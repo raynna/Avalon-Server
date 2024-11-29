@@ -18,7 +18,8 @@ public final class NPCCombatDefinitionsL {
 	private final static HashMap<Integer, NPCCombatDefinitions> npcCombatDefinitions = new HashMap<Integer, NPCCombatDefinitions>();
 	private final static NPCCombatDefinitions DEFAULT_DEFINITION = new NPCCombatDefinitions(1, -1, -1, -1, 5, 1, 33, 0,
 			NPCCombatDefinitions.MELEE, -1, -1, NPCCombatDefinitions.PASSIVE, NPCCombatDefinitions.SLASH);
-	private static final String PACKED_PATH = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/npcs/packedCombatDefinitions.ncd";
+	private static final String PACKED_PATH = System.getProperty("user.dir") + "/data/npcs/packedCombatDefinitions.ncd";
+	private static final String UNPACKED_PATH = System.getProperty("user.dir") + "/data/npcs/unpackedCombatDefinitionsList.txt";
 	private static DataOutputStream out;
 	private static BufferedReader in;
 
@@ -41,7 +42,7 @@ public final class NPCCombatDefinitionsL {
 		Logger.log("NPCCombatDefinitionsL", "Packing npc combat definitions...");
 		try {
 			out = new DataOutputStream(new FileOutputStream(PACKED_PATH));
-			in = new BufferedReader(new FileReader("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/npcs/unpackedCombatDefinitionsList.txt"));
+			in = new BufferedReader(new FileReader(UNPACKED_PATH));
 			while (true) {
 				String line = in.readLine();
 				count++;

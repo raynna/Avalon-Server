@@ -22,7 +22,7 @@ public final class KillScoreBoard implements Serializable {
 
 	private static KillScoreBoard[] ranks;
 
-	private static final String PATH = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/scoreboard/kills.ser";
+	private static final String PATH = System.getProperty("user.dir") + "/data/scoreboard/kills.ser";
 
 	public KillScoreBoard(Player player) {
 		this.username = player.getUsername();

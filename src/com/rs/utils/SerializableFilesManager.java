@@ -16,10 +16,10 @@ import com.rs.game.player.content.grandexchange.OfferHistory;
 
 public class SerializableFilesManager {
 
-	private static final String CLAN_PATH = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/clans/";
-	public static final String GE_OFFERS = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/GE/grandexchange/grandExchangeOffers.ser";
-	private static final String GE_OFFERS_HISTORY = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/GE/grandexchange/grandExchangeOffersTrack.ser";
-	private static final String GE_PRICES = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/GE/grandexchange/grandExchangePrices.ser";
+	private static final String CLAN_PATH = System.getProperty("user.dir") + "/data/clans/";
+	public static final String GE_OFFERS = System.getProperty("user.dir") + "/data/GE/grandexchange/grandExchangeOffers.ser";
+	private static final String GE_OFFERS_HISTORY = System.getProperty("user.dir") + "/data/GE/grandexchange/grandExchangeOffersTrack.ser";
+	private static final String GE_PRICES = System.getProperty("user.dir") + "/data/GE/grandexchange/grandExchangePrices.ser";
 	private static final String DISPLAY_NAMES = "displayNames.ser";
 
 	@SuppressWarnings("unchecked")

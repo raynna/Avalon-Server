@@ -13,15 +13,15 @@ import com.rs.json.GSONParser;
 public class AccountCreation {
 
 	public static Player loadPlayer(String username) {
-		return (Player) GSONParser.load("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/characters/" + username + ".json", Player.class);
+		return (Player) GSONParser.load(System.getProperty("user.dir") + "/data/characters/" + username + ".json", Player.class);
 	}
 
 	public static void savePlayer(Player player) {
-		GSONParser.save(player, "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/characters/" + player.getDisplayName() + ".json", Player.class);
+		GSONParser.save(player, System.getProperty("user.dir") + "/data/characters/" + player.getDisplayName() + ".json", Player.class);
 	}
 
 	public static boolean exists(String username) {
-		return new File("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/characters/" + username + ".json").exists();
+		return new File(System.getProperty("user.dir") + "/data/characters/" + username + ".json").exists();
 	}
 
 }

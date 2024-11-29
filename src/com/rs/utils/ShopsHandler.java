@@ -20,8 +20,8 @@ public class ShopsHandler {
 
 	private static final HashMap<Integer, Shop> handledShops = new HashMap<Integer, Shop>();
 
-	private static final String PACKED_PATH = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/items/packedShops.s";
-	private static final String UNPACKED_PATH = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/items/unpackedShops.txt";
+	private static final String PACKED_PATH = System.getProperty("user.dir") + "/data/items/packedShops/";
+	private static final String UNPACKED_PATH = System.getProperty("user.dir") + "/data/items/unpackedShops.txt";
 
 	private static BufferedReader in;
 

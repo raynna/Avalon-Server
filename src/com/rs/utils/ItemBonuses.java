@@ -10,7 +10,7 @@ import java.util.HashMap;
 public final class ItemBonuses {
 
 	private static HashMap<Integer, int[]> itemBonuses;
-	private final static String PACKED_PATH = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/items/bonuses.ib";
+	private final static String PACKED_PATH = System.getProperty("user.dir") + "/data/items/bonuses.ib";
 
 	public static final void init() {
 		if (new File(PACKED_PATH).exists())

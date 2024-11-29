@@ -25,7 +25,7 @@ public class NPCExamines {
 
 	public static void loadPackedExamines() {
 		try {
-			RandomAccessFile in = new RandomAccessFile("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/npcs/packedNpcExamines.e", "r");
+			RandomAccessFile in = new RandomAccessFile(System.getProperty("user.dir") + "/data/npcs/packedNpcExamines.e", "r");
 			FileChannel channel = in.getChannel();
 			ByteBuffer buffer = channel.map(MapMode.READ_ONLY, 0, channel.size());
 			while (buffer.hasRemaining())

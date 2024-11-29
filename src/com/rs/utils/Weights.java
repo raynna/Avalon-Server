@@ -16,7 +16,7 @@ public class Weights {
 			24211, 14938, 14939, 24208, 24209, 14936, 14937 };
 
 	public static void init() {
-		try (BufferedReader reader = new BufferedReader(new FileReader("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/items/unpackedWeights.txt"))) {
+		try (BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("user.dir") + "/data/items/unpackedWeights.txt"))) {
 			while (true) {
 				String file = reader.readLine();
 				if (file == null) {

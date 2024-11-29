@@ -3305,13 +3305,13 @@ public final class Commands {
         try {
             String location = "";
             if (player.isDeveloper()) {
-                location = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/logs/commands/admin/" + player.getUsername() + ".txt";
+                location = System.getProperty("user.dir") + "/data/logs/commands/admin/" + player.getUsername() + ".txt";
             } else if (player.isModerator()) {
-                location = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/logs/commands/mod/" + player.getUsername() + ".txt";
+                location = System.getProperty("user.dir") + "/data/logs/commands/mod/" + player.getUsername() + ".txt";
             } else if (player.getPlayerRank().getRank()[0] == Rank.PLAYERSUPPORT) {
-                location = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/logs/commands/support/" + player.getUsername() + ".txt";
+                location = System.getProperty("user.dir") + "/data/logs/commands/support/" + player.getUsername() + ".txt";
             } else {
-                location = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/logs/commands/player/" + player.getUsername() + ".txt";
+                location = System.getProperty("user.dir") + "/data/logs/commands/player/" + player.getUsername() + ".txt";
             }
             String afterCMD = "";
             for (int i = 1; i < cmd.length; i++)

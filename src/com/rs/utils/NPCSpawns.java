@@ -22,32 +22,17 @@ import com.rs.game.npc.NPC;
 public final class NPCSpawns {
 
 	private static final Object lock = new Object();
+	private static final String PACKED_PATH = System.getProperty("user.dir") + "/data/npcs/packedSpawns/";
+	private static final String UNPACKED_PATH = System.getProperty("user.dir") + "/data/npcs/unpackedSpawnsList.txt";
 	private static BufferedWriter writer;
 	private static BufferedReader in;
 	private static BufferedWriter writer2;
 	private static BufferedReader in2;
 
-	public static boolean addSpawn(String username, int id, WorldTile tile) throws Throwable {
-		synchronized (lock) {
-			File file = new File("data/npcs/spawns.txt");
-			writer = new BufferedWriter(new FileWriter(file, true));
-			writer.write("// " + NPCDefinitions.getNPCDefinitions(id).name + ", "
-					+ NPCDefinitions.getNPCDefinitions(id).combatLevel + ", added by: " + username);
-			writer.newLine();
-			writer.flush();
-			writer.write(id + " - " + tile.getX() + " " + tile.getY() + " " + tile.getPlane());
-			writer.newLine();
-			writer.flush();
-			World.spawnNPC(id, tile, -1, true);
-			return true;
-		}
-
-	}
-
 	public static boolean removeSpawn(NPC npc) throws Throwable {
 		synchronized (lock) {
 			List<String> page = new ArrayList<String>();
-			File file = new File("data/npcs/unpackedSpawnsList.txt");
+			File file = new File(UNPACKED_PATH);
 			in = new BufferedReader(new FileReader(file));
 			String line;
 			boolean removed = false;
@@ -76,16 +61,16 @@ public final class NPCSpawns {
 	}
 
 	public static final void init() {
-		if (!new File("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/npcs/packedSpawns").exists())
+		if (!new File(PACKED_PATH).exists())
 			packNPCSpawns();
 	}
 
 	private static final void packNPCSpawns() {
 		Logger.log("NPCSpawns", "Packing npc spawns...");
-		if (!new File("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/npcs/packedSpawns").mkdir())
+		if (!new File(PACKED_PATH).mkdir())
 			throw new RuntimeException("Couldn't create packedSpawns directory.");
 		try {
-			in2 = new BufferedReader(new FileReader("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/npcs/unpackedSpawnsList.txt"));
+			in2 = new BufferedReader(new FileReader(UNPACKED_PATH));
 			while (true) {
 				String line = in2.readLine();
 				if (line == null)
@@ -118,7 +103,7 @@ public final class NPCSpawns {
 	}
 
 	public static final void loadNPCSpawns(int regionId) {
-		File file = new File("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/npcs/packedSpawns/" + regionId + ".ns");
+		File file = new File(PACKED_PATH + regionId + ".ns");
 		if (!file.exists())
 			return;
 		try {
@@ -150,7 +135,7 @@ public final class NPCSpawns {
 			boolean canBeAttackFromOutOfArea) {
 		try {
 			DataOutputStream out = new DataOutputStream(
-					new FileOutputStream("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/npcs/packedSpawns/" + regionId + ".ns", true));
+					new FileOutputStream(PACKED_PATH + regionId + ".ns", true));
 			out.writeShort(npcId);
 			out.writeByte(tile.getPlane());
 			out.writeShort(tile.getX());

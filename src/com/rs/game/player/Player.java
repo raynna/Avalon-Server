@@ -1648,7 +1648,7 @@ public class Player extends Entity {
     public static void archiveChat(Player player, String message) {
         try {
             String location = "";
-            location = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/logs/chat/" + player.getUsername() + ".txt";
+            location = System.getProperty("user.dir") + "/data/logs/chat/" + player.getUsername() + ".txt";
             BufferedWriter writer = new BufferedWriter(new FileWriter(location, true));
             writer.write("[" + currentTime("dd MMMMM yyyy 'at' hh:mm:ss z") + "] - " + message);
             writer.newLine();

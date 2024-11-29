@@ -18,7 +18,8 @@ import com.rs.game.WorldTile;
 public final class MapAreas {
 
 	private final static HashMap<Integer, int[]> mapAreas = new HashMap<Integer, int[]>();
-	private final static String PACKED_PATH = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/map/packedMapAreas.ma";
+	private final static String PACKED_PATH = System.getProperty("user.dir") + "/data/map/packedMapAreas.ma";
+	private final static String UNPACKED_PATH = System.getProperty("user.dir") + "/data/map/unpackedMapAreas.txt";
 	private final static Object lock = new Object();
 	private static BufferedReader in;
 	private static DataOutputStream out;
@@ -71,7 +72,7 @@ public final class MapAreas {
 	private static void loadUnpackedMapAreas() {
 		Logger.log("MapAreas", "Packing map areas...");
 		try {
-			in = new BufferedReader(new FileReader("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/map/unpackedMapAreas.txt"));
+			in = new BufferedReader(new FileReader(UNPACKED_PATH));
 			out = new DataOutputStream(new FileOutputStream(PACKED_PATH));
 			while (true) {
 				String line = in.readLine();

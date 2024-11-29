@@ -19,8 +19,8 @@ import com.rs.game.item.Item;
 public class ItemExamines {
 
 	private final static HashMap<Integer, String> itemExamines = new HashMap<Integer, String>();
-	private final static String PACKED_PATH = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/items/packedExamines.e";
-	private final static String UNPACKED_PATH = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/items/unpackedExamines.txt";
+	private final static String PACKED_PATH = System.getProperty("user.dir") + "/data/items/packedExamines.e";
+	private final static String UNPACKED_PATH = System.getProperty("user.dir") + "/data/items/unpackedExamines.txt";
 	private static BufferedReader in;
 
 	public static final void init() {

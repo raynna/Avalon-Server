@@ -20,17 +20,21 @@ public final class ObjectSpawns {
 
 	private static BufferedReader in;
 
+	private static final String PATH = System.getProperty("user.dir") + "/data/map/packedSpawns";
+	private static final String TXT_PATH = System.getProperty("user.dir") + "/data/map/unpackedSpawnsList.txt";
+
 	public static final void init() {
-		if (!new File("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/map/packedSpawns").exists())
+		if (!new File(PATH).exists())
 			packObjectSpawns();
 	}
 
 	private static final void packObjectSpawns() {
+		System.out.println(PATH  + " " + TXT_PATH);
 		Logger.log("ObjectSpawns", "Packing object spawns...");
-		if (!new File("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/map/packedSpawns").mkdir())
+		if (!new File(PATH).mkdir())
 			throw new RuntimeException("Couldn't create packedSpawns directory.");
 		try {
-			in = new BufferedReader(new FileReader("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/map/unpackedSpawnsList.txt"));
+			in = new BufferedReader(new FileReader(TXT_PATH));
 			while (true) {
 				String line = in.readLine();
 				if (line == null)
@@ -60,7 +64,7 @@ public final class ObjectSpawns {
 	}
 
 	public static final void loadObjectSpawns(int regionId) {
-		File file = new File("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/map/packedSpawns/" + regionId + ".os");
+		File file = new File(PATH + regionId + ".os");
 		if (!file.exists())
 			return;
 		try {
@@ -91,7 +95,7 @@ public final class ObjectSpawns {
 			boolean cliped) {
 		try {
 			DataOutputStream out = new DataOutputStream(
-					new FileOutputStream("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/map/packedSpawns/" + regionId + ".os", true));
+					new FileOutputStream(PATH + regionId + ".os", true));
 			out.writeShort(objectId);
 			out.writeByte(type);
 			out.writeByte(rotation);

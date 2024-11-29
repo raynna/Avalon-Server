@@ -15,7 +15,8 @@ import java.util.HashMap;
 
 public final class NPCBonuses {
 	public final static HashMap<Integer, int[]> npcBonuses = new HashMap<Integer, int[]>();
-	private static final String PACKED_PATH = "C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/npcs/packedBonuses.nb";
+	private static final String PACKED_PATH = System.getProperty("user.dir") + "/data/npcs/packedBonuses.nb";
+	private static final String UNPACKED_PATH = System.getProperty("user.dir") + "/data/npcs/unpackedBonuses.txt";
 	private static DataOutputStream out;
 	private static BufferedReader in;
 
@@ -38,7 +39,7 @@ public final class NPCBonuses {
 		Logger.log("NPCBonuses", "Packing npc bonuses...");
 		try {
 			out = new DataOutputStream(new FileOutputStream(PACKED_PATH));
-			in = new BufferedReader(new FileReader("C:/Users/andre/Documents/GitHub/Avalon/Avalon/data/npcs/unpackedBonuses.txt"));
+			in = new BufferedReader(new FileReader(UNPACKED_PATH));
 			while (true) {
 				String line = in.readLine();
 				if (line == null)

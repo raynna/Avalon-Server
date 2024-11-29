@@ -874,7 +874,7 @@ public final class ItemDefinitions {
 
     public int getTipitPrice() {
         try {
-            for (String lines : FileUtilities.readFile("C:/Users/andre/Documents/GitHub/Avalon/Avalon/prices/prices.txt")) {
+            for (String lines : FileUtilities.readFile(System.getProperty("user.dir") + "/prices/prices.txt")) {
                 String[] data = lines.split(" - ");
                 if (lines.contains("originalPrices"))
                     continue;
