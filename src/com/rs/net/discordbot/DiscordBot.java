@@ -279,7 +279,7 @@ public class DiscordBot {
 			}
 			message.getAuthor().sendMessage(text);
 			for (User user : server.getMembers())
-				if (user.getRoles(server).contains(server.getRoleById("250050192227696641")))
+				if (user.getRoles(server).contains(server.getRoleById("ROLEIDHERE")))
 					user.sendMessage(
 							message.getAuthor().getName() + " has been issued a warning for the following message:\n"
 									+ message + "\n" + "They now have " + warnings.get(message.getAuthor()) + " warning"
