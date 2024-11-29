@@ -2,7 +2,6 @@ package com.rs;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.alex.store.Index;
@@ -41,7 +40,7 @@ import com.rs.game.player.controlers.ControlerHandler;
 import com.rs.game.player.cutscenes.CutscenesHandler;
 import com.rs.game.player.dialogues.DialogueHandler;
 import com.rs.game.worldlist.WorldList;
-import com.rs.net.DiscordBot;
+import com.rs.net.discordbot.DiscordBot;
 import com.rs.net.ServerChannelHandler;
 import com.rs.net.sql.DatabaseUtility;
 import com.rs.utils.Credentials;
@@ -67,6 +66,7 @@ import com.rs.utils.huffman.Huffman;
 public final class Launcher {
 
 	public static void main(String[] args) throws Exception {
+		System.out.println("Current working directory: " + System.getProperty("user.dir"));
 		if (args.length < 4) {
 			Settings.VPS_HOSTED = false;
 			Settings.PORT_ID = 43594;
@@ -136,8 +136,8 @@ public final class Launcher {
 		}
 		if (Settings.discordEnabled)
 			discord = new DiscordBot();
-		Logger.log("Economy",
-				Settings.ECONOMY_MODE == 2 ? "Full Spawn" : Settings.ECONOMY_MODE == 1 ? "Half Economy" : "Economy");
+		Logger.log("Economy Mode",
+				Settings.ECONOMY_MODE == 2 ? "Full Spawn" : Settings.ECONOMY_MODE == 1 ? "Half Economy" : "Full Economy");
 		Logger.log("Debug", Settings.DEBUG ? "Debug is activated." : "Debug is inactived.");
 		Logger.log("Status", Settings.SERVER_NAME + " is now online.");
 		if (Settings.sqlQueries)

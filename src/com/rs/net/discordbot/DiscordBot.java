@@ -1,4 +1,4 @@
-package com.rs.net;
+package com.rs.net.discordbot;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -29,10 +29,10 @@ public class DiscordBot {
 	private Server server;
 	private Channel channel;
 	private HashMap<User, Integer> warnings = new HashMap<>();
-	final String token = "MTA0ODUzNzI5NDY2OTM1Mjk3MQ.GNwd7j.t8o85ePGsjJUNDwplQFWJ-KIMniIA42BlEJMi8";
-	final String serverId = "568087421837770752";
-	public static final String COMMANDCHATID = "679362895020032001";
-	public static final String YELLCHATID = "679432984423825408";
+	final String token = "TOKENIDHERE";
+	final String serverId = "SERVERIDHERE";
+	public static final String COMMANDCHATID = "CHATIDHERE";
+	public static final String YELLCHATID = "CHATIDHERE";
 
 	public Channel getChannelByName(String name) {
 		for (Channel channel : getServer().getChannels()) {

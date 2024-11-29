@@ -29,9 +29,7 @@ public final class CityEventHandler {
             "impl"
     ).toString();
 
-    public static final boolean registerCitys() {
-        System.out.println("Current working directory: " + System.getProperty("user.dir"));
-        System.out.println("Resolved PATH: " + PATH);
+    public static boolean registerCitys() {
 
         File directory = new File(PATH);
         if (!directory.exists()) {
@@ -47,11 +45,8 @@ public final class CityEventHandler {
             System.out.println("No files found in directory: " + PATH);
             return false;
         }
-        //C:\Users\andre\Documents\GitHub\Avalon\Avalon\src\com\rs\game\cityhandler\impl
-        //C:\Users\andre\Documents\GitHub\Avalon\src\com\rs\game\cityhandler\impl
 
         for (File file : files) {
-            System.out.println("Processing file: " + file.getName());
             try {
                 String className = file.getName().replace(".java", "");
                 CityEvent event = (CityEvent) Class.forName("com.rs.game.cityhandler.impl." + className).newInstance();
@@ -62,16 +57,17 @@ public final class CityEventHandler {
                 e.printStackTrace();
             }
         }
+        System.out.println("[CityEventHandler]: " + files.length + " city plugins were loaded.");
         return true;
     }
 
 
-    public static final boolean reload() throws Throwable {
+    public static boolean reload() throws Throwable {
         cityEvents.clear();
         return registerCitys();
     }
 
-    public static final boolean handleNPCClick(Player player, NPC npc, int npcId) {
+    public static boolean handleNPCClick(Player player, NPC npc, int npcId) {
         CityEvent cityEvent = cityEvents.get(npcId);
         if (cityEvent == null)
             return false;
@@ -99,14 +95,14 @@ public final class CityEventHandler {
         return cityEvent.handleNPCClick4(player, npc);
     }
 
-    public static final boolean handleObjectClick(Player player, WorldObject object, int objectId) {
+    public static boolean handleObjectClick(Player player, WorldObject object, int objectId) {
         CityEvent cityEvent = cityEvents.get(objectId);
         if (cityEvent == null)
             return false;
         return cityEvent.handleObjectClick(player, object);
     }
 
-    public static final boolean handleObjectClick2(Player player,
+    public static boolean handleObjectClick2(Player player,
     		WorldObject object, int objectId) {
         CityEvent cityEvent = cityEvents.get(objectId);
         if (cityEvent == null)
@@ -114,7 +110,7 @@ public final class CityEventHandler {
         return cityEvent.handleObjectClick2(player, object);
     }
 
-    public static final boolean handleObjectClick3(Player player,
+    public static boolean handleObjectClick3(Player player,
     		WorldObject object, int objectId) {
         CityEvent cityEvent = cityEvents.get(objectId);
         if (cityEvent == null)
@@ -122,7 +118,7 @@ public final class CityEventHandler {
         return cityEvent.handleObjectClick3(player, object);
     }
 
-    public static final boolean handleObjectClick4(Player player,
+    public static boolean handleObjectClick4(Player player,
     		WorldObject object, int objectId) {
         CityEvent cityEvent = cityEvents.get(objectId);
         if (cityEvent == null)
@@ -130,7 +126,7 @@ public final class CityEventHandler {
         return cityEvent.handleObjectClick4(player, object);
     }
 
-    public static final boolean handleObjectClick5(Player player,
+    public static boolean handleObjectClick5(Player player,
     		WorldObject object, int objectId) {
         CityEvent cityEvent = cityEvents.get(objectId);
         if (cityEvent == null)
