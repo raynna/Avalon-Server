@@ -17,24 +17,22 @@ public class NpcPluginLoader {
 			System.out.println("[NpcPluginManager] "+npc.getName()+"("+npc.getId()+"): plugin was found by Id.");
 			return plugin;
 		}
-		if (plugin == null) {
-			for (Map.Entry<Object, NpcPlugin> entry : cachedNpcPlugins.entrySet()) {
-				Object[] keys = entry.getValue().getKeys();
-				for (Object key : keys) {
-					if (key instanceof String && npc.getName().toLowerCase().contains(((String) key).toLowerCase())) {
-						plugin = entry.getValue();
-						System.out.println("[NpcPluginManager] "+npc.getName()+"("+npc.getId()+"): Found plugin by name");
-						return plugin;
-					}
-				}
-			}
-		}
-		System.out.println("[NpcPluginManager] "+npc.getName()+"("+npc.getId()+"): Found no plugin for this npc.");
+        for (Map.Entry<Object, NpcPlugin> entry : cachedNpcPlugins.entrySet()) {
+            Object[] keys = entry.getValue().getKeys();
+            for (Object key : keys) {
+                if (key instanceof String && npc.getName().toLowerCase().contains(((String) key).toLowerCase())) {
+                    plugin = entry.getValue();
+                    System.out.println("[NpcPluginManager] " + npc.getName() + "(" + npc.getId() + "): Found plugin by name");
+                    return plugin;
+                }
+            }
+        }
+        System.out.println("[NpcPluginManager] "+npc.getName()+"("+npc.getId()+"): Found no plugin for this npc.");
 		return null;
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static final void init() {
+	public static void init() {
 		try {
 			String[] pluginFolders = {"com.rs.game.npc.plugins"};
 			Set<Class> processedClasses = new HashSet<>();
@@ -44,10 +42,9 @@ public class NpcPluginLoader {
 					if (c.isAnonymousClass() || processedClasses.contains(c))
 						continue;
 					Object o = c.newInstance();
-					if (!(o instanceof NpcPlugin))
+					if (!(o instanceof NpcPlugin plugin))
 						continue;
-					NpcPlugin plugin = (NpcPlugin) o;
-					for (Object key : plugin.getKeys())
+                    for (Object key : plugin.getKeys())
 						cachedNpcPlugins.put(key, plugin);
 					processedClasses.add(c);
 				}

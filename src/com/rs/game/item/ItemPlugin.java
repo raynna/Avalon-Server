@@ -59,11 +59,11 @@ public abstract class ItemPlugin {
 
     public void sendPluginLog(int option, Item item, String optionName, boolean executed) {
         StringBuilder builder = new StringBuilder();
-        builder.append("Option " + option + " - Class: " + this.getClass().getSimpleName() + ".java, ");
+        builder.append("Option ").append(option).append(" - Class: ").append(this.getClass().getSimpleName()).append(".java, ");
         if (executed) {
-            builder.append("Executed: '" + optionName + "' on " + item.getName() + "(" + item.getId() + ")");
+            builder.append("Executed: '").append(optionName).append("' on ").append(item.getName()).append("(").append(item.getId()).append(")");
         } else {
-            builder.append("Failed: '" + optionName + "' option is unhandled in plugin " + item.getName() + "(" + item.getId() + ")");
+            builder.append("Failed: '").append(optionName).append("' option is unhandled in plugin ").append(item.getName()).append("(").append(item.getId()).append(")");
         }
         Logger.log("ItemPlugin", builder);
     }

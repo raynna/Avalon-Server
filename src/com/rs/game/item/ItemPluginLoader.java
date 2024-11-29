@@ -18,15 +18,13 @@ public class ItemPluginLoader {
             System.out.println("[ItemPluginLoader] "+item.getName()+"("+item.getId()+"): plugin was found by Id.");
             return plugin;
         }
-        if (plugin == null) {
-            for (Map.Entry<Object, ItemPlugin> entry : cachedItemPlugins.entrySet()) {
-                Object[] keys = entry.getValue().getKeys();
-                for (Object key : keys) {
-                    if (key instanceof String && item.getName().toLowerCase().contains(((String) key).toLowerCase())) {
-                        plugin = entry.getValue();
-                        System.out.println("[ItemPluginLoader] "+item.getName()+"("+item.getId()+"): Found plugin by name.");
-                        return plugin;
-                    }
+        for (Map.Entry<Object, ItemPlugin> entry : cachedItemPlugins.entrySet()) {
+            Object[] keys = entry.getValue().getKeys();
+            for (Object key : keys) {
+                if (key instanceof String && item.getName().toLowerCase().contains(((String) key).toLowerCase())) {
+                    plugin = entry.getValue();
+                    System.out.println("[ItemPluginLoader] " + item.getName() + "(" + item.getId() + "): Found plugin by name.");
+                    return plugin;
                 }
             }
         }
@@ -52,10 +50,9 @@ public class ItemPluginLoader {
                         continue;
                     }
                     Object o = c.newInstance();
-                    if (!(o instanceof ItemPlugin)) {
+                    if (!(o instanceof ItemPlugin plugin)) {
                         continue;
                     }
-                    ItemPlugin plugin = (ItemPlugin) o;
                     for (Object key : plugin.getKeys()) {
                         cachedItemPlugins.put(key, plugin);
                     }

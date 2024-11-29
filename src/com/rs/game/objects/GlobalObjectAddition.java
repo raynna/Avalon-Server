@@ -15,7 +15,7 @@ public class GlobalObjectAddition {
     public static void init() {
         try {
             readToStoreCollection();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

@@ -18,24 +18,22 @@ public class ObjectPluginLoader {
 			System.out.println("[ObjectPluginLoader] "+object.getName()+"("+object.getId()+"): plugin was found by Id.");
 			return plugin;
 		}
-		if (plugin == null) {
-			for (Map.Entry<Object, ObjectPlugin> entry : cachedObjectPlugins.entrySet()) {
-				Object[] keys = entry.getValue().getKeys();
-				for (Object key : keys) {
-					if (key instanceof String && object.getName().toLowerCase().contains(((String) key).toLowerCase())) {
-						plugin = entry.getValue();
-						System.out.println("[ObjectPluginLoader] "+object.getName()+"("+object.getId()+"): Found plugin by name");
-						return plugin;
-					}
-				}
-			}
-		}
-		System.out.println("[ObjectPluginLoader] "+object.getName()+"("+object.getId()+"): Found no plugin for this object.");
+        for (Map.Entry<Object, ObjectPlugin> entry : cachedObjectPlugins.entrySet()) {
+            Object[] keys = entry.getValue().getKeys();
+            for (Object key : keys) {
+                if (key instanceof String && object.getName().toLowerCase().contains(((String) key).toLowerCase())) {
+                    plugin = entry.getValue();
+                    System.out.println("[ObjectPluginLoader] " + object.getName() + "(" + object.getId() + "): Found plugin by name");
+                    return plugin;
+                }
+            }
+        }
+        System.out.println("[ObjectPluginLoader] "+object.getName()+"("+object.getId()+"): Found no plugin for this object.");
 		return null;
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static final void init() {
+	public static void init() {
 		try {
 			String[] pluginFolders = {"com.rs.game.objects.plugins"};
 			Set<Class> processedClasses = new HashSet<>();
@@ -45,10 +43,9 @@ public class ObjectPluginLoader {
 					if (c.isAnonymousClass() || processedClasses.contains(c))
 						continue;
 					Object o = c.newInstance();
-					if (!(o instanceof ObjectPlugin))
+					if (!(o instanceof ObjectPlugin plugin))
 						continue;
-					ObjectPlugin plugin = (ObjectPlugin) o;
-					for (Object key : plugin.getKeys())
+                    for (Object key : plugin.getKeys())
 						cachedObjectPlugins.put(key, plugin);
 					processedClasses.add(c);
 				}
