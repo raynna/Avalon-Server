@@ -12,14 +12,16 @@ import com.rs.game.tasks.WorldTasksManager;
 
 public class CrystalChestObject extends ObjectPlugin {
 
+	private final int CRYSTAL_CHEST = 172, CRYSTAL_KEY = 989;
+
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { 172 };
+		return new Object[] { CRYSTAL_CHEST };
 	}
 
 	@Override
 	public boolean processObject(Player player, WorldObject object) {
-		if (!player.getInventory().containsItem(989, 1)) {
+		if (!player.getInventory().containsItem(CRYSTAL_KEY, 1)) {
 			player.getPackets().sendGameMessage("You need a crystal key to open this chest.");
 			return false;
 		}
@@ -29,7 +31,7 @@ public class CrystalChestObject extends ObjectPlugin {
 
 	@Override
 	public boolean processItemOnObject(Player player, WorldObject object, Item item) {
-		if (object.getId() != 172)
+		if (item.getId() != CRYSTAL_KEY)
 			return false;
 		openChest(player, object);
 		return true;
@@ -45,7 +47,7 @@ public class CrystalChestObject extends ObjectPlugin {
 		WorldTasksManager.schedule(new WorldTask() {
 			@Override
 			public void run() {
-				player.getInventory().deleteItem(989, 1);
+				player.getInventory().deleteItem(CRYSTAL_KEY, 1);
 				CrystalChest.sendRewards(false, player);
 			}
 		}, 1);
