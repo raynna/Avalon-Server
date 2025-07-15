@@ -685,3 +685,328 @@
 [29 november 2024 at 01:35:08 CET] - ::tele 0,48,54,16,34
 [29 november 2024 at 01:35:14 CET] - ::ironman 
 [29 november 2024 at 01:36:45 CET] - ::give crystal_key +20
+[14 July 2025 at 01:42:07 CEST] - ::bank 
+[14 July 2025 at 01:42:09 CEST] - ::emptybank 
+[14 July 2025 at 01:42:52 CEST] - ::npc 52
+[14 July 2025 at 01:42:55 CEST] - ::npc 54
+[14 July 2025 at 01:42:59 CEST] - ::god 
+[14 July 2025 at 01:43:01 CEST] - ::master 
+[14 July 2025 at 01:49:17 CEST] - ::bank 
+[14 July 2025 at 01:49:19 CEST] - ::empty 
+[14 July 2025 at 01:49:22 CEST] - ::heal 
+[14 July 2025 at 01:49:27 CEST] - ::testdrop 54 1
+[14 July 2025 at 01:49:30 CEST] - ::bank 
+[14 July 2025 at 01:49:50 CEST] - ::debug 
+[14 July 2025 at 01:50:39 CEST] - ::give black dragon tail-bone
+[14 July 2025 at 01:50:44 CEST] - ::give black_dragon_tail-bone
+[14 July 2025 at 01:51:06 CEST] - ::bank 
+[14 July 2025 at 01:51:19 CEST] - ::testdrop 54 100
+[14 July 2025 at 01:51:20 CEST] - ::bank 
+[14 July 2025 at 01:51:37 CEST] - ::bank 
+[14 July 2025 at 01:51:54 CEST] - ::bank 
+[14 July 2025 at 01:52:09 CEST] - ::emptybank 
+[14 July 2025 at 01:52:10 CEST] - ::empty 
+[14 July 2025 at 01:52:16 CEST] - ::bank 
+[14 July 2025 at 01:52:19 CEST] - ::bank 
+[14 July 2025 at 01:52:23 CEST] - ::bank 
+[14 July 2025 at 01:52:28 CEST] - ::item 995 1
+[14 July 2025 at 01:52:29 CEST] - ::bank 
+[14 July 2025 at 01:52:37 CEST] - ::testdrop 54 1000
+[14 July 2025 at 01:52:38 CEST] - ::bank 
+[14 July 2025 at 01:52:55 CEST] - ::bank 
+[14 July 2025 at 01:54:03 CEST] - ::item 17680
+[14 July 2025 at 01:54:08 CEST] - ::item 17680 1
+[14 July 2025 at 01:54:22 CEST] - ::item 21815 1
+[14 July 2025 at 01:54:24 CEST] - ::empty 
+[14 July 2025 at 01:54:32 CEST] - ::item 19787 1
+[14 July 2025 at 01:54:38 CEST] - ::item 21383 1
+[14 July 2025 at 01:54:41 CEST] - ::item 20383 3
+[14 July 2025 at 01:54:47 CEST] - ::give draconic_visage
+[14 July 2025 at 01:54:49 CEST] - ::item 11285 1
+[14 July 2025 at 01:54:50 CEST] - ::item 11284 1
+[14 July 2025 at 01:54:51 CEST] - ::item 11283
+[14 July 2025 at 01:54:54 CEST] - ::item 11282 1
+[14 July 2025 at 01:54:56 CEST] - ::item 11286 1
+[14 July 2025 at 01:55:08 CEST] - ::give starved_ancient_effigy
+[14 July 2025 at 01:55:18 CEST] - ::give black_dragon_egg
+[14 July 2025 at 01:55:29 CEST] - ::give bone_fragment
+[14 July 2025 at 01:55:37 CEST] - ::give bone_fragments
+[14 July 2025 at 01:55:41 CEST] - ::item 2801 1
+[14 July 2025 at 01:55:47 CEST] - ::give hard_clue
+[14 July 2025 at 02:21:32 CEST] - ::item 19582 1
+[14 July 2025 at 02:41:39 CEST] - ::item 12480 1
+[14 July 2025 at 04:58:58 CEST] - ::empty 
+[14 July 2025 at 04:58:59 CEST] - ::npc 54
+[14 July 2025 at 04:59:00 CEST] - ::god 
+[14 July 2025 at 04:59:11 CEST] - ::npc 54
+[14 July 2025 at 04:59:46 CEST] - ::give black dragon tail
+[14 July 2025 at 04:59:58 CEST] - ::give black_dragon_tail-bone
+[14 July 2025 at 05:15:34 CEST] - ::npc 54
+[14 July 2025 at 05:15:37 CEST] - ::god 
+[14 July 2025 at 05:15:38 CEST] - ::heal 
+[14 July 2025 at 05:16:05 CEST] - ::npc 54
+[14 July 2025 at 05:20:08 CEST] - ::npc 54
+[14 July 2025 at 05:20:10 CEST] - ::god 
+[14 July 2025 at 05:20:36 CEST] - ::give steel_halberd
+[14 July 2025 at 05:20:49 CEST] - ::item 12480 1
+[14 July 2025 at 05:20:52 CEST] - ::item 15152 1
+[14 July 2025 at 05:20:57 CEST] - ::item 11286 1
+[14 July 2025 at 05:21:03 CEST] - ::item 18778 1
+[14 July 2025 at 05:21:24 CEST] - ::item 33194 1
+[14 July 2025 at 05:21:30 CEST] - ::give dragon_token
+[14 July 2025 at 05:21:51 CEST] - ::npc 54
+[14 July 2025 at 05:21:52 CEST] - ::god 
+[14 July 2025 at 05:21:54 CEST] - ::heal 
+[14 July 2025 at 05:21:57 CEST] - ::item 11283 1
+[14 July 2025 at 05:22:03 CEST] - ::npc 54
+[14 July 2025 at 05:22:15 CEST] - ::npc 45
+[14 July 2025 at 05:22:20 CEST] - ::npc 54
+[14 July 2025 at 05:22:27 CEST] - ::npc 54
+[14 July 2025 at 05:22:29 CEST] - ::npc 54
+[14 July 2025 at 05:22:35 CEST] - ::npc 54
+[14 July 2025 at 05:22:43 CEST] - ::npc 54
+[14 July 2025 at 08:17:09 CEST] - ::bank 
+[14 July 2025 at 08:17:11 CEST] - ::emptybank 
+[14 July 2025 at 08:17:18 CEST] - ::bank 
+[14 July 2025 at 08:18:16 CEST] - ::bank 
+[14 July 2025 at 08:18:17 CEST] - ::empty 
+[14 July 2025 at 08:18:19 CEST] - ::emptybank 
+[14 July 2025 at 08:18:23 CEST] - ::testdrop 54 1000
+[14 July 2025 at 08:18:24 CEST] - ::bank 
+[14 July 2025 at 08:20:17 CEST] - ::bank 
+[14 July 2025 at 08:21:43 CEST] - ::emptybank 
+[14 July 2025 at 08:21:47 CEST] - ::testdrop 54 1
+[14 July 2025 at 08:21:48 CEST] - ::bank 
+[14 July 2025 at 08:21:52 CEST] - ::testdrop 54 1
+[14 July 2025 at 08:21:54 CEST] - ::bank 
+[14 July 2025 at 08:21:57 CEST] - ::testdrop 54 1
+[14 July 2025 at 08:22:00 CEST] - ::testdrop 54 1
+[14 July 2025 at 08:22:03 CEST] - ::testdrop 54 1
+[14 July 2025 at 08:22:05 CEST] - ::testdrop 54 1
+[14 July 2025 at 08:22:06 CEST] - ::testdrop 54 1
+[14 July 2025 at 08:22:10 CEST] - ::testdrop 54 10000
+[14 July 2025 at 08:22:14 CEST] - ::testdrop 54 100000
+[14 July 2025 at 08:22:40 CEST] - ::item 14479 1
+[14 July 2025 at 08:34:28 CEST] - ::item 2626 1
+[14 July 2025 at 09:00:22 CEST] - ::item 12480 1
+[14 July 2025 at 09:03:05 CEST] - ::item 2722 1
+[14 July 2025 at 09:03:07 CEST] - ::item 2723
+[14 July 2025 at 09:03:11 CEST] - ::item 2723 1
+[14 July 2025 at 09:03:15 CEST] - ::item 2727 1
+[14 July 2025 at 09:03:19 CEST] - ::item 2729 1
+[14 July 2025 at 09:30:34 CEST] - ::emptybank 
+[14 July 2025 at 09:30:36 CEST] - ::bank 
+[14 July 2025 at 09:30:37 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:30:40 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:30:43 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:30:44 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:30:47 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:30:52 CEST] - ::testdrop 54 100
+[14 July 2025 at 09:33:08 CEST] - ::emptybank 
+[14 July 2025 at 09:33:10 CEST] - ::bank 
+[14 July 2025 at 09:33:13 CEST] - ::testdrop 54 100
+[14 July 2025 at 09:33:27 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:33:29 CEST] - ::emptybank 
+[14 July 2025 at 09:33:32 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:33:35 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:33:37 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:33:39 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:33:41 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:33:43 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:33:46 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:33:48 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:33:50 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:34:01 CEST] - ::testdrop 54 1000
+[14 July 2025 at 09:34:14 CEST] - ::emptybank 
+[14 July 2025 at 09:35:06 CEST] - ::bank 
+[14 July 2025 at 09:35:08 CEST] - ::emptybank 
+[14 July 2025 at 09:35:27 CEST] - ::testdrop 54 1000
+[14 July 2025 at 09:35:27 CEST] - ::bank 
+[14 July 2025 at 09:35:30 CEST] - ::emptybank 
+[14 July 2025 at 09:35:35 CEST] - ::testdrop 54 1000
+[14 July 2025 at 09:35:36 CEST] - ::bank 
+[14 July 2025 at 09:36:07 CEST] - ::testdrop 54 100000
+[14 July 2025 at 09:45:07 CEST] - ::item 20653 1
+[14 July 2025 at 09:45:10 CEST] - ::item 20654 1
+[14 July 2025 at 09:45:12 CEST] - ::item 20655 1
+[14 July 2025 at 09:45:15 CEST] - ::item 20657 1
+[14 July 2025 at 09:45:18 CEST] - ::item 20659 1
+[14 July 2025 at 09:45:23 CEST] - ::item 2572 1
+[14 July 2025 at 09:45:42 CEST] - ::item 20655 1
+[14 July 2025 at 09:45:56 CEST] - ::item 2572 1
+[14 July 2025 at 09:48:08 CEST] - ::npc 54
+[14 July 2025 at 09:48:12 CEST] - ::god 
+[14 July 2025 at 09:49:08 CEST] - ::testdrop 54 100
+[14 July 2025 at 09:49:13 CEST] - ::bank 
+[14 July 2025 at 09:49:16 CEST] - ::emptybank 
+[14 July 2025 at 09:49:22 CEST] - ::bank 
+[14 July 2025 at 09:49:27 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:49:28 CEST] - ::bank 
+[14 July 2025 at 09:49:30 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:49:33 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:49:35 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:49:38 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:51:24 CEST] - ::bank 
+[14 July 2025 at 09:51:25 CEST] - ::emptybank 
+[14 July 2025 at 09:52:11 CEST] - ::testdrop 54 100
+[14 July 2025 at 09:52:32 CEST] - ::bank 
+[14 July 2025 at 09:54:47 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:55:03 CEST] - ::testdrop 54 10
+[14 July 2025 at 09:55:08 CEST] - ::bank 
+[14 July 2025 at 09:57:27 CEST] - ::bank 
+[14 July 2025 at 09:57:29 CEST] - ::emptybank 
+[14 July 2025 at 09:57:32 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:57:37 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:57:40 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:57:42 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:57:53 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:57:56 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:57:59 CEST] - ::testdrop 54 1
+[14 July 2025 at 09:58:08 CEST] - ::testdrop 54 10
+[14 July 2025 at 10:00:27 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:06:50 CEST] - ::testdrop 54 10
+[14 July 2025 at 10:06:52 CEST] - ::bank 
+[14 July 2025 at 10:06:55 CEST] - ::testdrop 54 100
+[14 July 2025 at 10:07:07 CEST] - ::testdrop 54 10000
+[14 July 2025 at 10:09:07 CEST] - ::bank 
+[14 July 2025 at 10:09:09 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:09:14 CEST] - ::testdrop 54 10000
+[14 July 2025 at 10:09:18 CEST] - ::emptybank 
+[14 July 2025 at 10:09:22 CEST] - ::testdrop 54 10000
+[14 July 2025 at 10:16:30 CEST] - ::bank 
+[14 July 2025 at 10:16:31 CEST] - ::emptybank 
+[14 July 2025 at 10:16:37 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:17:30 CEST] - ::emptybank 
+[14 July 2025 at 10:17:32 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:17:37 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:17:39 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:17:42 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:17:44 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:17:46 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:17:49 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:17:51 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:17:53 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:17:55 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:17:57 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:17:59 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:01 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:04 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:06 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:12 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:13 CEST] - ::bank 
+[14 July 2025 at 10:18:15 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:17 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:19 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:22 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:24 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:26 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:28 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:18:31 CEST] - ::testdrop 54 100
+[14 July 2025 at 10:18:40 CEST] - ::emptybank 
+[14 July 2025 at 10:18:44 CEST] - ::testdrop 54 10000
+[14 July 2025 at 10:19:50 CEST] - ::emptybank 
+[14 July 2025 at 10:19:55 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:20:32 CEST] - ::bank 
+[14 July 2025 at 10:20:35 CEST] - ::emptybank 
+[14 July 2025 at 10:20:41 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:20:43 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:20:47 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:20:50 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:20:51 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:20:54 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:20:55 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:20:58 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:20:59 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:21:01 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:21:03 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:21:05 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:21:07 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:21:09 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:21:12 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:21:13 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:21:16 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:21:18 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:21:20 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:21:51 CEST] - ::bank 
+[14 July 2025 at 10:21:52 CEST] - ::emptybank 
+[14 July 2025 at 10:21:57 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:22:13 CEST] - ::testdrop 54 9000
+[14 July 2025 at 10:45:07 CEST] - ::bank 
+[14 July 2025 at 10:45:09 CEST] - ::emptybank 
+[14 July 2025 at 10:45:13 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:45:15 CEST] - ::testdrop 54 10
+[14 July 2025 at 10:45:18 CEST] - ::testdrop 54 10
+[14 July 2025 at 10:45:20 CEST] - ::testdrop 54 10
+[14 July 2025 at 10:45:22 CEST] - ::testdrop 54 10
+[14 July 2025 at 10:45:24 CEST] - ::testdrop 54 10
+[14 July 2025 at 10:45:30 CEST] - ::testdrop 54 10
+[14 July 2025 at 10:45:32 CEST] - ::testdrop 54 10
+[14 July 2025 at 10:45:34 CEST] - ::emptybank 
+[14 July 2025 at 10:45:38 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:46:07 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:46:11 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:46:13 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:46:16 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:46:18 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:46:21 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:46:28 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:46:31 CEST] - ::testdrop 54 10000
+[14 July 2025 at 10:46:34 CEST] - ::testdrop 54 10000
+[14 July 2025 at 10:50:35 CEST] - ::bank 
+[14 July 2025 at 10:50:37 CEST] - ::emptybank 
+[14 July 2025 at 10:50:40 CEST] - ::testdrop 54 10000
+[14 July 2025 at 10:50:55 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:50:58 CEST] - ::testdrop 54 10000
+[14 July 2025 at 10:51:01 CEST] - ::testdrop 54 10000
+[14 July 2025 at 10:53:24 CEST] - ::droptest 54 1
+[14 July 2025 at 10:53:29 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:53:33 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:53:34 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:53:36 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:53:37 CEST] - ::testdrop 54 1
+[14 July 2025 at 10:53:39 CEST] - ::testdrop 54 100
+[14 July 2025 at 10:53:42 CEST] - ::testdrop 54 100
+[14 July 2025 at 10:56:17 CEST] - ::bank 
+[14 July 2025 at 10:56:19 CEST] - ::emptybank 
+[14 July 2025 at 10:56:22 CEST] - ::testdrop 54 100
+[14 July 2025 at 10:56:36 CEST] - ::testdrop 54 100
+[14 July 2025 at 10:56:41 CEST] - ::testdrop 54 100
+[14 July 2025 at 10:56:49 CEST] - ::testdrop 54 100
+[14 July 2025 at 10:57:38 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:57:57 CEST] - ::testdrop 54 1000
+[14 July 2025 at 10:58:20 CEST] - ::testdrop 54 10000
+[14 July 2025 at 11:00:10 CEST] - ::bank 
+[14 July 2025 at 11:00:12 CEST] - ::emptybank 
+[14 July 2025 at 11:00:15 CEST] - ::testdrop 54 1000
+[14 July 2025 at 11:00:40 CEST] - ::testdrop 54 1000
+[14 July 2025 at 11:00:47 CEST] - ::testdrop 54 1000
+[14 July 2025 at 11:00:53 CEST] - ::item 1623 1
+[14 July 2025 at 11:02:32 CEST] - ::emptybank 
+[14 July 2025 at 11:02:34 CEST] - ::bank 
+[14 July 2025 at 11:02:37 CEST] - ::testdrop 54 1000
+[14 July 2025 at 11:02:43 CEST] - ::testdrop 54 1000
+[14 July 2025 at 11:02:45 CEST] - ::testdrop 54 1000
+[14 July 2025 at 11:02:50 CEST] - ::testdrop 54 1000
+[14 July 2025 at 11:02:53 CEST] - ::testdrop 54 10000
+[14 July 2025 at 11:02:58 CEST] - ::item 830 1
+[14 July 2025 at 11:03:01 CEST] - ::testdrop 54 10000
+[14 July 2025 at 11:03:05 CEST] - ::testdrop 54 10000
+[14 July 2025 at 11:03:08 CEST] - ::testdrop 54 10000
+[14 July 2025 at 11:03:12 CEST] - ::testdrop 54 10000
+[14 July 2025 at 11:03:19 CEST] - ::testdrop 54 10000
+[14 July 2025 at 11:03:32 CEST] - ::item 1621 1
+[14 July 2025 at 11:03:34 CEST] - ::item 1623 1
+[14 July 2025 at 11:03:40 CEST] - ::item 14552 1
+[14 July 2025 at 11:03:42 CEST] - ::item 1452 1
+[14 July 2025 at 11:03:52 CEST] - ::item 830 1
+[14 July 2025 at 11:03:54 CEST] - ::empty 
+[14 July 2025 at 11:03:55 CEST] - ::emptybank 
+[14 July 2025 at 11:04:04 CEST] - ::testdrop 54 1000000
+[14 July 2025 at 11:10:35 CEST] - ::testdrop 54 100000
+[14 July 2025 at 11:11:16 CEST] - ::emptybank 
+[14 July 2025 at 11:11:21 CEST] - ::bank 
+[14 July 2025 at 11:11:24 CEST] - ::testdrop 54 100000
+[14 July 2025 at 11:11:40 CEST] - ::testdrop 54 100000
+[14 July 2025 at 11:11:46 CEST] - ::testdrop 54 100000
+[15 July 2025 at 01:14:15 CEST] - ::bank 
+[15 July 2025 at 01:28:04 CEST] - ::bank 

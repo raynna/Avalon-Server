@@ -51,86 +51,26 @@
   "inventory": {
     "items": {
       "data": [
-        {
-          "id": 11732,
-          "amount": 1
-        },
-        {
-          "id": 985,
-          "amount": 1
-        },
-        {
-          "id": 537,
-          "amount": 20
-        },
-        {
-          "id": 1215,
-          "amount": 1
-        },
-        {
-          "id": 533,
-          "amount": 104
-        },
-        {
-          "id": 985,
-          "amount": 1
-        },
-        {
-          "id": 10828,
-          "amount": 1
-        },
-        {
-          "id": 4153,
-          "amount": 1
-        },
-        {
-          "id": 4153,
-          "amount": 1
-        },
-        {
-          "id": 11718,
-          "amount": 1
-        },
-        {
-          "id": 20801,
-          "amount": 1
-        },
-        {
-          "id": 989,
-          "amount": 1
-        },
-        {
-          "id": 989,
-          "amount": 1
-        },
-        {
-          "id": 989,
-          "amount": 1
-        },
-        {
-          "id": 989,
-          "amount": 1
-        },
-        {
-          "id": 989,
-          "amount": 1
-        },
-        {
-          "id": 989,
-          "amount": 1
-        },
-        {
-          "id": 989,
-          "amount": 1
-        },
-        {
-          "id": 989,
-          "amount": 1
-        },
-        {
-          "id": 989,
-          "amount": 1
-        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
         null,
         null,
         null,
@@ -151,14 +91,20 @@
         null,
         null,
         null,
+        {
+          "id": 11283,
+          "amount": 1
+        },
         null,
         null,
         null,
         null,
         null,
         null,
-        null,
-        null,
+        {
+          "id": 20653,
+          "amount": 1
+        },
         null,
         null
       ],
@@ -169,159 +115,155 @@
     "bankTabs": [
       [
         {
-          "id": 5300,
-          "amount": 91
+          "id": 12160,
+          "amount": 19748
         },
         {
-          "id": 4834,
-          "amount": 1000
-        },
-        {
-          "id": 10524,
-          "amount": 109
-        },
-        {
-          "id": 11712,
-          "amount": 7
-        },
-        {
-          "id": 453,
-          "amount": 10568
+          "id": 2114,
+          "amount": 80083
         },
         {
           "id": 12163,
-          "amount": 96
+          "amount": 3913
         },
         {
-          "id": 1303,
-          "amount": 89
+          "id": 1355,
+          "amount": 6689
         },
         {
-          "id": 12158,
-          "amount": 170
+          "id": 1617,
+          "amount": 172
         },
         {
-          "id": 1275,
-          "amount": 96
+          "id": 1619,
+          "amount": 662
         },
         {
-          "id": 3024,
-          "amount": 105
-        },
-        {
-          "id": 12159,
-          "amount": 131
-        },
-        {
-          "id": 1127,
-          "amount": 84
-        },
-        {
-          "id": 2722,
-          "amount": 16
-        },
-        {
-          "id": 449,
-          "amount": 1883
-        },
-        {
-          "id": 3051,
-          "amount": 54
-        },
-        {
-          "id": 995,
-          "amount": 1624112
-        },
-        {
-          "id": 12160,
-          "amount": 146
-        },
-        {
-          "id": 1623,
-          "amount": 3
-        },
-        {
-          "id": 451,
-          "amount": 46
-        },
-        {
-          "id": 1319,
-          "amount": 99
-        },
-        {
-          "id": 1513,
-          "amount": 325
+          "id": 1747,
+          "amount": 300000
         },
         {
           "id": 1621,
-          "amount": 3
+          "amount": 1395
+        },
+        {
+          "id": 11286,
+          "amount": 600
+        },
+        {
+          "id": 1303,
+          "amount": 2265
+        },
+        {
+          "id": 1623,
+          "amount": 2708
+        },
+        {
+          "id": 536,
+          "amount": 300000
+        },
+        {
+          "id": 985,
+          "amount": 1094
+        },
+        {
+          "id": 1369,
+          "amount": 6775
         },
         {
           "id": 18778,
-          "amount": 44
+          "amount": 2326
         },
         {
-          "id": 561,
-          "amount": 1813
+          "id": 987,
+          "amount": 1103
         },
         {
-          "id": 19043,
-          "amount": 11
-        },
-        {
-          "id": 24154,
-          "amount": 7
-        },
-        {
-          "id": 11714,
-          "amount": 5
-        },
-        {
-          "id": 11710,
-          "amount": 4
-        },
-        {
-          "id": 892,
-          "amount": 206
-        },
-        {
-          "id": 1373,
+          "id": 1247,
           "amount": 3
         },
         {
-          "id": 11704,
-          "amount": 3
+          "id": 1123,
+          "amount": 2218
         },
         {
-          "id": 886,
-          "amount": 874
+          "id": 1315,
+          "amount": 9101
         },
         {
-          "id": 563,
-          "amount": 126
+          "id": 995,
+          "amount": 31359346
         },
         {
-          "id": 1185,
-          "amount": 5
+          "id": 868,
+          "amount": 13500
         },
         {
-          "id": 1289,
-          "amount": 1
+          "id": 1897,
+          "amount": 6856
+        },
+        {
+          "id": 554,
+          "amount": 894200
+        },
+        {
+          "id": 1963,
+          "amount": 26640
         },
         {
           "id": 1452,
-          "amount": 2
+          "amount": 272
         },
         {
-          "id": 11724,
-          "amount": 3
+          "id": 556,
+          "amount": 170775
         },
         {
-          "id": 2999,
-          "amount": 250
+          "id": 1197,
+          "amount": 2230
         },
         {
-          "id": 11726,
+          "id": 816,
+          "amount": 252544
+        },
+        {
+          "id": 563,
+          "amount": 114130
+        },
+        {
+          "id": 565,
+          "amount": 99930
+        },
+        {
+          "id": 1462,
+          "amount": 252
+        },
+        {
+          "id": 2361,
+          "amount": 6824
+        },
+        {
+          "id": 2363,
+          "amount": 272
+        },
+        {
+          "id": 829,
+          "amount": 1438800
+        },
+        {
+          "id": 830,
+          "amount": 25
+        },
+        {
+          "id": 12158,
+          "amount": 26346
+        },
+        {
+          "id": 12159,
+          "amount": 79540
+        },
+        {
+          "id": 2366,
           "amount": 1
         }
       ]
@@ -364,12 +306,10 @@
       120
     ],
     "xp": [
-      1.4020031E7,
-      1.3034431E7,
-      1.4324731E7,
-      1.3362143E7,
+      1.5051231E7,
       1.3034431E7,
       1.3034431E7,
+      1.3705017E7,
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
@@ -387,11 +327,13 @@
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
-      1.4324731E7,
+      1.3034431E7,
+      1.3034431E7,
+      1.3034431E7,
       1.04273167E8
     ],
     "xpTracks": [
-      3893912.0,
+      6783838.0,
       0.0,
       0.0
     ],
@@ -537,7 +479,7 @@
     "spellBook": 0,
     "autoCastSpell": 0
   },
-  "dfsCharges": 0,
+  "dfsCharges": 2,
   "recoilHits": 0,
   "lodestone": [
     false,
@@ -569,6 +511,31 @@
   "KBDEntrance": false,
   "advlog": {
     "Activities": [
+      "I levelled up my Dungeoneering. I am now level 120.",
+      "I levelled up my Summoning. I am now level 99.",
+      "I levelled up my Construction. I am now level 99.",
+      "I levelled up my Hunter. I am now level 99.",
+      "I levelled up my Runecrafting. I am now level 99.",
+      "I levelled up my Farming. I am now level 99.",
+      "I levelled up my Slayer. I am now level 99.",
+      "I levelled up my Thieving. I am now level 99.",
+      "I levelled up my Agility. I am now level 99.",
+      "I levelled up my Herblore. I am now level 99.",
+      "I levelled up my Mining. I am now level 99.",
+      "I levelled up my Smithing. I am now level 99.",
+      "I levelled up my Crafting. I am now level 99.",
+      "I levelled up my Firemaking. I am now level 99.",
+      "I levelled up my Fishing. I am now level 99.",
+      "I levelled up my Fletching. I am now level 99.",
+      "I levelled up my Woodcutting. I am now level 99.",
+      "I levelled up my Cooking. I am now level 99.",
+      "I levelled up my Magic. I am now level 99.",
+      "I levelled up my Prayer. I am now level 99.",
+      "I levelled up my Ranged. I am now level 99.",
+      "I levelled up my Constitution. I am now level 99.",
+      "I levelled up my Strength. I am now level 99.",
+      "I levelled up my Defence. I am now level 99.",
+      "I levelled up my Attack. I am now level 99.",
       "I have completed a Easy task: Claim Wildstalker Helmet",
       "After opening a crystal chest, I found a Armadyl helmet.",
       "After opening a casket, I found a Dragon platebody ornament kit (sp).",
@@ -613,6 +580,31 @@
       "I levelled up my Attack. I am now level 99."
     ],
     "ActivitiesTime": [
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
+      "13:43:01",
       "01:38:06",
       "01:37:19",
       "01:30:40",
@@ -657,6 +649,31 @@
       "23:49:00"
     ],
     "ActivitiesDate": [
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
+      "14th July",
       "29th november",
       "29th november",
       "29th november",
@@ -918,7 +935,7 @@
   "strongHoldSecurityFloor3": false,
   "strongHoldSecurityFloor4": false,
   "connectedClanChannel": false,
-  "lastLoggedIn": 1732841043489,
+  "lastLoggedIn": 1752535984687,
   "petManager": {
     "petDetails": {},
     "npcId": 0,
@@ -2446,7 +2463,7 @@
   "hasEfficiency": false,
   "oldItemsLook": true,
   "developerMode": false,
-  "pouchMoney": 2161238,
+  "pouchMoney": 2161436,
   "warriorPoints": [
     0.0,
     0.0,
@@ -2455,7 +2472,7 @@
     0.0,
     0.0
   ],
-  "weight": 13.100000000000001,
+  "weight": 16.2,
   "lividFarm": {
     "produce": 0,
     "spellAmount": 0,
@@ -2484,15 +2501,20 @@
     ]
   },
   "dropLogs": {
-    "drops": [],
+    "drops": [
+      {
+        "id": 11286,
+        "amount": 3
+      }
+    ],
     "lowestValue": 1000000,
-    "lowestValueMessage": false,
+    "lowestValueMessage": true,
     "toggledMessage": false
   },
   "squealOfFortune": {
     "version": 1,
-    "lastDailySpinsGiveaway": 1732834056059,
-    "dailySpins": 0,
+    "lastDailySpinsGiveaway": 1752492911977,
+    "dailySpins": 1,
     "earnedSpins": 0,
     "boughtSpins": 0,
     "rewardSlot": -1,
@@ -2502,8 +2524,14 @@
     "component": 0,
     "wearing": false
   },
-  "treasureTrailsManager": {},
-  "lastMessage": "test",
+  "treasureTrailsManager": {
+    "currentClue": {
+      "details": "ANAGRAM_B_3",
+      "count": 4,
+      "dificulty": 1
+    }
+  },
+  "lastMessage": "i",
   "claimBox": false,
   "artisan": {
     "quick_Learner": false,
@@ -2562,7 +2590,7 @@
   },
   "lavaflowCrustsMined": 0,
   "isTeleporting": false,
-  "hitpoints": 482,
+  "hitpoints": 990,
   "pid": 0,
   "mapSize": 0,
   "run": true,
@@ -2570,7 +2598,7 @@
     "poisonDamage": 0,
     "poisonCount": 0
   },
-  "x": 3085,
-  "y": 3495,
+  "x": 3089,
+  "y": 3490,
   "plane": 0
 }

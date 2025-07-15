@@ -11,8 +11,8 @@ import java.lang.reflect.Type;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.rs.game.player.Player;
-import com.rs.utils.Logger;
+import com.rs.java.game.player.Player;
+import com.rs.java.utils.Logger;
 
 /**
 * @author Melvin 27 jan. 2020

@@ -5,63 +5,61 @@ import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import com.alex.store.Index;
-import com.rs.cache.Cache;
-import com.rs.cache.loaders.ItemDefinitions;
-import com.rs.cache.loaders.ItemsEquipIds;
-import com.rs.cache.loaders.NPCDefinitions;
-import com.rs.cache.loaders.ObjectDefinitions;
-import com.rs.cores.CoresManager;
-import com.rs.game.Region;
-import com.rs.game.World;
-import com.rs.game.area.AreaManager;
-import com.rs.game.cityhandler.CityEventHandler;
-import com.rs.game.item.ItemPluginLoader;
-import com.rs.game.item.ground.AutomaticGroundItem;
-import com.rs.game.map.MapBuilder;
-import com.rs.game.npc.NpcPluginLoader;
-import com.rs.game.npc.combat.CombatScriptsHandler;
-import com.rs.game.npc.drops.MobRewardRDT;
-import com.rs.game.objects.GlobalObjectAddition;
-import com.rs.game.objects.GlobalObjectDeletion;
-import com.rs.game.objects.ObjectPluginLoader;
-import com.rs.game.player.AccountCreation;
-import com.rs.game.player.Player;
-import com.rs.game.player.actions.combat.weaponscript.WeaponScriptsManager;
-import com.rs.game.player.actions.skills.fishing.FishingSpotsHandler;
-import com.rs.game.player.content.EdgevillePvPInstance;
-import com.rs.game.player.content.KillScoreBoard;
-import com.rs.game.player.content.clans.ClansManager;
-import com.rs.game.player.content.customshops.CustomStoreData;
-import com.rs.game.player.content.friendschat.FriendChatsManager;
-import com.rs.game.player.content.grandexchange.GrandExchange;
-import com.rs.game.player.content.grandexchange.LimitedGEReader;
-import com.rs.game.player.content.grandexchange.UnlimitedGEReader;
-import com.rs.game.player.controlers.ControlerHandler;
-import com.rs.game.player.cutscenes.CutscenesHandler;
-import com.rs.game.player.dialogues.DialogueHandler;
-import com.rs.game.worldlist.WorldList;
-import com.rs.net.discordbot.DiscordBot;
-import com.rs.net.ServerChannelHandler;
-import com.rs.net.sql.DatabaseUtility;
-import com.rs.utils.Credentials;
-import com.rs.utils.DTRank;
-import com.rs.utils.DisplayNames;
-import com.rs.utils.IPBanL;
-import com.rs.utils.ItemBonuses;
-import com.rs.utils.ItemExamines;
-import com.rs.utils.Logger;
-import com.rs.utils.MapArchiveKeys;
-import com.rs.utils.MapAreas;
-import com.rs.utils.MusicHints;
-import com.rs.utils.NPCBonuses;
-import com.rs.utils.NPCCombatDefinitionsL;
-import com.rs.utils.NPCExamines;
-import com.rs.utils.NPCSpawns;
-import com.rs.utils.ObjectSpawns;
-import com.rs.utils.ShopsHandler;
-import com.rs.utils.WeaponTypesLoader;
-import com.rs.utils.Weights;
-import com.rs.utils.huffman.Huffman;
+import com.rs.core.cache.Cache;
+import com.rs.core.cache.defintions.ItemDefinitions;
+import com.rs.core.cache.defintions.ItemsEquipIds;
+import com.rs.core.cache.defintions.NPCDefinitions;
+import com.rs.core.cache.defintions.ObjectDefinitions;
+import com.rs.core.thread.CoresManager;
+import com.rs.java.game.Region;
+import com.rs.java.game.World;
+import com.rs.java.game.area.AreaManager;
+import com.rs.java.game.cityhandler.CityEventHandler;
+import com.rs.java.game.item.ItemPluginLoader;
+import com.rs.java.game.item.ground.AutomaticGroundItem;
+import com.rs.java.game.map.MapBuilder;
+import com.rs.java.game.npc.NpcPluginLoader;
+import com.rs.java.game.npc.combat.CombatScriptsHandler;
+import com.rs.kotlin.game.npc.drops.DropTablesSetup;
+import com.rs.java.game.objects.GlobalObjectAddition;
+import com.rs.java.game.objects.GlobalObjectDeletion;
+import com.rs.java.game.objects.ObjectPluginLoader;
+import com.rs.java.game.player.AccountCreation;
+import com.rs.java.game.player.Player;
+import com.rs.java.game.player.actions.combat.weaponscript.WeaponScriptsManager;
+import com.rs.java.game.player.actions.skills.fishing.FishingSpotsHandler;
+import com.rs.java.game.player.content.EdgevillePvPInstance;
+import com.rs.java.game.player.content.KillScoreBoard;
+import com.rs.java.game.player.content.clans.ClansManager;
+import com.rs.java.game.player.content.customshops.CustomStoreData;
+import com.rs.java.game.player.content.friendschat.FriendChatsManager;
+import com.rs.java.game.player.content.grandexchange.GrandExchange;
+import com.rs.java.game.player.content.grandexchange.LimitedGEReader;
+import com.rs.java.game.player.content.grandexchange.UnlimitedGEReader;
+import com.rs.java.game.player.controlers.ControlerHandler;
+import com.rs.java.game.player.cutscenes.CutscenesHandler;
+import com.rs.java.game.player.dialogues.DialogueHandler;
+import com.rs.java.game.worldlist.WorldList;
+import com.rs.core.networking.ServerChannelHandler;
+import com.rs.java.utils.Credentials;
+import com.rs.java.utils.DTRank;
+import com.rs.java.utils.DisplayNames;
+import com.rs.java.utils.IPBanL;
+import com.rs.java.utils.ItemBonuses;
+import com.rs.java.utils.ItemExamines;
+import com.rs.java.utils.Logger;
+import com.rs.java.utils.MapArchiveKeys;
+import com.rs.java.utils.MapAreas;
+import com.rs.java.utils.MusicHints;
+import com.rs.java.utils.NPCBonuses;
+import com.rs.java.utils.NPCCombatDefinitionsL;
+import com.rs.java.utils.NPCExamines;
+import com.rs.java.utils.NPCSpawns;
+import com.rs.java.utils.ObjectSpawns;
+import com.rs.java.utils.ShopsHandler;
+import com.rs.java.utils.WeaponTypesLoader;
+import com.rs.java.utils.Weights;
+import com.rs.java.utils.huffman.Huffman;
 
 public final class Launcher {
 
@@ -114,7 +112,8 @@ public final class Launcher {
 		Credentials.init();
 		WeaponTypesLoader.loadDefinitions();
 		AutomaticGroundItem.initialize();
-		MobRewardRDT.getInstance().structureNode();
+		//MobRewardRDT.getInstance().structureNode();
+		DropTablesSetup.setup();
 		WorldList.init();
 		KillScoreBoard.init();
 		EdgevillePvPInstance.buildInstance();
@@ -134,14 +133,10 @@ public final class Launcher {
 			System.exit(1);
 			return;
 		}
-		if (Settings.discordEnabled)
-			discord = new DiscordBot();
 		Logger.log("Economy Mode",
 				Settings.ECONOMY_MODE == 2 ? "Full Spawn" : Settings.ECONOMY_MODE == 1 ? "Half Economy" : "Full Economy");
 		Logger.log("Debug", Settings.DEBUG ? "Debug is activated." : "Debug is inactived.");
 		Logger.log("Status", Settings.SERVER_NAME + " is now online.");
-		if (Settings.sqlQueries)
-			DatabaseUtility.init();
 		if (!Settings.DEBUG) {
 			//discord.getChannelByName("server-status").sendMessage("Avalon is now online!");
 		}
@@ -274,11 +269,4 @@ public final class Launcher {
 		}
 
 	}
-
-	private static DiscordBot discord;
-
-	public static DiscordBot getDiscordBot() {
-		return discord;
-	}
-
 }

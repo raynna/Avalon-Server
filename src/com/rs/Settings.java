@@ -2,7 +2,7 @@ package com.rs;
 
 import java.math.BigInteger;
 
-import com.rs.game.WorldTile;
+import com.rs.java.game.WorldTile;
 
 public final class Settings {
 
