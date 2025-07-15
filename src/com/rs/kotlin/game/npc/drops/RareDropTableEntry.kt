@@ -1,12 +1,11 @@
 package com.rs.kotlin.game.npc.drops
 
 import com.rs.core.cache.defintions.ItemDefinitions
-import com.rs.java.game.item.ItemId
 import com.rs.java.game.player.Player
 import java.util.concurrent.ThreadLocalRandom
 
 class RareDropTableEntry : DropEntry(-1, 1, 1) {
-    private class WeightedDropEntry(itemId: Int, min: Int, max: Int, val weight: Int) : DropEntry(itemId, min, max)
+    private class WeightedDropEntry(itemId: Int, min: Int, max: Int, val weight: Double) : DropEntry(itemId, min, max)
 
     private val entries: MutableList<WeightedDropEntry> = ArrayList()
 
@@ -16,17 +15,22 @@ class RareDropTableEntry : DropEntry(-1, 1, 1) {
     }
 
     private fun initTable() {
-        add("nothing", numerator = 1, denominator = 69)
-        add("uncut sapphire", numerator = 1, denominator = 155)
-        add("uncut emerald", numerator = 1, denominator = 309)
-        add("loop half of key", numerator = 1, denominator = 378)
-        add("tooth half of key", numerator = 1, denominator = 378)
-        add(ItemId.COINS, min = 3000, max = 3000, numerator = 1, denominator = 390)
-        add("uncut ruby", numerator = 1, denominator = 618)
-        add("runite bar", numerator = 1, denominator = 1638)
-        add("chaos talisman", numerator = 1, denominator = 1649)
-        add("nature talisman", numerator = 1, denominator = 1649)
-        add("uncut diamond", numerator = 1, denominator = 2473)
+        add("nothing", numerator = 9, denominator = 64)
+        add("uncut dragonstone", numerator = 8, denominator = 64)
+        add("loop half of a key", numerator = 6, denominator = 64)
+        add("tooth half of a key", numerator = 6, denominator = 64)
+        add("rune platelegs", numerator = 5, denominator = 64)
+        add("magic logs#noted", min = 65, max = 85, numerator = 4, denominator = 64)
+        add("rune arrowheads", min = 110, max = 1140, numerator = 4, denominator = 64)
+        add("soft clay#noted", min = 35, max = 45, numerator = 4, denominator = 64)
+        add("teak plank#noted", min = 45, max = 55, numerator = 2, denominator = 64)
+        add("dragon bones#noted", min = 35, max = 45, numerator = 2, denominator = 64)
+        add("dragon helm", numerator = 2, denominator = 64)
+        add("dragon longsword", numerator = 1, denominator = 128)
+        add("molten glass#noted", min = 45, max = 55, numerator = 4, denominator = 64)
+        add("rune ore#noted", min = 25, max = 35, numerator = 4, denominator = 64)
+        add("raw lobster#noted", min = 135, max = 165, numerator = 1, denominator = 64)
+        add("super-rare", numerator = 4, denominator = 64)
     }
 
     fun add(
@@ -40,9 +44,12 @@ class RareDropTableEntry : DropEntry(-1, 1, 1) {
 
         val itemId = when (item) {
             is Int -> item
-            is String -> {
-                if (item.equals("nothing", ignoreCase = true)) -2
-                else ItemDefinitions.searchItems(item, 1).firstOrNull()?.id
+            is String -> when {
+                item.equals("nothing", ignoreCase = true) -> -2
+                item.equals("super-rare", ignoreCase = true) -> -3
+                else -> {
+                    ItemDefinitions.searchItems(item, 1).firstOrNull()?.id
+                }
             }
             else -> null
         }
@@ -51,45 +58,51 @@ class RareDropTableEntry : DropEntry(-1, 1, 1) {
             return
         }
 
-        var weight = Math.round(numerator.toDouble() / denominator * WEIGHT_BASE).toInt()
-        if (weight <= 0) weight = 1
+        var weight = numerator.toDouble() / denominator
+        if (weight < 0) weight = 0.0
         entries.add(WeightedDropEntry(itemId, min, max, weight))
     }
 
 
     override fun roll(player: Player?): Drop? {
-
-        val randomCheck = ThreadLocalRandom.current().nextInt(LAND_DENOMINATOR)
-        if (randomCheck >= LAND_CHANCE) {
-            return null
-        }
-
         val filteredEntries = if (player?.hasRingOfWealth() == true) {
-            entries.filter { it.itemId != -2 } // Exclude "nothing"
+            entries.filter { it.itemId != -2 }//remove nothing from table if wearin wealth
         } else {
             entries
         }
 
 
         val totalWeight = filteredEntries.sumOf { it.weight }
-        if (totalWeight == 0) {
+        if (totalWeight == 0.0) {
             return null
         }
+        for (entry in filteredEntries) {
+            val name = if (entry.itemId == -2) "nothing" else ItemDefinitions.getItemDefinitions(entry.itemId).name
+            println("  -> $name (id=${entry.itemId}, weight=${entry.weight})")
+        }
 
-        val roll = ThreadLocalRandom.current().nextInt(totalWeight) + 1
+        val roll = ThreadLocalRandom.current().nextDouble(totalWeight)
 
-        var cumulative = 0
+        var cumulative = 0.0
         for ((index, entry) in filteredEntries.withIndex()) {
             cumulative += entry.weight
-            if (roll <= cumulative) {
-                if (entry.itemId == -2) {
-                    return null
-                } else {
-                    val gemTable = DropTablesSetup.gemDropTable.roll(player)
-                    if (gemTable != null) {
-                        return gemTable;
+            if (roll < cumulative) {
+                return when (entry.itemId) {
+                    -2 -> {
+                        println("[RareDropTable] Rolled 'nothing'")
+                        null
                     }
-                    return entry.roll(player)
+                    -3 -> {
+                        println("[RareDropTable] Rolled 'super-table' entry, delegating to SuperRareTable.")
+                        val superTable = DropTablesSetup.superRareTable.roll(player)
+                        superTable
+                    }
+                    else -> {
+                        val drop = entry.roll(player)
+                        val name = ItemDefinitions.getItemDefinitions(entry.itemId).name
+                        println("[RareDropTable] Result: $name (id=${entry.itemId})")
+                        drop
+                    }
                 }
             }
         }
@@ -97,8 +110,6 @@ class RareDropTableEntry : DropEntry(-1, 1, 1) {
     }
 
     companion object {
-        private const val LAND_CHANCE = 2
-        private const val LAND_DENOMINATOR = 128
         private const val WEIGHT_BASE = 32000
     }
 }

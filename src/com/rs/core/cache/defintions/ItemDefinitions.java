@@ -154,9 +154,25 @@ ItemDefinitions {
             }
         }
 
-        matched.sort(Comparator.comparingInt(def -> getMatchScore(input, def.name.toLowerCase())));
+        matched.sort(Comparator
+                .comparingInt((ItemDefinitions def) -> getMatchScore(input, def.name.toLowerCase()))
+                .thenComparingInt(def -> {
+                    // Prefer unnoted stackable items
+                    boolean isPreferred = def.isStackable() && def.getCertId() == -1;
+                    return isPreferred ? 0 : 1;
+                }));
 
         List<ItemDefinitions> results = new ArrayList<>();
+
+        if (input.equals("coins")) {
+            ItemDefinitions coinsDef = ItemDefinitions.getItemDefinitions(995);
+            if (coinsDef != null) {
+                results.add(coinsDef);
+                if (results.size() >= maxResults)
+                    return results;
+            }
+        }
+
         for (ItemDefinitions def : matched) {
             if (noted) {
                 int certId = def.getCertId();
@@ -177,6 +193,7 @@ ItemDefinitions {
 
         return results;
     }
+
 
 
     public static final ItemDefinitions getItemDefinitions(int itemId) {

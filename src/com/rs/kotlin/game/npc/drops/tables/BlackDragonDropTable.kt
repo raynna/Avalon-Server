@@ -8,6 +8,7 @@ import com.rs.kotlin.game.npc.drops.DropTable.Companion.BLUE
 import com.rs.kotlin.game.npc.drops.DropTable.Companion.CRIMSON
 import com.rs.kotlin.game.npc.drops.DropTable.Companion.GOLD
 import com.rs.kotlin.game.npc.drops.DropTable.Companion.GREEN
+import com.rs.kotlin.game.npc.drops.DropTablesSetup.gemDropTable
 import com.rs.kotlin.game.npc.drops.DropTablesSetup.rareDropTable
 import java.util.concurrent.ThreadLocalRandom
 
@@ -57,10 +58,10 @@ object BlackDragonDropTable {
                 tertiaryDrop(
                     item = "black dragon egg",
                     probability = 1,
-                    chance = 100,
+                    chance = 200,
                     condition = { player -> player?.skills?.getLevelForXp(Skills.SUMMONING) != 99 })
-                tertiaryDrop(item = "draconic visage", 1, probability = 1, chance = 500)
-                tertiaryDrop(item = "starved ancient effigy", 1, probability = 1, chance = 128)
+                tertiaryDrop(item = "draconic visage", 1, probability = 1, chance = 10000)
+                tertiaryDrop(item = "starved ancient effigy", 1, probability = 1, chance = 18000)
             }
 
             percentDrops {
@@ -70,7 +71,7 @@ object BlackDragonDropTable {
                 percentDrop("blue charm", amount = 1, percent = 1.34)
             }
 
-            specialDrops {
+            /*specialDrops {
                 mainDrop(
                     item = "banana",
                     min = 1, max = 2, probability = 1, chance = 16,
@@ -85,12 +86,12 @@ object BlackDragonDropTable {
                             pineapple.id
                         drop.extraDrop = Drop(pineappleId, pineappleAmount)
                     })
-            }
+            }*/
 
             rareTable { player, drops ->
-                val rare = rareDropTable.roll(player)
-                if (rare != null) {
-                    drops.add(rare)
+                val gem = gemDropTable.roll(player)
+                if (gem != null) {
+                    drops.add(gem)
                     true
                 } else {
                     false

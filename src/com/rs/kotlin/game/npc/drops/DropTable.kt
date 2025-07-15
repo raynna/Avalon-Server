@@ -117,7 +117,8 @@ class DropTable(private val rolls: Int = 1) {
             }
 
             DropType.MAIN, DropType.SPECIAL -> {
-                val weight = if (numerator > 0 && denominator > 0) (1024 * numerator) / denominator else 0
+                var weight = Math.round(numerator.toDouble() / denominator).toDouble()
+                if (weight <= 0) weight = 1.0
 
                 val entry = if (customLogic != null) {
                     object : WeightedDropEntry(id, min, max, weight) {
@@ -208,9 +209,9 @@ class DropTable(private val rolls: Int = 1) {
 
     private fun rollWeighted(entries: List<WeightedDropEntry>): WeightedDropEntry? {
         val totalWeight = entries.sumOf { it.weight }
-        if (totalWeight == 0) return null
-        val rand = ThreadLocalRandom.current().nextInt(totalWeight)
-        var acc = 0
+        if (totalWeight == 0.0) return null
+        val rand = ThreadLocalRandom.current().nextDouble(totalWeight)
+        var acc = 0.0
         for (entry in entries) {
             acc += entry.weight
             if (rand < acc) return entry

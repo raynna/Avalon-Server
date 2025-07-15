@@ -5,7 +5,7 @@ import com.rs.java.game.player.Player
 import java.util.concurrent.ThreadLocalRandom
 
 class GemTableEntry : DropEntry(-1, 1, 1) {
-    private class WeightedDropEntry(itemId: Int, min: Int, max: Int, val weight: Int) : DropEntry(itemId, min, max)
+    private class WeightedDropEntry(itemId: Int, min: Int, max: Int, val weight: Double) : DropEntry(itemId, min, max)
 
     private val entries: MutableList<WeightedDropEntry> = ArrayList()
 
@@ -15,16 +15,18 @@ class GemTableEntry : DropEntry(-1, 1, 1) {
     }
 
     private fun initTable() {
-        add("nothing", numerator = 1, denominator = 2)
-        add("uncut sapphire", numerator = 1, denominator = 4)
-        add("uncut emerald", numerator = 1, denominator = 8)
-        add("chaos talisman", numerator = 1, denominator = 42)
-        add("nature talisman", numerator = 1, denominator = 42)
-        add("uncut diamond", numerator = 1, denominator = 64)
-        add("rune javelin", min = 5, numerator = 1, denominator = 64)
-        add("loop half of key", min = 1, numerator = 1, denominator = 128)
-        add("tooth half of key", min = 1, numerator = 1, denominator = 128)
-        add("mega-rare", min = 1, numerator = 1, denominator = 128)//megarare
+        add("nothing", numerator = 4, denominator = 128)
+        add("coins", min = 250, max = 499, numerator = 59, denominator = 128)
+        add("uncut sapphire", numerator = 31, denominator = 128)
+        add("uncut emerald", numerator = 16, denominator = 128)
+        add("uncut ruby", numerator = 8, denominator = 128)
+        add("uncut diamond", numerator = 2, denominator = 128)
+        add("rune javelin", min = 5, numerator = 4, denominator = 128)
+        add("chaos talisman", numerator = 3, denominator = 128)//TODO ADD NATURE IF NOT UNDERGROUND
+        add("uncut dragonstone", numerator = 1, denominator = 128)
+        add("tooth half of key", numerator = 1, denominator = 128)
+        add("loop half of key", numerator = 1, denominator = 128)
+        add("rare-table", numerator = 1, denominator = 128)//rare table
     }
 
     fun add(
@@ -40,7 +42,7 @@ class GemTableEntry : DropEntry(-1, 1, 1) {
             is Int -> item
             is String -> when {
                 item.equals("nothing", ignoreCase = true) -> -2
-                item.equals("mega-rare", ignoreCase = true) -> -3
+                item.equals("rare-table", ignoreCase = true) -> -3
                 else -> {
                     val def = ItemDefinitions.searchItems(item, 1).firstOrNull()
                     if (def == null) {
@@ -58,9 +60,8 @@ class GemTableEntry : DropEntry(-1, 1, 1) {
         if (itemId == null) {
             return
         }
-
-        var weight = Math.round(numerator.toDouble() / denominator * WEIGHT_BASE).toInt()
-        if (weight <= 0) weight = 1
+        var weight = numerator.toDouble() / denominator
+        if (weight < 0) weight = 0.0
         entries.add(WeightedDropEntry(itemId, min, max, weight))
     }
 
@@ -80,30 +81,34 @@ class GemTableEntry : DropEntry(-1, 1, 1) {
         }
 
         val totalWeight = filteredEntries.sumOf { it.weight }
-        if (totalWeight == 0) {
+        if (totalWeight == 0.0) {
             return null
         }
+        for (entry in filteredEntries) {
+            val name = if (entry.itemId == -2) "nothing" else ItemDefinitions.getItemDefinitions(entry.itemId).name
+            println("  -> $name (id=${entry.itemId}, weight=${entry.weight})")
+        }
 
-        val roll = ThreadLocalRandom.current().nextInt(totalWeight) + 1
+        val roll = ThreadLocalRandom.current().nextDouble(totalWeight)
 
-        var cumulative = 0
+        var cumulative = 0.0
         for ((index, entry) in filteredEntries.withIndex()) {
             cumulative += entry.weight
-            if (roll <= cumulative) {
+            if (roll < cumulative) {
                 return when (entry.itemId) {
                     -2 -> {
                         println("[GemTable] Rolled 'nothing'")
                         null
                     }
                     -3 -> {
-                        println("[GemTable] Rolled 'mega-rare' entry, delegating to MegaRareTable.")
-                        val megaRare = DropTablesSetup.megaRareTable.roll(player)
-                        println("[GemTable] MegaRare result: ${megaRare?.itemId ?: "null"}")
-                        megaRare
+                        println("[GemTable] Rolled 'rare-table' entry, delegating to RareTable.")
+                        val rareTable = DropTablesSetup.rareDropTable.roll(player)
+                        rareTable
                     }
                     else -> {
                         val drop = entry.roll(player)
-                        println("[GemTable] Rolled normal item: ${drop?.itemId ?: "null"}")
+                        val name = ItemDefinitions.getItemDefinitions(entry.itemId).name
+                        println("[GemTable] Result: $name (id=${entry.itemId})")
                         drop
                     }
                 }
@@ -116,6 +121,6 @@ class GemTableEntry : DropEntry(-1, 1, 1) {
     companion object {
         private const val LAND_CHANCE = 3
         private const val LAND_DENOMINATOR = 128
-        private const val WEIGHT_BASE = 32000
+        private const val WEIGHT_BASE = 128
     }
 }

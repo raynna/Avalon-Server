@@ -9,14 +9,14 @@ object DropTablesSetup {
         private set
     lateinit var gemDropTable: GemTableEntry
         private set
-    lateinit var megaRareTable: MegaRareTableEntry
+    lateinit var superRareTable: SuperRareTableEntry
         private set
 
     @JvmStatic
     fun setup() {
         rareDropTable = RareDropTableEntry()
         gemDropTable = GemTableEntry()
-        megaRareTable = MegaRareTableEntry()
+        superRareTable = SuperRareTableEntry()
         val blackDragon = BlackDragonDropTable.table
         registerDropTable(blackDragon, 50, 52, 54)
 

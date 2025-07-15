@@ -28,6 +28,7 @@ import com.rs.java.game.minigames.lividfarm.LividFarmControler;
 import com.rs.java.game.minigames.lividfarm.LividStore.Spell;
 import com.rs.java.game.minigames.pest.CommendationExchange;
 import com.rs.java.game.npc.NPC;
+import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager;
 import com.rs.kotlin.game.npc.drops.Drop;
 import com.rs.kotlin.game.npc.drops.DropTable;
 import com.rs.kotlin.game.npc.drops.DropTableRegistry;
@@ -607,6 +608,31 @@ public final class Commands {
                 case "pvp":
                 case "edgepvp":
                     EdgevillePvPControler.enterPVP(player);
+                    return true;
+                case "resetclues":
+                    player.getTreasureTrailsManager().resetCurrentClues();//all clues
+                    player.message("You have reset all your clue scrolls.");
+                    return true;
+                case "resetclue":
+                    int clueLevel = Integer.parseInt(cmd[1]);
+                    if (clueLevel > TreasureTrailsManager.LEVEL.length) {
+                        player.message("Invalid cluescroll level");
+                        return true;
+                    }
+                    player.getTreasureTrailsManager().resetCurrentClues(Integer.parseInt(cmd[1]));//level
+                    player.message("You have reset your " + TreasureTrailsManager.LEVEL[clueLevel] + " clue scroll");
+                    return true;
+                case "clues":
+                    if (player.getInventory().containsOneItem(TreasureTrailsManager.CLUE_SCROLLS)) {
+                        player.message("You already have all the cluescrolls");
+                        return true;
+                    }
+                    for (int i : TreasureTrailsManager.CLUE_SCROLLS) {
+                        if (player.getInventory().containsOneItem(i))
+                            continue;
+                        player.getInventory().addItem(new Item(i, 1));
+                    }
+                    player.message("All clue scrolls has been added to your inventory.");
                     return true;
                 case "ancient":
                 case "ancients":

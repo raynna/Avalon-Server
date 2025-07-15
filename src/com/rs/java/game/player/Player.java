@@ -3183,7 +3183,6 @@ public class Player extends Entity {
         if (World.containsPlayer(username))
             World.removePlayer(this);
         AccountCreation.savePlayer(this);
-        KillScoreBoard.save();
         // System.out.println(getDisplayName() + " has logged off, " +
         // Utils.GrabCountryDayTimeMonth(false)
         // + " | Current online: " + World.getPlayers().size());

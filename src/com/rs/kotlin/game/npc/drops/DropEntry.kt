@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom
 open class DropEntry @JvmOverloads constructor(
     @JvmField var itemId: Int,
     @JvmField protected var minAmount: Int,
-    protected var maxAmount: Int,
+    private var maxAmount: Int,
     protected var always: Boolean = false
 ) {
     private var extraDropEntry: DropEntry? = null

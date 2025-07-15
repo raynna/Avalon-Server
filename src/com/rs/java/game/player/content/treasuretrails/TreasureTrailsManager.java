@@ -42,22 +42,43 @@ public class TreasureTrailsManager implements Serializable {
 
 	private static final int PUZZLE_SIZE = 25;
 
-	private Clue currentClue;
-	private Clue[] currentClues;// unused, old code
+	private Clue[] currentClues;
+	private Clue[] activeClues;
 
 	private transient int cluePhase;
 	protected transient Player player;
 	private transient List<Item> pieces;
 
 	public TreasureTrailsManager() {
+		currentClues = new Clue[4];
 	}
 
 	public void setPlayer(Player player) {
 		this.player = player;
-		if (currentClues != null) {
-			currentClues = null;
-			currentClue = null;
+		if (currentClues == null) {
+			currentClues = new Clue[4];
 		}
+	}
+
+	public void setCurrentClue(int level) {
+		currentClues[level] = new Clue(generateClueDetails(level), generateClueSize(level), level);
+	}
+
+	public Clue getCurrentClue(int level) {
+		if (level < 0 || level >= currentClues.length)
+			return null;
+		if (player.getInventory().getNumberOf(CLUE_SCROLLS[level]) > 0)
+			return currentClues[level];
+		return null;
+	}
+
+	public Clue getCurrentClue() {
+		for (int level = 0; level < CLUE_SCROLLS.length; level++) {
+			if (player.getInventory().getNumberOf(CLUE_SCROLLS[level]) > 0 && currentClues[level] != null) {
+				return currentClues[level];
+			}
+		}
+		return null;
 	}
 
 	public int getPhase() {
@@ -114,73 +135,73 @@ public class TreasureTrailsManager implements Serializable {
 		return -1;
 	}
 
-	public void setNextClue(int source) {
-		int lastPhase = (currentClue.details.type == COORDINATE && currentClue.dificulty >= HARD) ? 2
-				: (currentClue.details.type == EMOTE ? 5 : 0); // last phase(5) get's set by the dialog
-
+	public void setNextClue(int level, int source) {
+		Clue lastClue = currentClues[level];
+		int lastPhase = (getCurrentClue().details.type == COORDINATE && getCurrentClue().dificulty >= HARD) ? 2
+				: (getCurrentClue().details.type == EMOTE ? 5 : 0); // last phase(5) get's set by the dialog
+		int clueId = CLUE_SCROLLS[lastClue.dificulty];
 		if (cluePhase == lastPhase) {
 			cluePhase = 0;
 			pieces = null;
-
 			if (source == SOURCE_DIG) {
-				player.getInventory().deleteItem(CLUE_SCROLLS[currentClue.dificulty], 1);
-				if (!currentClue.isLast()) {
-					currentClue.count--;
-					currentClue.details = generateClueDetails(currentClue.dificulty);
-					player.getInventory().addItem(SCROLL_BOXES[currentClue.dificulty], 1);
-					player.getDialogueManager().startDialogue("SimpleItemMessage", SCROLL_BOXES[currentClue.dificulty],
+				player.getInventory().deleteItem(clueId, 1);
+				if (!lastClue.isLast()) {
+					lastClue.count--;
+					lastClue.details = generateClueDetails(lastClue.dificulty);
+					player.getInventory().addItem(SCROLL_BOXES[lastClue.dificulty], 1);
+					player.getDialogueManager().startDialogue("SimpleItemMessage", SCROLL_BOXES[lastClue.dificulty],
 							"You've found a scroll box!");
 					player.message("You've found a scroll box!");
 				} else {
-					player.getInventory().addItem(REWARD_CASKETS[currentClue.dificulty], 1);
+					player.getInventory().addItem(REWARD_CASKETS[lastClue.dificulty], 1);
 					player.getDialogueManager().startDialogue("SimpleItemMessage", 3600,
 							"You've found a reward casket!");
 					player.message("You've found a reward casket!");
 					// openReward(currentClue.dificulty);
-					currentClue = null;
+					currentClues = null;
 				}
 			} else if (source == SOURCE_NPC || source == SOURCE_PUZZLENPC) {
-				if (!currentClue.isLast())
-					currentClue.count--;
-				int id = currentClue.details.id;
-				currentClue.details = generateClueDetails(currentClue.dificulty);
-				player.getDialogueManager().startDialogue("SimpleItemMessage", CLUE_SCROLLS[currentClue.dificulty],
+				if (!lastClue.isLast())
+					lastClue.count--;
+				int id = lastClue.details.id;
+				lastClue.details = generateClueDetails(lastClue.dificulty);
+				player.getDialogueManager().startDialogue("SimpleItemMessage", clueId,
 						NPCDefinitions.getNPCDefinitions(id).getName() + " has given you another clue scroll.");
 				player.message(NPCDefinitions.getNPCDefinitions(id).getName() + " has given you another clue scroll.");
 			} else if (source == SOURCE_EMOTE) {
-				player.getInventory().deleteItem(CLUE_SCROLLS[currentClue.dificulty], 1);
-				player.getInventory().addItem(SCROLL_BOXES[currentClue.dificulty], 1);
-				if (!currentClue.isLast())
-					currentClue.count--;
-				currentClue.details = generateClueDetails(currentClue.dificulty);
-				player.getDialogueManager().startDialogue("SimpleItemMessage", SCROLL_BOXES[currentClue.dificulty],
+				player.getInventory().deleteItem(clueId, 1);
+				player.getInventory().addItem(SCROLL_BOXES[lastClue.dificulty], 1);
+				if (!lastClue.isLast())
+					lastClue.count--;
+				lastClue.details = generateClueDetails(lastClue.dificulty);
+				player.getDialogueManager().startDialogue("SimpleItemMessage", SCROLL_BOXES[lastClue.dificulty],
 						"You've been given a scroll box!");
 				player.message("You've been given a scroll box!");
 			} else if (source == SOURCE_OBJECT) {
-				player.getInventory().deleteItem(CLUE_SCROLLS[currentClue.dificulty], 1);
-				if (!currentClue.isLast()) {
-					currentClue.count--;
-					currentClue.details = generateClueDetails(currentClue.dificulty);
-					player.getInventory().addItem(SCROLL_BOXES[currentClue.dificulty], 1);
-					player.getDialogueManager().startDialogue("SimpleItemMessage", CLUE_SCROLLS[currentClue.dificulty],
+				player.getInventory().deleteItem(CLUE_SCROLLS[lastClue.dificulty], 1);
+				if (!lastClue.isLast()) {
+					lastClue.count--;
+					lastClue.details = generateClueDetails(lastClue.dificulty);
+					player.getInventory().addItem(SCROLL_BOXES[lastClue.dificulty], 1);
+					player.getDialogueManager().startDialogue("SimpleItemMessage", CLUE_SCROLLS[lastClue.dificulty],
 							"You've found another clue!");
 					player.message("You've found another clue!");
 				} else {
-					player.getInventory().addItem(REWARD_CASKETS[currentClue.dificulty], 1);
+					player.getInventory().addItem(REWARD_CASKETS[lastClue.dificulty], 1);
 					player.getDialogueManager().startDialogue("SimpleItemMessage", 3600,
 							"You've found a reward casket!");
 					player.message("You've found a reward casket!");
 					// openReward(currentClue.dificulty);
-					currentClue = null;
+					currentClues = null;
 				}
 			} else {
 				throw new RuntimeException("UNKNOWN_SOURCE:" + source);
 			}
 		} else {
-			if (cluePhase == 0 && (currentClue.details.type == COORDINATE || currentClue.details.type == EMOTE)
-					&& currentClue.dificulty >= HARD) {
+			if (cluePhase == 0 && (lastClue.details.type == COORDINATE || lastClue.details.type == EMOTE)
+					&& lastClue.dificulty >= HARD) {
 				boolean inWilderness = player.getControlerManager().getControler() instanceof WildernessControler;
-				boolean isCoordinateClue = currentClue.details.type == COORDINATE;
+				boolean isCoordinateClue = lastClue.details.type == COORDINATE;
 				final ClueNPC npc = new ClueNPC(player,
 						inWilderness ? isCoordinateClue ? 1007 : 5144 : isCoordinateClue ? 1264 : 5145,
 						Utils.getFreeTile(player, 1), -1, true);
@@ -194,8 +215,8 @@ public class TreasureTrailsManager implements Serializable {
 					}
 				});
 				cluePhase = 1;
-			} else if (((cluePhase == 0 && currentClue.dificulty < HARD)
-					|| (cluePhase == 2 && currentClue.dificulty >= HARD)) && currentClue.details.type == EMOTE) {
+			} else if (((cluePhase == 0 && lastClue.dificulty < HARD)
+					|| (cluePhase == 2 && lastClue.dificulty >= HARD)) && lastClue.details.type == EMOTE) {
 				final NPC npc = new Ugi(player, 5141, Utils.getFreeTile(player, 1), -1, true);
 				npc.gfx(new Graphics(74));
 				WorldTasksManager.schedule(new WorldTask() {
@@ -204,7 +225,7 @@ public class TreasureTrailsManager implements Serializable {
 						npc.faceEntity(player);
 					}
 				});
-				cluePhase = ((int[]) currentClue.details.parameters[0]).length == 1 ? 4 : 3;
+				cluePhase = ((int[]) lastClue.details.parameters[0]).length == 1 ? 4 : 3;
 			} else if (cluePhase == 3) {
 				cluePhase = 4;
 			}
@@ -215,8 +236,12 @@ public class TreasureTrailsManager implements Serializable {
 		return getScrollLevel(id) != -1;
 	}
 
-	public void resetCurrentClue() {
-		currentClue = null;
+	public void resetCurrentClues() {
+		currentClues = new Clue[4];
+	}
+
+	public void resetCurrentClues(int level) {
+		currentClues[level] =  null;
 	}
 
 	/*
@@ -232,10 +257,6 @@ public class TreasureTrailsManager implements Serializable {
 		return false;
 	}
 
-	public void setCurrentClue(int level) {
-		currentClue = new Clue(generateClueDetails(level), generateClueSize(level), level);
-	}
-
 	public boolean useItem(Item item, int slot) {
 		int level = getScrollboxLevel(item.getId());
 		if (level != -1) {
@@ -247,40 +268,42 @@ public class TreasureTrailsManager implements Serializable {
 		}
 		level = getScrollLevel(item.getId());
 		if (level != -1) {
-			if (currentClue == null)
+			if (currentClues == null)
+				currentClues = new Clue[4];
+			if (currentClues[level] == null || currentClues[level].dificulty != level)
 				setCurrentClue(level);
-			if (currentClue.details.type == SIMPLE || currentClue.details.type == ANAGRAM) {
+			if (currentClues[level].details.type == SIMPLE || currentClues[level].details.type == ANAGRAM) {
 				player.getInterfaceManager().sendInterface(345);
-				int offset = (8 - currentClue.details.parameters.length) / 2;
+				int offset = (8 - currentClues[level].details.parameters.length) / 2;
 				for (int i = 0; i < 8; i++)
 					player.getPackets().sendIComponentText(345, i + 1, "");
-				for (int i = currentClue.details.type == EMOTE ? 2 : 0; i < currentClue.details.parameters.length; i++)
+				for (int i = currentClues[level].details.type == EMOTE ? 2 : 0; i < currentClues[level].details.parameters.length; i++)
 					player.getPackets().sendIComponentText(345, i + 1 + offset,
-							(String) currentClue.details.parameters[i]);
-			} else if (currentClue.details.type == EMOTE) {
+							(String) currentClues[level].details.parameters[i]);
+			} else if (currentClues[level].details.type == EMOTE) {
 				player.getInterfaceManager().sendInterface(345);
 				for (int i = 0; i < 8; i++)
 					player.getPackets().sendIComponentText(345, i + 1, "");
-				for (int i = 2; i < currentClue.details.parameters.length; i++)
-					player.getPackets().sendIComponentText(345, i, (String) currentClue.details.parameters[i]);
-			} else if (currentClue.details.type == MAP) {
-				player.getInterfaceManager().sendInterface((int) currentClue.details.parameters[0]);
-			} else if (currentClue.details.type == COORDINATE) {
+				for (int i = 2; i < currentClues[level].details.parameters.length; i++)
+					player.getPackets().sendIComponentText(345, i, (String) currentClues[level].details.parameters[i]);
+			} else if (currentClues[level].details.type == MAP) {
+				player.getInterfaceManager().sendInterface((int) currentClues[level].details.parameters[0]);
+			} else if (currentClues[level].details.type == COORDINATE) {
 				player.getInterfaceManager().sendInterface(345);
 				for (int i = 0; i < 8; i++)
 					player.getPackets().sendIComponentText(345, i + 1, "");
 				player.getPackets().sendIComponentText(345, 4,
-						((Integer) currentClue.details.parameters[0] <= 9 ? "0" : "")
-								+ currentClue.details.parameters[0] + " degrees, "
-								+ ((Integer) currentClue.details.parameters[1] <= 9 ? "0" : "")
-								+ currentClue.details.parameters[1] + " minutes "
-								+ ((Integer) currentClue.details.parameters[2] == NORTH ? "north" : "south"));
+						((Integer) currentClues[level].details.parameters[0] <= 9 ? "0" : "")
+								+ currentClues[level].details.parameters[0] + " degrees, "
+								+ ((Integer) currentClues[level].details.parameters[1] <= 9 ? "0" : "")
+								+ currentClues[level].details.parameters[1] + " minutes "
+								+ ((Integer) currentClues[level].details.parameters[2] == NORTH ? "north" : "south"));
 				player.getPackets().sendIComponentText(345, 5,
-						((Integer) currentClue.details.parameters[3] <= 9 ? "0" : "")
-								+ currentClue.details.parameters[3] + " degrees, "
-								+ ((Integer) currentClue.details.parameters[4] <= 9 ? "0" : "")
-								+ currentClue.details.parameters[4] + " minutes "
-								+ ((Integer) currentClue.details.parameters[5] == WEST ? "west" : "east"));
+						((Integer) currentClues[level].details.parameters[3] <= 9 ? "0" : "")
+								+ currentClues[level].details.parameters[3] + " degrees, "
+								+ ((Integer) currentClues[level].details.parameters[4] <= 9 ? "0" : "")
+								+ currentClues[level].details.parameters[4] + " minutes "
+								+ ((Integer) currentClues[level].details.parameters[5] == WEST ? "west" : "east"));
 			}
 			return true;
 		}
@@ -288,11 +311,20 @@ public class TreasureTrailsManager implements Serializable {
 	}
 
 	private boolean hasCurrentClue() {
-		if (!player.getInventory().containsOneItem(CLUE_SCROLLS[currentClue.dificulty])) {
-			player.getPackets()
-					.sendGameMessage("You need to be holding "
-							+ ((currentClue.dificulty == 0 || currentClue.dificulty == 3) ? "an" : " a") + " "
-							+ LEVEL[currentClue.dificulty] + " level clue scroll.");
+		Clue clue = getCurrentClue();
+		if (clue == null) {
+			player.getPackets().sendGameMessage("You need to have a valid clue step.");
+			return false;
+		}
+
+		int difficulty = clue.dificulty;
+		int clueItemId = CLUE_SCROLLS[difficulty];
+
+		if (!player.getInventory().containsOneItem(clueItemId)) {
+			String article = (difficulty == 0 || difficulty == 3) ? "an" : "a";
+			player.getPackets().sendGameMessage(
+					"You need to be holding " + article + " " + LEVEL[difficulty] + " level clue scroll."
+			);
 			return false;
 		}
 		return true;
@@ -314,207 +346,254 @@ public class TreasureTrailsManager implements Serializable {
 		p.getPackets().sendGameMessage("The treasure trail points you towards " + y + "-" + x + ".", false);
 	}
 
-	public void useEmote(int id) {// returned it all true because it wont stop emote on rs.
-		if (currentClue == null)
+	public void useEmote(int id) {
+		if (currentClues == null)
 			return;
-		WorldTile tile = new WorldTile(currentClue.details.id);
-		if (currentClue.details.type != EMOTE)
-			return;
-		else if (!hasCurrentClue())
-			return;
-		else if (id != ((int[]) currentClue.details.parameters[0])[cluePhase == 3 ? 1 : 0])
-			return;
-		else if (!player.withinDistance(tile, 8)) {
-			player.message("You are not close enough to your destination.");
-			locate(player, tile.getX(), tile.getY());
-			return;
-		}
-		Item[] requiredItems = (Item[]) currentClue.details.parameters[1];
-		if (requiredItems.length > 0) {
-			for (Item item : requiredItems) {
-				int slot = item.getId() == 20922 ? Equipment.SLOT_RING : item.getDefinitions().getEquipSlot();
-				Item requestedItem = player.getEquipment().getItem(slot);
-				if (requestedItem == null) {
-					return;
-				}
-				if (slot == Equipment.SLOT_RING && item.getId() == 20922) {
-					if (!player.getEquipment()
-							.containsOneItem(new int[] { 2552, 2554, 2556, 2558, 2560, 2562, 2564, 2566 })) {
-						return;
-					}
-				} else if (requestedItem.getId() != item.getId()) {
-					player.message("You're not wearing the correct items for this treasure trail.");
-					return;
-				}
+
+		for (int level = 0; level < CLUE_SCROLLS.length; level++) {
+			Clue clue = currentClues[level];
+
+			// Must have a clue scroll and clue data
+			if (clue == null || player.getInventory().getNumberOf(CLUE_SCROLLS[level]) == 0)
+				continue;
+
+			if (clue.details.type != EMOTE)
+				continue;
+
+			WorldTile tile = new WorldTile(clue.details.id);
+			int emoteId = ((int[]) clue.details.parameters[0])[cluePhase == 3 ? 1 : 0];
+
+			if (id != emoteId)
+				continue;
+
+			if (!player.withinDistance(tile, 8)) {
+				player.message("You are not close enough to your destination.");
+				locate(player, tile.getX(), tile.getY());
+				continue;
 			}
+
+			Item[] requiredItems = (Item[]) clue.details.parameters[1];
+			if (requiredItems.length > 0) {
+				boolean hasAllItems = true;
+				for (Item item : requiredItems) {
+					int slot = item.getId() == 20922 ? Equipment.SLOT_RING : item.getDefinitions().getEquipSlot();
+					Item equipped = player.getEquipment().getItem(slot);
+					if (equipped == null) {
+						hasAllItems = false;
+						break;
+					}
+					if (slot == Equipment.SLOT_RING && item.getId() == 20922) {
+						if (!player.getEquipment()
+								.containsOneItem(new int[] { 2552, 2554, 2556, 2558, 2560, 2562, 2564, 2566 })) {
+							hasAllItems = false;
+							break;
+						}
+					} else if (equipped.getId() != item.getId()) {
+						player.message("You're not wearing the correct items for this treasure trail.");
+						hasAllItems = false;
+						break;
+					}
+				}
+				if (!hasAllItems)
+					continue;
+			}
+
+			// All checks passed
+			setNextClue(level, SOURCE_EMOTE);
+			return;
 		}
-		setNextClue(SOURCE_EMOTE);
 	}
 
+
 	public boolean useDig() {
-		if (currentClue == null)
+		if (currentClues == null)
 			return false;
-		if ((currentClue.details.type == SIMPLE || currentClue.details.type == MAP)
-				&& currentClue.details.idType == TILE) {
-			if (!hasCurrentClue()) {
-				player.message("You dont have a clue.");
-				return false;
+
+		for (int level = 0; level < CLUE_SCROLLS.length; level++) {
+			Clue clue = currentClues[level];
+
+			if (clue == null || player.getInventory().getNumberOf(CLUE_SCROLLS[level]) == 0)
+				continue;
+
+			if ((clue.details.type == SIMPLE || clue.details.type == MAP)
+					&& clue.details.idType == TILE) {
+				WorldTile tile = new WorldTile(clue.details.id);
+				if (!player.withinDistance(tile, clue.details.type == MAP ? 6 : 16)) {
+					player.message(tile.getX() + " - " + tile.getY());
+					continue;
+				}
+				setNextClue(level, SOURCE_DIG);
+				return true;
+			} else if (clue.details.type == COORDINATE && hasSextantItems(player)) {
+				WorldTile t = getTile(
+						(Integer) clue.details.parameters[0],
+						(Integer) clue.details.parameters[1],
+						(Integer) clue.details.parameters[2],
+						(Integer) clue.details.parameters[3],
+						(Integer) clue.details.parameters[4],
+						(Integer) clue.details.parameters[5]
+				);
+				if (!player.withinDistance(t, 6)) {
+					player.message(t.getX() + " - " + t.getY());
+					continue;
+				}
+				setNextClue(level, SOURCE_DIG);
+				return true;
+			} else {
+				if (!hasSextant(player))
+					player.message("You don't have a sextant.");
+				if (!hasChart(player))
+					player.message("You don't have a chart.");
+				if (!hasWatch(player))
+					player.message("You don't have a watch.");
 			}
-			WorldTile tile = new WorldTile(currentClue.details.id);
-			if (!player.withinDistance(tile, currentClue.details.type == MAP ? 6 : 16)) {
-				player.message(tile.getX() + " - " + tile.getY());
-				return false;
-			}
-			setNextClue(SOURCE_DIG);
-			return true;
-		} else if (currentClue.details.type == COORDINATE && hasSextantItems(player)) {
-			if (!hasCurrentClue()) {
-				return false;
-			}
-			WorldTile t = getTile((Integer) currentClue.details.parameters[0],
-					(Integer) currentClue.details.parameters[1], (Integer) currentClue.details.parameters[2],
-					(Integer) currentClue.details.parameters[3], (Integer) currentClue.details.parameters[4],
-					(Integer) currentClue.details.parameters[5]);
-			if (!player.withinDistance(t, 6)) {
-				player.message(t.getX() + " - " + t.getY());
-				return false;
-			}
-			setNextClue(SOURCE_DIG);
-			return true;
-		} else {
-			if (!hasSextant(player))
-				player.message("You don't have a sextant.");
-			if (!hasChart(player))
-				player.message("You don't have a chart.");
-			if (!hasWatch(player))
-				player.message("You don't have a watch.");
 		}
 		return false;
 	}
 
+
 	public boolean useObject(WorldObject object) {
-		if (currentClue == null)
+		if (currentClues == null)
 			return false;
-		if (currentClue.details.idType != OBJECT || currentClue.details.id != object.getId())
-			return false;
-		else if (currentClue.details.type != SIMPLE && currentClue.details.type != MAP)
-			return false;
-		else if (!hasCurrentClue())
-			return false;
-		setNextClue(SOURCE_OBJECT);
-		return true;
+		for (int level = 0; level < CLUE_SCROLLS.length; level++) {
+			Clue clue = currentClues[level];
+			if (clue == null || player.getInventory().getNumberOf(CLUE_SCROLLS[level]) == 0) {
+				continue;
+			}
+			if (clue.details.idType != OBJECT || clue.details.id != object.getId()) {
+				continue;
+			}
+			if (clue.details.type != SIMPLE && clue.details.type != MAP)
+				continue;
+			setNextClue(level, SOURCE_OBJECT);
+			return true;
+		}
+		return false;
 	}
 
 	public boolean useNPC(final NPC npc) {
-		if (currentClue == null)
+		if (currentClues == null)
 			return false;
-		if (currentClue.details.idType != NPC || currentClue.details.id != npc.getId())
-			return false;
-		if (currentClue.details.type != SIMPLE && currentClue.details.type != ANAGRAM)
-			return false;
-		else if (!hasCurrentClue())
-			return false;
-		if (currentClue.details.type == ANAGRAM && currentClue.dificulty >= HARD
-				&& !player.getInventory().containsOneItem(PUZZLES)) {
-			player.getDialogueManager().startDialogue(new Dialogue() {
-				@Override
-				public void start() {
-					sendNPCDialogue(currentClue.details.id, Dialogue.NORMAL, "I have a puzzle for you!");
-					stage = 0;
-				}
 
-				@Override
-				public void run(int interfaceId, int componentId) {
-					if (stage == 0) {
-						int puzzle_id = currentClue.dificulty == ELITE ? PUZZLES[3]
-								: PUZZLES[Utils.random(PUZZLES.length - 1)];
-						//sendEntityDialogue(IS_ITEM, puzzle_id, -1, "", npc.getName() + " has given you a puzzle box!");
-						player.message(npc.getName() + " has given you a puzzle box!");
-						player.getInventory().addItem(puzzle_id, 1);
-						stage = 1;
+		for (int level = 0; level < CLUE_SCROLLS.length; level++) {
+			final Clue clue = currentClues[level];
+
+			if (clue == null || player.getInventory().getNumberOf(CLUE_SCROLLS[level]) == 0)
+				continue;
+
+			if (clue.details.idType != NPC || clue.details.id != npc.getId())
+				continue;
+
+			if (clue.details.type != SIMPLE && clue.details.type != ANAGRAM)
+				continue;
+
+			if (clue.details.type == ANAGRAM && clue.dificulty >= HARD &&
+					!player.getInventory().containsOneItem(PUZZLES)) {
+
+				player.getDialogueManager().startDialogue(new Dialogue() {
+					@Override
+					public void start() {
+						sendNPCDialogue(clue.details.id, Dialogue.NORMAL, "I have a puzzle for you!");
+						stage = 0;
 					}
-					if (stage == 1) {
+
+					@Override
+					public void run(int interfaceId, int componentId) {
+						if (stage == 0) {
+							int puzzleId = clue.dificulty == ELITE ? PUZZLES[3]
+									: PUZZLES[Utils.random(PUZZLES.length - 1)];
+							player.message(npc.getName() + " has given you a puzzle box!");
+							player.getInventory().addItem(puzzleId, 1);
+							stage = 1;
+						}
+						if (stage == 1) {
+							end();
+						}
+					}
+
+					@Override
+					public void finish() {
+					}
+				});
+
+				return true;
+
+			} else if (clue.details.type == ANAGRAM && clue.dificulty >= HARD && !hasCompletedPuzzle() && !player.isDeveloper()) {
+
+				player.getDialogueManager().startDialogue(new Dialogue() {
+					@Override
+					public void start() {
+						sendNPCDialogue(clue.details.id, Dialogue.NORMAL, "That doesn't look right.");
+					}
+
+					@Override
+					public void run(int interfaceId, int componentId) {
 						end();
 					}
-				}
 
-				@Override
-				public void finish() {
-				}
+					@Override
+					public void finish() {
+					}
+				});
 
-			});
+				return true;
 
-			return true;
-		} else if (currentClue.details.type == ANAGRAM && currentClue.dificulty >= HARD && !hasCompletedPuzzle() && !player.isDeveloper()) {
-			player.getDialogueManager().startDialogue(new Dialogue() {
-				@Override
-				public void start() {
-					sendNPCDialogue(currentClue.details.id, Dialogue.NORMAL, "That doesn't look right.");
-				}
+			} else if (clue.details.type == ANAGRAM && clue.dificulty >= HARD) {
 
-				@Override
-				public void run(int interfaceId, int componentId) {
-					end();
-				}
+				int finalLevel1 = level;
+				player.getDialogueManager().startDialogue(new Dialogue() {
+					@Override
+					public void start() {
+						sendNPCDialogue(clue.details.id, Dialogue.NORMAL, "Good job!");
+					}
 
-				@Override
-				public void finish() {
-				}
+					@Override
+					public void run(int interfaceId, int componentId) {
+						for (int id : PUZZLES)
+							player.getInventory().deleteItem(id, 1);
+						setNextClue(finalLevel1, SOURCE_PUZZLENPC);
+						end();
+					}
 
-			});
+					@Override
+					public void finish() {
+					}
+				});
 
-			return true;
+				return true;
+
+			} else {
+				int finalLevel = level;
+				player.getDialogueManager().startDialogue(new Dialogue() {
+					@Override
+					public void start() {
+						sendNPCDialogue(clue.details.id, Dialogue.NORMAL, "Congratulations! You have come to the right place.");
+					}
+
+					@Override
+					public void run(int interfaceId, int componentId) {
+						end();
+						setNextClue(finalLevel, SOURCE_NPC);
+					}
+
+					@Override
+					public void finish() {
+					}
+				});
+
+				return true;
+			}
 		}
-		if (currentClue.details.type == ANAGRAM && currentClue.dificulty >= HARD) {
-			player.getDialogueManager().startDialogue(new Dialogue() {
-				@Override
-				public void start() {
-					sendNPCDialogue(currentClue.details.id, Dialogue.NORMAL, "Good job!");
-				}
-
-				@Override
-				public void run(int interfaceId, int componentId) {
-					end();
-					for (int id : PUZZLES)
-						player.getInventory().deleteItem(id, 1);
-					setNextClue(SOURCE_PUZZLENPC);
-				}
-
-				@Override
-				public void finish() {
-				}
-
-			});
-			return true;
-		} else {
-			player.getDialogueManager().startDialogue(new Dialogue() {
-				@Override
-				public void start() {
-					sendNPCDialogue(currentClue.details.id, Dialogue.NORMAL,
-							"Congratulations! You have come to right place.");
-				}
-
-				@Override
-				public void run(int interfaceId, int componentId) {
-					end();
-					setNextClue(SOURCE_NPC);
-				}
-
-				@Override
-				public void finish() {
-				}
-
-			});
-			return true;
-		}
+		return false;
 	}
 
+
 	public void openPuzzle(int itemId) {
-		if (currentClue == null) {
+		if (currentClues == null) {
 			player.message("clue is null");
 			return;
-		} else if (currentClue.details.type == ANAGRAM) {
-			if (currentClue.dificulty != HARD && currentClue.dificulty != ELITE)
+		} else if (getCurrentClue().details.type == ANAGRAM) {
+			if (getCurrentClue().dificulty != HARD && getCurrentClue().dificulty != ELITE)
 				return;
 		}
 		int base = BASE_PIECES[getBasePiece(itemId)];
@@ -686,7 +765,7 @@ public class TreasureTrailsManager implements Serializable {
 	}
 
 	public void handleSextant(int componentId) {
-		if (currentClue == null || currentClue.details.type != COORDINATE) {
+		if (currentClues == null || getCurrentClue().details.type != COORDINATE) {
 			player.getPackets().sendGameMessage("It seems the telescope is not operational at the moment.");
 			return;
 		}
@@ -819,7 +898,7 @@ public class TreasureTrailsManager implements Serializable {
 				"helmet shop."),
 		SIMPLE_S_28(EASY, SIMPLE, OBJECT, 34585, "Search the crates in the guard", "house of the northern gate of",
 				"East Ardougne."),
-		SIMPLE_S_29(EASY, SIMPLE, OBJECT, 76811, "Search the crates in the", "northernmost house in Al Kharid."),
+		SIMPLE_S_29(EASY, SIMPLE, OBJECT, 46238, "Search the crate in the", "northernmost house in Al Kharid."),
 		SIMPLE_S_30(EASY, SIMPLE, OBJECT, 40021, "Search the crates in the Port", "Sarim fishing shop."),
 		SIMPLE_S_31(EASY, SIMPLE, OBJECT, 34586, "Search the crates in the shed", "just north of east Ardougne."),
 		SIMPLE_S_32(EASY, SIMPLE, OBJECT, 46269, "Search the crates near a cart in", "Varrock."),
@@ -1160,7 +1239,7 @@ public class TreasureTrailsManager implements Serializable {
 		}
 	}
 
-	private static class Clue implements Serializable {
+	public static class Clue implements Serializable {
 
 		private static final long serialVersionUID = -1028796694563388699L;
 
