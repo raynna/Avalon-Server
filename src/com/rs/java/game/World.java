@@ -1,17 +1,13 @@
 package com.rs.java.game;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import com.rs.Launcher;
 import com.rs.Settings;
 import com.rs.core.cache.defintions.ObjectDefinitions;
 import com.rs.core.thread.CoresManager;
+import com.rs.java.game.area.Area;
 import com.rs.java.game.area.AreaManager;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
@@ -1800,175 +1796,20 @@ public final class World {
         }
     }
 
-    public static final void sendDragonfireProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 53, 34, distance < 4 ? 36 : 41, 41, 0,
-                        receiver instanceof NPC ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    private static int getSpeed(Entity shooter, Entity target) {
+        int distance = Utils.getDistance(shooter, target);
+        return distance < 2 ? 41 : (distance == 2 ? 46 : 51);
     }
 
-    public static final void sendNPCProjectile(Entity shooter, WorldTile tile, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(tile)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, tile);
-                int startOffsetDistance = distance > 2 ? 0 : 0;
-                player.getPackets().sendProjectile(null,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        tile, gfxId, 53, 34, distance < 4 ? 36 : 41, 41, 0, startOffsetDistance, size);
-            }
-        }
+    private static int getSpeed(Entity shooter, WorldTile targetTile) {
+        int distance = Utils.getDistance(shooter, targetTile);
+        return distance < 2 ? 41 : (distance == 2 ? 46 : 51);
     }
 
-    public static final void sendGroundProjectile(Entity shooter, WorldTile tile, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(tile)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, tile);
-                int startOffsetDistance = distance > 2 ? 0 : 0;
-                player.getPackets().sendProjectile(null,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        tile, gfxId, 53, 0, distance < 4 ? 36 : 41, 41, 0, startOffsetDistance, size);
-            }
-        }
-    }
-
-    public static final void sendNPCSlowProjectile(Entity shooter, WorldTile tile, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(tile)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, tile);
-                int startOffsetDistance = distance > 2 ? 0 : 0;
-                player.getPackets().sendProjectile(null,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        tile, gfxId, 53, 34, distance < 4 ? 26 : 31, 21, 0, startOffsetDistance, size);
-            }
-        }
-    }
-
-    public static final void sendJadProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 53, 34, distance < 4 ? 32 : 48, 0, 0,
-                        receiver instanceof NPC ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
-    }
-
-    public static final void sendProjectile(Entity shooter, Entity receiver, int gfxId, int startHeight, int endHeight,
-                                            int speed, int delay, int curve) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, startHeight, endHeight, speed, delay, curve,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
-    }
-
-    public static final void sendElementalProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver, shooter, receiver, gfxId, 43, 34,
-                        distance < 2 ? 51 : distance == 2 ? 56 : 61, 51, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
-    }
-
-    public static final void sendFastBowProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver, shooter, receiver, gfxId, 43, 34,
-                        distance < 2 ? 51 : distance == 2 ? 56 : 61, 41, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
-    }
-
-    public static final void sendObjectProjectile(Entity shooter, WorldTile tile, int gfxId) {
+    public static void sendProjectileToPlayers(Entity shooter, WorldTile targetTile, Entity targetEntity, int gfxId,
+                                               int startHeight, int endHeight, int speed, int delay, int curve,
+                                               int startOffsetIfClose, int closeDistanceThreshold, boolean checkDistanceToTarget,
+                                               boolean includeTargetEntity, boolean useReceiverAsTarget) {
         for (int regionId : shooter.getMapRegionsIds()) {
             List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
             if (playersIndexes == null)
@@ -1977,574 +1818,295 @@ public final class World {
                 Player player = players.get(playerIndex);
                 if (player == null || !player.hasStarted() || player.hasFinished())
                     continue;
+
+                boolean nearShooter = player.withinDistance(shooter);
+                boolean nearTarget = false;
+                if (checkDistanceToTarget) {
+                    if (useReceiverAsTarget && targetEntity != null)
+                        nearTarget = player.withinDistance(targetEntity);
+                    else if (targetTile != null)
+                        nearTarget = player.withinDistance(targetTile);
+                }
+
+                if (!nearShooter && !nearTarget)
+                    continue;
+
                 int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, tile);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
+                int distance = targetEntity != null ? Utils.getDistance(shooter, targetEntity)
+                        : Utils.getDistance(shooter, targetTile);
 
-                player.getPackets().sendProjectile(null, shooter, tile, gfxId, 54, 4, 61, 41, 6, startOffsetDistance,
-                        size);
+                int startOffsetDistance = (distance <= closeDistanceThreshold) ? startOffsetIfClose : 0;
+
+                WorldTile startTile = new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane());
+
+                if (includeTargetEntity && targetEntity != null) {
+                    player.getPackets().sendProjectile(targetEntity, startTile, targetEntity, gfxId, startHeight, endHeight, speed, delay, curve, startOffsetDistance, size);
+                } else {
+                    player.getPackets().sendProjectile(null, startTile, targetTile, gfxId, startHeight, endHeight, speed, delay, curve, startOffsetDistance, size);
+                }
             }
         }
     }
 
-    public static final void sendMSBProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
+    public static void sendProjectile(WorldObject object, WorldTile startTile, WorldTile endTile, int gfxId,
+                                      int startHeight, int endHeight, int speed, int delay, int curve, int startOffset) {
+        for (Player pl : players) {
+            if (pl == null || !pl.withinDistance(object, 20))
                 continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 43, 34, distance < 2 ? 51 : distance == 2 ? 56 : 61, 31, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
+            pl.getPackets().sendProjectile(null, startTile, endTile, gfxId, startHeight, endHeight, speed, delay, curve,
+                    startOffset, 1);
         }
     }
 
-    public static final void sendMSBProjectile2(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 43, 34, distance < 2 ? 51 : distance == 2 ? 56 : 61, 56, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendDragonfireProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                53, 34, receiver != null ? (Utils.getDistance(shooter, receiver) < 4 ? 36 : 41) : 41,
+                41, 0, 11, 2, true, true, false);
     }
 
-    public static final void sendFastBowSwiftProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 43 - 5, 34 - 5, distance < 2 ? 51 : distance == 2 ? 56 : 61, 41, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendNPCProjectile(Entity shooter, WorldTile tile, int gfxId) {
+        sendProjectileToPlayers(shooter, tile, null, gfxId,
+                53, 34, (Utils.getDistance(shooter, tile) < 4 ? 36 : 41), 41,
+                0, 0, 2, true, false, false);
     }
 
-    public static final void sendSlowBowProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 43, 34, distance < 2 ? 41 : distance == 2 ? 46 : 51, 41, 16,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendGroundProjectile(Entity shooter, WorldTile tile, int gfxId) {
+        sendProjectileToPlayers(shooter, tile, null, gfxId,
+                53, 0, (Utils.getDistance(shooter, tile) < 4 ? 36 : 41), 41,
+                0, 0, 2, true, false, false);
     }
 
-    public static final void sendSlowBowProjectile(Entity shooter, WorldTile tile, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(tile)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, tile);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(shooter,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        tile, gfxId, 43, 34, distance < 2 ? 41 : distance == 2 ? 46 : 51, 41, 16, startOffsetDistance,
-                        size);
-            }
-        }
+    public static void sendNPCSlowProjectile(Entity shooter, WorldTile tile, int gfxId) {
+        sendProjectileToPlayers(shooter, tile, null, gfxId,
+                53, 34, (Utils.getDistance(shooter, tile) < 4 ? 26 : 31), 21,
+                0, 0, 2, true, false, false);
     }
 
-    public static final void sendSlowBow2Projectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 43, 34, distance < 2 ? 41 : distance == 2 ? 46 : 51, 61, 16,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendJadProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                53, 34, (Utils.getDistance(shooter, receiver) < 4 ? 32 : 48), 0,
+                0, 11, 2, true, true, false);
     }
 
-    public static final void sendSlowBowSwiftProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 43 - 5, 34 - 5, distance > 2 ? 51 : distance == 2 ? 56 : 61, 21, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendProjectile(Entity shooter, Entity receiver, int gfxId, int startHeight, int endHeight,
+                                      int speed, int delay, int curve) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                startHeight, endHeight, speed, delay, curve,
+                0, 2, true, true, false);
     }
 
-    public static final void sendCBOWProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getX(), shooter.getY(), shooter.getPlane()), receiver, gfxId, 43, 34,
-                        distance > 2 ? 61 : 51, 41, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendElementalProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                43, 34, receiver != null ? (Utils.getDistance(shooter, receiver) < 2 ? 51 : Utils.getDistance(shooter, receiver) == 2 ? 56 : 61) : 61,
+                51, 6, 11, 2, true, true, true);
     }
 
-    public static final void sendCBOWSwiftProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 43 - 5, 34 - 5, distance > 2 ? 61 : 51, 41, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendFastBowProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                43, 34, receiver != null ? (Utils.getDistance(shooter, receiver) < 2 ? 51 : Utils.getDistance(shooter, receiver) == 2 ? 56 : 61) : 61,
+                41, 6, 11, 2, true, true, true);
     }
 
-    public static final void sendThrowSwiftProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 43 - 5, 34 - 5, 42, 32, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendObjectProjectile(Entity shooter, WorldTile tile, int gfxId) {
+        sendProjectileToPlayers(shooter, tile, null, gfxId,
+                54, 4, 61, 41,
+                6, 11, 2, true, false, false);
     }
 
-    public static final void sendThrowProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 43, 34, 42, 31, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendMSBProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                43, 34, receiver != null ? (Utils.getDistance(shooter, receiver) < 2 ? 51 : Utils.getDistance(shooter, receiver) == 2 ? 56 : 61) : 61,
+                31, 6, 11, 2, true, true, false);
     }
 
-    public static final void sendDartProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 43, 34, 42, 16, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendMSBProjectile2(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                43, 34, receiver != null ? (Utils.getDistance(shooter, receiver) < 2 ? 51 : Utils.getDistance(shooter, receiver) == 2 ? 56 : 61) : 61,
+                56, 6, 11, 2, true, true, false);
     }
 
-    public static final void sendCannonProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 18, 18, distance < 2 ? 51 : distance == 2 ? 56 : 61, 41, 0,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendFastBowSwiftProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                38, 29, receiver != null ? (Utils.getDistance(shooter, receiver) < 2 ? 51 : Utils.getDistance(shooter, receiver) == 2 ? 56 : 61) : 61,
+                41, 6, 11, 2, true, true, false);
     }
 
-    public static final void sendSOAProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 0, 0, distance < 4 ? 51 : 61, 51, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendSlowBowProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                43, 34, getSpeed(shooter, receiver), 41, 16,
+                11, 2, true, true, true);
     }
 
-    public static final void sendSoulsplitProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 0, 0, distance < 4 ? 26 : 31, 41, 6,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendSlowBowProjectile(Entity shooter, WorldTile tile, int gfxId) {
+        sendProjectileToPlayers(shooter, tile, null, gfxId,
+                43, 34, getSpeed(shooter, tile), 41, 16,
+                11, 2, true, false, false);
     }
 
-    public static final void sendLeechProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 35, 35, distance < 2 ? 21 : 26, 5, 0,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendSlowBow2Projectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                43, 34, getSpeed(shooter, receiver), 61, 16,
+                11, 2, true, true, true);
     }
 
-    public static final void sendElemantalProjectile(Entity shooter, Entity receiver, int gfxId) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver,
-                        new WorldTile(shooter.getCoordFaceX(size), shooter.getCoordFaceY(size), shooter.getPlane()),
-                        receiver, gfxId, 28, 18, 50, 50, 0,
-                        receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendSlowBowSwiftProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                38, 29, getSpeed(shooter, receiver), 21, 6,
+                11, 2, true, true, true);
     }
 
-    public static final void sendProjectile(Entity shooter, WorldTile startTile, WorldTile receiver, int gfxId,
-                                            int startHeight, int endHeight, int speed, int delay, int curve, int startDistanceOffset) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                player.getPackets().sendProjectile(null, startTile, receiver, gfxId, startHeight, endHeight, speed,
-                        delay, curve, startDistanceOffset, shooter.getSize());
-            }
-        }
+    public static void sendCBOWProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                43, 34, getSpeed(shooter, receiver), 41, 6,
+                11, 2, true, true, true);
     }
 
-    public static final void sendProjectile(WorldTile shooter, Entity receiver, int gfxId, int startHeight,
-                                            int endHeight, int speed, int delay, int curve, int startDistanceOffset) {
-        for (int regionId : receiver.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver, shooter, receiver, gfxId, startHeight, endHeight, speed,
-                        delay, curve, receiver instanceof Player ? startOffsetDistance : startOffsetDistance, 1);
-            }
-        }
+    public static void sendCBOWSwiftProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                38, 29, getSpeed(shooter, receiver), 41, 6,
+                11, 2, true, true, true);
     }
 
-    public static final void sendProjectile(Entity shooter, WorldTile receiver, int gfxId, int startHeight,
-                                            int endHeight, int speed, int delay, int curve, int startDistanceOffset) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(null, shooter, receiver, gfxId, startHeight, endHeight, speed, delay,
-                        curve, receiver instanceof Player ? startOffsetDistance : startOffsetDistance,
-                        shooter.getSize());
-            }
-        }
+    public static void sendThrowSwiftProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                38, 29, 42, 32, 6,
+                11, 2, true, true, true);
     }
 
-    public static final void sendProjectile(Entity shooter, Entity receiver, int gfxId, int startHeight, int endHeight,
-                                            int speed, int delay, int curve, int startDistanceOffset) {
-        for (int regionId : shooter.getMapRegionsIds()) {
-            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player player = players.get(playerIndex);
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || (!player.withinDistance(shooter) && !player.withinDistance(receiver)))
-                    continue;
-                int size = shooter.getSize();
-                int distance = Utils.getDistance(shooter, receiver);
-                int startOffsetDistance = distance > 2 ? 0 : 11;
-
-                player.getPackets().sendProjectile(receiver, shooter, receiver, gfxId, startHeight, endHeight, speed,
-                        delay, curve, receiver instanceof Player ? startOffsetDistance : startOffsetDistance, size);
-            }
-        }
+    public static void sendThrowProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(shooter, null, receiver, gfxId,
+                43, 34, 42, 31, 6,
+                11, 2, true, true, true);
     }
 
-    public static final boolean isMultiArea(WorldTile tile) {
-        return (AreaManager.get(tile) != null && (AreaManager.get(tile).name().equalsIgnoreCase("Multi Area")
-                || AreaManager.get(tile).name().equalsIgnoreCase("Wildy Agility Multi")
-                || AreaManager.get(tile).name().equalsIgnoreCase("Godwars")
-                || AreaManager.get(tile).name().equalsIgnoreCase("ForinthryMulti")
-                || AreaManager.get(tile).name().equalsIgnoreCase("Nex Multi")
-                || AreaManager.get(tile).name().equalsIgnoreCase("Corp Multi")
-                || AreaManager.get(tile).name().equalsIgnoreCase("Tormdemon Multi")
-                || AreaManager.get(tile).name().equalsIgnoreCase("KQ Multi")
-                || AreaManager.get(tile).name().equalsIgnoreCase("Chaos Tunnel Multi")
-                || AreaManager.get(tile).name().equalsIgnoreCase("Dks Multi")
-                || AreaManager.get(tile).name().equalsIgnoreCase("KBD Multi")) || Bork.atBork(tile));
+    public static void sendDartProjectile(Entity shooter, Entity receiver, int gfxId) {
+        sendProjectileToPlayers(
+                shooter, null, receiver, gfxId,
+                43, 34, 42, 16, 6,
+                11, 2, true, true, false
+        );
     }
 
-    public static final boolean atMultiArea(Player player) {
-        return (AreaManager.get(player) != null && (AreaManager.get(player).name().equalsIgnoreCase("Multi Area")
-                || AreaManager.get(player).name().equalsIgnoreCase("Wildy Agility Multi")
-                || AreaManager.get(player).name().equalsIgnoreCase("Godwars")
-                || AreaManager.get(player).name().equalsIgnoreCase("ForinthryMulti")
-                || AreaManager.get(player).name().equalsIgnoreCase("Nex Multi")
-                || AreaManager.get(player).name().equalsIgnoreCase("Corp Multi")
-                || AreaManager.get(player).name().equalsIgnoreCase("Tormdemon Multi")
-                || AreaManager.get(player).name().equalsIgnoreCase("KQ Multi")
-                || AreaManager.get(player).name().equalsIgnoreCase("Chaos Tunnel Multi")
-                || AreaManager.get(player).name().equalsIgnoreCase("Dks Multi")
-                || AreaManager.get(player).name().equalsIgnoreCase("KBD Multi")) || Bork.atBork(player));
+    public static void sendCannonProjectile(Entity shooter, Entity receiver, int gfxId) {
+        int distance = Utils.getDistance(shooter, receiver);
+        int speed = distance < 2 ? 51 : distance == 2 ? 56 : 61;
+
+        sendProjectileToPlayers(
+                shooter, null, receiver, gfxId,
+                18, 18, speed, 41, 0,
+                11, 2, true, true, false
+        );
     }
 
-    public static final boolean inWilderness() {
-        /**
-         * Add to check if the player is in the wilderness if so then start the
-         * controler.
-         */
+    public static void sendSOAProjectile(Entity shooter, Entity receiver, int gfxId) {
+        int distance = Utils.getDistance(shooter, receiver);
+        int speed = distance < 4 ? 51 : 61;
 
-        return false;
+        sendProjectileToPlayers(
+                shooter, null, receiver, gfxId,
+                0, 0, speed, 51, 6,
+                11, 2, true, true, false
+        );
     }
 
-    public static final boolean isPvpArea(WorldTile tile) {
+    public static void sendSoulsplitProjectile(Entity shooter, Entity receiver, int gfxId) {
+        int distance = Utils.getDistance(shooter, receiver);
+        int speed = distance < 4 ? 26 : 31;
+
+        sendProjectileToPlayers(
+                shooter, null, receiver, gfxId,
+                0, 0, speed, 41, 6,
+                11, 2, true, true, false
+        );
+    }
+
+    public static void sendLeechProjectile(Entity shooter, Entity receiver, int gfxId) {
+        int distance = Utils.getDistance(shooter, receiver);
+        int speed = distance < 2 ? 21 : 26;
+
+        sendProjectileToPlayers(
+                shooter, null, receiver, gfxId,
+                35, 35, speed, 5, 0,
+                11, 2, true, true, false
+        );
+    }
+
+    private static final Set<String> MULTI_AREAS = Set.of(
+            "Multi Area", "Wildy Agility Multi", "Godwars", "ForinthryMulti", "Nex Multi",
+            "Corp Multi", "Tormdemon Multi", "KQ Multi", "Chaos Tunnel Multi", "Dks Multi", "KBD Multi"
+    );
+
+    public static boolean isMultiArea(WorldTile tile) {
+        Area area = AreaManager.get(tile);
+        return (area != null && MULTI_AREAS.contains(area.name())) || Bork.atBork(tile);
+    }
+
+    public static boolean atMultiArea(Player player) {
+        Area area = AreaManager.get(player);
+        return (area != null && MULTI_AREAS.contains(area.name())) || Bork.atBork(player);
+    }
+
+
+    public static boolean inWilderness(WorldTile tile) {
+        return WildernessControler.isAtWild(tile);
+    }
+
+    public static boolean isPvpArea(WorldTile tile) {
         return WildernessControler.isAtWild(tile) || EdgevillePvPControler.isAtPvP(tile);
     }
 
-    private transient static final EntityList<Player> lobbyPlayers = new EntityList<Player>(Settings.PLAYERS_LIMIT);
+    private static final EntityList<Player> lobbyPlayers = new EntityList<>(Settings.PLAYERS_LIMIT);
 
-    public static final Player getLobbyPlayerByDisplayName(String username) {
-        String formatedUsername = Utils.formatPlayerNameForDisplay(username);
-        for (Player player : getLobbyPlayers()) {
-            if (player == null) {
-                continue;
-            }
-            if (player.getUsername().equalsIgnoreCase(formatedUsername)
-                    || player.getDisplayName().equalsIgnoreCase(formatedUsername)) {
-                return player;
-            }
-        }
-        return null;
-    }
-
-    public static final EntityList<Player> getLobbyPlayers() {
+    public static EntityList<Player> getLobbyPlayers() {
         return lobbyPlayers;
     }
 
-    public static final void addPlayer(Player player) {
-        players.add(player);
-        if (World.containsLobbyPlayer(player.getUsername())) {
-            World.removeLobbyPlayer(player);
-            AntiFlood.remove(player.getSession().getIP());
-        }
-        AntiFlood.add(player.getSession().getIP());
+    public static Player getLobbyPlayerByDisplayName(String username) {
+        String formatted = Utils.formatPlayerNameForDisplay(username);
+        return lobbyPlayers.stream()
+                .filter(p -> p != null && (p.getUsername().equalsIgnoreCase(formatted) || p.getDisplayName().equalsIgnoreCase(formatted)))
+                .findFirst().orElse(null);
     }
 
-    public static final void addLobbyPlayer(Player player) {
+    public static boolean containsLobbyPlayer(String username) {
+        return lobbyPlayers.stream()
+                .anyMatch(p -> p != null && p.getUsername().equalsIgnoreCase(username));
+    }
+
+    public static void addLobbyPlayer(Player player) {
         lobbyPlayers.add(player);
         AntiFlood.add(player.getSession().getIP());
     }
 
-    public static final boolean containsLobbyPlayer(String username) {
-        for (Player p2 : lobbyPlayers) {
-            if (p2 == null) {
-                continue;
-            }
-            if (p2.getUsername().equalsIgnoreCase(username)) {
-                return true;
-            }
-        }
-        return false;
+    public static void removeLobbyPlayer(Player player) {
+        removeFromList(player, lobbyPlayers);
     }
 
-    public static void removeLobbyPlayer(Player player) {
-        for (Player p : lobbyPlayers) {
-            if (p.getUsername().equalsIgnoreCase(player.getUsername())) {
-                if (player.getCurrentFriendChat() != null) {
-                    player.getCurrentFriendChat().leaveChat(player, true);
-                }
-                lobbyPlayers.remove(p);
-            }
+    public static void addPlayer(Player player) {
+        players.add(player);
+
+        if (containsLobbyPlayer(player.getUsername())) {
+            removeLobbyPlayer(player);
         }
-        AntiFlood.remove(player.getSession().getIP());
+
+        AntiFlood.add(player.getSession().getIP());
     }
 
     public static void removePlayer(Player player) {
-        for (Player p : players) {
-            if (p.getUsername().equalsIgnoreCase(player.getUsername())) {
-                players.remove(p);
-            }
-        }
+        removeFromList(player, players);
+    }
+
+    private static void removeFromList(Player player, EntityList<Player> list) {
+        list.stream()
+                .filter(p -> p != null && p.getUsername().equalsIgnoreCase(player.getUsername()))
+                .findFirst()
+                .ifPresent(p -> {
+                    if (p.getCurrentFriendChat() != null) {
+                        p.getCurrentFriendChat().leaveChat(p, true);
+                    }
+                    list.remove(p);
+                });
+
         AntiFlood.remove(player.getSession().getIP());
     }
 
@@ -2584,49 +2146,7 @@ public final class World {
         }
     }
 
-    public static final void sendProjectile(WorldObject object, WorldTile startTile, WorldTile endTile, int gfxId,
-                                            int startHeight, int endHeight, int speed, int delay, int curve, int startOffset) {
-        for (Player pl : players) {
-            if (pl == null || !pl.withinDistance(object, 20))
-                continue;
-            pl.getPackets().sendProjectile(null, startTile, endTile, gfxId, startHeight, endHeight, speed, delay, curve,
-                    startOffset, 1);
-        }
-    }
-
     public static void sendNewsMessage(String message, boolean TwoHundredM) {
         World.sendWorldMessage("<img=7>" + (TwoHundredM ? "<col=ff0000>" : "<col=ff8c38>") + "News: " + message, false);
     }
-    
-
-	public static final Projectile sendProjectileNew(WorldTile from, WorldTile to, int graphicId, int startHeight, int endHeight, int startTime, double speed, int angle, int slope) {
-		return sendProjectile(from, to, false, false, 0, graphicId, startHeight, endHeight, startTime, speed, angle, slope);
-	}
-	
-
-	public static final Projectile sendProjectile(WorldTile from, WorldTile to, boolean adjustFlyingHeight, boolean adjustSenderHeight, int senderBodyPartId, int graphicId, int startHeight, int endHeight, int startTime, double speed, int angle, int slope) {
-		int fromSizeX, fromSizeY;
-		if (from instanceof Entity)
-			fromSizeX = fromSizeY = ((Entity) from).getSize();
-		else if (from instanceof WorldObject) {
-			ObjectDefinitions defs = ((WorldObject) from).getDefinitions();
-			fromSizeX = defs.getSizeX();
-			fromSizeY = defs.getSizeY();
-		} else
-			fromSizeX = fromSizeY = 1;
-		int toSizeX, toSizeY;
-		if (to instanceof Entity)
-			toSizeX = toSizeY = ((Entity) to).getSize();
-		else if (to instanceof WorldObject) {
-			ObjectDefinitions defs = ((WorldObject) to).getDefinitions();
-			toSizeX = defs.getSizeX();
-			toSizeY = defs.getSizeY();
-		} else
-			toSizeX = toSizeY = 1;
-
-		Projectile projectile = new Projectile(from, to, adjustFlyingHeight, adjustSenderHeight, senderBodyPartId, graphicId, startHeight, endHeight, startTime, startTime + (speed == -1 ? Utils.getProjectileTimeSoulsplit(from, fromSizeX, fromSizeY, to, toSizeX, toSizeY) : Utils.getProjectileTimeNew(from, fromSizeX, fromSizeY, to, toSizeX, toSizeY, speed)), slope, angle);
-		getRegion(from.getRegionId()).addProjectile(projectile);
-		return projectile;
-	}
-
 }
