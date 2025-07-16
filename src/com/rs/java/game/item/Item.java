@@ -1,5 +1,6 @@
 package com.rs.java.game.item;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
@@ -12,6 +13,7 @@ import com.rs.java.game.item.meta.CombatBonusType;
  */
 public class Item implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -6485003878697568087L;
 
 	private short id;

@@ -1,11 +1,18 @@
 package com.rs.java.game.item.meta;
 
-public class ChargeData implements ItemMetadata {
+import java.util.logging.Logger;
 
+public class ChargeData implements ItemMetadata {
+    private static final Logger logger = Logger.getLogger(ChargeData.class.getName());
     private int charges;
 
     public ChargeData(int charges) {
         this.charges = charges;
+    }
+
+    @Override
+    public String getType() {
+        return "dfs";
     }
 
     public int getCharges() {
@@ -22,11 +29,12 @@ public class ChargeData implements ItemMetadata {
 
     @Override
     public boolean isStackableWith(ItemMetadata other) {
-        return other instanceof ChargeData cd && this.charges == cd.charges;
+        return false;
     }
 
     @Override
     public ItemMetadata deepCopy() {
+        logger.fine(() -> "ChargeData deepCopy called, charges=" + charges);
         return new ChargeData(charges);
     }
 

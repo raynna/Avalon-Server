@@ -295,7 +295,7 @@ public class WarriorsGuild extends Controler {
 			if (object.getId() == 15647) {
 				if (!inLobby) {
 					if (player.getEquipment().getShieldId() == 8856) {
-						ButtonHandler.sendRemove(player, Equipment.SLOT_SHIELD);
+						ButtonHandler.registerRemoveEquipment(player, Equipment.SLOT_SHIELD);
 						player.getInterfaceManager().sendInterfaces();
 					}
 				}

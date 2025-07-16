@@ -24,20 +24,18 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
+import com.rs.java.game.item.meta.ChargeData;
 import com.rs.java.game.minigames.lividfarm.LividFarmControler;
 import com.rs.java.game.minigames.lividfarm.LividStore.Spell;
 import com.rs.java.game.minigames.pest.CommendationExchange;
 import com.rs.java.game.npc.NPC;
+import com.rs.java.game.player.*;
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager;
 import com.rs.kotlin.game.npc.drops.Drop;
 import com.rs.kotlin.game.npc.drops.DropTable;
 import com.rs.kotlin.game.npc.drops.DropTableRegistry;
 import com.rs.java.game.objects.ObjectPluginLoader;
-import com.rs.java.game.player.AccountCreation;
-import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Ranks.Rank;
-import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.VariableKeys;
 import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.actions.skills.construction.ConstructorsOutfit;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
@@ -633,6 +631,26 @@ public final class Commands {
                         player.getInventory().addItem(new Item(i, 1));
                     }
                     player.message("All clue scrolls has been added to your inventory.");
+                    return true;
+                case "charge":
+                    Item shield = player.getEquipment().getItem(Equipment.SLOT_SHIELD);
+                    //replace inactive with active
+                    if (shield != null && shield.getId() == 11284) {
+                        shield.setId(11283);
+                        shield.setMetadata(new ChargeData(0));
+                        player.getEquipment().refresh(Equipment.SLOT_SHIELD);
+                        player.getAppearence().generateAppearenceData();
+                    }
+
+                    //create charges if doesnt exist
+                    if (shield.getMetadata() == null || !(shield.getMetadata() instanceof ChargeData)) {
+                        shield.setMetadata(new ChargeData(0));
+                    }
+
+                    //charge shield
+                    ((ChargeData) shield.getMetadata()).increment(1);
+                    player.message("You have charged your dragonfire shield.");
+                    player.message("Total charges: " + ((ChargeData) shield.getMetadata()).getCharges());
                     return true;
                 case "ancient":
                 case "ancients":

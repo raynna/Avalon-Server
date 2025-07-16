@@ -46,26 +46,6 @@ public class FrostDragonCombat extends CombatScript {
 				}
 				npc.animate(new Animation(13155));
 				World.sendProjectile(npc, target, 393, 28, 16, 35, 35, 16, 0);
-				if (player.getEquipment().getShieldId() == 11283) {
-					if (player.getDfsCharges() < 50) {
-						player.animate(new Animation(6695));
-						player.gfx(new Graphics(1164, 1, 100));
-						player.setDfsCharges(player.getDfsCharges() + 1);
-						player.checkDFSCharges();
-						player.getPackets().sendGameMessage("Your dragonfire shield absorbs the dragon breath");
-					}
-				}
-				if (player.getEquipment().getShieldId() == 11284) {
-					if (player.getDfsCharges() < 50) {
-						player.getEquipment().getItems().set(5, new Item(11283));
-						player.getAppearence().generateAppearenceData();
-						player.animate(new Animation(6695));
-						player.gfx(new Graphics(1164, 1, 100));
-						player.setDfsCharges(player.getDfsCharges() + 1);
-						player.checkDFSCharges();
-						player.getPackets().sendGameMessage("Your dragonfire shield absorbs the dragon breath");
-					}
-				}
 				delayHit(npc, 1, target, getRegularHit(npc, damage));
 			}
 			break;
@@ -87,26 +67,6 @@ public class FrostDragonCombat extends CombatScript {
 				}
 				npc.animate(new Animation(13152));
 				npc.gfx(new Graphics(2465));
-				if (player.getEquipment().getShieldId() == 11283) {
-					if (player.getDfsCharges() < 50) {
-						player.animate(new Animation(6695));
-						player.gfx(new Graphics(1164, 1, 100));
-						player.setDfsCharges(player.getDfsCharges() + 1);
-						player.checkDFSCharges();
-						player.getPackets().sendGameMessage("Your dragonfire shield absorbs the dragon breath");
-					}
-				}
-				if (player.getEquipment().getShieldId() == 11284) {
-					if (player.getDfsCharges() < 50) {
-						player.getEquipment().getItems().set(5, new Item(11283));
-						player.getAppearence().generateAppearenceData();
-						player.animate(new Animation(6695));
-						player.gfx(new Graphics(1164, 1, 100));
-						player.setDfsCharges(player.getDfsCharges() + 1);
-						player.checkDFSCharges();
-						player.getPackets().sendGameMessage("Your dragonfire shield absorbs the dragon breath");
-					}
-				}
 				delayHit(npc, 1, target, getRegularHit(npc, damage));
 			} else {
 				damage = Utils.getRandom(650);
@@ -124,26 +84,6 @@ public class FrostDragonCombat extends CombatScript {
 							"Your potion fully protects you from the heat of the dragon's breath!", true);
 				}
 				npc.animate(new Animation(13155));
-				if (player.getEquipment().getShieldId() == 11283) {
-					if (player.getDfsCharges() < 50) {
-						player.animate(new Animation(6695));
-						player.gfx(new Graphics(1164, 1, 100));
-						player.setDfsCharges(player.getDfsCharges() + 1);
-						player.checkDFSCharges();
-						player.getPackets().sendGameMessage("Your dragonfire shield absorbs the dragon breath");
-					}
-				}
-				if (player.getEquipment().getShieldId() == 11284) {
-					if (player.getDfsCharges() < 50) {
-						player.getEquipment().getItems().set(5, new Item(11283));
-						player.getAppearence().generateAppearenceData();
-						player.animate(new Animation(6695));
-						player.gfx(new Graphics(1164, 1, 100));
-						player.setDfsCharges(player.getDfsCharges() + 1);
-						player.checkDFSCharges();
-						player.getPackets().sendGameMessage("Your dragonfire shield absorbs the dragon breath");
-					}
-				}
 				World.sendProjectile(npc, target, 393, 28, 16, 35, 35, 16, 0);
 				delayHit(npc, 1, target, getRegularHit(npc, damage));
 			}

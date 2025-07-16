@@ -803,7 +803,7 @@ public class DungeonManager {
 			Item item = player.getInventory().getItem(slotId);
 			if (item == null)
 				continue;
-			if (ButtonHandler.sendWear2(player, slotId, item.getId()))
+			if (ButtonHandler.sendWear(player, slotId, item.getId()))
 				worn = true;
 		}
 		if (worn) {

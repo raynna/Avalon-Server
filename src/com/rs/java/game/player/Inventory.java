@@ -1,6 +1,7 @@
 package com.rs.java.game.player;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import com.rs.Settings;
@@ -22,6 +23,8 @@ public final class Inventory implements Serializable {
 
 	public static final int INVENTORY_INTERFACE = 679;
 
+	public static final int RUNE_POUCH = 24497;
+
 	public Inventory() {
 		items = new ItemsContainer<Item>(28, false);
 	}
@@ -32,28 +35,18 @@ public final class Inventory implements Serializable {
 	
 
 	public void init() {
-		int RUNE_POUCH = 24497;
 		Item[] finalised = new Item[32];
 		for (int i = 0; i < 28; i++) {
 			finalised[i] = items.get(i);
 		}
 		if (player.getInventory().containsOneItem(RUNE_POUCH)) {
-			Item rune1 = player.getRunePouch().get(0);
-			Item rune2 = player.getRunePouch().get(1);
-			Item rune3 = player.getRunePouch().get(2);
-			if (rune1 != null)
-				finalised[29] = new Item(rune1.getId(),
-						rune1.getAmount() - player.getInventory().getNumberOf(rune1.getId()));
-			if (rune2 != null)
-				finalised[30] = new Item(rune2.getId(),
-						rune2.getAmount() - player.getInventory().getNumberOf(rune2.getId()));
-			if (rune3 != null)
-				finalised[31] = new Item(rune3.getId(),
-						rune3.getAmount() - player.getInventory().getNumberOf(rune3.getId()));
+			ItemsContainer<Item> pouchRunes = player.getRunePouch();
+			for (int i = 0; i < 3; i++) {
+				Item rune = pouchRunes.get(i);
+				finalised[29 + i] = (rune != null) ? rune.clone() : null;
+			}
 		} else {
-			finalised[29] = null;
-			finalised[30] = null;
-			finalised[31] = null;
+			Arrays.fill(finalised, 29, 32, null);
 		}
 		player.getPackets().sendItems(93, finalised);
 	}
@@ -69,32 +62,20 @@ public final class Inventory implements Serializable {
 	}
 
 	public void refresh(int... slots) {
-		int RUNE_POUCH = 24497;
 		Item[] finalised = new Item[32];
 		for (int i = 0; i < 28; i++) {
 			finalised[i] = items.get(i);
 		}
 		if (player.getInventory().containsOneItem(RUNE_POUCH)) {
-		Item rune1 = player.getRunePouch().get(0);
-		Item rune2 = player.getRunePouch().get(1);
-		Item rune3 = player.getRunePouch().get(2);
-		if (rune1 != null)
-			finalised[29] = new Item(rune1.getId(),
-					rune1.getAmount() - player.getInventory().getNumberOf(rune1.getId()));
-		if (rune2 != null)
-			finalised[30] = new Item(rune2.getId(),
-					rune2.getAmount() - player.getInventory().getNumberOf(rune2.getId()));
-		if (rune3 != null)
-			finalised[31] = new Item(rune3.getId(),
-					rune3.getAmount() - player.getInventory().getNumberOf(rune3.getId()));
+			ItemsContainer<Item> pouchRunes = player.getRunePouch();
+			for (int i = 0; i < 3; i++) {
+				Item rune = pouchRunes.get(i);
+				finalised[29 + i] = (rune != null) ? rune.clone() : null;
+				player.getPackets().sendUpdateItems(93, finalised, 29 + i);
+			}
 		} else {
-			finalised[29] = null;
-			finalised[30] = null;
-			finalised[31] = null;
+			Arrays.fill(finalised, 29, 32, null);
 		}
-		player.getPackets().sendUpdateItems(93, finalised, 29);
-		player.getPackets().sendUpdateItems(93, finalised, 30);
-		player.getPackets().sendUpdateItems(93, finalised, 31);
 		player.getPackets().sendUpdateItems(93, finalised, slots);
 	}
 
@@ -135,6 +116,23 @@ public final class Inventory implements Serializable {
 		Item[] itemsBefore = items.getItemsCopy();
 		if (!items.add(new Item(itemId, amount))) {
 			items.add(new Item(itemId, items.getFreeSlots()));
+			player.getPackets().sendGameMessage("Not enough space in your inventory.");
+			refreshItems(itemsBefore);
+			return false;
+		}
+		refreshItems(itemsBefore);
+		return true;
+	}
+
+	public boolean addItemFromEquipment(Item item) {
+		if (item == null || item.getId() < 0 || item.getAmount() <= 0 || !Utils.itemExists(item.getId())
+				|| !player.getControlerManager().canAddInventoryItem(item.getId(), item.getAmount()))
+			return false;
+
+		Item[] itemsBefore = items.getItemsCopy();
+		if (!items.add(item)) {
+			item.setAmount(items.getFreeSlot());
+			items.add(item);
 			player.getPackets().sendGameMessage("Not enough space in your inventory.");
 			refreshItems(itemsBefore);
 			return false;
@@ -444,29 +442,18 @@ public final class Inventory implements Serializable {
 	}
 
 	public void refresh() {
-		int RUNE_POUCH = 24497;
 		Item[] finalised = new Item[32];
 		for (int i = 0; i < 28; i++) {
 			finalised[i] = items.get(i);
 		}
 		if (player.getInventory().containsOneItem(RUNE_POUCH)) {
-		Item rune1 = player.getRunePouch().get(0);
-		Item rune2 = player.getRunePouch().get(1);
-		Item rune3 = player.getRunePouch().get(2);
-		if (rune1 != null)
-			finalised[29] = new Item(rune1.getId(),
-					rune1.getAmount() - player.getInventory().getNumberOf(rune1.getId()));
-		if (rune2 != null)
-			finalised[30] = new Item(rune2.getId(),
-					rune2.getAmount() - player.getInventory().getNumberOf(rune2.getId()));
-		if (rune3 != null)
-			finalised[31] = new Item(rune3.getId(),
-					rune3.getAmount() - player.getInventory().getNumberOf(rune3.getId()));
-		
+			ItemsContainer<Item> pouchRunes = player.getRunePouch();
+			for (int i = 0; i < 3; i++) {
+				Item rune = pouchRunes.get(i);
+				finalised[29 + i] = (rune != null) ? rune.clone() : null;
+			}
 		} else {
-			finalised[29] = null;
-			finalised[30] = null;
-			finalised[31] = null;
+			Arrays.fill(finalised, 29, 32, null);
 		}
 		player.getPackets().sendItems(93, finalised);
 		Weights.updateWeight(player);

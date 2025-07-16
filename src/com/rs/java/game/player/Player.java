@@ -2276,7 +2276,7 @@ public class Player extends Entity {
                     slot[i] = slots.get(i);
                 if (getTakeOffSwitchItemCache().size() > 0) {
                     getTakeOffSwitchItemCache().clear();
-                    ButtonHandler.sendRemove2(instance, slot);
+                    ButtonHandler.registerUnequip(instance, slot);
                 }
                 itemSwitch = false;
             }
@@ -3208,16 +3208,6 @@ public class Player extends Entity {
         return update;
     }
 
-    public void checkDFSCharges() {
-        if (getEquipment().getShieldId() == 11283 || getEquipment().getShieldId() == 11284) {
-            getCombatDefinitions().getBonuses()[5] += getDfsCharges();
-            getCombatDefinitions().getBonuses()[6] += getDfsCharges();
-            getCombatDefinitions().getBonuses()[7] += getDfsCharges();
-            getCombatDefinitions().getBonuses()[9] += getDfsCharges();
-            getCombatDefinitions().getBonuses()[10] += getDfsCharges();
-        }
-    }
-
     public void addDFSDefence() {
         getCombatDefinitions().getBonuses()[5] += 1;
         getCombatDefinitions().getBonuses()[6] += 1;
@@ -4057,10 +4047,6 @@ public class Player extends Entity {
             if (ItemConstants.turnCoins(item) && (isAtWild() || FfaZone.inRiskArea(this))) {
                 int price = item.getDefinitions().getHighAlchPrice();
                 items[1][i] = new Item(995, price);
-            }
-            if (item.getId() == 11284) {
-                items[1][i] = new Item(11283);
-                setDfsCharges(0);
             }
             if (!ItemConstants.keptOnDeath(item))
                 killer.totalCurrentDrop += (item.getDefinitions().getTipitPrice() * item.getAmount());

@@ -287,10 +287,18 @@ public final class Equipment implements Serializable {
 		refreshItems(itemsBefore);
 	}
 
+	public void updateItemWithMeta(int slot, Item itemWithMeta) {
+		getItems().set(slot, itemWithMeta.clone()); // preserve metadata
+		refresh(slot);
+	}
+
 	public void updateItem(int slot, int itemId) {
-		Item item = new Item(itemId, 1);
-		player.getEquipment().getItems().set(slot, item);
-		player.getEquipment().refresh(slot);
+		Item oldItem = getItem(slot);
+		if (oldItem == null) {
+			return;
+		}
+		oldItem.setId(itemId);
+		refresh(slot);
 		player.getAppearence().generateAppearenceData();
 	}
 

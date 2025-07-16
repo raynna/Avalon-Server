@@ -90,7 +90,7 @@ public class ChaosElementalCombat extends CombatScript {
 				int slot = Utils.random(10);
 
 				if (player.getEquipment().getItem(slot) != null && hasSpace) {
-					ButtonHandler.sendRemoveEquipment(player, slot);
+					ButtonHandler.unequip(player, slot);
 					player.message("Npc " + npc.getId() + " has removed slot " + slot);
 				}
 			}

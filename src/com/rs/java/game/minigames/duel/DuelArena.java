@@ -196,7 +196,7 @@ public class DuelArena extends Controler {
 			}
 		}, 0, 2);
 		if (player.getCustomDuelRule().get(1).equals(true) && !DDS(player.getEquipment().getWeaponId())) {
-			ButtonHandler.sendRemove(player, Equipment.SLOT_WEAPON);
+			ButtonHandler.registerRemoveEquipment(player, Equipment.SLOT_WEAPON);
 			player.message("<col=990000>Remember to equip your dds!");
 		}
 	}
@@ -1138,11 +1138,11 @@ public class DuelArena extends Controler {
 		for (int i = 10; i < 23; i++) {
 			if (i == 14) {
 				if (player.getEquipment().hasTwoHandedWeapon() || isWearingTwoHandedWeapon() == true)
-					ButtonHandler.sendRemove(target, 3);
+					ButtonHandler.registerRemoveEquipment(target, 3);
 			}
 			if (player.getLastDuelRules().getRule(i)) {
 				slot = i - 10;
-				ButtonHandler.sendRemove(player, slot);
+				ButtonHandler.registerRemoveEquipment(player, slot);
 			}
 		}
 	}

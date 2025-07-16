@@ -56,6 +56,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	public boolean forceAdd(T item) {
 		for (int i = 0; i < data.length; i++) {
 			if (data[i] == null) {
+				Item oldItem = new Item(item);
 				data[i] = item;
 				return true;
 			}
@@ -79,7 +80,10 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 			for (int i = 0; i < data.length; i++) {
 				if (data[i] != null) {
 					if (data[i].getId() == item.getId()) {
-						data[i] = new Item(data[i].getId(), data[i].getAmount() + item.getAmount());
+						Item oldItem = data[i];
+						Item newItem = new Item(oldItem);
+						newItem.setAmount(oldItem.getAmount() + item.getAmount());
+						data[i] = newItem;
 						return true;
 					}
 				}
@@ -89,7 +93,10 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 				if (freeSlots() >= item.getAmount()) {
 					for (int i = 0; i < item.getAmount(); i++) {
 						int index = freeSlot();
-						data[index] = new Item(item.getId(), 1);
+						Item oldItem = data[i];
+						Item newItem = new Item(oldItem);
+						newItem.setAmount(1);
+						data[index] = newItem;
 					}
 					return true;
 				} else {
@@ -125,7 +132,10 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 						removed += toRemove;
 						amt -= toRemove;
 						toRemove = 0;
-						data[i] = new Item(data[i].getId(), amt);
+						Item oldItem = data[i];
+						Item newItem = new Item(oldItem);
+						newItem.setAmount(amt);
+						data[i] = newItem;
 						return removed;
 					} else {
 						removed += amt;
@@ -299,50 +309,86 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	}
 
 	public int remove(int preferredSlot, Item item) {
-		int removed = 0, toRemove = item.getAmount();
-		if (data[preferredSlot] != null) {
-			if (data[preferredSlot].getId() == item.getId()) {
-				int amt = data[preferredSlot].getAmount();
+		int removed = 0;
+		int toRemove = item.getAmount();
+
+		Item slotItem = data[preferredSlot];
+		if (slotItem != null) {
+			if (slotItem == item || !item.getDefinitions().isStackable()) {
+				// Exact object match or unstackable: just match by reference
+				int amt = slotItem.getAmount();
 				if (amt > toRemove) {
 					removed += toRemove;
 					amt -= toRemove;
-					toRemove = 0;
-					// data[preferredSlot] = new
-					// Item(data[preferredSlot].getDefinition().getId(), amt);
-					set2(preferredSlot, new Item(data[preferredSlot].getId(), amt));
+					Item remaining = new Item(slotItem);
+					remaining.setAmount(amt);
+					set2(preferredSlot, remaining);
 					return removed;
 				} else {
 					removed += amt;
 					toRemove -= amt;
-					// data[preferredSlot] = null;
+					set(preferredSlot, null);
+				}
+			} else if (slotItem.isStackableWith(item)) {
+				int amt = slotItem.getAmount();
+				if (amt > toRemove) {
+					removed += toRemove;
+					amt -= toRemove;
+					Item remaining = new Item(slotItem);
+					remaining.setAmount(amt);
+					set2(preferredSlot, remaining);
+					return removed;
+				} else {
+					removed += amt;
+					toRemove -= amt;
 					set(preferredSlot, null);
 				}
 			}
 		}
+
+		// Go through rest of inventory
 		for (int i = 0; i < data.length; i++) {
-			if (data[i] != null) {
-				if (data[i].getId() == item.getId()) {
-					int amt = data[i].getAmount();
-					if (amt > toRemove) {
-						removed += toRemove;
-						amt -= toRemove;
-						toRemove = 0;
-						// data[i] = new Item(data[i].getDefinition().getId(),
-						// amt);
-						set2(i, new Item(data[i].getId(), amt));
-						return removed;
-					} else {
-						removed += amt;
-						toRemove -= amt;
-						// data[i] = null;
-						set(i, null);
-					}
+			if (data[i] == null || i == preferredSlot)
+				continue;
+
+			Item current = data[i];
+			if (current == item || !item.getDefinitions().isStackable()) {
+				// Match unstackables directly by reference
+				int amt = current.getAmount();
+				if (amt > toRemove) {
+					removed += toRemove;
+					amt -= toRemove;
+					Item remaining = new Item(current);
+					remaining.setAmount(amt);
+					set2(i, remaining);
+					return removed;
+				} else {
+					removed += amt;
+					toRemove -= amt;
+					set(i, null);
+				}
+			} else if (current.isStackableWith(item)) {
+				int amt = current.getAmount();
+				if (amt > toRemove) {
+					removed += toRemove;
+					amt -= toRemove;
+					Item remaining = new Item(current);
+					remaining.setAmount(amt);
+					set2(i, remaining);
+					return removed;
+				} else {
+					removed += amt;
+					toRemove -= amt;
+					set(i, null);
 				}
 			}
 		}
+
 		return removed;
 	}
-	
+
+
+
 
 	public void addAll(ItemsContainer<T> container) {
 		for (int i = 0; i < container.getSize(); i++) {
