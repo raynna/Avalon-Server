@@ -56,8 +56,7 @@ public class ShopsHandler {
 				Item[] items = new Item[splitedItems.length / 2];
 				int count = 0;
 				for (int i = 0; i < items.length; i++)
-					items[i] = new Item(Integer.valueOf(splitedItems[count++]), Integer.valueOf(splitedItems[count++]),
-							true);
+					items[i] = new Item(Integer.valueOf(splitedItems[count++]), Integer.valueOf(splitedItems[count++]));
 				out.writeInt(key);
 				writeAlexString(out, splitedLine[1]);
 				out.writeShort(money);
@@ -88,7 +87,7 @@ public class ShopsHandler {
 				boolean generalStore = buffer.get() == 1;
 				Item[] items = new Item[buffer.get() & 0xff];
 				for (int i = 0; i < items.length; i++)
-					items[i] = new Item(buffer.getShort() & 0xffff, buffer.getInt(), true);
+					items[i] = new Item(buffer.getShort() & 0xffff, buffer.getInt());
 				addShop(key, new Shop(name, money, items, generalStore));
 			}
 			channel.close();

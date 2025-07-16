@@ -3,6 +3,7 @@ package com.rs.kotlin.game.npc.drops.tables
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.item.ItemId
 import com.rs.java.game.player.Skills
+import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.drops.*
 import com.rs.kotlin.game.npc.drops.DropTable.Companion.BLUE
 import com.rs.kotlin.game.npc.drops.DropTable.Companion.CRIMSON
@@ -51,6 +52,11 @@ object BlackDragonDropTable {
 
             tertiaryDrops {
                 tertiaryDrop(
+                    item = "scroll box (hard)",
+                    probability = 1,
+                    chance = 128,
+                    condition = { player -> player?.treasureTrailsManager?.hasClueScrollByLevel(TreasureTrailsManager.HARD) == false }) //TODO fur'n seek wishlist
+                tertiaryDrop(
                     item = "black dragon tail-bone",
                     probability = 1,
                     chance = 4,
@@ -59,7 +65,7 @@ object BlackDragonDropTable {
                     item = "black dragon egg",
                     probability = 1,
                     chance = 200,
-                    condition = { player -> player?.skills?.getLevelForXp(Skills.SUMMONING) != 99 })
+                    condition = { player -> player?.skills?.getLevelForXp(Skills.SUMMONING) == 99 })
                 tertiaryDrop(item = "draconic visage", 1, probability = 1, chance = 10000)
                 tertiaryDrop(item = "starved ancient effigy", 1, probability = 1, chance = 18000)
             }

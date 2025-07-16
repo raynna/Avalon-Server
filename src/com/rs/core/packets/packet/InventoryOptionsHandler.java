@@ -21,6 +21,7 @@ import com.rs.java.game.item.ItemPlugin;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
 import com.rs.java.game.item.itemdegrading.ChargesManager;
 import com.rs.java.game.item.itemdegrading.ItemDegrade.ItemStore;
+import com.rs.java.game.item.meta.ChargeData;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.NpcPlugin;
@@ -41,6 +42,7 @@ import com.rs.java.game.player.actions.combat.LunarMagicks.RSLunarSpellStore;
 import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.actions.combat.ModernMagicks;
 import com.rs.java.game.player.actions.combat.ModernMagicks.RSSpellStore;
+import com.rs.java.game.player.actions.combat.modernspells.Charge;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking.Cook;
 import com.rs.java.game.player.actions.skills.crafting.GemCutting;
@@ -1067,9 +1069,16 @@ public class InventoryOptionsHandler {
         } else if (itemId >= 15048 && itemId <= 15054) {
             player.getDialogueManager().startDialogue("MagicSkullball", 15046, slotId);
             return;
-        } else if (itemId == 11283)
-            player.message("Your dragonfire shield has " + player.getDfsCharges() + " charges.");
-        else if (itemId == 11284)
+        } else if (itemId == 11283) {
+            Item shield = player.getInventory().getItem(slotId);
+            ChargeData chargeData = shield.getMetadata() instanceof ChargeData ? (ChargeData) shield.getMetadata() : null;
+            if (chargeData == null) {
+                player.message("Your dragonfire shield is not charged.");
+                return;
+            }
+            int charges = chargeData.getCharges();
+            player.message("Your dragonfire shield has " + charges + " charges");
+        } else if (itemId == 11284)
             player.message("Your dragonfire shield is not charged.");
         else if (itemId >= 15084 && itemId <= 15100)
             player.getDialogueManager().startDialogue("DiceBag", itemId);
@@ -1327,10 +1336,15 @@ public class InventoryOptionsHandler {
         } else if (itemId == 1438)
             Talisman.locate(player, 3127, 3405);
         else if (itemId == 11283) {
-            player.setDfsCharges(0);
-            player.message("You empty your dragonfire shield charges.");
-            player.getInventory().deleteItem(slotId, new Item(11283, 1));
-            player.getInventory().addItem(11284, 1);
+            Item shield = player.getInventory().getItem(slotId);
+            ChargeData chargeData = shield.getMetadata() instanceof ChargeData ? (ChargeData) shield.getMetadata() : null;
+            if (chargeData == null ||chargeData.getCharges() == 0) {
+                player.message("Your dragonfire shield is already empty.");
+            } else {
+                player.message("You empty your dragonfire shield charges.");
+                player.getInventory().deleteItem(slotId, 1);
+                player.getInventory().addItem(new Item(11284));
+            }
         } else if (itemId == 1440)
             Talisman.locate(player, 3306, 3474);
         else if (itemId == 1442)

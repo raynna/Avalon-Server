@@ -29,7 +29,7 @@ public class FloorItem extends Item {
 
 	@Override
 	public void setAmount(int amount) {
-		this.amount = amount;
+		this.setAmount(amount);
 	}
 	
 	public FloorItem(Item item, WorldTile tile, Player owner, boolean underGrave, boolean invisible, String ironmanName) {

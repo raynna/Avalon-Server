@@ -30,7 +30,7 @@ public class TreasureTrailsManager implements Serializable {
 
 	private static final long serialVersionUID = 9153704778933553926L;
 
-	private static final int EASY = 0, MEDIUM = 1, HARD = 2, ELITE = 3;
+	public static final int EASY = 0, MEDIUM = 1, HARD = 2, ELITE = 3;
 	public static final int SOURCE_DIG = 0, SOURCE_EMOTE = 1, SOURCE_NPC = 2, SOURCE_PUZZLENPC = 3, SOURCE_OBJECT = 4;
 
 	public static final int[] CLUE_SCROLLS = new int[] { 2677, 2801, 2722, 19043 };
@@ -256,6 +256,41 @@ public class TreasureTrailsManager implements Serializable {
 				return true;
 		return false;
 	}
+
+	public boolean hasClueScroll(int itemId) {
+        for (int clueScroll : CLUE_SCROLLS) {
+            if (clueScroll == itemId) {
+                if (player.getInventory().getNumberOf(itemId) > 0)
+                    return true;
+                if (player.getBank().containsOneItem(itemId))
+                    return true;
+                break;
+            }
+        }
+        for (int scrollBox : SCROLL_BOXES) {
+            if (scrollBox == itemId) {
+                if (player.getInventory().getNumberOf(itemId) > 0)
+                    return true;
+                if (player.getBank().containsOneItem(itemId))
+                    return true;
+                break;
+            }
+        }
+		return false;
+	}
+
+	public boolean hasClueScrollByLevel(int clueLevel) {
+		if (clueLevel < 0 || clueLevel >= CLUE_SCROLLS.length)
+			return false;
+
+		int clueScrollId = CLUE_SCROLLS[clueLevel];
+		int scrollBoxId = SCROLL_BOXES[clueLevel];
+
+		return hasClueScroll(clueScrollId) || hasClueScroll(scrollBoxId);
+	}
+
+
+
 
 	public boolean useItem(Item item, int slot) {
 		int level = getScrollboxLevel(item.getId());

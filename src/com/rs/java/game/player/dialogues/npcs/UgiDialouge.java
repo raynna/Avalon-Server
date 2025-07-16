@@ -13,7 +13,6 @@ public class UgiDialouge extends Dialogue {
 	public void start() {
 		Ugi npc = (Ugi) parameters[0];
 
-		// Find the clue level where this interaction is valid
 		for (int level = 0; level < TreasureTrailsManager.CLUE_SCROLLS.length; level++) {
 			if (player.getInventory().getNumberOf(TreasureTrailsManager.CLUE_SCROLLS[level]) > 0
 					&& player.getTreasureTrailsManager().getPhase() == 4) {
