@@ -9,8 +9,11 @@ import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.ItemExamines;
 import com.rs.java.utils.Utils;
 
+import java.io.Serial;
+
 public class FloorItem extends Item {
 
+	@Serial
 	private static final long serialVersionUID = -2287633342490535089L;
 
 	private final WorldTile tile;
