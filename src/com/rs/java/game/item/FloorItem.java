@@ -13,8 +13,8 @@ public class FloorItem extends Item {
 
 	private static final long serialVersionUID = -2287633342490535089L;
 
-	private WorldTile tile;
-	private String ownerName;
+	private final WorldTile tile;
+	private final String ownerName;
 	private transient Player owner;
 	// 0 visible, 1 invisible, 2 visible and reappears 30sec after taken
 	private int type;
@@ -25,36 +25,27 @@ public class FloorItem extends Item {
 
 	public FloorItem(int id) {
 		super(id);
+		this.tile = null;
+		this.ownerName = null;
 	}
 
-	@Override
-	public void setAmount(int amount) {
-		this.setAmount(amount);
-	}
-	
 	public FloorItem(Item item, WorldTile tile, Player owner, boolean underGrave, boolean invisible, String ironmanName) {
-		super(item.getId(), item.getAmount());
+		super(item.getId(), item.getAmount(), item.getMetadata());
 		this.tile = tile;
-		if (owner != null)
-			this.ownerName = owner.getUsername();
+		this.ownerName = owner != null ? owner.getUsername() : null;
 		this.owner = owner;
 		this.type = invisible ? 1 : 0;
-		this.setCantPickupBy(ironmanName);
+		this.cantPickupBy = ironmanName;
 	}
 
 	public FloorItem(Item item, WorldTile tile, Player owner, boolean underGrave, boolean invisible) {
-		super(item.getId(), item.getAmount());
-		this.tile = tile;
-		if (owner != null)
-			this.ownerName = owner.getUsername();
-		this.owner = owner;
-		this.type = invisible ? 1 : 0;
+		this(item, tile, owner, underGrave, invisible, null);
 	}
 
-	
 	public FloorItem(Item item, WorldTile tile, Player owner, boolean invisible, int tick, boolean spawned) {
-		super(item.getId(), item.getAmount());
+		super(item.getId(), item.getAmount(), item.getMetadata());
 		this.tile = tile;
+		this.ownerName = owner != null ? owner.getUsername() : null;
 		this.owner = owner;
 		this.type = invisible ? 1 : 0;
 		this.tick = tick;
@@ -62,10 +53,16 @@ public class FloorItem extends Item {
 	}
 
 	@Deprecated
-	public FloorItem(Item item, WorldTile tile, boolean appearforever) {
-		super(item.getId(), item.getAmount());
+	public FloorItem(Item item, WorldTile tile, boolean appearForever) {
+		super(item.getId(), item.getAmount(), item.getMetadata());
 		this.tile = tile;
-		this.type = appearforever ? 2 : 0;
+		this.ownerName = null;
+		this.type = appearForever ? 2 : 0;
+	}
+
+	@Override
+	public void setAmount(int amount) {
+		super.setAmount(amount);
 	}
 
 	public void setGlobalPicked(boolean picked) {
@@ -95,51 +92,53 @@ public class FloorItem extends Item {
 	public static void handleExamine(final Player player, InputStream stream) {
 		if (!player.hasStarted() || !player.clientHasLoadedMapRegion() || player.isDead())
 			return;
-		int y = stream.readUnsignedShort();
-		int x = stream.readUnsignedShortLE();
+		final int y = stream.readUnsignedShort();
+		final int x = stream.readUnsignedShortLE();
 		final int id = stream.readUnsignedShort();
 		final WorldTile tile = new WorldTile(x, y, player.getPlane());
 		final int regionId = tile.getRegionId();
 		if (!player.getMapRegionsIds().contains(regionId))
 			return;
-		final FloorItem item = World.getRegion(regionId).getGroundItem(id, tile, player);
-		if (item == null)
-			return;
-		long price;
-		long amount;
-		player.stopAll(false);
 		final FloorItem floorItem = World.getRegion(regionId).getGroundItem(id, tile, player);
 		if (floorItem == null)
 			return;
-		// player.getPackets().sendGameMessage(ItemExamines.getExamine(floorItem));
+
+		player.stopAll(false);
+
 		if (!ItemConstants.isTradeable(floorItem)) {
 			player.getPackets().sendGameMessage(
 					"[Price Checker] " + (floorItem.getAmount() > 1 ? floorItem.getAmount() + " x " : "")
 							+ floorItem.getDefinitions().getName() + " is untradeable.");
 			return;
 		}
+
 		if (floorItem.getId() == 995) {
 			player.getPackets()
 					.sendGameMessage("[Price Checker] " + Utils.getFormattedNumber(floorItem.getAmount(), ',') + " x "
 							+ floorItem.getDefinitions().getName() + ".");
 			return;
 		}
+
 		if ((floorItem.getDefinitions().isNoted() || floorItem.getDefinitions().isStackable())
 				&& floorItem.getAmount() > 1) {
-			amount = floorItem.getAmount();
-			price = EconomyPrices.getPrice(floorItem.getId()) * amount;
+			long amount = floorItem.getAmount();
+			long price = EconomyPrices.getPrice(floorItem.getId()) * amount;
 			player.getPackets()
 					.sendGameMessage("[Price Checker] " + Utils.getFormattedNumber(floorItem.getAmount(), ',') + " x "
 							+ floorItem.getDefinitions().getName() + ": " + Utils.formatDoubledAmount(price)
 							+ " coins.");
-		} else
+		} else {
 			player.getPackets().sendGameMessage("[Price Checker] " + floorItem.getDefinitions().getName() + ": "
 					+ Utils.getFormattedNumber(EconomyPrices.getPrice(floorItem.getId()), ',') + " coins.");
-		if (player.isDeveloper())
+		}
+
+		if (player.isDeveloper()) {
 			player.getPackets()
 					.sendGameMessage(floorItem.getDefinitions().getName() + ", ItemId: "
 							+ floorItem.getDefinitions().getId() + ", X: " + tile.getX() + ", Y: " + tile.getY()
 							+ ", H: " + tile.getPlane() + ", Owner: " + floorItem.getOwner());
+		}
+
 		player.getPackets().sendItemMessage(0, 15263739, id, x, y, ItemExamines.getExamine(new Item(id))); // ChatboxMessage
 	}
 
@@ -162,7 +161,7 @@ public class FloorItem extends Item {
 	public int getTick() {
 		return tick;
 	}
-	
+
 	public void setCantPickupBy(String player) {
 		cantPickupBy = player;
 	}
@@ -170,5 +169,4 @@ public class FloorItem extends Item {
 	public boolean cantPickupBy(String player) {
 		return cantPickupBy != null && cantPickupBy.equalsIgnoreCase(player);
 	}
-
 }

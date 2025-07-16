@@ -1357,573 +1357,429 @@ public final class World {
         return addGroundItem(item, tile, owner, invisible, hiddenTime, type, 60, ironmanName);
     }
 
-    public static final void turnPublic(FloorItem floorItem, int publicTime) {
-        if (!floorItem.isInvisible())
+    public static void turnPublic(FloorItem item, int publicTime) {
+        if (!item.isInvisible())
             return;
-        int regionId = floorItem.getTile().getRegionId();
-        final Region region = getRegion(regionId);
-        if (!region.getGroundItemsSafe().contains(floorItem))
+
+        Region region = getRegion(item.getTile().getRegionId());
+        if (!region.getGroundItemsSafe().contains(item))
             return;
-        Player realOwner = floorItem.hasOwner() ? World.getPlayer(floorItem.getOwner()) : null;
-        if (ItemConstants.removeAttachedId(floorItem) != -1) {
-            if (ItemConstants.removeAttachedId2(floorItem) != -1)
-                World.updateGroundItem(new Item(ItemConstants.removeAttachedId2(floorItem), 1),
-                        new WorldTile(floorItem.getTile()), realOwner, 1, 0);
-            removeGroundItem(floorItem, 0);
-            World.updateGroundItem(new Item(ItemConstants.removeAttachedId(floorItem), 1), floorItem.getTile(),
-                    realOwner, 1, 0);
+
+        Player owner = item.hasOwner() ? World.getPlayer(item.getOwner()) : null;
+
+        // Handle attached items
+        int attachedId = ItemConstants.removeAttachedId(item);
+        if (attachedId != -1) {
+            int attachedId2 = ItemConstants.removeAttachedId2(item);
+            if (attachedId2 != -1) {
+                World.updateGroundItem(new Item(attachedId2, 1), item.getTile(), owner, 1, 0);
+            }
+            removeGroundItem(item, 0);
+            World.updateGroundItem(new Item(attachedId, 1), item.getTile(), owner, 1, 0);
             return;
         }
-        floorItem.setInvisible(false);
-        if (realOwner != null) {
-            if (realOwner.getBeam() != null && realOwner.getBeamItem() != null) {
-                if (floorItem.getTile().matches(realOwner.getBeam())
-                        && realOwner.getBeamItem().getId() == floorItem.getId()) {
-                    realOwner.setBeam(null);
-                    realOwner.setBeamItem(null);
-                    // System.out.println("Removed beam due to turnt public.");
-                }
+
+        item.setInvisible(false);
+
+        // Remove player beam if applicable
+        if (owner != null && owner.getBeam() != null && owner.getBeamItem() != null) {
+            if (item.getTile().matches(owner.getBeam()) && owner.getBeamItem().getId() == item.getId()) {
+                owner.setBeam(null);
+                owner.setBeamItem(null);
             }
         }
+
+        // Send ground item to other players
+        int regionId = item.getTile().getRegionId();
         for (Player player : players) {
-            if (player == null || player == realOwner || !player.hasStarted() || player.hasFinished()
-                    || player.getPlane() != floorItem.getTile().getPlane()
-                    || !player.getMapRegionsIds().contains(regionId) || !ItemConstants.isTradeable(floorItem))
+            if (player == null || player == owner || !player.hasStarted() || player.hasFinished())
                 continue;
-            player.getPackets().sendGroundItem(floorItem);
+            if (player.getPlane() != item.getTile().getPlane())
+                continue;
+            if (!player.getMapRegionsIds().contains(regionId))
+                continue;
+            if (!ItemConstants.isTradeable(item))
+                continue;
+
+            player.getPackets().sendGroundItem(item);
         }
+
         if (publicTime != -1)
-            removeGroundItem(floorItem, publicTime);
+            removeGroundItem(item, publicTime);
     }
+
+    private static void broadcastGroundItem(FloorItem item, Player exclude, boolean checkTradeable) {
+        int regionId = item.getTile().getRegionId();
+        for (Player player : players) {
+            if (player == null || player == exclude || !player.hasStarted() || player.hasFinished())
+                continue;
+            if (player.getPlane() != item.getTile().getPlane())
+                continue;
+            if (!player.getMapRegionsIds().contains(regionId))
+                continue;
+            if (checkTradeable && !ItemConstants.isTradeable(item))
+                continue;
+
+            player.getPackets().sendGroundItem(item);
+        }
+    }
+
+
 
     @Deprecated
-    public static final void addGroundItemForever(Item item, final WorldTile tile) {
-        int regionId = tile.getRegionId();
-        final FloorItem floorItem = new FloorItem(item, tile, true);
-        final Region region = getRegion(tile.getRegionId());
+    public static void addGroundItemForever(Item item, WorldTile tile) {
+        FloorItem floorItem = new FloorItem(item, tile, true);
+        Region region = getRegion(tile.getRegionId());
         region.getGroundItemsSafe().add(floorItem);
-        for (Player player : players) {
-            if (player == null || !player.hasStarted() || player.hasFinished()
-                    || player.getPlane() != floorItem.getTile().getPlane()
-                    || !player.getMapRegionsIds().contains(regionId))
-                continue;
-            player.getPackets().sendGroundItem(floorItem);
-        }
+
+        broadcastGroundItem(floorItem, null, false);
     }
 
-    /*
-     * type 0 - gold if not tradeable type 1 - gold if destroyable type 2 - no gold
-     */
-    public static final FloorItem addGroundItem(final Item item, final WorldTile tile, final Player owner,
-                                                boolean invisible, long hiddenTime, int type, final int publicTime) {
-        final FloorItem floorItem = new FloorItem(item, tile, owner, false, invisible);
-        final Region region = getRegion(tile.getRegionId());
-        if (type == 1) {
-            if (ItemConstants.isTradeable(item) || ItemConstants.turnCoins(item)) {
-                region.getGroundItemsSafe().add(floorItem);
-            }
-            if (invisible) {
-                if (owner != null) {
-                    if (ItemConstants.isTradeable(item) || ItemConstants.turnCoins(item)) {
-                        owner.getPackets().sendGroundItem(floorItem);
+    public static FloorItem addGroundItem(Item item, WorldTile tile, Player owner,
+                                          boolean invisible, long hiddenTime, int type, int publicTime) {
+        return addGroundItemInternal(item, tile, owner, invisible, hiddenTime, type, publicTime, null);
+    }
 
-                    }
-                }
-                if (hiddenTime != -1) {
-                    CoresManager.slowExecutor.schedule(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                turnPublic(floorItem, publicTime);
-                            } catch (Throwable e) {
-                                Logger.handle(e);
-                            }
-                        }
-                    }, hiddenTime, TimeUnit.SECONDS);
-                }
-            } else {
-                int regionId = tile.getRegionId();
-                for (Player player : players) {
-                    if (player == null || !player.hasStarted() || player.hasFinished()
-                            || player.getPlane() != tile.getPlane() || !player.getMapRegionsIds().contains(regionId))
-                        continue;
-                    player.getPackets().sendGroundItem(floorItem);
-                }
-                if (publicTime != -1)
-                    removeGroundItem(floorItem, publicTime);
-            }
-        } else {
+    public static FloorItem addGroundItem(Item item, WorldTile tile, Player owner,
+                                          boolean invisible, long hiddenTime, int type, int publicTime, String ironmanName) {
+        return addGroundItemInternal(item, tile, owner, invisible, hiddenTime, type, publicTime, ironmanName);
+    }
+
+    private static FloorItem addGroundItemInternal(Item item, WorldTile tile, Player owner,
+                                                   boolean invisible, long hiddenTime, int type, int publicTime, String ironmanName) {
+        FloorItem floorItem = (ironmanName != null)
+                ? new FloorItem(item, tile, owner, false, invisible, ironmanName)
+                : new FloorItem(item, tile, owner, false, invisible);
+
+        Region region = getRegion(tile.getRegionId());
+
+        boolean shouldBroadcast = !invisible;
+        boolean shouldSendToOwner = invisible;
+        boolean shouldTrack = type != 2 || ItemConstants.isTradeable(item) || ItemConstants.turnCoins(item);
+
+        if (shouldTrack) {
             region.getGroundItemsSafe().add(floorItem);
-            if (invisible) {
-                if (owner != null) {
-                    owner.getPackets().sendGroundItem(floorItem);
-                }
-                if (hiddenTime != -1) {
-                    CoresManager.slowExecutor.schedule(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                turnPublic(floorItem, publicTime);
-                            } catch (Throwable e) {
-                                Logger.handle(e);
-                            }
-                        }
-                    }, hiddenTime, TimeUnit.SECONDS);
-                }
-            } else {
-                int regionId = tile.getRegionId();
-                for (Player player : players) {
-                    if (player == null || !player.hasStarted() || player.hasFinished()
-                            || player.getPlane() != tile.getPlane() || !player.getMapRegionsIds().contains(regionId)
-                            || !ItemConstants.isTradeable(item))
-                        continue;
-                    player.getPackets().sendGroundItem(floorItem);
-                }
-                if (publicTime != -1)
-                    removeGroundItem(floorItem, publicTime);
-            }
         }
-        return floorItem;
-    }
 
-    public static final FloorItem addGroundItem(final Item item, final WorldTile tile, final Player owner,
-                                                boolean invisible, long hiddenTime, int type, final int publicTime, String ironmanName) {
-        final FloorItem floorItem = new FloorItem(item, tile, owner, false, invisible, ironmanName);
-        final Region region = getRegion(tile.getRegionId());
-        if (type == 1) {
-            if (ItemConstants.isTradeable(item) || ItemConstants.turnCoins(item)) {
-                region.getGroundItemsSafe().add(floorItem);
-            }
-            if (invisible) {
-                if (owner != null) {
-                    if (ItemConstants.isTradeable(item) || ItemConstants.turnCoins(item)) {
-                        owner.getPackets().sendGroundItem(floorItem);
-
-                    }
-                }
-                if (hiddenTime != -1) {
-                    CoresManager.slowExecutor.schedule(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                turnPublic(floorItem, publicTime);
-                            } catch (Throwable e) {
-                                Logger.handle(e);
-                            }
-                        }
-                    }, hiddenTime, TimeUnit.SECONDS);
-                }
-            } else {
-                int regionId = tile.getRegionId();
-                for (Player player : players) {
-                    if (player == null || !player.hasStarted() || player.hasFinished()
-                            || player.getPlane() != tile.getPlane() || !player.getMapRegionsIds().contains(regionId))
-                        continue;
-                    player.getPackets().sendGroundItem(floorItem);
-                }
-                if (publicTime != -1)
-                    removeGroundItem(floorItem, publicTime);
-            }
-        } else {
-            region.getGroundItemsSafe().add(floorItem);
-            if (invisible) {
-                if (owner != null) {
-                    owner.getPackets().sendGroundItem(floorItem);
-                }
-                if (hiddenTime != -1) {
-                    CoresManager.slowExecutor.schedule(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                turnPublic(floorItem, publicTime);
-                            } catch (Throwable e) {
-                                Logger.handle(e);
-                            }
-                        }
-                    }, hiddenTime, TimeUnit.SECONDS);
-                }
-            } else {
-                int regionId = tile.getRegionId();
-                for (Player player : players) {
-                    if (player == null || !player.hasStarted() || player.hasFinished()
-                            || player.getPlane() != tile.getPlane() || !player.getMapRegionsIds().contains(regionId)
-                            || !ItemConstants.isTradeable(item))
-                        continue;
-                    player.getPackets().sendGroundItem(floorItem);
-                }
-                if (publicTime != -1)
-                    removeGroundItem(floorItem, publicTime);
-            }
-        }
-        return floorItem;
-    }
-
-    public static final void updateGroundItem(Item item, final WorldTile tile, final Player owner) {
-        final FloorItem floorItem = World.getRegion(tile.getRegionId()).getGroundItem(item.getId(), tile, owner);
-        if (floorItem == null) {
-            addGroundItem(item, tile, owner, true, 60);
-            return;
-        }
-        /*
-         * owner.getPackets().sendGameMessage( "FloorItem " +
-         * floorItem.getDefinitions().getName() + " set from " + floorItem.getAmount() +
-         * " to " + (floorItem.getAmount() + item.getAmount()) + "");
-         */
-        floorItem.setAmount(floorItem.getAmount() + item.getAmount());
-        /*
-         * addGroundItem(floorItem, tile, owner, true, 60);
-         */
-
-    }
-
-    public static final void updateGroundItem(Item item, final WorldTile tile, final Player owner, final int time,
-                                              final int type) {
-        final FloorItem floorItem = World.getRegion(tile.getRegionId()).getGroundItem(item.getId(), tile, owner);
-        if (floorItem == null) {
-            if (item.getAmount() != 1 && !item.getDefinitions().isStackable() && !item.getDefinitions().isNoted()) {
-                for (int i = 0; i < item.getAmount(); i++) {
-                    addGroundItem(new Item(item.getId(), 1), tile, owner, true, time, type);
-                }
-                return;
-            } else {
-                addGroundItem(item, tile, owner, true, time, type);
-                return;
-            }
-        }
-        if (floorItem.getDefinitions().isStackable() || floorItem.getDefinitions().isNoted()) {
-            if (floorItem.getAmount() + item.getAmount() < 0
-                    || floorItem.getAmount() + item.getAmount() > Integer.MAX_VALUE) {
-                int totalAmount = Integer.MAX_VALUE - floorItem.getAmount();
-                floorItem.setAmount(Integer.MAX_VALUE);
-                item.setAmount(item.getAmount() - totalAmount);
-                addGroundItem(item, tile, owner, true, time, type);
-                owner.getPackets().sendRemoveGroundItem(floorItem);
+        // Send to owner if invisible
+        if (shouldSendToOwner && owner != null) {
+            if (type != 2 || ItemConstants.isTradeable(item) || ItemConstants.turnCoins(item))
                 owner.getPackets().sendGroundItem(floorItem);
-            } else
-                floorItem.setAmount(floorItem.getAmount() + item.getAmount());
-            owner.getPackets().sendRemoveGroundItem(floorItem);
-            owner.getPackets().sendGroundItem(floorItem);
-        } else {
-            if (item.getAmount() != 1) {
-                for (int i = 0; i < item.getAmount(); i++) {
-                    addGroundItem(new Item(item.getId(), 1), tile, owner, true, time, type);
-                }
-                return;
-            } else {
-                addGroundItem(item, tile, owner, true, time, type);
-                return;
-            }
         }
-    }
 
-    public static final void updateGroundItem(Item item, final WorldTile tile, final Player owner, final int time,
-                                              final int type, String ironmanName) {
-        final FloorItem floorItem = World.getRegion(tile.getRegionId()).getGroundItem(item.getId(), tile, owner);
-        if (floorItem == null) {
-            if (item.getAmount() != 1 && !item.getDefinitions().isStackable() && !item.getDefinitions().isNoted()) {
-                for (int i = 0; i < item.getAmount(); i++) {
-                    addGroundItem(new Item(item.getId(), 1), tile, owner, true, time, type, ironmanName);
-                }
-                return;
-            } else {
-                addGroundItem(item, tile, owner, true, time, type, ironmanName);
-                return;
-            }
-        }
-        if (floorItem.getDefinitions().isStackable() || floorItem.getDefinitions().isNoted()) {
-            if (floorItem.getAmount() + item.getAmount() < 0
-                    || floorItem.getAmount() + item.getAmount() > Integer.MAX_VALUE) {
-                int totalAmount = Integer.MAX_VALUE - floorItem.getAmount();
-                floorItem.setAmount(Integer.MAX_VALUE);
-                item.setAmount(item.getAmount() - totalAmount);
-                addGroundItem(item, tile, owner, true, time, type, ironmanName);
-                owner.getPackets().sendRemoveGroundItem(floorItem);
-                owner.getPackets().sendGroundItem(floorItem);
-            } else
-                floorItem.setAmount(floorItem.getAmount() + item.getAmount());
-            owner.getPackets().sendRemoveGroundItem(floorItem);
-            owner.getPackets().sendGroundItem(floorItem);
-        } else {
-            if (item.getAmount() != 1) {
-                for (int i = 0; i < item.getAmount(); i++) {
-                    addGroundItem(new Item(item.getId(), 1), tile, owner, true, time, type, ironmanName);
-                }
-                return;
-            } else {
-                addGroundItem(item, tile, owner, true, time, type, ironmanName);
-                return;
-            }
-        }
-    }
-
-    private static final void removeGroundItem(final FloorItem floorItem, long publicTime) {
-        CoresManager.slowExecutor.schedule(new Runnable() {
-            @Override
-            public void run() {
+        // Public broadcast
+        if (shouldBroadcast) {
+            boolean checkTradeable = (type != 2);
+            broadcastGroundItem(floorItem, null, checkTradeable);
+            if (publicTime != -1)
+                removeGroundItem(floorItem, publicTime);
+        } else if (hiddenTime != -1) {
+            CoresManager.slowExecutor.schedule(() -> {
                 try {
-                    int regionId = floorItem.getTile().getRegionId();
-                    Region region = getRegion(regionId);
-                    if (!region.getGroundItemsSafe().contains(floorItem))
-                        return;
-                    region.getGroundItemsSafe().remove(floorItem);
-                    for (Player player : World.getPlayers()) {
-                        if (player == null || !player.hasStarted() || player.hasFinished()
-                                || player.getPlane() != floorItem.getTile().getPlane()
-                                || !player.getMapRegionsIds().contains(regionId))
-                            continue;
-                        player.getPackets().sendRemoveGroundItem(floorItem);
-                    }
+                    turnPublic(floorItem, publicTime);
                 } catch (Throwable e) {
                     Logger.handle(e);
                 }
+            }, hiddenTime, TimeUnit.SECONDS);
+        }
+
+        return floorItem;
+    }
+
+
+
+    public static void updateGroundItem(Item item, WorldTile tile, Player owner) {
+        updateGroundItem(item, tile, owner, 60, 0, null);
+    }
+
+    public static void updateGroundItem(Item item, WorldTile tile, Player owner, int time, int type) {
+        updateGroundItem(item, tile, owner, time, type, null);
+    }
+
+    public static void updateGroundItem(Item item, WorldTile tile, Player owner, int time, int type, String ironmanName) {
+        FloorItem floorItem = World.getRegion(tile.getRegionId()).getGroundItem(item.getId(), tile, owner);
+
+        if (floorItem == null) {
+            spawnAsNewGroundItem(item, tile, owner, time, type, ironmanName);
+            return;
+        }
+
+        boolean stackable = floorItem.getDefinitions().isStackable() || floorItem.getDefinitions().isNoted();
+
+        if (stackable) {
+            long total = (long) floorItem.getAmount() + item.getAmount();
+
+            if (total > Integer.MAX_VALUE) {
+                int amountCanAdd = Integer.MAX_VALUE - floorItem.getAmount();
+                floorItem.setAmount(Integer.MAX_VALUE);
+                item.setAmount(item.getAmount() - amountCanAdd);
+
+                if (ironmanName != null)
+                    addGroundItem(item, tile, owner, true, time, type, ironmanName);
+                else
+                    addGroundItem(item, tile, owner, true, time, type);
+
+                owner.getPackets().sendRemoveGroundItem(floorItem);
+                owner.getPackets().sendGroundItem(floorItem);
+            } else {
+                floorItem.setAmount(floorItem.getAmount() + item.getAmount());
+                owner.getPackets().sendRemoveGroundItem(floorItem);
+                owner.getPackets().sendGroundItem(floorItem);
             }
-        }, publicTime, TimeUnit.SECONDS);
+
+        } else {
+            spawnAsNewGroundItem(item, tile, owner, time, type, ironmanName);
+        }
     }
 
-    public static final boolean removeGroundItem(Player player, FloorItem floorItem) {
-        return removeGroundItem(player, floorItem, true);
+    private static void spawnAsNewGroundItem(Item item, WorldTile tile, Player owner, int time, int type, String ironmanName) {
+        boolean stackable = item.getDefinitions().isStackable() || item.getDefinitions().isNoted();
+
+        if (!stackable && item.getAmount() > 1) {
+            for (int i = 0; i < item.getAmount(); i++) {
+                Item single = new Item(item.getId(), 1);
+                if (ironmanName != null)
+                    addGroundItem(single, tile, owner, true, time, type, ironmanName);
+                else
+                    addGroundItem(single, tile, owner, true, time, type);
+            }
+        } else {
+            if (ironmanName != null)
+                addGroundItem(item, tile, owner, true, time, type, ironmanName);
+            else
+                addGroundItem(item, tile, owner, true, time, type);
+        }
     }
 
-    public void removeGroundCoins() {
-
+    private static boolean shouldNotifyPlayer(Player player, FloorItem item, int regionId) {
+        return player != null
+                && player.hasStarted()
+                && !player.hasFinished()
+                && player.getPlane() == item.getTile().getPlane()
+                && player.getMapRegionsIds().contains(regionId);
     }
 
-    public static final boolean removeGroundItem(Player player, final FloorItem floorItem, boolean add) {
-        int regionId = floorItem.getTile().getRegionId();
-        Region region = getRegion(regionId);
+
+    private static void removeGroundItem(final FloorItem item, long delaySeconds) {
+        CoresManager.slowExecutor.schedule(() -> {
+            try {
+                final int regionId = item.getTile().getRegionId();
+                final Region region = getRegion(regionId);
+
+                if (!region.getGroundItemsSafe().remove(item)) {
+                    return; // Item already removed
+                }
+
+                for (Player player : World.getPlayers()) {
+                    if (shouldNotifyPlayer(player, item, regionId)) {
+                        player.getPackets().sendRemoveGroundItem(item);
+                    }
+                }
+            } catch (Exception e) {
+                Logger.handle(e);
+            }
+        }, delaySeconds, TimeUnit.SECONDS);
+    }
+
+
+    public static void removeGroundItem(Player player, FloorItem floorItem) {
+        removeGroundItem(player, floorItem, true);
+    }
+
+    public static boolean removeGroundItem(Player player, final FloorItem floorItem, boolean addToInventory) {
+        final int regionId = floorItem.getTile().getRegionId();
+        final Region region = getRegion(regionId);
+
         if (player == null) {
             region.getGroundItemsSafe().remove(floorItem);
-            for (Player p2 : World.getPlayers()) {
-                if (p2 == null || !p2.hasStarted() || p2.hasFinished()
-                        || p2.getPlane() != floorItem.getTile().getPlane() || !p2.getMapRegionsIds().contains(regionId))
-                    continue;
-                p2.getPackets().sendRemoveGroundItem(floorItem);
-            }
+            broadcastRemoveGroundItem(floorItem, regionId);
+
             if (floorItem.isForever()) {
-                CoresManager.slowExecutor.schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            addGroundItemForever(floorItem, floorItem.getTile());
-                        } catch (Throwable e) {
-                            Logger.handle(e);
-                        }
-                    }
-                }, 60, TimeUnit.SECONDS);
+                scheduleGroundItemRespawn(floorItem);
             }
             return false;
         }
-        WorldTile playerTile = new WorldTile(player.getX(), player.getY(), player.getPlane());
-        if (!region.getGroundItemsSafe().contains(floorItem))
-            return false;
-        if (floorItem.cantPickupBy(player.getDisplayName()) && player.getPlayerRank().isIronman()) {
-            player.getPackets().sendGameMessage("You can't pickup other players items as an Iron "
-                    + (player.getAppearence().isMale() ? "Man" : "Woman") + ".");
-            return false;
-        }
-        if (floorItem.getOwn() != player && player.getPlayerRank().isIronman()) {
-            player.getPackets().sendGameMessage("You can't pickup other players items as an Iron "
-                    + (player.getAppearence().isMale() ? "Man" : "Woman") + ".");
-            return false;
-        }
-        if (floorItem.getId() == 2677
-                && (player.getInventory().containsOneItem(2677) || player.getBank().getItem(2677) != null)) {
-            player.getPackets().sendGameMessage("You can only have one easy clue scroll at a time.");
-            return false;
-        }
-        if (floorItem.getId() == 2801
-                && (player.getInventory().containsOneItem(2801) || player.getBank().getItem(2801) != null)) {
-            player.getPackets().sendGameMessage("You can only have one medium clue scroll at a time.");
-            return false;
-        }
-        if (floorItem.getId() == 2722
-                && (player.getInventory().containsOneItem(2722) || player.getBank().getItem(2722) != null)) {
-            player.getPackets().sendGameMessage("You can only have one hard clue scroll at a time.");
-            return false;
-        }
-        if (floorItem.getId() == 19043
-                && (player.getInventory().containsOneItem(19043) || player.getBank().getItem(19043) != null)) {
-            player.getPackets().sendGameMessage("You can only have one elite clue scroll at a time.");
-            return false;
-        }
-        if (floorItem.getOwn() != null && floorItem.getOwn().isDeveloper() && !player.isDeveloper()) {
-            player.getPackets()
-                    .sendGameMessage("This item has been dropped by a developer, therefor you can't pick it up.");
-            return false;
-        }
-        int amount = floorItem.getAmount();
+
+        if (!region.getGroundItemsSafe().contains(floorItem)) return false;
+
+        if (!canPickupItem(player, floorItem)) return false;
+
         if (floorItem.getId() == 995 && !player.isAtWild() && !FfaZone.inRiskArea(player)) {
-            amount = floorItem.getAmount();
-            int leftOver = 0;
-            if (player.getMoneyPouch().getTotal() + amount < 0) {
-                if (player.getMoneyPouch().getTotal() != Integer.MAX_VALUE)
-                    player.getPackets().sendGameMessage("You can't hold more coins in your money pouch.");
-                leftOver = Integer.MAX_VALUE - player.getMoneyPouch().getTotal();
-                amount = amount - leftOver;
-                if (player.getMoneyPouch().getTotal() != Integer.MAX_VALUE) {
-                    player.getPackets().sendRunScript(5561, 1, leftOver);
-                    player.getMoneyPouch().setTotal(Integer.MAX_VALUE);
-                    player.getPackets().sendGameMessage(
-                            Utils.getFormattedNumber(leftOver, ',') + " coins have been added to your money pouch.");
-                    player.getMoneyPouch().refresh();
-                    floorItem.setAmount(leftOver);
-                }
-                if (!player.getInventory().hasFreeSlots() && !player.getInventory().containsOneItem(995)) {
-                    player.getPackets().sendGameMessage("You don't have enough inventory space.");
-                    return false;
-                }
-                if (player.getInventory().getNumberOf(995) + amount < 0) {
-                    leftOver = Integer.MAX_VALUE - player.getInventory().getNumberOf(995);
-                    amount = amount - leftOver;
-                    if (player.getInventory().getNumberOf(995) != Integer.MAX_VALUE) {
-                        player.getInventory().deleteItem(995, Integer.MAX_VALUE);
-                        player.getInventory().addItem(995, Integer.MAX_VALUE);
-                    }
-                    floorItem.setAmount(amount);
-                    player.getPackets().sendRemoveGroundItem(floorItem);
-                    player.getPackets().sendGroundItem(floorItem);
-                    return false;
-                }
-                player.getInventory().addItem(995, amount);
-                region.getGroundItemsSafe().remove(floorItem);
-                if (floorItem.isInvisible()) {
-                    player.getPackets().sendRemoveGroundItem(floorItem);
-                    return true;
-                } else {
-                    for (Player p2 : World.getPlayers()) {
-                        if (p2 == null || !p2.hasStarted() || p2.hasFinished()
-                                || p2.getPlane() != floorItem.getTile().getPlane()
-                                || !p2.getMapRegionsIds().contains(regionId))
-                            continue;
-                        p2.getPackets().sendRemoveGroundItem(floorItem);
-                    }
-                    if (floorItem.isForever()) {
-                        CoresManager.slowExecutor.schedule(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    addGroundItemForever(floorItem, floorItem.getTile());
-                                } catch (Throwable e) {
-                                    Logger.handle(e);
-                                }
-                            }
-                        }, 60, TimeUnit.SECONDS);
-                    }
-                    return true;
-                }
-            }
-            if (player.getMoneyPouch().getTotal() == Integer.MAX_VALUE)
-                return false;
-            if (amount > 1)
-                player.getPackets().sendGameMessage(
-                        Utils.getFormattedNumber(amount, ',') + " coins have been added to your money pouch.");
-            else
-                player.getPackets().sendGameMessage("One coin has been added to your money pouch.");
-            player.getPackets().sendRunScript(5561, 1, amount);
-            player.getMoneyPouch().setTotal(player.getMoneyPouch().getTotal() + amount);
-            player.getMoneyPouch().refresh();
-            if (player.getFreezeDelay() >= Utils.currentTimeMillis()) {
-                if (!floorItem.getTile().matches(playerTile))
-                    player.animate(new Animation(537));
-            }
-            if (!floorItem.getTile().matches(player.getTile()) && add)
-                player.animate(new Animation(832));
-            region.getGroundItemsSafe().remove(floorItem);
-            if (floorItem.isInvisible()) {
-                player.getPackets().sendRemoveGroundItem(floorItem);
-            } else {
-                for (Player p2 : World.getPlayers()) {
-                    if (p2 == null || !p2.hasStarted() || p2.hasFinished()
-                            || p2.getPlane() != floorItem.getTile().getPlane()
-                            || !p2.getMapRegionsIds().contains(regionId))
-                        continue;
-                    p2.getPackets().sendRemoveGroundItem(floorItem);
-                }
-                if (floorItem.isForever()) {
-                    CoresManager.slowExecutor.schedule(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                addGroundItemForever(floorItem, floorItem.getTile());
-                            } catch (Throwable e) {
-                                Logger.handle(e);
-                            }
-                        }
-                    }, 60, TimeUnit.SECONDS);
-                }
-                return true;
-            }
+            return handleCoinPickup(player, floorItem, region, regionId);
         }
-        int inventoryLeftOver = 0;
-        if (player.getInventory().getAmountOf(floorItem.getId()) == Integer.MAX_VALUE) {
+
+        if (!hasInventorySpace(player, floorItem)) {
             player.getPackets().sendGameMessage("Not enough space in your inventory.");
             return false;
         }
-        if (!player.getInventory().hasFreeSlots()
-                && ((floorItem.getDefinitions().isStackable() || floorItem.getDefinitions().isNoted())
-                && !player.getInventory().containsItem(floorItem.getId(), 1))) {
-            player.getPackets().sendGameMessage("Not enough space in your inventory.");
-            return false;
-        } else if (!player.getInventory().hasFreeSlots()
-                && (!floorItem.getDefinitions().isStackable() && !floorItem.getDefinitions().isNoted())) {
-            player.getPackets().sendGameMessage("Not enough space in your inventory.");
-            return false;
-        }
-        if (player.getInventory().getNumberOf(floorItem.getId()) + amount < 0) {
-            inventoryLeftOver = Integer.MAX_VALUE - player.getInventory().getNumberOf(floorItem.getId());
-            amount = amount - inventoryLeftOver;
-            if (player.getInventory().getNumberOf(floorItem.getId()) != Integer.MAX_VALUE) {
-                player.getInventory().deleteItem(floorItem.getId(), Integer.MAX_VALUE);
-                player.getInventory().addItem(floorItem.getId(), Integer.MAX_VALUE);
-            }
-            floorItem.setAmount(amount);
-            player.getPackets().sendRemoveGroundItem(floorItem);
-            player.getPackets().sendGroundItem(floorItem);
-            return false;
-        }
-        if (player.getFreezeDelay() >= Utils.currentTimeMillis()) {
-            if (!floorItem.getTile().matches(playerTile))
-                player.animate(new Animation(832));
-        }
-        if (!floorItem.getTile().matches(player.getTile()) && add)
+
+        if (player.getFreezeDelay() >= Utils.currentTimeMillis() && !floorItem.getTile().matches(player.getTile())) {
             player.animate(new Animation(832));
-        if (player.getBeam() != null && player.getBeamItem() != null) {
-            if (floorItem.getTile().matches(player.getBeam()) && player.getBeamItem().getId() == floorItem.getId()) {
-                World.sendGraphics(player, new Graphics(-1, 0, 0), new WorldTile(floorItem.getTile()));
-                player.setBeam(null);
-                player.setBeamItem(null);
-                // System.out.println("Removed beam due to picked up.");
-            }
         }
+
+        if (addToInventory) {
+            Item item = new Item(floorItem.getId() == 7957 ? 1005 : floorItem.getId(), floorItem.getAmount());
+            player.getInventory().addItem(item);
+        }
+
         region.getGroundItemsSafe().remove(floorItem);
-        if (add)
-            player.getInventory()
-                    .addItem(new Item(floorItem.getId() == 7957 ? 1005 : floorItem.getId(), floorItem.getAmount()));
+        handleBeamPickup(player, floorItem);
+
         if (floorItem.isInvisible()) {
             player.getPackets().sendRemoveGroundItem(floorItem);
-            return true;
         } else {
-            for (Player p2 : World.getPlayers()) {
-                if (p2 == null || !p2.hasStarted() || p2.hasFinished()
-                        || p2.getPlane() != floorItem.getTile().getPlane() || !p2.getMapRegionsIds().contains(regionId))
-                    continue;
-                p2.getPackets().sendRemoveGroundItem(floorItem);
-            }
+            broadcastRemoveGroundItem(floorItem, regionId);
             if (floorItem.isForever()) {
-                CoresManager.slowExecutor.schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            addGroundItemForever(floorItem, floorItem.getTile());
-                        } catch (Throwable e) {
-                            Logger.handle(e);
-                        }
-                    }
-                }, 60, TimeUnit.SECONDS);
+                scheduleGroundItemRespawn(floorItem);
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean canPickupItem(Player player, FloorItem item) {
+        if ((item.cantPickupBy(player.getDisplayName()) || item.getOwn() != player)
+                && player.getPlayerRank().isIronman()) {
+            return sendIronmanRestriction(player);
+        }
+        if (isDeveloperOnlyItem(item, player)) {
+            player.getPackets().sendGameMessage("This item has been dropped by a developer, therefore you can't pick it up.");
+            return false;
+        }
+        return canPickupClueScroll(player, item);
+    }
+
+    private static boolean sendIronmanRestriction(Player player) {
+        player.getPackets().sendGameMessage("You can't pickup other players items as an Iron " +
+                (player.getAppearence().isMale() ? "Man" : "Woman") + ".");
+        return false;
+    }
+
+    private static boolean isDeveloperOnlyItem(FloorItem item, Player player) {
+        return item.getOwn() != null && item.getOwn().isDeveloper() && !player.isDeveloper();
+    }
+
+    private static boolean canPickupClueScroll(Player player, FloorItem item) {
+        int id = item.getId();
+        switch (id) {
+            case 2677: // easy
+            case 2801: // medium
+            case 2722: // hard
+            case 19043: // elite
+                if (player.getInventory().containsOneItem(id) || player.getBank().getItem(id) != null) {
+                    player.getPackets().sendGameMessage("You can only have one " + getClueTypeName(id) + " clue scroll at a time.");
+                    return false;
+                }
+                break;
+        }
+        return true;
+    }
+
+    private static String getClueTypeName(int id) {
+        switch (id) {
+            case 2677: return "easy";
+            case 2801: return "medium";
+            case 2722: return "hard";
+            case 19043: return "elite";
+            default: return "";
+        }
+    }
+
+    private static boolean hasInventorySpace(Player player, FloorItem item) {
+        int id = item.getId();
+        int amount = item.getAmount();
+        boolean stackable = item.getDefinitions().isStackable() || item.getDefinitions().isNoted();
+
+        if (player.getInventory().getAmountOf(id) == Integer.MAX_VALUE) {
+            return false;
+        }
+        if (!player.getInventory().hasFreeSlots()) {
+            if (stackable && !player.getInventory().containsItem(id, 1)) {
+                return false;
+            } else if (!stackable) {
+                return false;
             }
         }
         return true;
     }
+
+    private static void broadcastRemoveGroundItem(FloorItem item, int regionId) {
+        for (Player player : World.getPlayers()) {
+            if (player == null || !player.hasStarted() || player.hasFinished()) continue;
+            if (player.getPlane() != item.getTile().getPlane()) continue;
+            if (!player.getMapRegionsIds().contains(regionId)) continue;
+            player.getPackets().sendRemoveGroundItem(item);
+        }
+    }
+
+    private static void scheduleGroundItemRespawn(FloorItem item) {
+        CoresManager.slowExecutor.schedule(() -> {
+            try {
+                addGroundItemForever(item, item.getTile());
+            } catch (Throwable e) {
+                Logger.handle(e);
+            }
+        }, 60, TimeUnit.SECONDS);
+    }
+
+    private static void handleBeamPickup(Player player, FloorItem item) {
+        if (player.getBeam() != null && player.getBeamItem() != null) {
+            if (item.getTile().matches(player.getBeam()) && player.getBeamItem().getId() == item.getId()) {
+                World.sendGraphics(player, new Graphics(-1, 0, 0), new WorldTile(item.getTile()));
+                player.setBeam(null);
+                player.setBeamItem(null);
+            }
+        }
+    }
+
+    private static boolean handleCoinPickup(Player player, FloorItem item, Region region, int regionId) {
+        int amount = item.getAmount();
+        int pouchTotal = player.getMoneyPouch().getTotal();
+
+        if (pouchTotal == Integer.MAX_VALUE) {
+            player.getPackets().sendGameMessage("You can't hold more coins in your money pouch.");
+            return false;
+        }
+
+        int canAdd = Integer.MAX_VALUE - pouchTotal;
+        int toPouch = Math.min(amount, canAdd);
+        int leftover = amount - toPouch;
+
+        if (toPouch > 0) {
+            player.getMoneyPouch().setTotal(pouchTotal + toPouch);
+            player.getPackets().sendRunScript(5561, 1, toPouch);
+            player.getMoneyPouch().refresh();
+            player.getPackets().sendGameMessage(
+                    toPouch == 1 ? "One coin has been added to your money pouch." :
+                            Utils.getFormattedNumber(toPouch, ',') + " coins have been added to your money pouch.");
+        }
+
+        if (leftover > 0) {
+            if (!player.getInventory().hasFreeSlots() && !player.getInventory().containsOneItem(995)) {
+                player.getPackets().sendGameMessage("You don't have enough inventory space.");
+                return false;
+            }
+            if (player.getInventory().getNumberOf(995) + leftover < 0) {
+                int invCanAdd = Integer.MAX_VALUE - player.getInventory().getNumberOf(995);
+                player.getInventory().addItem(995, invCanAdd);
+                item.setAmount(leftover - invCanAdd);
+                player.getPackets().sendRemoveGroundItem(item);
+                player.getPackets().sendGroundItem(item);
+                return false;
+            }
+            player.getInventory().addItem(995, leftover);
+        }
+
+        region.getGroundItemsSafe().remove(item);
+        if (item.isInvisible()) {
+            player.getPackets().sendRemoveGroundItem(item);
+        } else {
+            broadcastRemoveGroundItem(item, regionId);
+            if (item.isForever()) scheduleGroundItemRespawn(item);
+        }
+        return true;
+    }
+
 
     public static final void sendObjectAnimation(WorldObject object, Animation animation) {
         sendObjectAnimation(null, object, animation);

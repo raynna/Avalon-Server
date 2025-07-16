@@ -6,7 +6,6 @@ import java.io.Serializable;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.ItemsEquipIds;
 import com.rs.java.game.item.meta.ItemMetadata;
-import com.rs.java.game.item.meta.CombatBonusType;
 
 /**
  * Represents a single item.
