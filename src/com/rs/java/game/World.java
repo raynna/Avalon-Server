@@ -70,10 +70,10 @@ public final class World {
 
 
     private static TimerRepository timers = new TimerRepository();
-    private static final EntityList<Player> players = new EntityList<Player>(Settings.PLAYERS_LIMIT);
+    private static final EntityList<Player> players = new EntityList<>(Settings.PLAYERS_LIMIT);
 
-    private static final EntityList<NPC> npcs = new EntityList<NPC>(Settings.NPCS_LIMIT);
-    private static final Map<Integer, Region> regions = Collections.synchronizedMap(new HashMap<Integer, Region>());
+    private static final EntityList<NPC> npcs = new EntityList<>(Settings.NPCS_LIMIT);
+    private static final Map<Integer, Region> regions = Collections.synchronizedMap(new HashMap<>());
 
     public static boolean isInUpdate;
 
