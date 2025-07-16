@@ -379,20 +379,15 @@ public class Bank implements Serializable {
 		if (tabId == 0 || tabId >= bankTabs.length)
 			return;
 
-		System.out.println("Collapsing tab " + tabId + ", moving " + bankTabs[tabId].length + " items to tab 0");
-
 		for (Item item : bankTabs[tabId]) {
-			System.out.println(" - Moving item id=" + item.getId() + " amt=" + item.getAmount());
 			addItemToTab(item, 0);
 		}
 
-		// Remove the tab
 		Item[][] newTabs = new Item[bankTabs.length - 1][];
 		System.arraycopy(bankTabs, 0, newTabs, 0, tabId);
 		System.arraycopy(bankTabs, tabId + 1, newTabs, tabId, bankTabs.length - tabId - 1);
 		bankTabs = newTabs;
 
-		System.out.println("Tabs after collapse: " + bankTabs.length);
 		refreshTabs();
 		refreshItems();
 	}
@@ -420,156 +415,94 @@ public class Bank implements Serializable {
 	}
 
 	public void switchItem(int fromSlot, int toSlot, int fromComponentId, int toComponentId) {
-		System.out.println("[switchItem(fromSlot, toSlot, fromComponentId, toComponentId)] called with fromSlot="
-				+ fromSlot + ", toSlot=" + toSlot + ", fromComponentId=" + fromComponentId + ", toComponentId=" + toComponentId);
-
 		if (toSlot == 65535) {
 			int toTab = toComponentId >= 76 ? 8 - (84 - toComponentId) : 9 - ((toComponentId - 46) / 2);
-			System.out.println("[switchItem] Calculated toTab: " + toTab);
 
 			if (toTab < 0 || toTab > 9) {
-				System.out.println("[switchItem] toTab out of range, aborting.");
 				return;
 			}
 
 			int[] fromRealSlot = getRealSlot(fromSlot);
 			if (fromRealSlot == null) {
-				System.out.println("[switchItem] fromRealSlot is null for fromSlot=" + fromSlot);
 				return;
 			}
-			System.out.println("[switchItem] fromRealSlot: tab=" + fromRealSlot[0] + ", slot=" + fromRealSlot[1]);
 
 			Item item = getItem(fromRealSlot);
 			if (item == null) {
-				System.out.println("[switchItem] No item found at fromRealSlot.");
 				return;
 			}
-			System.out.println("[switchItem] Moving item id=" + item.getId() + " amount=" + item.getAmount() +
-					" from tab " + fromRealSlot[0] + " to tab " + toTab);
 
-			// If same tab, just move to top
 			if (toTab == fromRealSlot[0]) {
-				System.out.println("[switchItem] Same tab move, moving item to top slot.");
 				switchItem(fromSlot, getStartSlot(toTab));
 				return;
 			}
 
-			// Remove the item from old location without refreshing now
 			boolean destroyedTab = removeItem2(fromRealSlot, item.getAmount(), false, true);
 			if (destroyedTab && toTab > fromRealSlot[0]) {
 				toTab -= 1;
-				System.out.println("[switchItem] Adjusted toTab after tab destruction: " + toTab);
 			}
-			System.out.println("[switchItem] Removed item from old tab. Tab destroyed? " + destroyedTab);
 
-			item = item.clone(); // Preserve metadata
-
-			// Disabled shifting adjustment to avoid tab indexing issues
-        /*
-        if (fromRealSlot[0] != 0 && toTab >= fromRealSlot[0]) {
-            toTab -= 1;
-            System.out.println("[switchItem] Adjusted toTab to " + toTab + " due to removal shift.");
-        }
-        */
-
-			// Create missing tabs as needed
+			item = item.clone();
 			while (toTab >= bankTabs.length) {
 				createTab();
-				System.out.println("[switchItem] Created new tab to reach toTab index: " + (bankTabs.length - 1));
 			}
 
-			// Defensive check on toTab validity again
 			if (toTab < 0 || toTab >= bankTabs.length) {
 				player.getPackets().sendGameMessage("Invalid bank tab.");
-				System.out.println("[switchItem] Invalid toTab after createTab checks: " + toTab);
 				return;
 			}
 
 			addItemToTab(item, toTab);
-			System.out.println("[switchItem] Added item to tab " + toTab);
 
 			refreshTab(fromRealSlot[0]);
 			refreshTab(toTab);
 			refreshItems();
 
 		} else {
-			System.out.println("[switchItem] Calling switchItem(fromSlot, toSlot)");
 			switchItem(fromSlot, toSlot);
 		}
 	}
 
 	public void switchItem(int fromSlot, int toSlot) {
-		System.out.println("[switchItem(fromSlot, toSlot)] called with fromSlot=" + fromSlot + ", toSlot=" + toSlot);
-
 		int[] fromRealSlot = getRealSlot(fromSlot);
 		int[] toRealSlot = getRealSlot(toSlot);
 
 		if (fromRealSlot == null) {
-			System.out.println("[switchItem] fromRealSlot is null for fromSlot=" + fromSlot);
 			return;
 		}
 		if (toRealSlot == null) {
-			System.out.println("[switchItem] toRealSlot is null for toSlot=" + toSlot);
 			return;
 		}
-
-		System.out.println("[switchItem] fromRealSlot: tab=" + fromRealSlot[0] + ", slot=" + fromRealSlot[1]
-				+ " | toRealSlot: tab=" + toRealSlot[0] + ", slot=" + toRealSlot[1]);
 
 		Item fromItem = getItem(fromRealSlot);
 		Item toItem = getItem(toRealSlot);
 
 		if (fromItem == null) {
-			System.out.println("[switchItem] No item at fromRealSlot");
 			return;
 		}
 		if (toItem == null) {
-			System.out.println("[switchItem] No item at toRealSlot");
 			return;
 		}
 
 		if (insertItems) {
-			System.out.println("[switchItem] insertItems is true, calling insertItem");
 			insertItem(fromSlot, fromRealSlot[0], toSlot);
 			return;
 		}
 
-		// Check if the source tab only has one item (the one being moved)
 		boolean isLastItemInFromTab = bankTabs[fromRealSlot[0]].length == 1;
 
 		if (isLastItemInFromTab) {
-			System.out.println("[switchItem] Last item in source tab detected. Moving item instead of swapping.");
 
-			// Remove from source tab (this will destroy the tab if it only had this one item)
 			boolean destroyed = removeItem2(fromRealSlot, fromItem.getAmount(), false, true);
-			System.out.println("[switchItem] Removed item from old tab. Tab destroyed? " + destroyed);
-
-			// Add to target tab
 			addItemToTab(fromItem, toRealSlot[0]);
-			System.out.println("[switchItem] Added item to tab " + toRealSlot[0]);
-
-			// Refresh all tabs because tabs may have shifted after destroy
 			refreshTabs();
 		} else {
-			System.out.println("[switchItem] Swapping item id=" + fromItem.getId() + " with item id=" + toItem.getId());
-
-			// Swap items preserving metadata
 			bankTabs[fromRealSlot[0]][fromRealSlot[1]] = toItem;
 			bankTabs[toRealSlot[0]][toRealSlot[1]] = fromItem;
-
-			System.out.println("[switchItem] Items swapped");
-
 			refreshTab(fromRealSlot[0]);
 			if (fromRealSlot[0] != toRealSlot[0]) refreshTab(toRealSlot[0]);
 		}
 		refreshItems();
-	}
-
-
-
-
-	public void openSetPin() { // TODO
-
 	}
 
 	public void openDepositBox() {
@@ -995,26 +928,18 @@ public class Bank implements Serializable {
 
 	public boolean removeItem2(int[] slot, int quantity, boolean refresh, boolean forceDestroy) {
 		if (slot == null) {
-			System.out.println("[removeItem2] slot is null.");
-			player.getPackets().sendGameMessage("slot is null.");
 			return false;
 		}
 		if (slot[0] < 0 || slot[0] >= bankTabs.length) {
-			System.out.println("[removeItem2] slot tab index out of bounds: " + slot[0]);
 			return false;
 		}
 		if (slot[1] < 0 || slot[1] >= bankTabs[slot[0]].length) {
-			System.out.println("[removeItem2] slot item index out of bounds: " + slot[1]);
 			return false;
 		}
 		Item item = bankTabs[slot[0]][slot[1]];
 		if (item == null) {
-			System.out.println("[removeItem2] item is null at tab " + slot[0] + " slot " + slot[1]);
 			return false;
 		}
-
-		System.out.println("[removeItem2] Removing qty " + quantity + " of item id=" + item.getId() +
-				" amt=" + item.getAmount() + " from tab " + slot[0] + ", slot " + slot[1]);
 
 		boolean destroyed = false;
 		if (quantity >= item.getAmount()) {
@@ -1022,7 +947,6 @@ public class Bank implements Serializable {
 				player.getPackets().sendGameMessage("You can't create a placeholder out of " + item.getName() + ".");
 			}
 			if (bankTabs[slot[0]].length == 1 && (forceDestroy || bankTabs.length != 1)) {
-				System.out.println("[removeItem2] Destroying tab " + slot[0] + " because it had only one item.");
 				destroyTab(slot[0]);
 				if (refresh)
 					refreshTabs();
@@ -1034,11 +958,9 @@ public class Bank implements Serializable {
 				bankTabs[slot[0]] = tab;
 				if (refresh)
 					refreshTab(slot[0]);
-				System.out.println("[removeItem2] Removed item from tab " + slot[0] + ". New tab size: " + bankTabs[slot[0]].length);
 			}
 		} else {
 			bankTabs[slot[0]][slot[1]] = new Item(item.getId(), item.getAmount() - quantity);
-			System.out.println("[removeItem2] Reduced item qty, new amount: " + bankTabs[slot[0]][slot[1]].getAmount());
 		}
 		if (refresh)
 			refreshItems();
@@ -1048,24 +970,18 @@ public class Bank implements Serializable {
 
 	public boolean removeItem(int[] slot, int quantity, boolean refresh, boolean forceDestroy) {
 		if (slot == null) {
-			System.out.println("[removeItem] slot is null.");
 			player.getPackets().sendGameMessage("slot is null.");
 			return false;
 		}
 		if (slot[0] < 0 || slot[0] >= bankTabs.length) {
-			System.out.println("[removeItem] slot tab index out of bounds: " + slot[0]);
 			return false;
 		}
 		if (slot[1] < 0 || slot[1] >= bankTabs[slot[0]].length) {
-			System.out.println("[removeItem] slot item index out of bounds: " + slot[1]);
 			return false;
 		}
 
-		System.out.println("[removeItem] Removing qty " + quantity + " from tab " + slot[0] + ", slot " + slot[1]);
-
 		boolean destroyed = false;
 		if (bankTabs[slot[0]].length == 1 && (forceDestroy || bankTabs.length != 1)) {
-			System.out.println("[removeItem] Destroying tab " + slot[0] + " because it had only one item.");
 			destroyTab(slot[0]);
 			if (refresh)
 				refreshTabs();
@@ -1077,7 +993,6 @@ public class Bank implements Serializable {
 			bankTabs[slot[0]] = tab;
 			if (refresh)
 				refreshTab(slot[0]);
-			System.out.println("[removeItem] Removed item from tab " + slot[0] + ". New tab size: " + bankTabs[slot[0]].length);
 		}
 		if (refresh)
 			refreshItems();
