@@ -1,7 +1,7 @@
 package com.rs.java.game.player.content;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.text.DecimalFormat;
 
 import com.rs.java.game.World;
 import com.rs.java.game.item.Item;
@@ -9,264 +9,365 @@ import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 
 /**
- * 
- * @Improved Nathan - Wilderness PK
- * 
+ * MoneyPouch handles coin storage for the player.
+ * Safely manages overflow and coin transfers between pouch, inventory, bank, and ground.
+ *
+ * @Improved Raynna
  */
-
 public class MoneyPouch implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -3847090682601697992L;
 
-	private transient Player player;
+	private final transient Player player;
 
 	public MoneyPouch(Player player) {
 		this.player = player;
 	}
 
-
-	public void addMoneyFromInventory(int amount, boolean delete) {
-		if (amount + getTotal() < 0) {
-			amount = Integer.MAX_VALUE - getTotal();
-		}
-		if (getTotal() == Integer.MAX_VALUE) {
-			player.getPackets().sendGameMessage("You can't store more in your money pouch.");
-			return;
-		}
-		StringBuilder builder = new StringBuilder();
-		if (amount > 1)
-			builder.append(Utils.getFormattedNumber(amount, ',') + " coins");
-		else
-			builder.append("One coin");
-		builder.append(" have been added to your money pouch.");
-		player.message(builder.toString());
-		player.getPackets().sendRunScript(5561, 1, amount);
-		player.getMoneyPouch().setTotal(player.getMoneyPouch().getTotal() + amount);
-		if (delete)
-			player.getInventory().deleteItem(new Item(995, amount));
-		refresh();
-	}
-
-
-
-
-
-	public void addMoneyFromBank(int amount, int bankSlot) {
-		// if (!player.getControlerManager().processMoneyPouch())
-		// return;
-		int leftOver = 0;
-		if (player.getMoneyPouchValue() + amount < 0 || player.getMoneyPouchValue() + amount >= Integer.MAX_VALUE) {
-			leftOver = Integer.MAX_VALUE - player.getMoneyPouchValue();
-			if (player.getMoneyPouchValue() != Integer.MAX_VALUE) {
-				player.getPackets().sendRunScript(5561, 1, leftOver);
-				player.getMoneyPouch().setTotal(Integer.MAX_VALUE);
-			}
-			player.getBank().removeItem2(bankSlot, leftOver, true, false);
-			amount = amount - leftOver;
-			refresh();
-			if (player.getInventory().getNumberOf(995) == Integer.MAX_VALUE) {
-				player.getPackets().sendGameMessage("You don't have enough inventory space.");
-				return;
-			}
-			// player.getPackets().sendGameMessage("Full pouch:amount - " +
-			// amount + ":leftOver - " + leftOver);
-			if (player.getInventory().getNumberOf(995) + amount < 0
-					|| player.getInventory().getNumberOf(995) + amount >= Integer.MAX_VALUE) {
-				leftOver = Integer.MAX_VALUE - player.getInventory().getNumberOf(995);
-				player.getInventory().deleteItem(995, Integer.MAX_VALUE);
-				player.getInventory().addItem(995, Integer.MAX_VALUE);
-				player.getBank().removeItem2(bankSlot, leftOver, true, false);
-				// player.getPackets().sendGameMessage("Full inventory:amount -
-				// " + amount + ":leftOver - " + leftOver);
-				return;
-			} else
-				player.getBank().removeItem2(bankSlot, amount, true, false);
-			player.getInventory().addItem(995, amount);
-			refresh();
-			// player.getPackets().sendGameMessage("Regular add inventory");
-		} else {
-			player.getBank().removeItem2(bankSlot, amount, true, false);
-			player.getPackets().sendRunScript(5561, 1, amount);
-			player.getMoneyPouch().setTotal(player.getMoneyPouch().getTotal() + amount);
-			// player.getPackets().sendGameMessage("Regular add pouch");
-			refresh();
-		}
-	}
-
-	public void addMoney(int amount, boolean delete) {
-		if (delete) {
-			if (player.getInventory().getNumberOf(995) > Integer.MAX_VALUE - getTotal()) {
-				amount = Integer.MAX_VALUE - getTotal();
-			}
-		}
-		int leftOver = 0;
-		if (getTotal() + amount < 0) {
-			if (getTotal() != Integer.MAX_VALUE)
-				player.getPackets().sendGameMessage("Your money pouch is not big enough to hold that much cash.");
-			leftOver = Integer.MAX_VALUE - getTotal();
-			amount = amount - leftOver;
-			if (getTotal() != Integer.MAX_VALUE) {
-				player.getPackets().sendRunScript(5561, 1, leftOver);
-				player.getMoneyPouch().setTotal(Integer.MAX_VALUE);
-				refresh();
-			}
-			if (player.getInventory().getNumberOf(995) + amount < 0) {
-				leftOver = Integer.MAX_VALUE - player.getInventory().getNumberOf(995);
-				amount = amount - leftOver;
-				if (player.getInventory().getNumberOf(995) != Integer.MAX_VALUE)
-					player.getInventory().addItem(995, leftOver);
-				if (delete)
-					player.getInventory().deleteItem(995, amount);
-				World.addGroundItem(new Item(995, amount), player, player, true, 60);
-				return;
-			} else {
-				if (delete)
-					player.getInventory().deleteItem(995, amount);
-					player.getInventory().addItem(new Item(995, amount));
-				return;
-			}
-		}
-		if (getTotal() == Integer.MAX_VALUE) {
-			return;
-		}
-		if (amount > 1) {
-			player.getPackets().sendGameMessage(
-					Utils.getFormattedNumber(amount, ',') + " coins have been added to your money pouch.");
-		} else {
-			player.getPackets().sendGameMessage("One coin has been added to your money pouch.");
-		}
-		player.getPackets().sendRunScript(5561, 1, amount);
-		player.getMoneyPouch().setTotal(player.getMoneyPouch().getTotal() + amount);
-		if (delete) {
-			player.getInventory().deleteItem(new Item(995, amount));
-		}
-		refresh();
-	}
-
-	public void addMoneyMisc(int amount) {
-		if (getTotal() + amount > Integer.MAX_VALUE || getTotal() + amount < 0) {
-			player.getPackets().sendGameMessage("Your money pouch is not big enough to hold that much cash.");
-			World.addGroundItem(new Item(995, amount), player, player, true, 60);
-			return;
-		}
-		if (amount > 1) {
-			player.getPackets().sendGameMessage(
-					Utils.getFormattedNumber(amount, ',') + " coins have been added to your money pouch.");
-		} else {
-			player.getPackets().sendGameMessage("One coin has been added to your money pouch.");
-		}
-		player.getPackets().sendRunScript(5561, 1, amount);
-		player.getMoneyPouch().setTotal(player.getMoneyPouch().getTotal() + amount);
-		refresh();
-	}
-
-	public void addOverFlowMoney(int amount) {
-		if (getTotal() + amount > Integer.MAX_VALUE || getTotal() + amount < 0) {
-			player.getPackets().sendGameMessage("Your money pouch is not big enough to hold that much cash.");
-			World.addGroundItem(new Item(995, amount), player, player, true, 60);
-			return;
-		}
-		if (getTotal() != Integer.MAX_VALUE) {
-			if (amount + getTotal() < 0) {
-				amount = Integer.MAX_VALUE - getTotal();
-			}
-			if (amount > 1) {
-				player.getPackets().sendGameMessage(
-						Utils.getFormattedNumber(amount, ',') + " coins have been added to your money pouch.");
-			} else {
-				player.getPackets().sendGameMessage("One coin has been added to your money pouch.");
-			}
-			player.getPackets().sendRunScript(5561, 1, amount);
-			player.getMoneyPouch().setTotal(player.getMoneyPouch().getTotal() + amount);
-			refresh();
-		} else {
-			player.getPackets().sendGameMessage("Money pouch overflow.");
-		}
-	}
-
-	@SuppressWarnings("unused")
-	private String getFormattedNumber(int amount) {
-		return new DecimalFormat("#,###,##0").format(amount).toString();
-	}
-
+	/**
+	 * Gets the current amount in money pouch.
+	 */
 	public int getTotal() {
 		return player.getMoneyPouchValue();
 	}
 
-	public void refresh() {
-		player.getPackets().sendRunScript(5560, player.getMoneyPouchValue());
-	}
-
-	public boolean removeMoneyMisc(int amount) {
-		if (amount <= 0 || getTotal() == 0) {
-			return false;
-		}
-		if (getTotal() < amount) {
-			amount = getTotal();
-		}
-		player.getPackets().sendGameMessage(
-				Utils.getFormattedNumber(amount, ',') + " coins have been removed from your money pouch.");
-		player.getMoneyPouch().setTotal(player.getMoneyPouch().getTotal() - amount);
-		player.getPackets().sendRunScript(5561, 0, amount);
-		refresh();
-		return true;
-	}
-
-	public boolean takeMoneyFromPouch(int amount) {
-		if (getTotal() - amount < 0)
-			amount = getTotal();
-		if (amount == 0)
-			return false;
-		setTotal(getTotal() - amount);
-		player.getPackets().sendRunScript(5561, 0, amount);
-		player.getPackets()
-				.sendGameMessage((amount == 1 ? "One" : Utils.getFormattedNumber(amount, ',')) + " coin"
-						+ (amount == 1 ? "" : "s") + " " + (amount == 1 ? "has" : "have")
-						+ " been withdrawn to your money pouch.");
-		refresh();
-		return true;
-	}
-
-	public void sendExamine() {
-		player.getPackets().sendGameMessage("Your money pouch current contains "
-				+ Utils.getFormattedNumber(player.getMoneyPouchValue(), ',') + " coins.");
-	}
-
+	/**
+	 * Sets the total money in the pouch.
+	 */
 	public void setTotal(int amount) {
 		player.setMoneyPouchValue(amount);
 	}
 
-	public void withdrawPouch(int amount) {
-		if (amount <= 0)
+	/**
+	 * Refreshes the pouch display.
+	 */
+	public void refresh() {
+		player.getPackets().sendRunScript(5560, getTotal());
+	}
+
+	/**
+	 * Checks if pouch is full.
+	 */
+	public boolean isFull() {
+		return getTotal() == Integer.MAX_VALUE;
+	}
+
+	/**
+	 * Adds money from player's inventory to pouch.
+	 * If delete is true, coins are removed from inventory.
+	 */
+	public void addMoneyFromInventory(int amount, boolean delete) {
+		if (amount <= 0) {
 			return;
-		if (getTotal() <= 0) {
-			player.getPackets().sendGameMessage("You don't have any money stored in your money pouch.");
+		}
+
+		int total = getTotal();
+
+		// Check for overflow
+		if (total + amount < 0) {
+			// Cap pouch at max
+			int spaceLeft = Integer.MAX_VALUE - total;
+			if (spaceLeft > 0) {
+				setTotal(Integer.MAX_VALUE);
+				sendAddMessage(spaceLeft);
+				refresh();
+			} else {
+				player.getPackets().sendGameMessage("Your money pouch is already full.");
+			}
+
+			int leftover = amount - spaceLeft;
+
+			// Add leftover coins to inventory or drop on ground
+			addLeftoverCoins(leftover, delete);
+
 			return;
 		}
-		if (player.getInventory().getFreeSlots() == 0 && player.getInventory().getNumberOf(995) < 1
-				|| player.getInventory().getNumberOf(995) == Integer.MAX_VALUE) {
-			player.getPackets().sendGameMessage("You don't have enough inventory space.");
+
+		// Safe add
+		setTotal(total + amount);
+		sendAddMessage(amount);
+		refresh();
+
+		if (delete) {
+			player.getInventory().deleteItem(new Item(995, amount));
+		}
+	}
+
+	/**
+	 * Adds money from bank to pouch or inventory with proper overflow handling.
+	 * bankSlot is used to remove coins from bank.
+	 */
+	public void addMoneyFromBank(int amount, int bankSlot) {
+		if (amount <= 0) {
 			return;
 		}
-		if (player.getInventory().getNumberOf(995) > Integer.MAX_VALUE - amount) {
-			amount = Integer.MAX_VALUE - player.getInventory().getNumberOf(995);
+
+		int total = getTotal();
+
+		// Check if adding amount to pouch overflows
+		if (total + amount < 0) {
+			int spaceLeft = Integer.MAX_VALUE - total;
+
+			if (spaceLeft > 0) {
+				// Fill pouch to max
+				setTotal(Integer.MAX_VALUE);
+				player.getPackets().sendRunScript(5561, 1, spaceLeft);
+				refresh();
+				// Remove coins added to pouch from bank
+				player.getBank().removeItem2(bankSlot, spaceLeft, true, false);
+			} else {
+				player.getPackets().sendGameMessage("Your money pouch is already full.");
+				// No coins removed from bank here because nothing moved to pouch
+				spaceLeft = 0;
+			}
+
+			int leftover = amount - spaceLeft;
+
+			if (leftover <= 0) {
+				return; // No leftover coins to handle
+			}
+
+			int inventoryCoins = player.getInventory().getNumberOf(995);
+
+			// Check if inventory can hold leftover coins safely without overflow
+			if (inventoryCoins + leftover < 0) {
+				// Inventory overflow scenario
+				int inventorySpaceLeft = Integer.MAX_VALUE - inventoryCoins;
+
+				if (inventorySpaceLeft > 0) {
+					// Add as many coins as inventory can hold
+					player.getInventory().addItem(995, inventorySpaceLeft);
+					player.getBank().removeItem2(bankSlot, inventorySpaceLeft, true, false);
+					leftover -= inventorySpaceLeft;
+				}
+
+				// After partial add, if leftover coins remain, **do NOT drop on floor**,
+				// leave them in bank (do nothing)
+				if (leftover > 0) {
+					player.getPackets().sendGameMessage("Your inventory is full. Some coins remain in your bank.");
+				}
+			} else {
+				// Inventory can hold all leftover coins safely
+				player.getInventory().addItem(995, leftover);
+				player.getBank().removeItem2(bankSlot, leftover, true, false);
+			}
+
+			return;
 		}
-		if (amount > getTotal()) {
-			amount = getTotal();
-		}
-		if (amount > 1) {
-			player.getPackets().sendGameMessage(
-					Utils.getFormattedNumber(amount, ',') + " coins have been removed from your money pouch.");
-		} else {
-			player.getPackets().sendGameMessage("One coin has been removed from your money pouch.");
-		}
-		player.getMoneyPouch().setTotal(player.getMoneyPouch().getTotal() - amount);
-		player.getInventory().addItem(new Item(995, amount));
-		player.getPackets().sendRunScript(5561, 0, amount);
+
+		// Safe add without overflow
+		player.getBank().removeItem2(bankSlot, amount, true, false);
+		setTotal(total + amount);
+		player.getPackets().sendRunScript(5561, 1, amount);
+		sendAddMessage(amount);
 		refresh();
 	}
 
-	public boolean cantAdd() {
-		return getTotal() == Integer.MAX_VALUE;
+
+	/**
+	 * Adds money directly to pouch.
+	 * If delete is true, removes coins from inventory.
+	 */
+	public void addMoney(int amount, boolean delete) {
+		if (amount <= 0) {
+			return;
+		}
+
+		int total = getTotal();
+
+		if (total + amount < 0) { // overflow
+			int spaceLeft = Integer.MAX_VALUE - total;
+
+			if (spaceLeft > 0) {
+				setTotal(Integer.MAX_VALUE);
+				player.getPackets().sendRunScript(5561, 1, spaceLeft);
+				sendAddMessage(spaceLeft);
+				refresh();
+			} else {
+				player.getPackets().sendGameMessage("Your money pouch is already full.");
+			}
+
+			int leftover = amount - spaceLeft;
+
+			addLeftoverCoins(leftover, delete);
+			return;
+		}
+
+		// Safe add
+		setTotal(total + amount);
+		player.getPackets().sendRunScript(5561, 1, amount);
+		sendAddMessage(amount);
+		refresh();
+
+		if (delete) {
+			player.getInventory().deleteItem(new Item(995, amount));
+		}
+	}
+
+	/**
+	 * Adds leftover coins to inventory or drops them on ground if no space.
+	 */
+	private void addLeftoverCoins(int amount, boolean deleteFromInventory) {
+		if (amount <= 0) {
+			return;
+		}
+
+		int inventoryCoins = player.getInventory().getNumberOf(995);
+
+		if (inventoryCoins + amount < 0) { // inventory overflow
+			int spaceLeft = Integer.MAX_VALUE - inventoryCoins;
+
+			if (spaceLeft > 0) {
+				player.getInventory().addItem(new Item(995, spaceLeft));
+				amount -= spaceLeft;
+			}
+
+			if (amount > 0) {
+				World.addGroundItem(new Item(995, amount), player, player, true, 60);
+			}
+		} else {
+			player.getInventory().addItem(new Item(995, amount));
+		}
+
+		if (deleteFromInventory) {
+			player.getInventory().deleteItem(new Item(995, amount));
+		}
+	}
+
+	/**
+	 * Adds money from miscellaneous sources (like drops) directly to pouch.
+	 * Drops coins on ground if overflow.
+	 */
+	public void addMoneyMisc(int amount) {
+		if (amount <= 0) {
+			return;
+		}
+
+		int total = getTotal();
+
+		if (total + amount < 0) { // overflow
+			player.getPackets().sendGameMessage("Your money pouch can't hold that much cash.");
+			World.addGroundItem(new Item(995, amount), player, player, true, 60);
+			return;
+		}
+
+		setTotal(total + amount);
+		sendAddMessage(amount);
+		player.getPackets().sendRunScript(5561, 1, amount);
+		refresh();
+	}
+
+	/**
+	 * Removes money from pouch.
+	 * Returns true if money was removed.
+	 */
+	public boolean removeMoneyMisc(int amount) {
+		if (amount <= 0 || getTotal() == 0) {
+			return false;
+		}
+
+		int total = getTotal();
+
+		if (total < amount) {
+			amount = total;
+		}
+
+		setTotal(total - amount);
+		player.getPackets().sendRunScript(5561, 0, amount);
+		player.getPackets().sendGameMessage(Utils.getFormattedNumber(amount, ',') + " coins have been removed from your money pouch.");
+		refresh();
+		return true;
+	}
+
+	/**
+	 * Withdraws money from pouch to inventory.
+	 */
+	public void withdrawPouch(int amount) {
+		if (amount <= 0) {
+			return;
+		}
+
+		int total = getTotal();
+
+		if (total == 0) {
+			player.getPackets().sendGameMessage("You don't have any money stored in your money pouch.");
+			return;
+		}
+
+		int freeSlots = player.getInventory().getFreeSlots();
+		int inventoryCoins = player.getInventory().getNumberOf(995);
+
+		if (freeSlots == 0 && inventoryCoins == 0 || inventoryCoins == Integer.MAX_VALUE) {
+			player.getPackets().sendGameMessage("You don't have enough inventory space.");
+			return;
+		}
+
+		if (inventoryCoins > Integer.MAX_VALUE - amount) {
+			amount = Integer.MAX_VALUE - inventoryCoins;
+		}
+
+		if (amount > total) {
+			amount = total;
+		}
+
+		setTotal(total - amount);
+		player.getInventory().addItem(new Item(995, amount));
+		player.getPackets().sendRunScript(5561, 0, amount);
+
+		if (amount > 1) {
+			player.getPackets().sendGameMessage(Utils.getFormattedNumber(amount, ',') + " coins have been withdrawn from your money pouch.");
+		} else {
+			player.getPackets().sendGameMessage("One coin has been withdrawn from your money pouch.");
+		}
+
+		refresh();
+	}
+
+	/**
+	 * Attempts to take money from pouch.
+	 * Returns true if any money was taken.
+	 */
+	public void takeMoneyFromPouch(int amount) {
+		if (amount <= 0) {
+			return;
+		}
+
+		int total = getTotal();
+
+		if (total == 0) {
+			return;
+		}
+
+		if (amount > total) {
+			amount = total;
+		}
+
+		setTotal(total - amount);
+		player.getPackets().sendRunScript(5561, 0, amount);
+		player.getPackets().sendGameMessage((amount == 1 ? "One" : Utils.getFormattedNumber(amount, ',')) + " coin" + (amount == 1 ? "" : "s") + " have been withdrawn from your money pouch.");
+		refresh();
+
+	}
+
+	/**
+	 * Sends a message to player about coins added.
+	 */
+	private void sendAddMessage(int amount) {
+		if (amount <= 0) {
+			return;
+		}
+		if (amount == 1) {
+			player.getPackets().sendGameMessage("One coin has been added to your money pouch.");
+		} else {
+			player.getPackets().sendGameMessage(Utils.getFormattedNumber(amount, ',') + " coins have been added to your money pouch.");
+		}
+	}
+
+	/**
+	 * Sends an examine message to player about pouch coins.
+	 */
+	public void sendExamine() {
+		player.getPackets().sendGameMessage("Your money pouch currently contains " + Utils.getFormattedNumber(getTotal(), ',') + " coins.");
 	}
 }

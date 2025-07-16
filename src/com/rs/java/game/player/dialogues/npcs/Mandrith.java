@@ -233,15 +233,14 @@ public class Mandrith extends Dialogue {
 			}
 			break;
 		case 29:
-			if (player.getMoneyPouch().cantAdd() && player.getInventory().containsItem(995, Integer.MAX_VALUE)) {
+			if (player.getMoneyPouch().isFull() && player.getInventory().containsItem(995, Integer.MAX_VALUE)) {
 				sendNPCDialogue(Mandrith, Sad,
 						"Sorry but it seems like you have max cash in both inventory and money pouch.");
-				stage = -1;
-			} else {
+            } else {
 				WildernessArtefacts.trade(player);
-				stage = -1;
-			}
-			break;
+            }
+            stage = -1;
+            break;
 		case 30:
 			player.getInterfaceManager().closeChatBoxInterface();
 			player.getCustomStore().sendInterface(player, 0, 102);

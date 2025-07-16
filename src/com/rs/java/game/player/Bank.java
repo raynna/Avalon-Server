@@ -773,39 +773,60 @@ public class Bank implements Serializable {
 			depositItem.setId(defs.getCertId());
 		}
 
-		// Check bank capacity
 		Item bankedItem = getItem(depositItem);
-		if (bankedItem != null && bankedItem.getAmount() == Integer.MAX_VALUE) {
-			player.getPackets().sendGameMessage("Not enough space in your bank.");
-			return;
-		}
+		int maxDepositAmount = depositAmount;
 
-		// Handle max stack size edge case
 		if (bankedItem != null) {
-			long total = (long) bankedItem.getAmount() + (long) depositItem.getAmount();
-			if (total > Integer.MAX_VALUE) {
-				int maxAdd = Integer.MAX_VALUE - bankedItem.getAmount();
-				depositItem.setAmount(maxAdd);
+			if (bankedItem.getAmount() == Integer.MAX_VALUE) {
 				player.getPackets().sendGameMessage("Not enough space in your bank.");
+				return;
+			}
+			int total = bankedItem.getAmount() + depositAmount;
+			if (total < 0) { // overflow detected
+				maxDepositAmount = Integer.MAX_VALUE - bankedItem.getAmount();
+				if (maxDepositAmount <= 0) {
+					player.getPackets().sendGameMessage("Not enough space in your bank.");
+					return;
+				}
+				player.getPackets().sendGameMessage("Not enough space in your bank. Depositing partial amount.");
 			}
 		} else if (!hasBankSpace()) {
 			player.getPackets().sendGameMessage("Not enough space in your bank.");
 			return;
 		}
 
-		// Remove item (or partial amount) from inventory without stack matching
-		if (invItem.getAmount() > depositAmount) {
-			Item remaining = new Item(invItem); // deep copy to retain metadata
-			remaining.setAmount(invItem.getAmount() - depositAmount);
-			player.getInventory().getItems().set(invSlot, remaining);
-		} else {
-			player.getInventory().getItems().set(invSlot, null);
-		}
-		player.getInventory().refresh(invSlot);
+		if (depositAmount > maxDepositAmount) {
+			// Partial deposit, leave leftover in inventory
+			int leftover = depositAmount - maxDepositAmount;
 
-		// Add item with metadata to bank (will not stack unless metadata is compatible)
-		addItem(depositItem, refresh);
+			if (invItem.getAmount() == depositAmount) {
+				// Entire stack selected, replace with leftover amount
+				Item leftoverItem = new Item(invItem.getId(), leftover, metadata);
+				player.getInventory().getItems().set(invSlot, leftoverItem);
+			} else {
+				// Partial stack deposit: subtract maxDepositAmount from current stack
+				Item remaining = new Item(invItem.getId(), invItem.getAmount() - maxDepositAmount, metadata);
+				player.getInventory().getItems().set(invSlot, remaining);
+			}
+
+			player.getInventory().refresh(invSlot);
+
+			// Now deposit only maxDepositAmount
+			depositItem.setAmount(maxDepositAmount);
+			addItem(depositItem, refresh);
+		} else {
+			// Full deposit
+			if (invItem.getAmount() > depositAmount) {
+				Item remaining = new Item(invItem.getId(), invItem.getAmount() - depositAmount, metadata);
+				player.getInventory().getItems().set(invSlot, remaining);
+			} else {
+				player.getInventory().getItems().set(invSlot, null);
+			}
+			player.getInventory().refresh(invSlot);
+			addItem(depositItem, refresh);
+		}
 	}
+
 
 
 
