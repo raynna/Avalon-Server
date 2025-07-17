@@ -2841,6 +2841,10 @@ public class ButtonHandler {
     }
 
     private static void equipItem(Player player, int equipmentSlot, Item itemToEquip) {
+        Item equippedItem = player.getEquipment().getItem(equipmentSlot);
+        if (equippedItem != null && itemToEquip.getDefinitions().isStackable() && equippedItem.getId() == itemToEquip.getId()) {
+            itemToEquip.setAmount(itemToEquip.getAmount() + equippedItem.getAmount());
+        }
         player.getEquipment().getItems().set(equipmentSlot, itemToEquip);
         if (itemToEquip.getMetadata() != null) {
             player.message("[ItemToEquip] " + itemToEquip.getDisplayName() + " has metadata: " + itemToEquip.getMetadata().getDisplaySuffix());
