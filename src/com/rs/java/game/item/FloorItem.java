@@ -102,7 +102,7 @@ public class FloorItem extends Item {
 		final int regionId = tile.getRegionId();
 		if (!player.getMapRegionsIds().contains(regionId))
 			return;
-		final FloorItem floorItem = World.getRegion(regionId).getGroundItem(id, tile, player);
+		final FloorItem floorItem = World.getRegion(regionId).getVisibleGroundItem(id, tile, player);
 		if (floorItem == null)
 			return;
 

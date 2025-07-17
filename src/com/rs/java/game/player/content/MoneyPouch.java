@@ -76,11 +76,8 @@ public class MoneyPouch implements Serializable {
 				player.getPackets().sendGameMessage("Your money pouch is already full.");
 			}
 
-			int leftover = amount - spaceLeft;
-
 			// Add leftover coins to inventory or drop on ground
-			addLeftoverCoins(leftover, delete);
-
+			addLeftoverCoins(spaceLeft, delete);
 			return;
 		}
 
@@ -213,21 +210,22 @@ public class MoneyPouch implements Serializable {
 			return;
 		}
 
-		int inventoryCoins = player.getInventory().getNumberOf(995);
+		if (!deleteFromInventory) {
+			int inventoryCoins = player.getInventory().getNumberOf(995);
 
-		if (inventoryCoins + amount < 0) { // inventory overflow
-			int spaceLeft = Integer.MAX_VALUE - inventoryCoins;
+			if (inventoryCoins + amount < 0) {
+				int spaceLeft = Integer.MAX_VALUE - inventoryCoins;
 
-			if (spaceLeft > 0) {
-				player.getInventory().addItem(new Item(995, spaceLeft));
+				if (spaceLeft > 0) {
+					player.getInventory().addItem(new Item(995, spaceLeft));
+				}
 				amount -= spaceLeft;
+				if (amount > 0) {
+					World.updateGroundItem(new Item(995, amount), player, player);
+				}
+			} else {
+				player.getInventory().addItem(new Item(995, amount));
 			}
-
-			if (amount > 0) {
-				World.addGroundItem(new Item(995, amount), player, player, true, 60);
-			}
-		} else {
-			player.getInventory().addItem(new Item(995, amount));
 		}
 
 		if (deleteFromInventory) {

@@ -1198,49 +1198,59 @@ public final class WorldPacketsDecoder extends Decoder {
 		else if (packetId == ITEM_TAKE_PACKET) {
 			if (!player.hasStarted() || !player.clientHasLoadedMapRegion() || player.isDead())
 				return;
+
 			final long currentTime = Utils.currentTimeMillis();
 			if (player.getLockDelay() > currentTime)
 				return;
+
 			int y = stream.readUnsignedShort();
 			int x = stream.readUnsignedShortLE();
-			final int id = stream.readUnsignedShort();
+			final int itemId = stream.readUnsignedShort();
 			boolean forceRun = stream.read128Byte() == 1;
+
 			final WorldTile tile = new WorldTile(x, y, player.getPlane());
 			final int regionId = tile.getRegionId();
+
 			if (!player.getMapRegionsIds().contains(regionId))
 				return;
-			final FloorItem item = World.getRegion(regionId).getGroundItem(id, tile, player);
-			if (item == null)
-				return;
-			player.stopAll(false);
+
 			if (forceRun)
 				player.setRun(forceRun);
-			player.setRouteEvent(new RouteEvent(item, new Runnable() {
-				@Override
-				public void run() {
-					final FloorItem item = World.getRegion(regionId).getGroundItem(id, tile, player);
-					if (item == null || !player.getControlerManager().canTakeItem(item))
-						return;
-					/*
-					 * if (item.isSpawned()) { WorldTasksManager.schedule(new WorldTask() {
-					 * 
-					 * @Override public void run() { World.addGlobalGroundItem(item, item.getTile(),
-					 * item.getTick(), item.isSpawned()); this.stop(); } }, item.getTick()); }
-					 */
-					if (item.getOwn() != player) {
-						if (player.getPlayerRank().isIronman()) {
-							player.message("You are not able to pick other players' items.");
-							return;
-						}
-					}
-					player.setNextFaceWorldTile(tile);
-					if (player.getFreezeDelay() <= currentTime)
-						player.addWalkSteps(tile.getX(), tile.getY(), 1);
-					AutomaticGroundItem.pickup(tile, item);
-					World.removeGroundItem(player, item);
+
+			player.stopAll(false);
+			player.setRouteEvent(new RouteEvent(tile, () -> {
+				FloorItem item = World.getRegion(regionId).getGroundItem(itemId, tile, player);
+				if (item == null) {
+					player.message("The item has disappeared.");
+					return;
 				}
+
+				if (!player.getControlerManager().canTakeItem(item)) {
+					return;
+				}
+
+				if (item.hasOwner() && item.isInvisible() && !player.getUsername().equals(item.getOwner())) {
+					if (player.getPlayerRank().isIronman()) {
+						player.message("You are not able to pick up other players' items.");
+						return;
+					}
+				}
+
+				if (!player.getTile().matches(tile)) {
+					// Sanity check; shouldn't happen with RouteEvent but good to guard.
+					return;
+				}
+
+				player.setNextFaceWorldTile(tile);
+
+				if (player.getFreezeDelay() <= currentTime)
+					player.addWalkSteps(tile.getX(), tile.getY(), 1);
+
+				AutomaticGroundItem.pickup(tile, item); // handles adding to inventory/bank/etc
+				World.removeGroundItem(player, item);
 			}));
-		} else if (packetId == EXAMINE_FLOORITEM_PACKET) {
+		}
+		else if (packetId == EXAMINE_FLOORITEM_PACKET) {
 			FloorItem.handleExamine(player, stream);
 		}
 	}

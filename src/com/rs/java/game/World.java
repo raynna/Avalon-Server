@@ -1405,8 +1405,8 @@ public final class World {
     private static FloorItem addGroundItemInternal(Item item, WorldTile tile, Player owner,
                                                    boolean invisible, long hiddenTime, int type, int publicTime, String ironmanName) {
         FloorItem floorItem = (ironmanName != null)
-                ? new FloorItem(item, tile, owner, false, invisible, ironmanName)
-                : new FloorItem(item, tile, owner, false, invisible);
+                ? new FloorItem(new Item(item), tile, owner, false, invisible, ironmanName)
+                : new FloorItem(new Item(item), tile, owner, false, invisible);
 
         Region region = getRegion(tile.getRegionId());
 
@@ -1494,7 +1494,7 @@ public final class World {
         if (!stackable && item.getAmount() > 1) {
             Item copy = item.clone();
             for (int i = 0; i < copy.getAmount(); i++) {
-                    item.setAmount(1);
+                    //item.setAmount(1);
                 if (ironmanName != null)
                     addGroundItem(item, tile, owner, true, time, type, ironmanName);
                 else
@@ -1693,9 +1693,10 @@ public final class World {
     private static boolean handleCoinPickup(Player player, FloorItem item, Region region, int regionId) {
         int amount = item.getAmount();
         int pouchTotal = player.getMoneyPouch().getTotal();
+        int coinsInventory = player.getInventory().getNumberOf(995);
 
-        if (pouchTotal == Integer.MAX_VALUE) {
-            player.getPackets().sendGameMessage("You can't hold more coins in your money pouch.");
+        if (pouchTotal == Integer.MAX_VALUE && coinsInventory == Integer.MAX_VALUE) {
+             player.getPackets().sendGameMessage("You can't hold more coins.");
             return false;
         }
 

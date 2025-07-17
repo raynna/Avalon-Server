@@ -255,19 +255,6 @@ public final class Commands {
                 case "claim":
                     ButtonHandler.refreshUntradeables(player);
                     return true;
-                case "search":
-                    String searchTerm = String.join(" ", Arrays.copyOfRange(cmd, 1, cmd.length));
-                    List<ItemDefinitions> matches = ItemDefinitions.searchItems(searchTerm, 5); // Change maxResults if needed
-
-                    if (matches.isEmpty()) {
-                        player.message("No item found for: '" + searchTerm + "'");
-                    } else {
-                        player.message("Results for '" + searchTerm + "':");
-                        for (ItemDefinitions def : matches) {
-                            player.message("- " + def.getName() + " (<col=ff0000>" + def.getId() + "</col>)");
-                        }
-                    }
-                    return true;
                 case "youtube":
                     name = "";
                     for (int i = 1; i < cmd.length; i++)
@@ -1433,7 +1420,7 @@ public final class Commands {
                                 .sendGameMessage("::drop 'amount of drops' 'amount of squares random generated'");
                         return true;
                     }
-                    if (Integer.valueOf(cmd[1]) > 100)
+                    if (Integer.valueOf(cmd[1]) > 500)
                         return true;
                     if (Integer.valueOf(cmd[2]) > 32)
                         return true;
@@ -1451,8 +1438,8 @@ public final class Commands {
                                         player.getY() - Utils.random(Integer.valueOf(cmd[2])), player.getPlane()),
                                 new WorldTile(player.getX() + Utils.random(Integer.valueOf(cmd[2])),
                                         player.getY() - Utils.random(Integer.valueOf(cmd[2])), player.getPlane())};
-                        World.addGroundItem(new Item(itemIds[Utils.getRandom(itemIds.length - 1)], 1),
-                                new WorldTile(tiles[Utils.getRandom(tiles.length - 1)]), player, false, 0);
+                        World.updateGroundItem(new Item(itemIds[Utils.getRandom(itemIds.length - 1)], 1),
+                                new WorldTile(tiles[Utils.getRandom(tiles.length - 1)]), player, 0, 0);
                     }
                     return true;
                 case "raredrop":
@@ -2540,17 +2527,58 @@ public final class Commands {
                         return true;
                     }
                     try {
-                        int itemId1 = Integer.valueOf(cmd[1]);
-                        if (cmd.length == 3)
-                            amount = Integer.parseInt(cmd[2]);
-                        player.getInventory().addItem(itemId1, amount);
-                        player.getPackets().sendGameMessage("You spawn " + amount + " x "
-                                + ItemDefinitions.getItemDefinitions(itemId1).getName() + ".");
-                    } catch (NumberFormatException e) {
-                        player.getPackets().sendGameMessage("Use: ::item id (optional:amount)");
+                        // Combine all arguments except the command itself into a single search string
+                        String input = String.join(" ", Arrays.copyOfRange(cmd, 1, cmd.length));
+
+                        amount = 1;
+                        String searchTerm = input;
+
+                        // Check if last part is a number (optional amount)
+                        String[] parts = input.split(" ");
+                        if (parts.length > 1 && parts[parts.length - 1].matches("\\d+")) {
+                            amount = Integer.parseInt(parts[parts.length - 1]);
+                            searchTerm = String.join(" ", Arrays.copyOfRange(parts, 0, parts.length - 1));
+                        }
+
+                        ItemDefinitions itemDef = null;
+
+                        // Try parsing input as an integer ID
+                        try {
+                            itemId = Integer.parseInt(searchTerm);
+                            itemDef = ItemDefinitions.getItemDefinitions(itemId);
+                        } catch (NumberFormatException e) {
+                            // Not an ID, try searching by name
+                            List<ItemDefinitions> results = ItemDefinitions.searchItems(searchTerm, 1);
+                            if (!results.isEmpty()) {
+                                itemDef = results.get(0);
+                            }
+                        }
+
+                        if (itemDef == null) {
+                            player.getPackets().sendGameMessage("No item found for: '" + searchTerm + "'");
+                            return true;
+                        }
+
+                        player.getInventory().addItem(itemDef.getId(), amount);
+                        player.getPackets().sendGameMessage("You spawn " + amount + " x " + itemDef.getName() + ".");
+                    } catch (Exception e) {
+                        player.getPackets().sendGameMessage("Use: ::item id|name (optional: amount)");
                     }
                     return true;
 
+                case "search":
+                    String searchTerm = String.join(" ", Arrays.copyOfRange(cmd, 1, cmd.length));
+                    List<ItemDefinitions> matches = ItemDefinitions.searchItems(searchTerm, 5); // Change maxResults if needed
+
+                    if (matches.isEmpty()) {
+                        player.message("No item found for: '" + searchTerm + "'");
+                    } else {
+                        player.message("Results for '" + searchTerm + "':");
+                        for (ItemDefinitions def : matches) {
+                            player.message("- " + def.getName() + " (<col=ff0000>" + def.getId() + "</col>)");
+                        }
+                    }
+                    return true;
                 case "sound":
                     int soundId = Integer.valueOf(cmd[1]);
                     player.message("play sound " + soundId);

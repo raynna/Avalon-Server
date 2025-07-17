@@ -93,10 +93,11 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 				if (freeSlots() >= item.getAmount()) {
 					for (int i = 0; i < item.getAmount(); i++) {
 						int index = freeSlot();
-						Item oldItem = data[i];
-						Item newItem = new Item(oldItem);
-						newItem.setAmount(1);
-						data[index] = newItem;
+						if (index == -1)
+							return false; // should never happen here due to earlier check
+						Item singleItem = new Item(item);
+						singleItem.setAmount(1);
+						data[index] = singleItem;
 					}
 					return true;
 				} else {

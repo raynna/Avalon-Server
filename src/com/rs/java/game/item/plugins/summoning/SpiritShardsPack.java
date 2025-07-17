@@ -8,7 +8,7 @@ public class SpiritShardsPack extends ItemPlugin {
 
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { 12183 };
+		return new Object[] { 15262, 12183 };
 	}
 	@Override
 	public boolean processItem(Player player, Item item, int slotId, String option) {

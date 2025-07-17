@@ -634,6 +634,22 @@ public class Region {
 		return null;
 	}
 
+	public FloorItem getVisibleGroundItem(int id, WorldTile tile, Player player) {
+		if (groundItems == null)
+			return null;
+		for (FloorItem item : groundItems) {
+			if (item.getId() != id)
+				continue;
+			if (item.getTile().matches(tile)) {
+				if (item.hasOwner() && item.isInvisible() && !item.getOwner().equals(player.getUsername()))
+					continue;
+				return item;
+			}
+		}
+		return null;
+	}
+
+
 	/**
 	 * Return's list of ground items that are currently loaded. List may be null if
 	 * there's no ground items. Modifying given list is prohibited.
