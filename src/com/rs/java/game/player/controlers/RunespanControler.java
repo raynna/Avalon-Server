@@ -988,7 +988,7 @@ public class RunespanControler extends Controler {
 							gfx = 2718;
 						else
 							gfx = 2729;
-						World.sendProjectile(player, toTile, gfx, 18, 18, 20, 50, 145, 0);
+						World.sendProjectileToTile(player, toTile, gfx);
 					} else if (plataform.middleGraphic == -3) { // EXCEPTION
 																// USED BY
 																// MISSILE
@@ -1001,7 +1001,7 @@ public class RunespanControler extends Controler {
 							gfx = 2719;
 						else
 							gfx = 2731;
-						World.sendProjectile(player, toTile, gfx, 18, 18, 20, 50, 145, 0);
+						World.sendProjectileToTile(player, toTile, gfx);
 					} else if (plataform.middleGraphic != -1)
 						player.gfx(new Graphics(plataform.middleGraphic));
 					if (plataform.invisible)
@@ -1095,7 +1095,6 @@ public class RunespanControler extends Controler {
 	 * Handles the yellow wizard every ten minutes.
 	 * 
 	 * @param player
-	 * @param called
 	 */
 	public void handleWizzard(Player player) {
 		if (player.RunespanLow) {

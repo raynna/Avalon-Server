@@ -11,11 +11,8 @@ import java.lang.reflect.Type;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.InstanceCreator;
-import com.rs.java.game.item.meta.ChargeData;
 import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.actions.combat.modernspells.Charge;
 import com.rs.java.utils.Logger;
 
 /**

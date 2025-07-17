@@ -21,7 +21,7 @@ import com.rs.java.game.item.ItemPlugin;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
 import com.rs.java.game.item.itemdegrading.ChargesManager;
 import com.rs.java.game.item.itemdegrading.ItemDegrade.ItemStore;
-import com.rs.java.game.item.meta.ChargeData;
+import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.NpcPlugin;
@@ -42,7 +42,6 @@ import com.rs.java.game.player.actions.combat.LunarMagicks.RSLunarSpellStore;
 import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.actions.combat.ModernMagicks;
 import com.rs.java.game.player.actions.combat.ModernMagicks.RSSpellStore;
-import com.rs.java.game.player.actions.combat.modernspells.Charge;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking.Cook;
 import com.rs.java.game.player.actions.skills.crafting.GemCutting;
@@ -1071,12 +1070,12 @@ public class InventoryOptionsHandler {
             return;
         } else if (itemId == 11283) {
             Item shield = player.getInventory().getItem(slotId);
-            ChargeData chargeData = shield.getMetadata() instanceof ChargeData ? (ChargeData) shield.getMetadata() : null;
-            if (chargeData == null) {
+            DragonFireShieldMetaData dragonFireShieldMetaData = shield.getMetadata() instanceof DragonFireShieldMetaData ? (DragonFireShieldMetaData) shield.getMetadata() : null;
+            if (dragonFireShieldMetaData == null) {
                 player.message("Your dragonfire shield is not charged.");
                 return;
             }
-            int charges = chargeData.getCharges();
+            int charges = dragonFireShieldMetaData.getValue();
             player.message("Your dragonfire shield has " + charges + " charges");
         } else if (itemId == 11284)
             player.message("Your dragonfire shield is not charged.");
@@ -1337,8 +1336,8 @@ public class InventoryOptionsHandler {
             Talisman.locate(player, 3127, 3405);
         else if (itemId == 11283) {
             Item shield = player.getInventory().getItem(slotId);
-            ChargeData chargeData = shield.getMetadata() instanceof ChargeData ? (ChargeData) shield.getMetadata() : null;
-            if (chargeData == null ||chargeData.getCharges() == 0) {
+            DragonFireShieldMetaData dragonFireShieldMetaData = shield.getMetadata() instanceof DragonFireShieldMetaData ? (DragonFireShieldMetaData) shield.getMetadata() : null;
+            if (dragonFireShieldMetaData == null || dragonFireShieldMetaData.getValue() == 0) {
                 player.message("Your dragonfire shield is already empty.");
             } else {
                 player.message("You empty your dragonfire shield charges.");

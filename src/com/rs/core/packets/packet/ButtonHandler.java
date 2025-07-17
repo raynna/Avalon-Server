@@ -12,7 +12,6 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.itemdegrading.ChargesManager;
-import com.rs.java.game.item.meta.ChargeData;
 import com.rs.java.game.item.plugins.misc.RunePouch;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.minigames.crucible.Crucible;
@@ -368,54 +367,28 @@ public class ButtonHandler {
                         }
                         break;
                 }
-            } else if (player.getTemporaryAttributtes().get("runepouch") != null) {
-                Item item = player.getRunePouch().get(slotId);
-                if (item == null && componentId == 7)
-                    return;
+            } else if (player.getTemporaryAttributtes().get("rune_pouch_slot") != null) {
                 switch (componentId) {
                     case 7:
-                        if (player.getInventory().getFreeSlots() == 0 && !player.getInventory().containsItem(player.getRunePouch().get(slotId).getId(), 1)) {
-                            player.getPackets().sendGameMessage("You don't have enough inventory space.");
-                            return;
-                        }
                         switch (packetId) {
                             case 55:
-                                RunePouch.withdrawRunePouch(player, slotId, item, 16000);
+                                RunePouch.withdrawRunePouch(player, slotId, 16000);
                                 break;
                             case 5:
-                                RunePouch.withdrawRunePouch(player, slotId, item, 100);
+                                RunePouch.withdrawRunePouch(player, slotId, 100);
                                 break;
                             case 67:
-                                RunePouch.withdrawRunePouch(player, slotId, item, 10);
+                                RunePouch.withdrawRunePouch(player, slotId, 10);
                                 break;
                             case 14:
-                                RunePouch.withdrawRunePouch(player, slotId, item, 1);
+                                RunePouch.withdrawRunePouch(player, slotId, 1);
                                 break;
                         }
                         break;
                     case 10:
-                        switch (packetId) {
-                            case 14:
-                                if (player.getRunePouch().getFreeSlots() < 3) {
-                                    for (Item items : player.getRunePouch().getContainerItems()) {
-                                        if (items == null)
-                                            continue;
-                                        if (!player.getInventory().hasFreeSlots() && !player.getInventory().containsItem(items.getId(), 1)) {
-                                            player.getPackets().sendGameMessage("You don't have enough inventory space to withdraw the " + items.getName() + "s.");
-                                            continue;
-                                        }
-                                        player.getInventory().addItem(items);
-                                        player.getRunePouch().remove(items);
-                                        player.getRunePouch().shift();
-                                        player.getInventory().refresh();
-                                        player.getPackets().sendGameMessage("You withdraw " + items.getAmount() + " x " + items.getName() + "s.");
-                                    }
-                                    RunePouch.openRunePouch(player);
-                                    break;
-                                } else {
-                                    player.getPackets().sendGameMessage("Your rune pouch is empty.");
-                                    return;
-                                }
+                        if (packetId == 14) {
+                            int runePouchSlot = (int) player.getTemporaryAttributtes().get("rune_pouch_slot");
+                            RunePouch.withdrawAll(player, runePouchSlot);
                         }
                         break;
                 }
@@ -1993,7 +1966,7 @@ public class ButtonHandler {
                 sendItemStats(player, item);
                 return;
             }
-            if (player.getTemporaryAttributtes().get("runepouch") != null) {
+            if (player.getTemporaryAttributtes().get("rune_pouch_slot") != null) {
                 if (componentId == 0) {
                     if (slotId >= player.getInventory().getItemsContainerSize())
                         return;

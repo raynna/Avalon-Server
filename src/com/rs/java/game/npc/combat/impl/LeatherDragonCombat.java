@@ -4,13 +4,12 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.item.meta.ChargeData;
+import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.actions.combat.modernspells.Charge;
 import com.rs.java.utils.Utils;
 
 public class LeatherDragonCombat extends CombatScript {
@@ -68,17 +67,17 @@ public class LeatherDragonCombat extends CombatScript {
 				// If shield is uncharged (11284), convert to charged version (11283)
 				if (shield != null && shield.getId() == 11284) {
 					shield.setId(11283);
-					shield.setMetadata(new ChargeData(0));
+					shield.setMetadata(new DragonFireShieldMetaData(0));
 					player.getAppearence().generateAppearenceData();
 				}
 
 				// Ensure the shield has charge metadata
-				if (shield.getMetadata() == null || !(shield.getMetadata() instanceof ChargeData)) {
-					shield.setMetadata(new ChargeData(0));
+				if (shield.getMetadata() == null || !(shield.getMetadata() instanceof DragonFireShieldMetaData)) {
+					shield.setMetadata(new DragonFireShieldMetaData(0));
 				}
 
 				// Increment charges
-				((ChargeData) shield.getMetadata()).increment(1);
+				((DragonFireShieldMetaData) shield.getMetadata()).increment(1);
 
 				// Play animation & feedback
 				player.animate(new Animation(6695));

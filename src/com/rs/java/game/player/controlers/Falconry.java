@@ -100,7 +100,7 @@ public class Falconry extends Controler {
                     WorldTasksManager.schedule(new WorldTask() {
                         @Override
                         public void run() {
-                            World.sendProjectile(player, npc, 918, 41, 16, 31, 35, 16, 0);
+                            World.sendElementalProjectile(player, npc, 918);
                             WorldTasksManager.schedule(new WorldTask() {
                                 @Override
                                 public void run() {
@@ -122,11 +122,11 @@ public class Falconry extends Controler {
                     WorldTasksManager.schedule(new WorldTask() {
                         @Override
                         public void run() {
-                            World.sendProjectile(player, npc, 918, 41, 16, 31, 35, 16, 0);
+                            World.sendElementalProjectile(player, npc, 918);
                             WorldTasksManager.schedule(new WorldTask() {
                                 @Override
                                 public void run() {
-                                    World.sendProjectile(npc, player, 918, 41, 16, 31, 35, 16, 0);
+                                    World.sendElementalProjectile(npc, player, 918);
                                     WorldTasksManager.schedule(new WorldTask() {
                                         @Override
                                         public void run() {

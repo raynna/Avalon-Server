@@ -3,12 +3,15 @@ package com.rs.java.game.player;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.rs.Settings;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
+import com.rs.java.game.item.meta.ItemMetadata;
+import com.rs.java.game.item.meta.MetaDataType;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.utils.*;
@@ -383,14 +386,17 @@ public final class Inventory implements Serializable {
 			return;
 		}
 		StringBuilder builder = new StringBuilder();
-		builder.append("Price check: ");
 		if (!isTradeable) {
-			builder.append(item.getDefinitions().getName() + " is untradeable.");
+			builder = new StringBuilder();
+			builder.append(item.getDefinitions().getName()).append(" is untradeable.");
+			player.message(builder.toString());
 		}
-		if (isFree) {
-			builder.append(item.getDefinitions().getName() + " has no cost.");
-		}
+		/*
+		Grand exchange price
+		 */
 		if (isTradeable && !isFree) {
+			builder = new StringBuilder();
+			builder.append("Ge Price: ");
 			if ((isNoted || isStackable)) {
 				if (item.getAmount() > 1)
 					builder.append(Utils.getFormattedNumber(item.getAmount(), ',') + " x ");
@@ -399,19 +405,13 @@ public final class Inventory implements Serializable {
 				if (item.getAmount() > 1)
 					builder.append(" (" + HexColours.getShortMessage(HexColours.Colour.RED, Utils.getFormattedNumber(EconomyPrices.getPrice(item.getId()), ','))
 							+ " coins each)");
+				builder.append("\n");
 			} else {
 				builder.append(item.getDefinitions().getName());
-				builder.append(": " + HexColours.getShortMessage(HexColours.Colour.RED, Utils.formatMillionAmount(totalPrice)) + " coins.");
+				builder.append(": " + HexColours.getShortMessage(HexColours.Colour.RED, Utils.formatMillionAmount(totalPrice)) + " coins.\n");
 			}
+			player.message(builder.toString());
 		}
-		player.message(builder.toString());
-		/*
-		new ChatLine
-		 */
-		builder = new StringBuilder();
-		builder.append("High Alch: " + HexColours.getShortMessage(HexColours.Colour.RED, Utils.getFormattedNumber(item.getDefinitions().getHighAlchPrice(), ',')) + " coins, ");
-		builder.append("Low Alch: " + HexColours.getShortMessage(HexColours.Colour.RED, Utils.getFormattedNumber(item.getDefinitions().getLowAlchPrice(), ',')) + " coins.");
-		player.message(builder.toString());
 		/*
 		new ChatLine
 		 */
@@ -423,21 +423,37 @@ public final class Inventory implements Serializable {
 			if (bestBuyOffer == 0 && bestSellOffer == 0) {
 				builder.append("There is no grand exchange offers for this item.");
 			} else {
-				builder.append("Buy Offer: " + (bestBuyOffer == 0 ? (HexColours.getShortMessage(HexColours.Colour.RED, "None") + ", ") : HexColours.getShortMessage(HexColours.Colour.GREEN, Utils.getFormattedNumber(bestBuyOffer, ',')) + " coins. "));
-				builder.append("Sell Offer: " + (bestSellOffer == 0 ? (HexColours.getShortMessage(HexColours.Colour.RED, "None") + ", ") : HexColours.getShortMessage(HexColours.Colour.GREEN, Utils.getFormattedNumber(bestSellOffer, ',')) + " coins."));
+				builder.append("Buy Offer: ").append(bestBuyOffer == 0 ? (HexColours.getShortMessage(HexColours.Colour.RED, "None") + ", ") : HexColours.getShortMessage(HexColours.Colour.GREEN, Utils.getFormattedNumber(bestBuyOffer, ',')) + " coins. ");
+				player.message(builder.toString());
+				builder = new StringBuilder();
+				builder.append("                                Sell Offer: ").append(bestSellOffer == 0 ? (HexColours.getShortMessage(HexColours.Colour.RED, "None") + ", ") : HexColours.getShortMessage(HexColours.Colour.GREEN, Utils.getFormattedNumber(bestSellOffer, ',')) + " coins.");
 			}
 			player.message(builder.toString());
 		}
-		/*
-		new ChatLine
+				/*
+		Alchemy price
 		 */
+		if (item.getDefinitions().getHighAlchPrice() > 0) {
+			builder = new StringBuilder();
+			builder.append("High Alch: " + HexColours.getShortMessage(HexColours.Colour.RED, Utils.getFormattedNumber(item.getDefinitions().getHighAlchPrice(), ',')) + " coins, ");
+			builder.append("Low Alch: " + HexColours.getShortMessage(HexColours.Colour.RED, Utils.getFormattedNumber(item.getDefinitions().getLowAlchPrice(), ',')) + " coins.");
+			player.message(builder.toString());
+		}
 		builder = new StringBuilder();
-		builder.append("Description: " + ItemExamines.getExamine(item));
+		builder.append("Description: ").append(ItemExamines.getExamine(item));
 		player.message(builder.toString());
 		if (player.isDeveloperMode()) {
 			builder = new StringBuilder();
-			builder.append("FileId: " + item.getDefinitions().getFileId() + ", ArchiveId: " + item.getDefinitions().getArchiveId());
+			builder.append("FileId: ").append(item.getDefinitions().getFileId()).append(", ArchiveId: ").append(item.getDefinitions().getArchiveId());
 			player.message(builder.toString());
+		}
+		if (item.getMetadata() != null) {
+			StringBuilder metaBuilder = new StringBuilder("Metadata: ");
+			metaBuilder
+					.append(MetaDataType.fromId(item.getMetadata().getType()))
+					.append(" (").append(item.getMetadata().getType()).append("), ")
+					.append(item.getMetadata().getValue());
+			player.message(metaBuilder.toString());
 		}
 	}
 
