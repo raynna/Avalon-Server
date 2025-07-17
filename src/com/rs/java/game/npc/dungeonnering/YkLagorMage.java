@@ -36,7 +36,7 @@ public class YkLagorMage extends DungeonNPC {
 		cycle = 5;
 		setNextFaceEntity(boss);
 		animate(new Animation(3645));
-		World.sendProjectile(this, boss, 2704, 39, 39, 55, 70, 0, 0);
+		World.sendElementalProjectile(this, boss, 2704);
 	}
 	
 	private static final WeaponType[][] WEAKNESS =

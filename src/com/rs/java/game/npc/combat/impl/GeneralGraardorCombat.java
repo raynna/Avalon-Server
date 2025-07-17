@@ -71,7 +71,7 @@ public class GeneralGraardorCombat extends CombatScript {
 			npc.animate(new Animation(7063));
 			for (Entity t : npc.getPossibleTargets()) {
 				delayHit(npc, 1, t, getRangeHit(npc, getRandomMaxHit(npc, 335, NPCCombatDefinitions.RANGE, t)));
-				World.sendProjectile(npc, t, 1200, 41, 16, 41, 35, 16, 0);
+				World.sendElementalProjectile(npc, t, 1200);
 			}
 		} else { // melee attack
 			if (Utils.isOnRange(npc.getX(), npc.getY(), npc.getSize(), target.getX(), target.getY(), target.getSize(),

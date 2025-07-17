@@ -80,7 +80,7 @@ public class KalGerWarmongerCombat extends CombatScript {
 			npc.animate(new Animation(14996));
 			npc.gfx(new Graphics(2874));
 			for (Entity t : boss.getPossibleTargets()) {
-				World.sendProjectile(boss, t, 2875, 65, 10, 50, 0, 5, 1);
+				World.sendElementalProjectile(boss, t, 2875);
 				t.gfx(new Graphics(2873));
 				delayHit(npc, 0, t, getMagicHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
 			}
@@ -91,7 +91,7 @@ public class KalGerWarmongerCombat extends CombatScript {
 			npc.animate(new Animation(14537));
 			npc.gfx(new Graphics(2885));
 			for (Entity t : boss.getPossibleTargets()) {
-				World.sendProjectile(boss, t, 2886, 75, 30, 50, 55, 2, 0);
+				World.sendElementalProjectile(boss, t, 2886);
 				delayHit(npc, 2, t, getRangeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
 			}
 		} else if (boss.getType() == 6) {//MAUL

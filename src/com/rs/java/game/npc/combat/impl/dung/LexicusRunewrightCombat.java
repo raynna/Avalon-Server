@@ -60,7 +60,7 @@ public class LexicusRunewrightCombat extends CombatScript {
 			boolean range_style = attack == 0 || attack == 1;
 			boss.animate(new Animation(13470));
 			boss.gfx(new Graphics(range_style ? 2408 : 2424));
-			World.sendProjectile(npc, target, range_style ? 2409 : 2425, 40, 40, 54, 35, 5, 0);
+			World.sendElementalProjectile(npc, target, range_style ? 2409 : 2425);
 			if (range_style)
 				delayHit(npc, 1, target, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			else
@@ -113,7 +113,7 @@ public class LexicusRunewrightCombat extends CombatScript {
 								break;
 							WorldObject c = cases.get(Utils.random(cases.size()));
 							cases.remove(c);
-							World.sendProjectile(npc, c, tile, 2422, 60, 75, 30, 0, 0, 0);
+							World.sendObjectProjectile(npc, c, 2422);
 						}
 					}
 				} else if (cycle == 4) {

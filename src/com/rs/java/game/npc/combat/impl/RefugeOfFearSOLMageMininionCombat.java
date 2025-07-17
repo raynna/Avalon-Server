@@ -58,7 +58,7 @@ public class RefugeOfFearSOLMageMininionCombat extends CombatScript {
 				}
 			}, 2);
 			p.addFreezeDelay(20000, true);
-			World.sendProjectile(npc, p, 178, 36, 32, 50, 70, 0, 0);
+			World.sendElementalProjectile(npc, p, 178);
 			break;
 		}
 	}

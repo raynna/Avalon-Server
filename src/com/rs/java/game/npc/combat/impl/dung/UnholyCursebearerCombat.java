@@ -70,11 +70,11 @@ public class UnholyCursebearerCombat extends CombatScript {
 			if (multiTarget) {
 				npc.gfx(new Graphics(2441));
 				for (Entity t : npc.getPossibleTargets()) {
-					World.sendProjectile(npc, t, 88, 50, 30, 41, 40, 0, 0);
+					World.sendElementalProjectile(npc, t, 88);
 					delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.6), NPCCombatDefinitions.MAGE, t)));
 				}
 			} else {
-				World.sendProjectile(npc, target, 88, 50, 30, 41, 30, 0, 0);
+				World.sendElementalProjectile(npc, target, 88);
 				delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			}
 			break;

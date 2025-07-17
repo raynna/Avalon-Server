@@ -63,7 +63,7 @@ public class BulwarkBeastCombat extends CombatScript {
 			npc.gfx(new Graphics(2394));
 			List<Entity> targets = npc.getPossibleTargets();
 			for (Entity t : targets) {
-				World.sendProjectile(npc, t, 2395, 35, 30, 41, 40, 0, 0);
+				World.sendProjectileToTile(npc, t, 2395);
 				t.gfx(new Graphics(2396, 75, 0));
 				delayHit(npc, 1, t, getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
 			}

@@ -83,7 +83,7 @@ public class GluttonousBehemothCombat extends CombatScript {
 		}
 		if (attackStyle == 0) {
 			npc.animate(new Animation(13719));
-			World.sendProjectile(npc, target, 2612, 41, 16, 41, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 2612);
 			int damage = getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target);
 			delayHit(npc, 2, target, getMagicHit(npc, damage));
 			if (damage != 0) {
@@ -96,7 +96,7 @@ public class GluttonousBehemothCombat extends CombatScript {
 			}
 		} else if (attackStyle == 1) {
 			npc.animate(new Animation(13721));
-			World.sendProjectile(npc, target, 2610, 41, 16, 41, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 2610);
 			delayHit(npc, 2, target, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override

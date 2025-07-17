@@ -49,8 +49,7 @@ public class LucienCombat extends CombatScript {
 				String key = t.getX() + "_" + t.getY();
 				if (!tiles.containsKey(t.getX() + "_" + t.getY())) {
 					tiles.put(key, new int[] { t.getX(), t.getY() });
-					World.sendProjectile(npc, new WorldTile(t.getX(), t.getY(), npc.getPlane()), 1900, 34, 0, 30, 35,
-							16, 0);
+					World.sendProjectileToTile(npc, new WorldTile(t.getX(), t.getY(), npc.getPlane()), 1900);
 				}
 			}
 			WorldTasksManager.schedule(new WorldTask() {
@@ -75,11 +74,11 @@ public class LucienCombat extends CombatScript {
 		if (attackStyle == 0) { // normal mage move
 			npc.animate(new Animation(11338));
 			delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, 400, NPCCombatDefinitions.MAGE, target)));
-			World.sendProjectile(npc, target, 2963, 34, 16, 40, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 2963);
 		} else if (attackStyle == 1) { // normal mage move
 			npc.animate(new Animation(11338));
 			delayHit(npc, 2, target, getRangeHit(npc, getRandomMaxHit(npc, 250, NPCCombatDefinitions.RANGE, target)));
-			World.sendProjectile(npc, target, 1904, 34, 16, 30, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 1904);
 			WorldTasksManager.schedule(new WorldTask() {
 
 				@Override
@@ -92,7 +91,7 @@ public class LucienCombat extends CombatScript {
 		} else if (attackStyle == 2) {
 			npc.animate(new Animation(11318));
 			npc.gfx(new Graphics(1901));
-			World.sendProjectile(npc, target, 1899, 34, 16, 30, 95, 16, 0);
+			World.sendElementalProjectile(npc, target, 1899);
 			delayHit(npc, 4, target, getMagicHit(npc, getRandomMaxHit(npc, 400, NPCCombatDefinitions.MAGE, target)));
 		} else if (attackStyle == 3) {
 			npc.animate(new Animation(11373));

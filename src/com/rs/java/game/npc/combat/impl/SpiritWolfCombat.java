@@ -26,7 +26,7 @@ public class SpiritWolfCombat extends CombatScript {
 			familiar.submitSpecial(familiar.getOwner());
 			npc.animate(new Animation(8293));
 			npc.gfx(new Graphics(1334));
-			World.sendProjectile(npc, target, 1333, 34, 16, 30, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 1333);
 			if (target instanceof NPC) {
 				if (!(((NPC) target).getCombatDefinitions().getAttackStyle() == NPCCombatDefinitions.MELEE))
 					target.setAttackedByDelay(3000);// three seconds

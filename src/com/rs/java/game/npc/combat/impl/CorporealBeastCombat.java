@@ -64,7 +64,7 @@ public class CorporealBeastCombat extends CombatScript {
 		if (attackStyle == 2) { // powerfull mage spiky ball
 			npc.animate(new Animation(10410));
 			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 650, NPCCombatDefinitions.MAGE, target)));
-			World.sendProjectile(npc, target, 1825, 41, 16, 41, 0, 16, 0);
+			World.sendProjectileToTile(npc, target, 1825);
 		} else if (attackStyle == 3) { // translucent ball of energy
 			npc.animate(new Animation(10410));
 			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 550, NPCCombatDefinitions.MAGE, target)));
@@ -87,12 +87,12 @@ public class CorporealBeastCombat extends CombatScript {
 					}
 
 				}, 1);
-				World.sendProjectile(npc, target, 1823, 41, 16, 41, 0, 16, 0);
+				World.sendProjectileToTile(npc, target, 1823);
 			}
 		} else if (attackStyle == 4) {
 			npc.animate(new Animation(10410));
 			final WorldTile tile = new WorldTile(target);
-			World.sendProjectile(npc, tile, 1824, 41, 16, 30, 0, 16, 0);
+			World.sendProjectileToTile(npc, tile, 1824);
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
@@ -100,7 +100,7 @@ public class CorporealBeastCombat extends CombatScript {
 						final WorldTile newTile = new WorldTile(tile, 3);
 						if (!World.canMoveNPC(newTile.getPlane(), newTile.getX(), newTile.getY(), 1))
 							continue;
-						World.sendProjectile(npc, tile, newTile, 1824, 0, 0, 25, 0, 30, 0);
+						World.sendProjectileToTile(npc, tile, 1824);
 						for (Entity t : possibleTargets) {
 							if (Utils.getDistance(newTile.getX(), newTile.getY(), t.getX(), t.getY()) > 1
 									|| !t.clipedProjectile(newTile, false))

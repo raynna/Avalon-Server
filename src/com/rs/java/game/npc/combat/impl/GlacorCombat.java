@@ -51,7 +51,7 @@ public class GlacorCombat extends CombatScript {
 			case 4:
 				final WorldTile tile = new WorldTile(target);
 				npc.animate(new Animation(9955));
-				World.sendProjectile(npc, tile, 2314, 50, 0, 46, 20, 0, 10);
+				World.sendProjectileToTile(npc, tile, 2314);
 				glacor.setRangeAttack(true);
 				WorldTasksManager.schedule(new WorldTask() {
 
@@ -77,10 +77,10 @@ public class GlacorCombat extends CombatScript {
 		boolean isRangedAttack = npc.isRangeAttack();
 		if (isRangedAttack) {
 			delayHit(npc, 2, target, getRangeHit(npc, getRandomMaxHit(npc, 294, NPCCombatDefinitions.RANGE, target)));
-			World.sendProjectile(npc, target, 962, 50, 30, 46, 30, 0, 10);
+			World.sendElementalProjectile(npc, target, 962);
 		} else {
 			delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, 264, NPCCombatDefinitions.MAGE, target)));
-			World.sendProjectile(npc, target, 634, 50, 30, 46, 30, 5, 10);
+			World.sendElementalProjectile(npc, target, 634);
 			if (Utils.random(5) == 0) {
 				WorldTasksManager.schedule(new WorldTask() {
 

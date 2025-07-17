@@ -70,7 +70,7 @@ public class RuneboundBehemothCombat extends CombatScript {
 								if (!manager.isAtBossRoom(tile))
 									continue tileLoop;
 								explosions.add(tile);
-								World.sendProjectile(boss, tile, 2414, 120, 0, 20, 0, 20, 0);
+								World.sendProjectileToTile(boss, tile, 2414);
 							}
 						}
 					} else if (cycles == 8) {
@@ -117,14 +117,14 @@ public class RuneboundBehemothCombat extends CombatScript {
 		case 1://green exploding blob attack (magic)
 			boss.animate(new Animation(14427));
 			//boss.setNextGraphics(new Graphics(2413));
-			World.sendProjectile(npc, target, 2414, 41, 16, 50, 40, 0, 0);
+			World.sendElementalProjectile(npc, target, 2414);
 			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			target.gfx(new Graphics(2417, 80, 0));
 			break;
 		case 2://green blob attack (range)
 			boss.animate(new Animation(14424));
 			boss.gfx(new Graphics(2394));
-			World.sendProjectile(npc, target, 2395, 41, 16, 50, 40, 0, 2);
+			World.sendElementalProjectile(npc, target, 2395);
 			delayHit(npc, 1, target, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			target.gfx(new Graphics(2396, 80, 0));
 			break;

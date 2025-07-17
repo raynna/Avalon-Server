@@ -30,7 +30,7 @@ public class Kreearra extends CombatScript {
 				sendMagicAttack(npc, t);
 			else {
 				delayHit(npc, 1, t, getRangeHit(npc, getRandomMaxHit(npc, 720, NPCCombatDefinitions.RANGE, t)));
-				World.sendProjectile(npc, t, 1197, 41, 16, 41, 35, 16, 0);
+				World.sendElementalProjectile(npc, t, 1197);
 				for (int c = 0; c < 10; c++) {
 					int dir = Utils.random(Utils.DIRECTION_DELTA_X.length);
 					if (World.checkWalkStep(target.getPlane(), target.getX(), target.getY(), dir, 1)) {
@@ -47,7 +47,7 @@ public class Kreearra extends CombatScript {
 	private void sendMagicAttack(NPC npc, Entity target) {
 		for (Entity t : npc.getPossibleTargets()) {
 			delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, 210, NPCCombatDefinitions.MAGE, t)));
-			World.sendProjectile(npc, t, 1198, 41, 16, 41, 35, 16, 0);
+			World.sendElementalProjectile(npc, t, 1198);
 		}
 	}
 }

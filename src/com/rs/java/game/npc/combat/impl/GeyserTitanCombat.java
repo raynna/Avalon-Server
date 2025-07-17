@@ -43,13 +43,13 @@ public class GeyserTitanCombat extends CombatScript {
 				delayHit(npc, 1, target,
 						getMeleeHit(npc, getRandomMaxHit(npc, 300, NPCCombatDefinitions.MELEE, target)));
 			}
-			World.sendProjectile(npc, target, 1376, 34, 16, 30, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 1376);
 		} else {
 			if (distant) {// range
 				damage = getRandomMaxHit(npc, 244, NPCCombatDefinitions.RANGE, target);
 				npc.animate(new Animation(7883));
 				npc.gfx(new Graphics(1375));
-				World.sendProjectile(npc, target, 1374, 34, 16, 30, 35, 16, 0);
+				World.sendElementalProjectile(npc, target, 1374);
 				delayHit(npc, 2, target, getRangeHit(npc, damage));
 			} else {// melee
 				damage = getRandomMaxHit(npc, 244, NPCCombatDefinitions.MELEE, target);

@@ -27,7 +27,7 @@ public class Default extends CombatScript {
 				if (attackStyle == NPCCombatDefinitions.RANGE)
 					World.sendFastBowProjectile(npc, target, defs.getAttackProjectile());
 				else
-					World.sendElemantalProjectile(npc, target, defs.getAttackProjectile());
+					World.sendElementalProjectile(npc, target, defs.getAttackProjectile());
 			}
 		}
 		if (defs.getAttackGfx() != -1)

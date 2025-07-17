@@ -31,7 +31,7 @@ public class AquaniteCombat extends CombatScript {
 				}
 			}
 		}
-		World.sendProjectile(npc, target, defs.getAttackProjectile(), 41, 16, 41, 35, 16, 0);
+		World.sendProjectileToTile(npc, target, defs.getAttackProjectile());
 		npc.gfx(new Graphics(defs.getAttackGfx()));
 		delayHit(npc, 2, target, getMagicHit(npc, damage));
 		return defs.getAttackDelay();

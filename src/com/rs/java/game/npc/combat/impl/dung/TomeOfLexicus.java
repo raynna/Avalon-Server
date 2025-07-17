@@ -29,7 +29,7 @@ public class TomeOfLexicus extends CombatScript {
 			boolean range_style = type == 1;
 			npc.animate(new Animation(13480));
 			npc.gfx(new Graphics(range_style ? 2408 : 2424));
-			World.sendProjectile(npc, target, range_style ? 2409 : 2425, 40, 40, 54, 35, 5, 0);
+			World.sendElementalProjectile(npc, target, range_style ? 2409 : 2425);
 			if (range_style)
 				delayHit(npc, 1, target, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			else

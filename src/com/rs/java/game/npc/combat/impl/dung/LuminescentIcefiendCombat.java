@@ -36,11 +36,11 @@ public class LuminescentIcefiendCombat extends CombatScript {
 
 		if (magicAttack) {
 			npc.animate(new Animation(13352));
-			World.sendProjectile(npc, target, 2529, 15, 16, 35, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 2529);
 			delayHit(icefiend, 2, target, getMagicHit(npc, getRandomMaxHit(npc, icefiend.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 		} else {
 			npc.animate(new Animation(13337));
-			World.sendProjectile(npc, target, 2530, 30, 16, 35, 35, 0, 0);
+			World.sendElementalProjectile(npc, target, 2530);
 			delayHit(icefiend, 2, target, getRangeHit(npc, getRandomMaxHit(npc, (int) (icefiend.getMaxHit() * .90), NPCCombatDefinitions.RANGE, target)));
 			WorldTasksManager.schedule(new WorldTask() {
 

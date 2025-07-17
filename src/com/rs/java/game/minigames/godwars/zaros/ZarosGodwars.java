@@ -176,7 +176,7 @@ public final class ZarosGodwars {
 									fumus.getCoordFaceY(fumus.getSize()), 0));
 							nex.setNextForceTalk(new ForceTalk("Fumus!"));
 							nex.animate(new Animation(6987));
-							World.sendProjectile(fumus, nex, 2244, 18, 18, 60, 30, 0, 0);
+							World.sendProjectileToTile(fumus, nex, 2244);
 							nex.playSound(3325, 2);
 						} else if (count == 5) {
 							World.spawnNPC(13452, new WorldTile(2937, 5216, 0), -1, true, true);
@@ -185,7 +185,7 @@ public final class ZarosGodwars {
 									umbra.getCoordFaceY(umbra.getSize()), 0));
 							nex.setNextForceTalk(new ForceTalk("Umbra!"));
 							nex.animate(new Animation(6987));
-							World.sendProjectile(umbra, nex, 2244, 18, 18, 60, 30, 0, 0);
+							World.sendProjectileToTile(umbra, nex, 2244);
 							nex.playSound(3313, 2);
 						} else if (count == 7) {
 							World.spawnNPC(13453, new WorldTile(2937, 5190, 0), -1, true, true);
@@ -194,7 +194,7 @@ public final class ZarosGodwars {
 									cruor.getCoordFaceY(cruor.getSize()), 0));
 							nex.setNextForceTalk(new ForceTalk("Cruor!"));
 							nex.animate(new Animation(6987));
-							World.sendProjectile(cruor, nex, 2244, 18, 18, 60, 30, 0, 0);
+							World.sendProjectileToTile(cruor, nex, 2244);
 							nex.playSound(3299, 2);
 						} else if (count == 9) {
 							World.spawnNPC(13454, new WorldTile(2912, 5190, 0), -1, true, true);
@@ -205,11 +205,11 @@ public final class ZarosGodwars {
 									glacies.getCoordFaceY(glacies.getSize()), 0));
 							nex.setNextForceTalk(new ForceTalk("Glacies!"));
 							nex.animate(new Animation(6987));
-							World.sendProjectile(glacies, nex, 2244, 18, 18, 60, 30, 0, 0);
+							World.sendProjectileToTile(glacies, nex, 2244);
 							nex.playSound(3304, 2);
 						} else if (count == 11) {
 							nex.setNextForceTalk(new ForceTalk("Fill my soul with smoke!"));
-							World.sendProjectile(fumus, nex, 2244, 18, 18, 60, 30, 0, 0);
+							World.sendProjectileToTile(fumus, nex, 2244);
 
 							nex.playSound(3310, 2);
 						} else if (count == 13) {

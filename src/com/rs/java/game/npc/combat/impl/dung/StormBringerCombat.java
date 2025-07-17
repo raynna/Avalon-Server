@@ -35,7 +35,7 @@ public class StormBringerCombat extends CombatScript {
 			damage = getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target);
 		npc.gfx(new Graphics(2591));
 		npc.animate(new Animation(13620));
-		World.sendProjectile(npc, target, 2592, 41, 16, 41, 35, 16, 0);//2593
+		World.sendElementalProjectile(npc, target, 2592);//2593
 		delayHit(npc, 2, target, getRangeHit(npc, damage));
 		if (damage > 0) {
 			WorldTasksManager.schedule(new WorldTask() {

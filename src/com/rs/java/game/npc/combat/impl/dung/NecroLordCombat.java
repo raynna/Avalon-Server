@@ -45,7 +45,7 @@ public class NecroLordCombat extends CombatScript {
 						for (int i = 0; i < skeletonCount; i++) {
 							WorldTile tile = Utils.getFreeTile(boss.getManager().getTile(boss.getReference(), Utils.random(2) == 0 ? 5 : 10, 5), 4);
 							projectileTile.add(tile);
-							World.sendProjectile(boss, tile, 2590, 65, 0, 30, 0, 16, 0);
+							World.sendProjectileToTile(boss, tile, 2590);
 						}
 					} else if (cycles == 4) {
 						for (WorldTile tile : projectileTile)
@@ -63,7 +63,7 @@ public class NecroLordCombat extends CombatScript {
 		case 1:
 			npc.animate(new Animation(14209));
 			npc.gfx(new Graphics(2716));
-			World.sendProjectile(npc, target, 2721, 38, 18, 50, 50, 0, 0);
+			World.sendElementalProjectile(npc, target, 2721);
 			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			target.gfx(new Graphics(2726, 75, 80));
 			break;
@@ -72,7 +72,7 @@ public class NecroLordCombat extends CombatScript {
 			final WorldTile tile = new WorldTile(target);
 			npc.animate(new Animation(attack == 2 ? 710 : 729));
 			npc.gfx(new Graphics(attack == 2 ? 177 : 167, 0, 65));
-			World.sendProjectile(npc, tile, attack == 2 ? 178 : 168, 40, 18, 55, 70, 5, 0);
+			World.sendProjectileToTile(npc, tile, attack == 2 ? 178 : 168);
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {

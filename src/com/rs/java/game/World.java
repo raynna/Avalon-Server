@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 
 import com.rs.Launcher;
 import com.rs.Settings;
-import com.rs.core.cache.defintions.ObjectDefinitions;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.area.Area;
 import com.rs.java.game.area.AreaManager;
@@ -72,6 +71,21 @@ public final class World {
     private static final Map<Integer, Region> regions = Collections.synchronizedMap(new HashMap<>());
 
     public static boolean isInUpdate;
+
+    public static List<Player> getLocalPlayers(int regionId) {
+        List<Player> localPlayers = new ArrayList<>();
+        List<Integer> indexes = getRegion(regionId).getPlayerIndexes();
+        if (indexes == null)
+            return localPlayers;
+
+        for (Integer index : indexes) {
+            Player player = players.get(index);
+            if (player != null && player.hasStarted() && !player.hasFinished()) {
+                localPlayers.add(player);
+            }
+        }
+        return localPlayers;
+    }
 
     public static int getPlayersInWilderness() {
         int result = 0;
@@ -1806,6 +1820,46 @@ public final class World {
         return distance < 2 ? 41 : (distance == 2 ? 46 : 51);
     }
 
+    public static void sendProjectileToTile(Entity shooter, WorldTile targetTile, int gfxId,
+                                            int startHeight, int endHeight, int speed, int delay, int curve,
+                                            int startOffsetIfClose, int closeDistanceThreshold, boolean checkDistanceToTarget) {
+        for (int regionId : shooter.getMapRegionsIds()) {
+            List<Integer> playersIndexes = getRegion(regionId).getPlayerIndexes();
+            if (playersIndexes == null)
+                continue;
+
+            for (Integer playerIndex : playersIndexes) {
+                Player player = players.get(playerIndex);
+                if (player == null || !player.hasStarted() || player.hasFinished())
+                    continue;
+
+                boolean nearShooter = player.withinDistance(shooter);
+                boolean nearTarget = false;
+
+                if (checkDistanceToTarget && targetTile != null) {
+                    nearTarget = player.withinDistance(targetTile);
+                }
+
+                if (!nearShooter && !nearTarget)
+                    continue;
+
+                int size = shooter.getSize();
+                int distance = Utils.getDistance(shooter, targetTile);
+                int startOffsetDistance = (distance <= closeDistanceThreshold) ? startOffsetIfClose : 0;
+
+                WorldTile startTile = new WorldTile(
+                        shooter.getCoordFaceX(size),
+                        shooter.getCoordFaceY(size),
+                        shooter.getPlane()
+                );
+
+                player.getPackets().sendProjectile(null, startTile, targetTile, gfxId,
+                        startHeight, endHeight, speed, delay, curve, startOffsetDistance, size);
+            }
+        }
+    }
+
+
     public static void sendProjectileToPlayers(Entity shooter, WorldTile targetTile, Entity targetEntity, int gfxId,
                                                int startHeight, int endHeight, int speed, int delay, int curve,
                                                int startOffsetIfClose, int closeDistanceThreshold, boolean checkDistanceToTarget,
@@ -1846,6 +1900,12 @@ public final class World {
                 }
             }
         }
+    }
+
+    public static void sendProjectileToTile(Entity shooter, WorldTile tile, int gfxId) {
+        sendProjectileToTile(shooter, tile, gfxId,
+                43, 34, (Utils.getDistance(shooter, tile) < 2 ? 51 : Utils.getDistance(shooter, tile) == 2 ? 56 : 61),
+                51, 6, 11, 2, true);
     }
 
     public static void sendProjectile(WorldObject object, WorldTile startTile, WorldTile endTile, int gfxId,
@@ -1907,10 +1967,11 @@ public final class World {
                 41, 6, 11, 2, true, true, true);
     }
 
-    public static void sendObjectProjectile(Entity shooter, WorldTile tile, int gfxId) {
+    public static int sendObjectProjectile(Entity shooter, WorldTile tile, int gfxId) {
         sendProjectileToPlayers(shooter, tile, null, gfxId,
                 54, 4, 61, 41,
                 6, 11, 2, true, false, false);
+        return gfxId;
     }
 
     public static void sendMSBProjectile(Entity shooter, Entity receiver, int gfxId) {

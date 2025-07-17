@@ -61,7 +61,7 @@ public class WarpedGulegaCombat extends CombatScript {
 			npc.animate(new Animation(15001));
 			npc.gfx(new Graphics(2882));
 			for (Entity t : npc.getPossibleTargets(true, true)) {
-				World.sendProjectile(npc, t, 2883, 75, 25, 30, 20, 15, 3);
+				World.sendElementalProjectile(npc, t, 2883);
 				t.gfx(new Graphics(2884, 90, 0));
 				delayHit(npc, 2, t, getRangeHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NPCCombatDefinitions.RANGE, t)));
 			}
@@ -69,7 +69,7 @@ public class WarpedGulegaCombat extends CombatScript {
 		case 2://reg magic aeo
 			npc.animate(new Animation(15007));
 			for (Entity t : npc.getPossibleTargets(true, true)) {
-				World.sendProjectile(npc, t, 2880, 150, 75, 30, 35, 15, 1);
+				World.sendElementalProjectile(npc, t, 2880);
 				t.gfx(new Graphics(2881, 90, 0));
 				delayHit(npc, 2, t, getMagicHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NPCCombatDefinitions.MAGE, t)));
 			}

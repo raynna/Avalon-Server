@@ -45,7 +45,7 @@ public class ShadowForgerIhlakhizanCombat extends CombatScript {
 					final WorldTile tile = ((ShadowForgerIhlakhizan) npc).getManager().getTile(forger.getReference(), 2 + Utils.random(12), 2 + Utils.random(12));
 					if (Utils.colides(npc.getX(), npc.getY(), npc.getSize(), tile.getX(), tile.getY(), 1))
 						continue;
-					World.sendProjectile(npc, tile, 2371, 120, 30, 41, 30, 16, 0);
+					World.sendProjectileToTile(npc, tile, 2371);
 					WorldTasksManager.schedule(new WorldTask() {
 
 						@Override
@@ -133,7 +133,7 @@ public class ShadowForgerIhlakhizanCombat extends CombatScript {
 		case 0:
 			npc.animate(new Animation(13025));
 			npc.gfx(new Graphics(2375));
-			World.sendProjectile(npc, target, 2376, 120, 30, 60, 70, 16, 0);
+			World.sendElementalProjectile(npc, target, 2376);
 			target.gfx(new Graphics(2377, 120, 0));
 			delayHit(npc, 3, target, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			break;

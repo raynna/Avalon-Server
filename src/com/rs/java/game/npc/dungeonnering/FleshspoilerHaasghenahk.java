@@ -61,7 +61,7 @@ public class FleshspoilerHaasghenahk extends DungeonBoss {
 		final List<WorldTile> tiles = new LinkedList<WorldTile>();
 		for (int i = 0; i < 5; i++) {
 			WorldTile tile = Utils.getFreeTile(centerTile, 6);
-			World.sendProjectile(this, tile, 2765, 150, 0, 30, 1, 40, 0);
+			World.sendProjectileToTile(this, tile, 2765);
 			tiles.add(tile);
 		}
 		final FleshspoilerHaasghenahk boss = this;

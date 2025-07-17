@@ -175,7 +175,7 @@ public class YkLagorThunderousCombat extends CombatScript {
 			for (Player player : npc.getManager().getParty().getTeam()) {
 				if (player.isDead() || !npc.getManager().isAtBossRoom(player))
 					continue;
-				World.sendProjectile(npc, player, 2733, 75, 50, 20, 0, 20, 0);
+				World.sendElementalProjectile(npc, player, 2733);
 				delayHit(npc, 1, player, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, player)));
 				player.gfx(new Graphics(2755, 85, 0));
 			}

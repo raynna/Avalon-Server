@@ -67,7 +67,7 @@ public class KrilTsutsaroth extends CombatScript {
 			npc.gfx(new Graphics(1210));
 			for (Entity t : npc.getPossibleTargets()) {
 				delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, 300, NPCCombatDefinitions.MAGE, t)));
-				World.sendProjectile(npc, t, 1211, 41, 16, 41, 35, 16, 0);
+				World.sendElementalProjectile(npc, t, 1211);
 				if (Utils.getRandom(4) == 0)
 					t.getPoison().makePoisoned(168);
 			}

@@ -53,7 +53,7 @@ public class ChaosElementalCombat extends CombatScript {
 				// Entity shooter, Entity receiver, int gfxId, int startHeight,
 				// int endHeight, int speed, int delay, int curve, int
 				// startDistanceOffset
-				World.sendProjectile(npc, target, 1279, 24, 24, 43, 32, 0, -2);
+				World.sendProjectileToTile(npc, target, 1279);
 				break;
 
 			case 5:
@@ -63,14 +63,14 @@ public class ChaosElementalCombat extends CombatScript {
 				npc.animate(new Animation(5443));
 				delayHit(npc, 2, target,
 						getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
-				World.sendProjectile(npc, target, 1279, 24, 24, 43, 32, 0, 0);
+				World.sendProjectileToTile(npc, target, 1279);
 				break;
 
 			default:
 				npc.animate(new Animation(5443));
 				delayHit(npc, 2, target,
 						getMeleeHit(npc, getRandomMaxHit(npc, 240, NPCCombatDefinitions.MELEE, target)));
-				World.sendProjectile(npc, target, 1279, 24, 24, 43, 32, 0, 0);
+				World.sendProjectileToTile(npc, target, 1279);
 				break;
 			}
 
@@ -96,7 +96,7 @@ public class ChaosElementalCombat extends CombatScript {
 			}
 			npc.gfx(new Graphics(999));
 			npc.animate(new Animation(5443));
-			World.sendProjectile(npc, target, 552, 34, 16, 40, 35, 16, 0);
+			World.sendProjectileToTile(npc, target, 552);
 
 		} else if (attackOption == 10) {
 

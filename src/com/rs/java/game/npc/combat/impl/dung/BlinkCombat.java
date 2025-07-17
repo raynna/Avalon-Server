@@ -67,7 +67,7 @@ public class BlinkCombat extends CombatScript {
 					boss.resetCombat();
 					boss.setNextFaceEntity(null);
 					boss.setNextFaceWorldTile(beginningTile);//Faces the direction it throws into
-					World.sendProjectile(boss, beginningTile, 2853, 18, 18, 50, 50, 0, 0);
+					World.sendProjectileToTile(boss, beginningTile, 2853);
 					WorldTasksManager.schedule(new WorldTask() {
 
 						private List<WorldTile> knifeTargets;
@@ -100,7 +100,7 @@ public class BlinkCombat extends CombatScript {
 					}, 0, 0);
 				} else {
 					boss.animate(new Animation(14949));
-					World.sendProjectile(boss, target, 2853, 18, 18, 50, 50, 0, 0);
+					World.sendProjectileToTile(boss, target, 2853);
 					delayHit(boss, 1, target, getRangeHit(boss, getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 				}
 			} else {

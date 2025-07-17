@@ -35,7 +35,7 @@ public class TokXilCombat extends CombatScript {
 		case 1:
 			hit = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target);
 			npc.animate(new Animation(16132));
-			World.sendProjectile(npc, target, 2993, 34, 16, 30, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 2993);
 			delayHit(npc, 2, target, getRangeHit(npc, hit));
 			break;
 		}

@@ -231,7 +231,7 @@ public class SiphonActionCreatures extends Action {
 			creature.setNextFaceWorldTile(player);
 			creature.resetWalkSteps();
 			player.setNextFaceWorldTile(creature);
-			World.sendProjectile(creature, creature, player, 3060, 31, 35, 35, 0, 2, 0);
+			World.sendElementalProjectile(creature, player, 3060);
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
@@ -288,7 +288,7 @@ public class SiphonActionCreatures extends Action {
 			player.getInventory().deleteItem(creature.getChippingRunes(), 10);
 			player.getInventory().addItem(24227, 10);
 
-			World.sendProjectile(player, npc, player, 3060, 31, 35, 35, 0, 2, 0);// Sent
+			World.sendElementalProjectile(player, npc, 3060);// Sent
 																					// to
 																					// the
 																					// creature

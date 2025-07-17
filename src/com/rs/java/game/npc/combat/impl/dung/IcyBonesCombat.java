@@ -39,7 +39,7 @@ public class IcyBonesCombat extends CombatScript {
 				delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			else
 				delayHit(npc, 2, target, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
-			World.sendProjectile(npc, target, 2595, 41, 16, 41, 40, 16, 0);
+			World.sendElementalProjectile(npc, target, 2595);
 			return npc.getAttackSpeed();
 		}
 		if (Utils.random(3) == 0 && Utils.isOnRange(target.getX(), target.getY(), target.getSize(), npc.getX(), npc.getY(), npc.getSize(), 0) && ((IcyBones) npc).sendSpikes()) {

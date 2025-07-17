@@ -50,7 +50,7 @@ public class DreadnautCombat extends CombatScript {
 				if (!t.withinDistance(target, 2))
 					continue;
 				int damage = getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.MELEE, t);
-				World.sendProjectile(boss, t, 2857, 30, 30, 25, 35, 15, 1);
+				World.sendProjectileToTile(boss, t, 2857);
 				if (damage > 0) {
 					sendReductionEffect(boss, t, damage);
 					boss.addSpot(new WorldTile(t));

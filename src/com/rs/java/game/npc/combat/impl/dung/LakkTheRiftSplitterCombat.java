@@ -93,7 +93,7 @@ public class LakkTheRiftSplitterCombat extends CombatScript {
 
 	private void regularMagicAttack(Entity target, NPC npc) {
 		npc.animate(new Animation(14398));
-		World.sendProjectile(npc, target, 2579, 50, 30, 41, 40, 0, 0);
+		World.sendElementalProjectile(npc, target, 2579);
 		if (target instanceof Player) {
 			Player player = (Player) target;
 			int damage = getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, player);

@@ -71,11 +71,11 @@ public class ForgottenMage extends CombatScript {
 		if (start != -1)
 			npc.gfx(new Graphics(start, 0, 0));
 		if (attack == 2722) {
-			World.sendProjectile(npc, target, 2735, 18, 18, 50, 50, 3, 0);
-			World.sendProjectile(npc, target, 2736, 18, 18, 50, 50, 20, 0);
-			World.sendProjectile(npc, target, 2736, 18, 18, 50, 50, 110, 0);
+			World.sendElementalProjectile(npc, target, 2735);
+			World.sendElementalProjectile(npc, target, 2736);
+			World.sendElementalProjectile(npc, target, 2736);
 		} else
-			World.sendProjectile(npc, target, projectileId, 18, 18, 50, 50, 3, 0);
+			World.sendElementalProjectile(npc, target, projectileId);
 		delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, NPCCombatDefinitions.MAGE, projectileId, target)));
 		if (hit == -1)
 			return;
@@ -91,7 +91,7 @@ public class ForgottenMage extends CombatScript {
 	private void sendWeaken(NPC npc, final Entity target, int attack, int start, final int hit, int projectileId, final int skill, final double percentDrain) {
 		npc.animate(new Animation(attack));
 		npc.gfx(new Graphics(start, 0, 50));
-		World.sendProjectile(npc, target, projectileId, 39, 18, 55, 70, 5, 0);
+		World.sendElementalProjectile(npc, target, projectileId);
 		if (hit > 0) {
 			WorldTasksManager.schedule(new WorldTask() {
 

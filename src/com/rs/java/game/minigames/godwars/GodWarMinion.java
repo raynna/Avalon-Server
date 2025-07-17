@@ -68,21 +68,17 @@ public class GodWarMinion extends NPC {
 				if (loop == 0) {
 					animate(new Animation(defs.getDeathEmote()));
 				} else if (loop >= defs.getDeathDelay()) {
-					if (source instanceof Player) {
-						Player player = (Player) source;
-						List<Player> players = World.getLocalPlayers(player.getTile(), 10);
-						if (players != null) {
-							for (Player p : players) {
-								if (p == null)
-									continue;
-								Controler controler = p.getControlerManager().getControler();
-								if (controler != null && controler instanceof GodWars) {
-									GodWars godControler = (GodWars) controler;
-									godControler.incrementKillCount(type);
-								}
-							}
-						}
-					}
+					if (source instanceof Player player) {
+                        List<Player> players = World.getLocalPlayers(player.getRegionId());
+                        for (Player p : players) {
+                            if (p == null)
+                                continue;
+                            Controler controler = p.getControlerManager().getControler();
+                            if (controler instanceof GodWars godControler) {
+                                godControler.incrementKillCount(type);
+                            }
+                        }
+                    }
 					drop();
 					reset();
 					setLocation(getRespawnTile());

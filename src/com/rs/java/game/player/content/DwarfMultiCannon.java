@@ -203,8 +203,7 @@ public class DwarfMultiCannon {
 				}
 				if (nearestN != null) {
 					int damage = rollCannonHit(player, nearestN) ? Utils.random(301) : 0;
-					World.sendProjectile(currentObject.transform(objectSizeX / 2, objectSizeY / 2, 0), nearestN, 53, 38,
-							38, 30, 0, 0, 0);
+					//TODO World.sendObjectProjectile(currentObject.transform(objectSizeX / 2, objectSizeY / 2, 0), nearestN, 53);
 					Hit hit = new Hit(player, damage, HitLook.CANNON_DAMAGE,
 							Utils.getDistance(
 									new WorldTile(currentObject.getX(), currentObject.getY(), currentObject.getPlane()),
@@ -219,8 +218,7 @@ public class DwarfMultiCannon {
 						player.getSkills().addXp(Skills.RANGE, damage / 5);
 					if (Utils.getRandom(100) < 25) {
 						damage = rollCannonHit(player, nearestN) ? Utils.random(301) : 0;
-						World.sendProjectile(currentObject.transform(objectSizeX / 2, objectSizeY / 2, 0), nearestN, 53,
-								38, 38, 30, 0, 0, 0);
+						//TODO World.sendElementalProjectile(currentObject.transform(objectSizeX / 2, objectSizeY / 2, 0), nearestN, 53);
 						hit = new Hit(player, damage, HitLook.CANNON_DAMAGE, Utils.getDistance(
 								new WorldTile(currentObject.getX(), currentObject.getY(), currentObject.getPlane()),
 								nearestN));

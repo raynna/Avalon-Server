@@ -118,11 +118,11 @@ public class MercenaryMageCombat extends CombatScript {
 					}
 				}
 			}, 0, 0);
-			World.sendProjectile(npc, center, 2196, 0, 0, 5, 35, 0, 0);
+			World.sendProjectileToTile(npc, center, 2196);
 		} else if (attackStyle == 3) {
 			delayHit(npc, 2, target,
 					getMagicHit(npc, getRandomMaxHit(npc, Utils.random(3000), NPCCombatDefinitions.MAGE, target)));
-			World.sendProjectile(npc, target, 2873, 34, 16, 40, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 2873);
 			npc.animate(new Animation(14221));
 			npc.setNextForceTalk(new ForceTalk(ATTACKS[Utils.random(ATTACKS.length)]));
 		} else if (attackStyle == 4) {

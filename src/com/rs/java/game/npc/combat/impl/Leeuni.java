@@ -40,7 +40,7 @@ public class Leeuni extends CombatScript {
 								npc,
 								getRandomMaxHit(npc, 540,
 										NPCCombatDefinitions.MAGE, t)));
-				World.sendProjectile(npc, t, 1002, 41, 16, 41, 35, 16, 0);
+				World.sendElementalProjectile(npc, t, 1002);
 				target.gfx(new Graphics(3000));
 			}
 		} else if (Utils.getRandom(2) == 1) {

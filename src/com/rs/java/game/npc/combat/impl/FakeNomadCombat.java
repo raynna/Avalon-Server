@@ -24,7 +24,7 @@ public class FakeNomadCombat extends CombatScript {
 		npc.animate(new Animation(12697));
 		boolean hit = getRandomMaxHit(npc, 50, NPCCombatDefinitions.MAGE, target) != 0;
 		delayHit(npc, 2, target, getRegularHit(npc, hit ? 50 : 0));
-		World.sendProjectile(npc, target, 1657, 30, 30, 75, 25, 0, 0);
+		World.sendElementalProjectile(npc, target, 1657);
 		if (hit) {
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override

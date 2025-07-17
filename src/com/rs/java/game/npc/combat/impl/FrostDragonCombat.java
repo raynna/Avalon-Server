@@ -45,7 +45,7 @@ public class FrostDragonCombat extends CombatScript {
 					player.getPackets().sendGameMessage("Your potion absorbs most of the dragon's breath!", true);
 				}
 				npc.animate(new Animation(13155));
-				World.sendProjectile(npc, target, 393, 28, 16, 35, 35, 16, 0);
+				World.sendElementalProjectile(npc, target, 393);
 				delayHit(npc, 1, target, getRegularHit(npc, damage));
 			}
 			break;
@@ -84,20 +84,20 @@ public class FrostDragonCombat extends CombatScript {
 							"Your potion fully protects you from the heat of the dragon's breath!", true);
 				}
 				npc.animate(new Animation(13155));
-				World.sendProjectile(npc, target, 393, 28, 16, 35, 35, 16, 0);
+				World.sendElementalProjectile(npc, target, 393);
 				delayHit(npc, 1, target, getRegularHit(npc, damage));
 			}
 			break;
 		case 2: // Range
 			damage = Utils.getRandom(250);
 			npc.animate(new Animation(13155));
-			World.sendProjectile(npc, target, 2707, 28, 16, 35, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 2707);
 			delayHit(npc, 1, target, getMagicHit(npc, damage));
 			break;
 		case 3: // Ice arrows range
 			damage = Utils.getRandom(250);
 			npc.animate(new Animation(13155));
-			World.sendProjectile(npc, target, 16, 28, 16, 35, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 16);
 			delayHit(npc, 1, target, getRangeHit(npc, damage));
 			break;
 		}

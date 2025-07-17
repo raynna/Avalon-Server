@@ -32,7 +32,7 @@ public class PlaneFreezerLakhrahnazCombat extends CombatScript {
 			case 0:
 				npc.animate(new Animation(13775));
 				for (Entity t : npc.getPossibleTargets()) {
-					World.sendProjectile(npc, t, 2577, 16, 16, 41, 30, 0, 0);
+					World.sendElementalProjectile(npc, t, 2577);
 					t.gfx(new Graphics(2578, 70, 0));
 					delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MAGE, target)));
 				}
@@ -48,7 +48,7 @@ public class PlaneFreezerLakhrahnazCombat extends CombatScript {
 		}
 		npc.animate(new Animation(13775));
 		npc.gfx(new Graphics(2574));
-		World.sendProjectile(npc, target, 2595, 16, 16, 41, 30, 0, 0);
+		World.sendElementalProjectile(npc, target, 2595);
 		target.gfx(new Graphics(2576, 70, 0));
 		delayHit(npc, 1, target, getRangeHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.RANGE, target)));
 		return npc.getAttackSpeed();

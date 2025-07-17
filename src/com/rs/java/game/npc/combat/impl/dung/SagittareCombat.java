@@ -44,7 +44,7 @@ public class SagittareCombat extends CombatScript {
 			for (Entity t : npc.getPossibleTargets()) {
 				if ((attack == 0 || attack == 1) && t != target)
 					continue;
-				World.sendProjectile(npc, t, attack == 0 ? 2533 : 2535, 65, 50, 54, 35, 5, 0);
+				World.sendElementalProjectile(npc, t, attack == 0 ? 2533 : 2535);
 				if (attack == 0)
 					delayHit(npc, 1, t, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
 				else
@@ -63,7 +63,7 @@ public class SagittareCombat extends CombatScript {
 				Player player = (Player) t;
 				boolean bindTarget = false;
 
-				World.sendProjectile(npc, t, isMagicAttack ? 2537 : 2540, 65, 50, 54, 35, 5, 0);
+				World.sendElementalProjectile(npc, t, isMagicAttack ? 2537 : 2540);
 				if (isMagicAttack) {
 					if (!player.getPrayer().isMageProtecting())
 						bindTarget = true;
@@ -132,7 +132,7 @@ public class SagittareCombat extends CombatScript {
 
 					for (int x = -1; x < 2; x++) {//3x3 area
 						for (int y = -1; y < 2; y++) {
-							World.sendProjectile(boss, center.transform(x, y, 0), 2533, 250, 0, 40, 0, 0, 0);
+							World.sendProjectileToTile(boss, center.transform(x, y, 0), 2533);
 						}
 					}
 					boss.setNextWorldTile(teleport);

@@ -1,6 +1,8 @@
 package com.rs.java.game.minigames.godwars.zaros;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
@@ -116,33 +118,48 @@ public final class Nex extends NPC {
 			public void run() {
 				gfx(new Graphics(2259));
 				ArrayList<Entity> possibleTargets = getPossibleTargets();
-				if (possibleTargets != null) {
-					for (Entity entity : possibleTargets) {
-						if (entity == null || entity.isDead() || entity.hasFinished()
-								|| !entity.withinDistance(target, 10))
-							continue;
-						World.sendProjectile(target, new WorldTile(getX() + 2, getY() + 2, getPlane()), 2260, 24, 0, 41,
-								35, 30, 0);
-						World.sendProjectile(target, new WorldTile(getX() + 2, getY(), getPlane()), 2260, 41, 0, 41, 35,
-								30, 0);
-						World.sendProjectile(target, new WorldTile(getX() + 2, getY() - 2, getPlane()), 2260, 41, 0, 41,
-								35, 30, 0);
-						World.sendProjectile(target, new WorldTile(getX() - 2, getY() + 2, getPlane()), 2260, 41, 0, 41,
-								35, 30, 0);
-						World.sendProjectile(target, new WorldTile(getX() - 2, getY(), getPlane()), 2260, 41, 0, 41, 35,
-								30, 0);
-						World.sendProjectile(target, new WorldTile(getX() - 2, getY() - 2, getPlane()), 2260, 41, 0, 41,
-								35, 30, 0);
-						World.sendProjectile(target, new WorldTile(getX(), getY() + 2, getPlane()), 2260, 41, 0, 41, 35,
-								30, 0);
-						World.sendProjectile(target, new WorldTile(getX(), getY() - 2, getPlane()), 2260, 41, 0, 41, 35,
-								30, 0);
-						entity.applyHit(new Hit(target, Utils.getRandom(600), HitLook.REGULAR_DAMAGE));
-					}
-				}
-			}
+                for (Entity entity : possibleTargets) {
+                    if (entity == null || entity.isDead() || entity.hasFinished()
+                            || !entity.withinDistance(target, 10))
+                        continue;
+                    performExplosionEffect(target);
+                }
+            }
 		});
 	}
+
+	private void performExplosionEffect(NPC source) {
+		source.gfx(new Graphics(2259));
+		ArrayList<Entity> targets = source.getPossibleTargets();
+
+		if (targets == null || targets.isEmpty())
+			return;
+
+		// Define the projectile target tile offsets relative to the source NPC
+		List<WorldTile> projectileTiles = Arrays.asList(
+				new WorldTile(source.getX() + 2, source.getY() + 2, source.getPlane()),
+				new WorldTile(source.getX() + 2, source.getY(), source.getPlane()),
+				new WorldTile(source.getX() + 2, source.getY() - 2, source.getPlane()),
+				new WorldTile(source.getX() - 2, source.getY() + 2, source.getPlane()),
+				new WorldTile(source.getX() - 2, source.getY(), source.getPlane()),
+				new WorldTile(source.getX() - 2, source.getY() - 2, source.getPlane()),
+				new WorldTile(source.getX(), source.getY() + 2, source.getPlane()),
+				new WorldTile(source.getX(), source.getY() - 2, source.getPlane())
+		);
+
+		for (Entity entity : targets) {
+			if (entity == null || entity.isDead() || entity.hasFinished() || !entity.withinDistance(source, 10))
+				continue;
+
+			// Loop to send all projectiles
+			for (WorldTile tile : projectileTiles) {
+				World.sendProjectileToTile(source, tile, 2260);
+			}
+
+			entity.applyHit(new Hit(source, Utils.getRandom(600), HitLook.REGULAR_DAMAGE));
+		}
+	}
+
 
 	public ArrayList<Entity> calculatePossibleTargets(WorldTile current, WorldTile position, boolean northSouth) {
 		ArrayList<Entity> list = new ArrayList<Entity>();
@@ -161,14 +178,14 @@ public final class Nex extends NPC {
 		if (getStage() == 0 && minionStage == 1) {
 			setCapDamage(500);
 			setNextForceTalk(new ForceTalk("Darken my shadow!"));
-			World.sendProjectile(ZarosGodwars.umbra, this, 2244, 18, 18, 60, 30, 0, 0);
+			World.sendProjectileToTile(ZarosGodwars.umbra, this, 2244);
 			getCombat().addCombatDelay(1);
 			setStage(1);
 			playSound(3302, 2);
 		} else if (getStage() == 1 && minionStage == 2) {
 			setCapDamage(500);
 			setNextForceTalk(new ForceTalk("Flood my lungs with blood!"));
-			World.sendProjectile(ZarosGodwars.cruor, this, 2244, 18, 18, 60, 30, 0, 0);
+			World.sendProjectileToTile(ZarosGodwars.cruor, this, 2244);
 			getCombat().addCombatDelay(1);
 			setStage(2);
 			playSound(3306, 2);
@@ -176,7 +193,7 @@ public final class Nex extends NPC {
 			setCapDamage(500);
 			killBloodReavers();
 			setNextForceTalk(new ForceTalk("Infuse me with the power of ice!"));
-			World.sendProjectile(ZarosGodwars.glacies, this, 2244, 18, 18, 60, 30, 0, 0);
+			World.sendProjectileToTile(ZarosGodwars.glacies, this, 2244);
 			getCombat().addCombatDelay(1);
 			setStage(3);
 			playSound(3303, 2);

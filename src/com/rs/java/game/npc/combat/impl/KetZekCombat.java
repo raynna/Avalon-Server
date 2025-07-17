@@ -48,7 +48,7 @@ public class KetZekCombat extends CombatScript {
 		hit = getRandomMaxHit(npc, npc.getCombatDefinitions().getMaxHit() - 50, NPCCombatDefinitions.MAGE, target);
 		npc.animate(new Animation(16136));
 		// npc.setNextGraphics(new Graphics(1622, 0, 96 << 16));
-		World.sendProjectile(npc, target, 2984, 34, 16, 30, 35, 16, 0);
+		World.sendElementalProjectile(npc, target, 2984);
 		delayHit(npc, 2, target, getMagicHit(npc, hit));
 		WorldTasksManager.schedule(new WorldTask() {
 

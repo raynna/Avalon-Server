@@ -33,7 +33,7 @@ public class HarAkenTentacleCombat extends CombatScript {
 			break;
 		case 1:
 			npc.animate(new Animation(npc.getId() == 15209 ? 16253 : 16242));
-			World.sendProjectile(npc, target, npc.getId() == 15209 ? 3004 : 2922, 140, 35, 80, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, npc.getId() == 15209 ? 3004 : 2922);
 			if (npc.getId() == 15209)
 				delayHit(npc, 2, target,
 						getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target)));

@@ -3794,16 +3794,16 @@ public class Player extends Entity {
                     }
                 });
             } else if (prayer.usingPrayer(1, 17)) {
-                World.sendProjectile(this, new WorldTile(getX() + 2, getY() + 2, getPlane()), 2260, 24, 0, 41, 35, 30, 0);
-                World.sendProjectile(this, new WorldTile(getX() + 2, getY(), getPlane()), 2260, 41, 0, 41, 35, 30, 0);
-                World.sendProjectile(this, new WorldTile(getX() + 2, getY() - 2, getPlane()), 2260, 41, 0, 41, 35, 30, 0);
+                World.sendObjectProjectile(this, new WorldTile(getX() + 2, getY() + 2, getPlane()), 2260);
+                World.sendObjectProjectile(this, new WorldTile(getX() + 2, getY(), getPlane()), 2260);
+                World.sendObjectProjectile(this, new WorldTile(getX() + 2, getY() - 2, getPlane()), 2260);
 
-                World.sendProjectile(this, new WorldTile(getX() - 2, getY() + 2, getPlane()), 2260, 41, 0, 41, 35, 30, 0);
-                World.sendProjectile(this, new WorldTile(getX() - 2, getY(), getPlane()), 2260, 41, 0, 41, 35, 30, 0);
-                World.sendProjectile(this, new WorldTile(getX() - 2, getY() - 2, getPlane()), 2260, 41, 0, 41, 35, 30, 0);
+                World.sendObjectProjectile(this, new WorldTile(getX() - 2, getY() + 2, getPlane()), 2260);
+                World.sendObjectProjectile(this, new WorldTile(getX() - 2, getY(), getPlane()), 2260);
+                World.sendObjectProjectile(this, new WorldTile(getX() - 2, getY() - 2, getPlane()), 2260);
 
-                World.sendProjectile(this, new WorldTile(getX(), getY() + 2, getPlane()), 2260, 41, 0, 41, 35, 30, 0);
-                World.sendProjectile(this, new WorldTile(getX(), getY() - 2, getPlane()), 2260, 41, 0, 41, 35, 30, 0);
+                World.sendObjectProjectile(this, new WorldTile(getX(), getY() + 2, getPlane()), 2260);
+                World.sendObjectProjectile(this, new WorldTile(getX(), getY() - 2, getPlane()), 2260);
                 final Player target = this;
                 WorldTasksManager.schedule(new WorldTask() {
 

@@ -24,7 +24,7 @@ public class ThornySnailCombat extends CombatScript {
 		if (usingSpecial) {// priority over regular attack
 			npc.animate(new Animation(8148));
 			npc.gfx(new Graphics(1385));
-			World.sendProjectile(npc, target, 1386, 34, 16, 30, 35, 16, 0);
+			World.sendElementalProjectile(npc, target, 1386);
 			delayHit(npc, 1, target, getRangeHit(npc, getRandomMaxHit(npc, 80, NPCCombatDefinitions.RANGE, target)));
 			npc.gfx(new Graphics(1387));
 		} else {

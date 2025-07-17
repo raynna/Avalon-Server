@@ -182,7 +182,7 @@ public class GodWars extends Controler {
 							player.animate(new Animation(16635));
 						} else if (ticks == 6) {
 							player.getAppearence().setHidden(true);
-							projectileTicks = ticks + Utils.projectileTimeToCycles(World.sendProjectile(player, 2699, 18, 18, 20, 3, 175, 0, 5).getEndTime());
+							projectileTicks = ticks + 4;
 							player.setNextForceMovement(new ForceMovement(player, 1, tile, 6, withinArmadyl ? ForceMovement.NORTH : ForceMovement.SOUTH));
 						} else if (ticks == projectileTicks) {
 							player.getAppearence().setHidden(false);

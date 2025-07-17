@@ -81,7 +81,7 @@ public class GeomancerCombat extends CombatScript {
 			if (!multiAttack && t.getIndex() != target.getIndex())
 				continue;
 			t.gfx(new Graphics(2726, 75, 100));
-			World.sendProjectile(npc, t, 2720, 50, 18, 50, 50, 0, 0);
+			World.sendElementalProjectile(npc, t, 2720);
 			delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * .7), NPCCombatDefinitions.MAGE, t)));
 		}
 	}
@@ -90,7 +90,7 @@ public class GeomancerCombat extends CombatScript {
 		npc.gfx(new Graphics(177, 0, 50));
 		npc.animate(new Animation(12992));
 		npc.removeTarget();
-		World.sendProjectile(npc, target, 178, 40, 18, 55, 70, 5, 0);
+		World.sendElementalProjectile(npc, target, 178);
 
 		int damage = getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.95), NPCCombatDefinitions.MAGE, target);
 
@@ -108,7 +108,7 @@ public class GeomancerCombat extends CombatScript {
 	private void sendWeaken(NPC npc, Entity target) {
 		npc.gfx(new Graphics(105, 0, 60));
 		npc.animate(new Animation(12992));
-		World.sendProjectile(npc, target, 106, 40, 18, 55, 70, 5, 0);
+		World.sendElementalProjectile(npc, target, 106);
 
 		int damage = getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target);
 
@@ -158,7 +158,7 @@ public class GeomancerCombat extends CombatScript {
 			}
 			delayHit(npc, 1, t, getMagicHit(npc, (int) (damage * .50)));
 			t.gfx(new Graphics(2147));
-			World.sendProjectile(npc, t, 2368, 50, 18, 55, 70, 5, 0);
+			World.sendElementalProjectile(npc, t, 2368);
 		}
 	}
 }

@@ -760,8 +760,7 @@ public final class WorldPacketsDecoder extends Decoder {
 				player.animate(new Animation(711));
 				player.getSkills().addXp(Skills.MAGIC, 10);
 				player.getInventory().deleteItem(563, 1);
-				World.sendProjectile(player, new WorldTile(xCoord, yCoord, player.getPlane()), 142, 18, 5, 20, 50, 0,
-						0);
+				World.sendProjectileToTile(player, new WorldTile(xCoord, yCoord, player.getPlane()), 142);
 				CoresManager.slowExecutor.schedule(new Runnable() {
 					@Override
 					public void run() {
@@ -787,24 +786,20 @@ public final class WorldPacketsDecoder extends Decoder {
 				player.animate(new Animation(711));
 				player.getSkills().addXp(Skills.MAGIC, 10);
 				player.getInventory().deleteItem(563, 1);
-				World.sendProjectile(player, new WorldTile(xCoord, yCoord, player.getPlane()), 142, 18, 5, 20, 50, 0,
-						0);
-				CoresManager.slowExecutor.schedule(new Runnable() {
-					@Override
-					public void run() {
-						World.sendGraphics(player, new Graphics(144), tile);
-						if (World.getRegion(regionId).getGroundItem(itemId, tile, player) == null) {
-							player.getPackets().sendGameMessage("Oops! - To late!");
-							return;
-						}
-						if (!player.getInventory().hasFreeSlots()) {
-							player.getPackets().sendGameMessage("You don't have enough inventory space.");
-							return;
-						}
-						player.getInventory().addItem(item.getId(), item.getAmount());
-						World.removeGroundItem(player, item);
-					}
-				}, 2, TimeUnit.SECONDS);
+				World.sendProjectileToTile(player, new WorldTile(xCoord, yCoord, player.getPlane()), 142);
+				CoresManager.slowExecutor.schedule(() -> {
+                    World.sendGraphics(player, new Graphics(144), tile);
+                    if (World.getRegion(regionId).getGroundItem(itemId, tile, player) == null) {
+                        player.getPackets().sendGameMessage("Oops! - To late!");
+                        return;
+                    }
+                    if (!player.getInventory().hasFreeSlots()) {
+                        player.getPackets().sendGameMessage("You don't have enough inventory space.");
+                        return;
+                    }
+                    player.getInventory().addItem(item.getId(), item.getAmount());
+                    World.removeGroundItem(player, item);
+                }, 2, TimeUnit.SECONDS);
 			}
 		} else if (packetId == INTERFACE_ON_PLAYER) {
 			if (!player.hasStarted() || !player.clientHasLoadedMapRegion() || player.isDead())

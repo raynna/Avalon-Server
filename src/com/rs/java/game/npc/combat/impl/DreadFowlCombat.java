@@ -26,14 +26,14 @@ public class DreadFowlCombat extends CombatScript {
 			npc.animate(new Animation(7810));
 			npc.gfx(new Graphics(1318));
 			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 40, NPCCombatDefinitions.MAGE, target)));
-			World.sendProjectile(npc, target, 1376, 34, 16, 30, 35, 16, 0);
+			World.sendProjectileToTile(npc, target, 1376);
 		} else {
 			if (Utils.getRandom(10) == 0) {// 1/10 chance of random special
 											// (weaker)
 				npc.animate(new Animation(7810));
 				npc.gfx(new Graphics(1318));
 				delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 30, NPCCombatDefinitions.MAGE, target)));
-				World.sendProjectile(npc, target, 1376, 34, 16, 30, 35, 16, 0);
+				World.sendProjectileToTile(npc, target, 1376);
 			} else {
 				npc.animate(new Animation(7810));
 				delayHit(npc, 1, target,

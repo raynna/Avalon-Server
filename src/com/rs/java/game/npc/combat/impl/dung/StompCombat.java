@@ -66,7 +66,7 @@ public class StompCombat extends CombatScript {
 			npc.animate(new Animation(13449));
 			npc.gfx(new Graphics(2401));
 			for (Entity t : npc.getPossibleTargets()) {
-				World.sendProjectile(npc, t, 2402, 16, 16, 41, 30, 0, 0);
+				World.sendElementalProjectile(npc, t, 2402);
 				t.gfx(new Graphics(2403, 70, 0));
 				delayHit(npc, 1, t, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			}
@@ -74,7 +74,7 @@ public class StompCombat extends CombatScript {
 		case 2:
 			npc.animate(new Animation(13450));
 			npc.gfx(new Graphics(2404));
-			World.sendProjectile(npc, target, 2405, 30, 16, 41, 65, 0, 0);
+			World.sendElementalProjectile(npc, target, 2405);
 			target.gfx(new Graphics(2406, 120, 0));
 			delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			break;
