@@ -385,7 +385,7 @@ public final class Inventory implements Serializable {
 			player.getPackets().sendGameMessage("This is a members object.");
 			return;
 		}
-		StringBuilder builder = new StringBuilder();
+		StringBuilder builder;
 		if (!isTradeable) {
 			builder = new StringBuilder();
 			builder.append(item.getDefinitions().getName()).append(" is untradeable.");
@@ -399,16 +399,15 @@ public final class Inventory implements Serializable {
 			builder.append("Ge Price: ");
 			if ((isNoted || isStackable)) {
 				if (item.getAmount() > 1)
-					builder.append(Utils.getFormattedNumber(item.getAmount(), ',') + " x ");
+					builder.append(Utils.getFormattedNumber(item.getAmount(), ',')).append(" x ");
 				builder.append(item.getDefinitions().getName());
-				builder.append(": " + HexColours.getShortMessage(HexColours.Colour.RED, Utils.formatMillionAmount(totalPrice)) + " coins.");
+				builder.append(": ").append(HexColours.getShortMessage(HexColours.Colour.RED, Utils.formatMillionAmount(totalPrice))).append(" coins.");
 				if (item.getAmount() > 1)
-					builder.append(" (" + HexColours.getShortMessage(HexColours.Colour.RED, Utils.getFormattedNumber(EconomyPrices.getPrice(item.getId()), ','))
-							+ " coins each)");
+					builder.append(" (").append(HexColours.getShortMessage(HexColours.Colour.RED, Utils.getFormattedNumber(EconomyPrices.getPrice(item.getId()), ','))).append(" coins each)");
 				builder.append("\n");
 			} else {
 				builder.append(item.getDefinitions().getName());
-				builder.append(": " + HexColours.getShortMessage(HexColours.Colour.RED, Utils.formatMillionAmount(totalPrice)) + " coins.\n");
+				builder.append(": ").append(HexColours.getShortMessage(HexColours.Colour.RED, Utils.formatMillionAmount(totalPrice))).append(" coins.\n");
 			}
 			player.message(builder.toString());
 		}
@@ -435,8 +434,8 @@ public final class Inventory implements Serializable {
 		 */
 		if (item.getDefinitions().getHighAlchPrice() > 0) {
 			builder = new StringBuilder();
-			builder.append("High Alch: " + HexColours.getShortMessage(HexColours.Colour.RED, Utils.getFormattedNumber(item.getDefinitions().getHighAlchPrice(), ',')) + " coins, ");
-			builder.append("Low Alch: " + HexColours.getShortMessage(HexColours.Colour.RED, Utils.getFormattedNumber(item.getDefinitions().getLowAlchPrice(), ',')) + " coins.");
+			builder.append("High Alch: ").append(HexColours.getShortMessage(HexColours.Colour.RED, Utils.getFormattedNumber(item.getDefinitions().getHighAlchPrice(), ','))).append(" coins, ");
+			builder.append("Low Alch: ").append(HexColours.getShortMessage(HexColours.Colour.RED, Utils.getFormattedNumber(item.getDefinitions().getLowAlchPrice(), ','))).append(" coins.");
 			player.message(builder.toString());
 		}
 		builder = new StringBuilder();

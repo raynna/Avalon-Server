@@ -1492,12 +1492,13 @@ public final class World {
         boolean stackable = item.getDefinitions().isStackable() || item.getDefinitions().isNoted();
 
         if (!stackable && item.getAmount() > 1) {
-            for (int i = 0; i < item.getAmount(); i++) {
-                Item single = new Item(item.getId(), 1);
+            Item copy = item.clone();
+            for (int i = 0; i < copy.getAmount(); i++) {
+                    item.setAmount(1);
                 if (ironmanName != null)
-                    addGroundItem(single, tile, owner, true, time, type, ironmanName);
+                    addGroundItem(item, tile, owner, true, time, type, ironmanName);
                 else
-                    addGroundItem(single, tile, owner, true, time, type);
+                    addGroundItem(item, tile, owner, true, time, type);
             }
         } else {
             if (ironmanName != null)
@@ -1574,8 +1575,9 @@ public final class World {
         }
 
         if (addToInventory) {
-            Item item = new Item(floorItem.getId() == 7957 ? 1005 : floorItem.getId(), floorItem.getAmount());
-            player.getInventory().addItem(item);
+            if (floorItem.getId() == 7957)
+                floorItem.setId(1005);
+            player.getInventory().addItem(floorItem);
         }
 
         region.getGroundItemsSafe().remove(floorItem);

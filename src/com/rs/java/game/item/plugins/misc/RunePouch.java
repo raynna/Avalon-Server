@@ -134,11 +134,11 @@ public class RunePouch extends ItemPlugin {
         }
         for (Integer runeId : toRemove) {
             runePouchMeta.removeRune(runeId, runePouchMeta.getRunes().get(runeId));
+            refreshRunePouch(player, runePouchMeta.getRunesToArray());
         }
         if (runePouchMeta.isEmpty()) {
             runePouch.setMetadata(null);
         }
-
         player.getInventory().refresh();
     }
 
@@ -181,11 +181,11 @@ public class RunePouch extends ItemPlugin {
 
         player.getInventory().deleteItem(item.getId(), amount);
         runePouchMeta.addRune(item.getId(), amount);
+        refreshRunePouch(player, runePouchMeta.getRunesToArray());
         //runePouchMeta.shift(); // if your RunePouchMetaData supports shifting
         player.getInventory().refresh();
 
         player.getPackets().sendGameMessage("You store " + amount + " x " + item.getName() + "s in the rune pouch.");
-        refreshRunePouch(player, runePouchMeta.getRunesToArray());
     }
 
 
@@ -225,15 +225,12 @@ public class RunePouch extends ItemPlugin {
         }
 
         runePouchMeta.removeRune(runeAtSlot.getId(), amount);
+        refreshRunePouch(player, runePouchMeta.getRunesToArray());
+        if (runePouchMeta.isEmpty()) {
+            runePouchItem.setMetadata(null);
+        }
         player.getInventory().addItem(runeAtSlot.getId(), amount);
         player.getInventory().refresh();
-
-        // If rune amount is now zero, shift to fill empty slots
-        if (runePouchMeta.getRunes().getOrDefault(runeAtSlot.getId(), 0) == 0) {
-            //runePouchMeta.shift();
-        }
-
-        refreshRunePouch(player, runePouchMeta.getRunesToArray());
         player.getPackets().sendGameMessage("You withdraw " + amount + " x " + runeAtSlot.getName() + "s from the rune pouch.");
     }
 

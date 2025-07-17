@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.meta.CombatBonusType;
+import com.rs.java.game.item.meta.DragonFireShieldMetaData;
+import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.utils.ItemBonuses;
 
@@ -699,7 +702,13 @@ public final class CombatDefinitions implements Serializable {
 				}
 				this.bonuses[id] += bonuses[id];
 			}
+			ItemMetadata metadata = item.getMetadata();
+			if (metadata instanceof DragonFireShieldMetaData dfsMeta) {
+				for (int i = STAB_DEF; i < RANGE_DEF; i++)
+				this.bonuses[i] += dfsMeta.getValue(); // +1 def per charge
+			}
 		}
+
 	}
 
 	public void resetSpecialAttack() {

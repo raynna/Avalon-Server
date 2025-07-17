@@ -1076,7 +1076,7 @@ public class InventoryOptionsHandler {
                 return;
             }
             int charges = dragonFireShieldMetaData.getValue();
-            player.message("Your dragonfire shield has " + charges + " charges");
+            player.message("Your dragonfire shield has " + charges + " charges.");
         } else if (itemId == 11284)
             player.message("Your dragonfire shield is not charged.");
         else if (itemId >= 15084 && itemId <= 15100)
