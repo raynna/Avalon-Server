@@ -141,49 +141,29 @@ public class ItemDegrade {
 		 * @Ahrims
 		 */
 
-		AHRIMS_HOOD(new Item(4708), new Item(4856), DegradeType.IN_COMBAT, new Item(4860),
-				new DegradeTime(TimeUnit.SECONDS, 1)),
-		AHRIMS_HOOD_100(new Item(4856), new Item(4857), DegradeType.IN_COMBAT, new Item(4860),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_HOOD_75(new Item(4857), new Item(4858), DegradeType.IN_COMBAT, new Item(4860),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_HOOD_50(new Item(4858), new Item(4859), DegradeType.IN_COMBAT, new Item(4860),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_HOOD_25(new Item(4859), null, DegradeType.IN_COMBAT, new Item(4860),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
+		AHRIMS_HOOD(new Item(4708), new Item(4856), DegradeType.AT_INCOMMING_HIT, new Item(4860), 1),
+		AHRIMS_HOOD_100(new Item(4856), new Item(4857), DegradeType.AT_INCOMMING_HIT, new Item(4860), 5),
+		AHRIMS_HOOD_75(new Item(4857), new Item(4858), DegradeType.AT_INCOMMING_HIT, new Item(4860), 5),
+		AHRIMS_HOOD_50(new Item(4858), new Item(4859), DegradeType.AT_INCOMMING_HIT, new Item(4860), 5),
+		AHRIMS_HOOD_25(new Item(4859), null, DegradeType.AT_INCOMMING_HIT, new Item(4860), 5),
 
-		AHRIMS_TOP(new Item(4712), new Item(4868), DegradeType.IN_COMBAT, new Item(4872),
-				new DegradeTime(TimeUnit.SECONDS, 1)),
-		AHRIMS_TOP_100(new Item(4868), new Item(4869), DegradeType.IN_COMBAT, new Item(4872),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_TOP_75(new Item(4869), new Item(4870), DegradeType.IN_COMBAT, new Item(4872),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_TOP_50(new Item(4870), new Item(4871), DegradeType.IN_COMBAT, new Item(4872),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_TOP_25(new Item(4871), null, DegradeType.IN_COMBAT, new Item(4872),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
+		AHRIMS_TOP(new Item(4712), new Item(4868), DegradeType.AT_INCOMMING_HIT, new Item(4872), 1),
+		AHRIMS_TOP_100(new Item(4868), new Item(4869), DegradeType.AT_INCOMMING_HIT, new Item(4872), 1000),
+		AHRIMS_TOP_75(new Item(4869), new Item(4870), DegradeType.AT_INCOMMING_HIT, new Item(4872), 1000),
+		AHRIMS_TOP_50(new Item(4870), new Item(4871), DegradeType.AT_INCOMMING_HIT, new Item(4872), 1000),
+		AHRIMS_TOP_25(new Item(4871), null, DegradeType.IN_COMBAT, new Item(4872), 1000),
 
-		AHRIMS_BOTTOM(new Item(4714), new Item(4874), DegradeType.IN_COMBAT, new Item(4878),
-				new DegradeTime(TimeUnit.SECONDS, 1)),
-		AHRIMS_BOTTOM_100(new Item(4874), new Item(4875), DegradeType.IN_COMBAT, new Item(4878),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_BOTTOM_75(new Item(4875), new Item(4876), DegradeType.IN_COMBAT, new Item(4878),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_BOTTOM_50(new Item(4876), new Item(4877), DegradeType.IN_COMBAT, new Item(4878),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_BOTTOM_25(new Item(4877), null, DegradeType.IN_COMBAT, new Item(4878),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
+		AHRIMS_BOTTOM(new Item(4714), new Item(4874), DegradeType.IN_COMBAT, new Item(4878), 1),
+		AHRIMS_BOTTOM_100(new Item(4874), new Item(4875), DegradeType.IN_COMBAT, new Item(4878), 1000),
+		AHRIMS_BOTTOM_75(new Item(4875), new Item(4876), DegradeType.IN_COMBAT, new Item(4878), 1000),
+		AHRIMS_BOTTOM_50(new Item(4876), new Item(4877), DegradeType.IN_COMBAT, new Item(4878), 1000),
+		AHRIMS_BOTTOM_25(new Item(4877), null, DegradeType.IN_COMBAT, new Item(4878), 1000),
 
-		AHRIMS_STAFF(new Item(4710), new Item(4862), DegradeType.IN_COMBAT, new Item(4866),
-				new DegradeTime(TimeUnit.SECONDS, 1)),
-		AHRIMS_STAFF_100(new Item(4862), new Item(4863), DegradeType.IN_COMBAT, new Item(4866),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_STAFF_75(new Item(4863), new Item(4864), DegradeType.IN_COMBAT, new Item(4866),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_STAFF_50(new Item(4864), new Item(4865), DegradeType.IN_COMBAT, new Item(4866),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
-		AHRIMS_STAFF_25(new Item(4865), null, DegradeType.IN_COMBAT, new Item(4866),
-				new DegradeTime(TimeUnit.MINUTES, 225)),
+		AHRIMS_STAFF(new Item(4710), new Item(4862), DegradeType.IN_COMBAT, new Item(4866), 1),
+		AHRIMS_STAFF_100(new Item(4862), new Item(4863), DegradeType.IN_COMBAT, new Item(4866), 1000),
+		AHRIMS_STAFF_75(new Item(4863), new Item(4864), DegradeType.IN_COMBAT, new Item(4866), 1000),
+		AHRIMS_STAFF_50(new Item(4864), new Item(4865), DegradeType.IN_COMBAT, new Item(4866), 1000),
+		AHRIMS_STAFF_25(new Item(4865), null, DegradeType.IN_COMBAT, new Item(4866), 1000),
 
 		/**
 		 * @Dharoks
@@ -499,6 +479,10 @@ public class ItemDegrade {
 
 		private ItemStore(Item currentItem, Item degradedItem, DegradeType type, Item brokenItem, DegradeTime time) {// barrows
 			this(currentItem, degradedItem, type, brokenItem, time, -1);
+		}
+
+		private ItemStore(Item currentItem, Item degradedItem, DegradeType type,  Item brokenItem, int hits) {// barrows
+			this(currentItem, degradedItem, type, brokenItem, null, hits);
 		}
 
 		private ItemStore(Item currentItem, Item degradedItem, DegradeType type, int hits) {// crystal

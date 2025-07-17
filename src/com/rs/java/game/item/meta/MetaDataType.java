@@ -5,7 +5,9 @@ import java.util.Map;
 
 public enum MetaDataType {
     DRAGONFIRE_SHIELD(0),
-    RUNE_POUCH(1);
+    RUNE_POUCH(1),
+    DEGRADE_TICKS(2),
+    DEGRADE_HITS(3);
 
     private final int id;
 

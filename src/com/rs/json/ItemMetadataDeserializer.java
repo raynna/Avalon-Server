@@ -1,10 +1,7 @@
 package com.rs.json;
 
 import com.google.gson.*;
-import com.rs.java.game.item.meta.DragonFireShieldMetaData;
-import com.rs.java.game.item.meta.ItemMetadata;
-import com.rs.java.game.item.meta.MetaDataType;
-import com.rs.java.game.item.meta.RunePouchMetaData;
+import com.rs.java.game.item.meta.*;
 
 import java.lang.reflect.Type;
 
@@ -15,6 +12,8 @@ public class ItemMetadataDeserializer implements JsonDeserializer<ItemMetadata> 
     static {
         TYPE_MAP.put(MetaDataType.DRAGONFIRE_SHIELD.getId(), DragonFireShieldMetaData.class);
         TYPE_MAP.put(MetaDataType.RUNE_POUCH.getId(), RunePouchMetaData.class);
+        TYPE_MAP.put(MetaDataType.DEGRADE_TICKS.getId(), DegradeTicksMetaData.class);
+        TYPE_MAP.put(MetaDataType.DEGRADE_HITS.getId(), DegradeHitsMetaData.class);
     }
 
     @Override

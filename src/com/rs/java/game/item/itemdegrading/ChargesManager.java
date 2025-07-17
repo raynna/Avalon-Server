@@ -9,6 +9,9 @@ import com.rs.java.game.Hit;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.itemdegrading.ItemDegrade.DegradeType;
 import com.rs.java.game.item.itemdegrading.ItemDegrade.ItemStore;
+import com.rs.java.game.item.meta.DegradeHitsMetaData;
+import com.rs.java.game.item.meta.DegradeTicksMetaData;
+import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 
@@ -234,68 +237,86 @@ public class ChargesManager implements Serializable {
 	}
 
 	private void degrade(int itemId, int defaultCharges, int slot) {
-		ItemDefinitions itemDef = ItemDefinitions.getItemDefinitions(itemId);
-		Integer c = charges.remove(itemId);
-		Item newItem = null;
-		for (ItemStore data : data) {
-			if (data == null || data.getCurrentItem().getId() != itemId)
-				continue;
-			if (c == null || c == 0)
-				c = (data.getType() == DegradeType.AT_INCOMMING_HIT || data.getType() == DegradeType.AT_OUTGOING_HIT)
-						? data.getHits()
-						: data.getTime().getTicks();
-			c--;
-			if (c > 0) {
-				charges.put(itemId, c);
-				if (itemDef.getName().contains("(deg")) {// pvp equipment
-					if (c % (Math.floor(data.getTime().getTicks() * 0.05)) == 0) {// every 5%
-						player.getCharges().checkPercentage(
-								"Your " + itemDef.getName() + " has degraded " + ChargesManager.REPLACE + "%.", itemId,
-								true);
-					}
-				}
-				if (itemId >= 18349 && itemId <= 18363) {// chaotic equipment
-					if (c % (Math.floor(data.getHits() * 0.05)) == 0) {// every 5%
-						player.getCharges().checkPercentage(
-								"Your " + itemDef.getName() + " has " + ChargesManager.REPLACE + "% charges left.",
-								itemId, false);
-					}
-				}
-				if (itemDef.getName().toLowerCase().contains("crystal")) {// crystal equipment
-					if (c % (Math.floor(data.getHits() * 0.05)) == 0) {// every 5%
-						player.getCharges().checkPercentage(
-								"Your " + itemDef.getName() + " has degraded " + ChargesManager.REPLACE + "%.", itemId,
-								true);
-					}
-				}
-			} else {
-				if (data.getDegradedItem() == null) {
-					if (data.getBrokenItem() != null) {
-						newItem = data.getBrokenItem();
-					}
-				} else {
-					if (itemId != data.getDegradedItem().getId()) {
-						newItem = data.getDegradedItem();
-					}
-				}
-				if (newItem == null) {
-					if (itemDef.getName().contains("(deg)")) {
-						if (slot == 0)
-							player.gfx(new Graphics(1859));
-						if (slot == 4)
-							player.gfx(new Graphics(1861));
-						if (slot == 7)
-							player.gfx(new Graphics(1860));
-					}
-					player.getPackets().sendGameMessage("Your " + itemDef.getName() + " turned into dust.");
-				} else {
-					player.getPackets().sendGameMessage("Your " + itemDef.getName() + " degraded.");
-				}
-				player.getEquipment().getItems().set(slot, newItem);
-				player.getEquipment().refresh(slot);
-				player.getAppearence().generateAppearenceData();
-			}
+		Item item = player.getEquipment().getItems().get(slot);
+		if (item == null) {
+			return;
 		}
+		ItemDefinitions definitions = ItemDefinitions.getItemDefinitions(itemId);
+		ItemMetadata metaData = item.getMetadata();
+		ItemStore degradeData = getItemStore(item.getId());
+		if (degradeData == null) {
+			return;
+		}
+		if (metaData == null) {
+			switch (degradeData.getType()) {
+				case WEAR:
+				case IN_COMBAT:
+					item.setMetadata(new DegradeTicksMetaData(degradeData.getTime().getTicks()));
+					break;
+				case AT_INCOMMING_HIT:
+				case AT_OUTGOING_HIT:
+					item.setMetadata(new DegradeHitsMetaData(degradeData.getHits()));
+					break;
+			}
+			metaData = item.getMetadata();
+		}
+		int charges = (int) metaData.getValue();
+		charges--;
+		if (charges > 0) {
+			metaData.setValue(charges);
+			item.setMetadata(metaData);
+			int total = getTotalCharges(metaData, degradeData);
+			if (charges % Math.floor(total * 0.05) == 0) {
+				player.getCharges().checkPercentage(
+						"Your " + definitions.getName() + " has degraded " + ChargesManager.REPLACE + "%.", itemId, true);
+			}
+			return;
+		}
+		Item newItem = degradeData.getDegradedItem() != null ? degradeData.getDegradedItem() : degradeData.getBrokenItem();
+		if (newItem == null) {
+			if (definitions.getName().contains("(deg)")) {
+				if (slot == 0) player.gfx(new Graphics(1859));
+				if (slot == 4) player.gfx(new Graphics(1861));
+				if (slot == 7) player.gfx(new Graphics(1860));
+				player.getPackets().sendGameMessage("Your " + definitions.getName() + " turned into dust.");
+				player.getEquipment().getItems().set(slot, null);
+			}
+		} else {
+			Item copy = newItem.clone();
+			player.getPackets().sendGameMessage("Your " + definitions.getName() + " degraded.");
+			player.getEquipment().getItems().set(slot, copy);
+		}
+		player.getEquipment().refresh(slot);
+		player.getAppearence().generateAppearenceData();
 	}
 
+	private ItemStore getItemStore(int itemId) {
+		for (ItemStore store : ItemStore.values()) {
+			if (store != null && store.getCurrentItem().getId() == itemId)
+				return store;
+		}
+		return null;
+	}
+
+	private int getChargesFromMetadata(ItemMetadata metadata) {
+		if (metadata instanceof DegradeHitsMetaData)
+			return ((DegradeHitsMetaData) metadata).getValue();
+		if (metadata instanceof DegradeTicksMetaData)
+			return ((DegradeTicksMetaData) metadata).getValue();
+		// Add more types as needed
+		return -1;
+	}
+
+	private void setDegradeHitsMetaData(ItemMetadata metadata, int value) {
+		if (metadata instanceof DegradeHitsMetaData)
+			metadata.setValue(value);
+	}
+
+	private int getTotalCharges(ItemMetadata metadata, ItemStore store) {
+		if (metadata instanceof DegradeTicksMetaData && store.getTime() != null)
+			return store.getTime().getTicks();
+		if (metadata instanceof DegradeHitsMetaData && store.getHits() > 0)
+			return store.getHits();
+		return 100; // fallback
+	}
 }

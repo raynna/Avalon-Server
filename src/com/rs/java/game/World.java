@@ -1244,7 +1244,7 @@ public final class World {
         }, time, TimeUnit.MILLISECONDS);
     }
 
-    public static final boolean removeObjectTemporary(final WorldObject object, long time, boolean removeClip) {
+    public static boolean removeObjectTemporary(final WorldObject object, long time, boolean removeClip) {
         removeObject(object, removeClip);
         CoresManager.slowExecutor.schedule(() -> {
             try {
@@ -1383,7 +1383,6 @@ public final class World {
 
 
 
-    @Deprecated
     public static void addGroundItemForever(Item item, WorldTile tile) {
         FloorItem floorItem = new FloorItem(item, tile, true);
         Region region = getRegion(tile.getRegionId());
@@ -1696,7 +1695,7 @@ public final class World {
         int coinsInventory = player.getInventory().getNumberOf(995);
 
         if (pouchTotal == Integer.MAX_VALUE && coinsInventory == Integer.MAX_VALUE) {
-             player.getPackets().sendGameMessage("You can't hold more coins.");
+             player.getPackets().sendGameMessage("You don't have enough space to hold more coins.");
             return false;
         }
 
@@ -1740,11 +1739,11 @@ public final class World {
     }
 
 
-    public static final void sendObjectAnimation(WorldObject object, Animation animation) {
+    public static void sendObjectAnimation(WorldObject object, Animation animation) {
         sendObjectAnimation(null, object, animation);
     }
 
-    public static final void sendObjectAnimation(Entity creator, WorldObject object, Animation animation) {
+    public static void sendObjectAnimation(Entity creator, WorldObject object, Animation animation) {
         if (creator == null) {
             for (Player player : World.getPlayers()) {
                 if (player == null || !player.hasStarted() || player.hasFinished() || !player.withinDistance(object))
@@ -1767,7 +1766,7 @@ public final class World {
         }
     }
 
-    public static final void sendGraphics(Entity creator, Graphics graphics, WorldTile tile) {
+    public static void sendGraphics(Entity creator, Graphics graphics, WorldTile tile) {
         if (creator == null) {
             for (Player player : World.getPlayers()) {
                 if (player == null || !player.hasStarted() || player.hasFinished() || !player.withinDistance(tile))
@@ -1789,7 +1788,7 @@ public final class World {
         }
     }
 
-    public static final void sendPrivateGraphics(Entity creator, Graphics graphics, WorldTile tile) {
+    public static void sendPrivateGraphics(Entity creator, Graphics graphics, WorldTile tile) {
         if (creator == null) {
             for (Player player : World.getPlayers()) {
                 if (player != creator || player == null || !player.hasStarted() || player.hasFinished()

@@ -55,7 +55,6 @@ public class FloorItem extends Item {
 		this.spawned = spawned;
 	}
 
-	@Deprecated
 	public FloorItem(Item item, WorldTile tile, boolean appearForever) {
 		super(item.getId(), item.getAmount(), item.getMetadata());
 		this.tile = tile;

@@ -16,10 +16,6 @@ public interface ItemMetadata extends Serializable {
         return 28;
     }
 
-    default void setValue(int amount) {
-        throw new UnsupportedOperationException("Increment not supported");
-    }
-
     default void increment(int amount) {
         // Default no-op or throw UnsupportedOperationException if you want to force override
         throw new UnsupportedOperationException("Increment not supported");
