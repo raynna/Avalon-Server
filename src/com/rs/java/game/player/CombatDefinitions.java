@@ -704,7 +704,7 @@ public final class CombatDefinitions implements Serializable {
 			}
 			ItemMetadata metadata = item.getMetadata();
 			if (metadata instanceof DragonFireShieldMetaData dfsMeta) {
-				for (int i = STAB_DEF; i < RANGE_DEF; i++)
+				for (int i = STAB_DEF; i <= RANGE_DEF; i++)
 				this.bonuses[i] += dfsMeta.getValue(); // +1 def per charge
 			}
 		}
