@@ -677,7 +677,7 @@ public final class Commands {
                         player.getPackets().sendGameMessage("You can't use ::" + cmd[0] + " at this location.");
                         return true;
                     }
-                    player.getPrayer().setPrayerBook(player.getPrayer().ancientcurses ? false : true);
+                    player.getPrayer().setPrayerBook(!player.getPrayer().isAncientCurses());
                     player.getPackets().sendGameMessage("You switch your prayer book.");
                     return true;
                 case "switch":
@@ -2313,7 +2313,7 @@ public final class Commands {
 
                 case "showrisk":
                     Integer[][] slots = ButtonHandler.getItemSlotsKeptOnDeath(player, player.isAtWild(), player.hasSkull(),
-                            player.getPrayer().usingPrayer(0, 10) || player.getPrayer().usingPrayer(1, 0));
+                            player.getPrayer().hasProtectItemPrayerActive());
                     Item[][] riskitems = ButtonHandler.getItemsKeptOnDeath(player, slots);
                     long riskedWealth = 0;
                     long carriedWealth = 0;

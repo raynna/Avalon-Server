@@ -33,13 +33,12 @@ public class FrostDragonCombat extends CombatScript {
 			} else {
 				damage = Utils.getRandom(650);
 				if (Combat.hasAntiDragProtection(target) || (player != null
-						&& (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)))) {
+						&& (player.getPrayer().isMageProtecting()))) {
 					damage = 0;
 					player.getPackets()
 							.sendGameMessage("Your " + (Combat.hasAntiDragProtection(target) ? "shield" : "prayer")
 									+ " absorbs most of the dragon's breath!", true);
-				} else if ((!Combat.hasAntiDragProtection(target) || !player.getPrayer().usingPrayer(0, 17)
-						|| !player.getPrayer().usingPrayer(1, 7))
+				} else if ((!Combat.hasAntiDragProtection(target) || !player.getPrayer().isMageProtecting())
 						&& player.getFireImmune() > Utils.currentTimeMillis()) {
 					damage = Utils.getRandom(164);
 					player.getPackets().sendGameMessage("Your potion absorbs most of the dragon's breath!", true);
@@ -53,13 +52,12 @@ public class FrostDragonCombat extends CombatScript {
 			if (npc.withinDistance(target, 3)) {
 				damage = Utils.getRandom(650);
 				if (Combat.hasAntiDragProtection(target) || (player != null
-						&& (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)))) {
+						&& (player.getPrayer().isMageProtecting()))) {
 					damage = 0;
 					player.getPackets()
 							.sendGameMessage("Your " + (Combat.hasAntiDragProtection(target) ? "shield" : "prayer")
 									+ " absorbs most of the dragon's breath!", true);
-				} else if ((!Combat.hasAntiDragProtection(target) || !player.getPrayer().usingPrayer(0, 17)
-						|| !player.getPrayer().usingPrayer(1, 7))
+				} else if ((!Combat.hasAntiDragProtection(target) || !player.getPrayer().isMageProtecting())
 						&& player.getFireImmune() > Utils.currentTimeMillis()) {
 					damage = Utils.getRandom(164);
 					player.getPackets().sendGameMessage(
@@ -71,13 +69,12 @@ public class FrostDragonCombat extends CombatScript {
 			} else {
 				damage = Utils.getRandom(650);
 				if (Combat.hasAntiDragProtection(target) || (player != null
-						&& (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)))) {
+						&& (player.getPrayer().isMageProtecting()))) {
 					damage = 0;
 					player.getPackets()
 							.sendGameMessage("Your " + (Combat.hasAntiDragProtection(target) ? "shield" : "prayer")
 									+ " absorbs most of the dragon's breath!", true);
-				} else if ((!Combat.hasAntiDragProtection(target) || !player.getPrayer().usingPrayer(0, 17)
-						|| !player.getPrayer().usingPrayer(1, 7))
+				} else if ((!Combat.hasAntiDragProtection(target) || !player.getPrayer().isMageProtecting())
 						&& player.getFireImmune() > Utils.currentTimeMillis()) {
 					damage = Utils.getRandom(164);
 					player.getPackets().sendGameMessage(

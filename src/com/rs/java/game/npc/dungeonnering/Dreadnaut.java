@@ -79,11 +79,6 @@ public class Dreadnaut extends DungeonBoss {
 		return WEAKNESS;
 	}
 
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return 0.60;
-	}
-
 	public boolean canReduceMagicLevel() {
 		return reduceMagicLevel;
 	}

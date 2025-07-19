@@ -206,7 +206,7 @@ public class SettingsTab extends CustomTab {
             @Override
             public void usage(Player p) {
                 p.toggles.put("ONEXHITS", !p.toggles("ONEXHITS", false));
-                p.getPrayer().refreshPrayerPoints();
+                p.getPrayer().refresh();
                 p.refreshHitPoints();
                 p.getSkills().switchXPPopup(true);
                 p.getSkills().switchXPPopup(true);

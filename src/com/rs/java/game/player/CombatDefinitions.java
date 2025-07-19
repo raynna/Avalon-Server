@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.item.meta.CombatBonusType;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
@@ -712,19 +711,19 @@ public final class CombatDefinitions implements Serializable {
 	}
 
 	public void resetSpecialAttack() {
-		desecreaseSpecialAttack(0);
+		decrease(0);
 		specialAttackPercentage = 100;
 		refreshSpecialAttackPercentage();
 	}
 
 	public void setSpecialAttack(int special) {
-		desecreaseSpecialAttack(0);
+		decrease(0);
 		specialAttackPercentage = (byte) special;
 		refreshSpecialAttackPercentage();
 	}
 
 	public void addSpecialAttack(int special) {
-		desecreaseSpecialAttack(0);
+		decrease(0);
 		specialAttackPercentage += (byte) special;
 		refreshSpecialAttackPercentage();
 	}
@@ -795,7 +794,7 @@ public final class CombatDefinitions implements Serializable {
 		refreshUsingSpecialAttack();
 	}
 
-	public void desecreaseSpecialAttack(int amount) {
+	public void decrease(int amount) {
 		usingSpecialAttack = false;
 		refreshUsingSpecialAttack();
 		if (amount > 0) {

@@ -29,7 +29,7 @@ public class BarrowDrop extends Dialogue {
 			}
 			player.message("Your " + item.getName() + " breaks as it hits the ground.");
 			player.getInventory().deleteItem(slotId, item);
-			if (player.getCharges().degrade(item))
+			if (player.getChargeManager().breakItem(item))
 				return;
 			World.addGroundItem(item, new WorldTile(player), player, true, 60);
 			player.getPackets().sendSound(4500, 0, 1);

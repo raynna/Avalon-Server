@@ -115,7 +115,7 @@ public class DeathEvent extends Controler {
 		player.getInventory().unlockInventoryOptions();
 		player.getInterfaceManager().sendEquipment();
 		player.getInterfaceManager().sendPrayerBook();
-		player.getPrayer().unlockPrayerBookButtons();
+		player.getPrayer().refresh();
 		player.getInterfaceManager().sendMagicBook();
 		player.getInterfaceManager().sendEmotes();
 		player.getEmotesManager().unlockEmotesBook();

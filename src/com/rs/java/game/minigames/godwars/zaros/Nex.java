@@ -225,7 +225,7 @@ public final class Nex extends NPC {
 			Entity source = hit.getSource();
 			if (source != null) {
 				int deflectedDamage = (int) (hit.getDamage() * 0.1);
-				hit.setDamage((int) (hit.getDamage() * source.getMeleePrayerMultiplier()));
+				hit.setDamage((int) (hit.getDamage() * 0.6));
 				if (deflectedDamage > 0)
 					source.applyHit(new Hit(this, deflectedDamage, HitLook.REFLECTED_DAMAGE));
 			}
@@ -245,21 +245,6 @@ public final class Nex extends NPC {
 		if (doingSiphon)
 			return;
 		super.gfx(nextGraphic);
-	}
-
-	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return 0.6;
 	}
 
 	@Override

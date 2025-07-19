@@ -20,7 +20,7 @@ import com.rs.java.game.item.ItemPluginLoader;
 import com.rs.java.game.item.ItemPlugin;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
 import com.rs.java.game.item.itemdegrading.ChargesManager;
-import com.rs.java.game.item.itemdegrading.ItemDegrade.ItemStore;
+import com.rs.java.game.item.itemdegrading.ItemDegrade.DegradeData;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.npc.NPC;
@@ -1037,7 +1037,7 @@ public class InventoryOptionsHandler {
         if (itemId == 20767 || itemId == 20769 || itemId == 20771)
             SkillCapeCustomizer.startCustomizing(player, itemId);
         if (itemId >= 18349 && itemId <= 18363) {
-            player.getCharges().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(itemId).getName() + " has " + ChargesManager.REPLACE + "% charges left.", itemId, false);
+            player.getChargeManager().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(itemId).getName() + " has ##% charges left.", itemId, false);
         } else if (itemId == 9013) {
             if (player.getSkullSkeptreCharges() == 1) {
                 player.getInventory().deleteItem(slotId, item);
@@ -1465,7 +1465,7 @@ public class InventoryOptionsHandler {
             player.getInventory().deleteItem(item);
             return;
         }
-        player.getCharges().degrade(item);
+        player.getChargeManager().breakItem(item);
         player.getInventory().dropItem(slotId, item, true);
     }
 
@@ -1542,7 +1542,7 @@ public class InventoryOptionsHandler {
                 }
                 if (npc.getId() == 9711) {
                     boolean wrongItem = true;
-                    for (ItemStore data : ItemStore.values()) {
+                    for (DegradeData data : DegradeData.values()) {
                         if (data == null)
                             continue;
                         if (data.getDegradedItem() != null && data.getDegradedItem().getId() == item.getId() && data.getHits() == 30000) {
@@ -1552,7 +1552,7 @@ public class InventoryOptionsHandler {
                         if (data.getCurrentItem().getId() == item.getId() && data.getHits() == 30000) {
                             player.message("Degraded Item: " + data.getDegradedItem().getName());
                             wrongItem = false;
-                            if (player.getCharges().getCharges(item.getId()) == data.getHits()) {
+                            if (player.getChargeManager().getCharges(item.getId()) == data.getHits()) {
                                 player.getDialogueManager().startDialogue("RewardsTrader", npc.getId(), item.getId(), 3);
                                 return;
                             }

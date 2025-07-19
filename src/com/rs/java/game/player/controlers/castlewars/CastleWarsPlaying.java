@@ -115,7 +115,7 @@ public class CastleWarsPlaying extends Controler {
 
 	@Override
 	public boolean canEquip(int slotId, int itemId) {
-		if (slotId == Equipment.SLOT_CAPE || slotId == Equipment.SLOT_HAT) {
+		if (slotId == Equipment.SLOT_CAPE || slotId == Equipment.SLOT_HEAD) {
 			player.getPackets().sendGameMessage("You can't remove your team's colours.");
 			return false;
 		}

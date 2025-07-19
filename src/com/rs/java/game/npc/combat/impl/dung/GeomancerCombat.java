@@ -140,9 +140,9 @@ public class GeomancerCombat extends CombatScript {
 			if (damage > 0) {
 				if (t instanceof Player) {
 					Player player = (Player) t;
-					if (player.getPrayer().hasPrayersOn()) {
+					if (player.getPrayer().hasActivePrayers()) {
 						if (!hasDrained) {
-							int prayerPoints = player.getPrayer().getPrayerpoints();
+							int prayerPoints = player.getPrayer().getPrayerPoints();
 
 							npc.gfx(new Graphics(2369, 70, 0));
 							if (prayerPoints > 0) {

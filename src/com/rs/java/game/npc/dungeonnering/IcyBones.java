@@ -26,21 +26,6 @@ public final class IcyBones extends DungeonBoss {
 		spikes = new ArrayList<WorldObject>();
 	}
 
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return 0.6;
-	}
-	
 	private static final WeaponType[][] WEAKNESS =
 		{{ new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.CRUSH_ATTACK)},};
 

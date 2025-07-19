@@ -125,11 +125,6 @@ public class YkLagorThunderous extends DungeonBoss {
 		}
 	}
 
-	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.6;
-	}
-
 	/* public ArrayList<Entity> getPossibleTargets(boolean special, boolean npc) {
 	ArrayList<Entity> possibleTargets = super.getPossibleTargets(npc, true);
 	if (special) {

@@ -13,9 +13,13 @@ import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
+import com.rs.java.game.player.prayer.PrayerEffectHandler;
 import com.rs.java.game.tasks.WorldTask;
 import com.rs.java.game.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+
+import java.util.Map;
+import java.util.function.Supplier;
 
 public abstract class CombatScript {
 
@@ -34,13 +38,14 @@ public abstract class CombatScript {
             target.handleIncommingHit(hit);
             int attackSpeed = npc.getAttackSpeed() * 600;
             npc.setAttackDelay((attackSpeed / 2) + 4800);
-            handleProtectPrayers(npc, target, hit);
+            if (target instanceof Player playerTarget) {
+                PrayerEffectHandler.handleAllPrayerEffects(npc, playerTarget, hit);
+            }
             handleAbsorb(target, hit);
-            handleSOL(target, hit);
+            handleStaffOfLightReduction(target, hit);
             handleDivine(target, hit);
             handleElysian(target, hit);
-            if (npc.getId() == 13448)
-                sendSoulSplit(hit, npc, target);
+            if (npc.getId() == 13448) sendSoulSplit(hit, npc, target);
             if (npc.getId() == 2027) {
                 if (hit.getDamage() != 0 && Utils.random(3) == 0) {
                     target.gfx(new Graphics(398));
@@ -48,8 +53,7 @@ public abstract class CombatScript {
                 }
             }
             if (npc.getId() == 6367) {
-                if (hit.getLook() == HitLook.MAGIC_DAMAGE && hit.getDamage() > 0)
-                    target.addFreezeDelay(20000, false);
+                if (hit.getLook() == HitLook.MAGIC_DAMAGE && hit.getDamage() > 0) target.addFreezeDelay(20000, false);
             }
         }
         WorldTasksManager.schedule(new WorldTask() {
@@ -58,53 +62,42 @@ public abstract class CombatScript {
             public void run() {
                 for (Hit hit : hits) {
                     NPC npc = (NPC) hit.getSource();
-                    if (npc.isDead() || npc.hasFinished() || target.isDead() || target.hasFinished())
-                        return;
+                    if (npc.isDead() || npc.hasFinished() || target.isDead() || target.hasFinished()) return;
                     target.applyHit(hit);
                     handleRingOfRecoil(npc, target, hit);
                     handleVengHit(target, hit);
                     if (npc.getId() >= 912 && npc.getId() <= 914) {
-                        if (hit.getDamage() == 0)
-                            target.gfx(new Graphics(85, 0, 96));
-                        else
-                            target.gfx(new Graphics(npc.getCombatDefinitions().getAttackProjectile(), 0, 0));
+                        if (hit.getDamage() == 0) target.gfx(new Graphics(85, 0, 96));
+                        else target.gfx(new Graphics(npc.getCombatDefinitions().getAttackProjectile(), 0, 0));
                     }
                     if (npc.getId() == 6367) {
-                        if (hit.getDamage() == 0)
-                            target.gfx(new Graphics(85, 0, 96));
+                        if (hit.getDamage() == 0) target.gfx(new Graphics(85, 0, 96));
                         if (hit.getDamage() > 0 && target.getFreezeDelay() > Utils.currentTimeMillis())
                             target.gfx(new Graphics(1677));
                         if (hit.getDamage() > 0 && target.getFreezeDelay() < Utils.currentTimeMillis())
                             target.gfx(new Graphics(369));
                     }
                     if (npc.getId() == 1007 && hit.getLook() == HitLook.MAGIC_DAMAGE) {
-                        if (hit.getDamage() == 0)
-                            target.gfx(new Graphics(85, 0, 96));
-                        if (hit.getDamage() > 0)
-                            target.gfx(new Graphics(78, 0, 0));
+                        if (hit.getDamage() == 0) target.gfx(new Graphics(85, 0, 96));
+                        if (hit.getDamage() > 0) target.gfx(new Graphics(78, 0, 0));
                     }
                     if (npc.getId() == 1264 && hit.getLook() == HitLook.MAGIC_DAMAGE) {
-                        if (hit.getDamage() == 0)
-                            target.gfx(new Graphics(85, 0, 96));
-                        if (hit.getDamage() > 0)
-                            target.gfx(new Graphics(76, 0, 0));
+                        if (hit.getDamage() == 0) target.gfx(new Graphics(85, 0, 96));
+                        if (hit.getDamage() > 0) target.gfx(new Graphics(76, 0, 0));
                     }
                     if (hit.getDamage() == 0) {
                         if (npc.getId() == 9172)// aquanite splash
                             target.gfx(new Graphics(2122));
                     }
                     npc.getCombat().doDefenceEmote(target);
-                    if (target instanceof Player) {
-                        Player p2 = (Player) target;
-                        p2.getCharges().processIncommingHit();
-                        p2.closeInterfaces();
-                        if (p2.getCombatDefinitions().isAutoRelatie() && !p2.getActionManager().hasSkillWorking()
-                                && !p2.hasWalkSteps())
-                            p2.getActionManager().setAction(new PlayerCombat(npc));
+                    if (target instanceof Player player) {
+                        player.getChargeManager().processIncommingHit();
+                        player.closeInterfaces();
+                        if (player.getCombatDefinitions().isAutoRelatie() && !player.getActionManager().hasSkillWorking() && !player.hasWalkSteps())
+                            player.getActionManager().setAction(new PlayerCombat(npc));
                     } else {
                         NPC n = (NPC) target;
-                        if (!n.isUnderCombat() || n.canBeAttackedByAutoRelatie())
-                            n.setTarget(npc);
+                        if (!n.isUnderCombat() || n.canBeAttackedByAutoRelatie()) n.setTarget(npc);
                     }
 
                 }
@@ -115,7 +108,7 @@ public abstract class CombatScript {
 
     public static void sendSoulSplit(final Hit hit, final NPC npc, final Entity target) {
         Player p2 = (Player) target;
-        if (target instanceof Player) {
+        if (target != null) {
             World.sendSoulsplitProjectile(npc, target, 2263);
             if (npc.getHitpoints() > 0 && npc.getHitpoints() <= npc.getMaxHitpoints()) {
                 npc.heal(hit.getDamage() / 5);
@@ -131,36 +124,37 @@ public abstract class CombatScript {
         }
     }
 
-    public static void handleRingOfRecoil(NPC npc, Entity target, Hit hit) {
-        if (target instanceof NPC)
+    public static void handleRingOfRecoil(NPC attacker, Entity target, Hit incomingHit) {
+        final int RING_OF_RECOIL_ID = 2550;
+        final int MIN_DAMAGE_FOR_RECOIL = 10;
+        final int MAX_RECOIL_DAMAGE = 60;
+        final double RECOIL_DAMAGE_PERCENT = 0.1;
+        if (attacker == null || target == null || incomingHit == null) {
             return;
-        int damage = (int) (hit.getDamage() * 0.1);
-        if (target instanceof Player) {
-            Player p2 = (Player) target;
-            if (p2.getEquipment().getRingId() == 2550) {
-                if (hit.getLook() == HitLook.MELEE_DAMAGE || hit.getLook() == HitLook.RANGE_DAMAGE
-                        || hit.getLook() == HitLook.MAGIC_DAMAGE) {
-                    if (hit.getDamage() > 9) {
-                        if (p2.getRecoilHits() == 0) {
-                            npc.applyHit(new Hit(p2, damage > 60 ? 60 : damage, HitLook.REFLECTED_DAMAGE));
-                            p2.setRecoilHits(400);
-                            p2.setRecoilHits(p2.getRecoilHits() - damage);
-                            p2.getPackets().sendGameMessage("Your ring of recoil started degrading.");
-                        } else if (p2.getRecoilHits() >= damage) {
-                            npc.applyHit(new Hit(p2, damage > 60 ? 60 : damage, HitLook.REFLECTED_DAMAGE));
-                            p2.setRecoilHits(p2.getRecoilHits() - damage);
-                        } else if (p2.getRecoilHits() - damage <= 0) {
-                            p2.getEquipment().deleteItem(2550, 1);
-                            p2.getAppearence().generateAppearenceData();
-                            hit.getSource()
-                                    .applyHit(new Hit(target, (int) (hit.getDamage() * 0.75), HitLook.REGULAR_DAMAGE));
-                            npc.applyHit(new Hit(p2, damage > 60 ? 60 : damage, HitLook.REFLECTED_DAMAGE));
-                            p2.setRecoilHits(400);
-                            p2.setRecoilHits(p2.getRecoilHits() - damage);
-                            p2.getPackets().sendGameMessage("Your ring of recoil has shattered.");
-                        }
-                    }
-                }
+        }
+        HitLook hitType = incomingHit.getLook();
+        if (hitType != HitLook.MELEE_DAMAGE &&
+                hitType != HitLook.RANGE_DAMAGE &&
+                hitType != HitLook.MAGIC_DAMAGE) {
+            return;
+        }
+        if (incomingHit.getDamage() < MIN_DAMAGE_FOR_RECOIL) {
+            return;
+        }
+        if (target instanceof Player player) {
+            boolean hasRingOfRecoil = player.getEquipment().getRingId() == RING_OF_RECOIL_ID;
+            if (!hasRingOfRecoil) {
+                return;
+            }
+            int recoilDamage = (int) (incomingHit.getDamage() * RECOIL_DAMAGE_PERCENT);
+            int remainingCharges = player.getChargeManager().getCharges(RING_OF_RECOIL_ID);
+            int absoluteRecoil = Math.min(MAX_RECOIL_DAMAGE, remainingCharges);
+
+            recoilDamage = Math.min(recoilDamage, absoluteRecoil);
+            if (recoilDamage > 0) {
+                Hit recoilHit = new Hit(player, recoilDamage, HitLook.REFLECTED_DAMAGE);
+                attacker.applyHit(recoilHit);
+
             }
         }
     }
@@ -177,132 +171,99 @@ public abstract class CombatScript {
         }
     }
 
-    public static void handleAbsorb(Entity target, Hit hit) {
-        if (target instanceof NPC) {
+    public static void handleAbsorb(Entity target, Hit incommingHit) {
+        final int MINIMUM_DAMAGE_THRESHOLD = 200;
+        final int MINIMUM_HP_THRESHOLD = 200;
+
+        if (!(target instanceof Player player)) {
             return;
         }
-        Player p2 = (Player) target;
-        if (hit.getLook() == HitLook.MELEE_DAMAGE) {
-            int reducedDamage = (hit.getDamage() - 200)
-                    * p2.getCombatDefinitions().getBonuses()[CombatDefinitions.ABSORVE_MELEE_BONUS] / 100;
-            if (hit.getDamage() - reducedDamage > 200 && p2.getHitpoints() > 200) {
-                if (reducedDamage > 0) {
-                    hit.setDamage(hit.getDamage() - reducedDamage);
-                    hit.setSoaking(new Hit(target, reducedDamage, HitLook.ABSORB_DAMAGE));
-                }
-            }
-        } else if (hit.getLook() == HitLook.RANGE_DAMAGE) {
-            int reducedDamage = (hit.getDamage() - 200)
-                    * p2.getCombatDefinitions().getBonuses()[CombatDefinitions.ABSORVE_RANGE_BONUS] / 100;
-            if (hit.getDamage() - reducedDamage > 200 && p2.getHitpoints() > 200) {
-                if (reducedDamage > 0) {
-                    hit.setDamage(hit.getDamage() - reducedDamage);
-                    hit.setSoaking(new Hit(target, reducedDamage, HitLook.ABSORB_DAMAGE));
-                }
-            }
-        } else if (hit.getLook() == HitLook.MAGIC_DAMAGE) {
-            int reducedDamage = (hit.getDamage() - 200)
-                    * p2.getCombatDefinitions().getBonuses()[CombatDefinitions.ABSORVE_MAGE_BONUS] / 100;
-            if (hit.getDamage() - reducedDamage > 200 && p2.getHitpoints() > 200) {
-                if (reducedDamage > 0) {
-                    hit.setDamage(hit.getDamage() - reducedDamage);
-                    hit.setSoaking(new Hit(target, reducedDamage, HitLook.ABSORB_DAMAGE));
-                }
-            }
+        HitLook hitType = incommingHit.getLook();
+        if (hitType != HitLook.MELEE_DAMAGE &&
+                hitType != HitLook.RANGE_DAMAGE &&
+                hitType != HitLook.MAGIC_DAMAGE) {
+            return;
+        }
+        int absorptionBonus = getAbsorptionBonus(player, hitType);
+        int reducibleDamage = incommingHit.getDamage() - MINIMUM_DAMAGE_THRESHOLD;
+        int reducedDamage = (reducibleDamage * absorptionBonus) / 100;
+        if (absorptionBonus == 0 || reducibleDamage <= 0 || reducedDamage <= 0) {
+            return;
+        }
+        if (player.getHitpoints() <= MINIMUM_HP_THRESHOLD) {
+            return;
+        }
+        incommingHit.setDamage(incommingHit.getDamage() - reducedDamage);
+        incommingHit.setSoaking(new Hit(target, reducedDamage, HitLook.ABSORB_DAMAGE));
+    }
+
+    private static int getAbsorptionBonus(Player player, HitLook hitType) {
+        CombatDefinitions combatDefs = player.getCombatDefinitions();
+
+        return switch (hitType) {
+            case MELEE_DAMAGE -> combatDefs.getBonuses()[CombatDefinitions.ABSORVE_MELEE_BONUS];
+            case RANGE_DAMAGE -> combatDefs.getBonuses()[CombatDefinitions.ABSORVE_RANGE_BONUS];
+            case MAGIC_DAMAGE -> combatDefs.getBonuses()[CombatDefinitions.ABSORVE_MAGE_BONUS];
+            default -> 0;
+        };
+    }
+
+    public static void handleDivine(Entity target, Hit incommingHit) {
+        final int DIVINE_SHIELD_ID = 13740;
+        final double DAMAGE_REDUCTION_MULTIPLIER = 0.7;
+        final double PRAYER_DRAIN_PERCENT = 0.3;
+        final int PRAYER_DRAIN_DIVISOR = 2;
+        if (!(target instanceof Player player)) {
+            return;
+        }
+        if (player.getEquipment().getShieldId() != DIVINE_SHIELD_ID) {
+            return;
+        }
+        int prayerDrain = (int) Math.ceil(incommingHit.getDamage() * PRAYER_DRAIN_PERCENT) / PRAYER_DRAIN_DIVISOR;
+        if (player.getPrayer().getPrayerPoints() < prayerDrain) {
+            return;
+        }
+        incommingHit.setDamage((int) (incommingHit.getDamage() * DAMAGE_REDUCTION_MULTIPLIER));
+        player.getPrayer().drainPrayer(prayerDrain);
+    }
+
+    public static void handleElysian(Entity target, Hit incommingHit) {
+        final int ELYSIAN_SHIELD_ID = 13742;
+        final double DAMAGE_REDUCTION_MULTIPLIER = 0.75;
+        final int CHANCE_NUMERATOR = 7;
+        final int CHANCE_DENOMINATOR = 10;
+        if (!(target instanceof Player player)) {
+            return;
+        }
+        if (player.getEquipment().getShieldId() != ELYSIAN_SHIELD_ID) {
+            return;
+        }
+        if (Utils.getRandom(CHANCE_DENOMINATOR) < CHANCE_NUMERATOR) {
+            incommingHit.setDamage((int) (incommingHit.getDamage() * DAMAGE_REDUCTION_MULTIPLIER));
         }
     }
 
-    public static void handleDivine(Entity target, Hit hit) {
-        if (target instanceof NPC)
+    public static void handleStaffOfLightReduction(Entity target, Hit hit) {
+        final int STAFF_OF_LIGHT_ID = 15486;
+        final double DAMAGE_REDUCTION_MULTIPLIER = 0.5;
+        final int POL_GFX_ID = 2320;
+        final int POL_GFX_HEIGHT = 100;
+        if (!(target instanceof Player player)) {
             return;
-        if (target instanceof Player) {
-            Player p2 = (Player) target;
-            int shieldId = p2.getEquipment().getShieldId();
-            if (shieldId == 13740) {
-                int drain = (int) (Math.ceil(hit.getDamage() * 0.3) / 2);
-                if (p2.getPrayer().getPrayerpoints() >= drain) {
-                    hit.setDamage((int) (hit.getDamage() * 0.70));
-                    p2.getPrayer().drainPrayer(drain);
-                }
-            }
         }
-    }
-
-    public static void handleElysian(Entity target, Hit hit) {
-        if (target instanceof NPC)
+        if (hit.getLook() != HitLook.MELEE_DAMAGE) {
             return;
-        if (target instanceof Player) {
-            Player p2 = (Player) target;
-            int shieldId = p2.getEquipment().getShieldId();
-            if (shieldId == 13742) {
-                if (Utils.getRandom(10) <= 7)
-                    hit.setDamage((int) (hit.getDamage() * 0.75));
-            }
         }
-    }
-
-    public static void handleSOL(Entity target, Hit hit) {
-        if (target instanceof NPC)
+        if (player.staffOfLightSpecial <= Utils.currentTimeMillis()) {
+            player.setStaffOfLightSpecial(0);
             return;
-        if (target instanceof Player) {
-            Player p2 = (Player) target;
-            if (hit.getLook() == HitLook.MELEE_DAMAGE) {
-                int weaponId = p2.getEquipment().getWeaponId();
-                if (p2.polDelay > Utils.currentTimeMillis()) {
-                    if (weaponId != 15486) {
-                        p2.setPolDelay(0);
-                    } else {
-                        p2.gfx(new Graphics(2320, 0, 100));
-                        hit.setDamage((int) (hit.getDamage() * 0.5));
-                    }
-                }
-            }
         }
-    }
-
-    public static void handleProtectPrayers(NPC npc, Entity target, Hit hit) {
-        if (target instanceof NPC)
+        if (player.getEquipment().getWeaponId() != STAFF_OF_LIGHT_ID) {
+            player.setStaffOfLightSpecial(0);
             return;
-        Player p2 = (Player) target;
-        if (p2.getPrayer().hasPrayersOn() && hit.getDamage() != 0) {
-            int deflectedDamage = (int) (hit.getDamage() * 0.1);
-            if (hit.getLook() == HitLook.MAGIC_DAMAGE) {
-                if (p2.getPrayer().usingPrayer(0, 17))
-                    hit.setDamage((int) (hit.getDamage() * npc.getMagePrayerMultiplier()));
-                else if (p2.getPrayer().usingPrayer(1, 7)) {
-                    if (Utils.getRandom(2) <= 1 && hit.getDamage() > 10) {
-                        npc.applyHit(new Hit(target, deflectedDamage, HitLook.REFLECTED_DAMAGE));
-                        p2.gfx(new Graphics(2228));
-                        p2.setNextAnimationNoPriority(new Animation(12573), p2);
-                    }
-                    hit.setDamage((int) (hit.getDamage() * npc.getMagePrayerMultiplier()));
-                }
-            }
-            if (hit.getLook() == HitLook.RANGE_DAMAGE) {
-                if (p2.getPrayer().usingPrayer(0, 18))
-                    hit.setDamage((int) (hit.getDamage() * npc.getRangePrayerMultiplier()));
-                else if (p2.getPrayer().usingPrayer(1, 8)) {
-                    if (Utils.getRandom(2) <= 1 && hit.getDamage() > 10) {
-                        npc.applyHit(new Hit(target, deflectedDamage, HitLook.REFLECTED_DAMAGE));
-                        p2.gfx(new Graphics(2229));
-                        p2.setNextAnimationNoPriority(new Animation(12573), p2);
-                    }
-                    hit.setDamage((int) (hit.getDamage() * npc.getRangePrayerMultiplier()));
-                }
-            }
-            if (hit.getLook() == HitLook.MELEE_DAMAGE) {
-                if (p2.getPrayer().usingPrayer(0, 19))
-                    hit.setDamage((int) (hit.getDamage() * npc.getMeleePrayerMultiplier()));
-                else if (p2.getPrayer().usingPrayer(1, 9)) {
-                    if (Utils.getRandom(2) <= 1 && hit.getDamage() > 10) {
-                        npc.applyHit(new Hit(target, deflectedDamage, HitLook.REFLECTED_DAMAGE));
-                        p2.gfx(new Graphics(2230));
-                        p2.setNextAnimationNoPriority(new Animation(12573), p2);
-                    }
-                    hit.setDamage((int) (hit.getDamage() * npc.getMeleePrayerMultiplier()));
-                }
-            }
         }
+        player.gfx(new Graphics(POL_GFX_ID, 0, POL_GFX_HEIGHT));
+        hit.setDamage((int) (hit.getDamage() * DAMAGE_REDUCTION_MULTIPLIER));
     }
 
     public static Hit getRangeHit(NPC npc, int damage) {
@@ -350,11 +311,7 @@ public abstract class CombatScript {
             range = range * (1 + rangeBonus / 64);
             R = Math.round(range);
         } else {
-            attackBonus = npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.STAB
-                    ? bonuses != null ? bonuses[CombatDefinitions.NPC_STAB_BONUS] : 0
-                    : npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.SLASH
-                    ? bonuses != null ? bonuses[CombatDefinitions.NPC_SLASH_BONUS] : 0
-                    : bonuses != null ? bonuses[CombatDefinitions.NPC_CRUSH_BONUS] : 0;
+            attackBonus = npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.STAB ? bonuses != null ? bonuses[CombatDefinitions.NPC_STAB_BONUS] : 0 : npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.SLASH ? bonuses != null ? bonuses[CombatDefinitions.NPC_SLASH_BONUS] : 0 : bonuses != null ? bonuses[CombatDefinitions.NPC_CRUSH_BONUS] : 0;
             attack += bonuses != null ? bonuses[CombatDefinitions.NPC_ATTACK_LEVEL] * 1.5 : npc.getCombatLevel();
             attack = Math.round(attack);
             attack += 8;
@@ -369,18 +326,10 @@ public abstract class CombatScript {
         double MD = 0;
         if (target instanceof Player) {
             Player p2 = (Player) target;
-            double defenceBonus = (p2.getCombatDefinitions().getBonuses()[attackStyle == NPCCombatDefinitions.RANGE
-                    ? CombatDefinitions.RANGE_DEF
-                    : CombatDefinitions.MAGIC_DEF]);
-            double meleeBonus = (p2.getCombatDefinitions()
-                    .getBonuses()[npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.STAB
-                    ? CombatDefinitions.STAB_DEF
-                    : npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.SLASH
-                    ? CombatDefinitions.SLASH_DEF
-                    : CombatDefinitions.CRUSH_DEF]);
+            double defenceBonus = (p2.getCombatDefinitions().getBonuses()[attackStyle == NPCCombatDefinitions.RANGE ? CombatDefinitions.RANGE_DEF : CombatDefinitions.MAGIC_DEF]);
+            double meleeBonus = (p2.getCombatDefinitions().getBonuses()[npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.STAB ? CombatDefinitions.STAB_DEF : npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.SLASH ? CombatDefinitions.SLASH_DEF : CombatDefinitions.CRUSH_DEF]);
             if (attackStyle == NPCCombatDefinitions.MAGE) {
-                magedefence = (p2.getSkills().getLevel(Skills.DEFENCE) * 0.3)
-                        + (p2.getSkills().getLevel(Skills.MAGIC) * 0.7);
+                magedefence = (p2.getSkills().getLevel(Skills.DEFENCE) * 0.3) + (p2.getSkills().getLevel(Skills.MAGIC) * 0.7);
                 magedefence = Math.round(magedefence);
                 magedefence += 8;
                 magedefence = magedefence * (1 + defenceBonus / 64);
@@ -402,13 +351,8 @@ public abstract class CombatScript {
             }
         } else if (target instanceof NPC || target instanceof Familiar) {
             NPC n = (NPC) target;
-            defence = n.getBonuses()[attackStyle == NPCCombatDefinitions.RANGE ? CombatDefinitions.RANGE_DEF
-                    : attackStyle == NPCCombatDefinitions.MAGE ? CombatDefinitions.MAGIC_DEF
-                    : CombatDefinitions.STAB_DEF];
-            double defenceBonus = (attackStyle == NPCCombatDefinitions.RANGE
-                    ? n.getBonuses()[CombatDefinitions.NPC_RANGE_BONUS]
-                    : attackStyle == NPCCombatDefinitions.MAGE ? n.getBonuses()[CombatDefinitions.NPC_MAGIC_BONUS]
-                    : n.getBonuses()[CombatDefinitions.NPC_STAB_BONUS]);
+            defence = n.getBonuses()[attackStyle == NPCCombatDefinitions.RANGE ? CombatDefinitions.RANGE_DEF : attackStyle == NPCCombatDefinitions.MAGE ? CombatDefinitions.MAGIC_DEF : CombatDefinitions.STAB_DEF];
+            double defenceBonus = (attackStyle == NPCCombatDefinitions.RANGE ? n.getBonuses()[CombatDefinitions.NPC_RANGE_BONUS] : attackStyle == NPCCombatDefinitions.MAGE ? n.getBonuses()[CombatDefinitions.NPC_MAGIC_BONUS] : n.getBonuses()[CombatDefinitions.NPC_STAB_BONUS]);
             if (attackStyle == NPCCombatDefinitions.MAGE) {
                 magedefence = n.getBonuses()[CombatDefinitions.NPC_DEFENCE_LEVEL];
                 magedefence = Math.round(magedefence);
@@ -432,35 +376,24 @@ public abstract class CombatScript {
         if (attackStyle == NPCCombatDefinitions.MAGE) {
             double prob = M / MD;
             double random = Utils.getRandomDouble(100);
-            if (M <= MD)
-                prob = (M - 1) / (MD * 2);
-            else if (M > MD)
-                prob = 1 - (MD + 1) / (M * 2);
-            if (npc.getId() == 1158 || npc.getId() == 1160)
-                prob = 100;
-            if (prob < random / 100)
-                return 0;
+            if (M <= MD) prob = (M - 1) / (MD * 2);
+            else if (M > MD) prob = 1 - (MD + 1) / (M * 2);
+            if (npc.getId() == 1158 || npc.getId() == 1160) prob = 100;
+            if (prob < random / 100) return 0;
         } else if (attackStyle == NPCCombatDefinitions.RANGE) {
             double prob = R / RD;
             double random = Utils.getRandomDouble(100);
-            if (R <= RD)
-                prob = (R - 1) / (RD * 2);
-            else if (R > RD)
-                prob = 1 - (RD + 1) / (R * 2);
+            if (R <= RD) prob = (R - 1) / (RD * 2);
+            else if (R > RD) prob = 1 - (RD + 1) / (R * 2);
             ;
-            if (npc.getId() == 1158 || npc.getId() == 1160)
-                prob = 100;
-            if (prob < random / 100)
-                return 0;
+            if (npc.getId() == 1158 || npc.getId() == 1160) prob = 100;
+            if (prob < random / 100) return 0;
         } else {
             double prob = A / D;
             double random = Utils.getRandomDouble(100);
-            if (A <= D)
-                prob = (A - 1) / (D * 2);
-            else if (A > D)
-                prob = 1 - (D + 1) / (A * 2);
-            if (prob < random / 100)
-                return 0;
+            if (A <= D) prob = (A - 1) / (D * 2);
+            else if (A > D) prob = 1 - (D + 1) / (A * 2);
+            if (prob < random / 100) return 0;
         }
         return Utils.getRandom(maxHit);
     }

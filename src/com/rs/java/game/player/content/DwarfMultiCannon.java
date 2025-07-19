@@ -254,7 +254,7 @@ public class DwarfMultiCannon {
 		double attack = 0;
 		double A = 0;
 		attack += attackLevel;
-		attack *= melee >= range ? player.getPrayer().getAttackMultiplier() : player.getPrayer().getRangeMultiplier();
+		attack *= melee >= range ? player.getPrayer().getAttackMultiplier() : player.getPrayer().getRangedMultiplier();
 		attack = Math.round(attack);
 		attack += 8;
 		attack = attack * (1 + bestBonus / 64);

@@ -6,6 +6,8 @@ import com.rs.java.game.Hit;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
+import com.rs.java.game.player.prayer.AncientPrayer;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
 
 public class RSModernCombatSpells {
@@ -268,7 +270,7 @@ public class RSModernCombatSpells {
 			case TELEPORT_BLOCK:
 				if (!isPlayer || missed)
 					return;
-					PlayerCombat.teleBlockTime = (((Player) target).getPrayer().usingPrayer(0, 17) || ((Player) target).getPrayer().usingPrayer(1, 7)
+					PlayerCombat.teleBlockTime = (((Player) target).getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || ((Player) target).getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)
 							? 240
 							: 480);
 				break;

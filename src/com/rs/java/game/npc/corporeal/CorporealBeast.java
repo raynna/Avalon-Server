@@ -64,10 +64,4 @@ public class CorporealBeast extends NPC {
 		if (core != null)
 			core.sendDeath(source);
 	}
-
-	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.6;
-	}
-
 }

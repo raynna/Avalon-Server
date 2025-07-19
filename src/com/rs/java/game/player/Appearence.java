@@ -150,7 +150,7 @@ public class Appearence implements Serializable {
 				stream.writeByte(0);
 			item = player.getEquipment().getItems().get(Equipment.SLOT_LEGS);
 			stream.writeShort(item == null ? 0x100 + lookI[5] : 16384 + item.getId());
-			item = player.getEquipment().getItems().get(Equipment.SLOT_HAT);
+			item = player.getEquipment().getItems().get(Equipment.SLOT_HEAD);
 			if ((item == null || !player.getEquipment().hideHair(item)))
 				stream.writeShort(0x100 + lookI[0]);
 			else
@@ -159,7 +159,7 @@ public class Appearence implements Serializable {
 			stream.writeShort(item == null ? 0x100 + lookI[4] : 16384 + item.getId());
 			item = player.getEquipment().getItems().get(Equipment.SLOT_FEET);
 			stream.writeShort(item == null ? 0x100 + lookI[6] : 16384 + item.getId());
-			item = player.getEquipment().getItems().get(male ? Equipment.SLOT_HAT : Equipment.SLOT_CHEST);
+			item = player.getEquipment().getItems().get(male ? Equipment.SLOT_HEAD : Equipment.SLOT_CHEST);
 			if (item == null || (male && player.getEquipment().showBear(item)))
 				stream.writeShort(0x100 + lookI[1]);
 			else
@@ -177,7 +177,7 @@ public class Appearence implements Serializable {
 				if (Equipment.DISABLED_SLOTS[slotId] != 0)
 					continue;
 				slotFlag++;
-				if (slotId == Equipment.SLOT_HAT) {
+				if (slotId == Equipment.SLOT_HEAD) {
 					int hatId = player.getEquipment().getHatId();
 					if (hatId == 20768 || hatId == 20770 || hatId == 20772) {
 						ItemDefinitions defs = ItemDefinitions.getItemDefinitions(hatId - 1);

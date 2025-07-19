@@ -17,6 +17,7 @@ import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.Blink;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.tasks.WorldTask;
 import com.rs.java.game.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
@@ -113,7 +114,7 @@ public class BlinkCombat extends CombatScript {
 				target.gfx(new Graphics(2854, 5, 0));
 				int damage = getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.MAGE, target);
 				if (target instanceof Player) {
-					if (((Player) target).getPrayer().isMageProtecting())
+					if (((Player) target).getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC))
 						damage *= .5D;
 				}
 				delayHit(boss, 1, target, getMagicHit(boss, damage));

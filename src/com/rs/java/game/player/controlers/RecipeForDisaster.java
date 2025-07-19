@@ -211,7 +211,7 @@ public class RecipeForDisaster extends Controler {
 
 	@Override
 	public void process() {
-		if (player.getPrayer().hasPrayersOn())
+		if (player.getPrayer().hasActivePrayers())
 			player.getPrayer().closeAllPrayers();
 		if (spawned) {
 			List<Integer> npcs = World.getRegion(player.getRegionId()).getNPCsIndexes();

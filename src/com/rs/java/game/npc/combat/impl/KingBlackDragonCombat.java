@@ -9,6 +9,8 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.prayer.AncientPrayer;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
 
 public class KingBlackDragonCombat extends CombatScript {
@@ -49,7 +51,7 @@ public class KingBlackDragonCombat extends CombatScript {
 					damage = 0;
 					player.getPackets()
 							.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-				} else if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+				} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
 					damage = 0;
 					player.message("Your shield and prayer protect you completly from the dragon's breath!");
 					// player.sm("Your shield aborsbs most of the dragon
@@ -68,14 +70,13 @@ public class KingBlackDragonCombat extends CombatScript {
 				damage = 0;
 				player.getPackets()
 						.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-			} else if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+			} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
 				damage *= 0.1;
 				player.getPackets().sendGameMessage("Your protection prayer absorbs some of the dragon fire!");
 			} else if (player.getEquipment().getShieldId() != 11283 && player.getEquipment().getShieldId() != 11284
 					&& player.getEquipment().getShieldId() != 1540
 					&& player.getSuperAntifire() < Utils.currentTimeMillis()
-					&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().usingPrayer(0, 17)
-					&& !player.getPrayer().usingPrayer(1, 7))
+					&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) && !player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC))
 				player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
 			npc.animate(new Animation(13160));
 			World.sendDragonfireProjectile(npc, target, 393);
@@ -117,7 +118,7 @@ public class KingBlackDragonCombat extends CombatScript {
 					damage = 0;
 					player.getPackets()
 							.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-				} else if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+				} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
 					damage = 0;
 					player.message("Your shield and prayer protect you completly from the dragon's breath!");
 					// player.sm("Your shield aborsbs most of the dragon
@@ -136,14 +137,14 @@ public class KingBlackDragonCombat extends CombatScript {
 				damage = 0;
 				player.getPackets()
 						.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-			} else if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+			} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
 				damage *= 0.1;
 				player.getPackets().sendGameMessage("Your protection prayer absorbs some of the dragon fire!");
 			} else if (player.getEquipment().getShieldId() != 11283 && player.getEquipment().getShieldId() != 11284
 					&& player.getEquipment().getShieldId() != 1540
 					&& player.getSuperAntifire() < Utils.currentTimeMillis()
-					&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().usingPrayer(0, 17)
-					&& !player.getPrayer().usingPrayer(1, 7))
+					&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC)
+					&& !player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC))
 				player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
 			npc.animate(new Animation(13160));
 			World.sendDragonfireProjectile(npc, target, 393);
@@ -186,7 +187,7 @@ public class KingBlackDragonCombat extends CombatScript {
 					damage = 0;
 					player.getPackets()
 							.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-				} else if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+				} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
 					damage = 0;
 					player.message("Your shield and prayer protect you completly from the dragon's breath!");
 					// player.sm("Your shield aborsbs most of the dragon
@@ -205,14 +206,14 @@ public class KingBlackDragonCombat extends CombatScript {
 				damage = 0;
 				player.getPackets()
 						.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-			} else if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+			} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
 				damage *= 0.1;
 				player.getPackets().sendGameMessage("Your protection prayer absorbs some of the dragon fire!");
 			} else if (player.getEquipment().getShieldId() != 11283 && player.getEquipment().getShieldId() != 11284
 					&& player.getEquipment().getShieldId() != 1540
 					&& player.getSuperAntifire() < Utils.currentTimeMillis()
-					&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().usingPrayer(0, 17)
-					&& !player.getPrayer().usingPrayer(1, 7))
+					&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC)
+					&& !player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC))
 				player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
 			npc.animate(new Animation(13160));
 			World.sendDragonfireProjectile(npc, target, 393);
@@ -257,7 +258,7 @@ public class KingBlackDragonCombat extends CombatScript {
 					damage = 0;
 					player.getPackets()
 							.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-				} else if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+				} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
 					damage = 0;
 					player.message("Your shield and prayer protect you completly from the dragon's breath!");
 					// player.sm("Your shield aborsbs most of the dragon
@@ -276,14 +277,14 @@ public class KingBlackDragonCombat extends CombatScript {
 				damage = 0;
 				player.getPackets()
 						.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-			} else if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+			} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
 				damage *= 0.1;
 				player.getPackets().sendGameMessage("Your protection prayer absorbs some of the dragon fire!");
 			} else if (player.getEquipment().getShieldId() != 11283 && player.getEquipment().getShieldId() != 11284
 					&& player.getEquipment().getShieldId() != 1540
 					&& player.getSuperAntifire() < Utils.currentTimeMillis()
-					&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().usingPrayer(0, 17)
-					&& !player.getPrayer().usingPrayer(1, 7))
+					&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC)
+					&& !player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC))
 				player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
 			npc.animate(new Animation(13160));
 			World.sendDragonfireProjectile(npc, target, 393);

@@ -48,18 +48,4 @@ public class Hybrid extends NPC {
 		food = 28;
 	}
 
-	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.5;
-	}
-
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return 0.5;
-	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return 0.5;
-	}
 }

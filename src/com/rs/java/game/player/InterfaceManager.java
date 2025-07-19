@@ -122,7 +122,7 @@ public class InterfaceManager {
 		player.getMusicsManager().unlockMusicPlayer();
 		player.getEmotesManager().unlockEmotesBook();
 		player.getInventory().unlockInventoryOptions();
-		player.getPrayer().unlockPrayerBookButtons();
+		player.getPrayer().refresh();
 		//player.getInterfaceManager().sendTimerInterface(player);
 		sendTimerInterface();
 		ClansManager.unlockBanList(player);
@@ -460,7 +460,7 @@ public class InterfaceManager {
 			player.getInventory().unlockInventoryOptions();
 			player.getInterfaceManager().sendEquipment();
 			player.getInterfaceManager().sendPrayerBook();
-			player.getPrayer().unlockPrayerBookButtons();
+			player.getPrayer().refresh();
 			player.getInterfaceManager().sendMagicBook();
 			player.getInterfaceManager().sendEmotes();
 			player.getEmotesManager().unlockEmotesBook();

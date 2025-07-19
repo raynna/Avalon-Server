@@ -54,21 +54,6 @@ public final class ShadowForgerIhlakhizan extends DungeonBoss {
 		return WEAKNESS;
 	}
 
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return 0.6;
-	}
-
 	/*@Override
 	public Item sendDrop(Player player, Drop drop) {
 		Item item = new Item(drop.getItemId());

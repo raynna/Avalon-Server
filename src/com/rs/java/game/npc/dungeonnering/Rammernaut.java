@@ -50,7 +50,7 @@ public class Rammernaut extends DungeonBoss {
 			player.stopAll();
 			player.getPackets().sendGameMessage("You've been stunned.");
 			player.addFreezeDelay(1200, true);
-			if (player.getPrayer().hasPrayersOn()) {
+			if (player.getPrayer().hasActivePrayers()) {
 				player.getPackets().sendGameMessage("Your prayers have been disabled.");
 				player.setPrayerDelay(7000);// Five seconds
 			}

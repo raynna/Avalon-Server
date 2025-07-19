@@ -16,11 +16,6 @@ public class SkeletalMinion extends DungeonNPC {
 	}
 
 	@Override
-	public double getMeleePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
 	public void drop() {
 
 	}

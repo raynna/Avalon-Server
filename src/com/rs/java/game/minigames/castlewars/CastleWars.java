@@ -106,8 +106,8 @@ public final class CastleWars {
 	}
 
 	public static void setHood(Player player, Item hood) {
-		player.getEquipment().getItems().set(Equipment.SLOT_HAT, hood);
-		player.getEquipment().refresh(Equipment.SLOT_HAT);
+		player.getEquipment().getItems().set(Equipment.SLOT_HEAD, hood);
+		player.getEquipment().refresh(Equipment.SLOT_HEAD);
 		player.getAppearence().generateAppearenceData();
 	}
 

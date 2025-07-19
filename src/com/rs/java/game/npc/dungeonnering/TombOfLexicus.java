@@ -16,21 +16,6 @@ public class TombOfLexicus extends DungeonNPC {
 	}
 
 	@Override
-	public double getMeleePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
 	public void drop() {
 
 	}

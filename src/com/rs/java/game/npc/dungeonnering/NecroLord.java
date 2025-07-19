@@ -46,11 +46,6 @@ public class NecroLord extends DungeonBoss {
 		return WEAKNESS;
 	}
 
-	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.6;
-	}
-
 	public void addSkeleton(WorldTile tile) {
 		SkeletalMinion npc = new SkeletalMinion(this, 11722, tile, getManager(), getMultiplier() / 2);
 		npc.setForceAgressive(true);

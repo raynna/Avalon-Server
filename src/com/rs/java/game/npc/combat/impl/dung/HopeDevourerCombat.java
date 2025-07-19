@@ -14,6 +14,7 @@ import com.rs.java.game.npc.dungeonnering.HopeDevourer;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.tasks.WorldTask;
 import com.rs.java.game.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
@@ -55,7 +56,7 @@ public class HopeDevourerCombat extends CombatScript {
 					for (Entity t : npc.getPossibleTargets()) {
 						Player player = (Player) t;
 						int damage = (int) Utils.random(npc.getMaxHit() * .85, npc.getMaxHit());
-						if (damage > 0 && player.getPrayer().isUsingProtectionPrayer()) {
+						if (damage > 0 && player.getPrayer().hasProtectionPrayerActive()) {
 							healedDamage += damage;
 							player.setPrayerDelay(1000);
 							t.gfx(new Graphics(2845, 75, 0));
@@ -115,7 +116,7 @@ public class HopeDevourerCombat extends CombatScript {
 			int damage = (int) Utils.random(npc.getMaxHit() * .75, npc.getMaxHit());
 			if (target instanceof Player) {
 				Player player = (Player) target;
-				if (player.getPrayer().isMeleeProtecting()) {
+				if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MELEE)) {
 					player.getPackets().sendGameMessage("Your prayer completely negates the attack.", true);
 					damage = 0;
 				}

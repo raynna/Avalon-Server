@@ -8,6 +8,8 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.prayer.AncientPrayer;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
 
 public class AquaniteCombat extends CombatScript {
@@ -25,9 +27,9 @@ public class AquaniteCombat extends CombatScript {
 		if (target instanceof Player) {
 			Player p2 = (Player) target;
 		if (Utils.random(10) == 0) {
-			if (p2.getPrayer().usingPrayer(0, 17) || p2.getPrayer().usingPrayer(1, 7)) {
-				p2.getPrayer().closeProtectPrayers();
-				p2.getPackets().sendGameMessage("The creature's attack turns off your " + (p2.getPrayer().usingPrayer(1, 7) ? "Deflect from Magic" : "Protect from Magic") +" prayer!");
+			if (p2.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || p2.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
+				p2.getPrayer().closeAllPrayers();
+				p2.getPackets().sendGameMessage("The creature's attack turns off your " + (p2.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC) ? "Deflect from Magic" : "Protect from Magic") +" prayer!");
 				}
 			}
 		}

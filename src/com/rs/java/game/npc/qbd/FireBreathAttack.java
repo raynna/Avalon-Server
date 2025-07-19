@@ -6,6 +6,8 @@ import com.rs.java.game.Hit;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.combat.Combat;
+import com.rs.java.game.player.prayer.AncientPrayer;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.tasks.WorldTask;
 import com.rs.java.game.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
@@ -72,7 +74,7 @@ public final class FireBreathAttack implements QueenAttack {
 		if (player.getAntifire() > Utils.currentTimeMillis() || player.getSuperAntifire() > Utils.currentTimeMillis()) {
 			return "Your potion absorbs most of the dragon's breath!";
 		}
-		if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+		if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
 			return "Your prayer absorbs most of the dragon's breath!";
 		}
 		return null;

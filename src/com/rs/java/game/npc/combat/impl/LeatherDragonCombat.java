@@ -49,15 +49,14 @@ public class LeatherDragonCombat extends CombatScript {
 				damage *= 0.0;
 				player.getPackets()
 						.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-			} else if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+			} else if (player.getPrayer().isMageProtecting()) {
 				damage *= 0.1;
 				player.getPackets()
 						.sendGameMessage("Your prayer protects you from some of the heat of the dragon's breath!");
 			} else if (player.getEquipment().getShieldId() != 11283 && player.getEquipment().getShieldId() != 11284
 					&& player.getEquipment().getShieldId() != 1540
 					&& player.getSuperAntifire() < Utils.currentTimeMillis()
-					&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().usingPrayer(0, 17)
-					&& !player.getPrayer().usingPrayer(1, 7))
+					&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().isMageProtecting())
 				player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
 			delayHit(npc, 1, target, getRegularHit(npc, damage));
 

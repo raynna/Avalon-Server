@@ -214,7 +214,7 @@ public class BankShop implements Serializable {
 				&& player.getEquipment().getItem(Equipment.SLOT_CHEST) == null
 				&& player.getEquipment().getItem(Equipment.SLOT_FEET) == null
 				&& player.getEquipment().getItem(Equipment.SLOT_HANDS) == null
-				&& player.getEquipment().getItem(Equipment.SLOT_HAT) == null
+				&& player.getEquipment().getItem(Equipment.SLOT_HEAD) == null
 				&& player.getEquipment().getItem(Equipment.SLOT_LEGS) == null
 				&& player.getEquipment().getItem(Equipment.SLOT_RING) == null
 				&& player.getEquipment().getItem(Equipment.SLOT_SHIELD) == null

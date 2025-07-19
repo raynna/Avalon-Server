@@ -84,7 +84,7 @@ public class CombatDummy extends Action {
 			player.getPackets().sendGameMessage("You don't have enough special points.");
 			return false;
 		}
-		player.getCombatDefinitions().desecreaseSpecialAttack(specialAmount);
+		player.getCombatDefinitions().decrease(specialAmount);
 		return true;
 	}
 
@@ -192,9 +192,9 @@ public class CombatDummy extends Action {
 				Player p2 = (Player) target;
 				if (!p2.attackedBy.containsKey(player))
 					p2.attackedBy.put(player, 1440);// 15minutes add to list
-				p2.getCharges().processIncommingHit();
+				p2.getChargeManager().processIncommingHit();
 			}
-			player.getCharges().processOutgoingHit();
+			player.getChargeManager().processOutgoingHit();
 			int damage = hit.getDamage() > target.getHitpoints() ? target.getHitpoints() : hit.getDamage();
 			player.getAuraManager().checkSuccefulHits(damage);
 			player.setDamage(hit.getDamage());

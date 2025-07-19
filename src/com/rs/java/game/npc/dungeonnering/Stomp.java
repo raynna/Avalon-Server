@@ -98,21 +98,6 @@ public final class Stomp extends DungeonBoss {
 		return WEAKNESS;
 	}
 
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return stage == 2 ? 0.6 : 0;
-	}
-
-	@Override
-	public double getMagePrayerMultiplier() {
-		return stage == 2 ? 0.6 : 0;
-	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return stage == 2 ? 0.6 : 0;
-	}
-
 	public void refreshLodestones() {
 		for (int i = 0; i < lodestones.length; i++)
 			refreshLodestone(i);

@@ -73,21 +73,6 @@ public class CombatEventNPC extends NPC {
 	}
 
 	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
 	public int getMaxHitpoints() {
 		return getCombatLevel() * 20 + 1;
 	}

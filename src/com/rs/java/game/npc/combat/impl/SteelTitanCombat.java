@@ -40,8 +40,7 @@ public class SteelTitanCombat extends CombatScript {
 					if (target instanceof Player) {
 						Player p2 = (Player) target;
 						appliedDamage = getRandomMaxHit(npc,
-								p2.getPrayer().usingPrayer(1, 6) ? 244 / 10
-										: p2.getPrayer().usingPrayer(0, 16) ? 244 / 10 : 244,
+								244,
 								NPCCombatDefinitions.RANGE, target);
 					} else {
 						appliedDamage = getRandomMaxHit(npc, 244, NPCCombatDefinitions.RANGE, target);
@@ -59,8 +58,7 @@ public class SteelTitanCombat extends CombatScript {
 					if (target instanceof Player) {
 						Player p2 = (Player) target;
 						appliedDamage = getRandomMaxHit(npc,
-								p2.getPrayer().usingPrayer(1, 6) ? 244 / 10
-										: p2.getPrayer().usingPrayer(0, 16) ? 244 / 10 : 244,
+								244,
 								NPCCombatDefinitions.MELEE, target);
 					} else {
 						appliedDamage = getRandomMaxHit(npc, 244, NPCCombatDefinitions.MELEE, target);

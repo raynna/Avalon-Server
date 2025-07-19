@@ -96,19 +96,4 @@ public class FightKilnNPC extends NPC {
 		return possibleTarget;
 	}
 
-	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.1;
-	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return 0.1;
-	}
-
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return 0.1;
-	}
-
 }

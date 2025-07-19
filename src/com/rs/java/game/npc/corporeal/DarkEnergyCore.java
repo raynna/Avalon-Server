@@ -73,11 +73,6 @@ public class DarkEnergyCore extends NPC {
 	}
 
 	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
 	public void sendDeath(Entity source) {
 		super.sendDeath(source);
 		beast.removeDarkEnergyCore();

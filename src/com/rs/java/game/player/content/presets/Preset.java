@@ -11,18 +11,18 @@ public final class Preset implements Serializable {
 	private static final long serialVersionUID = 1385575955598546603L;
 
 	private final Item[] inventory, equipment;
-	private final int prayerBook;
+	private final boolean curses;
 	private final byte spellBook;
 	private final String name;
 	private final double[] xp;
 	private final Item[] runes;
 
-	public Preset(String id, final Item[] inventory, final Item[] equipment, int prayerBook, byte spellBook,
+	public Preset(String id, final Item[] inventory, final Item[] equipment, boolean curses, byte spellBook,
 			double[] xp, Item[] runes) {
 		this.name = id;
 		this.inventory = inventory;
 		this.equipment = equipment;
-		this.prayerBook = prayerBook;
+		this.curses = curses;
 		this.spellBook = spellBook;
 		this.xp = xp;
 		this.runes = runes;
@@ -51,20 +51,20 @@ public final class Preset implements Serializable {
 		}*/
 	}
 
-	public final Item[] getInventory() {
+	public Item[] getInventory() {
 		return inventory;
 	}
 
-	public final Item[] getEquipment() {
+	public Item[] getEquipment() {
 		return equipment;
 	}
 
-	public final Item[] getRunes() {
+	public Item[] getRunes() {
 		return runes;
 	}
 
-	public final int getPrayerBook() {
-		return prayerBook;
+	public boolean isAncientCurses() {
+		return curses;
 	}
 
 	public final byte getSpellBook() {

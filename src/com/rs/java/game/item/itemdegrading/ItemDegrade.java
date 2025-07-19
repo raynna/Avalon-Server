@@ -25,7 +25,7 @@ public class ItemDegrade {
 		HITS;
 	}
 
-	public enum ItemStore {
+	public enum DegradeData {
 
 		/**
 		 * @CorruptStatius
@@ -469,28 +469,28 @@ public class ItemDegrade {
 		private DegradeTime time;
 		private int hits;
 
-		private ItemStore(Item currentItem, Item degradedItem, DegradeType type, DegradeTime time) {// non corrupt
+		private DegradeData(Item currentItem, Item degradedItem, DegradeType type, DegradeTime time) {// non corrupt
 			this(currentItem, degradedItem, type, null, time, -1);
 		}
 
-		private ItemStore(Item currentItem, Item degradedItem, DegradeTime time) {// corrupt
+		private DegradeData(Item currentItem, Item degradedItem, DegradeTime time) {// corrupt
 			this(currentItem, degradedItem, DegradeType.WEAR, null, time, -1);
 		}
 
-		private ItemStore(Item currentItem, Item degradedItem, DegradeType type, Item brokenItem, DegradeTime time) {// barrows
+		private DegradeData(Item currentItem, Item degradedItem, DegradeType type, Item brokenItem, DegradeTime time) {// barrows
 			this(currentItem, degradedItem, type, brokenItem, time, -1);
 		}
 
-		private ItemStore(Item currentItem, Item degradedItem, DegradeType type,  Item brokenItem, int hits) {// barrows
+		private DegradeData(Item currentItem, Item degradedItem, DegradeType type, Item brokenItem, int hits) {// barrows
 			this(currentItem, degradedItem, type, brokenItem, null, hits);
 		}
 
-		private ItemStore(Item currentItem, Item degradedItem, DegradeType type, int hits) {// crystal
+		private DegradeData(Item currentItem, Item degradedItem, DegradeType type, int hits) {// crystal
 			this(currentItem, degradedItem, type, null, null, hits);
 		}
 
-		private ItemStore(Item currentItem, Item degradedItem, DegradeType type, Item brokenItem, DegradeTime time,
-				int hits) {
+		private DegradeData(Item currentItem, Item degradedItem, DegradeType type, Item brokenItem, DegradeTime time,
+							int hits) {
 			this.currentItem = currentItem;
 			this.degradedItem = degradedItem;
 			this.type = type;

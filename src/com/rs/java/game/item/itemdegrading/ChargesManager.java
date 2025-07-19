@@ -1,17 +1,20 @@
 package com.rs.java.game.item.itemdegrading;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.Hit;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.itemdegrading.ItemDegrade.DegradeType;
-import com.rs.java.game.item.itemdegrading.ItemDegrade.ItemStore;
+import com.rs.java.game.item.itemdegrading.ItemDegrade.DegradeData;
 import com.rs.java.game.item.meta.DegradeHitsMetaData;
 import com.rs.java.game.item.meta.DegradeTicksMetaData;
 import com.rs.java.game.item.meta.ItemMetadata;
+import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 
@@ -23,21 +26,25 @@ import com.rs.java.utils.Utils;
 
 public class ChargesManager implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -5978513415281726450L;
 
 	private transient Player player;
 
-	private HashMap<Integer, Integer> charges;
+	private final Map<Integer, Integer> charges;
 
 	public ChargesManager() {
-		charges = new HashMap<Integer, Integer>();
+		charges = new HashMap<>();
 	}
 
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
 
-	private static ItemStore[] data = ItemStore.values();
+	private static final DegradeData[] data = DegradeData.values();
+
+	private final double DEGRADE_MESSAGE_INTERVAL = 0.05;
+	private final int CRUMBLE_DUST_HEAD = 1859, CRUMBLE_DUST_CHEST = 1861, CRUMBLE_DUST_LEGS = 1860;
 
 	public void process() {
 		Item[] items = player.getEquipment().getItems().getContainerItems();
@@ -45,19 +52,14 @@ public class ChargesManager implements Serializable {
 			Item item = items[slot];
 			if (item == null)
 				continue;
-			int defaultCharges = -1;
-			for (ItemStore data : data) {
-				if (data == null || data.getCurrentItem().getId() != item.getId())
-					continue;
-				defaultCharges = data.getTime() != null ? data.getTime().getTicks() : -1;
-				if (defaultCharges == -1)
-					continue;
-				if (data.getType() == DegradeType.WEAR)
-					degrade(item.getId(), defaultCharges, slot);
-				else if (data.getType() == DegradeType.IN_COMBAT
-						&& player.getAttackedByDelay() > Utils.currentTimeMillis())
-					degrade(item.getId(), defaultCharges, slot);
-			}
+			DegradeData data = getDegradeData(item.getId());
+			if (data == null || data.getCurrentItem().getId() != item.getId())
+				continue;
+			if (data.getType() == DegradeType.WEAR)
+				degrade(item, slot);
+			else if (data.getType() == DegradeType.IN_COMBAT
+					&& player.getAttackedByDelay() > Utils.currentTimeMillis())
+				degrade(item, slot);
 		}
 	}
 
@@ -67,21 +69,14 @@ public class ChargesManager implements Serializable {
 			Item item = items[slot];
 			if (item == null)
 				continue;
-			int defaultCharges = -1;
-			for (ItemStore data : data) {
-				if (data == null)
-					continue;
-				if (data.getCurrentItem().getId() != item.getId()) {
-					continue;
-				}
-
-				defaultCharges = data.getHits();
-				if (defaultCharges == -1)
-					continue;
-				if (data.getType() == DegradeType.AT_OUTGOING_HIT)
-					degrade(item.getId(), defaultCharges, slot);
+			DegradeData data = getDegradeData(item.getId());
+			if (data == null) continue;
+			if (data.getCurrentItem().getId() != item.getId()) {
+				continue;
 			}
-		}
+			if (data.getType() == DegradeType.AT_OUTGOING_HIT)
+				degrade(item, slot);
+			}
 	}
 
 	public void processIncommingHit() {
@@ -90,16 +85,10 @@ public class ChargesManager implements Serializable {
 			Item item = items[slot];
 			if (item == null)
 				continue;
-			int defaultCharges = -1;
-			for (ItemStore data : data) {
-				if (data == null || data.getCurrentItem().getId() != item.getId())
-					continue;
-				defaultCharges = data.getHits();
-				if (defaultCharges == -1)
-					continue;
-				if (data.getType() == DegradeType.AT_INCOMMING_HIT)
-					degrade(item.getId(), defaultCharges, slot);
-			}
+			DegradeData data = getDegradeData(item.getId());
+			if (data == null) continue;
+			if (data.getType() == DegradeType.AT_INCOMMING_HIT)
+				degrade(item, slot);
 		}
 	}
 
@@ -109,16 +98,10 @@ public class ChargesManager implements Serializable {
 			Item item = items[slot];
 			if (item == null)
 				continue;
-			int defaultCharges = -1;
-			for (ItemStore data : data) {
-				if (data == null || data.getCurrentItem().getId() != item.getId())
-					continue;
-				defaultCharges = data.getHits();
-				if (defaultCharges == -1)
-					continue;
-				if (data.getType() == DegradeType.HITS)
-					degrade(item.getId(), defaultCharges, slot, hit);
-			}
+			DegradeData data = getDegradeData(item.getId());
+			if (data == null) continue;
+			if (data.getType() == DegradeType.HITS)
+				degrade(item, slot, hit);
 		}
 	}
 
@@ -135,118 +118,90 @@ public class ChargesManager implements Serializable {
 		charges.put(id, amount);
 	}
 
-	public boolean degrade(Item item) {
-		int defaultCharges = -1;
-		for (ItemStore data : data) {
-			if (data == null)
-				continue;
-			if (data.getCurrentItem().getId() == item.getId()) {
-				defaultCharges = (data.getType() == DegradeType.AT_INCOMMING_HIT
-						|| data.getType() == DegradeType.AT_OUTGOING_HIT || data.getType() == DegradeType.HITS) ? data.getHits() : data.getTime().getTicks();
-				if (defaultCharges == -1)
-					return false;
-				charges.put(item.getId(), 1);
-				int newId = data.getBrokenItem() != null ? data.getBrokenItem().getId()
-						: data.getDegradedItem() != null ? data.getDegradedItem().getId() : -1;
-				if (newId != -1) {
-					item.setId(newId);
-					charges.put(newId, 1);
-				} else
-					return true;
-			}
+	public boolean breakItem(Item item) {
+		DegradeData data = getDegradeData(item.getId());
+		if (data == null) return false;
+		int newId = -1;
+		if (data.getCurrentItem().getId() == item.getId()) {
+			newId = data.getBrokenItem() != null ? data.getBrokenItem().getId()
+					: data.getDegradedItem() != null ? data.getDegradedItem().getId() : -1;
 		}
-		return false;
+		return newId != -1;
 	}
 
-	public static final String REPLACE = "##";
-
-	public void checkPercentage(String message, int id, boolean reverse) {
-		int charges = getCharges(id);
+	public void checkPercentage(String message, int itemId, boolean reverse) {
+		int charges = getCharges(itemId);
 		int maxCharges = 0;
-		for (ItemStore data : data) {
-			if (data == null)
-				continue;
-			if (data.getCurrentItem().getId() == id) {
-				maxCharges = (data.getType() == DegradeType.AT_INCOMMING_HIT
-						|| data.getType() == DegradeType.AT_OUTGOING_HIT) ? data.getHits() : data.getTime().getTicks();
-			}
+		DegradeData data = getDegradeData(itemId);
+		if (data == null) return;
+		if (data.getCurrentItem().getId() == itemId) {
+			maxCharges = (data.getType() == DegradeType.AT_INCOMMING_HIT
+					|| data.getType() == DegradeType.AT_OUTGOING_HIT) ? data.getHits() : data.getTime().getTicks();
 		}
 		int percentage = reverse ? (charges == 0 ? 0 : (100 - (charges * 100 / maxCharges)))
 				: charges == 0 ? 100 : (charges * 100 / maxCharges);
-		player.getPackets().sendGameMessage(message.replace(REPLACE, String.valueOf(percentage)));
+		player.message(message.replace("##", String.valueOf(percentage)));
 	}
 
-	public int getPercentage(int id, boolean reverse) {
-		int charges = getCharges(id);
+	public int getPercentage(Item item, boolean reverse) {
+		int charges = getCharges(item.getId());
 		int maxCharges = 0;
-		for (ItemStore data : data) {
-			if (data == null)
-				continue;
-			if (data.getCurrentItem().getId() == id
-					|| (data.getDegradedItem() != null && data.getDegradedItem().getId() == id)) {
-				maxCharges = (data.getType() == DegradeType.AT_INCOMMING_HIT
-						|| data.getType() == DegradeType.AT_OUTGOING_HIT) ? data.getHits() : data.getTime().getTicks();
-			}
+		DegradeData data = getDegradeData(item.getId());
+		if (data == null) return -1;
+		if (data.getCurrentItem().getId() == item.getId()) {
+			maxCharges = (data.getType() == DegradeType.AT_INCOMMING_HIT
+					|| data.getType() == DegradeType.AT_OUTGOING_HIT) ? data.getHits() : data.getTime().getTicks();
 		}
-		int percentage = reverse ? (charges == 0 ? 0 : (100 - (charges * 100 / maxCharges)))
+		return reverse ? (charges == 0 ? 0 : (100 - (charges * 100 / maxCharges)))
 				: charges == 0 ? 100 : (charges * 100 / maxCharges);
-		return percentage;
 	}
 
 	public void checkCharges(String message, int id) {
-		player.getPackets().sendGameMessage(message.replace(REPLACE, String.valueOf(getCharges(id))));
+		player.getPackets().sendGameMessage(message.replace("##", String.valueOf(getCharges(id))));
 	}
 
-	private void degrade(int itemId, int defaultCharges, int slot, Hit hit) {
-		ItemDefinitions itemDef = ItemDefinitions.getItemDefinitions(itemId);
-		Integer c = charges.remove(itemId);
-		Item newItem = null;
-		for (ItemStore data : data) {
-			if (data == null || data.getCurrentItem().getId() != itemId)
-				continue;
-			if (c == null || c == 0) {
-				c = data.getHits();
-				player.getPackets().sendGameMessage("Your " + itemDef.getName() + " started degrading.");
-			}	
-			int removeHits = hit != null ? hit.getDamage() : 0;
-			if (removeHits > c) {
-				c = 0;
-			} else {
-				c -= removeHits;
-			}
-			if (c > 0) {
-				charges.put(itemId, c);
-			} else {
-				if (data.getDegradedItem() == null) {
-					if (data.getBrokenItem() != null) {
-						newItem = data.getBrokenItem();
-					}
-				} else {
-					if (itemId != data.getDegradedItem().getId()) {
-						newItem = data.getDegradedItem();
-					}
-				}
-				if (newItem == null) {
-					player.getPackets().sendGameMessage("Your " + itemDef.getName() + " turned into dust.");
-				}
-				player.getEquipment().getItems().set(slot, newItem);
-				player.getEquipment().refresh(slot);
-				player.getAppearence().generateAppearenceData();
-			}
+	private void degrade(Item item, int slot, Hit hit) {
+		//TODO this is currently only used for ring of recoil since its charges stores on player
+		DegradeData data = getDegradeData(item.getId());
+		if (data == null || data.getCurrentItem().getId() != item.getId())
+			return;
+		ItemDefinitions definitions = ItemDefinitions.getItemDefinitions(item.getId());
+		int defaultCharges = data.getHits();
+        Integer c = charges.putIfAbsent(item.getId(), defaultCharges);
+		if (c == null || c == data.getHits()) {
+			player.message("Your " + definitions.getName() + " has started degrading.");
 		}
-	}
-
-	private void degrade(int itemId, int defaultCharges, int slot) {
-		Item item = player.getEquipment().getItems().get(slot);
-		if (item == null) {
+		int removeCharges = hit != null ? hit.getDamage() : 0;
+		if (removeCharges <= 0) return;
+		if (c != null && removeCharges < c) {
+			charges.put(item.getId(), c - removeCharges);
 			return;
 		}
-		ItemDefinitions definitions = ItemDefinitions.getItemDefinitions(itemId);
+		Item nextItem = null;
+		if (data.getDegradedItem() == null && data.getBrokenItem() != null) {
+			nextItem = data.getBrokenItem();
+		}
+		if (data.getDegradedItem() != null) {
+			if (item.getId() != data.getDegradedItem().getId()) {
+				nextItem = data.getDegradedItem();
+			}
+		}
+		if (nextItem != null) player.message("Your " + definitions.getName() + " has degraded.");
+		else player.message("Your " + definitions.getName() + " turned into dust.");
+
+		player.getEquipment().getItems().set(slot, nextItem);
+		player.getEquipment().refresh(slot);
+		player.getAppearence().generateAppearenceData();
+		charges.remove(item.getId());
+	}
+
+	private void degrade(Item item, int slot) {
+		ItemDefinitions definitions = ItemDefinitions.getItemDefinitions(item.getId());
 		ItemMetadata metaData = item.getMetadata();
-		ItemStore degradeData = getItemStore(item.getId());
-		if (degradeData == null) {
-			return;
-		}
+		DegradeData degradeData = getDegradeData(item.getId());
+
+		if (degradeData == null) return;
+
 		if (metaData == null) {
 			switch (degradeData.getType()) {
 				case WEAR:
@@ -255,6 +210,7 @@ public class ChargesManager implements Serializable {
 					break;
 				case AT_INCOMMING_HIT:
 				case AT_OUTGOING_HIT:
+				case HITS://TODO MIGHT NOT NEED ANYMORE
 					item.setMetadata(new DegradeHitsMetaData(degradeData.getHits()));
 					break;
 			}
@@ -266,57 +222,57 @@ public class ChargesManager implements Serializable {
 			metaData.setValue(charges);
 			item.setMetadata(metaData);
 			int total = getTotalCharges(metaData, degradeData);
-			if (charges % Math.floor(total * 0.05) == 0) {
-				player.getCharges().checkPercentage(
-						"Your " + definitions.getName() + " has degraded " + ChargesManager.REPLACE + "%.", itemId, true);
+			if (charges % Math.floor(total * DEGRADE_MESSAGE_INTERVAL) == 0) {
+				checkPercentage("Your " + definitions.getName() + " has degraded ##%.", item.getId(), true);
 			}
 			return;
 		}
 		Item newItem = degradeData.getDegradedItem() != null ? degradeData.getDegradedItem() : degradeData.getBrokenItem();
 		if (newItem == null) {
 			if (definitions.getName().contains("(deg)")) {
-				if (slot == 0) player.gfx(new Graphics(1859));
-				if (slot == 4) player.gfx(new Graphics(1861));
-				if (slot == 7) player.gfx(new Graphics(1860));
-				player.getPackets().sendGameMessage("Your " + definitions.getName() + " turned into dust.");
-				player.getEquipment().getItems().set(slot, null);
+				if (slot == Equipment.SLOT_HEAD) player.gfx(new Graphics(CRUMBLE_DUST_HEAD));
+				if (slot == Equipment.SLOT_CHEST) player.gfx(new Graphics(CRUMBLE_DUST_CHEST));
+				if (slot == Equipment.SLOT_LEGS) player.gfx(new Graphics(CRUMBLE_DUST_LEGS));
 			}
+			player.message("Your " + definitions.getName() + " turned into dust.");
+			player.getEquipment().getItems().set(slot, null);
 		} else {
+			player.message("Your " + definitions.getName() + " degraded.");
 			Item copy = newItem.clone();
-			player.getPackets().sendGameMessage("Your " + definitions.getName() + " degraded.");
 			player.getEquipment().getItems().set(slot, copy);
 		}
 		player.getEquipment().refresh(slot);
 		player.getAppearence().generateAppearenceData();
 	}
 
-	private ItemStore getItemStore(int itemId) {
-		for (ItemStore store : ItemStore.values()) {
-			if (store != null && store.getCurrentItem().getId() == itemId)
-				return store;
+	private DegradeData getDegradeData(int itemId) {
+		for (DegradeData degradeData : data) {
+			if (degradeData != null && degradeData.getCurrentItem().getId() == itemId)
+				return degradeData;
 		}
 		return null;
 	}
 
-	private int getChargesFromMetadata(ItemMetadata metadata) {
+	private int getValueFromMetaData(ItemMetadata metadata) {
 		if (metadata instanceof DegradeHitsMetaData)
 			return ((DegradeHitsMetaData) metadata).getValue();
 		if (metadata instanceof DegradeTicksMetaData)
 			return ((DegradeTicksMetaData) metadata).getValue();
-		// Add more types as needed
 		return -1;
 	}
 
-	private void setDegradeHitsMetaData(ItemMetadata metadata, int value) {
+	private void setValueFromMetaData(ItemMetadata metadata, int value) {
 		if (metadata instanceof DegradeHitsMetaData)
+			metadata.setValue(value);
+		if (metadata instanceof DegradeTicksMetaData)
 			metadata.setValue(value);
 	}
 
-	private int getTotalCharges(ItemMetadata metadata, ItemStore store) {
+	private int getTotalCharges(ItemMetadata metadata, DegradeData store) {
 		if (metadata instanceof DegradeTicksMetaData && store.getTime() != null)
 			return store.getTime().getTicks();
 		if (metadata instanceof DegradeHitsMetaData && store.getHits() > 0)
 			return store.getHits();
-		return 100; // fallback
+		return 100;
 	}
 }

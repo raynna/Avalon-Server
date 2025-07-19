@@ -38,10 +38,8 @@ public class IronTitanCombat extends CombatScript {
 			if (distant) {// Mage Hit & Magic Xp
 				for (Integer appliedDamage : damages) {
 					if (target instanceof Player) {
-						Player p2 = (Player) target;
 						appliedDamage = getRandomMaxHit(npc,
-								p2.getPrayer().usingPrayer(1, 6) ? 230 / 10
-										: p2.getPrayer().usingPrayer(0, 16) ? 230 / 10 : 230,
+								230,
 								NPCCombatDefinitions.MAGE, target);
 					} else {
 						appliedDamage = getRandomMaxHit(npc, 230, NPCCombatDefinitions.MAGE, target);
@@ -54,10 +52,8 @@ public class IronTitanCombat extends CombatScript {
 			} else {// Melee Hit & Defence Xp
 				for (Integer appliedDamage : damages) {
 					if (target instanceof Player) {
-						Player p2 = (Player) target;
 						appliedDamage = getRandomMaxHit(npc,
-								p2.getPrayer().usingPrayer(1, 6) ? 230 / 10
-										: p2.getPrayer().usingPrayer(0, 16) ? 230 / 10 : 230,
+								230,
 								NPCCombatDefinitions.MELEE, target);
 					} else {
 						appliedDamage = getRandomMaxHit(npc, 230, NPCCombatDefinitions.MELEE, target);

@@ -128,7 +128,7 @@ public class YkLagorThunderousCombat extends CombatScript {
 			int damage = 0;
 			if (target instanceof Player) {
 				Player player = (Player) target;
-				if (player.getPrayer().getPrayerpoints() > 0 && damage > 0)
+				if (player.getPrayer().getPrayerPoints() > 0 && damage > 0)
 					player.getPrayer().drainPrayer((int) (damage * .5));
 			}
 			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));

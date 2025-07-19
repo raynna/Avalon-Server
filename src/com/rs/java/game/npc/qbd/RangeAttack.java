@@ -6,6 +6,8 @@ import com.rs.java.game.Hit;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.combat.Combat;
+import com.rs.java.game.player.prayer.AncientPrayer;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.tasks.WorldTask;
 import com.rs.java.game.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
@@ -31,12 +33,12 @@ public final class RangeAttack implements QueenAttack {
 			public void run() {
 				stop();
 				int hit;
-				if (victim.getPrayer().usingPrayer(1, 8)) {
+				if (victim.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES)) {
 					victim.animate(new Animation(12573));
 					victim.gfx(new Graphics(2229));
 					victim.getPackets().sendGameMessage("You are unable to reflect damage back to this creature.");
 					hit = 0;
-				} else if (victim.getPrayer().usingPrayer(0, 18)) {
+				} else if (victim.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES)) {
 					victim.animate(new Animation(Combat.getDefenceEmote(victim)));
 					hit = 0;
 				} else {

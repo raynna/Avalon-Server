@@ -25,11 +25,6 @@ public class BarrowsBrother extends NPC {
 		super.sendDeath(source);
 	}
 
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return getId() != 2030 ? 0 : Utils.random(3) == 0 ? 1 : 0;
-	}
-
 	public void disapear() {
 		barrows = null;
 		finish();

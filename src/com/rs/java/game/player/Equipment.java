@@ -12,7 +12,7 @@ public final class Equipment implements Serializable {
 
 	private static final long serialVersionUID = -4147163237095647617L;
 
-	public static final byte SLOT_HAT = 0, SLOT_CAPE = 1, SLOT_AMULET = 2, SLOT_WEAPON = 3, SLOT_CHEST = 4,
+	public static final byte SLOT_HEAD = 0, SLOT_CAPE = 1, SLOT_AMULET = 2, SLOT_WEAPON = 3, SLOT_CHEST = 4,
 			SLOT_SHIELD = 5, SLOT_LEGS = 7, SLOT_HANDS = 9, SLOT_FEET = 10, SLOT_RING = 12, SLOT_ARROWS = 13,
 			SLOT_AURA = 14;
 
@@ -50,7 +50,7 @@ public final class Equipment implements Serializable {
 	}
 
 	public void refresh() {
-		for (byte i = SLOT_HAT; i < SLOT_AURA; i++) {
+		for (byte i = SLOT_HEAD; i < SLOT_AURA; i++) {
 			refresh(i);
 		}
 	}
@@ -100,7 +100,7 @@ public final class Equipment implements Serializable {
 			if (player.getAppearence().isNPC()) {
 				player.getAppearence().transformIntoNPC(-1);
 			}
-			if (index == Equipment.SLOT_HAT) {
+			if (index == Equipment.SLOT_HEAD) {
 				if (id == 20135 || id == 20137 // torva
 						|| id == 20147 || id == 20149 // pernix
 						|| id == 20159 || id == 20161 // virtus
@@ -223,7 +223,7 @@ public final class Equipment implements Serializable {
 	}
 
 	public int getHatId() {
-		Item item = items.get(SLOT_HAT);
+		Item item = items.get(SLOT_HEAD);
 		if (item == null)
 			return -1;
 		return item.getId();
@@ -341,7 +341,7 @@ public final class Equipment implements Serializable {
 	}
 
 	public boolean wearingArmour() {
-		return getItem(SLOT_HAT) != null || getItem(SLOT_CAPE) != null || getItem(SLOT_AMULET) != null
+		return getItem(SLOT_HEAD) != null || getItem(SLOT_CAPE) != null || getItem(SLOT_AMULET) != null
 				|| getItem(SLOT_WEAPON) != null || getItem(SLOT_CHEST) != null || getItem(SLOT_SHIELD) != null
 				|| getItem(SLOT_LEGS) != null || getItem(SLOT_HANDS) != null || getItem(SLOT_FEET) != null;
 	}

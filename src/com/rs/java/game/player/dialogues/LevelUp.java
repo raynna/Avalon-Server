@@ -125,15 +125,15 @@ public final class LevelUp extends Dialogue {
             ItemDefinitions legs = ItemDefinitions.getItemDefinitions(player.getEquipment().getLegsId());
             ItemDefinitions shield = ItemDefinitions.getItemDefinitions(player.getEquipment().getShieldId());
             if (level >= 20 && helm.getId() == 4071) {
-                player.getEquipment().updateItem(Equipment.SLOT_HAT, 4506);
+                player.getEquipment().updateItem(Equipment.SLOT_HEAD, 4506);
                 player.message("Your decorative helm has been upgraded.");
             }
             if (level >= 30 && helm.getId() == 4506) {
-                player.getEquipment().updateItem(Equipment.SLOT_HAT, 4511);
+                player.getEquipment().updateItem(Equipment.SLOT_HEAD, 4511);
                 player.message("Your decorative helm has been upgraded.");
             }
             if (level >= 40 && helm.getId() == 4511) {
-                player.getEquipment().updateItem(Equipment.SLOT_HAT, 18708);
+                player.getEquipment().updateItem(Equipment.SLOT_HEAD, 18708);
                 player.message("Your decorative helm has been upgraded.");
             }
 

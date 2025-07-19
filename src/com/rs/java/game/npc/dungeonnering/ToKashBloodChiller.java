@@ -24,16 +24,6 @@ public class ToKashBloodChiller extends DungeonBoss {
 		return WEAKNESS;
 	}
 
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return 1.5;
-	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return 1.5;
-	}
-
 	public void setSpecialAttack(boolean specialAttack) {
 		this.specialAttack = specialAttack;
 	}

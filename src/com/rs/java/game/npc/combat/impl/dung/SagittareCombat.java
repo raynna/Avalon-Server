@@ -15,6 +15,7 @@ import com.rs.java.game.npc.dungeonnering.Sagittare;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.game.player.content.dungeoneering.RoomReference;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.tasks.WorldTask;
 import com.rs.java.game.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
@@ -65,7 +66,7 @@ public class SagittareCombat extends CombatScript {
 
 				World.sendElementalProjectile(npc, t, isMagicAttack ? 2537 : 2540);
 				if (isMagicAttack) {
-					if (!player.getPrayer().isMageProtecting())
+					if (!player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC))
 						bindTarget = true;
 					delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
 				} else {

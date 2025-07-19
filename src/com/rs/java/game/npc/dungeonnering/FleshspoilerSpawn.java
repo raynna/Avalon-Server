@@ -19,11 +19,6 @@ public class FleshspoilerSpawn extends DungeonNPC {
 	}
 
 	@Override
-	public double getMeleePrayerMultiplier() {
-		return 0.0;//Fully block it.
-	}
-
-	@Override
 	public void drop() {
 
 	}

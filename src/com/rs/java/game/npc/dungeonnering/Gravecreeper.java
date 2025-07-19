@@ -40,16 +40,6 @@ public class Gravecreeper extends DungeonBoss {
 		plinths = new WorldObject[4][4];
 		triggeredPlinths = new boolean[4][4];
 	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return 0.6; //rs makes it always 0.6 99% time when partialy blocked duh
-	}
-
-	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.6;
-	}
 	
 	private static final WeaponType[][] WEAKNESS =
 		{{ new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK), new WeaponType(Combat.MAGIC_TYPE, PlayerCombat.FIRE_SPELL) },};
@@ -92,7 +82,7 @@ public class Gravecreeper extends DungeonBoss {
 						continue tileLoop;
 					p2.applyHit(new Hit(this, (int) Utils.random(getMaxHit() * .1, getMaxHit() * .25), HitLook.REGULAR_DAMAGE));
 					p2.getPrayer().drainPrayer(20);
-					if (p2.getPrayer().hasPrayersOn()) {
+					if (p2.getPrayer().hasActivePrayers()) {
 						p2.getPrayer().closeAllPrayers();
 					}
 				}

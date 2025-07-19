@@ -26,6 +26,7 @@ import com.rs.java.game.player.actions.combat.ModernMagicks;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.actions.combat.Poison;
 import com.rs.java.game.player.content.UpdateMask;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.route.RouteFinder;
 import com.rs.java.game.route.strategy.EntityStrategy;
 import com.rs.java.game.route.strategy.ObjectStrategy;
@@ -311,11 +312,10 @@ public abstract class Entity extends WorldTile {
         if (this instanceof Player) {
             Player p = (Player) this;
             if (hitpoints - hit.getDamage() <= p.getMaxHitpoints() * 0.2 && hitpoints - hit.getDamage() > 0) {
-                if (p.getPrayer().usingPrayer(0, 23)) {
+                if (p.getPrayer().isActive(NormalPrayer.RETRIBUTION)) {
                     p.gfx(new Graphics(436));
                     p.heal((int) Math.round((p.getSkills().getLevelForXp(Skills.PRAYER) * 0.25)));
-                    p.getSkills().set(Skills.PRAYER, 0);
-                    p.getPrayer().setPrayerpoints(0);
+                    p.getPrayer().drainPrayer(p.getPrayer().getPrayerPoints());
                 } else if (p.getEquipment().getAmuletId() == 11090) {
                     p.heal((int) (p.getMaxHitpoints() * 0.3));
                     for (Hit hits : p.getNextHits())
@@ -1391,12 +1391,6 @@ public abstract class Entity extends WorldTile {
     public int getLastFaceEntity() {
         return lastFaceEntity;
     }
-
-    public abstract double getMagePrayerMultiplier();
-
-    public abstract double getRangePrayerMultiplier();
-
-    public abstract double getMeleePrayerMultiplier();
 
     public long getCastedSpellDelay() {
         return castedSpellDelay;

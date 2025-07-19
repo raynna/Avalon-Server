@@ -558,7 +558,7 @@ public class WarriorsGuild extends Controler {
 				return false;
 			else
 				sendShieldInterfaces();
-		} else if (slot == Equipment.SLOT_HAT && kegCount >= 1)
+		} else if (slot == Equipment.SLOT_HEAD && kegCount >= 1)
 			return false;
 		return true;
 	}
@@ -681,8 +681,8 @@ public class WarriorsGuild extends Controler {
 					player.getAppearence().setRenderEmote(2671);
 				kegCount++;
 				player.getVarsManager().sendVarBit(object.getDefinitions().configFileId, 1);
-				player.getEquipment().getItems().set(Equipment.SLOT_HAT, new Item(8859 + kegCount));
-				player.getEquipment().refresh(Equipment.SLOT_HAT);
+				player.getEquipment().getItems().set(Equipment.SLOT_HEAD, new Item(8859 + kegCount));
+				player.getEquipment().refresh(Equipment.SLOT_HEAD);
 				player.getAppearence().generateAppearenceData();
 			}
 
@@ -704,8 +704,8 @@ public class WarriorsGuild extends Controler {
 
 	private void resetKegBalance() {
 		if (kegCount >= 1) {
-			player.getEquipment().getItems().set(Equipment.SLOT_HAT, null);
-			player.getEquipment().refresh(Equipment.SLOT_HAT);
+			player.getEquipment().getItems().set(Equipment.SLOT_HEAD, null);
+			player.getEquipment().refresh(Equipment.SLOT_HEAD);
 			player.getAppearence().generateAppearenceData();
 			player.getAppearence().setRenderEmote(-1);
 		}

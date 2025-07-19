@@ -37,7 +37,7 @@ public class DestroyItemOption extends Dialogue {
 				}
 			}
 			player.getInventory().deleteItem(slotId, item);
-			player.getCharges().degrade(item);
+			player.getChargeManager().breakItem(item);
 			player.getPackets().sendSound(4500, 0, 1);
 		}
 		end();

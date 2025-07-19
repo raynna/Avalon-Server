@@ -17,6 +17,8 @@ import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.game.player.content.dungeoneering.RoomReference;
+import com.rs.java.game.player.prayer.AncientPrayer;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.tasks.WorldTask;
 import com.rs.java.game.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
@@ -155,21 +157,6 @@ public class KalGerWarmonger extends DungeonBoss {
 		return super.getMaxHitpoints() * 2;//Maybe * 3
 	}
 
-	@Override
-	public double getMagePrayerMultiplier() {
-		return .6;
-	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return .6;
-	}
-
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return stolenEffects ? 1 : type == 4 ? .3 : .6;
-	}
-
 	private void processNextType() {
 		if (getManager().isDestroyed()) // Should fix some nullpointers
 			return;
@@ -265,8 +252,8 @@ public class KalGerWarmonger extends DungeonBoss {
 		for (Player player : getManager().getParty().getTeam()) {
 			if (!getManager().getCurrentRoomReference(player).equals(getReference()))
 				continue;
-			boolean usingPiety = player.getPrayer().usingPrayer(0, 27);
-			boolean usingTurmoil = player.getPrayer().usingPrayer(1, 19);
+		boolean usingPiety = player.getPrayer().isActive(NormalPrayer.PIETY);
+			boolean usingTurmoil = player.getPrayer().isActive(AncientPrayer.TURMOIL);
 			if (!usingPiety && !usingTurmoil)
 				continue;
 			player.getPackets().sendGameMessage("The Warmonger steals your " + (usingPiety ? "Piety" : "Turmoil") + " effects!");

@@ -6,6 +6,8 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.prayer.AncientPrayer;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
 
 public class JadinkoCombat extends CombatScript {
@@ -24,7 +26,7 @@ public class JadinkoCombat extends CombatScript {
 		int size = npc.getSize();
 		if (target instanceof Player) {
 			Player player = (Player) target;
-			if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+			if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
 				npc.setForceFollowClose(true);
 				meleeAttack(npc, target);
 				return defs.getAttackDelay();

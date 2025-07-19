@@ -37,6 +37,9 @@ import com.rs.java.game.player.actions.combat.modernspells.RSModernCombatSpells;
 import com.rs.java.game.player.actions.combat.modernspells.RSModernCombatSpells.ModernCombatSpellsStore;
 import com.rs.java.game.player.controlers.WildernessControler;
 import com.rs.java.game.player.controlers.pestcontrol.PestControlGame;
+import com.rs.java.game.player.prayer.AncientPrayer;
+import com.rs.java.game.player.prayer.NormalPrayer;
+import com.rs.java.game.player.prayer.PrayerEffectHandler;
 import com.rs.java.game.tasks.WorldTask;
 import com.rs.java.game.tasks.WorldTasksManager;
 import com.rs.java.utils.HexColours;
@@ -678,7 +681,7 @@ public class PlayerCombat extends Action {
     public int getMagicMaxHit(Player player, int baseDamage) {
         double A = 0, D = 0;
         double attackBonus = player.getCombatDefinitions().getBonuses()[CombatDefinitions.MAGIC_ATTACK];
-        double attack = Math.round(player.getSkills().getLevel(Skills.MAGIC) * player.getPrayer().getMageMultiplier()) + 8;
+        double attack = Math.round(player.getSkills().getLevel(Skills.MAGIC) * player.getPrayer().getMagicMultiplier()) + 8;
         if (fullVoidEquipped(player, 11663, 11674))
             attack *= hasEliteVoid(player) ? 1.475 : 1.45;
         if (target instanceof NPC) {
@@ -690,7 +693,7 @@ public class PlayerCombat extends Action {
         if (target instanceof Player) {
             Player p2 = (Player) target;
             double defenceBonus = p2.getCombatDefinitions().getBonuses()[CombatDefinitions.MAGIC_DEF];
-            double defence = Math.round((p2.getSkills().getLevel(Skills.MAGIC) * 0.7 + p2.getSkills().getLevel(Skills.DEFENCE) * 0.3) * p2.getMagePrayerMultiplier()) + 8;
+            double defence = Math.round((p2.getSkills().getLevel(Skills.MAGIC) * 0.7 + p2.getSkills().getLevel(Skills.DEFENCE) * 0.3) * p2.getPrayer().getMagicMultiplier()) + 8;
             defence = defence * (1 + defenceBonus / 64);
             D = Math.round(defence);
         } else {
@@ -763,7 +766,7 @@ public class PlayerCombat extends Action {
             int specAmt = getSpecialAmmount(weaponId);
             if (specAmt == 0) {
                 player.getPackets().sendGameMessage("This weapon has no special Attack.");
-                player.getCombatDefinitions().desecreaseSpecialAttack(0);
+                player.getCombatDefinitions().decrease(0);
                 return combatDelay;
             }
             if (player.getCombatDefinitions().hasRingOfVigour())
@@ -772,10 +775,10 @@ public class PlayerCombat extends Action {
                 specAmt *= 0.0;
             if (player.getCombatDefinitions().getSpecialAttackPercentage() < specAmt) {
                 player.getPackets().sendGameMessage("You don't have enough power left.");
-                player.getCombatDefinitions().desecreaseSpecialAttack(0);
+                player.getCombatDefinitions().decrease(0);
                 return combatDelay;
             }
-            player.getCombatDefinitions().desecreaseSpecialAttack(specAmt);
+            player.getCombatDefinitions().decrease(specAmt);
             switch (weaponId) {
                 case 19149:// zamorak bow
                 case 19151:
@@ -1319,7 +1322,7 @@ public class PlayerCombat extends Action {
                         if (p.getInventory().containsItem(946, 1) || slashBased) {
                             delay /= 2;
                         }
-                        if (p.getPrayer().usingPrayer(0, 18) || p.getPrayer().usingPrayer(1, 8)) {
+                        if (p.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES) || p.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES)) {
                             delay /= 2;
                         }
                         if (delay < 5000) {
@@ -2273,7 +2276,7 @@ public class PlayerCombat extends Action {
                 attack = attack * (1 + attackBonus / 64);
                 A = Math.round(attack);
             } else {
-                double range = Math.round(player.getSkills().getLevel(Skills.RANGE) * player.getPrayer().getRangeMultiplier()) + 8;
+                double range = Math.round(player.getSkills().getLevel(Skills.RANGE) * player.getPrayer().getRangedMultiplier()) + 8;
                 if (fullVoidEquipped(player, (new int[]{11664, 11675})))
                     range *= (hasEliteVoid(player) ? 1.135 : 1.1);
                 if (usingSpec) {
@@ -2485,7 +2488,7 @@ public class PlayerCombat extends Action {
             }
             double rangedLvl = player.getSkills().getLevel(Skills.RANGE);
             double styleBonus = attackStyle == 0 ? 3 : attackStyle == 1 ? 0 : 1;
-            double effectiveStrength = Math.round(rangedLvl * player.getPrayer().getRangeMultiplier()) + styleBonus;
+            double effectiveStrength = Math.round(rangedLvl * player.getPrayer().getRangedMultiplier()) + styleBonus;
             double otherBonus = 1;
             if (fullVoidEquipped(player, 11664, 11675))
                 effectiveStrength = Math.floor(effectiveStrength * (hasEliteVoid(player) ? 1.135 : 1.1));
@@ -2805,250 +2808,6 @@ public class PlayerCombat extends Action {
         block_tele = false;
     }
 
-    public void sendSoulSplit(final Hit hit, final Player player, final Entity target) {
-        int damage = hit.getDamage() > target.getHitpoints() ? target.getHitpoints() : hit.getDamage();
-        if (damage == 0)
-            return;
-        World.sendSoulsplitProjectile(player, target, 2263);
-        if (player.getHitpoints() > 0 && player.getHitpoints() <= player.getMaxHitpoints()) {
-            player.heal(damage / 5, true, true);
-            if (target instanceof Player) {
-                Player p2 = (Player) target;
-                p2.getPrayer().drainPrayer(damage / 5);
-            }
-        }
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                if (player == null || target == null || player.isDead() || player.hasFinished() || target.isDead()
-                        || target.hasFinished())
-                    return;
-                target.gfx(new Graphics(2264));
-                World.sendSoulsplitProjectile(target, player, 2263);
-            }
-        }, 1);
-    }
-
-    public void sendSap(final Player player, final Entity target) {
-        if (target instanceof Player) {
-            if (player == null || target == null)
-                return;
-            final Player p2 = (Player) target;
-            boolean usingMelee = player.getPrayer().usingPrayer(1, 1);
-            boolean usingRange = player.getPrayer().usingPrayer(1, 2);
-            boolean usingMagic = player.getPrayer().usingPrayer(1, 3);
-            boolean usingSpecial = player.getPrayer().usingPrayer(1, 4);
-            boolean reachedMax;
-            int projectileId = usingMelee ? 2215 : usingRange ? 2218 : usingMagic ? 2221 : usingSpecial ? 2224 : -1;
-            int gfx1 = usingMelee ? 2214 : usingRange ? 2217 : usingMagic ? 2220 : 2223;
-            int gfx2 = usingMelee ? 2216 : usingRange ? 2219 : usingMagic ? 2222 : 2225;
-            reachedMax = false;
-            if (Utils.getRandom(4) == 0 && projectileId != -1) {
-                player.setNextAnimationNoPriority(new Animation(12569), player);
-                player.getPrayer().setBoostedLeech(true);
-                p2.getPrayer().setBoostedLeech(true);
-                player.gfx(new Graphics(gfx1));
-                World.sendLeechProjectile(player, target, projectileId);
-                target.gfx(new Graphics(gfx2));
-                if (usingMelee) {
-                    for (int i = 0; i < 3; i++) {
-                        if (player.getPrayer().reachedMax(i) || player.getPrayer().reachedMin(i))
-                            reachedMax = true;
-                    }
-                    if (reachedMax)
-                        player.getPackets()
-                                .sendGameMessage("You are boosted so much that your sap curse has no effect.", true);
-                    else {
-                        for (int i = 0; i < 3; i++) {
-                            player.getPrayer().increase(i);
-                            p2.getPrayer().decrease(i);
-                        }
-                        player.getPackets()
-                                .sendGameMessage("Your curse drains Melee from the enemy, boosting your Melee.", true);
-                        p2.getPackets().sendGameMessage("Your Melee has been drained by an enemy curse.", true);
-                    }
-                }
-                if (usingRange) {
-                    if (player.getPrayer().reachedMax(3) || player.getPrayer().reachedMin(3))
-                        player.getPackets()
-                                .sendGameMessage("You are boosted so much that your sap curse has no effect.", true);
-                    else {
-                        player.getPrayer().increase(3);
-                        p2.getPrayer().decrease(3);
-                        player.getPackets().sendGameMessage(
-                                "Your curse drains Ranging from the enemy, boosting your Ranging.", true);
-                        p2.getPackets().sendGameMessage("Your Ranging has been drained by an enemy curse.", true);
-                    }
-                }
-                if (usingMagic) {
-                    if (player.getPrayer().reachedMax(4) || player.getPrayer().reachedMin(4))
-                        player.getPackets()
-                                .sendGameMessage("You are boosted so much that your sap curse has no effect.", true);
-                    else {
-                        player.getPrayer().increase(4);
-                        p2.getPrayer().decrease(4);
-                        player.getPackets()
-                                .sendGameMessage("Your curse drains Magic from the enemy, boosting your Magic.", true);
-                        p2.getPackets().sendGameMessage("Your Magic has been drained by an enemy curse.", true);
-                    }
-                }
-                if (usingSpecial) {
-                    if (p2.getCombatDefinitions().getSpecialAttackPercentage() <= 0)
-                        player.getPackets()
-                                .sendGameMessage("You are boosted so much that your sap curse has no effect.", true);
-                    else {
-                        p2.getCombatDefinitions().desecreaseSpecialAttack(10);
-                        player.getPackets().sendGameMessage("Your curse drains Special Attack from the enemy.", true);
-                        p2.getPackets().sendGameMessage("Your Special Attack has been drained by an enemy curse.",
-                                true);
-                    }
-                }
-            }
-        }
-
-    }
-
-    public void sendLeech(final Player player, final Entity target) {
-        if (target instanceof Player) {
-            if (player == null || target == null)
-                return;
-            final Player p2 = (Player) target;
-            boolean usingAttack = player.getPrayer().usingPrayer(1, 10);
-            boolean usingStrength = player.getPrayer().usingPrayer(1, 14);
-            boolean usingDefence = player.getPrayer().usingPrayer(1, 13);
-            boolean usingRange = player.getPrayer().usingPrayer(1, 11);
-            boolean usingMagic = player.getPrayer().usingPrayer(1, 12);
-            boolean usingRun = player.getPrayer().usingPrayer(1, 15);
-            boolean usingSpecial = player.getPrayer().usingPrayer(1, 16);
-            int getCurseId = usingAttack ? 0
-                    : usingStrength ? 1 : usingDefence ? 2 : usingRange ? 3 : usingMagic ? 4 : -1;
-            int projectileId = usingAttack ? 2231
-                    : usingRange ? 2236
-                    : usingMagic ? 2240 : usingDefence ? 2244 : usingStrength ? 2248 : usingRun ? 2252 : 2256;
-
-            int gfx1 = usingAttack ? 2232
-                    : usingRange ? 2238
-                    : usingMagic ? 2242 : usingDefence ? 2246 : usingStrength ? 2250 : usingRun ? 2254 : 2258;
-            String message = usingSpecial ? "Special attack"
-                    : usingRun ? "Run energy"
-                    : usingAttack ? "Attack"
-                    : usingStrength ? "Strength"
-                    : usingDefence ? "Defence" : usingRange ? "Ranging" : "Magic1";
-            if (Utils.getRandom(4) == 0 && getCurseId != -1) {
-                player.setNextAnimationNoPriority(new Animation(12575), target);
-                p2.gfx(new Graphics(gfx1));
-                World.sendLeechProjectile(player, target, projectileId);
-                player.getPrayer().setBoostedLeech(true);
-                p2.getPrayer().setBoostedLeech(true);
-                player.getPackets().sendGameMessage(
-                        "Your curse drains " + message + " from the enemy, boosting your " + message + ".", true);
-                p2.getPackets().sendGameMessage("Your " + message + " has been drained by an enemy curse.", true);
-                if (usingAttack) {
-                    if (player.getPrayer().reachedMax(0) || player.getPrayer().reachedMin(0)) {
-                        player.getPackets()
-                                .sendGameMessage("You are boosted so much that your leech curse has no effect.", true);
-                    } else {
-                        player.getPrayer().increase(0);
-                        p2.getPrayer().decrease(0);
-                    }
-                }
-                if (usingStrength) {
-                    if (player.getPrayer().reachedMax(1) || player.getPrayer().reachedMin(1)) {
-                        player.getPackets()
-                                .sendGameMessage("You are boosted so much that your leech curse has no effect.", true);
-                    } else {
-                        player.getPrayer().increase(1);
-                        p2.getPrayer().decrease(1);
-                    }
-                }
-                if (usingDefence) {
-                    if (player.getPrayer().reachedMax(2) || player.getPrayer().reachedMin(2)) {
-                        player.getPackets()
-                                .sendGameMessage("You are boosted so much that your leech curse has no effect.", true);
-                    } else {
-                        player.getPrayer().increase(2);
-                        p2.getPrayer().decrease(2);
-                    }
-                }
-                if (usingRange) {
-                    if (player.getPrayer().reachedMax(3) || player.getPrayer().reachedMin(3)) {
-                        player.getPackets()
-                                .sendGameMessage("You are boosted so much that your leech curse has no effect.", true);
-                    } else {
-                        player.getPrayer().increase(3);
-                        p2.getPrayer().decrease(3);
-                    }
-                }
-                if (usingMagic) {
-                    if (player.getPrayer().reachedMax(4) || player.getPrayer().reachedMin(4)) {
-                        player.getPackets()
-                                .sendGameMessage("You are boosted so much that your leech curse has no effect.", true);
-                    } else {
-                        player.getPrayer().increase(4);
-                        p2.getPrayer().decrease(4);
-                    }
-                }
-                if (usingSpecial) {
-                    if (p2.getCombatDefinitions().getSpecialAttackPercentage() <= 0) {
-                        player.getPackets()
-                                .sendGameMessage("You are boosted so much that your leech curse has no effect.", true);
-                    } else {
-                        player.getCombatDefinitions().increaseSpecialAttack(10);
-                        p2.getCombatDefinitions().desecreaseSpecialAttack(
-                                p2.getCombatDefinitions().getSpecialAttackPercentage() < 10 ? 0 : 10);
-                    }
-                }
-                if (usingRun) {
-                    if (p2.getRunEnergy() <= 9) {
-                        player.getPackets().sendGameMessage(
-                                "Your opponent has been weakened so much that your leech curse has no effect.", true);
-                    } else {
-                        player.setNextAnimationNoPriority(new Animation(12575), player);
-                        player.setRunEnergy(player.getRunEnergy() > 90 ? 100 : player.getRunEnergy() + 10);
-                        p2.setRunEnergy(p2.getRunEnergy() < 10 ? 0 : p2.getRunEnergy() - 10);
-                    }
-                }
-
-            }
-        }
-    }
-
-    public void boostTurmoil(final Player player) {
-        Player p2 = (Player) target;
-        if (target instanceof Player) {
-            if (!player.getPrayer().isBoostedLeech()) {
-                if (player.getPrayer().usingPrayer(1, 19)) {
-                    player.getPrayer().increaseTurmoilBonus(player, p2);
-                    // player.getPrayer().setBoostedLeech(true);
-                }
-            }
-        }
-    }
-
-    public void boostTurmoilNPC(final Player player) {
-        if (target instanceof NPC) {
-            if (!player.getPrayer().isBoostedLeech()) {
-                if (player.getPrayer().usingPrayer(1, 19)) {
-                    player.getPrayer().increaseTurmoilBonusNPC(player);
-
-                }
-            }
-        }
-    }
-
-    public void smitePrayer(final Player player, final Hit hit) {
-        if (target instanceof Player) {
-            Player p2 = (Player) target;
-            int damage = hit.getDamage() > target.getHitpoints() ? target.getHitpoints() : hit.getDamage();
-            int prayerDrain = damage / 4;
-            if (player.getPrayer().usingPrayer(0, 24)) {
-                if (prayerDrain > 0) {
-                    p2.getPrayer().drainPrayer(prayerDrain);
-                }
-            }
-        }
-    }
-
     public void sendGuthanEffect(final Hit hit, final Player player, final Entity target) {
         int damage = hit.getDamage();
         if (target instanceof Player) {
@@ -3090,10 +2849,10 @@ public class PlayerCombat extends Action {
         if (target instanceof Player) {
             Player p2 = (Player) target;
             int shieldId = p2.getEquipment().getShieldId();
-            if (damage > 0 && p2.getPrayer().getPrayerpoints() > 0) {
+            if (damage > 0 && p2.getPrayer().getPrayerPoints() > 0) {
                 if (shieldId == 13740 || shieldId == 23698) {
                     int drain = (int) (Math.ceil(damage * 0.3) / 2);
-                    if (p2.getPrayer().getPrayerpoints() >= drain) {
+                    if (p2.getPrayer().getPrayerPoints() >= drain) {
                         hit.setDamage((int) (damage * 0.70));
                         p2.getPrayer().drainPrayer(drain);
                     }
@@ -3120,9 +2879,9 @@ public class PlayerCombat extends Action {
             Player p2 = (Player) target;
             int weaponId = p2.getEquipment().getWeaponId();
             if (hit.getLook() == HitLook.MELEE_DAMAGE) {
-                if (p2.polDelay > Utils.currentTimeMillis()) {
+                if (p2.staffOfLightSpecial > Utils.currentTimeMillis()) {
                     if (weaponId != 15486 && weaponId != 11736) {
-                        p2.setPolDelay(0);
+                        p2.setStaffOfLightSpecial(0);
                         p2.getPackets().sendGameMessage("The power of the " + (weaponId == 15486 ? "light" : "dead")
                                 + "fades. Your resistance to melee attacks return to normal.");
                     } else {
@@ -3179,7 +2938,7 @@ public class PlayerCombat extends Action {
                 return;
             Hit finalHit = new Hit(p2, damage > 60 ? 60 : damage, HitLook.REFLECTED_DAMAGE);
             player.applyHit(finalHit);
-            player.getCharges().processHit(finalHit);
+            player.getChargeManager().processHit(finalHit);
         }
     }
 
@@ -3321,15 +3080,12 @@ public class PlayerCombat extends Action {
                 if (player.getEquipment().getWeaponId() == 4566)
                     hit.setDamage(p2.getHitpoints());
                 if (!isVeracEffect(player))
-                    p2.handleProtectPrayers(hit);
-                sendLeech(player, p2);
-                sendSap(player, p2);
-                p2.getCharges().processIncommingHit();
+                    PrayerEffectHandler.handleAllPrayerEffects(player, p2, hit);
+                p2.getChargeManager().processIncommingHit();
             }
-            player.getCharges().processOutgoingHit();
+            player.getChargeManager().processOutgoingHit();
             target.handleIncommingHit(hit);
             handlePenance(player, hit);
-            smitePrayer(player, hit);
             handleSagaie(hit, player);
             if (target instanceof Player)
                 handleAbsorb(player, hit);
@@ -3406,8 +3162,6 @@ public class PlayerCombat extends Action {
 
             if (blood_spell)
                 player.heal(damage / 4);
-            if (player.getPrayer().usingPrayer(1, 18) && damage > 0)
-                sendSoulSplit(hit, player, target);
             if (fullGuthansEquipped(player) && Utils.random(3) == 0)
                 sendGuthanEffect(hit, player, target);
             if (fullAkrisaeEquipped(player) && Utils.random(3) == 0)
@@ -3509,13 +3263,11 @@ public class PlayerCombat extends Action {
                             doDefenceEmote(target);
                         player.setDamage(hit.getDamage());
                         handleVengHit(player, hit);
-                        boostTurmoil(player);
                         handleRingOfRecoil(player, hit);
                     }
                     if (target instanceof NPC) {
                         NPC n = (NPC) target;
                         doDefenceEmote(n);
-                        boostTurmoilNPC(player);
                     }
                     player.setDamage(0);
                     handleDeathTouchBracelet(player, hit);
@@ -4164,11 +3916,11 @@ public class PlayerCombat extends Action {
         } else {
             player.resetWalkSteps();
         }
-        if (player.getPolDelay() >= Utils.currentTimeMillis() && !(player.getEquipment().getWeaponId() == 15486
+        if (player.getStaffOfLightSpecial() >= Utils.currentTimeMillis() && !(player.getEquipment().getWeaponId() == 15486
                 || player.getEquipment().getWeaponId() == 22207 || player.getEquipment().getWeaponId() == 22209
                 || player.getEquipment().getWeaponId() == 11736 || player.getEquipment().getWeaponId() == 22211
                 || player.getEquipment().getWeaponId() == 22213))
-            player.setPolDelay(0);
+            player.setStaffOfLightSpecial(0);
         player.temporaryAttribute().put("last_target", target);
         if (target instanceof Player) {
             Player p2 = (Player) target;
@@ -4225,10 +3977,10 @@ public class PlayerCombat extends Action {
             specAmt *= 0.0;
         if (player.getCombatDefinitions().getSpecialAttackPercentage() < specAmt) {
             player.getPackets().sendGameMessage("You don't have enough power left.");
-            player.getCombatDefinitions().desecreaseSpecialAttack(0);
+            player.getCombatDefinitions().decrease(0);
             return false;
         }
-        player.getCombatDefinitions().desecreaseSpecialAttack(specAmt);
+        player.getCombatDefinitions().decrease(specAmt);
         return true;
     }
 

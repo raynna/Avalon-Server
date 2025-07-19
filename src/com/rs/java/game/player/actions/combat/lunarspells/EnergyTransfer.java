@@ -31,7 +31,7 @@ public class EnergyTransfer {
 			int amount = (100 - other.getCombatDefinitions().getSpecialAttackPercentage());
 			if (amount > player.getCombatDefinitions().getSpecialAttackPercentage())
 				amount = player.getCombatDefinitions().getSpecialAttackPercentage();
-				player.getCombatDefinitions().desecreaseSpecialAttack(amount);
+				player.getCombatDefinitions().decrease(amount);
 				other.getCombatDefinitions().increaseSpecialAttack(amount);
 				player.animate(new Animation(4411));
 				other.gfx(new Graphics(744, 0, 100));

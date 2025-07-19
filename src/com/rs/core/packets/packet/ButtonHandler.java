@@ -991,10 +991,7 @@ public class ButtonHandler {
             WorldTasksManager.schedule(new WorldTask() {
                 @Override
                 public void run() {
-                    if (componentId == 8 || componentId == 42) {
-                        player.getPrayer().switchPrayer(slotId);
-                    } else if (componentId == 43 && player.getPrayer().isUsingQuickPrayer())
-                        player.getPrayer().switchSettingQuickPrayer();
+                    player.getPrayer().handlePrayerClick(componentId, slotId);
                 }
             });
         } else if (interfaceId == 1213) {// level up orb
@@ -1615,7 +1612,7 @@ public class ButtonHandler {
                         return;
                     }
                     if (hatId == 24437 || hatId == 24439 || hatId == 24440 || hatId == 24441) {
-                        player.getDialogueManager().startDialogue("FlamingSkull", player.getEquipment().getItem(Equipment.SLOT_HAT), -1);
+                        player.getDialogueManager().startDialogue("FlamingSkull", player.getEquipment().getItem(Equipment.SLOT_HEAD), -1);
                         return;
                     } else if (componentId == 15) {
                         int weaponId = player.getEquipment().getWeaponId();
@@ -1628,9 +1625,9 @@ public class ButtonHandler {
                         }
                     }
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                    ButtonHandler.registerRemoveEquipment(player, Equipment.SLOT_HAT);
+                    ButtonHandler.registerRemoveEquipment(player, Equipment.SLOT_HEAD);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
-                    player.getEquipment().sendExamine(Equipment.SLOT_HAT);
+                    player.getEquipment().sendExamine(Equipment.SLOT_HEAD);
             } else if (componentId == 9) {
 
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
@@ -1735,7 +1732,7 @@ public class ButtonHandler {
                         return;
                     }
                     if (weaponId >= 18349 && weaponId <= 18357) {
-                        player.getCharges().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(weaponId).getName() + " has " + ChargesManager.REPLACE + "% charges left.", weaponId, false);
+                        player.getChargeManager().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(weaponId).getName() + " has ##% charges left.", weaponId, false);
                     }
                     if (weaponId == 15484)
                         player.getInterfaceManager().gazeOrbOfOculus();
@@ -1799,7 +1796,7 @@ public class ButtonHandler {
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     int shieldId = player.getEquipment().getShieldId();
                     if (shieldId >= 18359 && shieldId <= 18363) {
-                        player.getCharges().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(shieldId).getName() + " has " + ChargesManager.REPLACE + "% charges left.", shieldId, false);
+                        player.getChargeManager().checkPercentage(ItemDefinitions.getItemDefinitions(shieldId).getName() + " has ##% charges left.", shieldId, false);
                     }
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
                     player.getEquipment().sendExamine(Equipment.SLOT_SHIELD);
@@ -1825,7 +1822,7 @@ public class ButtonHandler {
             } else if (componentId == 33) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     if (player.getEquipment().getRingId() == 2550)
-                        player.getPackets().sendGameMessage("Your " + ItemDefinitions.getItemDefinitions(2550).getName() + " has " + player.getCharges().getCharges(2550) + " left.");
+                        player.getPackets().sendGameMessage("Your " + ItemDefinitions.getItemDefinitions(2550).getName() + " has " + player.getChargeManager().getCharges(2550) + " left.");
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                     ButtonHandler.registerRemoveEquipment(player, Equipment.SLOT_RING);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
@@ -2067,7 +2064,7 @@ public class ButtonHandler {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) { // activate
                     player.getPrayer().switchQuickPrayers();
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) // switch
-                    player.getPrayer().switchSettingQuickPrayer();
+                    player.getPrayer().switchQuickPrayerSettings();
             }
         } else if (interfaceId == 13 || interfaceId == 14 || interfaceId == 759) {
             // player.getBankPin().handleButtons(interfaceId, componentId);
@@ -2656,9 +2653,9 @@ public class ButtonHandler {
         if (item.getId() == 4024)
             player.getAppearence().transformIntoNPC(-1);
         if (slotId == 3)
-            player.getCombatDefinitions().desecreaseSpecialAttack(0);
-        if (item.getId() == 15486 && player.polDelay > Utils.currentTimeMillis()) {
-            player.setPolDelay(0);
+            player.getCombatDefinitions().decrease(0);
+        if (item.getId() == 15486 && player.staffOfLightSpecial > Utils.currentTimeMillis()) {
+            player.setStaffOfLightSpecial(0);
             player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
         }
         if (player.getHitpoints() > (player.getMaxHitpoints() * 1.15)) {
@@ -2766,8 +2763,8 @@ public class ButtonHandler {
         }
 
         if (equipmentSlot == Equipment.SLOT_WEAPON && itemId != 15486) {
-            if (player.polDelay > Utils.currentTimeMillis()) {
-                player.setPolDelay(0);
+            if (player.staffOfLightSpecial > Utils.currentTimeMillis()) {
+                player.setStaffOfLightSpecial(0);
                 player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
             }
         }
@@ -2993,7 +2990,7 @@ public class ButtonHandler {
         @SuppressWarnings("unused")
         // TODO
         boolean inRiskArea = FfaZone.inRiskArea(player);
-        Integer[][] slots = getItemSlotsKeptOnDeath(player, wilderness, skulled, player.getPrayer().usingPrayer(0, 10) || player.getPrayer().usingPrayer(1, 0));
+        Integer[][] slots = getItemSlotsKeptOnDeath(player, wilderness, skulled, player.getPrayer().hasProtectItemPrayerActive());
         Item[][] items = getItemsKeptOnDeath(player, slots);
         long riskedWealth = 0;
         long carriedWealth = 0;

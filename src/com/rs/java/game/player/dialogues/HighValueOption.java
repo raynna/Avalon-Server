@@ -18,7 +18,7 @@ public class HighValueOption extends Dialogue {
 		slotId = (Integer) parameters[0];
 		item = (Item) parameters[1];
 		if (player.HighValueOption) {
-			player.getCharges().degrade(item);
+			player.getChargeManager().breakItem(item);
 			player.getInventory().deleteItem(slotId, item);
 			if (item.getId() == 21371) {
 				item.setId(ItemConstants.removeAttachedId(item));

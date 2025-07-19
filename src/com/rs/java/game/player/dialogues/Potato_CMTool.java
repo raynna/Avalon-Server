@@ -57,9 +57,9 @@ public class Potato_CMTool extends Dialogue {
 			case OPTION_4:
 				end();
 				player.getEquipment().getItems().set(Equipment.SLOT_CAPE, new Item(20769));
-				player.getEquipment().getItems().set(Equipment.SLOT_HAT, new Item(20770));
+				player.getEquipment().getItems().set(Equipment.SLOT_HEAD, new Item(20770));
 				player.getEquipment().refresh(Equipment.SLOT_CAPE);
-				player.getEquipment().refresh(Equipment.SLOT_HAT);
+				player.getEquipment().refresh(Equipment.SLOT_HEAD);
 				player.getAppearence().generateAppearenceData();
 				break;
 			case OPTION_5:

@@ -90,21 +90,6 @@ public class Blink extends DungeonBoss {
 		return WEAKNESS;
 	}
 
-	@Override
-	public double getMagePrayerMultiplier() {
-		return 1.0;
-	}
-
-	@Override
-	public double getRangePrayerMultiplier() {
-		return 0.6;
-	}
-
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return 0.8;
-	}
-
 	@SuppressWarnings("unused")
 	private void stopRushAttack() {
 		rushCount = -1;//stops the rush
@@ -164,8 +149,6 @@ public class Blink extends DungeonBoss {
 					if (!Utils.isOnRange(player.getX(), player.getY(), 1, getX(), getY(), 1, 4))
 						continue;
 					int damage = Utils.random(200, 600);
-					if (player.getMagePrayerMultiplier() == 0.6 || player.getRangePrayerMultiplier() == 0.6)
-						damage *= .5D;
 					player.gfx(new Graphics(2854));
 					player.applyHit(new Hit(this, damage, HitLook.REGULAR_DAMAGE, 35));
 

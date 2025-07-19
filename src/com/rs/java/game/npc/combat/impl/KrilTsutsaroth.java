@@ -9,6 +9,8 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.prayer.AncientPrayer;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
 
 public class KrilTsutsaroth extends CombatScript {
@@ -81,7 +83,7 @@ public class KrilTsutsaroth extends CombatScript {
 			int damage = 463;// normal
 			if (target instanceof Player) {
 				Player p2 = (Player) target;
-				if ((p2.getPrayer().usingPrayer(0, 19) || p2.getPrayer().usingPrayer(1, 9))
+				if ((p2.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MELEE) || p2.getPrayer().isActive(AncientPrayer.DEFLECT_MELEE))
 						&& Utils.getRandom(2) == 0) {
 					p2.getPrayer().drainPrayer((Math.round(damage / 2)));
 					damage = 597;

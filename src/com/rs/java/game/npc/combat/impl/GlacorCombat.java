@@ -32,7 +32,7 @@ public class GlacorCombat extends CombatScript {
 		if (target instanceof Player) {
 			Player player = (Player) target;
 			if (glacor.getEffect() == 1)
-				player.getPrayer().drainPrayer((int) (player.getPrayer().getPrayerpoints() * .1));
+				player.getPrayer().drainPrayer((int) (player.getPrayer().getPrayerPoints() * .1));
 			switch (Utils.getRandom(5)) {
 			case 0:
 			case 1:

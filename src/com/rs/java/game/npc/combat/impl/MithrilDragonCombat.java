@@ -9,6 +9,8 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.prayer.AncientPrayer;
+import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
 
 public class MithrilDragonCombat extends CombatScript {
@@ -57,15 +59,15 @@ public class MithrilDragonCombat extends CombatScript {
 					damage *= 0.1;
 					player.getPackets()
 							.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-				} else if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+				} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES)) {
 					damage *= 0.1;
 					player.getPackets()
 							.sendGameMessage("Your prayer protects you from some of the heat of the dragon's breath!");
 				} else if (player.getEquipment().getShieldId() != 11283 && player.getEquipment().getShieldId() != 11284
 						&& player.getEquipment().getShieldId() != 1540
 						&& player.getSuperAntifire() < Utils.currentTimeMillis()
-						&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().usingPrayer(0, 17)
-						&& !player.getPrayer().usingPrayer(1, 7))
+						&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES)
+						&& !player.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES))
 					player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
 				delayHit(npc, 1, target, getRegularHit(npc, damage));
 				if (player.getEquipment().getShieldId() == 11283) {
@@ -135,15 +137,15 @@ public class MithrilDragonCombat extends CombatScript {
 					damage *= 0.1;
 					player.getPackets()
 							.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-				} else if (player.getPrayer().usingPrayer(0, 17) || player.getPrayer().usingPrayer(1, 7)) {
+				} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES)) {
 					damage *= 0.1;
 					player.getPackets()
 							.sendGameMessage("Your prayer protects you from some of the heat of the dragon's breath!");
 				} else if (player.getEquipment().getShieldId() != 11283 && player.getEquipment().getShieldId() != 11284
 						&& player.getEquipment().getShieldId() != 1540
 						&& player.getSuperAntifire() < Utils.currentTimeMillis()
-						&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().usingPrayer(0, 17)
-						&& !player.getPrayer().usingPrayer(1, 7))
+						&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES)
+						&& !player.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES))
 					player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
 				delayHit(npc, 1, target, getRegularHit(npc, damage));
 				if (player.getEquipment().getShieldId() == 11283) {

@@ -851,27 +851,6 @@ public class NPC extends Entity implements Serializable {
         return bonuses;
     }
 
-    @Override
-    public double getMagePrayerMultiplier() {
-        if (this instanceof Familiar)
-            return 0.6;
-        return 0;
-    }
-
-    @Override
-    public double getRangePrayerMultiplier() {
-        if (this instanceof Familiar)
-            return 0.6;
-        return 0;
-    }
-
-    @Override
-    public double getMeleePrayerMultiplier() {
-        if (this instanceof Familiar)
-            return 0.6;
-        return 0;
-    }
-
     public WorldTile getRespawnTile() {
         return respawnTile;
     }

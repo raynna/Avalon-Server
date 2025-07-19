@@ -60,16 +60,6 @@ public class WorldGorgerShukarhazh extends DungeonBoss {
 	}
 
 	@Override
-	public double getMagePrayerMultiplier() {
-		return 0.6;//reg
-	}
-
-	@Override
-	public double getMeleePrayerMultiplier() {
-		return 1.0;//prayer dun work m8t
-	}
-
-	@Override
 	public void sendDeath(Entity source) {
 		super.sendDeath(source);
 		for (FamishedEye eye : eyes)
