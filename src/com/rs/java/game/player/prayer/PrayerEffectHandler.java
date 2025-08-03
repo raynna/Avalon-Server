@@ -215,10 +215,8 @@ public class PrayerEffectHandler {
 
     private static Prayer getProtectionPrayer(Player player, HitLook hitType) {
         if (player.getPrayer().isAncientCurses()) {
-            System.out.println("getProtectionPrayer: getDeflectPrayer");
             return getDeflectPrayer(hitType);
         }
-        System.out.println("getProtectionPrayer: getRegularPrayer");
         return switch (hitType) {
             case MAGIC_DAMAGE -> NormalPrayer.PROTECT_FROM_MAGIC;
             case RANGE_DAMAGE -> NormalPrayer.PROTECT_FROM_MISSILES;

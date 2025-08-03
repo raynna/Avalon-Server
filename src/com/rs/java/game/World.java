@@ -1448,7 +1448,6 @@ public final class World {
         FloorItem floorItem = World.getRegion(tile.getRegionId()).getGroundItem(item.getId(), tile, owner);
 
         if (floorItem == null) {
-            System.out.println("[updateGroundItem:1458] floorItem is null, adding " + item.getDisplayName());
             spawnAsNewGroundItem(item, tile, owner, hiddenTime, type, ironmanName);
             return;
         }
@@ -1491,7 +1490,6 @@ public final class World {
                 addGroundItem(item, tile, owner, false, hiddenTime, type, ironmanName);
             }
         } else {
-            System.out.println("[spawnAsNewGroundItem:1507] item amount was 1, adding item " + item.getDisplayName());
             addGroundItem(item, tile, owner, owner != null, hiddenTime, type, ironmanName);
         }
     }

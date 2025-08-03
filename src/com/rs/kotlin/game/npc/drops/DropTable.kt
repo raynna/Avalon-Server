@@ -22,17 +22,21 @@ fun dropTable(
 }
 
 
-class DropTable(private val rolls: Int = 1) {
+class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
     private val alwaysDrops = mutableListOf<DropEntry>()
     private val preRollDrops = mutableListOf<DropEntry>()
     private val tertiaryDrops = mutableListOf<TertiaryDropEntry>()
     private val mainDrops = WeightedTable()
     private val specialDrops = WeightedTable()
-    private val charmDrops = WeightedTable()
+    private var charmTable: SummoningCharms? = null
 
     private var rareTableRoller: ((Player, MutableList<Drop>) -> Boolean)? = null
     private var herbTableRoller: ((Player, MutableList<Drop>) -> Boolean)? = null
     private var currentContext: DropType? = null
+
+    override fun toString(): String {
+        return "DropTable(name='$name')"
+    }
 
     fun alwaysDrops(block: MutableList<DropEntry>.() -> Unit) {
         currentContext = DropType.ALWAYS
@@ -67,6 +71,7 @@ class DropTable(private val rolls: Int = 1) {
         currentContext = DropType.CHARM
         val scope = SummoningCharms(this)
         scope.block()
+        charmTable = scope
         currentContext = null
     }
 
@@ -131,8 +136,7 @@ class DropTable(private val rolls: Int = 1) {
             }
 
             DropType.CHARM -> {
-                val entry = WeightedDropEntry(item, amount, numerator, denominator, condition, customLogic)
-                charmDrops.add(entry)
+                throw UnsupportedOperationException("Please use charmDrops { } block for charms instead of drop()")
             }
         }
     }
@@ -141,19 +145,28 @@ class DropTable(private val rolls: Int = 1) {
         val drops = mutableListOf<Drop>()
 
         alwaysDrops.forEach { it.roll(player)?.let { drop -> drops.add(drop) } }
+
         preRollDrops.forEach { it.roll(player)?.let { drop -> drops.add(drop) } }
 
         rareTableRoller?.let {
-            if (it(player, drops)) return drops
+            if (it(player, drops)) {
+                return drops
+            }
         }
 
+        mainDrops.mutableEntries().forEach { entry ->
+            println("  itemId=${entry.itemId}, amount=${entry.rollAmount()}, weight=${entry.weight}, numerator=${entry.numerator}, denominator=${entry.denominator}")
+        }
         repeat(rolls) {
             if (rareTableRoller?.invoke(player, drops) == true) return@repeat
-            mainDrops.roll(player)?.let(drops::add)
+            val drop = mainDrops.roll(player)
+            drop?.let(drops::add)
         }
 
         tertiaryDrops.forEach { it.roll(player)?.let { drop -> drops.add(drop) } }
-        charmDrops.roll(player)?.let { drops.add(it) }
+
+        charmTable?.roll(player)?.let { drops.add(it) }
+
         return drops
     }
 

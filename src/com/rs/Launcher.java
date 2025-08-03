@@ -21,6 +21,7 @@ import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.npc.NpcPluginLoader;
 import com.rs.java.game.npc.combat.CombatScriptsHandler;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.RscmGenerator;
 import com.rs.kotlin.game.npc.drops.DropTable;
 import com.rs.kotlin.game.npc.drops.DropTableRegistry;
 import com.rs.kotlin.game.npc.drops.DropTablesSetup;
@@ -81,6 +82,7 @@ public final class Launcher {
 		}
 		Cache.init();
 		Rscm.loadAll();
+		//RscmGenerator.INSTANCE.generateGroupedNpcRscm();
 		DropTablesSetup.setup();
 		AreaManager.init();
 		ItemsEquipIds.init();

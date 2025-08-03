@@ -4844,3 +4844,88 @@
 [03 August 2025 at 09:30:32 CEST] - ::tele 0,28,81,54,39
 [03 August 2025 at 09:30:33 CEST] - ::tele 0,28,81,40,40
 [03 August 2025 at 09:31:08 CEST] - ::npc 4261
+[03 August 2025 at 11:48:52 CEST] - ::bank 
+[03 August 2025 at 11:48:54 CEST] - ::emptybank 
+[03 August 2025 at 11:48:56 CEST] - ::testdrop 54 1
+[03 August 2025 at 11:49:00 CEST] - ::testdrop 54 2
+[03 August 2025 at 11:49:01 CEST] - ::testdrop 54 1
+[03 August 2025 at 11:49:29 CEST] - ::testdrop 54 1
+[03 August 2025 at 11:49:30 CEST] - ::bank 
+[03 August 2025 at 11:49:32 CEST] - ::emptybank 
+[03 August 2025 at 11:49:33 CEST] - ::emptybank 
+[03 August 2025 at 11:49:36 CEST] - ::testdrop 54 1
+[03 August 2025 at 11:49:46 CEST] - ::testdrop 54 1
+[03 August 2025 at 11:49:49 CEST] - ::testdrop 11259 1
+[03 August 2025 at 11:49:51 CEST] - ::emptybank 
+[03 August 2025 at 11:50:50 CEST] - ::empty 
+[03 August 2025 at 11:51:11 CEST] - ::testdrop 4407 10
+[03 August 2025 at 11:51:33 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:34 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:35 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:35 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:36 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:36 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:37 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:38 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:38 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:38 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:39 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:39 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:40 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:40 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:40 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:40 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:41 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:51:41 CEST] - ::testdrop 4407 1
+[03 August 2025 at 11:52:24 CEST] - ::tele 0,50,50,58,32
+[03 August 2025 at 11:52:31 CEST] - ::item 4151 1
+[04 August 2025 at 01:01:08 CEST] - ::bank 
+[04 August 2025 at 01:01:10 CEST] - ::emptybank 
+[04 August 2025 at 01:01:15 CEST] - ::testdrop 11236 10
+[04 August 2025 at 01:01:17 CEST] - ::testdrop 11236 10
+[04 August 2025 at 01:01:18 CEST] - ::testdrop 11236 10
+[04 August 2025 at 01:01:19 CEST] - ::testdrop 11236 10
+[04 August 2025 at 01:01:19 CEST] - ::testdrop 11236 10
+[04 August 2025 at 01:01:22 CEST] - ::testdrop 11236 50
+[04 August 2025 at 01:01:23 CEST] - ::testdrop 11236 50
+[04 August 2025 at 01:01:25 CEST] - ::testdrop 11236 50
+[04 August 2025 at 01:01:27 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:28 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:28 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:28 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:29 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:29 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:29 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:29 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:29 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:30 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:30 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:30 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:31 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:32 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:33 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:33 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:33 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:33 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:34 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:34 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:34 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:34 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:35 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:35 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:35 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:35 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:35 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:35 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:35 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:01:36 CEST] - ::testdrop 11236 100
+[04 August 2025 at 01:02:16 CEST] - ::bank 
+[04 August 2025 at 01:02:19 CEST] - ::emptybank 
+[04 August 2025 at 01:02:33 CEST] - ::bank 
+[04 August 2025 at 01:02:35 CEST] - ::emptybank 
+[04 August 2025 at 01:02:40 CEST] - ::testdrop 54 1
+[04 August 2025 at 01:02:42 CEST] - ::testdrop 54 99
+[04 August 2025 at 01:02:47 CEST] - ::testdrop 54 900
+[04 August 2025 at 01:03:18 CEST] - ::testdrop 54 1
+[04 August 2025 at 01:04:37 CEST] - ::testdrop 54 9000
+[04 August 2025 at 01:04:42 CEST] - ::testdrop 54 10000

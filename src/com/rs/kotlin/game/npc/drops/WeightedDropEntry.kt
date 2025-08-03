@@ -5,8 +5,8 @@ import com.rs.java.game.player.Player
 open class WeightedDropEntry(
     itemId: Int,
     amount: IntRange,
-    numerator: Int,
-    denominator: Int,
+    val numerator: Int,
+    val denominator: Int,
     private val condition: ((Player) -> Boolean)? = null,
     private val customLogic: ((Player, Drop) -> Unit)? = null
 ) : DropEntry(itemId, amount) {

@@ -10,6 +10,7 @@ object Rscm {
         data class Id(val value: Int) : RscmEntry()
         data class Location(val x: Int, val y: Int, val plane: Int) : RscmEntry()
         data class Tile(val x: Int, val y: Int, val plane: Int) : RscmEntry()
+        data class IdList(val values: List<Int>) : RscmEntry()
     }
 
     private lateinit var mappings: Map<String, Map<String, RscmEntry>>
@@ -48,6 +49,25 @@ object Rscm {
     }
 
     @JvmStatic
+    fun lookupList(name: String): List<Int> {
+        val parts = name.split('.')
+        if (parts.size != 2) {
+            error("[Rscm] Invalid format: '$name'. Use 'type.name' (e.g. 'npc.goblin_lv2').")
+        }
+        val (type, ref) = parts
+        val entry = mappings[type]?.get(ref)
+            ?: error("Mapping '$ref' not found in $type mappings.")
+
+        val result = when (entry) {
+            is RscmEntry.IdList -> entry.values
+            else -> error("Mapping '$ref' in $type is not an IdList.")
+        }
+
+        //println("[Rscm] lookupList '$name' returned IDs: $result")
+        return result
+    }
+
+    @JvmStatic
     fun lookup(name: String): Int {
         val parts = name.split('.')
         if (parts.size != 2) {
@@ -68,30 +88,43 @@ object Rscm {
     private fun load(file: Path): Map<String, RscmEntry> {
         val locationRegex = Regex("""^(?<NAME>.+)=(?<X>\d+),(?<Y>\d+),(?<PLANE>\d+)$""")
         val idRegex = Regex("""^(?<NAME>.+)=(?<ID>\d+)$""")
+        val idListRegex = Regex("""^(?<NAME>.+)=\[(?<IDS>[\d,\s]+)]$""")
 
-        return file.readLines().mapNotNull { line ->
+        return file.readLines().mapIndexedNotNull { index, line ->
+            val trimmedLine = line.trim()
+
+            if (trimmedLine.isEmpty() || trimmedLine.startsWith("#")) {
+                // silently skip blank lines and comments
+                return@mapIndexedNotNull null
+            }
+
             when {
-                locationRegex.matches(line) -> {
-                    val match = locationRegex.find(line)!!
-                    val name = match.groups["NAME"]!!.value
+                locationRegex.matches(trimmedLine) -> {
+                    val match = locationRegex.find(trimmedLine)!!
+                    val name = match.groups["NAME"]!!.value.trim()
                     val x = match.groups["X"]!!.value.toInt()
                     val y = match.groups["Y"]!!.value.toInt()
                     val plane = match.groups["PLANE"]!!.value.toInt()
                     name to RscmEntry.Location(x, y, plane)
-                    name to RscmEntry.Tile(x, y, plane)
                 }
-                idRegex.matches(line) -> {
-                    val match = idRegex.find(line)!!
-                    val name = match.groups["NAME"]!!.value
+                idRegex.matches(trimmedLine) -> {
+                    val match = idRegex.find(trimmedLine)!!
+                    val name = match.groups["NAME"]!!.value.trim()
                     val id = match.groups["ID"]!!.value.toInt()
                     name to RscmEntry.Id(id)
                 }
+                idListRegex.matches(trimmedLine) -> {
+                    val match = idListRegex.find(trimmedLine)!!
+                    val name = match.groups["NAME"]!!.value.trim()
+                    val idsString = match.groups["IDS"]!!.value
+                    val ids = idsString.split(",").map { it.trim().toInt() }
+                    name to RscmEntry.IdList(ids)
+                }
                 else -> {
-                    println("[Rscm] Ignored invalid line: $line")
+                    println("[Rscm] Ignored invalid line #${index + 1}: \"$line\"")
                     null
                 }
             }
         }.toMap()
     }
-
 }

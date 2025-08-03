@@ -8,35 +8,74 @@ import kotlin.io.path.createDirectories
 
 object RscmGenerator {
 
+
+    fun generateGroupedNpcRscm() {
+        NPCDefinitions.loadAll()
+        val definitions = NPCDefinitions.getNpcDefinitions().values.filterNotNull()
+        val outputPath = Path("data/rscm/npc_group.rscm")
+
+        // Map (baseName, combatLevel) -> MutableList of npcIds
+        val grouped = mutableMapOf<Pair<String, Int>, MutableList<Int>>()
+
+        fun toBaseName(name: String): String =
+            name.lowercase().replace("[^a-z0-9]+".toRegex(), "_").trim('_')
+
+        for (def in definitions) {
+            if (def.name.isBlank()) continue
+            val baseName = toBaseName(def.name)
+            val key = baseName to def.combatLevel
+            grouped.getOrPut(key) { mutableListOf() }.add(def.id)
+        }
+
+        val entries = mutableListOf<String>()
+
+        for ((key, npcIds) in grouped.toSortedMap(compareBy({ it.first }, { it.second }))) {
+            val (base, level) = key
+            val groupName = if (level > 0) "${base}_lv$level" else base
+            val comment = if (level > 0) "# Combat Lvl. $level" else "# Friendly NPCs"
+            // Format list as [id1, id2, id3]
+            val idsString = npcIds.joinToString(", ", "[", "]")
+            //entries += comment
+            entries += "$groupName=$idsString"
+        }
+
+        outputPath.parent.createDirectories()
+        outputPath.writeLines(entries)
+        println("Generated grouped NPC mappings to $outputPath")
+    }
+
+
+
     fun generateNpcRscm() {
         NPCDefinitions.loadAll()
         val definitions = NPCDefinitions.getNpcDefinitions()
         val outputPath = Path("data/rscm/npc.rscm")
 
         val entries = mutableListOf<String>()
-        val nameCounts = mutableSetOf<String>()  // Track which base names have appeared
+        val usedNames = mutableSetOf<String>()
         val addedIds = mutableSetOf<Int>()
 
-        fun toBaseName(name: String) =
+        fun toBaseName(name: String): String =
             name.lowercase().replace("[^a-z0-9]+".toRegex(), "_").trim('_')
 
-        fun uniqueName(base: String, npcId: Int): String {
-            return if (!nameCounts.contains(base)) {
-                nameCounts.add(base)
-                base
-            } else {
-                // Duplicate: use npcId as suffix
-                "${base}_$npcId"
-            }
+        fun uniqueName(base: String, combatLevel: Int, npcId: Int): String {
+            var name = if (combatLevel > 0) "${base}_lv$combatLevel" else base
+            if (usedNames.add(name)) return name // name wasn't used yet
+            name = "${name}_$npcId"
+            usedNames.add(name)
+            return name
         }
 
         for (def in definitions.values) {
             if (def == null || def.name.isNullOrBlank()) continue
             if (def.id in addedIds) continue
 
-            val baseName = toBaseName(def.name)
-            val uniqueBase = uniqueName(baseName, def.id)
-            entries += "$uniqueBase=${def.id}"
+            val base = toBaseName(def.name)
+            val unique = uniqueName(base, def.combatLevel, def.id)
+
+            val comment = if (def.combatLevel == 0) "# Friendly" else "# Combat Lvl. ${def.combatLevel}"
+            entries += comment
+            entries += "$unique=${def.id}"
             addedIds += def.id
         }
 
@@ -44,6 +83,7 @@ object RscmGenerator {
         outputPath.writeLines(entries)
         println("Generated ${entries.size} npc mappings to $outputPath")
     }
+
 
 
     fun generateItemRscm() {

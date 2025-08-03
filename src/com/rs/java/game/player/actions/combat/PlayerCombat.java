@@ -2471,7 +2471,6 @@ public class PlayerCombat extends Action {
                 int oldMaxHit = maxHit;
                 maxHit *= NpcDamageBoost.getMultiplier(player, n, NpcDamageBoost.Style.MELEE);
                 int newMaxHit = maxHit;
-                System.out.println("Old MaxHit: " + oldMaxHit + " - new MaxHit: " + newMaxHit);
             }
             maxHit *= PlayerDamageBoost.getMultiplier(player);
             int style = player.getCombatDefinitions().getStyle(weaponId, attackStyle);
@@ -2507,7 +2506,6 @@ public class PlayerCombat extends Action {
                 int oldMaxHit = maxHit;
                 maxHit *= NpcDamageBoost.getMultiplier(player, n, NpcDamageBoost.Style.RANGE);
                 int newMaxHit = maxHit;
-                System.out.println("Old MaxHit: " + oldMaxHit + " - new MaxHit: " + newMaxHit);
             }
             if (player.getCombatDefinitions().getStyle(weaponId, attackStyle) == CombatDefinitions.ACCURATE)
                 maxHit += 3;
