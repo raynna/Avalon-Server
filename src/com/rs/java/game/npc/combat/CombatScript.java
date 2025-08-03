@@ -1,25 +1,25 @@
 package com.rs.java.game.npc.combat;
 
-import com.rs.java.game.Animation;
+import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.Entity;
 import com.rs.java.game.ForceTalk;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.Hit;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.World;
+import com.rs.java.game.item.Item;
+import com.rs.java.game.item.itemdegrading.ItemDegrade;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.CombatDefinitions;
+import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.prayer.PrayerEffectHandler;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
-
-import java.util.Map;
-import java.util.function.Supplier;
 
 public abstract class CombatScript {
 
@@ -39,7 +39,7 @@ public abstract class CombatScript {
             int attackSpeed = npc.getAttackSpeed() * 600;
             npc.setAttackDelay((attackSpeed / 2) + 4800);
             if (target instanceof Player playerTarget) {
-                PrayerEffectHandler.handleAllPrayerEffects(npc, playerTarget, hit);
+                PrayerEffectHandler.handleProtectionEffects(target, npc, hit);
             }
             handleAbsorb(target, hit);
             handleStaffOfLightReduction(target, hit);
@@ -64,6 +64,9 @@ public abstract class CombatScript {
                     NPC npc = (NPC) hit.getSource();
                     if (npc.isDead() || npc.hasFinished() || target.isDead() || target.hasFinished()) return;
                     target.applyHit(hit);
+                    if (target instanceof Player defender) {
+                        defender.getChargeManager().processHit(hit);
+                    }
                     handleRingOfRecoil(npc, target, hit);
                     handleVengHit(target, hit);
                     if (npc.getId() >= 912 && npc.getId() <= 914) {
@@ -91,7 +94,6 @@ public abstract class CombatScript {
                     }
                     npc.getCombat().doDefenceEmote(target);
                     if (target instanceof Player player) {
-                        player.getChargeManager().processIncommingHit();
                         player.closeInterfaces();
                         if (player.getCombatDefinitions().isAutoRelatie() && !player.getActionManager().hasSkillWorking() && !player.hasWalkSteps())
                             player.getActionManager().setAction(new PlayerCombat(npc));
@@ -129,34 +131,87 @@ public abstract class CombatScript {
         final int MIN_DAMAGE_FOR_RECOIL = 10;
         final int MAX_RECOIL_DAMAGE = 60;
         final double RECOIL_DAMAGE_PERCENT = 0.1;
+
         if (attacker == null || target == null || incomingHit == null) {
             return;
         }
+
         HitLook hitType = incomingHit.getLook();
         if (hitType != HitLook.MELEE_DAMAGE &&
                 hitType != HitLook.RANGE_DAMAGE &&
                 hitType != HitLook.MAGIC_DAMAGE) {
             return;
         }
+
         if (incomingHit.getDamage() < MIN_DAMAGE_FOR_RECOIL) {
             return;
         }
+
         if (target instanceof Player player) {
-            boolean hasRingOfRecoil = player.getEquipment().getRingId() == RING_OF_RECOIL_ID;
-            if (!hasRingOfRecoil) {
+            // Check if wearing ring
+            int ringSlot = Equipment.SLOT_RING;
+            Item ring = player.getEquipment().getItem(ringSlot);
+            if (ring == null || ring.getId() != RING_OF_RECOIL_ID) {
                 return;
             }
-            int recoilDamage = (int) (incomingHit.getDamage() * RECOIL_DAMAGE_PERCENT);
-            int remainingCharges = player.getChargeManager().getCharges(RING_OF_RECOIL_ID);
-            int absoluteRecoil = Math.min(MAX_RECOIL_DAMAGE, remainingCharges);
 
-            recoilDamage = Math.min(recoilDamage, absoluteRecoil);
+            // Get or initialize charges
+            int remainingCharges = player.getChargeManager().getCharges(RING_OF_RECOIL_ID);
+            if (remainingCharges <= 0) {
+                degradeRing(player, ringSlot, ring); // Handle ring breaking
+                return;
+            }
+
+            // Calculate recoil damage
+            int recoilDamage = (int) (incomingHit.getDamage() * RECOIL_DAMAGE_PERCENT);
+            recoilDamage = Math.min(recoilDamage, MAX_RECOIL_DAMAGE);
+            recoilDamage = Math.min(recoilDamage, remainingCharges);
+
             if (recoilDamage > 0) {
+                // Apply recoil damage
                 Hit recoilHit = new Hit(player, recoilDamage, HitLook.REFLECTED_DAMAGE);
                 attacker.applyHit(recoilHit);
 
+                // Update charges
+                int newCharges = remainingCharges - recoilDamage;
+                player.getChargeManager().setCharges(RING_OF_RECOIL_ID, newCharges);
+
+                // Break ring if no charges left
+                if (newCharges <= 0) {
+                    degradeRing(player, ringSlot, ring);
+                }
             }
         }
+    }
+
+    private static void degradeRing(Player player, int slot, Item ring) {
+        ItemDegrade.DegradeData data = player.getChargeManager().getDegradeData(ring.getId());
+        if (data == null) return;
+
+        Item nextItem = null;
+        if (data.getDegradedItem() == null && data.getBrokenItem() != null) {
+            nextItem = data.getBrokenItem();
+        }
+        if (data.getDegradedItem() != null) {
+            if (ring.getId() != data.getDegradedItem().getId()) {
+                nextItem = data.getDegradedItem();
+            }
+        }
+
+        String ringName = ItemDefinitions.getItemDefinitions(ring.getId()).getName();
+        if (nextItem != null) {
+            player.message("Your " + ringName + " has degraded.");
+        } else {
+            player.message("Your " + ringName + " turned into dust.");
+        }
+
+        // Remove the ring or replace with degraded version
+        player.getEquipment().getItems().set(slot, nextItem);
+        player.getEquipment().refresh(slot);
+        player.getAppearence().generateAppearenceData();
+
+        // Clear charges
+        player.getChargeManager().resetCharges(ring.getId());
     }
 
     private static void handleVengHit(Entity target, Hit hit) {

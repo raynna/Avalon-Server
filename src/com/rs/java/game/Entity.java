@@ -30,8 +30,8 @@ import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.route.RouteFinder;
 import com.rs.java.game.route.strategy.EntityStrategy;
 import com.rs.java.game.route.strategy.ObjectStrategy;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Utils;
 
@@ -1241,6 +1241,10 @@ public abstract class Entity extends WorldTile {
         this.nextAnimation = nextAnimation;
     }
 
+    public void animateNoCheck(Animation nextAnimation) {
+        this.nextAnimation = nextAnimation;
+    }
+
     public void setNextAnimation(int id) {
         animate(new Animation(id));
     }
@@ -1536,4 +1540,6 @@ public abstract class Entity extends WorldTile {
     public void setFindTargetDelay(long findTargetDelay) {
         this.findTargetDelay = findTargetDelay;
     }
+
+    public abstract double getProtectionPrayerEffectiveness();
 }

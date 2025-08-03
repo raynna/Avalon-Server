@@ -14,8 +14,8 @@ import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.controlers.Controler;
 import com.rs.java.game.player.controlers.GodWars;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 @SuppressWarnings("serial")
@@ -93,24 +93,21 @@ public class CommanderZilyana extends NPC {
 			finish();
 		}
 		final NPC npc = this;
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					setFinished(false);
-					World.addNPC(npc);
-					npc.setLastRegionId(0);
-					World.updateEntityRegion(npc);
-					loadMapRegions();
-					checkMultiArea();
-					// GodWarsBosses.respawnSaradominMinions();
-				} catch (Exception e) {
-					e.printStackTrace();
-				} catch (Error e) {
-					e.printStackTrace();
-				}
-			}
-		}, getCombatDefinitions().getRespawnDelay() * 600, TimeUnit.MILLISECONDS);
+		CoresManager.getSlowExecutor().schedule(() -> {
+            try {
+                setFinished(false);
+                World.addNPC(npc);
+                npc.setLastRegionId(0);
+                World.updateEntityRegion(npc);
+                loadMapRegions();
+                checkMultiArea();
+                // GodWarsBosses.respawnSaradominMinions();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } catch (Error e) {
+                e.printStackTrace();
+            }
+        }, getCombatDefinitions().getRespawnDelay() * 600L, TimeUnit.MILLISECONDS);
 	}
 
 }

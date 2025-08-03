@@ -65,8 +65,8 @@ import com.rs.java.game.player.content.dungeoneering.skills.DungeoneeringTraps;
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.java.game.player.dialogues.dungeoneering.DestroyCurrentStone;
 import com.rs.java.game.player.dialogues.skilling.LeatherCraftingD;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.java.utils.Utils;
 

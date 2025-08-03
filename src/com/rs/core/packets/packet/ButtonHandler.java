@@ -11,7 +11,6 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.item.itemdegrading.ChargesManager;
 import com.rs.java.game.item.plugins.misc.RunePouch;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.minigames.crucible.Crucible;
@@ -69,8 +68,8 @@ import com.rs.java.game.player.content.customtab.TeleportTab;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.game.player.dialogues.LevelUp;
 import com.rs.java.game.player.dialogues.Transportation;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.InputStream;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.java.utils.ItemBonuses;
@@ -1991,7 +1990,7 @@ public class ButtonHandler {
                     if (item == null)
                         return;
                     if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                        long passedTime = Utils.currentTimeMillis() - WorldThread.LAST_CYCLE_CTM;
+                        long passedTime = Utils.currentTimeMillis() - WorldThread.getLastCycleTime();
                         player.itemSwitch = player.hasInstantSpecial(player.getEquipment().getWeaponId());
                         WorldTasksManager.schedule(new WorldTask() {
 
@@ -2683,7 +2682,7 @@ public class ButtonHandler {
     public static void registerRemoveEquipment(final Player player, final int slotId) {
         if (slotId >= 15)
             return;
-        long passedTime = Utils.currentTimeMillis() - WorldThread.LAST_CYCLE_CTM;
+        long passedTime = Utils.currentTimeMillis() - WorldThread.getLastCycleTime();
         WorldTasksManager.schedule(new WorldTask() {
 
             @Override
@@ -2857,27 +2856,24 @@ public class ButtonHandler {
     }
 
     public static void submitSpecialRequest(final Player player) {
-        CoresManager.slowExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final int weaponId = player.getEquipment().getWeaponId();
-                    if (player.hasInstantSpecial(weaponId) && !player.itemSwitch) {
-                        final Entity target = (Entity) player.temporaryAttribute().get("last_target");
-                        if ((player.getActionManager().getAction() instanceof PlayerCombat) && target != null) {
-                            player.getActionManager().forceStop();
-                            player.performInstantSpecial(weaponId);
-                            player.getActionManager().setAction(new PlayerCombat(target));
-                        } else {
-                            player.getActionManager().forceStop();
-                            player.performInstantSpecial(weaponId);
-                        }
-                        return;
+        CoresManager.getSlowExecutor().execute(() -> {
+            try {
+                final int weaponId = player.getEquipment().getWeaponId();
+                if (player.hasInstantSpecial(weaponId) && !player.itemSwitch) {
+                    final Entity target = (Entity) player.temporaryAttribute().get("last_target");
+                    if ((player.getActionManager().getAction() instanceof PlayerCombat) && target != null) {
+                        player.getActionManager().forceStop();
+                        player.performInstantSpecial(weaponId);
+                        player.getActionManager().setAction(new PlayerCombat(target));
+                    } else {
+                        player.getActionManager().forceStop();
+                        player.performInstantSpecial(weaponId);
                     }
-                    player.getCombatDefinitions().switchUsingSpecialAttack();
-                } catch (Throwable e) {
-                    Logger.handle(e);
+                    return;
                 }
+                player.getCombatDefinitions().switchUsingSpecialAttack();
+            } catch (Throwable e) {
+                Logger.handle(e);
             }
         });
     }

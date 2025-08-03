@@ -26,7 +26,7 @@ public class MagicDoorLumbridge extends ObjectPlugin {
 	@Override
 	public boolean processObject(Player player, WorldObject object) {
 		DoorsAndGates.handleDoorTemporary(player, object, 1200);
-		CoresManager.fastExecutor.schedule(new TimerTask() {
+		CoresManager.getFastExecutor().schedule(new TimerTask() {
 
 			@Override
 			public void run() {

@@ -7,8 +7,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.rs.java.game.World;
 import com.rs.java.game.WorldObject;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public class OwnedObjectManager {

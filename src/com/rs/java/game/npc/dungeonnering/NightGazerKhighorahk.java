@@ -93,7 +93,7 @@ public final class NightGazerKhighorahk extends DungeonBoss {
 		World.spawnObject(light);
 		lightCount++;
 
-		CoresManager.fastExecutor.schedule(new TimerTask() {
+		CoresManager.getFastExecutor().schedule(new TimerTask() {
 
 			@Override
 			public void run() {

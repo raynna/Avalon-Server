@@ -15,8 +15,8 @@ import com.rs.java.game.npc.glacior.Glacyte;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.actions.skills.summoning.Summoning.Pouch;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public abstract class Familiar extends NPC implements Serializable {

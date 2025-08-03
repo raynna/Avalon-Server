@@ -1,7 +1,7 @@
 package com.rs.java.game.player.dialogues;
 
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 /**
  *

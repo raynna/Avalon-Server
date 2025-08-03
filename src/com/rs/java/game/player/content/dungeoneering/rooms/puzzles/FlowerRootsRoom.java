@@ -13,8 +13,8 @@ import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting;
 import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.HatchetDefinitions;
 import com.rs.java.game.player.content.dungeoneering.rooms.PuzzleRoom;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 public class FlowerRootsRoom extends PuzzleRoom {
 

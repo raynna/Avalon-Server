@@ -15,8 +15,8 @@ import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.controlers.CrucibleControler;
 import com.rs.java.game.player.controlers.FightCaves;
 import com.rs.java.game.player.controlers.FightKiln;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public class AncientMagicks {

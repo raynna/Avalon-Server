@@ -11,8 +11,8 @@ import com.rs.java.game.npc.dungeonnering.SkeletalAdventurer;
 import com.rs.java.game.npc.dungeonnering.YkLagorMage;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public class ForgottenMage extends CombatScript {

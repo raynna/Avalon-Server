@@ -14,8 +14,8 @@ import com.rs.java.game.player.actions.skills.thieving.BlackIbisOutfit.Pieces;
 import com.rs.java.game.player.content.AxeHut;
 import com.rs.java.game.player.content.PirateHut;
 import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 //import com.rs.java.game.player.content.agility.PirateHut;
 import com.rs.java.utils.Utils;
 

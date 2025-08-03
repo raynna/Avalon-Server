@@ -20,6 +20,9 @@ import com.rs.java.game.item.ground.AutomaticGroundItem;
 import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.npc.NpcPluginLoader;
 import com.rs.java.game.npc.combat.CombatScriptsHandler;
+import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.npc.drops.DropTable;
+import com.rs.kotlin.game.npc.drops.DropTableRegistry;
 import com.rs.kotlin.game.npc.drops.DropTablesSetup;
 import com.rs.java.game.objects.GlobalObjectAddition;
 import com.rs.java.game.objects.GlobalObjectDeletion;
@@ -77,6 +80,8 @@ public final class Launcher {
 			Settings.DEBUG = Boolean.parseBoolean(args[0]);
 		}
 		Cache.init();
+		Rscm.loadAll();
+		DropTablesSetup.setup();
 		AreaManager.init();
 		ItemsEquipIds.init();
 		Huffman.init();
@@ -113,7 +118,6 @@ public final class Launcher {
 		WeaponTypesLoader.loadDefinitions();
 		AutomaticGroundItem.initialize();
 		//MobRewardRDT.getInstance().structureNode();
-		DropTablesSetup.setup();
 		WorldList.init();
 		KillScoreBoard.init();
 		EdgevillePvPInstance.buildInstance();
@@ -145,38 +149,32 @@ public final class Launcher {
 	}
 
 	private static void addCleanMemoryTask() {
-		CoresManager.slowExecutor.scheduleWithFixedDelay(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					cleanMemory(Runtime.getRuntime().freeMemory() < Settings.MIN_FREE_MEM_ALLOWED);
-				} catch (Throwable e) {
-					Logger.handle(e);
-				}
-			}
-		}, 0, 10, TimeUnit.SECONDS);
+		CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
+            try {
+                cleanMemory(Runtime.getRuntime().freeMemory() < Settings.MIN_FREE_MEM_ALLOWED);
+            } catch (Throwable e) {
+                Logger.handle(e);
+            }
+        }, 0, 10, TimeUnit.SECONDS);
 	}
 
 	private static int i = 0;
 
 	private static void addAccountsSavingTask() {
-		CoresManager.slowExecutor.scheduleWithFixedDelay(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					i++;
-					if (i % 30 == 0 && !Settings.DEBUG) {
-						//discord.getChannelByName("public-chat").sendMessage("30 Minutes Message\n"
-						//		+ World.getPlayers().size() + " players are currently playing Avalon.");
-						i = 0;
-					}
-					saveFiles();
-				} catch (Throwable e) {
-					Logger.handle(e);
-				}
+		CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
+            try {
+                i++;
+                if (i % 30 == 0 && !Settings.DEBUG) {
+                    //discord.getChannelByName("public-chat").sendMessage("30 Minutes Message\n"
+                    //		+ World.getPlayers().size() + " players are currently playing Avalon.");
+                    i = 0;
+                }
+                saveFiles();
+            } catch (Throwable e) {
+                Logger.handle(e);
+            }
 
-			}
-		}, 0, 1, TimeUnit.MINUTES);
+        }, 0, 1, TimeUnit.MINUTES);
 	}
 
 	public static String Time(String dateFormat) {
@@ -215,7 +213,7 @@ public final class Launcher {
 		}
 		for (Index index : Cache.STORE.getIndexes())
 			index.resetCachedFiles();
-		CoresManager.fastExecutor.purge();
+		CoresManager.getFastExecutor().purge();
 		System.gc();
 	}
 

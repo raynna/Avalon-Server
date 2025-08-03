@@ -12,8 +12,8 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 @SuppressWarnings("serial")
 public class GeneralGraardor extends NPC {
@@ -82,16 +82,13 @@ public class GeneralGraardor extends NPC {
 			finish();
 		}
 		final NPC npc = this;
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				setFinished(false);
-				World.addNPC(npc);
-				npc.setLastRegionId(0);
-				World.updateEntityRegion(npc);
-				loadMapRegions();
-				checkMultiArea();
-			}
-		}, getCombatDefinitions().getRespawnDelay() * 600, TimeUnit.MILLISECONDS);
+		CoresManager.getSlowExecutor().schedule(() -> {
+            setFinished(false);
+            World.addNPC(npc);
+            npc.setLastRegionId(0);
+            World.updateEntityRegion(npc);
+            loadMapRegions();
+            checkMultiArea();
+        }, getCombatDefinitions().getRespawnDelay() * 600L, TimeUnit.MILLISECONDS);
 	}
 }

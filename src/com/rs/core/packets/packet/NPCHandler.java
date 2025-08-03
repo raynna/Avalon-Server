@@ -43,8 +43,8 @@ import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.SlidingTilesR
 import com.rs.java.game.player.controlers.Falconry;
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.java.game.player.dialogues.npcs.FremennikShipmaster;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.InputStream;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.NPCSpawns;
@@ -232,7 +232,7 @@ public class NPCHandler {
                             if (player.getInventory().addItem(1737, 1))
                                 npc.transformIntoNPC(42);
                             player.animate(new Animation(893));
-                            CoresManager.slowExecutor.schedule(new Runnable() {
+                            CoresManager.getSlowExecutor().schedule(new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
@@ -791,7 +791,7 @@ public class NPCHandler {
                     if (charter) {
                         final long time = FadingScreen.fade(player);
                         player.getPackets().sendGameMessage("You pay the fare and sail to Karamja.");
-                        CoresManager.slowExecutor.execute(new Runnable() {
+                        CoresManager.getSlowExecutor().execute(new Runnable() {
                             @Override
                             public void run() {
                                 try {

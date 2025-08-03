@@ -14,8 +14,8 @@ import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.npc.qbd.QueenBlackDragon;
 import com.rs.java.game.player.content.FadingScreen;
 import com.rs.java.game.player.content.GrotwormLair;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 
 /**
@@ -72,35 +72,32 @@ public final class QueenBlackDragonController extends Controler {
 	public void start() {
 		player.lock();
 		final long time = FadingScreen.fade(player);
-		CoresManager.slowExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					regionBase = MapBuilder.findEmptyChunkBound(8, 8);
-					base = new WorldTile(regionBase[0] << 3, regionBase[1] << 3, 1);
-					MapBuilder.copyAllPlanesMap(176, 792, regionBase[0], regionBase[1], 8, 8);
-					FadingScreen.unfade(player, time, new Runnable() {
-						@Override
-						public void run() {
-							npc = new QueenBlackDragon(player, base.transform(31, 37, 0), base);
-							player.setNextWorldTile(base.transform(33, 28, 0));
-							player.setLargeSceneView(true);
-							player.setForceMultiArea(true);
-							player.unlock();
-							player.getPackets().sendGlobalConfig(184, 150);
-							player.getPackets().sendGlobalConfig(1924, 0);
-							player.getPackets().sendGlobalConfig(1925, 0);
-							player.getInterfaceManager()
-									.sendTab(player.getInterfaceManager().hasRezizableScreen() ? 1 : 0, 1285);// 1133);
-							player.getMusicsManager().playMusic(1119); // AWOKEN
-						}
-					});
+		CoresManager.getSlowExecutor().execute(() -> {
+            try {
+                regionBase = MapBuilder.findEmptyChunkBound(8, 8);
+                base = new WorldTile(regionBase[0] << 3, regionBase[1] << 3, 1);
+                MapBuilder.copyAllPlanesMap(176, 792, regionBase[0], regionBase[1], 8, 8);
+                FadingScreen.unfade(player, time, new Runnable() {
+                    @Override
+                    public void run() {
+                        npc = new QueenBlackDragon(player, base.transform(31, 37, 0), base);
+                        player.setNextWorldTile(base.transform(33, 28, 0));
+                        player.setLargeSceneView(true);
+                        player.setForceMultiArea(true);
+                        player.unlock();
+                        player.getPackets().sendGlobalConfig(184, 150);
+                        player.getPackets().sendGlobalConfig(1924, 0);
+                        player.getPackets().sendGlobalConfig(1925, 0);
+                        player.getInterfaceManager()
+                                .sendTab(player.getInterfaceManager().hasRezizableScreen() ? 1 : 0, 1285);// 1133);
+                        player.getMusicsManager().playMusic(1119); // AWOKEN
+                    }
+                });
 
-				} catch (Throwable e) {
-					Logger.handle(e);
-				}
-			}
-		});
+            } catch (Throwable e) {
+                Logger.handle(e);
+            }
+        });
 	}
 
 	@Override
@@ -377,12 +374,7 @@ public final class QueenBlackDragonController extends Controler {
 		/*
 		 * 1200 delay because of leaving
 		 */
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				MapBuilder.destroyMap(regionBase[0], regionBase[1], 8, 8);
-			}
-		}, 1200, TimeUnit.MILLISECONDS);
+		CoresManager.getSlowExecutor().schedule(() -> MapBuilder.destroyMap(regionBase[0], regionBase[1], 8, 8), 1200, TimeUnit.MILLISECONDS);
 
 	}
 

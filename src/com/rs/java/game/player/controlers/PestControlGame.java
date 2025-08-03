@@ -4,8 +4,8 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.minigames.pest.Lander;
 import com.rs.java.game.minigames.pest.PestControl;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public class PestControlGame extends Controler {

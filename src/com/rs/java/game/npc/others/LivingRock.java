@@ -9,8 +9,8 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 
@@ -55,17 +55,14 @@ public class LivingRock extends NPC {
 		final int remainsId = getId() + 5;
 		transformIntoNPC(remainsId);
 		setRandomWalk(0);
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					if (remainsId == getId())
-						takeRemains();
-				} catch (Throwable e) {
-					Logger.handle(e);
-				}
-			}
-		}, 3, TimeUnit.MINUTES);
+		CoresManager.getSlowExecutor().schedule(() -> {
+            try {
+                if (remainsId == getId())
+                    takeRemains();
+            } catch (Throwable e) {
+                Logger.handle(e);
+            }
+        }, 3, TimeUnit.MINUTES);
 
 	}
 

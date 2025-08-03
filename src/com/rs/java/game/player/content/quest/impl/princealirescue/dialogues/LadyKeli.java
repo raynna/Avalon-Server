@@ -10,8 +10,8 @@ import com.rs.java.game.player.content.quest.State.QuestState;
 import com.rs.java.game.player.content.quest.impl.princealirescue.PrinceAliRescue;
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.java.game.player.dialogues.Mood;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 /**
  * 

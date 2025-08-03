@@ -8,8 +8,8 @@ import com.rs.java.game.cityhandler.CityEventHandler;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 

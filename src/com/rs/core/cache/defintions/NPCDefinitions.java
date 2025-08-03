@@ -3,6 +3,7 @@ package com.rs.core.cache.defintions;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.alex.store.ArchiveReference;
 import com.rs.core.cache.Cache;
 import com.rs.core.packets.InputStream;
 import com.rs.core.packets.OutputStream;
@@ -82,6 +83,49 @@ public final class NPCDefinitions {
 			npcDefinitions.put(id, def);
 		}
 		return def;
+	}
+
+	public static void loadAll() {
+		// Get the NPC index from cache
+		var npcIndex = Cache.STORE.getIndexes()[18];
+
+		// Get the max file ID in this index (some caches use getLastFileId(), adjust if needed)
+		ArchiveReference[] archives = npcIndex.getTable().getArchives();
+
+		for (int archiveId = 0; archiveId < archives.length; archiveId++) {
+			if (!npcIndex.archiveExists(archiveId)) {
+				continue;  // Skip non-existing archives
+			}
+
+			int lastFileId = npcIndex.getLastFileId(archiveId);
+			if (lastFileId < 0) {
+				continue;  // No files in this archive, skip
+			}
+
+			for (int fileId = 0; fileId <= lastFileId; fileId++) {
+				byte[] data = npcIndex.getFile(archiveId, fileId);
+				if (data == null) {
+					continue;  // No file data, skip
+				}
+
+				int npcId = (archiveId << 7) + fileId;  // Compose npcId from archive and file ids
+
+				NPCDefinitions def = new NPCDefinitions(npcId);
+				def.method694();
+				def.readValueLoop(new InputStream(data));
+
+				npcDefinitions.put(npcId, def);
+			}
+		}
+	}
+
+
+	public static int getNpcDefinitionsSize() {
+		return npcDefinitions.size();
+	}
+
+	public static ConcurrentHashMap<Integer, NPCDefinitions> getNpcDefinitions() {
+		return npcDefinitions;
 	}
 
 	public void method694() {

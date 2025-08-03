@@ -105,7 +105,7 @@ public class TokHaarHok extends Dialogue {
 				WorldTile posTile = fightKiln.getWorldTile(37, 45);
 				player.getPackets().sendCameraPos(Cutscene.getX(player, posTile.getX()),
 						Cutscene.getY(player, posTile.getY()), 3000);
-				CoresManager.fastExecutor.schedule(new TimerTask() {
+				CoresManager.getFastExecutor().schedule(new TimerTask() {
 					@Override
 					public void run() {
 						try {
@@ -162,7 +162,7 @@ public class TokHaarHok extends Dialogue {
 				stageInt = 1;
 				fightKiln.showHarAken();
 				player.getInterfaceManager().closeChatBoxInterface();
-				CoresManager.fastExecutor.schedule(new TimerTask() {
+				CoresManager.getFastExecutor().schedule(new TimerTask() {
 					@Override
 					public void run() {
 						try {
@@ -176,7 +176,7 @@ public class TokHaarHok extends Dialogue {
 			case 1:
 				end();
 				fightKiln.hideHarAken();
-				CoresManager.fastExecutor.schedule(new TimerTask() {
+				CoresManager.getFastExecutor().schedule(new TimerTask() {
 					@Override
 					public void run() {
 						try {

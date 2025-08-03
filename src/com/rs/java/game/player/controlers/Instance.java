@@ -7,8 +7,8 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 /**
  *
@@ -37,33 +37,30 @@ public class Instance extends Controler {
 
 	public void startInstance() {
 		player.lock();
-		CoresManager.slowExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				boundChunks = MapBuilder.findEmptyChunkBound(8, 8);
-				MapBuilder.copyAllPlanesMap(356, 666, boundChunks[0], boundChunks[1], 8, 8);
-				player.setNextWorldTile(getWorldTile(17, 26, 2));
-				WorldTasksManager.schedule(new WorldTask() {
-					@Override
-					public void run() {
-						player.unlock();
-						bandos = new NPC(6260, getWorldTile(20, 33, 2), -1, true);
-						minion = new NPC(6261, getWorldTile(18, 33, 2), -1, true);
-						minion2 = new NPC(6263, getWorldTile(25, 33, 2), -1, true);
-						minion3 = new NPC(6265, getWorldTile(16, 33, 2), -1, true);
-						World.addNPC(bandos);
-						World.addNPC(minion);
-						World.addNPC(minion2);
-						World.addNPC(minion3);
-						player.setForceMultiArea(true);
-						bandos.setForceMultiArea(true);
-						minion.setForceMultiArea(true);
-						minion2.setForceMultiArea(true);
-						minion3.setForceMultiArea(true);
-					}
-				}, 1);
-			}
-		});
+		CoresManager.getSlowExecutor().execute(() -> {
+            boundChunks = MapBuilder.findEmptyChunkBound(8, 8);
+            MapBuilder.copyAllPlanesMap(356, 666, boundChunks[0], boundChunks[1], 8, 8);
+            player.setNextWorldTile(getWorldTile(17, 26, 2));
+            WorldTasksManager.schedule(new WorldTask() {
+                @Override
+                public void run() {
+                    player.unlock();
+                    bandos = new NPC(6260, getWorldTile(20, 33, 2), -1, true);
+                    minion = new NPC(6261, getWorldTile(18, 33, 2), -1, true);
+                    minion2 = new NPC(6263, getWorldTile(25, 33, 2), -1, true);
+                    minion3 = new NPC(6265, getWorldTile(16, 33, 2), -1, true);
+                    World.addNPC(bandos);
+                    World.addNPC(minion);
+                    World.addNPC(minion2);
+                    World.addNPC(minion3);
+                    player.setForceMultiArea(true);
+                    bandos.setForceMultiArea(true);
+                    minion.setForceMultiArea(true);
+                    minion2.setForceMultiArea(true);
+                    minion3.setForceMultiArea(true);
+                }
+            }, 1);
+        });
 
 	}
 
@@ -90,23 +87,20 @@ public class Instance extends Controler {
 	}
 
 	public void destroyInstance() {
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				player.IsInInstance = false;
-				player.setForceMultiArea(false);
-				bandos.setForceMultiArea(false);
-				minion.setForceMultiArea(false);
-				minion2.setForceMultiArea(false);
-				minion3.setForceMultiArea(false);
-				World.removeNPC(bandos);
-				World.removeNPC(minion);
-				World.removeNPC(minion2);
-				World.removeNPC(minion3);
-				removeControler();
-				MapBuilder.destroyMap(boundChunks[0], boundChunks[1], 8, 8);
-			}
-		}, 3500, TimeUnit.MILLISECONDS);
+		CoresManager.getSlowExecutor().schedule(() -> {
+            player.IsInInstance = false;
+            player.setForceMultiArea(false);
+            bandos.setForceMultiArea(false);
+            minion.setForceMultiArea(false);
+            minion2.setForceMultiArea(false);
+            minion3.setForceMultiArea(false);
+            World.removeNPC(bandos);
+            World.removeNPC(minion);
+            World.removeNPC(minion2);
+            World.removeNPC(minion3);
+            removeControler();
+            MapBuilder.destroyMap(boundChunks[0], boundChunks[1], 8, 8);
+        }, 3500, TimeUnit.MILLISECONDS);
 	}
 
 }

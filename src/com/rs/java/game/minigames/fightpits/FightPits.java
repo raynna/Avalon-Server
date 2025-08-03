@@ -16,8 +16,8 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.fightpits.FightPitsNPC;
 import com.rs.java.game.npc.fightpits.TzKekPits;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 
@@ -237,7 +237,7 @@ public final class FightPits {
 			startedGame = false;
 		}
 		gameTask = new GameTask();
-		CoresManager.fastExecutor.scheduleAtFixedRate(gameTask, end ? 60000 : 10000, 60000);
+		CoresManager.getFastExecutor().scheduleAtFixedRate(gameTask, end ? 60000 : 10000, 60000);
 
 	}
 

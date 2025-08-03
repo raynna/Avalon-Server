@@ -39,6 +39,15 @@ public final class CoresManager {
 		shutdown = true;
 	}
 
+
+	public static ScheduledExecutorService getSlowExecutor() {
+		return slowExecutor;
+	}
+
+	public static Timer getFastExecutor() {
+		return fastExecutor;
+	}
+
 	private CoresManager() {
 
 	}

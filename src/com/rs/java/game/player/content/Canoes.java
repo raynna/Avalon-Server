@@ -6,8 +6,8 @@ import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
 import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.HatchetDefinitions;
 import com.rs.java.game.player.content.CarrierTravel.Carrier;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 /*
  * Credits goes to Matrix 3

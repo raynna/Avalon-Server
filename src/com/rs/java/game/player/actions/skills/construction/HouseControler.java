@@ -20,8 +20,8 @@ import com.rs.java.game.player.actions.skills.prayer.BoneOffering;
 import com.rs.java.game.player.actions.skills.prayer.Burying.Bone;
 import com.rs.java.game.player.content.PlayerLook;
 import com.rs.java.game.player.controlers.Controler;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.java.utils.Utils;
 

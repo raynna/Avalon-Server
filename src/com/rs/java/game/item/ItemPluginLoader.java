@@ -2,6 +2,7 @@ package com.rs.java.game.item;
 
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.Rscm;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -54,7 +55,13 @@ public class ItemPluginLoader {
                         continue;
                     }
                     for (Object key : plugin.getKeys()) {
-                        cachedItemPlugins.put(key, plugin);
+                        if (key instanceof String keyStr && keyStr.startsWith("item.")) {
+                            cachedItemPlugins.put(Rscm.lookup(keyStr), plugin);
+                        } else if (key instanceof Integer) {
+                            cachedItemPlugins.put(key, plugin);
+                        } else {
+                            System.out.println("Invalid key for " + plugin.getClass().getName());
+                        }
                     }
                     processedClasses.add(c);
                 }

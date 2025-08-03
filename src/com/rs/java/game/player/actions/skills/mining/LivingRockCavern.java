@@ -37,24 +37,12 @@ public final class LivingRockCavern {
 
 	private static void respawnRock(final Rocks rock) {
 		World.spawnObject(rock.rock);
-		CoresManager.slowExecutor.schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				removeRock(rock);
-			}
-		}, Utils.random(8) + 3, TimeUnit.MINUTES);
+		CoresManager.getSlowExecutor().schedule(() -> removeRock(rock), Utils.random(8) + 3, TimeUnit.MINUTES);
 	}
 
 	private static void removeRock(final Rocks rock) {
 		World.removeObject(rock.rock, true);
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				respawnRock(rock);
-			}
-
-		}, 3, TimeUnit.MINUTES);
+		CoresManager.getSlowExecutor().schedule(() -> respawnRock(rock), 3, TimeUnit.MINUTES);
 	}
 
 	public static void init() {

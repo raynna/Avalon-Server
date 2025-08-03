@@ -18,8 +18,8 @@ import com.rs.java.game.player.actions.skills.construction.HouseConstants.Room;
 import com.rs.java.game.player.actions.skills.construction.HouseConstants.Servant;
 import com.rs.java.game.player.actions.skills.construction.Sawmill;
 import com.rs.java.game.player.actions.skills.construction.Sawmill.Plank;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public class ServantNPC extends NPC {

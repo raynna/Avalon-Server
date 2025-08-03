@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.rs.Settings;
 import com.rs.java.game.player.content.clans.ClansManager;
+import com.rs.kotlin.Rscm;
 
 public class InterfaceManager {
 
@@ -92,6 +93,11 @@ public class InterfaceManager {
 	public void sendInterface(int interfaceId) {
 		player.getPackets().sendInterface(false, isResizableScreen() ? RESIZABLE_WINDOW_ID : FIXED_WINDOW_ID,
 				isResizableScreen() ? RESIZABLE_SCREEN_TAB_ID : FIXED_SCREEN_TAB_ID, interfaceId);
+	}
+
+	public void sendInterface(String interfaceName) {
+		player.getPackets().sendInterface(false, isResizableScreen() ? RESIZABLE_WINDOW_ID : FIXED_WINDOW_ID,
+				isResizableScreen() ? RESIZABLE_SCREEN_TAB_ID : FIXED_SCREEN_TAB_ID, Rscm.lookup(interfaceName));
 	}
 
 	public void sendInventoryInterface(int childId) {

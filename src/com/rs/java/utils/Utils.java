@@ -951,10 +951,10 @@ public final class Utils {
 	}
 
 	/**
-	 * Gets the interface definitions components size.
+	 * Gets the interface definitions component.rscm size.
 	 *
 	 * @param interfaceId the interface id
-	 * @return the interface definitions components size
+	 * @return the interface definitions component.rscm size
 	 */
 	public static final int getInterfaceDefinitionsComponentsSize(int interfaceId) {
 		return Cache.STORE.getIndexes()[3].getLastFileId(interfaceId) + 1;

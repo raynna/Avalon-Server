@@ -15,8 +15,8 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.Action;
 import com.rs.java.game.player.actions.combat.weaponscript.WeaponScript;
 import com.rs.java.game.player.actions.combat.weaponscript.WeaponScript.CombatType;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 import com.rs.java.game.player.actions.combat.weaponscript.WeaponScriptsManager;
 
@@ -102,16 +102,11 @@ public class CombatDummy extends Action {
 		} else {
 			meleeDelay(player);
 			player.setNextAnimationNoPriority(new Animation(script.getAttackAnimation(attackStyle)), player);
-			CoresManager.slowExecutor.schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					if (target.getNextAnimation() != null)
-						return;
-					performBlockAnimation(target);
-				}
-
-			}, 0, TimeUnit.MILLISECONDS);
+			CoresManager.getSlowExecutor().schedule(() -> {
+                if (target.getNextAnimation() != null)
+                    return;
+                performBlockAnimation(target);
+            }, 0, TimeUnit.MILLISECONDS);
 		}
 		playSound(soundId, player, target);
 		return combatDelay;
@@ -141,15 +136,11 @@ public class CombatDummy extends Action {
 			}
 		} else {
 			player.setNextAnimationNoPriority(new Animation(script.getAttackAnimation(attackStyle)), player);
-			CoresManager.slowExecutor.schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					if (target.getNextAnimation() != null)
-						return;
-					performBlockAnimation(target);
-				}
-			}, 0, TimeUnit.MILLISECONDS);
+			CoresManager.getSlowExecutor().schedule(() -> {
+                if (target.getNextAnimation() != null)
+                    return;
+                performBlockAnimation(target);
+            }, 0, TimeUnit.MILLISECONDS);
 		}
 		final int ammoId = player.getEquipment().getAmmoId();
 		player.gfx(new Graphics(0, 0, 100));

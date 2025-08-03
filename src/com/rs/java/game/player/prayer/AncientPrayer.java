@@ -8,6 +8,9 @@ import com.rs.java.game.player.Skills;
 public enum AncientPrayer implements Prayer {
 
     DEFLECT_MAGIC(7, 65, 0.3, "Deflect Magic", 2228, 12573) {
+        @Override public PrayerConflictGroup[] getConflictGroups() {
+            return new PrayerConflictGroup[]{PrayerConflictGroup.PROTECTION, PrayerConflictGroup.OVERHEAD};
+        }
         @Override public boolean isProtectionPrayer() { return true; }
         @Override public boolean isDeflectPrayer() { return true; }
         @Override public double getDamageReduction() { return 0.6; } // 40% damage reduction
@@ -15,6 +18,9 @@ public enum AncientPrayer implements Prayer {
         @Override public double getReflectAmount() { return 0.1; } // Reflects 10% damage
     },
     DEFLECT_MISSILES(8, 65, 0.3, "Deflect Missiles", 2229, 12573) {
+        @Override public PrayerConflictGroup[] getConflictGroups() {
+            return new PrayerConflictGroup[]{PrayerConflictGroup.PROTECTION, PrayerConflictGroup.OVERHEAD};
+        }
         @Override public boolean isProtectionPrayer() { return true; }
         @Override public boolean isDeflectPrayer() { return true; }
         @Override public double getDamageReduction() { return 0.6; } // 40% damage reduction
@@ -22,13 +28,16 @@ public enum AncientPrayer implements Prayer {
         @Override public double getReflectAmount() { return 0.1; } // Reflects 10% damage
     },
     DEFLECT_MELEE(9, 65, 0.3, "Deflect Melee", 2230, 12573) {
+        @Override public PrayerConflictGroup[] getConflictGroups() {
+            return new PrayerConflictGroup[]{PrayerConflictGroup.PROTECTION, PrayerConflictGroup.OVERHEAD};
+        }
         @Override public boolean isProtectionPrayer() { return true; }
         @Override public boolean isDeflectPrayer() { return true; }
         @Override public double getDamageReduction() { return 0.6; } // 40% damage reduction
         @Override public double getReflectChance() { return 0.5; } // 50% chance
         @Override public double getReflectAmount() { return 0.1; } // Reflects 10% damage
     },
-    DEFLECT_SUMMONING(18, 85, 0.3, "Deflect Summoning", 2231, 12573) {
+    DEFLECT_SUMMONING(6, 85, 0.3, "Deflect Summoning", 2231, 12573) {
         @Override public boolean isProtectionPrayer() { return true; }
         @Override public boolean isDeflectPrayer() { return true; }
         @Override public boolean isSummoningProtection() { return true; }
@@ -75,14 +84,14 @@ public enum AncientPrayer implements Prayer {
         @Override public boolean isProtectItemPrayer() { return true; }
     },
     BERSERK(5, 99, 0.6, "Berserk", 2256, 12585),
-    WRATH(6, 59, 1.8, "Wrath", 2266, 12589) {
+    WRATH(17, 59, 1.8, "Wrath", 2266, 12589) {
         @Override public PrayerConflictGroup[] getConflictGroups() {
-            return new PrayerConflictGroup[]{PrayerConflictGroup.STANDARD_PROTECTION, PrayerConflictGroup.SPECIAL_PROTECTION};
+            return new PrayerConflictGroup[]{PrayerConflictGroup.PROTECTION, PrayerConflictGroup.OVERHEAD};
         }
     },
-    SOUL_SPLIT(17, 80, 0.33, "Soul Split", 2264, 12581) {
+    SOUL_SPLIT(18, 80, 0.33, "Soul Split", 2264, 12581) {
         @Override public PrayerConflictGroup[] getConflictGroups() {
-            return new PrayerConflictGroup[]{PrayerConflictGroup.STANDARD_PROTECTION, PrayerConflictGroup.SPECIAL_PROTECTION};
+            return new PrayerConflictGroup[]{PrayerConflictGroup.PROTECTION, PrayerConflictGroup.OVERHEAD};
         }
         @Override public double getHealPercentage() { return 0.1; } // Heals 10% of damage dealt
     },

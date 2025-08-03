@@ -20,6 +20,8 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.CreationKiln;
 import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
@@ -119,9 +121,7 @@ import com.rs.java.game.player.controlers.pestcontrol.PestControlGame;
 import com.rs.java.game.player.controlers.pestcontrol.PestControlLobby;
 import com.rs.java.game.player.cutscenes.Cutscene;
 import com.rs.java.game.player.dialogues.Dialogue;
-import com.rs.java.game.player.teleportation.TeleportsData.TeleportStore;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.java.game.player.teleportation.Teleports;
 import com.rs.core.networking.Session;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.core.packets.packet.ButtonHandler;
@@ -1233,7 +1233,7 @@ public class Player extends Entity {
     }
 
     public Player(String password) {
-        super(Settings.ECONOMY_MODE > 0 ? TeleportStore.EDGEVILLE_PVP_INSTANCE.getTile() : Settings.START_PLAYER_LOCATION);
+        super(Settings.ECONOMY_MODE > 0 ? Teleports.TeleportLocations.EDGEVILLE_PVP_INSTANCE.getLocation() : Settings.START_PLAYER_LOCATION);
         setHitpoints(Settings.START_PLAYER_HITPOINTS);
         this.password = password;
         farmingManager = new FarmingManager();
@@ -1541,9 +1541,7 @@ public class Player extends Entity {
 
     public boolean hasRingOfWealth() {
         int[] rows = {2572, 20653, 20655, 20657, 20659};
-        boolean hasRing = getEquipment().containsOneItem(rows);
-        message("Has ring of wealth " + hasRing);
-        return hasRing;
+        return getEquipment().containsOneItem(rows);
     }
 
     public boolean hasDuellist() {
@@ -2481,6 +2479,7 @@ public class Player extends Entity {
     public transient int runTick = 0;
     public transient double drainTick = 0;
     public transient int miscTick = 0;
+    public transient int prayerTick = 0;
 
     @Override
     public void processEntity() {
@@ -2506,6 +2505,7 @@ public class Player extends Entity {
             getAssist().Check();
         }
         checkTimers();
+        prayer.processPrayerDrain(prayerTick++);
         if (miscTick % 10 == 0)
             drainHitPoints();
         //if (miscTick % 32 == 0)//TODO
@@ -2676,7 +2676,7 @@ public class Player extends Entity {
         charges.process();
         auraManager.process();
         actionManager.process();
-        prayer.processPrayerDrain();
+        prayer.processPrayerDrain(miscTick);
         controlerManager.process();
 
     }
@@ -3037,6 +3037,11 @@ public class Player extends Entity {
             setAtMultiArea(isAtMultiArea);
             getPackets().sendGlobalConfig(616, 0);
         }
+    }
+
+    @Override
+    public double getProtectionPrayerEffectiveness() {
+        return 1.0;
     }
 
     /**

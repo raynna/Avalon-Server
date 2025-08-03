@@ -7,8 +7,8 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.minigames.fightpits.FightPits;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.controlers.Controler;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 public class FightPitsArena extends Controler {
 

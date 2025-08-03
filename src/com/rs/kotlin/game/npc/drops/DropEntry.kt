@@ -5,36 +5,26 @@ import java.util.concurrent.ThreadLocalRandom
 
 open class DropEntry @JvmOverloads constructor(
     @JvmField var itemId: Int,
-    @JvmField protected var minAmount: Int,
-    private var maxAmount: Int,
-    protected var always: Boolean = false
+    @JvmField protected var amount: IntRange,
+    protected var always: Boolean = false,
+    private val condition: ((Player) -> Boolean)? = null
 ) {
     private var extraDropEntry: DropEntry? = null
 
-
-    constructor(itemId: Int, amount: Int) : this(itemId, amount, amount, false)
-
-    private fun rollAmount(): Int {
-        if (minAmount == maxAmount) return minAmount
-        return ThreadLocalRandom.current().nextInt(minAmount, maxAmount + 1)
+    open fun rollAmount(): Int {
+        return ThreadLocalRandom.current().nextInt(amount.first, amount.last + 1)
     }
 
-    open fun shouldDrop(player: Player?): Boolean {
-        return true
-    }
-
-    open fun roll(player: Player?): Drop? {
-        if (!shouldDrop(player)) return null
+    open fun roll(player: Player): Drop? {
+        if (condition?.invoke(player) == false) return null
 
         val mainDrop = Drop(itemId, rollAmount(), always)
 
-        if (extraDropEntry != null) {
-            val extra = extraDropEntry!!.roll(player)
-            if (extra != null) {
-                mainDrop.extraDrop = extra
-            }
+        extraDropEntry?.roll(player)?.let {
+            mainDrop.extraDrop = it
         }
 
         return mainDrop
     }
 }
+

@@ -1,5 +1,6 @@
 package com.rs.java.game.player;
 
+import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
@@ -46,6 +47,7 @@ public class RouteEvent {
 		if (!simpleCheck(npc)) {
 			return true;
 		}
+
 		if (npc.getFreezeDelay() > Utils.currentTimeMillis())
 			return true;
 		RouteStrategy[] strategies = generateStrategies();

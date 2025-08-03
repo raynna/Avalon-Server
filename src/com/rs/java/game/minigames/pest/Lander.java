@@ -74,7 +74,7 @@ public class Lander {
 
 	public void enterLander(Player player) {
 		if (lobby.size() == 0)
-			CoresManager.fastExecutor.schedule(timer = new LobbyTimer(), 1000, 1000);
+			CoresManager.getFastExecutor().schedule(timer = new LobbyTimer(), 1000, 1000);
 		player.getControlerManager().startControler("PestControlLobby", landerRequirement.getId());
 		add(player);
 		player.useStairs(-1, landerRequirement.getWorldTile(), 1, 2, "You board the lander.");

@@ -1,5 +1,7 @@
 package com.rs.core.packets.encode;
 
+import com.rs.java.game.player.actions.combat.modernspells.RSModernCombatSpells;
+import com.rs.kotlin.Rscm;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 
@@ -296,6 +298,25 @@ public class WorldPacketsEncoder extends Encoder {
 		session.write(stream);
 	}
 
+	public void sendHideIComponent(String interfaceName, String componentName, boolean hidden) {
+		int interfaceId = Rscm.lookup(interfaceName);
+		int componentId = Rscm.lookup(componentName);
+		OutputStream stream = new OutputStream(6);
+		stream.writePacket(player, 112);
+		stream.writeIntV2(interfaceId << 16 | componentId);
+		stream.writeByte(hidden ? 1 : 0);
+		session.write(stream);
+	}
+
+	public void sendHideIComponent(String interfaceName, int componentId, boolean hidden) {
+		int interfaceId = Rscm.lookup(interfaceName);
+		OutputStream stream = new OutputStream(6);
+		stream.writePacket(player, 112);
+		stream.writeIntV2(interfaceId << 16 | componentId);
+		stream.writeByte(hidden ? 1 : 0);
+		session.write(stream);
+	}
+
 	public void sendHideIComponent(int interfaceId, int componentId, boolean hidden) {
 		OutputStream stream = new OutputStream(6);
 		stream.writePacket(player, 112);
@@ -541,6 +562,16 @@ public class WorldPacketsEncoder extends Encoder {
 		session.write(stream);
 	}
 
+	public void sendIComponentText(String interfaceName, int componentId, String text) {
+		int interfaceId = Rscm.lookup(interfaceName);
+		OutputStream stream = new OutputStream();
+		stream.writePacketVarShort(player, 135);
+		stream.writeString(text);
+		stream.writeInt(interfaceId << 16 | componentId);
+		stream.endPacketVarShort();
+		session.write(stream);
+	}
+
 	public void sendIComponentText(int interfaceId, int componentId, String text) {
 		OutputStream stream = new OutputStream();
 		stream.writePacketVarShort(player, 135);
@@ -548,7 +579,6 @@ public class WorldPacketsEncoder extends Encoder {
 		stream.writeInt(interfaceId << 16 | componentId);
 		stream.endPacketVarShort();
 		session.write(stream);
-
 	}
 
 	public void sendIComponentAnimation(int emoteId, int interfaceId, int componentId) {
@@ -1389,6 +1419,17 @@ public class WorldPacketsEncoder extends Encoder {
 
 	public void sendGameMessage(String text, boolean filter) {
 		sendMessage(filter ? 109 : 0, text, null);
+	}
+
+	public void sendSpriteOnIComponent(String interfaceName, String componentName, String spriteName) {
+		int interfaceId = Rscm.lookup(interfaceName);
+		int componentId = Rscm.lookup(componentName);
+		int spriteId = Rscm.lookup(spriteName);
+		OutputStream stream = new OutputStream(11);
+		stream.writePacket(player, 121);
+		stream.writeInt(spriteId);
+		stream.writeIntV2(interfaceId << 16 | componentId);
+		session.write(stream);
 	}
 
 	public void sendSpriteOnIComponent(int interfaceId, int componentId, int spriteId) {

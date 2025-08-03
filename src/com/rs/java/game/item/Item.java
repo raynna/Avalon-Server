@@ -2,10 +2,12 @@ package com.rs.java.game.item;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Arrays;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.ItemsEquipIds;
 import com.rs.java.game.item.meta.ItemMetadata;
+import com.rs.kotlin.Rscm;
 
 /**
  * Represents a single item.
@@ -18,6 +20,37 @@ public class Item implements Serializable {
 	private short id;
 	private int amount;
 	private ItemMetadata metadata;
+
+	public static int[] getItems(String... names) {
+		return Arrays.stream(names)
+				.map(name -> name.startsWith("item.") ? name : "item." + name)
+				.mapToInt(Rscm::lookup)
+				.toArray();
+	}
+
+	public static int getItem(String name) {
+		String key = name.startsWith("item.") ? name : "item." + name;
+		return Rscm.lookup(key);
+	}
+
+	public static boolean isItem(int id, String... names) {
+		for (String name : names) {
+			if (id == getItem(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isItem(int id, String name) {
+		String key = name.startsWith("item.") ? name : "item." + name;
+		return id == Rscm.lookup(key);
+	}
+
+	public boolean isItem(String name) {
+		String key = name.startsWith("item.") ? name : "item." + name;
+		return id == Rscm.lookup(key);
+	}
 
 	public Item(int id) {
 		this(id, 1, null);

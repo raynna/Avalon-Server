@@ -3,8 +3,8 @@ package com.rs.java.game.player.dialogues;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.WorldTile;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 // Referenced classes of package com.rs.java.game.player.dialogues:
 //            Dialogue

@@ -8,8 +8,8 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.InterfaceManager;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.cutscenes.actions.CutsceneAction;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 
 public abstract class Cutscene {
@@ -43,18 +43,15 @@ public abstract class Cutscene {
 		player.unlock();
 		deleteCache();
 		if (currentMapData != null) {
-			CoresManager.slowExecutor.execute(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						if (currentMapData != null)
-							MapBuilder.destroyMap(currentMapData[0], currentMapData[1], currentMapData[1],
-									currentMapData[2]);
-					} catch (Throwable e) {
-						Logger.handle(e);
-					}
-				}
-			});
+			CoresManager.getSlowExecutor().execute(() -> {
+                try {
+                    if (currentMapData != null)
+                        MapBuilder.destroyMap(currentMapData[0], currentMapData[1], currentMapData[1],
+                                currentMapData[2]);
+                } catch (Throwable e) {
+                    Logger.handle(e);
+                }
+            });
 		}
 	}
 
@@ -71,7 +68,7 @@ public abstract class Cutscene {
 			final int heightChunks) {
 		constructingRegion = true;
 		player.getPackets().sendWindowsPane(56, 0);
-		CoresManager.slowExecutor.execute(new Runnable() {
+		CoresManager.getSlowExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -90,17 +87,14 @@ public abstract class Cutscene {
 						@Override
 						public void run() {
 
-							CoresManager.slowExecutor.execute(new Runnable() {
-								@Override
-								public void run() {
-									player.getPackets()
-											.sendWindowsPane(player.getInterfaceManager().hasRezizableScreen()
-													? InterfaceManager.RESIZABLE_WINDOW_ID
-													: InterfaceManager.FIXED_WINDOW_ID, 0);
-									if (oldData != null)
-										MapBuilder.destroyMap(oldData[0], oldData[1], oldData[1], oldData[2]);
-								}
-							});
+							CoresManager.getSlowExecutor().execute(() -> {
+                                player.getPackets()
+                                        .sendWindowsPane(player.getInterfaceManager().hasRezizableScreen()
+                                                ? InterfaceManager.RESIZABLE_WINDOW_ID
+                                                : InterfaceManager.FIXED_WINDOW_ID, 0);
+                                if (oldData != null)
+                                    MapBuilder.destroyMap(oldData[0], oldData[1], oldData[1], oldData[2]);
+                            });
 						}
 
 					}, 1);

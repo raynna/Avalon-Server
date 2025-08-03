@@ -6,5 +6,5 @@ enum class DropType {
     MAIN,
     TERTIARY,
     SPECIAL,
-    PERCENT
+    CHARM
 }

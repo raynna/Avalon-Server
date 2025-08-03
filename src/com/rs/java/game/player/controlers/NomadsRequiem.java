@@ -17,8 +17,8 @@ import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.content.FadingScreen;
 import com.rs.java.game.player.cutscenes.Cutscene;
 import com.rs.java.game.player.dialogues.Dialogue;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 
@@ -312,30 +312,27 @@ public class NomadsRequiem extends Controler {
 	public void enter(final DungeonPart part, final int doorIndex) {
 		player.lock();
 		final long time = FadingScreen.fade(player);
-		CoresManager.slowExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					final int[] oldMapBaseChunks = mapBaseChunks;
-					final DungeonPart oldPart = currentPart;
-					mapBaseChunks = MapBuilder.findEmptyChunkBound(part.sizeX, part.sizeY);
-					currentPart = part;
-					MapBuilder.copyAllPlanesMap(part.chunkX, part.chunkY, mapBaseChunks[0], mapBaseChunks[1],
-							part.sizeX, part.sizeY);
+		CoresManager.getSlowExecutor().execute(() -> {
+            try {
+                final int[] oldMapBaseChunks = mapBaseChunks;
+                final DungeonPart oldPart = currentPart;
+                mapBaseChunks = MapBuilder.findEmptyChunkBound(part.sizeX, part.sizeY);
+                currentPart = part;
+                MapBuilder.copyAllPlanesMap(part.chunkX, part.chunkY, mapBaseChunks[0], mapBaseChunks[1],
+                        part.sizeX, part.sizeY);
 
-					FadingScreen.unfade(player, time, new Runnable() {
-						@Override
-						public void run() {
-							destroyPart(oldMapBaseChunks, oldPart);
-							enterDoor(doorIndex);
-						}
-					});
+                FadingScreen.unfade(player, time, new Runnable() {
+                    @Override
+                    public void run() {
+                        destroyPart(oldMapBaseChunks, oldPart);
+                        enterDoor(doorIndex);
+                    }
+                });
 
-				} catch (Throwable e) {
-					Logger.handle(e);
-				}
-			}
-		});
+            } catch (Throwable e) {
+                Logger.handle(e);
+            }
+        });
 	}
 
 	public void destroyCurrentPart() {
@@ -343,13 +340,7 @@ public class NomadsRequiem extends Controler {
 	}
 
 	public void destroyPart(final int[] mapBaseChunks, final DungeonPart part) {
-		// since it will change after
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				MapBuilder.destroyMap(mapBaseChunks[0], mapBaseChunks[1], part.sizeX, part.sizeY);
-			}
-		}, 1200, TimeUnit.MILLISECONDS);
+		CoresManager.getSlowExecutor().schedule(() -> MapBuilder.destroyMap(mapBaseChunks[0], mapBaseChunks[1], part.sizeX, part.sizeY), 1200, TimeUnit.MILLISECONDS);
 	}
 
 }

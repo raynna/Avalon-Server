@@ -9,8 +9,8 @@ import com.rs.java.game.player.actions.skills.mining.Mining;
 import com.rs.java.game.player.actions.skills.mining.MiningBase.PickAxeDefinitions;
 import com.rs.java.game.player.content.dungeoneering.rooms.PuzzleRoom;
 import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.ReturnTheFlowRoom.FlowBuilder.FlowPiece;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 public class ReturnTheFlowRoom extends PuzzleRoom {
 

@@ -15,8 +15,8 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.content.FadingScreen;
 import com.rs.java.game.player.content.pet.Pets;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 
 public class RecipeForDisaster extends Controler {
@@ -120,37 +120,34 @@ public class RecipeForDisaster extends Controler {
 		this.login = login;
 		stage = Stages.LOADING;
 		player.lock(); // locks player
-		CoresManager.slowExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				boundChuncks = MapBuilder.findEmptyChunkBound(8, 8);
-				MapBuilder.copyAllPlanesMap(236, 668, boundChuncks[0], boundChuncks[1], 8);
-				player.setNextWorldTile(getWorldTile(9, 8));
-				WorldTasksManager.schedule(new WorldTask() {
-					@Override
-					public void run() {
-						player.unlock(); // unlocks player
-						stage = Stages.RUNNING;
-					}
+		CoresManager.getSlowExecutor().execute(() -> {
+            boundChuncks = MapBuilder.findEmptyChunkBound(8, 8);
+            MapBuilder.copyAllPlanesMap(236, 668, boundChuncks[0], boundChuncks[1], 8);
+            player.setNextWorldTile(getWorldTile(9, 8));
+            WorldTasksManager.schedule(new WorldTask() {
+                @Override
+                public void run() {
+                    player.unlock(); // unlocks player
+                    stage = Stages.RUNNING;
+                }
 
-				}, 1);
-				if (!login) {
-					CoresManager.fastExecutor.schedule(new TimerTask() {
+            }, 1);
+            if (!login) {
+                CoresManager.getFastExecutor().schedule(new TimerTask() {
 
-						@Override
-						public void run() {
-							if (stage != Stages.RUNNING)
-								return;
-							try {
-								startWave();
-							} catch (Throwable t) {
-								Logger.handle(t);
-							}
-						}
-					}, 6000);
-				}
-			}
-		});
+                    @Override
+                    public void run() {
+                        if (stage != Stages.RUNNING)
+                            return;
+                        try {
+                            startWave();
+                        } catch (Throwable t) {
+                            Logger.handle(t);
+                        }
+                    }
+                }, 6000);
+            }
+        });
 	}
 
 	public WorldTile getSpawnTile() {
@@ -194,7 +191,7 @@ public class RecipeForDisaster extends Controler {
 	}
 
 	public void setWaveEvent() {
-		CoresManager.fastExecutor.schedule(new TimerTask() {
+		CoresManager.getFastExecutor().schedule(new TimerTask() {
 
 			@Override
 			public void run() {
@@ -292,12 +289,7 @@ public class RecipeForDisaster extends Controler {
 		/*
 		 * 1200 delay because of leaving
 		 */
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				MapBuilder.destroyMap(boundChuncks[0], boundChuncks[1], 8, 8);
-			}
-		}, 1200, TimeUnit.MILLISECONDS);
+		CoresManager.getSlowExecutor().schedule(() -> MapBuilder.destroyMap(boundChuncks[0], boundChuncks[1], 8, 8), 1200, TimeUnit.MILLISECONDS);
 	}
 
 	/*

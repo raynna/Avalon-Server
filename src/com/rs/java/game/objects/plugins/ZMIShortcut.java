@@ -5,8 +5,8 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.FadingScreen;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 public class ZMIShortcut extends ObjectPlugin {
 

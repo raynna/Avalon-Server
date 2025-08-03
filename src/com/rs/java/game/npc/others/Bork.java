@@ -8,8 +8,8 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 @SuppressWarnings("serial")
 public class Bork extends NPC {
@@ -64,18 +64,15 @@ public class Bork extends NPC {
 			setLocation(getRespawnTile());
 			finish();
 		}
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					spawn();
-				} catch (Exception e) {
-					e.printStackTrace();
-				} catch (Error e) {
-					e.printStackTrace();
-				}
-			}
-		}, 1,
+		CoresManager.getSlowExecutor().schedule(() -> {
+            try {
+                spawn();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } catch (Error e) {
+                e.printStackTrace();
+            }
+        }, 1,
 			TimeUnit.HOURS);
 	}
 	

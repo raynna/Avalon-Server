@@ -12,8 +12,8 @@ import com.rs.java.game.npc.dungeonnering.FrozenAdventurer;
 import com.rs.java.game.npc.dungeonnering.ToKashBloodChiller;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public class ToKashBloodChillerCombat extends CombatScript {

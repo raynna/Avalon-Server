@@ -112,8 +112,8 @@ import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.PoltergeistRo
 import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.PoltergeistRoom.Poltergeist;
 import com.rs.java.game.player.content.dungeoneering.skills.DungeoneeringFishing;
 import com.rs.java.game.player.controlers.DungeonControler;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
@@ -340,7 +340,7 @@ public class DungeonManager {
 		}
 		visibleMap[reference.getX()][reference.getY()] = vr;
 		vr.init(this, reference, party.getFloorType(), room.getRoom());
-		CoresManager.slowExecutor.execute(new Runnable() {
+		CoresManager.getSlowExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -1311,7 +1311,7 @@ public class DungeonManager {
 			}
 			final Dungeon oldDungeon = dungeon;
 			dungeon = null;
-			CoresManager.slowExecutor.schedule(new Runnable() {
+			CoresManager.getSlowExecutor().schedule(new Runnable() {
 				@Override
 				public void run() {
 					try {
@@ -1561,13 +1561,23 @@ public class DungeonManager {
 	}
 
 	public void setRewardsTimer() {
-		CoresManager.fastExecutor.schedule(rewardsTimer = new RewardsTimer(), 1000, 5000);
+		rewardsTimer = new RewardsTimer();
+		CoresManager.getSlowExecutor().scheduleAtFixedRate(
+				rewardsTimer,
+				1000,  // initial delay (1 second)
+				5000,  // period (5 seconds)
+				TimeUnit.MILLISECONDS
+		);
 	}
 
 	public void setDestroyTimer() {
-		// cant be already instanced before anyway, afterall only isntances hwen party
-		// is 0 and remvoes if party not 0
-		CoresManager.fastExecutor.schedule(destroyTimer = new DestroyTimer(), 1000, 5000);
+		destroyTimer = new DestroyTimer();
+		CoresManager.getSlowExecutor().scheduleAtFixedRate(
+				destroyTimer,
+				1000,  // initial delay (1 second)
+				5000,  // period (5 seconds)
+				TimeUnit.MILLISECONDS
+		);
 	}
 
 	public void setMark(Entity target, boolean mark) {
@@ -1707,7 +1717,7 @@ public class DungeonManager {
 		visibleMap = new VisibleRoom[DungeonConstants.DUNGEON_RATIO[party
 				.getSize()][0]][DungeonConstants.DUNGEON_RATIO[party.getSize()][1]];
 		// slow executor loads dungeon as it may take up to few secs
-		CoresManager.slowExecutor.execute(new Runnable() {
+		CoresManager.getSlowExecutor().execute(new Runnable() {
 			@Override
 			public void run() {
 				try {

@@ -9,8 +9,8 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.controlers.Controler;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 public class DeathEvent extends Controler {
 
@@ -56,29 +56,26 @@ public class DeathEvent extends Controler {
 	public void loadRoom() {
 		stage = Stages.LOADING;
 		player.lock(); // locks player
-		CoresManager.slowExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				boundChuncks = MapBuilder.findEmptyChunkBound(2, 2);
-				MapBuilder.copyMap(246, 662, boundChuncks[0], boundChuncks[1], 2, 2, new int[1], new int[1]);
-				player.reset();
-				player.setNextWorldTile(new WorldTile(boundChuncks[0] * 8 + 10, boundChuncks[1] * 8 + 6, 0));
-				player.animate(new Animation(-1));
-				// 1delay because player cant walk while teleing :p, + possible
-				// issues avoid
-				WorldTasksManager.schedule(new WorldTask() {
-					@Override
-					public void run() {
-						player.getMusicsManager().playMusic(683);
-						player.getPackets().sendBlackOut(2);
-						sendInterfaces();
-						player.unlock(); // unlocks player
-						stage = Stages.RUNNING;
-					}
+		CoresManager.getSlowExecutor().execute(() -> {
+            boundChuncks = MapBuilder.findEmptyChunkBound(2, 2);
+            MapBuilder.copyMap(246, 662, boundChuncks[0], boundChuncks[1], 2, 2, new int[1], new int[1]);
+            player.reset();
+            player.setNextWorldTile(new WorldTile(boundChuncks[0] * 8 + 10, boundChuncks[1] * 8 + 6, 0));
+            player.animate(new Animation(-1));
+            // 1delay because player cant walk while teleing :p, + possible
+            // issues avoid
+            WorldTasksManager.schedule(new WorldTask() {
+                @Override
+                public void run() {
+                    player.getMusicsManager().playMusic(683);
+                    player.getPackets().sendBlackOut(2);
+                    sendInterfaces();
+                    player.unlock(); // unlocks player
+                    stage = Stages.RUNNING;
+                }
 
-				}, 1);
-			}
-		});
+            }, 1);
+        });
 	}
 
 	@Override
@@ -126,12 +123,7 @@ public class DeathEvent extends Controler {
 		if (stage != Stages.RUNNING)
 			return;
 		stage = Stages.DESTROYING;
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				MapBuilder.destroyMap(boundChuncks[0], boundChuncks[1], 8, 8);
-			}
-		}, 1200, TimeUnit.MILLISECONDS);
+		CoresManager.getSlowExecutor().schedule(() -> MapBuilder.destroyMap(boundChuncks[0], boundChuncks[1], 8, 8), 1200, TimeUnit.MILLISECONDS);
 	}
 
 	@Override

@@ -17,8 +17,8 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.Foods.Food;
 import com.rs.java.game.player.controlers.castlewars.CastleWarsPlaying;
 import com.rs.java.game.player.dialogues.CastleWarsScoreboard;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 public final class CastleWars {
 	public static final int CW_TICKET = 4067;
@@ -125,7 +125,7 @@ public final class CastleWars {
 
 	public static void createPlayingGame() {
 		playingGame = new PlayingGame();
-		CoresManager.fastExecutor.scheduleAtFixedRate(playingGame, 60000, 60000);
+		CoresManager.getFastExecutor().scheduleAtFixedRate(playingGame, 60000, 60000);
 		refreshAllPlayersTime();
 	}
 

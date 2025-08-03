@@ -10,8 +10,8 @@ import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.content.Foods.Food;
 import com.rs.java.game.player.content.Pots.Pot;
 import com.rs.java.game.player.controlers.Controler;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 /**
  * A controler subclass handling players in the clan wars activity.

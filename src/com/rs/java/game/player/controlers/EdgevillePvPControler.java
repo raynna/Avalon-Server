@@ -7,9 +7,9 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.teleportation.TeleportsData.TeleportStore;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.java.game.player.teleportation.Teleports.TeleportLocations;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.HexColours.Colour;
@@ -20,7 +20,7 @@ public class EdgevillePvPControler extends Controler {
 
     public static void enterPVP(Player player) {
         player.getControlerManager().startControler("EdgevillePvPControler");
-        player.setNextWorldTile(TeleportStore.EDGEVILLE_PVP_INSTANCE.getTile());
+        player.setNextWorldTile(TeleportLocations.EDGEVILLE_PVP_INSTANCE.getLocation());
         player.message("You " + HexColours.getShortMessage(Colour.RED, "enter") + " edgeville pvp instance.");
         player.getAppearence().generateAppearenceData();
     }
@@ -232,7 +232,7 @@ public class EdgevillePvPControler extends Controler {
                     player.getEquipment().init();
                     player.getInventory().init();
                     player.reset();
-                    player.setNextWorldTile(TeleportStore.EDGEVILLE_PVP_INSTANCE.getTile());
+                    player.setNextWorldTile(TeleportLocations.EDGEVILLE_PVP_INSTANCE.getLocation());
                     player.animate(new Animation(-1));
                 } else if (loop == 3) {
                     player.getPackets().sendMusicEffect(90);

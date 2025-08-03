@@ -21,8 +21,8 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.controlers.Controler;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.Utils;
 
@@ -36,7 +36,7 @@ public class WarriorsGuild extends Controler {
 	 * Initiate the "Warrior's Guild" timer task.
 	 */
 	public static void init() {
-		CoresManager.fastExecutor.schedule(WarriorsGuild.timer = new WarriorTimer(), 600, 600);
+		CoresManager.getFastExecutor().schedule(WarriorsGuild.timer = new WarriorTimer(), 600, 600);
 	}
 
 	/**

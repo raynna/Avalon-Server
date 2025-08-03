@@ -1,16 +1,26 @@
 package com.rs.java.game;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import com.rs.Settings;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.Rscm;
 
 public class WorldTile implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -6567346497259686765L;
 
 	private short x, y;
 	private byte plane;
+
+	public WorldTile(String location) {
+		WorldTile tile = Rscm.lookupLocation(location);
+		this.x = tile.x;
+		this.y = tile.y;
+		this.plane = tile.plane;
+	}
 
 	public WorldTile(int x, int y, int plane) {
 		this.x = (short) x;

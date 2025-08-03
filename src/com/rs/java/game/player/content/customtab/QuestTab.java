@@ -86,19 +86,19 @@ public class QuestTab extends CustomTab {
 
 	public static void open(Player player) {
 		sendComponents(player);
-		for (int i = 3; i <= 22; i++)
-			player.getPackets().sendHideIComponent(3002, i, true);
+		for (int i = firstSlot; i <= lastSlot; i++)
+			player.getPackets().sendHideIComponent("interface.quest_tab", i, true);
 		for (int i = 28; i <= 56; i++)
-			player.getPackets().sendHideIComponent(3002, i, true);
+			player.getPackets().sendHideIComponent("interface.quest_tab", i, true);
 		player.getTemporaryAttributtes().put("CUSTOMTAB", 4);
-		player.getPackets().sendHideIComponent(3002, BACK_BUTTON, false);
-		player.getPackets().sendHideIComponent(3002, FORWARD_BUTTON, false);
-		player.getPackets().sendSpriteOnIComponent(3002, PURPLE_STAR_COMP, PURPLE_HIGHLIGHTED);
+		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:back", false);
+		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:forward", false);
+		player.getPackets().sendSpriteOnIComponent("interface.quest_tab", "component.quest_tab:purple_star", "sprite.quest_tab_purple_star_highlight");
 		for (QuestStore store : QuestStore.values()) {
 			if (store != null) {
-				player.getPackets().sendHideIComponent(3002, store.compId, false);
+				player.getPackets().sendHideIComponent("interface.quest_tab", store.compId, false);
 				if (store.text(player) != null)
-					player.getPackets().sendIComponentText(3002, store.compId, store.text(player));
+					player.getPackets().sendIComponentText("interface.quest_tab", store.compId, store.text(player));
 			}
 		}
 	}

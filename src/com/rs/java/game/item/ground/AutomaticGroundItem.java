@@ -283,10 +283,8 @@ public class AutomaticGroundItem {
     }
    
     private static void spawn(AutomaticItem value) {
-       // System.out.println(String.format("Spawned [uid=%s, itemId=%s, locationX=%s, locationY=%s, respawnTime=%s]", value.location.getFixedUniqueId() + value.item.getFixedUniqueId(), value.item.getId(), value.location.getX(), value.location.getY(), value.maxDelay));
-      //  World.addGroundItem(value.item, value.location, null, false, 1, true, false, 1337);
-      //  World.updateGroundItem(value.item, value.location, null, -1, 0);
-        World.addGroundItem(value.item, value.location, null, false, -1, 1, -1);
+       System.out.println(String.format("Spawned [uid=%s, itemId=%s, locationX=%s, locationY=%s, respawnTime=%s]", value.location.getFixedUniqueId() + value.item.getFixedUniqueId(), value.item.getId(), value.location.getX(), value.location.getY(), value.maxDelay));
+       World.addGlobalGroundItem(value.item, value.location);
     }
  
     public static void pickup(WorldTile location, Item item){

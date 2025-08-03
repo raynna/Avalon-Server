@@ -2,17 +2,19 @@ package com.rs.java.game.player.prayer;
 
 public enum PrayerConflictGroup {
     NONE(0),
-    ATTACK(1),
-    STRENGTH(2),
-    DEFENSIVE_SKINS(3),
-    RANGED(4),
-    MAGIC(5),
-    RESTORATION(6),
-    PROTECT_ITEM(7),
-    STANDARD_PROTECTION(8),
-    RETRIBUTION(9),
-    SPECIAL_PROTECTION(10),
-    OTHER(11);
+    MELEE(1),
+    OFFENSIVE(2),
+    ATTACK(3),
+    STRENGTH(4),
+    DEFENSIVE_SKINS(5),
+    RANGED(6),
+    MAGIC(7),
+    RESTORATION(8),
+    PROTECT_ITEM(9),
+    PROTECTION(10),
+    OVERHEAD(11),
+    SPECIAL(12),
+    OTHER(13);
 
     private final int groupId;
 

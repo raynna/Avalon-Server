@@ -15,8 +15,8 @@ import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.cutscenes.Cutscene;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.java.utils.ItemExamines;
 import com.rs.java.utils.Utils;
@@ -191,7 +191,7 @@ public final class DominionTower implements Serializable {
     public void createArena(final int mode) {
         player.closeInterfaces();
         player.lock();
-        CoresManager.slowExecutor.execute(() -> {
+        CoresManager.getSlowExecutor().execute(() -> {
             try {
                 boolean needDestroy = mapBaseCoords != null;
                 final int[] oldMapBaseCoords = mapBaseCoords;
@@ -212,7 +212,7 @@ public final class DominionTower implements Serializable {
                     WorldTasksManager.schedule(new WorldTask() {
                         @Override
                         public void run() {
-                            CoresManager.slowExecutor.execute(() -> {
+                            CoresManager.getSlowExecutor().execute(() -> {
                                 try {
                                     MapBuilder.destroyMap(oldMapBaseCoords[0], oldMapBaseCoords[1], 8, 8);
                                 } catch (Exception | Error e) {
@@ -447,7 +447,7 @@ public final class DominionTower implements Serializable {
         WorldTasksManager.schedule(new WorldTask() {
             @Override
             public void run() {
-                CoresManager.slowExecutor.execute(() -> {
+                CoresManager.getSlowExecutor().execute(() -> {
                     try {
                         MapBuilder.destroyMap(mapBaseCoords[0], mapBaseCoords[1], 8, 8);
                         if (!logout) {

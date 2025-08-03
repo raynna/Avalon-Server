@@ -256,7 +256,7 @@ public class FriendChatsManager {
 	public void sendFCGiveaway(final Player player, boolean reroll, boolean message) {
 		if (message)
 			sendRollMessage(player, "[Giveaway] " + (reroll ? "Could not find a winner, rerolling.." : "Rolling.."));
-		CoresManager.slowExecutor.schedule(new Runnable() {
+		CoresManager.getSlowExecutor().schedule(new Runnable() {
 
 			@Override
 			public void run() {
@@ -265,7 +265,7 @@ public class FriendChatsManager {
 					return;
 				}
 				sendRollMessage(player, "[Giveaway] " + "Picking a random winner..");
-				CoresManager.slowExecutor.schedule(new Runnable() {
+				CoresManager.getSlowExecutor().schedule(new Runnable() {
 
 					@Override
 					public void run() {

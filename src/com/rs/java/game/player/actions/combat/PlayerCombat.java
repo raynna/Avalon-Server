@@ -40,8 +40,8 @@ import com.rs.java.game.player.controlers.pestcontrol.PestControlGame;
 import com.rs.java.game.player.prayer.AncientPrayer;
 import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.player.prayer.PrayerEffectHandler;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.MapAreas;
@@ -2096,7 +2096,7 @@ public class PlayerCombat extends Action {
             }
             MeleeHitDelay(player);
             player.setNextAnimationNoPriority(new Animation(getWeaponAttackEmote(weaponId, attackStyle)), player);
-            CoresManager.slowExecutor.schedule(new Runnable() {
+            CoresManager.getSlowExecutor().schedule(new Runnable() {
 
                 @Override
                 public void run() {
@@ -3064,7 +3064,7 @@ public class PlayerCombat extends Action {
             if (target instanceof Player) {
                 Player p2 = (Player) target;
                 if (meleeAttack) {
-                    CoresManager.slowExecutor.schedule(new Runnable() {
+                    CoresManager.getSlowExecutor().schedule(new Runnable() {
 
                         @Override
                         public void run() {
@@ -3080,13 +3080,14 @@ public class PlayerCombat extends Action {
                 if (player.getEquipment().getWeaponId() == 4566)
                     hit.setDamage(p2.getHitpoints());
                 if (!isVeracEffect(player))
-                    PrayerEffectHandler.handleAllPrayerEffects(player, p2, hit);
+                    PrayerEffectHandler.handleProtectionEffects(p2, player, hit);
                 p2.getChargeManager().processIncommingHit();
             }
             player.getChargeManager().processOutgoingHit();
             target.handleIncommingHit(hit);
             handlePenance(player, hit);
             handleSagaie(hit, player);
+            PrayerEffectHandler.handleOffensiveEffects(player, target, hit);
             if (target instanceof Player)
                 handleAbsorb(player, hit);
             if (target instanceof NPC) {

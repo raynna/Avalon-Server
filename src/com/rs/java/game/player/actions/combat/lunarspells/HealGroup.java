@@ -39,13 +39,10 @@ public class HealGroup {
 				}
 			}
 			player.message("The spell affected " + playersAround + " player(s).");
-			CoresManager.slowExecutor.schedule(new Runnable() {
-				@Override
-				public void run() {
-					player.applyHit(new Hit(player, ((int) (player.getHitpoints() * .75)), HitLook.REGULAR_DAMAGE));
-					player.animate(new Animation(Combat.getDefenceEmote(player)));
-				}
-			}, 1200, TimeUnit.MILLISECONDS);
+			CoresManager.getSlowExecutor().schedule(() -> {
+                player.applyHit(new Hit(player, ((int) (player.getHitpoints() * .75)), HitLook.REGULAR_DAMAGE));
+                player.animate(new Animation(Combat.getDefenceEmote(player)));
+            }, 1200, TimeUnit.MILLISECONDS);
 		}
 		player.getSkills().addXp(Skills.MAGIC, xp);
 		player.gfx(new Graphics(745, 0, 100));

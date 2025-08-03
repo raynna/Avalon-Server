@@ -4,8 +4,8 @@ import java.util.TimerTask;
 
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 
@@ -30,7 +30,7 @@ public final class FadingScreen {
 	public static void unfade(final Player player, long endTime, long startTime, final Runnable event) {
 		long leftTime = endTime - (Utils.currentTimeMillis() - startTime);
 		if (leftTime > 0) {
-			CoresManager.fastExecutor.schedule(new TimerTask() {
+			CoresManager.getFastExecutor().schedule(new TimerTask() {
 				@Override
 				public void run() {
 					try {
@@ -52,7 +52,7 @@ public final class FadingScreen {
 			@Override
 			public void run() {
 				player.getInterfaceManager().sendFadingInterface(170);
-				CoresManager.fastExecutor.schedule(new TimerTask() {
+				CoresManager.getFastExecutor().schedule(new TimerTask() {
 					@Override
 					public void run() {
 						try {

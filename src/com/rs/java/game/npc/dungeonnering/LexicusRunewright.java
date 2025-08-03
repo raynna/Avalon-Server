@@ -14,8 +14,8 @@ import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.actions.combat.Combat;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.game.player.content.dungeoneering.RoomReference;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.WeaponTypesLoader.WeaponType;
 

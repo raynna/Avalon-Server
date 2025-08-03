@@ -13,8 +13,8 @@ import com.rs.java.game.npc.nomad.Nomad;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.dialogues.Dialogue;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 public class NomadCombat extends CombatScript {
 

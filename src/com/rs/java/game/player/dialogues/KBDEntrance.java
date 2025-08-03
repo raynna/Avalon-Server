@@ -21,13 +21,10 @@ public class KBDEntrance extends Dialogue {
 	}
 
 	public static void Teleport(final Player player) {
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				Magic.pushLeverTeleport(player, new WorldTile(2273, 4681, 0));
-				return;
-			}
-		}, 1000, TimeUnit.MILLISECONDS);
+		CoresManager.getSlowExecutor().schedule(() -> {
+            Magic.pushLeverTeleport(player, new WorldTile(2273, 4681, 0));
+            return;
+        }, 1000, TimeUnit.MILLISECONDS);
 	}
 
 	@Override

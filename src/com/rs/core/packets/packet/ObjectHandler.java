@@ -83,8 +83,8 @@ import com.rs.java.game.player.controlers.Falconry;
 import com.rs.java.game.player.controlers.FightCaves;
 import com.rs.java.game.player.controlers.RecipeForDisaster;
 import com.rs.java.game.player.dialogues.npcs.MiningGuildDwarf;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.InputStream;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
@@ -426,7 +426,7 @@ public final class ObjectHandler {
                 if (id == 30560 && object.getX() == 3510 && object.getY() == 9811) {
                     player.lock(5);
                     final long time = FadingScreen.fade(player);
-                    CoresManager.slowExecutor.execute(new Runnable() {
+                    CoresManager.getSlowExecutor().execute(new Runnable() {
                         @Override
                         public void run() {
                             player.animate(new Animation(844));
@@ -447,7 +447,7 @@ public final class ObjectHandler {
                 if (id == 5046 && object.getX() == 3492 && object.getY() == 9808) {
                     player.lock(5);
                     final long time = FadingScreen.fade(player);
-                    CoresManager.slowExecutor.execute(new Runnable() {
+                    CoresManager.getSlowExecutor().execute(new Runnable() {
 
                         @Override
                         public void run() {

@@ -2,24 +2,32 @@ package com.rs.kotlin.game.npc.drops
 
 import com.rs.java.game.player.Player
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.math.max
 
-open class TertiaryDropEntry(itemId: Int, amount: Int, numerator: Int, denominator: Int) :
-    DropEntry(itemId, amount, amount) {
-    private val probability: Double
+open class TertiaryDropEntry(
+    itemId: Int,
+    amount: IntRange,
+    private val numerator: Int,
+    private val denominator: Int,
+    private val condition: ((Player) -> Boolean)? = null
+) : DropEntry(itemId, amount) {
 
     init {
-        require(!(numerator <= 0 || denominator <= 0 || numerator > denominator)) { "Invalid probability: $numerator/$denominator" }
-        probability = numerator.toDouble() / denominator;
+        require(numerator in 1..denominator) { "Invalid weight: $numerator/$denominator" }
     }
 
-    override fun roll(player: Player?): Drop? {
-        if (!shouldDrop(player)) return null
-        val roll = ThreadLocalRandom.current().nextDouble()
-        if (roll < probability) return Drop(itemId, minAmount, false)
+    override fun rollAmount(): Int {
+        return ThreadLocalRandom.current().nextInt(amount.first, amount.last + 1)
+    }
+
+    override fun roll(player: Player): Drop? {
+        if (condition != null && !condition.invoke(player)) {
+            return null
+        }
+        val roll = ThreadLocalRandom.current().nextInt(denominator)
+        if (roll < numerator) {
+            return Drop(itemId, rollAmount())
+        }
         return null
     }
-
-    companion object {
-    }
 }
+

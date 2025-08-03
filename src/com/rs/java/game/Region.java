@@ -55,7 +55,7 @@ public class Region {
 	public void checkLoadMap() {
 		if (getLoadMapStage() == 0) {
 			setLoadMapStage(1);
-			CoresManager.slowExecutor.execute(new Runnable() {
+			CoresManager.getSlowExecutor().execute(new Runnable() {
 				@Override
 				public void run() {
 					try {
@@ -624,11 +624,10 @@ public class Region {
 			return null;
 		for (FloorItem item : groundItems) {
 			if (item.hasOwner() && item.isInvisible()) {
-				if (!player.getUsername().equals(item.getOwner()))
+				if (player == null || !player.getUsername().equals(item.getOwner()))
 					continue;
 			}
-			if (item.getId() == id && tile.getX() == item.getTile().getX() && tile.getY() == item.getTile().getY()
-					&& tile.getPlane() == item.getTile().getPlane())
+			if (item.getId() == id && tile.matches(item.getTile()))
 				return item;
 		}
 		return null;

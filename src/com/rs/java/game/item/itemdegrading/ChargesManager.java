@@ -118,15 +118,15 @@ public class ChargesManager implements Serializable {
 		charges.put(id, amount);
 	}
 
-	public boolean breakItem(Item item) {
+	public int breakItem(Item item) {
 		DegradeData data = getDegradeData(item.getId());
-		if (data == null) return false;
+		if (data == null) return -1;
 		int newId = -1;
 		if (data.getCurrentItem().getId() == item.getId()) {
 			newId = data.getBrokenItem() != null ? data.getBrokenItem().getId()
 					: data.getDegradedItem() != null ? data.getDegradedItem().getId() : -1;
 		}
-		return newId != -1;
+		return newId != -1 ? newId : item.getId();
 	}
 
 	public void checkPercentage(String message, int itemId, boolean reverse) {
@@ -161,38 +161,17 @@ public class ChargesManager implements Serializable {
 	}
 
 	private void degrade(Item item, int slot, Hit hit) {
-		//TODO this is currently only used for ring of recoil since its charges stores on player
 		DegradeData data = getDegradeData(item.getId());
 		if (data == null || data.getCurrentItem().getId() != item.getId())
 			return;
-		ItemDefinitions definitions = ItemDefinitions.getItemDefinitions(item.getId());
-		int defaultCharges = data.getHits();
-        Integer c = charges.putIfAbsent(item.getId(), defaultCharges);
-		if (c == null || c == data.getHits()) {
-			player.message("Your " + definitions.getName() + " has started degrading.");
-		}
-		int removeCharges = hit != null ? hit.getDamage() : 0;
-		if (removeCharges <= 0) return;
-		if (c != null && removeCharges < c) {
-			charges.put(item.getId(), c - removeCharges);
-			return;
-		}
-		Item nextItem = null;
-		if (data.getDegradedItem() == null && data.getBrokenItem() != null) {
-			nextItem = data.getBrokenItem();
-		}
-		if (data.getDegradedItem() != null) {
-			if (item.getId() != data.getDegradedItem().getId()) {
-				nextItem = data.getDegradedItem();
-			}
-		}
-		if (nextItem != null) player.message("Your " + definitions.getName() + " has degraded.");
-		else player.message("Your " + definitions.getName() + " turned into dust.");
 
-		player.getEquipment().getItems().set(slot, nextItem);
-		player.getEquipment().refresh(slot);
-		player.getAppearence().generateAppearenceData();
-		charges.remove(item.getId());
+		// Only initialize charges if they don't exist
+		charges.computeIfAbsent(item.getId(), k -> {
+			player.message("Your " + ItemDefinitions.getItemDefinitions(item.getId()).getName() + " has started degrading.");
+			return data.getHits(); // Initialize with default charges (400)
+		});
+
+		// No charge removal or degradation logic here - handled in handleRingOfRecoil
 	}
 
 	private void degrade(Item item, int slot) {
@@ -245,7 +224,7 @@ public class ChargesManager implements Serializable {
 		player.getAppearence().generateAppearenceData();
 	}
 
-	private DegradeData getDegradeData(int itemId) {
+	public DegradeData getDegradeData(int itemId) {
 		for (DegradeData degradeData : data) {
 			if (degradeData != null && degradeData.getCurrentItem().getId() == itemId)
 				return degradeData;

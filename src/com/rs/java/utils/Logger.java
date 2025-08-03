@@ -1,6 +1,6 @@
 package com.rs.java.utils;
 
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.networking.ServerChannelHandler;
 
 public final class Logger {

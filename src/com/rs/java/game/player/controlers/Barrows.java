@@ -17,8 +17,8 @@ import com.rs.java.game.item.ItemId;
 import com.rs.java.game.npc.others.BarrowsBrother;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public final class Barrows extends Controler {

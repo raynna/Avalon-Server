@@ -135,32 +135,34 @@ public final class World {
     }
 
     public enum ARTISAN_TYPES {
-		HELM, CHEST, GLOVES, BOOTS
-	};
+        HELM, CHEST, GLOVES, BOOTS
+    }
 
-	public static ARTISAN_TYPES artisanBonusExp;
+    ;
 
-	public static void artisanWorkShopBonusExp() {
-		spawnNPC(6654, new WorldTile(3060, 3339, 0), -1, true);
-		NPC suak = getNPC(6654);
-		int time = 36000;
-		CoresManager.fastExecutor.schedule(new TimerTask() {
+    public static ARTISAN_TYPES artisanBonusExp;
 
-			@Override
-			public void run() {
-				try {
-					ARTISAN_TYPES[] values2 = ARTISAN_TYPES.values();
-					artisanBonusExp = values2[Utils.random(0, values2.length -1)];
+    public static void artisanWorkShopBonusExp() {
+        spawnNPC(6654, new WorldTile(3060, 3339, 0), -1, true);
+        NPC suak = getNPC(6654);
+        int time = 36000;
+        CoresManager.getFastExecutor().schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                try {
+                    ARTISAN_TYPES[] values2 = ARTISAN_TYPES.values();
+                    artisanBonusExp = values2[Utils.random(0, values2.length - 1)];
                     assert suak != null;
                     suak.setNextForceTalk(new ForceTalk("Smith " + artisanBonusExp));
-				} catch (Throwable e) {
-					World.sendWorldMessage("" + e, true);
-					Logger.handle(e);
-				}
-			}
-		}, 0, time);
-		World.sendWorldMessage("" + artisanBonusExp, true);
-	}
+                } catch (Throwable e) {
+                    World.sendWorldMessage("" + e, true);
+                    Logger.handle(e);
+                }
+            }
+        }, 0, time);
+        World.sendWorldMessage("" + artisanBonusExp, true);
+    }
     /*
      * private static void addLogicPacketsTask() {
      * CoresManager.fastExecutor.scheduleAtFixedRate(new TimerTask() {
@@ -197,7 +199,7 @@ public final class World {
                                               final Runnable event) {
         final long start = Utils.currentTimeMillis();
         World.getRegion(regionId, true);
-        CoresManager.fastExecutor.schedule(new TimerTask() {
+        CoresManager.getFastExecutor().schedule(new TimerTask() {
 
             @Override
             public void run() {
@@ -223,7 +225,7 @@ public final class World {
                 World.getRegion(regionId, true); // forces check load if not loaded
             }
         }
-        CoresManager.fastExecutor.schedule(new TimerTask() {
+        CoresManager.getFastExecutor().schedule(new TimerTask() {
 
             @Override
             public void run() {
@@ -251,11 +253,11 @@ public final class World {
     public static ShootingStar shootingStar;
 
     public static void executeShootingStar() {
-        CoresManager.slowExecutor.scheduleWithFixedDelay(() -> shootingStar = new ShootingStar(), 0, 30, TimeUnit.MINUTES);
+        CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> shootingStar = new ShootingStar(), 0, 30, TimeUnit.MINUTES);
     }
 
     private static void addOwnedObjectsTask() {
-        CoresManager.slowExecutor.scheduleWithFixedDelay(() -> {
+        CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
             try {
                 OwnedObjectManager.processAll();
             } catch (Throwable e) {
@@ -265,7 +267,7 @@ public final class World {
     }
 
     private static void addRestoreShopItemsTask() {
-        CoresManager.slowExecutor.scheduleWithFixedDelay(() -> {
+        CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
             try {
                 ShopsHandler.restoreShops();
             } catch (Throwable e) {
@@ -275,7 +277,7 @@ public final class World {
     }
 
     private static void addDegradeShopItemsTask() {
-        CoresManager.slowExecutor.scheduleWithFixedDelay(() -> {
+        CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
             try {
                 ShopsHandler.degradeShops();
             } catch (Throwable e) {
@@ -287,7 +289,7 @@ public final class World {
     private static final int lastMessage = -1;
 
     private static void addRandomMessagesTask() {
-        CoresManager.slowExecutor.scheduleWithFixedDelay(() -> {
+        CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
             try {
                 for (Player player : getPlayers()) {
                     if (player == null || !player.isActive())
@@ -367,7 +369,7 @@ public final class World {
     }
 
     public static NPC spawnNPC(int id, WorldTile tile, int mapAreaNameHash, boolean canBeAttackFromOutOfArea,
-                                     boolean spawned) {
+                               boolean spawned) {
         NPC n = null;
         HunterNPC hunterNPCs = HunterNPC.forId(id);
         if (hunterNPCs != null) {
@@ -414,15 +416,15 @@ public final class World {
         else if (id >= 9462 && id <= 9467)
             n = new Strykewyrm(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea);
         else if (id == 6247)
-			n = new CommanderZilyana(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
-		else if (id >= 6210 && id <= 6221)
-			n = new GodwarsZammorakFaction(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
-		else if (id >= 6254 && id <= 6259)
-			n = new GodwarsSaradominFaction(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
-		else if (id >= 6268 && id <= 6283)
-			n = new GodwarsBandosFaction(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
-		else if (id >= 6228 && id <= 6246)
-			n = new GodwarsArmadylFaction(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
+            n = new CommanderZilyana(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
+        else if (id >= 6210 && id <= 6221)
+            n = new GodwarsZammorakFaction(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
+        else if (id >= 6254 && id <= 6259)
+            n = new GodwarsSaradominFaction(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
+        else if (id >= 6268 && id <= 6283)
+            n = new GodwarsBandosFaction(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
+        else if (id >= 6228 && id <= 6246)
+            n = new GodwarsArmadylFaction(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
         else if (id == 8133)
             n = new CorporealBeast(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
         else if (id == 19000 || id == 19001 || id == 19002 || id == 6367 || id == 3229 || id == 1919)
@@ -449,7 +451,7 @@ public final class World {
             n = new Rocks(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
         else if (id == 1265 || id == 1267)
             n = new RockCrabs(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
-            else if (id == 3373)
+        else if (id == 3373)
             n = new Max(id, tile, canBeAttackFromOutOfArea);
         else
             n = new NPC(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
@@ -457,7 +459,7 @@ public final class World {
     }
 
     public static NPC spawnNPC(int id, WorldTile tile, int mapAreaNameHash, boolean canBeAttackFromOutOfArea,
-                                     boolean spawned, Player owner) {
+                               boolean spawned, Player owner) {
         NPC n = new NPC(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned, owner);
         if (n.getId() == 9151) {
             n.animate(new Animation(11907));
@@ -1021,7 +1023,7 @@ public final class World {
                 continue;
             player.getPackets().sendSystemUpdate(newTime);
         }
-        CoresManager.slowExecutor.schedule(() -> {
+        CoresManager.getSlowExecutor().schedule(() -> {
             try {
                 for (Player player : World.getPlayers()) {
                     if (player == null || !player.hasStarted())
@@ -1048,7 +1050,7 @@ public final class World {
                 continue;
             player.getPackets().sendSystemUpdate(delay);
         }
-        CoresManager.slowExecutor.schedule(() -> {
+        CoresManager.getSlowExecutor().schedule(() -> {
             try {
                 for (Player player : World.getPlayers()) {
                     if (player == null || !player.hasStarted())
@@ -1079,7 +1081,7 @@ public final class World {
                 player.getSession().getChannel().disconnect();
             }
         }
-        CoresManager.slowExecutor.schedule(() -> {
+        CoresManager.getSlowExecutor().schedule(() -> {
             try {
                 for (Player player : World.getPlayers()) {
                     if (player == null || !player.hasStarted())
@@ -1119,54 +1121,43 @@ public final class World {
     }
 
     public static void spawnObjectTemporary(final WorldObject object, long time,
-                                                  final boolean checkObjectInstance, boolean checkObjectBefore) {
+                                            final boolean checkObjectInstance, boolean checkObjectBefore) {
         final WorldObject before = checkObjectBefore ? World.getObjectWithType(object, object.getType()) : null;
         spawnObject(object);
-        CoresManager.slowExecutor.schedule(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (checkObjectInstance && World.getObjectWithId(object, object.getId()) != object)
-                        return;
-                    if (before != null)
-                        spawnObject(before);
-                    else
-                        removeObject(object);
-                } catch (Throwable e) {
-                    Logger.handle(e);
-                }
+        CoresManager.getSlowExecutor().schedule(() -> {
+            try {
+                if (checkObjectInstance && World.getObjectWithId(object, object.getId()) != object)
+                    return;
+                if (before != null)
+                    spawnObject(before);
+                else
+                    removeObject(object);
+            } catch (Throwable e) {
+                Logger.handle(e);
             }
-
         }, time, TimeUnit.MILLISECONDS);
     }
 
     public static boolean removeObjectTemporary(final WorldObject object, long time) {
         removeObject(object);
-        CoresManager.slowExecutor.schedule(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    spawnObject(object);
-                } catch (Throwable e) {
-                    Logger.handle(e);
-                }
+        CoresManager.getSlowExecutor().schedule(() -> {
+            try {
+                spawnObject(object);
+            } catch (Throwable e) {
+                Logger.handle(e);
             }
-
         }, time, TimeUnit.MILLISECONDS);
         return true;
     }
 
     public static void spawnTempGroundObject(final WorldObject object, final int replaceId, long time) {
         spawnObject(object);
-        CoresManager.slowExecutor.schedule(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    removeObject(object);
-                    addGroundItem(new Item(replaceId), object, null, false, 180);
-                } catch (Throwable e) {
-                    Logger.handle(e);
-                }
+        CoresManager.getSlowExecutor().schedule(() -> {
+            try {
+                removeObject(object);
+                addGroundItem(new Item(replaceId), object, null, false, 180);
+            } catch (Throwable e) {
+                Logger.handle(e);
             }
         }, time, TimeUnit.MILLISECONDS);
     }
@@ -1233,7 +1224,7 @@ public final class World {
         WorldObject newObject = new WorldObject(newId, object.getType(), object.getRotation(), object.getX(),
                 object.getY(), object.getPlane());
         spawnObject(object);
-        CoresManager.slowExecutor.schedule(() -> {
+        CoresManager.getSlowExecutor().schedule(() -> {
             try {
                 if (!World.isSpawnedObject(object))
                     return;
@@ -1246,7 +1237,7 @@ public final class World {
 
     public static boolean removeObjectTemporary(final WorldObject object, long time, boolean removeClip) {
         removeObject(object, removeClip);
-        CoresManager.slowExecutor.schedule(() -> {
+        CoresManager.getSlowExecutor().schedule(() -> {
             try {
                 // if (!World.containsObjectWithId(new WorldTile(object.getTileHash()),
                 // object.getId()))
@@ -1261,7 +1252,7 @@ public final class World {
     public static void spawnTempGroundObject(final WorldObject object, final int replaceId, long time,
                                              final boolean removeClip) {
         spawnObject(object);
-        CoresManager.slowExecutor.schedule(() -> {
+        CoresManager.getSlowExecutor().schedule(() -> {
             try {
                 removeObject(object, removeClip);
                 addGroundItem(new Item(replaceId), object, null, false, 180);
@@ -1304,6 +1295,10 @@ public final class World {
         addGroundItem(item, tile, owner, invisible, hiddenTime, 2, 60);
     }
 
+    public static void addGlobalGroundItem(final Item item, final WorldTile tile) {
+        addGroundItem(item, tile, null, false, -1, 2, -1, null);
+    }
+
     public static FloorItem addGroundItem(final Item item, final WorldTile tile, final Player owner,
                                           boolean invisible, long hiddenTime, int type) {
         return addGroundItem(item, tile, owner, invisible, hiddenTime, type, 60);
@@ -1329,10 +1324,11 @@ public final class World {
         if (attachedId != -1) {
             int attachedId2 = ItemConstants.removeAttachedId2(item);
             if (attachedId2 != -1) {
-                World.updateGroundItem(new Item(attachedId2, 1), item.getTile(), owner, 1, 0);
+                World.updateGroundItem(new Item(attachedId2, 1), item.getTile(), owner, 0, 2);
             }
             removeGroundItem(item, 0);
-            World.updateGroundItem(new Item(attachedId, 1), item.getTile(), owner, 1, 0);
+            removeGroundItem(item, 0); // Remove the untradeable one
+            World.updateGroundItem(new Item(attachedId, 1), item.getTile(), null, 0, 2); // Spawn tradeable (no owner)
             return;
         }
 
@@ -1382,7 +1378,6 @@ public final class World {
     }
 
 
-
     public static void addGroundItemForever(Item item, WorldTile tile) {
         FloorItem floorItem = new FloorItem(item, tile, true);
         Region region = getRegion(tile.getRegionId());
@@ -1403,9 +1398,7 @@ public final class World {
 
     private static FloorItem addGroundItemInternal(Item item, WorldTile tile, Player owner,
                                                    boolean invisible, long hiddenTime, int type, int publicTime, String ironmanName) {
-        FloorItem floorItem = (ironmanName != null)
-                ? new FloorItem(new Item(item), tile, owner, false, invisible, ironmanName)
-                : new FloorItem(new Item(item), tile, owner, false, invisible);
+        FloorItem floorItem = new FloorItem(new Item(item), tile, owner, false, invisible, ironmanName);
 
         Region region = getRegion(tile.getRegionId());
 
@@ -1426,10 +1419,11 @@ public final class World {
         if (shouldBroadcast) {
             boolean checkTradeable = (type != 2);
             broadcastGroundItem(floorItem, checkTradeable);
-            if (publicTime != -1)
+            if (publicTime != -1) {
                 removeGroundItem(floorItem, publicTime);
+            }
         } else if (hiddenTime != -1) {
-            CoresManager.slowExecutor.schedule(() -> {
+            CoresManager.getSlowExecutor().schedule(() -> {
                 try {
                     turnPublic(floorItem, publicTime);
                 } catch (Throwable e) {
@@ -1442,20 +1436,20 @@ public final class World {
     }
 
 
-
     public static void updateGroundItem(Item item, WorldTile tile, Player owner) {
         updateGroundItem(item, tile, owner, 60, 0, null);
     }
 
-    public static void updateGroundItem(Item item, WorldTile tile, Player owner, int time, int type) {
-        updateGroundItem(item, tile, owner, time, type, null);
+    public static void updateGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime, int type) {
+        updateGroundItem(item, tile, owner, hiddenTime, type, null);
     }
 
-    public static void updateGroundItem(Item item, WorldTile tile, Player owner, int time, int type, String ironmanName) {
+    public static void updateGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime, int type, String ironmanName) {
         FloorItem floorItem = World.getRegion(tile.getRegionId()).getGroundItem(item.getId(), tile, owner);
 
         if (floorItem == null) {
-            spawnAsNewGroundItem(item, tile, owner, time, type, ironmanName);
+            System.out.println("[updateGroundItem:1458] floorItem is null, adding " + item.getDisplayName());
+            spawnAsNewGroundItem(item, tile, owner, hiddenTime, type, ironmanName);
             return;
         }
 
@@ -1470,9 +1464,9 @@ public final class World {
                 item.setAmount(item.getAmount() - amountCanAdd);
 
                 if (ironmanName != null)
-                    addGroundItem(item, tile, owner, true, time, type, ironmanName);
+                    addGroundItem(item, tile, owner, true, hiddenTime, type, ironmanName);
                 else
-                    addGroundItem(item, tile, owner, true, time, type);
+                    addGroundItem(item, tile, owner, true, hiddenTime, type);
 
                 owner.getPackets().sendRemoveGroundItem(floorItem);
                 owner.getPackets().sendGroundItem(floorItem);
@@ -1483,27 +1477,22 @@ public final class World {
             }
 
         } else {
-            spawnAsNewGroundItem(item, tile, owner, time, type, ironmanName);
+            spawnAsNewGroundItem(item, tile, owner, hiddenTime, type, ironmanName);
         }
     }
 
-    private static void spawnAsNewGroundItem(Item item, WorldTile tile, Player owner, int time, int type, String ironmanName) {
+    private static void spawnAsNewGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime, int type, String ironmanName) {
         boolean stackable = item.getDefinitions().isStackable() || item.getDefinitions().isNoted();
 
         if (!stackable && item.getAmount() > 1) {
             Item copy = item.clone();
             for (int i = 0; i < copy.getAmount(); i++) {
-                    //item.setAmount(1);
-                if (ironmanName != null)
-                    addGroundItem(item, tile, owner, true, time, type, ironmanName);
-                else
-                    addGroundItem(item, tile, owner, true, time, type);
+                //item.setAmount(1);
+                addGroundItem(item, tile, owner, false, hiddenTime, type, ironmanName);
             }
         } else {
-            if (ironmanName != null)
-                addGroundItem(item, tile, owner, true, time, type, ironmanName);
-            else
-                addGroundItem(item, tile, owner, true, time, type);
+            System.out.println("[spawnAsNewGroundItem:1507] item amount was 1, adding item " + item.getDisplayName());
+            addGroundItem(item, tile, owner, owner != null, hiddenTime, type, ironmanName);
         }
     }
 
@@ -1517,7 +1506,7 @@ public final class World {
 
 
     private static void removeGroundItem(final FloorItem item, long delaySeconds) {
-        CoresManager.slowExecutor.schedule(() -> {
+        CoresManager.getSlowExecutor().schedule(() -> {
             try {
                 final int regionId = item.getTile().getRegionId();
                 final Region region = getRegion(regionId);
@@ -1570,7 +1559,7 @@ public final class World {
         }
 
         if (player.getFreezeDelay() >= Utils.currentTimeMillis() && !floorItem.getTile().matches(player.getTile())) {
-            player.animate(new Animation(832));
+            player.animate(new Animation("animation.pickup_floor"));
         }
 
         if (addToInventory) {
@@ -1634,11 +1623,16 @@ public final class World {
 
     private static String getClueTypeName(int id) {
         switch (id) {
-            case 2677: return "easy";
-            case 2801: return "medium";
-            case 2722: return "hard";
-            case 19043: return "elite";
-            default: return "";
+            case 2677:
+                return "easy";
+            case 2801:
+                return "medium";
+            case 2722:
+                return "hard";
+            case 19043:
+                return "elite";
+            default:
+                return "";
         }
     }
 
@@ -1670,7 +1664,7 @@ public final class World {
     }
 
     private static void scheduleGroundItemRespawn(FloorItem item) {
-        CoresManager.slowExecutor.schedule(() -> {
+        CoresManager.getSlowExecutor().schedule(() -> {
             try {
                 addGroundItemForever(item, item.getTile());
             } catch (Throwable e) {
@@ -1695,7 +1689,7 @@ public final class World {
         int coinsInventory = player.getInventory().getNumberOf(995);
 
         if (pouchTotal == Integer.MAX_VALUE && coinsInventory == Integer.MAX_VALUE) {
-             player.getPackets().sendGameMessage("You don't have enough space to hold more coins.");
+            player.getPackets().sendGameMessage("You don't have enough space to hold more coins.");
             return false;
         }
 

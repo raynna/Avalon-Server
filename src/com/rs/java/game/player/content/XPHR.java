@@ -7,8 +7,8 @@ import java.util.concurrent.TimeUnit;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 /**
@@ -77,22 +77,19 @@ public class XPHR implements Serializable {
 
 	public void CalculateXPHR(int skill) {
 		CalculateXPHR = true;
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				TempValues.put("TempXPHR", TempValues.get("TempSessionXP") * 12);
-				XPHR = TempValues.get("TempXPHR");
-				TempValues.put("TempSessionXP", 0);
-				TempValues.put("TempXPHR", 0);
-				player.getPackets()
-						.sendIComponentText(3001, 1,
-								(!Configuration.get("SkillSettings") ? "XP (" + Skills.SKILL_NAME[skill] + "): "
-										+ Skill.get(Skills.SKILL_NAME[skill]) : "Session XP: " + SessionXP)
-						+ "<br>XP/H: " + Utils.getFormattedNumber(XPHR, ',') + " (" + Utils.getFormatedTimeShort(time)
-						+ ")");
-				CalculateXPHR = false;
-			}
-		}, 5, TimeUnit.MINUTES);
+		CoresManager.getSlowExecutor().schedule(() -> {
+            TempValues.put("TempXPHR", TempValues.get("TempSessionXP") * 12);
+            XPHR = TempValues.get("TempXPHR");
+            TempValues.put("TempSessionXP", 0);
+            TempValues.put("TempXPHR", 0);
+            player.getPackets()
+                    .sendIComponentText(3001, 1,
+                            (!Configuration.get("SkillSettings") ? "XP (" + Skills.SKILL_NAME[skill] + "): "
+                                    + Skill.get(Skills.SKILL_NAME[skill]) : "Session XP: " + SessionXP)
+                    + "<br>XP/H: " + Utils.getFormattedNumber(XPHR, ',') + " (" + Utils.getFormatedTimeShort(time)
+                    + ")");
+            CalculateXPHR = false;
+        }, 5, TimeUnit.MINUTES);
 	}
 
 	public void AddSkill(int skill, double xp) {

@@ -15,6 +15,7 @@ import com.rs.java.game.item.meta.MetaDataType;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.utils.*;
+import com.rs.kotlin.Rscm;
 
 public final class Inventory implements Serializable {
 
@@ -159,6 +160,22 @@ public final class Inventory implements Serializable {
 		return true;
 	}
 
+	public boolean addItem(final String name, final int amount) {
+		int itemId = Rscm.lookup(name);
+		if (itemId < 0 || amount < 1 || !Utils.itemExists(itemId)
+				|| !player.getControlerManager().canAddInventoryItem(itemId, amount))
+			return false;
+		Item[] itemsBefore = items.getItemsCopy();
+		if (!items.add(new Item(itemId, amount))) {
+			items.add(new Item(itemId, items.getFreeSlots()));
+			player.getPackets().sendGameMessage("Not enough space in your inventory.");
+			refreshItems(itemsBefore);
+			return false;
+		}
+		refreshItems(itemsBefore);
+		return true;
+	}
+
 	public boolean addItem(final int itemId, final int amount) {
 		if (itemId < 0 || amount < 1 || !Utils.itemExists(itemId)
 				|| !player.getControlerManager().canAddInventoryItem(itemId, amount))
@@ -247,6 +264,17 @@ public final class Inventory implements Serializable {
 		return true;
 	}
 
+	public void deleteItem(String name, int amount) {
+		int itemId = Rscm.lookup(name);
+		if (!player.getControlerManager().canDeleteInventoryItem(itemId, amount))
+			return;
+		Item[] itemsBefore = items.getItemsCopy();
+		items.remove(new Item(itemId, amount));
+		refreshItems(itemsBefore);
+		if (itemId == 995)
+			player.getPackets().sendGameMessage((amount == 1 ? "One coin" : Utils.getFormattedNumber(amount, ',') + " coins") + " have been removed from your inventory.");
+	}
+
 	public void deleteItem(int itemId, int amount) {
 		if (!player.getControlerManager().canDeleteInventoryItem(itemId, amount))
 			return;
@@ -313,6 +341,10 @@ public final class Inventory implements Serializable {
 
 	public int getNumberOf(int itemId) {
 		return items.getNumberOf(itemId);
+	}
+
+	public int getNumberOf(String name) {
+		return items.getNumberOf(Rscm.lookup(name));
 	}
 
 	public int getAmountOf(int itemId) {
@@ -443,7 +475,9 @@ public final class Inventory implements Serializable {
 		player.message(builder.toString());
 		if (player.isDeveloperMode()) {
 			builder = new StringBuilder();
-			builder.append("FileId: ").append(item.getDefinitions().getFileId()).append(", ArchiveId: ").append(item.getDefinitions().getArchiveId());
+			builder.append("FileId: ").append(item.getDefinitions().getFileId());
+			builder.append(", ArchiveId: ").append(item.getDefinitions().getArchiveId());
+			builder.append(", ItemId: " ).append(item.getId());
 			player.message(builder.toString());
 		}
 		if (item.getMetadata() != null) {

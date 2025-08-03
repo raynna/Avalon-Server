@@ -14,8 +14,8 @@ import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.controlers.Controler;
 import com.rs.java.game.player.controlers.GodWars;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 @SuppressWarnings("serial")
@@ -99,17 +99,14 @@ public class GodWarMinion extends NPC {
 			finish();
 		}
 		final NPC npc = this;
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				setFinished(false);
-				World.addNPC(npc);
-				npc.setLastRegionId(0);
-				World.updateEntityRegion(npc);
-				loadMapRegions();
-				checkMultiArea();
-			}
-		}, getCombatDefinitions().getRespawnDelay() * 600, TimeUnit.MILLISECONDS);
+		CoresManager.getSlowExecutor().schedule(() -> {
+            setFinished(false);
+            World.addNPC(npc);
+            npc.setLastRegionId(0);
+            World.updateEntityRegion(npc);
+            loadMapRegions();
+            checkMultiArea();
+        }, getCombatDefinitions().getRespawnDelay() * 600L, TimeUnit.MILLISECONDS);
 	}
 
 	public void respawn() {

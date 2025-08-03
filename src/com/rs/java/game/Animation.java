@@ -1,5 +1,7 @@
 package com.rs.java.game;
 
+import com.rs.kotlin.Rscm;
+
 public final class Animation {
 
 	private int[] ids;
@@ -7,6 +9,10 @@ public final class Animation {
 
 	public Animation(int id) {
 		this(id, 0);
+	}
+
+	public Animation(String animation) {
+		this(Rscm.lookup(animation), 0);
 	}
 
 	public Animation(int id, int speed) {

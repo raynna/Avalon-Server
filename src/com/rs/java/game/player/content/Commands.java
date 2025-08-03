@@ -51,8 +51,8 @@ import com.rs.java.game.player.content.grandexchange.GrandExchangeManager;
 import com.rs.java.game.player.content.randomevent.AntiBot;
 import com.rs.java.game.player.controlers.EdgevillePvPControler;
 import com.rs.java.game.player.dialogues.LevelUp;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.Encrypt;
@@ -78,6 +78,7 @@ public final class Commands {
         for (int i = 0; i < times; i++) {
             List<Drop> drops = table.rollDrops(player);
             for (Drop drop : drops) {
+                if (drop == null) continue;
                 dropCounts.merge(drop.itemId, drop.amount, Integer::sum);
 
                 if (drop.extraDrop != null) {
@@ -2548,7 +2549,11 @@ public final class Commands {
                             itemDef = ItemDefinitions.getItemDefinitions(itemId);
                         } catch (NumberFormatException e) {
                             // Not an ID, try searching by name
-                            List<ItemDefinitions> results = ItemDefinitions.searchItems(searchTerm, 1);
+                            List<ItemDefinitions> results = ItemDefinitions.searchItems(searchTerm, 10);
+                            player.message("Results for '" + searchTerm + "':");
+                            for (ItemDefinitions def : results) {
+                                player.message("- " + def.getName() + " (<col=ff0000>" + def.getId() + "</col>)");
+                            }
                             if (!results.isEmpty()) {
                                 itemDef = results.get(0);
                             }
@@ -2565,7 +2570,10 @@ public final class Commands {
                         player.getPackets().sendGameMessage("Use: ::item id|name (optional: amount)");
                     }
                     return true;
-
+                case "appearence":
+                    player.getAppearence().setLook(Integer.parseInt(cmd[1]), Integer.parseInt(cmd[2]));
+                    player.getAppearence().generateAppearenceData();
+                    return true;
                 case "search":
                     String searchTerm = String.join(" ", Arrays.copyOfRange(cmd, 1, cmd.length));
                     List<ItemDefinitions> matches = ItemDefinitions.searchItems(searchTerm, 5); // Change maxResults if needed
@@ -3071,7 +3079,8 @@ public final class Commands {
                         return true;
                     }
                     try {
-                        player.animate(new Animation(Integer.valueOf(cmd[1])));
+                        player.animateNoCheck(new Animation(-1));
+                        player.animateNoCheck(new Animation(Integer.parseInt(cmd[1])));
                     } catch (NumberFormatException e) {
                         player.getPackets().sendPanelBoxMessage("Use: ::anim id");
                     }

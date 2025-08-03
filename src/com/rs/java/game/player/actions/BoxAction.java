@@ -259,7 +259,7 @@ public class BoxAction extends Action {
                     new WorldObject[]{
                             new WorldObject(hunt.getObjectId(), 10, 0, player.getX(), player.getY(), player.getPlane())},
                     new long[]{600000});
-            CoresManager.slowExecutor.schedule(new Runnable() {
+            CoresManager.getSlowExecutor().schedule(new Runnable() {
 
                 @Override
                 public void run() {

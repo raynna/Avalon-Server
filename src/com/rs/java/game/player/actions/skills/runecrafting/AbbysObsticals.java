@@ -13,8 +13,8 @@ import com.rs.java.game.player.actions.skills.mining.MiningBase;
 import com.rs.java.game.player.actions.skills.mining.MiningBase.PickAxeDefinitions;
 import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting;
 import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.HatchetDefinitions;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public class AbbysObsticals {

@@ -13,8 +13,8 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public final class ZarosGodwars {
@@ -139,14 +139,7 @@ public final class ZarosGodwars {
 	public static void endWar() {
 		// synchronized(LOCK) {
 		deleteNPCS();
-		CoresManager.slowExecutor.schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				startWar();
-			}
-
-		}, 1, TimeUnit.MINUTES);
+		CoresManager.getSlowExecutor().schedule(() -> startWar(), 1, TimeUnit.MINUTES);
 		// }
 	}
 

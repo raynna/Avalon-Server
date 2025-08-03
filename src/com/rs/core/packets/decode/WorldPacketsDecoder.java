@@ -761,7 +761,7 @@ public final class WorldPacketsDecoder extends Decoder {
 				player.getSkills().addXp(Skills.MAGIC, 10);
 				player.getInventory().deleteItem(563, 1);
 				World.sendProjectileToTile(player, new WorldTile(xCoord, yCoord, player.getPlane()), 142);
-				CoresManager.slowExecutor.schedule(new Runnable() {
+				CoresManager.getSlowExecutor().schedule(new Runnable() {
 					@Override
 					public void run() {
 						World.sendGraphics(player, new Graphics(144), tile);
@@ -787,7 +787,7 @@ public final class WorldPacketsDecoder extends Decoder {
 				player.getSkills().addXp(Skills.MAGIC, 10);
 				player.getInventory().deleteItem(563, 1);
 				World.sendProjectileToTile(player, new WorldTile(xCoord, yCoord, player.getPlane()), 142);
-				CoresManager.slowExecutor.schedule(() -> {
+				CoresManager.getSlowExecutor().schedule(() -> {
                     World.sendGraphics(player, new Graphics(144), tile);
                     if (World.getRegion(regionId).getGroundItem(itemId, tile, player) == null) {
                         player.getPackets().sendGameMessage("Oops! - To late!");
@@ -1216,10 +1216,9 @@ public final class WorldPacketsDecoder extends Decoder {
 
 			if (forceRun)
 				player.setRun(forceRun);
-
 			player.stopAll(false);
-			player.setRouteEvent(new RouteEvent(tile, () -> {
-				FloorItem item = World.getRegion(regionId).getGroundItem(itemId, tile, player);
+			FloorItem item = World.getRegion(regionId).getGroundItem(itemId, tile, player);
+			player.setRouteEvent(new RouteEvent(item, () -> {
 				if (item == null) {
 					player.message("The item has disappeared.");
 					return;
@@ -1235,13 +1234,11 @@ public final class WorldPacketsDecoder extends Decoder {
 						return;
 					}
 				}
-
+				player.setNextFaceWorldTile(tile);
 				if (!player.getTile().matches(tile)) {
-					// Sanity check; shouldn't happen with RouteEvent but good to guard.
-					return;
+					player.animate(new Animation(832));
 				}
 
-				player.setNextFaceWorldTile(tile);
 
 				if (player.getFreezeDelay() <= currentTime)
 					player.addWalkSteps(tile.getX(), tile.getY(), 1);

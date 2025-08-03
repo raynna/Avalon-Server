@@ -335,45 +335,48 @@ public final class ClanWars implements Serializable {
         player.getVarsManager().sendVarBit(5293, 1);
         final Player other = (Player) player.temporaryAttribute().get("clan_request_p");
         if (other != null && (Boolean) other.temporaryAttribute().get("accepted_war_terms") == Boolean.TRUE) {
-            CoresManager.slowExecutor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    player.temporaryAttribute().remove("accepted_war_terms");
-                    other.temporaryAttribute().remove("accepted_war_terms");
-                    player.getInterfaceManager().closeScreenInterface();
-                    other.getInterfaceManager().closeScreenInterface();
-                    for (Player p : firstTeam.getPlayerList(firstTeam)) {
-                        if (p != player && p != other) {
-                            p.getPackets()
-                                    .sendGameMessage("<col=FF0000>Your clan has been challenged to a clan war!</col>");
-                            p.getPackets().sendGameMessage(
-                                    "<col=FF0000>Step through the purple portal in the Challenge Hall.</col>");
-                            p.getPackets().sendGameMessage("<col=FF0000>Battle will commence in 2 minutes.</col>");
-                        }
+            CoresManager.getSlowExecutor().submit(() -> {
+                player.temporaryAttribute().remove("accepted_war_terms");
+                other.temporaryAttribute().remove("accepted_war_terms");
+                player.getInterfaceManager().closeScreenInterface();
+                other.getInterfaceManager().closeScreenInterface();
+                for (Player p : firstTeam.getPlayerList(firstTeam)) {
+                    if (p != player && p != other) {
+                        p.getPackets()
+                                .sendGameMessage("<col=FF0000>Your clan has been challenged to a clan war!</col>");
+                        p.getPackets().sendGameMessage(
+                                "<col=FF0000>Step through the purple portal in the Challenge Hall.</col>");
+                        p.getPackets().sendGameMessage("<col=FF0000>Battle will commence in 2 minutes.</col>");
                     }
-                    for (Player p : secondTeam.getPlayerList(secondTeam)) {
-                        if (p != player && p != other) {
-                            p.getPackets()
-                                    .sendGameMessage("<col=FF0000>Your clan has been challenged to a clan war!</col>");
-                            p.getPackets().sendGameMessage(
-                                    "<col=FF0000>Step through the purple portal in the Challenge Hall.</col>");
-                            p.getPackets().sendGameMessage("<col=FF0000>Battle will commence in 2 minutes.</col>");
-                        }
-                    }
-                    firstTeam.setClanWars(ClanWars.this);
-                    secondTeam.setClanWars(ClanWars.this);
-                    int width = (areaType.getNorthEastTile().getX() - areaType.getSouthWestTile().getX()) / 8 + 1;
-                    int height = (areaType.getNorthEastTile().getY() - areaType.getSouthWestTile().getY()) / 8 + 1;
-                    int[] newCoords = MapBuilder.findEmptyChunkBound(width, height);
-                    MapBuilder.copyAllPlanesMap(areaType.getSouthWestTile().getChunkX(),
-                            areaType.getSouthWestTile().getChunkY(), newCoords[0], newCoords[1], width, height);
-                    baseLocation = new WorldTile(newCoords[0] << 3, newCoords[1] << 3, 0);
-                    WallHandler.loadWall(ClanWars.this);
-                    CoresManager.fastExecutor.scheduleAtFixedRate(timer = new ClanWarsTimer(ClanWars.this), 600, 600);
-                    enter(player);
-                    enter(other);
-                    currentWars.add(ClanWars.this);
                 }
+                for (Player p : secondTeam.getPlayerList(secondTeam)) {
+                    if (p != player && p != other) {
+                        p.getPackets()
+                                .sendGameMessage("<col=FF0000>Your clan has been challenged to a clan war!</col>");
+                        p.getPackets().sendGameMessage(
+                                "<col=FF0000>Step through the purple portal in the Challenge Hall.</col>");
+                        p.getPackets().sendGameMessage("<col=FF0000>Battle will commence in 2 minutes.</col>");
+                    }
+                }
+                firstTeam.setClanWars(ClanWars.this);
+                secondTeam.setClanWars(ClanWars.this);
+                int width = (areaType.getNorthEastTile().getX() - areaType.getSouthWestTile().getX()) / 8 + 1;
+                int height = (areaType.getNorthEastTile().getY() - areaType.getSouthWestTile().getY()) / 8 + 1;
+                int[] newCoords = MapBuilder.findEmptyChunkBound(width, height);
+                MapBuilder.copyAllPlanesMap(areaType.getSouthWestTile().getChunkX(),
+                        areaType.getSouthWestTile().getChunkY(), newCoords[0], newCoords[1], width, height);
+                baseLocation = new WorldTile(newCoords[0] << 3, newCoords[1] << 3, 0);
+                WallHandler.loadWall(ClanWars.this);
+                timer = new ClanWarsTimer(ClanWars.this);
+                CoresManager.getSlowExecutor().scheduleAtFixedRate(
+                        timer,
+                        600,  // initial delay (1 second)
+                        600,  // period (5 seconds)
+                        TimeUnit.MILLISECONDS
+                );
+                enter(player);
+                enter(other);
+                currentWars.add(ClanWars.this);
             });
             return;
         }
@@ -425,21 +428,18 @@ public final class ClanWars implements Serializable {
                 c.timer.refresh(p, false);
             }
             p.getControlerManager().startControler("clan_war", c);
-            CoresManager.slowExecutor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    for (Player player : c.firstPlayers) {
-                        c.timer.refresh(player, true);
-                    }
-                    for (Player player : c.secondPlayers) {
-                        c.timer.refresh(player, false);
-                    }
-                    for (Player player : c.firstViewers) {
-                        c.timer.refresh(player, true);
-                    }
-                    for (Player player : c.secondViewers) {
-                        c.timer.refresh(player, false);
-                    }
+            CoresManager.getSlowExecutor().submit(() -> {
+                for (Player player : c.firstPlayers) {
+                    c.timer.refresh(player, true);
+                }
+                for (Player player : c.secondPlayers) {
+                    c.timer.refresh(player, false);
+                }
+                for (Player player : c.firstViewers) {
+                    c.timer.refresh(player, true);
+                }
+                for (Player player : c.secondViewers) {
+                    c.timer.refresh(player, false);
                 }
             });
             return;
@@ -598,13 +598,10 @@ public final class ClanWars implements Serializable {
         for (Player player : secondTeam.getPlayerList(secondTeam)) {
             player.getPackets().sendGameMessage(secondMessage);
         }
-        CoresManager.slowExecutor.schedule(new Runnable() {
-            @Override
-            public void run() {
-                int width = (areaType.getNorthEastTile().getX() - areaType.getSouthWestTile().getX()) / 8 + 1;
-                int height = (areaType.getNorthEastTile().getY() - areaType.getSouthWestTile().getY()) / 8 + 1;
-                MapBuilder.destroyMap(baseLocation.getChunkX(), baseLocation.getChunkY(), width, height);
-            }
+        CoresManager.getSlowExecutor().schedule(() -> {
+            int width = (areaType.getNorthEastTile().getX() - areaType.getSouthWestTile().getX()) / 8 + 1;
+            int height = (areaType.getNorthEastTile().getY() - areaType.getSouthWestTile().getY()) / 8 + 1;
+            MapBuilder.destroyMap(baseLocation.getChunkX(), baseLocation.getChunkY(), width, height);
         }, 1200, TimeUnit.MILLISECONDS);
     }
 

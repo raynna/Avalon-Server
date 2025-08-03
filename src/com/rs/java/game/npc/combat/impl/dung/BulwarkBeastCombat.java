@@ -13,8 +13,8 @@ import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.impl.KalphiteQueenCombat;
 import com.rs.java.game.npc.dungeonnering.BulwarkBeast;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public class BulwarkBeastCombat extends CombatScript {

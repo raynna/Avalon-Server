@@ -8,7 +8,7 @@ public class SwitchPrayersTrue extends Dialogue {
 	public void start() {
 		// sendDoubleItemSelection(player, new int[] { 681, 1 }, new int[] {
 		// 1714, 1 }, "Curses", "Prayers");
-		// components off ^
+		// component.rscm off ^
 		if (!player.getPrayer().isAncientCurses()) {
 			stage = 1;
 			sendOptionsDialogue(TITLE, "Yes, replace my prayers with curses.", "Nevermind.");

@@ -307,7 +307,7 @@ public class ItemSets {
 		player.getInventory().deleteItem(slot, item);
 		for (int itemId : set.items)
 			player.getInventory().addItem(itemId, 1);
-		player.getPackets().sendGameMessage("You sucessfully traded your item components for a set!");
+		player.getPackets().sendGameMessage("You sucessfully traded your item component.rscm for a set!");
 	}
 
 	public static void exchangeSet(Player player, int id) {

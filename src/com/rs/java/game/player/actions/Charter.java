@@ -38,21 +38,13 @@ public class Charter extends Action {
 	public int processWithDelay(Player player) {
 		final long time = FadingScreen.fade(player);
 		player.getPackets().sendGameMessage("You cross the gangplank and charter back to Port Sarim.");
-		CoresManager.slowExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					FadingScreen.unfade(player, time, new Runnable() {
-						@Override
-						public void run() {
-							player.setNextWorldTile(new WorldTile(PORT_SARIM));
-						}
-					});
-				} catch (Throwable e) {
-					Logger.handle(e);
-				}
-			}
-		});
+		CoresManager.getSlowExecutor().execute(() -> {
+            try {
+                FadingScreen.unfade(player, time, () -> player.setNextWorldTile(new WorldTile(PORT_SARIM)));
+            } catch (Throwable e) {
+                Logger.handle(e);
+            }
+        });
 		return -1;
 	}
 

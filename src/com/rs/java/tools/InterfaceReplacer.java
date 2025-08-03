@@ -37,6 +37,6 @@ public class InterfaceReplacer {
 			toArchive.addFile(a);
 		}
 		cache1.getIndex(3).update();
-		System.out.println("Finished packing all components from:" + fromArchive.getId() + " to:" + toArchive.getId());
+		System.out.println("Finished packing all component.rscm from:" + fromArchive.getId() + " to:" + toArchive.getId());
 	}
 }

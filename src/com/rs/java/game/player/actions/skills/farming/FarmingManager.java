@@ -17,8 +17,8 @@ import com.rs.java.game.player.actions.Action;
 import com.rs.java.game.player.actions.WaterFilling;
 import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.HatchetDefinitions;
 import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.TreeDefinitions;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.Utils;
 

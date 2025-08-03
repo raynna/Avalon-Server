@@ -20,8 +20,8 @@ import com.rs.java.game.npc.pest.Spinner;
 import com.rs.java.game.npc.pest.Splatter;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.controlers.pestcontrol.PestControlGame;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 
@@ -72,21 +72,18 @@ public class PestControl {
 
 	public PestControl create() {
 		final PestControl instance = this;
-		CoresManager.slowExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				boundChunks = MapBuilder.findEmptyChunkBound(8, 8);
-				MapBuilder.copyAllPlanesMap(328, 320, boundChunks[0], boundChunks[1], 8);
-				sendBeginningWave();
-				unlockPortal();
-				for (Player player : team) {
-					player.getControlerManager().removeControlerWithoutCheck();
-					player.useStairs(-1, getWorldTile(35 - Utils.random(4), 54 - (Utils.random(3))), 1, 2);
-					player.getControlerManager().startControler("PestControlGame", instance);
-				}
-				CoresManager.fastExecutor.schedule(new PestGameTimer(), 1000, 1000);
-			}
-		});
+		CoresManager.getSlowExecutor().execute(() -> {
+            boundChunks = MapBuilder.findEmptyChunkBound(8, 8);
+            MapBuilder.copyAllPlanesMap(328, 320, boundChunks[0], boundChunks[1], 8);
+            sendBeginningWave();
+            unlockPortal();
+            for (Player player : team) {
+                player.getControlerManager().removeControlerWithoutCheck();
+                player.useStairs(-1, getWorldTile(35 - Utils.random(4), 54 - (Utils.random(3))), 1, 2);
+                player.getControlerManager().startControler("PestControlGame", instance);
+            }
+            CoresManager.getFastExecutor().schedule(new PestGameTimer(), 1000, 1000);
+        });
 		return instance;
 	}
 
@@ -142,13 +139,10 @@ public class PestControl {
 				}
 			}, 1);
 		}
-		CoresManager.slowExecutor.schedule(new Runnable() {
-			@Override
-			public void run() {
-				MapBuilder.destroyMap(boundChunks[0], boundChunks[1], 8, 8);
-				boundChunks = null;
-			}
-		}, 6000, TimeUnit.MILLISECONDS);
+		CoresManager.getSlowExecutor().schedule(() -> {
+            MapBuilder.destroyMap(boundChunks[0], boundChunks[1], 8, 8);
+            boundChunks = null;
+        }, 6000, TimeUnit.MILLISECONDS);
 	}
 
 	private void sendFinalReward(Player player, int knightZeal) {

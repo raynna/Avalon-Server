@@ -439,8 +439,8 @@ public class SawmillController extends Controler {
 
 	private void refreshConveyorAnimation() {
 		int delayz = LumberjackOutfit.hasAllPieces(player) ? 3 : 5;
-		if (WorldThread.LAST_CYCLE_CTM > lastLogAnimation + delayz) {
-			lastLogAnimation = WorldThread.LAST_CYCLE_CTM;
+		if (WorldThread.getLastCycleTime() > lastLogAnimation + delayz) {
+			lastLogAnimation = WorldThread.getLastCycleTime();
 			World.sendObjectAnimation(player, CONVEYOR_BELT, new Animation(12394));
 			World.sendObjectAnimation(player, CONVEYOR_BELT, new Animation(12395));
 		}

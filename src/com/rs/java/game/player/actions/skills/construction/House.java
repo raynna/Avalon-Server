@@ -30,8 +30,8 @@ import com.rs.java.game.player.actions.skills.construction.HouseConstants.Roof;
 import com.rs.java.game.player.actions.skills.construction.HouseConstants.Room;
 import com.rs.java.game.player.actions.skills.construction.HouseConstants.Servant;
 import com.rs.java.game.player.controlers.Controler;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 
@@ -738,7 +738,7 @@ public class House implements Serializable {
 				}
 			}, 4);
 		} else {
-			CoresManager.slowExecutor.execute(new Runnable() {
+			CoresManager.getSlowExecutor().execute(new Runnable() {
 				@Override
 				public void run() {
 					try {
@@ -1009,7 +1009,7 @@ public class House implements Serializable {
 			clearChallengeNPCs();
 			challengeMode = 0;
 		}
-		CoresManager.slowExecutor.schedule(new Runnable() {
+		CoresManager.getSlowExecutor().schedule(new Runnable() {
 			@Override
 			public void run() {
 				try {

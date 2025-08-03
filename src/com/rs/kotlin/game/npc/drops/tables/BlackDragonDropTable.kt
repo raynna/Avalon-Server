@@ -1,107 +1,76 @@
 package com.rs.kotlin.game.npc.drops.tables
 
-import com.rs.core.cache.defintions.ItemDefinitions
-import com.rs.java.game.item.ItemId
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.drops.*
-import com.rs.kotlin.game.npc.drops.DropTable.Companion.BLUE
-import com.rs.kotlin.game.npc.drops.DropTable.Companion.CRIMSON
-import com.rs.kotlin.game.npc.drops.DropTable.Companion.GOLD
-import com.rs.kotlin.game.npc.drops.DropTable.Companion.GREEN
-import com.rs.kotlin.game.npc.drops.DropTablesSetup.gemDropTable
-import com.rs.kotlin.game.npc.drops.DropTablesSetup.rareDropTable
-import java.util.concurrent.ThreadLocalRandom
 
 object BlackDragonDropTable {
 
-    val table = dropTable(rolls = 1) {//1 means 1 roll per kill, special for things like zulrah who has multiple rolls on maintable
+    val table = dropTable(rareDropTable = true, rolls = 1) {
 
-            alwaysDrops {
-                alwaysDrop("dragon bones")
-                alwaysDrop("black dragonhide");
-            }
-
-            preRollDrops {
-                preRollDrop(
-                    item = "dragon token",
-                    condition = { player -> false }
-                )
-            }
-
-            mainDrops {//item: Any, amount: Int = 1, numerator: Int = 1, denominator: Int = 4
-                mainDrop(item = "mithril 2h sword", amount = 1, probability = 1, chance = 32)
-                mainDrop(item = "mithril hatchet", amount = 1, probability = 1, chance = 42)
-                mainDrop(item = "mithril battleaxe", amount = 1, probability = 1, chance = 42)
-                mainDrop(item = "rune knife", amount = 2, probability = 1, chance = 42)
-                mainDrop(item = "mithril kiteshield", amount = 1, probability = 1, chance = 128)
-                mainDrop(item = "adamant platebody", amount = 1, probability = 1, chance = 128)
-                mainDrop(item = "rune longsword", amount = 1, probability = 1, chance = 128)
-                mainDrop(item = "adamant javelin", amount = 30, probability = 1, chance = 6)
-                mainDrop(item = "fire rune", amount = 50, probability = 1, chance = 16)
-                mainDrop(item = "adamant dart(p)", amount = 16, probability = 1, chance = 18)
-                mainDrop(item = "law rune", amount = 10, probability = 1, chance = 25)
-                mainDrop(item = "blood rune", amount = 15, probability = 1, chance = 42)
-                mainDrop(item = "air rune", amount = 75, probability = 1, chance = 128)
-                mainDrop(item = ItemId.COINS, amount = 196, probability = 1, chance = 3)
-                mainDrop(item = ItemId.COINS, amount = 330, probability = 1, chance = 12)
-                mainDrop(item = ItemId.COINS, amount = 690, probability = 1, chance = 128)
-                mainDrop(item = "adamant bar", amount = 1, probability = 1, chance = 42)
-                mainDrop(item = "chocolate cake", amount = 1, probability = 1, chance = 42)
-            }
-
-            tertiaryDrops {
-                tertiaryDrop(
-                    item = "scroll box (hard)",
-                    probability = 1,
-                    chance = 128,
-                    condition = { player -> player?.treasureTrailsManager?.hasClueScrollByLevel(TreasureTrailsManager.HARD) == false }) //TODO fur'n seek wishlist
-                tertiaryDrop(
-                    item = "black dragon tail-bone",
-                    probability = 1,
-                    chance = 4,
-                    condition = { player -> false }) //TODO fur'n seek wishlist
-                tertiaryDrop(
-                    item = "black dragon egg",
-                    probability = 1,
-                    chance = 200,
-                    condition = { player -> player?.skills?.getLevelForXp(Skills.SUMMONING) == 99 })
-                tertiaryDrop(item = "draconic visage", 1, probability = 1, chance = 10000)
-                tertiaryDrop(item = "starved ancient effigy", 1, probability = 1, chance = 18000)
-            }
-
-            percentDrops {
-                percentDrop("gold charm", amount = 1, percent = 8.96)
-                percentDrop("green charm", amount = 1, percent = 26.9)
-                percentDrop("crimson charm", amount = 1, percent = 6.72)
-                percentDrop("blue charm", amount = 1, percent = 1.34)
-            }
-
-            /*specialDrops {
-                mainDrop(
-                    item = "banana",
-                    min = 1, max = 2, probability = 1, chance = 16,
-                    customLogic = {
-                                  player, drop ->
-                        val pineappleAmount = ThreadLocalRandom.current().nextInt(2, 8)
-                        val noted = drop.amount > 2
-                        val pineapple = ItemDefinitions.getItemDefinitions(ItemId.PINEAPPLE);
-                        val pineappleId = if (noted)
-                            pineapple.getCertId()
-                        else
-                            pineapple.id
-                        drop.extraDrop = Drop(pineappleId, pineappleAmount)
-                    })
-            }*/
-
-            rareTable { player, drops ->
-                val gem = gemDropTable.roll(player)
-                if (gem != null) {
-                    drops.add(gem)
-                    true
-                } else {
-                    false
-                }
-            }
+        alwaysDrops {
+            drop("item.dragon_bones")
+            drop("item.black_dragonhide");
         }
+
+        charmDrops {
+            gold(amount = 3, numerator = 90, denominator = 1000)
+            green(amount = 3, numerator = 269, denominator = 1000)
+            crimson(amount = 3, numerator = 67, denominator = 1000)
+            blue(amount = 3, numerator = 13, denominator = 1000)
+        }
+
+        preRollDrops {
+            drop(
+                item = "item.dragon_token",
+                condition = { player -> false }//TODO RECIPE FOR DISASTER STEP
+            )
+        }
+
+        mainDrops {
+            drop(item = "item.mithril_2h_sword", numerator = 4, denominator = 128)
+            drop(item = "item.mithril_hatchet", numerator = 3, denominator = 128)
+            drop(item = "item.mithril_battleaxe", numerator = 3, denominator = 128)
+            drop(item = "item.rune_knife", amount = 2, numerator = 3, denominator = 128)
+            drop(item = "item.mithril_kiteshield", numerator = 1, denominator = 128)
+            drop(item = "item.adamant_platebody", numerator = 1, denominator = 128)
+            drop(item = "item.rune_longsword", numerator = 1, denominator = 128)
+            drop(item = "item.adamant_javelin", amount = 30, numerator = 20, denominator = 128)
+            drop(item = "item.fire_rune", amount = 50, numerator = 8, denominator = 128)
+            drop(item = "item.adamant_dart_p", amount = 16, numerator = 7, denominator = 128)
+            drop(item = "item.law_rune", amount = 10, numerator = 5, denominator = 128)
+            drop(item = "item.blood_rune", amount = 15, numerator = 3, denominator = 128)
+            drop(item = "item.air_rune", amount = 75, numerator = 1, denominator = 128)
+            drop(item = "item.coins", amount = 196, numerator = 40, denominator = 128)
+            drop(item = "item.coins", amount = 330, numerator = 10, denominator = 128)
+            drop(item = "item.coins", amount = 690, numerator = 1, denominator = 128)
+            drop(item = "item.adamant_bar", numerator = 3, denominator = 128)
+            drop(item = "item.chocolate_cake", numerator = 3, denominator = 128)
+        }
+
+        tertiaryDrops {
+            drop(
+                item = "item.scroll_box_hard",
+                numerator = 1,
+                denominator = 128,
+                condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) })
+            drop(
+                item = "item.scroll_box_elite",
+                numerator = 1,
+                denominator = 500,
+                condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) })
+            drop(
+                item = "item.black_dragon_tail_bone",
+                numerator = 1,
+                denominator = 4,
+                condition = { player -> false }) //TODO fur'n seek wishlist
+            drop(
+                item = "item.black_dragon_egg",
+                numerator = 1,
+                denominator = 200,
+                condition = { player -> player.skills?.getLevelForXp(Skills.SUMMONING) == 99 })
+            drop(item = "item.draconic_visage", 1, numerator = 1, denominator = 10000)
+            drop(item = "item.starved_ancient_effigy", 1, numerator = 1, denominator = 18000)
+        }
+    }
 }

@@ -18,8 +18,8 @@ import com.rs.java.game.npc.fightcaves.TzTok_Jad;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.content.pet.Pets;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 
@@ -132,55 +132,52 @@ public class FightCaves extends Controler {
         this.login = login;
         stage = Stages.LOADING;
         player.lock(); // locks player
-        CoresManager.slowExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                if (boundChuncks == null) {
-                    boundChuncks = MapBuilder.findEmptyChunkBound(8, 8);
-                    buildMap();
-                } else if (!login) {
-                    buildMap();
-                    player.setForceNextMapLoadRefresh(true);
-                    player.loadMapRegions();
+        CoresManager.getSlowExecutor().execute(() -> {
+            if (boundChuncks == null) {
+                boundChuncks = MapBuilder.findEmptyChunkBound(8, 8);
+                buildMap();
+            } else if (!login) {
+                buildMap();
+                player.setForceNextMapLoadRefresh(true);
+                player.loadMapRegions();
+            }
+
+            selectedMusic = MUSICS[Utils.random(MUSICS.length)];
+            player.setNextWorldTile(!login ? getWorldTile(46, 61) : getWorldTile(32, 32));
+            WorldTasksManager.schedule(new WorldTask() {
+                @Override
+                public void run() {
+                    if (!login) {
+                        WorldTile walkTo = getWorldTile(32, 32);
+                        player.addWalkSteps(walkTo.getX(), walkTo.getY(), -1, false);
+                    }
+                    player.getDialogueManager().startDialogue("SimpleNPCMessage", THHAAR_MEJ_JAL,
+                            "You're on your own now, JalYt.<br>Prepare to fight for your life!");
+                    player.setForceMultiArea(true);
+                    playMusic();
+                    player.unlock(); // unlocks player
+                    stage = Stages.RUNNING;
                 }
 
-                selectedMusic = MUSICS[Utils.random(MUSICS.length)];
-                player.setNextWorldTile(!login ? getWorldTile(46, 61) : getWorldTile(32, 32));
-                WorldTasksManager.schedule(new WorldTask() {
+            }, 1);
+            if (!login) {
+                /*
+                 * lets stress less the worldthread, also fastexecutor used
+                 * for mini stuff
+                 */
+                CoresManager.getFastExecutor().schedule(new TimerTask() {
+
                     @Override
                     public void run() {
-                        if (!login) {
-                            WorldTile walkTo = getWorldTile(32, 32);
-                            player.addWalkSteps(walkTo.getX(), walkTo.getY(), -1, false);
+                        if (stage != Stages.RUNNING)
+                            return;
+                        try {
+                            startWave();
+                        } catch (Throwable t) {
+                            Logger.handle(t);
                         }
-                        player.getDialogueManager().startDialogue("SimpleNPCMessage", THHAAR_MEJ_JAL,
-                                "You're on your own now, JalYt.<br>Prepare to fight for your life!");
-                        player.setForceMultiArea(true);
-                        playMusic();
-                        player.unlock(); // unlocks player
-                        stage = Stages.RUNNING;
                     }
-
-                }, 1);
-                if (!login) {
-                    /*
-                     * lets stress less the worldthread, also fastexecutor used
-                     * for mini stuff
-                     */
-                    CoresManager.fastExecutor.schedule(new TimerTask() {
-
-                        @Override
-                        public void run() {
-                            if (stage != Stages.RUNNING)
-                                return;
-                            try {
-                                startWave();
-                            } catch (Throwable t) {
-                                Logger.handle(t);
-                            }
-                        }
-                    }, 6000);
-                }
+                }, 6000);
             }
         });
     }
@@ -263,7 +260,7 @@ public class FightCaves extends Controler {
         if (getCurrentWave() == 63)
             player.getDialogueManager().startDialogue("SimpleNPCMessage", THHAAR_MEJ_JAL,
                     "Look out, here comes TzTok-Jad!");
-        CoresManager.fastExecutor.schedule(new TimerTask() {
+        CoresManager.getFastExecutor().schedule(new TimerTask() {
 
             @Override
             public void run() {
@@ -385,12 +382,7 @@ public class FightCaves extends Controler {
         /*
          * 1200 delay because of leaving
          */
-        CoresManager.slowExecutor.schedule(new Runnable() {
-            @Override
-            public void run() {
-                MapBuilder.destroyMap(boundChuncks[0], boundChuncks[1], 8, 8);
-            }
-        }, 1200, TimeUnit.MILLISECONDS);
+        CoresManager.getSlowExecutor().schedule(() -> MapBuilder.destroyMap(boundChuncks[0], boundChuncks[1], 8, 8), 1200, TimeUnit.MILLISECONDS);
     }
 
     /*

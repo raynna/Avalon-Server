@@ -19,7 +19,6 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemPluginLoader;
 import com.rs.java.game.item.ItemPlugin;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
-import com.rs.java.game.item.itemdegrading.ChargesManager;
 import com.rs.java.game.item.itemdegrading.ItemDegrade.DegradeData;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.minigames.clanwars.FfaZone;
@@ -87,8 +86,8 @@ import com.rs.java.game.player.controlers.Barrows;
 import com.rs.java.game.player.controlers.FightKiln;
 import com.rs.java.game.player.controlers.GodCapes;
 import com.rs.java.game.player.dialogues.skilling.AmuletAttaching;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.InputStream;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.HexColours.Colour;
@@ -124,7 +123,7 @@ public class InventoryOptionsHandler {
 
     public static void dig(final Player player) {
         player.resetWalkSteps();
-        player.animate(new Animation(830));
+        player.animate(new Animation("animation.dig"));
         player.lock();
         WorldTasksManager.schedule(new WorldTask() {
 
@@ -214,45 +213,21 @@ public class InventoryOptionsHandler {
         if (itemId == 15048) {
             player.message("Turning...");
             String[] responses = new String[]{"Absolutely", "Ask again another time.", "Don't hold your breath.", "I wouldn't have a clue.", "I'd be lying if i said no.", "Not so sure about that", "Seems probable", "Surely not.", "The fortunes are with you", "Without a shadow of a doubt.", "Yes, I'd say so."};
-            CoresManager.slowExecutor.schedule(new Runnable() {
-
-                @Override
-                public void run() {
-                    player.message("Your Magic skullball (Long) says '" + (responses[Utils.getRandom(responses.length - 1)]) + "'");
-                }
-            }, 2000, TimeUnit.MILLISECONDS);
+            CoresManager.getSlowExecutor().schedule(() -> player.message("Your Magic skullball (Long) says '" + (responses[Utils.getRandom(responses.length - 1)]) + "'"), 2000, TimeUnit.MILLISECONDS);
         }
         if (itemId == 15050) {
             player.message("Turning...");
-            CoresManager.slowExecutor.schedule(new Runnable() {
-
-                @Override
-                public void run() {
-                    player.message("Your Magic skullball (Yes/no) says '" + (Utils.random(2) == 1 ? "Yes" : "No") + "'");
-                }
-            }, 2000, TimeUnit.MILLISECONDS);
+            CoresManager.getSlowExecutor().schedule(() -> player.message("Your Magic skullball (Yes/no) says '" + (Utils.random(2) == 1 ? "Yes" : "No") + "'"), 2000, TimeUnit.MILLISECONDS);
         }
         if (itemId == 15052) {
             player.message("Turning...");
             String[] responses = new String[]{"Enjoy mass combat in Clan Wars.", "Experienced runecrafters can play the Great Orb Project.", "Fight for glory and rewards in the Duel Arena.", "Match weapons and wits against your foe in Fist of Guthix."};
-            CoresManager.slowExecutor.schedule(new Runnable() {
-
-                @Override
-                public void run() {
-                    player.message("Your Magic skullball (activities) says '" + (responses[Utils.getRandom(responses.length - 1)]) + "'");
-                }
-            }, 2000, TimeUnit.MILLISECONDS);
+            CoresManager.getSlowExecutor().schedule(() -> player.message("Your Magic skullball (activities) says '" + (responses[Utils.getRandom(responses.length - 1)]) + "'"), 2000, TimeUnit.MILLISECONDS);
         }
         if (itemId == 15054) {
             player.message("Turning...");
             String[] responses = new String[]{"Black.", "Blue.", "Green.", "Orange.", "Red.", "Yellow.", "Purple.", "White."};
-            CoresManager.slowExecutor.schedule(new Runnable() {
-
-                @Override
-                public void run() {
-                    player.message("Your Magic skullball (colours) says '" + (responses[Utils.getRandom(responses.length - 1)]) + "'");
-                }
-            }, 2000, TimeUnit.MILLISECONDS);
+            CoresManager.getSlowExecutor().schedule(() -> player.message("Your Magic skullball (colours) says '" + (responses[Utils.getRandom(responses.length - 1)]) + "'"), 2000, TimeUnit.MILLISECONDS);
         }
         if (itemId == 15075) {
             for (Entity e : Utils.getAroundEntities(player, player, 14)) {
@@ -296,14 +271,11 @@ public class InventoryOptionsHandler {
             return;
         }
         if (itemId >= 13561 && itemId <= 13562 || itemId == 19760) {
-            CoresManager.slowExecutor.schedule(new Runnable() {
-                @Override
-                public void run() {
-                    if (player.getSwitchItemCache().contains(slotId))
-                        return;
-                    player.getSwitchItemCache().add(slotId);
-                    player.stopAll(false, true, true);
-                }
+            CoresManager.getSlowExecutor().schedule(() -> {
+                if (player.getSwitchItemCache().contains(slotId))
+                    return;
+                player.getSwitchItemCache().add(slotId);
+                player.stopAll(false, true, true);
             }, 200, TimeUnit.MILLISECONDS);
             // ButtonHandler.sendWear2(player, slotId, itemId);
         }
@@ -349,22 +321,30 @@ public class InventoryOptionsHandler {
                         player.addWalkSteps(player.getX(), player.getY() - 1, 1);
         }
 
-        if (itemId == 11159) {
+        if (item.isItem("item.hunter_kit")) {
             if (player.getInventory().getFreeSlots() < 9) {
                 player.message("You do not have enough inventory slots. You need 8 or more.");
                 return;
             }
-            final int[] hunter_items = {10150, 10010, 10006, 10031, 10029, 596, 10008, 11260};
-            player.getInventory().deleteItem(11159, 1);
-            for (int items : hunter_items)
-                player.getInventory().addItem(items, 1);
+            final int[] items = Item.getItems(
+                    "item.noose_wand",
+                    "item.butterfly_net",
+                    "item.bird_snare",
+                    "item.rabbit_snare",
+                    "item.teasing_stick",
+                    "item.unlit_torch",
+                    "item.box_trap",
+                    "item.impling_jar");
+            player.getInventory().deleteItem("item.hunter_kit", 1);
+            for (int i : items)
+                player.getInventory().addItem(i, 1);
             return;
         }
-        if (itemId == 11949) {
+        if (item.isItem("item.snow_globe")) {
             player.closeInterfaces();
-            player.animate(new Animation(1745));
-            player.getInterfaceManager().sendInterface(659);
-            player.getInventory().addItem(10501, 10);
+            player.animate(new Animation("animation.stomp_floor"));
+            player.getInterfaceManager().sendInterface("interface.snow_globe");
+            player.getInventory().addItem("item.snowball", 10);
             return;
         }
         if (itemId == 15084) {
@@ -393,15 +373,15 @@ public class InventoryOptionsHandler {
                     GemCutting.cut(player, Gem.ONYX);
             }
         }
-        if (itemId == 8014) {
-            int bones = player.getInventory().getNumberOf(526);
+        if (Item.isItem(itemId, "item.bones_to_peaches")) {
+            int bones = player.getInventory().getNumberOf("item.bones");
             if (bones == 0) {
                 player.message("You don't have any bones.");
                 return;
             }
-            player.getInventory().deleteItem(526, bones);
-            player.getInventory().deleteItem(8014, 1);
-            player.getInventory().addItem(6883, bones);
+            player.getInventory().deleteItem("item.bones", bones);
+            player.getInventory().deleteItem("item.bones_to_peaches", 1);
+            player.getInventory().addItem("item.peach", bones);
             return;
         }
         if (itemId == 10952) {
@@ -1450,7 +1430,7 @@ public class InventoryOptionsHandler {
         if (itemId == 4045) {
             if (player.getHitpoints() == 0)
                 return;
-            player.animate(new Animation(827));
+            player.animate(new Animation("animation.pickup_floor"));
             player.applyHit(new Hit(player, 250, HitLook.REGULAR_DAMAGE));
             player.setNextForceTalk(new ForceTalk("Oww!!"));
             player.getInventory().deleteItem(item);
@@ -1459,7 +1439,7 @@ public class InventoryOptionsHandler {
         if (itemId == 703) {
             if (player.getHitpoints() == 0)
                 return;
-            player.animate(new Animation(827));
+            player.animate(new Animation("animation.pickup_floor"));
             player.applyHit(new Hit(player, 550, HitLook.REGULAR_DAMAGE));
             player.setNextForceTalk(new ForceTalk("Oww!!"));
             player.getInventory().deleteItem(item);

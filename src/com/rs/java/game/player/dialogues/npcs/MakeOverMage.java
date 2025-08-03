@@ -79,7 +79,7 @@ public class MakeOverMage extends Dialogue {
 			stage = 5;
 			sendEntityDialogue(SEND_2_TEXT_CHAT,
 					new String[] { NPCDefinitions.getNPCDefinitions(npcId).name,
-							"When I have broken down all components of your body, I",
+							"When I have broken down all component.rscm of your body, I",
 							"then rebuilt it into the form I am thinking of." },
 					IS_NPC, npcId, 9827);
 

@@ -18,7 +18,7 @@ public class Appearence implements Serializable {
 
 	private transient int renderEmote;
 	private int title;
-	private int[] lookI;
+	public int[] lookI;
 	public byte[] colour;
 	private boolean male;
 	private transient boolean glowRed;
@@ -446,7 +446,6 @@ public class Appearence implements Serializable {
 		for (int i = 1; i < 4; i++)
 			if (colours[i - 1] <= 127)
 				colour[i] = (byte) colours[i - 1];
-
 	}
 
 	public int getBootsColor() {

@@ -46,20 +46,14 @@ public class WhirlPool extends Action {
 		} else if (currentTime == 11) {
 			final long time = FadingScreen.fade(player);
 			player.getPackets().sendGameMessage("You jump into the whirlpool!", true);
-			CoresManager.slowExecutor.execute(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						FadingScreen.unfade(player, time, new Runnable() {
-							@Override
-							public void run() {
-							}
-						});
-					} catch (Throwable e) {
-						Logger.handle(e);
-					}
-				}
-			});
+			CoresManager.getSlowExecutor().execute(() -> {
+                try {
+                    FadingScreen.unfade(player, time, () -> {
+                    });
+                } catch (Throwable e) {
+                    Logger.handle(e);
+                }
+            });
 		} else if (currentTime == 13) {
 			player.setNextWorldTile(TELE_LOC);
 		} else if (currentTime == 14) {

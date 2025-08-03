@@ -3,8 +3,8 @@ package com.rs.java.game.player.content.quest.impl.druidicritual.impl;
 import com.rs.java.game.Animation;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 public class CauldronOfThunder {
 

@@ -20,8 +20,8 @@ import com.rs.java.game.player.content.dungeoneering.rooms.PuzzleRoom;
 import com.rs.java.game.player.content.dungeoneering.skills.DungeoneeringFishing;
 import com.rs.java.game.player.content.dungeoneering.skills.DungeoneeringFishing.Fish;
 import com.rs.java.game.player.controlers.DungeonControler;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public class FishingFerretRoom extends PuzzleRoom {

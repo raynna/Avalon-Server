@@ -33,8 +33,22 @@ ItemDefinitions {
         itemsDefinitions = new ItemDefinitions[Utils.getItemDefinitionsSize()];
     }
 
+    public static void loadAll() {
+        int size = Utils.getItemDefinitionsSize();
+        for (int i = 0; i < size; i++) {
+            if (itemsDefinitions[i] == null) {
+                itemsDefinitions[i] = new ItemDefinitions(i);
+                itemsDefinitions[i].loadItemDefinitions(); // load from cache here
+            }
+        }
+    }
+
+    public static ItemDefinitions[] getItemDefinitions() {
+        return itemsDefinitions;
+    }
+
     private int id;
-    private boolean loaded;
+    public boolean loaded;
 
     public int modelId;
     public String name;
@@ -266,7 +280,7 @@ ItemDefinitions {
         return null;
     }
 
-    private final void loadItemDefinitions() {
+    private void loadItemDefinitions() {
         byte[] data = Cache.STORE.getIndexes()[Constants.ITEM_DEFINITIONS_INDEX].getFile(getArchiveId(), getFileId());
         if (data == null) {
             // System.out.println("Failed loading Item " + id+".");

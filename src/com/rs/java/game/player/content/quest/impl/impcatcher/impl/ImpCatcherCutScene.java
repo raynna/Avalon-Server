@@ -14,8 +14,8 @@ import com.rs.java.game.player.cutscenes.actions.LookCameraAction;
 import com.rs.java.game.player.cutscenes.actions.NPCAnimationAction;
 import com.rs.java.game.player.cutscenes.actions.NPCFaceTileAction;
 import com.rs.java.game.player.cutscenes.actions.PosCameraAction;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 public class ImpCatcherCutScene extends Cutscene {
 	

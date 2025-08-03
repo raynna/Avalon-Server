@@ -15,32 +15,29 @@ public class Donations {
 			return;
 		player.temporaryAttribute().put("CheckingDonation", Boolean.TRUE);
 		player.getPackets().sendGameMessage("Checking donation...");
-		CoresManager.slowExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					URL url = new URL("http://matrixftw.com/donate/checkdonate.php?username="
-							+ player.getUsername().toLowerCase());
-					BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-					String string = reader.readLine();
-					boolean noresult = string == null || string.length() <= 0 || string.equalsIgnoreCase("false");
-					reader.close();
-					if (noresult)
-						player.getPackets().sendGameMessage(
-								"<col=ff0000>We were unable to locate your donation, please try again later.");
-					else {
-						//SET DONATOR
-						AccountCreation.savePlayer(player);
-						player.getPackets().sendGameMessage("<col=00ff00>Congratulations! You are now a "
-								+ (string == "1" ? "Legendary " : "") + "donator.");
-					}
-				} catch (Throwable e) {
-					player.getPackets().sendGameMessage(
-							"<col=ff0000>We were unable to verify your donation, please try again later.");
-				}
-				player.temporaryAttribute().remove("CheckingDonation");
-			}
-		});
+		CoresManager.getSlowExecutor().execute(() -> {
+            try {
+                URL url = new URL("http://matrixftw.com/donate/checkdonate.php?username="
+                        + player.getUsername().toLowerCase());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                String string = reader.readLine();
+                boolean noresult = string == null || string.length() <= 0 || string.equalsIgnoreCase("false");
+                reader.close();
+                if (noresult)
+                    player.getPackets().sendGameMessage(
+                            "<col=ff0000>We were unable to locate your donation, please try again later.");
+                else {
+                    //SET DONATOR
+                    AccountCreation.savePlayer(player);
+                    player.getPackets().sendGameMessage("<col=00ff00>Congratulations! You are now a "
+                            + (string == "1" ? "Legendary " : "") + "donator.");
+                }
+            } catch (Throwable e) {
+                player.getPackets().sendGameMessage(
+                        "<col=ff0000>We were unable to verify your donation, please try again later.");
+            }
+            player.temporaryAttribute().remove("CheckingDonation");
+        });
 	}
 }
 

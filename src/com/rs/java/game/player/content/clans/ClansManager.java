@@ -524,7 +524,7 @@ public class ClansManager {
 		if (message)
 			sendRollMessage(player,
 					new String("[Giveaway] " + (reroll ? "Could not find a winner, rerolling.." : "Rolling..")));
-		CoresManager.slowExecutor.schedule(new Runnable() {
+		CoresManager.getSlowExecutor().schedule(new Runnable() {
 
 			@Override
 			public void run() {
@@ -533,7 +533,7 @@ public class ClansManager {
 					return;
 				}
 				sendRollMessage(player, new String("[Giveaway] " + "Picking a random winner.."));
-				CoresManager.slowExecutor.schedule(new Runnable() {
+				CoresManager.getSlowExecutor().schedule(new Runnable() {
 
 					@Override
 					public void run() {

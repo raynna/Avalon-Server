@@ -28,8 +28,8 @@ import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.SlidingStatue
 import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.SlidingTilesRoom;
 import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.ToxinMaze;
 import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.UnhappyGhostRoom;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 
 public class DungeonConstants {
 

@@ -19,8 +19,8 @@ import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.DungeonNPC;
 import com.rs.java.game.npc.dungeonnering.LexicusRunewright;
 import com.rs.java.game.npc.familiar.Familiar;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 public class LexicusRunewrightCombat extends CombatScript {

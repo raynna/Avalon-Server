@@ -16,8 +16,8 @@ import com.rs.java.game.player.actions.Action;
 import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
 import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.game.player.controlers.DungeonControler;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.InventoryOptionsHandler;
 import com.rs.java.utils.Utils;
 

@@ -4,8 +4,8 @@ import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.CombatDefinitions;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
 import java.util.Map;
@@ -16,10 +16,10 @@ public class PrayerEffectHandler {
 
     private static final int SOUL_SPLIT_PROJECTILE = 2263;
     private static final int SOUL_SPLIT_GFX = 2264;
-    private static final double HEAL_PERCENTAGE = 0.20; // 20% of damage
-    private static final double PRAYER_DRAIN_PERCENTAGE = 0.20; // 20% of damage
+    private static final double HEAL_PERCENTAGE = 0.20; // 10% of damage
+    private static final double SOUL_SPLIT_DRAIN_PERCENTAGE = 0.20; // 20% of damage
+    private static final double SMITE_DRAIN_PERCENTAGE = 0.25; // 25% of damage
 
-    // Leech effect data
     private static final Map<AncientPrayer, LeechData> LEECH_DATA = Map.of(
             AncientPrayer.LEECH_ATTACK, new LeechData(0, 2231, 2232, "Attack"),
             AncientPrayer.LEECH_STRENGTH, new LeechData(1, 2248, 2250, "Strength"),
@@ -32,37 +32,34 @@ public class PrayerEffectHandler {
 
     private record LeechData(int statIndex, int projectileId, int gfxId, String message) {}
 
-    public static void handleAllPrayerEffects(Entity source, Entity target, Hit hit) {
-        if (source == null || target == null) return;
-
-        if (hit != null && hit.getDamage() > 0) {
-            if (target instanceof Player playerTarget) {
-                handleProtectionEffects(playerTarget, source, hit);
+    public static void handleProtectionEffects(Entity target, Entity source, Hit hit) {
+        if (target instanceof Player defender) {
+            Prayer protectionPrayer = getProtectionPrayer(defender, hit.getLook());
+            if (protectionPrayer != null && protectionPrayer.isProtectionPrayer() && defender.getPrayer().isActive(protectionPrayer)) {
+                handleActualProtectionPrayer(source, target, hit, protectionPrayer);
             }
         }
-        if (target instanceof Player playerTarget) {
-            handleOffensiveEffects(playerTarget, target, hit);
-            handleTurmoilEffects(playerTarget, target);
-        }
     }
 
-    private static void handleProtectionEffects(Player defender, Entity attacker, Hit hit) {
-        if (!defender.getPrayer().hasActivePrayers()) return;
-
-        Prayer protectionPrayer = getProtectionPrayer(defender, hit.getLook());
-        if (protectionPrayer == null) return;
-
-        // Apply damage reduction (same for PvP and NPC attacks)
+    private static void handleActualProtectionPrayer(Entity attacker, Entity defender, Hit hit, Prayer protectionPrayer) {
         double reduction = 1.0 - protectionPrayer.getDamageReduction();
-        hit.setDamage((int)(hit.getDamage() * reduction));
 
-        // Handle deflect effects (works against both Players and NPCs)
-        if (protectionPrayer instanceof AncientPrayer && protectionPrayer.isDeflectPrayer()) {
-            handleDeflectEffect(defender, attacker, hit, (AncientPrayer)protectionPrayer);
+        if (attacker instanceof NPC npc) {
+            if (npc.getProtectionPrayerEffectiveness() != 1.0) {
+                reduction *= npc.getProtectionPrayerEffectiveness();
+            } else {
+                reduction = 0.0;
+            }
+        }
+        hit.setDamage((int)(hit.getDamage() * reduction));
+        if (defender instanceof Player player) {
+            if (protectionPrayer instanceof AncientPrayer && protectionPrayer.isDeflectPrayer() && player.getPrayer().isPrayerActive(protectionPrayer)) {
+                handleDeflectEffect(defender, attacker, hit, (AncientPrayer)protectionPrayer);
+            }
         }
     }
 
-    private static void handleDeflectEffect(Player defender, Entity attacker, Hit hit, AncientPrayer deflectPrayer) {
+    private static void handleDeflectEffect(Entity defender, Entity attacker, Hit hit, AncientPrayer deflectPrayer) {
         if (Utils.randomDouble() >= deflectPrayer.getReflectChance()) return;
 
         int reflectDamage = (int)(hit.getDamage() * deflectPrayer.getReflectAmount());
@@ -71,7 +68,7 @@ public class PrayerEffectHandler {
         defender.animate(deflectPrayer.getActivationAnimation());
     }
 
-    private static void handleOffensiveEffects(Player attacker, Entity target, Hit hit) {
+    public static void handleOffensiveEffects(Player attacker, Entity target, Hit hit) {
         if (attacker.getPrayer().isActive(NormalPrayer.SMITE) && target instanceof Player) {
             handleSmiteEffect(attacker, (Player)target, hit);
         }
@@ -87,7 +84,7 @@ public class PrayerEffectHandler {
 
     private static void handleSmiteEffect(Player attacker, Player target, Hit hit) {
         int damage = Math.min(hit.getDamage(), target.getHitpoints());
-        int prayerDrain = damage / 4; // 25% of damage as prayer drain
+        int prayerDrain = (int) (damage * SMITE_DRAIN_PERCENTAGE);
         if (prayerDrain > 0) {
             target.getPrayer().drainPrayer(prayerDrain);
         }
@@ -97,24 +94,17 @@ public class PrayerEffectHandler {
         int damage = Math.min(hit.getDamage(), target.getHitpoints());
         if (damage <= 0) return;
 
-        // Initial projectile
         World.sendSoulsplitProjectile(attacker, target, SOUL_SPLIT_PROJECTILE);
-
-        // Calculate and apply healing
         int healAmount = (int)(damage * HEAL_PERCENTAGE);
         if (healAmount > 0 && attacker.getHitpoints() < attacker.getMaxHitpoints()) {
             attacker.heal(healAmount, true, true);
         }
-
-        // Drain prayer from player targets
         if (target instanceof Player targetPlayer) {
-            int prayerDrain = (int)(damage * PRAYER_DRAIN_PERCENTAGE);
+            int prayerDrain = (int)(damage * SOUL_SPLIT_DRAIN_PERCENTAGE);
             if (prayerDrain > 0) {
                 targetPlayer.getPrayer().drainPrayer(prayerDrain);
             }
         }
-
-        // Delayed return projectile effect
         WorldTasksManager.schedule(new WorldTask() {
             @Override
             public void run() {
@@ -132,16 +122,15 @@ public class PrayerEffectHandler {
                 !target.isDead() && !target.hasFinished();
     }
 
-    private static void handleLeechEffects(Player attacker, Entity target) {
-        if (!(target instanceof Player p2)) return;
+    private static void handleLeechEffects(Player attacker, Entity defender) {
         if (Utils.getRandom(4) != 0) return; // 25% chance
 
         AncientPrayer activeLeech = getActiveLeechPrayer(attacker);
         if (activeLeech == null) return;
 
         LeechData data = LEECH_DATA.get(activeLeech);
-        playLeechEffects(attacker, p2, data);
-        applyLeechDrain(attacker, p2, activeLeech, data);
+        playLeechEffects(attacker, defender, data);
+        applyLeechDrain(attacker, defender, activeLeech, data);
     }
 
     private static AncientPrayer getActiveLeechPrayer(Player player) {
@@ -151,40 +140,44 @@ public class PrayerEffectHandler {
                 .orElse(null);
     }
 
-    private static void playLeechEffects(Player attacker, Player target, LeechData data) {
+    private static void playLeechEffects(Player attacker, Entity target, LeechData data) {
         attacker.setNextAnimation(12575);
         target.gfx(new Graphics(data.gfxId()));
         World.sendLeechProjectile(attacker, target, data.projectileId());
 
         attacker.getPackets().sendGameMessage(
                 "Your curse drains " + data.message() + " from the enemy, boosting your " + data.message(), true);
-        target.getPackets().sendGameMessage("Your " + data.message() + " has been drained by an enemy curse.", true);
+        if (target instanceof Player p2)
+            p2.getPackets().sendGameMessage("Your " + data.message() + " has been drained by an enemy curse.", true);
     }
 
-    private static void applyLeechDrain(Player attacker, Player target, AncientPrayer prayer, LeechData data) {
+    private static void applyLeechDrain(Player attacker, Entity target, AncientPrayer prayer, LeechData data) {
         if (data.statIndex() == -1) {
             handleSpecialLeechCases(attacker, target, prayer);
             return;
         }
 
         PrayerBook attackerPrayer = attacker.getPrayer();
-        PrayerBook targetPrayer = target.getPrayer();
 
         if (attackerPrayer.reachedMax(data.statIndex()) || attackerPrayer.reachedMin(data.statIndex())) {
-            attacker.getPackets().sendGameMessage(
-                    "You are boosted so much that your leech curse has no effect.", true);
+            attacker.getPackets().sendGameMessage("You are boosted so much that your leech curse has no effect.", true);
             return;
         }
 
         attackerPrayer.increaseLeechBonus(data.statIndex());
-        targetPrayer.decreaseLeechBonus(data.statIndex());
+        if (target instanceof Player p2) {
+            PrayerBook targetPrayer = p2.getPrayer();
+            targetPrayer.decreaseLeechBonus(data.statIndex());
+        }
     }
 
-    private static void handleSpecialLeechCases(Player attacker, Player target, AncientPrayer prayer) {
-        if (prayer == AncientPrayer.LEECH_ENERGY) {
-            handleRunEnergyDrain(attacker, target);
-        } else if (prayer == AncientPrayer.LEECH_SPECIAL) {
-            handleSpecialAttackDrain(attacker, target);
+    private static void handleSpecialLeechCases(Player attacker, Entity target, AncientPrayer prayer) {
+        if (target instanceof Player defender) {
+            if (prayer == AncientPrayer.LEECH_ENERGY) {
+                handleRunEnergyDrain(attacker, defender);
+            } else if (prayer == AncientPrayer.LEECH_SPECIAL) {
+                handleSpecialAttackDrain(attacker, defender);
+            }
         }
     }
 
@@ -222,8 +215,10 @@ public class PrayerEffectHandler {
 
     private static Prayer getProtectionPrayer(Player player, HitLook hitType) {
         if (player.getPrayer().isAncientCurses()) {
+            System.out.println("getProtectionPrayer: getDeflectPrayer");
             return getDeflectPrayer(hitType);
         }
+        System.out.println("getProtectionPrayer: getRegularPrayer");
         return switch (hitType) {
             case MAGIC_DAMAGE -> NormalPrayer.PROTECT_FROM_MAGIC;
             case RANGE_DAMAGE -> NormalPrayer.PROTECT_FROM_MISSILES;

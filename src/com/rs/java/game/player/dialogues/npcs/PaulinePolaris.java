@@ -61,47 +61,35 @@ public class PaulinePolaris extends Dialogue {
 			player.getInterfaceManager().closeChatBoxInterface();
 			player.getInterfaceManager().closeScreenInterface();
 			final long time = FadingScreen.fade(player);
-			CoresManager.slowExecutor.execute(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						FadingScreen.unfade(player, time, new Runnable() {
-							@Override
-							public void run() {
-								stage = 101;
-								sendDialogue("Congratulations! You've learned how to cast the " + spell.getName()
-										+ " spell.");
-								player.getLivid().getSpellsLearned().add(spell);
-								player.getLivid().addSpellAmount();
-								if (spell == Spell.BORROWED_POWER)
-									player.getLivid().removeProduce(Spell.BORROWED_POWER.getProduce());
-							}
-						});
-					} catch (Throwable e) {
-						Logger.handle(e);
-					}
-				}
-			});
+			CoresManager.getSlowExecutor().execute(() -> {
+                try {
+                    FadingScreen.unfade(player, time, () -> {
+                        stage = 101;
+                        sendDialogue("Congratulations! You've learned how to cast the " + spell.getName()
+                                + " spell.");
+                        player.getLivid().getSpellsLearned().add(spell);
+                        player.getLivid().addSpellAmount();
+                        if (spell == Spell.BORROWED_POWER)
+                            player.getLivid().removeProduce(Spell.BORROWED_POWER.getProduce());
+                    });
+                } catch (Throwable e) {
+                    Logger.handle(e);
+                }
+            });
 		} else if (stage == 125) {
 			player.getInterfaceManager().closeChatBoxInterface();
 			player.getInterfaceManager().closeScreenInterface();
 			final long time = FadingScreen.fade(player);
-			CoresManager.slowExecutor.execute(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						FadingScreen.unfade(player, time, new Runnable() {
-							@Override
-							public void run() {
-								stage = -2;
-								wish.process(player);
-							}
-						});
-					} catch (Throwable e) {
-						Logger.handle(e);
-					}
-				}
-			});
+			CoresManager.getSlowExecutor().execute(() -> {
+                try {
+                    FadingScreen.unfade(player, time, () -> {
+                        stage = -2;
+                        wish.process(player);
+                    });
+                } catch (Throwable e) {
+                    Logger.handle(e);
+                }
+            });
 		} else if (stage == 101) {
 			LividStore.openInterface(player);
 			end();

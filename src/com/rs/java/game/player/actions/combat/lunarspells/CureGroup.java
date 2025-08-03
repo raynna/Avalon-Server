@@ -34,13 +34,10 @@ public class CureGroup {
 				}
 			}
 			player.message("The spell affected " + playersAround + " player(s).");
-			CoresManager.slowExecutor.schedule(new Runnable() {
-				@Override
-				public void run() {
-					player.getPoison().reset();
-					player.message("You were cured.");
-				}
-			}, 1200, TimeUnit.MILLISECONDS);
+			CoresManager.getSlowExecutor().schedule(() -> {
+                player.getPoison().reset();
+                player.message("You were cured.");
+            }, 1200, TimeUnit.MILLISECONDS);
 		}
 		player.getSkills().addXp(Skills.MAGIC, xp);
 		player.gfx(new Graphics(744, 0, 100));

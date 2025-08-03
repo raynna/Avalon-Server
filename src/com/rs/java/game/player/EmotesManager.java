@@ -10,8 +10,8 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.java.utils.Utils;
 
@@ -1148,7 +1148,7 @@ public final class EmotesManager implements Serializable {
  * import com.rs.Settings; import com.rs.core.cache.defintions.NPCDefinitions; import
  * com.rs.java.game.Animation; import com.rs.java.game.Graphics; import com.rs.java.game.World;
  * import com.rs.java.game.WorldTile; import com.rs.java.game.npc.NPC; import
- * com.rs.java.game.tasks.WorldTask; import com.rs.java.game.tasks.WorldTasksManager;
+ * com.rs.core.tasks.WorldTask; import com.rs.core.tasks.WorldTasksManager;
  * import com.rs.core.packets.decode.WorldPacketsDecoder; import com.rs.java.utils.Utils;
  * 
  * public final class EmotesManager implements Serializable {

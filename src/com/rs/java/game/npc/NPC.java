@@ -2,6 +2,7 @@ package com.rs.java.game.npc;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -23,6 +24,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.combat.NPCCombat;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.familiar.Familiar;
+import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.drops.DropTable;
 import com.rs.kotlin.game.npc.drops.DropTableRegistry;
 import com.rs.kotlin.game.npc.drops.Drop;
@@ -38,8 +40,8 @@ import com.rs.java.game.player.controlers.DungeonControler;
 import com.rs.java.game.player.controlers.WildernessControler;
 import com.rs.java.game.route.RouteFinder;
 import com.rs.java.game.route.strategy.FixedTileStrategy;
-import com.rs.java.game.tasks.WorldTask;
-import com.rs.java.game.tasks.WorldTasksManager;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.*;
 
 /**
@@ -91,6 +93,36 @@ public class NPC extends Entity implements Serializable {
     private transient boolean locked;
 
     private double charmDropPercentage;
+
+
+    public static int[] getNpcs(String... names) {
+        return Arrays.stream(names)
+                .map(name -> name.startsWith("npc.") ? name : "npc." + name).mapToInt(Rscm::lookup).toArray();
+    }
+
+    public static int getNpc(String name) {
+        String key = name.startsWith("npc.") ? name : "npc." + name;
+        return Rscm.lookup(key);
+    }
+
+    public static boolean isNpc(int id, String... names) {
+        for (String name : names) {
+            if (id == getNpc(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isNpc(int id, String name) {
+        String key = name.startsWith("npc.") ? name : "npc." + name;
+        return id == Rscm.lookup(key);
+    }
+
+    public boolean isNpc(String name) {
+        String key = name.startsWith("npc.") ? name : "npc." + name;
+        return id == Rscm.lookup(key);
+    }
 
     public NPC(int id, WorldTile tile, int mapAreaNameHash, boolean canBeAttackFromOutOfArea) {
         this(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, false);
@@ -407,7 +439,7 @@ public class NPC extends Entity implements Serializable {
             setLocation(respawnTile);
             finish();
         }
-        CoresManager.slowExecutor.schedule(new Runnable() {
+        CoresManager.getSlowExecutor().schedule(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -1274,5 +1306,10 @@ public class NPC extends Entity implements Serializable {
 
     public int getAttackSpeed() {
         return getCombatDefinitions().getAttackDelay();
+    }
+
+    @Override
+    public double getProtectionPrayerEffectiveness() {
+        return 0.0;
     }
 }
