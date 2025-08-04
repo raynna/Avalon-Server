@@ -170,7 +170,6 @@ public enum NormalPrayer implements Prayer {
     @Override public String getName() { return name; }
     @Override public PrayerBookType getBook() { return PrayerBookType.NORMAL; }
 
-    // Default implementations
     @Override public boolean isProtectionPrayer() { return false; }
     @Override public double getAttackBoost() { return 0; }
     @Override public double getStrengthBoost() { return 0; }

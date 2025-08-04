@@ -10,13 +10,11 @@ import com.rs.java.utils.Utils;
 import java.util.List;
 
 public class WrathEffect {
-    // Configuration for normal Wrath prayer
     private static final int NORMAL_WRATH_GFX = 437;
     private static final int NORMAL_WRATH_EXPLOSION_GFX = 438;
     private static final int NORMAL_WRATH_DAMAGE = 180;
     private static final int NORMAL_WRATH_RADIUS = 1;
     
-    // Configuration for ancient Wrath curse
     private static final int ANCIENT_WRATH_PROJECTILE = 2260;
     private static final int ANCIENT_WRATH_GFX = 2259;
     private static final int ANCIENT_WRATH_DAMAGE = 250;
@@ -46,10 +44,8 @@ public class WrathEffect {
     }
 
     private static void handleAncientWrath(Player deadPlayer, Entity killer) {
-        // Shoot projectiles in all directions
         shootProjectiles(deadPlayer, ANCIENT_WRATH_PROJECTILE);
 
-        // Play effect and damage after delay
         WorldTasksManager.schedule(new WorldTask() {
             @Override
             public void run() {
@@ -62,14 +58,12 @@ public class WrathEffect {
 
     private static void applyDamageInRadius(Player source, Entity killer, int radius, int maxDamage) {
         if (source.isAtMultiArea()) {
-            // Multi-combat area - hit all valid targets in radius
             for (int regionId : source.getMapRegionsIds()) {
                 processPlayersInRegion(source, killer, regionId, radius, maxDamage);
                 processNPCsInRegion(source, killer, regionId, radius, maxDamage);
             }
         } else {
-            // Single combat - only hit the killer if valid
-            if (killer != null && killer != source && !killer.isDead() && !killer.hasFinished() && 
+            if (killer != null && killer != source && !killer.isDead() && !killer.hasFinished() &&
                 killer.withinDistance(source, radius) && source.getControlerManager().canHit(killer)) {
                 killer.applyHit(new Hit(source, Utils.getRandom(maxDamage), Hit.HitLook.REGULAR_DAMAGE));
             }
@@ -108,10 +102,9 @@ public class WrathEffect {
     private static void shootProjectiles(Player source, int projectileId) {
         WorldTile center = new WorldTile(source.getX(), source.getY(), source.getPlane());
         
-        // Shoot in all 8 directions
         for (int dx = -2; dx <= 2; dx += 2) {
             for (int dy = -2; dy <= 2; dy += 2) {
-                if (dx == 0 && dy == 0) continue; // Skip center
+                if (dx == 0 && dy == 0) continue;
                 World.sendObjectProjectile(source, center.transform(dx, dy, 0), projectileId);
             }
         }
@@ -120,13 +113,11 @@ public class WrathEffect {
     private static void playExplosionGraphics(Player source, int gfxId, int radius) {
         WorldTile center = new WorldTile(source.getX(), source.getY(), source.getPlane());
         
-        // Center graphics
         World.sendGraphics(source, new Graphics(gfxId), center);
         
-        // Surrounding tiles
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dy = -radius; dy <= radius; dy++) {
-                if (dx == 0 && dy == 0) continue; // Skip center
+                if (dx == 0 && dy == 0) continue;
                 World.sendGraphics(source, new Graphics(gfxId), center.transform(dx, dy, 0));
             }
         }

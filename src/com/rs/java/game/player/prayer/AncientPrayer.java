@@ -182,7 +182,6 @@ public enum AncientPrayer implements Prayer {
         return animationId == -1 ? null : new Animation(animationId);
     }
 
-    // Default implementations
     @Override public boolean isProtectionPrayer() { return false; }
     @Override public double getHealPercentage() { return 0; }
     @Override public double getAttackBoost() { return 0; }
