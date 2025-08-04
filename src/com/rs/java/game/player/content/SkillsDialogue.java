@@ -29,18 +29,18 @@ public final class SkillsDialogue {
 			player.getPackets().sendHideIComponent(916, 9, true);
 		} else {
 			if (option != MAKE_SETS && option != MAKE_NO_ALL_NO_CUSTOM)
-				player.getPackets().sendUnlockIComponentOptionSlots(916, 8, -1,
+				player.getPackets().sendUnlockOptions(916, 8, -1,
 						0, 0); // unlocks all option
 		}
-		player.getPackets().sendIComponentText(916, 6, explanation);
-		player.getPackets().sendGlobalConfig(754, option);
+		player.getPackets().sendTextOnComponent(916, 6, explanation);
+		player.getPackets().sendGlobalVar(754, option);
 		for (int i = 0; i < 10; i++) {
 			if (i >= items.length) {
-				player.getPackets().sendGlobalConfig(
+				player.getPackets().sendGlobalVar(
 						i >= 6 ? (1139 + i - 6) : 755 + i, -1);
 				continue;
 			}
-			player.getPackets().sendGlobalConfig(
+			player.getPackets().sendGlobalVar(
 					i >= 6 ? (1139 + i - 6) : 755 + i, items[i]);
 			String name = ItemDefinitions.getItemDefinitions(items[i])
 					.getName();
@@ -67,15 +67,15 @@ public final class SkillsDialogue {
 		player.getPackets().sendHideIComponent(916, 9, true);
 		for (int i = 15; i < 27; i++)
 		player.getPackets().sendHideIComponent(916, i, true);
-		player.getPackets().sendIComponentText(916, 6, explanation);
-		player.getPackets().sendGlobalConfig(754, -1);
+		player.getPackets().sendTextOnComponent(916, 6, explanation);
+		player.getPackets().sendGlobalVar(754, -1);
 		for (int i = 0; i < 10; i++) {
 			if (i >= items.length) {
-				player.getPackets().sendGlobalConfig(
+				player.getPackets().sendGlobalVar(
 						i >= 6 ? (1139 + i - 6) : 755 + i, -1);
 				continue;
 			}
-			player.getPackets().sendGlobalConfig(
+			player.getPackets().sendGlobalVar(
 					i >= 6 ? (1139 + i - 6) : 755 + i, items[i]);
 			String name = ItemDefinitions.getItemDefinitions(items[i])
 					.getName();
@@ -104,7 +104,7 @@ public final class SkillsDialogue {
 
 	public static void setMaxQuantity(Player player, int maxQuantity) {
 		player.temporaryAttribute().put("SkillsDialogueMaxQuantity", maxQuantity);
-		player.getPackets().sendConfigByFile(8094, maxQuantity);
+		player.getPackets().sendVarBit(8094, maxQuantity);
 	}
 
 	public static void setQuantity(Player player, int quantity) {
@@ -119,7 +119,7 @@ public final class SkillsDialogue {
 			quantity = 0;
 		player.temporaryAttribute().put("SkillsDialogueQuantity", quantity);
 		if (refresh)
-			player.getPackets().sendConfigByFile(8095, quantity);
+			player.getPackets().sendVarBit(8095, quantity);
 	}
 
 	public static int getMaxQuantity(Player player) {

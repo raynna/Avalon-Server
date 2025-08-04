@@ -65,8 +65,8 @@ public class AreaManager {
 	}
 
 	public static void update(final Player player, final Area area) {
-		player.getPackets().sendIComponentText(1073, 10, "<col=ffffff>You have reached");
-		player.getPackets().sendIComponentText(1073, 11, "<col=ffcff00>" + area.name());
+		player.getPackets().sendTextOnComponent(1073, 10, "<col=ffffff>You have reached");
+		player.getPackets().sendTextOnComponent(1073, 11, "<col=ffcff00>" + area.name());
 		player.getInterfaceManager().sendTab(player.getInterfaceManager().hasRezizableScreen() ? 1 : 11, 1073);
 		WorldTasksManager.schedule(new WorldTask() {
 			@Override

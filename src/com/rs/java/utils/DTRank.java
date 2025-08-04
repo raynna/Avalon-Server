@@ -36,12 +36,12 @@ public final class DTRank implements Serializable {
 		for (DTRank rank : ranks) {
 			if (rank == null)
 				return;
-			player.getPackets().sendIComponentText(1158, 9 + count * 5,
+			player.getPackets().sendTextOnComponent(1158, 9 + count * 5,
 					Utils.formatPlayerNameForDisplay(rank.username));
-			player.getPackets().sendIComponentText(1158, 10 + count * 5,
+			player.getPackets().sendTextOnComponent(1158, 10 + count * 5,
 					"On " + (rank.mode == DominionTower.CLIMBER ? "climber" : "endurance") + ", reached floor "
 							+ rank.floorId + ", killing: " + rank.bossName + ".");
-			player.getPackets().sendIComponentText(1158, 11 + count * 5, "DF:<br>" + Utils.formatAmount(rank.dominionFactor));
+			player.getPackets().sendTextOnComponent(1158, 11 + count * 5, "DF:<br>" + Utils.formatAmount(rank.dominionFactor));
 			count++;
 		}
 	}

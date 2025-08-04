@@ -46,7 +46,6 @@ import com.rs.java.game.minigames.clanwars.RequestController;
 import com.rs.java.game.minigames.clanwars.WarControler;
 import com.rs.java.game.minigames.duel.DuelArena;
 import com.rs.java.game.minigames.duel.DuelRules;
-import com.rs.java.game.minigames.godwars.zaros.Nex;
 import com.rs.java.game.minigames.lividfarm.LividFarm;
 import com.rs.java.game.minigames.warriorguild.WarriorsGuild;
 import com.rs.java.game.npc.NPC;
@@ -1341,7 +1340,7 @@ public class Player extends Entity {
         for (int i = 0; i < Utils.DEFAULT_LOBBY_CONFIGS.length; i++) {
             int val = Utils.DEFAULT_LOBBY_CONFIGS[i];
             if (val != 0) {
-                player.getPackets().sendConfig(i, val);
+                player.getPackets().sendVar(i, val);
             }
         }
     }
@@ -2033,7 +2032,7 @@ public class Player extends Entity {
             if (getFriendsIgnores().getFriends().contains(p2.getUsername()) && p2.getFriendsIgnores().isOnline(p2)) {
                 online++;
             }
-            getPackets().sendIComponentText(550, 18, "<col=ffc800>~ " + Settings.SERVER_NAME + " ~</col> " + (getFriendsIgnores().getFriends().size() == 0 ? "" : "<br>Friends online: " + online + " / " + getFriendsIgnores().getFriends().size()));
+            getPackets().sendTextOnComponent(550, 18, "<col=ffc800>~ " + Settings.SERVER_NAME + " ~</col> " + (getFriendsIgnores().getFriends().size() == 0 ? "" : "<br>Friends online: " + online + " / " + getFriendsIgnores().getFriends().size()));
         }
     }
 
@@ -2375,7 +2374,7 @@ public class Player extends Entity {
         if (OwnedObjectManager.containsObjectValue(this, 6)) {
             getPackets().sendHideIComponent(3039, 16, false);
             getPackets().sendHideIComponent(3039, 17, false);
-            getPackets().sendIComponentText(3039, 17, (getCannonBalls() == 0 ? "<col=ff5331>" : "") + getCannonBalls() + "");
+            getPackets().sendTextOnComponent(3039, 17, (getCannonBalls() == 0 ? "<col=ff5331>" : "") + getCannonBalls() + "");
         } else {
             if (getCannonBalls() != 0) {
                 return;
@@ -2386,7 +2385,7 @@ public class Player extends Entity {
         if (getTeleBlockDelay() >= Utils.currentTimeMillis()) {
             getPackets().sendHideIComponent(3039, 2, false);
             getPackets().sendHideIComponent(3039, 3, false);
-            getPackets().sendIComponentText(3039, 3, getTimeLeft(getTeleBlockDelay()) + "");
+            getPackets().sendTextOnComponent(3039, 3, getTimeLeft(getTeleBlockDelay()) + "");
         } else {
             getPackets().sendHideIComponent(3039, 2, true);
             getPackets().sendHideIComponent(3039, 3, true);
@@ -2394,7 +2393,7 @@ public class Player extends Entity {
         if (getVengDelay() >= Utils.currentTimeMillis()) {
             getPackets().sendHideIComponent(3039, 4, false);
             getPackets().sendHideIComponent(3039, 5, false);
-            getPackets().sendIComponentText(3039, 5, getTimeLeft(getVengDelay()) + "");
+            getPackets().sendTextOnComponent(3039, 5, getTimeLeft(getVengDelay()) + "");
         } else {
             getPackets().sendHideIComponent(3039, 4, true);
             getPackets().sendHideIComponent(3039, 5, true);
@@ -2402,7 +2401,7 @@ public class Player extends Entity {
         if (getFreezeDelay() >= Utils.currentTimeMillis()) {
             getPackets().sendHideIComponent(3039, 6, false);
             getPackets().sendHideIComponent(3039, 7, false);
-            getPackets().sendIComponentText(3039, 7, getTimeLeft(getFreezeDelay()) + "");
+            getPackets().sendTextOnComponent(3039, 7, getTimeLeft(getFreezeDelay()) + "");
         } else {
             getPackets().sendHideIComponent(3039, 6, true);
             getPackets().sendHideIComponent(3039, 7, true);
@@ -2410,7 +2409,7 @@ public class Player extends Entity {
         if (getDisruptionDelay() >= Utils.currentTimeMillis()) {
             getPackets().sendHideIComponent(3039, 9, false);
             getPackets().sendHideIComponent(3039, 10, false);
-            getPackets().sendIComponentText(3039, 10, getTimeLeft(getDisruptionDelay()) + "");
+            getPackets().sendTextOnComponent(3039, 10, getTimeLeft(getDisruptionDelay()) + "");
         } else {
             getPackets().sendHideIComponent(3039, 9, true);
             getPackets().sendHideIComponent(3039, 10, true);
@@ -2418,7 +2417,7 @@ public class Player extends Entity {
         if (getPrayerRenewalDelay() >= Utils.currentTimeMillis()) {
             getPackets().sendHideIComponent(3039, 11, false);
             getPackets().sendHideIComponent(3039, 12, false);
-            getPackets().sendIComponentText(3039, 12, getTimeLeft(getPrayerRenewalDelay()) + "");
+            getPackets().sendTextOnComponent(3039, 12, getTimeLeft(getPrayerRenewalDelay()) + "");
         } else {
             getPackets().sendHideIComponent(3039, 11, true);
             getPackets().sendHideIComponent(3039, 12, true);
@@ -2426,7 +2425,7 @@ public class Player extends Entity {
         if (getOverloadDelay() > 0) {
             getPackets().sendHideIComponent(3039, 13, false);
             getPackets().sendHideIComponent(3039, 14, false);
-            getPackets().sendIComponentText(3039, 14, getTimeLeft(getOverloadDelay()) + "");
+            getPackets().sendTextOnComponent(3039, 14, getTimeLeft(getOverloadDelay()) + "");
         } else {
             getPackets().sendHideIComponent(3039, 13, true);
             getPackets().sendHideIComponent(3039, 14, true);
@@ -2456,7 +2455,7 @@ public class Player extends Entity {
         getInterfaceManager().sendInterface(275);
         int number1 = 0;
         for (int i = 0; i < 300; i++) {
-            getPackets().sendIComponentText(275, i, "");
+            getPackets().sendTextOnComponent(275, i, "");
         }
         for (Player p5 : World.getPlayers()) {
             if (p5 == null)
@@ -2466,12 +2465,12 @@ public class Player extends Entity {
             StringBuilder builder = new StringBuilder();
             builder.append("<img=" + getPlayerRank().getIconId() + ">");
             builder.append(HexColours.getShortMessage(Colour.RED, getTitle()));
-            getPackets().sendIComponentText(275, (13 + number1), builder.toString() + " " + p5.getDisplayName());
+            getPackets().sendTextOnComponent(275, (13 + number1), builder.toString() + " " + p5.getDisplayName());
         }
-        getPackets().sendIComponentText(275, 1, Settings.SERVER_NAME);
-        getPackets().sendIComponentText(275, 10, " ");
-        getPackets().sendIComponentText(275, 11, "Players Online: " + number1);
-        getPackets().sendIComponentText(275, 12, " ");
+        getPackets().sendTextOnComponent(275, 1, Settings.SERVER_NAME);
+        getPackets().sendTextOnComponent(275, 10, " ");
+        getPackets().sendTextOnComponent(275, 11, "Players Online: " + number1);
+        getPackets().sendTextOnComponent(275, 12, " ");
     }
 
     private transient int beamDelay = 0;
@@ -2732,7 +2731,7 @@ public class Player extends Entity {
     }
 
     public void sendRunButtonConfig() {
-        getPackets().sendConfig(173, resting ? 3 : getRun() ? 1 : 0);
+        getPackets().sendVar(173, resting ? 3 : getRun() ? 1 : 0);
     }
 
     public void restoreRunEnergy() {
@@ -2807,9 +2806,9 @@ public class Player extends Entity {
         refreshHitPoints();
         prayer.onLogin();
         getPoison().refresh();
-        getPackets().sendConfig(281, 1000);
-        getPackets().sendConfig(1160, -1);
-        getPackets().sendConfig(1159, 1);
+        getPackets().sendVar(281, 1000);
+        getPackets().sendVar(1160, -1);
+        getPackets().sendVar(1159, 1);
         getPackets().sendGameBarStages();
         musicsManager.init();
         house.init();
@@ -2951,10 +2950,10 @@ public class Player extends Entity {
         if (lodestone == null || lodestone[9] != true) {
             lodestone = new boolean[]{false, false, false, false, false, false, false, false, false, true, false, false, false, false, false};
         }
-        getPackets().sendConfigByFile(358, lodestone[0] ? 15 : 14);
-        getPackets().sendConfigByFile(2448, lodestone[1] ? 190 : 189);
+        getPackets().sendVarBit(358, lodestone[0] ? 15 : 14);
+        getPackets().sendVarBit(2448, lodestone[1] ? 190 : 189);
         for (int i = 10900; i < 10913; i++)
-            getPackets().sendConfigByFile(i, lodestone[(i - 10900) + 2] ? 1 : -1);
+            getPackets().sendVarBit(i, lodestone[(i - 10900) + 2] ? 1 : -1);
     }
 
     private void checkRights() {
@@ -2976,7 +2975,7 @@ public class Player extends Entity {
 
     private void refreshFightKilnEntrance() {
         if (completedFightCaves)
-            getPackets().sendConfigByFile(10838, 1);
+            getPackets().sendVarBit(10838, 1);
     }
 
     /*
@@ -3038,10 +3037,10 @@ public class Player extends Entity {
         boolean isAtMultiArea = isForceMultiArea() ? true : World.isMultiArea(this);
         if (isAtMultiArea) {
             setAtMultiArea(isAtMultiArea);
-            getPackets().sendGlobalConfig(616, 1);
+            getPackets().sendGlobalVar(616, 1);
         } else if (!isAtMultiArea) {
             setAtMultiArea(isAtMultiArea);
-            getPackets().sendGlobalConfig(616, 0);
+            getPackets().sendGlobalVar(616, 0);
         }
     }
 
@@ -3257,19 +3256,19 @@ public class Player extends Entity {
 
     public void refreshHitPoints() {
         if (toggles("ONEXHITS", false)) {
-            getPackets().sendConfigByFile(7198, getHitpoints());
-            getPackets().sendIComponentText(748, 8, getHitpoints() / 10 + "");
+            getPackets().sendVarBit(7198, getHitpoints());
+            getPackets().sendTextOnComponent(748, 8, getHitpoints() / 10 + "");
         } else
-            getPackets().sendConfigByFile(7198, getHitpoints());
+            getPackets().sendVarBit(7198, getHitpoints());
     }
 
     public void refreshHitPoints(boolean update) {
         if (toggles("ONEXHITS", false)) {
             if (update)
-                getPackets().sendConfigByFile(7198, getHitpoints());
-            getPackets().sendIComponentText(748, 8, getHitpoints() / 10 + "");
+                getPackets().sendVarBit(7198, getHitpoints());
+            getPackets().sendTextOnComponent(748, 8, getHitpoints() / 10 + "");
         } else
-            getPackets().sendConfigByFile(7198, getHitpoints());
+            getPackets().sendVarBit(7198, getHitpoints());
     }
 
     @Override
@@ -4232,15 +4231,15 @@ public class Player extends Entity {
     }
 
     public void refreshAllowChatEffects() {
-        getPackets().sendConfig(171, allowChatEffects ? 0 : 1);
+        getPackets().sendVar(171, allowChatEffects ? 0 : 1);
     }
 
     public void refreshMouseButtons() {
-        getPackets().sendConfig(170, mouseButtons ? 0 : 1);
+        getPackets().sendVar(170, mouseButtons ? 0 : 1);
     }
 
     public void refreshPrivateChatSetup() {
-        getPackets().sendConfig(287, privateChatSetup);
+        getPackets().sendVar(287, privateChatSetup);
     }
 
     public void refreshOtherChatsSetup() {
@@ -5549,9 +5548,9 @@ public class Player extends Entity {
             }
             getInterfaceManager().sendInterface(275);
             for (int i = 0; i < 150; i++)
-                getPackets().sendIComponentText(275, i, "");
-            getPackets().sendIComponentText(275, 1, "*Completionist Requirements*");
-            getPackets().sendIComponentText(275, 10, text.toString());
+                getPackets().sendTextOnComponent(275, i, "");
+            getPackets().sendTextOnComponent(275, 1, "*Completionist Requirements*");
+            getPackets().sendTextOnComponent(275, 10, text.toString());
         }
         if (!isCompletedFightKiln())
             message("You must have completed the Fight kiln.");
@@ -5746,7 +5745,7 @@ public class Player extends Entity {
     }
 
     public void refreshProfanity() {
-        getPackets().sendConfig(1438, isFilteredProfanity() ? 0 : 32);
+        getPackets().sendVar(1438, isFilteredProfanity() ? 0 : 32);
     }
 
     public boolean isAcceptAid() {
@@ -5763,7 +5762,7 @@ public class Player extends Entity {
     }
 
     public void refreshAcceptAid() {
-        getPackets().sendConfig(427, acceptAid ? 1 : 0);
+        getPackets().sendVar(427, acceptAid ? 1 : 0);
     }
 
     public ItemsContainer<Item> getClueScrollRewards() {

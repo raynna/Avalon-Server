@@ -52,7 +52,7 @@ private Map<String, String> data = new HashMap<String, String>();
 	
 	public void showRequirements() {
         player.getPackets().sendHideIComponent(1243, 26, true);
-		player.getPackets().sendIComponentText(1243, 21,
+		player.getPackets().sendTextOnComponent(1243, 21,
 				"<col=f8ff49>Requirements:</col> <br>" + getRequirements());
 	}
 	
@@ -66,7 +66,7 @@ private Map<String, String> data = new HashMap<String, String>();
 	}
 	
 	public void finish() {
-		player.getPackets().sendConfig(getVarp()[0], getVarp()[2]);
+		player.getPackets().sendVar(getVarp()[0], getVarp()[2]);
 		state = QuestState.COMPLETED;
 		player.getInterfaceManager().openGameTab(3);
 		QuestTab.open(player);
@@ -102,9 +102,9 @@ private Map<String, String> data = new HashMap<String, String>();
 		player.getQuestManager().setQuestPoints(player.getQuestManager().getQuestPoints() + getQuestPoints());
 		//player.getQuestManager().update();
 		player.getInterfaceManager().sendInterface(1244);
-		player.getPackets().sendIComponentText(1244, 25,
+		player.getPackets().sendTextOnComponent(1244, 25,
 				"You have completed " + getQuestName() + ".");
-		player.getPackets().sendIComponentText(1244, 27,
+		player.getPackets().sendTextOnComponent(1244, 27,
 				"Quest Points: " + player.getQuestManager().getQuestPoints());
 		player.getPackets()
 				.sendGlobalString(
@@ -141,7 +141,7 @@ private Map<String, String> data = new HashMap<String, String>();
 		}
 		rewards.setLength(rewards.length() - 2);
         player.getPackets().sendHideIComponent(1243, 38, true);
-		player.getPackets().sendIComponentText(1243, 33, "<col=f8ff49>Rewards:</col><br>" + rewards.toString());
+		player.getPackets().sendTextOnComponent(1243, 33, "<col=f8ff49>Rewards:</col><br>" + rewards.toString());
 	}
 	
 	public void sendStartOption() {
@@ -149,14 +149,14 @@ private Map<String, String> data = new HashMap<String, String>();
 		player.getQuestManager().setCurrent(this);
 		assembleJournal(0);
 		player.getInterfaceManager().sendInterface(1243);
-		player.getPackets().sendIComponentText(1243, 6, getQuestName());
+		player.getPackets().sendTextOnComponent(1243, 6, getQuestName());
 		player.getPackets().sendHideIComponent(1243, 45, false);
 		player.getPackets().sendHideIComponent(1243, 56, true);
 		player.getPackets().sendHideIComponent(1243, 57, true);
-		player.getPackets().sendIComponentText(1243, 18, "<col=f8ff49>Start Point:</col><br>"
+		player.getPackets().sendTextOnComponent(1243, 18, "<col=f8ff49>Start Point:</col><br>"
 						+ getStart());
-		player.getPackets().sendIComponentText(1243, 21, "<col=f8ff49>Requirements:</col>");
-		player.getPackets().sendIComponentText(1243, 33, "<col=f8ff49>Rewards:</col>");
+		player.getPackets().sendTextOnComponent(1243, 21, "<col=f8ff49>Requirements:</col>");
+		player.getPackets().sendTextOnComponent(1243, 33, "<col=f8ff49>Rewards:</col>");
 	}
 	
 	public abstract String getStart();
@@ -180,17 +180,17 @@ private Map<String, String> data = new HashMap<String, String>();
 	public Quest openJournal() {
 		player.getInterfaceManager().closeScreenInterface();
 		for (int i = 0; i < 309; i++) {
-			player.getPackets().sendIComponentText(275, i, " ");
+			player.getPackets().sendTextOnComponent(275, i, " ");
 		}
 		assembleJournal(stage);
-		player.getPackets().sendIComponentText(275, 1, getQuestName());
+		player.getPackets().sendTextOnComponent(275, 1, getQuestName());
 		player.getInterfaceManager().sendInterface(275);
 		String text = "";
 		for (int i = 0; i < getJournal().getEntries().size(); i++) {
 			text = getJournal().getEntries().get(i).meetsCondition(player) ? "<str>"
 					 + getJournal().getEntries().get(i).getFinished(player)  :
 						getJournal().getEntries().get(i).getText();
-			player.getPackets().sendIComponentText(275, 10 + i, text);
+			player.getPackets().sendTextOnComponent(275, 10 + i, text);
 		}
 		return this;
 	}

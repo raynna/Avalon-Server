@@ -37,7 +37,7 @@ public abstract class Cutscene {
 			player.setNextWorldTile(endTile);
 		if (hiddenMinimap())
 			player.getPackets().sendBlackOut(0); // unblack
-		player.getPackets().sendConfig(1241, 0);
+		player.getPackets().sendVar(1241, 0);
 		player.getPackets().sendResetCamera();
 		player.setLargeSceneView(false);
 		player.unlock();
@@ -58,7 +58,7 @@ public abstract class Cutscene {
 	public final void startCutscene(Player player) {
 		if (hiddenMinimap())
 			player.getPackets().sendBlackOut(2); // minimap
-		player.getPackets().sendConfig(1241, 1);
+		player.getPackets().sendVar(1241, 1);
 		player.setLargeSceneView(true);
 		player.lock();
 		player.stopAll(true, false);

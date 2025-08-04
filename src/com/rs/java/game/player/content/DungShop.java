@@ -152,8 +152,8 @@ public class DungShop {
 
 	public static void openShop(Player player) {
 		player.getInterfaceManager().sendInterface(940);
-		player.getPackets().sendIComponentSettings(940, 2, 0, 205, 145346);
-		player.getPackets().sendIComponentText(940, 31, player.getAvalonPoints() + "");
+		player.getPackets().sendComponentSettings(940, 2, 0, 205, 145346);
+		player.getPackets().sendTextOnComponent(940, 31, player.getAvalonPoints() + "");
 
 	}
 
@@ -213,7 +213,7 @@ public class DungShop {
 			player.getPackets().sendGameMessage("You do not have enough " + Settings.SERVER_NAME + " points to purchase that item.");
 			player.getPackets().sendHideIComponent(940, 42, true);
 		}
-		player.getPackets().sendIComponentText(940, 31, player.getAvalonPoints() + "");
+		player.getPackets().sendTextOnComponent(940, 31, player.getAvalonPoints() + "");
 	}
 
 	public static boolean bankContains(Player player, int itemId) {

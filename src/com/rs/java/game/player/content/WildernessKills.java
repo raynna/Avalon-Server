@@ -118,19 +118,19 @@ public class WildernessKills {
 		}
 		player.getInterfaceManager().sendInterface(275);
 		for (int i = 0; i < 100; i++)
-			player.getPackets().sendIComponentText(275, i, "");
-		player.getPackets().sendIComponentText(275, 1, "Recent Wilderness Kills");
+			player.getPackets().sendTextOnComponent(275, i, "");
+		player.getPackets().sendTextOnComponent(275, 1, "Recent Wilderness Kills");
 		if (Kills.size() == 0) {
-			player.getPackets().sendIComponentText(275, 15, "<col=990000>There have been no recent kills.");
+			player.getPackets().sendTextOnComponent(275, 15, "<col=990000>There have been no recent kills.");
 			return;
 		}
-		player.getPackets().sendIComponentText(275, 10,
+		player.getPackets().sendTextOnComponent(275, 10,
 				player.hasWildstalker()
 						? "<col=990000>Your kill/death ratio: " + player.getKillCount() + "/" + player.getDeathCount()
 						: "Claim wildstalker helmet to view KDR.");
 		for (int i = 0; i < Kills.size(); i++) {
 			StartLine++;
-			player.getPackets().sendIComponentText(275, StartLine, Kills.get(i));
+			player.getPackets().sendTextOnComponent(275, StartLine, Kills.get(i));
 		}
 	}
 

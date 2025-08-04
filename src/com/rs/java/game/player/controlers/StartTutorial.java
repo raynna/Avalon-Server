@@ -74,31 +74,31 @@ public class StartTutorial extends Controler {
 		int stage = getStage();
 		player.getInterfaceManager().replaceRealChatBoxInterface(372);
 		if (stage == 0) {
-			player.getPackets().sendIComponentText(372, 0, "Getting Started");
-			player.getPackets().sendIComponentText(372, 1,
+			player.getPackets().sendTextOnComponent(372, 0, "Getting Started");
+			player.getPackets().sendTextOnComponent(372, 1,
 					"To start the tutorial use your left mouse button to click on the");
-			player.getPackets().sendIComponentText(372, 2, "Quest Guide in this room .He is indicated by a flashing");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 2, "Quest Guide in this room .He is indicated by a flashing");
+			player.getPackets().sendTextOnComponent(372, 3,
 					"yellow arrow above his head. If you can't see him use your");
-			player.getPackets().sendIComponentText(372, 4, "keyboard arrow keys to rotate the view.");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 4, "keyboard arrow keys to rotate the view.");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 1) {
-			player.getPackets().sendIComponentText(372, 0, "Getting Started");
-			player.getPackets().sendIComponentText(372, 1, "Click on Zaros Altar and switch your prayer book");
-			player.getPackets().sendIComponentText(372, 2, "to ancient curses prayers book.");
-			player.getPackets().sendIComponentText(372, 3, "");
-			player.getPackets().sendIComponentText(372, 4, "");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 0, "Getting Started");
+			player.getPackets().sendTextOnComponent(372, 1, "Click on Zaros Altar and switch your prayer book");
+			player.getPackets().sendTextOnComponent(372, 2, "to ancient curses prayers book.");
+			player.getPackets().sendTextOnComponent(372, 3, "");
+			player.getPackets().sendTextOnComponent(372, 4, "");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 2) {
-			player.getPackets().sendIComponentText(372, 0, "Getting Started");
-			player.getPackets().sendIComponentText(372, 1, "Walk to Edgeville north till you find a ditch.");
-			player.getPackets().sendIComponentText(372, 2, "Then click on the ditch and cross it.");
-			player.getPackets().sendIComponentText(372, 3, "");
-			player.getPackets().sendIComponentText(372, 4, "");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 0, "Getting Started");
+			player.getPackets().sendTextOnComponent(372, 1, "Walk to Edgeville north till you find a ditch.");
+			player.getPackets().sendTextOnComponent(372, 2, "Then click on the ditch and cross it.");
+			player.getPackets().sendTextOnComponent(372, 3, "");
+			player.getPackets().sendTextOnComponent(372, 4, "");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		}
 	}
 

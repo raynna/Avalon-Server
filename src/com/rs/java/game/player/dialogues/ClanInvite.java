@@ -21,7 +21,7 @@ public class ClanInvite extends Dialogue {
 		}
 		player.getPackets().sendClanSettings(manager, false);
 		player.getInterfaceManager().sendInterface(1095);
-		player.getPackets().sendIComponentText(1095, 2,
+		player.getPackets().sendTextOnComponent(1095, 2,
 				"You have been invited to join clanname by " + inviter.getDisplayName() + ".");
 		if (manager.getClan().getMottifTop() != 0)
 			player.getPackets().sendIComponentSprite(1095, 44,

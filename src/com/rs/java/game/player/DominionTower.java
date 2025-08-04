@@ -106,7 +106,7 @@ public final class DominionTower implements Serializable {
             return;
         }
         player.getInterfaceManager().sendInterface(1164);
-        player.getPackets().sendIComponentText(1164, 27, progress == 0 ? "Ready for a new match" : "Floor progress: " + progress);
+        player.getPackets().sendTextOnComponent(1164, 27, progress == 0 ? "Ready for a new match" : "Floor progress: " + progress);
     }
 
     public void handleButtons(int interfaceId, int componentId, int slotId, int packetId) {
@@ -275,7 +275,7 @@ public final class DominionTower implements Serializable {
                     player.getInterfaceManager().sendTab(player.getInterfaceManager().hasRezizableScreen() ? 11 : 0, 1172);
                     player.getPackets().sendHideIComponent(1172, 2, true);
                     player.getPackets().sendHideIComponent(1172, 7, true);
-                    player.getPackets().sendIComponentText(1172, 4, player.getDisplayName());
+                    player.getPackets().sendTextOnComponent(1172, 4, player.getDisplayName());
                     player.getVarsManager().sendVar(1241, 1);
                     player.getPackets().sendCameraPos(Cutscene.getX(player, getBaseX() + 25), Cutscene.getY(player, getBaseY() + 38), 1800);
                     player.getPackets().sendCameraLook(Cutscene.getX(player, getBaseX() + 25), Cutscene.getY(player, getBaseY() + 29), 800);
@@ -285,7 +285,7 @@ public final class DominionTower implements Serializable {
                 } else if (count == 3) {
                     player.getPackets().sendHideIComponent(1172, 2, false);
                     player.getPackets().sendHideIComponent(1172, 5, true);
-                    player.getPackets().sendIComponentText(1172, 6, getMap().getStringValue(2095));
+                    player.getPackets().sendTextOnComponent(1172, 6, getMap().getStringValue(2095));
                     player.getVarsManager().sendVar(1241, 0);
                     player.getPackets().sendCameraPos(Cutscene.getX(player, getBaseX() + 35), Cutscene.getY(player, getBaseY() + 37), 1800);
                     player.getPackets().sendCameraLook(Cutscene.getX(player, getBaseX() + 35), Cutscene.getY(player, getBaseY() + 28), 800);
@@ -305,7 +305,7 @@ public final class DominionTower implements Serializable {
                     player.getInterfaceManager().sendInterface(1172);
                     player.getPackets().sendHideIComponent(1172, 2, true);
                     player.getPackets().sendHideIComponent(1172, 5, true);
-                    player.getPackets().sendIComponentText(1172, 8, "Fight!");
+                    player.getPackets().sendTextOnComponent(1172, 8, "Fight!");
                     player.getPackets().sendHideIComponent(1172, 10, true);
                     player.getPackets().sendCameraLook(Cutscene.getX(player, getBaseX() + 32), Cutscene.getY(player, getBaseY() + 36), 0);
                     player.getPackets().sendCameraPos(Cutscene.getX(player, getBaseX() + 32), Cutscene.getY(player, getBaseY() + 16), 5000);
@@ -357,8 +357,8 @@ public final class DominionTower implements Serializable {
                     player.getInterfaceManager().sendInterface(1172);
                     player.getPackets().sendHideIComponent(1172, 2, true);
                     player.getPackets().sendHideIComponent(1172, 5, true);
-                    player.getPackets().sendIComponentText(1172, 8, "Unlucky, you lost!");
-                    player.getPackets().sendIComponentText(1172, 10, "You leave with a dominion factor of: " + getDominionFactor());
+                    player.getPackets().sendTextOnComponent(1172, 8, "Unlucky, you lost!");
+                    player.getPackets().sendTextOnComponent(1172, 10, "You leave with a dominion factor of: " + getDominionFactor());
                     player.getPackets().sendCameraPos(Cutscene.getX(player, getBaseX() + 35), Cutscene.getY(player, getBaseY() + 37), 2500);
                     player.getPackets().sendCameraLook(Cutscene.getX(player, getBaseX() + 35), Cutscene.getY(player, getBaseY() + 28), 800);
                     player.getPackets().sendCameraPos(Cutscene.getX(player, getBaseX() + 42), Cutscene.getY(player, getBaseY() + 37), 2500, 6, 6);
@@ -413,8 +413,8 @@ public final class DominionTower implements Serializable {
                     player.getInterfaceManager().sendInterface(1172);
                     player.getPackets().sendHideIComponent(1172, 2, true);
                     player.getPackets().sendHideIComponent(1172, 5, true);
-                    player.getPackets().sendIComponentText(1172, 8, "Yeah! You won!");
-                    player.getPackets().sendIComponentText(1172, 10, "You now have a dominion factor of: " + getDominionFactor());
+                    player.getPackets().sendTextOnComponent(1172, 8, "Yeah! You won!");
+                    player.getPackets().sendTextOnComponent(1172, 10, "You now have a dominion factor of: " + getDominionFactor());
                     player.getPackets().sendCameraPos(Cutscene.getX(player, getBaseX() + 35), Cutscene.getY(player, getBaseY() + 37), 2500);
                     player.getPackets().sendCameraLook(Cutscene.getX(player, getBaseX() + 35), Cutscene.getY(player, getBaseY() + 28), 800);
                     player.getPackets().sendCameraPos(Cutscene.getX(player, getBaseX() + 42), Cutscene.getY(player, getBaseY() + 37), 2500, 6, 6);
@@ -521,8 +521,8 @@ public final class DominionTower implements Serializable {
     public void openEnduranceMode() {
         selectBoss();
         player.getInterfaceManager().sendScreenInterface(93, 1173);
-        player.getPackets().sendIComponentText(1173, 38, String.valueOf(getProgress()));
-        player.getPackets().sendIComponentText(1173, 31, String.valueOf(getFactorReward()));
+        player.getPackets().sendTextOnComponent(1173, 38, String.valueOf(getProgress()));
+        player.getPackets().sendTextOnComponent(1173, 31, String.valueOf(getFactorReward()));
     }
 
     public int getBossesTotalLevel() {
@@ -607,7 +607,7 @@ public final class DominionTower implements Serializable {
         setDominionFactor(0);
         player.getInterfaceManager().sendInterface(1171);
         player.getPackets().sendInterSetItemsOptionsScript(1171, 7, 100, 8, 3, "Take", "Bank", "Discard", "Examine");
-        player.getPackets().sendUnlockIComponentOptionSlots(1171, 7, 0, 20, 0, 1, 2, 3);
+        player.getPackets().sendUnlockOptions(1171, 7, 0, 20, 0, 1, 2, 3);
         refreshRewards();
     }
 

@@ -75,23 +75,17 @@ public class Nomad extends NPC {
 	public void sendDeath(Entity source) {
 		if (throneTile != null) {
 			target.lock();
-			target.getPackets().sendConfigByFile(6962, 0);
+			target.getPackets().sendVarBit(6962, 0);
 			Dialogue.sendNPCDialogueNoContinue(target, getId(), 9802, "You...<br>You have doomed this world.");
 			target.getPackets().sendVoice(8260);
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
 					Dialogue.closeNoContinueDialogue(target);
-					// target.getQuestManager().get(Quests.NOMADS_REQIUM).finish();
-					FadingScreen.fade(target, new Runnable() {
-
-						@Override
-						public void run() {
-							target.getControlerManager().forceStop();
-							target.unlock();
-						}
-
-					});
+					FadingScreen.fade(target, () -> {
+                        target.getControlerManager().forceStop();
+                        target.unlock();
+                    });
 				}
 			}, getCombatDefinitions().getAttackDelay() + 1);
 		}

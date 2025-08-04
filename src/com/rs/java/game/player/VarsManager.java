@@ -2,6 +2,7 @@ package com.rs.java.game.player;
 
 import com.rs.core.cache.Cache;
 import com.rs.core.cache.defintions.VarBitDefinitions;
+import com.rs.kotlin.Rscm;
 
 public class VarsManager {
 
@@ -24,6 +25,11 @@ public class VarsManager {
 	}
 
 	public void sendVar(int id, int value) {
+		sendVar(id, value, false);
+	}
+
+	public void sendVar(String var, int value) {
+		int id = Rscm.lookup(var);
 		sendVar(id, value, false);
 	}
 

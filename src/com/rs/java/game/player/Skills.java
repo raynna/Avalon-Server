@@ -1161,7 +1161,7 @@ public final class Skills implements Serializable {
         int milestone = getMilestone(player);//all this to handle it good shit nice to see the little details thats what i do the best
         int combatMilestone = getCombatMilestone(player);
         int slayerCombatMilestones = getSlayerCombatMilestone(player);
-        player.getPackets().sendGlobalConfig(gainedLevelConfig, gainedLevels + newLevel);
+        player.getPackets().sendGlobalVar(gainedLevelConfig, gainedLevels + newLevel);
         player.getVarsManager().sendVarBit(4727, combatMilestone);
         player.getVarsManager().sendVarBit(4728, milestone);
         player.getVarsManager().sendVarBit(4729, levelupConfig);

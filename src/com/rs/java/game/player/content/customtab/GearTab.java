@@ -15,7 +15,7 @@ public class GearTab extends CustomTab {
 		player.getTemporaryAttributtes().put("CUSTOMTAB", 3);
 		player.getTemporaryAttributtes().remove("ACHIEVEMENTTAB");
 		player.getTemporaryAttributtes().remove("SELECTEDGEAR");
-		player.getPackets().sendIComponentText(3002, 25, "Gear Setups");
+		player.getPackets().sendTextOnComponent(3002, 25, "Gear Setups");
 		player.getPackets().sendHideIComponent(3002, PURPLE_STAR_COMP, false);
 		player.getPackets().sendHideIComponent(3002, YELLOW_STAR_COMP, false);
 		player.getPackets().sendIComponentSprite(3002, PURPLE_STAR_COMP, 1842);
@@ -23,7 +23,7 @@ public class GearTab extends CustomTab {
 		for (Entry<String, Preset> gear : player.getPresetManager().PRESET_SETUPS.entrySet()) {
 			if (gear != null) {
 				player.getPackets().sendHideIComponent(3002, i, false);
-				player.getPackets().sendIComponentText(3002, i, (gear.getKey()) + "");
+				player.getPackets().sendTextOnComponent(3002, i, (gear.getKey()) + "");
 			}
 			i++;
 		}
@@ -64,15 +64,15 @@ public class GearTab extends CustomTab {
 		}
 		player.getPackets().sendIComponentSprite(3002, GREEN_STAR_COMP, 8486);
 		if (p2 != null)
-			player.getPackets().sendIComponentText(3002, 25, otherName + "<br> Presets");
+			player.getPackets().sendTextOnComponent(3002, 25, otherName + "<br> Presets");
 		else
-			player.getPackets().sendIComponentText(3002, 25, "Gear Setups");
+			player.getPackets().sendTextOnComponent(3002, 25, "Gear Setups");
 		int i = 3;
 		for (Entry<String, Preset> gear : p2 != null ? p2.getPresetManager().PRESET_SETUPS.entrySet()
 				: player.getPresetManager().PRESET_SETUPS.entrySet()) {
 			if (gear != null) {
 				player.getPackets().sendHideIComponent(3002, i, false);
-				player.getPackets().sendIComponentText(3002, i, (gear.getKey()) + "");
+				player.getPackets().sendTextOnComponent(3002, i, (gear.getKey()) + "");
 			}
 			i++;
 		}
@@ -149,22 +149,22 @@ public class GearTab extends CustomTab {
 		for (Entry<String, Preset> gear : p2 != null ? p2.getPresetManager().PRESET_SETUPS.entrySet()
 				: player.getPresetManager().PRESET_SETUPS.entrySet()) {
 			if (gear != null) {
-				player.getPackets().sendIComponentText(3002, i, gear.getKey());
+				player.getPackets().sendTextOnComponent(3002, i, gear.getKey());
 				if (compId == i) {
 					Integer selectedGear = (Integer) player.getTemporaryAttributtes().get("SELECTEDGEAR");
 					if (selectedGear != null) {
 						if (gear.getValue().getId(p2 != null ? p2 : player) == selectedGear) {
 							player.getTemporaryAttributtes().remove("SELECTEDGEAR");
-							player.getPackets().sendIComponentText(3002, i, gear.getKey());
+							player.getPackets().sendTextOnComponent(3002, i, gear.getKey());
 						} else {
 							player.getTemporaryAttributtes().put("SELECTEDGEAR",
 									gear.getValue().getId(p2 != null ? p2 : player));
-							player.getPackets().sendIComponentText(3002, i, gear.getKey() + "<img=12>");
+							player.getPackets().sendTextOnComponent(3002, i, gear.getKey() + "<img=12>");
 						}
 					} else {
 						player.getTemporaryAttributtes().put("SELECTEDGEAR",
 								gear.getValue().getId(p2 != null ? p2 : player));
-						player.getPackets().sendIComponentText(3002, i, gear.getKey() + "<img=12>");
+						player.getPackets().sendTextOnComponent(3002, i, gear.getKey() + "<img=12>");
 					}
 				}
 				i++;

@@ -64,10 +64,10 @@ public class BankShop implements Serializable {
 	}
 
 	private void refreshBankSize() {
-		player.getPackets().sendGlobalConfig(1024, isBoughtSlots() ? 1 : 0);
-		player.getPackets().sendGlobalConfig(1038, freeSize);
-		player.getPackets().sendGlobalConfig(192, memberSize + freeSize);
-		player.getPackets().sendGlobalConfig(638, freeSize);
+		player.getPackets().sendGlobalVar(1024, isBoughtSlots() ? 1 : 0);
+		player.getPackets().sendGlobalVar(1038, freeSize);
+		player.getPackets().sendGlobalVar(192, memberSize + freeSize);
+		player.getPackets().sendGlobalVar(638, freeSize);
 
 	}
 
@@ -372,7 +372,7 @@ public class BankShop implements Serializable {
 		final int lastGameTab = player.getInterfaceManager().openGameTab(9); // friends
 		// tab
 		sendBoxInterItems();
-		player.getPackets().sendIComponentText(11, 13, "Bank Of " + Settings.SERVER_NAME + " - Deposit Box");
+		player.getPackets().sendTextOnComponent(11, 13, "Bank Of " + Settings.SERVER_NAME + " - Deposit Box");
 		player.setCloseInterfacesEvent(new Runnable() {
 			@Override
 			public void run() {
@@ -388,7 +388,7 @@ public class BankShop implements Serializable {
 	public void sendBoxInterItems() {
 		player.getPackets().sendInterSetItemsOptionsScript(11, 17, 93, 6, 5, "Deposit-1", "Deposit-5", "Deposit-10",
 				"Deposit-All", "Deposit-X", "Examine");
-		player.getPackets().sendUnlockIComponentOptionSlots(11, 17, 0, 27, 0, 1, 2, 3, 4, 5);
+		player.getPackets().sendUnlockOptions(11, 17, 0, 27, 0, 1, 2, 3, 4, 5);
 	}
 
 	public void openBank() {
@@ -404,7 +404,7 @@ public class BankShop implements Serializable {
 	}
 
 	public void refreshLastX() {
-		player.getPackets().sendConfig(1249, lastX);
+		player.getPackets().sendVar(1249, lastX);
 	}
 
 	public void createTab() {
@@ -757,13 +757,13 @@ public class BankShop implements Serializable {
 	}
 
 	public void refreshViewingTab() {
-		player.getPackets().sendConfigByFile(4893, currentTab + 1);
+		player.getPackets().sendVarBit(4893, currentTab + 1);
 	}
 
 	public void refreshTab(int slot) {
 		if (slot == 0)
 			return;
-		player.getPackets().sendConfigByFile(4885 + (slot - 1), getTabSize(slot));
+		player.getPackets().sendVarBit(4885 + (slot - 1), getTabSize(slot));
 		calculateBankSize();
 		refreshBankSize();
 	}
@@ -833,8 +833,8 @@ public class BankShop implements Serializable {
 	}
 
 	public void unlockButtons() {
-		player.getPackets().sendIComponentSettings(762, 95, 0, getMaxBankSpace(), 2622718);
-		player.getPackets().sendIComponentSettings(763, 0, 0, 27, 2425982);
+		player.getPackets().sendComponentSettings(762, 95, 0, getMaxBankSpace(), 2622718);
+		player.getPackets().sendComponentSettings(763, 0, 0, 27, 2425982);
 	}
 
 	public boolean getWithdrawNotes() {
@@ -843,7 +843,7 @@ public class BankShop implements Serializable {
 
 	public void switchWithdrawNotes() {
 		withdrawNotes = !withdrawNotes;
-		player.getPackets().sendConfig(115, withdrawNotes ? 1 : 0);
+		player.getPackets().sendVar(115, withdrawNotes ? 1 : 0);
 	}
 
 	public void switchPlaceholders() {
@@ -856,7 +856,7 @@ public class BankShop implements Serializable {
 
 	public void switchInsertItems() {
 		insertItems = !insertItems;
-		player.getPackets().sendConfig(305, insertItems ? 1 : 0);
+		player.getPackets().sendVar(305, insertItems ? 1 : 0);
 	}
 
 	public void setCurrentTab(int currentTab) {

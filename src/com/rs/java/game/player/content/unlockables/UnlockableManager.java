@@ -104,7 +104,7 @@ public class UnlockableManager {
 		player.getInterfaceManager().sendInterface(275);
 		int number = 0;
 		for (int i = 0; i < 100; i++) {
-			player.getPackets().sendIComponentText(275, i, "");
+			player.getPackets().sendTextOnComponent(275, i, "");
 		}
 		for (UnlockableItems items : UnlockableItems.values()) {
 			if (items == null)
@@ -114,12 +114,12 @@ public class UnlockableManager {
 			String itemName = ItemDefinitions.getItemDefinitions(firstItem).getName();
 			String text = (hasUnlockedItem(player, firstItem) ? "<col=009933>You have unlocked " + itemName
 					: "<col=660066>" + itemName + " - costs (" + items.getPrice() + ") pk points");
-			player.getPackets().sendIComponentText(275, (13 + number), text);
+			player.getPackets().sendTextOnComponent(275, (13 + number), text);
 		}
-		player.getPackets().sendIComponentText(275, 1, "Pk Points: " + player.getPKP());
-		player.getPackets().sendIComponentText(275, 10, " ");
-		player.getPackets().sendIComponentText(275, 11, "Items Unlocks");
-		player.getPackets().sendIComponentText(275, 12, " ");
+		player.getPackets().sendTextOnComponent(275, 1, "Pk Points: " + player.getPKP());
+		player.getPackets().sendTextOnComponent(275, 10, " ");
+		player.getPackets().sendTextOnComponent(275, 11, "Items Unlocks");
+		player.getPackets().sendTextOnComponent(275, 12, " ");
 	}
 
 }

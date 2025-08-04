@@ -39,7 +39,7 @@ public class JewllerySmithing {
 		player.getInterfaceManager().sendInterface(INTERFACE);
 		for (int primaryIndex = 0; primaryIndex < MOLDS.length; primaryIndex++) {
 			if (player.getInventory().containsItemToolBelt(MOLDS[primaryIndex]) || player.getToolbelt().contains(MOLDS[primaryIndex])) {
-				player.getPackets().sendIComponentText(INTERFACE, 16 + (primaryIndex * 19), "");
+				player.getPackets().sendTextOnComponent(INTERFACE, 16 + (primaryIndex * 19), "");
 				for (int secondaryIndex = 0; secondaryIndex < ITEMS[primaryIndex].length; secondaryIndex++) {
 					callCS2(player);
 					player.getPackets()
@@ -68,7 +68,7 @@ public class JewllerySmithing {
 						(COMPONENTS_BASE[primaryIndex] + secondaryIndex * 2),
 						(299 + (primaryIndex * 14) + secondaryIndex), false, 6, 4, "Make 1", "Make 5", "Make 10",
 						"Make All");
-				player.getPackets().sendUnlockIComponentOptionSlots(INTERFACE,
+				player.getPackets().sendUnlockOptions(INTERFACE,
 						(COMPONENTS_BASE[primaryIndex] + secondaryIndex * 2), 0, 28, 0, 1, 2, 3);
 			}
 		}

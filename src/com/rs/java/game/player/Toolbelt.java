@@ -136,7 +136,7 @@ public class Toolbelt implements Serializable {
 		for (int i = 0; i < Config_IDS.length; i++) {
 			if (configValue[i] == 0)
 				continue;
-			player.getPackets().sendConfig(Config_IDS[i], configValue[i]);
+			player.getPackets().sendVar(Config_IDS[i], configValue[i]);
 		}
 	}
 

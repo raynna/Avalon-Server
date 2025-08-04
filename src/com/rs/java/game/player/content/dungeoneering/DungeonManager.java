@@ -1426,7 +1426,7 @@ public class DungeonManager {
 				for (int i2 = 0; i2 < (achievements.length > 6 ? 6 : achievements.length); i2++)
 					player.getPackets().sendCSVarInteger(1203 + (i * 6) + i2, achievements[i2]);
 			}
-			player.getPackets().sendIComponentText(933, 331, Utils.formatTime((Utils.currentTimeMillis() - time)));
+			player.getPackets().sendTextOnComponent(933, 331, Utils.formatTime((Utils.currentTimeMillis() - time)));
 			player.getPackets().sendCSVarInteger(1187, party.getFloor());
 			player.getPackets().sendCSVarInteger(1188, party.getSize() + 1); // dungeon size, sets bonus aswell
 			multiplier += DungeonConstants.DUNGEON_SIZE_BONUS[party.getSize()];

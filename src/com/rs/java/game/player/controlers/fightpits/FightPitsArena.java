@@ -117,6 +117,6 @@ public class FightPitsArena extends Controler {
 	public void sendInterfaces() {
 		player.getInterfaceManager().sendTab(player.getInterfaceManager().hasRezizableScreen() ? 34 : 0, 373);
 		if (FightPits.currentChampion != null)
-			player.getPackets().sendIComponentText(373, 10, "Current Champion: JaLYt-Ket-" + FightPits.currentChampion);
+			player.getPackets().sendTextOnComponent(373, 10, "Current Champion: JaLYt-Ket-" + FightPits.currentChampion);
 	}
 }

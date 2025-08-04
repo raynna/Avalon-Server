@@ -57,12 +57,12 @@ public class PriceChecker extends Dialogue {
 		case 2:
 			switch (componentId) {
 			case OPTION_1:
-				player.getPackets().sendConfig(1109, -1);
-				player.getPackets().sendConfig1(1241, 16750848);
-				player.getPackets().sendConfig1(1242, 15439903);
-				player.getPackets().sendConfig1(741, -1);
-				player.getPackets().sendConfig1(743, -1);
-				player.getPackets().sendConfig1(744, 0);
+				player.getPackets().sendVar(1109, -1);
+				player.getPackets().sendVar1(1241, 16750848);
+				player.getPackets().sendVar1(1242, 15439903);
+				player.getPackets().sendVar1(741, -1);
+				player.getPackets().sendVar1(743, -1);
+				player.getPackets().sendVar1(744, 0);
 				player.getPackets().sendInterface(true, 752, 7, 389);
 				player.getPackets().sendRunScript(570, new Object[] { "Price checker" });
 				break;

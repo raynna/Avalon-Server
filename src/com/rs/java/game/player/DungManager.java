@@ -600,7 +600,7 @@ public class DungManager implements Serializable {
 			player.getPackets().sendGameMessage("A member in your party can't do this floor.");
 			return;
 		}
-		player.getPackets().sendIComponentText(947, 765, "" + floor);
+		player.getPackets().sendTextOnComponent(947, 765, "" + floor);
 		player.getTemporaryAttributtes().put("DUNG_FLOOR", floor);
 	}
 
@@ -667,8 +667,8 @@ public class DungManager implements Serializable {
 		markComplexity(complexity, true);
 		hideSkills(complexity);
 		int penalty = complexity == 6 ? 0 : ((6 - complexity) * 5 + 25);
-		player.getPackets().sendIComponentText(938, 42, "" + complexity);
-		player.getPackets().sendIComponentText(938, 119, penalty + "% XP Penalty");
+		player.getPackets().sendTextOnComponent(938, 42, "" + complexity);
+		player.getPackets().sendTextOnComponent(938, 119, penalty + "% XP Penalty");
 		player.getTemporaryAttributtes().put("DUNG_COMPLEXITY", complexity);
 	}
 
@@ -717,7 +717,7 @@ public class DungManager implements Serializable {
 		if (complexity >= 5)
 			count += 5;
 		for (int i = 0; i < COMPLEXITY_SKILLS.length; i++) {
-			player.getPackets().sendIComponentText(938, 88 + i * 2,
+			player.getPackets().sendTextOnComponent(938, 88 + i * 2,
 					(i >= count ? "<col=383838>" : "") + COMPLEXITY_SKILLS[i]);
 		}
 	}

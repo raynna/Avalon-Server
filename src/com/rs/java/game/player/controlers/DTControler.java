@@ -128,9 +128,9 @@ public class DTControler extends Controler {
 		if (bosses != null) {
 			player.getInterfaceManager().sendOverlay(1159, false);
 			player.getPackets().sendHideIComponent(1159, 14, true);
-			player.getPackets().sendIComponentText(1159, 32, getMode() == DominionTower.CLIMBER ? "Climber" : "Endurance" + ". Floor " + (player.getDominionTower().getProgress() + 1));
-			player.getPackets().sendIComponentText(1159, 40, player.getDisplayName());
-			player.getPackets().sendIComponentText(1159, 41,
+			player.getPackets().sendTextOnComponent(1159, 32, getMode() == DominionTower.CLIMBER ? "Climber" : "Endurance" + ". Floor " + (player.getDominionTower().getProgress() + 1));
+			player.getPackets().sendTextOnComponent(1159, 40, player.getDisplayName());
+			player.getPackets().sendTextOnComponent(1159, 41,
 					/* player.getDominionTower().getNextBoss().getName() */player.getDominionTower().getMap().getStringValue(2095));
 		}
 	}

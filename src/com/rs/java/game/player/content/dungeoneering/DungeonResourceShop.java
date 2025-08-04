@@ -19,8 +19,8 @@ public class DungeonResourceShop {
 		}
 		player.getPackets().sendCSVarInteger(1320, complexity);
 		player.getTemporaryAttributtes().put("DUNG_COMPLEXITY", complexity);
-		player.getPackets().sendUnlockIComponentOptionSlots(RESOURCE_SHOP, 24, 0, 429, 0, 1, 2, 3, 4);
-		player.getPackets().sendUnlockIComponentOptionSlots(RESOURCE_SHOP_INV, 0, 0, 27, 0, 1, 2, 3, 4, 5);
+		player.getPackets().sendUnlockOptions(RESOURCE_SHOP, 24, 0, 429, 0, 1, 2, 3, 4);
+		player.getPackets().sendUnlockOptions(RESOURCE_SHOP_INV, 0, 0, 27, 0, 1, 2, 3, 4, 5);
 		player.getPackets().sendInterSetItemsOptionsScript(RESOURCE_SHOP_INV, 0, 93, 4, 7, "Value", "Sell 1", "Sell 5",
 				"Sell 10", "Sell 50", "Examine");
 		player.getInterfaceManager().sendInterface(RESOURCE_SHOP);

@@ -102,9 +102,9 @@ public class SquealOfFortune implements Serializable {
 	public void start() {
 
 		items.clear();
-		player.getPackets().sendConfigByFile(11026, player.getSpins());
-		player.getPackets().sendConfigByFile(11155, Utils.random(1, 5));
-		player.getPackets().sendGlobalConfig(1928, 1);
+		player.getPackets().sendVarBit(11026, player.getSpins());
+		player.getPackets().sendVarBit(11155, Utils.random(1, 5));
+		player.getPackets().sendGlobalVar(1928, 1);
 		for (int i = 0; i < 14; i++) {
 			if (i == 8 || i == 4) {
 				items.add(new Item(rare()));
@@ -159,7 +159,7 @@ public class SquealOfFortune implements Serializable {
 			if (player.getSpins() == 0) {
 				items.clear();
 				player.getPackets().sendWindowsPane(player.getInterfaceManager().hasRezizableScreen() ? 746 : 548, 0);
-				player.getPackets().sendGlobalConfig(1790, 0);
+				player.getPackets().sendGlobalVar(1790, 0);
 				player.getPackets().sendRunScript(5906);
 				return;
 			} // damx
@@ -167,10 +167,10 @@ public class SquealOfFortune implements Serializable {
 				return;
 			}
 			player.lock(11);
-			player.getPackets().sendGlobalConfig(1781, Utils.getRandom(13));
-			player.getPackets().sendConfigByFile(10860, prizeId);
-			player.getPackets().sendGlobalConfig(1790, 1);
-			player.getPackets().sendConfigByFile(10861, prizeId);
+			player.getPackets().sendGlobalVar(1781, Utils.getRandom(13));
+			player.getPackets().sendVarBit(10860, prizeId);
+			player.getPackets().sendGlobalVar(1790, 1);
+			player.getPackets().sendVarBit(10861, prizeId);
 			player.setSpins(player.getSpins() - 1); // damx
 		}
 
@@ -181,8 +181,8 @@ public class SquealOfFortune implements Serializable {
 			start();
 		} else if (buttonId == 192) {
 			player.getInventory().addItem(new Item(items.get(prizeId).getId()));
-			player.getPackets().sendConfigByFile(10861, 0);
-			player.getPackets().sendGlobalConfig(1790, 0);
+			player.getPackets().sendVarBit(10861, 0);
+			player.getPackets().sendGlobalVar(1790, 0);
 			player.getPackets().sendHideIComponent(1253, 240, false);
 			player.getPackets().sendHideIComponent(1253, 178, false);
 			player.getPackets().sendHideIComponent(1253, 225, false);
@@ -191,7 +191,7 @@ public class SquealOfFortune implements Serializable {
 		} else if (buttonId == 258) {
 			items.clear();
 			player.getPackets().sendWindowsPane(player.getInterfaceManager().hasRezizableScreen() ? 746 : 548, 0);
-			player.getPackets().sendGlobalConfig(1790, 0);
+			player.getPackets().sendGlobalVar(1790, 0);
 			player.getPackets().sendRunScript(5906);
 		}
 	}

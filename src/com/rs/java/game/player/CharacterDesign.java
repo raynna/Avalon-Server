@@ -12,12 +12,12 @@ public class CharacterDesign {
 
 	public static void openPlayerCustomizing(Player player) {
 		player.getPackets().sendWindowsPane(1028, 0);
-		player.getPackets().sendIComponentSettings(1028, 65, 0, 11, 2);
-		player.getPackets().sendIComponentSettings(1028, 128, 0, 50, 2);
-		player.getPackets().sendIComponentSettings(1028, 132, 0, 250, 2);
+		player.getPackets().sendComponentSettings(1028, 65, 0, 11, 2);
+		player.getPackets().sendComponentSettings(1028, 128, 0, 50, 2);
+		player.getPackets().sendComponentSettings(1028, 132, 0, 250, 2);
 		player.getPackets().sendHideIComponent(1028, 123, true);
-		player.getPackets().sendConfig(2533, 0);
-		player.getPackets().sendConfig(1363, player.getAppearence().isMale() ? 0 : 4096);
+		player.getPackets().sendVar(2533, 0);
+		player.getPackets().sendVar(1363, player.getAppearence().isMale() ? 0 : 4096);
 		player.temporaryAttribute().put("customizing_stage", Integer.valueOf(0));
 		player.temporaryAttribute().put("customizing_set", Integer.valueOf(-1));
 		player.temporaryAttribute().put("extra_set", Integer.valueOf(-1));
@@ -160,7 +160,7 @@ public class CharacterDesign {
 		}
 		player.getAppearence().setLookStyles(SETS[player.getAppearence().isMale() ? 0 : 1][0][0]);
 		player.getAppearence().setColours(SETS[player.getAppearence().isMale() ? 0 : 1][0][1]);
-		player.getPackets().sendConfig(1363, player.getAppearence().isMale() ? 0 : 4096);
+		player.getPackets().sendVar(1363, player.getAppearence().isMale() ? 0 : 4096);
 		player.getAppearence().generateAppearenceData();
 	}
 

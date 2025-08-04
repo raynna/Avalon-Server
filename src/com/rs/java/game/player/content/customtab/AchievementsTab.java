@@ -77,18 +77,18 @@ public class AchievementsTab extends CustomTab {
 			if (store != null) {
 				player.getPackets().sendHideIComponent(3002, store.compId, false);
 				if (store.text != null) {
-					player.getPackets().sendIComponentText(3002, store.compId, store.text);
+					player.getPackets().sendTextOnComponent(3002, store.compId, store.text);
 				}
 			}
 		}
 		double percentage = getPercentage(currentActions, totalActions);
-		player.getPackets().sendIComponentText(3002, 24,
+		player.getPackets().sendTextOnComponent(3002, 24,
 				completedTasks + "/" + totalTasks + (percentage == 100 ? "" : " ")
 						+ (percentage == 100 ? "<col=04BB3B>" : percentage == 0 ? "<col=BB0404>" : "<col=FFF300>")
 						+ (percentage == 100 ? "100%" : new DecimalFormat("##.##").format(percentage) + "%"));
 		if (percentage == 100) {
 			player.getPackets().sendHideIComponent(3002, 10, false);
-			player.getPackets().sendIComponentText(3002, 10, "<col=04BB3B>You completed all " + totalTasks + " tasks!");
+			player.getPackets().sendTextOnComponent(3002, 10, "<col=04BB3B>You completed all " + totalTasks + " tasks!");
 		}
 	}
 
@@ -207,19 +207,19 @@ public class AchievementsTab extends CustomTab {
 				if (player.getTaskManager().completedTask(store))
 					completedTasks++;
 				player.getPackets().sendHideIComponent(3002, i, false);
-				player.getPackets().sendIComponentText(3002, i,
+				player.getPackets().sendTextOnComponent(3002, i,
 						(player.getTaskManager().completedTask(store) ? "<col=04BB3B>"
 								: player.getTaskManager().getTaskStage(store) > 0 ? "<col=FFF300>" : "<col=BB0404>")
 								+ Utils.formatString(store.name()).replace("$", "'")
 								+ (store.getAmount() > 1 && !player.getTaskManager().completedTask(store) ? " ("
 										+ player.getTaskManager().getTaskStage(store) + "/" + store.getAmount() + ")"
 										: ""));
-				player.getPackets().sendIComponentText(3002, 25, Utils.formatString(category) + "");
+				player.getPackets().sendTextOnComponent(3002, 25, Utils.formatString(category) + "");
 				i++;
 			}
 		}
 		double percentage = getPercentage(currentActions, totalActions);
-		player.getPackets().sendIComponentText(3002, 24,
+		player.getPackets().sendTextOnComponent(3002, 24,
 				completedTasks + "/" + totalTasks + (percentage == 100 ? "" : " ")
 						+ (percentage == 100 ? "<col=04BB3B>" : percentage == 0 ? "<col=BB0404>" : "<col=FFF300>")
 						+ (percentage == 100 ? "100%" : new DecimalFormat("##.#").format(percentage) + "%"));

@@ -193,7 +193,6 @@ public class PrayerEffectHandler {
 
     private static void handleTurmoilEffects(Player player, Entity target) {
         if (!player.getPrayer().isActive(AncientPrayer.TURMOIL)) return;
-        if (player.getPrayer().isBoostedLeech()) return;
 
         player.getPrayer().updateTurmoilBonus(target);
     }

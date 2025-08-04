@@ -99,7 +99,7 @@ public class CustomStore extends CustomStoreData {
 	public void sendInventory(Player player) {
 		player.getInterfaceManager().sendInventoryInterface(1266);
 		player.getPackets().sendItems(93, player.getInventory().getItems());
-		player.getPackets().sendUnlockIComponentOptionSlots(1266, 0, 0, 27, 0, 1, 2, 3, 4, 5);
+		player.getPackets().sendUnlockOptions(1266, 0, 0, 27, 0, 1, 2, 3, 4, 5);
 		player.getPackets().sendInterSetItemsOptionsScript(1266, 0, 93, 4, 7, "Value", "Sell 1", "Sell 5", "Sell 10",
 				"Sell 50", "Examine");
 	}
@@ -124,7 +124,7 @@ public class CustomStore extends CustomStoreData {
 	public void sendOptions(int i) {
 		player.getPackets().sendInterSetItemsOptionsScript(INTERFACE_ID, COMPONENTS[i] + 2, i, 1, 1, "Info", "Buy 1",
 				"Buy 10", "Buy 100", "Buy X", "Examine");
-		player.getPackets().sendUnlockIComponentOptionSlots(INTERFACE_ID, COMPONENTS[i] + 2, 0, 160, 0, 1, 2, 3, 4, 5);
+		player.getPackets().sendUnlockOptions(INTERFACE_ID, COMPONENTS[i] + 2, 0, 160, 0, 1, 2, 3, 4, 5);
 	}
 
 	private String formatPrice(int price) {
@@ -152,7 +152,7 @@ public class CustomStore extends CustomStoreData {
 					new Item[] { new Item(getItems(TYPE, SHOP).get(container).getId(),
 							(SHOP == PK_POINTS || SHOP == AVALON_POINTS ? 1
 									: getItems(TYPE, SHOP).get(container).getAmount())) });// sends items
-			player.getPackets().sendIComponentText(INTERFACE_ID, COMPONENTS[container] + 4,
+			player.getPackets().sendTextOnComponent(INTERFACE_ID, COMPONENTS[container] + 4,
 					getItems(TYPE, SHOP).get(container).getAmount() == 0 ? "Out<br>of<br>stock<br><br><br><br><br>"
 							: price == 0 ? HexColours.getShortMessage(Colour.GREEN, "Free")
 									: totalCurrency >= price ? HexColours.getMessage(Colour.YELLOW, formatPrice(price))
@@ -165,10 +165,10 @@ public class CustomStore extends CustomStoreData {
 			if (SHOP == PK_POINTS || SHOP == AVALON_POINTS)
 				player.getPackets().sendHideIComponent(INTERFACE_ID, 17, false);// unhides total currency
 			// price
-			player.getPackets().sendIComponentText(INTERFACE_ID, 17,
+			player.getPackets().sendTextOnComponent(INTERFACE_ID, 17,
 					getPointsName(TYPE, SHOP) + ": " + Utils.getFormattedNumber(totalCurrency, ','));// sends your total
 			// currency
-			player.getPackets().sendIComponentText(INTERFACE_ID, 16, getShopTitle(TYPE, SHOP));// sends shop title
+			player.getPackets().sendTextOnComponent(INTERFACE_ID, 16, getShopTitle(TYPE, SHOP));// sends shop title
 			return;
 		}
 		if (TYPE == SKILLCAPE) {
@@ -183,7 +183,7 @@ public class CustomStore extends CustomStoreData {
 							SkillcapeStore.capes.get(container).getAmount()) });// sends items
 			int price = SkillcapeStore.capes.get(container).getId() == 20767 ? 2475000
 					: SkillcapeStore.capes.get(container).getId() == 19709 ? 120000 : 99000;
-			player.getPackets().sendIComponentText(INTERFACE_ID, COMPONENTS[container] + 4,
+			player.getPackets().sendTextOnComponent(INTERFACE_ID, COMPONENTS[container] + 4,
 					player.getTotalCoins() >= price ? HexColours.getMessage(Colour.YELLOW, formatPrice(price))
 							: HexColours.getMessage(Colour.RED, formatPrice(price)));// sends
 			// price
@@ -194,22 +194,22 @@ public class CustomStore extends CustomStoreData {
 					getCurrencySprite(TYPE, SHOP));// sends sprite next to price
 			player.getPackets().sendHideIComponent(INTERFACE_ID, COMPONENTS[container] + 3, true);// hides background of
 																									// price
-			player.getPackets().sendIComponentText(INTERFACE_ID, 17,
+			player.getPackets().sendTextOnComponent(INTERFACE_ID, 17,
 					getPointsName(TYPE, SHOP) + ": " + Utils.getFormattedNumber(totalCurrency, ','));// sends your total
 			// currency
-			player.getPackets().sendIComponentText(INTERFACE_ID, 16, getShopTitle(TYPE, SHOP));// sends shop title
+			player.getPackets().sendTextOnComponent(INTERFACE_ID, 16, getShopTitle(TYPE, SHOP));// sends shop title
 		} else {
 			player.getPackets().sendHideIComponent(INTERFACE_ID, COMPONENTS[container], false);
 			player.getPackets().sendItems(container,
 					new Item[] { new Item(getShopType(TYPE)[container][0], getShopType(TYPE)[container][1]) });
 			player.getPackets().sendHideIComponent(INTERFACE_ID, COMPONENTS[container] + 3, true);
-			player.getPackets().sendIComponentText(INTERFACE_ID, COMPONENTS[container] + 4,
+			player.getPackets().sendTextOnComponent(INTERFACE_ID, COMPONENTS[container] + 4,
 					formatPrice(getShopType(TYPE)[container][2]) + "");
 			player.getPackets().sendSpriteOnIComponent(INTERFACE_ID, COMPONENTS[container] + 5,
 					getCurrencySprite(TYPE, SHOP));
-			player.getPackets().sendIComponentText(INTERFACE_ID, 17,
+			player.getPackets().sendTextOnComponent(INTERFACE_ID, 17,
 					getPointsName(TYPE, SHOP) + ": " + Utils.getFormattedNumber(totalCurrency, ','));
-			player.getPackets().sendIComponentText(INTERFACE_ID, 16, getShopTitle(TYPE));
+			player.getPackets().sendTextOnComponent(INTERFACE_ID, 16, getShopTitle(TYPE));
 		}
 	}
 

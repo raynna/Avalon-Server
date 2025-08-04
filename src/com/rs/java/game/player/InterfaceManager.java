@@ -107,11 +107,11 @@ public class InterfaceManager {
 
 	public void sendTimerInterface(Player player) {
 		player.getInterfaceManager().sendOverlay(3000, false);
-		player.getPackets().sendIComponentText(3000, 5, "");
-		player.getPackets().sendIComponentText(3000, 6, "");
-		player.getPackets().sendIComponentText(3000, 7, "");
-		player.getPackets().sendIComponentText(3000, 8, "");
-		player.getPackets().sendIComponentText(3000, 9, "");
+		player.getPackets().sendTextOnComponent(3000, 5, "");
+		player.getPackets().sendTextOnComponent(3000, 6, "");
+		player.getPackets().sendTextOnComponent(3000, 7, "");
+		player.getPackets().sendTextOnComponent(3000, 8, "");
+		player.getPackets().sendTextOnComponent(3000, 9, "");
 	}
 
 	public final void sendInterfaces() {
@@ -132,7 +132,7 @@ public class InterfaceManager {
 		//player.getInterfaceManager().sendTimerInterface(player);
 		sendTimerInterface();
 		ClansManager.unlockBanList(player);
-		player.getPackets().sendIComponentText(182, 1,
+		player.getPackets().sendTextOnComponent(182, 1,
 				"When you finished playing " + Settings.SERVER_NAME + ", click the log out button to save your progress properly.");
 		if (player.getFamiliar() != null && player.isActive())
 			player.getFamiliar().unlock();
@@ -163,7 +163,7 @@ public class InterfaceManager {
 		sendTab(198, 747);
 		player.getPackets().sendInterface(true, 752, 9, 137);
 		sendTab(119, 1139);
-		player.getPackets().sendGlobalConfig(823, 1);
+		player.getPackets().sendGlobalVar(823, 1);
 		sendCombatStyles();
 		sendTaskSystem();
 		sendSkills();
@@ -223,12 +223,12 @@ public class InterfaceManager {
 
 	public void sendStaffPanel() {
 		sendTab(resizableScreen ? 119 : 179, 506);
-		player.getPackets().sendGlobalConfig(823, 1);
+		player.getPackets().sendGlobalVar(823, 1);
 	}
 	
 	public void sendSof() {
 		sendTab(resizableScreen ? 119 : 179, 1139);
-		player.getPackets().sendGlobalConfig(823, 1);
+		player.getPackets().sendGlobalVar(823, 1);
 		player.getPackets().sendHideIComponent(1139, 8, true);
 		player.getPackets().sendHideIComponent(1139, 12, true);
 	}
@@ -506,7 +506,7 @@ public class InterfaceManager {
 	 * returns lastGameTab
 	 */
 	public int openGameTab(int tabId) {
-		player.getPackets().sendGlobalConfig(168, tabId);
+		player.getPackets().sendGlobalVar(168, tabId);
 		int lastTab = 4; // tabId
 		// tab = tabId;
 		return lastTab;

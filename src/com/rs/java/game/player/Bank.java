@@ -114,10 +114,10 @@ public class Bank implements Serializable {
 	}
 
 	private void refreshBankSize() {
-		player.getPackets().sendGlobalConfig(1024, isBoughtSlots() ? 1 : 0);
-		player.getPackets().sendGlobalConfig(1038, freeSize);
-		player.getPackets().sendGlobalConfig(192, memberSize + freeSize);
-		player.getPackets().sendGlobalConfig(638, freeSize);
+		player.getPackets().sendGlobalVar(1024, isBoughtSlots() ? 1 : 0);
+		player.getPackets().sendGlobalVar(1038, freeSize);
+		player.getPackets().sendGlobalVar(192, memberSize + freeSize);
+		player.getPackets().sendGlobalVar(638, freeSize);
 
 	}
 
@@ -134,21 +134,21 @@ public class Bank implements Serializable {
 	}
 
 	public void openPin() {
-		player.getPackets().sendGlobalConfig(98, 1);
+		player.getPackets().sendGlobalVar(98, 1);
 		player.getVarsManager().sendVarBit(1010, -1);
 		player.getInterfaceManager().sendInterface(13);
 		player.getInterfaceManager().setInterface(false, 13, 5, 759);
 		for (int i = 0; i < 40; i += 4) {
-			player.getPackets().sendUnlockIComponentOptionSlots(759, i, 0, 100, true, 0, 1, 2);
+			player.getPackets().sendUnlockOptions(759, i, 0, 100, true, 0, 1, 2);
 		}
 		if (recoveryDelay >= Utils.currentTimeMillis()) {
 			int days = (int) (recoveryDelay / 86400000);
 			int hours = days / 24;
-			player.getPackets().sendIComponentText(13, 27,
+			player.getPackets().sendTextOnComponent(13, 27,
 					actualPin != null ? "Your bankpin will be set in " + days + " days and " + hours + " hours."
 							: "Your bankpin will be deleted in " + days + " days and " + hours + " hours.");
 		} else
-			player.getPackets().sendIComponentText(13, 27, "Bank of " + Settings.SERVER_NAME);
+			player.getPackets().sendTextOnComponent(13, 27, "Bank of " + Settings.SERVER_NAME);
 	}
 
 	public void checkPinInput(boolean isConfirmation, int componentId) {
@@ -512,7 +512,7 @@ public class Bank implements Serializable {
 		final int lastGameTab = player.getInterfaceManager().openGameTab(9); // friends
 		// tab
 		sendBoxInterItems();
-		player.getPackets().sendIComponentText(11, 13, "The Bank of " + Settings.SERVER_NAME + " - Deposit Box");
+		player.getPackets().sendTextOnComponent(11, 13, "The Bank of " + Settings.SERVER_NAME + " - Deposit Box");
 		player.setCloseInterfacesEvent(new Runnable() {
 			@Override
 			public void run() {
@@ -528,7 +528,7 @@ public class Bank implements Serializable {
 	public void sendBoxInterItems() {
 		player.getPackets().sendInterSetItemsOptionsScript(11, 17, 93, 6, 5, "Deposit-1", "Deposit-5", "Deposit-10",
 				"Deposit-All", "Deposit-X", "Examine");
-		player.getPackets().sendUnlockIComponentOptionSlots(11, 17, 0, 27, 0, 1, 2, 3, 4, 5);
+		player.getPackets().sendUnlockOptions(11, 17, 0, 27, 0, 1, 2, 3, 4, 5);
 	}
 
 	public void openBank() {
@@ -545,7 +545,7 @@ public class Bank implements Serializable {
 	}
 
 	public void refreshLastX() {
-		player.getPackets().sendConfig(1249, lastX);
+		player.getPackets().sendVar(1249, lastX);
 	}
 
 	public void createTab() {
@@ -1097,27 +1097,27 @@ public class Bank implements Serializable {
 	}
 
 	public void refreshViewingTab() {
-		player.getPackets().sendConfigByFile(4893, currentTab + 1);
+		player.getPackets().sendVarBit(4893, currentTab + 1);
 	}
 
 	public void refreshValue() {
 		long bank = getBankValue();
 		String wealth = Utils.formatDoubledAmount(bank) + " GP";
 		if (bank == 0) {
-			player.getPackets().sendIComponentText(762, 47, "Where's your bank m8?");
+			player.getPackets().sendTextOnComponent(762, 47, "Where's your bank m8?");
 		} else if (bank > 0 && bank <= 9999999) {
-			player.getPackets().sendIComponentText(762, 47, "<col=FFFFFF>" + wealth);
+			player.getPackets().sendTextOnComponent(762, 47, "<col=FFFFFF>" + wealth);
 		} else if (bank > 10000000 && bank <= 999999999) {
-			player.getPackets().sendIComponentText(762, 47, "<col=ff000>" + wealth);
+			player.getPackets().sendTextOnComponent(762, 47, "<col=ff000>" + wealth);
 		} else if (bank >= 1000000000) {
-			player.getPackets().sendIComponentText(762, 47, "<col=ffc800>" + wealth);
+			player.getPackets().sendTextOnComponent(762, 47, "<col=ffc800>" + wealth);
 		}
 	}
 
 	public void refreshTab(int slot) {
 		if (slot == 0)
 			return;
-		player.getPackets().sendConfigByFile(4885 + (slot - 1), getTabSize(slot));
+		player.getPackets().sendVarBit(4885 + (slot - 1), getTabSize(slot));
 		calculateBankSize();
 		refreshBankSize();
 	}
@@ -1191,8 +1191,8 @@ public class Bank implements Serializable {
 	}
 
 	public void unlockButtons() {
-		player.getPackets().sendIComponentSettings(762, 95, 0, getMaxBankSpace(), 2622718);
-		player.getPackets().sendIComponentSettings(763, 0, 0, 27, 2425982);
+		player.getPackets().sendComponentSettings(762, 95, 0, getMaxBankSpace(), 2622718);
+		player.getPackets().sendComponentSettings(763, 0, 0, 27, 2425982);
 	}
 
 	public boolean getWithdrawNotes() {
@@ -1201,7 +1201,7 @@ public class Bank implements Serializable {
 
 	public void switchWithdrawNotes() {
 		withdrawNotes = !withdrawNotes;
-		player.getPackets().sendConfig(115, withdrawNotes ? 1 : 0);
+		player.getPackets().sendVar(115, withdrawNotes ? 1 : 0);
 	}
 
 	public void switchPlaceholders() {
@@ -1214,7 +1214,7 @@ public class Bank implements Serializable {
 
 	public void switchInsertItems() {
 		insertItems = !insertItems;
-		player.getPackets().sendConfig(305, insertItems ? 1 : 0);
+		player.getPackets().sendVar(305, insertItems ? 1 : 0);
 	}
 
 	public void setCurrentTab(int currentTab) {

@@ -72,29 +72,29 @@ public class Shop {
 				player.temporaryAttribute().remove("amount_shop");
 			}
 		});
-		player.getPackets().sendConfig(118, MAIN_STOCK_ITEMS_KEY);
-		player.getPackets().sendConfig(1496, 51);
-		player.getPackets().sendConfig(532, money);
-		player.getPackets().sendConfig(2565, 0);
-		player.getPackets().sendConfig(2563, 0);
+		player.getPackets().sendVar(118, MAIN_STOCK_ITEMS_KEY);
+		player.getPackets().sendVar(1496, 51);
+		player.getPackets().sendVar(532, money);
+		player.getPackets().sendVar(2565, 0);
+		player.getPackets().sendVar(2563, 0);
 		sendStore(player);
-		player.getPackets().sendGlobalConfig(199, -1);
+		player.getPackets().sendGlobalVar(199, -1);
 		player.getInterfaceManager().sendInterface(1265);
 		for (int i = 0; i < MAX_SHOP_ITEMS; i++)
-			player.getPackets().sendGlobalConfig(946 + i,
+			player.getPackets().sendGlobalVar(946 + i,
 					i < defaultQuantity.length ? defaultQuantity[i] : generalStock != null ? 0 : -1);// prices
-		player.getPackets().sendGlobalConfig(1241, 16750848);
-		player.getPackets().sendGlobalConfig(1242, 15439903);
-		player.getPackets().sendGlobalConfig(741, -1);
-		player.getPackets().sendGlobalConfig(743, -1);
-		player.getPackets().sendGlobalConfig(744, 1);
+		player.getPackets().sendGlobalVar(1241, 16750848);
+		player.getPackets().sendGlobalVar(1242, 15439903);
+		player.getPackets().sendGlobalVar(741, -1);
+		player.getPackets().sendGlobalVar(743, -1);
+		player.getPackets().sendGlobalVar(744, 1);
 		if (generalStock != null) {
 			player.getPackets().sendHideIComponent(1265, 19, false);
 		}
-		player.getPackets().sendIComponentSettings(1265, 20, 0, getStoreSize() * 6, 1150);
-		player.getPackets().sendIComponentSettings(1265, 26, 0, getStoreSize() * 6, 82903066);
+		player.getPackets().sendComponentSettings(1265, 20, 0, getStoreSize() * 6, 1150);
+		player.getPackets().sendComponentSettings(1265, 26, 0, getStoreSize() * 6, 82903066);
 		sendInventory(player);
-		player.getPackets().sendIComponentText(1265, 85, name);
+		player.getPackets().sendTextOnComponent(1265, 85, name);
 		player.getTemporaryAttributtes().put("shop_buying", Boolean.TRUE);
 		player.temporaryAttribute().put("amount_shop", 1);
 	}
@@ -102,7 +102,7 @@ public class Shop {
 	public void sendInventory(Player player) {
 		player.getInterfaceManager().sendInventoryInterface(1266);
 		player.getPackets().sendItems(93, player.getInventory().getItems());
-		player.getPackets().sendUnlockIComponentOptionSlots(1266, 0, 0, 27, 0, 1, 2, 3, 4, 5);
+		player.getPackets().sendUnlockOptions(1266, 0, 0, 27, 0, 1, 2, 3, 4, 5);
 		player.getPackets().sendInterSetItemsOptionsScript(1266, 0, 93, 4, 7, "Value", "Sell 1", "Sell 5", "Sell 10",
 				"Sell 50", "Examine");
 	}
@@ -357,10 +357,10 @@ public class Shop {
 			player.getPackets().sendGameMessage("You can't sell " + item.getDefinitions().getName() + " to this shop.");
 			return;
 		}
-		player.getPackets().sendIComponentText(1265, 40, ItemExamines.getExamine(item));
-		player.getPackets().sendIComponentText(1265, 43, "This is " + getItemType(item) + ".");
+		player.getPackets().sendTextOnComponent(1265, 40, ItemExamines.getExamine(item));
+		player.getPackets().sendTextOnComponent(1265, 43, "This is " + getItemType(item) + ".");
 		if (item.getDefinitions().isWearItem()) {
-			player.getPackets().sendIComponentText(1265, 44, "It is " + getEquipType(item) + ".");
+			player.getPackets().sendTextOnComponent(1265, 44, "It is " + getEquipType(item) + ".");
 		}
 		if (price <= 0) {
 			if (isBuying)
@@ -549,7 +549,7 @@ public class Shop {
 		viewingPlayers.computeIfAbsent(shopId, id -> new CopyOnWriteArrayList<>());
 		for (Player p : viewingPlayers.get(shopId)) {
 			sendStore(p);
-			p.getPackets().sendIComponentSettings(620, 25, 0, getStoreSize() * 6, 1150);
+			p.getPackets().sendComponentSettings(620, 25, 0, getStoreSize() * 6, 1150);
 			customcs2configstring(p);
 		}
 	}
@@ -599,7 +599,7 @@ public class Shop {
 
 	public void addAmount(Player player, int amount) {
 		this.amount += amount;
-		player.getPackets().sendConfig(2564, this.amount);
+		player.getPackets().sendVar(2564, this.amount);
 	}
 
 	public void removeAmount(Player player, int amount) {

@@ -51,12 +51,12 @@ public class ReferSystem {
 		p2.getInterfaceManager().sendTab(p2.getInterfaceManager().hasRezizableScreen() ? 112 : 172, 1019);
 		p2.getPackets().sendHideIComponent(1019, 11, true);
 		p2.getPackets().sendHideIComponent(1019, 9, true);
-		p2.getPackets().sendIComponentText(1019, 3, "<col=ff0000>Attention!");
-		p2.getPackets().sendIComponentText(1019, 18, "Accept");
-		p2.getPackets().sendIComponentText(1019, 16, "Decline");
-		p2.getPackets().sendIComponentText(1019, 8,
+		p2.getPackets().sendTextOnComponent(1019, 3, "<col=ff0000>Attention!");
+		p2.getPackets().sendTextOnComponent(1019, 18, "Accept");
+		p2.getPackets().sendTextOnComponent(1019, 16, "Decline");
+		p2.getPackets().sendTextOnComponent(1019, 8,
 				p2.getReferrer() + " has sent you a referral invite. Do you wish to accept?");
-		p2.getPackets().sendIComponentText(1019, 0, "Declining will close this tab and cancel the invite.");
+		p2.getPackets().sendTextOnComponent(1019, 0, "Declining will close this tab and cancel the invite.");
 		p2.getInterfaceManager().openGameTab(1);
 	}
 

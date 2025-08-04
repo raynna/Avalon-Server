@@ -162,7 +162,7 @@ public class NexCombat extends CombatScript {
 								for (Entity entity : nex.getPossibleTargets()) {
 									if (entity instanceof Player) {
 										Player player = (Player) entity;
-										player.getPackets().sendGlobalConfig(1435, 255);
+										player.getPackets().sendGlobalVar(1435, 255);
 									}
 								}
 								stop();
@@ -176,7 +176,7 @@ public class NexCombat extends CombatScript {
 												npc.getY());
 										if (distance > 30)
 											distance = 30;
-										player.getPackets().sendGlobalConfig(1435, (distance * 255 / 30));
+										player.getPackets().sendGlobalVar(1435, (distance * 255 / 30));
 									}
 								}
 							}

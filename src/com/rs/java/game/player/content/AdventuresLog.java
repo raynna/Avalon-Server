@@ -109,20 +109,20 @@ public class AdventuresLog implements Serializable {
 		int[] cids = { 10, 15, 20, 25, 30, 35, 40, 45, 50, 55 };
 		int[] title = { 9, 14, 19, 24, 29, 34, 39, 44, 49, 54 };
 		player.getInterfaceManager().sendInterface(1158);
-		player.getPackets().sendIComponentText(1158, 74, player.getUsername() + " - Adventure log");
+		player.getPackets().sendTextOnComponent(1158, 74, player.getUsername() + " - Adventure log");
 		for (int cid : cids)
-			player.getPackets().sendIComponentText(1158, cid, "");
+			player.getPackets().sendTextOnComponent(1158, cid, "");
 		for (int titles : title)
-			player.getPackets().sendIComponentText(1158, titles, "");
+			player.getPackets().sendTextOnComponent(1158, titles, "");
 		for (int time : times)
-			player.getPackets().sendIComponentText(1158, time, "");
+			player.getPackets().sendTextOnComponent(1158, time, "");
 		for (int i = 0; i < Activities.size(); i++) {
 			dateLine += 5;
 			timeLine += 5;
 			titleLine += 5;
-			player.getPackets().sendIComponentText(1158, titleLine, Activities.get(i));
-			player.getPackets().sendIComponentText(1158, timeLine, ActivitiesTime.get(i));
-			player.getPackets().sendIComponentText(1158, dateLine, ActivitiesDate.get(i));
+			player.getPackets().sendTextOnComponent(1158, titleLine, Activities.get(i));
+			player.getPackets().sendTextOnComponent(1158, timeLine, ActivitiesTime.get(i));
+			player.getPackets().sendTextOnComponent(1158, dateLine, ActivitiesDate.get(i));
 		}
 
 	}
@@ -155,24 +155,24 @@ public class AdventuresLog implements Serializable {
 		}
 		player.getInterfaceManager().sendInterface(1158);
 		for (int cid : cids)
-			player.getPackets().sendIComponentText(1158, cid, "");
+			player.getPackets().sendTextOnComponent(1158, cid, "");
 		for (int titles : title)
-			player.getPackets().sendIComponentText(1158, titles, "");
+			player.getPackets().sendTextOnComponent(1158, titles, "");
 		for (int time : times)
-			player.getPackets().sendIComponentText(1158, time, "");
-		player.getPackets().sendIComponentText(1158, 74,
+			player.getPackets().sendTextOnComponent(1158, time, "");
+		player.getPackets().sendTextOnComponent(1158, 74,
 				Utils.formatPlayerNameForDisplay(username) + " - Adventure log");
 		for (int i = 0; i < other.getAdventureLog().getActivities().size(); i++) {
 			Line += 5;
-			player.getPackets().sendIComponentText(1158, Line, other.getAdventureLog().getActivities().get(i));
+			player.getPackets().sendTextOnComponent(1158, Line, other.getAdventureLog().getActivities().get(i));
 		}
 		for (int i = 0; i < other.getAdventureLog().getActivitiesTime().size(); i++) {
 			Line += 1;
-			player.getPackets().sendIComponentText(1158, Line, other.getAdventureLog().getActivitiesTime().get(i));
+			player.getPackets().sendTextOnComponent(1158, Line, other.getAdventureLog().getActivitiesTime().get(i));
 		}
 		for (int i = 0; i < other.getAdventureLog().getActivitiesDate().size(); i++) {
 			Line += 2;
-			player.getPackets().sendIComponentText(1158, Line, other.getAdventureLog().getActivitiesDate().get(i));
+			player.getPackets().sendTextOnComponent(1158, Line, other.getAdventureLog().getActivitiesDate().get(i));
 		}
 
 	}

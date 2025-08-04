@@ -253,13 +253,13 @@ public class RunePouch extends ItemPlugin {
             player.getInterfaceManager().sendInterface(1284);
         player.getInterfaceManager().sendInventoryInterface(670);
         player.getPackets().sendInterSetItemsOptionsScript(670, 0, 93, 4, 7, "Store 1", "Store 10", "Store 100", "Store-All");
-        player.getPackets().sendUnlockIComponentOptionSlots(670, 0, 0, 27, 0, 1, 2, 3);
-        player.getPackets().sendIComponentText(1284, 28, "Rune Pouch");
+        player.getPackets().sendUnlockOptions(670, 0, 0, 27, 0, 1, 2, 3);
+        player.getPackets().sendTextOnComponent(1284, 28, "Rune Pouch");
         player.getPackets().sendHideIComponent(1284, 8, true);
         player.getPackets().sendHideIComponent(1284, 9, true);
-        player.getPackets().sendIComponentText(1284, 46, "Take-All");
+        player.getPackets().sendTextOnComponent(1284, 46, "Take-All");
         player.getPackets().sendInterSetItemsOptionsScript(1284, 7, 100, 8, 4, "Withdraw 1", "Withdraw 10", "Withdraw 100", "Withdraw-All");
-        player.getPackets().sendUnlockIComponentOptionSlots(1284, 7, 0, 3, 0, 1, 2, 3);
+        player.getPackets().sendUnlockOptions(1284, 7, 0, 3, 0, 1, 2, 3);
         player.getPackets().sendItems(100, items);
         player.getPackets().sendUpdateItems(100, items, 3);
     }

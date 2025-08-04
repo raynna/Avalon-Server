@@ -311,29 +311,29 @@ public class TreasureTrailsManager implements Serializable {
 				player.getInterfaceManager().sendInterface(345);
 				int offset = (8 - currentClues[level].details.parameters.length) / 2;
 				for (int i = 0; i < 8; i++)
-					player.getPackets().sendIComponentText(345, i + 1, "");
+					player.getPackets().sendTextOnComponent(345, i + 1, "");
 				for (int i = currentClues[level].details.type == EMOTE ? 2 : 0; i < currentClues[level].details.parameters.length; i++)
-					player.getPackets().sendIComponentText(345, i + 1 + offset,
+					player.getPackets().sendTextOnComponent(345, i + 1 + offset,
 							(String) currentClues[level].details.parameters[i]);
 			} else if (currentClues[level].details.type == EMOTE) {
 				player.getInterfaceManager().sendInterface(345);
 				for (int i = 0; i < 8; i++)
-					player.getPackets().sendIComponentText(345, i + 1, "");
+					player.getPackets().sendTextOnComponent(345, i + 1, "");
 				for (int i = 2; i < currentClues[level].details.parameters.length; i++)
-					player.getPackets().sendIComponentText(345, i, (String) currentClues[level].details.parameters[i]);
+					player.getPackets().sendTextOnComponent(345, i, (String) currentClues[level].details.parameters[i]);
 			} else if (currentClues[level].details.type == MAP) {
 				player.getInterfaceManager().sendInterface((int) currentClues[level].details.parameters[0]);
 			} else if (currentClues[level].details.type == COORDINATE) {
 				player.getInterfaceManager().sendInterface(345);
 				for (int i = 0; i < 8; i++)
-					player.getPackets().sendIComponentText(345, i + 1, "");
-				player.getPackets().sendIComponentText(345, 4,
+					player.getPackets().sendTextOnComponent(345, i + 1, "");
+				player.getPackets().sendTextOnComponent(345, 4,
 						((Integer) currentClues[level].details.parameters[0] <= 9 ? "0" : "")
 								+ currentClues[level].details.parameters[0] + " degrees, "
 								+ ((Integer) currentClues[level].details.parameters[1] <= 9 ? "0" : "")
 								+ currentClues[level].details.parameters[1] + " minutes "
 								+ ((Integer) currentClues[level].details.parameters[2] == NORTH ? "north" : "south"));
-				player.getPackets().sendIComponentText(345, 5,
+				player.getPackets().sendTextOnComponent(345, 5,
 						((Integer) currentClues[level].details.parameters[3] <= 9 ? "0" : "")
 								+ currentClues[level].details.parameters[3] + " degrees, "
 								+ ((Integer) currentClues[level].details.parameters[4] <= 9 ? "0" : "")
@@ -648,7 +648,7 @@ public class TreasureTrailsManager implements Serializable {
 					pieces.add(new Item(-1, 1));
 			}
 		}
-		player.getPackets().sendUnlockIComponentOptionSlots(363, 4, 0, 25, 0);
+		player.getPackets().sendUnlockOptions(363, 4, 0, 25, 0);
 		player.getPackets().sendItems(140, pieces.toArray(new Item[pieces.size()]));
 		player.getInterfaceManager().sendInterface(363);
 	}
@@ -714,7 +714,7 @@ public class TreasureTrailsManager implements Serializable {
 		player.getInterfaceManager().sendInterface(364);
 		player.getPackets().sendItems(141, player.getClueScrollRewards());
 		player.getPackets().sendInterSetItemsOptionsScript(364, 4, 141, 3, 4, "Examine");
-		player.getPackets().sendUnlockIComponentOptionSlots(364, 4, 0, player.getClueScrollRewards().getSize(), 0);
+		player.getPackets().sendUnlockOptions(364, 4, 0, player.getClueScrollRewards().getSize(), 0);
 		long totalValue = 0;
 		for (Item item : player.getClueScrollRewards().toArray()) {
 			if (item == null)

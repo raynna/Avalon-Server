@@ -10,7 +10,7 @@ public class Scroll {
 
     public static void initalizeScroll(Player player) {
         player.getInterfaceManager().sendInterface(220);
-        player.getPackets().sendIComponentText(220, 8, "<col=000000>Visit the city of the White Knights. In the park,");
-        player.getPackets().sendIComponentText(220, 9, "<col=000000>Saradomin points to the X which marks the spot.");
+        player.getPackets().sendTextOnComponent(220, 8, "<col=000000>Visit the city of the White Knights. In the park,");
+        player.getPackets().sendTextOnComponent(220, 9, "<col=000000>Saradomin points to the X which marks the spot.");
     }
 }

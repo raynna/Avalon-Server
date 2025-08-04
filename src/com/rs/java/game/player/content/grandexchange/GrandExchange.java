@@ -120,12 +120,12 @@ public class GrandExchange {
 		player.getInterfaceManager().sendInterface(275);
 		int number = 0;
 		for (int i = 0; i < 100; i++) {
-			player.getPackets().sendIComponentText(275, i, "");
+			player.getPackets().sendTextOnComponent(275, i, "");
 		}
 		for (Offer offer : OFFERS.values()) {
 			if (offer == null)
 				continue;
-			player.getPackets().sendIComponentText(275, 11, "Amount of Offers: " + number
+			player.getPackets().sendTextOnComponent(275, 11, "Amount of Offers: " + number
 					+ "<br>It does only show items were price is over " + Settings.LOWPRICE_LIMIT + "<br><br>");
 			ItemDefinitions defs = ItemDefinitions.getItemDefinitions(offer.getId());
 			if (GrandExchange.getPrice(offer.getId()) < Settings.LOWPRICE_LIMIT
@@ -133,9 +133,9 @@ public class GrandExchange {
 				continue;
 			if (offer.isCompleted())
 				continue;
-			player.getPackets().sendIComponentText(275, 1, "Grand Exchange Offers");
+			player.getPackets().sendTextOnComponent(275, 1, "Grand Exchange Offers");
 			int totalAmount = offer.getAmount() - offer.getTotalAmmountSoFar();
-			player.getPackets().sendIComponentText(275, (13 + number++),
+			player.getPackets().sendTextOnComponent(275, (13 + number++),
 					Utils.formatPlayerNameForDisplay(offer.getUsername()) + " ["
 							+ (offer.isBuying() ? "Buying" : "Selling") + "] " + defs.getName()
 							+ (totalAmount > 1 ? " x " + Utils.getFormattedNumber(totalAmount, ',') : "") + " :  Price "

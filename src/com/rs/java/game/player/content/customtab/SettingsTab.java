@@ -267,7 +267,7 @@ public class SettingsTab extends CustomTab {
             if (store != null) {
                 player.getPackets().sendHideIComponent(3002, store.compId, false);
                 if (store.text(player) != null) {
-                    player.getPackets().sendIComponentText(3002, store.compId, store.text(player));
+                    player.getPackets().sendTextOnComponent(3002, store.compId, store.text(player));
                 }
             }
         }

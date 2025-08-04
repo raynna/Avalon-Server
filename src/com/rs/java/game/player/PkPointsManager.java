@@ -49,12 +49,12 @@ public class PkPointsManager {
 
 	public void openPKPointShop() {
 		pkpItems.clear();
-		player.getPackets().sendIComponentText(3007, 14, "Pk Point Store");
+		player.getPackets().sendTextOnComponent(3007, 14, "Pk Point Store");
 		player.getInterfaceManager().sendInterface(3007);
 		player.getInterfaceManager().sendInventoryInterface(207);
 		sendInterItems();
 		sendOptions();
-		player.getPackets().sendGlobalConfig(728, 0);
+		player.getPackets().sendGlobalVar(728, 0);
 		player.getTemporaryAttributtes().put("PkPointsStore", Boolean.TRUE);
 		for (PkPointStore items : PkPointStore.values()) {
 			if (items != null) {
@@ -203,7 +203,7 @@ public class PkPointsManager {
 				for (PkPointStore store : PkPointStore.values()) {
 					if (store != null) {
 						if (store.itemId == item.getId())
-							player.getPackets().sendGlobalConfig(700 + index, item == null ? 0 : store.price);
+							player.getPackets().sendGlobalVar(700 + index, item == null ? 0 : store.price);
 					}
 				}
 			}
@@ -222,9 +222,9 @@ public class PkPointsManager {
 	}
 
 	public void sendOptions() {
-		player.getPackets().sendUnlockIComponentOptionSlots(3007, 15, 0, 54, 0, 1, 2);
+		player.getPackets().sendUnlockOptions(3007, 15, 0, 54, 0, 1, 2);
 		player.getPackets().sendInterSetItemsOptionsScript(3007, 15, 90, 7, 5, "Info", "Buy", "Examine");
-		player.getPackets().sendUnlockIComponentOptionSlots(207, 0, 0, 27, 0, 1, 2, 3, 4);
+		player.getPackets().sendUnlockOptions(207, 0, 0, 27, 0, 1, 2, 3, 4);
 		player.getPackets().sendInterSetItemsOptionsScript(207, 0, 93, 5, 7, "Info", "Sell 1", "Sell 5", "Sell 10",
 				"Examine");
 	}

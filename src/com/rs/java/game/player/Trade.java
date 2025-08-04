@@ -32,7 +32,7 @@ public class Trade {
 		synchronized (this) {
 			synchronized (target.getTrade()) {
 				this.target = target;
-				player.getPackets().sendIComponentText(335, 17, "Trading With: " + target.getDisplayName());
+				player.getPackets().sendTextOnComponent(335, 17, "Trading With: " + target.getDisplayName());
 				player.getPackets().sendGlobalString(203, target.getDisplayName());
 				sendInterItems();
 				sendOptions();
@@ -189,12 +189,12 @@ public class Trade {
 	public void sendOptions() {
 		player.getPackets().sendInterSetItemsOptionsScript(336, 0, 93, 4, 7, "Offer", "Offer-5", "Offer-10",
 				"Offer-All", "Offer-X", "Value<col=FF9040>", "Lend");
-		player.getPackets().sendIComponentSettings(336, 0, 0, 27, 1278);
+		player.getPackets().sendComponentSettings(336, 0, 0, 27, 1278);
 		player.getPackets().sendInterSetItemsOptionsScript(335, 32, 90, 4, 7, "Remove", "Remove-5", "Remove-10",
 				"Remove-All", "Remove-X", "Value");
-		player.getPackets().sendIComponentSettings(335, 32, 0, 27, 1150);
+		player.getPackets().sendComponentSettings(335, 32, 0, 27, 1150);
 		player.getPackets().sendInterSetItemsOptionsScript(335, 35, 90, true, 4, 7, "Value");
-		player.getPackets().sendIComponentSettings(335, 35, 0, 27, 1026);
+		player.getPackets().sendComponentSettings(335, 35, 0, 27, 1026);
 
 	}
 
@@ -295,7 +295,7 @@ public class Trade {
 	}
 
 	public void refreshStageMessage(boolean firstStage) {
-		player.getPackets().sendIComponentText(firstStage ? 335 : 334, firstStage ? 39 : 34,
+		player.getPackets().sendTextOnComponent(firstStage ? 335 : 334, firstStage ? 39 : 34,
 				getAcceptMessage(firstStage));
 	}
 
@@ -308,19 +308,19 @@ public class Trade {
 	}
 
 	public void sendTradeModified() {
-		player.getPackets().sendConfig(1042, tradeModified ? 1 : 0);
-		target.getPackets().sendConfig(1043, tradeModified ? 1 : 0);
+		player.getPackets().sendVar(1042, tradeModified ? 1 : 0);
+		target.getPackets().sendVar(1043, tradeModified ? 1 : 0);
 	}
 
 	public void refreshTradeWealth() {
 		int wealth = getTradeWealth();
-		player.getPackets().sendGlobalConfig(729, wealth);
-		target.getPackets().sendGlobalConfig(697, wealth);
+		player.getPackets().sendGlobalVar(729, wealth);
+		target.getPackets().sendGlobalVar(697, wealth);
 	}
 
 	public void refreshFreeInventorySlots() {
 		int freeSlots = player.getInventory().getFreeSlots();
-		target.getPackets().sendIComponentText(335, 23,
+		target.getPackets().sendTextOnComponent(335, 23,
 				"has " + (freeSlots == 0 ? "no" : freeSlots) + " free" + "<br>inventory slots");
 	}
 

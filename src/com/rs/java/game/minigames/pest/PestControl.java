@@ -168,9 +168,9 @@ public class PestControl {
 			for (int i = 13; i < 17; i++) {
 				PestPortal npc = portals[i - 13];
 				if (npc != null)
-					player.getPackets().sendIComponentText(408, i, npc.getHitpoints() + "");
+					player.getPackets().sendTextOnComponent(408, i, npc.getHitpoints() + "");
 			}
-			player.getPackets().sendIComponentText(408, 1, "" + knight.getHitpoints());
+			player.getPackets().sendTextOnComponent(408, 1, "" + knight.getHitpoints());
 		}
 	}
 
@@ -211,7 +211,7 @@ public class PestControl {
 
 	private void updateTime(int minutes) {
 		for (Player player : team)
-			player.getPackets().sendIComponentText(408, 0, minutes + " min");
+			player.getPackets().sendTextOnComponent(408, 0, minutes + " min");
 	}
 
 	public void sendTeamMessage(String message) {

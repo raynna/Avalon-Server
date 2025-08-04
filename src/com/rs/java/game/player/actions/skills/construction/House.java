@@ -198,7 +198,7 @@ public class House implements Serializable {
 				Room refRoom = HouseConstants.Room.values()[index];
 				if (player.getSkills().getLevel(Skills.CONSTRUCTION) >= refRoom.getLevel()
 						&& player.getTotalCoins() >= refRoom.getPrice())
-					player.getPackets().sendIComponentText(402,
+					player.getPackets().sendTextOnComponent(402,
 							index + (refRoom == HouseConstants.Room.DUNGEON_STAIRS
 									|| refRoom == HouseConstants.Room.DUNGEON_PIT ? 69
 											: refRoom == HouseConstants.Room.TREASURE_ROOM ? 70 : 68),
@@ -389,22 +389,22 @@ public class House implements Serializable {
 		}
 		player.getPackets().sendItems(8, itemArray);
 		player.getPackets().sendInterSetItemsOptionsScript(interId, 11, 8, interId == 396 ? 2 : 1, 4, "Build");
-		player.getPackets().sendUnlockIComponentOptionSlots(interId, 11, 0, interId == 396 ? 7 : 3, 0);
+		player.getPackets().sendUnlockOptions(interId, 11, 0, interId == 396 ? 7 : 3, 0);
 		player.getInterfaceManager().sendInterface(interId);
 		for (int i = 0; i < (interId == 396 ? 7 : 3); i++) {
 			if (i >= build.getPieces().length) {
 				player.getPackets().sendHideIComponent(interId, (interId == 394 ? 29 : 49) + i, true);
-				player.getPackets().sendIComponentText(interId, (interId == 394 ? 32 : 56) + i, "");
-				player.getPackets().sendIComponentText(interId, 14 + (5 * i), "");
+				player.getPackets().sendTextOnComponent(interId, (interId == 394 ? 32 : 56) + i, "");
+				player.getPackets().sendTextOnComponent(interId, 14 + (5 * i), "");
 				for (int i2 = 0; i2 < 4; i2++)
-					player.getPackets().sendIComponentText(interId, 15 + i2 + (5 * i), "");
+					player.getPackets().sendTextOnComponent(interId, 15 + i2 + (5 * i), "");
 			} else {
-				player.getPackets().sendIComponentText(interId, (interId == 394 ? 32 : 56) + i,
+				player.getPackets().sendTextOnComponent(interId, (interId == 394 ? 32 : 56) + i,
 						"Lvl " + build.getPieces()[i].getLevel());
-				player.getPackets().sendIComponentText(interId, 14 + (5 * i),
+				player.getPackets().sendTextOnComponent(interId, 14 + (5 * i),
 						ItemDefinitions.getItemDefinitions(build.getPieces()[i].getItemId()).getName());
 				for (int i2 = 0; i2 < 4; i2++)
-					player.getPackets().sendIComponentText(interId, 15 + i2 + (5 * i),
+					player.getPackets().sendTextOnComponent(interId, 15 + i2 + (5 * i),
 							build.getPieces()[i].getRequirements().length <= i2 ? ""
 									: build.getPieces()[i].getRequirements()[i2].getName() + ": "
 											+ build.getPieces()[i].getRequirements()[i2].getAmount());

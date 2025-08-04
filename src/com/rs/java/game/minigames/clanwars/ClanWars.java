@@ -181,11 +181,11 @@ public final class ClanWars implements Serializable {
             resetAccept = true;
         }
         if (resetAccept) {
-            player.getPackets().sendConfigByFile(5293, 0);
-            other.getPackets().sendConfigByFile(5293, 0);
+            player.getPackets().sendVarBit(5293, 0);
+            other.getPackets().sendVarBit(5293, 0);
         }
-        player.getPackets().sendConfigByFile(configId, value);
-        other.getPackets().sendConfigByFile(configId, value);
+        player.getPackets().sendVarBit(configId, value);
+        other.getPackets().sendVarBit(configId, value);
     }
 
     /**
@@ -196,40 +196,40 @@ public final class ClanWars implements Serializable {
     private void sendVictoryConfiguration(Player p) {
         switch (victoryType) {
             case -1:
-                p.getPackets().sendConfigByFile(5280, 0);
+                p.getPackets().sendVarBit(5280, 0);
                 break;
             case 25:
-                p.getPackets().sendConfigByFile(5280, 1);
+                p.getPackets().sendVarBit(5280, 1);
                 break;
             case 50:
-                p.getPackets().sendConfigByFile(5280, 2);
+                p.getPackets().sendVarBit(5280, 2);
                 break;
             case 100:
-                p.getPackets().sendConfigByFile(5280, 3);
+                p.getPackets().sendVarBit(5280, 3);
                 break;
             case 200:
-                p.getPackets().sendConfigByFile(5280, 4);
+                p.getPackets().sendVarBit(5280, 4);
                 break;
             case 400:
-                p.getPackets().sendConfigByFile(5280, 5);
+                p.getPackets().sendVarBit(5280, 5);
                 break;
             case 750:
-                p.getPackets().sendConfigByFile(5280, 6);
+                p.getPackets().sendVarBit(5280, 6);
                 break;
             case 0x3e8:
-                p.getPackets().sendConfigByFile(5280, 7);
+                p.getPackets().sendVarBit(5280, 7);
                 break;
             case 0x9c4:
-                p.getPackets().sendConfigByFile(5280, 8);
+                p.getPackets().sendVarBit(5280, 8);
                 break;
             case 0x1388:
-                p.getPackets().sendConfigByFile(5280, 9);
+                p.getPackets().sendVarBit(5280, 9);
                 break;
             case 0x2710:
-                p.getPackets().sendConfigByFile(5280, 10);
+                p.getPackets().sendVarBit(5280, 10);
                 break;
             case -2:
-                p.getPackets().sendConfigByFile(5280, 15);
+                p.getPackets().sendVarBit(5280, 15);
                 break;
         }
     }
@@ -242,43 +242,43 @@ public final class ClanWars implements Serializable {
     private void sendTimeConfiguration(Player p) {
         switch (timeLeft) {
             case 500:
-                p.getPackets().sendConfigByFile(5281, 1);
+                p.getPackets().sendVarBit(5281, 1);
                 break;
             case 0x3e8:
-                p.getPackets().sendConfigByFile(5281, 2);
+                p.getPackets().sendVarBit(5281, 2);
                 break;
             case 0xbb8:
-                p.getPackets().sendConfigByFile(5281, 3);
+                p.getPackets().sendVarBit(5281, 3);
                 break;
             case 0x1770:
-                p.getPackets().sendConfigByFile(5281, 4);
+                p.getPackets().sendVarBit(5281, 4);
                 break;
             case 0x2328:
-                p.getPackets().sendConfigByFile(5281, 5);
+                p.getPackets().sendVarBit(5281, 5);
                 break;
             case 0x2ee0:
-                p.getPackets().sendConfigByFile(5281, 6);
+                p.getPackets().sendVarBit(5281, 6);
                 break;
             case 0x3a98:
-                p.getPackets().sendConfigByFile(5281, 7);
+                p.getPackets().sendVarBit(5281, 7);
                 break;
             case 0x4650:
-                p.getPackets().sendConfigByFile(5281, 8);
+                p.getPackets().sendVarBit(5281, 8);
                 break;
             case 0x5dc0:
-                p.getPackets().sendConfigByFile(5281, 9);
+                p.getPackets().sendVarBit(5281, 9);
                 break;
             case 0x7530:
-                p.getPackets().sendConfigByFile(5281, 10);
+                p.getPackets().sendVarBit(5281, 10);
                 break;
             case 0x8ca0:
-                p.getPackets().sendConfigByFile(5281, 11);
+                p.getPackets().sendVarBit(5281, 11);
                 break;
             case 0xbb80:
-                p.getPackets().sendConfigByFile(5281, 12);
+                p.getPackets().sendVarBit(5281, 12);
                 break;
             case -1:
-                p.getPackets().sendConfigByFile(5281, 0);
+                p.getPackets().sendVarBit(5281, 0);
                 break;
         }
     }
@@ -320,10 +320,10 @@ public final class ClanWars implements Serializable {
     public void sendInterface(Player p, Player other) {
         p.temporaryAttribute().put("clan_wars", this);
         p.getInterfaceManager().sendInterface(791);
-        p.getPackets().sendUnlockIComponentOptionSlots(791, 141, 0, 63, 0);
-        p.getPackets().sendConfigByFile(5291, 0);
-        p.getPackets().sendConfigByFile(5292, 0);
-        p.getPackets().sendConfigByFile(5293, 0);
+        p.getPackets().sendUnlockOptions(791, 141, 0, 63, 0);
+        p.getPackets().sendVarBit(5291, 0);
+        p.getPackets().sendVarBit(5292, 0);
+        p.getPackets().sendVarBit(5293, 0);
     }
 
     /**
@@ -398,7 +398,7 @@ public final class ClanWars implements Serializable {
         }
         c.sendVictoryConfiguration(p);
         c.sendTimeConfiguration(p);
-        p.getPackets().sendGlobalConfig(271, hasWar ? 1 : 0);
+        p.getPackets().sendGlobalVar(271, hasWar ? 1 : 0);
         p.getInterfaceManager().sendTab(p.getInterfaceManager().hasRezizableScreen() ? 11 : 29, 265);
         if (hasWar && c.timer.isStarted() && c.isKnockOut()) {
             hasWar = false;
@@ -562,7 +562,7 @@ public final class ClanWars implements Serializable {
             boolean resized = player.getInterfaceManager().hasRezizableScreen();
             player.getPackets().closeInterface(resized ? 746 : 548, resized ? 1 : 11);
             player.getInterfaceManager().sendInterface(790);
-            player.getPackets().sendGlobalConfig(268, firstType);
+            player.getPackets().sendGlobalVar(268, firstType);
             player.getControlerManager().startControler("clan_wars_request");
             player.setForceMultiArea(true);
             player.stopAll(true, false);
@@ -573,7 +573,7 @@ public final class ClanWars implements Serializable {
             boolean resized = player.getInterfaceManager().hasRezizableScreen();
             player.getPackets().closeInterface(resized ? 746 : 548, resized ? 1 : 11);
             player.getInterfaceManager().sendInterface(790);
-            player.getPackets().sendGlobalConfig(268, secondType);
+            player.getPackets().sendGlobalVar(268, secondType);
             player.getControlerManager().startControler("clan_wars_request");
             player.setForceMultiArea(true);
             player.stopAll(true, false);

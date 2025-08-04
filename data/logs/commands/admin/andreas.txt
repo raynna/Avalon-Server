@@ -5934,3 +5934,50 @@
 [04 August 2025 at 06:53:47 CEST] - ::heal 
 [04 August 2025 at 06:56:46 CEST] - ::heal 
 [04 August 2025 at 07:00:45 CEST] - ::heal 
+[04 August 2025 at 08:27:36 CEST] - ::inter 749
+[04 August 2025 at 08:29:41 CEST] - ::inters 749
+[04 August 2025 at 08:31:28 CEST] - ::var 2382 2
+[04 August 2025 at 08:31:31 CEST] - ::var 2383 3
+[04 August 2025 at 08:31:34 CEST] - ::var 2382 3
+[04 August 2025 at 08:31:54 CEST] - ::varbit 2382 45
+[04 August 2025 at 08:34:30 CEST] - ::varbit 181 0
+[04 August 2025 at 08:34:32 CEST] - ::varbit 181 1
+[04 August 2025 at 08:34:43 CEST] - ::varbit 181 1
+[04 August 2025 at 08:34:50 CEST] - ::varbit 181 1
+[04 August 2025 at 08:34:51 CEST] - ::varbit 181 0
+[04 August 2025 at 08:34:54 CEST] - ::varbit 181 1
+[04 August 2025 at 08:34:54 CEST] - ::varbit 181 2
+[04 August 2025 at 08:34:55 CEST] - ::varbit 181 0
+[04 August 2025 at 08:34:56 CEST] - ::varbit 181 1
+[04 August 2025 at 08:34:58 CEST] - ::varbit 181 0
+[04 August 2025 at 08:35:01 CEST] - ::varbit 181 1
+[04 August 2025 at 08:35:02 CEST] - ::varbit 181 0
+[04 August 2025 at 08:35:04 CEST] - ::varbit 181 1
+[04 August 2025 at 08:35:13 CEST] - ::varbit 181 1
+[04 August 2025 at 08:35:21 CEST] - ::inter 271
+[04 August 2025 at 08:35:25 CEST] - ::varbit 181 0
+[04 August 2025 at 08:35:36 CEST] - ::global 181 1
+[04 August 2025 at 08:36:04 CEST] - ::var 181 0
+[04 August 2025 at 08:36:06 CEST] - ::var 181 1
+[04 August 2025 at 08:36:39 CEST] - ::global 181 0
+[04 August 2025 at 08:36:41 CEST] - ::var 181 1
+[04 August 2025 at 08:36:43 CEST] - ::varbit 181 1
+[04 August 2025 at 08:39:35 CEST] - ::global 181 1
+[04 August 2025 at 08:39:40 CEST] - ::global 181 0
+[04 August 2025 at 08:46:26 CEST] - ::global 181 1
+[04 August 2025 at 08:48:31 CEST] - ::var 1584 1
+[04 August 2025 at 08:51:23 CEST] - ::inter 271 1
+[04 August 2025 at 08:51:26 CEST] - ::inter 271
+[04 August 2025 at 08:51:36 CEST] - ::global 181 0
+[04 August 2025 at 08:51:41 CEST] - ::var 1584 0
+[04 August 2025 at 08:51:44 CEST] - ::inter 271
+[04 August 2025 at 08:53:24 CEST] - ::inters 271
+[04 August 2025 at 08:58:49 CEST] - ::prayers 
+[04 August 2025 at 08:58:59 CEST] - ::prayers 
+[04 August 2025 at 09:01:30 CEST] - ::inter 759
+[04 August 2025 at 09:01:45 CEST] - ::inter 769
+[04 August 2025 at 09:01:47 CEST] - ::inter 749
+[04 August 2025 at 09:08:54 CEST] - ::item rune crossbo
+[04 August 2025 at 09:09:02 CEST] - ::item diamond bolt e
+[04 August 2025 at 09:09:07 CEST] - ::item diamond bolt e 100
+[04 August 2025 at 09:09:18 CEST] - ::heal 

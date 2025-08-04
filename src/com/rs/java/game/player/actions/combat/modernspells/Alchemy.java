@@ -30,7 +30,7 @@ public class Alchemy {
 			alchedItem = new Item(alchedItem.getDefinitions().getCertId());
 		player.getMoneyPouch().addMoney(lowAlch ? alchedItem.getDefinitions().getLowAlchPrice() : alchedItem.getDefinitions().getHighAlchPrice(), false);
 		player.getInventory().refresh();
-		player.getPackets().sendGlobalConfig(168, 7);
+		player.getPackets().sendGlobalVar(168, 7);
 		player.getSkills().addXp(Skills.MAGIC, lowAlch ? 31 : 65);
 		player.lock(1);
 		return true;

@@ -295,7 +295,7 @@ public class FriendsIgnores implements Serializable {
 	}
 
 	public void refreshChatName() {
-		player.getPackets().sendIComponentText(1108, 1, chatName == null ? "Chat disabled" : chatName);
+		player.getPackets().sendTextOnComponent(1108, 1, chatName == null ? "Chat disabled" : chatName);
 	}
 
 	public void refreshWhoCanShareloot() {
@@ -316,7 +316,7 @@ public class FriendsIgnores implements Serializable {
 			text = "General+";
 		else
 			text = "No-one";
-		player.getPackets().sendIComponentText(1108, 5, text);
+		player.getPackets().sendTextOnComponent(1108, 5, text);
 	}
 
 	public void refreshWhoCanKickOnChat() {
@@ -339,7 +339,7 @@ public class FriendsIgnores implements Serializable {
 			text = "Only Me";
 		else
 			text = "Anyone";
-		player.getPackets().sendIComponentText(1108, 4, text);
+		player.getPackets().sendTextOnComponent(1108, 4, text);
 	}
 
 	public void refreshWhoCanTalkOnChat() {
@@ -362,7 +362,7 @@ public class FriendsIgnores implements Serializable {
 			text = "Only Me";
 		else
 			text = "Anyone";
-		player.getPackets().sendIComponentText(1108, 3, text);
+		player.getPackets().sendTextOnComponent(1108, 3, text);
 	}
 
 	public void refreshWhoCanEnterChat() {
@@ -385,7 +385,7 @@ public class FriendsIgnores implements Serializable {
 			text = "Only Me";
 		else
 			text = "Anyone";
-		player.getPackets().sendIComponentText(1108, 2, text);
+		player.getPackets().sendTextOnComponent(1108, 2, text);
 	}
 
 	public void openFriendChatSetup() {

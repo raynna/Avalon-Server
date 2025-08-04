@@ -114,7 +114,7 @@ public class CooksAssistant extends Quest {
 	@Override
 	public void accept() {
 		player.getDialogueManager().startDialogue("LumbridgeCook", -1);
-		player.getPackets().sendConfig(1593, 1);
+		player.getPackets().sendVar(1593, 1);
 		player.getInterfaceManager().sendInterfaces();
 		player.getQuestManager().get(Quests.COOKS_ASSISTANT).setStage(1);
 		player.getQuestManager().get(Quests.COOKS_ASSISTANT).setState(QuestState.STARTED);

@@ -233,7 +233,7 @@ public class DruidicRitual extends Quest implements Serializable {
 	@Override
 	public void accept() {
 		player.getDialogueManager().startDialogue("Kaqemeex", -3);
-		player.getPackets().sendConfig(1593, 33);
+		player.getPackets().sendVar(1593, 33);
 		player.getInterfaceManager().sendInterfaces();
 		
 	}

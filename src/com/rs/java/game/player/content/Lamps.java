@@ -78,12 +78,12 @@ public class Lamps {
 				player.getPackets().sendGlobalString(358, "What sort of XP would you like?");
 				sendSelectedSkill();
 				player.getVarsManager().sendVarBit(2187, 1);//unlock construction skill
-				player.getPackets().sendGlobalConfig(1797, 0); // selectable lamps don't show xp
-				player.getPackets().sendGlobalConfig(1798, 1); // minimum level of 1 to show
-				player.getPackets().sendGlobalConfig(1799, id);
+				player.getPackets().sendGlobalVar(1797, 0); // selectable lamps don't show xp
+				player.getPackets().sendGlobalVar(1798, 1); // minimum level of 1 to show
+				player.getPackets().sendGlobalVar(1799, id);
 
 				for (int i = 13; i < 44; i++)
-					player.getPackets().sendUnlockIComponentOptionSlots(1263, i, -1, 0, 0);
+					player.getPackets().sendUnlockOptions(1263, i, -1, 0, 0);
 
 			}
 
@@ -94,7 +94,7 @@ public class Lamps {
 						// client auto sends message that this skill can't be given exp without a house
 						selectedSkill = skill;
 						sendSelectedSkill();
-						player.getPackets().sendUnlockIComponentOptionSlots(1263, 43, -1, 0, true, 0); // not the right way but eh
+						player.getPackets().sendUnlockOptions(1263, 43, -1, 0, true, 0); // not the right way but eh
 				} else if (componentId == 43 && selectedSkill != -1) {
 					if (!player.getInventory().containsItem(id, 1)) {
 						end();
@@ -122,11 +122,11 @@ public class Lamps {
 			private void sendSelectedSkill() {
 				ClientScriptMap map = ClientScriptMap.getMap(681);
 				if (selectedSkill == map.getDefaultIntValue()) {
-					player.getPackets().sendGlobalConfig(1796, map.getDefaultIntValue());
+					player.getPackets().sendGlobalVar(1796, map.getDefaultIntValue());
 					return;
 				}
 				long key = map.getKeyForValue(selectedSkill);
-				player.getPackets().sendGlobalConfig(1796, (int) key);
+				player.getPackets().sendGlobalVar(1796, (int) key);
 			}
 		});
 	}

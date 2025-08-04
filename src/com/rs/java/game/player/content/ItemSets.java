@@ -351,8 +351,8 @@ public class ItemSets {
 	public static void openSets(Player player) {
 		player.getInterfaceManager().sendInterface(645);
 		player.getInterfaceManager().sendInventoryInterface(644);
-		player.getPackets().sendIComponentSettings(645, 16, 0, 115, 14);
-		player.getPackets().sendUnlockIComponentOptionSlots(644, 0, 0, 27, 0, 1, 2);
+		player.getPackets().sendComponentSettings(645, 16, 0, 115, 14);
+		player.getPackets().sendUnlockOptions(644, 0, 0, 27, 0, 1, 2);
 		player.getPackets().sendInterSetItemsOptionsScript(644, 0, 93, 4, 7, "Components", "Exchange", "Examine");
 		player.getPackets().sendRunScript(676);
 	}

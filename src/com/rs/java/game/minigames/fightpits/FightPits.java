@@ -133,7 +133,7 @@ public final class FightPits {
 	public static void refreshFoes() {
 		int foes = arena.size() - 1;
 		for (Player player : arena)
-			player.getPackets().sendConfig(560, foes);
+			player.getPackets().sendVar(560, foes);
 
 	}
 
@@ -255,7 +255,7 @@ public final class FightPits {
 			return;
 		Player champion = arena.get(0);
 		currentChampion = champion.getDisplayName();
-		champion.getPackets().sendIComponentText(373, 10, "Current Champion: JaLYt-Ket-" + currentChampion);
+		champion.getPackets().sendTextOnComponent(373, 10, "Current Champion: JaLYt-Ket-" + currentChampion);
 		champion.setFightPitsSkull();
 		champion.setWonFightPits();
 		champion.getDialogueManager().startDialogue("SimpleNPCMessage", THHAAR_MEJ_KAH,

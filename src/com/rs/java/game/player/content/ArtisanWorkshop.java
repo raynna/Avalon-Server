@@ -240,19 +240,19 @@ public class ArtisanWorkshop implements Serializable {
 		player.getInterfaceManager().sendInterface(1072);
 		sendBarValues(ignots_I);
 		selected = ignots_I;
-		player.getPackets().sendIComponentText(1072, 53, ""+ironOre);
-		player.getPackets().sendIComponentText(1072, 57, ""+mithrilOre);
-		player.getPackets().sendIComponentText(1072, 61, ""+adamantOre);
-		player.getPackets().sendIComponentText(1072, 65, ""+runiteOre);
-		player.getPackets().sendIComponentText(1072, 49, ""+coal);
+		player.getPackets().sendTextOnComponent(1072, 53, ""+ironOre);
+		player.getPackets().sendTextOnComponent(1072, 57, ""+mithrilOre);
+		player.getPackets().sendTextOnComponent(1072, 61, ""+adamantOre);
+		player.getPackets().sendTextOnComponent(1072, 65, ""+runiteOre);
+		player.getPackets().sendTextOnComponent(1072, 49, ""+coal);
 	}
 	
 	public void refreshInterface(){
-		player.getPackets().sendIComponentText(1072, 53, ""+ironOre);
-		player.getPackets().sendIComponentText(1072, 57, ""+mithrilOre);
-		player.getPackets().sendIComponentText(1072, 61, ""+adamantOre);
-		player.getPackets().sendIComponentText(1072, 65, ""+runiteOre);
-		player.getPackets().sendIComponentText(1072, 49, ""+coal);
+		player.getPackets().sendTextOnComponent(1072, 53, ""+ironOre);
+		player.getPackets().sendTextOnComponent(1072, 57, ""+mithrilOre);
+		player.getPackets().sendTextOnComponent(1072, 61, ""+adamantOre);
+		player.getPackets().sendTextOnComponent(1072, 65, ""+runiteOre);
+		player.getPackets().sendTextOnComponent(1072, 49, ""+coal);
 	}
 	/**
 	 * sends the overlay interface
@@ -305,11 +305,11 @@ public class ArtisanWorkshop implements Serializable {
 		int count = 0;
 		for(int i = 0; i <ing.length; i ++){
 			if(i == 0){
-				player.getPackets().sendIComponentText(1072, barValuesCid[count], ""+ing[i].ores[0].getAmount());
+				player.getPackets().sendTextOnComponent(1072, barValuesCid[count], ""+ing[i].ores[0].getAmount());
 				count++;
 			} else {
-			player.getPackets().sendIComponentText(1072, barValuesCid[count], ""+ing[i].ores[0].getAmount());
-			player.getPackets().sendIComponentText(1072, barValuesCid[count+1], ""+ing[i].ores[1].getAmount());
+			player.getPackets().sendTextOnComponent(1072, barValuesCid[count], ""+ing[i].ores[0].getAmount());
+			player.getPackets().sendTextOnComponent(1072, barValuesCid[count+1], ""+ing[i].ores[1].getAmount());
 			count += 2;
 			}
 			
@@ -387,8 +387,8 @@ public class ArtisanWorkshop implements Serializable {
 	}
 	
 	public void sendInfo(String name, String info){
-		player.getPackets().sendIComponentText(825, 66, ""+name);
-		player.getPackets().sendIComponentText(825, 67, ""+info);
+		player.getPackets().sendTextOnComponent(825, 66, ""+name);
+		player.getPackets().sendTextOnComponent(825, 67, ""+info);
 	}
 	/**
 	 * sends the reward interface
@@ -399,31 +399,31 @@ public class ArtisanWorkshop implements Serializable {
 		player.getPackets().sendHideIComponent(825, 129, true);
 		player.getPackets().sendHideIComponent(825, 133, true);
 		player.getPackets().sendHideIComponent(825, 136, true);
-		player.getPackets().sendIComponentText(825, 95, "Quick Learner");
-		player.getPackets().sendIComponentText(825, 96, "20%");
+		player.getPackets().sendTextOnComponent(825, 95, "Quick Learner");
+		player.getPackets().sendTextOnComponent(825, 96, "20%");
 		
-		player.getPackets().sendIComponentText(825, 99, "Budding Student");
-		player.getPackets().sendIComponentText(825, 100, "40%");
+		player.getPackets().sendTextOnComponent(825, 99, "Budding Student");
+		player.getPackets().sendTextOnComponent(825, 100, "40%");
 		
-		player.getPackets().sendIComponentText(825, 103, "Master Student");
-		player.getPackets().sendIComponentText(825, 104, "60%");
+		player.getPackets().sendTextOnComponent(825, 103, "Master Student");
+		player.getPackets().sendTextOnComponent(825, 104, "60%");
 		
-		player.getPackets().sendIComponentText(825, 107, "Expert");
-		player.getPackets().sendIComponentText(825, 108, "80%");
+		player.getPackets().sendTextOnComponent(825, 107, "Expert");
+		player.getPackets().sendTextOnComponent(825, 108, "80%");
 		
-		player.getPackets().sendIComponentText(825, 111, "Golden Cannon");
-		player.getPackets().sendIComponentText(825, 112, "50%");
+		player.getPackets().sendTextOnComponent(825, 111, "Golden Cannon");
+		player.getPackets().sendTextOnComponent(825, 112, "50%");
 		
-		player.getPackets().sendIComponentText(825, 115, "Royal Cannon");
-		player.getPackets().sendIComponentText(825, 116, "100%");
+		player.getPackets().sendTextOnComponent(825, 115, "Royal Cannon");
+		player.getPackets().sendTextOnComponent(825, 116, "100%");
 		
-		player.getPackets().sendIComponentText(825, 119, "Restocking Cannon");
-		player.getPackets().sendIComponentText(825, 120, "100%");
+		player.getPackets().sendTextOnComponent(825, 119, "Restocking Cannon");
+		player.getPackets().sendTextOnComponent(825, 120, "100%");
 		
-		player.getPackets().sendIComponentText(825, 123, "Ingot kit");
-		player.getPackets().sendIComponentText(825, 124, "100%");
+		player.getPackets().sendTextOnComponent(825, 123, "Ingot kit");
+		player.getPackets().sendTextOnComponent(825, 124, "100%");
 		
-		player.getPackets().sendIComponentText(825, 55, respect+"%");
+		player.getPackets().sendTextOnComponent(825, 55, respect+"%");
 		
 		
 	}

@@ -246,14 +246,14 @@ public abstract class Familiar extends NPC implements Serializable {
 		switchOrb(true);
 		owner.getVarsManager().sendVar(448, pouch.getRealPouchId());
 		owner.getVarsManager().sendVar(1160, 243269632);
-		owner.getPackets().sendConfig(1160, 243269632); // sets npc emote
-		owner.getPackets().sendGlobalConfig(1436, 0);
+		owner.getPackets().sendVar(1160, 243269632); // sets npc emote
+		owner.getPackets().sendGlobalVar(1436, 0);
 		refreshSpecialEnergy();
 		sendTimeRemaining();
 		owner.getVarsManager().sendVar(1175, getSpecialAmount() >> 23);
 		owner.getPackets().sendGlobalString(204, getSpecialName());
 		owner.getPackets().sendGlobalString(205, getSpecialDescription());
-		owner.getPackets().sendGlobalConfig(1436, getSpecialAttack() == SpecialAttack.CLICK ? 1 : 0);
+		owner.getPackets().sendGlobalVar(1436, getSpecialAttack() == SpecialAttack.CLICK ? 1 : 0);
 		unlockOrb();
 	}
 
@@ -268,7 +268,7 @@ public abstract class Familiar extends NPC implements Serializable {
 		owner.getPackets().sendHideIComponent(662, 71, false);
 		owner.getPackets().sendHideIComponent(662, 72, false);
 		unlock();
-		owner.getPackets().sendGlobalConfig(168, 8);// tab id
+		owner.getPackets().sendGlobalVar(168, 8);// tab id
 	}
 
 	public void switchOrb(boolean on) {
@@ -289,11 +289,11 @@ public abstract class Familiar extends NPC implements Serializable {
 		boolean res = player.getInterfaceManager().hasRezizableScreen();
 		player.getPackets().sendInterface(true, res ? 746 : 548, res ? 119 : 179, 880);
 		sendLeftClickOption(player);
-		player.getPackets().sendGlobalConfig(168, 8);// tab id
+		player.getPackets().sendGlobalVar(168, 8);// tab id
 	}
 
 	public static void confirmLeftOption(Player player) {
-		player.getPackets().sendGlobalConfig(168, 4);// inv tab id
+		player.getPackets().sendGlobalVar(168, 4);// inv tab id
 		boolean res = player.getInterfaceManager().hasRezizableScreen();
 		player.getPackets().closeInterface(res ? 119 : 179);
 	}
@@ -321,20 +321,20 @@ public abstract class Familiar extends NPC implements Serializable {
 	public void unlock() {
 		switch (getSpecialAttack()) {
 		case CLICK:
-			owner.getPackets().sendIComponentSettings(747, 18, 0, 0, 2);
-			owner.getPackets().sendIComponentSettings(662, 74, 0, 0, 2);
+			owner.getPackets().sendComponentSettings(747, 18, 0, 0, 2);
+			owner.getPackets().sendComponentSettings(662, 74, 0, 0, 2);
 			break;
 		case ENTITY:
-			owner.getPackets().sendIComponentSettings(747, 18, 0, 0, 20480);
-			owner.getPackets().sendIComponentSettings(662, 74, 0, 0, 20480);
+			owner.getPackets().sendComponentSettings(747, 18, 0, 0, 20480);
+			owner.getPackets().sendComponentSettings(662, 74, 0, 0, 20480);
 			break;
 		case OBJECT:
-			owner.getPackets().sendIComponentSettings(747, 18, 0, 0, 78321);
-			owner.getPackets().sendIComponentSettings(662, 74, 0, 0, 78321);
+			owner.getPackets().sendComponentSettings(747, 18, 0, 0, 78321);
+			owner.getPackets().sendComponentSettings(662, 74, 0, 0, 78321);
 			break;
 		case ITEM:
-			owner.getPackets().sendIComponentSettings(747, 18, 0, 0, 65536);
-			owner.getPackets().sendIComponentSettings(662, 74, 0, 0, 65536);
+			owner.getPackets().sendComponentSettings(747, 18, 0, 0, 65536);
+			owner.getPackets().sendComponentSettings(662, 74, 0, 0, 65536);
 			break;
 		}
 		owner.getPackets().sendHideIComponent(747, 9, false);
@@ -405,7 +405,7 @@ public abstract class Familiar extends NPC implements Serializable {
 			setFinished(true);
 			switchOrb(false);
 			owner.getPackets().closeInterface(owner.getInterfaceManager().hasRezizableScreen() ? 98 : 212);
-			owner.getPackets().sendIComponentSettings(747, 18, 0, 0, 0);
+			owner.getPackets().sendComponentSettings(747, 18, 0, 0, 0);
 			if (owner.storedScrolls >= 1) {
 				if (owner.getInventory().hasFreeSlots())
 					owner.getInventory().addItem(Summoning.getScrollId(pouch.getRealPouchId()), owner.storedScrolls);

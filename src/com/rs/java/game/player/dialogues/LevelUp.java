@@ -180,7 +180,7 @@ public final class LevelUp extends Dialogue {
         player.getInterfaceManager().sendFadingInterface(1216);
         player.getVarsManager().sendVarBit(4757, getIconValue(skill));
         Configs levelup = Configs.levelup(skill);
-        player.getPackets().sendGlobalConfig(1756, levelup.getId());
+        player.getPackets().sendGlobalVar(1756, levelup.getId());
         switchFlash(player, skill, true);
     }
 

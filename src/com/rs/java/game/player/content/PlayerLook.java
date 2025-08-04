@@ -8,9 +8,9 @@ public final class PlayerLook {
 
 	public static void openCharacterCustomizing(Player player) {
 		player.getPackets().sendRootInterface(1028, 0);
-		player.getPackets().sendUnlockIComponentOptionSlots(1028, 65, 0, 11, 0);
-		player.getPackets().sendUnlockIComponentOptionSlots(1028, 128, 0, 50, 0);
-		player.getPackets().sendUnlockIComponentOptionSlots(1028, 132, 0, 250, 0);
+		player.getPackets().sendUnlockOptions(1028, 65, 0, 11, 0);
+		player.getPackets().sendUnlockOptions(1028, 128, 0, 50, 0);
+		player.getPackets().sendUnlockOptions(1028, 132, 0, 250, 0);
 		player.getVarsManager().sendVarBit(8093, player.getAppearence().isMale() ? 0 : 1);
 	}
 
@@ -213,7 +213,7 @@ public final class PlayerLook {
 
 	public static void openMageMakeOver(Player player) {
 		player.getInterfaceManager().sendInterface(900);
-		player.getPackets().sendIComponentText(900, 33, "Confirm");
+		player.getPackets().sendTextOnComponent(900, 33, "Confirm");
 		player.getVarsManager().sendVarBit(6098, player.getAppearence().isMale() ? 0 : 1);
 		player.getVarsManager().sendVarBit(6099, player.getAppearence().getSkinColor());
 		player.temporaryAttribute().put("MageMakeOverGender", player.getAppearence().isMale());
@@ -272,10 +272,10 @@ public final class PlayerLook {
 		}
 		player.animate(new Animation(11623));
 		player.getInterfaceManager().sendInterface(729);
-		player.getPackets().sendIComponentText(729, 21, "Free!");
+		player.getPackets().sendTextOnComponent(729, 21, "Free!");
 		player.temporaryAttribute().put("ThessaliasMakeOver", 0);
-		player.getPackets().sendUnlockIComponentOptionSlots(729, 12, 0, 100, 0);
-		player.getPackets().sendUnlockIComponentOptionSlots(729, 17, 0, ClientScriptMap.getMap(3282).getSize() * 2, 0);
+		player.getPackets().sendUnlockOptions(729, 12, 0, 100, 0);
+		player.getPackets().sendUnlockOptions(729, 17, 0, ClientScriptMap.getMap(3282).getSize() * 2, 0);
 		player.setCloseInterfacesEvent(new Runnable() {
 
 			@Override
@@ -303,10 +303,10 @@ public final class PlayerLook {
 		}
 		player.animate(new Animation(11623));
 		player.getInterfaceManager().sendInterface(309);
-		player.getPackets().sendUnlockIComponentOptionSlots(309, 10, 0,
+		player.getPackets().sendUnlockOptions(309, 10, 0,
 				ClientScriptMap.getMap(player.getAppearence().isMale() ? 2339 : 2342).getSize() * 2, 0);
-		player.getPackets().sendUnlockIComponentOptionSlots(309, 16, 0, ClientScriptMap.getMap(2345).getSize() * 2, 0);
-		player.getPackets().sendIComponentText(309, 20, "Free!");
+		player.getPackets().sendUnlockOptions(309, 16, 0, ClientScriptMap.getMap(2345).getSize() * 2, 0);
+		player.getPackets().sendTextOnComponent(309, 20, "Free!");
 		player.temporaryAttribute().put("hairSaloon", true);
 		player.setCloseInterfacesEvent(new Runnable() {
 
@@ -330,10 +330,10 @@ public final class PlayerLook {
 		}
 		player.animate(new Animation(11623));
 		player.getInterfaceManager().sendInterface(728);
-		player.getPackets().sendUnlockIComponentOptionSlots(728, 7, 0,
+		player.getPackets().sendUnlockOptions(728, 7, 0,
 				ClientScriptMap.getMap(player.getAppearence().isMale() ? 3297 : 3297).getSize() * 2, 0);
-		player.getPackets().sendUnlockIComponentOptionSlots(728, 12, 0, ClientScriptMap.getMap(3297).getSize() * 2, 0);
-		player.getPackets().sendIComponentText(728, 16, "Free!");
+		player.getPackets().sendUnlockOptions(728, 12, 0, ClientScriptMap.getMap(3297).getSize() * 2, 0);
+		player.getPackets().sendTextOnComponent(728, 16, "Free!");
 		player.temporaryAttribute().put("bootSaloon", true);
 		player.setCloseInterfacesEvent(new Runnable() {
 

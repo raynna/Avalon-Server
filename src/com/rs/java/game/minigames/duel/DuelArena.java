@@ -55,9 +55,9 @@ public class DuelArena extends Controler {
 		long seconds = TimeUnit.MILLISECONDS.toSeconds(player.getRuleCount() - Utils.currentTimeMillis());
 		long otherseconds = TimeUnit.MILLISECONDS.toSeconds(target.getRuleCount() - Utils.currentTimeMillis());
 		if (seconds > 0 || otherseconds > 0) {
-			target.getPackets().sendIComponentText(ifFriendly ? 637 : 631, ifFriendly ? 20 : 41,
+			target.getPackets().sendTextOnComponent(ifFriendly ? 637 : 631, ifFriendly ? 20 : 41,
 					"You can accept in " + seconds + " seconds.");
-			player.getPackets().sendIComponentText(ifFriendly ? 637 : 631, ifFriendly ? 20 : 41,
+			player.getPackets().sendTextOnComponent(ifFriendly ? 637 : 631, ifFriendly ? 20 : 41,
 					"You can accept in " + otherseconds + " seconds.");
 			return;
 		}
@@ -121,13 +121,13 @@ public class DuelArena extends Controler {
 	}
 
 	private void refreshStakedWealth() {
-		player.getPackets().sendIComponentText(631, 44,
+		player.getPackets().sendTextOnComponent(631, 44,
 				"Your stake: " + Utils.formatDoubledAmountShort(getStakedValue(player)) + " GP");
-		player.getPackets().sendIComponentText(631, 45,
+		player.getPackets().sendTextOnComponent(631, 45,
 				"Opponent's stake: " + Utils.formatDoubledAmountShort(getStakedValue(target)) + " GP");
-		target.getPackets().sendIComponentText(631, 44,
+		target.getPackets().sendTextOnComponent(631, 44,
 				"Your stake: " + Utils.formatDoubledAmountShort(getStakedValue(target)) + " GP");
-		target.getPackets().sendIComponentText(631, 45,
+		target.getPackets().sendTextOnComponent(631, 45,
 				"Opponent's stake: " + Utils.formatDoubledAmountShort(getStakedValue(player)) + " GP");
 	}
 
@@ -692,15 +692,15 @@ public class DuelArena extends Controler {
 		player.getInterfaceManager().sendInterface(ifFriendly ? 637 : 631);
 		player.getPackets().sendItems(134, false, player.getLastDuelRules().getStake());
 		player.getPackets().sendItems(134, true, player.getLastDuelRules().getStake());
-		player.getPackets().sendIComponentText(ifFriendly ? 637 : 631, ifFriendly ? 16 : 38,
+		player.getPackets().sendTextOnComponent(ifFriendly ? 637 : 631, ifFriendly ? 16 : 38,
 				" " + Utils.formatPlayerNameForDisplay(target.getUsername()));
-		player.getPackets().sendIComponentText(ifFriendly ? 637 : 631, ifFriendly ? 18 : 40,
+		player.getPackets().sendTextOnComponent(ifFriendly ? 637 : 631, ifFriendly ? 18 : 40,
 				"" + (target.getSkills().getCombatLevelWithSummoning()));
-		player.getPackets().sendConfig(286, 0);
+		player.getPackets().sendVar(286, 0);
 		player.getPackets().sendGlobalString(274, target.getDisplayName());
 		player.getCustomDuelRule().put(1, false);
 		target.getCustomDuelRule().put(1, false);
-		player.getPackets().sendIComponentText(631, 69, "DDS Only");
+		player.getPackets().sendTextOnComponent(631, 69, "DDS Only");
 		player.temporaryAttribute().put("firstScreen", true);
 		refreshScreenMessage(true, ifFriendly);
 		player.setCloseInterfacesEvent(new Runnable() {
@@ -720,9 +720,9 @@ public class DuelArena extends Controler {
 	public void refreshSpecialDuel(Player player, Entity target) {
 		Player p2 = (Player) target;
 		DuelRules rules = player.getLastDuelRules();
-		player.getPackets().sendIComponentText(631, 69, "<col=ffc900>Dds only: "
+		player.getPackets().sendTextOnComponent(631, 69, "<col=ffc900>Dds only: "
 				+ (player.getCustomDuelRule().get(1).equals(true) ? "<col=ff000>ENABLED" : "<col=ff0000>DISABLED"));
-		p2.getPackets().sendIComponentText(631, 69, "<col=ffc900>Dds only: "
+		p2.getPackets().sendTextOnComponent(631, 69, "<col=ffc900>Dds only: "
 				+ (p2.getCustomDuelRule().get(1).equals(true) ? "<col=ff000>ENABLED" : "<col=ff0000>DISABLED"));
 		rules.setRules(0);
 		rules.setRules(2);
@@ -1117,7 +1117,7 @@ public class DuelArena extends Controler {
 	}
 
 	private void refreshScreenMessage(boolean firstStage, boolean ifFriendly) {
-		player.getPackets().sendIComponentText(firstStage ? (ifFriendly ? 637 : 631) : (ifFriendly ? 639 : 626),
+		player.getPackets().sendTextOnComponent(firstStage ? (ifFriendly ? 637 : 631) : (ifFriendly ? 639 : 626),
 				firstStage ? (ifFriendly ? 20 : 41) : (ifFriendly ? 23 : 35),
 				"<col=ff0000>" + getAcceptMessage(firstStage));
 	}
@@ -1125,8 +1125,8 @@ public class DuelArena extends Controler {
 	private void refreshScreenMessages(boolean firstStage, boolean ifFriendly) {
 		refreshScreenMessage(firstStage, ifFriendly);
 		if (!ifFriendly) {
-			player.getPackets().sendIComponentText(626, 25, "");
-			player.getPackets().sendIComponentText(626, 26, "");
+			player.getPackets().sendTextOnComponent(626, 25, "");
+			player.getPackets().sendTextOnComponent(626, 26, "");
 		}
 		if (target != null) {
 			((DuelArena) target.getControlerManager().getControler()).refreshScreenMessage(firstStage, ifFriendly);
@@ -1200,24 +1200,24 @@ public class DuelArena extends Controler {
 
 	private void sendFinishInterface(Player player, Player loser) {
 		player.getInterfaceManager().sendInterface(634);
-		player.getPackets().sendIComponentText(634, 17, "Close");
+		player.getPackets().sendTextOnComponent(634, 17, "Close");
 		player.getPackets().sendInterSetItemsOptionsScript(634, 28, 136, 6, 4, "Examine");
-		player.getPackets().sendUnlockIComponentOptionSlots(634, 28, 0, 35, new int[] { 0, 1, 2, 3, 4, 5 });
+		player.getPackets().sendUnlockOptions(634, 28, 0, 35, new int[] { 0, 1, 2, 3, 4, 5 });
 		if (loser.getLastDuelRules().getStake() != null) {
 			player.getPackets().sendItems(136, loser.getLastDuelRules().getStake());
 		}
-		player.getPackets().sendIComponentText(634, 30, "Name: ");
-		player.getPackets().sendIComponentText(634, 31, "Combat Level: ");
-		player.getPackets().sendIComponentText(634, 33, "" + Utils.formatPlayerNameForDisplay(loser.getUsername()));
-		player.getPackets().sendIComponentText(634, 32, "" + loser.getSkills().getCombatLevelWithSummoning());
+		player.getPackets().sendTextOnComponent(634, 30, "Name: ");
+		player.getPackets().sendTextOnComponent(634, 31, "Combat Level: ");
+		player.getPackets().sendTextOnComponent(634, 33, "" + Utils.formatPlayerNameForDisplay(loser.getUsername()));
+		player.getPackets().sendTextOnComponent(634, 32, "" + loser.getSkills().getCombatLevelWithSummoning());
 	}
 
 	private void sendOptions(Player player) {
 		player.getInterfaceManager().sendInventoryInterface(628);
-		player.getPackets().sendUnlockIComponentOptionSlots(628, 0, 0, 27, 0, 1, 2, 3, 4, 5);
+		player.getPackets().sendUnlockOptions(628, 0, 0, 27, 0, 1, 2, 3, 4, 5);
 		player.getPackets().sendInterSetItemsOptionsScript(628, 0, 93, 4, 7, "Stake 1", "Stake 5", "Stake 10",
 				"Stake All", "Stake X");
-		player.getPackets().sendUnlockIComponentOptionSlots(631, 47, 0, 27, 0, 1, 2, 3, 4, 5);
+		player.getPackets().sendUnlockOptions(631, 47, 0, 27, 0, 1, 2, 3, 4, 5);
 		player.getPackets().sendInterSetItemsOptionsScript(631, 0, 120, 4, 7, "Remove 1", "Remove 5", "Remove 10",
 				"Remove All", "Remove X");
 	}

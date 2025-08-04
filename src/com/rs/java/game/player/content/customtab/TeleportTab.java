@@ -326,7 +326,7 @@ public class TeleportTab extends CustomTab {
 			if (tab != null) {
 				player.getPackets().sendHideIComponent(3002, tab.getComponentId(), false);
 				if (tab.getText() != null) {
-					player.getPackets().sendIComponentText(3002, tab.getComponentId(),
+					player.getPackets().sendTextOnComponent(3002, tab.getComponentId(),
 							(tab.getComponentId() == 25 ? "" : "<col=f4ee42>") + tab.getText());
 				}
 			}
@@ -341,11 +341,11 @@ public class TeleportTab extends CustomTab {
 		player.getPackets().sendHideIComponent(3002, 7, false);
 		player.getPackets().sendHideIComponent(3002, 9, false);
 		player.getPackets().sendHideIComponent(3002, BLUE_STAR_COMP, false);
-		player.getPackets().sendIComponentText(3002, 3,
+		player.getPackets().sendTextOnComponent(3002, 3,
 				"<br><br>This is a <col=BB0404>dangerous</col> teleport, <br>Are you sure you want <br>to teleport?");
-		player.getPackets().sendIComponentText(3002, 7, "<col=04BB3B>Yes</col>, I want to teleport.");
-		player.getPackets().sendIComponentText(3002, 9, "<col=BB0404>No</col>, I don't want to teleport.");
-		player.getPackets().sendIComponentText(3002, 25, "Dangerous!");
+		player.getPackets().sendTextOnComponent(3002, 7, "<col=04BB3B>Yes</col>, I want to teleport.");
+		player.getPackets().sendTextOnComponent(3002, 9, "<col=BB0404>No</col>, I don't want to teleport.");
+		player.getPackets().sendTextOnComponent(3002, 25, "Dangerous!");
 		player.getPackets().sendSpriteOnIComponent(3002, BLUE_STAR_COMP, 439);
 	}
 
@@ -472,7 +472,7 @@ public class TeleportTab extends CustomTab {
 		initializeTeleportCategory(player, type);
 
 		String categoryName = getSkillingCategoryName(type);
-		player.getPackets().sendIComponentText(3002, 25, categoryName);
+		player.getPackets().sendTextOnComponent(3002, 25, categoryName);
 
 		displayTeleportOptions(player, type);
 	}
@@ -496,7 +496,7 @@ public class TeleportTab extends CustomTab {
 		initializeTeleportCategory(player, type);
 
 		String categoryName = getMainCategoryName(type);
-		player.getPackets().sendIComponentText(3002, 25, categoryName);
+		player.getPackets().sendTextOnComponent(3002, 25, categoryName);
 
 		displayTeleportOptions(player, type);
 	}
@@ -534,7 +534,7 @@ public class TeleportTab extends CustomTab {
 				player.getPackets().sendHideIComponent(3002, teleport.getComponentId(), false);
 				if (teleport.getText() != null) {
 					String text = buildTeleportText(teleport);
-					player.getPackets().sendIComponentText(3002, teleport.getComponentId(), text);
+					player.getPackets().sendTextOnComponent(3002, teleport.getComponentId(), text);
 				}
 			}
 		}

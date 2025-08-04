@@ -60,21 +60,21 @@ public class GrandExchangeManager implements Serializable {
 		player.getInterfaceManager().sendInterface(643);
 		for (int i = 0; i < history.length; i++) {
 			OfferHistory o = history[i];
-			player.getPackets().sendIComponentText(643, 25 + i,
+			player.getPackets().sendTextOnComponent(643, 25 + i,
 					o == null ? "" : o.isBought() ? "You bought" : "You sold");
-			player.getPackets().sendIComponentText(643, 35 + i,
+			player.getPackets().sendTextOnComponent(643, 35 + i,
 					o == null ? "" : ItemDefinitions.getItemDefinitions(o.getId()).getName());
-			player.getPackets().sendIComponentText(643, 30 + i,
+			player.getPackets().sendTextOnComponent(643, 30 + i,
 					o == null ? "" : "" + Utils.getFormattedNumber(o.getQuantity(), ','));
-			player.getPackets().sendIComponentText(643, 40 + i,
+			player.getPackets().sendTextOnComponent(643, 40 + i,
 					o == null ? "" : "" + Utils.getFormattedNumber(o.getPrice(), ','));
 		}
 	}
 
 	public void openGrandExchange() {
 		player.getInterfaceManager().sendInterface(105);
-		player.getPackets().sendUnlockIComponentOptionSlots(105, 206, -1, 0, 0, 1);
-		player.getPackets().sendUnlockIComponentOptionSlots(105, 208, -1, 0, 0, 1);
+		player.getPackets().sendUnlockOptions(105, 206, -1, 0, 0, 1);
+		player.getPackets().sendUnlockOptions(105, 208, -1, 0, 0, 1);
 		cancelOffer();
 		player.setCloseInterfacesEvent(new Runnable() {
 			@Override
@@ -87,12 +87,12 @@ public class GrandExchangeManager implements Serializable {
 
 	public void openCollectionBox() {
 		player.getInterfaceManager().sendInterface(109);
-		player.getPackets().sendUnlockIComponentOptionSlots(109, 19, 0, 2, 0, 1);
-		player.getPackets().sendUnlockIComponentOptionSlots(109, 23, 0, 2, 0, 1);
-		player.getPackets().sendUnlockIComponentOptionSlots(109, 27, 0, 2, 0, 1);
-		player.getPackets().sendUnlockIComponentOptionSlots(109, 32, 0, 2, 0, 1);
-		player.getPackets().sendUnlockIComponentOptionSlots(109, 37, 0, 2, 0, 1);
-		player.getPackets().sendUnlockIComponentOptionSlots(109, 42, 0, 2, 0, 1);
+		player.getPackets().sendUnlockOptions(109, 19, 0, 2, 0, 1);
+		player.getPackets().sendUnlockOptions(109, 23, 0, 2, 0, 1);
+		player.getPackets().sendUnlockOptions(109, 27, 0, 2, 0, 1);
+		player.getPackets().sendUnlockOptions(109, 32, 0, 2, 0, 1);
+		player.getPackets().sendUnlockOptions(109, 37, 0, 2, 0, 1);
+		player.getPackets().sendUnlockOptions(109, 42, 0, 2, 0, 1);
 	}
 
 	public void setSlot(int slot) {
@@ -444,7 +444,7 @@ public class GrandExchangeManager implements Serializable {
 
 	public void sendInfo(Item item) {
 		player.getInterfaceManager().sendInventoryInterface(449);
-		player.getPackets().sendGlobalConfig(741, item.getId());
+		player.getPackets().sendGlobalVar(741, item.getId());
 		player.getPackets().sendGlobalString(25, ItemExamines.getExamine(item));
 		player.getPackets().sendGlobalString(34, ""); // quest id for some items
 		int[] bonuses = new int[18];
@@ -506,14 +506,14 @@ public class GrandExchangeManager implements Serializable {
 		setPricePerItem(1);
 		setMarketPrice(0);
 		player.getInterfaceManager().closeInventoryInterface();
-		player.getPackets().sendConfig(1109, -1);
-		player.getPackets().sendConfig(1112, 0);
-		player.getPackets().sendConfig(1113, 0);
-		player.getPackets().sendConfig1(1241, 16750848);
-		player.getPackets().sendConfig1(1242, 15439903);
-		player.getPackets().sendConfig1(741, -1);
-		player.getPackets().sendConfig1(743, -1);
-		player.getPackets().sendConfig1(744, 0);
+		player.getPackets().sendVar(1109, -1);
+		player.getPackets().sendVar(1112, 0);
+		player.getPackets().sendVar(1113, 0);
+		player.getPackets().sendVar(1241, 16750848);
+		player.getPackets().sendVar(1242, 15439903);
+		player.getPackets().sendVar(741, -1);
+		player.getPackets().sendVar(743, -1);
+		player.getPackets().sendVar(744, 0);
 		player.getPackets().sendInterface(true, 752, 7, 389);
 		player.getPackets().sendRunScript(570, new Object[] { "Grand Exchange Item Search" });
 	}
@@ -535,15 +535,15 @@ public class GrandExchangeManager implements Serializable {
 		if (getType() == 1 || getType() == -1) {
 			Item item = new Item(id);
 			if (GrandExchange.getPrice(id) == 0) {
-				player.getPackets().sendIComponentText(105, 143,
+				player.getPackets().sendTextOnComponent(105, 143,
 						ItemExamines.getExamine(item) + "<br> <br>You can't sell free items to the grand exchange.");
 			} else if (GrandExchange.getPrice(id) < Settings.LOWPRICE_LIMIT
 					&& !LimitedGEReader.itemIsLimited(item.getId()) || UnlimitedGEReader.itemIsLimited(id)) {
-				player.getPackets().sendIComponentText(105, 143, ItemExamines.getExamine(item)
+				player.getPackets().sendTextOnComponent(105, 143, ItemExamines.getExamine(item)
 						+ "<br> <br>The Grand Exchange will automatically buy this<br>item for 5% less than its guide price.");
 			} else {
 				if (totalbuyamount > 0) {
-					player.getPackets().sendIComponentText(105, 143,
+					player.getPackets().sendTextOnComponent(105, 143,
 							"" + ItemExamines.getExamine(new Item(id)) + "<br><br>Best offer: "
 									+ Utils.getFormattedNumber(buyprice, ',') + "<br>Quantity: "
 									+ Utils.getFormattedNumber(totalbuyamount, ','));
@@ -552,7 +552,7 @@ public class GrandExchangeManager implements Serializable {
 							Utils.getFormattedNumber(totalbuyamount, ',') + " x",
 							ItemDefinitions.getItemDefinitions(id).getName() + "");
 				} else {
-					player.getPackets().sendIComponentText(105, 143, ItemExamines.getExamine(item)
+					player.getPackets().sendTextOnComponent(105, 143, ItemExamines.getExamine(item)
 							+ "<br> <br>There are currently no buy offers for this item.");
 				}
 			}
@@ -560,15 +560,15 @@ public class GrandExchangeManager implements Serializable {
 		if (getType() == 0) {
 			Item item = new Item(id);
 			if (GrandExchange.getPrice(id) == 0) {
-				player.getPackets().sendIComponentText(105, 143, "" + ItemExamines.getExamine(new Item(id))
+				player.getPackets().sendTextOnComponent(105, 143, "" + ItemExamines.getExamine(new Item(id))
 						+ "<br><br>Quantity: Unlimited!<br>" + "Price: Free!");
 			} else if (GrandExchange.getPrice(id) < Settings.LOWPRICE_LIMIT && !LimitedGEReader.itemIsLimited(id)
 					|| UnlimitedGEReader.itemIsLimited(id)) {
-				player.getPackets().sendIComponentText(105, 143, "" + ItemExamines.getExamine(new Item(id))
+				player.getPackets().sendTextOnComponent(105, 143, "" + ItemExamines.getExamine(new Item(id))
 						+ "<br><br>Quantity: Unlimited!<br>" + "Price: " + GrandExchange.getPrice(id) + ".");
 			} else {
 				if (totalsellamount > 0) {
-					player.getPackets().sendIComponentText(105, 143,
+					player.getPackets().sendTextOnComponent(105, 143,
 							"" + ItemExamines.getExamine(item) + "<br><br>Lowest offer: "
 									+ Utils.getFormattedNumber(sellprice, ',') + "<br>Quantity: "
 									+ Utils.getFormattedNumber(totalsellamount, ','));
@@ -577,7 +577,7 @@ public class GrandExchangeManager implements Serializable {
 							Utils.getFormattedNumber(totalsellamount, ','),
 							ItemDefinitions.getItemDefinitions(id).getName() + "");
 				} else
-					player.getPackets().sendIComponentText(105, 143, "" + ItemExamines.getExamine(new Item(id))
+					player.getPackets().sendTextOnComponent(105, 143, "" + ItemExamines.getExamine(new Item(id))
 							+ "<br><br>There are currently no sell offers for this item.");
 			}
 		}
@@ -667,17 +667,17 @@ public class GrandExchangeManager implements Serializable {
 			player.getPackets().sendHideIComponent(105, 196, true);
 			player.getPackets().sendHideIComponent(105, 220, true);
 			player.getInterfaceManager().sendInventoryInterface(107);
-			player.getPackets().sendUnlockIComponentOptionSlots(107, 18, 0, 27, 0);
+			player.getPackets().sendUnlockOptions(107, 18, 0, 27, 0);
 			player.getPackets().sendInterSetItemsOptionsScript(107, 18, 93, 4, 7, "Offer");
 		} else {
 			player.getPackets().sendHideIComponent(105, 196, true);
 			player.getPackets().sendHideIComponent(105, 220, true);
-			player.getPackets().sendConfig(1109, -1);
-			player.getPackets().sendConfig1(1241, 16750848);
-			player.getPackets().sendConfig1(1242, 15439903);
-			player.getPackets().sendConfig1(741, -1);
-			player.getPackets().sendConfig1(743, -1);
-			player.getPackets().sendConfig1(744, 0);
+			player.getPackets().sendVar(1109, -1);
+			player.getPackets().sendVar(1241, 16750848);
+			player.getPackets().sendVar(1242, 15439903);
+			player.getPackets().sendVar(741, -1);
+			player.getPackets().sendVar(743, -1);
+			player.getPackets().sendVar(744, 0);
 			player.getPackets().sendInterface(true, 752, 7, 389);
 			player.getPackets().sendRunScript(570, new Object[] { "Grand Exchange Item Search" });
 		}

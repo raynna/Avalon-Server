@@ -85,9 +85,9 @@ public final class QueenBlackDragonController extends Controler {
                         player.setLargeSceneView(true);
                         player.setForceMultiArea(true);
                         player.unlock();
-                        player.getPackets().sendGlobalConfig(184, 150);
-                        player.getPackets().sendGlobalConfig(1924, 0);
-                        player.getPackets().sendGlobalConfig(1925, 0);
+                        player.getPackets().sendGlobalVar(184, 150);
+                        player.getPackets().sendGlobalVar(1924, 0);
+                        player.getPackets().sendGlobalVar(1925, 0);
                         player.getInterfaceManager()
                                 .sendTab(player.getInterfaceManager().hasRezizableScreen() ? 1 : 0, 1285);// 1133);
                         player.getMusicsManager().playMusic(1119); // AWOKEN
@@ -115,7 +115,7 @@ public final class QueenBlackDragonController extends Controler {
 				public void run() {
 					player.getPackets().sendGameMessage(
 							"You descend the stairs that appeared when you defeated the Queen Black Dragon.");
-					player.getPackets().sendGlobalConfig(184, -1);
+					player.getPackets().sendGlobalVar(184, -1);
 					npc.finish();
 					MapBuilder.copyAllPlanesMap(160, 760, regionBase[0], regionBase[1], 8, 8);
 					player.setForceNextMapLoadRefresh(true);
@@ -161,19 +161,19 @@ public final class QueenBlackDragonController extends Controler {
 			World.spawnObject(npc.getActiveArtifact());
 			switch (object.getId()) {
 			case 70777:
-				player.getPackets().sendGlobalConfig(1924, 2);
+				player.getPackets().sendGlobalVar(1924, 2);
 				player.getPackets().sendSpawnedObject(new WorldObject(70843, 10, 0, base.transform(24, 21, -1)));
 				break;
 			case 70780:
-				player.getPackets().sendGlobalConfig(1924, 4);
+				player.getPackets().sendGlobalVar(1924, 4);
 				player.getPackets().sendSpawnedObject(new WorldObject(70845, 10, 0, base.transform(24, 21, -1)));
 				break;
 			case 70783:
-				player.getPackets().sendGlobalConfig(1924, 6);
+				player.getPackets().sendGlobalVar(1924, 6);
 				player.getPackets().sendSpawnedObject(new WorldObject(70847, 10, 0, base.transform(24, 21, -1)));
 				break;
 			case 70786:
-				player.getPackets().sendGlobalConfig(1924, 8);
+				player.getPackets().sendGlobalVar(1924, 8);
 				player.getPackets().sendSpawnedObject(new WorldObject(70849, 10, 0, base.transform(24, 21, -1)));
 				break;
 			}
@@ -364,7 +364,7 @@ public final class QueenBlackDragonController extends Controler {
 		if (type == 0) {
 			boolean resizable = player.getInterfaceManager().hasRezizableScreen();
 			player.getPackets().closeInterface(resizable ? 746 : 548, resizable ? 1 : 0);
-			player.getPackets().sendGlobalConfig(184, -1);
+			player.getPackets().sendGlobalVar(184, -1);
 		} else {
 			player.setLocation(OUTSIDE);
 		}

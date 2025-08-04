@@ -45,8 +45,8 @@ public class AntiBot {
 		hasEvent(true);
 		player.getInterfaceManager().sendTabInterfaces(true);
 		player.getInterfaceManager().sendTab(player.getInterfaceManager().hasRezizableScreen() ? 114 : 174, 865);
-		player.getPackets().sendIComponentText(928, 10, "<col=ffc800>A wild event has appeared!");
-		player.getPackets().sendIComponentText(928, 16, "<col=ffc800>" + generateQuestion() + ""
+		player.getPackets().sendTextOnComponent(928, 10, "<col=ffc800>A wild event has appeared!");
+		player.getPackets().sendTextOnComponent(928, 16, "<col=ffc800>" + generateQuestion() + ""
 				+ "<br><br><col=ffc800>" + getHint() + "<br><br><col=ffc800>Type the answer in the chatbox.");
 		JournalTab.open(player);
 		player.stopAll(true);

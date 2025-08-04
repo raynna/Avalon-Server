@@ -78,6 +78,7 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.Weights;
+import com.rs.kotlin.Rscm;
 
 /**
  * @Improved Andreas, Phillip - AvalonPK
@@ -157,7 +158,7 @@ public class ButtonHandler {
             if ((interfaceId == 548 && componentId == 148) || (interfaceId == 746 && componentId == 199)) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     player.getHintIconsManager().removeAll();
-                    player.getPackets().sendConfig(1159, 0);
+                    player.getPackets().sendVar(1159, 0);
                     return;
                 }
                 if (player.getInterfaceManager().containsScreenInter() || player.getInterfaceManager().containsInventoryInter()) {
@@ -171,8 +172,8 @@ public class ButtonHandler {
                 player.animate(new Animation(840));
                 player.getPackets().sendWindowsPane(755, 0);
                 int posHash = player.getX() << 14 | player.getY();
-                player.getPackets().sendGlobalConfig(622, posHash);
-                player.getPackets().sendGlobalConfig(674, posHash);
+                player.getPackets().sendGlobalVar(622, posHash);
+                player.getPackets().sendGlobalVar(674, posHash);
             } else if (interfaceId == 629 && componentId == 68) {
                 player.closeInterfaces();
             } else if ((interfaceId == 548 && componentId == 17) || (interfaceId == 746 && componentId == 54)) {
@@ -986,7 +987,7 @@ public class ButtonHandler {
                 player.setPrivateChatSetup(componentId - 48);
             else if (componentId >= 72 && componentId <= 91)
                 player.setFriendChatSetup(componentId - 72);
-        } else if (interfaceId == 271) {
+        } else if (interfaceId == Rscm.lookup("interface.prayerbook")) {
             WorldTasksManager.schedule(new WorldTask() {
                 @Override
                 public void run() {
@@ -1457,7 +1458,7 @@ public class ButtonHandler {
                         skillId = Skills.SMITHING;
                         skillMenu = Skills.SkillData.SMITHING.getValue();
                         if (player.getTemporaryAttributtes().remove("leveledUp[" + skillId + "]") != Boolean.TRUE) {
-                            player.getPackets().sendConfig(965, skillMenu);
+                            player.getPackets().sendVar(965, skillMenu);
                         } else {
                             Skills.sendLevelConfigs(player, skillId);
                             lvlupSkill = skillId;
@@ -1576,7 +1577,7 @@ public class ButtonHandler {
             if (player.temporaryAttribute().get("skillMenu") != null)
                 skillMenu = (Integer) player.temporaryAttribute().get("skillMenu");
             if (componentId >= 9 && componentId <= 25)
-                player.getPackets().sendConfig(965, ((componentId - 9) * 1024) + skillMenu);
+                player.getPackets().sendVar(965, ((componentId - 9) * 1024) + skillMenu);
             else if (componentId == 29)
                 player.stopAll();
         } else if (interfaceId == 387) {
@@ -1902,10 +1903,10 @@ public class ButtonHandler {
         } else if (interfaceId == 640) {
             if (componentId == 18 || componentId == 22) {
                 player.temporaryAttribute().put("WillDuelFriendly", true);
-                player.getPackets().sendConfig(283, 67108864);
+                player.getPackets().sendVar(283, 67108864);
             } else if (componentId == 19 || componentId == 21) {
                 player.temporaryAttribute().put("WillDuelFriendly", false);
-                player.getPackets().sendConfig(283, 134217728);
+                player.getPackets().sendVar(283, 134217728);
             } else if (componentId == 20) {
                 DuelControler.challenge(player);
             }
@@ -1945,7 +1946,7 @@ public class ButtonHandler {
                     return;
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                     registerRemoveEquipment(player, slotId);
-                    player.getPackets().sendGlobalConfig(779, player.getEquipment().getWeaponRenderEmote());
+                    player.getPackets().sendGlobalVar(779, player.getEquipment().getWeaponRenderEmote());
                     ButtonHandler.refreshEquipBonuses(player);
                 }
             } else if (componentId == 46 && player.temporaryAttribute().remove("Banking") != null) {
@@ -2124,7 +2125,7 @@ public class ButtonHandler {
             if (componentId == 15)
                 player.getBank().switchInsertItems();
             else if (componentId == 19) {
-                player.getPackets().sendConfig(115, player.getBank().getWithdrawNotes() ? 1 : 0);
+                player.getPackets().sendVar(115, player.getBank().getWithdrawNotes() ? 1 : 0);
                 player.getBank().switchWithdrawNotes();
             } else if (componentId == 33)
                 player.getBank().depositAllInventory(true);
@@ -2144,35 +2145,35 @@ public class ButtonHandler {
                 long collectionValue = GrandExchange.getTotalCollectionValue(player);
                 player.closeInterfaces();
                 player.getInterfaceManager().sendInterface(629);
-                player.getPackets().sendIComponentText(629, 11, "Information Tab");
-                player.getPackets().sendIComponentText(629, 12, "");
-                player.getPackets().sendIComponentText(629, 41, "Money pouch:");
-                player.getPackets().sendIComponentText(629, 54, Utils.formatDoubledAmount(moneyPouch));
-                player.getPackets().sendIComponentText(629, 42, "Bank:");
-                player.getPackets().sendIComponentText(629, 55, Utils.formatDoubledAmount(bankValue));
-                player.getPackets().sendIComponentText(629, 43, "Inventory:");
-                player.getPackets().sendIComponentText(629, 56, Utils.formatDoubledAmount(inventoryValue));
-                player.getPackets().sendIComponentText(629, 44, "Equipment:");
-                player.getPackets().sendIComponentText(629, 57, Utils.formatDoubledAmount(equipmentValue));
-                player.getPackets().sendIComponentText(629, 45, "Grand Exchange");
-                player.getPackets().sendIComponentText(629, 58, "");
-                player.getPackets().sendIComponentText(629, 46, "Pending Offers:");
-                player.getPackets().sendIComponentText(629, 59, Utils.formatDoubledAmount(grandexchangeValue));
-                player.getPackets().sendIComponentText(629, 47, "Collection Box:");
-                player.getPackets().sendIComponentText(629, 60, Utils.formatDoubledAmount(collectionValue));
+                player.getPackets().sendTextOnComponent(629, 11, "Information Tab");
+                player.getPackets().sendTextOnComponent(629, 12, "");
+                player.getPackets().sendTextOnComponent(629, 41, "Money pouch:");
+                player.getPackets().sendTextOnComponent(629, 54, Utils.formatDoubledAmount(moneyPouch));
+                player.getPackets().sendTextOnComponent(629, 42, "Bank:");
+                player.getPackets().sendTextOnComponent(629, 55, Utils.formatDoubledAmount(bankValue));
+                player.getPackets().sendTextOnComponent(629, 43, "Inventory:");
+                player.getPackets().sendTextOnComponent(629, 56, Utils.formatDoubledAmount(inventoryValue));
+                player.getPackets().sendTextOnComponent(629, 44, "Equipment:");
+                player.getPackets().sendTextOnComponent(629, 57, Utils.formatDoubledAmount(equipmentValue));
+                player.getPackets().sendTextOnComponent(629, 45, "Grand Exchange");
+                player.getPackets().sendTextOnComponent(629, 58, "");
+                player.getPackets().sendTextOnComponent(629, 46, "Pending Offers:");
+                player.getPackets().sendTextOnComponent(629, 59, Utils.formatDoubledAmount(grandexchangeValue));
+                player.getPackets().sendTextOnComponent(629, 47, "Collection Box:");
+                player.getPackets().sendTextOnComponent(629, 60, Utils.formatDoubledAmount(collectionValue));
                 totalValue = bankValue + inventoryValue + equipmentValue + moneyPouch + collectionValue + grandexchangeValue;
-                player.getPackets().sendIComponentText(629, 48, "Total wealth:");
-                player.getPackets().sendIComponentText(629, 61, Utils.formatDoubledAmount(totalValue));
-                player.getPackets().sendIComponentText(629, 49, "");
-                player.getPackets().sendIComponentText(629, 62, "");
-                player.getPackets().sendIComponentText(629, 50, "Highest value Wildy kill:");
-                player.getPackets().sendIComponentText(629, 63, (player.getHighestValuedKill() >= Integer.MAX_VALUE ? "Lots!" : Utils.getFormattedNumber(player.getHighestValuedKill(), ',')));
+                player.getPackets().sendTextOnComponent(629, 48, "Total wealth:");
+                player.getPackets().sendTextOnComponent(629, 61, Utils.formatDoubledAmount(totalValue));
+                player.getPackets().sendTextOnComponent(629, 49, "");
+                player.getPackets().sendTextOnComponent(629, 62, "");
+                player.getPackets().sendTextOnComponent(629, 50, "Highest value Wildy kill:");
+                player.getPackets().sendTextOnComponent(629, 63, (player.getHighestValuedKill() >= Integer.MAX_VALUE ? "Lots!" : Utils.getFormattedNumber(player.getHighestValuedKill(), ',')));
                 int bossKills = 0;
                 bossKills += player.getBossKillcount().size();
-                player.getPackets().sendIComponentText(629, 51, "Total boss kills:");
-                player.getPackets().sendIComponentText(629, 64, Utils.getFormattedNumber(bossKills, ','));
-                player.getPackets().sendIComponentText(629, 52, "Slayer tasks completed:");
-                player.getPackets().sendIComponentText(629, 65, Utils.getFormattedNumber(player.getSlayerManager().getCompletedTasks()));
+                player.getPackets().sendTextOnComponent(629, 51, "Total boss kills:");
+                player.getPackets().sendTextOnComponent(629, 64, Utils.getFormattedNumber(bossKills, ','));
+                player.getPackets().sendTextOnComponent(629, 52, "Slayer tasks completed:");
+                player.getPackets().sendTextOnComponent(629, 65, Utils.getFormattedNumber(player.getSlayerManager().getCompletedTasks()));
                 player.getPackets().sendHideIComponent(629, 68, true);
                 player.getPackets().sendHideIComponent(629, 69, true);
             } else if (componentId >= 46 && componentId <= 64) {
@@ -2259,7 +2260,7 @@ public class ButtonHandler {
                 player.animate(new Animation(-1));
             } else if (componentId == 42) {
                 player.getHintIconsManager().removeAll();
-                player.getPackets().sendConfig(1159, 1);
+                player.getPackets().sendVar(1159, 1);
             }
         } else if (interfaceId == 20)
             SkillCapeCustomizer.handleSkillCapeCustomizer(player, componentId);
@@ -2392,7 +2393,7 @@ public class ButtonHandler {
                     return;
                 shop.setAmount(player, isBuying ? shop.getMainStock()[slot].getAmount() : player.getInventory().getNumberOf(player.getInventory().getItem(slot).getId()));
             } else if (componentId == 29) {
-                player.getPackets().sendConfig(2561, 93);
+                player.getPackets().sendVar(2561, 93);
                 player.getTemporaryAttributtes().remove("shop_buying");
             } else if (componentId == 28) {
                 player.getTemporaryAttributtes().put("shop_buying", true);
@@ -2409,7 +2410,7 @@ public class ButtonHandler {
                         return;
                     Integer slot = (Integer) player.temporaryAttribute().get("ShopSelectedSlot");
                     player.temporaryAttribute().remove("shop_buying");
-                    player.getPackets().sendConfig(2563, slotId);
+                    player.getPackets().sendVar(2563, slotId);
                     if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
                         shop.sendValue(player, slotId);
                     else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
@@ -2662,7 +2663,7 @@ public class ButtonHandler {
             player.refreshHitPoints();
         }
         if (Runecrafting.isTiara(item.getId()))
-            player.getPackets().sendConfig(491, 0);
+            player.getPackets().sendVar(491, 0);
         player.getAppearence().generateAppearenceData();
         refreshEquipBonuses(player);
         Weights.calculateWeight(player);
@@ -2842,16 +2843,6 @@ public class ButtonHandler {
             itemToEquip.setAmount(itemToEquip.getAmount() + equippedItem.getAmount());
         }
         player.getEquipment().getItems().set(equipmentSlot, itemToEquip);
-        if (itemToEquip.getMetadata() != null) {
-            player.message("[ItemToEquip] " + itemToEquip.getDisplayName() + " has metadata: " + itemToEquip.getMetadata().getDisplaySuffix());
-        } else {
-            player.message("[ItemToEquip] " + itemToEquip.getDisplayName() + " has no metadata");
-        }
-        if (itemToEquip.getMetadata() != null) {
-            player.message("[EquippedItem] " + player.getEquipment().getItem(equipmentSlot).getDisplayName() + " has metadata: " + player.getEquipment().getItem(equipmentSlot).getMetadata().getDisplaySuffix());
-        } else {
-            player.message("[EquippedItem] " + player.getEquipment().getItem(equipmentSlot).getDisplayName() + " has no metadata");
-        }
         player.getEquipment().refresh(equipmentSlot);
     }
 
@@ -3145,13 +3136,13 @@ public class ButtonHandler {
         player.getPackets().sendHideIComponent(667, 1, false);
         player.getVarsManager().sendVarBit(4894, banking ? 1 : 0);
         player.getVarsManager().sendVarBit(8348, 1);
-        player.getPackets().sendGlobalConfig(779, player.getEquipment().getWeaponRenderEmote());
+        player.getPackets().sendGlobalVar(779, player.getEquipment().getWeaponRenderEmote());
         player.getPackets().sendRunScript(787, 1);
         player.getPackets().sendItems(93, player.getInventory().getItems());
         player.getPackets().sendInterSetItemsOptionsScript(670, 0, 93, 4, 7, "Equip", "Compare", "Stats", "Examine");
-        player.getPackets().sendUnlockIComponentOptionSlots(670, 0, 0, 27, 0, 1, 2, 3);
-        player.getPackets().sendUnlockIComponentOptionSlots(667, 9, 0, 24, 0, 8, 9);
-        player.getPackets().sendIComponentSettings(667, 14, 0, 13, 1030);
+        player.getPackets().sendUnlockOptions(670, 0, 0, 27, 0, 1, 2, 3);
+        player.getPackets().sendUnlockOptions(667, 9, 0, 24, 0, 8, 9);
+        player.getPackets().sendComponentSettings(667, 14, 0, 13, 1030);
         refreshEquipBonuses(player);
         if (banking) {
             player.getTemporaryAttributtes().put("Banking", Boolean.TRUE);
@@ -3263,7 +3254,7 @@ public class ButtonHandler {
     }
 
     public static void refreshEquipBonuses(Player player) {
-        player.getPackets().sendGlobalConfig(779, player.getEquipment().getWeaponRenderEmote());
+        player.getPackets().sendGlobalVar(779, player.getEquipment().getWeaponRenderEmote());
         for (int i = 0; i < 18; i++) {
             String bonusName = (new StringBuilder(String.valueOf(names[i <= 4 ? i : i - 5]))).append(": ").toString();
             int bonus = player.getCombatDefinitions().getBonuses()[i];
@@ -3272,7 +3263,7 @@ public class ButtonHandler {
                 bonusName = (new StringBuilder(String.valueOf(bonusName))).append("%").toString();
 
             player.getPackets().sendWeight(player.getWeight());
-            player.getPackets().sendIComponentText(667, 28 + i, bonusName);
+            player.getPackets().sendTextOnComponent(667, 28 + i, bonusName);
         }
 
     }
@@ -3280,15 +3271,15 @@ public class ButtonHandler {
     public static void refreshUntradeables(Player player) {
         Item[] items = player.getUntradeables().getContainerItems();
         player.getInterfaceManager().sendInterface(1284);
-        player.getPackets().sendIComponentText(1284, 28, "Untradeables");
-        player.getPackets().sendIComponentText(1284, 4, "-");
-        player.getPackets().sendIComponentText(1284, 42, "-");
-        player.getPackets().sendIComponentText(1284, 46, "-");
+        player.getPackets().sendTextOnComponent(1284, 28, "Untradeables");
+        player.getPackets().sendTextOnComponent(1284, 4, "-");
+        player.getPackets().sendTextOnComponent(1284, 42, "-");
+        player.getPackets().sendTextOnComponent(1284, 46, "-");
         player.getPackets().sendHideIComponent(1284, 8, true);
         player.getPackets().sendHideIComponent(1284, 9, true);
         player.getPackets().sendHideIComponent(1284, 10, true);
         player.getPackets().sendInterSetItemsOptionsScript(1284, 7, 100, 8, 3, "Claim", "Bank", "Examine");
-        player.getPackets().sendUnlockIComponentOptionSlots(1284, 7, 0, 28, 0, 1, 2);
+        player.getPackets().sendUnlockOptions(1284, 7, 0, 28, 0, 1, 2);
         player.getPackets().sendItems(100, items);
         player.temporaryAttribute().put("untradeables", Boolean.TRUE);
         player.setCloseInterfacesEvent(new Runnable() {

@@ -137,7 +137,7 @@ public final class MusicsManager implements Serializable {
 		}
 		for (int i = 0; i < PLAY_LIST_CONFIG_IDS.length; i++)
 			if(PLAY_LIST_CONFIG_IDS[i] == -1)
-			player.getPackets().sendConfig(PLAY_LIST_CONFIG_IDS[i],
+			player.getPackets().sendVar(PLAY_LIST_CONFIG_IDS[i],
 					configValues[i]);
 	}
 
@@ -155,7 +155,7 @@ public final class MusicsManager implements Serializable {
 		}
 		for (int i = 0; i < CONFIG_IDS.length; i++) {
 			if (CONFIG_IDS[i] != -1 && configValues[i] != 0)
-				player.getPackets().sendConfig(CONFIG_IDS[i], configValues[i]);
+				player.getPackets().sendVar(CONFIG_IDS[i], configValues[i]);
 		}
 	}
 
@@ -171,7 +171,7 @@ public final class MusicsManager implements Serializable {
 	}
 
 	public void unlockMusicPlayer() {
-		player.getPackets().sendUnlockIComponentOptionSlots(187, 1, 0,
+		player.getPackets().sendUnlockOptions(187, 1, 0,
 				CONFIG_IDS.length * 64 , 0, 1, 2, 3);
 	}
 
@@ -251,7 +251,7 @@ public final class MusicsManager implements Serializable {
 		if (musicId == -2) {
 			playingMusic = musicId;
 			player.getPackets().sendMusic(-1);
-			player.getPackets().sendIComponentText(187, 4, "");
+			player.getPackets().sendTextOnComponent(187, 4, "");
 			return;
 		}
 		player.getPackets().sendMusic(musicId, playingMusic == -1 ? 0 : 100,
@@ -267,7 +267,7 @@ public final class MusicsManager implements Serializable {
 			
 			if (musicName.equals(" "))
 				musicName = Region.getMusicName1(player.getRegionId());
-			player.getPackets().sendIComponentText(187, 4,
+			player.getPackets().sendTextOnComponent(187, 4,
 					musicName != null ? musicName : "");
 			if (!unlockedMusics.contains(musicId)) {
 				addMusic(musicId);

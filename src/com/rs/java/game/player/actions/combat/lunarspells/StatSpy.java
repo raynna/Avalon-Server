@@ -30,16 +30,16 @@ public class StatSpy {
 			other.gfx(new Graphics(736, 0, 100));
 			player.getInterfaceManager().sendTab(player.getInterfaceManager().hasRezizableScreen() ? 114 : 174, 523);
 			player.getInterfaceManager().openGameTab(3);
-			player.getPackets().sendIComponentText(523, 103,
+			player.getPackets().sendTextOnComponent(523, 103,
 					"Viewing stats for <br><img=" + other.getRights() + ">" + other.getDisplayName());
 			for (int i = 0; i < 25; i++) {
-				player.getPackets().sendIComponentText(523, start, "" + other.getSkills().getLevel(i));
-				player.getPackets().sendIComponentText(523, end, "99");
+				player.getPackets().sendTextOnComponent(523, start, "" + other.getSkills().getLevel(i));
+				player.getPackets().sendTextOnComponent(523, end, "99");
 				start += 4;
 				end += 4;
 			}
-			player.getPackets().sendIComponentText(523, 98, "120");
-			player.getPackets().sendIComponentText(523, 106, "Hitpoints: " + other.getHitpoints());
+			player.getPackets().sendTextOnComponent(523, 98, "120");
+			player.getPackets().sendTextOnComponent(523, 106, "Hitpoints: " + other.getHitpoints());
 			player.getSkills().addXp(Skills.MAGIC, xp);
 			player.temporaryAttribute().put("LAST_SPELL", Utils.currentTimeMillis());
 			other.message("Your stats are being spied on by " + player.getDisplayName() + ".");

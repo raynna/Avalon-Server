@@ -219,9 +219,9 @@ public class WildernessControler extends Controler {
 			double death = player.getDeathCount();
 			double dr = kill / death;
 			player.getInterfaceManager().sendTab(10, 3040);
-			player.getPackets().sendIComponentText(3040, 2, "Kills: " + (int) kill);
-			player.getPackets().sendIComponentText(3040, 3, "Deaths: " + (int) death);
-			player.getPackets().sendIComponentText(3040, 4, "Ratio: " + dr);
+			player.getPackets().sendTextOnComponent(3040, 2, "Kills: " + (int) kill);
+			player.getPackets().sendTextOnComponent(3040, 3, "Deaths: " + (int) death);
+			player.getPackets().sendTextOnComponent(3040, 4, "Ratio: " + dr);
 		}
 	}
 
@@ -232,9 +232,9 @@ public class WildernessControler extends Controler {
 			double death = player.getDeathCount();
 			double dr = kill / death;
 			player.getInterfaceManager().sendTab(10, 3040);
-			player.getPackets().sendIComponentText(3040, 2, "Kills: " + (int) kill);
-			player.getPackets().sendIComponentText(3040, 3, "Deaths: " + (int) death);
-			player.getPackets().sendIComponentText(3040, 4, "Ratio: " + dr);
+			player.getPackets().sendTextOnComponent(3040, 2, "Kills: " + (int) kill);
+			player.getPackets().sendTextOnComponent(3040, 3, "Deaths: " + (int) death);
+			player.getPackets().sendTextOnComponent(3040, 4, "Ratio: " + dr);
 		}
 	}
 
@@ -336,7 +336,7 @@ public class WildernessControler extends Controler {
 			showingSkull = true;
 			player.setCanPvp(true);
 			showSkull();
-			player.getPackets().sendGlobalConfig(1000, player.getSkills().getCombatLevel() + player.getSkills().getSummoningCombatLevel());
+			player.getPackets().sendGlobalVar(1000, player.getSkills().getCombatLevel() + player.getSkills().getSummoningCombatLevel());
 			player.getAppearence().generateAppearenceData();
 			checkBoosts(player);
 		} else if (showingSkull && (isAtWildSafe || !isAtWild)) {
@@ -358,7 +358,7 @@ public class WildernessControler extends Controler {
 			player.getPackets().closeInterface(player.getInterfaceManager().hasRezizableScreen() ? 11 : 0);
 			player.getAppearence().generateAppearenceData();
 			player.getEquipment().refresh(null);
-			player.getPackets().sendGlobalConfig(1000, 0);
+			player.getPackets().sendGlobalVar(1000, 0);
 		}
 	}
 

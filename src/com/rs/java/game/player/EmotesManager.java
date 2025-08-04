@@ -1055,7 +1055,7 @@ public final class EmotesManager implements Serializable {
 
 	void refreshListConfigs() {
 		if (unlockedEmotes.contains(24) && unlockedEmotes.contains(25))
-			player.getPackets().sendConfig(465, 7); // goblin quest emotes
+			player.getPackets().sendVar(465, 7); // goblin quest emotes
 		int value1 = 0;
 		if (unlockedEmotes.contains(32))
 			value1 += 1;
@@ -1066,10 +1066,10 @@ public final class EmotesManager implements Serializable {
 		if (unlockedEmotes.contains(31))
 			value1 += 8;
 		if (value1 > 0)
-			player.getPackets().sendConfig(802, value1); // stronghold of
+			player.getPackets().sendVar(802, value1); // stronghold of
 		// security emotes
 		if (unlockedEmotes.contains(36))
-			player.getPackets().sendConfig(1085, 249852); // hallowen hand
+			player.getPackets().sendVar(1085, 249852); // hallowen hand
 		// emote
 		int value2 = 0;
 		if (unlockedEmotes.contains(29))
@@ -1105,26 +1105,26 @@ public final class EmotesManager implements Serializable {
 		if (unlockedEmotes.contains(45))
 			value2 += 32768;
 		if (value2 > 0)
-			player.getPackets().sendConfig(313, value2); //
-		player.getPackets().sendConfig(313, 1);
+			player.getPackets().sendVar(313, value2); //
+		player.getPackets().sendVar(313, 1);
 		if (unlockedEmotes.contains(47))
-			player.getPackets().sendConfig(818, 1);
-		player.getPackets().sendConfig(465, 7);
-		player.getPackets().sendConfig(802, -1);
-		player.getPackets().sendConfig(1085, 249852);
-		player.getPackets().sendConfig(313, -1);
-		player.getPackets().sendConfig(2033, 1043648799);
-		player.getPackets().sendConfig(2032, 7341);
-		player.getPackets().sendConfig(1921, -893736236);
-		player.getPackets().sendConfig(1404, 123728213);
-		player.getPackets().sendConfig(2169, -1);
-		player.getPackets().sendConfig(2230, -1);
-		player.getPackets().sendConfig(1597, -1);
-		player.getPackets().sendConfig(1842, -1);
-		player.getPackets().sendConfig(2432, -1);
-		player.getPackets().sendConfig(1958, 534);
-		player.getPackets().sendConfig(2405, -1);
-		player.getPackets().sendConfig(2458, -1);
+			player.getPackets().sendVar(818, 1);
+		player.getPackets().sendVar(465, 7);
+		player.getPackets().sendVar(802, -1);
+		player.getPackets().sendVar(1085, 249852);
+		player.getPackets().sendVar(313, -1);
+		player.getPackets().sendVar(2033, 1043648799);
+		player.getPackets().sendVar(2032, 7341);
+		player.getPackets().sendVar(1921, -893736236);
+		player.getPackets().sendVar(1404, 123728213);
+		player.getPackets().sendVar(2169, -1);
+		player.getPackets().sendVar(2230, -1);
+		player.getPackets().sendVar(1597, -1);
+		player.getPackets().sendVar(1842, -1);
+		player.getPackets().sendVar(2432, -1);
+		player.getPackets().sendVar(1958, 534);
+		player.getPackets().sendVar(2405, -1);
+		player.getPackets().sendVar(2458, -1);
 	}
 
 	public long getNextEmoteEnd() {
@@ -1136,7 +1136,7 @@ public final class EmotesManager implements Serializable {
 	}
 
 	public void unlockEmotesBook() {
-		player.getPackets().sendUnlockIComponentOptionSlots(590, 8, 0, 118, 0, 1);
+		player.getPackets().sendUnlockOptions(590, 8, 0, 118, 0, 1);
 	}
 }
 

@@ -70,7 +70,7 @@ public class Summoning {
 		player.getSkills().drainSummoning(pouch.getSummoningCost());
 		player.setFamiliar(npc);
 		player.getSkills().addXp(Skills.SUMMONING, 10);
-		player.getPackets().sendGlobalConfig(168, 8);
+		player.getPackets().sendGlobalVar(168, 8);
 	}
 
 	public static Familiar createFamiliar(Player player, Pouch pouch) {
@@ -345,7 +345,7 @@ public class Summoning {
 		player.getPackets().sendPouchInfusionOptionsScript(POUCHES_INTERFACE, 16, 78, 8, 10, "Infuse<col=FF9040>",
 				"Infuse-5<col=FF9040>", "Infuse-10<col=FF9040>", "Infuse-X<col=FF9040>", "Infuse-All<col=FF9040>",
 				"List<col=FF9040>");
-		player.getPackets().sendIComponentSettings(POUCHES_INTERFACE, 16, 0, 462, 190);
+		player.getPackets().sendComponentSettings(POUCHES_INTERFACE, 16, 0, 462, 190);
 		player.temporaryAttribute().put("infusing_scroll", false);
 	}
 
@@ -354,7 +354,7 @@ public class Summoning {
 		player.getPackets().sendScrollInfusionOptionsScript(SCROLLS_INTERFACE, 16, 78, 8, 10, "Transform<col=FF9040>",
 				"Transform-5<col=FF9040>", "Transform-10<col=FF9040>", "Transform-X<col=FF9040>",
 				"Transform-All<col=FF9040>");
-		player.getPackets().sendIComponentSettings(SCROLLS_INTERFACE, 16, 0, 462, 126);
+		player.getPackets().sendComponentSettings(SCROLLS_INTERFACE, 16, 0, 462, 126);
 		player.temporaryAttribute().put("infusing_scroll", true);
 	}
 

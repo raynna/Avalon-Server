@@ -14,9 +14,9 @@ public class BarrowDrop extends Dialogue {
 		slotId = (Integer) parameters[0];
 		item = (Item) parameters[1];
 		player.getInterfaceManager().sendChatBoxInterface(1183);
-		player.getPackets().sendIComponentText(1183, 12, "This item will break as it touches the ground.");
-		player.getPackets().sendIComponentText(1183, 22, "Are you sure you want to drop this object?");
-		player.getPackets().sendIComponentText(1183, 7, item.getName());
+		player.getPackets().sendTextOnComponent(1183, 12, "This item will break as it touches the ground.");
+		player.getPackets().sendTextOnComponent(1183, 22, "Are you sure you want to drop this object?");
+		player.getPackets().sendTextOnComponent(1183, 7, item.getName());
 		player.getPackets().sendItemOnIComponent(1183, 13, item.getId(), 1);
 	}
 

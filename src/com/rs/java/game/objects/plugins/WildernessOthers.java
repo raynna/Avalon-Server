@@ -87,22 +87,22 @@ public class WildernessOthers extends ObjectPlugin {
 			if (player.withinDistance(new WorldTile(1598, 4504, 0), 1)) {// PORTAL
 				// 1
 				player.getInterfaceManager().sendInterface(327);
-				player.getPackets().sendIComponentText(327, 13, "Edgeville");
-				player.getPackets().sendIComponentText(327, 14, "This portal will take you to edgeville. There "
+				player.getPackets().sendTextOnComponent(327, 13, "Edgeville");
+				player.getPackets().sendTextOnComponent(327, 14, "This portal will take you to edgeville. There "
 						+ "you can multi pk once past the wilderness ditch.");
 			}
 			if (player.withinDistance(new WorldTile(1598, 4508, 0), 1)) {// PORTAL
 				// 2
 				player.getInterfaceManager().sendInterface(327);
-				player.getPackets().sendIComponentText(327, 13, "Mage Bank");
-				player.getPackets().sendIComponentText(327, 14, "This portal will take you to the mage bank. "
+				player.getPackets().sendTextOnComponent(327, 13, "Mage Bank");
+				player.getPackets().sendTextOnComponent(327, 14, "This portal will take you to the mage bank. "
 						+ "The mage bank is a 1v1 deep wilderness area.");
 			}
 			if (player.withinDistance(new WorldTile(1598, 4513, 0), 1)) {// PORTAL
 				// 3
 				player.getInterfaceManager().sendInterface(327);
-				player.getPackets().sendIComponentText(327, 13, "Magic's Portal");
-				player.getPackets().sendIComponentText(327, 14,
+				player.getPackets().sendTextOnComponent(327, 13, "Magic's Portal");
+				player.getPackets().sendTextOnComponent(327, 14,
 						"This portal will allow you to teleport to areas that "
 								+ "will allow you to change your magic spell book.");
 			}

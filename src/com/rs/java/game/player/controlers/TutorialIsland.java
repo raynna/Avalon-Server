@@ -86,19 +86,19 @@ public final class TutorialIsland extends Controler {
 		if (getStage() == 1)
 			player.getInterfaceManager().sendSettings();
 		else if (getStage() == 2)
-			player.getPackets().sendConfig(1021, 0); // unflash
+			player.getPackets().sendVar(1021, 0); // unflash
 		else if (getStage() == 5) {
 			player.getInterfaceManager().sendInventory();
 			player.getInventory().unlockInventoryOptions();
 			player.getHintIconsManager().removeUnsavedHintIcon();
 		} else if (getStage() == 6)
-			player.getPackets().sendConfig(1021, 0); // unflash
+			player.getPackets().sendVar(1021, 0); // unflash
 		else if (getStage() == 7)
 			player.getHintIconsManager().removeUnsavedHintIcon();
 		else if (getStage() == 10)
 			player.getInterfaceManager().sendSkills();
 		else if (getStage() == 11)
-			player.getPackets().sendConfig(1021, 0); // unflash
+			player.getPackets().sendVar(1021, 0); // unflash
 		else if (getStage() == 13 || getStage() == 21)
 			player.getHintIconsManager().removeUnsavedHintIcon();
 		refreshStage();
@@ -113,288 +113,288 @@ public final class TutorialIsland extends Controler {
 																	// please
 																	// follow
 																	// intrucions
-			player.getPackets().sendIComponentText(372, 0, "Getting Started");
-			player.getPackets().sendIComponentText(372, 1,
+			player.getPackets().sendTextOnComponent(372, 0, "Getting Started");
+			player.getPackets().sendTextOnComponent(372, 1,
 					"To start the tutorial use your left mouse button to click on the");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 2,
 					Settings.SERVER_NAME + " Guide in this room .He is indicated by a flashing");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 3,
 					"yellow arrow above his head. If you can't see him use your");
-			player.getPackets().sendIComponentText(372, 4, "keyboard arrow keys to rotate the view.");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 4, "keyboard arrow keys to rotate the view.");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 1) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
-			player.getPackets().sendIComponentText(372, 0, "");
-			player.getPackets().sendIComponentText(372, 1, "");
-			player.getPackets().sendIComponentText(372, 2, "Player controls");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 0, "");
+			player.getPackets().sendTextOnComponent(372, 1, "");
+			player.getPackets().sendTextOnComponent(372, 2, "Player controls");
+			player.getPackets().sendTextOnComponent(372, 3,
 					"Please click on the flashing spanner icon found at the buttom");
-			player.getPackets().sendIComponentText(372, 4,
+			player.getPackets().sendTextOnComponent(372, 4,
 					"right of your screen. This will display your player controls.");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
-			player.getPackets().sendConfig(1021, 13); // flashing setting tab
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
+			player.getPackets().sendVar(1021, 13); // flashing setting tab
 		} else if (stage == 2) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
-			player.getPackets().sendIComponentText(372, 0, "Player controls");
-			player.getPackets().sendIComponentText(372, 1,
+			player.getPackets().sendTextOnComponent(372, 0, "Player controls");
+			player.getPackets().sendTextOnComponent(372, 1,
 					"On the side panel you can now see a variety of options from");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 2,
 					"changing the brightness of the screen and of the volume of");
-			player.getPackets().sendIComponentText(372, 3, "music, to selecting whether your player should help");
-			player.getPackets().sendIComponentText(372, 4,
+			player.getPackets().sendTextOnComponent(372, 3, "music, to selecting whether your player should help");
+			player.getPackets().sendTextOnComponent(372, 4,
 					"from other players. Don't worry about these too much for now.");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 3) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
-			player.getPackets().sendIComponentText(372, 0, "Interacting with the scenery");
-			player.getPackets().sendIComponentText(372, 1,
+			player.getPackets().sendTextOnComponent(372, 0, "Interacting with the scenery");
+			player.getPackets().sendTextOnComponent(372, 1,
 					"You can interact with many items of the scenery by simply clicking");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 2,
 					"on them. Right clicking will also give more options. Feel free to");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 3,
 					"try it with the things in this room, then click on the door");
-			player.getPackets().sendIComponentText(372, 4,
+			player.getPackets().sendTextOnComponent(372, 4,
 					"indicated with the yellow arrow to go througth to the next");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 4) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
 			sendProgress(2);
-			player.getPackets().sendIComponentText(372, 0, "Moving around");
-			player.getPackets().sendIComponentText(372, 1,
+			player.getPackets().sendTextOnComponent(372, 0, "Moving around");
+			player.getPackets().sendTextOnComponent(372, 1,
 					"You can interact with many items of the scenery by simply clicking");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 2,
 					"ground will walk you to that point. Talk to the Survival Expert by");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 3,
 					"the pond to continue the tutorial. Remember you can rotate");
-			player.getPackets().sendIComponentText(372, 4, "the view by pressing the arrow keys.");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 4, "the view by pressing the arrow keys.");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 5) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
 			sendProgress(2);
-			player.getPackets().sendIComponentText(372, 0, "Viewing the items that you were given.");
-			player.getPackets().sendIComponentText(372, 1,
+			player.getPackets().sendTextOnComponent(372, 0, "Viewing the items that you were given.");
+			player.getPackets().sendTextOnComponent(372, 1,
 					"Click on the flashing backpack icon to the right hand size of");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 2,
 					"the main window to view your inventory. Your inventory is a list");
-			player.getPackets().sendIComponentText(372, 3, "of everything you have in your backpack.");
-			player.getPackets().sendIComponentText(372, 4, "");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
-			player.getPackets().sendConfig(1021, 5); // flashing inv tab
+			player.getPackets().sendTextOnComponent(372, 3, "of everything you have in your backpack.");
+			player.getPackets().sendTextOnComponent(372, 4, "");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
+			player.getPackets().sendVar(1021, 5); // flashing inv tab
 		} else if (stage == 6) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
 			sendProgress(2);
-			player.getPackets().sendIComponentText(372, 0, "Cut down a tree");
-			player.getPackets().sendIComponentText(372, 1,
+			player.getPackets().sendTextOnComponent(372, 0, "Cut down a tree");
+			player.getPackets().sendTextOnComponent(372, 1,
 					"You can click on the backpack icon at any time to view the");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 2,
 					"items that you currently have in your inventory. You will see");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 3,
 					"that you now have an axe in your inventory. Use this to get");
-			player.getPackets().sendIComponentText(372, 4, "some logs by clicking on one of the trees in the area.");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 4, "some logs by clicking on one of the trees in the area.");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 7) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
 			sendProgress(2);
-			player.getPackets().sendIComponentText(372, 0, "Please wait");
-			player.getPackets().sendIComponentText(372, 1, "");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 0, "Please wait");
+			player.getPackets().sendTextOnComponent(372, 1, "");
+			player.getPackets().sendTextOnComponent(372, 2,
 					"Your character is now attemping to cut down the tree. Sit back");
-			player.getPackets().sendIComponentText(372, 3, "for a moment while he does all the hard work.");
-			player.getPackets().sendIComponentText(372, 4, "");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 3, "for a moment while he does all the hard work.");
+			player.getPackets().sendTextOnComponent(372, 4, "");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 8) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
 			sendProgress(2);
-			player.getPackets().sendIComponentText(372, 0, "Making a fire");
-			player.getPackets().sendIComponentText(372, 1,
+			player.getPackets().sendTextOnComponent(372, 0, "Making a fire");
+			player.getPackets().sendTextOnComponent(372, 1,
 					"Well done! You managed to cut some logs from the tree! Next,");
-			player.getPackets().sendIComponentText(372, 2, "use the tinderbox in your inventory to light the logs.");
-			player.getPackets().sendIComponentText(372, 3, "First click on the tinderbox to 'use' it.");
-			player.getPackets().sendIComponentText(372, 4, "Then click on the logs in your inventory to light them.");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 2, "use the tinderbox in your inventory to light the logs.");
+			player.getPackets().sendTextOnComponent(372, 3, "First click on the tinderbox to 'use' it.");
+			player.getPackets().sendTextOnComponent(372, 4, "Then click on the logs in your inventory to light them.");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 9) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
 			sendProgress(2);
-			player.getPackets().sendIComponentText(372, 0, "Please wait");
-			player.getPackets().sendIComponentText(372, 1, "");
-			player.getPackets().sendIComponentText(372, 2, "Your character is now attemping to light the fire.");
-			player.getPackets().sendIComponentText(372, 3, "This should only take a few seconds.");
-			player.getPackets().sendIComponentText(372, 4, "");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 0, "Please wait");
+			player.getPackets().sendTextOnComponent(372, 1, "");
+			player.getPackets().sendTextOnComponent(372, 2, "Your character is now attemping to light the fire.");
+			player.getPackets().sendTextOnComponent(372, 3, "This should only take a few seconds.");
+			player.getPackets().sendTextOnComponent(372, 4, "");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 10) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
 			sendProgress(2);
-			player.getPackets().sendIComponentText(372, 0, "");
-			player.getPackets().sendIComponentText(372, 1, "");
-			player.getPackets().sendIComponentText(372, 2, "You gained some experience.");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 0, "");
+			player.getPackets().sendTextOnComponent(372, 1, "");
+			player.getPackets().sendTextOnComponent(372, 2, "You gained some experience.");
+			player.getPackets().sendTextOnComponent(372, 3,
 					"Click on the flashing bar graph icon near the inventory button");
-			player.getPackets().sendIComponentText(372, 4, "to see your skill stats.");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
-			player.getPackets().sendConfig(1021, 3); // flashing skills tab
+			player.getPackets().sendTextOnComponent(372, 4, "to see your skill stats.");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
+			player.getPackets().sendVar(1021, 3); // flashing skills tab
 		} else if (stage == 11) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
 			sendProgress(2);
-			player.getPackets().sendIComponentText(372, 0, "Your skill stats");
-			player.getPackets().sendIComponentText(372, 1,
+			player.getPackets().sendTextOnComponent(372, 0, "Your skill stats");
+			player.getPackets().sendTextOnComponent(372, 1,
 					"Here you will see how good your skills are. As you move your");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 2,
 					"mouse over any of the icons in this panel, the small yellow");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 3,
 					"popup box will show you the start amount of experience you");
-			player.getPackets().sendIComponentText(372, 4,
+			player.getPackets().sendTextOnComponent(372, 4,
 					"have and how much is needed to get to the next level. Speak to");
-			player.getPackets().sendIComponentText(372, 5, "the Survival Expert to continue.");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 5, "the Survival Expert to continue.");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 12) {
 			player.getPackets().sendHideIComponent(371, 4, true); // hides the
 																	// please
 																	// follow
 																	// intrucions
 			sendProgress(3);
-			player.getPackets().sendIComponentText(372, 0, "Catch some Shrimp.");
-			player.getPackets().sendIComponentText(372, 1,
+			player.getPackets().sendTextOnComponent(372, 0, "Catch some Shrimp.");
+			player.getPackets().sendTextOnComponent(372, 1,
 					"Click on the sparkling fishing spot indicated by the fishing");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 2,
 					"arrow. Remember, you can check your inventory by clicking the");
-			player.getPackets().sendIComponentText(372, 3, "backpack icon.");
-			player.getPackets().sendIComponentText(372, 4, "");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 3, "backpack icon.");
+			player.getPackets().sendTextOnComponent(372, 4, "");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 13 || stage == 16) {
 			player.getPackets().sendHideIComponent(371, 4, true);
 			sendProgress(3);
-			player.getPackets().sendIComponentText(372, 0, "");
-			player.getPackets().sendIComponentText(372, 1, "");
-			player.getPackets().sendIComponentText(372, 2, "Please wait");
-			player.getPackets().sendIComponentText(372, 3, "This should only take a few seconds.");
-			player.getPackets().sendIComponentText(372, 4,
+			player.getPackets().sendTextOnComponent(372, 0, "");
+			player.getPackets().sendTextOnComponent(372, 1, "");
+			player.getPackets().sendTextOnComponent(372, 2, "Please wait");
+			player.getPackets().sendTextOnComponent(372, 3, "This should only take a few seconds.");
+			player.getPackets().sendTextOnComponent(372, 4,
 					"As you gain Fishing experience you'll find that there are many types");
-			player.getPackets().sendIComponentText(372, 5, "of fish and many ways to catch them.");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 5, "of fish and many ways to catch them.");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 14) {
 			player.getPackets().sendHideIComponent(371, 4, true);
 			sendProgress(3);
-			player.getPackets().sendIComponentText(372, 0, "Cooking your shrimp");
-			player.getPackets().sendIComponentText(372, 1, "");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 0, "Cooking your shrimp");
+			player.getPackets().sendTextOnComponent(372, 1, "");
+			player.getPackets().sendTextOnComponent(372, 2,
 					"Now you have caught some shrimp, let's cook it. First light a fire: chop");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 3,
 					"down a tree and then use a tinderbox on the logs. If you've lost");
-			player.getPackets().sendIComponentText(372, 4, "your hatchet or tinderbox! Brynna will give you another.");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 4, "your hatchet or tinderbox! Brynna will give you another.");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 15 || stage == 17) {
 			player.getPackets().sendHideIComponent(371, 4, true);
 			sendProgress(3);
-			player.getPackets().sendIComponentText(372, 0, "Burning your shrimp");
-			player.getPackets().sendIComponentText(372, 1, "");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 0, "Burning your shrimp");
+			player.getPackets().sendTextOnComponent(372, 1, "");
+			player.getPackets().sendTextOnComponent(372, 2,
 					"You have just burnt your first shrimp. This is normal. As you get");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 3,
 					"more experience in Cooking, you will burn stuff less often. Let's try");
-			player.getPackets().sendIComponentText(372, 4,
+			player.getPackets().sendTextOnComponent(372, 4,
 					"cooking without burning it this time. First catch some more shrimp,");
-			player.getPackets().sendIComponentText(372, 5, "then use it on a fire.");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 5, "then use it on a fire.");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 18) {
 			player.getPackets().sendHideIComponent(371, 4, true);
 			sendProgress(3);
-			player.getPackets().sendIComponentText(372, 0, "");
-			player.getPackets().sendIComponentText(372, 1, "Well done, you've just cooked your first RuneScape meal.");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 0, "");
+			player.getPackets().sendTextOnComponent(372, 1, "Well done, you've just cooked your first RuneScape meal.");
+			player.getPackets().sendTextOnComponent(372, 2,
 					"If you'd like a recap on anything you've learnt so far speak to the");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 3,
 					"Survival Expert. You can now move on the next instructor. Click");
-			player.getPackets().sendIComponentText(372, 4,
+			player.getPackets().sendTextOnComponent(372, 4,
 					"on the gate shown and follow the path. Remember, you can move the");
-			player.getPackets().sendIComponentText(372, 5, "camera with the arrow keys.");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 5, "camera with the arrow keys.");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 19) {
 			player.getPackets().sendHideIComponent(371, 4, true);
 			sendProgress(4);
-			player.getPackets().sendIComponentText(372, 0, "Find your next instructor");
-			player.getPackets().sendIComponentText(372, 1, "");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 0, "Find your next instructor");
+			player.getPackets().sendTextOnComponent(372, 1, "");
+			player.getPackets().sendTextOnComponent(372, 2,
 					"Follow the path until you get to the door with the yellow arrow above");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 3,
 					"it. Click on the door to open it. Notice the mini map in the top right,");
-			player.getPackets().sendIComponentText(372, 4,
+			player.getPackets().sendTextOnComponent(372, 4,
 					"this shows a top down view of the area arround you. This can also");
-			player.getPackets().sendIComponentText(372, 5, "be used tor navigation.");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 5, "be used tor navigation.");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 20) {
 			player.getPackets().sendHideIComponent(371, 4, true);
 			sendProgress(4);
-			player.getPackets().sendIComponentText(372, 0, "Find your next instructor");
-			player.getPackets().sendIComponentText(372, 1, "");
-			player.getPackets().sendIComponentText(372, 2,
+			player.getPackets().sendTextOnComponent(372, 0, "Find your next instructor");
+			player.getPackets().sendTextOnComponent(372, 1, "");
+			player.getPackets().sendTextOnComponent(372, 2,
 					"Talk to the chef indicated. He will teach you the more advanced");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 3,
 					"aspects of Cocking such as combiding ingredients. He will also teach");
-			player.getPackets().sendIComponentText(372, 4, "you about your Music Player.");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 4, "you about your Music Player.");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		} else if (stage == 21) {
 			player.getPackets().sendHideIComponent(371, 4, true);
 			sendProgress(4);
-			player.getPackets().sendIComponentText(372, 0, "Making dough");
-			player.getPackets().sendIComponentText(372, 1, "");
-			player.getPackets().sendIComponentText(372, 2, "This is the base of the meals. To make dough we must mix");
-			player.getPackets().sendIComponentText(372, 3,
+			player.getPackets().sendTextOnComponent(372, 0, "Making dough");
+			player.getPackets().sendTextOnComponent(372, 1, "");
+			player.getPackets().sendTextOnComponent(372, 2, "This is the base of the meals. To make dough we must mix");
+			player.getPackets().sendTextOnComponent(372, 3,
 					"flour and water. First right click the bucket of water and select use,");
-			player.getPackets().sendIComponentText(372, 4, "then left click on the pot of flour.");
-			player.getPackets().sendIComponentText(372, 5, "");
-			player.getPackets().sendIComponentText(372, 6, "");
+			player.getPackets().sendTextOnComponent(372, 4, "then left click on the pot of flour.");
+			player.getPackets().sendTextOnComponent(372, 5, "");
+			player.getPackets().sendTextOnComponent(372, 6, "");
 		}
 	}
 
 	public void sendProgress(int progress) {
-		player.getPackets().sendConfig(406, progress);
+		player.getPackets().sendVar(406, progress);
 	}
 
 	/*

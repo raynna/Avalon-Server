@@ -324,9 +324,9 @@ public final class Barrows extends Controler {
                 resetHeadTimer();
                 return;
             }
-            player.getPackets().sendGlobalConfig(1043, 0);
+            player.getPackets().sendGlobalVar(1043, 0);
             headComponentId = 9 + Utils.random(10);
-            player.getPackets().sendGlobalConfig(1043, 4761 + headIndex);
+            player.getPackets().sendGlobalVar(1043, 4761 + headIndex);
 //			player.getPackets().sendItemOnIComponent(24, headComponentId, 4761 + headIndex, 0);
 //			player.getPackets().sendIComponentAnimation(9810, 24, headComponentId);
             int activeLevel = player.getPrayer().getPrayerPoints();
@@ -336,7 +336,7 @@ public final class Barrows extends Controler {
             }
             timer = 3;
         } else {
-            player.getPackets().sendGlobalConfig(1043, 0);
+            player.getPackets().sendGlobalVar(1043, 0);
             player.getPackets().sendItemOnIComponent(24, headComponentId, -1, 0);
             headComponentId = 0;
             resetHeadTimer();
@@ -369,12 +369,12 @@ public final class Barrows extends Controler {
     }
 
     public void sendBrotherSlain(int index, boolean slain) {
-        player.getPackets().sendConfigByFile(457 + index, slain ? 1 : 0);
+        player.getPackets().sendVarBit(457 + index, slain ? 1 : 0);
     }
 
     public void sendCreaturesSlainCount(int count) {
-        player.getPackets().sendIComponentText(24, 6, Utils.format(count));
-        player.getPackets().sendConfigByFile(464, count);
+        player.getPackets().sendTextOnComponent(24, 6, Utils.format(count));
+        player.getPackets().sendVarBit(464, count);
     }
 
     @Override

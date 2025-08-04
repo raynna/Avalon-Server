@@ -182,7 +182,7 @@ public class DuelControler extends Controler {
 				player.temporaryAttribute().put("DuelTarget", target);
 				player.getInterfaceManager().sendInterface(640);
 				player.temporaryAttribute().put("WillDuelFriendly", true);
-				player.getPackets().sendConfig(283, 67108864);
+				player.getPackets().sendVar(283, 67108864);
 			}
 		});
 		player.faceEntity(target);

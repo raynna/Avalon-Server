@@ -98,7 +98,7 @@ public class QuestTab extends CustomTab {
 			if (store != null) {
 				player.getPackets().sendHideIComponent("interface.quest_tab", store.compId, false);
 				if (store.text(player) != null)
-					player.getPackets().sendIComponentText("interface.quest_tab", store.compId, store.text(player));
+					player.getPackets().sendTextOnComponent("interface.quest_tab", store.compId, store.text(player));
 			}
 		}
 	}

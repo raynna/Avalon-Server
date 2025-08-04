@@ -288,7 +288,7 @@ public abstract class Dialogue {
 			params[i++] = string;
 		}
 
-		player.getPackets().sendIComponentText(1188, 20, title);
+		player.getPackets().sendTextOnComponent(1188, 20, title);
 		player.getPackets().sendRunScript(5589, params);
 		return true;
 	}
@@ -305,7 +305,7 @@ public abstract class Dialogue {
 			params[i++] = string;
 		}
 
-		player.getPackets().sendIComponentText(1188, 20, title);
+		player.getPackets().sendTextOnComponent(1188, 20, title);
 		player.getPackets().sendRunScript(5589, params);
 		return true;
 	}
@@ -340,11 +340,11 @@ public abstract class Dialogue {
 		if (type == IS_ITEM) {
 			player.getInterfaceManager().sendChatBoxInterface(1190);
 			player.getPackets().sendItemOnIComponent(1190, 1, entityId, animationId);
-			player.getPackets().sendIComponentText(1190, 4, text);
+			player.getPackets().sendTextOnComponent(1190, 4, text);
 		} else {
 			player.getInterfaceManager().sendChatBoxInterface(1192);
-			player.getPackets().sendIComponentText(1192, 16, title);
-			player.getPackets().sendIComponentText(1192, 12, text);
+			player.getPackets().sendTextOnComponent(1192, 16, title);
+			player.getPackets().sendTextOnComponent(1192, 12, text);
 			player.getPackets().sendEntityOnIComponent(type == IS_PLAYER, entityId, 1192, 11);
 			if (animationId != -1)
 				player.getPackets().sendIComponentAnimation(animationId, 1192, 11);
@@ -376,8 +376,8 @@ public abstract class Dialogue {
 			player.getInterfaceManager().sendChatBoxInterface(1185);
 			player.getPackets().sendItemOnIComponent(1185, 4, item1[0], item1[1]);
 			player.getPackets().sendItemOnIComponent(1185, 5, item2[0], item2[1]);
-			player.getPackets().sendIComponentText(1185, 20, option1);
-			player.getPackets().sendIComponentText(1185, 25, option2);
+			player.getPackets().sendTextOnComponent(1185, 20, option1);
+			player.getPackets().sendTextOnComponent(1185, 25, option2);
 		}
 		return true;
 	}
@@ -390,22 +390,22 @@ public abstract class Dialogue {
 		String text = builder.toString();
 		if (type == IS_NPC) {
 			player.getInterfaceManager().sendChatBoxInterface(1184);
-			player.getPackets().sendIComponentText(1184, 17, title);
-			player.getPackets().sendIComponentText(1184, 13, text);
+			player.getPackets().sendTextOnComponent(1184, 17, title);
+			player.getPackets().sendTextOnComponent(1184, 13, text);
 			player.getPackets().sendNPCOnIComponent(1184, 11, entityId);
 			if (animationId != -1)
 				player.getPackets().sendIComponentAnimation(animationId, 1184, 11);
 		} else if (type == IS_PLAYER) {
 			player.getInterfaceManager().sendChatBoxInterface(1191);
-			player.getPackets().sendIComponentText(1191, 8, title);
-			player.getPackets().sendIComponentText(1191, 17, text);
+			player.getPackets().sendTextOnComponent(1191, 8, title);
+			player.getPackets().sendTextOnComponent(1191, 17, text);
 			player.getPackets().sendPlayerOnIComponent(1191, 15);
 			if (animationId != -1)
 				player.getPackets().sendIComponentAnimation(animationId, 1191, 15);
 		} else if (type == IS_ITEM) {
 			player.getInterfaceManager().sendChatBoxInterface(1189);
 			player.getPackets().sendItemOnIComponent(1189, 1, entityId, animationId);
-			player.getPackets().sendIComponentText(1189, 4, text);
+			player.getPackets().sendTextOnComponent(1189, 4, text);
 		}
 		return true;
 	}
@@ -416,7 +416,7 @@ public abstract class Dialogue {
 			builder.append((line == 0 ? "<p=" + getP() + ">" : "<br>") + texts[line]);
 		String text = builder.toString();
 		player.getInterfaceManager().sendChatBoxInterface(1186);
-		player.getPackets().sendIComponentText(1186, 1, text);
+		player.getPackets().sendTextOnComponent(1186, 1, text);
 		return true;
 	}
 
@@ -437,7 +437,7 @@ public abstract class Dialogue {
 		if (talkDefinitons.length != componentOptions.length)
 			return false;
 		for (int childOptionId = 0; childOptionId < componentOptions.length; childOptionId++)
-			player.getPackets().sendIComponentText(interId, componentOptions[childOptionId],
+			player.getPackets().sendTextOnComponent(interId, componentOptions[childOptionId],
 					talkDefinitons[childOptionId]);
 		if (type == IS_PLAYER || type == IS_NPC) {
 			player.getPackets().sendEntityOnIComponent(type == IS_PLAYER, entityId, interId, 2);
@@ -469,7 +469,7 @@ public abstract class Dialogue {
 		String texts = builder.toString();
 		int amount = 1;
 		player.getInterfaceManager().sendChatBoxInterface(1189);
-		player.getPackets().sendIComponentText(1189, 4, texts);
+		player.getPackets().sendTextOnComponent(1189, 4, texts);
 		player.getPackets().sendItemOnIComponent(1189, 1, item, amount);
 		return true;
 	}
@@ -481,7 +481,7 @@ public abstract class Dialogue {
 		String texts = builder.toString();
 		int amount = 1;
 		player.getInterfaceManager().sendChatBoxInterface(1189);
-		player.getPackets().sendIComponentText(1189, 4, texts);
+		player.getPackets().sendTextOnComponent(1189, 4, texts);
 		player.getPackets().sendItemOnIComponent(1189, 1, item, amount);
 		return true;
 	}

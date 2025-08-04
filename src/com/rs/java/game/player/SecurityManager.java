@@ -182,10 +182,10 @@ public class SecurityManager implements Serializable {
 		}
 		player.getInterfaceManager().sendInterface(275);
 		for (int i = 0; i < 100; i++)
-			player.getPackets().sendIComponentText(275, i, "");
-		player.getPackets().sendIComponentText(275, 1, "Registered email(s)");
+			player.getPackets().sendTextOnComponent(275, i, "");
+		player.getPackets().sendTextOnComponent(275, 1, "Registered email(s)");
 		for (int i = 0; i < Email.size(); i++) {
-			player.getPackets().sendIComponentText(275, 10 + i, Email.get(i));
+			player.getPackets().sendTextOnComponent(275, 10 + i, Email.get(i));
 		}
 		UpdateLastChanged();
 	}
@@ -197,14 +197,14 @@ public class SecurityManager implements Serializable {
 		int unknownIPS = 0;
 		player.getInterfaceManager().sendInterface(275);
 		for (int i = 0; i < 100; i++)
-			player.getPackets().sendIComponentText(275, i, "");
-		player.getPackets().sendIComponentText(275, 1, "Registered IP(s)");
+			player.getPackets().sendTextOnComponent(275, i, "");
+		player.getPackets().sendTextOnComponent(275, 1, "Registered IP(s)");
 		for (int i = 0; i < IPS.size(); i++) {
-			player.getPackets().sendIComponentText(275, 10 + i,
+			player.getPackets().sendTextOnComponent(275, 10 + i,
 					IPS.get(i) + " - " + Utils.getCountryName(IPS.get(i), true));
 			if (!player.getSession().getIP().equalsIgnoreCase(IPS.get(i)))
 				unknownIPS++;
-			player.getPackets().sendIComponentText(275, IPS.size() + 14, "<col=ff0000> There are " + unknownIPS
+			player.getPackets().sendTextOnComponent(275, IPS.size() + 14, "<col=ff0000> There are " + unknownIPS
 					+ (unknownIPS > 1 ? " IPS" : " IP") + " that does not match to yours.");
 
 		}

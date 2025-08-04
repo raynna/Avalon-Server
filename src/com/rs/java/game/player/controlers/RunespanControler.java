@@ -1037,8 +1037,8 @@ public class RunespanControler extends Controler {
 	public void start() {
 		sendInterfaces();
 		refreshInventoryPoints();
-		player.getPackets().sendGlobalConfig(1917, getCurrentFloor());
-		player.getPackets().sendGlobalConfig(1918, 0); // no runesphere active
+		player.getPackets().sendGlobalVar(1917, getCurrentFloor());
+		player.getPackets().sendGlobalVar(1918, 0); // no runesphere active
 		startTime = Utils.currentTimeMillis();
 		player.getDialogueManager().startDialogue("SimpleMessage", "Welcome To the Runespan ",
 				"WARNING:When you leave all the runes you make here will be removed and",
@@ -1144,8 +1144,8 @@ public class RunespanControler extends Controler {
 	@Override
 	public void sendInterfaces() {
 		player.getInterfaceManager().sendOverlay(1274, false);
-		player.getPackets().sendIComponentText(1274, 5, Integer.toString(player.getRunespanPoints()));
-		player.getPackets().sendIComponentText(1274, 2, Integer.toString(player.getInventoryPoints()));
+		player.getPackets().sendTextOnComponent(1274, 5, Integer.toString(player.getRunespanPoints()));
+		player.getPackets().sendTextOnComponent(1274, 2, Integer.toString(player.getInventoryPoints()));
 		refreshInventoryPoints();
 	}
 
@@ -1176,8 +1176,8 @@ public class RunespanControler extends Controler {
 	 * Refresh screen interface.
 	 */
 	public void refreshInventoryPoints() {
-		player.getPackets().sendIComponentText(1274, 5, Integer.toString(player.getRunespanPoints()));
-		player.getPackets().sendIComponentText(1274, 2, Integer.toString(player.getInventoryPoints()));
+		player.getPackets().sendTextOnComponent(1274, 5, Integer.toString(player.getRunespanPoints()));
+		player.getPackets().sendTextOnComponent(1274, 2, Integer.toString(player.getInventoryPoints()));
 	}
 
 	@Override
@@ -1380,7 +1380,7 @@ public class RunespanControler extends Controler {
 					player.animate(new Animation(-1));
 				}
 			}, 3);
-			player.getPackets().sendGlobalConfig(1917, 2);
+			player.getPackets().sendGlobalVar(1917, 2);
 			return false;
 		} else if (object.getId() == 70509) {
 			player.useStairs(16675, VINE_LADDER, 2, 3);
@@ -1395,7 +1395,7 @@ public class RunespanControler extends Controler {
 					player.animate(new Animation(-1));
 				}
 			}, 1);
-			player.getPackets().sendGlobalConfig(1917, 1);
+			player.getPackets().sendGlobalVar(1917, 1);
 			return false;
 		} else if (object.getId() == 70510) {
 			player.useStairs(16668, HIGHEST_LEVEL, 4, 5);
@@ -1410,7 +1410,7 @@ public class RunespanControler extends Controler {
 					player.animate(new Animation(-1));
 				}
 			}, 1);
-			player.getPackets().sendGlobalConfig(1917, 2);
+			player.getPackets().sendGlobalVar(1917, 2);
 			return false;
 		} else if (object.getId() == 70511) {
 			player.useStairs(16675, BONE_LADDER, 2, 3);
@@ -1425,7 +1425,7 @@ public class RunespanControler extends Controler {
 					player.animate(new Animation(-1));
 				}
 			}, 3);
-			player.getPackets().sendGlobalConfig(1917, 1);
+			player.getPackets().sendGlobalVar(1917, 1);
 			return false;
 		}
 		return !handlePlataform(object);

@@ -260,11 +260,11 @@ public class CreationKiln {
 	public void openKilnInterface() {
 		player.getInterfaceManager().sendInterface(813);
 		for (int config : GLOBALCONFIG)
-			player.getPackets().sendGlobalConfig(config, 0);
+			player.getPackets().sendGlobalVar(config, 0);
 		int i = 0;
 		for (int clay : clayIds) {
 			if (player.getInventory().containsOneItem(clay)) {
-				player.getPackets().sendGlobalConfig(GLOBALCONFIG[i], 1);
+				player.getPackets().sendGlobalVar(GLOBALCONFIG[i], 1);
 			}
 			i++;
 		}

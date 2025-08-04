@@ -210,7 +210,7 @@ public class AssistManager {
 	 */
 	public void Open() {
 		player.getInterfaceManager().sendInterface(301);
-		player.getPackets().sendIComponentText(301, 73,
+		player.getPackets().sendTextOnComponent(301, 73,
 				"Assist System XP Display - You are assisting " + AssistingWho + ".");
 		player.getPackets().sendHideIComponent(301, 10, true);
 		Refresh();
@@ -220,8 +220,8 @@ public class AssistManager {
 	 * Refresh.
 	 */
 	public void Refresh() {
-		player.getPackets().sendConfig(1087, Integer.MAX_VALUE);
-		player.getPackets().sendIComponentText(301, 84, String.valueOf(TotalXPGained));
+		player.getPackets().sendVar(1087, Integer.MAX_VALUE);
+		player.getPackets().sendTextOnComponent(301, 84, String.valueOf(TotalXPGained));
 	}
 
 	/**

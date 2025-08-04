@@ -102,7 +102,7 @@ public final class Poison implements Serializable {
 	public void refresh() {
 		if (entity instanceof Player) {
 			Player player = ((Player) entity);
-			player.getPackets().sendConfig(102, isPoisoned() ? 1 : 0);
+			player.getPackets().sendVar(102, isPoisoned() ? 1 : 0);
 		}
 	}
 

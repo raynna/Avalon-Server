@@ -83,11 +83,11 @@ public final class Pet extends NPC {
 		unlockOrb();
 		if (pet == Pets.TROLL_BABY || pet.getFood().length > 0) {
 			details.updateHunger(0.025);
-			owner.getPackets().sendConfigByFile(4286, (int) details.getHunger());
+			owner.getPackets().sendVarBit(4286, (int) details.getHunger());
 		}
 		if (growthRate > 0.000) {
 			details.updateGrowth(growthRate);
-			owner.getPackets().sendConfigByFile(4285, (int) details.getGrowth());
+			owner.getPackets().sendVarBit(4285, (int) details.getGrowth());
 			if (details.getGrowth() == 100.0) {
 				growNextStage();
 			}
@@ -138,7 +138,7 @@ public final class Pet extends NPC {
 		owner.getPetManager().setItemId(-1);
 		switchOrb(false);
 		owner.getPackets().closeInterface(owner.getInterfaceManager().hasRezizableScreen() ? 98 : 212);
-		owner.getPackets().sendIComponentSettings(747, 17, 0, 0, 0);
+		owner.getPackets().sendComponentSettings(747, 17, 0, 0, 0);
 		finish();
 	}
 
@@ -147,7 +147,7 @@ public final class Pet extends NPC {
 		owner.getPetManager().setItemId(-1);
 		owner.getPetManager().removeDetails(owner.getPet().getItemId());
 		owner.getInterfaceManager().sendInterfaces();
-		owner.getPackets().sendIComponentSettings(747, 17, 0, 0, 0);
+		owner.getPackets().sendComponentSettings(747, 17, 0, 0, 0);
 		if (owner.getPet() != null) {
 			owner.getPet().switchOrb(false);
 			owner.getPet().finish();
@@ -227,9 +227,9 @@ public final class Pet extends NPC {
 	 */
 	public void sendMainConfigurations() {
 		switchOrb(true);
-		owner.getPackets().sendConfig(448, itemId);// configures
-		owner.getPackets().sendConfig(1160, 243269632); // sets npc emote
-		owner.getPackets().sendGlobalConfig(1436, 0);
+		owner.getPackets().sendVar(448, itemId);// configures
+		owner.getPackets().sendVar(1160, 243269632); // sets npc emote
+		owner.getPackets().sendGlobalVar(1436, 0);
 		unlockOrb(); // temporary
 	}
 
@@ -237,12 +237,12 @@ public final class Pet extends NPC {
 	 * Sends the follower details.
 	 */
 	public void sendFollowerDetails() {
-		owner.getPackets().sendConfigByFile(4285, (int) details.getGrowth());
-		owner.getPackets().sendConfigByFile(4286, (int) details.getHunger());
+		owner.getPackets().sendVarBit(4285, (int) details.getGrowth());
+		owner.getPackets().sendVarBit(4286, (int) details.getHunger());
 		boolean res = owner.getInterfaceManager().hasRezizableScreen();
 		owner.getPackets().sendInterface(true, res ? 746 : 548, res ? 119 : 179, 662);
 		unlock();
-		owner.getPackets().sendGlobalConfig(168, 8);// tab id
+		owner.getPackets().sendGlobalVar(168, 8);// tab id
 	}
 
 	/**
@@ -252,7 +252,7 @@ public final class Pet extends NPC {
 	 *            If the orb should be enabled.
 	 */
 	public void switchOrb(boolean enable) {
-		owner.getPackets().sendConfig(1174, enable ? getId() : 0);
+		owner.getPackets().sendVar(1174, enable ? getId() : 0);
 		if (enable) {
 			unlock();
 			return;

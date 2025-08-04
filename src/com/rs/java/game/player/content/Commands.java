@@ -436,60 +436,60 @@ public final class Commands {
 
                 case "teles":
                     player.getInterfaceManager().sendInterface(275);
-                    player.getPackets().sendIComponentText(275, 1, "*Teleports*");
-                    player.getPackets().sendIComponentText(275, 10, "");
-                    player.getPackets().sendIComponentText(275, 11,
+                    player.getPackets().sendTextOnComponent(275, 1, "*Teleports*");
+                    player.getPackets().sendTextOnComponent(275, 10, "");
+                    player.getPackets().sendTextOnComponent(275, 11,
                             "::zerk *Teleports to western side of edgeville. SINGLE");
-                    player.getPackets().sendIComponentText(275, 12, "::easts *Teleports to lvl 20 east dragons. SINGLE");
-                    player.getPackets().sendIComponentText(275, 13, "::wests *Teleports to lvl 13 west dragons. SINGLE");
-                    player.getPackets().sendIComponentText(275, 14, "::mb *Teleports inside the mage bank. NOT WILDY");
-                    player.getPackets().sendIComponentText(275, 15,
+                    player.getPackets().sendTextOnComponent(275, 12, "::easts *Teleports to lvl 20 east dragons. SINGLE");
+                    player.getPackets().sendTextOnComponent(275, 13, "::wests *Teleports to lvl 13 west dragons. SINGLE");
+                    player.getPackets().sendTextOnComponent(275, 14, "::mb *Teleports inside the mage bank. NOT WILDY");
+                    player.getPackets().sendTextOnComponent(275, 15,
                             "::brid *Teleports to west side of edgeville wilderness. SINGLE");
-                    player.getPackets().sendIComponentText(275, 16, "::gdz *Teleports to Greater demons in lvl 48. MULTI");
-                    player.getPackets().sendIComponentText(275, 17,
+                    player.getPackets().sendTextOnComponent(275, 16, "::gdz *Teleports to Greater demons in lvl 48. MULTI");
+                    player.getPackets().sendTextOnComponent(275, 17,
                             "::44ports *Teleports to lvl 44 wilderness portal. SINGLE");
-                    player.getPackets().sendIComponentText(275, 18,
+                    player.getPackets().sendTextOnComponent(275, 18,
                             "::iceplatue *Teleports to ice platue in lvl 50 wilderness. SINGLE");
-                    player.getPackets().sendIComponentText(275, 19,
+                    player.getPackets().sendTextOnComponent(275, 19,
                             "::kbd *Teleports outside king black dragon lair. MULTI");
-                    player.getPackets().sendIComponentText(275, 20,
+                    player.getPackets().sendTextOnComponent(275, 20,
                             "::50ports *Teleports to lvl 50 wilderness portal. MULTI");
-                    player.getPackets().sendIComponentText(275, 21,
+                    player.getPackets().sendTextOnComponent(275, 21,
                             "::bh *Teleports inside the Bounty hunter crate. MULTI");
-                    player.getPackets().sendIComponentText(275, 22, "::revs *Teleports to rev cave. SINGLE & MULTI");
-                    player.getPackets().sendIComponentText(275, 23,
+                    player.getPackets().sendTextOnComponent(275, 22, "::revs *Teleports to rev cave. SINGLE & MULTI");
+                    player.getPackets().sendTextOnComponent(275, 23,
                             "::altar *Teleports to an altar deep in west of wilderness.");
-                    player.getPackets().sendIComponentText(275, 24,
+                    player.getPackets().sendTextOnComponent(275, 24,
                             "::castle *Teleports to castle near west dragons. MULTI");
                     return true;
                 case "commands":
                     player.getInterfaceManager().sendInterface(275);
-                    player.getPackets().sendIComponentText(275, 1, "*Commands*");
-                    player.getPackets().sendIComponentText(275, 10, "");
-                    player.getPackets().sendIComponentText(275, 11,
+                    player.getPackets().sendTextOnComponent(275, 1, "*Commands*");
+                    player.getPackets().sendTextOnComponent(275, 10, "");
+                    player.getPackets().sendTextOnComponent(275, 11,
                             "::setlevel skillId level - Set your own combat skills<br>You can only set skillIds 1-6 & 23");
-                    player.getPackets().sendIComponentText(275, 12, "");
-                    player.getPackets().sendIComponentText(275, 13, "::teles - Shows all teleport commands");
-                    player.getPackets().sendIComponentText(275, 14, "::tasks - Shows list of all tasks");
-                    player.getPackets().sendIComponentText(275, 15, "::players - Tells you how many players are online");
-                    player.getPackets().sendIComponentText(275, 16, "::playerslist - Shows a list of all players online");
-                    player.getPackets().sendIComponentText(275, 17, "::pricecheck - Search & price checks an item");
-                    player.getPackets().sendIComponentText(275, 18, "::checkoffers - Shows all Grand exchange offers");
-                    player.getPackets().sendIComponentText(275, 19, "::kdr - Prints out your kills & deaths ratio");
-                    player.getPackets().sendIComponentText(275, 20, "::skull - Makes you skulled");
-                    player.getPackets().sendIComponentText(275, 21, "::droplog - Shows droplog");
-                    player.getPackets().sendIComponentText(275, 22, "::cleardroplog - Clears all drops from droplog");
-                    player.getPackets().sendIComponentText(275, 23,
+                    player.getPackets().sendTextOnComponent(275, 12, "");
+                    player.getPackets().sendTextOnComponent(275, 13, "::teles - Shows all teleport commands");
+                    player.getPackets().sendTextOnComponent(275, 14, "::tasks - Shows list of all tasks");
+                    player.getPackets().sendTextOnComponent(275, 15, "::players - Tells you how many players are online");
+                    player.getPackets().sendTextOnComponent(275, 16, "::playerslist - Shows a list of all players online");
+                    player.getPackets().sendTextOnComponent(275, 17, "::pricecheck - Search & price checks an item");
+                    player.getPackets().sendTextOnComponent(275, 18, "::checkoffers - Shows all Grand exchange offers");
+                    player.getPackets().sendTextOnComponent(275, 19, "::kdr - Prints out your kills & deaths ratio");
+                    player.getPackets().sendTextOnComponent(275, 20, "::skull - Makes you skulled");
+                    player.getPackets().sendTextOnComponent(275, 21, "::droplog - Shows droplog");
+                    player.getPackets().sendTextOnComponent(275, 22, "::cleardroplog - Clears all drops from droplog");
+                    player.getPackets().sendTextOnComponent(275, 23,
                             "::toggledroplogmessage - Toggle on & off droplog messages");
-                    player.getPackets().sendIComponentText(275, 24,
+                    player.getPackets().sendTextOnComponent(275, 24,
                             "::droplogvalue value - Set value of which items should be logged");
-                    player.getPackets().sendIComponentText(275, 25, "::droplog - Shows droplog");
-                    player.getPackets().sendIComponentText(275, 26,
+                    player.getPackets().sendTextOnComponent(275, 25, "::droplog - Shows droplog");
+                    player.getPackets().sendTextOnComponent(275, 26,
                             "::switchitemslook - Changes items look from old / new");
-                    player.getPackets().sendIComponentText(275, 27, "::compreqs - Shows completionist cape requirements");
-                    player.getPackets().sendIComponentText(275, 28, "::emptybank - Resets your whole bank.");
+                    player.getPackets().sendTextOnComponent(275, 27, "::compreqs - Shows completionist cape requirements");
+                    player.getPackets().sendTextOnComponent(275, 28, "::emptybank - Resets your whole bank.");
                     for (int i = 29; i <= 150; i++)
-                        player.getPackets().sendIComponentText(275, i, "");
+                        player.getPackets().sendTextOnComponent(275, i, "");
                     return true;
                 case "players":
                 case "online":
@@ -499,12 +499,12 @@ public final class Commands {
                 case "price":
                 case "pricecheck":
                     player.getPackets().sendHideIComponent(105, 196, true);
-                    player.getPackets().sendConfig(1109, -1);
-                    player.getPackets().sendConfig1(1241, 16750848);
-                    player.getPackets().sendConfig1(1242, 15439903);
-                    player.getPackets().sendConfig1(741, -1);
-                    player.getPackets().sendConfig1(743, -1);
-                    player.getPackets().sendConfig1(744, 0);
+                    player.getPackets().sendVar(1109, -1);
+                    player.getPackets().sendVar1(1241, 16750848);
+                    player.getPackets().sendVar1(1242, 15439903);
+                    player.getPackets().sendVar1(741, -1);
+                    player.getPackets().sendVar1(743, -1);
+                    player.getPackets().sendVar1(744, 0);
                     player.getPackets().sendInterface(true, 752, 7, 389);
                     player.getPackets().sendRunScript(570, new Object[]{"Price checker"});
                     return true;
@@ -1111,7 +1111,7 @@ public final class Commands {
                     return true;
                 case "infuse":
                     player.getInterfaceManager().sendInterface(666);
-                    player.getPackets().sendIComponentSettings(666, 16, 0, 462, 1400);
+                    player.getPackets().sendComponentSettings(666, 16, 0, 462, 1400);
                     player.getPackets().sendInterSetItemsOptionsScript(666, 16, 78, 8, 10, "test",
                             "teste", "tester", "baaaa", "baaa",
                             "heh");
@@ -1151,7 +1151,7 @@ public final class Commands {
 
                     //datamap(3644, int0) + (getSkillActualLvl(skill1) - int4) + datamap(3645, int0)
                     //1469, configValue + (newLevel - 1469) + configValue
-                    player.getPackets().sendGlobalConfig(LevelUp.getLevelGainedConfig(skillId), gainedLevels + newLevel);
+                    player.getPackets().sendGlobalVar(LevelUp.getLevelGainedConfig(skillId), gainedLevels + newLevel);
                     //player.getPackets().sendVarBit(4727, newLevel);
                     //player.getPackets().sendVarBit(281, 500);//unknown what to send
                     if (milestoneAchievement) {
@@ -1195,7 +1195,7 @@ public final class Commands {
                     //varbit: 4728 - what milestone level you are now - usage (4728 - 0, 1, 2, 3, 4) 0=50, 1=100, 2=150, 3=200, 4=250, 5=300..
                     player.getSkills().setXp(skillId, Skills.getXPForLevel(newLevel));
                     player.getSkills().refresh(skillId);
-                    player.getPackets().sendGlobalConfig(1469 + skillId, gainedLevels + newLevel);
+                    player.getPackets().sendGlobalVar(1469 + skillId, gainedLevels + newLevel);
                     player.getPackets().sendVarBit(4727, newLevel);
                     //player.getPackets().sendVarBit(281, 500);//unknown what to send
                     if (milestoneAchievement) {
@@ -1382,9 +1382,9 @@ public final class Commands {
                             contentsFinal += inventoryContents;
                         }
                         player.getInterfaceManager().sendInterface(1166);
-                        player.getPackets().sendIComponentText(1166, 1, contentsFinal);
-                        player.getPackets().sendIComponentText(1166, 2, usedSlots + " / 28 Inventory slots used.");
-                        player.getPackets().sendIComponentText(1166, 23,
+                        player.getPackets().sendTextOnComponent(1166, 1, contentsFinal);
+                        player.getPackets().sendTextOnComponent(1166, 2, usedSlots + " / 28 Inventory slots used.");
+                        player.getPackets().sendTextOnComponent(1166, 23,
                                 "<col=FFFFFF><shad=000000>" + target.getDisplayName() + "</shad></col>");
                     } catch (Exception e) {
                         player.getPackets().sendGameMessage(
@@ -1599,12 +1599,13 @@ public final class Commands {
                     return true;
                 case "zoom":
                     int zoomId = Integer.valueOf(cmd[1]);
-                    player.getPackets().sendGlobalConfig(184, zoomId);
+                    player.getPackets().sendGlobalVar(184, zoomId);
                     return true;
                 case "global":
                     int globalConfigId = Integer.valueOf(cmd[1]);
                     int value = Integer.valueOf(cmd[2]);
-                    player.getPackets().sendGlobalConfig(globalConfigId, value);
+                    //player.getVarsManager().setVar(globalConfigId, value);
+                    player.getPackets().sendGlobalVar(globalConfigId, value);
                     player.getPackets().sendGameMessage("Sent global config: " + globalConfigId + "; " + value);
                     return true;
                 case "varbit":
@@ -1646,7 +1647,7 @@ public final class Commands {
                     var2 = Integer.valueOf(cmd[2]);
                     varValue = Integer.valueOf(cmd[3]);
                     for (int i = var1; i < var2; i++)
-                        player.getPackets().sendGlobalConfig(i, varValue);
+                        player.getPackets().sendGlobalVar(i, varValue);
                     player.message("sent global config " + var1 + "-" + var2 + ":value:" + varValue);
                     return true;
                 case "sendstring":
@@ -1656,7 +1657,7 @@ public final class Commands {
                     player.getPackets().sendGameMessage("Sent global string: " + stringId + "; " + stringText);
                     return true;
                 case "resetzoom":
-                    player.getPackets().sendGlobalConfig(184, 250);
+                    player.getPackets().sendGlobalVar(184, 250);
                     return true;
                 case "skull":
                     player.skullDelay = 2000; // 20minutes
@@ -2285,30 +2286,30 @@ public final class Commands {
 
                 case "teles":
                     player.getInterfaceManager().sendInterface(275);
-                    player.getPackets().sendIComponentText(275, 1, "*Teleports*");
-                    player.getPackets().sendIComponentText(275, 10, "");
-                    player.getPackets().sendIComponentText(275, 11,
+                    player.getPackets().sendTextOnComponent(275, 1, "*Teleports*");
+                    player.getPackets().sendTextOnComponent(275, 10, "");
+                    player.getPackets().sendTextOnComponent(275, 11,
                             "::zerk *Teleports to western side of edgeville. SINGLE");
-                    player.getPackets().sendIComponentText(275, 12, "::easts *Teleports to lvl 20 east dragons. SINGLE");
-                    player.getPackets().sendIComponentText(275, 13, "::wests *Teleports to lvl 13 west dragons. SINGLE");
-                    player.getPackets().sendIComponentText(275, 14, "::mb *Teleports inside the mage bank. NOT WILDY");
-                    player.getPackets().sendIComponentText(275, 15,
+                    player.getPackets().sendTextOnComponent(275, 12, "::easts *Teleports to lvl 20 east dragons. SINGLE");
+                    player.getPackets().sendTextOnComponent(275, 13, "::wests *Teleports to lvl 13 west dragons. SINGLE");
+                    player.getPackets().sendTextOnComponent(275, 14, "::mb *Teleports inside the mage bank. NOT WILDY");
+                    player.getPackets().sendTextOnComponent(275, 15,
                             "::brid *Teleports to west side of edgeville wilderness. SINGLE");
-                    player.getPackets().sendIComponentText(275, 16, "::gdz *Teleports to Greater demons in lvl 48. MULTI");
-                    player.getPackets().sendIComponentText(275, 17,
+                    player.getPackets().sendTextOnComponent(275, 16, "::gdz *Teleports to Greater demons in lvl 48. MULTI");
+                    player.getPackets().sendTextOnComponent(275, 17,
                             "::44ports *Teleports to lvl 44 wilderness portal. SINGLE");
-                    player.getPackets().sendIComponentText(275, 18,
+                    player.getPackets().sendTextOnComponent(275, 18,
                             "::iceplatue *Teleports to ice platue in lvl 50 wilderness. SINGLE");
-                    player.getPackets().sendIComponentText(275, 19,
+                    player.getPackets().sendTextOnComponent(275, 19,
                             "::kbd *Teleports outside king black dragon lair. MULTI");
-                    player.getPackets().sendIComponentText(275, 20,
+                    player.getPackets().sendTextOnComponent(275, 20,
                             "::50ports *Teleports to lvl 50 wilderness portal. MULTI");
-                    player.getPackets().sendIComponentText(275, 21,
+                    player.getPackets().sendTextOnComponent(275, 21,
                             "::bh *Teleports inside the Bounty hunter crate. MULTI");
-                    player.getPackets().sendIComponentText(275, 22, "::revs *Teleports to rev cave. SINGLE & MULTI");
-                    player.getPackets().sendIComponentText(275, 23,
+                    player.getPackets().sendTextOnComponent(275, 22, "::revs *Teleports to rev cave. SINGLE & MULTI");
+                    player.getPackets().sendTextOnComponent(275, 23,
                             "::altar *Teleports to an altar deep in west of wilderness.");
-                    player.getPackets().sendIComponentText(275, 24,
+                    player.getPackets().sendTextOnComponent(275, 24,
                             "::castle *Teleports to castle near west dragons. MULTI");
                     return true;
 
@@ -2389,7 +2390,7 @@ public final class Commands {
                         int interId1 = Integer.valueOf(cmd[1]);
                         for (int componentId = 0; componentId < Utils
                                 .getInterfaceDefinitionsComponentsSize(interId1); componentId++) {
-                            player.getPackets().sendIComponentText(interId1, componentId, "cid: " + componentId);
+                            player.getPackets().sendTextOnComponent(interId1, componentId, "cid: " + componentId);
                         }
                     } catch (NumberFormatException e) {
                         player.getPackets().sendPanelBoxMessage("Use: ::inter interfaceId");

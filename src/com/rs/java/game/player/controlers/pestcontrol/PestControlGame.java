@@ -30,7 +30,7 @@ public class PestControlGame extends Controler {
 
 	private void updatePestPoints() {
 		boolean isGreen = getPoints() > 750;
-		player.getPackets().sendIComponentText(408, 11, (isGreen ? "<col=75AE49>" : "") + (int) getPoints() + "</col>");
+		player.getPackets().sendTextOnComponent(408, 11, (isGreen ? "<col=75AE49>" : "") + (int) getPoints() + "</col>");
 	}
 
 	@Override

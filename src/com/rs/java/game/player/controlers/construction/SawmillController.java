@@ -223,7 +223,7 @@ public class SawmillController extends Controler {
 			colour = "<col=00FF00>";
 		else
 			colour = "<col=FFFF00>";
-		player.getPackets().sendIComponentText(903, INVESTIGATE_COMPONENT_IDS[i], colour + "x" + job.planks[i]);
+		player.getPackets().sendTextOnComponent(903, INVESTIGATE_COMPONENT_IDS[i], colour + "x" + job.planks[i]);
 	}
 
 	public void finishJob() {
@@ -274,7 +274,7 @@ public class SawmillController extends Controler {
 
 			player.getPackets().sendHideIComponent(901, job.jobDetails == Jobs.QUICK ? 22 : 20, true);
 
-			player.getPackets().sendIComponentText(901, job.jobDetails == Jobs.QUICK ? 33 : 24, job.planks[0] + "/" + job.jobDetails.planks[0] + " Short plank" + "<br>" + job.planks[1] + "/" + job.jobDetails.planks[1] + " Long plank" + "<br>" + job.planks[2] + "/" + job.jobDetails.planks[2] + " Diagonal plank" + "<br>" + job.planks[3] + "/" + job.jobDetails.planks[3] + " Tooth plank" + "<br>" + job.planks[4] + "/" + job.jobDetails.planks[4] + " Groove plank" + "<br>" + job.planks[5] + "/" + job.jobDetails.planks[5] + " Curved plank");
+			player.getPackets().sendTextOnComponent(901, job.jobDetails == Jobs.QUICK ? 33 : 24, job.planks[0] + "/" + job.jobDetails.planks[0] + " Short plank" + "<br>" + job.planks[1] + "/" + job.jobDetails.planks[1] + " Long plank" + "<br>" + job.planks[2] + "/" + job.jobDetails.planks[2] + " Diagonal plank" + "<br>" + job.planks[3] + "/" + job.jobDetails.planks[3] + " Tooth plank" + "<br>" + job.planks[4] + "/" + job.jobDetails.planks[4] + " Groove plank" + "<br>" + job.planks[5] + "/" + job.jobDetails.planks[5] + " Curved plank");
 		}
 
 	}

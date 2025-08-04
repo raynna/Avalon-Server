@@ -38,7 +38,7 @@ public final class Notes implements Serializable {
 	 * Inits the.
 	 */
 	public void init() {
-		player.getPackets().sendIComponentSettings(34, 9, 0, 30, 2621470);
+		player.getPackets().sendComponentSettings(34, 9, 0, 30, 2621470);
 		player.getPackets().sendHideIComponent(34, 3, false);
 		player.getPackets().sendHideIComponent(34, 44, false);
 		player.getVarsManager().sendVar(1437, 1); // unlocks add notes

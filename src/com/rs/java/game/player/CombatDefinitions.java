@@ -82,7 +82,7 @@ public final class CombatDefinitions implements Serializable {
 
 	public void refreshAutoCastSpell() {
 		refreshAttackStyle();
-		player.getPackets().sendConfig(108, getSpellAutoCastConfigValue());
+		player.getPackets().sendVar(108, getSpellAutoCastConfigValue());
 	}
 
 	public int getSpellAutoCastConfigValue() {
@@ -237,7 +237,7 @@ public final class CombatDefinitions implements Serializable {
 	}
 
 	public void refreshSpellBookScrollBar_DefCast() {
-		player.getPackets().sendConfig(439, (dungeonneringSpellBook ? 3 : spellBook) + (defensiveCasting ? 1 << 8 : 0));
+		player.getPackets().sendVar(439, (dungeonneringSpellBook ? 3 : spellBook) + (defensiveCasting ? 1 << 8 : 0));
 	}
 
 	public int getSpellBook() {
@@ -290,14 +290,14 @@ public final class CombatDefinitions implements Serializable {
 
 	public void refreshSpellBook() {
 		if (spellBook == 0) {
-			player.getPackets().sendConfig(1376,
+			player.getPackets().sendVar(1376,
 					sortSpellBook | (showCombatSpells ? 0 : 1 << 9) | (showSkillSpells ? 0 : 1 << 10)
 							| (showMiscellaneousSpells ? 0 : 1 << 11) | (showTeleportSpells ? 0 : 1 << 12));
 		} else if (spellBook == 1) {
-			player.getPackets().sendConfig(1376,
+			player.getPackets().sendVar(1376,
 					sortSpellBook << 3 | (showCombatSpells ? 0 : 1 << 16) | (showTeleportSpells ? 0 : 1 << 17));
 		} else if (spellBook == 2) {
-			player.getPackets().sendConfig(1376, sortSpellBook << 6 | (showCombatSpells ? 0 : 1 << 13)
+			player.getPackets().sendVar(1376, sortSpellBook << 6 | (showCombatSpells ? 0 : 1 << 13)
 					| (showMiscellaneousSpells ? 0 : 1 << 14) | (showTeleportSpells ? 0 : 1 << 15));
 		}
 	}
@@ -781,12 +781,12 @@ public final class CombatDefinitions implements Serializable {
 	}
 
 	public void refreshAttackStyle() {
-		player.getPackets().sendConfig(43, autoCastSpell > 0 ? 4 : attackStyle);
+		player.getPackets().sendVar(43, autoCastSpell > 0 ? 4 : attackStyle);
 	}
 
 	public void sendUnlockAttackStylesButtons() {
 		for (int componentId = 7; componentId <= 10; componentId++)
-			player.getPackets().sendUnlockIComponentOptionSlots(884, componentId, -1, 0, 0);
+			player.getPackets().sendUnlockOptions(884, componentId, -1, 0, 0);
 	}
 
 	public void switchUsingSpecialAttack() {
@@ -819,7 +819,7 @@ public final class CombatDefinitions implements Serializable {
 	}
 
 	public void refreshUsingSpecialAttack() {
-		player.getPackets().sendConfig(301, usingSpecialAttack ? 1 : 0);
+		player.getPackets().sendVar(301, usingSpecialAttack ? 1 : 0);
 	}
 
 	public void refreshSpecialAttackPercentage() {
@@ -832,7 +832,7 @@ public final class CombatDefinitions implements Serializable {
 	}
 
 	public void refreshAutoRelatie() {
-		player.getPackets().sendConfig(172, autoRetaliate ? 0 : 1);
+		player.getPackets().sendVar(172, autoRetaliate ? 0 : 1);
 	}
 
 	public boolean isUsingSpecialAttack() {

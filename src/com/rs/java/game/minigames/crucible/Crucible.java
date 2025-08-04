@@ -180,10 +180,10 @@ public class Crucible {
 				player.getInterfaceManager().sendInterface(1298);
 				player.getPackets().sendHideIComponent(1298, 40, true);
 				player.getPackets().sendHideIComponent(1298, 41, true);
-				player.getPackets().sendIComponentText(1298, 23, "0");
-				player.getPackets().sendIComponentText(1298, 5, "0");
-				player.getPackets().sendIComponentText(1298, 6, "0");
-				player.getPackets().sendIComponentText(1298, 7, "0");
+				player.getPackets().sendTextOnComponent(1298, 23, "0");
+				player.getPackets().sendTextOnComponent(1298, 5, "0");
+				player.getPackets().sendTextOnComponent(1298, 6, "0");
+				player.getPackets().sendTextOnComponent(1298, 7, "0");
 				player.temporaryAttribute().put("crucibleBounty", fissure);
 			}
 		} else {

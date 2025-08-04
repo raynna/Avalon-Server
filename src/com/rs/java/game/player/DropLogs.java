@@ -22,13 +22,13 @@ public class DropLogs implements Serializable {
 		int itemsSize = 13;
 		player.getInterfaceManager().sendInterface(275);
 		for (int i = 0; i < 100; i++)
-			player.getPackets().sendIComponentText(275, i, "");
-		player.getPackets().sendIComponentText(275, 1, "Droplog");
-		player.getPackets().sendIComponentText(275, 10, "Lowest value: " + Utils.getFormattedNumber(lowestValue, ','));
+			player.getPackets().sendTextOnComponent(275, i, "");
+		player.getPackets().sendTextOnComponent(275, 1, "Droplog");
+		player.getPackets().sendTextOnComponent(275, 10, "Lowest value: " + Utils.getFormattedNumber(lowestValue, ','));
 		for (Item items : drops) {
 			if (items == null)
 				continue;
-			player.getPackets().sendIComponentText(275, itemsSize,
+			player.getPackets().sendTextOnComponent(275, itemsSize,
 					items.getDefinitions().getName() + " : " + items.getAmount());
 			itemsSize++;
 		}

@@ -31,7 +31,7 @@ public class EdgevillePvPControler extends Controler {
         player.getAppearence().generateAppearenceData();
         player.message("You " + HexColours.getShortMessage(Colour.RED, "leave") + " edgeville pvp instance.");
         player.setCanPvp(false);
-        player.getPackets().sendGlobalConfig(1000, 0);
+        player.getPackets().sendGlobalVar(1000, 0);
         player.getAppearence().generateAppearenceData();
     }
 
@@ -186,7 +186,7 @@ public class EdgevillePvPControler extends Controler {
             builder.append(minus + " - 138");
         else if (plus < 138 && minus > 3)
             builder.append(minus + " - " + plus);
-        player.getPackets().sendIComponentText(3043, 3, builder.toString());
+        player.getPackets().sendTextOnComponent(3043, 3, builder.toString());
         builder = new StringBuilder();
         builder.append("EP: ");
         if (player.getEP() >= 70)
@@ -196,7 +196,7 @@ public class EdgevillePvPControler extends Controler {
         if (player.getEP() < 35)
             builder.append(HexColours.Colour.RED.getHex());
         builder.append(player.getEP() + "%");
-        player.getPackets().sendIComponentText(3043, 4, builder.toString());
+        player.getPackets().sendTextOnComponent(3043, 4, builder.toString());
         if (isSafe(player))
             player.getPackets().sendSpriteOnIComponent(3043, 2, inSafeSprite);
         else
@@ -253,19 +253,19 @@ public class EdgevillePvPControler extends Controler {
         }
         if (isAtPvP(player) && !isAtBank(player)) {
             player.setCanPvp(true);
-            player.getPackets().sendGlobalConfig(1000, player.getSkills().getCombatLevel() + player.getSkills().getSummoningCombatLevel());
+            player.getPackets().sendGlobalVar(1000, player.getSkills().getCombatLevel() + player.getSkills().getSummoningCombatLevel());
             player.getPackets().sendSpriteOnIComponent(3043, 2, inDangerSprite);
             player.getAppearence().generateAppearenceData();
             sendInterfaces();
         } else if (isAtBank(player)) {
             sendInterfaces();
             removeIcon();
-            player.getPackets().sendGlobalConfig(1000, 0);
+            player.getPackets().sendGlobalVar(1000, 0);
             player.setCanPvp(false);
             player.getPackets().sendSpriteOnIComponent(3043, 2, inSafeSprite);
             player.getAppearence().generateAppearenceData();
         } else if (!isAtPvP(player) && !isAtBank(player)) {
-            player.getPackets().sendGlobalConfig(1000, 0);
+            player.getPackets().sendGlobalVar(1000, 0);
             player.getAppearence().generateAppearenceData();
             forceClose();
         }

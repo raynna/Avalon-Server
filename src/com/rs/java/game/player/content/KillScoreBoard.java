@@ -34,20 +34,20 @@ public final class KillScoreBoard implements Serializable {
 	public static void showRanks(Player player) {
 		player.getInterfaceManager().sendInterface(1158);
 		int count = 0;
-		player.getPackets().sendIComponentText(1158, 74, "Top 10 Scoreboard");
+		player.getPackets().sendTextOnComponent(1158, 74, "Top 10 Scoreboard");
 		boolean rankOne = true;
 		for (int i = 9; i < 5 * 11; i += 5)
-		player.getPackets().sendIComponentText(1158, i, "");
+		player.getPackets().sendTextOnComponent(1158, i, "");
 		for (int i = 10; i < 5 * 12; i += 5)
-			player.getPackets().sendIComponentText(1158, i, "");
+			player.getPackets().sendTextOnComponent(1158, i, "");
 		for (int i = 11; i < 5 * 13; i += 5)
-			player.getPackets().sendIComponentText(1158, i, "");
+			player.getPackets().sendTextOnComponent(1158, i, "");
 		for (KillScoreBoard rank : ranks) {
 			if (rank == null)
 				return;
 			double dr = rank.kdr;
-			player.getPackets().sendIComponentText(1158, 9 + count * 5, (rankOne ? "<col=F6A90E>" : "") +Utils.formatPlayerNameForDisplay(rank.username));
-			player.getPackets().sendIComponentText(1158, 10 + count * 5, (rankOne ? "<col=F6A90E>" : "") +
+			player.getPackets().sendTextOnComponent(1158, 9 + count * 5, (rankOne ? "<col=F6A90E>" : "") +Utils.formatPlayerNameForDisplay(rank.username));
+			player.getPackets().sendTextOnComponent(1158, 10 + count * 5, (rankOne ? "<col=F6A90E>" : "") +
 					"K/D: " + new DecimalFormat("##.00").format(dr).replace(',', '.') + "                   K: " + new DecimalFormat("0000.#").format(rank.kills) + "                 D: " + new DecimalFormat("0000.#").format(rank.deaths));
 			//player.getPackets().sendIComponentText(1158, 11 + count * 5,
 			//		"K: " + kills + "<br>D: " + deaths);

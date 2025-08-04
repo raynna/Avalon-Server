@@ -204,24 +204,24 @@ public class DungeoneeringSmithing extends Action {
 			if (dungeoneering) {
 				int componentId = index == 0 ? 22 : index == 1 ? 23 : (14 + index * 5);
 
-				player.getPackets().sendUnlockIComponentOptionSlots(DUNG_INTERFACE, componentId, 0, 5, 0, 1, 2, 3);
+				player.getPackets().sendUnlockOptions(DUNG_INTERFACE, componentId, 0, 5, 0, 1, 2, 3);
 				player.getPackets().sendInterSetItemsOptionsScript(DUNG_INTERFACE, componentId, 143 + index, 4, 5, "Make-1", "Make-5", "Make-X", "Make-All");
 
 				player.getPackets().sendHideIComponent(DUNG_INTERFACE, componentBase - (index >= 11 ? 2 : 0), true);
 				player.getPackets().sendItems(143 + index, new Item[]
 				{ new Item(build, getForgedAmount(index, true)) });
 
-				player.getPackets().sendIComponentText(DUNG_INTERFACE, componentBase - (index >= 11 ? 1 : 2), (currentLevel >= LEVEL_INCREMENT[1][index] + baseLevel ? "<col=FFFFFF>" : "") + NAMES[1][index]);
-				player.getPackets().sendIComponentText(DUNG_INTERFACE, componentBase - (index >= 11 ? 0 : 1), (player.getInventory().getAmountOf(BARS[1][type]) >= BAR_DEPLETION[1][index] ? "<col=00FF00>" : "") + BAR_DEPLETION[1][index] + " Bars");
+				player.getPackets().sendTextOnComponent(DUNG_INTERFACE, componentBase - (index >= 11 ? 1 : 2), (currentLevel >= LEVEL_INCREMENT[1][index] + baseLevel ? "<col=FFFFFF>" : "") + NAMES[1][index]);
+				player.getPackets().sendTextOnComponent(DUNG_INTERFACE, componentBase - (index >= 11 ? 0 : 1), (player.getInventory().getAmountOf(BARS[1][type]) >= BAR_DEPLETION[1][index] ? "<col=00FF00>" : "") + BAR_DEPLETION[1][index] + " Bars");
 			} else {
 				setComponents(player, componentBase, dungeoneering);
 				player.getPackets().sendItemOnIComponent(FORGING_INTERFACE, componentBase, build, getForgedAmount(index, false));
-				player.getPackets().sendIComponentText(FORGING_INTERFACE, componentBase + 1, (currentLevel >= LEVEL_INCREMENT[0][index] + baseLevel ? "<col=FFFFFF>" : "") + NAMES[0][index]);
-				player.getPackets().sendIComponentText(FORGING_INTERFACE, componentBase + 2, (player.getInventory().getAmountOf(BARS[0][type]) >= BAR_DEPLETION[0][index] ? "<col=00FF00>" : "") + BAR_DEPLETION[dungeoneering ? 1 : 0][index] + " Bars");
+				player.getPackets().sendTextOnComponent(FORGING_INTERFACE, componentBase + 1, (currentLevel >= LEVEL_INCREMENT[0][index] + baseLevel ? "<col=FFFFFF>" : "") + NAMES[0][index]);
+				player.getPackets().sendTextOnComponent(FORGING_INTERFACE, componentBase + 2, (player.getInventory().getAmountOf(BARS[0][type]) >= BAR_DEPLETION[0][index] ? "<col=00FF00>" : "") + BAR_DEPLETION[dungeoneering ? 1 : 0][index] + " Bars");
 			}
 		}
 		if (!dungeoneering)
-			player.getPackets().sendIComponentText(FORGING_INTERFACE, 14, ItemDefinitions.getItemDefinitions(BARS[0][type]).getName().replace(" bar", "") + " Smithing");
+			player.getPackets().sendTextOnComponent(FORGING_INTERFACE, 14, ItemDefinitions.getItemDefinitions(BARS[0][type]).getName().replace(" bar", "") + " Smithing");
 		player.getInterfaceManager().sendInterface(dungeoneering ? DUNG_INTERFACE : FORGING_INTERFACE);
 	}
 

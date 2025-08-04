@@ -17,13 +17,13 @@ public final class PestControlLobby extends Controler {
 
 	@Override
 	public void sendInterfaces() {
-		player.getPackets().sendIComponentText(407, 3, Utils.fixChatMessage(Lander.getLanders()[landerId].toString()));
+		player.getPackets().sendTextOnComponent(407, 3, Utils.fixChatMessage(Lander.getLanders()[landerId].toString()));
 		int secondsLeft = (Lander.getLanders()[landerId].getTimer().getSeconds());
-		player.getPackets().sendIComponentText(407, 13, "Next Departure: " + secondsLeft + " seconds ");
-		player.getPackets().sendIComponentText(407, 15, "(Need 3 to 25 players)");
-		player.getPackets().sendIComponentText(407, 14,
+		player.getPackets().sendTextOnComponent(407, 13, "Next Departure: " + secondsLeft + " seconds ");
+		player.getPackets().sendTextOnComponent(407, 15, "(Need 3 to 25 players)");
+		player.getPackets().sendTextOnComponent(407, 14,
 				"Player's Ready: " + Lander.getLanders()[landerId].getPlayers().size());
-		player.getPackets().sendIComponentText(407, 16, "Commendations: " + player.pestControlPoints);
+		player.getPackets().sendTextOnComponent(407, 16, "Commendations: " + player.pestControlPoints);
 		player.getInterfaceManager().sendOverlay(407, false);
 	}
 

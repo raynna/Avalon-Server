@@ -49,8 +49,6 @@ class RareDropTableEntry : DropEntry(-1, 1..1) {
             else -> Rscm.lookup(item)
         }
 
-        if (itemId == null) return
-
         table.add(WeightedDropEntry(
             itemId = itemId,
             amount = amount,

@@ -33,7 +33,7 @@ public class ReportAbuse {
 			return;
 		}
 		player.getInterfaceManager().sendInterface(594);
-		player.getPackets().sendIComponentText(594, 68, "When you report someone, it will be reviewed by the staff of "
+		player.getPackets().sendTextOnComponent(594, 68, "When you report someone, it will be reviewed by the staff of "
 				+ Settings.SERVER_NAME + ". <col=ff0000>Please do not misuse this system.");
 		player.getPackets().sendHideIComponent(594, 72, true);
 		ShowButton(player);

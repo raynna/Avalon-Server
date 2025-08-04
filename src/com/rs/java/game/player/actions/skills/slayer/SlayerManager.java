@@ -101,7 +101,7 @@ public class SlayerManager implements Serializable {
 			for (int index = 0; index < canceledTasks.length; index++) {
 				SlayerTask task = canceledTasks[index];
 				if (task != null) {
-					player.getPackets().sendIComponentText(ASSIGNMENT_INTERFACE, 31 + index, task.getName());
+					player.getPackets().sendTextOnComponent(ASSIGNMENT_INTERFACE, 31 + index, task.getName());
 				} else
 					player.getPackets().sendHideIComponent(ASSIGNMENT_INTERFACE, 37 + index, true);
 			}
@@ -110,9 +110,9 @@ public class SlayerManager implements Serializable {
 				boolean hasUnlocked = learnedAbilities[index];
 				if (hasUnlocked) {
 					Object[] data = ABILITY[index];
-					player.getPackets().sendIComponentText(ABILITIES_INTERFACE, (int) data[0],
+					player.getPackets().sendTextOnComponent(ABILITIES_INTERFACE, (int) data[0],
 							"You have already unlocked this ability.");
-					player.getPackets().sendIComponentText(ABILITIES_INTERFACE, (int) data[1], "");
+					player.getPackets().sendTextOnComponent(ABILITIES_INTERFACE, (int) data[1], "");
 					player.getPackets().sendHideIComponent(ABILITIES_INTERFACE, 73 + index, true);
 				}
 			}
@@ -121,11 +121,11 @@ public class SlayerManager implements Serializable {
 
 	private void sendPoints(int interfaceId) {
 		if (interfaceId == ASSIGNMENT_INTERFACE)
-			player.getPackets().sendIComponentText(interfaceId, 19, "" + slayerPoints);
+			player.getPackets().sendTextOnComponent(interfaceId, 19, "" + slayerPoints);
 		else if (interfaceId == BUY_INTERFACE)
-			player.getPackets().sendIComponentText(interfaceId, 20, "" + slayerPoints);
+			player.getPackets().sendTextOnComponent(interfaceId, 20, "" + slayerPoints);
 		else
-			player.getPackets().sendIComponentText(interfaceId, 79, "" + slayerPoints);
+			player.getPackets().sendTextOnComponent(interfaceId, 79, "" + slayerPoints);
 	}
 
 	public void handleRewardButtons(int interfaceId, int componentId) {
@@ -383,9 +383,9 @@ public class SlayerManager implements Serializable {
 
 	private void openSocialInvitation(final Player otherPlayer) {
 		player.getInterfaceManager().sendInterface(1310);
-		player.getPackets().sendIComponentText(1310, 6, otherPlayer.getDisplayName());
-		player.getPackets().sendIComponentText(1310, 8, "" + otherPlayer.getSkills().getLevel(Skills.SLAYER));
-		player.getPackets().sendIComponentText(1310, 10, "" + otherPlayer.getSkills().getCombatLevelWithSummoning());
+		player.getPackets().sendTextOnComponent(1310, 6, otherPlayer.getDisplayName());
+		player.getPackets().sendTextOnComponent(1310, 8, "" + otherPlayer.getSkills().getLevel(Skills.SLAYER));
+		player.getPackets().sendTextOnComponent(1310, 10, "" + otherPlayer.getSkills().getCombatLevelWithSummoning());
 		player.setCloseInterfacesEvent(new Runnable() {
 
 			@Override

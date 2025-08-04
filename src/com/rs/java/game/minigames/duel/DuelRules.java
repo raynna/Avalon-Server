@@ -103,7 +103,7 @@ public class DuelRules {
 			}
 			ruleId += ruleId;
 		}
-		player.getPackets().sendConfig(286, value);
+		player.getPackets().sendVar(286, value);
 	}
 
 	public boolean setRule(int ruleId, boolean value) {

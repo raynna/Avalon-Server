@@ -29,13 +29,13 @@ public class PartyRoom {
 	private static void sendOptions(final Player player) {
 		player.getPackets().sendInterSetItemsOptionsScript(INVENTORY_INTERFACE, 0, 93, 4, 7, "Deposit", "Deposit-5",
 				"Deposit-10", "Deposit-All", "Deposit-X");
-		player.getPackets().sendIComponentSettings(INVENTORY_INTERFACE, 0, 0, 27, 1278);
+		player.getPackets().sendComponentSettings(INVENTORY_INTERFACE, 0, 0, 27, 1278);
 		player.getPackets().sendInterSetItemsOptionsScript(INVENTORY_INTERFACE, 30, CHEST_INTERFACE_ITEMS_KEY, 4, 7,
 				"Value");
-		player.getPackets().sendIComponentSettings(PARTY_CHEST_INTERFACE, 30, 0, 27, 1150);
+		player.getPackets().sendComponentSettings(PARTY_CHEST_INTERFACE, 30, 0, 27, 1150);
 		player.getPackets().sendInterSetItemsOptionsScript(PARTY_CHEST_INTERFACE, 33, CHEST_INTERFACE_ITEMS_KEY, true,
 				4, 7, "Examine");
-		player.getPackets().sendIComponentSettings(PARTY_CHEST_INTERFACE, 33, 0, 27, 1026);
+		player.getPackets().sendComponentSettings(PARTY_CHEST_INTERFACE, 33, 0, 27, 1026);
 
 	}
 

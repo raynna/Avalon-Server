@@ -3,14 +3,12 @@ package com.rs.java.game.player;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import com.rs.Settings;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
-import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.item.meta.MetaDataType;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
@@ -56,8 +54,8 @@ public final class Inventory implements Serializable {
 	}
 
 	public void unlockInventoryOptions() {
-		player.getPackets().sendIComponentSettings(INVENTORY_INTERFACE, 0, 0, 27, 4554126);
-		player.getPackets().sendIComponentSettings(INVENTORY_INTERFACE, 0, 28, 55, 2097152);
+		player.getPackets().sendComponentSettings(INVENTORY_INTERFACE, 0, 0, 27, 4554126);
+		player.getPackets().sendComponentSettings(INVENTORY_INTERFACE, 0, 28, 55, 2097152);
 	}
 
 	public void reset() {

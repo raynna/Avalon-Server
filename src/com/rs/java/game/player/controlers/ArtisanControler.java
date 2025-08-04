@@ -12,13 +12,13 @@ public class ArtisanControler extends Controler {
 	public void start() {
 		player.setNextWorldTile(new WorldTile(3036, 3338, 0));
 		player.getArtisanWorkshop().sendOverlayInterface();
-		player.getPackets().sendIComponentText(1073, 11, ""+ World.artisanBonusExp);
+		player.getPackets().sendTextOnComponent(1073, 11, ""+ World.artisanBonusExp);
 	}
 	
 	
 	@Override
 	public void process() {
-		player.getPackets().sendIComponentText(1073, 11, ""+World.artisanBonusExp);
+		player.getPackets().sendTextOnComponent(1073, 11, ""+World.artisanBonusExp);
 	}
 	
 	@Override
@@ -121,7 +121,7 @@ public class ArtisanControler extends Controler {
 	@Override
 	public boolean login() {
 		player.getArtisanWorkshop().sendOverlayInterface();
-		player.getPackets().sendIComponentText(1073, 11, ""+World.artisanBonusExp);
+		player.getPackets().sendTextOnComponent(1073, 11, ""+World.artisanBonusExp);
 		return false;
 	}
 	

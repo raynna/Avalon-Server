@@ -39,7 +39,7 @@ public class TradeStore {
 	 */
 	public void openTrade() {
 		synchronized (this) {
-			player.getPackets().sendIComponentText(335, 17, "Trading With: " + Settings.SERVER_NAME);
+			player.getPackets().sendTextOnComponent(335, 17, "Trading With: " + Settings.SERVER_NAME);
 			player.getPackets().sendGlobalString(203, Settings.SERVER_NAME);
 			sendInterItems();
 			sendOptions();
@@ -249,12 +249,12 @@ public class TradeStore {
 	public void sendOptions() {
 		player.getPackets().sendInterSetItemsOptionsScript(336, 0, 93, 4, 7, "Offer", "Offer-5", "Offer-10",
 				"Offer-All", "Offer-X", "Value<col=FF9040>", "Lend");
-		player.getPackets().sendIComponentSettings(336, 0, 0, 27, 1278);
+		player.getPackets().sendComponentSettings(336, 0, 0, 27, 1278);
 		player.getPackets().sendInterSetItemsOptionsScript(335, 32, 90, 4, 7, "Remove", "Remove-5", "Remove-10",
 				"Remove-All", "Remove-X", "Value");
-		player.getPackets().sendIComponentSettings(335, 32, 0, 27, 1150);
+		player.getPackets().sendComponentSettings(335, 32, 0, 27, 1150);
 		player.getPackets().sendInterSetItemsOptionsScript(335, 35, 90, true, 4, 7, "Value");
-		player.getPackets().sendIComponentSettings(335, 35, 0, 27, 1026);
+		player.getPackets().sendComponentSettings(335, 35, 0, 27, 1026);
 
 	}
 
@@ -348,7 +348,7 @@ public class TradeStore {
 	}
 
 	public void refreshStageMessage(boolean firstStage) {
-		player.getPackets().sendIComponentText(firstStage ? 335 : 334, firstStage ? 39 : 34,
+		player.getPackets().sendTextOnComponent(firstStage ? 335 : 334, firstStage ? 39 : 34,
 				getAcceptMessage(firstStage));
 	}
 
@@ -357,12 +357,12 @@ public class TradeStore {
 	}
 
 	public void sendTradeModified() {
-		player.getPackets().sendConfig(1042, tradeModified ? 1 : 0);
+		player.getPackets().sendVar(1042, tradeModified ? 1 : 0);
 	}
 
 	public void refreshTradeWealth() {
 		int wealth = getTradeWealth();
-		player.getPackets().sendGlobalConfig(729, wealth);
+		player.getPackets().sendGlobalVar(729, wealth);
 	}
 
 	public int getTradeWealth() {

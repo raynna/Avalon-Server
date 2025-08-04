@@ -67,13 +67,13 @@ public class ActivityHandler {
 	  */
 	public static void sendInterface(Player player) {
 	player.getInterfaceManager().sendInterface(INTERFACE);
-	player.getPackets().sendIComponentText(INTERFACE, 74, "Event Checker");
-	player.getPackets().sendIComponentText(INTERFACE, 9, "<img=7>Name.");
-	player.getPackets().sendIComponentText(INTERFACE, 10, "<img=7>Description");
-	player.getPackets().sendIComponentText(INTERFACE, 11, "<img=7>Type.");
-	player.getPackets().sendIComponentText(INTERFACE, 14, "Shooting star");
-	player.getPackets().sendIComponentText(INTERFACE, 15, ""+ getShootingStar()+"");
-	player.getPackets().sendIComponentText(INTERFACE, 16, "Skilling");
+	player.getPackets().sendTextOnComponent(INTERFACE, 74, "Event Checker");
+	player.getPackets().sendTextOnComponent(INTERFACE, 9, "<img=7>Name.");
+	player.getPackets().sendTextOnComponent(INTERFACE, 10, "<img=7>Description");
+	player.getPackets().sendTextOnComponent(INTERFACE, 11, "<img=7>Type.");
+	player.getPackets().sendTextOnComponent(INTERFACE, 14, "Shooting star");
+	player.getPackets().sendTextOnComponent(INTERFACE, 15, ""+ getShootingStar()+"");
+	player.getPackets().sendTextOnComponent(INTERFACE, 16, "Skilling");
 	}
 	
 

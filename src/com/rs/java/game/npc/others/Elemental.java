@@ -137,7 +137,7 @@ public class Elemental extends NPC {
 									@Override
 									public void run() {
 										player.getPackets().sendBlackOut(0);
-										player.getPackets().sendConfig(1241, 0);
+										player.getPackets().sendVar(1241, 0);
 									}
 
 								});

@@ -7,3 +7,7 @@ quest_tab:purple_star=59
 quest_tab:red_star=60
 quest_tab:green_star=61
 quest_tab:blue_star=62
+prayer_orb:button=4
+prayer_orb:text=6
+prayerbook:prayer_slots=8
+prayerbook:quickprayer_slots=42

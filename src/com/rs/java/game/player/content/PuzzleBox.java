@@ -22,7 +22,7 @@ public class PuzzleBox implements Serializable {
 	}
 	
 	public void unlockPuzzleBox(Player player) {
-		player.getPackets().sendUnlockIComponentOptionSlots(363, 4, 0, 25, 0);
+		player.getPackets().sendUnlockOptions(363, 4, 0, 25, 0);
 	}
 
 	public void openPuzzle() {

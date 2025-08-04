@@ -95,16 +95,16 @@ public class PlayerCombat extends Action {
             if (p2.getAppearence().getTitle() != -1)
                 name.append(p2.getAppearence().getTitleName());
             name.append(p2.getDisplayName());
-            p1.getPackets().sendIComponentText(3037, 6, name.toString());
-            p1.getPackets().sendIComponentText(3037, 7,
+            p1.getPackets().sendTextOnComponent(3037, 6, name.toString());
+            p1.getPackets().sendTextOnComponent(3037, 7,
                     (p1.toggles("ONEXHITS", false) ? p2.getHitpoints() / 10 + "/" + p2.getMaxHitpoints() / 10
                             : p2.getHitpoints() + "/" + p2.getMaxHitpoints()));
         } else {
             NPC npc = (NPC) target;
             Player p1 = (Player) player;
-            p1.getPackets().sendIComponentText(3037, 6, npc.getName());
+            p1.getPackets().sendTextOnComponent(3037, 6, npc.getName());
             checkCombatLevel(p1, npc);
-            p1.getPackets().sendIComponentText(3037, 7,
+            p1.getPackets().sendTextOnComponent(3037, 7,
                     (p1.toggles("ONEXHITS", false) ? npc.getHitpoints() / 10 + "/" + npc.getMaxHitpoints() / 10
                             : npc.getHitpoints() + "/" + npc.getMaxHitpoints()));
         }
@@ -126,7 +126,7 @@ public class PlayerCombat extends Action {
             if (level < targetLevel)
                 builder.append(HexColours.Colour.RED.getHex());
             builder.append(targetLevel);
-            player.getPackets().sendIComponentText(3037, 9, builder.toString());
+            player.getPackets().sendTextOnComponent(3037, 9, builder.toString());
         } else {
             Player p2 = (Player) target;
             int level = player.isAtWild() ? player.getSkills().getCombatLevel() : player.getSkills().getCombatLevelWithSummoning();
@@ -142,7 +142,7 @@ public class PlayerCombat extends Action {
             if (level < targetLevel)
                 builder.append(HexColours.Colour.RED.getHex());
             builder.append((player.isAtWild() || player.isAtPvP() ? targetLevel + "+" + p2.getSkills().getSummoningCombatLevel() : p2.getSkills().getCombatLevelWithSummoning()));
-            player.getPackets().sendIComponentText(3037, 9, builder.toString());
+            player.getPackets().sendTextOnComponent(3037, 9, builder.toString());
         }
     }
 

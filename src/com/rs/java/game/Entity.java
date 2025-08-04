@@ -238,7 +238,7 @@ public abstract class Entity extends WorldTile {
             if (level < targetLevel)
                 builder.append(HexColours.Colour.RED.getHex());
             builder.append(targetLevel);
-            player.getPackets().sendIComponentText(3037, 9, builder.toString());
+            player.getPackets().sendTextOnComponent(3037, 9, builder.toString());
         } else {
             Player p2 = (Player) target;
             int level = player.isAtWild() ? player.getSkills().getCombatLevel() : player.getSkills().getCombatLevelWithSummoning();
@@ -254,7 +254,7 @@ public abstract class Entity extends WorldTile {
             if (level < targetLevel)
                 builder.append(HexColours.Colour.RED.getHex());
             builder.append((player.isAtWild() || player.isAtPvP() ? targetLevel + "+" + p2.getSkills().getSummoningCombatLevel() : p2.getSkills().getCombatLevelWithSummoning()));
-            player.getPackets().sendIComponentText(3037, 9, builder.toString());
+            player.getPackets().sendTextOnComponent(3037, 9, builder.toString());
         }
     }
 
@@ -269,8 +269,8 @@ public abstract class Entity extends WorldTile {
             if (p2.getAppearence().getTitle() != -1)
                 name.append(p2.getAppearence().getTitleName());
             name.append(p2.getDisplayName());
-            p1.getPackets().sendIComponentText(3037, 6, name.toString());
-            p1.getPackets().sendIComponentText(3037, 7, (p1.toggles("ONEXHITS", false) ? p2.getHitpoints() / 10 + "/" + p2.getMaxHitpoints() / 10 : p2.getHitpoints() + "/" + p2.getMaxHitpoints()));
+            p1.getPackets().sendTextOnComponent(3037, 6, name.toString());
+            p1.getPackets().sendTextOnComponent(3037, 7, (p1.toggles("ONEXHITS", false) ? p2.getHitpoints() / 10 + "/" + p2.getMaxHitpoints() / 10 : p2.getHitpoints() + "/" + p2.getMaxHitpoints()));
             final int pixels = (int) ((double) p2.getHitpoints() / p2.getMaxHitpoints() * 126D);
             p1.getPackets().sendRunScript(6252, pixels);
             WorldTasksManager.schedule(new WorldTask() {
@@ -286,8 +286,8 @@ public abstract class Entity extends WorldTile {
             if (!p1.getInterfaceManager().containsTab(PlayerCombat.getHealthOverlayId(p1)))
                 p1.getInterfaceManager().sendTab(PlayerCombat.getHealthOverlayId(p1), 3037);
             checkCombatLevel(p1, npc);
-            p1.getPackets().sendIComponentText(3037, 6, npc.getName());
-            p1.getPackets().sendIComponentText(3037, 7, (p1.toggles("ONEXHITS", false) ? npc.getHitpoints() / 10 + "/" + npc.getMaxHitpoints() / 10 : npc.getHitpoints() + "/" + npc.getMaxHitpoints()));
+            p1.getPackets().sendTextOnComponent(3037, 6, npc.getName());
+            p1.getPackets().sendTextOnComponent(3037, 7, (p1.toggles("ONEXHITS", false) ? npc.getHitpoints() / 10 + "/" + npc.getMaxHitpoints() / 10 : npc.getHitpoints() + "/" + npc.getMaxHitpoints()));
             final int pixels = (int) ((double) npc.getHitpoints() / npc.getMaxHitpoints() * 126D);
             p1.getPackets().sendRunScript(6252, pixels);
             WorldTasksManager.schedule(new WorldTask() {

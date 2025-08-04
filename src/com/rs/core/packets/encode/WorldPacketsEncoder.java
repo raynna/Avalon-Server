@@ -1,6 +1,5 @@
 package com.rs.core.packets.encode;
 
-import com.rs.java.game.player.actions.combat.modernspells.RSModernCombatSpells;
 import com.rs.kotlin.Rscm;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
@@ -183,6 +182,14 @@ public class WorldPacketsEncoder extends Encoder {
 			stream.writeInt(offer.getTotalPriceSoFar());
 		}
 		session.write(stream);
+	}
+
+	public void sendVar(String var, int value) {
+		int id = Rscm.lookup(var);
+		if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE)
+			sendVar2(id, value);
+		else
+			sendVar1(id, value);
 	}
 
 	public void sendVar(int id, int value) {
@@ -377,15 +384,25 @@ public class WorldPacketsEncoder extends Encoder {
 
 	}
 
-	public void sendUnlockIComponentOptionSlots(int interfaceId, int componentId, int fromSlot, int toSlot,
-			int... optionsSlots) {
+	public void sendUnlockOptions(String interfaceName, String component, int fromSlot, int toSlot,
+								  int... optionsSlots) {
+		int interfaceId = Rscm.lookup(interfaceName);
+		int componentId = Rscm.lookup(component);
 		int settingsHash = 0;
 		for (int slot : optionsSlots)
 			settingsHash |= 2 << slot;
-		sendIComponentSettings(interfaceId, componentId, fromSlot, toSlot, settingsHash);
+		sendComponentSettings(interfaceId, componentId, fromSlot, toSlot, settingsHash);
 	}
 
-	public void sendIComponentSettings(int interfaceId, int componentId, int fromSlot, int toSlot, int settingsHash) {
+	public void sendUnlockOptions(int interfaceId, int componentId, int fromSlot, int toSlot,
+								  int... optionsSlots) {
+		int settingsHash = 0;
+		for (int slot : optionsSlots)
+			settingsHash |= 2 << slot;
+		sendComponentSettings(interfaceId, componentId, fromSlot, toSlot, settingsHash);
+	}
+
+	public void sendComponentSettings(int interfaceId, int componentId, int fromSlot, int toSlot, int settingsHash) {
 		OutputStream stream = new OutputStream(13);
 		stream.writePacket(player, 40);
 		stream.writeIntV2(settingsHash);
@@ -486,14 +503,22 @@ public class WorldPacketsEncoder extends Encoder {
 		session.write(stream);
 	}
 
-	public void sendGlobalConfig(int id, int value) {
+	public void sendGlobalVar(String var, int value) {
+		int id = Rscm.lookup(var);
 		if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE)
-			sendGlobalConfig2(id, value);
+			sendGlobalVar2(id, value);
 		else
-			sendGlobalConfig1(id, value);
+			sendGlobalVar1(id, value);
 	}
 
-	public void sendGlobalConfig1(int id, int value) {
+	public void sendGlobalVar(int id, int value) {
+		if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE)
+			sendGlobalVar2(id, value);
+		else
+			sendGlobalVar1(id, value);
+	}
+
+	public void sendGlobalVar1(int id, int value) {
 		OutputStream stream = new OutputStream(4);
 		stream.writePacket(player, 154);
 		stream.writeByteC(value);
@@ -501,57 +526,11 @@ public class WorldPacketsEncoder extends Encoder {
 		session.write(stream);
 	}
 
-	public void sendGlobalConfig2(int id, int value) {
+	public void sendGlobalVar2(int id, int value) {
 		OutputStream stream = new OutputStream(7);
 		stream.writePacket(player, 63);
 		stream.writeShort128(id);
 		stream.writeInt(value);
-		session.write(stream);
-	}
-
-	public void sendConfig(int id, int value) {
-		if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE)
-			sendConfig2(id, value);
-		else
-			sendConfig1(id, value);
-	}
-
-	public void sendConfigByFile(int fileId, int value) {
-		if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE)
-			sendConfigByFile2(fileId, value);
-		else
-			sendConfigByFile1(fileId, value);
-	}
-
-	public void sendConfig1(int id, int value) {
-		OutputStream stream = new OutputStream(4);
-		stream.writePacket(player, 110);
-		stream.writeShortLE128(id);
-		stream.writeByte128(value);
-		session.write(stream);
-	}
-
-	public void sendConfig2(int id, int value) {
-		OutputStream stream = new OutputStream(7);
-		stream.writePacket(player, 56);
-		stream.writeShort128(id);
-		stream.writeIntLE(value);
-		session.write(stream);
-	}
-
-	public void sendConfigByFile1(int fileId, int value) {
-		OutputStream stream = new OutputStream(4);
-		stream.writePacket(player, 111);
-		stream.writeShort128(fileId);
-		stream.writeByteC(value);
-		session.write(stream);
-	}
-
-	public void sendConfigByFile2(int fileId, int value) {
-		OutputStream stream = new OutputStream(7);
-		stream.writePacket(player, 81);
-		stream.writeIntV1(value);
-		stream.writeShort128(fileId);
 		session.write(stream);
 	}
 
@@ -562,7 +541,18 @@ public class WorldPacketsEncoder extends Encoder {
 		session.write(stream);
 	}
 
-	public void sendIComponentText(String interfaceName, int componentId, String text) {
+	public void sendTextOnComponent(String interfaceName, String component, String text) {
+		int interfaceId = Rscm.lookup(interfaceName);
+		int componentId = Rscm.lookup(component);
+		OutputStream stream = new OutputStream();
+		stream.writePacketVarShort(player, 135);
+		stream.writeString(text);
+		stream.writeInt(interfaceId << 16 | componentId);
+		stream.endPacketVarShort();
+		session.write(stream);
+	}
+
+	public void sendTextOnComponent(String interfaceName, int componentId, String text) {
 		int interfaceId = Rscm.lookup(interfaceName);
 		OutputStream stream = new OutputStream();
 		stream.writePacketVarShort(player, 135);
@@ -572,7 +562,7 @@ public class WorldPacketsEncoder extends Encoder {
 		session.write(stream);
 	}
 
-	public void sendIComponentText(int interfaceId, int componentId, String text) {
+	public void sendTextOnComponent(int interfaceId, int componentId, String text) {
 		OutputStream stream = new OutputStream();
 		stream.writePacketVarShort(player, 135);
 		stream.writeString(text);
@@ -1323,27 +1313,27 @@ public class WorldPacketsEncoder extends Encoder {
 	public void sendPlayerMessage(int border, Player player, String message) {
 		sendGameMessage(message);
 		sendGlobalString(306, message);
-		sendGlobalConfig(1699, 15263739);
-		sendGlobalConfig(1700, border);
-		sendGlobalConfig(1695, 1);
+		sendGlobalVar(1699, 15263739);
+		sendGlobalVar(1700, border);
+		sendGlobalVar(1695, 1);
 		sendPlayerInterface(player, true, 746, 1, 1177);
 	}
 
 	public void sendNPCMessage(int border, NPC npc, String message) {
 		sendGameMessage(message);
 		sendGlobalString(306, message);
-		sendGlobalConfig(1699, 15263739);
-		sendGlobalConfig(1700, border);
-		sendGlobalConfig(1695, 1);
+		sendGlobalVar(1699, 15263739);
+		sendGlobalVar(1700, border);
+		sendGlobalVar(1695, 1);
 		sendNPCInterface(npc, true, 746, 1, 1177);
 	}
 
 	public void sendObjectMessage(int border, WorldObject object, String message) {
 		sendGameMessage(message);
 		sendGlobalString(306, message);
-		sendGlobalConfig(1699, 15263739);
-		sendGlobalConfig(1700, border);
-		sendGlobalConfig(1695, 1);
+		sendGlobalVar(1699, 15263739);
+		sendGlobalVar(1700, border);
+		sendGlobalVar(1695, 1);
 		sendObjectInterface(object, true, 746, 1, 1177);
 	}
 
@@ -1702,12 +1692,12 @@ public class WorldPacketsEncoder extends Encoder {
 		session.write(stream);
 	}
 
-	public void sendUnlockIComponentOptionSlots(int interfaceId, int componentId, int fromSlot, int toSlot,
-			boolean unlockEvent, int... optionsSlots) {
+	public void sendUnlockOptions(int interfaceId, int componentId, int fromSlot, int toSlot,
+								  boolean unlockEvent, int... optionsSlots) {
 		int settingsHash = unlockEvent ? 1 : 0;
 		for (int slot : optionsSlots)
 			settingsHash |= 2 << slot;
-		sendIComponentSettings(interfaceId, componentId, fromSlot, toSlot, settingsHash);
+		sendComponentSettings(interfaceId, componentId, fromSlot, toSlot, settingsHash);
 	}
 
 	public void sendWorldList(boolean full) {
@@ -1801,9 +1791,9 @@ public class WorldPacketsEncoder extends Encoder {
 	public void sendItemMessage(int border, int colour, int id, int x, int y, String message) {
 		sendGameMessage(message);
 		sendGlobalString(306, message);
-		sendGlobalConfig(1699, colour); // "color" - Default; 1 - Black
-		sendGlobalConfig(1700, border); // "border" - Default; 0 - White; 1 - Red; 2 - No Border
-		sendGlobalConfig(1695, 1);
+		sendGlobalVar(1699, colour); // "color" - Default; 1 - Black
+		sendGlobalVar(1700, border); // "border" - Default; 0 - White; 1 - Red; 2 - No Border
+		sendGlobalVar(1695, 1);
 		sendItemInterface(new Item(id), new WorldTile(x, y, player.getPlane()), true, 746, 0, 1177);
 	}
 

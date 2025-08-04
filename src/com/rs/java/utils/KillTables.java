@@ -47,7 +47,7 @@ public final class KillTables implements Serializable {
 
 	public static void showRanks(Player player) {
 		for (int i = 10; i < 310; i++)
-			player.getPackets().sendIComponentText(275, i, "");
+			player.getPackets().sendTextOnComponent(275, i, "");
 		for (int i = 0; i < 300; i++) {
 			if (ranks[i] == null)
 				break;
@@ -60,11 +60,11 @@ public final class KillTables implements Serializable {
 				text = "<col=38610B>";
 			else
 				text = "<col=000000>";
-			player.getPackets().sendIComponentText(275, i + 10,
+			player.getPackets().sendTextOnComponent(275, i + 10,
 					text + "Top " + (i + 1) + " - " + Utils.formatPlayerNameForDisplay(ranks[i].username) + " - kills: "
 							+ ranks[i].kills + " - deaths: " + ranks[i].deaths);
 		}
-		player.getPackets().sendIComponentText(275, 1, "Player Killing Ranks Table");
+		player.getPackets().sendTextOnComponent(275, 1, "Player Killing Ranks Table");
 		player.getInterfaceManager().sendInterface(275);
 	}
 

@@ -60,7 +60,7 @@ public class LividFarm {
 	}
 
 	public static void updateProduce(Player player) {
-		player.getPackets().sendIComponentText(3046, 3,
+		player.getPackets().sendTextOnComponent(3046, 3,
 				"Produce: " + Utils.getFormattedNumber(player.getLivid().getProduce(), ','));
 	}
 

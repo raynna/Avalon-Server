@@ -34,19 +34,19 @@ public class ClansManager {
 	}
 
 	public static void viewClanmateDetails(Player player, ClanMember member) {
-		player.getPackets().sendGlobalConfig(1500, member.getRank());
-		player.getPackets().sendGlobalConfig(1501, member.getJob());
-		player.getPackets().sendGlobalConfig(1564, 0);
-		player.getPackets().sendGlobalConfig(1565, member.isBanFromKeep() ? 1 : 0);
-		player.getPackets().sendGlobalConfig(1566, member.isBanFromCitadel() ? 1 : 0);
-		player.getPackets().sendGlobalConfig(1567, member.isBanFromIsland() ? 1 : 0);
-		player.getPackets().sendGlobalConfig(1568, member.firstWeek() ? 1 : 0);
+		player.getPackets().sendGlobalVar(1500, member.getRank());
+		player.getPackets().sendGlobalVar(1501, member.getJob());
+		player.getPackets().sendGlobalVar(1564, 0);
+		player.getPackets().sendGlobalVar(1565, member.isBanFromKeep() ? 1 : 0);
+		player.getPackets().sendGlobalVar(1566, member.isBanFromCitadel() ? 1 : 0);
+		player.getPackets().sendGlobalVar(1567, member.isBanFromIsland() ? 1 : 0);
+		player.getPackets().sendGlobalVar(1568, member.firstWeek() ? 1 : 0);
 		player.getPackets().sendGlobalString(347, Utils.formatPlayerNameForDisplay(member.getUsername()));
 		player.getPackets().sendRunScript(4319);
 	}
 
 	public static void unlockBanList(Player player) {
-		player.getPackets().sendUnlockIComponentOptionSlots(1110, 11, 0, 100, 0);
+		player.getPackets().sendUnlockOptions(1110, 11, 0, 100, 0);
 	}
 
 	public ClansManager(Clan clan) {
@@ -186,13 +186,13 @@ public class ClansManager {
 			}
 			if (rank != null) {
 				member.setRank(rank);
-				player.getPackets().sendGlobalConfig(1500, rank);
+				player.getPackets().sendGlobalVar(1500, rank);
 				manager.generateClanChannelDataBlock();
 				manager.refreshClanChannel();
 			}
 			if (job != null) {
 				member.setJob(job);
-				player.getPackets().sendGlobalConfig(1501, job);
+				player.getPackets().sendGlobalVar(1501, job);
 			}
 			manager.generateClanSettingsDataBlock();
 			manager.refreshClanSettings();
@@ -253,7 +253,7 @@ public class ClansManager {
 		if (!manager.hasRankToEditSettings(player))
 			return;
 		player.getInterfaceManager().sendInterface(1089);
-		player.getPackets().sendUnlockIComponentOptionSlots(1089, 30, 0, 241, 0);
+		player.getPackets().sendUnlockOptions(1089, 30, 0, 241, 0);
 	}
 
 	public static void openForumThreadInterface(Player player) {
@@ -284,8 +284,8 @@ public class ClansManager {
 			return;
 		player.stopAll();
 		player.getInterfaceManager().sendInterface(1105);
-		player.getPackets().sendUnlockIComponentOptionSlots(1105, 66, 0, 116, 0); // top
-		player.getPackets().sendUnlockIComponentOptionSlots(1105, 63, 0, 116, 0); // button
+		player.getPackets().sendUnlockOptions(1105, 66, 0, 116, 0); // top
+		player.getPackets().sendUnlockOptions(1105, 63, 0, 116, 0); // button
 		for (int i = 0; i < manager.clan.getMottifColors().length; i++)
 			player.getVarsManager().sendVar(2094 + i, manager.clan.getMottifColors()[i]);
 	}
@@ -975,7 +975,7 @@ public class ClansManager {
 			boolean created = manager != null;
 			if (!created) { // not loaded
 				if (!SerializableFilesManager.containsClan(clanName)) {
-					player.getPackets().sendIComponentText(1110, 70,
+					player.getPackets().sendTextOnComponent(1110, 70,
 							"Could not find a clan named " + clanName + ". Please check the name and try again.");
 					return false;
 				}
@@ -1006,7 +1006,7 @@ public class ClansManager {
 				if (guest) {
 					if (!manager.clan.isGuestsInChatCanEnter()) {
 						player.getPackets().sendGameMessage("This clan only allows clanmates to join their channel.");
-						player.getPackets().sendIComponentText(1110, 70,
+						player.getPackets().sendTextOnComponent(1110, 70,
 								"This clan only allows clanmates to join their channel.");
 						return false;
 					}
@@ -1045,7 +1045,7 @@ public class ClansManager {
 		player.getPackets().sendClanSettings(manager, false);
 		player.getInterfaceManager().sendInterface(1107);
 		if (manager.clan.getMotto() != null)
-			player.getPackets().sendIComponentText(1107, 88, manager.clan.getMotto());
+			player.getPackets().sendTextOnComponent(1107, 88, manager.clan.getMotto());
 		if (manager.clan.getMottifTop() != 0)
 			player.getPackets().sendIComponentSprite(1107, 96, getMottifSprite(manager.clan.getMottifTop()));
 		if (manager.clan.getMottifBottom() != 0)
@@ -1053,11 +1053,11 @@ public class ClansManager {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeZone(TimeZone.getTimeZone("GMT"));
-		player.getPackets().sendIComponentText(1107, 186, dateFormat.format(cal.getTime()));
+		player.getPackets().sendTextOnComponent(1107, 186, dateFormat.format(cal.getTime()));
 		cal.add(Calendar.MINUTE, manager.clan.getTimeZone());
-		player.getPackets().sendIComponentText(1107, 185, dateFormat.format(cal.getTime()));
+		player.getPackets().sendTextOnComponent(1107, 185, dateFormat.format(cal.getTime()));
 		if (p2 != null)
-			player.getPackets().sendIComponentText(1107, 92, p2.getDisplayName());
+			player.getPackets().sendTextOnComponent(1107, 92, p2.getDisplayName());
 		else
 			player.getPackets().sendHideIComponent(1107, 90, true);
 
@@ -1109,33 +1109,33 @@ public class ClansManager {
 	}
 
 	public static void selectPermissionRank(Player player, int selectedRank) {
-		player.getPackets().sendGlobalConfig(1572, 1);
-		player.getPackets().sendGlobalConfig(1574, 1);
-		player.getPackets().sendGlobalConfig(1576, 1);
-		player.getPackets().sendGlobalConfig(1577, 1);
-		player.getPackets().sendGlobalConfig(1578, 1);
-		player.getPackets().sendGlobalConfig(1579, 1);
-		player.getPackets().sendGlobalConfig(1580, 1);
-		player.getPackets().sendGlobalConfig(1581, 1);
-		player.getPackets().sendGlobalConfig(1582, 1);
-		player.getPackets().sendGlobalConfig(1583, 1);
-		player.getPackets().sendGlobalConfig(1584, 1);
-		player.getPackets().sendGlobalConfig(1585, 1);
-		player.getPackets().sendGlobalConfig(1586, 1);
-		player.getPackets().sendGlobalConfig(1587, 1);
-		player.getPackets().sendGlobalConfig(1588, 1);
-		player.getPackets().sendGlobalConfig(1589, 1);
+		player.getPackets().sendGlobalVar(1572, 1);
+		player.getPackets().sendGlobalVar(1574, 1);
+		player.getPackets().sendGlobalVar(1576, 1);
+		player.getPackets().sendGlobalVar(1577, 1);
+		player.getPackets().sendGlobalVar(1578, 1);
+		player.getPackets().sendGlobalVar(1579, 1);
+		player.getPackets().sendGlobalVar(1580, 1);
+		player.getPackets().sendGlobalVar(1581, 1);
+		player.getPackets().sendGlobalVar(1582, 1);
+		player.getPackets().sendGlobalVar(1583, 1);
+		player.getPackets().sendGlobalVar(1584, 1);
+		player.getPackets().sendGlobalVar(1585, 1);
+		player.getPackets().sendGlobalVar(1586, 1);
+		player.getPackets().sendGlobalVar(1587, 1);
+		player.getPackets().sendGlobalVar(1588, 1);
+		player.getPackets().sendGlobalVar(1589, 1);
 
-		player.getPackets().sendGlobalConfig(1649, 1);
+		player.getPackets().sendGlobalVar(1649, 1);
 
-		player.getPackets().sendGlobalConfig(1590, 1);
-		player.getPackets().sendGlobalConfig(1569, selectedRank); // selects
+		player.getPackets().sendGlobalVar(1590, 1);
+		player.getPackets().sendGlobalVar(1569, selectedRank); // selects
 		// rank
-		player.getPackets().sendGlobalConfig(1571, 1);
-		player.getPackets().sendGlobalConfig(1570, 1);
-		player.getPackets().sendGlobalConfig(1573, 1);
-		player.getPackets().sendGlobalConfig(1575, 1);
-		player.getPackets().sendGlobalConfig(1792, 1);
+		player.getPackets().sendGlobalVar(1571, 1);
+		player.getPackets().sendGlobalVar(1570, 1);
+		player.getPackets().sendGlobalVar(1573, 1);
+		player.getPackets().sendGlobalVar(1575, 1);
+		player.getPackets().sendGlobalVar(1792, 1);
 
 	}
 
@@ -1151,7 +1151,7 @@ public class ClansManager {
 			player.getPackets().sendHideIComponent(1096, i, true);
 		for (int i = 380; i <= 387; i++)
 			player.getPackets().sendHideIComponent(1096, i, true);
-		player.getPackets().sendIComponentText(1096, 373, "Permissions are currently disabled and setted to default.");
+		player.getPackets().sendTextOnComponent(1096, 373, "Permissions are currently disabled and setted to default.");
 		player.getPackets().sendHideIComponent(1096, 202, false); // disable
 		// acess to
 		// citadel
@@ -1168,18 +1168,18 @@ public class ClansManager {
 		// signpost
 		// permissions
 		// setting
-		player.getPackets().sendUnlockIComponentOptionSlots(1096, 240, 0, 144, 0); // unlocks
+		player.getPackets().sendUnlockOptions(1096, 240, 0, 144, 0); // unlocks
 		// timezone
 		// setting
-		player.getPackets().sendUnlockIComponentOptionSlots(1096, 290, 0, 200, 0); // unlocks
+		player.getPackets().sendUnlockOptions(1096, 290, 0, 200, 0); // unlocks
 		// worldid
 		// setting
-		player.getPackets().sendUnlockIComponentOptionSlots(1096, 41, 0, Clan.MAX_MEMBERS, 0); // unlocks
+		player.getPackets().sendUnlockOptions(1096, 41, 0, Clan.MAX_MEMBERS, 0); // unlocks
 		// clanmates
-		player.getPackets().sendUnlockIComponentOptionSlots(1096, 276, 0, 125, 0); // set
+		player.getPackets().sendUnlockOptions(1096, 276, 0, 125, 0); // set
 		// member
 		// rank
-		player.getPackets().sendUnlockIComponentOptionSlots(1096, 262, 0, 500, 0); // set
+		player.getPackets().sendUnlockOptions(1096, 262, 0, 500, 0); // set
 		// member
 		// profession
 	}
@@ -1190,7 +1190,7 @@ public class ClansManager {
 		else {
 			player.temporaryAttribute().put("joinguestclan", Boolean.TRUE);
 			player.getPackets().sendInputNameScript("Please enter the name of the clan to chat in:");
-			player.getPackets().sendIComponentText(1110, 70,
+			player.getPackets().sendTextOnComponent(1110, 70,
 					"Please enter the name of the clan whose Clan chat you wish to join as a guest. <br><br>To talk as a guest, start  your<br>line<br>of chat with ///");
 
 		}

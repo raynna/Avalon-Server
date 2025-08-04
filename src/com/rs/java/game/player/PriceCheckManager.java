@@ -21,9 +21,9 @@ public class PriceCheckManager {
 		player.getInterfaceManager().sendInventoryInterface(207);
 		sendInterItems();
 		sendOptions();
-		player.getPackets().sendGlobalConfig(728, 0);
+		player.getPackets().sendGlobalVar(728, 0);
 		for (int i = 0; i < pcInv.getSize(); i++)
-			player.getPackets().sendGlobalConfig(700 + i, 0);
+			player.getPackets().sendGlobalVar(700 + i, 0);
 		player.setCloseInterfacesEvent(new Runnable() {
 			@Override
 			public void run() {
@@ -87,7 +87,7 @@ public class PriceCheckManager {
 				totalPrice += EconomyPrices.getPrice(item.getId()) * item.getAmount();
 			if (itemsBefore[index] != item) {
 				changedSlots[count++] = index;
-				player.getPackets().sendGlobalConfig(700 + index,
+				player.getPackets().sendGlobalVar(700 + index,
 						item == null ? 0 : EconomyPrices.getPrice(item.getId()));
 			}
 
@@ -95,7 +95,7 @@ public class PriceCheckManager {
 		int[] finalChangedSlots = new int[count];
 		System.arraycopy(changedSlots, 0, finalChangedSlots, 0, count);
 		refresh(finalChangedSlots);
-		player.getPackets().sendGlobalConfig(728, totalPrice);
+		player.getPackets().sendGlobalVar(728, totalPrice);
 	}
 
 	public void refresh(int... slots) {
@@ -103,8 +103,8 @@ public class PriceCheckManager {
 	}
 
 	public void sendOptions() {
-		player.getPackets().sendUnlockIComponentOptionSlots(206, 15, 0, 54, 0, 1, 2, 3, 4, 5, 6);
-		player.getPackets().sendUnlockIComponentOptionSlots(207, 0, 0, 27, 0, 1, 2, 3, 4, 5);
+		player.getPackets().sendUnlockOptions(206, 15, 0, 54, 0, 1, 2, 3, 4, 5, 6);
+		player.getPackets().sendUnlockOptions(207, 0, 0, 27, 0, 1, 2, 3, 4, 5);
 		player.getPackets().sendInterSetItemsOptionsScript(207, 0, 93, 4, 7, "Add", "Add-5", "Add-10", "Add-All",
 				"Add-X", "Examine");
 	}

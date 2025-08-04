@@ -233,10 +233,10 @@ public class BeastOfBurden implements Serializable {
 	}
 
 	public void sendOptions() {
-		player.getPackets().sendUnlockIComponentOptionSlots(665, 0, 0, 27, 0, 1, 2, 3, 4, 5);
+		player.getPackets().sendUnlockOptions(665, 0, 0, 27, 0, 1, 2, 3, 4, 5);
 		player.getPackets().sendInterSetItemsOptionsScript(665, 0, 93, 4, 7, "Store", "Store-5", "Store-10",
 				"Store-All", "Store-X", "Examine");
-		player.getPackets().sendUnlockIComponentOptionSlots(671, 27, 0, ITEMS_KEY, 0, 1, 2, 3, 4, 5);
+		player.getPackets().sendUnlockOptions(671, 27, 0, ITEMS_KEY, 0, 1, 2, 3, 4, 5);
 		player.getPackets().sendInterSetItemsOptionsScript(671, 27, ITEMS_KEY, 6, 5, "Withdraw", "Withdraw-5",
 				"Withdraw-10", "Withdraw-All", "Withdraw-X", "Examine");
 	}

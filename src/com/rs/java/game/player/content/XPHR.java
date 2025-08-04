@@ -83,7 +83,7 @@ public class XPHR implements Serializable {
             TempValues.put("TempSessionXP", 0);
             TempValues.put("TempXPHR", 0);
             player.getPackets()
-                    .sendIComponentText(3001, 1,
+                    .sendTextOnComponent(3001, 1,
                             (!Configuration.get("SkillSettings") ? "XP (" + Skills.SKILL_NAME[skill] + "): "
                                     + Skill.get(Skills.SKILL_NAME[skill]) : "Session XP: " + SessionXP)
                     + "<br>XP/H: " + Utils.getFormattedNumber(XPHR, ',') + " (" + Utils.getFormatedTimeShort(time)
@@ -115,7 +115,7 @@ public class XPHR implements Serializable {
 					Reset();
 				}
 				player.getPackets()
-						.sendIComponentText(3001, 1,
+						.sendTextOnComponent(3001, 1,
 								(!Configuration.get("SkillSettings") ? "XP (" + Skills.SKILL_NAME[skill] + "): "
 										+ Skill.get(Skills.SKILL_NAME[skill]) : "Session XP: " + SessionXP)
 						+ "<br>XP/H: " + Utils.getFormattedNumber(XPHR, ',') + " (" + Utils.getFormatedTimeShort(time)
@@ -133,7 +133,7 @@ public class XPHR implements Serializable {
 		OpenStatistics();
 		Skill.clear();
 		player.getInterfaceManager().closeHealth(false);
-		player.getPackets().sendIComponentText(3001, 1, "");
+		player.getPackets().sendTextOnComponent(3001, 1, "");
 		SessionActive(false);
 		StartedSession(false);
 		SessionXP = 0;
@@ -149,12 +149,12 @@ public class XPHR implements Serializable {
 	private void OpenStatistics() {
 		player.getInterfaceManager().sendInterface(275);
 		for (int i = 0; i < 100; i++)
-			player.getPackets().sendIComponentText(275, i, "");
-		player.getPackets().sendIComponentText(275, 1, "Statistics");
-		player.getPackets().sendIComponentText(275, 13, "Total Gained XP: " + Utils.getFormattedNumber(SessionXP, ',')
+			player.getPackets().sendTextOnComponent(275, i, "");
+		player.getPackets().sendTextOnComponent(275, 1, "Statistics");
+		player.getPackets().sendTextOnComponent(275, 13, "Total Gained XP: " + Utils.getFormattedNumber(SessionXP, ',')
 				+ " XP <br>Average XP/H " + Utils.getFormattedNumber(XPHR, ','));
-		player.getPackets().sendIComponentText(275, 15, "XP in individual skills");
-		player.getPackets().sendIComponentText(275, 16,
+		player.getPackets().sendTextOnComponent(275, 15, "XP in individual skills");
+		player.getPackets().sendTextOnComponent(275, 16,
 				Skill.toString().replace("{", "").replace("}", "").replace("=", " = ").replace(",", "<br>") + " XP");
 	}
 

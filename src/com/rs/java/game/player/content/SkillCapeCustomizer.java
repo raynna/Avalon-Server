@@ -22,7 +22,7 @@ public final class SkillCapeCustomizer {
 		int[] skillCape = itemId == 20767 ? player.getMaxedCapeCustomized() : player.getCompletionistCapeCustomized();
 		player.getInterfaceManager().sendInterface(20);
 		for (int i = 0; i < 4; i++)
-			player.getPackets().sendConfigByFile(9254 + i, skillCape[i]);
+			player.getPackets().sendVarBit(9254 + i, skillCape[i]);
 		player.getPackets().sendIComponentModel(20, 55,
 				player.getAppearence().isMale() ? ItemDefinitions.getItemDefinitions(itemId).getMaleWornModelId1()
 						: ItemDefinitions.getItemDefinitions(itemId).getFemaleWornModelId1());
@@ -44,7 +44,7 @@ public final class SkillCapeCustomizer {
 			return;
 		int[] skillCape = capeId == 20767 ? player.getMaxedCapeCustomized() : player.getCompletionistCapeCustomized();
 		skillCape[part] = colorId;
-		player.getPackets().sendConfigByFile(9254 + part, colorId);
+		player.getPackets().sendVarBit(9254 + part, colorId);
 		player.getInterfaceManager().sendInterface(20);
 	}
 
@@ -61,23 +61,23 @@ public final class SkillCapeCustomizer {
 				player.setCompletionistCapeCustomized(
 						Arrays.copyOf(ItemDefinitions.getItemDefinitions(capeId).originalModelColors, 4));
 			for (int i = 0; i < 4; i++)
-				player.getPackets().sendConfigByFile(9254 + i, skillCape[i]);
+				player.getPackets().sendVarBit(9254 + i, skillCape[i]);
 		} else if (buttonId == 34) { // detail top
 			player.temporaryAttribute().put("SkillcapeCustomize", 0);
 			player.getInterfaceManager().sendInterface(19);
-			player.getPackets().sendConfig(2174, skillCape[0]);
+			player.getPackets().sendVar(2174, skillCape[0]);
 		} else if (buttonId == 71) { // background top
 			player.temporaryAttribute().put("SkillcapeCustomize", 1);
 			player.getInterfaceManager().sendInterface(19);
-			player.getPackets().sendConfig(2174, skillCape[1]);
+			player.getPackets().sendVar(2174, skillCape[1]);
 		} else if (buttonId == 83) { // detail button
 			player.temporaryAttribute().put("SkillcapeCustomize", 2);
 			player.getInterfaceManager().sendInterface(19);
-			player.getPackets().sendConfig(2174, skillCape[2]);
+			player.getPackets().sendVar(2174, skillCape[2]);
 		} else if (buttonId == 95) { // background button
 			player.temporaryAttribute().put("SkillcapeCustomize", 3);
 			player.getInterfaceManager().sendInterface(19);
-			player.getPackets().sendConfig(2174, skillCape[3]);
+			player.getPackets().sendVar(2174, skillCape[3]);
 		} else if (buttonId == 114 || buttonId == 142) { // done / close
 			player.getAppearence().generateAppearenceData();
 			player.closeInterfaces();

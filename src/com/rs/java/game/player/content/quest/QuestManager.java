@@ -129,32 +129,32 @@ public class QuestManager implements Serializable {
 
 	public void update() {
 		int totalQuestPoints = 333;
-		player.getPackets().sendConfig(904, totalQuestPoints);
-		player.getPackets().sendConfig(101, player.getQuestManager().getQuestPoints());
+		player.getPackets().sendVar(904, totalQuestPoints);
+		player.getPackets().sendVar(101, player.getQuestManager().getQuestPoints());
 		/**
 		 * Started
 		 */
 		if(player.getQuestManager().get(Quests.RUNE_MYSTERIES).getState() == QuestState.STARTED) {
-			player.getPackets().sendConfig(player.getQuestManager().get(Quests.RUNE_MYSTERIES).getVarp()[0], player.getQuestManager().get(Quests.RUNE_MYSTERIES).getVarp()[1]);
+			player.getPackets().sendVar(player.getQuestManager().get(Quests.RUNE_MYSTERIES).getVarp()[0], player.getQuestManager().get(Quests.RUNE_MYSTERIES).getVarp()[1]);
 		}
 		if(player.getQuestManager().get(Quests.PIRATES_TREASURE).getState() == QuestState.STARTED) {
-			player.getPackets().sendConfig(player.getQuestManager().get(Quests.PIRATES_TREASURE).getVarp()[0], player.getQuestManager().get(Quests.PIRATES_TREASURE).getVarp()[1]);
+			player.getPackets().sendVar(player.getQuestManager().get(Quests.PIRATES_TREASURE).getVarp()[0], player.getQuestManager().get(Quests.PIRATES_TREASURE).getVarp()[1]);
 		}
 		if(player.getQuestManager().get(Quests.GOBLIN_DIPLOMACY).getState() == QuestState.STARTED) {
-			player.getPackets().sendConfig(player.getQuestManager().get(Quests.GOBLIN_DIPLOMACY).getVarp()[0], player.getQuestManager().get(Quests.GOBLIN_DIPLOMACY).getVarp()[1]);
+			player.getPackets().sendVar(player.getQuestManager().get(Quests.GOBLIN_DIPLOMACY).getVarp()[0], player.getQuestManager().get(Quests.GOBLIN_DIPLOMACY).getVarp()[1]);
 		}
 
 		/**
 		 * Finished
 		 */
 		if(player.getQuestManager().get(Quests.RUNE_MYSTERIES).getState() == QuestState.COMPLETED) {
-			player.getPackets().sendConfig(player.getQuestManager().get(Quests.RUNE_MYSTERIES).getVarp()[0], player.getQuestManager().get(Quests.RUNE_MYSTERIES).getVarp()[2]);
+			player.getPackets().sendVar(player.getQuestManager().get(Quests.RUNE_MYSTERIES).getVarp()[0], player.getQuestManager().get(Quests.RUNE_MYSTERIES).getVarp()[2]);
 		}
 		if(player.getQuestManager().get(Quests.PIRATES_TREASURE).getState() == QuestState.COMPLETED) {
-			player.getPackets().sendConfig(player.getQuestManager().get(Quests.PIRATES_TREASURE).getVarp()[0], player.getQuestManager().get(Quests.PIRATES_TREASURE).getVarp()[2]);
+			player.getPackets().sendVar(player.getQuestManager().get(Quests.PIRATES_TREASURE).getVarp()[0], player.getQuestManager().get(Quests.PIRATES_TREASURE).getVarp()[2]);
 		}
 		if(player.getQuestManager().get(Quests.GOBLIN_DIPLOMACY).getState() == QuestState.COMPLETED) {
-			player.getPackets().sendConfig(player.getQuestManager().get(Quests.GOBLIN_DIPLOMACY).getVarp()[0], player.getQuestManager().get(Quests.GOBLIN_DIPLOMACY).getVarp()[2]);
+			player.getPackets().sendVar(player.getQuestManager().get(Quests.GOBLIN_DIPLOMACY).getVarp()[0], player.getQuestManager().get(Quests.GOBLIN_DIPLOMACY).getVarp()[2]);
 		}
 	}
 

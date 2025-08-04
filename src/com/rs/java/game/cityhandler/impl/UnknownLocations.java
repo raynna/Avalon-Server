@@ -258,7 +258,7 @@ public class UnknownLocations implements CityEvent {
 			if (travel) {
 				player.lock();
 				player.getInterfaceManager().sendInterface(299);
-				player.getPackets().sendConfig(75, 1);
+				player.getPackets().sendVar(75, 1);
 
 				WorldTasksManager.schedule(new WorldTask() {
 
@@ -271,7 +271,7 @@ public class UnknownLocations implements CityEvent {
 						player.getDialogueManager().startDialogue(
 								"SimpleMessage",
 								"The ship arrives at Entrana.");
-						player.getPackets().sendConfig(75, 0);
+						player.getPackets().sendVar(75, 0);
 						return;
 					}
 				}, 12);

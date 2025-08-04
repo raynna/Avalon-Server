@@ -50,8 +50,8 @@ public final class CastleWars {
 
 	public static void viewScoreBoard(Player player) {
 		player.getInterfaceManager().sendChatBoxInterface(55);
-		player.getPackets().sendIComponentText(55, 1, "Saradomin: " + seasonWins[SARADOMIN]);
-		player.getPackets().sendIComponentText(55, 2, "Zamorak: " + seasonWins[ZAMORAK]);
+		player.getPackets().sendTextOnComponent(55, 1, "Saradomin: " + seasonWins[SARADOMIN]);
+		player.getPackets().sendTextOnComponent(55, 2, "Zamorak: " + seasonWins[ZAMORAK]);
 	}
 
 	public static int getPowerfullestTeam() {
@@ -184,7 +184,7 @@ public final class CastleWars {
 	}
 
 	public static void refreshTimeLeft(Player player) {
-		player.getPackets().sendConfig(380,
+		player.getPackets().sendVar(380,
 				playingGame == null ? 0
 						: playingGame.minutesLeft
 								- (player.getControlerManager().getControler() instanceof CastleWarsPlaying ? 5 : 0));
@@ -426,10 +426,10 @@ public final class CastleWars {
 		}
 
 		public void refresh(Player player) {
-			player.getPackets().sendConfigByFile(143, flagStatus[SARADOMIN]);
-			player.getPackets().sendConfigByFile(145, score[SARADOMIN]);
-			player.getPackets().sendConfigByFile(153, flagStatus[ZAMORAK]);
-			player.getPackets().sendConfigByFile(155, score[ZAMORAK]);
+			player.getPackets().sendVarBit(143, flagStatus[SARADOMIN]);
+			player.getPackets().sendVarBit(145, score[SARADOMIN]);
+			player.getPackets().sendVarBit(153, flagStatus[ZAMORAK]);
+			player.getPackets().sendVarBit(155, score[ZAMORAK]);
 		}
 
 		@Override

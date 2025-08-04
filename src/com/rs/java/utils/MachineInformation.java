@@ -64,8 +64,8 @@ public class MachineInformation {
 			 */
 		if (title != null) {
 			player.getInterfaceManager().sendInterface(405);
-			player.getPackets().sendIComponentText(405, 16, title);
-			player.getPackets().sendIComponentText(405, 17, suggestion);
+			player.getPackets().sendTextOnComponent(405, 16, title);
+			player.getPackets().sendTextOnComponent(405, 17, suggestion);
 		}
 	}
 

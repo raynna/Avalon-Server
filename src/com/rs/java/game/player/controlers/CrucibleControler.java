@@ -51,7 +51,7 @@ public class CrucibleControler extends Controler {
 	public void sendInterfaces() {
 		player.getInterfaceManager().sendOverlay(1296, false);
 		if (target != null)
-			player.getPackets().sendIComponentText(1296, 25, target.getDisplayName());
+			player.getPackets().sendTextOnComponent(1296, 25, target.getDisplayName());
 	}
 
 	@Override
@@ -102,13 +102,13 @@ public class CrucibleControler extends Controler {
 		Long immune = (Long) player.temporaryAttribute().get("CrucibleImmune");
 		long currentTime = Utils.currentTimeMillis();
 		if (immune != null && immune > Utils.currentTimeMillis()) {
-			player.getPackets().sendIComponentText(1296, 26, "" + (((immune - currentTime) / 3000) + 1));
+			player.getPackets().sendTextOnComponent(1296, 26, "" + (((immune - currentTime) / 3000) + 1));
 		} else if (target != null) {
 			if (player.temporaryAttribute().remove("CrucibleImmune") != null)
-				player.getPackets().sendIComponentText(1296, 26, "None");
+				player.getPackets().sendTextOnComponent(1296, 26, "None");
 		} else if (player.hasSkull()) {
 			if (player.temporaryAttribute().remove("CrucibleImmune") != null)
-				player.getPackets().sendIComponentText(1296, 26, "None");
+				player.getPackets().sendTextOnComponent(1296, 26, "None");
 		}
 	}
 
@@ -217,12 +217,12 @@ public class CrucibleControler extends Controler {
 	public void setTarget(Player target) {
 		this.target = target;
 		if (target != null) {
-			player.getPackets().sendIComponentText(1296, 25, target.getDisplayName());
+			player.getPackets().sendTextOnComponent(1296, 25, target.getDisplayName());
 			player.getHintIconsManager().removeAll();
 			player.getHintIconsManager().addHintIcon(target, 9, -1, false);
 		} else {
 			player.getHintIconsManager().removeUnsavedHintIcon();
-			player.getPackets().sendIComponentText(1296, 25, "None");
+			player.getPackets().sendTextOnComponent(1296, 25, "None");
 		}
 	}
 

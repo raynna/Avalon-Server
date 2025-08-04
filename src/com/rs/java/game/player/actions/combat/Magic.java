@@ -962,16 +962,16 @@ public class Magic {
 		other.gfx(new Graphics(736, 0, 100));
 		player.getInterfaceManager().sendTab(player.getInterfaceManager().hasRezizableScreen() ? 114 : 174, 523);
 		player.getInterfaceManager().openGameTab(3);
-		player.getPackets().sendIComponentText(523, 103,
+		player.getPackets().sendTextOnComponent(523, 103,
 				"Viewing stats for <br><img=" + other.getRights() + ">" + other.getDisplayName());
 		for (int i = 0; i < 25; i++) {
-			player.getPackets().sendIComponentText(523, start, "" + other.getSkills().getLevel(i));
-			player.getPackets().sendIComponentText(523, end, "99");
+			player.getPackets().sendTextOnComponent(523, start, "" + other.getSkills().getLevel(i));
+			player.getPackets().sendTextOnComponent(523, end, "99");
 			start += 4;
 			end += 4;
 		}
-		player.getPackets().sendIComponentText(523, 98, "120");
-		player.getPackets().sendIComponentText(523, 106, "Hitpoints: " + other.getHitpoints());
+		player.getPackets().sendTextOnComponent(523, 98, "120");
+		player.getPackets().sendTextOnComponent(523, 106, "Hitpoints: " + other.getHitpoints());
 		player.getSkills().addXp(Skills.MAGIC, 76);
 		player.temporaryAttribute().put("LAST_SPELL", Utils.currentTimeMillis());
 		other.message("Your stats are being spied on by " + player.getDisplayName() + ".");
@@ -1005,11 +1005,11 @@ public class Magic {
 		player.gfx(new Graphics(1059));
 		npc.gfx(new Graphics(736, 0, 100));
 		player.getInterfaceManager().sendTab(player.getInterfaceManager().hasRezizableScreen() ? 114 : 174, 522);
-		player.getPackets().sendIComponentText(522, 0, npc.getName());
-		player.getPackets().sendIComponentText(522, 1, "Combat level: " + npc.getCombatLevel());
-		player.getPackets().sendIComponentText(522, 2, "Life Points: " + npc.getHitpoints());
-		player.getPackets().sendIComponentText(522, 3, "Max hit: " + npc.getMaxHit());
-		player.getPackets().sendIComponentText(522, 4, "Agreesive: " + (npc.checkAgressivity() ? "Yes." : "No."));
+		player.getPackets().sendTextOnComponent(522, 0, npc.getName());
+		player.getPackets().sendTextOnComponent(522, 1, "Combat level: " + npc.getCombatLevel());
+		player.getPackets().sendTextOnComponent(522, 2, "Life Points: " + npc.getHitpoints());
+		player.getPackets().sendTextOnComponent(522, 3, "Max hit: " + npc.getMaxHit());
+		player.getPackets().sendTextOnComponent(522, 4, "Agreesive: " + (npc.checkAgressivity() ? "Yes." : "No."));
 		player.getInterfaceManager().openGameTab(3);
 		player.getSkills().addXp(Skills.MAGIC, 61);
 		player.temporaryAttribute().put("LAST_SPELL", Utils.currentTimeMillis());

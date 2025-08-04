@@ -65,12 +65,12 @@ public final class ClanWarsTimer extends TimerTask {// this is the class for
 				} else if (startTicks == 0) {
 					started = true;
 					for (Player player : clanWars.getFirstPlayers()) {
-						player.getPackets().sendGlobalConfig(270, 0);
-						player.getPackets().sendGlobalConfig(260, 1);
+						player.getPackets().sendGlobalVar(270, 0);
+						player.getPackets().sendGlobalVar(260, 1);
 					}
 					for (Player player : clanWars.getSecondPlayers()) {
-						player.getPackets().sendGlobalConfig(270, 0);
-						player.getPackets().sendGlobalConfig(260, 1);
+						player.getPackets().sendGlobalVar(270, 0);
+						player.getPackets().sendGlobalVar(260, 1);
 					}
 					WallHandler.removeWall(clanWars);
 					clanWars.updateWar();
@@ -90,16 +90,16 @@ public final class ClanWarsTimer extends TimerTask {// this is the class for
 			if ((timeLeft * 0.6) / 60 != lastMinutes) {
 				lastMinutes = (int) Math.ceil((timeLeft * 0.6) / 60);
 				for (Player player : clanWars.getFirstPlayers()) {
-					player.getPackets().sendGlobalConfig(270, lastMinutes);
+					player.getPackets().sendGlobalVar(270, lastMinutes);
 				}
 				for (Player player : clanWars.getSecondPlayers()) {
-					player.getPackets().sendGlobalConfig(270, lastMinutes);
+					player.getPackets().sendGlobalVar(270, lastMinutes);
 				}
 				for (Player player : clanWars.getFirstViewers()) {
-					player.getPackets().sendGlobalConfig(270, lastMinutes);
+					player.getPackets().sendGlobalVar(270, lastMinutes);
 				}
 				for (Player player : clanWars.getSecondViewers()) {
-					player.getPackets().sendGlobalConfig(270, lastMinutes);
+					player.getPackets().sendGlobalVar(270, lastMinutes);
 				}
 			}
 			if (timeLeft-- == 0) {
@@ -120,14 +120,14 @@ public final class ClanWarsTimer extends TimerTask {// this is the class for
 	 *            If the player is part of the first team/viewers.
 	 */
 	public void refresh(Player p, boolean firstTeam) {
-		p.getPackets().sendGlobalConfig(261,
+		p.getPackets().sendGlobalVar(261,
 				(firstTeam ? clanWars.getFirstPlayers() : clanWars.getSecondPlayers()).size());
-		p.getPackets().sendGlobalConfig(262,
+		p.getPackets().sendGlobalVar(262,
 				(firstTeam ? clanWars.getSecondPlayers() : clanWars.getFirstPlayers()).size());
-		p.getPackets().sendGlobalConfig(263, clanWars.getKills() >> (firstTeam ? 0 : 24) & 0xFFFF);
-		p.getPackets().sendGlobalConfig(264, clanWars.getKills() >> (firstTeam ? 24 : 0) & 0xFFFF);
-		p.getPackets().sendGlobalConfig(260, started ? 1 : 0);
-		p.getPackets().sendGlobalConfig(270, started ? lastMinutes : startTicks);
+		p.getPackets().sendGlobalVar(263, clanWars.getKills() >> (firstTeam ? 0 : 24) & 0xFFFF);
+		p.getPackets().sendGlobalVar(264, clanWars.getKills() >> (firstTeam ? 24 : 0) & 0xFFFF);
+		p.getPackets().sendGlobalVar(260, started ? 1 : 0);
+		p.getPackets().sendGlobalVar(270, started ? lastMinutes : startTicks);
 	}
 
 	/**

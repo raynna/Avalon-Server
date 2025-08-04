@@ -210,7 +210,7 @@ public final class QueenBlackDragon extends NPC {
 			return;
 		}
 		if (lastHitpoints != hitpoints) {
-			attacker.getPackets().sendGlobalConfig(1923, getMaxHitpoints() - hitpoints);
+			attacker.getPackets().sendGlobalVar(1923, getMaxHitpoints() - hitpoints);
 			lastHitpoints = hitpoints;
 		}
 	}
@@ -219,13 +219,13 @@ public final class QueenBlackDragon extends NPC {
 	public void sendDeath(Entity source) {
 		switch (phase) {
 		case 1:
-			attacker.getPackets().sendGlobalConfig(1924, 1);
+			attacker.getPackets().sendGlobalVar(1924, 1);
 			activeArtifact = new WorldObject(70777, 10, 0, base.transform(33, 31, 0));
 			attacker.getPackets().sendGameMessage(
 					"The Queen Black Dragon's concentration wavers; the first artefact is now unguarded.");
 			break;
 		case 2:
-			attacker.getPackets().sendGlobalConfig(1924, 3);
+			attacker.getPackets().sendGlobalVar(1924, 3);
 			attacker.getPackets().sendSpawnedObject(new WorldObject(70844, 10, 0, base.transform(24, 21, -1)));
 			activeArtifact = new WorldObject(70780, 10, 0, base.transform(24, 21, 0));
 			attacker.getPackets()
@@ -233,7 +233,7 @@ public final class QueenBlackDragon extends NPC {
 			attacker.getPackets().sendGameMessage("unguarded.");
 			break;
 		case 3:
-			attacker.getPackets().sendGlobalConfig(1924, 5);
+			attacker.getPackets().sendGlobalVar(1924, 5);
 			attacker.getPackets().sendSpawnedObject(new WorldObject(70846, 10, 0, base.transform(24, 21, -1)));
 			activeArtifact = new WorldObject(70783, 10, 0, base.transform(42, 21, 0));
 			attacker.getPackets()
@@ -241,7 +241,7 @@ public final class QueenBlackDragon extends NPC {
 			attacker.getPackets().sendGameMessage("unguarded.");
 			break;
 		case 4:
-			attacker.getPackets().sendGlobalConfig(1924, 7);
+			attacker.getPackets().sendGlobalVar(1924, 7);
 			attacker.getPackets().sendSpawnedObject(new WorldObject(70848, 10, 0, base.transform(24, 21, -1)));
 			activeArtifact = new WorldObject(70786, 10, 0, base.transform(33, 21, 0));
 			attacker.getPackets().sendGameMessage(
@@ -407,7 +407,7 @@ public final class QueenBlackDragon extends NPC {
 	public void openRewardChest(boolean replace) {
 		attacker.getInterfaceManager().sendInterface(1284);
 		attacker.getPackets().sendInterSetItemsOptionsScript(1284, 7, 100, 8, 3, "Take", "Bank", "Discard", "Examine");
-		attacker.getPackets().sendUnlockIComponentOptionSlots(1284, 7, 0, 10, 0, 1, 2, 3);
+		attacker.getPackets().sendUnlockOptions(1284, 7, 0, 10, 0, 1, 2, 3);
 		attacker.getPackets().sendItems(100, rewards);
 		if (replace) {
 			World.spawnObject(new WorldObject(70817, 10, 0, base.transform(30, 28, -1)));

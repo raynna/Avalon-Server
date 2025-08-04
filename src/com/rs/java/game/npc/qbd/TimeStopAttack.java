@@ -58,7 +58,7 @@ public final class TimeStopAttack implements QueenAttack {
 						worm.setLocked(false);
 					}
 					victim.unlock();
-					victim.getPackets().sendGlobalConfig(1925, 0);
+					victim.getPackets().sendGlobalVar(1925, 0);
 					return;
 				} else if (stage == 4) {
 					for (TorturedSoul s : npc.getSouls()) {
@@ -69,7 +69,7 @@ public final class TimeStopAttack implements QueenAttack {
 					}
 					victim.lock();
 					soul.setLocked(false);
-					victim.getPackets().sendGlobalConfig(1925, 1);
+					victim.getPackets().sendGlobalVar(1925, 1);
 					victim.getPackets().sendGameMessage(
 							"<col=33900>The tortured soul has stopped time for everyone except himself and the Queen Black</col>");
 					victim.getPackets().sendGameMessage("<col=33900>Dragon.</col>");

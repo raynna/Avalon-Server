@@ -1374,7 +1374,7 @@ public final class WorldPacketsDecoder extends Decoder {
 			else {
 				player.temporaryAttribute().remove("worldHash");
 				player.getHintIconsManager().addHintIcon(x, y, plane, 20, 0, 2, -1, true);
-				player.getPackets().sendConfig(1159, coordinateHash);
+				player.getPackets().sendVar(1159, coordinateHash);
 			}
 		} else if (packetId == ACTION_BUTTON1_PACKET || packetId == ACTION_BUTTON2_PACKET
 				|| packetId == ACTION_BUTTON4_PACKET || packetId == ACTION_BUTTON5_PACKET

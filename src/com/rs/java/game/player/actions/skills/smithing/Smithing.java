@@ -407,11 +407,11 @@ public class Smithing extends Action {
 						bar.getItems()[i].getId(), 1);
 				String[] name = getStrings(player, bar, i, bar.getItems()[i].getId());
 				if (name != null) {
-					player.getPackets().sendIComponentText(300, componentChilds[i] + 1, name[0]);
-					player.getPackets().sendIComponentText(300, componentChilds[i] + 2, name[1]);
+					player.getPackets().sendTextOnComponent(300, componentChilds[i] + 1, name[0]);
+					player.getPackets().sendTextOnComponent(300, componentChilds[i] + 2, name[1]);
 				}
 			}
-			player.getPackets().sendIComponentText(300, 14,
+			player.getPackets().sendTextOnComponent(300, 14,
 					Utils.formatPlayerNameForDisplay(bar.toString().toLowerCase()) + "");
 			player.getInterfaceManager().sendInterface(SMITHING_INTERFACE);
 		}
