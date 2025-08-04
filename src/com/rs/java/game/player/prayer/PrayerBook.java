@@ -265,7 +265,7 @@ public class PrayerBook implements Serializable {
             }
             if (prayer == AncientPrayer.TURMOIL && turmoilActive) {
                 turmoilActive = false;
-                Arrays.fill(turmoilBonuses, 0); // Reset Turmoil bonuses
+                Arrays.fill(turmoilBonuses, 0);
                 updateLeechBonuses();
             }
         }
@@ -384,7 +384,6 @@ public class PrayerBook implements Serializable {
 
     private void updateAppearanceIfNeeded(Prayer prayer) {
         if (prayer.isProtectionPrayer() || prayer == NormalPrayer.RETRIBUTION || prayer == NormalPrayer.REDEMPTION || prayer == NormalPrayer.SMITE || prayer == AncientPrayer.DEFLECT_MAGIC || prayer == AncientPrayer.DEFLECT_MISSILES || prayer == AncientPrayer.DEFLECT_MELEE || prayer == AncientPrayer.WRATH || prayer == AncientPrayer.SOUL_SPLIT || prayer == AncientPrayer.TURMOIL) {
-
             player.getAppearence().generateAppearenceData();
         }
     }
@@ -424,11 +423,10 @@ public class PrayerBook implements Serializable {
     public void updateTurmoilBonus(Entity target) {
         if (!turmoilActive) return;
 
-        for (int statIndex : new int[]{0, 1, 2}) { // 0=Attack, 1=Strength, 2=Defence
+        for (int statIndex : new int[]{0, 1, 2}) {
             int targetLevel = getTargetLevel(target, statIndex);
             if (targetLevel == -1) continue;
 
-            // Calculate pure Turmoil boost based only on target's level
             int turmoilBoost = (int) (targetLevel * TURMOIL_BOOST_RATIO);
             turmoilBonuses[statIndex] = Math.min(turmoilBoost, TURMOIL_MAX_BONUS);
         }
@@ -470,27 +468,24 @@ public class PrayerBook implements Serializable {
     }
 
     private double calculateBoost(Function<Prayer, Double> boostGetter) {
-        double bonus = 1.0; // Base 100%
+        double bonus = 1.0;
 
-        // Apply permanent leech bonuses
         for (int i = 0; i < leechBonuses.length; i++) {
             if (boostGetter.apply(getPrayerForLeechIndex(i)) != null) {
                 bonus += leechBonuses[i] / 100.0;
             }
         }
 
-        // Apply Turmoil temporary boosts if active
         if (turmoilActive && boostGetter.apply(AncientPrayer.TURMOIL) != null) {
             if (boostGetter.apply(AncientPrayer.LEECH_ATTACK) != null) {
-                bonus += turmoilBonuses[0] / 100.0; // Attack boost
+                bonus += turmoilBonuses[0] / 100.0;
             } else if (boostGetter.apply(AncientPrayer.LEECH_STRENGTH) != null) {
-                bonus += turmoilBonuses[1] / 100.0; // Strength boost
+                bonus += turmoilBonuses[1] / 100.0;
             } else if (boostGetter.apply(AncientPrayer.LEECH_DEFENCE) != null) {
-                bonus += turmoilBonuses[2] / 100.0; // Defence boost
+                bonus += turmoilBonuses[2] / 100.0;
             }
         }
 
-        // Apply other prayer boosts
         for (Prayer prayer : getActivePrayers()) {
             Double boost = boostGetter.apply(prayer);
             if (boost != null) {
@@ -498,7 +493,7 @@ public class PrayerBook implements Serializable {
             }
         }
 
-        return Math.max(0.15, bonus); // Minimum 15% effectiveness
+        return Math.max(0.15, bonus);
     }
 
     public double getMagicMultiplier() {
@@ -704,7 +699,6 @@ public class PrayerBook implements Serializable {
         return value;
     }
 
-    // Utility Methods
     public void reset() {
         closeAllPrayers();
         resetLeechBonuses();
@@ -715,7 +709,7 @@ public class PrayerBook implements Serializable {
     public void closeAllPrayers() {
         if (turmoilActive) {
             turmoilActive = false;
-            Arrays.fill(turmoilBonuses, 0); // Reset Turmoil bonuses
+            Arrays.fill(turmoilBonuses, 0);
         }
         activeNormalPrayers.clear();
         activeAncientPrayers.clear();
@@ -783,7 +777,6 @@ public class PrayerBook implements Serializable {
         return changed;
     }
 
-    // Active Prayers Management
     public Set<Prayer> getActivePrayers() {
         return Collections.unmodifiableSet(getActivePrayerSet());
     }
