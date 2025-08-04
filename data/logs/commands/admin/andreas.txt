@@ -4929,3 +4929,300 @@
 [04 August 2025 at 01:03:18 CEST] - ::testdrop 54 1
 [04 August 2025 at 01:04:37 CEST] - ::testdrop 54 9000
 [04 August 2025 at 01:04:42 CEST] - ::testdrop 54 10000
+[04 August 2025 at 01:07:04 CEST] - ::emptybank 
+[04 August 2025 at 01:07:23 CEST] - ::bank 
+[04 August 2025 at 01:07:28 CEST] - ::testdrop 3254 1
+[04 August 2025 at 01:07:38 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:07:40 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:07:43 CEST] - ::testdrop 3264 98
+[04 August 2025 at 01:07:45 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:07:46 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:07:47 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:07:48 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:07:49 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:07:49 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:10:29 CEST] - ::bank 
+[04 August 2025 at 01:10:31 CEST] - ::emptybank 
+[04 August 2025 at 01:10:35 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:10:36 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:10:37 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:10:38 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:10:38 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:10:39 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:10:39 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:10:40 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:10:40 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:10:41 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:10:43 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:10:44 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:10:45 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:10:46 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:10:46 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:10:46 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:10:47 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:10:47 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:10:47 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:13:33 CEST] - ::bank 
+[04 August 2025 at 01:13:35 CEST] - ::emptybank 
+[04 August 2025 at 01:13:41 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:42 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:43 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:44 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:44 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:44 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:45 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:45 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:45 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:45 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:45 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:46 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:46 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:46 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:46 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:47 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:47 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:47 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:47 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:47 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:48 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:48 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:48 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:49 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:49 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:49 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:49 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:13:50 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:14:46 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:15:22 CEST] - ::bank 
+[04 August 2025 at 01:15:23 CEST] - ::bank 
+[04 August 2025 at 01:15:24 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:15:25 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:15:25 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:11 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:13 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:14 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:16 CEST] - ::bank 
+[04 August 2025 at 01:18:17 CEST] - ::bank 
+[04 August 2025 at 01:18:17 CEST] - ::bank 
+[04 August 2025 at 01:18:18 CEST] - ::bank 
+[04 August 2025 at 01:18:18 CEST] - ::bank 
+[04 August 2025 at 01:18:19 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:20 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:20 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:20 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:20 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:21 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:21 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:21 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:21 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:22 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:22 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:22 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:22 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:23 CEST] - ::testdrop 3264 10
+[04 August 2025 at 01:18:24 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:18:25 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:18:26 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:18:26 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:18:26 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:18:27 CEST] - ::testdrop 3264 100
+[04 August 2025 at 01:19:48 CEST] - ::emptybank 
+[04 August 2025 at 01:19:53 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:19:54 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:19:54 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:19:55 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:19:56 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:19:56 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:19:57 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:19:58 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:19:58 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:19:59 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:19:59 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:00 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:00 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:00 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:01 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:01 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:02 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:03 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:04 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:05 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:05 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:07 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:08 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:09 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:10 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:12 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:13 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:14 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:15 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:16 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:17 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:18 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:19 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:20 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:21 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:21 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:22 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:23 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:24 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:25 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:26 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:26 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:27 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:28 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:29 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:30 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:30 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:31 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:32 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:34 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:34 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:35 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:36 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:37 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:38 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:41 CEST] - ::emptybank 
+[04 August 2025 at 01:20:45 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:46 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:47 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:48 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:49 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:49 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:51 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:52 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:52 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:53 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:54 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:55 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:56 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:20:56 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:00 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:01 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:02 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:03 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:04 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:05 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:05 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:06 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:07 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:08 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:09 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:10 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:12 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:13 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:14 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:14 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:15 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:16 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:17 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:18 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:19 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:20 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:21 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:22 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:22 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:23 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:24 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:25 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:26 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:26 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:27 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:27 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:21:27 CEST] - ::testdrop 3264 1
+[04 August 2025 at 01:22:04 CEST] - ::npc 3264
+[04 August 2025 at 01:22:05 CEST] - ::npc 3264
+[04 August 2025 at 01:22:05 CEST] - ::npc 3264
+[04 August 2025 at 01:22:05 CEST] - ::npc 3264
+[04 August 2025 at 01:22:05 CEST] - ::npc 3264
+[04 August 2025 at 01:22:05 CEST] - ::npc 3264
+[04 August 2025 at 01:22:06 CEST] - ::npc 3264
+[04 August 2025 at 01:22:06 CEST] - ::npc 3264
+[04 August 2025 at 01:22:07 CEST] - ::npc 3264
+[04 August 2025 at 01:26:10 CEST] - ::item herbicide
+[04 August 2025 at 01:26:29 CEST] - ::npc 3264
+[04 August 2025 at 01:26:30 CEST] - ::npc 3264
+[04 August 2025 at 01:26:30 CEST] - ::npc 3264
+[04 August 2025 at 01:26:30 CEST] - ::npc 3264
+[04 August 2025 at 01:26:33 CEST] - ::npc 3264
+[04 August 2025 at 01:26:33 CEST] - ::npc 3264
+[04 August 2025 at 01:26:33 CEST] - ::npc 3264
+[04 August 2025 at 01:26:34 CEST] - ::npc 3264
+[04 August 2025 at 01:27:37 CEST] - ::item 4151 3
+[04 August 2025 at 01:27:42 CEST] - ::item 4151 3
+[04 August 2025 at 01:27:44 CEST] - ::item 4152 3
+[04 August 2025 at 01:30:46 CEST] - ::item rune sword
+[04 August 2025 at 01:30:50 CEST] - ::item rune halb
+[04 August 2025 at 01:36:22 CEST] - ::item 4151 2
+[04 August 2025 at 01:39:19 CEST] - ::item 4151 2
+[04 August 2025 at 01:41:26 CEST] - ::varbit 9227 1
+[04 August 2025 at 01:41:28 CEST] - ::varbit 9227 2
+[04 August 2025 at 01:41:30 CEST] - ::varbit 9227 4151
+[04 August 2025 at 01:41:33 CEST] - ::varbit 9227 1
+[04 August 2025 at 01:41:35 CEST] - ::varbit 9227 0
+[04 August 2025 at 01:41:37 CEST] - ::varbit 9227 1
+[04 August 2025 at 01:42:02 CEST] - ::item 9222 1
+[04 August 2025 at 01:42:08 CEST] - ::varbit 9222 1
+[04 August 2025 at 01:42:09 CEST] - ::varbit 9222 2
+[04 August 2025 at 01:42:10 CEST] - ::varbit 9222 3
+[04 August 2025 at 01:42:11 CEST] - ::varbit 9222 4
+[04 August 2025 at 01:42:12 CEST] - ::varbit 9222 5
+[04 August 2025 at 01:42:17 CEST] - ::varbit 9240 1
+[04 August 2025 at 01:42:17 CEST] - ::varbit 9240 2
+[04 August 2025 at 01:42:18 CEST] - ::varbit 9240 3
+[04 August 2025 at 01:42:19 CEST] - ::varbit 9240 4
+[04 August 2025 at 01:42:24 CEST] - ::varbit 9229 1
+[04 August 2025 at 01:42:26 CEST] - ::varbit 9229 0
+[04 August 2025 at 01:42:27 CEST] - ::varbit 9229 1
+[04 August 2025 at 01:42:28 CEST] - ::varbit 9229 0
+[04 August 2025 at 01:42:34 CEST] - ::varbit 9226 1
+[04 August 2025 at 01:42:35 CEST] - ::varbit 9226 0
+[04 August 2025 at 01:42:45 CEST] - ::varbit 9223 1
+[04 August 2025 at 01:42:47 CEST] - ::varbit 9224 1
+[04 August 2025 at 01:42:49 CEST] - ::varbit 9225 1
+[04 August 2025 at 01:42:50 CEST] - ::varbit 9226 1
+[04 August 2025 at 01:42:52 CEST] - ::varbit 9226 1
+[04 August 2025 at 01:42:54 CEST] - ::varbit 9226 0
+[04 August 2025 at 01:42:55 CEST] - ::varbit 9226 1
+[04 August 2025 at 01:43:01 CEST] - ::varbit 9226 0
+[04 August 2025 at 01:43:02 CEST] - ::varbit 9226 1
+[04 August 2025 at 01:43:05 CEST] - ::varbit 9226 0
+[04 August 2025 at 01:43:09 CEST] - ::varbit 9250 1
+[04 August 2025 at 01:43:11 CEST] - ::varbit 9260 1
+[04 August 2025 at 01:43:12 CEST] - ::varbit 9260 10
+[04 August 2025 at 02:04:16 CEST] - ::varbit 9223 7
+[04 August 2025 at 02:04:18 CEST] - ::varbit 9223 6
+[04 August 2025 at 02:04:20 CEST] - ::varbit 9223 8
+[04 August 2025 at 02:04:23 CEST] - ::varbit 9223 9
+[04 August 2025 at 02:04:24 CEST] - ::varbit 9223 8
+[04 August 2025 at 02:04:25 CEST] - ::varbit 9223 1
+[04 August 2025 at 02:04:26 CEST] - ::varbit 9223 10
+[04 August 2025 at 02:04:27 CEST] - ::varbit 9223 11
+[04 August 2025 at 02:04:28 CEST] - ::varbit 9223 12
+[04 August 2025 at 02:04:29 CEST] - ::varbit 9223 13
+[04 August 2025 at 02:04:30 CEST] - ::varbit 9223 14
+[04 August 2025 at 02:04:31 CEST] - ::varbit 9223 2
+[04 August 2025 at 02:04:33 CEST] - ::varbit 9223 1
+[04 August 2025 at 02:04:35 CEST] - ::varbit 9223 2
+[04 August 2025 at 02:04:36 CEST] - ::varbit 9223 -1
+[04 August 2025 at 02:04:37 CEST] - ::varbit 9223 0
+[04 August 2025 at 02:04:41 CEST] - ::varbit 9223 0
+[04 August 2025 at 02:04:42 CEST] - ::varbit 9223 4
+[04 August 2025 at 02:04:49 CEST] - ::varbit 9224 -1
+[04 August 2025 at 02:05:00 CEST] - ::varbit 9224 9225 -1
+[04 August 2025 at 02:05:04 CEST] - ::varbit 9225 -1
+[04 August 2025 at 02:05:07 CEST] - ::varbit 9225 0
+[04 August 2025 at 02:05:08 CEST] - ::varbit 9225 1
+[04 August 2025 at 02:05:11 CEST] - ::varbit 9225 1
+[04 August 2025 at 02:05:12 CEST] - ::varbit 9225 0
+[04 August 2025 at 02:05:13 CEST] - ::varbit 9225 7
+[04 August 2025 at 02:05:14 CEST] - ::varbit 9225 0
+[04 August 2025 at 02:05:16 CEST] - ::varbit 9224 0
+[04 August 2025 at 02:05:16 CEST] - ::varbit 9224 1
+[04 August 2025 at 02:05:18 CEST] - ::varbit 9224 7
+[04 August 2025 at 02:05:20 CEST] - ::varbit 9223 0
+[04 August 2025 at 02:05:21 CEST] - ::varbit 9223 1
+[04 August 2025 at 02:05:24 CEST] - ::varbit 9223 2
+[04 August 2025 at 02:05:24 CEST] - ::varbit 9223 3
+[04 August 2025 at 02:05:25 CEST] - ::varbit 9223 4
+[04 August 2025 at 02:05:27 CEST] - ::varbit 9223 500

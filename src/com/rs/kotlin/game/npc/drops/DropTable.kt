@@ -15,7 +15,7 @@ fun dropTable(
         herbDropTable.roll(player)?.also(drops::add) != null
     }
 
-    if (rareDropTable) rareTable { player, drops ->
+    if (rareDropTable) gemTable { player, drops ->
         gemDropTable.roll(player)?.also(drops::add) != null
     }
     block()
@@ -30,7 +30,7 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
     private val specialDrops = WeightedTable()
     private var charmTable: SummoningCharms? = null
 
-    private var rareTableRoller: ((Player, MutableList<Drop>) -> Boolean)? = null
+    private var gemTableRoller: ((Player, MutableList<Drop>) -> Boolean)? = null
     private var herbTableRoller: ((Player, MutableList<Drop>) -> Boolean)? = null
     private var currentContext: DropType? = null
 
@@ -75,8 +75,8 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
         currentContext = null
     }
 
-    fun rareTable(block: (Player, MutableList<Drop>) -> Boolean) {
-        rareTableRoller = block
+    fun gemTable(block: (Player, MutableList<Drop>) -> Boolean) {
+        gemTableRoller = block
     }
 
     fun herbTable(block: (Player, MutableList<Drop>) -> Boolean) {
@@ -148,17 +148,22 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
 
         preRollDrops.forEach { it.roll(player)?.let { drop -> drops.add(drop) } }
 
-        rareTableRoller?.let {
+        gemTableRoller?.let {
             if (it(player, drops)) {
                 return drops
             }
         }
-
-        mainDrops.mutableEntries().forEach { entry ->
-            println("  itemId=${entry.itemId}, amount=${entry.rollAmount()}, weight=${entry.weight}, numerator=${entry.numerator}, denominator=${entry.denominator}")
+        herbTableRoller?.let {
+            if (it(player, drops)) {
+                return drops;
+            }
         }
+
+       // mainDrops.mutableEntries().forEach { entry ->
+         //   println("  itemId=${entry.itemId}, amount=${entry.rollAmount()}, weight=${entry.weight}, numerator=${entry.numerator}, denominator=${entry.denominator}")
+        //}
         repeat(rolls) {
-            if (rareTableRoller?.invoke(player, drops) == true) return@repeat
+            if (gemTableRoller?.invoke(player, drops) == true) return@repeat
             val drop = mainDrops.roll(player)
             drop?.let(drops::add)
         }

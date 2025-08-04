@@ -1,8 +1,5 @@
 package com.rs.kotlin.game.npc.drops.tables
 
-import com.rs.java.game.item.ItemId
-import com.rs.java.game.player.Skills
-import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.drops.*
 import com.rs.kotlin.game.npc.drops.DropTablesSetup.gemDropTable
 
@@ -36,7 +33,7 @@ object TestTable {
                     })
             }*/
 
-            rareTable { player, drops ->
+            gemTable { player, drops ->
                 val gem = gemDropTable.roll(player)
                 if (gem != null) {
                     drops.add(gem)

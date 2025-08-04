@@ -670,14 +670,9 @@ public class NPC extends Entity implements Serializable {
                 }
             }
         }
-        // int totalXp = 0;
         for (int i = 0; i < item.getAmount(); i++) {
             player.getSkills().addXp(Skills.HERBLORE, HerbCleaning.getHerb(drop.itemId).getExperience() * 2);
-            // totalXp += HerbCleaning.getHerb(drop.getItemId()).getExperience() * 2;
         }
-        // player.getPackets().sendGameMessage("Herbicide gathered in total of " +
-        // (totalXp * Settings.SKILLING_XP_RATE) * player.getBonusExp() + " herblore
-        // experinece from " + dropName + ".");
         item.setAmount(0);
     }
 
@@ -749,14 +744,6 @@ public class NPC extends Entity implements Serializable {
                                             : Utils.formatString(dropName))
                                             + " as a loot from " + getName() + "!",
                                     false);
-                            if (Settings.discordEnabled) {
-                                // Launcher.getDiscordBot().getChannelByName("public-chat")
-                                //       .sendMessage(":gift: " + luckyPlayer.getDisplayName() + " has recieved "
-                                //              + (item.getAmount() > 1
-                                //              ? item.getAmount() + " x " + Utils.formatString(dropName)
-                                //               : Utils.formatString(dropName))
-                                //               + " as a loot from " + getName() + "!");
-                            }
                         }
                         sendLootBeam(item, luckyPlayer, this);
                     }
@@ -838,7 +825,7 @@ public class NPC extends Entity implements Serializable {
                         player, 60, 0);
                 if (player.getRareItem() != null) {
                     if (player.getRareItem().getId() == item.getId() && player.getRareItem().getAmount() == item.getAmount()) {
-                        if (EconomyPrices.getPrice(item.getId()) > 1000000) {
+                        if (EconomyPrices.getPrice(item.getId()) >= 1000000) {
                             World.sendWorldMessage(
                                     "<img=7><col=36648b>News: " + player.getDisplayName() + " has recieved "
                                             + (item.getAmount() > 1 ? item.getAmount() + " x " + Utils.formatString(dropName)

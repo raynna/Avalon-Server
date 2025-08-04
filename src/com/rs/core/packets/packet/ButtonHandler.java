@@ -2902,83 +2902,174 @@ public class ButtonHandler {
         sendItemsKeptOnDeath(player, player.isAtWild() ? true : false);
     }
 
+    public static final class PartialKeepRecord {
+        public final int id;
+        public final int amount;
+        public final int originalSlot;
+
+        public PartialKeepRecord(int id, int amount, int originalSlot) {
+            this.id = id;
+            this.amount = amount;
+            this.originalSlot = originalSlot;
+        }
+    }
+
+    private static final List<PartialKeepRecord> partialKeeps = new ArrayList<>();
+
     public static Integer[][] getItemSlotsKeptOnDeath(final Player player, boolean atWilderness, boolean skulled, boolean protectPrayer) {
-        ArrayList<Integer> droppedItems = new ArrayList<Integer>();
-        ArrayList<Integer> protectedItems = new ArrayList<Integer>();
-        ArrayList<Integer> lostItems = new ArrayList<Integer>();
+        partialKeeps.clear(); // Clear previous partials
+
+        ArrayList<Integer> protectedItems = new ArrayList<>();
+        ArrayList<Integer> lostItems = new ArrayList<>();
+
         boolean inRiskArea = FfaZone.inRiskArea(player);
         int keptAmount = (player.hasSkull() || inRiskArea) ? 0 : 3;
         if (protectPrayer)
             keptAmount++;
+
+        System.out.println("Kept amount allowed: " + keptAmount);
+
+        class SlotEntry {
+            int slot;
+            int itemId;
+            int amount;
+            long totalValue;
+            long perUnitValue;
+
+            SlotEntry(int slot, int itemId, int amount, long totalValue, long perUnitValue) {
+                this.slot = slot;
+                this.itemId = itemId;
+                this.amount = amount;
+                this.totalValue = totalValue;
+                this.perUnitValue = perUnitValue;
+            }
+        }
+
+        List<SlotEntry> droppedSlots = new ArrayList<>();
+
         for (int i = 1; i < 44; i++) {
             Item item = i >= 16 ? player.getInventory().getItem(i - 16) : player.getEquipment().getItem(i - 1);
             if (item == null)
                 continue;
+
             int stageOnDeath = item.getDefinitions().getStageOnDeath();
-            if (!atWilderness && stageOnDeath == 1)
+            System.out.printf("Slot %d: Item ID %d, amount %d, stageOnDeath %d%n", i, item.getId(), item.getAmount(), stageOnDeath);
+
+            if (!atWilderness && stageOnDeath == 1) {
                 protectedItems.add(i);
-            else if (ItemConstants.keptOnDeath(item) && atWilderness)
+                System.out.println(" -> Marked as protected (not wilderness and stage 1)");
+            } else if (ItemConstants.keptOnDeath(item) && atWilderness) {
                 protectedItems.add(i);
-            else if (stageOnDeath == -1)
+                System.out.println(" -> Marked as protected (keptOnDeath & wilderness)");
+            } else if (stageOnDeath == -1) {
                 lostItems.add(i);
-            else
-                droppedItems.add(i);
-        }
-        if (droppedItems.size() < keptAmount)
-            keptAmount = droppedItems.size();
-
-        Collections.sort(droppedItems, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                Item i1 = o1 >= 16 ? player.getInventory().getItem(o1 - 16) : player.getEquipment().getItem(o1 - 1);
-                Item i2 = o2 >= 16 ? player.getInventory().getItem(o2 - 16) : player.getEquipment().getItem(o2 - 1);
-                int price1 = i1 == null ? 0 : GrandExchange.getPrice(i1.getId());
-                int price2 = i2 == null ? 0 : GrandExchange.getPrice(i2.getId());
-                if (price1 > price2)
-                    return -1;
-                if (price1 < price2)
-                    return 1;
-                return 0;
+                System.out.println(" -> Marked as lost");
+            } else {
+                int price = GrandExchange.getPrice(item.getId());
+                long totalValue = (long) price * item.getAmount();
+                droppedSlots.add(new SlotEntry(i, item.getId(), item.getAmount(), totalValue, price));
+                System.out.printf(" -> Marked as dropped with totalValue %d and perUnitValue %d%n", totalValue, price);
             }
-        });
+        }
 
-        Integer[] keptItems = new Integer[keptAmount];
-        for (int i = 0; i < keptAmount; i++)
-            keptItems[i] = droppedItems.remove(0);
-        return new Integer[][]{keptItems, droppedItems.toArray(new Integer[droppedItems.size()]), protectedItems.toArray(new Integer[protectedItems.size()]), atWilderness ? new Integer[0] : lostItems.toArray(new Integer[lostItems.size()])};
+        droppedSlots.sort((a, b) -> Long.compare(b.perUnitValue, a.perUnitValue));
+
+        System.out.println("Dropped slots sorted by per-unit value descending:");
+        for (SlotEntry slot : droppedSlots) {
+            System.out.printf("  Slot %d, itemId %d, amount %d, totalValue %d, perUnitValue %d%n",
+                    slot.slot, slot.itemId, slot.amount, slot.totalValue, slot.perUnitValue);
+        }
+
+        ArrayList<Integer> keptItems = new ArrayList<>();
+        ArrayList<Integer> droppedItems = new ArrayList<>();
+        int keptUnits = 0;
+        int partialIndex = 0;
+
+        for (SlotEntry entry : droppedSlots) {
+            if (keptUnits >= keptAmount) {
+                droppedItems.add(entry.slot);
+                System.out.printf("Dropping entire slot %d with %d units%n", entry.slot, entry.amount);
+                continue;
+            }
+
+            int remaining = keptAmount - keptUnits;
+
+            if (entry.amount <= remaining) {
+                keptItems.add(entry.slot);
+                keptUnits += entry.amount;
+                System.out.printf("Keeping entire slot %d with %d units (total kept: %d)%n", entry.slot, entry.amount, keptUnits);
+            } else {
+                // Partial stack handling
+                int keptPart = remaining;
+                int droppedPart = entry.amount - keptPart;
+
+                int syntheticSlot = -1000 - partialIndex++;
+                keptItems.add(syntheticSlot);
+                partialKeeps.add(new PartialKeepRecord(entry.itemId, keptPart, entry.slot));
+
+                droppedItems.add(entry.slot);
+                keptUnits += keptPart;
+
+                System.out.printf("Keeping %d units from slot %d (partial stack). Total kept: %d%n", keptPart, entry.slot, keptUnits);
+                System.out.printf("Dropping remaining %d units from slot %d%n", droppedPart, entry.slot);
+            }
+        }
+
+        System.out.printf("Final kept units: %d / %d%n", keptUnits, keptAmount);
+        System.out.printf("Kept slots: %s%n", keptItems);
+        System.out.printf("Dropped slots: %s%n", droppedItems);
+
+        return new Integer[][]{
+                keptItems.toArray(new Integer[0]),
+                droppedItems.toArray(new Integer[0]),
+                protectedItems.toArray(new Integer[0]),
+                atWilderness ? new Integer[0] : lostItems.toArray(new Integer[0])
+        };
     }
+
 
     public static Item[][] getItemsKeptOnDeath(Player player, Integer[][] slots) {
-        ArrayList<Item> droppedItems = new ArrayList<Item>();
-        ArrayList<Item> keptItems = new ArrayList<Item>();
-        for (int i : slots[0]) { // items kept on death
-            Item item = i >= 16 ? player.getInventory().getItem(i - 16) : player.getEquipment().getItem(i - 1);
-            if (item == null) // shouldn't
-                continue;
-            item = new Item(item.getId(), item.getAmount());
-            if (item.getAmount() > 1) {
-                droppedItems.add(new Item(item.getId(), item.getAmount() - 1));
-                item.setAmount(1);
-            }
-            keptItems.add(item);
-        }
-        for (int i : slots[1]) { // items droped on death
-            Item item = i >= 16 ? player.getInventory().getItem(i - 16) : player.getEquipment().getItem(i - 1);
-            if (item == null) // shouldnt
-                continue;
-            item = new Item(item.getId(), item.getAmount());
-            droppedItems.add(item);
-        }
-        for (int i : slots[2]) { // items protected by default
-            Item item = i >= 16 ? player.getInventory().getItem(i - 16) : player.getEquipment().getItem(i - 1);
-            if (item == null) // shouldnt
-                continue;
-            item = new Item(item.getId(), item.getAmount());
-            keptItems.add(item);
-        }
-        return new Item[][]{keptItems.toArray(new Item[keptItems.size()]), droppedItems.toArray(new Item[droppedItems.size()])};
+        List<Item> keptItems = new ArrayList<>();
+        List<Item> droppedItems = new ArrayList<>();
 
+        for (int slot : slots[0]) {
+            if (slot >= 0) {
+                Item item = slot >= 16 ? player.getInventory().getItem(slot - 16)
+                        : player.getEquipment().getItem(slot - 1);
+                if (item == null)
+                    continue;
+                keptItems.add(new Item(item.getId(), item.getAmount()));
+            } else {
+                int realSlot = -(slot + 1000);
+                PartialKeepRecord partial = partialKeeps.get(realSlot);
+                if (partial != null) {
+                    keptItems.add(new Item(partial.id, partial.amount));
+                }
+            }
+        }
+
+        for (int slot : slots[2]) {
+            Item item = slot >= 16 ? player.getInventory().getItem(slot - 16)
+                    : player.getEquipment().getItem(slot - 1);
+            if (item != null)
+                keptItems.add(new Item(item.getId(), item.getAmount()));
+        }
+
+        for (int slot : slots[1]) {
+            Item item = slot >= 16 ? player.getInventory().getItem(slot - 16)
+                    : player.getEquipment().getItem(slot - 1);
+            if (item != null)
+                droppedItems.add(new Item(item.getId(), item.getAmount()));
+        }
+
+        return new Item[][]{
+                keptItems.toArray(new Item[0]),
+                droppedItems.toArray(new Item[0])
+        };
     }
+
+
+
 
     public static void sendItemsKeptOnDeath(Player player, boolean wilderness) {
         boolean skulled = player.hasSkull();
@@ -3002,18 +3093,32 @@ public class ButtonHandler {
                 continue;
             long amount = item.getAmount();
             long price = GrandExchange.getPrice(item.getId());
-            amount = item.getAmount();
-            price = GrandExchange.getPrice(item.getId());
             carriedWealth += price * amount;
         }
-        if (slots[0].length > 0) {
-            for (int i = 0; i < slots[0].length; i++)
-                player.getVarsManager().sendVarBit(9222 + i, slots[0][i]);
-            player.getVarsManager().sendVarBit(9227, slots[0].length);
-        } else {
-            player.getVarsManager().sendVarBit(9222, -1);
-            player.getVarsManager().sendVarBit(9227, 1);
+        Set<Integer> sentSlots = new HashSet<>();
+
+        int keptSlotCount = 0;
+        for (int i = 0; i < slots[0].length && keptSlotCount < 4; i++) {
+            int rawSlot = slots[0][i];
+            int slotIndex;
+            if (rawSlot < 0) {
+                int realSlot = -(rawSlot + 1000);
+                Item keptItem = items[0][i];
+                slotIndex = player.getInventory().getItems().getThisItemSlot(keptItem.getId());
+            } else {
+                slotIndex = rawSlot;
+            }
+            if (sentSlots.add(slotIndex)) {
+                player.getVarsManager().sendVarBit(9222 + keptSlotCount, slotIndex);
+                keptSlotCount++;
+            }
         }
+
+        // Clear unused slots
+        for (int i = keptSlotCount; i < 4; i++)
+            player.getVarsManager().sendVarBit(9222 + i, -1);
+
+        player.getVarsManager().sendVarBit(9227, Math.max(keptSlotCount, 1));
         player.getVarsManager().sendVarBit(9226, (wilderness || inFfa) ? 1 : 0);
         if (!inFfa)
             player.getVarsManager().sendVarBit(9229, player.hasSkull() ? 1 : 0);
