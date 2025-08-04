@@ -2481,6 +2481,12 @@ public class Player extends Entity {
     public transient int miscTick = 0;
     public transient int prayerTick = 0;
 
+    private transient int gameTick = 0;
+
+    public int getGameTicks() {
+        return gameTick;
+    }
+
     @Override
     public void processEntity() {
         processLogicPackets();
@@ -2505,7 +2511,8 @@ public class Player extends Entity {
             getAssist().Check();
         }
         checkTimers();
-        prayer.processPrayerDrain(prayerTick++);
+        prayer.processPrayerDrain(gameTick);
+        gameTick++;
         if (miscTick % 10 == 0)
             drainHitPoints();
         //if (miscTick % 32 == 0)//TODO
@@ -2641,7 +2648,7 @@ public class Player extends Entity {
                 if (getPrayerRenewalDelay() == 48)
                     message("<col=0000FF>Your prayer renewal will wear off in 30 seconds.");
                 if (!prayer.hasFullPrayerPoints()) {
-                    getPrayer().restorePrayer(1, true);
+                    getPrayer().restorePrayer(1);
                     if ((getPrayerRenewalDelay() - 1) % 40 == 0)
                         gfx(new Graphics(1295));
                 }
@@ -2676,7 +2683,6 @@ public class Player extends Entity {
         charges.process();
         auraManager.process();
         actionManager.process();
-        prayer.processPrayerDrain(miscTick);
         controlerManager.process();
 
     }
@@ -3687,25 +3693,18 @@ public class Player extends Entity {
             public void run() {
                 if (loop == 0) {
                     final long time = FadingScreen.fade(instance);
-                    CoresManager.slowExecutor.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                FadingScreen.unfade(instance, time, new Runnable() {
-                                    @Override
-                                    public void run() {
-                                    }
-                                });
-                            } catch (Throwable e) {
-                                Logger.handle(e);
-                            }
+                    CoresManager.slowExecutor.execute(() -> {
+                        try {
+                            FadingScreen.unfade(instance, time, () -> {
+                            });
+                        } catch (Throwable e) {
+                            Logger.handle(e);
                         }
                     });
                 }
                 if (loop == 1) {
                     message("Oh dear, you have died.");
-                    if (source instanceof Player) {
-                        Player killer = (Player) source;
+                    if (source instanceof Player killer) {
                         killer.setAttackedByDelay(4);
                     }
                 } else if (loop == 2) {
@@ -3771,6 +3770,7 @@ public class Player extends Entity {
         Item[][] items = ButtonHandler.getItemsKeptOnDeath(this, slots);
         inventory.reset();
         equipment.reset();
+        prayer.reset();
         killer.totalCurrentDrop = 0;
         appearence.generateAppearenceData();
         for (int i = 0; i < items[0].length; i++) {

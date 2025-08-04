@@ -17,3 +17,10 @@
 [17 December 2022 at 02:38:38 CET] - andreas killed manager
 [17 December 2022 at 02:39:08 CET] - andreas killed manager
 [17 December 2022 at 02:45:44 CET] - andreas killed manager
+[04 August 2025 at 05:22:44 CEST] - andreas killed manager
+[04 August 2025 at 06:02:44 CEST] - andreas killed manager
+[04 August 2025 at 06:10:38 CEST] - andreas died to manager
+[04 August 2025 at 06:17:38 CEST] - andreas died to manager
+[04 August 2025 at 06:36:38 CEST] - andreas killed manager
+[04 August 2025 at 06:59:52 CEST] - andreas died to manager
+[04 August 2025 at 07:03:28 CEST] - andreas died to manager

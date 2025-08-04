@@ -22,4 +22,9 @@ public class Ankou extends DungeonNPC {
 	public WeaponType[][] getWeaknessStyle() {
 		return WEAKNESS;
 	}
+
+	@Override
+	public double getProtectionPrayerEffectiveness() {
+		return 0.1;
+	}
 }

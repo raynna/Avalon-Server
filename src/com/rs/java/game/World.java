@@ -53,6 +53,7 @@ import com.rs.java.utils.IPBanL;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.Rscm;
 
 /**
  * @Improved Andreas - AvalonPK
@@ -383,7 +384,7 @@ public final class World {
             n = new Bork(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
         else if (id == 9463 || id == 9465 || id == 9467)
             n = new Strykewyrms(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
-        else if (id == 2881 || id == 2882 || id == 2883)
+        else if (id == Rscm.lookup("npc.dagannoth_supreme_lv303") || id == Rscm.lookup("npc.dagannoth_prime_lv303") || id == Rscm.lookup("npc.dagannoth_rex_lv303"))
             n = new DagannothKings(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
         else if (id == 2892 || id == 2893 || id == 2894)
             n = new Spyinolyp(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);

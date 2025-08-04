@@ -1010,6 +1010,368 @@
 [14 July 2025 at 11:11:46 CEST] - ::testdrop 54 100000
 [15 July 2025 at 01:14:15 CEST] - ::bank 
 [15 July 2025 at 01:28:04 CEST] - ::bank 
+[15 July 2025 at 05:46:31 CEST] - ::bank 
+[15 July 2025 at 05:46:33 CEST] - ::emptybank 
+[15 July 2025 at 05:46:37 CEST] - ::testdrop 54 100
+[15 July 2025 at 05:53:48 CEST] - ::bank 
+[15 July 2025 at 05:53:50 CEST] - ::emptybank 
+[15 July 2025 at 05:53:54 CEST] - ::testdrop 54 10
+[15 July 2025 at 05:55:13 CEST] - ::testdrop 54 1
+[15 July 2025 at 05:55:23 CEST] - ::testdrop 54 1
+[15 July 2025 at 05:56:46 CEST] - ::bank 
+[15 July 2025 at 05:56:48 CEST] - ::emptybank 
+[15 July 2025 at 05:56:52 CEST] - ::testdrop 54 1
+[15 July 2025 at 05:57:00 CEST] - ::testdrop 54 100
+[15 July 2025 at 05:57:07 CEST] - ::testdrop 54 1000
+[15 July 2025 at 05:57:56 CEST] - ::testdrop 54 1000
+[15 July 2025 at 05:58:13 CEST] - ::testdrop 54 1000
+[15 July 2025 at 06:19:23 CEST] - ::bank 
+[15 July 2025 at 06:19:25 CEST] - ::emptybank 
+[15 July 2025 at 06:19:28 CEST] - ::testdrop 54 1000
+[15 July 2025 at 06:22:29 CEST] - ::testdrop 54 10000
+[15 July 2025 at 06:57:14 CEST] - ::item 1149 1
+[15 July 2025 at 07:04:30 CEST] - ::bank 
+[15 July 2025 at 07:04:31 CEST] - ::emptybank 
+[15 July 2025 at 07:04:35 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:04:47 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:05:02 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:05:11 CEST] - ::testdrop 54 10000
+[15 July 2025 at 07:05:43 CEST] - ::testdrop 54 100000
+[15 July 2025 at 07:06:17 CEST] - ::testdrop 54 100000
+[15 July 2025 at 07:06:24 CEST] - ::testdrop 54 100000
+[15 July 2025 at 07:06:29 CEST] - ::testdrop 54 100000
+[15 July 2025 at 07:06:33 CEST] - ::testdrop 54 100000
+[15 July 2025 at 07:31:20 CEST] - ::emptybank 
+[15 July 2025 at 07:31:22 CEST] - ::bank 
+[15 July 2025 at 07:31:25 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:31:41 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:31:47 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:32:01 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:32:08 CEST] - ::testdrop 45 1000
+[15 July 2025 at 07:32:13 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:38:09 CEST] - ::bank 
+[15 July 2025 at 07:38:11 CEST] - ::emptybank 
+[15 July 2025 at 07:38:15 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:38:35 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:38:39 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:43:20 CEST] - ::bank 
+[15 July 2025 at 07:43:22 CEST] - ::emptybank 
+[15 July 2025 at 07:43:27 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:52:17 CEST] - ::bank 
+[15 July 2025 at 07:52:21 CEST] - ::emptybank 
+[15 July 2025 at 07:52:26 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:52:35 CEST] - ::testdrop 54 1000
+[15 July 2025 at 07:52:44 CEST] - ::testdrop 54 10000
+[15 July 2025 at 08:42:45 CEST] - ::emptybank 
+[15 July 2025 at 08:42:49 CEST] - ::testdrop 54 1000
+[15 July 2025 at 08:42:50 CEST] - ::bank 
+[15 July 2025 at 08:42:52 CEST] - ::bank 
+[15 July 2025 at 08:48:54 CEST] - ::bank 
+[15 July 2025 at 08:48:57 CEST] - ::emptybank 
+[15 July 2025 at 08:49:01 CEST] - ::testdrop 54 1000
+[15 July 2025 at 08:49:14 CEST] - ::emptybank 
+[15 July 2025 at 08:49:17 CEST] - ::testdrop 54 1
+[15 July 2025 at 08:49:20 CEST] - ::testdrop 54 1
+[15 July 2025 at 08:49:22 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:49:24 CEST] - ::testdrop 54 100
+[15 July 2025 at 08:49:26 CEST] - ::emptybank 
+[15 July 2025 at 08:49:29 CEST] - ::testdrop 54 1
+[15 July 2025 at 08:49:32 CEST] - ::testdrop 54 1
+[15 July 2025 at 08:49:34 CEST] - ::testdrop 54 1
+[15 July 2025 at 08:49:39 CEST] - ::testdrop 54 1
+[15 July 2025 at 08:49:41 CEST] - ::testdrop 54 1
+[15 July 2025 at 08:49:43 CEST] - ::testdrop 54 1
+[15 July 2025 at 08:49:44 CEST] - ::testdrop 54 1
+[15 July 2025 at 08:49:47 CEST] - ::testdrop 54 1
+[15 July 2025 at 08:49:49 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:49:51 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:49:53 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:49:59 CEST] - ::testdrop 54 1000
+[15 July 2025 at 08:50:04 CEST] - ::testdrop 54 1000
+[15 July 2025 at 08:50:06 CEST] - ::testdrop 54 1000
+[15 July 2025 at 08:50:10 CEST] - ::testdrop 54 1000
+[15 July 2025 at 08:50:15 CEST] - ::testdrop 54 1000
+[15 July 2025 at 08:50:20 CEST] - ::testdrop 54 50000
+[15 July 2025 at 08:50:36 CEST] - ::testdrop 54 50000
+[15 July 2025 at 08:50:40 CEST] - ::testdrop 54 50000
+[15 July 2025 at 08:51:19 CEST] - ::bank 
+[15 July 2025 at 08:51:21 CEST] - ::emptybank 
+[15 July 2025 at 08:51:25 CEST] - ::testdrop 54 1000
+[15 July 2025 at 08:51:29 CEST] - ::testdrop 54 1000
+[15 July 2025 at 08:51:35 CEST] - ::testdrop 54 100
+[15 July 2025 at 08:51:38 CEST] - ::testdrop 54 10000
+[15 July 2025 at 08:54:47 CEST] - ::bank 
+[15 July 2025 at 08:54:49 CEST] - ::emptybank 
+[15 July 2025 at 08:54:54 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:54:59 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:55:00 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:55:02 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:55:04 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:55:06 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:55:07 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:55:09 CEST] - ::testdrop 54 100
+[15 July 2025 at 08:55:14 CEST] - ::testdrop 54 100
+[15 July 2025 at 08:55:16 CEST] - ::testdrop 54 100
+[15 July 2025 at 08:58:51 CEST] - ::bank 
+[15 July 2025 at 08:58:53 CEST] - ::emptybank 
+[15 July 2025 at 08:58:58 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:59:03 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:59:05 CEST] - ::testdrop 54 10
+[15 July 2025 at 08:59:52 CEST] - ::testdrop 54 10
+[15 July 2025 at 09:02:34 CEST] - ::testdrop 54 10
+[15 July 2025 at 09:02:36 CEST] - ::bank 
+[15 July 2025 at 09:02:38 CEST] - ::emptybank 
+[15 July 2025 at 09:02:41 CEST] - ::testdrop 54 1
+[15 July 2025 at 09:02:44 CEST] - ::testdrop 54 1
+[15 July 2025 at 09:02:47 CEST] - ::testdrop 54 1
+[15 July 2025 at 09:02:51 CEST] - ::testdrop 54 1
+[15 July 2025 at 09:07:01 CEST] - ::testdrop 54 1000
+[15 July 2025 at 09:07:09 CEST] - ::testdrop 54 1000
+[15 July 2025 at 09:07:15 CEST] - ::testdrop 54 1000
+[15 July 2025 at 09:07:42 CEST] - ::testdrop 54 10000
+[15 July 2025 at 09:07:53 CEST] - ::testdrop 54 1000000
+[15 July 2025 at 09:08:00 CEST] - ::bank 
+[15 July 2025 at 09:09:54 CEST] - ::item 2722 1
+[15 July 2025 at 09:10:26 CEST] - ::item 2722 1
+[15 July 2025 at 09:10:42 CEST] - ::item 2801 1
+[15 July 2025 at 09:12:07 CEST] - ::inter 345
+[15 July 2025 at 09:12:33 CEST] - ::item 18937 1
+[15 July 2025 at 09:12:48 CEST] - ::item 18937 1
+[15 July 2025 at 09:12:56 CEST] - ::item 18937 1
+[15 July 2025 at 09:16:05 CEST] - ::item 2720 1
+[15 July 2025 at 09:16:15 CEST] - ::item 19005 1
+[15 July 2025 at 09:57:37 CEST] - ::tele 0,48,53,5,35
+[15 July 2025 at 11:46:34 CEST] - ::item 2677 1
+[15 July 2025 at 11:46:48 CEST] - ::item 2722 1
+[15 July 2025 at 11:46:55 CEST] - ::give spade
+[15 July 2025 at 11:46:59 CEST] - ::tele 0,47,53,58,29
+[15 July 2025 at 11:47:00 CEST] - ::tele 0,47,53,50,20
+[15 July 2025 at 11:47:00 CEST] - ::tele 0,47,53,42,10
+[15 July 2025 at 11:47:01 CEST] - ::tele 0,47,53,37,6
+[15 July 2025 at 11:47:03 CEST] - ::tele 0,47,53,35,6
+[15 July 2025 at 11:47:13 CEST] - ::give sextant
+[15 July 2025 at 11:47:15 CEST] - ::give chart
+[15 July 2025 at 11:47:16 CEST] - ::give watch
+[15 July 2025 at 11:56:10 CEST] - ::tele 0,51,50,30,0
+[15 July 2025 at 11:57:11 CEST] - ::tele 0,51,50,30,4
+[15 July 2025 at 11:58:10 CEST] - ::tele 0,51,50,28,4
+[15 July 2025 at 11:58:26 CEST] - ::tele 0,51,50,50,43
+[15 July 2025 at 11:59:47 CEST] - ::object 76811
+[15 July 2025 at 11:59:54 CEST] - ::object 76811 1
+[15 July 2025 at 11:59:56 CEST] - ::object 76811 2
+[16 July 2025 at 12:00:01 CEST] - ::object 76811 4
+[16 July 2025 at 12:00:08 CEST] - ::tele 0,51,50,39,34
+[16 July 2025 at 12:00:09 CEST] - ::tele 0,51,50,32,24
+[16 July 2025 at 12:00:10 CEST] - ::tele 0,51,50,32,13
+[16 July 2025 at 12:00:10 CEST] - ::tele 0,51,50,29,5
+[16 July 2025 at 12:02:51 CEST] - ::tele 0,42,51,26,44
+[16 July 2025 at 12:03:12 CEST] - ::tele 0,42,51,26,44
+[16 July 2025 at 12:03:13 CEST] - ::tele 0,42,51,22,41
+[16 July 2025 at 12:03:16 CEST] - ::tele 0,42,51,12,53
+[16 July 2025 at 12:03:16 CEST] - ::tele 0,42,52,4,1
+[16 July 2025 at 12:03:17 CEST] - ::tele 0,41,52,58,0
+[16 July 2025 at 12:03:18 CEST] - ::tele 0,41,52,46,3
+[16 July 2025 at 12:03:31 CEST] - ::tele 0,41,51,42,58
+[16 July 2025 at 12:03:52 CEST] - ::tele 0,41,51,37,58
+[16 July 2025 at 12:04:02 CEST] - ::tele 0,41,51,38,57
+[16 July 2025 at 12:04:15 CEST] - ::tele 0,41,52,45,2
+[16 July 2025 at 12:04:16 CEST] - ::tele 0,41,52,52,9
+[16 July 2025 at 12:04:17 CEST] - ::tele 0,41,52,56,17
+[16 July 2025 at 12:04:17 CEST] - ::tele 0,41,52,60,25
+[16 July 2025 at 12:04:18 CEST] - ::tele 0,42,52,0,33
+[16 July 2025 at 12:04:38 CEST] - ::tele 0,41,52,49,41
+[16 July 2025 at 12:04:39 CEST] - ::tele 0,41,52,37,47
+[16 July 2025 at 12:04:40 CEST] - ::tele 0,41,52,26,55
+[16 July 2025 at 12:04:41 CEST] - ::tele 0,41,52,17,57
+[16 July 2025 at 12:04:42 CEST] - ::tele 0,41,52,15,58
+[16 July 2025 at 12:04:45 CEST] - ::tele 0,41,52,9,59
+[16 July 2025 at 12:04:50 CEST] - ::tele 0,41,52,13,53
+[16 July 2025 at 12:07:24 CEST] - ::tele 0,41,52,20,33
+[16 July 2025 at 12:07:38 CEST] - ::tele 0,41,52,13,26
+[16 July 2025 at 12:07:40 CEST] - ::tele 0,41,52,18,30
+[16 July 2025 at 12:07:43 CEST] - ::tele 0,41,52,13,31
+[16 July 2025 at 12:07:44 CEST] - ::tele 0,41,52,6,31
+[16 July 2025 at 12:07:45 CEST] - ::tele 0,40,52,59,27
+[16 July 2025 at 12:08:00 CEST] - ::tele 0,40,52,57,21
+[16 July 2025 at 12:08:01 CEST] - ::tele 0,40,52,56,16
+[16 July 2025 at 12:08:02 CEST] - ::tele 0,40,52,57,18
+[16 July 2025 at 12:26:46 CEST] - ::give clue scroll hard
+[16 July 2025 at 12:26:54 CEST] - ::item 2722 1
+[16 July 2025 at 12:27:02 CEST] - ::item 2677 1
+[16 July 2025 at 12:27:24 CEST] - ::npc 543
+[16 July 2025 at 12:27:35 CEST] - ::item 4585 1
+[16 July 2025 at 12:27:43 CEST] - ::npc 4585
+[16 July 2025 at 12:35:53 CEST] - ::resetclues 
+[16 July 2025 at 12:36:23 CEST] - ::clues 
+[16 July 2025 at 12:36:23 CEST] - ::clues 
+[16 July 2025 at 12:36:28 CEST] - ::resetclues 
+[16 July 2025 at 12:36:49 CEST] - ::npc 4431
+[16 July 2025 at 12:41:34 CEST] - ::resetclues 
+[16 July 2025 at 12:42:06 CEST] - ::tele 0,45,53,5,57
+[16 July 2025 at 12:42:19 CEST] - ::resetclues 
+[16 July 2025 at 12:42:37 CEST] - ::npc 2812
+[16 July 2025 at 12:45:37 CEST] - ::item 18937 1
+[16 July 2025 at 12:45:41 CEST] - ::item 18937 1
+[16 July 2025 at 12:46:02 CEST] - ::item 7240 1
+[16 July 2025 at 12:46:12 CEST] - ::item 7240 10
+[16 July 2025 at 12:46:39 CEST] - ::bank 
+[16 July 2025 at 12:49:00 CEST] - ::empty 
+[16 July 2025 at 12:49:04 CEST] - ::item 18937 1
+[16 July 2025 at 01:10:02 CEST] - ::empty 
+[16 July 2025 at 01:10:03 CEST] - ::bank 
+[16 July 2025 at 01:10:05 CEST] - ::emptybank 
+[16 July 2025 at 01:10:09 CEST] - ::testdrop 54 100
+[16 July 2025 at 01:10:13 CEST] - ::testdrop 54 100
+[16 July 2025 at 01:10:15 CEST] - ::testdrop 54 100
+[16 July 2025 at 01:10:24 CEST] - ::testdrop 54 1200
+[16 July 2025 at 01:10:31 CEST] - ::testdrop 54 500
+[16 July 2025 at 01:10:37 CEST] - ::testdrop 54 8000
+[16 July 2025 at 01:10:42 CEST] - ::testdrop 54 10000
+[16 July 2025 at 01:10:46 CEST] - ::testdrop 54 10000
+[16 July 2025 at 01:10:49 CEST] - ::testdrop 54 10000
+[16 July 2025 at 01:10:54 CEST] - ::testdrop 54 60000
+[16 July 2025 at 01:11:05 CEST] - ::testdrop 54 1000000
+[16 July 2025 at 01:12:41 CEST] - ::item 11724 1
+[16 July 2025 at 01:12:42 CEST] - ::item 11726 1
+[16 July 2025 at 01:19:14 CEST] - ::heal 
+[16 July 2025 at 01:26:35 CEST] - ::tele 0,50,53,11,11
+[16 July 2025 at 01:26:35 CEST] - ::tele 0,50,52,11,59
+[16 July 2025 at 01:26:37 CEST] - ::tele 0,50,52,13,48
+[16 July 2025 at 01:26:51 CEST] - ::tele 0,50,52,12,53
+[16 July 2025 at 01:26:51 CEST] - ::tele 0,50,53,7,5
+[16 July 2025 at 01:26:52 CEST] - ::tele 0,50,53,8,23
+[16 July 2025 at 01:26:53 CEST] - ::tele 0,50,53,3,34
+[16 July 2025 at 01:40:36 CEST] - ::item 11284 1
+[16 July 2025 at 01:40:41 CEST] - ::item 11283 1
+[16 July 2025 at 01:51:47 CEST] - ::npc 54
+[16 July 2025 at 01:52:03 CEST] - ::item 11283 1
+[16 July 2025 at 02:02:27 CEST] - ::heal 
+[16 July 2025 at 02:02:29 CEST] - ::tele 0,48,54,21,37
+[16 July 2025 at 02:02:31 CEST] - ::tele 0,48,54,15,36
+[16 July 2025 at 02:02:34 CEST] - ::npc 54
+[16 July 2025 at 02:02:57 CEST] - ::heal 
+[16 July 2025 at 02:03:09 CEST] - ::item 11284 1
+[17 July 2025 at 09:52:39 CEST] - ::charge 
+[17 July 2025 at 09:52:40 CEST] - ::charge 
+[17 July 2025 at 09:52:41 CEST] - ::charge 
+[17 July 2025 at 10:16:11 CEST] - ::item 24497 1
+[17 July 2025 at 10:18:23 CEST] - ::addrune 
+[17 July 2025 at 11:02:47 CEST] - ::item 24497 1
+[17 July 2025 at 11:07:17 CEST] - ::item 24497 1
+[17 July 2025 at 11:07:21 CEST] - ::item 22497 1
+[17 July 2025 at 11:07:25 CEST] - ::item 24497 1
+[17 July 2025 at 11:07:30 CEST] - ::item 555 17000
+[17 July 2025 at 11:07:32 CEST] - ::item 560 1000
+[17 July 2025 at 11:07:34 CEST] - ::item 565 500
+[17 July 2025 at 11:07:40 CEST] - ::item 554 25000
+[17 July 2025 at 11:07:43 CEST] - ::item 553 25000
+[17 July 2025 at 11:07:45 CEST] - ::bank 
+[17 July 2025 at 11:07:57 CEST] - ::item 556 25000
+[17 July 2025 at 11:08:01 CEST] - ::item 557 5000
+[17 July 2025 at 01:09:42 CEST] - ::item 995 15000000
+[17 July 2025 at 01:09:49 CEST] - ::clearchat 
+[17 July 2025 at 01:10:42 CEST] - ::item 995 15000000
+[17 July 2025 at 01:10:47 CEST] - ::item 11284 1
+[17 July 2025 at 01:11:02 CEST] - ::clearchat 
+[17 July 2025 at 01:13:31 CEST] - ::item 995 15000000
+[17 July 2025 at 01:13:32 CEST] - ::item 11284 1
+[17 July 2025 at 01:17:50 CEST] - ::clearchat 
+[17 July 2025 at 03:14:21 CEST] - ::charge 
+[17 July 2025 at 03:14:21 CEST] - ::charge 
+[17 July 2025 at 03:14:22 CEST] - ::charge 
+[17 July 2025 at 03:14:22 CEST] - ::charge 
+[17 July 2025 at 03:14:22 CEST] - ::charge 
+[17 July 2025 at 03:14:22 CEST] - ::charge 
+[17 July 2025 at 03:14:22 CEST] - ::charge 
+[17 July 2025 at 03:14:23 CEST] - ::charge 
+[17 July 2025 at 03:16:20 CEST] - ::item 11283 1
+[17 July 2025 at 03:19:28 CEST] - ::charge 
+[17 July 2025 at 03:19:30 CEST] - ::charge 
+[17 July 2025 at 03:19:30 CEST] - ::charge 
+[17 July 2025 at 03:19:30 CEST] - ::charge 
+[17 July 2025 at 03:19:30 CEST] - ::charge 
+[17 July 2025 at 03:19:31 CEST] - ::charge 
+[17 July 2025 at 03:19:31 CEST] - ::charge 
+[17 July 2025 at 03:19:31 CEST] - ::charge 
+[17 July 2025 at 03:19:31 CEST] - ::charge 
+[17 July 2025 at 03:19:32 CEST] - ::charge 
+[17 July 2025 at 03:19:32 CEST] - ::charge 
+[17 July 2025 at 03:19:32 CEST] - ::charge 
+[17 July 2025 at 03:19:32 CEST] - ::charge 
+[17 July 2025 at 03:19:33 CEST] - ::charge 
+[17 July 2025 at 03:19:33 CEST] - ::charge 
+[17 July 2025 at 03:19:33 CEST] - ::charge 
+[17 July 2025 at 03:19:33 CEST] - ::charge 
+[17 July 2025 at 03:19:33 CEST] - ::charge 
+[17 July 2025 at 03:19:34 CEST] - ::charge 
+[17 July 2025 at 03:19:34 CEST] - ::charge 
+[17 July 2025 at 03:19:34 CEST] - ::charge 
+[17 July 2025 at 03:19:34 CEST] - ::charge 
+[17 July 2025 at 03:19:34 CEST] - ::charge 
+[17 July 2025 at 03:19:34 CEST] - ::charge 
+[17 July 2025 at 03:19:35 CEST] - ::charge 
+[17 July 2025 at 03:19:35 CEST] - ::charge 
+[17 July 2025 at 03:19:35 CEST] - ::charge 
+[17 July 2025 at 03:19:36 CEST] - ::charge 
+[17 July 2025 at 03:19:36 CEST] - ::charge 
+[17 July 2025 at 03:19:36 CEST] - ::charge 
+[17 July 2025 at 03:19:36 CEST] - ::charge 
+[17 July 2025 at 03:19:37 CEST] - ::charge 
+[17 July 2025 at 03:19:37 CEST] - ::charge 
+[17 July 2025 at 03:19:37 CEST] - ::charge 
+[17 July 2025 at 03:19:37 CEST] - ::charge 
+[17 July 2025 at 03:19:37 CEST] - ::charge 
+[17 July 2025 at 03:19:38 CEST] - ::charge 
+[17 July 2025 at 03:19:38 CEST] - ::charge 
+[17 July 2025 at 03:19:38 CEST] - ::charge 
+[17 July 2025 at 03:19:38 CEST] - ::charge 
+[17 July 2025 at 03:19:38 CEST] - ::charge 
+[17 July 2025 at 03:19:39 CEST] - ::charge 
+[17 July 2025 at 03:19:39 CEST] - ::charge 
+[17 July 2025 at 03:19:39 CEST] - ::charge 
+[17 July 2025 at 03:19:40 CEST] - ::charge 
+[17 July 2025 at 03:19:40 CEST] - ::charge 
+[17 July 2025 at 03:19:40 CEST] - ::charge 
+[17 July 2025 at 03:19:41 CEST] - ::charge 
+[17 July 2025 at 03:19:41 CEST] - ::charge 
+[17 July 2025 at 03:19:41 CEST] - ::charge 
+[17 July 2025 at 03:19:42 CEST] - ::charge 
+[17 July 2025 at 03:19:42 CEST] - ::charge 
+[17 July 2025 at 03:19:42 CEST] - ::charge 
+[17 July 2025 at 03:19:46 CEST] - ::clearchat 
+[17 July 2025 at 03:46:21 CEST] - ::item 892 10
+[17 July 2025 at 03:46:30 CEST] - ::item 892 15
+[17 July 2025 at 03:51:16 CEST] - ::item 892 10
+[17 July 2025 at 03:52:06 CEST] - ::item 11724 1
+[17 July 2025 at 03:52:09 CEST] - ::item 11796 1
+[17 July 2025 at 03:52:13 CEST] - ::item 11694 1
+[18 July 2025 at 10:12:31 CEST] - ::curses 
+[18 July 2025 at 10:55:43 CEST] - ::anim 7152
+[18 July 2025 at 10:55:51 CEST] - ::gfx 736
+[18 July 2025 at 10:56:36 CEST] - ::prayers 
+[18 July 2025 at 11:11:14 CEST] - ::curses 
+[19 July 2025 at 12:53:45 CEST] - ::heal 
+[19 July 2025 at 03:31:21 CEST] - ::heal 
+[19 July 2025 at 03:31:22 CEST] - ::master 
+[19 July 2025 at 03:31:24 CEST] - ::heal 
+[19 July 2025 at 06:30:01 CEST] - ::heal 
+[19 July 2025 at 06:53:46 CEST] - ::curses 
+[19 July 2025 at 06:53:49 CEST] - ::curses 
+[19 July 2025 at 06:53:52 CEST] - ::prayers 
+[19 July 2025 at 06:53:53 CEST] - ::prayers 
+[19 July 2025 at 06:59:20 CEST] - ::curses 
+[19 July 2025 at 07:00:38 CEST] - ::var 1582 0
+[19 July 2025 at 07:00:40 CEST] - ::var 1582 1
+[19 July 2025 at 07:00:49 CEST] - ::var 1395 0
+[19 July 2025 at 07:00:51 CEST] - ::var 1395 1
+[19 July 2025 at 07:01:04 CEST] - ::var 1395 2
+[19 July 2025 at 07:01:06 CEST] - ::var 1395 0
+[19 July 2025 at 07:01:33 CEST] - ::var 1584 1
+[19 July 2025 at 07:02:49 CEST] - ::curses 
+[19 July 2025 at 07:02:50 CEST] - ::curses 
+[19 July 2025 at 07:05:49 CEST] - ::curses 
+[19 July 2025 at 07:26:14 CEST] - ::curses 
+[19 July 2025 at 07:33:38 CEST] - ::curses 
 [16 July 2025 at 02:25:30 CEST] - ::emptybank 
 [16 July 2025 at 02:25:32 CEST] - ::item 11284 1
 [16 July 2025 at 02:25:34 CEST] - ::item 11284 1
@@ -5226,3 +5588,349 @@
 [04 August 2025 at 02:05:24 CEST] - ::varbit 9223 3
 [04 August 2025 at 02:05:25 CEST] - ::varbit 9223 4
 [04 August 2025 at 02:05:27 CEST] - ::varbit 9223 500
+[04 August 2025 at 09:39:55 CEST] - ::master 
+[04 August 2025 at 09:39:57 CEST] - ::heal 
+[04 August 2025 at 09:42:46 CEST] - ::npc 4381
+[04 August 2025 at 09:43:33 CEST] - ::god 
+[04 August 2025 at 09:43:40 CEST] - ::npc 10736
+[04 August 2025 at 09:43:47 CEST] - ::god 
+[04 August 2025 at 09:43:51 CEST] - ::npc 10736
+[04 August 2025 at 09:44:01 CEST] - ::npc 10743
+[04 August 2025 at 09:44:15 CEST] - ::god 
+[04 August 2025 at 09:44:17 CEST] - ::god 
+[04 August 2025 at 09:44:25 CEST] - ::npc 10742
+[04 August 2025 at 09:45:50 CEST] - ::setlevel 1 1
+[04 August 2025 at 09:46:38 CEST] - ::npc 2881
+[04 August 2025 at 09:47:24 CEST] - ::item balmung
+[04 August 2025 at 09:55:56 CEST] - ::npc 2881
+[04 August 2025 at 09:59:49 CEST] - ::setlevel 1 70
+[04 August 2025 at 09:59:53 CEST] - ::setlevel 1 70
+[04 August 2025 at 10:00:17 CEST] - ::prayers 
+[04 August 2025 at 10:07:09 CEST] - ::prayers 
+[04 August 2025 at 10:07:25 CEST] - ::prayers 
+[04 August 2025 at 10:23:46 CEST] - ::item 4151 5
+[04 August 2025 at 10:24:32 CEST] - ::skull 
+[04 August 2025 at 10:25:20 CEST] - ::kill andreas
+[04 August 2025 at 10:25:25 CEST] - ::item dwarven rock cake
+[04 August 2025 at 10:25:31 CEST] - ::item 7510 1
+[04 August 2025 at 10:25:35 CEST] - ::tele 0,48,54,14,42
+[04 August 2025 at 10:26:03 CEST] - ::item 4151 1
+[04 August 2025 at 10:26:05 CEST] - ::item 20072 1
+[04 August 2025 at 10:26:10 CEST] - ::item bandos chest
+[04 August 2025 at 10:26:12 CEST] - ::item bandos tass
+[04 August 2025 at 10:26:16 CEST] - ::item tokhaar
+[04 August 2025 at 10:27:00 CEST] - ::item tokhaar
+[04 August 2025 at 10:27:02 CEST] - ::item 23659 1
+[04 August 2025 at 10:27:08 CEST] - ::item whip
+[04 August 2025 at 10:27:12 CEST] - ::item abyssal
+[04 August 2025 at 10:27:14 CEST] - ::item abyssal w
+[04 August 2025 at 10:27:17 CEST] - ::item dragon def
+[04 August 2025 at 10:27:19 CEST] - ::item fury
+[04 August 2025 at 10:27:24 CEST] - ::item amulet of fury
+[04 August 2025 at 10:27:31 CEST] - ::item culimancer gloves 10
+[04 August 2025 at 10:27:37 CEST] - ::item culimi
+[04 August 2025 at 10:27:47 CEST] - ::item gloves
+[04 August 2025 at 10:27:49 CEST] - ::item 7462 1
+[04 August 2025 at 10:27:55 CEST] - ::item culinaro
+[04 August 2025 at 10:28:04 CEST] - ::item steadfast
+[04 August 2025 at 10:28:07 CEST] - ::item bandos tass
+[04 August 2025 at 10:28:10 CEST] - ::item bandos chest
+[04 August 2025 at 10:28:13 CEST] - ::item neitiz
+[04 August 2025 at 10:28:20 CEST] - ::master 
+[04 August 2025 at 10:28:35 CEST] - ::item berseker ring i
+[04 August 2025 at 10:28:45 CEST] - ::item berserker ring (
+[04 August 2025 at 10:29:41 CEST] - ::gfx 2226
+[04 August 2025 at 10:55:37 CEST] - ::gfx 2226
+[04 August 2025 at 10:55:41 CEST] - ::gfx 2227
+[04 August 2025 at 10:55:43 CEST] - ::gfx 2228
+[04 August 2025 at 10:55:46 CEST] - ::gfx 2229
+[04 August 2025 at 10:55:50 CEST] - ::gfx 2230
+[04 August 2025 at 10:55:52 CEST] - ::gfx 2231
+[04 August 2025 at 10:55:56 CEST] - ::gfx 2227
+[04 August 2025 at 10:55:59 CEST] - ::gfx 2227
+[04 August 2025 at 10:56:01 CEST] - ::gfx 2228
+[04 August 2025 at 10:56:03 CEST] - ::gfx 2227
+[04 August 2025 at 10:56:19 CEST] - ::gfx 2228
+[04 August 2025 at 10:56:21 CEST] - ::gfx 2229
+[04 August 2025 at 10:56:40 CEST] - ::gfx 2230
+[04 August 2025 at 10:56:42 CEST] - ::gfx 2231
+[04 August 2025 at 10:56:55 CEST] - ::gfx 2232
+[04 August 2025 at 10:57:00 CEST] - ::gfx 2233
+[04 August 2025 at 10:57:02 CEST] - ::gfx 2231
+[04 August 2025 at 10:57:06 CEST] - ::gfx 2232
+[04 August 2025 at 10:57:09 CEST] - ::gfx 2233
+[04 August 2025 at 10:57:10 CEST] - ::gfx 2234
+[04 August 2025 at 10:57:12 CEST] - ::gfx 2235
+[04 August 2025 at 10:57:14 CEST] - ::gfx 2236
+[04 August 2025 at 10:57:15 CEST] - ::gfx 2237
+[04 August 2025 at 10:57:16 CEST] - ::gfx 2236
+[04 August 2025 at 10:57:18 CEST] - ::gfx 2238
+[04 August 2025 at 10:57:20 CEST] - ::gfx 2236
+[04 August 2025 at 10:57:27 CEST] - ::gfx 2232
+[04 August 2025 at 10:57:56 CEST] - ::gfx 2233
+[04 August 2025 at 10:57:57 CEST] - ::gfx 2234
+[04 August 2025 at 10:57:58 CEST] - ::gfx 2235
+[04 August 2025 at 10:58:00 CEST] - ::gfx 2236
+[04 August 2025 at 10:58:01 CEST] - ::gfx 2236
+[04 August 2025 at 10:58:03 CEST] - ::gfx 2236
+[04 August 2025 at 10:58:14 CEST] - ::gfx 2237
+[04 August 2025 at 10:58:15 CEST] - ::gfx 2238
+[04 August 2025 at 10:58:31 CEST] - ::gfx 2239
+[04 August 2025 at 10:58:33 CEST] - ::gfx 2240
+[04 August 2025 at 10:58:48 CEST] - ::gfx 2242
+[04 August 2025 at 10:58:50 CEST] - ::gfx 2241
+[04 August 2025 at 10:58:54 CEST] - ::gfx 2243
+[04 August 2025 at 10:58:55 CEST] - ::gfx 2244
+[04 August 2025 at 10:58:56 CEST] - ::gfx 2244
+[04 August 2025 at 10:58:58 CEST] - ::gfx 2244
+[04 August 2025 at 10:58:59 CEST] - ::gfx 2244
+[04 August 2025 at 10:59:02 CEST] - ::gfx 2246
+[04 August 2025 at 10:59:04 CEST] - ::gfx 2244
+[04 August 2025 at 10:59:24 CEST] - ::gfx 2245
+[04 August 2025 at 10:59:27 CEST] - ::gfx 2246
+[04 August 2025 at 10:59:29 CEST] - ::gfx 2247
+[04 August 2025 at 10:59:30 CEST] - ::gfx 2248
+[04 August 2025 at 10:59:32 CEST] - ::gfx 2248
+[04 August 2025 at 10:59:33 CEST] - ::gfx 2248
+[04 August 2025 at 10:59:35 CEST] - ::gfx 2248
+[04 August 2025 at 10:59:36 CEST] - ::gfx 2248
+[04 August 2025 at 10:59:39 CEST] - ::gfx 2248
+[04 August 2025 at 10:59:41 CEST] - ::gfx 2250
+[04 August 2025 at 11:00:13 CEST] - ::gfx 2252
+[04 August 2025 at 11:00:14 CEST] - ::gfx 2253
+[04 August 2025 at 11:00:15 CEST] - ::gfx 2254
+[04 August 2025 at 11:00:18 CEST] - ::gfx 2252
+[04 August 2025 at 11:00:19 CEST] - ::gfx 2252
+[04 August 2025 at 11:00:21 CEST] - ::gfx 2252
+[04 August 2025 at 11:00:23 CEST] - ::gfx 2254
+[04 August 2025 at 11:00:40 CEST] - ::gfx 2252
+[04 August 2025 at 11:00:48 CEST] - ::gfx 2255
+[04 August 2025 at 11:00:50 CEST] - ::gfx 2256
+[04 August 2025 at 11:00:51 CEST] - ::gfx 2255
+[04 August 2025 at 11:00:53 CEST] - ::gfx 2255
+[04 August 2025 at 11:00:54 CEST] - ::gfx 2255
+[04 August 2025 at 11:00:56 CEST] - ::gfx 2256
+[04 August 2025 at 11:00:57 CEST] - ::gfx 2257
+[04 August 2025 at 11:00:59 CEST] - ::gfx 2258
+[04 August 2025 at 11:01:09 CEST] - ::gfx 2256
+[04 August 2025 at 11:01:29 CEST] - ::gfx 2256
+[04 August 2025 at 11:01:31 CEST] - ::gfx 2256
+[04 August 2025 at 11:01:32 CEST] - ::gfx 2256
+[04 August 2025 at 11:01:33 CEST] - ::gfx 2256
+[04 August 2025 at 11:01:34 CEST] - ::gfx 2256
+[04 August 2025 at 11:01:35 CEST] - ::gfx 2256
+[04 August 2025 at 11:06:50 CEST] - ::gfx 2256
+[04 August 2025 at 11:06:56 CEST] - ::gfx 2257
+[04 August 2025 at 11:06:58 CEST] - ::gfx 2258
+[04 August 2025 at 11:07:01 CEST] - ::gfx 2255
+[04 August 2025 at 11:07:16 CEST] - ::gfx 2258
+[04 August 2025 at 11:07:18 CEST] - ::gfx 2259
+[04 August 2025 at 11:07:21 CEST] - ::gfx 2260
+[04 August 2025 at 11:07:23 CEST] - ::gfx 2261
+[04 August 2025 at 11:07:25 CEST] - ::gfx 2261
+[04 August 2025 at 11:07:27 CEST] - ::gfx 2262
+[04 August 2025 at 11:07:29 CEST] - ::gfx 2261
+[04 August 2025 at 11:07:31 CEST] - ::gfx 2261
+[04 August 2025 at 11:07:32 CEST] - ::gfx 2261
+[04 August 2025 at 11:07:36 CEST] - ::gfx 2259
+[04 August 2025 at 11:07:58 CEST] - ::gfx 2260
+[04 August 2025 at 11:08:02 CEST] - ::gfx 2261
+[04 August 2025 at 11:08:13 CEST] - ::gfx 2262
+[04 August 2025 at 11:08:14 CEST] - ::gfx 2263
+[04 August 2025 at 11:08:16 CEST] - ::gfx 2263
+[04 August 2025 at 11:08:25 CEST] - ::gfx 2264
+[04 August 2025 at 11:08:35 CEST] - ::gfx 2265
+[04 August 2025 at 11:08:37 CEST] - ::gfx 2266
+[04 August 2025 at 11:08:51 CEST] - ::gfx 2267
+[04 August 2025 at 11:08:53 CEST] - ::gfx 2268
+[04 August 2025 at 11:08:55 CEST] - ::gfx 2269
+[04 August 2025 at 11:08:57 CEST] - ::gfx 2270
+[04 August 2025 at 11:09:03 CEST] - ::gfx 2225
+[04 August 2025 at 11:09:06 CEST] - ::gfx 2224
+[04 August 2025 at 11:09:07 CEST] - ::gfx 2223
+[04 August 2025 at 11:09:09 CEST] - ::gfx 2222
+[04 August 2025 at 11:09:11 CEST] - ::gfx 2221
+[04 August 2025 at 11:09:13 CEST] - ::gfx 2220
+[04 August 2025 at 11:09:17 CEST] - ::gfx 2221
+[04 August 2025 at 11:09:24 CEST] - ::gfx 2200
+[04 August 2025 at 11:09:26 CEST] - ::gfx 2200
+[04 August 2025 at 11:09:27 CEST] - ::gfx 2200
+[04 August 2025 at 11:09:29 CEST] - ::gfx 2201
+[04 August 2025 at 11:09:30 CEST] - ::gfx 2202
+[04 August 2025 at 11:09:32 CEST] - ::gfx 2203
+[04 August 2025 at 11:09:33 CEST] - ::gfx 2204
+[04 August 2025 at 11:09:36 CEST] - ::gfx 2205
+[04 August 2025 at 11:09:39 CEST] - ::gfx 2206
+[04 August 2025 at 11:09:41 CEST] - ::gfx 2207
+[04 August 2025 at 11:09:42 CEST] - ::gfx 2208
+[04 August 2025 at 11:09:44 CEST] - ::gfx 2209
+[04 August 2025 at 11:09:46 CEST] - ::gfx 2210
+[04 August 2025 at 11:09:48 CEST] - ::gfx 2211
+[04 August 2025 at 11:09:50 CEST] - ::gfx 2212
+[04 August 2025 at 11:09:51 CEST] - ::gfx 2213
+[04 August 2025 at 11:10:08 CEST] - ::gfx 2214
+[04 August 2025 at 11:10:22 CEST] - ::gfx 2215
+[04 August 2025 at 11:10:36 CEST] - ::gfx 2216
+[04 August 2025 at 11:10:47 CEST] - ::gfx 2217
+[04 August 2025 at 11:11:09 CEST] - ::gfx 2218
+[04 August 2025 at 11:11:11 CEST] - ::gfx 2219
+[04 August 2025 at 11:11:14 CEST] - ::gfx 2220
+[04 August 2025 at 11:11:31 CEST] - ::gfx 2221
+[04 August 2025 at 11:11:32 CEST] - ::gfx 2222
+[04 August 2025 at 11:11:41 CEST] - ::gfx 2223
+[04 August 2025 at 11:12:03 CEST] - ::gfx 2225
+[04 August 2025 at 11:12:35 CEST] - ::anim 12581
+[04 August 2025 at 11:12:38 CEST] - ::anim 12565
+[04 August 2025 at 11:12:40 CEST] - ::anim 12565
+[04 August 2025 at 11:12:56 CEST] - ::anim 12566
+[04 August 2025 at 11:13:06 CEST] - ::anim 12567
+[04 August 2025 at 11:13:20 CEST] - ::anim 12568
+[04 August 2025 at 11:13:21 CEST] - ::anim 12569
+[04 August 2025 at 11:13:24 CEST] - ::anim 12570
+[04 August 2025 at 11:13:34 CEST] - ::anim 12569
+[04 August 2025 at 11:13:47 CEST] - ::anim 12571
+[04 August 2025 at 11:13:48 CEST] - ::anim 12572
+[04 August 2025 at 11:13:49 CEST] - ::anim 12573
+[04 August 2025 at 11:13:51 CEST] - ::anim 12573
+[04 August 2025 at 11:13:52 CEST] - ::anim 12574
+[04 August 2025 at 11:13:53 CEST] - ::anim 12573
+[04 August 2025 at 11:14:02 CEST] - ::anim 12574
+[04 August 2025 at 11:14:02 CEST] - ::anim 12575
+[04 August 2025 at 11:14:12 CEST] - ::anim 12576
+[04 August 2025 at 11:14:13 CEST] - ::anim 12577
+[04 August 2025 at 11:14:14 CEST] - ::anim 12578
+[04 August 2025 at 11:14:16 CEST] - ::anim 12579
+[04 August 2025 at 11:14:17 CEST] - ::anim 12580
+[04 August 2025 at 11:14:19 CEST] - ::anim 12581
+[04 August 2025 at 11:14:21 CEST] - ::anim 12582
+[04 August 2025 at 11:14:22 CEST] - ::anim 12583
+[04 August 2025 at 11:14:25 CEST] - ::anim 12584
+[04 August 2025 at 11:14:27 CEST] - ::anim 12584
+[04 August 2025 at 11:14:33 CEST] - ::anim 12584
+[04 August 2025 at 11:14:35 CEST] - ::anim 12585
+[04 August 2025 at 11:14:38 CEST] - ::anim 12584
+[04 August 2025 at 11:14:47 CEST] - ::anim 12584
+[04 August 2025 at 11:14:59 CEST] - ::anim 12585
+[04 August 2025 at 11:15:01 CEST] - ::anim 12586
+[04 August 2025 at 11:15:02 CEST] - ::anim 12587
+[04 August 2025 at 11:15:03 CEST] - ::anim 12588
+[04 August 2025 at 11:15:05 CEST] - ::anim 12589
+[04 August 2025 at 11:15:07 CEST] - ::anim 12590
+[04 August 2025 at 11:15:09 CEST] - ::anim 12591
+[04 August 2025 at 11:15:11 CEST] - ::anim 12592
+[04 August 2025 at 11:15:12 CEST] - ::anim 12593
+[04 August 2025 at 11:15:13 CEST] - ::anim 12594
+[04 August 2025 at 11:15:15 CEST] - ::anim 12595
+[04 August 2025 at 11:15:16 CEST] - ::anim 12596
+[04 August 2025 at 11:15:17 CEST] - ::anim 12597
+[04 August 2025 at 11:15:18 CEST] - ::anim 12598
+[04 August 2025 at 11:15:20 CEST] - ::anim 12599
+[04 August 2025 at 11:15:23 CEST] - ::anim 12597
+[04 August 2025 at 11:15:24 CEST] - ::anim 12596
+[04 August 2025 at 11:15:25 CEST] - ::anim 12595
+[04 August 2025 at 11:15:27 CEST] - ::anim 12594
+[04 August 2025 at 11:15:37 CEST] - ::anim 12595
+[04 August 2025 at 11:15:45 CEST] - ::anim 12596
+[04 August 2025 at 11:15:49 CEST] - ::anim 1255o
+[04 August 2025 at 11:15:52 CEST] - ::anim 12550
+[04 August 2025 at 11:15:54 CEST] - ::anim 12551
+[04 August 2025 at 11:15:56 CEST] - ::anim 12552
+[04 August 2025 at 11:15:57 CEST] - ::anim 12553
+[04 August 2025 at 11:15:58 CEST] - ::anim 12554
+[04 August 2025 at 11:16:00 CEST] - ::anim 12555
+[04 August 2025 at 11:16:01 CEST] - ::anim 12556
+[04 August 2025 at 11:16:02 CEST] - ::anim 12557
+[04 August 2025 at 11:16:04 CEST] - ::anim 12558
+[04 August 2025 at 11:16:05 CEST] - ::anim 12559
+[04 August 2025 at 11:16:07 CEST] - ::anim 12560
+[04 August 2025 at 11:16:08 CEST] - ::anim 12561
+[04 August 2025 at 11:16:10 CEST] - ::anim 12562
+[04 August 2025 at 11:16:13 CEST] - ::anim 12563
+[04 August 2025 at 11:16:23 CEST] - ::anim 12564
+[04 August 2025 at 11:16:26 CEST] - ::anim 12565
+[04 August 2025 at 11:16:27 CEST] - ::anim 12565
+[04 August 2025 at 11:16:37 CEST] - ::anim 12566
+[04 August 2025 at 11:16:38 CEST] - ::anim 12567
+[04 August 2025 at 11:17:33 CEST] - ::anim 12500
+[04 August 2025 at 11:17:35 CEST] - ::anim 12501
+[04 August 2025 at 11:17:36 CEST] - ::anim 12502
+[04 August 2025 at 11:18:26 CEST] - ::anim 12589
+[04 August 2025 at 11:18:34 CEST] - ::anim 12588
+[04 August 2025 at 11:18:35 CEST] - ::anim 12588
+[04 August 2025 at 11:18:36 CEST] - ::anim 12589
+[04 August 2025 at 11:18:39 CEST] - ::anim -1
+[04 August 2025 at 11:18:40 CEST] - ::anim 12589
+[04 August 2025 at 11:18:56 CEST] - ::anim 12585
+[04 August 2025 at 11:18:57 CEST] - ::anim 12586
+[04 August 2025 at 11:18:58 CEST] - ::anim 12587
+[04 August 2025 at 11:18:59 CEST] - ::anim 12588
+[04 August 2025 at 11:19:01 CEST] - ::anim 12589
+[04 August 2025 at 11:19:02 CEST] - ::anim -1
+[04 August 2025 at 11:19:04 CEST] - ::anim 12590
+[04 August 2025 at 11:19:05 CEST] - ::anim 12591
+[04 August 2025 at 11:19:07 CEST] - ::anim 12592
+[04 August 2025 at 11:19:08 CEST] - ::anim 12593
+[04 August 2025 at 11:19:09 CEST] - ::anim 12594
+[04 August 2025 at 11:19:11 CEST] - ::anim 12595
+[04 August 2025 at 11:19:12 CEST] - ::anim 12596
+[04 August 2025 at 11:19:13 CEST] - ::anim 12597
+[04 August 2025 at 11:19:14 CEST] - ::anim 12598
+[04 August 2025 at 11:19:16 CEST] - ::anim 12599
+[04 August 2025 at 11:19:19 CEST] - ::anim 12600
+[04 August 2025 at 11:20:08 CEST] - ::anim 12804
+[04 August 2025 at 11:20:14 CEST] - ::anim 12805
+[04 August 2025 at 11:20:17 CEST] - ::anim 12806
+[04 August 2025 at 11:20:41 CEST] - ::anim 12807
+[04 August 2025 at 11:20:42 CEST] - ::anim 12808
+[04 August 2025 at 11:20:43 CEST] - ::anim 12809
+[04 August 2025 at 11:20:46 CEST] - ::anim 12810
+[04 August 2025 at 11:30:16 CEST] - ::gfx 2254
+[04 August 2025 at 11:30:22 CEST] - ::gfx 2252
+[04 August 2025 at 11:40:23 CEST] - ::gfx 2264
+[04 August 2025 at 11:40:25 CEST] - ::gfx 2265
+[04 August 2025 at 11:40:27 CEST] - ::gfx 2263
+[04 August 2025 at 11:43:14 CEST] - ::prayers 
+[04 August 2025 at 11:46:50 CEST] - ::anim 12575
+[04 August 2025 at 12:18:31 CEST] - ::prayers 
+[04 August 2025 at 12:41:03 CEST] - ::npc 2661
+[04 August 2025 at 12:41:09 CEST] - ::npc 2881
+[04 August 2025 at 01:10:20 CEST] - ::heal 
+[04 August 2025 at 01:23:08 CEST] - ::prayers 
+[04 August 2025 at 01:25:51 CEST] - ::curses 
+[04 August 2025 at 01:26:13 CEST] - ::heal 
+[04 August 2025 at 02:09:36 CEST] - ::heal 
+[04 August 2025 at 02:27:15 CEST] - ::heal 
+[04 August 2025 at 02:32:21 CEST] - ::prayers 
+[04 August 2025 at 02:34:40 CEST] - ::heal 
+[04 August 2025 at 02:42:31 CEST] - ::heal 
+[04 August 2025 at 02:43:38 CEST] - ::heal 
+[04 August 2025 at 03:07:43 CEST] - ::heal 
+[04 August 2025 at 03:15:39 CEST] - ::heal 
+[04 August 2025 at 03:23:53 CEST] - ::item proslyte
+[04 August 2025 at 03:23:57 CEST] - ::item initiate
+[04 August 2025 at 03:24:07 CEST] - ::item 5575 1
+[04 August 2025 at 03:24:08 CEST] - ::item 5576 1
+[04 August 2025 at 03:42:15 CEST] - ::prayers 
+[04 August 2025 at 03:43:04 CEST] - ::heal 
+[04 August 2025 at 03:43:31 CEST] - ::npc 2881
+[04 August 2025 at 03:44:10 CEST] - ::npc 2881
+[04 August 2025 at 03:44:53 CEST] - ::heal 
+[04 August 2025 at 03:49:43 CEST] - ::npc 2881
+[04 August 2025 at 03:51:23 CEST] - ::heal 
+[04 August 2025 at 03:56:12 CEST] - ::heal 
+[04 August 2025 at 03:57:52 CEST] - ::heal 
+[04 August 2025 at 04:11:57 CEST] - ::heal 
+[04 August 2025 at 04:16:35 CEST] - ::heal 
+[04 August 2025 at 05:59:48 CEST] - ::heal 
+[04 August 2025 at 06:05:07 CEST] - ::heal 
+[04 August 2025 at 06:10:35 CEST] - ::heal 
+[04 August 2025 at 06:10:49 CEST] - ::ecomode 2
+[04 August 2025 at 06:13:12 CEST] - ::heal 
+[04 August 2025 at 06:15:47 CEST] - ::heal 
+[04 August 2025 at 06:34:48 CEST] - ::ecomode 2
+[04 August 2025 at 06:39:32 CEST] - ::heal 
+[04 August 2025 at 06:47:50 CEST] - ::heal 
+[04 August 2025 at 06:51:51 CEST] - ::heal 
+[04 August 2025 at 06:53:47 CEST] - ::heal 
+[04 August 2025 at 06:56:46 CEST] - ::heal 
+[04 August 2025 at 07:00:45 CEST] - ::heal 

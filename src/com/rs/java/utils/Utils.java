@@ -70,6 +70,10 @@ public final class Utils {
 		return tile;
 	}
 
+	public static int clamp(int value, int min, int max) {
+		return Math.max(min, Math.min(max, value));
+	}
+
 	public static boolean collides(Entity entity, Entity target) {
 		return entity.getPlane() == target.getPlane() && colides(entity.getX(), entity.getY(), entity.getSize(),
 				target.getX(), target.getY(), target.getSize());
@@ -146,6 +150,11 @@ public final class Utils {
 		return NumberFormat.getNumberInstance(Locale.UK).format(number);
 	}
 
+	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.###"); // 3 decimal places
+
+	public static String formatDouble(double value) {
+		return DECIMAL_FORMAT.format(value);
+	}
 	/**
 	 * Format amount.
 	 *
@@ -1029,15 +1038,20 @@ public final class Utils {
 	 * @param maxValue the max value
 	 * @return the random
 	 */
-	public static final int getRandom(int maxValue) {
+	public static int getRandom(int maxValue) {
 		return (int) (Math.random() * (maxValue));
 	}
 
-	public static final double getRandom(double maxValue) {
-		return (double) (Math.random() * (maxValue));
+	public static boolean roll(int numerator, int denominator) {
+		if (denominator <= 0 || numerator <= 0) return false;
+		return getRandom(denominator) < numerator;
 	}
 
-	public static final double randomDouble() {
+	public static double getRandom(double maxValue) {
+		return Math.random() * (maxValue);
+	}
+
+	public static double randomDouble() {
 		return new Random().nextDouble();
 	}
 

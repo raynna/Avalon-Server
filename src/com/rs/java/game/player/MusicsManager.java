@@ -34,6 +34,7 @@ public final class MusicsManager implements Serializable {
 
     public MusicsManager() {
         unlockedMusics = new ArrayList<Integer>();
+		playList = new ArrayList<Integer>();
         // auto unlock all musics - pixel
               for (int i = 0; i < 1200; i++)
                      unlockedMusics.add(i);

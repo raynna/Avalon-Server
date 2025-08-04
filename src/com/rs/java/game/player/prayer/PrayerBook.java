@@ -5,11 +5,12 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
 
-import com.mysql.jdbc.LoadBalancingConnectionProxy;
 import com.rs.java.game.Animation;
+import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.minigames.clanwars.ClanWars;
 import com.rs.java.game.minigames.clanwars.ClanWars.Rules;
+import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
@@ -39,9 +40,12 @@ public class PrayerBook implements Serializable {
     private transient final EnumSet<AncientPrayer> activeAncientPrayers = EnumSet.noneOf(AncientPrayer.class);
     private transient final boolean[] quickNormalPrayers = new boolean[NormalPrayer.values().length];
     private transient final boolean[] quickAncientPrayers = new boolean[AncientPrayer.values().length];
-    private transient final int[] leechBonuses = new int[5]; // 0=Attack, 1=Strength, 2=Defence, 3=Range, 4=Magic
+
+    private transient final int[] leechBonuses = new int[5]; // Permanent leech bonuses
+    private transient final int[] turmoilBonuses = new int[3]; // Temporary Turmoil boosts (0=Attack, 1=Strength, 2=Defence)
+    private transient boolean turmoilActive = false;
+
     private transient boolean boostedLeech = false;
-    private transient final Map<Prayer, Long> nextDrainTimes = new HashMap<>();
     private Map<Integer, Long> lastLeechTimes = new HashMap<>();
 
     // Initialization
@@ -121,8 +125,14 @@ public class PrayerBook implements Serializable {
         return false;
     }
 
+    private int getCurrentTick() {
+        return player.getGameTicks();
+    }
+
     public boolean switchPrayer(Prayer prayer) {
         boolean currentlyActive = isActive(prayer);
+        int currentTick = getCurrentTick();
+
         if (currentlyActive) {
             boolean result = deactivatePrayer(prayer);
             debugPrayerState("After deactivation", prayer);
@@ -134,7 +144,11 @@ public class PrayerBook implements Serializable {
             return false;
         }
         closeConflictingPrayers(prayer);
-
+        if (prayer == AncientPrayer.TURMOIL && !turmoilActive) {
+            turmoilActive = true;
+            Arrays.fill(turmoilBonuses, 0); // Reset Turmoil bonuses
+            updateLeechBonuses();
+        }
         if (isQuickPrayerMode()) {
             getQuickPrayerArray()[prayer.getId()] = true;
         } else {
@@ -144,10 +158,12 @@ public class PrayerBook implements Serializable {
             } else {
                 activeNormalPrayers.add((NormalPrayer) prayer);
             }
-            resetDrainTimer(prayer);
             updateAppearanceIfNeeded(prayer);
             playActivationEffects(prayer);
         }
+
+        // Mark the tick when this prayer was activated
+        this.prayerActivatedTick = currentTick;
 
         player.getPackets().sendSound(2662, 0, 1);
         recalculatePrayer();
@@ -156,9 +172,9 @@ public class PrayerBook implements Serializable {
         return true;
     }
 
+
     private boolean deactivatePrayer(Prayer prayer) {
         debug("Deactivating prayer: " + prayer.getName());
-
         if (isQuickPrayerMode()) {
             debug("Removing from quick prayers");
             getQuickPrayerArray()[prayer.getId()] = false;
@@ -169,10 +185,13 @@ public class PrayerBook implements Serializable {
             } else {
                 activeNormalPrayers.remove((NormalPrayer) prayer);
             }
-            nextDrainTimes.remove(prayer);
             updateAppearanceIfNeeded(prayer);
         }
-
+        if (prayer == AncientPrayer.TURMOIL && turmoilActive) {
+            turmoilActive = false;
+            Arrays.fill(turmoilBonuses, 0); // Clear Turmoil bonuses
+            updateLeechBonuses();
+        }
         player.getPackets().sendSound(2662, 0, 1);
         recalculatePrayer();
         debug("Prayer deactivated successfully");
@@ -271,7 +290,11 @@ public class PrayerBook implements Serializable {
                 getQuickPrayerArray()[prayer.getId()] = false;
             } else {
                 getActivePrayerSet().remove(prayer);
-                nextDrainTimes.remove(prayer);
+            }
+            if (prayer == AncientPrayer.TURMOIL && turmoilActive) {
+                turmoilActive = false;
+                Arrays.fill(turmoilBonuses, 0); // Reset Turmoil bonuses
+                updateLeechBonuses();
             }
         }
         if (group == PrayerConflictGroup.PROTECTION || group == PrayerConflictGroup.OTHER || group == PrayerConflictGroup.OVERHEAD || group == PrayerConflictGroup.SPECIAL) {
@@ -292,35 +315,56 @@ public class PrayerBook implements Serializable {
             case RESTORATION:
                 return new Prayer[]{NormalPrayer.RAPID_HEAL, NormalPrayer.RAPID_RESTORE};
             case MELEE:
-                return new Prayer[]{NormalPrayer.BURST_OF_STRENGTH, NormalPrayer.SUPERHUMAN_STRENGTH, NormalPrayer.ULTIMATE_STRENGTH,
-                        NormalPrayer.CLARITY_OF_THOUGHT, NormalPrayer.IMPROVED_REFLEXES, NormalPrayer.INCREDIBLE_REFLEXES, NormalPrayer.CHIVALRY, NormalPrayer.PIETY};
+                return new Prayer[]{
+                        NormalPrayer.BURST_OF_STRENGTH, NormalPrayer.SUPERHUMAN_STRENGTH,
+                        NormalPrayer.ULTIMATE_STRENGTH, NormalPrayer.CLARITY_OF_THOUGHT,
+                        NormalPrayer.IMPROVED_REFLEXES, NormalPrayer.INCREDIBLE_REFLEXES,
+                        NormalPrayer.CHIVALRY, NormalPrayer.PIETY};
             case OFFENSIVE:
-                return new Prayer[]{NormalPrayer.BURST_OF_STRENGTH, NormalPrayer.SUPERHUMAN_STRENGTH, NormalPrayer.ULTIMATE_STRENGTH,
-                        NormalPrayer.CLARITY_OF_THOUGHT, NormalPrayer.IMPROVED_REFLEXES, NormalPrayer.INCREDIBLE_REFLEXES, NormalPrayer.CHIVALRY, NormalPrayer.PIETY,
-                        NormalPrayer.SHARP_EYE, NormalPrayer.HAWK_EYE, NormalPrayer.EAGLE_EYE, NormalPrayer.RIGOUR,
-                        NormalPrayer.MYSTIC_WILL, NormalPrayer.MYSTIC_LORE, NormalPrayer.MYSTIC_MIGHT, NormalPrayer.AUGURY
-                };
-                case DEFENSIVE_SKINS:
-                return new Prayer[]{NormalPrayer.THICK_SKIN, NormalPrayer.ROCK_SKIN, NormalPrayer.STEEL_SKIN, NormalPrayer.CHIVALRY, NormalPrayer.PIETY};
+                return new Prayer[]{
+                        NormalPrayer.BURST_OF_STRENGTH, NormalPrayer.SUPERHUMAN_STRENGTH,
+                        NormalPrayer.ULTIMATE_STRENGTH, NormalPrayer.CLARITY_OF_THOUGHT,
+                        NormalPrayer.IMPROVED_REFLEXES, NormalPrayer.INCREDIBLE_REFLEXES,
+                        NormalPrayer.CHIVALRY, NormalPrayer.PIETY,
+                        NormalPrayer.SHARP_EYE, NormalPrayer.HAWK_EYE,
+                        NormalPrayer.EAGLE_EYE, NormalPrayer.RIGOUR,
+                        NormalPrayer.MYSTIC_WILL, NormalPrayer.MYSTIC_LORE,
+                        NormalPrayer.MYSTIC_MIGHT, NormalPrayer.AUGURY};
+            case DEFENSIVE_SKINS:
+                return new Prayer[]{
+                        NormalPrayer.THICK_SKIN, NormalPrayer.ROCK_SKIN,
+                        NormalPrayer.STEEL_SKIN, NormalPrayer.CHIVALRY, NormalPrayer.PIETY};
             case STRENGTH:
-                return new Prayer[]{NormalPrayer.BURST_OF_STRENGTH, NormalPrayer.SUPERHUMAN_STRENGTH, NormalPrayer.ULTIMATE_STRENGTH, NormalPrayer.CHIVALRY, NormalPrayer.PIETY};
+                return new Prayer[]{
+                        NormalPrayer.BURST_OF_STRENGTH, NormalPrayer.SUPERHUMAN_STRENGTH,
+                        NormalPrayer.ULTIMATE_STRENGTH, NormalPrayer.CHIVALRY, NormalPrayer.PIETY};
             case ATTACK:
-                return new Prayer[]{NormalPrayer.CLARITY_OF_THOUGHT, NormalPrayer.IMPROVED_REFLEXES, NormalPrayer.INCREDIBLE_REFLEXES, NormalPrayer.CHIVALRY, NormalPrayer.PIETY};
+                return new Prayer[]{
+                        NormalPrayer.CLARITY_OF_THOUGHT, NormalPrayer.IMPROVED_REFLEXES,
+                        NormalPrayer.INCREDIBLE_REFLEXES, NormalPrayer.CHIVALRY, NormalPrayer.PIETY};
             case RANGED:
-                return new Prayer[]{NormalPrayer.SHARP_EYE, NormalPrayer.HAWK_EYE, NormalPrayer.EAGLE_EYE, NormalPrayer.RIGOUR};
+                return new Prayer[]{
+                        NormalPrayer.SHARP_EYE, NormalPrayer.HAWK_EYE,
+                        NormalPrayer.EAGLE_EYE, NormalPrayer.RIGOUR};
             case MAGIC:
-                return new Prayer[]{NormalPrayer.MYSTIC_WILL, NormalPrayer.MYSTIC_LORE, NormalPrayer.MYSTIC_MIGHT, NormalPrayer.AUGURY};
+                return new Prayer[]{
+                        NormalPrayer.MYSTIC_WILL, NormalPrayer.MYSTIC_LORE,
+                        NormalPrayer.MYSTIC_MIGHT, NormalPrayer.AUGURY};
             case PROTECT_ITEM:
-                return new Prayer[]{NormalPrayer.PROTECT_ITEM, AncientPrayer.PROTECT_ITEM_CURSE};
+                return new Prayer[]{NormalPrayer.PROTECT_ITEM};
             case OVERHEAD:
-                return new Prayer[]{NormalPrayer.PROTECT_FROM_MAGIC,
-                        NormalPrayer.PROTECT_FROM_MISSILES, NormalPrayer.PROTECT_FROM_MELEE, NormalPrayer.RETRIBUTION,
-                        NormalPrayer.REDEMPTION, NormalPrayer.SMITE, AncientPrayer.DEFLECT_MAGIC, AncientPrayer.DEFLECT_MISSILES, AncientPrayer.DEFLECT_MELEE, AncientPrayer.WRATH, AncientPrayer.SOUL_SPLIT};
+                return new Prayer[]{
+                        NormalPrayer.PROTECT_FROM_MAGIC, NormalPrayer.PROTECT_FROM_MISSILES,
+                        NormalPrayer.PROTECT_FROM_MELEE, NormalPrayer.RETRIBUTION,
+                        NormalPrayer.REDEMPTION, NormalPrayer.SMITE};
             case PROTECTION:
-                return new Prayer[]{NormalPrayer.PROTECT_FROM_MAGIC, NormalPrayer.PROTECT_FROM_MISSILES, NormalPrayer.PROTECT_FROM_MELEE,
-                        AncientPrayer.DEFLECT_MAGIC, AncientPrayer.DEFLECT_MISSILES, AncientPrayer.DEFLECT_MELEE};
+                return new Prayer[]{
+                        NormalPrayer.PROTECT_FROM_MAGIC, NormalPrayer.PROTECT_FROM_MISSILES,
+                        NormalPrayer.PROTECT_FROM_MELEE};
             case OTHER:
-                return new Prayer[]{NormalPrayer.REDEMPTION, NormalPrayer.RETRIBUTION, NormalPrayer.SMITE, NormalPrayer.PROTECT_FROM_SUMMONING};
+                return new Prayer[]{
+                        NormalPrayer.REDEMPTION, NormalPrayer.RETRIBUTION,
+                        NormalPrayer.SMITE, NormalPrayer.PROTECT_FROM_SUMMONING};
             case SPECIAL:
                 return new Prayer[]{NormalPrayer.RAPID_RENEWAL};
             default:
@@ -330,6 +374,24 @@ public class PrayerBook implements Serializable {
 
     private Prayer[] getAncientPrayersInGroup(PrayerConflictGroup group) {
         switch (group) {
+            case SAP_CURSES:
+                return new Prayer[]{AncientPrayer.SAP_WARRIOR, AncientPrayer.SAP_RANGER, AncientPrayer.SAP_MAGE, AncientPrayer.SAP_SPIRIT};
+            case LEECH_CURSES:
+                return new Prayer[]{
+                        AncientPrayer.LEECH_ATTACK, AncientPrayer.LEECH_RANGED,
+                        AncientPrayer.LEECH_MAGIC, AncientPrayer.LEECH_DEFENCE,
+                        AncientPrayer.LEECH_STRENGTH, AncientPrayer.LEECH_ENERGY, AncientPrayer.LEECH_ENERGY};
+            case SPECIAL_DRAIN:
+                return new Prayer[]{AncientPrayer.SAP_SPIRIT, AncientPrayer.LEECH_SPECIAL};
+            case ENERGY_DRAIN:
+                return new Prayer[]{AncientPrayer.LEECH_ENERGY};
+            case MELEE:
+                return new Prayer[]{AncientPrayer.TURMOIL};
+            case OFFENSIVE:
+                return new Prayer[]{AncientPrayer.SAP_MAGE, AncientPrayer.SAP_RANGER,
+                        AncientPrayer.SAP_WARRIOR, AncientPrayer.LEECH_ATTACK,
+                        AncientPrayer.LEECH_DEFENCE, AncientPrayer.LEECH_STRENGTH,
+                        AncientPrayer.LEECH_RANGED, AncientPrayer.LEECH_MAGIC, AncientPrayer.TURMOIL};
             case ATTACK:
                 return new Prayer[]{AncientPrayer.SAP_WARRIOR, AncientPrayer.LEECH_ATTACK, AncientPrayer.TURMOIL};
             case STRENGTH:
@@ -343,12 +405,16 @@ public class PrayerBook implements Serializable {
             case PROTECT_ITEM:
                 return new Prayer[]{AncientPrayer.PROTECT_ITEM_CURSE};
             case PROTECTION:
-                return new Prayer[]{AncientPrayer.DEFLECT_MAGIC, AncientPrayer.DEFLECT_MISSILES, AncientPrayer.DEFLECT_MELEE};
+                return new Prayer[]{
+                        AncientPrayer.DEFLECT_MAGIC, AncientPrayer.DEFLECT_MISSILES, AncientPrayer.DEFLECT_MELEE};
             case OVERHEAD:
-                return new Prayer[]{AncientPrayer.DEFLECT_MAGIC, AncientPrayer.DEFLECT_MISSILES, AncientPrayer.DEFLECT_MELEE, AncientPrayer.WRATH, AncientPrayer.SOUL_SPLIT};
+                return new Prayer[]{
+                        AncientPrayer.DEFLECT_MAGIC, AncientPrayer.DEFLECT_MISSILES,
+                        AncientPrayer.DEFLECT_MELEE, AncientPrayer.WRATH, AncientPrayer.SOUL_SPLIT};
             case OTHER:
+                return new Prayer[]{AncientPrayer.DEFLECT_SUMMONING, AncientPrayer.WRATH, AncientPrayer.SOUL_SPLIT};
+            case SPECIAL:
                 return new Prayer[]{AncientPrayer.BERSERK};
-            // ... other groups
             default:
                 return new Prayer[0];
         }
@@ -380,7 +446,7 @@ public class PrayerBook implements Serializable {
     }
 
     private void recalculatePrayer() {
-        int configValue = 0;
+        long configValue = 0L;
 
         if (isQuickPrayerMode()) {
             boolean[] quickPrayers = getQuickPrayerArray();
@@ -388,141 +454,199 @@ public class PrayerBook implements Serializable {
                 if (quickPrayers[i]) {
                     Prayer prayer = getPrayerForId(i);
                     if (prayer != null) {
-                        configValue += getPrayerConfigValue(prayer);
+                        configValue |= getPrayerConfigValue(prayer);
                     }
                 }
             }
         } else {
             for (Prayer prayer : getActivePrayerSet()) {
-                configValue += getPrayerConfigValue(prayer);
+                configValue |= getPrayerConfigValue(prayer);
             }
         }
 
         int configId = isAncientCurses() ? (isQuickPrayerMode() ? 1587 : 1582) : (isQuickPrayerMode() ? 1397 : 1395);
+        System.out.println("Sending config id: " + configId + ", configValue: " + configValue);
 
-        player.getPackets().sendConfig(configId, configValue);
+        player.getPackets().sendConfig(configId, (int) configValue);
     }
 
-    private int getPrayerConfigValue(Prayer prayer) {
-        return isAncientCurses() ? (int) Math.pow(2, prayer.getId()) : prayer.getConfigValue();
+    private long getPrayerConfigValue(Prayer prayer) {
+        return isAncientCurses() ? (1L << prayer.getId()) : prayer.getConfigValue();
+    }
+
+    private static final int TURMOIL_MAX_BONUS = 15;
+    private static final double TURMOIL_BOOST_RATIO = 0.10;
+
+    public void updateTurmoilBonus(Entity target) {
+        if (!turmoilActive) return;
+
+        for (int statIndex : new int[]{0, 1, 2}) { // 0=Attack, 1=Strength, 2=Defence
+            int targetLevel = getTargetLevel(target, statIndex);
+            if (targetLevel == -1) continue;
+
+            // Calculate pure Turmoil boost based only on target's level
+            int turmoilBoost = (int) (targetLevel * TURMOIL_BOOST_RATIO);
+            turmoilBonuses[statIndex] = Math.min(turmoilBoost, TURMOIL_MAX_BONUS);
+        }
+        updateLeechBonuses();
+    }
+
+    private int getTargetLevel(Entity target, int statIndex) {
+        if (target instanceof Player p) {
+            switch (statIndex) {
+                case BonusIndex.ATTACK:
+                    return p.getSkills().getLevel(Skills.ATTACK);
+                case BonusIndex.STRENGTH:
+                    return p.getSkills().getLevel(Skills.STRENGTH);
+                case BonusIndex.DEFENCE:
+                    return p.getSkills().getLevel(Skills.DEFENCE);
+            }
+        } else if (target instanceof NPC npc) {
+            switch (statIndex) {
+                case BonusIndex.ATTACK:
+                    return npc.getBonuses()[CombatDefinitions.NPC_ATTACK_LEVEL];
+                case BonusIndex.STRENGTH:
+                    return npc.getBonuses()[CombatDefinitions.NPC_STRENGTH_LEVEL];
+                case BonusIndex.DEFENCE:
+                    return npc.getBonuses()[CombatDefinitions.NPC_DEFENCE_LEVEL];
+            }
+        }
+        return -1;
+    }
+
+    private Prayer getPrayerForLeechIndex(int index) {
+        switch (index) {
+            case 0: return AncientPrayer.LEECH_ATTACK;
+            case 1: return AncientPrayer.LEECH_STRENGTH;
+            case 2: return AncientPrayer.LEECH_DEFENCE;
+            case 3: return AncientPrayer.LEECH_RANGED;
+            case 4: return AncientPrayer.LEECH_MAGIC;
+            default: return null;
+        }
     }
 
     private double calculateBoost(Function<Prayer, Double> boostGetter) {
-        if (!hasActivePrayers()) return 1.0;
+        double bonus = 1.0; // Base 100%
 
-        double bonus = 1.0;
+        // Apply permanent leech bonuses
+        for (int i = 0; i < leechBonuses.length; i++) {
+            if (boostGetter.apply(getPrayerForLeechIndex(i)) != null) {
+                bonus += leechBonuses[i] / 100.0;
+            }
+        }
+
+        // Apply Turmoil temporary boosts if active
+        if (turmoilActive && boostGetter.apply(AncientPrayer.TURMOIL) != null) {
+            if (boostGetter.apply(AncientPrayer.LEECH_ATTACK) != null) {
+                bonus += turmoilBonuses[0] / 100.0; // Attack boost
+            } else if (boostGetter.apply(AncientPrayer.LEECH_STRENGTH) != null) {
+                bonus += turmoilBonuses[1] / 100.0; // Strength boost
+            } else if (boostGetter.apply(AncientPrayer.LEECH_DEFENCE) != null) {
+                bonus += turmoilBonuses[2] / 100.0; // Defence boost
+            }
+        }
+
+        // Apply other prayer boosts
         for (Prayer prayer : getActivePrayers()) {
             Double boost = boostGetter.apply(prayer);
             if (boost != null) {
-                // Handle leech bonuses separately
-                if (prayer instanceof AncientPrayer && ((AncientPrayer) prayer).getLeechBonusIndex() >= 0) {
-                    int index = ((AncientPrayer) prayer).getLeechBonusIndex();
-                    bonus += (boost + leechBonuses[index]) / 100.0;
-                } else {
-                    bonus += boost;
-                }
+                bonus += boost;
             }
         }
-        return bonus;
+
+        return Math.max(0.15, bonus); // Minimum 15% effectiveness
     }
 
-    // Prayer Effects
     public double getMagicMultiplier() {
         return calculateBoost(Prayer::getMagicBoost);
     }
 
-    // Ranged
     public double getRangedMultiplier() {
         return calculateBoost(Prayer::getRangedBoost);
     }
 
-    // Attack
     public double getAttackMultiplier() {
         return calculateBoost(Prayer::getAttackBoost);
     }
 
-    // Strength
     public double getStrengthMultiplier() {
         return calculateBoost(Prayer::getStrengthBoost);
     }
 
-    // Defence
     public double getDefenceMultiplier() {
         return calculateBoost(Prayer::getDefenceBoost);
     }
 
-    // ... similar methods for other combat bonuses
-
     public void processLeechDecay(int ticks) {
-        if (ticks % 50 == 0) { // or use an internal timer
+        if (ticks % 50 == 0) {
             checkLeechDecay(player);
         }
     }
 
-    // Prayer Drain System
+    private transient int prayerActivatedTick = -1;
+    private transient int drainCounter = 0;
+    private static final int DRAIN_PRECISION = 1000;
+    private static final int DRAIN_MULTIPLIER = 10;
+
     public void processPrayerDrain(int ticks) {
         processLeechDecay(ticks);
+
         if (!hasActivePrayers()) {
             return;
         }
 
-        long currentTime = Utils.currentTimeMillis();
-        int totalDrain = 0;
+        if (prayerActivatedTick == ticks) {
+            return;
+        }
 
+        int prayerBonus = player.getCombatDefinitions().getBonuses()[CombatDefinitions.PRAYER_BONUS];
+        int drainResistance = (2 * prayerBonus + 60);
+
+        int totalDrainRate = 0;
         for (Prayer prayer : getActivePrayers()) {
-            Long nextDrain = nextDrainTimes.get(prayer);
-            if (nextDrain != null && nextDrain <= currentTime) {
-                totalDrain += calculateDrainAmount(prayer, currentTime);
-            }
+            totalDrainRate += prayer.getDrainRate() * DRAIN_MULTIPLIER;
         }
 
-        if (totalDrain > 0) {
-            drainPrayer(totalDrain, true);
-            if (!hasPrayerPoints()) {
-                closeAllPrayers();
-            }
-        }
-    }
+        drainCounter += totalDrainRate * DRAIN_PRECISION;
 
-    private int calculateDrainAmount(Prayer prayer, long currentTime) {
-        int drain = 0;
-        double rate = prayer.getDrainRate() * 1000;
-        rate += player.getCombatDefinitions().getBonuses()[CombatDefinitions.PRAYER_BONUS] * 50;
-
-        long drainTimer = nextDrainTimes.get(prayer);
-        int passedTime = (int) (currentTime - drainTimer);
-
-        drain++;
-        int count = 0;
-        while (passedTime >= rate && count++ < 10) {
-            drain++;
-            passedTime -= rate;
+        int pointsToDrain = 0;
+        int resistanceThreshold = drainResistance * DRAIN_PRECISION;
+        while (drainCounter >= resistanceThreshold) {
+            pointsToDrain++;
+            drainCounter -= resistanceThreshold;
         }
 
-        nextDrainTimes.put(prayer, (currentTime + (long) rate) - passedTime);
-        return drain;
+        if (pointsToDrain > 0) {
+            drainPrayer(pointsToDrain);
+        }
+
+        /*debug("[Prayer Drain] Ticks:" + ticks +
+                " Drain:" + (totalDrainRate/DRAIN_MULTIPLIER) +
+                " Bonus:" + prayerBonus +
+                " Res:" + (drainResistance/DRAIN_MULTIPLIER));
+        debug("[Prayer Drain] Drained:" + pointsToDrain +
+                " Remainder:" + (drainCounter / (double)DRAIN_PRECISION));*/
+
+        if (!hasPrayerPoints()) {
+            closeAllPrayers();
+            player.message("You have run out of Prayer points!");
+        }
     }
 
     public void switchQuickPrayerSettings() {
-        // Toggle quick prayer state
         usingQuickPrayer = !usingQuickPrayer;
 
-        // Update client configuration
         player.getPackets().sendGlobalConfig(181, usingQuickPrayer ? 1 : 0);
         player.getPackets().sendConfig(1584, isAncientCurses() ? 1 : 0);
 
-        // Unlock prayer book buttons based on current mode
         unlockPrayerBookButtons();
 
-        // Update appearance if needed (for protection prayer visuals)
         player.getAppearence().generateAppearenceData();
 
-        // Recalculate active prayer effects
         recalculatePrayer();
 
-        // Special case for quick prayer activation
         if (usingQuickPrayer) {
-            player.getPackets().sendGlobalConfig(168, 6); // Visual effect for quick prayer activation
+            player.getPackets().sendGlobalConfig(168, 6);
         }
 
         // Debug logging
@@ -579,7 +703,7 @@ public class PrayerBook implements Serializable {
 
     /**
      * OVERHEAD IDS
-     *
+     * <p>
      * //NORMAL PRAYERS
      * MELEE_PROT = 0
      * RANGE_PROT = 1
@@ -596,7 +720,7 @@ public class PrayerBook implements Serializable {
      * SUMMONING & RANGE = 9
      * SUMMONING & MAGE = 10
      * EMPTY OVERHEAD = 11
-     *
+     * <p>
      * //ANCIENT PRAYERS
      * DEFLECT MELEE = 12
      * DEFLECT MAGE = 13
@@ -607,7 +731,7 @@ public class PrayerBook implements Serializable {
      * SUMMONING & MAGE = 18
      * WRATH = 19
      * SOULSPLIT = 20
-     *
+     * <p>
      * //OTHERS
      * RED SKULL = 21
      * WHITE SKULL = 25
@@ -616,17 +740,17 @@ public class PrayerBook implements Serializable {
 
     private int getAncientCursesHeadIcon() {
         int value = -1;
-        if (isActive(AncientPrayer.DEFLECT_MELEE)) value += 13;
-        if (isActive(AncientPrayer.DEFLECT_MAGIC)) value += 14;
-        if (isActive(AncientPrayer.DEFLECT_MISSILES)) value += 15;
+        if (isActive(AncientPrayer.DEFLECT_MELEE)) value = 12;
+        if (isActive(AncientPrayer.DEFLECT_MAGIC)) value = 13;
+        if (isActive(AncientPrayer.DEFLECT_MISSILES)) value = 14;
         if (isActive(AncientPrayer.DEFLECT_SUMMONING)) {
-            value += 16;
+            value = 15;
             if (isActive(AncientPrayer.DEFLECT_MELEE)) value += 1;
-            if (isActive(AncientPrayer.DEFLECT_MAGIC)) value += 2;
-            if (isActive(AncientPrayer.DEFLECT_MISSILES)) value += 3;
+            if (isActive(AncientPrayer.DEFLECT_MISSILES)) value += 2;
+            if (isActive(AncientPrayer.DEFLECT_MAGIC)) value += 3;
         }
-        if (isActive(AncientPrayer.WRATH)) value += 20;
-        if (isActive(AncientPrayer.SOUL_SPLIT)) value += 21;
+        if (isActive(AncientPrayer.WRATH)) value = 19;
+        if (isActive(AncientPrayer.SOUL_SPLIT)) value = 20;
         return value;
     }
 
@@ -645,15 +769,18 @@ public class PrayerBook implements Serializable {
     // Utility Methods
     public void reset() {
         closeAllPrayers();
+        resetLeechBonuses();
         prayerPoints = player.getSkills().getLevelForXp(Skills.PRAYER) * PRAYER_POINTS_PER_LEVEL;
         refreshPrayerPoints();
     }
 
     public void closeAllPrayers() {
+        if (turmoilActive) {
+            turmoilActive = false;
+            Arrays.fill(turmoilBonuses, 0); // Reset Turmoil bonuses
+        }
         activeNormalPrayers.clear();
         activeAncientPrayers.clear();
-        nextDrainTimes.clear();
-        resetLeechBonuses();
         recalculatePrayer();
         player.getPackets().sendGlobalConfig(182, 0);
         player.getAppearence().generateAppearenceData();
@@ -668,25 +795,16 @@ public class PrayerBook implements Serializable {
             activeNormalPrayers.remove(NormalPrayer.PROTECT_FROM_MAGIC);
             activeNormalPrayers.remove(NormalPrayer.PROTECT_FROM_MISSILES);
             activeNormalPrayers.remove(NormalPrayer.PROTECT_FROM_MELEE);
-            activeNormalPrayers.remove(NormalPrayer.RETRIBUTION);
         }
         player.getAppearence().generateAppearenceData();
     }
 
-    // Prayer Points Management
     public boolean drainPrayer(int amount) {
-        if (prayerPoints <= 0) return false;
-        prayerPoints = Math.max(0, prayerPoints - amount);
-        refreshPrayerPoints();
-        return true;
-    }
-
-    public boolean drainPrayer(int amount, boolean updateCheck) {
         if (prayerPoints <= 0) return false;
         int newPrayer = Math.max(0, prayerPoints - amount);
         boolean changed = (newPrayer != prayerPoints);
         prayerPoints = newPrayer;
-        if (changed && (!updateCheck || prayerPoints % 10 == 0)) {
+        if (changed) {
             refreshPrayerPoints();
         }
         return changed;
@@ -779,18 +897,22 @@ public class PrayerBook implements Serializable {
         return isActive(NormalPrayer.PROTECT_FROM_MISSILES) || isActive(AncientPrayer.DEFLECT_MISSILES);
     }
 
-    // Leech and Stat Adjustment System
     public void adjustStat(int stat, int percentage) {
         if (stat < 0 || stat >= STAT_VARBIT_IDS.length) return;
-        int clientValue = percentage + 30;
-        player.getVarsManager().sendVarBit(STAT_VARBIT_IDS[stat], clientValue);
-        if (stat <= 4) updateCombatBonuses();
+        player.getVarsManager().sendVarBit(STAT_VARBIT_IDS[stat], percentage + 30);
     }
 
     public void increaseLeechBonus(int bonusIndex) {
         if (leechBonuses[bonusIndex] < MAX_LEECH_BONUS) {
             leechBonuses[bonusIndex]++;
-            adjustStat(bonusIndex, leechBonuses[bonusIndex]);
+
+            // Special handling for attack/strength/defence when Turmoil is active
+            if (turmoilActive && bonusIndex <= 2) { // 0=Attack, 1=Strength, 2=Defence
+                // Apply the leech bonus to the current turmoil boost
+                turmoilBonuses[bonusIndex] = Math.min(turmoilBonuses[bonusIndex] + 1, TURMOIL_MAX_BONUS);
+            }
+
+            updateLeechBonuses();
             lastLeechTimes.put(bonusIndex, System.currentTimeMillis());
         }
     }
@@ -798,7 +920,12 @@ public class PrayerBook implements Serializable {
     public void decreaseLeechBonus(int bonusIndex) {
         if (leechBonuses[bonusIndex] > MIN_LEECH_BONUS) {
             leechBonuses[bonusIndex]--;
-            adjustStat(bonusIndex, leechBonuses[bonusIndex]);
+
+            if (turmoilActive && bonusIndex <= 2) { // 0=Attack, 1=Strength, 2=Defence
+                turmoilBonuses[bonusIndex] = Math.max(turmoilBonuses[bonusIndex] - 1, 0);
+            }
+
+            updateLeechBonuses();
         }
     }
 
@@ -832,7 +959,11 @@ public class PrayerBook implements Serializable {
 
     public void updateLeechBonuses() {
         for (int i = 0; i < 5; i++) {
-            adjustStat(i, leechBonuses[i]);
+            if (turmoilActive && i <= 2) {
+                adjustStat(i, leechBonuses[i] + turmoilBonuses[i]);
+            } else {
+                adjustStat(i, leechBonuses[i]);
+            }
         }
     }
 
@@ -865,13 +996,6 @@ public class PrayerBook implements Serializable {
         }
     }
 
-    private void updateCombatBonuses() {
-        //player.getCombatDefinitions().calculateLevels();
-        if (WildernessControler.isAtWild(player)) {
-            player.getPackets().sendPlayerOption("Attack", 1, false);
-        }
-    }
-
     private EnumSet<? extends Prayer> getActivePrayerSet() {
         return isAncientCurses() ? activeAncientPrayers : activeNormalPrayers;
     }
@@ -891,12 +1015,6 @@ public class PrayerBook implements Serializable {
             }
         }
         return null;
-    }
-
-    private void resetDrainTimer(Prayer prayer) {
-        double rate = prayer.getDrainRate() * 1000;
-        rate += player.getCombatDefinitions().getBonuses()[CombatDefinitions.PRAYER_BONUS] * 50;
-        nextDrainTimes.put(prayer, Utils.currentTimeMillis() + (long) rate);
     }
 
     /**

@@ -265,3 +265,18 @@ surok_spell_casting=1084
 druidicspirit_bloom=1100
 
 stomp_floor=1745
+
+curses_turmoil=12565
+curses_protect_item=12567
+curses_sap=12569
+curses_deflect=12573
+curses_leech=12575
+curses_activation_prayer=12584
+curses_berserker=12589
+sling_attack=12594
+sling_block=12595
+
+staff_of_light_special=12805
+staff_of_light_block=12806
+
+

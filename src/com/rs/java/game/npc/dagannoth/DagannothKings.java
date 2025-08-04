@@ -28,4 +28,9 @@ public class DagannothKings extends NPC {
 		super.sendDeath(source);
 	}
 
+	@Override
+	public double getProtectionPrayerEffectiveness() {
+		return 0.1;
+	}
+
 }

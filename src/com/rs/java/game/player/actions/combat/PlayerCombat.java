@@ -2277,7 +2277,7 @@ public class PlayerCombat extends Action {
                 A = Math.round(attack);
             } else {
                 double range = Math.round(player.getSkills().getLevel(Skills.RANGE) * player.getPrayer().getRangedMultiplier()) + 8;
-                if (fullVoidEquipped(player, (new int[]{11664, 11675})))
+                if (fullVoidEquipped(player, 11664, 11675))
                     range *= (hasEliteVoid(player) ? 1.135 : 1.1);
                 if (usingSpec) {
                     double multiplier = getSpecialAccuracyModifier(player);

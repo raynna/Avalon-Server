@@ -45,6 +45,9 @@ public interface Prayer {
     default double getDefenceBoost() { return 0.0; }
     default double getEnemyDrainPercentage() { return 0.0; }
     default boolean isSummoningProtection() { return false; }
+    default Animation getAnimation() { return new Animation(-1); }
+    default Graphics getProjectile() { return new Graphics(-1); }
+    default Graphics getGraphic() { return new Graphics(-1); }
     default PrayerConflictGroup[] getConflictGroups() {
         return new PrayerConflictGroup[PrayerConflictGroup.NONE.getGroupId()];
     }

@@ -14,7 +14,11 @@ public enum PrayerConflictGroup {
     PROTECTION(10),
     OVERHEAD(11),
     SPECIAL(12),
-    OTHER(13);
+    LEECH_CURSES(13),
+    SAP_CURSES(14),
+    ENERGY_DRAIN(15),
+    SPECIAL_DRAIN(16),
+    OTHER(17);
 
     private final int groupId;
 
