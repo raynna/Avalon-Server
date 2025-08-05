@@ -2078,11 +2078,15 @@ public final class World {
 
     public static void sendLeechProjectile(Entity shooter, Entity receiver, int gfxId) {
         int distance = Utils.getDistance(shooter, receiver);
-        int speed = distance < 2 ? 21 : 26;
+        int speed = distance < 2 ? 6 : 11;
+        int startHeight = 36;
+        int endHeight = 36;
+        int delay = 31;
+        int duration = 36;
+        int arc = 0;
+        int displacement = 100;
 
-        sendProjectileToPlayers(
-                shooter, null, receiver, gfxId,
-                35, 35, speed, 5, 0,
+        sendProjectileToPlayers(shooter, null, receiver, gfxId, startHeight, endHeight, speed, delay, arc,
                 11, 2, true, true, false
         );
     }

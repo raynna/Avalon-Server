@@ -30,11 +30,7 @@ import com.rs.java.game.player.actions.FightPitsViewingOrb;
 import com.rs.java.game.player.actions.HomeTeleport;
 import com.rs.java.game.player.actions.Rest;
 import com.rs.java.game.player.actions.WildyViewing;
-import com.rs.java.game.player.actions.combat.AncientMagicks;
-import com.rs.java.game.player.actions.combat.LunarMagicks;
-import com.rs.java.game.player.actions.combat.Magic;
-import com.rs.java.game.player.actions.combat.ModernMagicks;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
+import com.rs.java.game.player.actions.combat.*;
 import com.rs.java.game.player.actions.combat.Poison.AntiDotes;
 import com.rs.java.game.player.actions.skills.construction.House;
 import com.rs.java.game.player.actions.skills.construction.Sawmill;
@@ -1992,7 +1988,7 @@ public class ButtonHandler {
                         return;
                     if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                         long passedTime = Utils.currentTimeMillis() - WorldThread.getLastCycleTime();
-                        player.itemSwitch = player.hasInstantSpecial(player.getEquipment().getWeaponId());
+                        player.itemSwitch = player.hasInstantSpecial(player.getEquipment().getItem(Equipment.SLOT_WEAPON));
                         WorldTasksManager.schedule(new WorldTask() {
 
                             @Override
@@ -2653,7 +2649,7 @@ public class ButtonHandler {
         if (item.getId() == 4024)
             player.getAppearence().transformIntoNPC(-1);
         if (slotId == 3)
-            player.getCombatDefinitions().decrease(0);
+            player.getCombatDefinitions().decreaseSpecialAttack(0);
         if (item.getId() == 15486 && player.staffOfLightSpecial > Utils.currentTimeMillis()) {
             player.setStaffOfLightSpecial(0);
             player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
@@ -2849,16 +2845,16 @@ public class ButtonHandler {
     public static void submitSpecialRequest(final Player player) {
         CoresManager.getSlowExecutor().execute(() -> {
             try {
-                final int weaponId = player.getEquipment().getWeaponId();
-                if (player.hasInstantSpecial(weaponId) && !player.itemSwitch) {
+                Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
+                if (player.hasInstantSpecial(weapon) && !player.itemSwitch) {
                     final Entity target = (Entity) player.temporaryAttribute().get("last_target");
                     if ((player.getActionManager().getAction() instanceof PlayerCombat) && target != null) {
                         player.getActionManager().forceStop();
-                        player.performInstantSpecial(weaponId);
+                        player.performInstantSpecial(weapon);
                         player.getActionManager().setAction(new PlayerCombat(target));
                     } else {
                         player.getActionManager().forceStop();
-                        player.performInstantSpecial(weaponId);
+                        player.performInstantSpecial(weapon);
                     }
                     return;
                 }

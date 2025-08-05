@@ -381,7 +381,6 @@ public class WorldPacketsEncoder extends Encoder {
 		stream.writeByte(curve);
 		stream.writeShort(creatorSize * 64 + startDistanceOffset * 64);
 		session.write(stream);
-
 	}
 
 	public void sendUnlockOptions(String interfaceName, String component, int fromSlot, int toSlot,

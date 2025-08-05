@@ -526,6 +526,7 @@ public class PrayerBook implements Serializable {
     private transient int drainCounter = 0;
     private static final int DRAIN_PRECISION = 1000;
     private static final int DRAIN_MULTIPLIER = 10;
+    private static final int BASE_RESISTANCE = 60;
 
     public void processPrayerDrain(int ticks) {
         processLeechDecay(ticks);
@@ -537,9 +538,13 @@ public class PrayerBook implements Serializable {
         if (prayerActivatedTick == ticks) {
             return;
         }
+        if (!hasPrayerPoints()) {//i believe it should check for runout next tick like this
+            closeAllPrayers();
+            player.message("You have run out of Prayer points!");
+        }
 
         int prayerBonus = player.getCombatDefinitions().getBonuses()[CombatDefinitions.PRAYER_BONUS];
-        int drainResistance = (2 * prayerBonus + 60);
+        int drainResistance = (2 * prayerBonus + BASE_RESISTANCE);
 
         int totalDrainRate = 0;
         for (Prayer prayer : getActivePrayers()) {
@@ -565,11 +570,6 @@ public class PrayerBook implements Serializable {
                 " Res:" + (drainResistance/DRAIN_MULTIPLIER));
         debug("[Prayer Drain] Drained:" + pointsToDrain +
                 " Remainder:" + (drainCounter / (double)DRAIN_PRECISION));*/
-
-        if (!hasPrayerPoints()) {
-            closeAllPrayers();
-            player.message("You have run out of Prayer points!");
-        }
     }
 
     public void switchQuickPrayerSettings() {
@@ -858,15 +858,14 @@ public class PrayerBook implements Serializable {
     }
 
     public void checkLeechDecay(Player player) {
-        long now = System.currentTimeMillis();
         int DECAY_TIMER = 30_000;
+        boolean changed = false;
         for (int i = 0; i < leechBonuses.length; i++) {
             int current = leechBonuses[i];
             if (current == 0) continue;
 
             long lastBoost = lastLeechTimes.getOrDefault(i, 0L);
 
-            if (now - lastBoost >= DECAY_TIMER) {
                 if (current > 0) {
                     leechBonuses[i]--;
                 } else {
@@ -874,15 +873,16 @@ public class PrayerBook implements Serializable {
                 }
 
                 adjustStat(i, leechBonuses[i]);
-                lastLeechTimes.put(i, now);
-
-                if (current > 0) {
-                    player.getPackets().sendGameMessage("Your leech boost is fading.");
-                } else {
-                    player.getPackets().sendGameMessage("Your drained stat is recovering.");
+                int newCurrent = leechBonuses[i];
+                if (newCurrent != current && newCurrent > 0)
+                    changed = true;
+                String statAffected = BonusIndex.nameOf(i);
+                if (newCurrent == 0) {
+                    player.message("Your " + statAffected + " is now unaffected by sap and leech curses.", true);
                 }
-            }
         }
+        if (changed)
+            player.message("The sap or leech curses currently affecting your stats reduce a little.", true);
     }
 
     public void updateLeechBonuses() {

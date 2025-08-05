@@ -42,6 +42,15 @@ public class Item implements Serializable {
 		return false;
 	}
 
+	public String getNameKey() {
+		return Rscm.reverseLookup(id);
+	}
+
+	public boolean isName(String name) {
+		String key = name.startsWith("item.") ? name : "item." + name;
+		return key.equals(getNameKey());
+	}
+
 	public static boolean isItem(int id, String name) {
 		String key = name.startsWith("item.") ? name : "item." + name;
 		return id == Rscm.lookup(key);
@@ -50,6 +59,15 @@ public class Item implements Serializable {
 	public boolean isItem(String name) {
 		String key = name.startsWith("item.") ? name : "item." + name;
 		return id == Rscm.lookup(key);
+	}
+
+	public boolean isAnyOf(String... itemNames) {
+		for (String name : itemNames) {
+			if (isItem(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public Item(int id) {

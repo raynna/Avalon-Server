@@ -30,7 +30,7 @@ public class LavaTitanCombat extends CombatScript {
 			if (damage <= 4 && target instanceof Player) {
 				Player player = (Player) target;
 				player.getCombatDefinitions()
-						.decrease((player.getCombatDefinitions().getSpecialAttackPercentage() / 10));
+						.decreaseSpecialAttack((player.getCombatDefinitions().getSpecialAttackPercentage() / 10));
 			}
 		} else {
 			damage = getRandomMaxHit(npc, 140, NPCCombatDefinitions.MELEE, target);

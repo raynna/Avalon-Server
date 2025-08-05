@@ -53,7 +53,7 @@ public final class CombatDefinitions implements Serializable {
 	private boolean defensiveCasting;
 	public transient boolean instantAttack;
 	private transient boolean dungeonneringSpellBook;
-	public byte spellBook;
+	public int spellBook;
 	private byte autoCastSpell;
 
 	public int getSpellId() {
@@ -711,19 +711,19 @@ public final class CombatDefinitions implements Serializable {
 	}
 
 	public void resetSpecialAttack() {
-		decrease(0);
+		decreaseSpecialAttack(0);
 		specialAttackPercentage = 100;
 		refreshSpecialAttackPercentage();
 	}
 
 	public void setSpecialAttack(int special) {
-		decrease(0);
+		decreaseSpecialAttack(0);
 		specialAttackPercentage = (byte) special;
 		refreshSpecialAttackPercentage();
 	}
 
 	public void addSpecialAttack(int special) {
-		decrease(0);
+		decreaseSpecialAttack(0);
 		specialAttackPercentage += (byte) special;
 		refreshSpecialAttackPercentage();
 	}
@@ -794,7 +794,7 @@ public final class CombatDefinitions implements Serializable {
 		refreshUsingSpecialAttack();
 	}
 
-	public void decrease(int amount) {
+	public void decreaseSpecialAttack(int amount) {
 		usingSpecialAttack = false;
 		refreshUsingSpecialAttack();
 		if (amount > 0) {

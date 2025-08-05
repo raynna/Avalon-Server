@@ -55,11 +55,12 @@ import com.rs.java.game.npc.pet.Pet;
 import com.rs.java.game.objects.GlobalObjectAddition;
 import com.rs.java.game.objects.GlobalObjectDeletion;
 import com.rs.java.game.objects.ObjectPlugin;
+import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.prayer.AncientPrayer;
 import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.player.prayer.PrayerBook;
 import com.rs.java.game.player.Ranks.Rank;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
+import com.rs.kotlin.game.player.action.NewActionManager;
 import com.rs.java.game.player.actions.skills.construction.House;
 import com.rs.java.game.player.actions.skills.farming.FarmingManager;
 import com.rs.java.game.player.actions.skills.hunter.HunterImplings;
@@ -672,6 +673,12 @@ public class Player extends Entity {
      * @ActionManager
      */
     private transient ActionManager actionManager;
+
+    /**
+     * New Action Manager
+     */
+
+    private transient NewActionManager newActionManager;
 
     /**
      * @Cutscenes
@@ -1453,6 +1460,7 @@ public class Player extends Entity {
         localPlayerUpdate = new LocalPlayerUpdate(this);
         localNPCUpdate = new LocalNPCUpdate(this);
         actionManager = new ActionManager(this);
+        newActionManager = new NewActionManager(this);
         if (farmingManager == null)
             farmingManager = new FarmingManager();
         farmingManager.setPlayer(this);
@@ -1940,8 +1948,10 @@ public class Player extends Entity {
             closeInterfaces();
         if (stopWalk)
             resetWalkSteps();
-        if (stopActions)
+        if (stopActions) {
             actionManager.forceStop();
+            newActionManager.forceStop();
+        }
         combatDefinitions.resetSpells(false);
     }
 
@@ -1952,10 +1962,12 @@ public class Player extends Entity {
             closeInterfaces();
         if (stopWalk)
             resetWalkSteps();
-        if (stopActions)
+        if (stopActions) {
+            newActionManager.forceStop();
             actionManager.forceStop();
+        }
         if (stopSpecial)
-            combatDefinitions.decrease(0);
+            combatDefinitions.decreaseSpecialAttack(0);
         combatDefinitions.resetSpells(false);
     }
 
@@ -2682,6 +2694,7 @@ public class Player extends Entity {
         charges.process();
         auraManager.process();
         actionManager.process();
+        newActionManager.process();
         controlerManager.process();
 
     }
@@ -3512,6 +3525,10 @@ public class Player extends Entity {
 
     public ActionManager getActionManager() {
         return actionManager;
+    }
+
+    public NewActionManager getNewActionManager() {
+        return newActionManager;
     }
 
     public void setCoordsEvent(CoordsEvent coordsEvent) {
@@ -5041,8 +5058,8 @@ public class Player extends Entity {
         return ownedObjectsManagerKeys;
     }
 
-    public boolean hasInstantSpecial(final int weaponId) {
-        switch (weaponId) {
+    public boolean hasInstantSpecial(Item weapon) {
+        switch (weapon.getId()) {
             case 4153:
             case 14679:
             case 15486:
@@ -5071,6 +5088,12 @@ public class Player extends Entity {
         getPackets().sendGameMessage(string);
     }
 
+    public void message(String string, boolean filter) {
+        if (string == null)
+            return;
+        getPackets().sendGameMessage(string, filter);
+    }
+
     public void addXp(int skillId, double exp) {
         getSkills().addXp(skillId, exp);
     }
@@ -5087,16 +5110,16 @@ public class Player extends Entity {
         getInventory().deleteItem(itemId, amount);
     }
 
-    public void performInstantSpecial(final int weaponId) {
-        int specAmt = PlayerCombat.getSpecialAmmount(weaponId);
+    public void performInstantSpecial(Item weapon) {
+        int specAmt = PlayerCombat.getSpecialAmmount(weapon);
         if (combatDefinitions.hasRingOfVigour())
             specAmt *= 0.9;
         if (combatDefinitions.getSpecialAttackPercentage() < specAmt) {
             message("You don't have enough power left.");
-            combatDefinitions.decrease(0);
+            combatDefinitions.decreaseSpecialAttack(0);
             return;
         }
-        switch (weaponId) {
+        switch (weapon.getId()) {
             case 4153:
             case 14679:
                 combatDefinitions.usingSpecialAttack = true;
@@ -5123,10 +5146,7 @@ public class Player extends Entity {
                 skills.set(Skills.RANGE, range);
                 skills.set(Skills.MAGIC, magic);
                 skills.set(Skills.STRENGTH, strength);
-                combatDefinitions.decrease(specAmt);
-                if (getUsername().equalsIgnoreCase("tristam")) {
-                    specAmt += 100;
-                }
+                combatDefinitions.decreaseSpecialAttack(specAmt);
                 break;
             case 35:// Excalibur
             case 8280:
@@ -5134,7 +5154,7 @@ public class Player extends Entity {
                 animate(new Animation(1168));
                 gfx(new Graphics(247));
                 setNextForceTalk(new ForceTalk("For Camelot!"));
-                final boolean enhanced = weaponId == 14632;
+                final boolean enhanced = weapon.getId() == 14632;
                 skills.set(Skills.DEFENCE, enhanced ? (int) (skills.getLevelForXp(Skills.DEFENCE) * 1.15D) : (skills.getLevel(Skills.DEFENCE) + 8));
                 WorldTasksManager.schedule(new WorldTask() {
                     int count = 5;
@@ -5152,13 +5172,13 @@ public class Player extends Entity {
                         }
                     }
                 }, 4, 2);
-                combatDefinitions.decrease(specAmt);
+                combatDefinitions.decreaseSpecialAttack(specAmt);
                 break;
 
             case 18355:
             case 4675:
             case 6914:
-                combatDefinitions.decrease(0);
+                combatDefinitions.decreaseSpecialAttack(0);
                 return;
 
             case 15486:
@@ -5171,7 +5191,7 @@ public class Player extends Entity {
                 gfx(new Graphics(2319));// 2320
                 gfx(new Graphics(2321));
                 addPolDelay(60000);
-                combatDefinitions.decrease(specAmt);
+                combatDefinitions.decreaseSpecialAttack(specAmt);
                 break;
         }
     }

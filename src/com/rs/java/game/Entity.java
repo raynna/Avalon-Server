@@ -66,6 +66,7 @@ public abstract class Entity extends WorldTile {
     // entity masks
     private transient UpdateMask updateMask;
     private transient Animation nextAnimation;
+    private transient boolean forceAnimation;
     private transient Graphics nextGraphics1;
     private transient Graphics nextGraphics2;
     private transient Graphics nextGraphics3;
@@ -514,9 +515,10 @@ public abstract class Entity extends WorldTile {
             }
         }
 
-        if (this instanceof Player && run && nextWalkDirection != -1 && nextRunDirection == -1) { // fix 1 step run
-            Player player = (Player) this;
-            player.setTemporaryMoveType(Player.WALK_MOVE_TYPE);
+        if (this instanceof Player player && run && nextWalkDirection != -1 && nextRunDirection == -1) {
+            if (walkSteps.size() <= 1 || player.getRunEnergy() <= 0) {
+                player.setTemporaryMoveType(Player.WALK_MOVE_TYPE);
+            }
         }
 
         World.updateEntityRegion(this);
@@ -968,9 +970,12 @@ public abstract class Entity extends WorldTile {
                 return true;
             int[] bufferX = RouteFinder.getLastPathBufferX();
             int[] bufferY = RouteFinder.getLastPathBufferY();
+            int stepsAdded = 0;
             for (int step = steps - 1; step >= 0; step--) {
-                if (!addWalkSteps(bufferX[step], bufferY[step], 25, true))
-                    break;
+                if (addWalkSteps(bufferX[step], bufferY[step], 25, true)) {
+                    stepsAdded++;
+                    if (stepsAdded >= 25) break;
+                }
             }
             return true;
         }
@@ -1141,7 +1146,7 @@ public abstract class Entity extends WorldTile {
     }
 
     public boolean needMasksUpdate() {
-        return nextFaceEntity != -2 || nextAnimation != null || nextGraphics1 != null || nextGraphics2 != null || nextGraphics3 != null || nextGraphics4 != null || (nextWalkDirection == -1 && nextFaceWorldTile != null) || !nextHits.isEmpty() || nextForceMovement != null || updateMask != null || nextForceTalk != null;
+        return nextFaceEntity != -2 || nextAnimation != null || forceAnimation || nextGraphics1 != null || nextGraphics2 != null || nextGraphics3 != null || nextGraphics4 != null || (nextWalkDirection == -1 && nextFaceWorldTile != null) || !nextHits.isEmpty() || nextForceMovement != null || updateMask != null || nextForceTalk != null;
     }
 
     public boolean isDead() {
@@ -1150,6 +1155,7 @@ public abstract class Entity extends WorldTile {
 
     public void resetMasks() {
         nextAnimation = null;
+        forceAnimation = false;
         nextGraphics1 = null;
         nextGraphics2 = null;
         nextGraphics3 = null;
@@ -1242,6 +1248,9 @@ public abstract class Entity extends WorldTile {
     }
 
     public void animateNoCheck(Animation nextAnimation) {
+        if (this.nextAnimation != null) {
+            this.forceAnimation = true;
+        }
         this.nextAnimation = nextAnimation;
     }
 
@@ -1263,6 +1272,15 @@ public abstract class Entity extends WorldTile {
 
     public void gfx(int gfxId) {
         gfx(new Graphics(gfxId));
+    }
+
+    public void delayGfx(Graphics nextGraphics, int delay) {
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                gfx(nextGraphics);
+            }
+        }, delay);
     }
 
     public void gfx(Graphics nextGraphics) {

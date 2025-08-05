@@ -5981,3 +5981,45 @@
 [04 August 2025 at 09:09:02 CEST] - ::item diamond bolt e
 [04 August 2025 at 09:09:07 CEST] - ::item diamond bolt e 100
 [04 August 2025 at 09:09:18 CEST] - ::heal 
+[05 August 2025 at 02:50:13 CEST] - ::empty 
+[05 August 2025 at 02:50:21 CEST] - ::item verac skirt
+[05 August 2025 at 02:50:24 CEST] - ::item verac
+[05 August 2025 at 02:50:28 CEST] - ::item 4759 1
+[05 August 2025 at 02:50:32 CEST] - ::item torag platebody
+[05 August 2025 at 02:50:36 CEST] - ::item  6585 1
+[05 August 2025 at 02:50:37 CEST] - ::item 6585 1
+[05 August 2025 at 02:50:39 CEST] - ::item 6570 1
+[05 August 2025 at 02:50:44 CEST] - ::item crystal shiedl
+[05 August 2025 at 02:50:51 CEST] - ::item arcane spirit shield
+[05 August 2025 at 02:50:58 CEST] - ::item 11732 1
+[05 August 2025 at 02:51:00 CEST] - ::item 7462 1
+[05 August 2025 at 02:51:04 CEST] - ::item 15486 1
+[05 August 2025 at 02:51:14 CEST] - ::ecomode 2
+[05 August 2025 at 02:52:43 CEST] - ::curses 
+[05 August 2025 at 02:58:24 CEST] - ::heal 
+[05 August 2025 at 03:20:52 CEST] - ::heal 
+[05 August 2025 at 03:22:39 CEST] - ::heal 
+[05 August 2025 at 03:26:44 CEST] - ::ecomode 2
+[05 August 2025 at 04:05:48 CEST] - ::heal 
+[05 August 2025 at 05:04:38 CEST] - ::heal 
+[05 August 2025 at 05:11:11 CEST] - ::heal 
+[05 August 2025 at 05:15:25 CEST] - ::heal 
+[05 August 2025 at 05:26:11 CEST] - ::tele 0,1,1,20,10
+[05 August 2025 at 05:26:15 CEST] - ::item 4936 1
+[05 August 2025 at 05:27:26 CEST] - ::item 10156 1
+[05 August 2025 at 05:34:36 CEST] - ::item 9977 2
+[05 August 2025 at 05:35:45 CEST] - ::item 6522 1
+[05 August 2025 at 05:36:10 CEST] - ::item 6522 1
+[05 August 2025 at 06:01:41 CEST] - ::item 4740 1
+[05 August 2025 at 07:24:35 CEST] - ::heal 
+[05 August 2025 at 09:59:53 CEST] - ::heal 
+[06 August 2025 at 12:08:53 CEST] - ::tele 0,1,1,26,17
+[06 August 2025 at 12:08:56 CEST] - ::item 24203 1
+[06 August 2025 at 12:23:08 CEST] - ::runes 
+[06 August 2025 at 12:23:11 CEST] - ::ancients 
+[06 August 2025 at 12:44:34 CEST] - ::anim 14221
+[06 August 2025 at 12:53:19 CEST] - ::heal 
+[06 August 2025 at 12:55:55 CEST] - ::tele 0,1,1,30,31
+[06 August 2025 at 12:57:36 CEST] - ::tele 0,1,1,31,32
+[06 August 2025 at 01:02:33 CEST] - ::tele 0,1,1,32,30
+[06 August 2025 at 01:02:34 CEST] - ::tele 0,1,1,31,35

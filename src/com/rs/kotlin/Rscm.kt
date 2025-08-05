@@ -14,6 +14,7 @@ object Rscm {
     }
 
     private lateinit var mappings: Map<String, Map<String, RscmEntry>>
+    private lateinit var reverseMappings: Map<Int, String>
 
     @JvmStatic
     @OptIn(ExperimentalPathApi::class)
@@ -29,6 +30,23 @@ object Rscm {
                     put(file.nameWithoutExtension, results)
                 }
             }
+        this.reverseMappings = buildReverseMappings()
+    }
+
+    private fun buildReverseMappings(): Map<Int, String> {
+        val reverseMap = mutableMapOf<Int, String>()
+        for ((type, entries) in mappings) {
+            for ((name, entry) in entries) {
+                when (entry) {
+                    is RscmEntry.Id -> reverseMap[entry.value] = "$type.$name"
+                    is RscmEntry.IdList -> entry.values.forEach { id ->
+                        reverseMap[id] = "$type.$name"
+                    }
+                    else -> {} // ignore locations and tiles
+                }
+            }
+        }
+        return reverseMap
     }
 
     @JvmStatic
@@ -83,6 +101,11 @@ object Rscm {
             is RscmEntry.Id -> entry.value
             else -> error("Mapping '$ref' in $type is not an ID.")
         }
+    }
+
+    @JvmStatic
+    fun reverseLookup(id: Int): String? {
+        return reverseMappings[id]
     }
 
     private fun load(file: Path): Map<String, RscmEntry> {

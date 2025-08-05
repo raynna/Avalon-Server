@@ -77,6 +77,8 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.SerializableFilesManager;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.huffman.Huffman;
+import com.rs.kotlin.game.player.combat.CombatAction;
+import com.rs.kotlin.game.player.combat.CombatStyle;
 
 public final class WorldPacketsDecoder extends Decoder {
 
@@ -440,21 +442,18 @@ public final class WorldPacketsDecoder extends Decoder {
 				player.setRun(forceRun);
 			switch (interfaceId) {
 			case 430:
-				player.setRouteEvent(new RouteEvent(object, new Runnable() {
-					@Override
-					public void run() {
-						player.faceObject(object);
-						RSLunarSpellStore s = RSLunarSpellStore.getSpell(componentId);
-						if (s != null) {
-							if (s.getSpellId() == 44)
-								return;
-							player.getTemporaryAttributtes().put("spell_objectid", objectId);
-							if (!LunarMagicks.hasRequirement(player, componentId)) {
-								return;
-							}
-						}
-					}
-				}));
+				player.setRouteEvent(new RouteEvent(object, () -> {
+                    player.faceObject(object);
+                    RSLunarSpellStore s = RSLunarSpellStore.getSpell(componentId);
+                    if (s != null) {
+                        if (s.getSpellId() == 44)
+                            return;
+                        player.getTemporaryAttributtes().put("spell_objectid", objectId);
+                        if (!LunarMagicks.hasRequirement(player, componentId)) {
+                            return;
+                        }
+                    }
+                }));
 				break;
 			case 192:
 				player.setRouteEvent(new RouteEvent(object, new Runnable() {
@@ -655,7 +654,9 @@ public final class WorldPacketsDecoder extends Decoder {
 				}
 			}
 			player.stopAll(false);
-			player.getActionManager().setAction(new PlayerCombat(p2));
+			player.getNewActionManager().setAction(new CombatAction(p2));
+			//player.getActionManager().setAction(new PlayerCombat(p2));
+			//player.getActionManager().setAction(new PlayerCombat(p2));
 		} else if (packetId == PLAYER_OPTION_9_PACKET) {
 			boolean forceRun = stream.readUnsignedByte() == 1;
 			int playerIndex = stream.readUnsignedShortLE128();
@@ -913,7 +914,7 @@ public final class WorldPacketsDecoder extends Decoder {
 						}
 						if (AncientMagicks.hasRequirement(player, componentId, true, false)
 								&& AncientMagicks.checkRunes(player, componentId, false)) {
-							player.getActionManager().setAction(new PlayerCombat(p2));
+							player.getNewActionManager().setAction(new CombatAction(p2));
 							return;
 						}
 					} else {

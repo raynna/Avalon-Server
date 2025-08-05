@@ -84,7 +84,7 @@ public class CombatDummy extends Action {
 			player.getPackets().sendGameMessage("You don't have enough special points.");
 			return false;
 		}
-		player.getCombatDefinitions().decrease(specialAmount);
+		player.getCombatDefinitions().decreaseSpecialAttack(specialAmount);
 		return true;
 	}
 
