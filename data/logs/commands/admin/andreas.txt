@@ -6242,3 +6242,57 @@
 [07 August 2025 at 03:53:39 CEST] - ::gfx 18
 [07 August 2025 at 03:53:42 CEST] - ::gfx 19
 [07 August 2025 at 03:53:47 CEST] - ::gfx 19
+[07 August 2025 at 10:00:23 CEST] - ::item 1321 1
+[07 August 2025 at 10:04:57 CEST] - ::anim 11969
+[07 August 2025 at 10:05:00 CEST] - ::anim 11970
+[07 August 2025 at 10:05:03 CEST] - ::anim 11968
+[07 August 2025 at 10:06:01 CEST] - ::anim 15072
+[07 August 2025 at 10:06:04 CEST] - ::anim 15071
+[07 August 2025 at 10:06:10 CEST] - ::anim 15071
+[07 August 2025 at 10:07:05 CEST] - ::anim 423
+[07 August 2025 at 10:07:08 CEST] - ::anim 422
+[07 August 2025 at 10:07:13 CEST] - ::anim 424
+[07 August 2025 at 10:07:15 CEST] - ::anim 421
+[07 August 2025 at 10:07:22 CEST] - ::anim 421
+[07 August 2025 at 10:07:23 CEST] - ::anim 422
+[07 August 2025 at 10:07:44 CEST] - ::anim 406
+[07 August 2025 at 10:07:52 CEST] - ::anim 422
+[07 August 2025 at 10:08:52 CEST] - ::anim 7048
+[07 August 2025 at 10:09:22 CEST] - ::anim 7049
+[07 August 2025 at 10:09:32 CEST] - ::anim 7041
+[07 August 2025 at 10:09:39 CEST] - ::item iron 2h
+[07 August 2025 at 10:10:25 CEST] - ::item 4151 1
+[07 August 2025 at 10:11:41 CEST] - ::item 1307 1
+[07 August 2025 at 10:13:48 CEST] - ::anim 423
+[07 August 2025 at 11:00:32 CEST] - ::give rune bolt
+[07 August 2025 at 11:00:37 CEST] - ::item rune bolt
+[07 August 2025 at 11:00:41 CEST] - ::item rune bolts
+[07 August 2025 at 11:00:44 CEST] - ::item runite bolt
+[07 August 2025 at 11:02:52 CEST] - ::item 877 100
+[07 August 2025 at 11:22:19 CEST] - ::item 9174 1
+[07 August 2025 at 11:22:21 CEST] - ::empty 
+[07 August 2025 at 11:22:29 CEST] - ::item steel arrow
+[07 August 2025 at 11:22:47 CEST] - ::gfx 18
+[07 August 2025 at 11:22:49 CEST] - ::gfx 19
+[07 August 2025 at 11:22:51 CEST] - ::gfx 20
+[07 August 2025 at 11:22:57 CEST] - ::gfx 10
+[07 August 2025 at 11:23:00 CEST] - ::gfx 11
+[07 August 2025 at 11:24:02 CEST] - ::item iron arrow
+[07 August 2025 at 11:24:06 CEST] - ::item 884 100
+[07 August 2025 at 11:24:53 CEST] - ::give oak shortbow
+[07 August 2025 at 11:24:56 CEST] - ::item oak shortbow
+[07 August 2025 at 11:25:09 CEST] - ::gfx 10
+[07 August 2025 at 11:25:10 CEST] - ::item 884 100
+[07 August 2025 at 11:25:13 CEST] - ::item 886 100
+[07 August 2025 at 11:28:22 CEST] - ::item dorguu
+[07 August 2025 at 11:28:27 CEST] - ::item dorg
+[07 August 2025 at 11:28:35 CEST] - ::item dorgesh-kaan cross
+[07 August 2025 at 11:28:38 CEST] - ::item dorgesh-kaan bow
+[07 August 2025 at 11:28:40 CEST] - ::item dorgesh-kaan
+[07 August 2025 at 11:28:47 CEST] - ::item dorgeshkaan
+[07 August 2025 at 11:28:49 CEST] - ::item dorgesh
+[07 August 2025 at 11:28:52 CEST] - ::item 8880 1
+[07 August 2025 at 11:29:52 CEST] - ::item bone bolt
+[07 August 2025 at 11:30:49 CEST] - ::item iron crossbow
+[07 August 2025 at 11:31:03 CEST] - ::item bone bolt
+[07 August 2025 at 11:31:04 CEST] - ::item 8882 1000

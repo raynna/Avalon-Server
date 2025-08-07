@@ -6,7 +6,10 @@ import com.rs.java.game.Entity
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.action.NewAction
-import com.rs.kotlin.game.player.combat.range.RangeUtilities
+import com.rs.kotlin.game.player.combat.magic.MagicStyle
+import com.rs.kotlin.game.player.combat.melee.MeleeStyle
+import com.rs.kotlin.game.player.combat.range.RangeData
+import com.rs.kotlin.game.player.combat.range.RangedStyle
 import kotlin.math.abs
 
 class CombatAction(
@@ -52,12 +55,6 @@ class CombatAction(
         if (target.isDead) {
             return false
         }
-        if (!style.canAttack(player, target)) {
-            return false
-        }
-        if (!check(player, target)) {
-            return false;
-        }
         //player.message("process");
         val spellId = player.getCombatDefinitions().spellId
         style = when {
@@ -70,7 +67,7 @@ class CombatAction(
     }
 
     override fun processWithDelay(player: Player?): Int {
-        if (player == null || !process(player)) {
+        if (player == null || !process(player) || !check(player, target)) {
             return -1
         }
         //player.message("process with delay")
@@ -104,7 +101,7 @@ class CombatAction(
 
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
-                if (player.isDead || target.isDead || !player.isActive || !style.canAttack(player, target)) {
+                if (player.isDead || target.isDead || !player.isActive) {
                     stop()
                     return
                 }
@@ -171,6 +168,9 @@ class CombatAction(
 
 
     private fun check(player: Player, target: Entity): Boolean {
+        if (!style.canAttack(player, target)) {
+            return false
+        }
         if (player.isAtMultiArea && !target.isAtMultiArea) {
             if (target.attackedBy != player && target.attackedByDelay > Utils.currentTimeMillis()) {
                 player.message("That " + (if (player.getAttackedBy() is Player) "player" else "npc") + " is already in combat.")
@@ -194,7 +194,7 @@ class CombatAction(
 
 
     private fun validateAttack(player: Player, target: Entity): Boolean {
-        return !target.isDead && player.isActive && style.canAttack(player, target)
+        return !target.isDead && player.isActive
     }
 
     fun reset() {
@@ -214,7 +214,7 @@ class CombatAction(
 
     private fun isRangedWeapon(player: Player): Boolean {
         val weaponId = player.equipment.getWeaponId()
-        val ranged = RangeUtilities.getWeaponByItemId(weaponId);
+        val ranged = RangeData.getWeaponByItemId(weaponId);
         if (ranged != null) {
             println("[CombatAction] isRangedWeapon(): weaponId=${ranged.name}, ${ranged.ammoType.name}")
         }

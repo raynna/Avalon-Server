@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.player.combat
+package com.rs.kotlin.game.player.combat.range
 
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
@@ -6,13 +6,16 @@ import com.rs.java.game.Entity
 import com.rs.java.game.Hit
 import com.rs.java.game.Hit.HitLook
 import com.rs.java.game.World
-import com.rs.java.game.WorldTile
 import com.rs.java.game.item.Item
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
-import com.rs.kotlin.game.player.combat.range.*
+import com.rs.kotlin.game.player.combat.AttackStyle
+import com.rs.kotlin.game.player.combat.CombatCalculations
+import com.rs.kotlin.game.player.combat.CombatStyle
+import com.rs.kotlin.game.player.combat.WeaponStyle
+import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 
@@ -25,9 +28,19 @@ object RangedStyle : CombatStyle {
     override fun onStop(attacker: Player?, defender: Entity?, interrupted: Boolean) {}
 
     override fun canAttack(attacker: Player, defender: Entity): Boolean {
-        currentWeapon = RangeUtilities.getWeaponByItemId(attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1)
-        currentAmmo = RangeUtilities.getAmmoByItemId(attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]?.id ?: -1)
+        currentWeapon = RangeData.getWeaponByItemId(attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1)
+        currentAmmo = RangeData.getAmmoByItemId(attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]?.id ?: -1)
 
+        val ammoTier = currentAmmo?.ammoTier
+        val ammoType = currentAmmo?.ammoType
+        val ammoId = currentAmmo?.itemId
+        val ammoName = currentAmmo?.name
+        val ammoLevelReq = currentAmmo?.levelRequired
+
+        val weaponAmmoType = currentWeapon?.ammoType
+        val allowedAmmos = currentWeapon?.allowedAmmoIds
+        val maxTier = currentWeapon?.maxAmmoTier
+        val weaponName = currentWeapon?.name
         if (currentWeapon == null) {
             attacker.message("You need a ranged weapon to attack.")
             return false
@@ -37,23 +50,41 @@ object RangedStyle : CombatStyle {
             attacker.message("You don't have any ammunition equipped.")
             return false
         }
-
-        if (currentAmmo!!.levelRequired > attacker.skills.getLevel(Skills.RANGE)) {
-            attacker.message("You need a Ranged level of ${currentAmmo!!.levelRequired} to use ${currentAmmo!!.name}.")
-            return false
+        if (allowedAmmos != null) {
+            if (!allowedAmmos.contains(ammoId)) {
+                attacker.message("You cannot use $ammoName with a $weaponName.")
+                return false
+            }
+        } else if (maxTier != null) {
+            if (ammoTier == null || !maxTier.canUse(ammoTier)) {
+                attacker.message("You cannot use $ammoName with a $weaponName.")
+                return false
+            }
         }
 
-        if (currentWeapon!!.ammoType != currentAmmo!!.ammoType) {
-            attacker.message("You can't use ${currentAmmo!!.name} with a ${currentWeapon!!.name}.")
+        if (ammoLevelReq != null) {
+            if (ammoLevelReq > attacker.skills.getLevel(Skills.RANGE)) {
+                attacker.message("You need a Ranged level of $ammoLevelReq to use ${ammoName}.")
+                return false
+            }
+        }
+
+        if (weaponAmmoType != ammoType) {
+            attacker.message("You can't use $ammoName with a $weaponName.")
             return false
         }
 
         return true
     }
 
+    fun getAttackStyle(attacker: Player): AttackStyle {
+        val style = AttackStyle.fromOrdinal(attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponStyle)
+        return style
+    }
+
     override fun getAttackDelay(attacker: Player): Int {
         val baseSpeed = currentWeapon?.attackSpeed ?: 4
-        val style = AttackStyle.fromOrdinal(attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponType)
+        val style = AttackStyle.fromOrdinal(attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponStyle)
         return baseSpeed + style.attackSpeedModifier
     }
 
@@ -79,16 +110,16 @@ object RangedStyle : CombatStyle {
         }
 
         // Play attack animation
-        attacker.animate(currentWeapon!!.animationId)
+        currentWeapon!!.animationId?.let { attacker.animate(it) }
         if (currentAmmo!!.startGfx != -1) {
             attacker.gfx(currentAmmo!!.startGfx, 100)
         }
 
         // Calculate hit
-        val attackStyle = attacker.combatDefinitions.attackStyle
-        val hitSuccess = CombatCalculations.calculateRangedAccuracy(attacker, defender, currentWeapon!!.itemId, attackStyle)
-        val maxHit = CombatCalculations.calculateRangedMaxHit(attacker, currentWeapon!!.itemId, currentAmmo!!.itemId)
-        val hit = Hit(attacker, if (hitSuccess) Utils.random(maxHit) else 0, HitLook.RANGE_DAMAGE)
+        val attackStyle = getAttackStyle(attacker)
+        val hitSuccess =
+            CombatCalculations.calculateRangedAccuracy(attacker, defender, currentWeapon!!, attackStyle)
+        val hit = CombatCalculations.calculateRangedMaxHit(attacker, attackStyle)
 
         // Add XP
         attacker.skills.addXp(Skills.RANGE, (hit.damage * 0.4).toDouble())
@@ -106,11 +137,11 @@ object RangedStyle : CombatStyle {
         // Debug log for ranged attack context
         attacker.message("Ranged Attack -> " +
                 "Weapon: ${currentWeapon?.name}, " +
-                "WeaponType: ${currentWeapon?.weaponType?.name}, " +
+                "WeaponType: ${currentWeapon?.weaponStyle?.name}, " +
                 "AmmoType: ${currentAmmo?.ammoType?.name}, " +
                 "Ammo: ${currentAmmo?.name}, " +
-                "Style: ${AttackStyle.fromOrdinal(attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponType).name}, " +
-                "MaxHit: $maxHit, " +
+                "Style: ${AttackStyle.fromOrdinal(attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponStyle).name}, " +
+                "MaxHit: ${hit.maxHit}, " +
                 "Hit: ${hit.damage}")
 
     }
@@ -153,7 +184,7 @@ object RangedStyle : CombatStyle {
             AmmoType.THROWNAXE -> Projectile.THROWING_KNIFE
         }
 
-        if (currentWeapon!!.weaponType == WeaponStyle.CHINCHOMPA) {
+        if (currentWeapon!!.weaponStyle == WeaponStyle.CHINCHOMPA) {
             //TODO ProjectileManager.sendMulti(projectileType, projectileId, attacker, defender)
         } else {
             ProjectileManager.send(

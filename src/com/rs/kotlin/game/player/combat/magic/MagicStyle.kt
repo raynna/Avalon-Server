@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.player.combat
+package com.rs.kotlin.game.player.combat.magic
 
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
@@ -8,7 +8,8 @@ import com.rs.java.game.Hit.HitLook
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
-import com.rs.kotlin.game.player.combat.magic.*
+import com.rs.kotlin.game.player.combat.CombatCalculations
+import com.rs.kotlin.game.player.combat.CombatStyle
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 
@@ -82,9 +83,12 @@ object MagicStyle : CombatStyle {
     private fun handleAncientMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
         attacker.message("Casting ancient spell: ${spell.name}")
         val hitSuccess = CombatCalculations.calculateMagicAccuracy(attacker, defender)
-        val maxHit = CombatCalculations.calculateMagicMaxHit(attacker, spell)
-        val hit = Hit(attacker, if (hitSuccess) Utils.random(maxHit) else 0, HitLook.MAGIC_DAMAGE)
+        val hit = CombatCalculations.calculateMagicMaxHit(attacker, spell)
         var endGraphic = spell.endGraphicId
+        if (!hitSuccess) {
+            endGraphic = -1
+            hit.damage = 0
+        }
         attacker.skills.addXp(Skills.MAGIC, spell.xp + (hit.damage * 0.3))
 
         if (!hitSuccess) {
@@ -129,14 +133,13 @@ object MagicStyle : CombatStyle {
     private fun handleModernMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
         attacker.message("Casting modern spell: ${spell.name}")
         val hitSuccess = CombatCalculations.calculateMagicAccuracy(attacker, defender)
-        val maxHit = CombatCalculations.calculateMagicMaxHit(attacker, spell)
-        val hit = Hit(attacker, if (hitSuccess) Utils.random(maxHit) else 0, HitLook.MAGIC_DAMAGE)
+        val hit = CombatCalculations.calculateMagicMaxHit(attacker, spell)
         var endGraphic = spell.endGraphicId
-        attacker.skills.addXp(Skills.MAGIC, spell.xp + (hit.damage * 0.3))
-
         if (!hitSuccess) {
             endGraphic = -1
+            hit.damage = 0
         }
+        attacker.skills.addXp(Skills.MAGIC, spell.xp + (hit.damage * 0.3))
 
         if (hit.damage > 0 && spell.bind != -1) {
             defender.setFreezeDelay(spell.bind.toLong())

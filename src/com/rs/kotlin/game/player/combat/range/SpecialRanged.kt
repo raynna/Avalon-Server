@@ -1,14 +1,14 @@
 package com.rs.kotlin.game.player.combat.range
 
+import com.rs.kotlin.game.player.combat.SpecialAttack
 import com.rs.kotlin.game.player.combat.WeaponStyle
 
-object SpecialRanged : RangeUtilities(SPECIAL_ID) {
+object SpecialRanged : RangeData() {
     override val weapons = listOf(
         RangedWeapon(
             itemId = 861,
             name = "Magic shortbow",
-            weaponType = WeaponStyle.SHORTBOW,
-            levelRequired = 50,
+            weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
             attackRange = 7,
             animationId = 1074,
@@ -25,8 +25,7 @@ object SpecialRanged : RangeUtilities(SPECIAL_ID) {
         RangedWeapon(
             itemId = 11235,
             name = "Dark bow",
-            weaponType = WeaponStyle.LONGBOW,
-            levelRequired = 60,
+            weaponStyle = WeaponStyle.LONGBOW,
             attackSpeed = 9,
             attackRange = 8,
             animationId = 426,
@@ -42,8 +41,7 @@ object SpecialRanged : RangeUtilities(SPECIAL_ID) {
         RangedWeapon(
             itemId = 9185,
             name = "Rune crossbow",
-            weaponType = WeaponStyle.CROSSBOW,
-            levelRequired = 40,
+            weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
             attackRange = 7,
             animationId = 423,
@@ -53,8 +51,7 @@ object SpecialRanged : RangeUtilities(SPECIAL_ID) {
         RangedWeapon(
             itemId = 11959,
             name = "Red chinchompa",
-            weaponType = WeaponStyle.CHINCHOMPA,
-            levelRequired = 55,
+            weaponStyle = WeaponStyle.CHINCHOMPA,
             attackSpeed = 4,
             attackRange = 3,
             animationId = 2779,

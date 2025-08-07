@@ -1,0 +1,23 @@
+package com.rs.kotlin.game.player.combat
+
+import com.rs.kotlin.game.player.combat.melee.StandardMelee
+import com.rs.kotlin.game.player.combat.range.RangeData
+
+object CombatAnimations {
+
+    private const val DEFAULT_ANIMATION = 422
+    private const val UNARMED_ANIMATION = 422
+
+    fun getAnimation(itemId: Int, attackStyle: AttackStyle): Int? {
+        StandardMelee.getWeaponByItemId(itemId)?.let { meleeWeapon ->
+            return meleeWeapon.animations[attackStyle] ?: DEFAULT_ANIMATION
+        }
+
+        RangeData.getWeaponByItemId(itemId)?.let { rangedWeapon ->
+            return rangedWeapon.animationId
+        }
+
+        val unarmed = StandardMelee.getDefaultWeapon()
+        return unarmed.animations[attackStyle] ?: UNARMED_ANIMATION
+    }
+}

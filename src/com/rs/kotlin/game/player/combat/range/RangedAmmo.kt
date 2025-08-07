@@ -10,4 +10,5 @@ data class RangedAmmo(
     val dropOnGround: Boolean = true,
     val specialEffect: SpecialEffect? = null,
     val ammoType: AmmoType = AmmoType.ARROW,
+    val ammoTier: AmmoTier? = null,
 )

@@ -1,10 +1,11 @@
-package com.rs.kotlin.game.player.combat.range
+package com.rs.kotlin.game.player.combat.melee
 
+import com.rs.kotlin.game.player.combat.AttackStyle
 import com.rs.kotlin.game.player.combat.SpecialAttack
 import com.rs.kotlin.game.player.combat.Weapon
 import com.rs.kotlin.game.player.combat.WeaponStyle
 
-data class RangedWeapon(
+data class MeleeWeapon(
     override val itemId: Int,
     override val name: String,
     override val weaponStyle: WeaponStyle,
@@ -13,8 +14,5 @@ data class RangedWeapon(
     override val attackDelay: Int? = null,
     override val animationId: Int? = null,
     override val specialAttack: SpecialAttack? = null,
-    val projectileId: Int? = null,
-    val ammoType: AmmoType,
-    val maxAmmoTier: AmmoTier? = null,
-    val allowedAmmoIds: Set<Int>? = null
+    val animations: Map<AttackStyle, Int> = emptyMap()
 ) : Weapon

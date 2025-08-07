@@ -23,6 +23,7 @@ public final class Hit {
 	private Entity source;
 	private HitLook look;
 	private int damage;
+	private int maxHit;
 	private boolean critical;
 	private Hit soaking;
 	private int delay;
@@ -42,12 +43,21 @@ public final class Hit {
 	}
 
 	public Hit(Entity source, int damage, HitLook look) {
-		this(source, damage, look, 0);
+		this(source, damage, 0, look, 0);
 	}
 
 	public Hit(Entity source, int damage, HitLook look, int delay) {
+		this(source, damage, 0, look, delay);
+	}
+
+	public Hit(Entity source, int damage, int maxHit, HitLook look) {
+		this(source, damage, maxHit, look, 0);
+	}
+
+	public Hit(Entity source, int damage, int maxHit, HitLook look, int delay) {
 		this.source = source;
 		this.damage = damage;
+		this.maxHit = maxHit;
 		this.look = look;
 		this.delay = delay;
 	}
@@ -87,6 +97,10 @@ public final class Hit {
 	public int getDamage() {
 		return damage;
 	}
+
+	public int getMaxHit() { return maxHit; }
+
+	public void setMaxHit(int maxHit) { this.maxHit = maxHit; }
 
 	public void setDamage(int damage) {
 		this.damage = damage;

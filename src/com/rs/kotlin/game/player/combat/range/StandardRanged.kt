@@ -68,67 +68,87 @@ import com.rs.kotlin.game.player.combat.WeaponStyle
  * Dark bow	            9 ticks	8 ticks
  */
 
-object StandardRanged : RangeUtilities(STANDARD_ID) {
+object StandardRanged : RangeData() {
     override val weapons = listOf(
         RangedWeapon(
             itemId = 841,
             name = "Shortbow",
-            weaponType = WeaponStyle.SHORTBOW,
-            levelRequired = 1,
+            weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
             attackRange = 7,
             animationId = 426,
-            ammoType = AmmoType.ARROW
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.IRON_ARROW
         ),
         RangedWeapon(
             itemId = 843,
             name = "Oak shortbow",
-            weaponType = WeaponStyle.SHORTBOW,
-            levelRequired = 5,
-            attackSpeed = 3,
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackSpeed = 4,
             attackRange = 7,
             animationId = 426,
-            ammoType = AmmoType.ARROW
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.STEEL_ARROW
         ),
         RangedWeapon(
             itemId = 839,
             name = "Longbow",
-            weaponType = WeaponStyle.LONGBOW,
-            levelRequired = 1,
-            attackSpeed = 5,
-            attackRange = 8,
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackSpeed = 6,
+            attackRange = 10,
             animationId = 426,
-            ammoType = AmmoType.ARROW
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.IRON_ARROW
         ),
         RangedWeapon(
             itemId = 845,
             name = "Oak longbow",
-            weaponType = WeaponStyle.LONGBOW,
-            levelRequired = 5,
+            weaponStyle = WeaponStyle.LONGBOW,
             attackSpeed = 6,
-            attackRange = 8,
+            attackRange = 10,
             animationId = 426,
-            ammoType = AmmoType.ARROW
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.STEEL_ARROW
         ),
         RangedWeapon(
             itemId = 9174,
             name = "Bronze crossbow",
-            weaponType = WeaponStyle.CROSSBOW,
-            levelRequired = 1,
+            weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
             attackRange = 7,
             animationId = 423,
-            ammoType = AmmoType.BOLT
+            ammoType = AmmoType.BOLT,
+            maxAmmoTier = AmmoTier.BRONZE_BOLT
         ),
         RangedWeapon(
             itemId = 9177,
             name = "Iron crossbow",
-            weaponType = WeaponStyle.CROSSBOW,
-            levelRequired = 10,
+            weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
             attackRange = 7,
             animationId = 423,
-            ammoType = AmmoType.BOLT
+            ammoType = AmmoType.BOLT,
+            maxAmmoTier = AmmoTier.IRON_BOLT
+        ),
+        RangedWeapon(
+            itemId = 9177,
+            name = "Iron crossbow",
+            weaponStyle = WeaponStyle.CROSSBOW,
+            attackSpeed = 6,
+            attackRange = 7,
+            animationId = 423,
+            ammoType = AmmoType.BOLT,
+            maxAmmoTier = AmmoTier.IRON_BOLT
+        ),
+        RangedWeapon(
+            itemId = 8880,
+            name = "Dorgeshuun c'bow",
+            weaponStyle = WeaponStyle.CROSSBOW,
+            attackSpeed = 6,
+            attackRange = 7,
+            animationId = 423,
+            ammoType = AmmoType.BOLT,
+            allowedAmmoIds = setOf(8882)
         )
     )
 
@@ -136,6 +156,7 @@ object StandardRanged : RangeUtilities(STANDARD_ID) {
         RangedAmmo(
             itemId = 882,
             name = "Bronze arrow",
+            ammoTier = AmmoTier.BRONZE_ARROW,
             levelRequired = 1,
             damageBonus = 0,
             projectileId = 10,
@@ -144,16 +165,27 @@ object StandardRanged : RangeUtilities(STANDARD_ID) {
         RangedAmmo(
             itemId = 884,
             name = "Iron arrow",
+            ammoTier = AmmoTier.IRON_ARROW,
             levelRequired = 1,
             damageBonus = 1,
             projectileId = 9,
-            startGfx = 18
+            startGfx = 18,
+        ),
+        RangedAmmo(
+            itemId = 886,
+            name = "Steel arrow",
+            ammoTier = AmmoTier.STEEL_ARROW,
+            levelRequired = 1,
+            damageBonus = 1,
+            projectileId = 11,
+            startGfx = 20,
         ),
         // Bolts
         RangedAmmo(
             itemId = 877,
             name = "Bronze bolts",
             ammoType =  AmmoType.BOLT,
+            ammoTier = AmmoTier.BRONZE_BOLT,
             levelRequired = 1,
             damageBonus = 0,
             projectileId = 27,
@@ -161,6 +193,15 @@ object StandardRanged : RangeUtilities(STANDARD_ID) {
         RangedAmmo(
             itemId = 9140,
             name = "Iron bolts",
+            ammoType =  AmmoType.BOLT,
+            ammoTier = AmmoTier.IRON_BOLT,
+            levelRequired = 10,
+            damageBonus = 1,
+            projectileId = 28,
+        ),
+        RangedAmmo(
+            itemId = 8882,
+            name = "Bone bolts",
             ammoType =  AmmoType.BOLT,
             levelRequired = 10,
             damageBonus = 1,
