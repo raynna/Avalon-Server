@@ -75,6 +75,7 @@ import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.Weights;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.player.magic.SpellHandler;
 
 /**
  * @Improved Andreas, Phillip - AvalonPK
@@ -618,7 +619,7 @@ public class ButtonHandler {
             else if (componentId >= 15 & componentId <= 17)
                 player.getCombatDefinitions().setSortSpellBook(componentId - 15);
             else {
-                ModernMagicks.checkCombatSpell(player, componentId);
+                SpellHandler.INSTANCE.selectCombatSpell(player, componentId);
             }
         } else if (interfaceId == 1276) {
             if (componentId == 145)

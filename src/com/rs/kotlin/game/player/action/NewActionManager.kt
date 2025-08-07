@@ -29,7 +29,7 @@ class NewActionManager(@Transient private val player: Player?) {
             forceStop()
             return
         }
-
+        currentAction?.process(player)
         // Process current main action if any
         if (player.username.equals("andreas") && actionDelay > 0)
             println("process(): [${player.username}] Delay is: $actionDelay");

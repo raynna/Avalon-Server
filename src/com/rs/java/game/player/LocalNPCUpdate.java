@@ -101,7 +101,7 @@ public final class LocalNPCUpdate {
 					if (y < 15)
 						y += 32;
 				}
-				stream.writeBits(3, (n.getDirection() >> 11) - 4);
+				stream.writeBits(3, getNpcDirection(n));
 				stream.writeBits(largeSceneView ? 8 : 5, y);
 				stream.writeBits(15, n.getId());
 				stream.writeBits(largeSceneView ? 8 : 5, x);
@@ -113,6 +113,11 @@ public final class LocalNPCUpdate {
 					appendUpdateBlock(n, updateBlockData, true);
 			}
 		}
+	}
+
+	public static int getNpcDirection(NPC npc) {
+		int direction = npc.getDirection();
+		return direction >> 8;
 	}
 
 	private void appendUpdateBlock(NPC n, OutputStream data, boolean added) {

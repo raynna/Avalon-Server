@@ -9,6 +9,14 @@ import com.rs.java.utils.Utils
 
 object ProjectileManager {
 
+    @JvmStatic // for java call
+    fun sendWithHitGraphic(
+        projectile: Projectile,
+        projectileGfxId: Int,
+        attacker: Entity,
+        defender: Entity,
+        hitGraphicId: Int
+    ) = sendWithHitGraphic(projectile, projectileGfxId, attacker, defender, hitGraphicId, 0)
 
     @JvmStatic
     fun sendWithHitGraphic(
@@ -16,32 +24,65 @@ object ProjectileManager {
         projectileGfxId: Int,
         attacker: Entity,
         defender: Entity,
-        hitGraphicId: Int
+        hitGraphicId: Int,
+        graphicHeight: Int = 0
     ) {
-        val baseType = ProjectileRegistry.get(projectile)
-        if (baseType == null) {
+        sendWithHeightAndHitGraphic(
+            projectile,
+            projectileGfxId,
+            0, // Default height difference
+            attacker,
+            defender,
+            hitGraphicId,
+            graphicHeight
+        )
+    }
+
+    @JvmStatic
+    fun sendWithHeightAndHitGraphic(
+        projectile: Projectile,
+        projectileGfxId: Int,
+        heightDifference: Int,
+        attacker: Entity,
+        defender: Entity,
+        hitGraphicId: Int,
+        graphicHeight: Int = 100
+    ) {
+        val baseType = ProjectileRegistry.get(projectile) ?: run {
             println("Unknown projectile type: $projectile")
             return
         }
 
+        val adjustedType = baseType.copy(
+            startHeight = (baseType.startHeight + heightDifference).coerceIn(0, 255),
+            endHeight = (baseType.endHeight + heightDifference).coerceIn(0, 255)
+        )
+
         val player = if (attacker is Player) attacker else defender as? Player
             ?: error("Either attacker or defender must be a Player")
-
+        val startTile = WorldTile(attacker.getCoordFaceX(attacker.size),
+            attacker.getCoordFaceY(attacker.size),
+            attacker.plane)
+        val endTile = WorldTile(
+            defender.getCoordFaceX(defender.size),
+            defender.getCoordFaceY(defender.size),
+            defender.plane)
         val duration = sendProjectile(
             player = player,
             receiver = defender,
-            startTile =  WorldTile(attacker.getCoordFaceX(attacker.size), attacker.getCoordFaceY(attacker.size), attacker.plane),
-            endTile = WorldTile(defender.getCoordFaceX(defender.size), defender.getCoordFaceY(defender.size), defender.plane),
+            startTile = startTile,
+            endTile = endTile,
             gfx = projectileGfxId,
-            type = baseType,
+            type = adjustedType,
             creatorSize = attacker.size
         )
 
         val delayTicks = ((duration + 29) / 30) - 1
 
-        WorldTasksManager.schedule(object: WorldTask(){
+        WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
-                defender.gfx(hitGraphicId)
+                val rotation = calculateRotation(startTile, endTile);
+                defender.gfx(hitGraphicId, graphicHeight, rotation)
             }
         }, delayTicks.coerceAtLeast(0))
     }
@@ -50,25 +91,65 @@ object ProjectileManager {
     fun send(
         projectile: Projectile,
         gfxId: Int,
+        heightDifference: Int,
+        attacker: Entity,
+        defender: Entity,
+        hitGraphicId: Int
+    ) = sendWithHeightAndHitGraphic(
+        projectile,
+        gfxId,
+        heightDifference,
+        attacker,
+        defender,
+        hitGraphicId,
+        0
+    )
+
+    @JvmStatic
+    fun send(
+        projectile: Projectile,
+        gfxId: Int,
+        heightDifference: Int,
         attacker: Entity,
         defender: Entity
     ) {
-        val baseType = ProjectileRegistry.get(projectile)
-        if (baseType == null) {
+        val baseType = ProjectileRegistry.get(projectile) ?: run {
             println("Unknown projectile type: $projectile")
             return
         }
+
+        val adjustedType = baseType.copy(
+            startHeight = (baseType.startHeight + heightDifference).coerceIn(0, 255),
+            endHeight = (baseType.endHeight + heightDifference).coerceIn(0, 255)
+        )
+
         sendProjectile(
             player = if (attacker is Player) attacker else defender as? Player
                 ?: error("Either attacker or defender must be a Player"),
             receiver = defender,
-            startTile = attacker.tile,
-            endTile = defender.tile,
+            startTile = WorldTile(
+                attacker.getCoordFaceX(attacker.size),
+                attacker.getCoordFaceY(attacker.size),
+                attacker.plane
+            ),
+            endTile = WorldTile(
+                defender.getCoordFaceX(defender.size),
+                defender.getCoordFaceY(defender.size),
+                defender.plane
+            ),
             gfx = gfxId,
-            type = baseType,
+            type = adjustedType,
             creatorSize = attacker.size
         )
     }
+
+    @JvmStatic
+    fun send(
+        projectile: Projectile,
+        gfxId: Int,
+        attacker: Entity,
+        defender: Entity
+    ) = send(projectile, gfxId, 0, attacker, defender)
 
     @JvmStatic
     fun send(
@@ -80,8 +161,7 @@ object ProjectileManager {
         creatorSize: Int,
         player: Player
     ) {
-        val baseType = ProjectileRegistry.get(projectile)
-        if (baseType == null) {
+        val baseType = ProjectileRegistry.get(projectile) ?: run {
             println("Unknown projectile type: $projectile")
             return
         }
@@ -136,4 +216,22 @@ object ProjectileManager {
         return totalDuration
     }
 
+    private fun calculateRotation(startTile: WorldTile, endTile: WorldTile): Int {
+        val startX = startTile.x
+        val startY = startTile.y
+        val endX = endTile.x
+        val endY = endTile.y
+        val (rotation, directionName) = when {
+            endX == startX && endY < startY -> Pair(0, "North")
+            endX < startX && endY < startY -> Pair(1, "North-East")
+            endX < startX && endY == startY -> Pair(2, "East")
+            endX < startX && endY > startY -> Pair(3, "South-East")
+            endX == startX && endY > startY -> Pair(4, "South")
+            endX > startX && endY > startY -> Pair(5, "South-West")
+            endX > startX && endY == startY -> Pair(6, "West")
+            endX > startX && endY < startY -> Pair(7, "North-West")
+            else -> Pair(8, "South (default)")
+        }
+        return rotation
+    }
 }

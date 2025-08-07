@@ -16,18 +16,18 @@ object MeleeStyle : CombatStyle {
 
     override fun getAttackDelay(attacker: Player): Int = 3
 
-    override fun applyHit(attacker: Player, target: Entity, hit: Hit) {
+    override fun applyHit(attacker: Player, defender: Entity, hit: Hit) {
         val damage = 10
-        target.applyHit(hit);
+        defender.applyHit(hit);
     }
 
-    override fun attack(attacker: Player, target: Entity) {
+    override fun attack(attacker: Player, defender: Entity) {
         attacker.animate(422)
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
-                val hit = Hit(target, 10, HitLook.MELEE_DAMAGE)
-                applyHit(attacker, target, hit)
-                onHit(attacker, target)
+                val hit = Hit(defender, 10, HitLook.MELEE_DAMAGE)
+                applyHit(attacker, defender, hit)
+                onHit(attacker, defender);
             }
         }, 0)
     }

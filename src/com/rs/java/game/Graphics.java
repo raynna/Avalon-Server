@@ -8,10 +8,14 @@ public final class Graphics {
 		this(id, 0, 0, 0);
 
 	}
-
-	public Graphics(int id, int speed, int height) {
-		this(id, speed, height, 0);
+	public Graphics(int id, int height) {
+		this(id, 0, height, 0);
 	}
+
+	public Graphics(int id, int rotation, int height) {
+		this(id, 0, height, rotation);
+	}
+
 
 	public Graphics(int id, int speed, int height, int rotation) {
 		this.id = id;

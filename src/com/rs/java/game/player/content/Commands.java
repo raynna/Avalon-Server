@@ -3063,17 +3063,34 @@ public final class Commands {
                 case "spec":
                     player.getCombatDefinitions().resetSpecialAttack();
                     return true;
-                case "gfx":
+                case "gfx": {
                     if (cmd.length < 2) {
-                        player.getPackets().sendPanelBoxMessage("Use: ::gfx id");
+                        player.getPackets().sendPanelBoxMessage("Use: ::gfx id [height=0] [rotation=0] [speed=0]");
                         return true;
                     }
+
                     try {
-                        player.gfx(new Graphics(Integer.valueOf(cmd[1]), 0, 0));
+                        int gfxId = Integer.parseInt(cmd[1]);
+                        int height = cmd.length > 2 ? Integer.parseInt(cmd[2]) : 0;
+                        rotation = cmd.length > 3 ? Integer.parseInt(cmd[3]) : 0;
+                        int speed = cmd.length > 4 ? Integer.parseInt(cmd[4]) : 0;
+
+                        player.gfx(new Graphics(gfxId, speed, height, rotation));
+
+                        player.getPackets().sendPanelBoxMessage(
+                                "GFX spawned: ID=" + gfxId +
+                                        ", Height=" + height +
+                                        ", Rotation=" + rotation +
+                                        ", Speed=" + speed
+                        );
+
                     } catch (NumberFormatException e) {
-                        player.getPackets().sendPanelBoxMessage("Use: ::gfx id");
+                        player.getPackets().sendPanelBoxMessage(
+                                "Invalid number format. Use: ::gfx id [height] [rotation] [speed]"
+                        );
                     }
                     return true;
+                }
                 case "anim":
                     if (cmd.length < 2) {
                         player.getPackets().sendPanelBoxMessage("Use: ::anim id");

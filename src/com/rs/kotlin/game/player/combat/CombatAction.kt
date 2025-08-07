@@ -57,6 +57,13 @@ class CombatAction(
         if (!check(player, target)) {
             return false;
         }
+        player.message("process");
+        val spellId = player.getCombatDefinitions().spellId
+        style = when {
+            spellId != 0 -> MagicStyle
+            isRangedWeapon(player) -> RangedStyle
+            else -> MeleeStyle
+        }
         scheduleFollowTask(player);
         return true
     }
@@ -65,6 +72,7 @@ class CombatAction(
         if (player == null || !process(player)) {
             return -1
         }
+        player.message("process with delay")
         val requiredDistance = style.getAttackDistance(player)
         if ((!player.clipedProjectile(target, requiredDistance == 0)) || !Utils.isOnRange(player.x, player.y, player.size, target.x, target.y, target.size, requiredDistance)) {
             return 0

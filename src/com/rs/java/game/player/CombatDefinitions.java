@@ -53,7 +53,7 @@ public final class CombatDefinitions implements Serializable {
 	private boolean defensiveCasting;
 	public transient boolean instantAttack;
 	private transient boolean dungeonneringSpellBook;
-	public int spellBook;
+	public byte spellBook;
 	private byte autoCastSpell;
 
 	public int getSpellId() {

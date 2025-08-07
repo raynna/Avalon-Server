@@ -30,7 +30,7 @@ abstract class NewAction {
     }
 
     protected fun setActionDelay(player: Player, delay: Int) {
-        player.actionManager.actionDelay = delay
+        player.newActionManager.setActionDelay(delay)
     }
 
     open fun onActionReplaced(newAction: NewAction): Boolean {

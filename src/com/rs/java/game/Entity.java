@@ -1274,6 +1274,14 @@ public abstract class Entity extends WorldTile {
         gfx(new Graphics(gfxId));
     }
 
+    public void gfx(int gfxId, int height) {
+        gfx(new Graphics(gfxId, 0, height));
+    }
+
+    public void gfx(int gfxId, int height, int rotation) {
+        gfx(new Graphics(gfxId, rotation, height));
+    }
+
     public void delayGfx(Graphics nextGraphics, int delay) {
         WorldTasksManager.schedule(new WorldTask() {
             @Override
