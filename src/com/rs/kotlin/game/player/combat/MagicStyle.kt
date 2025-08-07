@@ -196,23 +196,19 @@ object MagicStyle : CombatStyle {
 
     private fun calculateMagicHitDelay(distance: Int, spell: Spell): Int {
         var delay = when {
-            distance <= 1 -> 1    // Point-blank range
-            distance <= 3 -> 2    // Short range
-            distance <= 6 -> 3    // Medium range
-            else -> 4             // Long range (max 10 squares in RS)
+            distance <= 1 -> 1
+            distance <= 3 -> 2
+            distance <= 6 -> 3
+            else -> 4
         }
 
-        // Adjust for spell types
         delay += when (spell.type) {
             SpellType.Combat -> {
                 when {
-                    spell.name.contains("Bolt") -> 0   // Bolt spells are faster
-                    spell.name.contains("Blitz") -> 1  // Blitz spells slightly slower
-                    spell.name.contains("Barrage") -> 2 // Barrage spells slowest
-                    else -> 0 // Default
+                    else -> 0 //TODO IF NEEDED
                 }
             }
-            else -> 0 // Non-combat spells
+            else -> 0
         }
 
         return delay.coerceAtLeast(1) // Minimum 1 tick delay
