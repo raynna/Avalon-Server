@@ -60,9 +60,5 @@ enum class AmmoType {
 }
 
 enum class EffectType {
-    POISON,
     DRAGONFIRE,
-    LIFE_LEECH,
-    DEFENCE_REDUCTION,
-    BIND
 }

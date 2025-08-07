@@ -69,7 +69,7 @@ object CombatCalculations {
 
         fun getAttackBonusType(player: Player, weaponId: Int, attackStyle: Int): BonusType {
             return when (getAttackStyle(player, weaponId, attackStyle)) {
-                else -> BonusType.CrushAttack
+                else -> BonusType.CrushAttack//TODO
             }
         }
     }
@@ -160,7 +160,6 @@ object CombatCalculations {
         }
     }
 
-    // Public API functions
     fun calculateMeleeAccuracy(player: Player, target: Entity, weaponId: Int, attackStyle: Int): Boolean {
         return MeleeCombat.calculateAccuracy(player, target, weaponId, attackStyle)
     }
@@ -185,7 +184,6 @@ object CombatCalculations {
         return MagicCombat.calculateMaxHit(player, spell)
     }
 
-    // Helper functions
     private fun calculateHitProbability(attack: Double, defence: Double): Boolean {
         val prob = when {
             attack < defence -> (attack - 1.0) / (defence * 2.0)
@@ -209,7 +207,7 @@ object CombatCalculations {
         var range = round(player.skills.getLevel(Skills.RANGE) * player.prayer.getRangedMultiplier()) + 8.0
         when (player.combatDefinitions.getStyle(weaponId, attackStyle)) {
             ACCURATE -> range += 3.0
-            CombatDefinitions.RAPID -> range += 1.0
+            RAPID -> range += 1.0
             else -> {}
         }
         return range

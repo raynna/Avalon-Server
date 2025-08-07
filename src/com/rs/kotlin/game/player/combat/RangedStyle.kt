@@ -174,39 +174,20 @@ object RangedStyle : CombatStyle {
         currentAmmo?.specialEffect?.let { effect: SpecialEffect ->
             if (Utils.randomDouble() < effect.chance) {
                 when (effect.type) {
-                    EffectType.POISON -> defender.poison.makePoisoned(effect.damage)
-                    EffectType.DRAGONFIRE -> {
+                    EffectType.DRAGONFIRE -> {//TODO DRAGONFIRE
                         val damage = effect.damage + Utils.random(5)
                         defender.applyHit(Hit(attacker, damage, HitLook.REGULAR_DAMAGE))
-                    }
-                    EffectType.LIFE_LEECH -> {
-                        val heal = (defender.hitpoints * 0.25).toInt()
-                        attacker.heal(heal)
-                    }
-                    EffectType.DEFENCE_REDUCTION -> {
-                        //TODO defender.(Skills.DEFENCE, effect.duration ?: 5)
-                    }
-                    EffectType.BIND -> {
-                        defender.setFreezeDelay(effect.duration?.toLong() ?: 5L)
                     }
                 }
             }
         }
     }
 
-    /**
-     * var delay = when {
-     *             distance <= 1 -> 1    // Point-blank range
-     *             distance <= 3 -> 2    // Short range
-     *             distance <= 6 -> 3    // Medium range
-     *             else -> 4             // Long range (max 10 squares in RS)
-     *         }
-     */
     private fun getRangedHitDelay(attacker: Player, defender: Entity): Int {
         val distance = Utils.getDistance(attacker, defender)
         return when {
-            distance <= 2 -> 1    // Point-blank range
-            distance <= 4 -> 2    // Short range
+            distance <= 2 -> 1//TODO UNSURE OF CORRECT VALUES
+            distance <= 4 -> 2
                 else -> 3
         }
     }

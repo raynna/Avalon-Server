@@ -33,7 +33,6 @@ abstract class Spellbook(val id: Int) {
 
 object AncientMagicks : Spellbook(ANCIENT_ID) {
     override val spells = listOf(
-        // Teleport spells
         Spell(
             id = 48,
             name = "Home Teleport",
@@ -633,7 +632,6 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             ),
             teleportLocation = WorldTile(2762, 9094, 0)
         ),
-            //WIND_RUSH(98, 2.5, 10, -1, null, 2699, 2700, AIR_SPELL),
         Spell(
             id = 98,
             name = "Wind Rush",
@@ -865,7 +863,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             name = "Magic Dart",
             level = 50,
             xp = 30.0,
-            damage = 0, //Special damage calculation
+            damage = 0,//special calc for this
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 1),
@@ -1118,7 +1116,6 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             endGraphicId = 1019
         ),
 
-        // Utility spells
         Spell(
             id = 26,
             name = "Confuse",
@@ -1280,7 +1277,6 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             endGraphicId = 1843
         ),
 
-        // Enchantment spells
         Spell(
             id = 29,
             name = "Enchant Level-1 Jewellery",
@@ -1350,7 +1346,6 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             )
         ),
 
-        // Other utility spells
         Spell(
             id = 44,
             name = "Telegrab",

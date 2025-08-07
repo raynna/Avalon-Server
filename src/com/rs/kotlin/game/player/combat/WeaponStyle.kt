@@ -53,5 +53,4 @@ enum class WeaponStyle(val attackStyles: List<AttackStyle>) {
         AttackStyle.CONTROLLED,
         AttackStyle.DEFENSIVE
     ))
-    // Add more as needed...
 }

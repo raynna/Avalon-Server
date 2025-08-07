@@ -4,7 +4,6 @@ import com.rs.kotlin.game.player.combat.WeaponStyle
 
 object SpecialRanged : RangeUtilities(SPECIAL_ID) {
     override val weapons = listOf(
-        // Special bows
         RangedWeapon(
             itemId = 861,
             name = "Magic shortbow",
@@ -36,12 +35,6 @@ object SpecialRanged : RangeUtilities(SPECIAL_ID) {
                 energyCost = 65,
                 damageMultiplier = 1.5,
                 accuracyMultiplier = 1.25,
-                specialEffect = SpecialEffect(
-                    type = EffectType.DEFENCE_REDUCTION,
-                    chance = 0.25,
-                    damage = 0,
-                    duration = 5
-                )
             ),
             ammoType = AmmoType.ARROW
         ),
@@ -71,7 +64,6 @@ object SpecialRanged : RangeUtilities(SPECIAL_ID) {
     )
 
     override val ammunition = listOf(
-        // Special arrows
         RangedAmmo(
             itemId = 11212,
             name = "Dragon arrow",
@@ -79,7 +71,6 @@ object SpecialRanged : RangeUtilities(SPECIAL_ID) {
             levelRequired = 60,
             damageBonus = 6,
             projectileId = 1111,
-            dropOnGround = true
         ),
         // Special bolts
         RangedAmmo(
@@ -89,7 +80,6 @@ object SpecialRanged : RangeUtilities(SPECIAL_ID) {
             levelRequired = 50,
             damageBonus = 3,
             projectileId = 27,
-            dropOnGround = false,
             specialEffect = SpecialEffect(
                 type = EffectType.DRAGONFIRE,
                 chance = 0.1,
@@ -103,7 +93,6 @@ object SpecialRanged : RangeUtilities(SPECIAL_ID) {
             levelRequired = 60,
             damageBonus = 5,
             projectileId = 27,
-            dropOnGround = false,
             specialEffect = SpecialEffect(
                 type = EffectType.DRAGONFIRE,
                 chance = 0.2,
@@ -117,12 +106,6 @@ object SpecialRanged : RangeUtilities(SPECIAL_ID) {
             levelRequired = 70,
             damageBonus = 7,
             projectileId = 27,
-            dropOnGround = false,
-            specialEffect = SpecialEffect(
-                type = EffectType.LIFE_LEECH,
-                chance = 0.25,
-                damage = 0
-            )
         ),
         // Chinchompas
         RangedAmmo(
@@ -132,7 +115,6 @@ object SpecialRanged : RangeUtilities(SPECIAL_ID) {
             levelRequired = 55,
             damageBonus = 0,
             projectileId = 908,
-            dropOnGround = false
         )
     )
 }

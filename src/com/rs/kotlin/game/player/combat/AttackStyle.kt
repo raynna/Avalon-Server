@@ -5,13 +5,11 @@ enum class AttackStyle(
     val combatType: CombatType,
     val xpMode: XpMode
 ) {
-    // MELEE
     ACCURATE(combatType = CombatType.MELEE, xpMode = XpMode.ATTACK),
     AGGRESSIVE(combatType = CombatType.MELEE, xpMode = XpMode.STRENGTH),
     DEFENSIVE(combatType = CombatType.MELEE, xpMode = XpMode.DEFENCE),
     CONTROLLED(combatType = CombatType.MELEE, xpMode = XpMode.SHARED),
 
-    // RANGED
     RAPID(attackSpeedModifier = -1, combatType = CombatType.RANGED, xpMode = XpMode.RANGED),
     LONGRANGE(attackSpeedModifier = 1, combatType = CombatType.RANGED, xpMode = XpMode.DEFENCE);
 

@@ -20,7 +20,6 @@ object RuneDefinitions {
         const val COSMIC = 564
         const val ARMADYL = 21773
 
-        // Composite runes
         const val MUD = 4698
         const val MIST = 4695
         const val DUST = 4696
