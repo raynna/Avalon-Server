@@ -6191,3 +6191,54 @@
 [07 August 2025 at 08:03:20 CEST] - ::tele 0,48,54,14,40
 [07 August 2025 at 08:03:23 CEST] - ::tele 0,48,54,9,46
 [07 August 2025 at 08:03:26 CEST] - ::tele 0,48,54,14,41
+[07 August 2025 at 03:00:21 CEST] - ::tele 0,1,1,20,16
+[07 August 2025 at 03:00:26 CEST] - ::give shortbow
+[07 August 2025 at 03:00:30 CEST] - ::give bronze arrow
+[07 August 2025 at 03:00:34 CEST] - ::item bronze arrow +10
+[07 August 2025 at 03:00:38 CEST] - ::item bronze arrow
+[07 August 2025 at 03:00:42 CEST] - ::item 884 1000
+[07 August 2025 at 03:00:47 CEST] - ::item 882 1000
+[07 August 2025 at 03:28:55 CEST] - ::item chinchompa
+[07 August 2025 at 03:41:20 CEST] - ::gfx 10
+[07 August 2025 at 03:41:23 CEST] - ::gfx 9
+[07 August 2025 at 03:41:25 CEST] - ::gfx 8
+[07 August 2025 at 03:41:27 CEST] - ::gfx 7
+[07 August 2025 at 03:41:30 CEST] - ::gfx 111
+[07 August 2025 at 03:41:31 CEST] - ::gfx 11
+[07 August 2025 at 03:41:33 CEST] - ::gfx 12
+[07 August 2025 at 03:41:34 CEST] - ::gfx 13
+[07 August 2025 at 03:41:35 CEST] - ::gfx 14
+[07 August 2025 at 03:41:37 CEST] - ::gfx 15
+[07 August 2025 at 03:41:42 CEST] - ::gfx 16
+[07 August 2025 at 03:41:43 CEST] - ::gfx 17
+[07 August 2025 at 03:41:45 CEST] - ::gfx 18
+[07 August 2025 at 03:41:47 CEST] - ::gfx 18
+[07 August 2025 at 03:41:49 CEST] - ::gfx 18
+[07 August 2025 at 03:43:30 CEST] - ::gfx 18
+[07 August 2025 at 03:45:26 CEST] - ::gfx 44
+[07 August 2025 at 03:49:47 CEST] - ::tele 0,48,54,17,44
+[07 August 2025 at 03:49:49 CEST] - ::tele 0,48,54,13,42
+[07 August 2025 at 03:49:53 CEST] - ::tele 0,48,54,19,46
+[07 August 2025 at 03:49:54 CEST] - ::tele 0,48,54,13,42
+[07 August 2025 at 03:50:13 CEST] - ::tele 0,48,54,20,45
+[07 August 2025 at 03:50:15 CEST] - ::tele 0,48,54,13,42
+[07 August 2025 at 03:50:17 CEST] - ::tele 0,48,54,19,45
+[07 August 2025 at 03:50:24 CEST] - ::tele 0,48,54,17,44
+[07 August 2025 at 03:50:33 CEST] - ::tele 0,48,54,14,42
+[07 August 2025 at 03:51:36 CEST] - ::tele 0,48,54,19,45
+[07 August 2025 at 03:51:43 CEST] - ::tele 0,48,54,13,42
+[07 August 2025 at 03:53:17 CEST] - ::gfx 17
+[07 August 2025 at 03:53:19 CEST] - ::gfx 19
+[07 August 2025 at 03:53:22 CEST] - ::gfx 20
+[07 August 2025 at 03:53:25 CEST] - ::gfx 21
+[07 August 2025 at 03:53:27 CEST] - ::gfx 22
+[07 August 2025 at 03:53:28 CEST] - ::gfx 23
+[07 August 2025 at 03:53:29 CEST] - ::gfx 24
+[07 August 2025 at 03:53:30 CEST] - ::gfx 25
+[07 August 2025 at 03:53:32 CEST] - ::gfx 26
+[07 August 2025 at 03:53:34 CEST] - ::gfx 27
+[07 August 2025 at 03:53:37 CEST] - ::gfx 16
+[07 August 2025 at 03:53:38 CEST] - ::gfx 17
+[07 August 2025 at 03:53:39 CEST] - ::gfx 18
+[07 August 2025 at 03:53:42 CEST] - ::gfx 19
+[07 August 2025 at 03:53:47 CEST] - ::gfx 19

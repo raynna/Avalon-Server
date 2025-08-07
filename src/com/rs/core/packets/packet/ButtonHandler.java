@@ -75,7 +75,7 @@ import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.Weights;
 import com.rs.kotlin.Rscm;
-import com.rs.kotlin.game.player.magic.SpellHandler;
+import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 
 /**
  * @Improved Andreas, Phillip - AvalonPK

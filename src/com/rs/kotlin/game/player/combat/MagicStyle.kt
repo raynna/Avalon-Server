@@ -8,7 +8,7 @@ import com.rs.java.game.Hit.HitLook
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
-import com.rs.kotlin.game.player.magic.*
+import com.rs.kotlin.game.player.combat.magic.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 

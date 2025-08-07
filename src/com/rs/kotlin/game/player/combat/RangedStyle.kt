@@ -12,12 +12,13 @@ import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
+import com.rs.kotlin.game.player.combat.range.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 
 object RangedStyle : CombatStyle {
-    private var currentWeapon: RangeUtilities.RangedWeapon? = null
-    private var currentAmmo: RangeUtilities.RangedAmmo? = null
+    private var currentWeapon: RangedWeapon? = null
+    private var currentAmmo: RangedAmmo? = null
 
     override fun onHit(attacker: Player, defender: Entity) {}
 
@@ -51,7 +52,9 @@ object RangedStyle : CombatStyle {
     }
 
     override fun getAttackDelay(attacker: Player): Int {
-        return currentWeapon?.attackSpeed ?: 4
+        val baseSpeed = currentWeapon?.attackSpeed ?: 4
+        val style = AttackStyle.fromOrdinal(attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponType)
+        return baseSpeed + style.attackSpeedModifier
     }
 
     override fun getAttackDistance(attacker: Player): Int {
@@ -77,11 +80,14 @@ object RangedStyle : CombatStyle {
 
         // Play attack animation
         attacker.animate(currentWeapon!!.animationId)
+        if (currentAmmo!!.startGfx != -1) {
+            attacker.gfx(currentAmmo!!.startGfx, 100)
+        }
 
         // Calculate hit
         val attackStyle = attacker.combatDefinitions.attackStyle
-        val hitSuccess = CombatCalculations.calculateRangedAccuracy(attacker, defender, currentWeapon, attackStyle)
-        val maxHit = CombatCalculations.calculateRangedMaxHit(attacker, currentWeapon!!, currentAmmo!!)
+        val hitSuccess = CombatCalculations.calculateRangedAccuracy(attacker, defender, currentWeapon!!.itemId, attackStyle)
+        val maxHit = CombatCalculations.calculateRangedMaxHit(attacker, currentWeapon!!.itemId, currentAmmo!!.itemId)
         val hit = Hit(attacker, if (hitSuccess) Utils.random(maxHit) else 0, HitLook.RANGE_DAMAGE)
 
         // Add XP
@@ -97,6 +103,16 @@ object RangedStyle : CombatStyle {
         if (hitSuccess && currentAmmo!!.dropOnGround) {
             dropAmmoOnGround(attacker, defender)
         }
+        // Debug log for ranged attack context
+        attacker.message("Ranged Attack -> " +
+                "Weapon: ${currentWeapon?.name}, " +
+                "WeaponType: ${currentWeapon?.weaponType?.name}, " +
+                "AmmoType: ${currentAmmo?.ammoType?.name}, " +
+                "Ammo: ${currentAmmo?.name}, " +
+                "Style: ${AttackStyle.fromOrdinal(attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponType).name}, " +
+                "MaxHit: $maxHit, " +
+                "Hit: ${hit.damage}")
+
     }
 
     private fun consumeAmmo(player: Player): Boolean {
@@ -110,12 +126,12 @@ object RangedStyle : CombatStyle {
 
         // Don't consume bolts with certain crossbows
         if (currentAmmo!!.ammoType == AmmoType.BOLT &&
-            player.equipment.getItems()[Equipment.SLOT_WEAPON.toInt()]?.id in listOf(9183, 9185)) {
+            player.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id in listOf(9183, 9185)) {
             return true
         }
 
         // Don't consume ammo if wearing Ava's device with chance
-        if (player.equipment.getItems()[Equipment.SLOT_CAPE.toInt()]?.id in listOf(10498, 10499)) {
+        if (player.equipment.items[Equipment.SLOT_CAPE.toInt()]?.id in listOf(10498, 10499)) {
             if (Utils.random(4) != 0) { // 75% chance to save ammo
                 return true
             }
@@ -126,63 +142,49 @@ object RangedStyle : CombatStyle {
     }
 
     private fun sendProjectile(attacker: Player, defender: Entity, hitSuccess: Boolean) {
-        val projectileId = if (hitSuccess) currentAmmo!!.projectileId else 44
-
+        val projectileId = if (hitSuccess) currentAmmo!!.projectileId else -1
         val projectileType = when (currentAmmo!!.ammoType) {
-            RangeUtilities.AmmoType.ARROW -> Projectile.ARROW
-            RangeUtilities.AmmoType.BOLT -> Projectile.BOLT
-            RangeUtilities.AmmoType.DART -> Projectile.DART
-            RangeUtilities.AmmoType.KNIFE -> Projectile.THROWING_KNIFE
-            RangeUtilities.AmmoType.JAVELIN -> Projectile.JAVELIN
-            RangeUtilities.AmmoType.CHINCHOMPA -> Projectile.CHINCHOMPA
-            RangeUtilities.AmmoType.THROWNAXE -> Projectile.THROWING_KNIFE
+            AmmoType.ARROW -> Projectile.ARROW
+            AmmoType.BOLT -> Projectile.BOLT
+            AmmoType.DART -> Projectile.DART
+            AmmoType.KNIFE -> Projectile.THROWING_KNIFE
+            AmmoType.JAVELIN -> Projectile.JAVELIN
+            AmmoType.CHINCHOMPA -> Projectile.CHINCHOMPA
+            AmmoType.THROWNAXE -> Projectile.THROWING_KNIFE
         }
 
-        if (currentWeapon!!.weaponType == RangeUtilities.RangedWeaponType.CHINCHOMPA) {
-            ProjectileManager.sendMulti(projectileType, projectileId, attacker, defender)
+        if (currentWeapon!!.weaponType == WeaponStyle.CHINCHOMPA) {
+            //TODO ProjectileManager.sendMulti(projectileType, projectileId, attacker, defender)
         } else {
-            ProjectileManager.sendWithHitGraphic(
+            ProjectileManager.send(
                 projectileType,
                 projectileId,
                 attacker,
-                defender,
-                if (hitSuccess) -1 else 44,
-                100
+                defender
             )
         }
     }
 
     private fun dropAmmoOnGround(attacker: Player, defender: Entity) {
-        val worldTile = if (Utils.random(3) == 0) {
-            defender.tile
-        } else {
-            calculateDropTile(attacker, defender)
-        }
-        World.updateGroundItem(Item(currentAmmo!!.itemId, 1), worldTile, attacker);
-    }
-
-    private fun calculateDropTile(attacker: Player, defender: Entity): WorldTile {
-        val distance = Utils.getDistance(attacker, defender)
-        val direction = Utils.getDirectionTo(attacker, defender)
-        val dropDistance = Utils.random(distance)
-        return attacker.tile.transform(direction, dropDistance)
+        if (!Utils.roll(1, 3))
+            World.updateGroundItem(Item(currentAmmo!!.itemId, 1), defender.tile, attacker);
     }
 
     private fun handleSpecialEffects(attacker: Player, defender: Entity) {
-        currentAmmo?.specialEffect?.let { effect ->
+        currentAmmo?.specialEffect?.let { effect: SpecialEffect ->
             if (Utils.randomDouble() < effect.chance) {
                 when (effect.type) {
-                    EffectType.POISON -> defender.poison(effect.damage)
+                    EffectType.POISON -> defender.poison.makePoisoned(effect.damage)
                     EffectType.DRAGONFIRE -> {
                         val damage = effect.damage + Utils.random(5)
-                        defender.applyHit(Hit(attacker, damage, HitLook.DRAGON_FIRE_DAMAGE))
+                        defender.applyHit(Hit(attacker, damage, HitLook.REGULAR_DAMAGE))
                     }
                     EffectType.LIFE_LEECH -> {
-                        val heal = (defender.getHitpoints() * 0.25).toInt()
+                        val heal = (defender.hitpoints * 0.25).toInt()
                         attacker.heal(heal)
                     }
                     EffectType.DEFENCE_REDUCTION -> {
-                        defender.lowerStat(Skills.DEFENCE, effect.duration ?: 5)
+                        //TODO defender.(Skills.DEFENCE, effect.duration ?: 5)
                     }
                     EffectType.BIND -> {
                         defender.setFreezeDelay(effect.duration?.toLong() ?: 5L)
@@ -192,12 +194,20 @@ object RangedStyle : CombatStyle {
         }
     }
 
+    /**
+     * var delay = when {
+     *             distance <= 1 -> 1    // Point-blank range
+     *             distance <= 3 -> 2    // Short range
+     *             distance <= 6 -> 3    // Medium range
+     *             else -> 4             // Long range (max 10 squares in RS)
+     *         }
+     */
     private fun getRangedHitDelay(attacker: Player, defender: Entity): Int {
         val distance = Utils.getDistance(attacker, defender)
         return when {
-            distance <= 3 -> 2
-            distance <= 6 -> 3
-            else -> 4
+            distance <= 2 -> 1    // Point-blank range
+            distance <= 4 -> 2    // Short range
+                else -> 3
         }
     }
 }

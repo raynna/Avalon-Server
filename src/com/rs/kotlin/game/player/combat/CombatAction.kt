@@ -6,6 +6,7 @@ import com.rs.java.game.Entity
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.action.NewAction
+import com.rs.kotlin.game.player.combat.range.RangeUtilities
 import kotlin.math.abs
 
 class CombatAction(
@@ -57,7 +58,7 @@ class CombatAction(
         if (!check(player, target)) {
             return false;
         }
-        player.message("process");
+        //player.message("process");
         val spellId = player.getCombatDefinitions().spellId
         style = when {
             spellId != 0 -> MagicStyle
@@ -72,7 +73,7 @@ class CombatAction(
         if (player == null || !process(player)) {
             return -1
         }
-        player.message("process with delay")
+        //player.message("process with delay")
         val requiredDistance = style.getAttackDistance(player)
         if ((!player.clipedProjectile(target, requiredDistance == 0)) || !Utils.isOnRange(player.x, player.y, player.size, target.x, target.y, target.size, requiredDistance)) {
             return 0
@@ -88,7 +89,7 @@ class CombatAction(
         return when (phase) {
             CombatPhase.HIT -> {
                 if (validateAttack(player, target)) {
-                    player.message("attack with ${style}")
+                    //player.message("attack with ${style}")
                     style.attack(player, target)
                 }
                 phase = CombatPhase.HIT
@@ -213,10 +214,11 @@ class CombatAction(
 
     private fun isRangedWeapon(player: Player): Boolean {
         val weaponId = player.equipment.getWeaponId()
-        val rangedWeapons = listOf(9185, 11235, 861, 4734, 6724, 19481)
-        val isRanged = weaponId in rangedWeapons
-        println("[CombatAction] isRangedWeapon(): weaponId=$weaponId, isRanged=$isRanged")
-        return isRanged
+        val ranged = RangeUtilities.getWeaponByItemId(weaponId);
+        if (ranged != null) {
+            println("[CombatAction] isRangedWeapon(): weaponId=${ranged.name}, ${ranged.ammoType.name}")
+        }
+        return ranged != null
     }
 
     private fun handleCollisionMovement(player: Player, target: Entity, size: Int): Boolean {

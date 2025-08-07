@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.player.magic
+package com.rs.kotlin.game.player.combat.magic
 
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.*

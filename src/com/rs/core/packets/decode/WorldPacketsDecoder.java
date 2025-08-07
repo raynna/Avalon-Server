@@ -34,7 +34,6 @@ import com.rs.java.game.player.RouteEvent;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.PlayerFollow;
 import com.rs.java.game.player.actions.combat.LunarMagicks;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.actions.skills.construction.House;
 import com.rs.java.game.player.actions.skills.construction.Sawmill;
 import com.rs.java.game.player.actions.skills.construction.Sawmill.Plank;
@@ -73,8 +72,7 @@ import com.rs.java.utils.SerializableFilesManager;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.huffman.Huffman;
 import com.rs.kotlin.game.player.combat.CombatAction;
-import com.rs.kotlin.game.player.combat.CombatStyle;
-import com.rs.kotlin.game.player.magic.*;
+import com.rs.kotlin.game.player.combat.magic.*;
 
 public final class WorldPacketsDecoder extends Decoder {
 

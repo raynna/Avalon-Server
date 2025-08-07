@@ -216,7 +216,7 @@ object ProjectileManager {
         return totalDuration
     }
 
-    private fun calculateRotation(startTile: WorldTile, endTile: WorldTile): Int {
+    fun calculateRotation(startTile: WorldTile, endTile: WorldTile): Int {
         val startX = startTile.x
         val startY = startTile.y
         val endX = endTile.x

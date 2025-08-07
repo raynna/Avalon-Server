@@ -1,29 +1,36 @@
 package com.rs.kotlin.game.player.combat
 
-enum class AttackStyle {
-    MELEE_STAB,
-    MELEE_SLASH,
-    MELEE_CRUSH,
-    RANGED,
-    MAGIC
+enum class AttackStyle(
+    val attackSpeedModifier: Int = 0,
+    val combatType: CombatType,
+    val xpMode: XpMode
+) {
+    // MELEE
+    ACCURATE(combatType = CombatType.MELEE, xpMode = XpMode.ATTACK),
+    AGGRESSIVE(combatType = CombatType.MELEE, xpMode = XpMode.STRENGTH),
+    DEFENSIVE(combatType = CombatType.MELEE, xpMode = XpMode.DEFENCE),
+    CONTROLLED(combatType = CombatType.MELEE, xpMode = XpMode.SHARED),
+
+    // RANGED
+    RAPID(attackSpeedModifier = -1, combatType = CombatType.RANGED, xpMode = XpMode.RANGED),
+    LONGRANGE(attackSpeedModifier = 1, combatType = CombatType.RANGED, xpMode = XpMode.DEFENCE);
+
+    companion object {
+        fun fromOrdinal(id: Int, weaponStyle: WeaponStyle): AttackStyle {
+            return weaponStyle.attackStyles.getOrElse(id) { ACCURATE }
+        }
+    }
 }
 
-enum class CombatBonusType(val index: Int) {
-    STAB_ATTACK(0),
-    SLASH_ATTACK(1),
-    CRUSH_ATTACK(2),
-    MAGIC_ATTACK(3),
-    RANGED_ATTACK(4),
-    STAB_DEFENCE(5),
-    SLASH_DEFENCE(6),
-    CRUSH_DEFENCE(7),
-    MAGIC_DEFENCE(8),
-    RANGED_DEFENCE(9),
-    STRENGTH_BONUS(10),
-    RANGED_STR_BONUS(11),
-    MAGIC_DAMAGE(12)
+
+
+
+
+enum class XpMode {
+    ATTACK, STRENGTH, DEFENCE, SHARED, RANGED
 }
 
-data class CombatBonuses(val bonuses: IntArray) {
-    operator fun get(type: CombatBonusType): Int = bonuses[type.index]
+enum class CombatType {
+    MELEE, RANGED, MAGIC
 }
+

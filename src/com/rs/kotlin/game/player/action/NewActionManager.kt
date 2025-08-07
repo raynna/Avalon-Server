@@ -10,7 +10,7 @@ class NewActionManager(@Transient private val player: Player?) {
 
     fun process() {
         if (locked || player == null) {
-            println("[NewActionManager] process(): Skipping because locked=$locked or player=null")
+            //println("[NewActionManager] process(): Skipping because locked=$locked or player=null")
             return
         }
 
@@ -18,30 +18,30 @@ class NewActionManager(@Transient private val player: Player?) {
 
         // If player dead, force stop everything and return early
         if (player.isDead) {
-            println("[NewActionManager] process(): Player is dead, forcing stop")
+            //println("[NewActionManager] process(): Player is dead, forcing stop")
             forceStop()
             return
         }
 
         // Validate current action: if invalid, force stop
         if (currentAction != null && !validateAction()) {
-            println("[NewActionManager] process(): Validation failed for current action, forcing stop")
+            //println("[NewActionManager] process(): Validation failed for current action, forcing stop")
             forceStop()
             return
         }
         currentAction?.process(player)
         // Process current main action if any
-        if (player.username.equals("andreas") && actionDelay > 0)
-            println("process(): [${player.username}] Delay is: $actionDelay");
+        //if (player.username.equals("andreas") && actionDelay > 0)
+        //println("process(): [${player.username}] Delay is: $actionDelay");
         if (actionDelay > 0) {
             actionDelay--
             return;
         }
         if (currentAction != null) {
             val delay = currentAction!!.processWithDelay(player)
-            println("[NewActionManager] process(): processWithDelay() returned $delay for current action ${currentAction!!.javaClass.simpleName}")
+            //println("[NewActionManager] process(): processWithDelay() returned $delay for current action ${currentAction!!.javaClass.simpleName}")
             if (delay == -1) {
-                println("[NewActionManager] process(): processWithDelay returned -1, forcing stop")
+                //println("[NewActionManager] process(): processWithDelay returned -1, forcing stop")
                 forceStop()
                 return
             }
@@ -77,51 +77,51 @@ class NewActionManager(@Transient private val player: Player?) {
 
         // Check if we can replace current action
         if (currentAction != null) {
-            println("[NewActionManager] setAction(): Current action ${currentAction!!.javaClass.simpleName} present, checking interruptibility and priority")
+            //println("[NewActionManager] setAction(): Current action ${currentAction!!.javaClass.simpleName} present, checking interruptibility and priority")
             if (!currentAction!!.isInterruptible() &&
                 newAction.getPriority().ordinal <= currentAction!!.getPriority().ordinal) {
-                println("[NewActionManager] setAction(): Current action is not interruptible and new action priority is not higher, reject new action")
+                //println("[NewActionManager] setAction(): Current action is not interruptible and new action priority is not higher, reject new action")
                 return false
             }
 
             if (!currentAction!!.onActionReplaced(newAction)) {
-                println("[NewActionManager] setAction(): Current action rejected being replaced by new action")
+                //println("[NewActionManager] setAction(): Current action rejected being replaced by new action")
                 return false
             }
 
             // Stop current action properly
-            println("[NewActionManager] setAction(): Stopping current action ${currentAction!!.javaClass.simpleName} for new action ${newAction.javaClass.simpleName}")
+            //println("[NewActionManager] setAction(): Stopping current action ${currentAction!!.javaClass.simpleName} for new action ${newAction.javaClass.simpleName}")
             currentAction!!.stop(player, true)
         }
 
         if (!newAction.start(player)) {
-            println("[NewActionManager] setAction(): Failed to start new action ${newAction.javaClass.simpleName}")
+            //println("[NewActionManager] setAction(): Failed to start new action ${newAction.javaClass.simpleName}")
             return false
         }
         this.currentAction = newAction
-        println("[NewActionManager] setAction(): New action ${newAction.javaClass.simpleName} started and set as current action")
+        //println("[NewActionManager] setAction(): New action ${newAction.javaClass.simpleName} started and set as current action")
         return true
     }
 
     fun forceStop() {
         if (currentAction == null) {
-            println("[NewActionManager] forceStop(): No current action to stop")
+            //println("[NewActionManager] forceStop(): No current action to stop")
             return
         }
-        println("[NewActionManager] forceStop(): Stopping current action ${currentAction!!.javaClass.simpleName}")
+        // println("[NewActionManager] forceStop(): Stopping current action ${currentAction!!.javaClass.simpleName}")
         currentAction!!.stop(player, false)
         currentAction = null
 
     }
 
     fun lock() {
-        println("[NewActionManager] lock(): Locking action manager and forcing stop of current actions")
+        //println("[NewActionManager] lock(): Locking action manager and forcing stop of current actions")
         this.locked = true
         forceStop()
     }
 
     fun unlock() {
-        println("[NewActionManager] unlock(): Unlocking action manager")
+        //println("[NewActionManager] unlock(): Unlocking action manager")
         this.locked = false
     }
 
@@ -130,12 +130,12 @@ class NewActionManager(@Transient private val player: Player?) {
     }
 
     fun setActionDelay(delay: Int) {
-        println("[NewActionManager] setActionDelay(): Setting action delay to $delay")
+        //println("[NewActionManager] setActionDelay(): Setting action delay to $delay")
         this.actionDelay = delay
     }
 
     fun addActionDelay(delay: Int) {
-        println("[NewActionManager] addActionDelay(): Adding $delay to action delay (was $actionDelay)")
+        //println("[NewActionManager] addActionDelay(): Adding $delay to action delay (was $actionDelay)")
         this.actionDelay += delay
     }
 
@@ -153,14 +153,14 @@ class NewActionManager(@Transient private val player: Player?) {
 
     fun interruptNonCombatActions() {
         if (currentAction != null && currentAction!!.getPriority() != NewAction.ActionPriority.COMBAT) {
-            println("[NewActionManager] interruptNonCombatActions(): Interrupting current non-combat action ${currentAction!!.javaClass.simpleName}")
+            //println("[NewActionManager] interruptNonCombatActions(): Interrupting current non-combat action ${currentAction!!.javaClass.simpleName}")
             forceStop()
         }
     }
 
     fun stopActionOfType(actionClass: Class<out NewAction>) {
         if (currentAction != null && actionClass.isInstance(currentAction)) {
-            println("[NewActionManager] stopActionOfType(): Stopping current action of type ${actionClass.simpleName}")
+            //println("[NewActionManager] stopActionOfType(): Stopping current action of type ${actionClass.simpleName}")
             forceStop()
         }
     }

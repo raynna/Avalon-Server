@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.player.magic
+package com.rs.kotlin.game.player.combat.magic
 
 sealed class ElementType {
     object None : ElementType()

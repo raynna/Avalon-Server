@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.player.magic
+package com.rs.kotlin.game.player.combat.magic
 
 object RuneDefinitions {
     const val RUNE_POUCH = 24497

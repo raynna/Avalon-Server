@@ -8,7 +8,7 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.CombatCalculations.MeleeCombat.getAttackBonusType
-import com.rs.kotlin.game.player.magic.Spell
+import com.rs.kotlin.game.player.combat.magic.Spell
 import kotlin.math.floor
 import kotlin.math.round
 
