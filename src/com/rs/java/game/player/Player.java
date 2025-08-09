@@ -126,6 +126,7 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.MachineInformation;
 import com.rs.java.utils.Utils;
 import com.rs.java.game.player.VariableKeys.*;
+import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 
 public class Player extends Entity {
 
@@ -2550,19 +2551,8 @@ public class Player extends Entity {
             message("The power of the light fades. Your resistance to melee attacks return to normal.");
             staffOfLightSpecial = 0;
         }
-        if (getInterfaceManager().containsTab(PlayerCombat.getHealthOverlayId(this))) {
-            if (isDead()) {
-                getInterfaceManager().closeTab(getInterfaceManager().isResizableScreen(), PlayerCombat.getHealthOverlayId(this));
-            }
-            if (getTemporaryTarget() != null) {
-                if (getTemporaryTarget().isDead() || !getTemporaryTarget().withinDistance(this, 32)) {
-                    getInterfaceManager().closeTab(getInterfaceManager().isResizableScreen(), PlayerCombat.getHealthOverlayId(this));
-                }
-            }
-            if (getTemporaryActionDelay() < Utils.currentTimeMillis() && getAttackedByDelay() < Utils.currentTimeMillis()) {
-                getInterfaceManager().closeTab(getInterfaceManager().isResizableScreen(), PlayerCombat.getHealthOverlayId(this));
-            }
-        }
+        HealthOverlay healthOverlay = new HealthOverlay();
+        healthOverlay.closeOverlay(this);
         if (getOverloadDelay() > 0) {
             if (getOverloadDelay() == 0 || isDead()) {
                 Pots.resetOverLoadEffect(this);
@@ -4424,6 +4414,10 @@ public class Player extends Entity {
         temporaryAttribute().put("temporaryTarget", target);
     }
 
+    public void removeTemporaryTarget() {
+        temporaryAttribute().remove("temporaryTarget");
+    }
+
     public long getTemporaryActionDelay() {
         Long temporaryActionDelay = (Long) temporaryAttribute().get("temporaryActionDelay");
         if (temporaryActionDelay == null)
@@ -4433,8 +4427,6 @@ public class Player extends Entity {
 
     public Entity getTemporaryTarget() {
         Entity temporaryTarget = (Entity) temporaryAttribute().get("temporaryTarget");
-        if (temporaryTarget == null)
-            return null;
         return temporaryTarget;
     }
 

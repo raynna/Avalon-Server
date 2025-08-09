@@ -3,6 +3,7 @@ package com.rs.kotlin.game.player.combat
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
+import com.rs.java.game.Keys
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.action.NewAction
@@ -42,8 +43,9 @@ class CombatAction(
             isRangedWeapon(player) -> RangedStyle
             else -> MeleeStyle
         }
-        healthOverlay.checkCombatLevel(player, target)
-        healthOverlay.updateHealthOverlay(player, target)
+        player.temporaryTarget = target
+        player.tickTimers.set(Keys.IntKey.LAST_ATTACK_TICK, 10)
+        healthOverlay.sendOverlay(player, target)
         player.setNextFaceEntity(target);
         player.resetWalkSteps()
         if (style == MeleeStyle)
@@ -87,7 +89,7 @@ class CombatAction(
         return when (phase) {
             CombatPhase.HIT -> {
                 if (validateAttack(player, target)) {
-                    //player.message("attack with ${style}")
+                    player.tickTimers.set(Keys.IntKey.LAST_ATTACK_TICK, 10)
                     style.attack()
                 }
                 phase = CombatPhase.HIT

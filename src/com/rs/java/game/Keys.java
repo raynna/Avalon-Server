@@ -15,6 +15,8 @@ public class Keys {
         RENEWAL_TICKS(9, 0),
         VENGEANCE_TICKS(10, 0),
 
+        LAST_ATTACK_TICK(11, 0),
+
         COAL_STORED(15, 0),
 
 

@@ -33,6 +33,7 @@ import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.NewPoison;
+import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 
 public abstract class Entity extends WorldTile {
 
@@ -354,14 +355,14 @@ public abstract class Entity extends WorldTile {
             Player p = (Player) hit.getSource();
             p.refreshHitPoints();
         }
-        Entity attacker = (Entity) hit.getSource();
-        if (attacker instanceof Player && attacker != this) {
-            Player p = (Player) attacker;
-            if (p.toggles("HEALTHBAR", false)) {
-                Entity target = (Entity) this;
-                p.temporaryAttribute().put("temporaryTarget", target);
-                checkCombatLevel(p, target);
-                updateHealthOverlay(attacker, target);
+        Entity attacker = hit.getSource();
+        if (attacker instanceof Player player && attacker != this) {
+            if (player.toggles("HEALTHBAR", false)) {
+                Entity target = this;
+                HealthOverlay overlay = new HealthOverlay();
+                player.setTemporaryTarget(this);
+                overlay.checkCombatLevel(player, target);
+                overlay.updateHealthOverlay(player, target, true);
             }
         }
         if (hitpoints <= 0)

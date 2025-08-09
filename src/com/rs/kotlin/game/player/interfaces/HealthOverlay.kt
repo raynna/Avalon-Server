@@ -1,37 +1,85 @@
 package com.rs.kotlin.game.player.interfaces
 
+import com.rs.core.tasks.WorldTask
+import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
+import com.rs.java.game.Keys
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.HexColours
 
 class HealthOverlay {
+
+    fun sendOverlay(player: Player, target: Entity) {
+        checkCombatLevel(player, target)
+        updateHealthOverlay(player, target, false)
+        if (player.toggles("HEALTHBAR", false) && (!player.interfaceManager.containsTab(getHealthOverlayId(player)))) {
+            player.message("sent tab")
+            player.interfaceManager.sendTab(getHealthOverlayId(player), 3037)
+            val pixels: Int = (target.hitpoints.toDouble() / target.getMaxHitpoints() * 126.0).toInt()
+            player.packets.sendRunScript(6252, pixels)
+            player.packets.sendRunScript(6253, 0)
+        }
+    }
+
+    private fun checkForClose(player: Player): Boolean {
+        if (player.isDead || player.temporaryTarget == null || player.temporaryTarget.isDead) {
+            player.message("target or player is dead");
+            return true
+        }
+        if (!player.temporaryTarget.withinDistance(player.temporaryTarget, 32)) {
+            player.message("target isnt in range of player");
+            return true
+        }
+        if (player.tickTimers.getOrDefault(Keys.IntKey.LAST_ATTACK_TICK, 0) <= 0) {
+            player.message("lastAttack tick is 0")
+            return true
+        }
+        return false
+    }
+
+    fun closeOverlay(player: Player) {
+        if (checkForClose(player) && player.interfaceManager.containsTab(getHealthOverlayId(player))) {
+            player.message("closing overlay");
+            player.removeTemporaryTarget()
+            player.interfaceManager.closeTab(player.interfaceManager.isResizableScreen, getHealthOverlayId(player))
+        }
+    }
+
     fun getHealthOverlayId(player: Player): Int {
         return if (player.interfaceManager.isResizableScreen) 1 else 30
     }
 
-    fun updateHealthOverlay(player: Entity, target: Entity) {
-        val p1 = player as Player
-
+    fun updateHealthOverlay(player: Player, target: Entity, updateScript: Boolean) {
         when (target) {
             is Player -> {
-                checkCombatLevel(p1, target)
+                checkCombatLevel(player, target)
 
                 val name = buildTargetName(target)
-                p1.packets.sendTextOnComponent(3037, 6, name)
+                player.packets.sendTextOnComponent(3037, 6, name)
 
-                val hpText = buildHpText(p1, target.hitpoints, target.maxHitpoints)
-                p1.packets.sendTextOnComponent(3037, 7, hpText)
+                val hpText = buildHpText(player, target.hitpoints, target.maxHitpoints)
+                player.packets.sendTextOnComponent(3037, 7, hpText)
             }
 
             is NPC -> {
-                p1.packets.sendTextOnComponent(3037, 6, target.name)
+                player.packets.sendTextOnComponent(3037, 6, target.name)
 
-                checkCombatLevel(p1, target)
+                checkCombatLevel(player, target)
 
-                val hpText = buildHpText(p1, target.hitpoints, target.maxHitpoints)
-                p1.packets.sendTextOnComponent(3037, 7, hpText)
+                val hpText = buildHpText(player, target.hitpoints, target.maxHitpoints)
+                player.packets.sendTextOnComponent(3037, 7, hpText)
             }
+        }
+        if (updateScript) {
+            val pixels: Int = (target.hitpoints.toDouble() / target.getMaxHitpoints() * 126.0).toInt()
+            player.packets.sendRunScript(6252, pixels)
+            WorldTasksManager.schedule(object : WorldTask() {
+                override fun run() {
+                    player.packets.sendRunScript(6253, pixels)
+                    stop()
+                }
+            }, 0, 1)
         }
     }
 
