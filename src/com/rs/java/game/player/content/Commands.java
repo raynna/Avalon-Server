@@ -735,9 +735,9 @@ public final class Commands {
                     return true;
                 case "runes":
                     for (int i = 554; i < 566; i++) {
-                        player.getInventory().addItem(new Item(i, Integer.MAX_VALUE));
-                        player.getInventory().addItem(new Item(9075, 5000));
+                        player.getInventory().addItem(new Item(i, 5000));
                     }
+                    player.getInventory().addItem(new Item(9075, 5000));
                     return true;
                 case "unlocklivid":
                     for (Spell s : Spell.values()) {
@@ -3074,7 +3074,7 @@ public final class Commands {
 
                     try {
                         int gfxId = Integer.parseInt(cmd[1]);
-                        int height = cmd.length > 2 ? Integer.parseInt(cmd[2]) : 0;
+                        int height = cmd.length > 2 ? Integer.parseInt(cmd[2]) : 250;
                         rotation = cmd.length > 3 ? Integer.parseInt(cmd[3]) : 0;
                         int speed = cmd.length > 4 ? Integer.parseInt(cmd[4]) : 0;
 

@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.player.combat.range
 
-import com.rs.kotlin.game.player.combat.SpecialAttack
 import com.rs.kotlin.game.player.combat.WeaponStyle
 
 object SpecialRanged : RangeData() {
@@ -63,12 +62,7 @@ object SpecialRanged : RangeData() {
             ammoType =  AmmoType.BOLT,
             levelRequired = 50,
             damageBonus = 3,
-            projectileId = 27,
-            specialEffect = SpecialEffect(
-                type = EffectType.DRAGONFIRE,
-                chance = 0.1,
-                damage = 20
-            )
+            projectileId = 27
         ),
         RangedAmmo(
             itemId = 9244,
@@ -76,12 +70,7 @@ object SpecialRanged : RangeData() {
             ammoType =  AmmoType.BOLT,
             levelRequired = 60,
             damageBonus = 5,
-            projectileId = 27,
-            specialEffect = SpecialEffect(
-                type = EffectType.DRAGONFIRE,
-                chance = 0.2,
-                damage = 30
-            )
+            projectileId = 27
         ),
         RangedAmmo(
             itemId = 9245,

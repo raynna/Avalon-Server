@@ -73,7 +73,7 @@ object SpellHandler {
 
     private fun castInstant(player: Player, spell: Spell) {
         if (spell.name.equals("charge", ignoreCase = true)) {
-            player.animate()
+            player.animate(811)
         }
     }
 

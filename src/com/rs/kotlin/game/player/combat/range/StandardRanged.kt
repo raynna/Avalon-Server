@@ -2,10 +2,9 @@ package com.rs.kotlin.game.player.combat.range
 
 import com.rs.java.game.Animation
 import com.rs.java.game.Graphics
-import com.rs.kotlin.game.player.combat.CombatType
-import com.rs.kotlin.game.player.combat.PendingHit
-import com.rs.kotlin.game.player.combat.SpecialAttack
-import com.rs.kotlin.game.player.combat.WeaponStyle
+import com.rs.java.game.Hit
+import com.rs.java.utils.Utils
+import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 
@@ -123,7 +122,7 @@ object StandardRanged : RangeData() {
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
             attackRange = 7,
-            animationId = 423,
+            animationId = 4230,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.BRONZE_BOLT
         ),
@@ -133,7 +132,7 @@ object StandardRanged : RangeData() {
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
             attackRange = 7,
-            animationId = 423,
+            animationId = 4230,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.IRON_BOLT
         ),
@@ -143,7 +142,7 @@ object StandardRanged : RangeData() {
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
             attackRange = 7,
-            animationId = 423,
+            animationId = 4230,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.IRON_BOLT
         ),
@@ -153,9 +152,111 @@ object StandardRanged : RangeData() {
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
             attackRange = 7,
-            animationId = 423,
+            animationId = 4230,
             ammoType = AmmoType.BOLT,
             allowedAmmoIds = setOf(8882)
+        ),
+        RangedWeapon(
+            itemId = 19143,
+            name = "Saradomin bow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackSpeed = 4,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.RUNE_ARROW,
+            specialAttack = SpecialAttack(
+                energyCost = 55,
+                damageMultiplier = 1.5,
+                execute = { context ->
+                    val special = context.weapon.specialAttack!!
+                    context.attacker.animate(Animation(426))
+                    ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
+                    val hit = context.combat.registerHit(
+                        context.attacker,
+                        context.defender,
+                        CombatType.RANGED,
+                        context.attackStyle,
+                        context.weapon,
+                        accuracyMultiplier = special.accuracyMultiplier,
+                        damageMultiplier = special.damageMultiplier
+                    )
+                    if (hit.damage > 0) {
+                        context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
+                    }
+                    context.combat.delayHits(
+                        PendingHit(hit, context.combat.getHitDelay())
+                    )
+                }
+            )
+        ),
+        RangedWeapon(
+            itemId = 19146,
+            name = "Guthix bow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackSpeed = 4,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.RUNE_ARROW,
+            specialAttack = SpecialAttack(
+                energyCost = 55,
+                damageMultiplier = 1.5,
+                execute = { context ->
+                    val special = context.weapon.specialAttack!!
+                    context.attacker.animate(Animation(426))
+                    ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
+                    val hit = context.combat.registerHit(
+                        context.attacker,
+                        context.defender,
+                        CombatType.RANGED,
+                        context.attackStyle,
+                        context.weapon,
+                        accuracyMultiplier = special.accuracyMultiplier,
+                        damageMultiplier = special.damageMultiplier
+                    )
+                    if (hit.damage > 0) {
+                        context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
+                    }
+                    context.combat.delayHits(
+                        PendingHit(hit, context.combat.getHitDelay())
+                    )
+                }
+            )
+        ),
+        RangedWeapon(
+            itemId = 19149,
+            name = "Zamorak bow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackSpeed = 4,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.RUNE_ARROW,
+            specialAttack = SpecialAttack(
+                energyCost = 55,
+                damageMultiplier = 1.5,
+                execute = { context ->
+                    val special = context.weapon.specialAttack!!
+                    context.attacker.animate(Animation(426))
+                    ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
+                    val hit = context.combat.registerHit(
+                        context.attacker,
+                        context.defender,
+                        CombatType.RANGED,
+                        context.attackStyle,
+                        context.weapon,
+                        accuracyMultiplier = special.accuracyMultiplier,
+                        damageMultiplier = special.damageMultiplier
+                    )
+                    if (hit.damage > 0) {
+                        context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
+                    }
+                    context.combat.delayHits(
+                        PendingHit(hit, context.combat.getHitDelay())
+                    )
+                }
+            )
         ),
         RangedWeapon(
             itemId = 861,
@@ -221,6 +322,138 @@ object StandardRanged : RangeData() {
             projectileId = 11,
             startGfx = 20,
         ),
+        RangedAmmo(
+            itemId = 888,
+            name = "Mithril arrow",
+            ammoTier = AmmoTier.MITHRIL_ARROW,
+            levelRequired = 1,
+            damageBonus = 1,
+            projectileId = 12,
+            startGfx = 21,
+        ),
+        RangedAmmo(
+            itemId = 890,
+            name = "Adamant arrow",
+            ammoTier = AmmoTier.ADAMANT_ARROW,
+            levelRequired = 1,
+            damageBonus = 1,
+            projectileId = 13,
+            startGfx = 22,
+        ),
+        RangedAmmo(
+            itemId = 892,
+            name = "Rune arrow",
+            ammoTier = AmmoTier.RUNE_ARROW,
+            levelRequired = 1,
+            damageBonus = 1,
+            projectileId = 15,
+            startGfx = 24,
+        ),
+        RangedAmmo(
+            itemId = 19157,
+            name = "Guthix arrow",
+            ammoTier = AmmoTier.RUNE_ARROW,
+            levelRequired = 1,
+            damageBonus = 1,
+            projectileId = 98,
+            startGfx = 95,
+            specialEffect = SpecialEffect(
+                chance = 10,
+                execute = { context ->
+                    val chance = if (context.weapon.itemId == 19146) 5 else 10
+                    if (Utils.roll(1, chance)) {
+                        val hit = context.combat.registerHit(
+                            attacker = context.attacker,
+                            defender = context.defender,
+                            attackStyle = context.attackStyle,
+                            weapon = context.weapon,
+                            combatType = CombatType.RANGED,
+                            hitLook =  Hit.HitLook.MAGIC_DAMAGE,
+                            damageMultiplier = 0.2
+                        )
+                        if (hit.damage == 0) {
+                            context.defender.gfx(Graphics(85, 100))
+                        } else {
+                            hit.setCriticalMark()
+                            context.defender.gfx(Graphics(127))
+                        }
+                        context.combat.delayHits(
+                            PendingHit(hit, context.combat.getHitDelay())
+                        )
+                    }
+                }
+            )
+        ),
+        RangedAmmo(
+            itemId = 19152,
+            name = "Saradomin arrow",
+            ammoTier = AmmoTier.RUNE_ARROW,
+            levelRequired = 1,
+            damageBonus = 1,
+            projectileId = 99,
+            startGfx = 96,
+            specialEffect = SpecialEffect(
+                chance = 10,
+                execute = { context ->
+                    val chance = if (context.weapon.itemId == 19143) 5 else 10
+                    if (Utils.roll(1, chance)) {
+                        val hit = context.combat.registerHit(
+                            attacker = context.attacker,
+                            defender = context.defender,
+                            attackStyle = context.attackStyle,
+                            weapon = context.weapon,
+                            combatType = CombatType.RANGED,
+                            hitLook =  Hit.HitLook.MAGIC_DAMAGE,
+                            damageMultiplier = 0.2
+                        )
+                        if (hit.damage == 0) {
+                            context.defender.gfx(Graphics(85, 100))
+                        } else {
+                            hit.setCriticalMark()
+                            context.defender.gfx(Graphics(128))
+                        }
+                        context.combat.delayHits(
+                            PendingHit(hit, context.combat.getHitDelay())
+                        )
+                    }
+                }
+            )
+        ),
+        RangedAmmo(
+            itemId = 19162,
+            name = "Zamorak arrow",
+            ammoTier = AmmoTier.RUNE_ARROW,
+            levelRequired = 1,
+            damageBonus = 1,
+            projectileId = 100,
+            startGfx = 97,
+            specialEffect = SpecialEffect(
+                chance = 10,
+                execute = { context ->
+                    val chance = if (context.weapon.itemId == 19149) 5 else 10
+                    if (Utils.roll(1, chance)) {
+                        val hit = context.combat.registerHit(
+                            attacker = context.attacker,
+                            defender = context.defender,
+                            attackStyle = context.attackStyle,
+                            weapon = context.weapon,
+                            combatType = CombatType.RANGED,
+                            hitLook =  Hit.HitLook.MAGIC_DAMAGE,
+                            damageMultiplier = 0.2
+                        )
+                        if (hit.damage == 0) {
+                            context.defender.gfx(Graphics(85, 100))
+                        } else {
+                            hit.setCriticalMark()
+                            context.defender.gfx(Graphics(129))
+                        }
+                        context.combat.delayHits(
+                            PendingHit(hit, context.combat.getHitDelay())
+                        )
+                    }
+                }
+            )
+        ),
         // Bolts
         RangedAmmo(
             itemId = 877,
@@ -238,7 +471,7 @@ object StandardRanged : RangeData() {
             ammoTier = AmmoTier.IRON_BOLT,
             levelRequired = 10,
             damageBonus = 1,
-            projectileId = 28,
+            projectileId = 27,
         ),
         RangedAmmo(
             itemId = 8882,
@@ -246,7 +479,7 @@ object StandardRanged : RangeData() {
             ammoType =  AmmoType.BOLT,
             levelRequired = 10,
             damageBonus = 1,
-            projectileId = 28,
+            projectileId = 27,
         )
     )
 }

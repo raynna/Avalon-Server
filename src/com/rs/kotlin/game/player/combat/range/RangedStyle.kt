@@ -118,6 +118,7 @@ object RangedStyle : CombatStyle {
             attacker.gfx(currentAmmo!!.startGfx, 100)
         }
         sendProjectile()
+        handleSpecialEffects()
         delayHits(PendingHit(hit, getHitDelay()))
         attacker.message("Ranged Attack -> " +
                 "Weapon: ${currentWeapon?.name}, " +
@@ -212,16 +213,16 @@ object RangedStyle : CombatStyle {
             World.updateGroundItem(Item(currentAmmo!!.itemId, 1), defender.tile, attacker);
     }
 
-    private fun handleSpecialEffects(attacker: Player, defender: Entity) {
-        currentAmmo?.specialEffect?.let { effect: SpecialEffect ->
-            if (Utils.randomDouble() < effect.chance) {
-                when (effect.type) {
-                    EffectType.DRAGONFIRE -> {//TODO DRAGONFIRE
-                        val damage = effect.damage + Utils.random(5)
-                        defender.applyHit(Hit(attacker, damage, HitLook.REGULAR_DAMAGE))
-                    }
-                }
-            }
+    private fun handleSpecialEffects() {
+        currentAmmo?.specialEffect?.let { special ->
+                val context = CombatContext(
+                    combat = this,
+                    attacker = attacker,
+                    defender = defender,
+                    weapon = currentWeapon!!,
+                    attackStyle = attackStyle
+                )
+                special.execute(context)
         }
     }
 

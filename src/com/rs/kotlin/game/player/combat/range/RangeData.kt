@@ -24,14 +24,6 @@ abstract class RangeData {
     }
 }
 
-
-data class SpecialEffect(
-    val type: EffectType,
-    val chance: Double,
-    val damage: Int,
-    val duration: Int? = null
-)
-
 enum class AmmoType {
     ARROW,
     BOLT,

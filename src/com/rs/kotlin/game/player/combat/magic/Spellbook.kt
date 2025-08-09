@@ -850,7 +850,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             staff = StaffRequirement(listOf(1409)),
             animationId = 708,
             graphicId = Graphics(87, 100),
-            endGraphic = Graphics(89, 100),
+            endGraphic = Graphics(89, 50),
             projectileType = Projectile.IBAN_BLAST,
             projectileId = 88
         ),
