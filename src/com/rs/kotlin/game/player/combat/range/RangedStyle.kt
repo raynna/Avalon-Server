@@ -210,8 +210,8 @@ object RangedStyle : CombatStyle {
 
 
     private fun sendProjectile() {
-        val projectileId = currentWeapon?.projectileId?: currentAmmo?.projectileId?:27//for throwing weapons like knifes and darts
-        val type = currentWeapon?.ammoType ?: currentAmmo?.ammoType
+        val projectileId = currentWeapon?.projectileId?: currentAmmo?.projectileId?:27//prioritize weapon first
+        val type = currentWeapon?.ammoType ?: currentAmmo?.ammoType//prioritize weapon first
         val projectileType = when (type) {
             AmmoType.ARROW -> Projectile.ARROW
             AmmoType.BOLT -> Projectile.BOLT

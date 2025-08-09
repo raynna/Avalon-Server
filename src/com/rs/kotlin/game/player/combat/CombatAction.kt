@@ -10,6 +10,7 @@ import com.rs.kotlin.game.player.combat.magic.MagicStyle
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.range.RangedStyle
+import com.rs.kotlin.game.player.interfaces.HealthOverlay
 import kotlin.math.abs
 
 class CombatAction(
@@ -19,6 +20,8 @@ class CombatAction(
     enum class CombatPhase {
         HIT
     }
+
+    private val healthOverlay = HealthOverlay()
 
     private var lastTargetX = -1
     private var lastTargetY = -1
@@ -39,7 +42,8 @@ class CombatAction(
             isRangedWeapon(player) -> RangedStyle
             else -> MeleeStyle
         }
-        player.message("spellId: $spellId ");
+        healthOverlay.checkCombatLevel(player, target)
+        healthOverlay.updateHealthOverlay(player, target)
         player.setNextFaceEntity(target);
         player.resetWalkSteps()
         if (style == MeleeStyle)
@@ -152,8 +156,6 @@ class CombatAction(
         followTask = null
     }
 
-
-
     private fun check(player: Player, target: Entity): Boolean {
         if (!style.canAttack(player, target)) {
             return false
@@ -178,7 +180,6 @@ class CombatAction(
         }
         return true;
     }
-
 
     private fun validateAttack(player: Player, target: Entity): Boolean {
         return !target.isDead && player.isActive
