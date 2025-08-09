@@ -210,8 +210,7 @@ object RangedStyle : CombatStyle {
 
 
     private fun sendProjectile() {
-        val ammoProjectileId = currentAmmo?.projectileId?:27
-        val weaponProjectileId = currentWeapon?.projectileId?:212//for throwing weapons like knifes and darts
+        val projectileId = currentWeapon?.projectileId?: currentAmmo?.projectileId?:27//for throwing weapons like knifes and darts
         val type = currentWeapon?.ammoType ?: currentAmmo?.ammoType
         val projectileType = when (type) {
             AmmoType.ARROW -> Projectile.ARROW
@@ -223,15 +222,10 @@ object RangedStyle : CombatStyle {
             AmmoType.THROWNAXE -> Projectile.THROWING_KNIFE
             null -> Projectile.BOLT
         }
-        if (weaponProjectileId != -1) {
+        if (projectileId != -1) {
             ProjectileManager.send(
                 projectileType,
-                weaponProjectileId,
-                attacker, defender)
-        } else {
-            ProjectileManager.send(
-                projectileType,
-                ammoProjectileId,
+                projectileId,
                 attacker, defender)
         }
     }
