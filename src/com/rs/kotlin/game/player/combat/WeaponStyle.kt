@@ -7,9 +7,11 @@ enum class AttackBonusType(val index: Int) {
     RANGE(3)
 }
 
+data class StyleKey(val style: AttackStyle, val index: Int)
+
 enum class WeaponStyle(
     val attackStyles: List<AttackStyle>,
-    private val attackBonusMap: Map<AttackStyle, AttackBonusType>? = null
+    val attackBonusMap: Map<StyleKey, AttackBonusType>
 ) {
     SHORTBOW(
         attackStyles = listOf(
@@ -18,9 +20,21 @@ enum class WeaponStyle(
             AttackStyle.LONGRANGE
         ),
         attackBonusMap = mapOf(
-            AttackStyle.ACCURATE to AttackBonusType.RANGE,
-            AttackStyle.RAPID to AttackBonusType.RANGE,
-            AttackStyle.LONGRANGE to AttackBonusType.RANGE
+            StyleKey(AttackStyle.ACCURATE, 0) to AttackBonusType.RANGE,
+            StyleKey(AttackStyle.RAPID, 1) to AttackBonusType.RANGE,
+            StyleKey(AttackStyle.LONGRANGE, 2) to AttackBonusType.RANGE,
+        )
+    ),
+    CROSSBOW(
+        attackStyles = listOf(
+            AttackStyle.ACCURATE,
+            AttackStyle.RAPID,
+            AttackStyle.LONGRANGE
+        ),
+        attackBonusMap = mapOf(
+            StyleKey(AttackStyle.ACCURATE, 0) to AttackBonusType.RANGE,
+            StyleKey(AttackStyle.RAPID, 1) to AttackBonusType.RANGE,
+            StyleKey(AttackStyle.LONGRANGE, 2) to AttackBonusType.RANGE,
         )
     ),
     THROWING(
@@ -30,9 +44,9 @@ enum class WeaponStyle(
             AttackStyle.LONGRANGE
         ),
         attackBonusMap = mapOf(
-            AttackStyle.ACCURATE to AttackBonusType.RANGE,
-            AttackStyle.RAPID to AttackBonusType.RANGE,
-            AttackStyle.LONGRANGE to AttackBonusType.RANGE
+            StyleKey(AttackStyle.ACCURATE, 0) to AttackBonusType.RANGE,
+            StyleKey(AttackStyle.RAPID, 1) to AttackBonusType.RANGE,
+            StyleKey(AttackStyle.LONGRANGE, 2) to AttackBonusType.RANGE,
         )
     ),
     LONGBOW(
@@ -41,7 +55,11 @@ enum class WeaponStyle(
             AttackStyle.RAPID,
             AttackStyle.LONGRANGE
         ),
-        // default to RANGE for all if no map provided
+        attackBonusMap = mapOf(
+            StyleKey(AttackStyle.ACCURATE, 0) to AttackBonusType.RANGE,
+            StyleKey(AttackStyle.RAPID, 1) to AttackBonusType.RANGE,
+            StyleKey(AttackStyle.LONGRANGE, 2) to AttackBonusType.RANGE,
+        )
     ),
     UNARMED(
         attackStyles = listOf(
@@ -50,9 +68,9 @@ enum class WeaponStyle(
             AttackStyle.DEFENSIVE
         ),
         attackBonusMap = mapOf(
-            AttackStyle.ACCURATE to AttackBonusType.CRUSH,
-            AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
-            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH
+            StyleKey(AttackStyle.ACCURATE, 0) to AttackBonusType.CRUSH,
+            StyleKey(AttackStyle.AGGRESSIVE, 1) to AttackBonusType.CRUSH,
+            StyleKey(AttackStyle.DEFENSIVE, 2) to AttackBonusType.CRUSH,
         )
     ),
     TWO_HANDED_SWORD(
@@ -63,10 +81,10 @@ enum class WeaponStyle(
             AttackStyle.DEFENSIVE
         ),
         attackBonusMap = mapOf(
-            AttackStyle.ACCURATE to AttackBonusType.STAB,
-            AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
-            AttackStyle.CONTROLLED to AttackBonusType.CRUSH,
-            AttackStyle.DEFENSIVE to AttackBonusType.SLASH
+            StyleKey(AttackStyle.ACCURATE, 0) to AttackBonusType.STAB,
+            StyleKey(AttackStyle.AGGRESSIVE, 1) to AttackBonusType.SLASH,
+            StyleKey(AttackStyle.CONTROLLED, 2) to AttackBonusType.CRUSH,
+            StyleKey(AttackStyle.DEFENSIVE, 3) to AttackBonusType.SLASH,
         )
     ),
     SCIMITAR(
@@ -77,10 +95,10 @@ enum class WeaponStyle(
             AttackStyle.DEFENSIVE
         ),
         attackBonusMap = mapOf(
-            AttackStyle.ACCURATE to AttackBonusType.SLASH,
-            AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
-            AttackStyle.CONTROLLED to AttackBonusType.STAB,
-            AttackStyle.DEFENSIVE to AttackBonusType.SLASH
+            StyleKey(AttackStyle.ACCURATE, 0) to AttackBonusType.SLASH,
+            StyleKey(AttackStyle.AGGRESSIVE, 1) to AttackBonusType.SLASH,
+            StyleKey(AttackStyle.CONTROLLED, 2) to AttackBonusType.STAB,
+            StyleKey(AttackStyle.DEFENSIVE, 3) to AttackBonusType.SLASH,
         )
     ),
     DAGGER(
@@ -91,10 +109,10 @@ enum class WeaponStyle(
             AttackStyle.DEFENSIVE
         ),
         attackBonusMap = mapOf(
-            AttackStyle.ACCURATE to AttackBonusType.STAB,
-            AttackStyle.AGGRESSIVE to AttackBonusType.STAB,
-            AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
-            AttackStyle.DEFENSIVE to AttackBonusType.STAB
+            StyleKey(AttackStyle.ACCURATE, 0) to AttackBonusType.STAB,
+            StyleKey(AttackStyle.AGGRESSIVE, 1) to AttackBonusType.STAB,
+            StyleKey(AttackStyle.AGGRESSIVE, 2) to AttackBonusType.SLASH,
+            StyleKey(AttackStyle.DEFENSIVE, 3) to AttackBonusType.STAB,
         )
     ),
     WHIP(
@@ -104,53 +122,28 @@ enum class WeaponStyle(
             AttackStyle.DEFENSIVE
         ),
         attackBonusMap = mapOf(
-            AttackStyle.ACCURATE to AttackBonusType.SLASH,
-            AttackStyle.CONTROLLED to AttackBonusType.SLASH,
-            AttackStyle.DEFENSIVE to AttackBonusType.SLASH
+            StyleKey(AttackStyle.ACCURATE, 0) to AttackBonusType.SLASH,
+            StyleKey(AttackStyle.CONTROLLED, 1) to AttackBonusType.SLASH,
+            StyleKey(AttackStyle.DEFENSIVE, 2) to AttackBonusType.SLASH,
         )
-    ),
-    BOW(
-        attackStyles = listOf(
-            AttackStyle.ACCURATE,
-            AttackStyle.RAPID,
-            AttackStyle.LONGRANGE
-        )
-    ),
-    CHINCHOMPA(
-        attackStyles = listOf(
-            AttackStyle.ACCURATE,
-            AttackStyle.RAPID,
-            AttackStyle.LONGRANGE
-        )
-    ),
-    CROSSBOW(
-        attackStyles = listOf(
-            AttackStyle.ACCURATE,
-            AttackStyle.RAPID,
-            AttackStyle.LONGRANGE
-        )
-        // defaults to RANGE
     ),
     HALBERD(
         attackStyles = listOf(
-            AttackStyle.ACCURATE,
             AttackStyle.CONTROLLED,
+            AttackStyle.AGGRESSIVE,
             AttackStyle.DEFENSIVE
         ),
         attackBonusMap = mapOf(
-            AttackStyle.ACCURATE to AttackBonusType.STAB,
-            AttackStyle.CONTROLLED to AttackBonusType.SLASH,
-            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH
+            StyleKey(AttackStyle.CONTROLLED, 0) to AttackBonusType.STAB,
+            StyleKey(AttackStyle.AGGRESSIVE, 1) to AttackBonusType.SLASH,
+            StyleKey(AttackStyle.DEFENSIVE, 2) to AttackBonusType.STAB,
         )
     );
 
-    fun getAttackBonusType(attackStyle: AttackStyle): AttackBonusType {
-        return attackBonusMap?.get(attackStyle) ?: AttackBonusType.RANGE
+    fun getAttackBonusType(attackStyle: AttackStyle, styleIndex: Int): AttackBonusType {
+        return attackBonusMap[StyleKey(attackStyle, styleIndex)] ?: AttackBonusType.RANGE
     }
 
     companion object {
-        fun getAttackBonusType(weaponStyle: WeaponStyle, attackStyle: AttackStyle): AttackBonusType {
-            return weaponStyle.getAttackBonusType(attackStyle);
-        }
     }
 }

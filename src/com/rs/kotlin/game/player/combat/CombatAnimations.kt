@@ -6,18 +6,19 @@ import com.rs.kotlin.game.player.combat.range.RangeData
 object CombatAnimations {
 
     private const val DEFAULT_ANIMATION = 422
-    private const val UNARMED_ANIMATION = 422
+    private const val DEFAULT_RANGE_ANIMATION = 426
 
-    fun getAnimation(itemId: Int, attackStyle: AttackStyle): Int? {
+    fun getAnimation(itemId: Int, attackStyle: AttackStyle, styleIndex: Int): Int {
         StandardMelee.getWeaponByItemId(itemId)?.let { meleeWeapon ->
-            return meleeWeapon.animations[attackStyle] ?: DEFAULT_ANIMATION
+            return meleeWeapon.animations[StyleKey(attackStyle, styleIndex)] ?: DEFAULT_ANIMATION
         }
 
         RangeData.getWeaponByItemId(itemId)?.let { rangedWeapon ->
-            return rangedWeapon.animationId
+            return rangedWeapon.animationId?: DEFAULT_RANGE_ANIMATION
         }
 
         val unarmed = StandardMelee.getDefaultWeapon()
-        return unarmed.animations[attackStyle] ?: UNARMED_ANIMATION
+        return unarmed.animations[StyleKey(attackStyle, styleIndex)] ?: DEFAULT_ANIMATION
     }
+
 }

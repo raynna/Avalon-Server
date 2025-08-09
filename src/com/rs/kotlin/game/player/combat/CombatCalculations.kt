@@ -72,7 +72,7 @@ object CombatCalculations {
              * Attack Calculation DONE
              */
             val attackLevel = getBaseAttackLevel(player, attackStyle)
-            val bonusType = weapon?.weaponStyle?.getAttackBonusType(attackStyle)
+            val bonusType = weapon?.weaponStyle?.getAttackBonusType(attackStyle, player.combatDefinitions.attackStyle)
             val attackBonus = player.combatDefinitions.bonuses[bonusType!!.index].toDouble()
             val styleBonus = getAttackStyleBonus(attackStyle)
             val prayerBonus = player.prayer.attackMultiplier
@@ -160,7 +160,7 @@ object CombatCalculations {
             * Range attack Calculation DONE
             */
             val attackLevel = getBaseAttackLevel(player, attackStyle)
-            val bonusType = weapon?.weaponStyle?.getAttackBonusType(attackStyle)
+            val bonusType = weapon?.weaponStyle?.getAttackBonusType(attackStyle, player.combatDefinitions.attackStyle)
             val rangeBonus = player.combatDefinitions.bonuses[bonusType!!.index].toDouble()
             val styleBonus = getAttackStyleBonus(attackStyle)
             val prayerBonus = player.prayer.rangedMultiplier
@@ -371,24 +371,27 @@ object CombatCalculations {
     }
 
     private fun getDefenceBonus(target: Entity, weapon: Weapon, attackStyle: AttackStyle, spell: Spell?): Double {
-        val bonusStyle = weapon.weaponStyle.getAttackBonusType(attackStyle)
-        val npcDefenceBonus = when (bonusStyle){
-            AttackBonusType.STAB -> NpcBonusType.StabDefence
-            AttackBonusType.SLASH -> NpcBonusType.SlashDefence
-            AttackBonusType.CRUSH -> NpcBonusType.CrushDefence
-            else -> if (spell != null) NpcBonusType.MagicDefence else NpcBonusType.RangeDefence
+        if (target is Player) {
+            val bonusStyle = weapon.weaponStyle.getAttackBonusType(attackStyle, target.combatDefinitions.attackStyle)
+            val npcDefenceBonus = when (bonusStyle) {
+                AttackBonusType.STAB -> NpcBonusType.StabDefence
+                AttackBonusType.SLASH -> NpcBonusType.SlashDefence
+                AttackBonusType.CRUSH -> NpcBonusType.CrushDefence
+                else -> if (spell != null) NpcBonusType.MagicDefence else NpcBonusType.RangeDefence
+            }
+            val playerDefenceBonus = when (bonusStyle) {
+                AttackBonusType.STAB -> BonusType.StabDefence
+                AttackBonusType.SLASH -> BonusType.SlashDefence
+                AttackBonusType.CRUSH -> BonusType.CrushDefence
+                else -> if (spell != null) BonusType.MagicDefence else BonusType.RangeDefence
+            }
+            val defenceBonus = when (target) {
+                is Player -> target.combatDefinitions.bonuses[playerDefenceBonus.index].toDouble()
+                is NPC -> target.bonuses?.get(npcDefenceBonus.index)?.toDouble() ?: target.combatLevel.toDouble()
+                else -> 0.0
+            }
+            return defenceBonus
         }
-        val playerDefenceBonus = when (bonusStyle){
-            AttackBonusType.STAB -> BonusType.StabDefence
-            AttackBonusType.SLASH -> BonusType.SlashDefence
-            AttackBonusType.CRUSH -> BonusType.CrushDefence
-            else -> if (spell != null) BonusType.MagicDefence else BonusType.RangeDefence
-        }
-        val defenceBonus = when (target) {
-            is Player -> target.combatDefinitions.bonuses[playerDefenceBonus.index].toDouble()
-            is NPC -> target.bonuses?.get(npcDefenceBonus.index)?.toDouble() ?: target.combatLevel.toDouble()
-            else -> 0.0
-        }
-        return defenceBonus
+        return 0.0
     }
 }

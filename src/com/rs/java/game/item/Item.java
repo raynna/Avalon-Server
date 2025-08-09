@@ -75,11 +75,11 @@ public class Item implements Serializable {
 	}
 
 	public Item(String name) {
-		this(ItemDefinitions.getId(name), 1, null);
+		this(name.startsWith("item.") ? Rscm.lookup(name) : ItemDefinitions.getId(name), 1, null);
 	}
 
 	public Item(String name, int amount) {
-		this(ItemDefinitions.getId(name), amount, null);
+		this(name.startsWith("item.") ? Rscm.lookup(name) : ItemDefinitions.getId(name), amount, null);
 	}
 
 	public Item(int id, int amount) {

@@ -7,6 +7,7 @@ import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.kotlin.game.player.combat.*
+import com.rs.kotlin.game.player.combat.magic.SpellType
 
 object MeleeStyle : CombatStyle {
 
@@ -70,12 +71,12 @@ object MeleeStyle : CombatStyle {
                 }
             }
         }
-        CombatAnimations.getAnimation(currentWeapon!!.itemId, MeleeStyle.attackStyle!!)?.let { attacker.animate(it) }
+        CombatAnimations.getAnimation(currentWeapon!!.itemId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
         delayHits(PendingHit(hit, 0))
         attacker.message("[Melee Attack] -> " +
                 "Weapon: ${currentWeapon?.name}, " +
                 "WeaponStyle: ${attackStyle.name}, " +
-                "WeaponBonusStyle: ${currentWeapon?.weaponStyle?.getAttackBonusType(attackStyle)}, " +
+                "WeaponBonusStyle: ${currentWeapon?.weaponStyle?.getAttackBonusType(attackStyle, attacker.combatDefinitions.attackStyle)}, " +
                 "WeaponType: ${currentWeapon?.weaponStyle?.name}, " +
                 "MaxHit: ${hit.maxHit}, " +
                 "Hit: ${hit.damage}")

@@ -33,17 +33,6 @@ object SpecialRanged : RangeData() {
             animationId = 423,
             ammoType = AmmoType.BOLT
         ),
-        // Chinchompas
-        RangedWeapon(
-            itemId = 11959,
-            name = "Red chinchompa",
-            weaponStyle = WeaponStyle.CHINCHOMPA,
-            attackSpeed = 4,
-            attackRange = 3,
-            animationId = 2779,
-            projectileId = 908,
-            ammoType = AmmoType.CHINCHOMPA
-        )
     )
 
     override val ammunition = listOf(

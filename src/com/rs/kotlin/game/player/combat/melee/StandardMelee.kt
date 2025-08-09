@@ -15,9 +15,9 @@ object StandardMelee : MeleeData() {
         weaponStyle = WeaponStyle.UNARMED,
         attackSpeed = 4,
         animations = mapOf(
-            AttackStyle.ACCURATE to 422,
-            AttackStyle.AGGRESSIVE to 423,
-            AttackStyle.DEFENSIVE to 422
+            StyleKey(AttackStyle.ACCURATE, 0) to 422,
+            StyleKey(AttackStyle.AGGRESSIVE, 1) to 423,
+            StyleKey(AttackStyle.DEFENSIVE, 2) to 422,
         ),
         specialAttack = SpecialAttack(
             energyCost = 25,
@@ -40,9 +40,9 @@ object StandardMelee : MeleeData() {
             weaponStyle = WeaponStyle.WHIP,
             attackSpeed = 4,
             animations = mapOf(
-                AttackStyle.ACCURATE to 11969,
-                AttackStyle.CONTROLLED to 11970,
-                AttackStyle.DEFENSIVE to 11968
+                StyleKey(AttackStyle.ACCURATE, 0) to 11969,
+                StyleKey(AttackStyle.CONTROLLED, 1) to 11970,
+                StyleKey(AttackStyle.DEFENSIVE, 2) to 11968,
             ),
             specialAttack = SpecialAttack(
                 energyCost = 25,
@@ -68,10 +68,10 @@ object StandardMelee : MeleeData() {
             weaponStyle = WeaponStyle.DAGGER,
             attackSpeed = 4,
             animations = mapOf(
-                AttackStyle.ACCURATE to 376,
-                AttackStyle.AGGRESSIVE to 376,
-                AttackStyle.AGGRESSIVE to 377,
-                AttackStyle.DEFENSIVE to 376
+                StyleKey(AttackStyle.ACCURATE, 0) to 376,
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to 376,
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to 377,
+                StyleKey(AttackStyle.DEFENSIVE, 3) to 376,
             ),
             specialAttack = SpecialAttack(
                 energyCost = 25,
@@ -103,11 +103,11 @@ object StandardMelee : MeleeData() {
             weaponStyle = WeaponStyle.SCIMITAR,
             attackSpeed = 4,
             animations = mapOf(
-                AttackStyle.ACCURATE to 15071,
-                AttackStyle.AGGRESSIVE to 15071,
-                AttackStyle.CONTROLLED to 15072,
-                AttackStyle.DEFENSIVE to 15071
-            )
+                StyleKey(AttackStyle.ACCURATE, 0) to 15071,
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to 15071,
+                StyleKey(AttackStyle.CONTROLLED, 2) to 15072,
+                StyleKey(AttackStyle.DEFENSIVE, 3) to 15071,
+            ),
         ),
         MeleeWeapon(
             itemId = 1307,
@@ -115,11 +115,11 @@ object StandardMelee : MeleeData() {
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
             attackSpeed = 6,
             animations = mapOf(
-                AttackStyle.ACCURATE to 7041,
-                AttackStyle.AGGRESSIVE to 7041,
-                AttackStyle.CONTROLLED to 7048,
-                AttackStyle.DEFENSIVE to 7049
-            )
+                StyleKey(AttackStyle.ACCURATE, 0) to 7041,
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to 7041,
+                StyleKey(AttackStyle.CONTROLLED, 2) to 7048,
+                StyleKey(AttackStyle.DEFENSIVE, 3) to 7049,
+            ),
         )
     )
 }

@@ -830,7 +830,7 @@ ItemDefinitions {
     private int unknownValue1;
     private int unknownValue2;
 
-    private final void readOpcodeValues(InputStream stream) {
+    private void readOpcodeValues(InputStream stream) {
         while (true) {
             int opcode = stream.readUnsignedByte();
             if (opcode == 0)

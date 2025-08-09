@@ -7646,3 +7646,235 @@
 [09 August 2025 at 10:27:43 CEST] - ::item 870 100000
 [09 August 2025 at 10:27:46 CEST] - ::item iron crossbo
 [09 August 2025 at 10:54:28 CEST] - ::inter 3037
+[09 August 2025 at 11:43:25 CEST] - ::empty 
+[09 August 2025 at 11:43:28 CEST] - ::item vesta
+[09 August 2025 at 11:44:15 CEST] - ::item vesta skirt
+[09 August 2025 at 11:44:17 CEST] - ::item vesta
+[09 August 2025 at 11:44:19 CEST] - ::item 13839 1
+[09 August 2025 at 11:44:22 CEST] - ::item 13893 1
+[09 August 2025 at 11:44:31 CEST] - ::item 21371 1
+[09 August 2025 at 11:44:35 CEST] - ::item 4151 1
+[09 August 2025 at 11:44:37 CEST] - ::item 6585 1
+[09 August 2025 at 11:44:40 CEST] - ::item 23659 1
+[09 August 2025 at 11:44:44 CEST] - ::item 21787 1
+[09 August 2025 at 11:44:47 CEST] - ::item 8462 1
+[09 August 2025 at 11:44:48 CEST] - ::item 7462 1
+[09 August 2025 at 11:44:51 CEST] - ::item 15220 1
+[09 August 2025 at 11:44:56 CEST] - ::item 10828 1
+[09 August 2025 at 11:45:00 CEST] - ::item 20072 1
+[09 August 2025 at 11:45:14 CEST] - ::item 5698 1
+[09 August 2025 at 11:45:21 CEST] - ::item statius
+[09 August 2025 at 11:45:25 CEST] - ::item 13896 1
+[09 August 2025 at 11:45:44 CEST] - ::item 2440 1
+[09 August 2025 at 11:45:45 CEST] - ::item 2436 1
+[09 August 2025 at 11:45:46 CEST] - ::item 3024 3
+[09 August 2025 at 11:45:47 CEST] - ::item 6685 2
+[09 August 2025 at 11:45:48 CEST] - ::item 15272 100
+[09 August 2025 at 11:46:00 CEST] - ::prayers 
+[09 August 2025 at 11:46:08 CEST] - ::item 2440 1
+[09 August 2025 at 11:46:11 CEST] - ::prayers 
+[09 August 2025 at 11:46:17 CEST] - ::modern 
+[09 August 2025 at 11:46:18 CEST] - ::ancients 
+[09 August 2025 at 11:46:21 CEST] - ::spellbook 
+[09 August 2025 at 11:46:31 CEST] - ::vengrunes 
+[09 August 2025 at 11:47:14 CEST] - ::spec 
+[09 August 2025 at 11:47:43 CEST] - ::spec 
+[09 August 2025 at 11:58:39 CEST] - ::item rune halberd
+[09 August 2025 at 11:58:41 CEST] - ::item rune halberd
+[10 August 2025 at 12:08:23 CEST] - ::anim 422
+[10 August 2025 at 12:08:32 CEST] - ::anim 526
+[10 August 2025 at 12:08:35 CEST] - ::anim 528
+[10 August 2025 at 12:08:37 CEST] - ::anim 628
+[10 August 2025 at 12:08:39 CEST] - ::anim 625
+[10 August 2025 at 12:08:49 CEST] - ::anim 426
+[10 August 2025 at 12:13:02 CEST] - ::heal 
+[10 August 2025 at 12:13:04 CEST] - ::ecomode 2
+[10 August 2025 at 12:13:07 CEST] - ::clearchat 
+[10 August 2025 at 12:13:32 CEST] - ::clearchat 
+[10 August 2025 at 12:13:34 CEST] - ::heal 
+[10 August 2025 at 12:13:35 CEST] - ::spec 
+[10 August 2025 at 12:15:42 CEST] - ::freezeme 
+[10 August 2025 at 12:15:45 CEST] - ::tele 0,48,54,13,43
+[10 August 2025 at 12:16:04 CEST] - ::clearchat 
+[10 August 2025 at 12:16:16 CEST] - ::freezeme 
+[10 August 2025 at 12:18:03 CEST] - ::freezeme 
+[10 August 2025 at 12:36:43 CEST] - ::tele 0,48,54,28,51
+[10 August 2025 at 12:36:43 CEST] - ::tele 0,48,54,40,60
+[10 August 2025 at 12:36:44 CEST] - ::tele 0,48,54,40,61
+[10 August 2025 at 12:36:44 CEST] - ::tele 0,48,54,40,62
+[10 August 2025 at 12:36:44 CEST] - ::tele 0,48,54,39,62
+[10 August 2025 at 12:36:44 CEST] - ::tele 0,48,55,50,9
+[10 August 2025 at 12:36:44 CEST] - ::tele 0,48,55,50,9
+[10 August 2025 at 12:36:44 CEST] - ::tele 0,48,55,50,9
+[10 August 2025 at 12:36:45 CEST] - ::tele 0,48,55,50,9
+[10 August 2025 at 12:36:45 CEST] - ::tele 0,48,55,61,20
+[10 August 2025 at 12:36:45 CEST] - ::tele 0,48,55,60,21
+[10 August 2025 at 12:36:45 CEST] - ::tele 0,48,55,59,22
+[10 August 2025 at 12:36:45 CEST] - ::tele 0,49,55,3,35
+[10 August 2025 at 12:36:45 CEST] - ::tele 0,49,55,3,35
+[10 August 2025 at 12:36:46 CEST] - ::tele 0,49,55,2,35
+[10 August 2025 at 12:36:47 CEST] - ::tele 0,49,55,13,48
+[10 August 2025 at 12:36:47 CEST] - ::tele 0,49,55,13,48
+[10 August 2025 at 12:36:47 CEST] - ::tele 0,49,55,24,60
+[10 August 2025 at 12:36:47 CEST] - ::tele 0,49,55,24,60
+[10 August 2025 at 12:36:47 CEST] - ::tele 0,49,55,23,60
+[10 August 2025 at 12:36:48 CEST] - ::tele 0,49,55,23,60
+[10 August 2025 at 12:36:48 CEST] - ::tele 0,49,55,23,60
+[10 August 2025 at 12:36:48 CEST] - ::tele 0,49,55,23,60
+[10 August 2025 at 12:36:48 CEST] - ::tele 0,49,55,23,60
+[10 August 2025 at 12:36:48 CEST] - ::tele 0,49,55,23,60
+[10 August 2025 at 12:36:50 CEST] - ::tele 0,49,56,36,6
+[10 August 2025 at 12:36:50 CEST] - ::tele 0,49,56,35,7
+[10 August 2025 at 12:36:50 CEST] - ::tele 0,49,56,34,7
+[10 August 2025 at 12:36:50 CEST] - ::tele 0,49,56,34,7
+[10 August 2025 at 12:36:51 CEST] - ::tele 0,49,56,45,18
+[10 August 2025 at 12:36:51 CEST] - ::tele 0,49,56,45,18
+[10 August 2025 at 12:36:51 CEST] - ::tele 0,49,56,45,18
+[10 August 2025 at 12:36:51 CEST] - ::tele 0,49,56,45,18
+[10 August 2025 at 12:36:51 CEST] - ::tele 0,49,56,56,29
+[10 August 2025 at 12:36:51 CEST] - ::tele 0,49,56,56,29
+[10 August 2025 at 12:36:52 CEST] - ::tele 0,49,56,56,28
+[10 August 2025 at 12:36:52 CEST] - ::tele 0,50,56,4,37
+[10 August 2025 at 12:36:52 CEST] - ::tele 0,50,56,4,37
+[10 August 2025 at 12:36:54 CEST] - ::tele 0,50,56,12,27
+[10 August 2025 at 12:36:54 CEST] - ::tele 0,50,56,14,17
+[10 August 2025 at 12:36:55 CEST] - ::tele 0,50,56,22,23
+[10 August 2025 at 12:36:56 CEST] - ::tele 0,50,56,35,29
+[10 August 2025 at 12:36:56 CEST] - ::tele 0,50,56,35,29
+[10 August 2025 at 12:36:56 CEST] - ::tele 0,50,56,48,35
+[10 August 2025 at 12:36:56 CEST] - ::tele 0,50,56,48,35
+[10 August 2025 at 12:36:56 CEST] - ::tele 0,50,56,48,35
+[10 August 2025 at 12:36:57 CEST] - ::tele 0,50,56,61,41
+[10 August 2025 at 12:36:57 CEST] - ::tele 0,50,56,61,41
+[10 August 2025 at 12:36:57 CEST] - ::tele 0,50,56,61,41
+[10 August 2025 at 12:36:58 CEST] - ::tele 0,51,56,10,47
+[10 August 2025 at 12:36:58 CEST] - ::tele 0,51,56,26,47
+[10 August 2025 at 12:36:58 CEST] - ::tele 0,51,56,27,46
+[10 August 2025 at 12:36:58 CEST] - ::tele 0,51,56,27,46
+[10 August 2025 at 12:36:59 CEST] - ::tele 0,51,56,44,45
+[10 August 2025 at 12:36:59 CEST] - ::tele 0,51,56,58,44
+[10 August 2025 at 12:37:00 CEST] - ::tele 0,52,56,8,43
+[10 August 2025 at 12:37:01 CEST] - ::tele 0,52,56,3,42
+[10 August 2025 at 12:37:02 CEST] - ::tele 0,52,56,5,32
+[10 August 2025 at 12:37:02 CEST] - ::tele 0,52,56,2,21
+[10 August 2025 at 12:38:02 CEST] - ::item 11283 1
+[10 August 2025 at 12:38:03 CEST] - ::charge 
+[10 August 2025 at 12:38:14 CEST] - ::charge 
+[10 August 2025 at 12:38:14 CEST] - ::charge 
+[10 August 2025 at 12:38:14 CEST] - ::charge 
+[10 August 2025 at 12:38:15 CEST] - ::charge 
+[10 August 2025 at 12:38:15 CEST] - ::charge 
+[10 August 2025 at 12:38:15 CEST] - ::charge 
+[10 August 2025 at 12:38:15 CEST] - ::charge 
+[10 August 2025 at 12:38:15 CEST] - ::charge 
+[10 August 2025 at 12:38:15 CEST] - ::charge 
+[10 August 2025 at 12:38:16 CEST] - ::charge 
+[10 August 2025 at 12:38:16 CEST] - ::charge 
+[10 August 2025 at 12:38:16 CEST] - ::charge 
+[10 August 2025 at 12:38:16 CEST] - ::charge 
+[10 August 2025 at 12:38:16 CEST] - ::charge 
+[10 August 2025 at 12:38:17 CEST] - ::charge 
+[10 August 2025 at 12:38:17 CEST] - ::charge 
+[10 August 2025 at 12:38:17 CEST] - ::charge 
+[10 August 2025 at 12:38:18 CEST] - ::charge 
+[10 August 2025 at 12:38:18 CEST] - ::charge 
+[10 August 2025 at 12:38:18 CEST] - ::charge 
+[10 August 2025 at 12:38:18 CEST] - ::charge 
+[10 August 2025 at 12:38:18 CEST] - ::charge 
+[10 August 2025 at 12:38:18 CEST] - ::charge 
+[10 August 2025 at 12:38:18 CEST] - ::charge 
+[10 August 2025 at 12:38:19 CEST] - ::charge 
+[10 August 2025 at 12:38:19 CEST] - ::charge 
+[10 August 2025 at 12:38:19 CEST] - ::charge 
+[10 August 2025 at 12:38:19 CEST] - ::charge 
+[10 August 2025 at 12:38:19 CEST] - ::charge 
+[10 August 2025 at 12:38:20 CEST] - ::charge 
+[10 August 2025 at 12:38:20 CEST] - ::charge 
+[10 August 2025 at 12:38:20 CEST] - ::charge 
+[10 August 2025 at 12:38:20 CEST] - ::charge 
+[10 August 2025 at 12:38:20 CEST] - ::charge 
+[10 August 2025 at 12:38:20 CEST] - ::charge 
+[10 August 2025 at 12:38:20 CEST] - ::charge 
+[10 August 2025 at 12:38:21 CEST] - ::charge 
+[10 August 2025 at 12:38:21 CEST] - ::charge 
+[10 August 2025 at 12:38:21 CEST] - ::charge 
+[10 August 2025 at 12:38:21 CEST] - ::charge 
+[10 August 2025 at 12:38:21 CEST] - ::charge 
+[10 August 2025 at 12:38:21 CEST] - ::charge 
+[10 August 2025 at 12:38:21 CEST] - ::charge 
+[10 August 2025 at 12:38:22 CEST] - ::charge 
+[10 August 2025 at 12:38:22 CEST] - ::charge 
+[10 August 2025 at 12:38:22 CEST] - ::charge 
+[10 August 2025 at 12:38:22 CEST] - ::charge 
+[10 August 2025 at 12:38:22 CEST] - ::charge 
+[10 August 2025 at 12:38:22 CEST] - ::charge 
+[10 August 2025 at 12:38:22 CEST] - ::charge 
+[10 August 2025 at 12:38:23 CEST] - ::charge 
+[10 August 2025 at 12:38:23 CEST] - ::charge 
+[10 August 2025 at 12:38:42 CEST] - ::charge 
+[10 August 2025 at 12:38:42 CEST] - ::charge 
+[10 August 2025 at 12:38:42 CEST] - ::charge 
+[10 August 2025 at 12:38:43 CEST] - ::charge 
+[10 August 2025 at 12:38:43 CEST] - ::charge 
+[10 August 2025 at 12:38:43 CEST] - ::charge 
+[10 August 2025 at 12:38:43 CEST] - ::charge 
+[10 August 2025 at 12:38:43 CEST] - ::charge 
+[10 August 2025 at 12:38:43 CEST] - ::charge 
+[10 August 2025 at 12:38:43 CEST] - ::charge 
+[10 August 2025 at 12:38:44 CEST] - ::charge 
+[10 August 2025 at 12:38:44 CEST] - ::charge 
+[10 August 2025 at 12:38:52 CEST] - ::charge 
+[10 August 2025 at 12:38:53 CEST] - ::charge 
+[10 August 2025 at 12:38:53 CEST] - ::charge 
+[10 August 2025 at 12:38:53 CEST] - ::charge 
+[10 August 2025 at 12:38:54 CEST] - ::charge 
+[10 August 2025 at 12:38:54 CEST] - ::charge 
+[10 August 2025 at 12:38:54 CEST] - ::charge 
+[10 August 2025 at 12:38:54 CEST] - ::charge 
+[10 August 2025 at 12:38:54 CEST] - ::charge 
+[10 August 2025 at 12:38:54 CEST] - ::charge 
+[10 August 2025 at 12:38:54 CEST] - ::charge 
+[10 August 2025 at 12:38:54 CEST] - ::charge 
+[10 August 2025 at 12:38:55 CEST] - ::charge 
+[10 August 2025 at 12:38:55 CEST] - ::charge 
+[10 August 2025 at 12:38:55 CEST] - ::charge 
+[10 August 2025 at 12:38:55 CEST] - ::charge 
+[10 August 2025 at 12:38:55 CEST] - ::charge 
+[10 August 2025 at 12:38:55 CEST] - ::charge 
+[10 August 2025 at 12:38:56 CEST] - ::charge 
+[10 August 2025 at 12:38:56 CEST] - ::charge 
+[10 August 2025 at 12:38:56 CEST] - ::charge 
+[10 August 2025 at 12:38:56 CEST] - ::charge 
+[10 August 2025 at 12:38:56 CEST] - ::charge 
+[10 August 2025 at 12:38:56 CEST] - ::charge 
+[10 August 2025 at 12:38:56 CEST] - ::charge 
+[10 August 2025 at 12:38:57 CEST] - ::charge 
+[10 August 2025 at 12:38:57 CEST] - ::charge 
+[10 August 2025 at 12:38:57 CEST] - ::charge 
+[10 August 2025 at 12:38:57 CEST] - ::charge 
+[10 August 2025 at 12:38:57 CEST] - ::charge 
+[10 August 2025 at 12:38:58 CEST] - ::charge 
+[10 August 2025 at 12:38:58 CEST] - ::charge 
+[10 August 2025 at 12:38:58 CEST] - ::charge 
+[10 August 2025 at 12:38:58 CEST] - ::charge 
+[10 August 2025 at 12:38:58 CEST] - ::charge 
+[10 August 2025 at 12:38:58 CEST] - ::charge 
+[10 August 2025 at 12:38:58 CEST] - ::charge 
+[10 August 2025 at 12:39:01 CEST] - ::charge 
+[10 August 2025 at 12:39:08 CEST] - ::item 1725 1
+[10 August 2025 at 12:39:11 CEST] - ::item golaith
+[10 August 2025 at 12:39:15 CEST] - ::item golaith glov
+[10 August 2025 at 12:39:21 CEST] - ::item goliath
+[10 August 2025 at 12:39:40 CEST] - ::item 18349 1
+[10 August 2025 at 12:39:55 CEST] - ::item 2440 1
+[10 August 2025 at 12:39:56 CEST] - ::item 2436 1
+[10 August 2025 at 12:40:16 CEST] - ::spec 
+[10 August 2025 at 12:40:20 CEST] - ::spec 
+[10 August 2025 at 12:40:30 CEST] - ::spec 
+[10 August 2025 at 12:41:47 CEST] - ::tele 0,48,54,15,55
+[10 August 2025 at 12:41:47 CEST] - ::tele 0,48,55,16,6
+[10 August 2025 at 12:41:55 CEST] - ::npc 50
+[10 August 2025 at 12:42:29 CEST] - ::heal 
+[10 August 2025 at 12:43:51 CEST] - ::tele 0,48,54,17,59
+[10 August 2025 at 12:46:02 CEST] - ::heal 
+[10 August 2025 at 12:46:08 CEST] - ::freezeme 

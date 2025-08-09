@@ -14,7 +14,6 @@ class HealthOverlay {
         checkCombatLevel(player, target)
         updateHealthOverlay(player, target, false)
         if (player.toggles("HEALTHBAR", false) && (!player.interfaceManager.containsTab(getHealthOverlayId(player)))) {
-            player.message("sent tab")
             player.interfaceManager.sendTab(getHealthOverlayId(player), 3037)
             val pixels: Int = (target.hitpoints.toDouble() / target.getMaxHitpoints() * 126.0).toInt()
             player.packets.sendRunScript(6252, pixels)
@@ -24,25 +23,23 @@ class HealthOverlay {
 
     private fun checkForClose(player: Player): Boolean {
         if (player.isDead || player.temporaryTarget == null || player.temporaryTarget.isDead) {
-            player.message("target or player is dead");
             return true
         }
         if (!player.temporaryTarget.withinDistance(player.temporaryTarget, 32)) {
-            player.message("target isnt in range of player");
             return true
         }
         if (player.tickTimers.getOrDefault(Keys.IntKey.LAST_ATTACK_TICK, 0) <= 0) {
-            player.message("lastAttack tick is 0")
             return true
         }
         return false
     }
 
     fun closeOverlay(player: Player) {
-        if (checkForClose(player) && player.interfaceManager.containsTab(getHealthOverlayId(player))) {
-            player.message("closing overlay");
-            player.removeTemporaryTarget()
-            player.interfaceManager.closeTab(player.interfaceManager.isResizableScreen, getHealthOverlayId(player))
+        if (player.interfaceManager.containsTab(getHealthOverlayId(player))) {
+            if (checkForClose(player) && player.interfaceManager.containsTab(getHealthOverlayId(player))) {
+                player.removeTemporaryTarget()
+                player.interfaceManager.closeTab(player.interfaceManager.isResizableScreen, getHealthOverlayId(player))
+            }
         }
     }
 

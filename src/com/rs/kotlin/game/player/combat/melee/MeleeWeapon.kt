@@ -1,9 +1,6 @@
 package com.rs.kotlin.game.player.combat.melee
 
-import com.rs.kotlin.game.player.combat.AttackStyle
-import com.rs.kotlin.game.player.combat.SpecialAttack
-import com.rs.kotlin.game.player.combat.Weapon
-import com.rs.kotlin.game.player.combat.WeaponStyle
+import com.rs.kotlin.game.player.combat.*
 
 data class MeleeWeapon(
     override val itemId: Int,
@@ -14,5 +11,5 @@ data class MeleeWeapon(
     override val attackDelay: Int? = null,
     override val animationId: Int? = null,
     override val specialAttack: SpecialAttack? = null,
-    val animations: Map<AttackStyle, Int> = emptyMap()
+    val animations: Map<StyleKey, Int> = emptyMap()
 ) : Weapon

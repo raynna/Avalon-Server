@@ -54,7 +54,7 @@ public class CustomStoreData {
 	public static void init() {
 		resetShops();
 
-		pkpts.add(new Item("dragon claws", 60000));
+		pkpts.add(new Item("item.dragon_claws", 60000));
 		pkpts.add(new Item("armadyl godsword", 60000));
 		pkpts.add(new Item(19784, 70000));
 		pkpts.add(new Item("vesta's chainbody", 15000));
@@ -150,7 +150,7 @@ public class CustomStoreData {
 
 		magic.add(new Item("mystic boots"));
 		magic.add(new Item("dagon'hai robe top"));
-		magic.add(new Item("ghostly robe"));
+		magic.add(new Item("item.ghostly_robe"));
 		magic.add(new Item("wizard robe top"));
 		magic.add(new Item("enchanted top"));
 		magic.add(new Item("mystic robe top"));
@@ -158,14 +158,14 @@ public class CustomStoreData {
 
 		magic.add(new Item("wizard boots"));
 		magic.add(new Item("dagon'hai robe bottom"));
-		magic.add(new Item("ghostly robe�1"));
+		magic.add(new Item("item.ghostly_robe_2"));
 		magic.add(new Item("wizard robe skirt"));
 		magic.add(new Item("enchanted robe"));
 		magic.add(new Item("mystic robe bottom"));
 		magic.add(new Item("ahrim's robe skirt"));
 
-		magic.add(new Item("zamorak robe"));
-		magic.add(new Item("zamorak robe�2"));
+		magic.add(new Item("item.zamorak_robe"));
+		magic.add(new Item("item.zamorak_robe_2"));
 
 		magic.add(new Item("spirit shield"));
 		magic.add(new Item("blessed spirit shield"));

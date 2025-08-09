@@ -114,7 +114,7 @@ object RangedStyle : CombatStyle {
                 }
             }
         }
-        CombatAnimations.getAnimation(currentWeapon!!.itemId, attackStyle)?.let { attacker.animate(it) }
+        CombatAnimations.getAnimation(currentWeapon!!.itemId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
         if (currentAmmo!!.startGfx != null) {
             attacker.gfx(currentAmmo?.startGfx)
         }
