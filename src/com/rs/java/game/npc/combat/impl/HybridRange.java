@@ -27,7 +27,7 @@ public class HybridRange extends CombatScript {
 		final int getRandom = random(5);
 		if (Utils.random(1) == 0 && target.getHitpoints() <= target.getMaxHitpoints() * 0.50
 				&& HybridMelee.specialAttack >= 25) {
-			if ((npc.getFreezeDelay() < Utils.currentTimeMillis())) {
+			if (!npc.isFrozen()) {
 				if (npc.getId() == 19000)
 					npc.transformIntoNPC(19002);
 				else

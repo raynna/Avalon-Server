@@ -195,7 +195,7 @@ public final class NPCCombat {
              */
             if (Utils.colides(npc.getX(), npc.getY(), size, target.getX(), target.getY(), target.getSize())
                     && !target.hasWalkSteps()) {
-                if (npc.getFreezeDelay() >= Utils.currentTimeMillis()) {
+                if (npc.isFrozen()) {
                     combatDelay = 1;
                     return true;
                 }

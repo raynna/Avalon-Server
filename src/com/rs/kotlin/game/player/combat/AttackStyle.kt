@@ -1,5 +1,8 @@
 package com.rs.kotlin.game.player.combat
 
+import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
+
 enum class AttackStyle(
     val attackSpeedModifier: Int = 0,
     val combatType: CombatType,
@@ -21,12 +24,30 @@ enum class AttackStyle(
 }
 
 
-
-
-
 enum class XpMode {
-    ATTACK, STRENGTH, DEFENCE, SHARED, RANGED
+    ATTACK, STRENGTH, DEFENCE, SHARED, RANGED;
+
+    fun distributeXp(player: Player, damage: Int, hitpoints: Boolean = true) {
+        val baseXp = (damage * 0.4)
+        val hpXp = (damage * 0.133)
+        if (hitpoints) {
+            player.skills.addXp(Skills.HITPOINTS, hpXp)
+        }
+        when (this) {
+            ATTACK -> player.skills.addXp(Skills.ATTACK, baseXp)
+            STRENGTH -> player.skills.addXp(Skills.STRENGTH, baseXp)
+            DEFENCE -> player.skills.addXp(Skills.DEFENCE, baseXp)
+            RANGED -> player.skills.addXp(Skills.RANGE, baseXp)
+            SHARED -> {
+                val split = baseXp / 3
+                player.skills.addXp(Skills.ATTACK, split)
+                player.skills.addXp(Skills.STRENGTH, split)
+                player.skills.addXp(Skills.DEFENCE, split)
+            }
+        }
+    }
 }
+
 
 enum class CombatType {
     MELEE, RANGED, MAGIC

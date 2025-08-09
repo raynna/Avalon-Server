@@ -1,6 +1,13 @@
 package com.rs.kotlin.game.player.combat.range
 
+import com.rs.java.game.Animation
+import com.rs.java.game.Graphics
+import com.rs.kotlin.game.player.combat.CombatType
+import com.rs.kotlin.game.player.combat.PendingHit
+import com.rs.kotlin.game.player.combat.SpecialAttack
 import com.rs.kotlin.game.player.combat.WeaponStyle
+import com.rs.kotlin.game.world.projectile.Projectile
+import com.rs.kotlin.game.world.projectile.ProjectileManager
 
 
 /** Range Attack distances
@@ -149,6 +156,40 @@ object StandardRanged : RangeData() {
             animationId = 423,
             ammoType = AmmoType.BOLT,
             allowedAmmoIds = setOf(8882)
+        ),
+        RangedWeapon(
+            itemId = 861,
+            name = "Magic shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackSpeed = 4,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.RUNE_ARROW,
+            specialAttack = SpecialAttack(
+                energyCost = 55,
+                accuracyMultiplier = 1.0,
+                damageMultiplier = 1.0,
+                execute = { context ->
+                    val special = context.weapon.specialAttack!!
+                    context.attacker.animate(Animation(1074))
+                    ProjectileManager.sendWithDelay(Projectile.ARROW, 249, context.attacker, context.defender, -5)
+                    ProjectileManager.sendWithDelay(Projectile.ARROW, 249, context.attacker, context.defender, -25)
+                    fun registerSpecialHit() = context.combat.registerHit(
+                        context.attacker,
+                        context.defender,
+                        CombatType.RANGED,
+                        context.attackStyle,
+                        context.weapon,
+                        accuracyMultiplier = special.accuracyMultiplier,
+                        damageMultiplier = special.damageMultiplier
+                    )
+                    context.combat.delayHits(
+                        PendingHit(registerSpecialHit(), context.combat.getHitDelay() - 1),
+                        PendingHit(registerSpecialHit(), context.combat.getHitDelay())
+                    )
+                }
+            )
         )
     )
 

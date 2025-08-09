@@ -1,6 +1,8 @@
 package com.rs.kotlin.game.player.combat.magic
 
+import com.rs.java.game.Graphics
 import com.rs.java.game.WorldTile
+import com.rs.kotlin.game.world.projectile.Projectile
 
 abstract class Spellbook(val id: Int) {
     companion object {
@@ -28,7 +30,7 @@ abstract class Spellbook(val id: Int) {
         }
     }
     abstract val spells: List<Spell>
-    fun getSpell(spellId: Int): Spell? = ModernMagicks.spells.find { it.id == spellId }
+    fun getSpell(spellId: Int): Spell? = spells.find { it.id == spellId }
 }
 
 object AncientMagicks : Spellbook(ANCIENT_ID) {
@@ -155,9 +157,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 1, true)
             ),
             animationId = 1978,
-            graphicId = 384,
-            projectileId = 385,
-            endGraphicId = 386
+            projectileId = 384,
+            endGraphic = Graphics(385)
         ),
         Spell(
             id = 32,
@@ -173,9 +174,9 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 1)
             ),
             animationId = 1978,
-            graphicId = 379,
+            graphicId = Graphics(379),
             projectileId = 380,
-            endGraphicId = 380
+            endGraphic = Graphics(381)
         ),
         Spell(
             id = 24,
@@ -190,9 +191,9 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 1)
             ),
             animationId = 1978,
-            graphicId = 373,
+            graphicId = Graphics(373),
             projectileId = 374,
-            endGraphicId = 374
+            endGraphic = Graphics(375)
         ),
         Spell(
             id = 20,
@@ -207,9 +208,9 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.WATER, 2)
             ),
             animationId = 1978,
-            graphicId = 361,
-            projectileId = 362,
-            endGraphicId = 362
+            projectileId = 360,
+            endGraphic = Graphics(361),
+            bind = 8
         ),
         Spell(
             id = 36,
@@ -224,9 +225,9 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 1)
             ),
             animationId = 10513,
-            graphicId = 1845,
+            graphicId = Graphics(1845),
             projectileId = 1846,
-            endGraphicId = 1847
+            endGraphic = Graphics(1847)
         ),
         Spell(
             id = 30,
@@ -242,8 +243,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 2, true)
             ),
             animationId = 1979,
-            graphicId = 389,
-            endGraphicId = 389,
+            endGraphic = Graphics(389),
             multi = true
         ),
         Spell(
@@ -260,8 +260,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 1)
             ),
             animationId = 1979,
-            graphicId = 383,
-            endGraphicId = 383,
+            endGraphic = Graphics(382),
             multi = true
         ),
         Spell(
@@ -277,8 +276,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 2)
             ),
             animationId = 1979,
-            graphicId = 376,
-            endGraphicId = 376,
+            endGraphic = Graphics(377),
             multi = true
         ),
         Spell(
@@ -294,10 +292,10 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.WATER, 4)
             ),
             animationId = 1979,
-            graphicId = 363,
-            projectileId = 366,
-            endGraphicId = 366,
-            multi = true
+            projectileId = 362,
+            endGraphic = Graphics(363),
+            multi = true,
+            bind = 16
         ),
         Spell(
             id = 38,
@@ -312,8 +310,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 2)
             ),
             animationId = 10516,
-            graphicId = 1848,
-            endGraphicId = 1849,
+            graphicId = Graphics(1848),
+            endGraphic = Graphics(1849),
             multi = true
         ),
 
@@ -331,9 +329,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 2, true)
             ),
             animationId = 1978,
-            graphicId = 387,
             projectileId = 386,
-            endGraphicId = 386
+            endGraphic = Graphics(387)
         ),
         Spell(
             id = 33,
@@ -349,9 +346,9 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 2)
             ),
             animationId = 1978,
-            graphicId = 381,
+            graphicId = Graphics(379),
             projectileId = 380,
-            endGraphicId = 380
+            endGraphic = Graphics(381)
         ),
         Spell(
             id = 25,
@@ -365,9 +362,9 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 4)
             ),
             animationId = 1978,
-            graphicId = 375,
+            graphicId = Graphics(373),
             projectileId = 374,
-            endGraphicId = 374
+            endGraphic = Graphics(375)
         ),
         Spell(
             id = 21,
@@ -382,9 +379,9 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.WATER, 3)
             ),
             animationId = 1978,
-            graphicId = 367,
-            projectileId = 368,
-            endGraphicId = 368
+            graphicId = Graphics(366),
+            endGraphic = Graphics(367),
+            bind = 24
         ),
         Spell(
             id = 37,
@@ -399,9 +396,9 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 3)
             ),
             animationId = 10524,
-            graphicId = 1850,
+            graphicId = Graphics(1850),
             projectileId = 1852,
-            endGraphicId = 1851
+            endGraphic = Graphics(1851)
         ),
 
         Spell(
@@ -418,8 +415,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 4, true)
             ),
             animationId = 1979,
-            graphicId = 391,
-            endGraphicId = 390,
+            endGraphic = Graphics(390),
             multi = true
         ),
         Spell(
@@ -436,8 +432,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 3)
             ),
             animationId = 1979,
-            graphicId = 383,
-            endGraphicId = 383,
+            endGraphic = Graphics(383),
             multi = true
         ),
         Spell(
@@ -453,8 +448,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 1)
             ),
             animationId = 1979,
-            graphicId = 377,
-            endGraphicId = 377,
+            endGraphic = Graphics(377),
             multi = true
         ),
         Spell(
@@ -470,10 +464,10 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.WATER, 6)
             ),
             animationId = 1979,
-            graphicId = 369,
             projectileId = 368,
-            endGraphicId = 368,
-            multi = true
+            endGraphic = Graphics(369),
+            multi = true,
+            bind = 32
         ),
         Spell(
             id = 39,
@@ -488,8 +482,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 4)
             ),
             animationId = 10518,
-            graphicId = 1853,
-            endGraphicId = 1854,
+            graphicId = Graphics(1853),
+            endGraphic = Graphics(1854),
             multi = true
         )
     )
@@ -644,9 +638,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 2, true)
             ),
             animationId = 14221,
-            graphicId = 457,
-            projectileId = 2699,
-            endGraphicId = 2700
+            graphicId = Graphics(457),
+            projectileId = 458,
+            endGraphic = Graphics(463, 100)
         ),
         Spell(
             id = 25,
@@ -661,9 +655,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.MIND, 1)
             ),
             animationId = 14221,
-            graphicId = 457,
+            graphicId = Graphics(457),
             projectileId = 458,
-            endGraphicId = 463
+            endGraphic = Graphics(463, 100)
         ),
         Spell(
             id = 28,
@@ -678,10 +672,10 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 1),
                 RuneRequirement(RuneDefinitions.Runes.MIND, 1)
             ),
-            animationId = 14221,
-            graphicId = 2702,
+            animationId = 14220,
+            graphicId = Graphics(2701),
             projectileId = 2703,
-            endGraphicId = 2708
+            endGraphic = Graphics(2708, 100)
         ),
         Spell(
             id = 30,
@@ -697,9 +691,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.MIND, 1)
             ),
             animationId = 14221,
-            graphicId = 2713,
+            graphicId = Graphics(2713),
             projectileId = 2718,
-            endGraphicId = 2723
+            endGraphic = Graphics(2723, 100)
         ),
         Spell(
             id = 32,
@@ -715,9 +709,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.MIND, 1)
             ),
             animationId = 14221,
-            graphicId = 2728,
+            graphicId = Graphics(2728),
             projectileId = 2729,
-            endGraphicId = 2737
+            endGraphic = Graphics(2737, 100)
         ),
         Spell(
             id = 34,
@@ -732,9 +726,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 1)
             ),
             animationId = 14221,
-            graphicId = 2699,
-            projectileId = 2699,
-            endGraphicId = 2700
+            graphicId = Graphics(457),
+            projectileId = 459,
+            endGraphic = Graphics(464, 100)
         ),
         Spell(
             id = 39,
@@ -749,10 +743,10 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 2),
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 1)
             ),
-            animationId = 14221,
-            graphicId = 2707,
+            animationId = 14220,
+            graphicId = Graphics(2701),
             projectileId = 2704,
-            endGraphicId = 2709
+            endGraphic = Graphics(2709, 100)
         ),
         Spell(
             id = 42,
@@ -768,9 +762,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 1)
             ),
             animationId = 14221,
-            graphicId = 2714,
+            graphicId = Graphics(2714),
             projectileId = 2719,
-            endGraphicId = 2724
+            endGraphic = Graphics(2724, 100)
         ),
         Spell(
             id = 45,
@@ -786,9 +780,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 1)
             ),
             animationId = 14221,
-            graphicId = 2728,
+            graphicId = Graphics(2728),
             projectileId = 2731,
-            endGraphicId = 2738
+            endGraphic = Graphics(2738, 100)
         ),
         Spell(
             id = 47,
@@ -803,9 +797,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 1)
             ),
             animationId = 724,
-            graphicId = 145,
+            graphicId = Graphics(145, 100),
             projectileId = 146,
-            endGraphicId = 147
+            endGraphic = Graphics(147, 100)
         ),
         Spell(
             id = 49,
@@ -820,9 +814,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 1)
             ),
             animationId = 14221,
-            graphicId = 2699,
-            projectileId = 2699,
-            endGraphicId = 2700
+            graphicId = Graphics(457),
+            projectileId = 460,
+            endGraphic = Graphics(464, 100)
         ),
         Spell(
             id = 52,
@@ -837,10 +831,10 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 3),
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 1)
             ),
-            animationId = 14221,
-            graphicId = 2701,
+            animationId = 14220,
+            graphicId = Graphics(2701),
             projectileId = 2705,
-            endGraphicId = 2710
+            endGraphic = Graphics(2710, 100)
         ),
         Spell(
             id = 54,
@@ -853,10 +847,12 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.FIRE, 5),
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 1)
             ),
+            staff = StaffRequirement(listOf(1409)),
             animationId = 708,
-            graphicId = 87,
-            projectileId = 88,
-            endGraphicId = 89
+            graphicId = Graphics(87, 100),
+            endGraphic = Graphics(89, 100),
+            projectileType = Projectile.IBAN_BLAST,
+            projectileId = 88
         ),
         Spell(
             id = 56,
@@ -870,8 +866,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.MIND, 4)
             ),
             animationId = 1575,
+            projectileType = Projectile.SLAYER_DART,
             projectileId = 328,
-            endGraphicId = 329
+            endGraphic = Graphics(329, 100)
         ),
         Spell(
             id = 58,
@@ -887,9 +884,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 1)
             ),
             animationId = 14221,
-            graphicId = 2715,
+            graphicId = Graphics(2715),
             projectileId = 2720,
-            endGraphicId = 2725
+            endGraphic = Graphics(2725, 100)
         ),
         Spell(
             id = 63,
@@ -905,9 +902,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 1)
             ),
             animationId = 14221,
-            graphicId = 2728,
+            graphicId = Graphics(2728),
             projectileId = 2733,
-            endGraphicId = 2739
+            endGraphic = Graphics(2739, 100)
         ),
         Spell(
             id = 66,
@@ -922,7 +919,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 4)
             ),
             animationId = 811,
-            endGraphicId = 76
+            endGraphic = Graphics(76, 100)
         ),
         Spell(
             id = 67,
@@ -937,7 +934,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 4)
             ),
             animationId = 811,
-            endGraphicId = 77
+            endGraphic = Graphics(77, 100)
         ),
         Spell(
             id = 68,
@@ -952,7 +949,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 1)
             ),
             animationId = 811,
-            endGraphicId = 78
+            endGraphic = Graphics(78, 100)
         ),
         Spell(
             id = 70,
@@ -967,9 +964,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 1)
             ),
             animationId = 14221,
-            graphicId = 2699,
-            projectileId = 2699,
-            endGraphicId = 2700
+            graphicId = Graphics(457),
+            projectileId = 461,
+            endGraphic = Graphics(2699, 100)
         ),
         Spell(
             id = 73,
@@ -985,9 +982,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 1)
             ),
             animationId = 14221,
-            graphicId = 2702,
+            graphicId = Graphics(2702),
             projectileId = 2706,
-            endGraphicId = 2710
+            endGraphic = Graphics(2710, 100)
         ),
         Spell(
             id = 77,
@@ -1003,9 +1000,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 1)
             ),
             animationId = 14221,
-            graphicId = 2716,
+            graphicId = Graphics(2716),
             projectileId = 2721,
-            endGraphicId = 2726
+            endGraphic = Graphics(2726, 100)
         ),
         Spell(
             id = 80,
@@ -1021,9 +1018,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 1)
             ),
             animationId = 14223,
-            graphicId = 2728,
+            graphicId = Graphics(2728),
             projectileId = 2735,
-            endGraphicId = 2740
+            endGraphic = Graphics(2740, 100)
         ),
         Spell(
             id = 84,
@@ -1039,9 +1036,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 1)
             ),
             animationId = 10546,
-            graphicId = 457,
+            graphicId = Graphics(457),
             projectileId = 462,
-            endGraphicId = 2700
+            endGraphic = Graphics(2700, 100)
         ),
         Spell(
             id = 87,
@@ -1058,9 +1055,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 1)
             ),
             animationId = 10542,
-            graphicId = 2701,
+            graphicId = Graphics(2701),
             projectileId = 2707,
-            endGraphicId = 2712
+            endGraphic = Graphics(2712, 100)
         ),
         Spell(
             id = 89,
@@ -1077,9 +1074,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 1)
             ),
             animationId = 14209,
-            graphicId = 2717,
+            graphicId = Graphics(2717),
             projectileId = 2722,
-            endGraphicId = 2727
+            endGraphic = Graphics(2727, 100)
         ),
         Spell(
             id = 91,
@@ -1097,8 +1094,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             ),
             projectileIds = listOf(2736, 2735, 2736),
             animationId = 2791,
-            graphicId = 2728,
-            endGraphicId = 2741
+            graphicId = Graphics(2728),
+            endGraphic = Graphics(2741, 100)
         ),
         Spell(
             id = 99,
@@ -1111,9 +1108,10 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.ARMADYL, 1)
             ),
             animationId = 10546,
-            graphicId = 457,
+            graphicId = Graphics(457),
+            projectileType = Projectile.STORM_OF_ARMADYL,
             projectileId = 1019,
-            endGraphicId = 1019
+            endGraphic = Graphics(1019)
         ),
 
         Spell(
@@ -1128,9 +1126,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.BODY, 1)
             ),
             animationId = 710,
-            graphicId = 102,
+            graphicId = Graphics(102, 100),
             projectileId = 103,
-            endGraphicId = 104
+            endGraphic = Graphics(104, 100)
         ),
         Spell(
             id = 31,
@@ -1144,9 +1142,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.BODY, 1)
             ),
             animationId = 710,
-            graphicId = 105,
+            graphicId = Graphics(105, 100),
             projectileId = 106,
-            endGraphicId = 107
+            endGraphic = Graphics(107, 100)
         ),
         Spell(
             id = 35,
@@ -1160,9 +1158,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.BODY, 1)
             ),
             animationId = 710,
-            graphicId = 108,
+            graphicId = Graphics(108, 100),
             projectileId = 109,
-            endGraphicId = 110
+            endGraphic = Graphics(110, 100)
         ),
         Spell(
             id = 75,
@@ -1176,9 +1174,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 1)
             ),
             animationId = 710,
-            graphicId = 167,
+            graphicId = Graphics(167, 100),
             projectileId = 168,
-            endGraphicId = 169
+            endGraphic = Graphics(169, 100)
         ),
         Spell(
             id = 78,
@@ -1192,9 +1190,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 1)
             ),
             animationId = 710,
-            graphicId = 170,
+            graphicId = Graphics(170, 100),
             projectileId = 171,
-            endGraphicId = 172
+            endGraphic = Graphics(172, 100)
         ),
         Spell(
             id = 82,
@@ -1208,9 +1206,9 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 1)
             ),
             animationId = 710,
-            graphicId = 173,
+            graphicId = Graphics(173, 100),
             projectileId = 174,
-            endGraphicId = 107
+            endGraphic = Graphics(107, 100)
         ),
         Spell(
             id = 36,
@@ -1224,9 +1222,10 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.NATURE, 2)
             ),
             animationId = 710,
-            graphicId = 177,
+            graphicId = Graphics(177, 100),
             projectileId = 178,
-            endGraphicId = 179
+            endGraphic = Graphics(179, 100),
+            bind = 8
         ),
         Spell(
             id = 55,
@@ -1240,9 +1239,10 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.NATURE, 3)
             ),
             animationId = 710,
-            graphicId = 177,
+            graphicId = Graphics(177, 100),
             projectileId = 178,
-            endGraphicId = 180
+            endGraphic = Graphics(180, 100),
+            bind = 16
         ),
         Spell(
             id = 81,
@@ -1256,9 +1256,10 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.NATURE, 4)
             ),
             animationId = 710,
-            graphicId = 177,
+            graphicId = Graphics(177, 100),
             projectileId = 178,
-            endGraphicId = 181
+            endGraphic = Graphics(181, 100),
+            bind = 24
         ),
         Spell(
             id = 86,
@@ -1272,9 +1273,10 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 1)
             ),
             animationId = 10503,
-            graphicId = 1841,
+            graphicId = Graphics(1841),
+            projectileType = Projectile.TELEPORT_BLOCK,
             projectileId = 1842,
-            endGraphicId = 1843
+            endGraphic = Graphics(1843)
         ),
 
         Spell(

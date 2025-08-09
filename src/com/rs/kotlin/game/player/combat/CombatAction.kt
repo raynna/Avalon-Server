@@ -23,14 +23,13 @@ class CombatAction(
     private var lastTargetX = -1
     private var lastTargetY = -1
 
+    private var followTask: WorldTask? = null
+
     private var phase = CombatPhase.HIT
     private var ticksUntilNextPhase = 0
     private lateinit var style: CombatStyle
 
-    override fun start(player: Player?): Boolean {
-        if (player == null) {
-            return false
-        }
+    override fun start(player: Player): Boolean {
         if (target.isDead) {
             return false
         }
@@ -45,13 +44,11 @@ class CombatAction(
         player.resetWalkSteps()
         if (style == MeleeStyle)
             player.calcFollow(target, if (player.run) 2 else 1, true, true)
+        ensureFollowTask(player)
         return true
     }
 
-    override fun process(player: Player?): Boolean {
-        if (player == null) {
-            return false
-        }
+    override fun process(player: Player): Boolean {
         if (target.isDead) {
             return false
         }
@@ -62,16 +59,16 @@ class CombatAction(
             isRangedWeapon(player) -> RangedStyle
             else -> MeleeStyle
         }
-        scheduleFollowTask(player);
+        ensureFollowTask(player);
         return true
     }
 
-    override fun processWithDelay(player: Player?): Int {
-        if (player == null || !process(player) || !check(player, target)) {
+    override fun processWithDelay(player: Player): Int {
+        if (!process(player) || !check(player, target)) {
             return -1
         }
         //player.message("process with delay")
-        val requiredDistance = style.getAttackDistance(player)
+        val requiredDistance = style.getAttackDistance()
         if ((!player.clipedProjectile(target, requiredDistance == 0)) || !Utils.isOnRange(player.x, player.y, player.size, target.x, target.y, target.size, requiredDistance)) {
             return 0
         }
@@ -87,84 +84,74 @@ class CombatAction(
             CombatPhase.HIT -> {
                 if (validateAttack(player, target)) {
                     //player.message("attack with ${style}")
-                    style.attack(player, target)
+                    style.attack()
                 }
                 phase = CombatPhase.HIT
-                style.getAttackDelay(player) - 1
+                style.getAttackSpeed() - 1
             }
         }
     }
 
-    private fun scheduleFollowTask(player: Player) {
-        val requiredDistance = style.getAttackDistance(player)
-        val size = player.size // assuming you have this getter
+    private fun ensureFollowTask(player: Player) {
+        if (followTask != null) return // already running
 
-        WorldTasksManager.schedule(object : WorldTask() {
+        val requiredDistance = style.getAttackDistance()
+        val size = player.size
+
+        followTask = object : WorldTask() {
             override fun run() {
                 if (player.isDead || target.isDead || !player.isActive) {
-                    stop()
-                    return
-                }
-                if (player.newActionManager.getCurrentAction() == null) {
-                    stop()
+                    stopFollowTask()
                     return
                 }
 
-                // Check if colliding and target is not moving
+                // Don't stop on style switch; only stop if combat ends
+                if (player.newActionManager.getCurrentAction() != this@CombatAction) {
+                    stopFollowTask()
+                    return
+                }
+
                 if (Utils.colides(player.x, player.y, size, target.x, target.y, target.size) && !target.hasWalkSteps()) {
-                    // Freeze check
                     if (player.freezeDelay >= Utils.currentTimeMillis()) {
                         player.packets.sendGameMessage("A magical force prevents you from moving.")
-                        stop()
+                        stopFollowTask()
                         return
                     }
-                    // Try to walk around the target in this order:
-                    player.resetWalkSteps()
-                    if (!player.addWalkSteps(target.x + target.size, player.y)) {
-                        player.resetWalkSteps()
-                        if (!player.addWalkSteps(target.x - size, player.y)) {
-                            player.resetWalkSteps()
-                            if (!player.addWalkSteps(player.x, target.y + target.size)) {
-                                player.resetWalkSteps()
-                                if (!player.addWalkSteps(player.x, target.y - size)) {
-                                    player.resetWalkSteps()
-                                    stop()
-                                    return
-                                }
-                            }
-                        }
+                    if (!handleCollisionMovement(player, target, size)) {
+                        stopFollowTask()
                     }
                     return
                 }
 
-                // Special melee diagonal check when player and target size = 1, diagonally adjacent
-                if (player.combatDefinitions.spellId <= 0
-                    && player.equipment.weaponId != 24203 && target.size == 1
-                    && abs(player.x - target.x) == 1 && abs(player.y - target.y) == 1
-                    && !target.hasWalkSteps()
-                ) {
-                    // Freeze check
+                if (shouldAdjustDiagonal(player, target)) {
                     if (player.freezeDelay >= Utils.currentTimeMillis()) {
                         player.packets.sendGameMessage("A magical force prevents you from moving.")
-                        stop()
+                        stopFollowTask()
                         return
                     }
                     player.calcFollow(target, if (player.run) 2 else 1, true, true)
                     return
                 }
+
                 player.resetWalkSteps()
                 if ((!player.clipedProjectile(target, requiredDistance == 0)) || !Utils.isOnRange(player.x, player.y, player.size, target.x, target.y, target.size, requiredDistance)) {
                     val moved = lastTargetX != target.x || lastTargetY != target.y
                     lastTargetX = target.x
                     lastTargetY = target.y
                     if (moved || (!player.hasWalkSteps() && player.newActionManager.getCurrentAction() != null)) {
-                        player.resetWalkSteps()
                         player.calcFollow(target, if (player.run) 2 else 1, true, true)
                     }
                 }
             }
-        }, 0, 0)
+        }
+        WorldTasksManager.schedule(followTask, 0, 0)
     }
+
+    private fun stopFollowTask() {
+        followTask?.stop()
+        followTask = null
+    }
+
 
 
     private fun check(player: Player, target: Entity): Boolean {
@@ -202,9 +189,9 @@ class CombatAction(
         ticksUntilNextPhase = 0
     }
 
-    override fun stop(player: Player?, interrupted: Boolean) {
+    override fun stop(player: Player, interrupted: Boolean) {
         println("[CombatAction] stop(): Combat stopped (interrupted=$interrupted)")
-        style.onStop(player, target, interrupted)
+        style.onStop(interrupted)
     }
 
     override fun getPriority(): ActionPriority {

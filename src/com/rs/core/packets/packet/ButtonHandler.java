@@ -2721,7 +2721,7 @@ public class ButtonHandler {
             return true;
         }
 
-        player.stopAll(false, false, true, equipmentSlot == Equipment.SLOT_WEAPON);
+        //player.stopAll(false, false, true, equipmentSlot == Equipment.SLOT_WEAPON);
         if (!hasSkillRequirements(player, inventoryItem)) {
             return false;
         }

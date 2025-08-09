@@ -5,6 +5,9 @@ public class Keys {
     public enum IntKey {
 
         KEYS_OPENED(1, 0),
+        FREEZE_TICKS(2, 0),
+        FREEZE_IMMUNE_TICKS(3, 0),
+        VENGEANCE_COOLDOWN(4, 0),
 
         ;
         private final int uid;

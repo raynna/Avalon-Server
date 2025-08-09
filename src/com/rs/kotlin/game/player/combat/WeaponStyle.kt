@@ -71,6 +71,20 @@ enum class WeaponStyle(
             AttackStyle.DEFENSIVE to AttackBonusType.SLASH
         )
     ),
+    DAGGER(
+        attackStyles = listOf(
+            AttackStyle.ACCURATE,
+            AttackStyle.AGGRESSIVE,
+            AttackStyle.AGGRESSIVE,
+            AttackStyle.DEFENSIVE
+        ),
+        attackBonusMap = mapOf(
+            AttackStyle.ACCURATE to AttackBonusType.STAB,
+            AttackStyle.AGGRESSIVE to AttackBonusType.STAB,
+            AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
+            AttackStyle.DEFENSIVE to AttackBonusType.STAB
+        )
+    ),
     WHIP(
         attackStyles = listOf(
             AttackStyle.ACCURATE,
@@ -123,8 +137,8 @@ enum class WeaponStyle(
     }
 
     companion object {
-        fun getAttackBonusType(attackStyle: AttackStyle): AttackBonusType {
-            return getAttackBonusType(attackStyle)
+        fun getAttackBonusType(weaponStyle: WeaponStyle, attackStyle: AttackStyle): AttackBonusType {
+            return weaponStyle.getAttackBonusType(attackStyle);
         }
     }
 }

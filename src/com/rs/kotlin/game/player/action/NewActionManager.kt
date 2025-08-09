@@ -3,13 +3,13 @@ package com.rs.kotlin.game.player.action
 import com.rs.java.game.player.Player
 import kotlin.jvm.Transient
 
-class NewActionManager(@Transient private val player: Player?) {
+class NewActionManager(@Transient private val player: Player) {
     private var currentAction: NewAction? = null
     private var actionDelay: Int = 0
     private var locked: Boolean = false
 
     fun process() {
-        if (locked || player == null) {
+        if (locked) {
             //println("[NewActionManager] process(): Skipping because locked=$locked or player=null")
             return
         }
@@ -109,7 +109,7 @@ class NewActionManager(@Transient private val player: Player?) {
             return
         }
         // println("[NewActionManager] forceStop(): Stopping current action ${currentAction!!.javaClass.simpleName}")
-        currentAction!!.stop(player, false)
+        currentAction!!.stop(player,false)
         currentAction = null
 
     }

@@ -349,7 +349,7 @@ public final class WorldPacketsDecoder extends Decoder {
 				return;
 			if (player.isLocked())
 				return;
-			if (player.getFreezeDelay() >= Utils.currentTimeMillis()) {
+			if (player.isFrozen()) {
 				player.getPackets().sendGameMessage("A magical force prevents you from moving.");
 				player.stopAll(true, false, true);
 				return;
@@ -721,7 +721,7 @@ public final class WorldPacketsDecoder extends Decoder {
 				return;
 			long currentTime = Utils.currentTimeMillis();
 			if (player.getLockDelay() > currentTime)
-				// || player.getFreezeDelay() >= currentTime)
+				// || player.isFrozen())
 				return;
 			int xCoord = stream.readShort();
 			int yCoord = stream.readShort();
@@ -1055,6 +1055,7 @@ public final class WorldPacketsDecoder extends Decoder {
 					}
 					break;
 				case 193: { // Ancient spellbook on NPC
+					player.message("Used spell in ancients on npc");
 					Spell spell = AncientMagicks.getSpellByComponent(componentId);
 					if (spell == null)
 						return;
@@ -1245,7 +1246,7 @@ public final class WorldPacketsDecoder extends Decoder {
 				}
 
 
-				if (player.getFreezeDelay() <= currentTime)
+				if (!player.isFrozen())
 					player.addWalkSteps(tile.getX(), tile.getY(), 1);
 
 				AutomaticGroundItem.pickup(tile, item); // handles adding to inventory/bank/etc

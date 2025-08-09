@@ -75,9 +75,9 @@ public abstract class CombatScript {
                     }
                     if (npc.getId() == 6367) {
                         if (hit.getDamage() == 0) target.gfx(new Graphics(85, 0, 96));
-                        if (hit.getDamage() > 0 && target.getFreezeDelay() > Utils.currentTimeMillis())
+                        if (hit.getDamage() > 0 && target.isFrozen())
                             target.gfx(new Graphics(1677));
-                        if (hit.getDamage() > 0 && target.getFreezeDelay() < Utils.currentTimeMillis())
+                        if (hit.getDamage() > 0 && !target.isFrozen())
                             target.gfx(new Graphics(369));
                     }
                     if (npc.getId() == 1007 && hit.getLook() == HitLook.MAGIC_DAMAGE) {

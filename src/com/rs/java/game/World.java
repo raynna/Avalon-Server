@@ -1557,7 +1557,7 @@ public final class World {
             return false;
         }
 
-        if (player.getFreezeDelay() >= Utils.currentTimeMillis() && !floorItem.getTile().matches(player.getTile())) {
+        if (player.isFrozen() && !floorItem.getTile().matches(player.getTile())) {
             player.animate(new Animation("animation.pickup_floor"));
         }
 

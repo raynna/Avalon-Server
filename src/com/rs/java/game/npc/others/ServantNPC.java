@@ -250,7 +250,7 @@ public class ServantNPC extends NPC {
 	private void sendFollow() {
 		if (getLastFaceEntity() != owner.getClientIndex())
 			setNextFaceEntity(owner);
-		if (owner.getFreezeDelay() > Utils.currentTimeMillis())
+		if (owner.isFrozen())
 			return;
 		int size = getSize();
 		int targetSize = owner.getSize();

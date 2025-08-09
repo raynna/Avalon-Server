@@ -57,7 +57,7 @@ public class AsteaFrostwebCombat extends CombatScript {
 					WorldTasksManager.schedule(new WorldTask() {
 						@Override
 						public void run() {
-							if (target.getFreezeDelay() > Utils.currentTimeMillis())
+							if (target.isFrozen())
 								target.gfx(new Graphics(1677, 0, 100));
 							else {
 								target.gfx(new Graphics(369));
@@ -73,7 +73,7 @@ public class AsteaFrostwebCombat extends CombatScript {
 								WorldTasksManager.schedule(new WorldTask() {
 									@Override
 									public void run() {
-										if (t.getFreezeDelay() > Utils.currentTimeMillis())
+										if (t.isFrozen())
 											t.gfx(new Graphics(1677, 0, 100));
 										else {
 											t.gfx(new Graphics(369));

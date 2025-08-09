@@ -46,7 +46,7 @@ public class StrykewyrmCombat extends CombatScript {
 				WorldTasksManager.schedule(new WorldTask() {
 					@Override
 					public void run() {
-						if (Utils.getRandom(10) == 0 && target.getFreezeDelay() < System.currentTimeMillis()) {
+						if (Utils.getRandom(10) == 0 && !target.isFrozen()) {
 							target.setFreezeDelay(3000);
 							target.gfx(new Graphics(369));
 							if (target instanceof Player) {

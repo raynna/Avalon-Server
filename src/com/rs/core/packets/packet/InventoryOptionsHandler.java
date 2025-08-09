@@ -118,6 +118,7 @@ public class InventoryOptionsHandler {
             return;
         if (player.getSwitchItemCache().contains(slotId))
             return;
+        player.stopAll(false, false, true, false);
         player.getSwitchItemCache().add(slotId);
     }
 

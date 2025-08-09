@@ -12,10 +12,10 @@ abstract class NewAction {
 
     protected var interrupted: Boolean = false
 
-    abstract fun start(player: Player?): Boolean
-    abstract fun process(player: Player?): Boolean
-    abstract fun processWithDelay(player: Player?): Int
-    abstract fun stop(player: Player?, interrupted: Boolean)
+    abstract fun start(player: Player): Boolean
+    abstract fun process(player: Player): Boolean
+    abstract fun processWithDelay(player: Player): Int
+    abstract fun stop(player: Player, interrupted: Boolean)
 
     fun canProcess(player: Player): Boolean {
         return !player.isDead && !player.isLocked

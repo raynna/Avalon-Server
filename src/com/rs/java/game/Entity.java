@@ -1,8 +1,6 @@
 package com.rs.java.game;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -22,6 +20,7 @@ import com.rs.java.game.npc.pet.Pet;
 import com.rs.java.game.npc.qbd.TorturedSoul;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.VariableKeys;
 import com.rs.java.game.player.actions.combat.ModernMagicks;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.actions.combat.Poison;
@@ -125,6 +124,8 @@ public abstract class Entity extends WorldTile {
         lastFaceEntity = -1;
         nextFaceEntity = -2;
         poison.setEntity(this);
+        if (tickTimers == null)
+            tickTimers = new HashMap<>();
     }
 
     public int getClientIndex() {
@@ -650,7 +651,7 @@ public abstract class Entity extends WorldTile {
      * return added all steps
      */
     public boolean addWalkStepsInteract(final int destX, final int destY, int maxStepsCount, int sizeX, int sizeY, boolean calculate) {
-        if (getFreezeDelay() >= Utils.currentTimeMillis())
+        if (isFrozen())
             return false;
         int[] lastTile = getLastWalkTile();
         int myX = lastTile[0];
@@ -869,20 +870,6 @@ public abstract class Entity extends WorldTile {
         return true;
     }
 
-    public int getFreezeDelay() {
-        Integer freezeDelay = (Integer) temporaryAttribute().get("freezeDelay");
-        if (freezeDelay == null)
-            return 0;
-        return freezeDelay;
-    }
-
-    public int getFreezeImmuneDelay() {
-        Integer freezeImmune = (Integer) temporaryAttribute().get("freezeImmune");
-        if (freezeImmune == null)
-            return 0;
-        return freezeImmune;
-    }
-
     public void setAttackedBy(Entity e) {
         temporaryAttribute().put("attackedBy", e);
     }
@@ -927,40 +914,18 @@ public abstract class Entity extends WorldTile {
         return flinchDelay;
     }
 
-    public void setFreezeDelay(long freezeDelay) {
-        temporaryAttribute().put("freezeDelay", freezeDelay + Utils.currentTimeMillis());
+    public void setFreezeDelay(int ticks) {
+        setTimer(Keys.IntKey.FREEZE_TICKS, ticks);
     }
 
-    public void setFreezeImmune(long freezeImmune) {
-        temporaryAttribute().put("freezeImmune", freezeImmune + Utils.currentTimeMillis());
-    }
-
-    public void addFreezeDelay(long freezeDelay, boolean entangle) {
-        if (getFreezeDelay() < Utils.currentTimeMillis()) {
-            if (getSize() > 2)
-                return;
-            resetWalkSteps();
-            setFreezeDelay(freezeDelay);
-            setFreezeImmune(freezeDelay + (10 * 1000));
-            if (!entangle && this instanceof Player) {
-                Player p = (Player) this;
-                p.stopAll();
-                p.getPackets().sendGameMessage("You have been frozen.");
-            }
-        } else {
-            if (entangle) {
-                if (this instanceof Player) {
-                    Player p = (Player) this;
-                    p.getPackets().sendGameMessage("Your target is already effected by this spell.", true);
-                }
-            }
-        }
+    public void setFreezeImmune(int ticks) {
+        setTimer(Keys.IntKey.FREEZE_IMMUNE_TICKS, ticks);
     }
 
     // used for normal npc follow int maxStepsCount, boolean calculate used to
     // save mem on normal path
     public boolean calcFollow(WorldTile target, int maxStepsCount, boolean calculate, boolean inteligent) {
-        if (getFreezeDelay() > Utils.currentTimeMillis())
+        if (isFrozen())
             return false;
         if (inteligent) {
             int steps = RouteFinder.findRoute(RouteFinder.WALK_ROUTEFINDER, getX(), getY(), getPlane(), getSize(), target instanceof WorldObject ? new ObjectStrategy((WorldObject) target) : new EntityStrategy((Entity) target), true);
@@ -1178,6 +1143,91 @@ public abstract class Entity extends WorldTile {
         processMovement();
         processReceivedHits();
         processReceivedDamage();
+        Iterator<Map.Entry<Keys.IntKey, Integer>> it = tickTimers.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Keys.IntKey, Integer> entry = it.next();
+            int ticksLeft = entry.getValue() - 1;
+            if (ticksLeft <= 0) {
+                it.remove();
+                onTimerExpired(entry.getKey());
+            } else {
+                entry.setValue(ticksLeft);
+            }
+        }
+    }
+
+    public int getFreezeDelay() {
+        if (tickTimers.get(Keys.IntKey.FREEZE_TICKS) == null) {
+            return 0;
+        }
+        return tickTimers.get(Keys.IntKey.FREEZE_TICKS);
+    }
+
+    public boolean isFrozen() {
+        if (tickTimers.get(Keys.IntKey.FREEZE_TICKS) == null) {
+            return false;
+        }
+        return tickTimers.get(Keys.IntKey.FREEZE_TICKS) > 0;
+    }
+
+    public boolean isFreezeImmune() {
+        if (tickTimers.get(Keys.IntKey.FREEZE_IMMUNE_TICKS) == null) {
+            return false;
+        }
+        return tickTimers.get(Keys.IntKey.FREEZE_IMMUNE_TICKS) > 0;
+    }
+
+    public void freeze(int value) {
+        setTimer(Keys.IntKey.FREEZE_TICKS, value);
+        setTimer(Keys.IntKey.FREEZE_IMMUNE_TICKS, value + 5);
+    }
+
+    public void addFreezeDelay(int ticks, boolean entangle) {
+        setTimer(Keys.IntKey.FREEZE_TICKS, ticks);
+        setTimer(Keys.IntKey.FREEZE_IMMUNE_TICKS, ticks + 5);
+        if (this instanceof Player player) {
+            player.message("Freeze for " + ticks + " ticks, entangle: " + entangle);
+            player.message("FrozenTimer: " + getTimer(Keys.IntKey.FREEZE_TICKS));
+        }
+        if (!isFrozen()) {
+            resetWalkSteps();
+            if (this instanceof Player player) {
+                player.resetWalkSteps();
+                if (!entangle)
+                    player.message("You have been frozen.");
+            }
+        } else {
+            if (entangle) {
+                if (this instanceof Player) {
+                    Player p = (Player) this;
+                    p.getPackets().sendGameMessage("This player is already effected by this spell.", true);
+                }
+            }
+        }
+    }
+
+    protected void onTimerExpired(Keys.IntKey timerName) {
+        /*if (timerName.equals(Keys.IntKey.FREEZE_TICKS)) {
+            tickTimers.remove(Keys.IntKey.FREEZE_TICKS);
+        }*/
+    }
+
+    private Map<Keys.IntKey, Integer> tickTimers = new HashMap<>();
+
+    public void setTimer(Keys.IntKey key, int ticks) {
+        tickTimers.put(key, ticks);
+    }
+
+    public boolean hasTimer(Keys.IntKey key) {
+        return tickTimers.containsKey(key) && tickTimers.get(key) > 0;
+    }
+
+    public int getTimer(Keys.IntKey key) {
+        return tickTimers.getOrDefault(key, 0);
+    }
+
+    public void removeTimer(Keys.IntKey key) {
+        tickTimers.remove(key);
     }
 
     public void loadMapRegions() {

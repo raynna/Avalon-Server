@@ -2523,6 +2523,9 @@ public final class Commands {
                         player.getPackets().sendGameMessage("Use: ::bankitem id (optional:amount)");
                     }
                     return true;
+                case "freezeme":
+                    player.addFreezeDelay(16, false);
+                    return true;
                 case "item":
                     if (player.isAtWild()) {
                         player.getPackets().sendGameMessage("You can't use ::" + cmd[0] + " in the wilderness.");

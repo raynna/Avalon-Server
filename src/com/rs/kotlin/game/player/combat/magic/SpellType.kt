@@ -1,6 +1,8 @@
 package com.rs.kotlin.game.player.combat.magic
 
+import com.rs.java.game.Graphics
 import com.rs.java.game.WorldTile
+import com.rs.kotlin.game.world.projectile.Projectile
 
 sealed class SpellType {
     object Combat : SpellType()
@@ -47,8 +49,9 @@ data class Spell(
     val staff: StaffRequirement? = null,
     val teleportLocation: WorldTile? = null,
     val animationId: Int = -1,
-    val graphicId: Int = -1,
-    val endGraphicId: Int = -1,
+    val graphicId: Graphics = Graphics(-1),
+    val endGraphic: Graphics = Graphics(-1),
+    val projectileType: Projectile = Projectile.ELEMENTAL_SPELL,
     val projectileId: Int = -1,
     val projectileIds: List<Int> = emptyList(),
     val requiredItem: Int? = null

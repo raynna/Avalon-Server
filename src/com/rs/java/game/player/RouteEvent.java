@@ -48,7 +48,7 @@ public class RouteEvent {
 			return true;
 		}
 
-		if (npc.getFreezeDelay() > Utils.currentTimeMillis())
+		if (npc.isFrozen())
 			return true;
 		RouteStrategy[] strategies = generateStrategies();
 		if (strategies == null)
@@ -84,7 +84,7 @@ public class RouteEvent {
 				int[] bufferX = RouteFinder.getLastPathBufferX();
 				int[] bufferY = RouteFinder.getLastPathBufferY();
 				npc.resetWalkSteps();
-				if (npc.getFreezeDelay() > Utils.currentTimeMillis())
+				if (npc.isFrozen())
 					return false;
 				for (int step = steps - 1; step >= 0; step--) {
 					if (!npc.addWalkSteps(bufferX[step], bufferY[step], 25, true))
@@ -156,7 +156,7 @@ public class RouteEvent {
 				player.getPackets().sendMinimapFlag(
 						last.getLocalX(player.getLastLoadedMapRegionTile(), player.getMapSize()),
 						last.getLocalY(player.getLastLoadedMapRegionTile(), player.getMapSize()));
-				if (player.getFreezeDelay() > Utils.currentTimeMillis())
+				if (player.isFrozen())
 					return false;
 				for (int step = steps - 1; step >= 0; step--) {
 					if (!player.addWalkSteps(bufferX[step], bufferY[step], 25, true))

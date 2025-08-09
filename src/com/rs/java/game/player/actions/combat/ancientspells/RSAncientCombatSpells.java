@@ -201,8 +201,8 @@ public class RSAncientCombatSpells {// this gets the data from spells
 			player.heal(damage / 4);
 		}
 		if (spell.getSpellType() == ICE_SPELL) {
-			if (target.getSize() < 2 && target.getFreezeDelay() < Utils.currentTimeMillis()
-					&& target.getFreezeImmuneDelay() < Utils.currentTimeMillis()) {
+			if (target.getSize() < 2 && !target.isFrozen()
+					&& !target.isFreezeImmune()) {
 				int freeze_time = spell.getId() == 20 ? 8
 						: spell.getId() == 21 ? 16 : spell.getId() == 22 ? 24 : 32;
 				if (damage > 0) {

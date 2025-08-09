@@ -3,20 +3,21 @@ package com.rs.kotlin.game.world.projectile
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
+import com.rs.java.game.Graphics
 import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 
 object ProjectileManager {
 
-    @JvmStatic // for java call
+    /*@JvmStatic // for java call
     fun sendWithHitGraphic(
         projectile: Projectile,
         projectileGfxId: Int,
         attacker: Entity,
         defender: Entity,
-        hitGraphicId: Int
-    ) = sendWithHitGraphic(projectile, projectileGfxId, attacker, defender, hitGraphicId, 0)
+        hitGraphicId: Graphics
+    ) = sendWithHitGraphic(projectile, projectileGfxId, attacker, defender, hitGraphic)*/
 
     @JvmStatic
     fun sendWithHitGraphic(
@@ -24,8 +25,7 @@ object ProjectileManager {
         projectileGfxId: Int,
         attacker: Entity,
         defender: Entity,
-        hitGraphicId: Int,
-        graphicHeight: Int = 0
+        hitGraphic: Graphics
     ) {
         sendWithHeightAndHitGraphic(
             projectile,
@@ -33,8 +33,7 @@ object ProjectileManager {
             0, // Default height difference
             attacker,
             defender,
-            hitGraphicId,
-            graphicHeight
+            hitGraphic
         )
     }
 
@@ -45,8 +44,7 @@ object ProjectileManager {
         heightDifference: Int,
         attacker: Entity,
         defender: Entity,
-        hitGraphicId: Int,
-        graphicHeight: Int = 100
+        hitGraphic: Graphics = Graphics(-1)
     ) {
         val baseType = ProjectileRegistry.get(projectile) ?: run {
             println("Unknown projectile type: $projectile")
@@ -82,7 +80,7 @@ object ProjectileManager {
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
                 val rotation = calculateRotation(startTile, endTile);
-                defender.gfx(hitGraphicId, graphicHeight, rotation)
+                defender.gfx(hitGraphic.id, hitGraphic.height, rotation)
             }
         }, delayTicks.coerceAtLeast(0))
     }
@@ -94,15 +92,14 @@ object ProjectileManager {
         heightDifference: Int,
         attacker: Entity,
         defender: Entity,
-        hitGraphicId: Int
+        hitGraphic: Graphics = Graphics(-1)
     ) = sendWithHeightAndHitGraphic(
         projectile,
         gfxId,
         heightDifference,
         attacker,
         defender,
-        hitGraphicId,
-        0
+        hitGraphic
     )
 
     @JvmStatic
@@ -144,6 +141,82 @@ object ProjectileManager {
     }
 
     @JvmStatic
+    fun sendWithSpeed(
+        projectile: Projectile,
+        gfxId: Int,
+        attacker: Entity,
+        defender: Entity,
+        speedDifference: Int
+    ) {
+        val baseType = ProjectileRegistry.get(projectile) ?: run {
+            println("Unknown projectile type: $projectile")
+            return
+        }
+
+        val newSpeed = baseType.copy(
+            speed = (baseType.speed + speedDifference).coerceIn(0, 255)
+        )
+
+        sendProjectile(
+            player = if (attacker is Player) attacker else defender as? Player
+                ?: error("Either attacker or defender must be a Player"),
+            receiver = defender,
+            startTile = WorldTile(
+                attacker.getCoordFaceX(attacker.size),
+                attacker.getCoordFaceY(attacker.size),
+                attacker.plane
+            ),
+            endTile = WorldTile(
+                defender.getCoordFaceX(defender.size),
+                defender.getCoordFaceY(defender.size),
+                defender.plane
+            ),
+            gfx = gfxId,
+            type = baseType,
+            creatorSize = attacker.size,
+            adjustedSpeed = newSpeed.speed
+        )
+    }
+
+    @JvmStatic
+    fun sendWithDelay(
+        projectile: Projectile,
+        gfxId: Int,
+        attacker: Entity,
+        defender: Entity,
+        delayDifference: Int
+    ) {
+        val baseType = ProjectileRegistry.get(projectile) ?: run {
+            println("Unknown projectile type: $projectile")
+            return
+        }
+
+        val newDelay = baseType.copy(
+            delay = (baseType.delay + delayDifference).coerceIn(0, 255)
+        )
+
+        sendProjectile(
+            player = if (attacker is Player) attacker else defender as? Player
+                ?: error("Either attacker or defender must be a Player"),
+            receiver = defender,
+            startTile = WorldTile(
+                attacker.getCoordFaceX(attacker.size),
+                attacker.getCoordFaceY(attacker.size),
+                attacker.plane
+            ),
+            endTile = WorldTile(
+                defender.getCoordFaceX(defender.size),
+                defender.getCoordFaceY(defender.size),
+                defender.plane
+            ),
+            gfx = gfxId,
+            type = baseType,
+            creatorSize = attacker.size,
+            adjustedDelay = newDelay.delay
+        )
+    }
+
+    @JvmStatic
     fun send(
         projectile: Projectile,
         gfxId: Int,
@@ -175,7 +248,9 @@ object ProjectileManager {
         endTile: WorldTile,
         gfx: Int,
         type: ProjectileType,
-        creatorSize: Int
+        creatorSize: Int,
+        adjustedSpeed: Int = -1,
+        adjustedDelay: Int = -1
     ): Int {
         val stream = player.packets.createWorldTileStream(startTile)
         stream.writePacket(player, 20)
@@ -194,17 +269,18 @@ object ProjectileManager {
             is Player -> -(receiver.index + 1)
             else -> receiver.index + 1
         }
+        val delay = if (adjustedDelay != -1) adjustedDelay else type.delay
         stream.writeShort(index)
 
         stream.writeShort(gfx)
         stream.writeByte(type.startHeight)
         stream.writeByte(type.endHeight)
-        stream.writeShort(type.delay)
+        stream.writeShort(delay)
 
         val distance = Utils.getDistance(startTile.x, startTile.y, endTile.x, endTile.y)
-        val speed = type.duration
+        val speed = if (adjustedSpeed != -1) adjustedSpeed else type.speed
         val travelDuration = if (distance == 0) 10 else (distance * 30) / (speed / 10)
-        val totalDuration = type.delay + travelDuration
+        val totalDuration = delay + travelDuration
 
         stream.writeShort(totalDuration)
         stream.writeByte(type.arc)

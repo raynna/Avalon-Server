@@ -13,13 +13,6 @@ object SpecialRanged : RangeData() {
             attackRange = 7,
             animationId = 1074,
             projectileId = 249,
-            specialAttack = SpecialAttack(
-                name = "Magic shortbow special",
-                energyCost = 55,
-                damageMultiplier = 1.0,
-                accuracyMultiplier = 1.0,
-                specialProjectileId = 249
-            ),
             ammoType = AmmoType.ARROW
         ),
         RangedWeapon(
@@ -29,12 +22,6 @@ object SpecialRanged : RangeData() {
             attackSpeed = 9,
             attackRange = 8,
             animationId = 426,
-            specialAttack = SpecialAttack(
-                name = "Dark bow special",
-                energyCost = 65,
-                damageMultiplier = 1.5,
-                accuracyMultiplier = 1.25,
-            ),
             ammoType = AmmoType.ARROW
         ),
         // Crossbows

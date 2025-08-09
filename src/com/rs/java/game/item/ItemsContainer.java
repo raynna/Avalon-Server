@@ -76,35 +76,45 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	}
 
 	public boolean add(T item) {
+		// Handle stackable items
 		if (alwaysStackable || item.getDefinitions().isStackable() || item.getDefinitions().isNoted()) {
 			for (int i = 0; i < data.length; i++) {
-				if (data[i] != null) {
-					if (data[i].getId() == item.getId()) {
-						Item oldItem = data[i];
-						Item newItem = new Item(oldItem);
-						newItem.setAmount(oldItem.getAmount() + item.getAmount());
-						data[i] = newItem;
-						return true;
+				if (data[i] != null && data[i].getId() == item.getId()) {
+					Item oldItem = data[i];
+					long total = (long) oldItem.getAmount() + item.getAmount();
+					System.out.println(total);
+					// Overflow check
+					if (total > Integer.MAX_VALUE || total < 0) {
+						total = Integer.MAX_VALUE;
 					}
-				}
-			}
-		} else {
-			if (item.getAmount() > 1) {
-				if (freeSlots() >= item.getAmount()) {
-					for (int i = 0; i < item.getAmount(); i++) {
-						int index = freeSlot();
-						if (index == -1)
-							return false; // should never happen here due to earlier check
-						Item singleItem = new Item(item);
-						singleItem.setAmount(1);
-						data[index] = singleItem;
-					}
+
+					Item newItem = new Item(oldItem);
+					newItem.setAmount((int) total);
+					data[i] = newItem;
 					return true;
-				} else {
-					return false;
 				}
 			}
 		}
+		// Handle non-stackable items efficiently
+		else if (item.getAmount() > 1) {
+			int freeSlots = freeSlots();
+			if (freeSlots < item.getAmount()) {
+				return false;
+			}
+
+			int remaining = item.getAmount();
+			for (int i = 0; i < data.length && remaining > 0; i++) {
+				if (data[i] == null) {
+					Item singleItem = new Item(item);
+					singleItem.setAmount(1);
+					data[i] = singleItem;
+					remaining--;
+				}
+			}
+			return true;
+		}
+
+		// Single item add
 		int index = freeSlot();
 		if (index == -1) {
 			return false;
@@ -112,6 +122,8 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 		data[index] = item;
 		return true;
 	}
+
+
 
 	public int freeSlots() {
 		int j = 0;

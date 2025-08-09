@@ -43,6 +43,7 @@ object SpellHandler {
     }
 
     fun cast(player: Player, spellId: Int, autocast: Boolean = false) {
+        player.message("Cast spellId $spellId")
         val spell = getSpellForPlayer(player, spellId) ?: return
         if (!canCast(player, spell)) return
         if (!checkAndRemoveRunes(player, spell)) return
@@ -55,7 +56,7 @@ object SpellHandler {
             is SpellType.Combat -> handleCombatSpell(player, spell, autocast)
             is SpellType.Teleport -> handleTeleportSpell(player, spell)
             SpellType.FloorItem -> TODO()
-            SpellType.Instant -> TODO()
+            SpellType.Instant -> castInstant(player, spell)
             SpellType.Item -> TODO()
             SpellType.Object -> TODO()
             SpellType.Target -> TODO()
@@ -68,6 +69,12 @@ object SpellHandler {
             put("spell_slotid", slotId)
         }
         cast(player, spellId, false)
+    }
+
+    private fun castInstant(player: Player, spell: Spell) {
+        if (spell.name.equals("charge", ignoreCase = true)) {
+            player.animate()
+        }
     }
 
     fun castOnObject(player: Player, spellId: Int, objectId: Int) {
@@ -93,6 +100,7 @@ object SpellHandler {
     }
 
     fun getSpellForPlayer(player: Player, spellId: Int): Spell? {
+        player.message("SpellBook: ${player.combatDefinitions.getSpellBook()} && ancients is: ${AncientMagicks.id}")
         return when (player.combatDefinitions.getSpellBook()) {
             AncientMagicks.id -> AncientMagicks.getSpell(spellId)
             ModernMagicks.id -> ModernMagicks.getSpell(spellId)
@@ -205,11 +213,12 @@ object SpellHandler {
     }
 
     private fun hasRune(player: Player, runeId: Int, amount: Int): Boolean {
+        player.message("number of ${player.inventory.getNumberOf(runeId)}")
         return if (hasRunePouch(player)) {
             player.runePouch.contains(Item(runeId, amount)) ||
                     player.inventory.containsItem(runeId, amount)
         } else {
-            player.inventory.containsItem(runeId, amount)
+            player.inventory.getNumberOf(runeId) >= amount
         }
     }
 
@@ -225,6 +234,7 @@ object SpellHandler {
 
     private fun handleCombatSpell(player: Player, spell: Spell, autocast: Boolean) {
         if (!autocast) {
+            player.message("Not autocast for spell ${spell.name}")
             player.temporaryAttribute()["tempCastSpell"] = spell.id
             player.message("set tempCastSpell to ${spell.id}, tempCastSpell is now: ${player.temporaryAttribute()["tempCastSpell"]}")
         }

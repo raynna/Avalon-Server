@@ -64,9 +64,13 @@ public class PrayerEffectHandler {
             handleTurmoilEffects(attacker, target);
             if (attacker.getPrayer().isActive(AncientPrayer.SOUL_SPLIT)) {
                 handleSoulSplitEffect(attacker, target, hit);
-            } else {
-                handleLeechEffects(attacker, target);
             }
+            WorldTasksManager.schedule(new WorldTask() {
+                @Override
+                public void run() {
+                    handleLeechEffects(attacker, target);
+                }
+            });
         }
     }
 
@@ -83,7 +87,7 @@ public class PrayerEffectHandler {
         int damage = Math.min(hit.getDamage(), target.getHitpoints());
         if (damage <= 0) return;
         Prayer soulSplit = AncientPrayer.SOUL_SPLIT;
-        ProjectileManager.send(Projectile.ARROW, soulSplit.getProjectile().getId(), attacker, target);
+        ProjectileManager.send(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), attacker, target);
         int healAmount = (int)(damage * soulSplit.getHealPercentage());
         if (healAmount > 0 && attacker.getHitpoints() < attacker.getMaxHitpoints()) {
             attacker.heal(healAmount, true, true);
@@ -101,9 +105,9 @@ public class PrayerEffectHandler {
 
                 target.gfx(soulSplit.getGraphic());
                 if (soulSplit.getProjectile() != null)
-                    World.sendSoulsplitProjectile(target, attacker, soulSplit.getProjectile().getId());
+                    ProjectileManager.send(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), target, attacker);
             }
-        }, Utils.getDistance(attacker, target) > 2 ? 2 : 1);//TODO base this by distance and projectile
+        }, Utils.getDistance(attacker, target) > 2 ? 2 : 1);
     }
 
     private static boolean isValidForSoulSplitEffect(Player attacker, Entity target) {
@@ -137,7 +141,7 @@ public class PrayerEffectHandler {
 
     private static void playLeechEffects(Player attacker, Entity target, AncientPrayer prayer) {
         attacker.animateNoCheck(new Animation(Rscm.lookup("animation.curses_leech")));
-        ProjectileManager.sendWithHitGraphic(Projectile.LEECH, prayer.getProjectile().getId(), attacker, target, prayer.getGraphic().getId());
+        ProjectileManager.sendWithHitGraphic(Projectile.LEECH, prayer.getProjectile().getId(), attacker, target, prayer.getGraphic());
         String statAffected = prayer.getName().replace("Leech ", "");
         attacker.getPackets().sendGameMessage("Your curse drains " + statAffected + " from the enemy, boosting your " + statAffected + ".", true);
         if (target instanceof Player p2) {

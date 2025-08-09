@@ -27,16 +27,8 @@ import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.core.thread.CoresManager;
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.ForceTalk;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.Hit;
+import com.rs.java.game.*;
 import com.rs.java.game.Hit.HitLook;
-import com.rs.java.game.Region;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldObject;
-import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
@@ -2376,7 +2368,7 @@ public class Player extends Entity {
     }
 
     private void checkTimers() {
-        if (getFreezeDelay() < Utils.currentTimeMillis() && getTeleBlockDelay() < Utils.currentTimeMillis() && getVengDelay() < Utils.currentTimeMillis() && getOverloadDelay() < Utils.currentTimeMillis() && getDisruptionDelay() < Utils.currentTimeMillis() && getPrayerRenewalDelay() < Utils.currentTimeMillis() && !OwnedObjectManager.containsObjectValue(this, 6)) {
+        if (!isFrozen() && getTeleBlockDelay() < Utils.currentTimeMillis() && getVengDelay() < Utils.currentTimeMillis() && getOverloadDelay() < Utils.currentTimeMillis() && getDisruptionDelay() < Utils.currentTimeMillis() && getPrayerRenewalDelay() < Utils.currentTimeMillis() && !OwnedObjectManager.containsObjectValue(this, 6)) {
             if (getInterfaceManager().containsInterface(3039))
                 getInterfaceManager().removeInterface(getInterfaceManager().isResizableScreen() ? 26 : 31, 3039);
         } else {
@@ -2410,7 +2402,7 @@ public class Player extends Entity {
             getPackets().sendHideIComponent(3039, 4, true);
             getPackets().sendHideIComponent(3039, 5, true);
         }
-        if (getFreezeDelay() >= Utils.currentTimeMillis()) {
+        if (isFrozen()) {
             getPackets().sendHideIComponent(3039, 6, false);
             getPackets().sendHideIComponent(3039, 7, false);
             getPackets().sendTextOnComponent(3039, 7, getTimeLeft(getFreezeDelay()) + "");
@@ -2684,7 +2676,7 @@ public class Player extends Entity {
             getControlerManager().startControler("WildernessControler");
         }
         if (getFrozenBy() != null && this != null) {
-            if (!Utils.inCircle(getFrozenBy(), this, 12) && getFreezeDelay() >= Utils.currentTimeMillis()) {
+            if (!Utils.inCircle(getFrozenBy(), this, 12) && isFrozen()) {
                 setFreezeDelay(0);
                 getFrozenBy().setFreezeDelay(0);
                 if (!(getFrozenBy() instanceof NPC))
@@ -2695,6 +2687,7 @@ public class Player extends Entity {
         auraManager.process();
         actionManager.process();
         newActionManager.process();
+       // newActionManager.process()
         controlerManager.process();
 
     }
@@ -4470,12 +4463,15 @@ public class Player extends Entity {
     }
 
     public String getTimeLeft(int ticks) {
-        StringBuilder builder = new StringBuilder();
-        int seconds = (int) (1 + ticks * 0.6);
+        int seconds = (int)Math.ceil(ticks * 0.6);
         int minutes = seconds / 60;
-        builder.append(minutes > 0 ? minutes + "m" : seconds + "s");
-        System.out.println(ticks + ", seconds: " + seconds + ", minutes: " + minutes);
-        return builder.toString();
+        seconds = seconds % 60;  // remaining seconds after minutes
+
+        if (minutes > 0) {
+            return minutes + "m " + seconds + "s";
+        } else {
+            return seconds + "s";
+        }
     }
 
     public String getTimeLeft(long value) {
@@ -4536,46 +4532,6 @@ public class Player extends Entity {
 
     public int getTeleBlockImmune() {
         return get(IntKey.TELEPORT_BLOCK_IMMUNITY);
-    }
-
-    public void setFreezeDelay(int ticks) {
-        set(IntKey.FREEZE_DELAY, ticks);
-    }
-
-    public void addFreezeDelay(int ticks, boolean entangle) {
-        set(IntKey.FREEZE_DELAY, ticks);
-        if (getFreezeDelay() >= Utils.currentTimeMillis()) {
-            resetWalkSteps();
-            if (this instanceof Player) {
-                Player p = (Player) this;
-                p.resetWalkSteps();
-                if (!entangle)
-                    p.message("You have been frozen.");
-            }
-        } else {
-            if (entangle) {
-                if (this instanceof Player) {
-                    Player p = (Player) this;
-                    p.getPackets().sendGameMessage("This player is already effected by this spell.", true);
-                }
-            }
-        }
-    }
-
-    public void setFreezeImmune(int ticks) {
-        set(IntKey.FREEZE_IMMUNITY, ticks);
-    }
-
-    public void resetFreezeDelay() {
-        clear(IntKey.FREEZE_DELAY);
-    }
-
-    public int getFreezeDelay() {
-        return get(IntKey.FREEZE_DELAY);
-    }
-
-    public int getFreezeImmuneDelay() {
-        return get(IntKey.FREEZE_IMMUNITY);
     }
 
     public int getKillCount() {

@@ -90,8 +90,9 @@ public final class Hit {
 		return look;
 	}
 	
-	public HitLook setLook(HitLook look) {
-		return this.look = look;
+	public Hit setLook(HitLook look) {
+		this.look = look;
+		return this;
 	}
 
 	public int getDamage() {
@@ -128,6 +129,21 @@ public final class Hit {
 
 	public int getDelay() {
 		return delay;
+	}
+
+	public Hit copy() {
+		Hit copy = new Hit(this.source, this.damage, this.maxHit, this.look, this.delay);
+		copy.critical = this.critical;
+		copy.soaking = this.soaking; // shallow copy, adjust if needed
+		return copy;
+	}
+
+	// Overloaded copy with new damage example (optional)
+	public Hit copyWithDamage(int newDamage) {
+		Hit copy = new Hit(this.source, newDamage, this.maxHit, this.look, this.delay);
+		copy.critical = this.critical;
+		copy.soaking = this.soaking;
+		return copy;
 	}
 
 }

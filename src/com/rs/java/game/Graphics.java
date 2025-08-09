@@ -68,8 +68,6 @@ public final class Graphics {
 	public int getSettings2Hash() {
 		int hash = 0;
 		hash |= rotation & 0x7;
-		// hash |= value << 3;
-		// hash |= 1 << 7; boolean
 		return hash;
 	}
 
@@ -80,4 +78,6 @@ public final class Graphics {
 	public int getHeight() {
 		return height;
 	}
+
+	public int getRotation() { return rotation; }
 }

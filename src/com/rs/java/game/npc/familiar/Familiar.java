@@ -72,7 +72,7 @@ public abstract class Familiar extends NPC implements Serializable {
 	private void sendFollow() {
 		if (getLastFaceEntity() != owner.getClientIndex())
 			setNextFaceEntity(owner);
-		if (getFreezeDelay() > Utils.currentTimeMillis())
+		if (isFrozen())
 			return;
 		int size = getSize();
 		int targetSize = owner.getSize();

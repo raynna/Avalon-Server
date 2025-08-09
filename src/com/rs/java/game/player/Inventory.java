@@ -322,7 +322,20 @@ public final class Inventory implements Serializable {
 		int[] finalChangedSlots = new int[count];
 		System.arraycopy(changedSlots, 0, finalChangedSlots, 0, count);
 		refresh(finalChangedSlots);
-		Weights.updateWeight(player);
+	}
+
+	public void refreshItems(Item[] itemsBefore, boolean updateWeight) {
+		int[] changedSlots = new int[itemsBefore.length];
+		int count = 0;
+		for (int index = 0; index < itemsBefore.length; index++) {
+			if (itemsBefore[index] != items.getContainerItems()[index])
+				changedSlots[count++] = index;
+		}
+		int[] finalChangedSlots = new int[count];
+		System.arraycopy(changedSlots, 0, finalChangedSlots, 0, count);
+		refresh(finalChangedSlots);
+		if (updateWeight)
+			Weights.updateWeight(player);
 	}
 
 	public ItemsContainer<Item> getItems() {
@@ -503,7 +516,6 @@ public final class Inventory implements Serializable {
 			Arrays.fill(finalised, 29, 32, null);
 		}
 		player.getPackets().sendItems(93, finalised);
-		Weights.updateWeight(player);
 	}
 
 	public void replaceItem(int id, int amount, int slot) {

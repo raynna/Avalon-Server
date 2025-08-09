@@ -3,48 +3,79 @@ package com.rs.kotlin.game.player.combat.magic
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
+import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
-import com.rs.java.game.Hit.HitLook
+import com.rs.java.game.npc.NPC
+import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
+import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.java.utils.Utils
-import com.rs.kotlin.game.player.combat.CombatCalculations
-import com.rs.kotlin.game.player.combat.CombatStyle
+import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 
 object MagicStyle : CombatStyle {
+
     private const val NO_SPELL = 65535
     private const val DEFAULT_SPELL = 65536
     private const val MIN_SPELL_ID = 256
 
     private const val SPLASH_GRAPHIC = 85
 
+
     private var currentSpell: Spell? = null
 
+    private lateinit var attacker: Player
+    private lateinit var defender: Entity
+
     override fun canAttack(attacker: Player, defender: Entity): Boolean {
+        this.attacker = attacker
+        this.defender = defender
+        val combatDefs = attacker.combatDefinitions
+        val spellId = combatDefs.spellId
+        currentSpell = when (combatDefs.getSpellBook()) {
+            AncientMagicks.id -> AncientMagicks.getSpell(spellId)
+            ModernMagicks.id -> ModernMagicks.getSpell(spellId)
+            else -> null
+        }
+        if (currentSpell != null) {
+            val weaponId = attacker.equipment.weaponId
+            if (currentSpell?.staff != null && weaponId !in currentSpell?.staff!!.ids) {
+                attacker.message("You don't have the correct staff to cast ${currentSpell?.name}.")
+                return false
+            }
+
+        }
         return true
     }
 
-    override fun getAttackDelay(attacker: Player): Int = 5
-    override fun getAttackDistance(attacker: Player): Int = 8
-
-    override fun applyHit(attacker: Player, defender: Entity, hit: Hit) {
-        WorldTasksManager.schedule(object : WorldTask() {
-            override fun run() {
-                if (hit.damage == 0) {
-                    defender.gfx(SPLASH_GRAPHIC, 100)
-                    return
-                }
-                defender.applyHit(hit)
-            }
-        }, getMagicHitDelay(attacker, defender))
+    override fun getAttackSpeed(): Int {
+        val baseSpeed = when (attacker.combatDefinitions.getSpellBook()) {
+            192 -> 5
+            else -> 5
+        }
+        return baseSpeed
     }
 
-    override fun attack(attacker: Player, defender: Entity) {
+    override fun getHitDelay(): Int {
+        val distance = Utils.getDistance(attacker, defender)
+        val delay = when {
+            distance <= 1 -> 1
+            distance <= 3 -> 2
+            distance <= 6 -> 3
+            else -> 4
+        }
+        return delay.coerceAtLeast(1) // Minimum 1 tick delay
+    }
+
+    override fun getAttackDistance(): Int {
+        return 8
+    }
+
+    override fun attack() {
         val combatDefs = attacker.combatDefinitions
         var spellId = combatDefs.spellId
-        attacker.message("spellId ${spellId}")
         val manual = isManualCast(spellId)
         if (manual) {
             attacker.message("manual cast: reset tempCast")
@@ -56,8 +87,6 @@ object MagicStyle : CombatStyle {
             ModernMagicks.id -> ModernMagicks.getSpell(spellId)
             else -> null
         }
-
-        logAttack(attacker)
         attacker.message("${ModernMagicks.id} vs ${combatDefs.getSpellBook()}")
         currentSpell?.let { spell ->
             when (combatDefs.getSpellBook()) {
@@ -68,92 +97,57 @@ object MagicStyle : CombatStyle {
         } ?: attacker.message("Invalid spell ID: $spellId")
     }
 
-    override fun onHit(attacker: Player, defender: Entity) {}
-
-    override fun onStop(attacker: Player?, defender: Entity?, interrupted: Boolean) {}
-
-    private fun isManualCast(spellId: Int): Boolean {
-        return spellId != NO_SPELL && spellId != DEFAULT_SPELL && spellId >= MIN_SPELL_ID
-    }
-
-    private fun logAttack(attacker: Player) {
-        attacker.message("Attacking with magic, spellbook ${attacker.combatDefinitions.spellBook}")
-    }
-
-    private fun handleAncientMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
-        attacker.message("Casting ancient spell: ${spell.name}")
-        val hitSuccess = CombatCalculations.calculateMagicAccuracy(attacker, defender)
-        val hit = CombatCalculations.calculateMagicMaxHit(attacker, spell)
-        var endGraphic = spell.endGraphicId
-        if (!hitSuccess) {
-            endGraphic = -1
-            hit.damage = 0
-        }
-        attacker.skills.addXp(Skills.MAGIC, spell.xp + (hit.damage * 0.3))
-
-        if (!hitSuccess) {
-            endGraphic = -1 // to make sure hitgraphic doesnt apply if its a splash
-        }
-
-        if (hit.damage > 0 && spell.bind != -1) {
-            defender.setFreezeDelay(spell.bind.toLong())
-        }
-
-        spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
-        spell.graphicId.takeIf { it != -1 }?.let { attacker.gfx(it) }
-
-        if (spell.projectileId != -1) {
-            if (spell.endGraphicId != -1) {
-                ProjectileManager.sendWithHitGraphic(
-                    Projectile.ELEMENTAL_SPELL,
-                    spell.projectileId,
-                    attacker,
-                    defender,
-                    endGraphic,
-                    100
-                )
-            } else {
-                ProjectileManager.send(Projectile.ELEMENTAL_SPELL, spell.projectileId, attacker, defender)
+    override fun delayHits(vararg hits: PendingHit) {
+        var totalDamage = 0
+        for (pending in hits) {
+            val hit = pending.hit
+            PrayerEffectHandler.handleOffensiveEffects(attacker, defender, hit)
+            PrayerEffectHandler.handleProtectionEffects(attacker, defender, hit)
+            totalDamage += hit.damage
+            scheduleHit(pending.delay) {
+                if (hit.damage > 0)
+                    defender.applyHit(hit)
+                onHit(hit)
             }
         }
+        addMagicExperience(totalDamage)
+    }
 
-        applyHit(attacker, defender, hit)
-
-        if (manual) {
-            WorldTasksManager.schedule(object : WorldTask() {
-                override fun run() {
-                    attacker.newActionManager.forceStop()
-                    attacker.resetWalkSteps()
-                    attacker.setNextFaceEntity(null)
-                }
-            })
+    override fun onHit(hit: Hit) {
+        if (hit.damage == 0) {
+            defender.gfx(SPLASH_GRAPHIC)
+            return
         }
+        if (currentSpell != null) {
+            if (currentSpell?.endGraphic?.id != -1 && currentSpell?.projectileId == -1 && currentSpell?.projectileIds!!.isEmpty()) {
+                defender.gfx(currentSpell!!.endGraphic)
+            }
+        }
+    }
+
+    override fun onStop(interrupted: Boolean) {
     }
 
     private fun handleModernMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
         attacker.message("Casting modern spell: ${spell.name}")
-        val hitSuccess = CombatCalculations.calculateMagicAccuracy(attacker, defender)
-        val hit = CombatCalculations.calculateMagicMaxHit(attacker, spell)
-        var endGraphic = spell.endGraphicId
-        if (!hitSuccess) {
-            endGraphic = -1
-            hit.damage = 0
-        }
-        attacker.skills.addXp(Skills.MAGIC, spell.xp + (hit.damage * 0.3))
-
+        val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spell = spell)
+        val splash = hit.damage == 0
+        var endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
         if (hit.damage > 0 && spell.bind != -1) {
-            defender.setFreezeDelay(spell.bind.toLong())
+            if (!defender.isFreezeImmune) {
+                defender.freeze(spell.bind)
+            } else {
+                attacker.message("That ${if (defender is NPC) "npc" else "player"} is already affected by this spell.")
+                return
+            }
         }
-
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
-        spell.graphicId.takeIf { it != -1 }?.let { attacker.gfx(it) }
-
+        spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
         if (spell.projectileIds.isNotEmpty()) {
             val heightDifferences = listOf(10, 0, -10)
-
             spell.projectileIds.zip(heightDifferences).forEach { (projectileId, heightDiff) ->
                 ProjectileManager.sendWithHeightAndHitGraphic(
-                    Projectile.ELEMENTAL_SPELL,
+                    spell.projectileType,
                     projectileId,
                     heightDiff,
                     attacker,
@@ -162,24 +156,23 @@ object MagicStyle : CombatStyle {
                 )
             }
         }
-
         if (spell.projectileId != -1) {
-            if (spell.endGraphicId != -1) {
+            if (endGraphic.id != -1) {
                 ProjectileManager.sendWithHitGraphic(
-                    Projectile.ELEMENTAL_SPELL,
+                    spell.projectileType,
                     spell.projectileId,
                     attacker,
                     defender,
-                    endGraphic,
-                    100
+                    endGraphic
                 )
             } else {
-                ProjectileManager.send(Projectile.ELEMENTAL_SPELL, spell.projectileId, attacker, defender)
+                ProjectileManager.send(spell.projectileType, spell.projectileId, attacker, defender)
             }
         }
-
-        applyHit(attacker, defender, hit)
-
+        if (hit.damage > 0 && spell.bind != -1) {
+            defender.addFreezeDelay(spell.bind, true)
+        }
+        delayHits(PendingHit(hit, getHitDelay()))
         if (manual) {
             WorldTasksManager.schedule(object : WorldTask() {
                 override fun run() {
@@ -189,31 +182,79 @@ object MagicStyle : CombatStyle {
                 }
             })
         }
+        attacker.message(
+            "Magic Attack -> " +
+                    "Spell: ${spell.name.toString()}, " +
+                    "SpellType: ${spell.type}, " +
+                    "BaseDamage: ${spell.damage}, " +
+                    "MaxHit: ${hit.maxHit}, " +
+                    "Hit: ${hit.damage}"
+        )
     }
 
-    private fun getMagicHitDelay(player: Player, defender: Entity): Int {
-        val spell = currentSpell ?: return 3
-        val distance = Utils.getDistance(player, defender)
-        return calculateMagicHitDelay(distance, spell)
-    }
-
-    private fun calculateMagicHitDelay(distance: Int, spell: Spell): Int {
-        var delay = when {
-            distance <= 1 -> 1
-            distance <= 3 -> 2
-            distance <= 6 -> 3
-            else -> 4
-        }
-
-        delay += when (spell.type) {
-            SpellType.Combat -> {
-                when {
-                    else -> 0 //TODO IF NEEDED
+    private fun handleAncientMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
+        attacker.message("Casting ancient spell: ${spell.name}")
+        val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spell = spell)
+        spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
+        spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
+        val splash = hit.damage == 0
+        var endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
+        if (hit.damage > 0 && spell.bind != -1) {
+            if (!defender.isFreezeImmune) {
+                defender.freeze(spell.bind)
+            } else {
+                if (spell.name.contains("ice barrage", ignoreCase = true)) {
+                    endGraphic = Graphics(1677, 100)
                 }
             }
-            else -> 0
         }
+        if (spell.projectileId != -1) {
+            if (spell.endGraphic.id != -1) {
+                ProjectileManager.sendWithHitGraphic(
+                    spell.projectileType,
+                    spell.projectileId,
+                    attacker,
+                    defender,
+                    endGraphic,
+                )
+            } else {
+                ProjectileManager.send(spell.projectileType, spell.projectileId, attacker, defender)
+            }
+        }
+        delayHits(PendingHit(hit, getHitDelay()))
+        if (manual) {
+            WorldTasksManager.schedule(object : WorldTask() {
+                override fun run() {
+                    attacker.newActionManager.forceStop()
+                    attacker.resetWalkSteps()
+                    attacker.setNextFaceEntity(null)
+                }
+            })
+        }
+        attacker.message(
+            "Magic Attack -> " +
+                    "Spell: ${spell.name.toString()}, " +
+                    "SpellType: ${spell.type}, " +
+                    "BaseDamage: ${spell.damage}, " +
+                    "MaxHit: ${hit.maxHit}, " +
+                    "Hit: ${hit.damage}"
+        )
+    }
 
-        return delay.coerceAtLeast(1) // Minimum 1 tick delay
+    private fun addMagicExperience(totalDamage: Int) {
+        val spellXp = currentSpell?.xp
+        val baseXp = (totalDamage * 0.3)
+        val combined = baseXp.plus(spellXp!!)
+        if (attacker.getCombatDefinitions().isDefensiveCasting) {
+            attacker.skills.addXp(Skills.DEFENCE, (totalDamage * 0.1))
+            attacker.skills.addXp(Skills.MAGIC, (totalDamage * 0.133))
+        } else {
+            attacker.skills.addXp(Skills.MAGIC, combined)
+        }
+        attacker.skills.addXp(Skills.HITPOINTS, (totalDamage * 0.133))
+    }
+
+    private fun isManualCast(spellId: Int): Boolean {
+        return spellId != NO_SPELL && spellId != DEFAULT_SPELL && spellId >= MIN_SPELL_ID
     }
 }

@@ -312,7 +312,7 @@ public class NPC extends Entity implements Serializable {
             if (!isForceWalking()) {
                 if (!cantInteract) {
                     if (!checkAgressivity()) {
-                        if (getFreezeDelay() < Utils.currentTimeMillis()) {
+                        if (!isFrozen()) {
                             if (!hasWalkSteps() && (walkType & NORMAL_WALK) != 0) {
                                 boolean can = false;
                                 for (int i = 0; i < 2; i++) {
@@ -348,7 +348,7 @@ public class NPC extends Entity implements Serializable {
             }
         }
         if (isForceWalking()) {
-            if (getFreezeDelay() < Utils.currentTimeMillis()) {
+            if (!isFrozen()) {
                 if (getX() != forceWalk.getX() || getY() != forceWalk.getY()) {
                     if (!hasWalkSteps()) {
                         int steps = RouteFinder.findRoute(RouteFinder.WALK_ROUTEFINDER, getX(), getY(), getPlane(),

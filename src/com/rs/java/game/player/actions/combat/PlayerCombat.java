@@ -463,7 +463,7 @@ public class PlayerCombat extends Action {
             }
             if (spell == ModernCombatSpellsStore.BIND || spell == ModernCombatSpellsStore.SNARE
                     || spell == ModernCombatSpellsStore.ENTANGLE) {
-                if (target.getFreezeDelay() > Utils.currentTimeMillis()) {
+                if (target.isFrozen()) {
                     player.message("This " + (target instanceof Player ? "player" : "monster") + " is already effected by this spell.");
                     return -1;
                 }
@@ -553,8 +553,8 @@ public class PlayerCombat extends Action {
                 magic_sound = 170;
             if (spell == AncientCombatSpellsStore.ICE_BARRAGE) {
                 magic_sound = 168;
-                if (target.getSize() >= 2 || target.getFreezeDelay() > 0
-                        || target.getFreezeImmuneDelay() > 0) {
+                if (target.getSize() >= 2 || target.isFrozen()
+                        || target.isFreezeImmune()) {
                     mage_hit_gfx = 1677;
                 } else
                     mage_hit_gfx = 369;
@@ -3327,7 +3327,7 @@ public class PlayerCombat extends Action {
 
         if (player.getPlane() != target.getPlane() || distanceX > size + maxDistance || distanceX < -1 - maxDistance
                 || distanceY > size + maxDistance || distanceY < -1 - maxDistance) {
-            player.resetFreezeDelay();
+            player.freeze(0);
             return false;
         }
         if (player.getCombatDefinitions().getSpellId() <= 0
@@ -3406,7 +3406,7 @@ public class PlayerCombat extends Action {
         int isRanging = isRanging(player);
         if (Utils.colides(player.getX(), player.getY(), size, target.getX(), target.getY(), target.getSize())
                 && !target.hasWalkSteps()) {
-            if (player.getFreezeDelay() >= Utils.currentTimeMillis()) {
+            if (player.isFrozen()) {
                 player.getPackets().sendGameMessage("A magical force prevents you from moving.");
                 return false;
             }
@@ -3429,7 +3429,7 @@ public class PlayerCombat extends Action {
                 && player.getEquipment().getWeaponId() != 24203 && target.getSize() == 1
                 && Math.abs(player.getX() - target.getX()) == 1 && Math.abs(player.getY() - target.getY()) == 1
                 && !target.hasWalkSteps()) {
-            if (player.getFreezeDelay() >= Utils.currentTimeMillis()) {
+            if (player.isFrozen()) {
                 player.getPackets().sendGameMessage("A magical force prevents you from moving.");
                 return false;
             }
