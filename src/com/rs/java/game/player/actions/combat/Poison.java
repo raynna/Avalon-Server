@@ -27,9 +27,8 @@ public final class Poison implements Serializable {
 	public void makePoisoned(int startDamage) {
 		if (poisonDamage > startDamage)
 			return;
-		if (entity instanceof Player) {
-			Player player = ((Player) entity);
-			if (player.getPoisonImmune() > Utils.currentTimeMillis())
+		if (entity instanceof Player player) {
+            if (player.getPoisonImmune() > Utils.currentTimeMillis())
 				return;
 			player.getPackets().sendGameMessage("You are now poisoned.");
 		}

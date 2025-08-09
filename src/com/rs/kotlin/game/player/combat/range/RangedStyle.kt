@@ -2,7 +2,6 @@ package com.rs.kotlin.game.player.combat.range
 
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
-import com.rs.java.game.Hit.HitLook
 import com.rs.java.game.World
 import com.rs.java.game.item.Item
 import com.rs.java.game.player.Equipment
@@ -10,6 +9,7 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.java.utils.Utils
+import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
@@ -44,7 +44,7 @@ object RangedStyle : CombatStyle {
             return false
         }
 
-        if (currentAmmo == null) {
+        if (currentAmmo == null && weaponAmmoType != AmmoType.THROWING && weaponAmmoType != AmmoType.DART) {
             attacker.message("You don't have any ammunition equipped.")
             return false
         }
@@ -66,10 +66,11 @@ object RangedStyle : CombatStyle {
                 return false
             }
         }
-
-        if (weaponAmmoType != ammoType) {
-            attacker.message("You can't use $ammoName with a $weaponName.")
-            return false
+        if (weaponAmmoType != AmmoType.THROWING && weaponAmmoType != AmmoType.DART) {
+            if (weaponAmmoType != ammoType) {
+                attacker.message("You can't use $ammoName with a $weaponName.")
+                return false
+            }
         }
 
         return true
@@ -114,8 +115,8 @@ object RangedStyle : CombatStyle {
             }
         }
         CombatAnimations.getAnimation(currentWeapon!!.itemId, attackStyle)?.let { attacker.animate(it) }
-        if (currentAmmo!!.startGfx != -1) {
-            attacker.gfx(currentAmmo!!.startGfx, 100)
+        if (currentAmmo!!.startGfx != null) {
+            attacker.gfx(currentAmmo?.startGfx)
         }
         sendProjectile()
         handleSpecialEffects()
@@ -133,8 +134,26 @@ object RangedStyle : CombatStyle {
 
     override fun onHit(hit: Hit) {
         if (currentAmmo != null) {
+            if (currentAmmo?.endGfx != null) {
+                defender.gfx(currentAmmo?.endGfx);
+            }
             if (currentAmmo!!.dropOnGround) {
                 dropAmmoOnGround()
+            }
+            //mainhand poison
+            if (currentWeapon?.poisonSeverity != -1) {
+                currentWeapon?.poisonSeverity?.let {
+                    defender.newPoison.roll(attacker, NewPoison.WeaponType.RANGED, it)
+                }
+            }
+            //ammopoison
+            if (currentAmmo?.ammoType == currentWeapon?.ammoType) {
+                if (currentAmmo?.poisonSeverity != -1) {
+                    currentAmmo?.poisonSeverity?.let {
+                        defender.newPoison.roll(attacker, NewPoison.WeaponType.RANGED, it
+                        )
+                    };
+                }
             }
         }
     }
@@ -159,52 +178,61 @@ object RangedStyle : CombatStyle {
     }
 
     private fun consumeAmmo(): Boolean {
-        val ammo = attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()] ?: return false
+        val weapon = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]
+        val ammoItem = attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]
+        val ammoType = currentWeapon?.ammoType ?: currentAmmo?.ammoType
 
-        // Special case for chinchompas which are the weapon
-        if (ammo.id == 11959) {
-            attacker.equipment.deleteItem(ammo.id, 1)
+        if (weapon?.id == 11959) {
+            attacker.equipment.deleteItem(weapon.id, 1)
             return true
         }
 
-        // Don't consume bolts with certain crossbows
-        if (currentAmmo!!.ammoType == AmmoType.BOLT &&
-            attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id in listOf(9183, 9185)) {
-            return true
-        }
-
-        // Don't consume ammo if wearing Ava's device with chance
-        if (attacker.equipment.items[Equipment.SLOT_CAPE.toInt()]?.id in listOf(10498, 10499)) {
-            if (Utils.random(4) != 0) { // 75% chance to save ammo
+        if (attacker.equipment.items[Equipment.SLOT_CAPE.toInt()]?.id in listOf(10498, 10499, 20068)) {
+            if (Utils.roll(3,4)) {
                 return true
             }
         }
 
-        attacker.equipment.deleteItem(ammo.id, 1)
-        return true
+        if (ammoType == AmmoType.THROWING || ammoType == AmmoType.DART) {
+            if (weapon != null) {
+                attacker.equipment.deleteItem(weapon.id, 1)
+                return true
+            }
+        }
+
+        if (ammoItem != null) {
+            attacker.equipment.deleteItem(ammoItem.id, 1)
+            return true
+        }
+
+        return false
     }
 
+
     private fun sendProjectile() {
-        val projectileId = currentAmmo!!.projectileId
-        val projectileType = when (currentAmmo!!.ammoType) {
+        val ammoProjectileId = currentAmmo?.projectileId?:27
+        val weaponProjectileId = currentWeapon?.projectileId?:212//for throwing weapons like knifes and darts
+        val type = currentWeapon?.ammoType ?: currentAmmo?.ammoType
+        val projectileType = when (type) {
             AmmoType.ARROW -> Projectile.ARROW
             AmmoType.BOLT -> Projectile.BOLT
             AmmoType.DART -> Projectile.DART
-            AmmoType.KNIFE -> Projectile.THROWING_KNIFE
+            AmmoType.THROWING -> Projectile.THROWING_KNIFE
             AmmoType.JAVELIN -> Projectile.JAVELIN
             AmmoType.CHINCHOMPA -> Projectile.CHINCHOMPA
             AmmoType.THROWNAXE -> Projectile.THROWING_KNIFE
+            null -> Projectile.BOLT
         }
-
-        if (currentWeapon!!.weaponStyle == WeaponStyle.CHINCHOMPA) {
-            //TODO ProjectileManager.sendMulti(projectileType, projectileId, attacker, defender)
+        if (weaponProjectileId != -1) {
+            ProjectileManager.send(
+                projectileType,
+                weaponProjectileId,
+                attacker, defender)
         } else {
             ProjectileManager.send(
                 projectileType,
-                projectileId,
-                attacker,
-                defender
-            )
+                ammoProjectileId,
+                attacker, defender)
         }
     }
 
@@ -220,7 +248,8 @@ object RangedStyle : CombatStyle {
                     attacker = attacker,
                     defender = defender,
                     weapon = currentWeapon!!,
-                    attackStyle = attackStyle
+                    attackStyle = attackStyle,
+                    ammo = currentAmmo
                 )
                 special.execute(context)
         }

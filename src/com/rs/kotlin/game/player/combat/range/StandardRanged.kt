@@ -74,6 +74,37 @@ import com.rs.kotlin.game.world.projectile.ProjectileManager
  * Dark bow	            9 ticks	8 ticks
  */
 
+
+/**
+ * Projectiles
+ * Bronze dart → 226
+ * Iron dart → 227
+ * Steel dart → 228
+ * Mithril dart → 229
+ * Adamant dart → 230
+ * Rune dart → 231
+ *
+ * Bronze javelin → 200
+ * Iron javelin → 201
+ * Steel javelin → 202
+ * Mithril javelin → 201 (note: same as iron)
+ * Adamant javelin → 204
+ * Rune javelin → 205
+ *
+ * Bronze knife → 212
+ * Iron knife → 213
+ * Steel knife → 214
+ * Mithril knife → 216
+ * Adamant knife → 217
+ * Rune knife → 218
+ * Black knife → 215
+ *
+ * Most bolts (rune, bronze, dragon, silver, etc.)	27
+ * Bakriminel bolts	3023
+ * Coral bolts	3172
+ * Royal bolts	3173
+ */
+
 object StandardRanged : RangeData() {
     override val weapons = listOf(
         RangedWeapon(
@@ -291,6 +322,41 @@ object StandardRanged : RangeData() {
                     )
                 }
             )
+        ),
+
+        //knifes
+        RangedWeapon(
+            itemId = 864,
+            name = "Bronze knife",
+            weaponStyle = WeaponStyle.THROWING,
+            attackSpeed = 3,
+            attackRange = 4,
+            projectileId = 212,
+            animationId = 9057,
+            ammoType = AmmoType.THROWING
+        ),
+        RangedWeapon(
+            itemId = 870,
+            name = "Bronze knife (p)",
+            weaponStyle = WeaponStyle.THROWING,
+            attackSpeed = 3,
+            attackRange = 4,
+            projectileId = 212,
+            poisonSeverity = 20,
+            animationId = 9057,
+            ammoType = AmmoType.THROWING
+        ),
+
+        //darts
+        RangedWeapon(
+            itemId = 806,
+            name = "Bronze dart",
+            weaponStyle = WeaponStyle.THROWING,
+            attackSpeed = 3,
+            attackRange = 3,
+            projectileId = 226,
+            animationId = 582,
+            ammoType = AmmoType.DART
         )
     )
 
@@ -300,67 +366,61 @@ object StandardRanged : RangeData() {
             name = "Bronze arrow",
             ammoTier = AmmoTier.BRONZE_ARROW,
             levelRequired = 1,
-            damageBonus = 0,
             projectileId = 10,
-            startGfx = 19
+            startGfx = Graphics(19, 100)
         ),
         RangedAmmo(
             itemId = 884,
             name = "Iron arrow",
             ammoTier = AmmoTier.IRON_ARROW,
             levelRequired = 1,
-            damageBonus = 1,
             projectileId = 9,
-            startGfx = 18,
+            startGfx = Graphics(18, 100),
         ),
         RangedAmmo(
             itemId = 886,
             name = "Steel arrow",
             ammoTier = AmmoTier.STEEL_ARROW,
             levelRequired = 1,
-            damageBonus = 1,
             projectileId = 11,
-            startGfx = 20,
+            startGfx = Graphics(20, 100),
         ),
         RangedAmmo(
             itemId = 888,
             name = "Mithril arrow",
             ammoTier = AmmoTier.MITHRIL_ARROW,
             levelRequired = 1,
-            damageBonus = 1,
             projectileId = 12,
-            startGfx = 21,
+            startGfx = Graphics(21, 100),
         ),
         RangedAmmo(
             itemId = 890,
             name = "Adamant arrow",
             ammoTier = AmmoTier.ADAMANT_ARROW,
             levelRequired = 1,
-            damageBonus = 1,
             projectileId = 13,
-            startGfx = 22,
+            startGfx = Graphics(22, 100),
         ),
         RangedAmmo(
             itemId = 892,
             name = "Rune arrow",
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
-            damageBonus = 1,
             projectileId = 15,
-            startGfx = 24,
+            startGfx = Graphics(24, 100),
         ),
         RangedAmmo(
             itemId = 19157,
             name = "Guthix arrow",
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
-            damageBonus = 1,
             projectileId = 98,
-            startGfx = 95,
+            startGfx = Graphics(95, 100),
             specialEffect = SpecialEffect(
                 chance = 10,
                 execute = { context ->
                     val chance = if (context.weapon.itemId == 19146) 5 else 10
+                    context.ammo?.endGfx = null//TODO not having to reset this everytime
                     if (Utils.roll(1, chance)) {
                         val hit = context.combat.registerHit(
                             attacker = context.attacker,
@@ -368,17 +428,17 @@ object StandardRanged : RangeData() {
                             attackStyle = context.attackStyle,
                             weapon = context.weapon,
                             combatType = CombatType.RANGED,
-                            hitLook =  Hit.HitLook.MAGIC_DAMAGE,
+                            hitLook = Hit.HitLook.MAGIC_DAMAGE,
                             damageMultiplier = 0.2
                         )
                         if (hit.damage == 0) {
-                            context.defender.gfx(Graphics(85, 100))
+                            context.ammo?.endGfx = Graphics(85, 100);
                         } else {
+                            context.ammo?.endGfx = Graphics(127);
                             hit.setCriticalMark()
-                            context.defender.gfx(Graphics(127))
                         }
                         context.combat.delayHits(
-                            PendingHit(hit, context.combat.getHitDelay())
+                            PendingHit(hit, context.combat.getHitDelay() + 1)
                         )
                     }
                 }
@@ -389,13 +449,13 @@ object StandardRanged : RangeData() {
             name = "Saradomin arrow",
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
-            damageBonus = 1,
             projectileId = 99,
-            startGfx = 96,
+            startGfx = Graphics(96, 100),
             specialEffect = SpecialEffect(
                 chance = 10,
                 execute = { context ->
                     val chance = if (context.weapon.itemId == 19143) 5 else 10
+                    context.ammo?.endGfx = null//TODO not having to reset this everytime
                     if (Utils.roll(1, chance)) {
                         val hit = context.combat.registerHit(
                             attacker = context.attacker,
@@ -403,17 +463,17 @@ object StandardRanged : RangeData() {
                             attackStyle = context.attackStyle,
                             weapon = context.weapon,
                             combatType = CombatType.RANGED,
-                            hitLook =  Hit.HitLook.MAGIC_DAMAGE,
+                            hitLook = Hit.HitLook.MAGIC_DAMAGE,
                             damageMultiplier = 0.2
                         )
                         if (hit.damage == 0) {
-                            context.defender.gfx(Graphics(85, 100))
+                            context.ammo?.endGfx = Graphics(85, 100);
                         } else {
+                            context.ammo?.endGfx = Graphics(128);
                             hit.setCriticalMark()
-                            context.defender.gfx(Graphics(128))
                         }
                         context.combat.delayHits(
-                            PendingHit(hit, context.combat.getHitDelay())
+                            PendingHit(hit, context.combat.getHitDelay() + 1)
                         )
                     }
                 }
@@ -424,13 +484,13 @@ object StandardRanged : RangeData() {
             name = "Zamorak arrow",
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
-            damageBonus = 1,
             projectileId = 100,
-            startGfx = 97,
+            startGfx = Graphics(97, 100),
             specialEffect = SpecialEffect(
                 chance = 10,
                 execute = { context ->
                     val chance = if (context.weapon.itemId == 19149) 5 else 10
+                    context.ammo?.endGfx = null//TODO not having to reset this everytime
                     if (Utils.roll(1, chance)) {
                         val hit = context.combat.registerHit(
                             attacker = context.attacker,
@@ -438,17 +498,17 @@ object StandardRanged : RangeData() {
                             attackStyle = context.attackStyle,
                             weapon = context.weapon,
                             combatType = CombatType.RANGED,
-                            hitLook =  Hit.HitLook.MAGIC_DAMAGE,
+                            hitLook = Hit.HitLook.MAGIC_DAMAGE,
                             damageMultiplier = 0.2
                         )
                         if (hit.damage == 0) {
-                            context.defender.gfx(Graphics(85, 100))
+                            context.ammo?.endGfx = Graphics(85, 100);
                         } else {
+                            context.ammo?.endGfx = Graphics(129);
                             hit.setCriticalMark()
-                            context.defender.gfx(Graphics(129))
                         }
                         context.combat.delayHits(
-                            PendingHit(hit, context.combat.getHitDelay())
+                            PendingHit(hit, context.combat.getHitDelay() + 1)
                         )
                     }
                 }
@@ -458,27 +518,51 @@ object StandardRanged : RangeData() {
         RangedAmmo(
             itemId = 877,
             name = "Bronze bolts",
-            ammoType =  AmmoType.BOLT,
+            ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.BRONZE_BOLT,
             levelRequired = 1,
-            damageBonus = 0,
             projectileId = 27,
         ),
         RangedAmmo(
             itemId = 9140,
             name = "Iron bolts",
-            ammoType =  AmmoType.BOLT,
+            ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.IRON_BOLT,
-            levelRequired = 10,
-            damageBonus = 1,
+            levelRequired = 1,
+            projectileId = 27,
+        ),
+        RangedAmmo(
+            itemId = 9287,
+            name = "Iron bolts (p)",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.IRON_BOLT,
+            levelRequired = 1,
+            poisonSeverity = 20,
+            projectileId = 27,
+        ),
+        RangedAmmo(
+            itemId = 9294,
+            name = "Iron bolts (p+)",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.IRON_BOLT,
+            levelRequired = 1,
+            poisonSeverity = 25,
+            projectileId = 27,
+        ),
+        RangedAmmo(
+            itemId = 9301,
+            name = "Iron bolts (p++)",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.IRON_BOLT,
+            levelRequired = 1,
+            poisonSeverity = 30,
             projectileId = 27,
         ),
         RangedAmmo(
             itemId = 8882,
             name = "Bone bolts",
-            ammoType =  AmmoType.BOLT,
+            ammoType = AmmoType.BOLT,
             levelRequired = 10,
-            damageBonus = 1,
             projectileId = 27,
         )
     )

@@ -6,8 +6,8 @@ public final class Graphics {
 
 	public Graphics(int id) {
 		this(id, 0, 0, 0);
-
 	}
+
 	public Graphics(int id, int height) {
 		this(id, 0, height, 0);
 	}

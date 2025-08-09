@@ -20,7 +20,6 @@ import com.rs.java.game.npc.pet.Pet;
 import com.rs.java.game.npc.qbd.TorturedSoul;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.VariableKeys;
 import com.rs.java.game.player.actions.combat.ModernMagicks;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.actions.combat.Poison;
@@ -33,6 +32,7 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.NewPoison;
 
 public abstract class Entity extends WorldTile {
 
@@ -94,6 +94,7 @@ public abstract class Entity extends WorldTile {
     // static maps
     private boolean run;
     private Poison poison;
+    private NewPoison newPoison;
     public transient int morriganHits;
     public transient int vineHits;
 
@@ -101,6 +102,7 @@ public abstract class Entity extends WorldTile {
     public Entity(WorldTile tile) {
         super(tile);
         poison = new Poison();
+        newPoison = new NewPoison(this);
     }
 
     @Override
@@ -124,8 +126,17 @@ public abstract class Entity extends WorldTile {
         lastFaceEntity = -1;
         nextFaceEntity = -2;
         poison.setEntity(this);
+        newPoison.setEntity(this);
         if (tickTimers == null)
             tickTimers = new HashMap<>();
+        if (intMap == null)
+            intMap = new HashMap<>();
+        if (longMap == null)
+            longMap = new HashMap<>();
+        if (booleanMap == null)
+            booleanMap = new HashMap<>();
+        if (stringKey == null)
+            stringKey = new HashMap<>();
     }
 
     public int getClientIndex() {
@@ -1140,6 +1151,7 @@ public abstract class Entity extends WorldTile {
 
     public void processEntity() {
         poison.processPoison();
+        newPoison.processPoison();
         processMovement();
         processReceivedHits();
         processReceivedDamage();
@@ -1212,7 +1224,67 @@ public abstract class Entity extends WorldTile {
         }*/
     }
 
-    private Map<Keys.IntKey, Integer> tickTimers = new HashMap<>();
+    private Map<Keys.LongKey, Long> longMap = new HashMap<>();
+    private Map<Keys.IntKey, Integer> intMap = new HashMap<>();
+    private Map<Keys.BooleanKey, Boolean> booleanMap = new HashMap<>();
+    private Map<Keys.StringKey, String> stringKey = new HashMap<>();
+
+    public void set(Keys.LongKey key, long i) {
+        longMap.put(key, i);
+    }
+
+    public long get(Keys.LongKey key) {
+        Long map = longMap.getOrDefault(key, key.getDefaultValue());
+        if (map == null) {
+            System.out.println("LongMap: " + map + " is null");
+            return -1;
+        }
+        return map.longValue();
+    }
+
+    public void set(Keys.IntKey key, int i) {
+        intMap.put(key, i);
+    }
+
+    public void add(Keys.IntKey key, int i) {
+        intMap.merge(key, i, Integer::sum);
+    }
+
+    public void remove(Keys.IntKey key, int i) {
+        intMap.compute(key, (k, v) -> Math.max(v - i, 0));
+    }
+
+    public void remove(Keys.LongKey key, int i) {
+        longMap.compute(key, (k, v) -> Math.max(v - i, 0));
+    }
+
+    public void clear(Keys.LongKey key) {
+        longMap.remove(key);
+    }
+
+    public void clear(Keys.IntKey key) {
+        intMap.remove(key);
+    }
+
+    public int get(Keys.IntKey key) {
+        Integer map = intMap.getOrDefault(key, key.getDefaultValue());
+        if (map == null)
+            return 0;
+        return map.intValue();
+    }
+
+    public void set(Keys.BooleanKey key, boolean i) {
+        booleanMap.put(key, i);
+    }
+
+    public boolean get(Keys.BooleanKey key) {
+        Boolean map = booleanMap.getOrDefault(key, key.getDefaultValue());
+        if (map == null)
+            return false;
+        return map.booleanValue();
+    }
+
+    public Map<Keys.IntKey, Integer> tickTimers = new HashMap<>();
 
     public void setTimer(Keys.IntKey key, int ticks) {
         tickTimers.put(key, ticks);
@@ -1507,6 +1579,11 @@ public abstract class Entity extends WorldTile {
     public Poison getPoison() {
         return poison;
     }
+
+    public NewPoison getNewPoison() {
+        return newPoison;
+    }
+
 
     public ForceTalk getNextForceTalk() {
         return nextForceTalk;

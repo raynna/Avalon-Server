@@ -203,7 +203,7 @@ class CombatAction(
         val weaponId = player.equipment.getWeaponId()
         val ranged = RangeData.getWeaponByItemId(weaponId);
         if (ranged != null) {
-            println("[CombatAction] isRangedWeapon(): weaponId=${ranged.name}, ${ranged.ammoType.name}")
+           // println("[CombatAction] isRangedWeapon(): weaponId=${ranged.name}, ${ranged.ammoType.name}")
         }
         return ranged != null
     }

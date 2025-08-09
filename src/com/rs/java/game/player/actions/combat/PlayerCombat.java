@@ -8,15 +8,8 @@ import java.util.concurrent.TimeUnit;
 import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.thread.CoresManager;
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.ForceTalk;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.Hit;
+import com.rs.java.game.*;
 import com.rs.java.game.Hit.HitLook;
-import com.rs.java.game.Region;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.minigames.duel.DuelArena;
 import com.rs.java.game.minigames.godwars.zaros.NexMinion;
@@ -2694,13 +2687,13 @@ public class PlayerCombat extends Action {
                 if (player.getTemporaryAttributtes().get("GODMODE") != null)
                     hit.setDamage(n.getHitpoints());
             }
-            if (player.isAtWild() && player.get(IntKey.EP) != 100 && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
+            if (player.isAtWild() && player.get(Keys.IntKey.EP) != 100 && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
                 if (Utils.getRandom(2) == 0) {
                     int random = Utils.random(5) + 1;
-                    if (player.get(IntKey.EP) + random > 100)
-                        player.set(IntKey.EP, 100);
+                    if (player.get(Keys.IntKey.EP) + random > 100)
+                        player.set(Keys.IntKey.EP, 100);
                     else
-                        player.add(IntKey.EP, random);
+                        player.add(Keys.IntKey.EP, random);
                 }
             }
             int damage = hit.getDamage() > target.getHitpoints() ? target.getHitpoints() : hit.getDamage();
@@ -2997,7 +2990,7 @@ public class PlayerCombat extends Action {
                 if (weaponName.contains("dart"))
                     return 582;
                 if (weaponName.contains("knife"))
-                    return 9055;
+                    return 9057;
                 if (weaponName.contains("scimitar") || weaponName.contains("korasi's sword")) {
                     switch (attackStyle) {
                         case 2:

@@ -166,6 +166,8 @@ public final class Equipment implements Serializable {
 			return true;
 		if (name.contains("mime m"))
 			return true;
+		if (item.getId() == 21389 || item.getId() >= 2910 && item.getId() <= 2940)
+			return true;
 		return item.getDefinitions().getEquipType() == 8;
 	}
 

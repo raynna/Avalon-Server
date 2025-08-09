@@ -28,7 +28,7 @@ enum class AmmoType {
     ARROW,
     BOLT,
     DART,
-    KNIFE,
+    THROWING,
     JAVELIN,
     CHINCHOMPA,
     THROWNAXE

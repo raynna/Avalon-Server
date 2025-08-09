@@ -13,15 +13,8 @@ import com.rs.core.cache.defintions.GeneralRequirementMap;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.core.cache.defintions.ObjectDefinitions;
-import com.rs.java.game.Animation;
-import com.rs.java.game.ForceMovement;
-import com.rs.java.game.ForceTalk;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.Hit;
+import com.rs.java.game.*;
 import com.rs.java.game.Hit.HitLook;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldObject;
-import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
@@ -175,9 +168,7 @@ public final class Commands {
                     }, 0, 2);
                     return true;
                 case "add":
-                    player.add(VariableKeys.IntKey.EP, 10);
-
-
+                    player.add(Keys.IntKey.EP, 10);
                     return true;
                 case "store":
                     player.getPackets().sendOpenURL("http://avalonrsps718.everythingrs.com/services/store");
@@ -542,7 +533,7 @@ public final class Commands {
                         dr = 0;
                     player.setNextForceTalk(
                             new ForceTalk("Kills: " + player.getKillCount() + " Deaths: " + player.getDeathCount()
-                                    + " Streak: " + player.get(VariableKeys.IntKey.KILLSTREAK) + " Ratio: " + new DecimalFormat("##.#").format(dr)));
+                                    + " Streak: " + player.get(Keys.IntKey.KILLSTREAK) + " Ratio: " + new DecimalFormat("##.#").format(dr)));
                     return true;
                 case "switchitemslook":
                     player.switchItemsLook();
@@ -1272,6 +1263,9 @@ public final class Commands {
                 case "lowhp":
                     player.applyHit(new Hit(player, player.getHitpoints() - 1, HitLook.REGULAR_DAMAGE));
                     return true;
+                case "poisonme":
+                    player.getNewPoison().startPoison(30);
+                        return true;
                 case "serverdoubledrop":
                     try {
                         boolean doubledrop = Boolean.valueOf(cmd[1]);
@@ -1863,7 +1857,7 @@ public final class Commands {
                         }
                         if (p != null) {
                             try {
-                                p.add(VariableKeys.IntKey.KILLSTREAK, amount);
+                                p.add(Keys.IntKey.KILLSTREAK, amount);
                                 p.getPackets().sendGameMessage("You recieve " + amount + " killstreaks.");
                                 return true;
                             } catch (NumberFormatException e) {
@@ -1884,7 +1878,7 @@ public final class Commands {
                         }
                         if (p != null) {
                             try {
-                                p.add(VariableKeys.IntKey.KILLCOUNT, amount);
+                                p.add(Keys.IntKey.KILLCOUNT, amount);
                                 p.getPackets().sendGameMessage("You recieve " + amount + " kills.");
                                 return true;
                             } catch (NumberFormatException e) {
@@ -1905,7 +1899,7 @@ public final class Commands {
                         }
                         if (p != null) {
                             try {
-                                p.add(VariableKeys.IntKey.DEATHCOUNT, amount);
+                                p.add(Keys.IntKey.DEATHCOUNT, amount);
                                 p.getPackets().sendGameMessage("You recieve " + amount + " deaths.");
                                 return true;
                             } catch (NumberFormatException e) {
@@ -2042,6 +2036,7 @@ public final class Commands {
                                     * player.getAuraManager().getPrayerPotsRestoreMultiplier()));
                     if (player.getPoison().isPoisoned())
                         player.getPoison().makePoisoned(0);
+                    player.getNewPoison().reset();
                     player.setRunEnergy(100);
                     player.heal(player.getMaxHitpoints());
                     player.getSkills().restoreSkills();
@@ -2102,7 +2097,7 @@ public final class Commands {
                         }
                         if (p != null) {
                             try {
-                                p.add(VariableKeys.IntKey.KILLCOUNT, amount);
+                                p.add(Keys.IntKey.KILLCOUNT, amount);
                                 return true;
                             } catch (NumberFormatException e) {
                             }
@@ -2341,7 +2336,7 @@ public final class Commands {
 
                 case "ks":
                 case "killstreak":
-                    player.setNextForceTalk(new ForceTalk("My current killstreak: " + player.get(VariableKeys.IntKey.KILLSTREAK)));
+                    player.setNextForceTalk(new ForceTalk("My current killstreak: " + player.get(Keys.IntKey.KILLSTREAK)));
                     return true;
 
                 case "players":
@@ -2498,7 +2493,7 @@ public final class Commands {
                         }
                         if (p != null) {
                             try {
-                                p.set(VariableKeys.IntKey.DEATHCOUNT, amount);
+                                p.set(Keys.IntKey.DEATHCOUNT, amount);
                                 return true;
                             } catch (NumberFormatException e) {
                             }

@@ -52,7 +52,6 @@ object SpecialRanged : RangeData() {
             name = "Dragon arrow",
             ammoType =  AmmoType.ARROW,
             levelRequired = 60,
-            damageBonus = 6,
             projectileId = 1111,
         ),
         // Special bolts
@@ -61,7 +60,6 @@ object SpecialRanged : RangeData() {
             name = "Ruby bolts (e)",
             ammoType =  AmmoType.BOLT,
             levelRequired = 50,
-            damageBonus = 3,
             projectileId = 27
         ),
         RangedAmmo(
@@ -69,7 +67,6 @@ object SpecialRanged : RangeData() {
             name = "Dragonstone bolts (e)",
             ammoType =  AmmoType.BOLT,
             levelRequired = 60,
-            damageBonus = 5,
             projectileId = 27
         ),
         RangedAmmo(
@@ -77,7 +74,6 @@ object SpecialRanged : RangeData() {
             name = "Onyx bolts (e)",
             ammoType =  AmmoType.BOLT,
             levelRequired = 70,
-            damageBonus = 7,
             projectileId = 27,
         ),
         // Chinchompas
@@ -86,7 +82,6 @@ object SpecialRanged : RangeData() {
             name = "Red chinchompa",
             ammoType =  AmmoType.CHINCHOMPA,
             levelRequired = 55,
-            damageBonus = 0,
             projectileId = 908,
         )
     )

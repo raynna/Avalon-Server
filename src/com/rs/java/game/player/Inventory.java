@@ -489,6 +489,7 @@ public final class Inventory implements Serializable {
 			builder.append("FileId: ").append(item.getDefinitions().getFileId());
 			builder.append(", ArchiveId: ").append(item.getDefinitions().getArchiveId());
 			builder.append(", ItemId: " ).append(item.getId());
+			builder.append(", EquipmentType: " ).append(item.getDefinitions().getEquipType());
 			player.message(builder.toString());
 		}
 		if (item.getMetadata() != null) {

@@ -13,6 +13,7 @@ data class RangedWeapon(
     override val attackDelay: Int? = null,
     override val animationId: Int? = null,
     override val specialAttack: SpecialAttack? = null,
+    val poisonSeverity: Int = -1,
     val projectileId: Int? = null,
     val ammoType: AmmoType,
     val maxAmmoTier: AmmoTier? = null,

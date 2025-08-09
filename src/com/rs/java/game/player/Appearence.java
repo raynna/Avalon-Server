@@ -224,13 +224,13 @@ public class Appearence implements Serializable {
 						hash |= 1 << slotFlag;
 						stream.writeByte((modifyColor ? 0x4 : 0) | (bottom != 0 || top != 0 ? 0x8 : 0));
 						if (modifyColor) {
-							int slots = 0 | 1 << 4 | 2 << 8 | 3 << 12;
+							int slots = 1 << 4 | 2 << 8 | 3 << 12;
 							stream.writeShort(slots);
 							for (int i = 0; i < 4; i++)
 								stream.writeShort(colors[i]);
 						}
 						if (bottom != 0 || top != 0) {
-							int slots = 0 | 1 << 4;
+							int slots = 1 << 4;
 							stream.writeByte(slots);
 							stream.writeShort(ClansManager.getMottifTexture(top));
 							stream.writeShort(ClansManager.getMottifTexture(bottom));
@@ -253,13 +253,13 @@ public class Appearence implements Serializable {
 						hash |= 1 << slotFlag;
 						stream.writeByte((modifyColor ? 0x4 : 0) | (bottom != 0 || top != 0 ? 0x8 : 0));
 						if (modifyColor) {
-							int slots = 0 | 1 << 4 | 2 << 8 | 3 << 12;
+							int slots = 1 << 4 | 2 << 8 | 3 << 12;
 							stream.writeShort(slots);
 							for (int i = 0; i < 4; i++)
 								stream.writeShort(colors[i]);
 						}
 						if (bottom != 0 || top != 0) {
-							int slots = 0 | 1 << 4;
+							int slots = 1 << 4;
 							stream.writeByte(slots);
 							stream.writeShort(ClansManager.getMottifTexture(top));
 							stream.writeShort(ClansManager.getMottifTexture(bottom));

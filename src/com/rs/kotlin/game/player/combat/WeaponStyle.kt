@@ -23,6 +23,18 @@ enum class WeaponStyle(
             AttackStyle.LONGRANGE to AttackBonusType.RANGE
         )
     ),
+    THROWING(
+        attackStyles = listOf(
+            AttackStyle.ACCURATE,
+            AttackStyle.RAPID,
+            AttackStyle.LONGRANGE
+        ),
+        attackBonusMap = mapOf(
+            AttackStyle.ACCURATE to AttackBonusType.RANGE,
+            AttackStyle.RAPID to AttackBonusType.RANGE,
+            AttackStyle.LONGRANGE to AttackBonusType.RANGE
+        )
+    ),
     LONGBOW(
         attackStyles = listOf(
             AttackStyle.ACCURATE,

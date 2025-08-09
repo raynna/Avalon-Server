@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import com.rs.java.game.Keys;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.VariableKeys;
 
@@ -21,8 +22,8 @@ public final class KillTables implements Serializable {
 
 	public KillTables(Player player) {
 		this.username = player.getUsername();
-		this.kills = player.get(VariableKeys.IntKey.KILLCOUNT);
-		this.deaths = player.get(VariableKeys.IntKey.DEATHCOUNT);
+		this.kills = player.get(Keys.IntKey.KILLCOUNT);
+		this.deaths = player.get(Keys.IntKey.DEATHCOUNT);
 	}
 
 	public static void init() {

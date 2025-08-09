@@ -133,67 +133,6 @@ public class Player extends Entity {
 
     private static final long serialVersionUID = 2011932556974180375L;
 
-
-    private Map<VariableKeys.LongKey, Long> longMap = new HashMap<>();
-    private Map<VariableKeys.IntKey, Integer> intMap = new HashMap<>();
-    private Map<VariableKeys.BooleanKey, Boolean> booleanMap = new HashMap<>();
-    private Map<VariableKeys.StringKey, String> stringKey = new HashMap<>();
-
-    public void set(LongKey key, long i) {
-        longMap.put(key, i);
-    }
-
-    public long get(LongKey key) {
-        Long map = longMap.getOrDefault(key, key.getDefaultValue());
-        if (map == null) {
-            System.out.println("LongMap: " + map + " is null");
-            return -1;
-        }
-        return map.longValue();
-    }
-
-    public void set(IntKey key, int i) {
-        intMap.put(key, i);
-    }
-
-    public void add(IntKey key, int i) {
-        intMap.merge(key, i, Integer::sum);
-    }
-
-    public void remove(IntKey key, int i) {
-        intMap.compute(key, (k, v) -> Math.max(v - i, 0));
-    }
-
-    public void remove(LongKey key, int i) {
-        longMap.compute(key, (k, v) -> Math.max(v - i, 0));
-    }
-
-    public void clear(LongKey key) {
-        longMap.remove(key);
-    }
-
-    public void clear(IntKey key) {
-        intMap.remove(key);
-    }
-
-    public int get(IntKey key) {
-        Integer map = intMap.getOrDefault(key, key.getDefaultValue());
-        if (map == null)
-            return 0;
-        return map.intValue();
-    }
-
-    public void set(BooleanKey key, boolean i) {
-        booleanMap.put(key, i);
-    }
-
-    public boolean get(BooleanKey key) {
-        Boolean map = booleanMap.getOrDefault(key, key.getDefaultValue());
-        if (map == null)
-            return false;
-        return map.booleanValue();
-    }
-
     /**
      * @Player
      */
@@ -585,15 +524,15 @@ public class Player extends Entity {
      */
 
     public int getCoalStored() {
-        return get(IntKey.COAL_STORED);
+        return get(Keys.IntKey.COAL_STORED);
     }
 
     public void addCoalStored(int amount) {
-        add(IntKey.COAL_STORED, amount);
+        add(Keys.IntKey.COAL_STORED, amount);
     }
 
     public void removeCoalStored(int amount) {
-        remove(IntKey.COAL_STORED, amount);
+        remove(Keys.IntKey.COAL_STORED, amount);
     }
 
     /**
@@ -601,11 +540,11 @@ public class Player extends Entity {
      */
 
     public long getHighestValuedKill() {
-        return get(LongKey.HIGHEST_VALUE_DROP);
+        return get(Keys.LongKey.HIGHEST_VALUE_DROP);
     }
 
     public void setHighestValuedKill(long price) {
-        set(LongKey.HIGHEST_VALUE_DROP, price);
+        set(Keys.LongKey.HIGHEST_VALUE_DROP, price);
     }
 
     /**
@@ -1516,14 +1455,6 @@ public class Player extends Entity {
             lastlevelUp = new ArrayList<String>();
         if (slayerTask == null)
             slayerTask = new HashMap<Integer, String>();
-        if (intMap == null)
-            intMap = new HashMap<IntKey, Integer>();
-        if (longMap == null)
-            longMap = new HashMap<LongKey, Long>();
-        if (booleanMap == null)
-            booleanMap = new HashMap<BooleanKey, Boolean>();
-        if (stringKey == null)
-            stringKey = new HashMap<StringKey, String>();
 
         updateIPnPass();
         if (getSkullSkeptreCharges() <= 0)
@@ -1561,32 +1492,32 @@ public class Player extends Entity {
 
     public void setHighestLevel(int skill, int value) {
         if (skill == Skills.ATTACK)
-            set(IntKey.HIGHEST_ATTACK_LEVEL, value);
+            set(Keys.IntKey.HIGHEST_ATTACK_LEVEL, value);
         if (skill == Skills.STRENGTH)
-            set(IntKey.HIGHEST_STRENGTH_LEVEL, value);
+            set(Keys.IntKey.HIGHEST_STRENGTH_LEVEL, value);
         if (skill == Skills.DEFENCE)
-            set(IntKey.HIGHEST_DEFENCE_LEVEL, value);
+            set(Keys.IntKey.HIGHEST_DEFENCE_LEVEL, value);
         if (skill == Skills.RANGE)
-            set(IntKey.HIGHEST_RANGED_LEVEL, value);
+            set(Keys.IntKey.HIGHEST_RANGED_LEVEL, value);
         if (skill == Skills.PRAYER)
-            set(IntKey.HIGHEST_PRAYER_LEVEL, value);
+            set(Keys.IntKey.HIGHEST_PRAYER_LEVEL, value);
         if (skill == Skills.MAGIC)
-            set(IntKey.HIGHEST_MAGIC_LEVEL, value);
+            set(Keys.IntKey.HIGHEST_MAGIC_LEVEL, value);
     }
 
     public void getHighestLevel(int skill) {
         if (skill == Skills.ATTACK)
-            get(IntKey.HIGHEST_ATTACK_LEVEL);
+            get(Keys.IntKey.HIGHEST_ATTACK_LEVEL);
         if (skill == Skills.STRENGTH)
-            get(IntKey.HIGHEST_STRENGTH_LEVEL);
+            get(Keys.IntKey.HIGHEST_STRENGTH_LEVEL);
         if (skill == Skills.DEFENCE)
-            get(IntKey.HIGHEST_DEFENCE_LEVEL);
+            get(Keys.IntKey.HIGHEST_DEFENCE_LEVEL);
         if (skill == Skills.RANGE)
-            get(IntKey.HIGHEST_RANGED_LEVEL);
+            get(Keys.IntKey.HIGHEST_RANGED_LEVEL);
         if (skill == Skills.PRAYER)
-            get(IntKey.HIGHEST_PRAYER_LEVEL);
+            get(Keys.IntKey.HIGHEST_PRAYER_LEVEL);
         if (skill == Skills.MAGIC)
-            get(IntKey.HIGHEST_MAGIC_LEVEL);
+            get(Keys.IntKey.HIGHEST_MAGIC_LEVEL);
     }
 
     public void setFamiliarBoB(ItemsContainer<Item> items) {
@@ -2633,7 +2564,6 @@ public class Player extends Entity {
             }
         }
         if (getOverloadDelay() > 0) {
-            remove(IntKey.OVERLOAD_EFFECT, 1);
             if (getOverloadDelay() == 0 || isDead()) {
                 Pots.resetOverLoadEffect(this);
                 return;
@@ -3859,14 +3789,14 @@ public class Player extends Entity {
                     killer.message("You recieved a " + HexColours.getShortMessage(Colour.RED, pkKey.getName()) + ", but it was added to your bank.");
                 }
             }
-            double ep = killer.get(IntKey.EP) * 0.30;
+            double ep = killer.get(Keys.IntKey.EP) * 0.30;
             if (ep < 0)
                 ep = 0;
             double rollChance = 100 - ep;
             double c = Utils.getRandomDouble2(rollChance);
             Artefacts rolledItem = Artefacts.values()[Utils.getRandom(Artefacts.values().length - 1)];
             if (c <= rolledItem.getChance()) {
-                killer.set(IntKey.EP, 0);
+                killer.set(Keys.IntKey.EP, 0);
                 World.addGroundItem(new Item(rolledItem.getId(), 1), deathTile, killer == null ? this : killer, true, 60);
                 killer.message("You recieved a " + rolledItem.getName() + " as a pvp drop.");
             }
@@ -4021,25 +3951,25 @@ public class Player extends Entity {
         archiveDeaths(killed, this);
         if (hasWildstalker())
             upgradeWildstalker();
-        add(IntKey.KILLSTREAK, 1);
-        add(IntKey.KILLCOUNT, 1);
+        add(Keys.IntKey.KILLSTREAK, 1);
+        add(Keys.IntKey.KILLCOUNT, 1);
         if (!getPlayerRank().isStaff())
             KillScoreBoard.checkRank(this);
-        int totalPts = Utils.random(400, 600) + ((get(IntKey.KILLSTREAK) * 200) / 2);
+        int totalPts = Utils.random(400, 600) + ((get(Keys.IntKey.KILLSTREAK) * 200) / 2);
         if (isMember())
             totalPts *= 1.20;
         if (totalPts > 10000)
             totalPts = Utils.random(9500, 10000);
-        add(IntKey.PK_POINTS, totalPts);
+        add(Keys.IntKey.PK_POINTS, totalPts);
         getAdventureLog().addActivity("I have killed " + killed.getDisplayName() + " in a PvP zone.");
-        message("You now have a killstreak of " + HexColours.getShortMessage(Colour.RED, "" + get(IntKey.KILLSTREAK)) + (get(IntKey.KILLSTREAK) > 1 ? " kills." : " kill.") + (get(IntKey.KILLSTREAK) > get(IntKey.KILLSTREAK_RECORD) ? " " + HexColours.getShortMessage(Colour.RED, "New Record!") : ""));
-        if (killed.get(IntKey.KILLSTREAK) >= 5)
-            World.sendNewsMessage(getDisplayName() + " has ended " + killed.getDisplayName() + (killed.getDisplayName().endsWith("s") ? "'" : "s") + " killstreak of " + killed.get(IntKey.KILLSTREAK) + "!", false);
-        message("You gained " + HexColours.getShortMessage(Colour.RED, "" + Utils.getFormattedNumber(totalPts, ',')) + " pk points, you now have " + HexColours.getShortMessage(Colour.RED, "" + Utils.getFormattedNumber(get(IntKey.PK_POINTS), ',')) + " pk points.");
-        if (get(IntKey.KILLSTREAK) > get(IntKey.KILLSTREAK_RECORD))
-            set(IntKey.KILLSTREAK_RECORD, 1);
-        killed.add(IntKey.DEATHCOUNT, 1);
-        killed.set(IntKey.KILLSTREAK, 0);
+        message("You now have a killstreak of " + HexColours.getShortMessage(Colour.RED, "" + get(Keys.IntKey.KILLSTREAK)) + (get(Keys.IntKey.KILLSTREAK) > 1 ? " kills." : " kill.") + (get(Keys.IntKey.KILLSTREAK) > get(Keys.IntKey.KILLSTREAK_RECORD) ? " " + HexColours.getShortMessage(Colour.RED, "New Record!") : ""));
+        if (killed.get(Keys.IntKey.KILLSTREAK) >= 5)
+            World.sendNewsMessage(getDisplayName() + " has ended " + killed.getDisplayName() + (killed.getDisplayName().endsWith("s") ? "'" : "s") + " killstreak of " + killed.get(Keys.IntKey.KILLSTREAK) + "!", false);
+        message("You gained " + HexColours.getShortMessage(Colour.RED, "" + Utils.getFormattedNumber(totalPts, ',')) + " pk points, you now have " + HexColours.getShortMessage(Colour.RED, "" + Utils.getFormattedNumber(get(Keys.IntKey.PK_POINTS), ',')) + " pk points.");
+        if (get(Keys.IntKey.KILLSTREAK) > get(Keys.IntKey.KILLSTREAK_RECORD))
+            set(Keys.IntKey.KILLSTREAK_RECORD, 1);
+        killed.add(Keys.IntKey.DEATHCOUNT, 1);
+        killed.set(Keys.IntKey.KILLSTREAK, 0);
         message("" + randomKillMessage(killed));
     }
 
@@ -4432,27 +4362,27 @@ public class Player extends Entity {
 
 
     public void setVengeance(boolean value) {
-        set(BooleanKey.VENGEANCE_ACTIVE, value);
+        set(Keys.BooleanKey.VENGEANCE_ACTIVE, value);
     }
 
     public void setDisruption(boolean value) {
-        set(BooleanKey.DISRUPTION_ACTIVE, value);
+        set(Keys.BooleanKey.DISRUPTION_ACTIVE, value);
     }
 
     public void setVengeance(int ticks) {
-        set(IntKey.VENGEANCE, ticks);
+        set(Keys.IntKey.VENGEANCE_TICKS, ticks);
     }
 
     public void setTeleBlockDelay(int ticks) {
-        set(IntKey.TELEPORT_BLOCK_IMMUNITY, ticks);
+        set(Keys.IntKey.TELEPORT_BLOCK_IMMUNITY, ticks);
     }
 
     public void setTeleBlockImmune(int ticks) {
-        set(IntKey.TELEPORT_BLOCK, ticks);
+        set(Keys.IntKey.TELEPORT_BLOCK, ticks);
     }
 
     public void setPrayerRenewal(int ticks) {
-        set(IntKey.PRAYER_RENEWAL_EFFECT, ticks);
+        set(Keys.IntKey.RENEWAL_TICKS, ticks);
     }
 
     public int getTickToSeconds(int ticks) {
@@ -4482,14 +4412,12 @@ public class Player extends Entity {
     }
 
     public void setOverload(int ticks) {
-        //redo to int and use ticks, 480 ticks is 300 seconds/5minutes
-        getTickToSeconds(ticks);
-        set(IntKey.OVERLOAD_EFFECT, ticks);
+        set(Keys.IntKey.OVERLOAD_TICKS, ticks);
     }
 
 
     public void setDisruption(int ticks) {
-        set(IntKey.DISRUPTION_SHIELD, ticks);
+        set(Keys.IntKey.DISRUPTION_SHIELD, ticks);
     }
 
     public void setTemporaryTarget(Entity target) {
@@ -4511,67 +4439,67 @@ public class Player extends Entity {
     }
 
     public int getOverloadDelay() {
-        return get(IntKey.OVERLOAD_EFFECT);
+        return tickTimers.getOrDefault(Keys.IntKey.OVERLOAD_TICKS, 0);
     }
 
     public int getPrayerRenewalDelay() {
-        return get(IntKey.PRAYER_RENEWAL_EFFECT);
+        return tickTimers.getOrDefault(Keys.IntKey.RENEWAL_TICKS, 0);
     }
 
     public int getVengDelay() {
-        return get(IntKey.VENGEANCE);
+        return tickTimers.getOrDefault(Keys.IntKey.VENGEANCE_TICKS, 0);
     }
 
     public int getDisruptionDelay() {
-        return get(IntKey.DISRUPTION_SHIELD);
+        return tickTimers.getOrDefault(Keys.IntKey.DISRUPTION_SHIELD, 0);
     }
 
     public int getTeleBlockDelay() {
-        return get(IntKey.TELEPORT_BLOCK);
+        return tickTimers.getOrDefault(Keys.IntKey.TELEPORT_BLOCK, 0);
     }
 
     public int getTeleBlockImmune() {
-        return get(IntKey.TELEPORT_BLOCK_IMMUNITY);
+        return tickTimers.getOrDefault(Keys.IntKey.TELEPORT_BLOCK_IMMUNITY, 0);
     }
 
     public int getKillCount() {
-        return get(IntKey.KILLCOUNT);
+        return get(Keys.IntKey.KILLCOUNT);
     }
 
     public int getDeathCount() {
-        return get(IntKey.DEATHCOUNT);
+        return get(Keys.IntKey.DEATHCOUNT);
     }
 
     public int getEP() {
-        return get(IntKey.EP);
+        return get(Keys.IntKey.EP);
     }
 
     public void addEP(int amount) {
-        add(IntKey.EP, amount);
+        add(Keys.IntKey.EP, amount);
     }
 
     public void removeEP(int amount) {
-        remove(IntKey.EP, amount);
+        remove(Keys.IntKey.EP, amount);
     }
 
     public void setEP(int amount) {
-        set(IntKey.EP, amount);
+        set(Keys.IntKey.EP, amount);
     }
 
     public int getPKP() {
-        return get(IntKey.PK_POINTS);
+        return get(Keys.IntKey.PK_POINTS);
     }
 
     public void addPKP(int amount) {
-        add(IntKey.PK_POINTS, amount);
+        add(Keys.IntKey.PK_POINTS, amount);
     }
 
     public void removePKP(int amount) {
-        remove(IntKey.PK_POINTS, amount);
+        remove(Keys.IntKey.PK_POINTS, amount);
     }
 
     public void setPKP(int amount) {
-        set(IntKey.PK_POINTS, amount);
+        set(Keys.IntKey.PK_POINTS, amount);
     }
 
 
@@ -5642,11 +5570,11 @@ public class Player extends Entity {
     }
 
     public boolean isTalkedWithMarv() {
-        return get(BooleanKey.TALKED_TO_MARV);
+        return get(Keys.BooleanKey.TALKED_TO_MARV);
     }
 
     public void setTalkedWithMarv() {
-        set(BooleanKey.TALKED_TO_MARV, true);
+        set(Keys.BooleanKey.TALKED_TO_MARV, true);
     }
 
     public int getCrucibleHighScore() {

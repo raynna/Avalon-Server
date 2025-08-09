@@ -2,6 +2,7 @@ package com.rs.java.game.player.dialogues.npcs;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.NPCDefinitions;
+import com.rs.java.game.Keys;
 import com.rs.java.game.player.VariableKeys;
 import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.game.player.dialogues.Dialogue;
@@ -13,18 +14,18 @@ public class MrEx extends Dialogue {
 	@Override
 	public void start() {
 		npcId = (Integer) parameters[0];
-		if (!player.get(VariableKeys.BooleanKey.TALKED_TO_MR_EX)) {
+		if (!player.get(Keys.BooleanKey.TALKED_TO_MR_EX)) {
 			stageName = "FirstTimeStage2";
 			sendEntityDialogue(SEND_2_TEXT_CHAT,
 					new String[] { NPCDefinitions.getNPCDefinitions(npcId).name,
 							"Are you heading out into the Wilderness? If so, I have a gift for you." },
 					IS_NPC, npcId, 9827);
-		} else if (player.get(VariableKeys.BooleanKey.TALKED_TO_MR_EX) && !player.hasWildstalker()) {
+		} else if (player.get(Keys.BooleanKey.TALKED_TO_MR_EX) && !player.hasWildstalker()) {
 			stageName = "LostHatStage2";
 			sendEntityDialogue(SEND_2_TEXT_CHAT,
 					new String[] { NPCDefinitions.getNPCDefinitions(npcId).name, "You've lost your hat, it seems." },
 					IS_NPC, npcId, 9827);
-		} else if (player.get(VariableKeys.BooleanKey.TALKED_TO_MR_EX) && player.hasWildstalker()) {
+		} else if (player.get(Keys.BooleanKey.TALKED_TO_MR_EX) && player.hasWildstalker()) {
 			stageName = "TellMoreOptions";
 			sendOptionsDialogue("Choose an option.", "Tell me more about this hat, then.", "Farewell!");
 		}
@@ -83,7 +84,7 @@ public class MrEx extends Dialogue {
 						IS_NPC, npcId, 9827);
 			} else {
 				stageName = "FirstTimeStage5";
-				player.set(VariableKeys.BooleanKey.TALKED_TO_MR_EX, true);
+				player.set(Keys.BooleanKey.TALKED_TO_MR_EX, true);
 				player.getTaskManager().checkComplete(Tasks.CLAIM_WILDSTALKER_HELMET);
 				player.getInventory().addItem(20801, 1);
 				sendEntityDialogue(SEND_ITEM_DIALOGUE, new String[] { ItemDefinitions.getItemDefinitions(20801).name,

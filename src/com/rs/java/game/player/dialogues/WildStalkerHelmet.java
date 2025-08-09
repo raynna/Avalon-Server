@@ -2,6 +2,7 @@ package com.rs.java.game.player.dialogues;
 
 import java.text.DecimalFormat;
 
+import com.rs.java.game.Keys;
 import com.rs.java.game.player.VariableKeys;
 import com.rs.java.utils.Utils;
 
@@ -16,8 +17,8 @@ public class WildStalkerHelmet extends Dialogue {
 
 	@Override
 	public void run(int interfaceId, int componentId) {
-		int ks = player.get(VariableKeys.IntKey.KILLSTREAK);
-		int ksr = player.get(VariableKeys.IntKey.KILLSTREAK_RECORD);
+		int ks = player.get(Keys.IntKey.KILLSTREAK);
+		int ksr = player.get(Keys.IntKey.KILLSTREAK_RECORD);
 		double kills = player.getKillCount();
 		double deaths = player.getDeathCount();
 		double dr = (kills / deaths);
@@ -52,9 +53,9 @@ public class WildStalkerHelmet extends Dialogue {
 			end();
 		} else if (stage == 25) {
 			stage = 15;
-			player.set(VariableKeys.IntKey.KILLCOUNT, 0);
-			player.set(VariableKeys.IntKey.DEATHCOUNT, 0);
-			player.set(VariableKeys.IntKey.KILLSTREAK, 0);
+			player.set(Keys.IntKey.KILLCOUNT, 0);
+			player.set(Keys.IntKey.DEATHCOUNT, 0);
+			player.set(Keys.IntKey.KILLSTREAK, 0);
 			removeWildStalkers();
 			sendDialogue("You reset your Wilderness kills and deaths.");
 			player.getInventory().addItem(20801, 1);
