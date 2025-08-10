@@ -238,8 +238,7 @@ public class KingBlackDragonCombat extends CombatScript {
 				}
 			}
 			if (Utils.getRandom(3) == 0) {
-				target.setFreezeDelay(15000);
-				target.setFreezeImmune(20000);
+				target.addFreezeDelay(20, false);
 			}
 			delayHit(npc, 2, target, getRegularHit(npc, damage));
 			// World.sendProjectile(npc, target, 395, 34, 16, 30, 35, 16, 0);

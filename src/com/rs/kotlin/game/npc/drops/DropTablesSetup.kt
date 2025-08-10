@@ -59,7 +59,8 @@ object DropTablesSetup {
         herbDropTable = HerbTableEntry()
         registerDropTable(BlackDragonDropTable.table, Rscm.lookup("npc.black_dragon_lv227"))
         registerDropTable(GoblinDropTable.table, Rscm.lookupList("npc_group.goblin_lv1"), Rscm.lookupList("npc_group.goblin_lv2"))
-        registerDropTable(GoblinLvl5DropTable.table,
+        registerDropTable(
+            GoblinLvl5DropTable.table,
             Rscm.lookupList("npc_group.goblin_lv5"),
             Rscm.lookupList("npc_group.goblin_lv11"),
             Rscm.lookupList("npc_group.goblin_lv12"),

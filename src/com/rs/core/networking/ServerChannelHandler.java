@@ -24,7 +24,7 @@ public final class ServerChannelHandler extends SimpleChannelHandler {
 	private static ChannelGroup channels;
 	private static ServerBootstrap bootstrap;
 
-	public static final void init() {
+	public static void init() {
 		new ServerChannelHandler();
 	}
 

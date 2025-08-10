@@ -4,6 +4,8 @@ import com.rs.java.game.Animation
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.kotlin.game.player.combat.*
+import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.special.SpecialAttack
 
 object StandardMelee : MeleeData() {
 

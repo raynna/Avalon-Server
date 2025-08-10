@@ -6,13 +6,12 @@ import com.rs.java.game.Entity
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.java.game.npc.NPC
-import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
-import com.rs.kotlin.game.world.projectile.Projectile
+import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 
 object MagicStyle : CombatStyle {

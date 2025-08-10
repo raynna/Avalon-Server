@@ -5,6 +5,9 @@ import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
+import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.special.SpecialAttack
+import com.rs.kotlin.game.player.combat.special.SpecialEffect
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 

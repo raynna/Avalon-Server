@@ -1,7 +1,7 @@
 package com.rs.kotlin.game.player.combat.range
 
 import com.rs.java.game.Graphics
-import com.rs.kotlin.game.player.combat.SpecialEffect
+import com.rs.kotlin.game.player.combat.special.SpecialEffect
 
 data class RangedAmmo(
     val itemId: Int,

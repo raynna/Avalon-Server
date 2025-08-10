@@ -127,6 +127,9 @@ public abstract class Entity extends WorldTile {
         lastFaceEntity = -1;
         nextFaceEntity = -2;
         poison.setEntity(this);
+        if (newPoison == null) {
+            newPoison = new NewPoison(this);
+        }
         newPoison.setEntity(this);
         if (tickTimers == null)
             tickTimers = new HashMap<>();

@@ -85,6 +85,9 @@ public class NPCHandler {
             player.getPackets().sendGameMessage("Failed removing spawn!");
         }
         if (Settings.DEBUG) {
+            for (int i = 0; i < npc.getBonuses().length; i++) {
+                player.message("Bonus ["+i+"]: " + npc.getBonuses()[i]);
+            }
             player.message("NpcId: " + npc.getId() + ", Index: " + npcIndex);
             player.message(npc.getName() + " size:" + npc.getSize());
             player.message("Visible On Map: " + npc.getDefinitions().isVisibleOnMap);

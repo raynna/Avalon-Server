@@ -1,10 +1,13 @@
-package com.rs.kotlin.game.player.combat
+package com.rs.kotlin.game.player.combat.special
 
 import com.rs.java.game.Entity
 import com.rs.java.game.player.Player
+import com.rs.kotlin.game.player.combat.AttackStyle
+import com.rs.kotlin.game.player.combat.CombatStyle
+import com.rs.kotlin.game.player.combat.Weapon
 import com.rs.kotlin.game.player.combat.range.RangedAmmo
 
-data class CombatContext(
+data class SpecialContext(
     val attacker: Player,
     val defender: Entity,
     val weapon: Weapon,

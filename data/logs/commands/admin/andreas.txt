@@ -7878,3 +7878,44 @@
 [10 August 2025 at 12:43:51 CEST] - ::tele 0,48,54,17,59
 [10 August 2025 at 12:46:02 CEST] - ::heal 
 [10 August 2025 at 12:46:08 CEST] - ::freezeme 
+[10 August 2025 at 04:21:15 CEST] - ::master 
+[10 August 2025 at 04:21:16 CEST] - ::heal 
+[10 August 2025 at 04:40:51 CEST] - ::item 5698 1
+[10 August 2025 at 04:41:33 CEST] - ::npc 50
+[10 August 2025 at 04:41:35 CEST] - ::item 11283 1
+[10 August 2025 at 04:41:37 CEST] - ::heal 
+[10 August 2025 at 04:41:52 CEST] - ::tele 0,48,54,15,40
+[10 August 2025 at 04:42:35 CEST] - ::heal 
+[10 August 2025 at 04:42:37 CEST] - ::god 
+[10 August 2025 at 04:42:43 CEST] - ::heal 
+[10 August 2025 at 04:42:44 CEST] - ::spec 
+[10 August 2025 at 04:42:53 CEST] - ::heal 
+[10 August 2025 at 04:43:02 CEST] - ::heal 
+[10 August 2025 at 04:43:02 CEST] - ::heal 
+[10 August 2025 at 04:43:08 CEST] - ::freezeme 
+[10 August 2025 at 04:44:58 CEST] - ::npc 50
+[10 August 2025 at 04:45:01 CEST] - ::heal 
+[10 August 2025 at 04:45:52 CEST] - ::heal 
+[10 August 2025 at 04:46:26 CEST] - ::heal 
+[10 August 2025 at 04:48:39 CEST] - ::tele 0,48,54,15,41
+[10 August 2025 at 04:48:41 CEST] - ::npc 50
+[10 August 2025 at 04:48:45 CEST] - ::heal 
+[10 August 2025 at 04:49:08 CEST] - ::tele 0,48,54,15,40
+[10 August 2025 at 04:49:14 CEST] - ::heal 
+[10 August 2025 at 04:55:30 CEST] - ::tele 0,48,54,13,41
+[10 August 2025 at 04:55:46 CEST] - ::freezeme 
+[10 August 2025 at 04:55:48 CEST] - ::npc 50
+[10 August 2025 at 04:56:17 CEST] - ::tele 0,48,54,20,37
+[10 August 2025 at 04:57:19 CEST] - ::tele 0,48,54,15,39
+[10 August 2025 at 04:57:22 CEST] - ::npc 50
+[10 August 2025 at 04:57:25 CEST] - ::heal 
+[10 August 2025 at 04:59:43 CEST] - ::heal 
+[10 August 2025 at 04:59:44 CEST] - ::npc 50
+[10 August 2025 at 05:00:45 CEST] - ::npc 50
+[10 August 2025 at 05:00:45 CEST] - ::heal 
+[10 August 2025 at 05:05:04 CEST] - ::tele 0,48,54,15,41
+[10 August 2025 at 05:05:06 CEST] - ::heal 
+[10 August 2025 at 05:05:08 CEST] - ::npc 50
+[10 August 2025 at 05:05:09 CEST] - ::tele 0,48,54,20,37
+[10 August 2025 at 05:06:36 CEST] - ::item 861 1
+[10 August 2025 at 05:06:38 CEST] - ::item 892 1000

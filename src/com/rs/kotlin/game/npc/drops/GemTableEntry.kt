@@ -42,12 +42,14 @@ class GemTableEntry : DropEntry(-1, 1..1) {
             else -> Rscm.lookup(item)
         }
 
-        table.add(WeightedDropEntry(
+        table.add(
+            WeightedDropEntry(
             itemId = itemId,
             amount = amount,
             numerator = numerator,
             denominator = denominator
-        ))
+        )
+        )
     }
 
     override fun roll(player: Player): Drop? {

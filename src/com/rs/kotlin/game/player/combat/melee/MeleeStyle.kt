@@ -7,12 +7,14 @@ import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.kotlin.game.player.combat.*
-import com.rs.kotlin.game.player.combat.magic.SpellType
+import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.special.SpecialContext
 
 object MeleeStyle : CombatStyle {
 
     private var currentWeapon: Weapon? = null
-    private var attackStyle: AttackStyle? = null
+    private var attackStyle: AttackStyle = AttackStyle.ACCURATE
+    private var attackBonusType: AttackBonusType = AttackBonusType.CRUSH
 
     private lateinit var attacker: Player
     lateinit var defender: Entity
@@ -23,6 +25,7 @@ object MeleeStyle : CombatStyle {
         val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
         currentWeapon = StandardMelee.getWeaponByItemId(weaponId) ?: StandardMelee.getDefaultWeapon()
         attackStyle = getAttackStyle()
+        attackBonusType = getAttackBonusType()
         if (defender is NPC) {
             attacker.message("Attacker: ${attacker.displayName}, Defender: ${defender.name}, weaponId: $weaponId, currentWeapon: ${currentWeapon!!.name}")
         }
@@ -30,8 +33,13 @@ object MeleeStyle : CombatStyle {
     }
 
     fun getAttackStyle(): AttackStyle {
-        val style = AttackStyle.fromOrdinal(this.attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponStyle)
-        return style
+        val attackStyleId = attacker.combatDefinitions.attackStyle
+        return currentWeapon?.weaponStyle?.styleSet?.styleAt(attackStyleId)?: AttackStyle.ACCURATE
+    }
+
+    fun getAttackBonusType(): AttackBonusType {
+        val attackStyleId = attacker.combatDefinitions.attackStyle
+        return currentWeapon?.weaponStyle?.styleSet?.bonusAt(attackStyleId)?: AttackBonusType.CRUSH
     }
 
     override fun getAttackDistance(): Int {
@@ -40,7 +48,7 @@ object MeleeStyle : CombatStyle {
 
     override fun getAttackSpeed(): Int {
         val baseSpeed = currentWeapon?.attackSpeed ?: 4
-        val style = AttackStyle.fromOrdinal(this.attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponStyle)
+        val style = getAttackStyle()
         return baseSpeed + style.attackSpeedModifier
     }
 
@@ -49,18 +57,17 @@ object MeleeStyle : CombatStyle {
     }
 
     override fun attack() {
-        val attackStyle = getAttackStyle();
-        val hit = registerHit(attacker = attacker,  defender = defender, weapon = currentWeapon!!, combatType = CombatType.MELEE, attackStyle = attackStyle)
+        val hit = registerHit(attacker = attacker,  defender = defender, weapon = currentWeapon, combatType = CombatType.MELEE, attackStyle = attackStyle)
         if (attacker.combatDefinitions.isUsingSpecialAttack) {
             currentWeapon?.specialAttack?.let { special ->
                 val specialEnergy = attacker.combatDefinitions.specialAttackPercentage
                 if (specialEnergy >= special.energyCost) {
-                    val context = CombatContext(
+                    val context = SpecialContext(
                         combat = this,
                         attacker = attacker,
                         defender = defender,
                         weapon = currentWeapon!!,
-                        attackStyle = getAttackStyle()
+                        attackStyle = attackStyle
                     )
                     special.execute(context)
                     attacker.combatDefinitions.decreaseSpecialAttack(special.energyCost);
@@ -76,7 +83,7 @@ object MeleeStyle : CombatStyle {
         attacker.message("[Melee Attack] -> " +
                 "Weapon: ${currentWeapon?.name}, " +
                 "WeaponStyle: ${attackStyle.name}, " +
-                "WeaponBonusStyle: ${currentWeapon?.weaponStyle?.getAttackBonusType(attackStyle, attacker.combatDefinitions.attackStyle)}, " +
+                "WeaponBonusStyle: ${attackBonusType.name}, " +
                 "WeaponType: ${currentWeapon?.weaponStyle?.name}, " +
                 "MaxHit: ${hit.maxHit}, " +
                 "Hit: ${hit.damage}")
@@ -94,7 +101,7 @@ object MeleeStyle : CombatStyle {
                 onHit(hit)
             }
         }
-        attackStyle!!.xpMode.distributeXp(attacker, totalDamage);
+        attackStyle.xpMode.distributeXp(attacker, attackStyle, totalDamage);
     }
 
     override fun onHit(hit: Hit) {

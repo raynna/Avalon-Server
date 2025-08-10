@@ -2,7 +2,7 @@ package com.rs.kotlin.game.npc.drops.tables
 
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
-import com.rs.kotlin.game.npc.drops.*
+import com.rs.kotlin.game.npc.drops.dropTable
 
 object BlackDragonDropTable {
 

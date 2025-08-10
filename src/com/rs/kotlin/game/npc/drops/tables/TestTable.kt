@@ -1,6 +1,6 @@
 package com.rs.kotlin.game.npc.drops.tables
 
-import com.rs.kotlin.game.npc.drops.*
+import com.rs.kotlin.game.npc.drops.dropTable
 import com.rs.kotlin.game.npc.drops.DropTablesSetup.gemDropTable
 
 object TestTable {

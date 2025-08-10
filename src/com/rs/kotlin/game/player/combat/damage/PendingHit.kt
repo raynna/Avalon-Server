@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.player.combat
+package com.rs.kotlin.game.player.combat.damage
 
 import com.rs.java.game.Hit
 

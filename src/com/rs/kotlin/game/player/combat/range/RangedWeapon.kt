@@ -1,6 +1,6 @@
 package com.rs.kotlin.game.player.combat.range
 
-import com.rs.kotlin.game.player.combat.SpecialAttack
+import com.rs.kotlin.game.player.combat.special.SpecialAttack
 import com.rs.kotlin.game.player.combat.Weapon
 import com.rs.kotlin.game.player.combat.WeaponStyle
 

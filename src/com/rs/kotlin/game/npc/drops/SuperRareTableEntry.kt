@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.npc.drops
 
-import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 
@@ -55,12 +54,14 @@ class SuperRareTableEntry : DropEntry(-1, 1..1) {
             else -> Rscm.lookup(item)
         } ?: return
 
-        table.add(WeightedDropEntry(
+        table.add(
+            WeightedDropEntry(
             itemId = itemId,
             amount = amount,
             numerator = numerator,
             denominator = denominator
-        ))
+        )
+        )
     }
 
     override fun roll(player: Player): Drop? {

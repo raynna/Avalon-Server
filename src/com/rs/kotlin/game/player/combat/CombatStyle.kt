@@ -6,6 +6,7 @@ import com.rs.java.game.Entity
 import com.rs.java.game.Hit
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
+import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.magic.Spell
 
 interface CombatStyle {
@@ -39,26 +40,24 @@ interface CombatStyle {
             CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
             CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
             CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
-            else -> null
         }
 
         val landed = when (combatType) {
             CombatType.MELEE -> {
                 requireNotNull(weapon) { "Weapon required for melee attack" }
-                CombatCalculations.calculateMeleeAccuracy(attacker, defender, weapon, attackStyle, accuracyMultiplier)
+                CombatCalculations.calculateMeleeAccuracy(attacker, defender, accuracyMultiplier)
             }
             CombatType.RANGED -> {
                 requireNotNull(weapon) { "Weapon required for ranged attack" }
-                CombatCalculations.calculateRangedAccuracy(attacker, defender, weapon, attackStyle, accuracyMultiplier)
+                CombatCalculations.calculateRangedAccuracy(attacker, defender, accuracyMultiplier)
             }
             CombatType.MAGIC -> CombatCalculations.calculateMagicAccuracy(attacker, defender)
-            else -> false
         }
 
         val hit = if (landed) {
             when (combatType) {
-                CombatType.MELEE -> CombatCalculations.calculateMeleeMaxHit(attacker, attackStyle, damageMultiplier)
-                CombatType.RANGED -> CombatCalculations.calculateRangedMaxHit(attacker, attackStyle, damageMultiplier)
+                CombatType.MELEE -> CombatCalculations.calculateMeleeMaxHit(attacker, defender, damageMultiplier)
+                CombatType.RANGED -> CombatCalculations.calculateRangedMaxHit(attacker, defender, damageMultiplier)
                 CombatType.MAGIC -> {
                     requireNotNull(spell) { "Spell required for magic attack" }
                     CombatCalculations.calculateMagicMaxHit(attacker, defender, spell)

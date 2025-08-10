@@ -11,6 +11,8 @@ import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.*
+import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.special.SpecialContext
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 
@@ -22,13 +24,15 @@ object RangedStyle : CombatStyle {
     private var currentWeapon: RangedWeapon? = null
     private var currentAmmo: RangedAmmo? = null
     private var attackStyle: AttackStyle = AttackStyle.ACCURATE
+    private var attackBonusType: AttackBonusType = AttackBonusType.RANGE
 
     override fun canAttack(attacker: Player, defender: Entity): Boolean {
         this.attacker = attacker
         this.defender = defender
         currentWeapon = RangeData.getWeaponByItemId(attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1)
         currentAmmo = RangeData.getAmmoByItemId(attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]?.id ?: -1)
-        attackStyle = getAttackStyle()
+        attackStyle = currentWeapon?.weaponStyle?.styleSet?.styleAt(attacker.combatDefinitions.attackStyle)?:AttackStyle.RAPID
+        attackBonusType = currentWeapon?.weaponStyle?.styleSet?.bonusAt(attacker.combatDefinitions.attackStyle)?:AttackBonusType.RANGE
         val ammoTier = currentAmmo?.ammoTier
         val ammoType = currentAmmo?.ammoType
         val ammoId = currentAmmo?.itemId
@@ -77,13 +81,16 @@ object RangedStyle : CombatStyle {
     }
 
     fun getAttackStyle(): AttackStyle {
-        val style = AttackStyle.fromOrdinal(attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponStyle)
-        return style
+        return currentWeapon?.weaponStyle?.styleSet?.styleAt(attacker.combatDefinitions.attackStyle)?:AttackStyle.RAPID
+    }
+
+    fun getAttackBonusType(): AttackBonusType {
+    return currentWeapon?.weaponStyle?.styleSet?.bonusAt(attacker.combatDefinitions.attackStyle)?:AttackBonusType.RANGE
     }
 
     override fun getAttackSpeed(): Int {
         val baseSpeed = currentWeapon?.attackSpeed ?: 4
-        val style = AttackStyle.fromOrdinal(attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponStyle)
+        val style = getAttackStyle()
         return baseSpeed + style.attackSpeedModifier
     }
 
@@ -92,18 +99,17 @@ object RangedStyle : CombatStyle {
     }
 
     override fun attack() {
-        val attackStyle = getAttackStyle()
         val hit = registerHit(attacker, defender, CombatType.RANGED, weapon = currentWeapon!!, attackStyle = attackStyle)
         if (attacker.combatDefinitions.isUsingSpecialAttack) {
             currentWeapon?.specialAttack?.let { special ->
                 val specialEnergy = attacker.combatDefinitions.specialAttackPercentage
                 if (specialEnergy >= special.energyCost) {
-                    val context = CombatContext(
+                    val context = SpecialContext(
                         combat = this,
                         attacker = attacker,
                         defender = defender,
                         weapon = currentWeapon!!,
-                        attackStyle = getAttackStyle()
+                        attackStyle = attackStyle
                     )
                     special.execute(context)
                     attacker.combatDefinitions.decreaseSpecialAttack(special.energyCost);
@@ -126,7 +132,8 @@ object RangedStyle : CombatStyle {
                 "WeaponType: ${currentWeapon?.weaponStyle?.name}, " +
                 "AmmoType: ${currentAmmo?.ammoType?.name}, " +
                 "Ammo: ${currentAmmo?.name}, " +
-                "Style: ${AttackStyle.fromOrdinal(attacker.combatDefinitions.attackStyle, currentWeapon!!.weaponStyle).name}, " +
+                "Style: ${attackStyle}, " +
+                "StyleBonus: ${attackBonusType}, " +
                 "MaxHit: ${hit.maxHit}, " +
                 "Hit: ${hit.damage}")
 
@@ -171,7 +178,7 @@ object RangedStyle : CombatStyle {
                 onHit(hit)
             }
         }
-        attackStyle.xpMode.distributeXp(attacker, totalDamage);
+        attackStyle.xpMode.distributeXp(attacker, attackStyle, totalDamage);
     }
 
     override fun onStop(interrupted: Boolean) {
@@ -237,7 +244,7 @@ object RangedStyle : CombatStyle {
 
     private fun handleSpecialEffects() {
         currentAmmo?.specialEffect?.let { special ->
-                val context = CombatContext(
+                val context = SpecialContext(
                     combat = this,
                     attacker = attacker,
                     defender = defender,

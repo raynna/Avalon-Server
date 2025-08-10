@@ -1,6 +1,7 @@
 package com.rs.kotlin.game.player.combat.melee
 
 import com.rs.kotlin.game.player.combat.*
+import com.rs.kotlin.game.player.combat.special.SpecialAttack
 
 data class MeleeWeapon(
     override val itemId: Int,
