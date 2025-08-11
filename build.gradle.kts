@@ -22,9 +22,7 @@ dependencies {
     implementation("io.netty:netty:3.9.9.Final")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.slf4j:slf4j-simple:2.0.12")
-    implementation("log4j:log4j:1.2.16")
-    //its that simple, then you can delete the local jar ohh nice the rebuild herE?
-//god i need to get rid of those libs locally i think ye use maven implemtation declarations instead, you dont want to host local libs ye, never used gradle in my life or maven or yes, i did for some minecrat modding
+
     // Local JARs (Try to avoid this if at all possible by using Maven)
     implementation(files("lib/FileStore.jar"))
     implementation(files("lib/c3p0-0.9.5.5.jar"))
@@ -36,6 +34,7 @@ dependencies {
     implementation(files("lib/ip2c.jar"))
     implementation(files("lib/javacord-2.0.17-shaded.jar"))
     implementation(files("lib/jode-1.1.2-pre1.jar"))
+    implementation(files("lib/log4j-1.2.16.jar"))
     implementation(files("lib/lzma-4.63-jio-0.94.jar"))
     implementation(files("lib/mail.jar"))
     implementation(files("lib/mchange-commons-java-0.2.19.jar"))
@@ -64,8 +63,5 @@ java {
 }
 
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-        vendor.set(JvmVendorSpec.ORACLE)
-    }
+    jvmToolchain(21)
 }
