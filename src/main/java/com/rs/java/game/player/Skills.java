@@ -1,12 +1,22 @@
 package com.rs.java.game.player;
 
 import java.io.Serializable;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.rs.Settings;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
+import com.rs.core.thread.CoresManager;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.utils.HexColours;
+import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import kotlin.Pair;
 
 public final class Skills implements Serializable {
 
@@ -119,6 +129,9 @@ public final class Skills implements Serializable {
     private boolean[] skillsTargetsUsingLevelMode;
     private int[] skillsTargetsValues;
     private boolean xpDisplay, xpPopup;
+
+    private Queue<Pair<Integer, Double>> xpQueue = new LinkedList<>();
+    private boolean xpTaskRunning = false;
 
     private transient int currentCounter;
     private transient Player player;
@@ -1019,6 +1032,55 @@ public final class Skills implements Serializable {
         refresh(skill);
     }
 
+/*    private Map<Integer, Double> xpMap = new HashMap<>();
+
+    public void addXp(int skill, double exp) {
+        if (exp < 1) return;
+        xpMap.put(skill, xpMap.getOrDefault(skill, 0.0) + exp);
+    }
+
+    public void process() {
+        if (xpMap.isEmpty()) return;
+        for (Map.Entry<Integer, Double> entry : xpMap.entrySet()) {
+            final int skill = entry.getKey();
+            final double exp = entry.getValue();
+            updateXp(skill, exp);
+        }
+        xpMap.clear();
+    }*/
+
+    private transient final ConcurrentHashMap<Integer, Double> pendingXp = new ConcurrentHashMap<>();
+    private transient final ReentrantLock xpUpdateLock = new ReentrantLock();
+    private transient final AtomicBoolean xpUpdateScheduled = new AtomicBoolean(false);
+
+    public void addXpDelayed(final int skill, final double xp) {
+        if (xp < 1) return;
+
+        pendingXp.merge(skill, xp, (oldVal, newVal) -> oldVal + newVal);
+
+        if (xpUpdateScheduled.compareAndSet(false, true)) {
+            CoresManager.getFastExecutor().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    xpUpdateLock.lock();
+                    try {
+                        ConcurrentHashMap<Integer, Double> copy = new ConcurrentHashMap<>(pendingXp);
+                        pendingXp.clear();
+                        xpUpdateScheduled.set(false);
+
+                        for (Integer skillId : copy.keySet()) {
+                            double amount = copy.get(skillId);
+                            addXp(skillId, amount); // Your existing addXp method
+                        }
+                    } finally {
+                        xpUpdateLock.unlock();
+                    }
+                }
+            }, 60);
+        }
+    }
+
+
     public void addXp(int skill, double exp) {
         if (exp < 1)
             return;
@@ -1101,6 +1163,7 @@ public final class Skills implements Serializable {
         }
         refresh(skill);
     }
+
 
 
     public void sendLevelAttributtes(Player player, int skillId, int oldLevel, int newLevel) {

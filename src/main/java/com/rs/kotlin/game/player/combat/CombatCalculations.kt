@@ -3,13 +3,13 @@ package com.rs.kotlin.game.player.combat
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
 import com.rs.java.game.npc.NPC
-import com.rs.java.game.player.CombatDefinitions
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.npc.NpcBonusType
 import com.rs.kotlin.game.player.combat.damage.DamageMultipliers
 import com.rs.kotlin.game.player.combat.magic.Spell
+import com.rs.kotlin.game.player.combat.magic.Spellbook
 import com.rs.kotlin.game.player.equipment.BonusType
 import kotlin.math.floor
 
@@ -56,20 +56,26 @@ object CombatCalculations {
             } else {
                 floor(((getDefenceLevel(target) + 9) * (defenceBonus + 64)).toDouble())
             }
-            player.message("[Combat Accuracy][Attack] - " +
-                    "attackLevel: ${baseAttack}, " +
-                    "attackBonus: $attackBonus, " +
-                    "styleBonus: $styleBonus, " +
-                    "effectiveAttack: $effectiveAttackLevel, " +
-                    "attackRoll: $attackRoll, " +
-                    "")
-            player.message("[Combat Accuracy][Defence] - Target: "
-                    + (if (target is NPC) "${target.name}, " else if (target is Player) "${target.username}, " else "") +
-                    "defenceLevel: $defenceLevel, " +
-                    "defenceBonus: $defenceBonus, " +
-                    "targetStyleBonus: $targetStyleBonus, " +
-                    "defenceRoll: $defenceRoll, " +
-                    "")
+            if (player.developerMode) {
+                player.message(
+                    "[Combat Accuracy][Attack] - " +
+                            "attackLevel: ${baseAttack}, " +
+                            "attackBonus: $attackBonus, " +
+                            "styleBonus: $styleBonus, " +
+                            "effectiveAttack: $effectiveAttackLevel, " +
+                            "attackRoll: $attackRoll, " +
+                            ""
+                )
+                player.message(
+                    "[Combat Accuracy][Defence] - Target: "
+                            + (if (target is NPC) "${target.name}, " else if (target is Player) "${target.username}, " else "") +
+                            "defenceLevel: $defenceLevel, " +
+                            "defenceBonus: $defenceBonus, " +
+                            "targetStyleBonus: $targetStyleBonus, " +
+                            "defenceRoll: $defenceRoll, " +
+                            ""
+                )
+            }
             return calculateHitProbability(attackRoll, defenceRoll)
         }
 
@@ -95,11 +101,15 @@ object CombatCalculations {
             if (damage >= floor(baseDamage * 0.90)) {
                 hit.setCriticalMark()
             }
-            player.message("[Combat Damage] -> " +
-                    "BaseDamage: ${baseDamage}, " +
-                    "MaxHit: ${maxHit}, " +
-                    "Rolled Damage: ${damage}, " +
-                    "Critical?: ${damage >= floor(baseDamage * 0.90)}")
+            if (player.developerMode) {
+                player.message(
+                    "[Combat Damage] -> " +
+                            "BaseDamage: ${baseDamage}, " +
+                            "MaxHit: ${maxHit}, " +
+                            "Rolled Damage: ${damage}, " +
+                            "Critical?: ${damage >= floor(baseDamage * 0.90)}"
+                )
+            }
             return hit
         }
     }
@@ -134,6 +144,7 @@ object CombatCalculations {
             } else {
                 floor(((getDefenceLevel(target) + 9) * (defenceBonus + 64)).toDouble())//DONE
             }
+            if (player.developerMode) {
             player.message("[Combat Accuracy] - " +
                     "bonusType: ${bonusType}, " +
                     "AttackBonus: $rangeBonus, " +
@@ -141,6 +152,7 @@ object CombatCalculations {
                     "Attack: $rangeRoll, " +
                     "Defence: $defenceRoll, " +
                     "")
+                }
             return calculateHitProbability(rangeRoll, defenceRoll)
         }
 
@@ -169,12 +181,16 @@ object CombatCalculations {
             if (damage >= floor(baseDamage * 0.90)) {
                 hit.setCriticalMark()
             }
-            player.message("Ranged Damage Calculation -> " +
-                    "BaseDamage: ${baseDamage}, " +
-                    "StyleBonus: ${styleBonus}, " +
-                    "MaxHit: ${maxHit}, " +
-                    "Rolled Damage: ${damage}, " +
-                    "Critical?: ${damage >= floor(baseDamage * 0.90)}")
+            if (player.developerMode) {
+                player.message(
+                    "Ranged Damage Calculation -> " +
+                            "BaseDamage: ${baseDamage}, " +
+                            "StyleBonus: ${styleBonus}, " +
+                            "MaxHit: ${maxHit}, " +
+                            "Rolled Damage: ${damage}, " +
+                            "Critical?: ${damage >= floor(baseDamage * 0.90)}"
+                )
+            }
             return hit
         }
     }
@@ -193,8 +209,9 @@ object CombatCalculations {
             return calculateHitProbability(attack, defence)
         }
 
-        fun calculateMaxHit(player: Player, target: Entity, spell: Spell): Hit {
-            val baseDamage = spell.damage
+        fun calculateMaxHit(player: Player, target: Entity, spellId: Int): Hit {
+            val spell = Spellbook.getSpellById(spellId)
+            val baseDamage = spell?.damage?:10
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
 
@@ -261,8 +278,8 @@ object CombatCalculations {
     fun calculateRangedMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): Hit =
         RangedCombat.calculateMaxHit(player, target, specialMultiplier)
 
-    fun calculateMagicMaxHit(player: Player, target: Entity, spell: Spell): Hit =
-        MagicCombat.calculateMaxHit(player, target, spell)
+    fun calculateMagicMaxHit(player: Player, target: Entity, spellId: Int): Hit =
+        MagicCombat.calculateMaxHit(player, target, spellId)
 
 
     private fun calculateHitProbability(attack: Double, defence: Double): Boolean {

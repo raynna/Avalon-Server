@@ -43,6 +43,7 @@ data class Spell(
     val xp: Double,
     val type: SpellType,
     val bind: Int = -1,
+    val drain: Boolean = false,
     val element: ElementType = ElementType.None,
     val multi: Boolean = false,
     val runes: List<RuneRequirement>,

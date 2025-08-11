@@ -1243,6 +1243,42 @@ public abstract class Entity extends WorldTile {
         }
     }
 
+    public void drainStat(int bonusIndex, int amount) {
+        drainStat(-1, bonusIndex, amount, null);
+    }
+
+    public void drainStat(int skillId, int amount, String message) {
+        drainStat(skillId, -1, amount, message);
+    }
+
+    public void drainStat(int skillId, int bonusIndex, int amount, String message) {
+        if (this instanceof Player player) {
+            player.getSkills().drainLevel(skillId, amount);
+            if (message != null) {
+                player.message(message);
+            }
+        } else if (this instanceof NPC npc) {
+            int[] bonuses = npc.getBonuses();
+            if (bonuses != null && bonusIndex >= 0 && bonusIndex < bonuses.length) {
+                bonuses[bonusIndex] = Math.max(0, bonuses[bonusIndex] - amount);
+            }
+        }
+    }
+
+    public void drainDefence(int amount) {
+        if (this instanceof Player player) {
+            player.getSkills().drainLevel(Skills.DEFENCE, amount);
+            player.message("Your defence has been drained!");
+        }
+    }
+
+    public void drainAttack(int amount) {
+        if (this instanceof Player player) {
+            player.getSkills().drainLevel(Skills.ATTACK, amount);
+            player.message("Your attack has been drained!");
+        }
+    }
+
     protected void onTimerExpired(Keys.IntKey timerName) {
         /*if (timerName.equals(Keys.IntKey.FREEZE_TICKS)) {
             tickTimers.remove(Keys.IntKey.FREEZE_TICKS);

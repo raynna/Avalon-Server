@@ -3,12 +3,10 @@ package com.rs.kotlin.game.player.combat.special
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
 import com.rs.java.game.player.Player
-import com.rs.kotlin.game.player.combat.AttackStyle
-import com.rs.kotlin.game.player.combat.CombatStyle
-import com.rs.kotlin.game.player.combat.CombatType
-import com.rs.kotlin.game.player.combat.Weapon
+import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.magic.Spell
+import com.rs.kotlin.game.player.combat.magic.Spellbook
 import com.rs.kotlin.game.player.combat.range.RangedAmmo
 
 data class CombatContext(
@@ -26,14 +24,14 @@ fun CombatContext.registerHit(
     accuracyMultiplier: Double = 1.0,
     damageMultiplier: Double = 1.0,
     hitLook: Hit.HitLook? = null,
-    spell: Spell? = null
+    spellId: Int = -1
 ): Hit = combat.registerHit(
     attacker = attacker,
     defender = defender,
     combatType = combatType,
     attackStyle = attackStyle,
     weapon = weapon,
-    spell = spell,
+    spellId = spellId,
     accuracyMultiplier = accuracyMultiplier,
     damageMultiplier = damageMultiplier,
     hitLook = hitLook
@@ -42,7 +40,7 @@ fun CombatContext.registerHit(
 fun CombatContext.repeatHits(
     count: Int, combatType: CombatType = CombatType.MELEE, delays: List<Int> = List(count) { 0 }
 ) {
-    val special = weapon.specialAttack!!
+    val special = weapon.special!!
     val pendingHits = (0 until count).map { i ->
         PendingHit(
             registerHit(
@@ -58,8 +56,8 @@ fun CombatContext.repeatHits(
 fun CombatContext.repeatHits(
     combatType: CombatType = CombatType.MELEE,
     delays: List<Int>,
-    damageMultipliers: List<Double> = List(delays.size) { weapon.specialAttack!!.damageMultiplier },
-    accuracyMultipliers: List<Double> = List(delays.size) { weapon.specialAttack!!.accuracyMultiplier }
+    damageMultipliers: List<Double> = List(delays.size) { weapon.special!!.damageMultiplier },
+    accuracyMultipliers: List<Double> = List(delays.size) { weapon.special!!.accuracyMultiplier }
 ) {
     require(delays.size == damageMultipliers.size && delays.size == accuracyMultipliers.size) {
         "All lists must be the same size"
@@ -76,6 +74,35 @@ fun CombatContext.repeatHits(
     combat.delayHits(*pendingHits.toTypedArray())
 }
 
+fun CombatContext.forcedHit(
+    damageMultiplier: Double = 1.0,
+    combatType: CombatType = CombatType.MELEE,
+    hitLook: Hit.HitLook = Hit.HitLook.REGULAR_DAMAGE,
+    baseDamage: Int? = 0,
+    delay: Int = 0,
+    hits: Int = 1
+): List<Hit> {
+
+    val pendingHits = (0 until hits).map {
+        val hit = when (combatType) {
+            CombatType.MELEE -> CombatCalculations.calculateMeleeMaxHit(attacker, defender, damageMultiplier)
+            CombatType.RANGED -> CombatCalculations.calculateRangedMaxHit(attacker, defender, damageMultiplier)
+            CombatType.MAGIC -> {
+                requireNotNull(baseDamage) { "Spell required for magic attack" }
+                CombatCalculations.calculateMagicMaxHit(attacker, defender, baseDamage)
+            }
+        }
+        hit.look = hitLook
+        if (hit.look == Hit.HitLook.REGULAR_DAMAGE && hit.isCriticalHit) {
+            hit.critical = false;
+        }
+        PendingHit(hit, delay)
+    }
+
+    combat.delayHits(*pendingHits.toTypedArray())
+    return pendingHits.map { it.hit }
+}
+
 fun CombatContext.meleeHit(
     accuracyMultiplier: Double = 1.0,
     damageMultiplier: Double = 1.0,
@@ -83,12 +110,12 @@ fun CombatContext.meleeHit(
     delay: Int = 0,
     hits: Int = 1
 ): List<Hit> {
-    val accMul = if (usingSpecial && weapon.specialAttack != null) {
-        weapon.specialAttack!!.accuracyMultiplier
+    val accMul = if (usingSpecial && weapon.special != null) {
+        weapon.special!!.accuracyMultiplier
     } else accuracyMultiplier
 
-    val dmgMul = if (usingSpecial && weapon.specialAttack != null) {
-        weapon.specialAttack!!.damageMultiplier
+    val dmgMul = if (usingSpecial && weapon.special != null) {
+        weapon.special!!.damageMultiplier
     } else damageMultiplier
 
     val pendingHits = (0 until hits).map {
@@ -113,12 +140,12 @@ fun CombatContext.rangedHit(
     delay: Int = 0,
     hits: Int = 1
 ): List<Hit> {
-    val accMul = if (usingSpecial && weapon.specialAttack != null) {
-        weapon.specialAttack!!.accuracyMultiplier
+    val accMul = if (usingSpecial && weapon.special != null) {
+        weapon.special!!.accuracyMultiplier
     } else accuracyMultiplier
 
-    val dmgMul = if (usingSpecial && weapon.specialAttack != null) {
-        weapon.specialAttack!!.damageMultiplier
+    val dmgMul = if (usingSpecial && weapon.special != null) {
+        weapon.special!!.damageMultiplier
     } else damageMultiplier
     val pendingHits = (0 until hits).map {
         val hit = registerHit(
@@ -137,16 +164,16 @@ fun CombatContext.magicHit(
     accuracyMultiplier: Double = 1.0,
     damageMultiplier: Double = 1.0,
     hitLook: Hit.HitLook? = null,
-    spell: Spell? = null,
+    spellId: Int = -1,
     delay: Int = 0,
     hits: Int = 1
 ): List<Hit> {
-    val accMul = if (usingSpecial && weapon.specialAttack != null) {
-        weapon.specialAttack!!.accuracyMultiplier
+    val accMul = if (usingSpecial && weapon.special != null) {
+        weapon.special!!.accuracyMultiplier
     } else accuracyMultiplier
 
-    val dmgMul = if (usingSpecial && weapon.specialAttack != null) {
-        weapon.specialAttack!!.damageMultiplier
+    val dmgMul = if (usingSpecial && weapon.special != null) {
+        weapon.special!!.damageMultiplier
     } else damageMultiplier
     val pendingHits = (0 until hits).map {
         val hit = registerHit(
@@ -154,7 +181,7 @@ fun CombatContext.magicHit(
             accuracyMultiplier = accMul,
             damageMultiplier = dmgMul,
             hitLook = hitLook,
-            spell = spell
+            spellId = spellId
         )
         PendingHit(hit, delay)
     }
@@ -164,7 +191,7 @@ fun CombatContext.magicHit(
 
 class SpecialHitBuilder(private val context: CombatContext) {
     private val hits = mutableListOf<PendingHit>()
-    private val special = context.weapon.specialAttack!!
+    private val special = context.weapon.special!!
 
     private fun addHit(
         type: CombatType, damageMultiplier: Double, accuracyMultiplier: Double, delay: Int

@@ -6,7 +6,6 @@ import com.rs.java.game.Hit
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.melee.MeleeWeapon
 import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
@@ -216,11 +215,11 @@ object StandardRanged : RangeData() {
             animationId = 426,
             ammoType = AmmoType.ARROW,
             maxAmmoTier = AmmoTier.RUNE_ARROW,
-            specialAttack = SpecialAttack(
+            special = SpecialAttack(
                 energyCost = 55,
                 damageMultiplier = 1.5,
                 execute = { context ->
-                    val special = context.weapon.specialAttack!!
+                    val special = context.weapon.special!!
                     context.attacker.animate(Animation(426))
                     ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
                     val hit = context.combat.registerHit(
@@ -250,11 +249,11 @@ object StandardRanged : RangeData() {
             animationId = 426,
             ammoType = AmmoType.ARROW,
             maxAmmoTier = AmmoTier.RUNE_ARROW,
-            specialAttack = SpecialAttack(
+            special = SpecialAttack(
                 energyCost = 55,
                 damageMultiplier = 1.5,
                 execute = { context ->
-                    val special = context.weapon.specialAttack!!
+                    val special = context.weapon.special!!
                     context.attacker.animate(Animation(426))
                     ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
                     val hit = context.combat.registerHit(
@@ -284,11 +283,11 @@ object StandardRanged : RangeData() {
             animationId = 426,
             ammoType = AmmoType.ARROW,
             maxAmmoTier = AmmoTier.RUNE_ARROW,
-            specialAttack = SpecialAttack(
+            special = SpecialAttack(
                 energyCost = 55,
                 damageMultiplier = 1.5,
                 execute = { context ->
-                    val special = context.weapon.specialAttack!!
+                    val special = context.weapon.special!!
                     context.attacker.animate(Animation(426))
                     ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
                     val hit = context.combat.registerHit(
@@ -318,12 +317,12 @@ object StandardRanged : RangeData() {
             animationId = 426,
             ammoType = AmmoType.ARROW,
             maxAmmoTier = AmmoTier.RUNE_ARROW,
-            specialAttack = SpecialAttack(
+            special = SpecialAttack(
                 energyCost = 55,
                 accuracyMultiplier = 1.0,
                 damageMultiplier = 1.0,
                 execute = { context ->
-                    val special = context.weapon.specialAttack!!
+                    val special = context.weapon.special!!
                     context.attacker.animate(Animation(1074))
                     ProjectileManager.sendWithDelay(Projectile.ARROW, 249, context.attacker, context.defender, -5)
                     ProjectileManager.sendWithDelay(Projectile.ARROW, 249, context.attacker, context.defender, -25)

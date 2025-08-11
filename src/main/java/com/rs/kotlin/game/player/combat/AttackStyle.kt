@@ -1,8 +1,11 @@
 package com.rs.kotlin.game.player.combat
 
+import com.rs.core.thread.CoresManager
+import com.rs.core.thread.WorldThread
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
-import com.rs.java.game.player.actions.combat.Combat
+import com.rs.java.utils.Utils
+import java.util.*
 
 enum class AttackStyle(
     val attackSpeedModifier: Int = 0,
@@ -24,30 +27,38 @@ enum class XpMode {
     ATTACK, STRENGTH, DEFENCE, SHARED, RANGED;
 
     fun distributeXp(player: Player, attackStyle: AttackStyle, damage: Int, hitpoints: Boolean = true) {
-        val baseXp = (damage * 0.4)
-        val hpXp = (damage * 0.133)
+        val xpToAdd = mutableMapOf<Int, Double>()
+
+        val baseXp = damage * 0.4
+        val hpXp = damage * 0.133
         val type = attackStyle.combatType
+
         if (hitpoints) {
-            player.skills.addXp(Skills.HITPOINTS, hpXp)
+            xpToAdd[Skills.HITPOINTS] = hpXp
         }
+
         when (this) {
-            ATTACK -> player.skills.addXp(Skills.ATTACK, baseXp)
-            STRENGTH -> player.skills.addXp(Skills.STRENGTH, baseXp)
-            DEFENCE -> player.skills.addXp(Skills.DEFENCE, baseXp)
-            RANGED -> player.skills.addXp(Skills.RANGE, baseXp)
+            ATTACK -> xpToAdd[Skills.ATTACK] = (xpToAdd[Skills.ATTACK] ?: 0.0) + baseXp
+            STRENGTH -> xpToAdd[Skills.STRENGTH] = (xpToAdd[Skills.STRENGTH] ?: 0.0) + baseXp
+            DEFENCE -> xpToAdd[Skills.DEFENCE] = (xpToAdd[Skills.DEFENCE] ?: 0.0) + baseXp
+            RANGED -> xpToAdd[Skills.RANGE] = (xpToAdd[Skills.RANGE] ?: 0.0) + baseXp
             SHARED -> {
                 if (type == CombatType.RANGED) {
                     val split = baseXp / 2
-                    player.skills.addXp(Skills.RANGE, split)
-                    player.skills.addXp(Skills.DEFENCE, split)
+                    xpToAdd[Skills.RANGE] = (xpToAdd[Skills.RANGE] ?: 0.0) + split
+                    xpToAdd[Skills.DEFENCE] = (xpToAdd[Skills.DEFENCE] ?: 0.0) + split
                 }
                 val split = baseXp / 3
-                player.skills.addXp(Skills.ATTACK, split)
-                player.skills.addXp(Skills.STRENGTH, split)
-                player.skills.addXp(Skills.DEFENCE, split)
+                xpToAdd[Skills.ATTACK] = (xpToAdd[Skills.ATTACK] ?: 0.0) + split
+                xpToAdd[Skills.STRENGTH] = (xpToAdd[Skills.STRENGTH] ?: 0.0) + split
+                xpToAdd[Skills.DEFENCE] = (xpToAdd[Skills.DEFENCE] ?: 0.0) + split
             }
         }
+        for ((skill, xp) in xpToAdd) {
+            player.skills.addXpDelayed(skill, xp)
+        }
     }
+
 }
 
 

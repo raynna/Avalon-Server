@@ -2,6 +2,7 @@ package com.rs.kotlin.game.player.combat
 import com.rs.kotlin.game.player.combat.melee.StandardMelee
 import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.special.SpecialAttack
+import com.rs.kotlin.game.player.combat.special.SpecialEffect
 
 interface Weapon {
     val itemId: Int
@@ -11,7 +12,8 @@ interface Weapon {
     val attackRange: Int? get() = null
     val attackDelay: Int? get() = null
     val animationId: Int? get() = null
-    val specialAttack: SpecialAttack? get() = null
+    val special: SpecialAttack? get() = null
+    val effect: SpecialEffect? get() = null
 
     companion object {
         fun getWeapon(itemId: Int): Weapon {

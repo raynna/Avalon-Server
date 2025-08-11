@@ -2,7 +2,6 @@ package com.rs.kotlin.game.player.combat.melee
 
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
-import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.prayer.PrayerEffectHandler
@@ -26,7 +25,18 @@ object MeleeStyle : CombatStyle {
         this.attacker = attacker;
         this.defender = defender
         val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
-        currentWeapon = StandardMelee.getWeaponByItemId(weaponId) ?: StandardMelee.getDefaultWeapon()
+        val gloves = attacker.equipment.getItem(Equipment.SLOT_HANDS.toInt()) ?: null
+        val hasGoliathGloves = attacker.combatDefinitions.hasGoliath(gloves)
+
+        currentWeapon = when {
+            weaponId != -1 && StandardMelee.getWeaponByItemId(weaponId) != null ->
+                StandardMelee.getWeaponByItemId(weaponId)!!
+            hasGoliathGloves ->
+                StandardMelee.getGoliathWeapon()
+            else ->
+                StandardMelee.getDefaultWeapon() // unarmed
+        }
+        attacker.message("currentWeapon ${currentWeapon.name}")
         attackStyle = getAttackStyle()
         attackBonusType = getAttackBonusType()
         combatContext = CombatContext(
@@ -37,9 +47,6 @@ object MeleeStyle : CombatStyle {
             attackStyle = attackStyle,
 
         )
-        if (defender is NPC) {
-            attacker.message("Attacker: ${attacker.displayName}, Defender: ${defender.name}, weaponId: $weaponId, currentWeapon: ${currentWeapon.name}")
-        }
         return true
     }
 
@@ -68,7 +75,7 @@ object MeleeStyle : CombatStyle {
 
     override fun attack() {
         if (attacker.combatDefinitions.isUsingSpecialAttack) {
-            currentWeapon.specialAttack?.let { special ->
+            currentWeapon.special?.let { special ->
                 val specialEnergy = attacker.combatDefinitions.specialAttackPercentage
                 if (specialEnergy >= special.energyCost) {
                     val specialContext = combatContext.copy(usingSpecial = true)
@@ -81,15 +88,21 @@ object MeleeStyle : CombatStyle {
                 }
             }
         }
-        CombatAnimations.getAnimation(currentWeapon.itemId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
+        currentWeapon.effect?.let { effect ->
+            CombatAnimations.getAnimation(currentWeapon.itemId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
+            effect.execute(combatContext)
+            return
+        }
         val hit = combatContext.meleeHit()
-        attacker.message("[Melee Attack] -> " +
+        if (attacker.developerMode) {
+            attacker.message("[Melee Attack] -> " +
                 "Weapon: ${currentWeapon.name}, " +
                 "WeaponStyle: ${attackStyle.name}, " +
                 "WeaponBonusStyle: ${attackBonusType.name}, " +
                 "WeaponType: ${currentWeapon.weaponStyle.name}, " +
                 "MaxHit: ${hit[0].maxHit}, " +
                 "Hit: ${hit[0].damage}")
+        }
     }
 
     override fun delayHits(vararg hits: PendingHit) {

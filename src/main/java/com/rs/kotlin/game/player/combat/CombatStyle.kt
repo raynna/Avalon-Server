@@ -8,6 +8,7 @@ import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.magic.Spell
+import com.rs.kotlin.game.player.combat.magic.Spellbook
 
 interface CombatStyle {
     fun canAttack(attacker: Player, defender: Entity): Boolean
@@ -31,7 +32,7 @@ interface CombatStyle {
         combatType: CombatType,
         attackStyle: AttackStyle = AttackStyle.ACCURATE,
         weapon: Weapon? = null,
-        spell: Spell? = null,
+        spellId: Int = -1,
         accuracyMultiplier: Double = 1.0,
         damageMultiplier: Double = 1.0,
         hitLook: Hit.HitLook? = null
@@ -59,22 +60,16 @@ interface CombatStyle {
                 CombatType.MELEE -> CombatCalculations.calculateMeleeMaxHit(attacker, defender, damageMultiplier)
                 CombatType.RANGED -> CombatCalculations.calculateRangedMaxHit(attacker, defender, damageMultiplier)
                 CombatType.MAGIC -> {
-                    requireNotNull(spell) { "Spell required for magic attack" }
-                    CombatCalculations.calculateMagicMaxHit(attacker, defender, spell)
+                    requireNotNull(spellId) { "Spell required for magic attack" }
+                    CombatCalculations.calculateMagicMaxHit(attacker, defender, spellId)
                 }
-
             }
         } else {
             Hit(defender, 0, resolvedHitLook)
         }
         hit.look = resolvedHitLook
         if (hit.isCriticalHit && !hit.isCombatLook) {
-            println("attack isnt a combatlook")
             hit.critical = false
-        }
-        if (spell != null) {//TODO temporary fix for things like entangle and curse spells to hit
-            if (landed && spell.damage == -1)
-                hit.damage = Utils.random(1, 10)
         }
         return hit
     }

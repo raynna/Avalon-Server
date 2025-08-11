@@ -98,6 +98,13 @@ enum class WeaponStyle(
             AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
             AttackStyle.DEFENSIVE to AttackBonusType.STAB
         ),
+    ),
+    HAMMER(
+        styles(
+            AttackStyle.ACCURATE to AttackBonusType.CRUSH,
+            AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
+            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH
+        ),
     );
 
     companion object {

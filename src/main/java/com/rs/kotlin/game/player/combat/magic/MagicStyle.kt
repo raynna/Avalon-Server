@@ -129,7 +129,7 @@ object MagicStyle : CombatStyle {
 
     private fun handleModernMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
         attacker.message("Casting modern spell: ${spell.name}")
-        val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spell = spell)
+        val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
         val splash = hit.damage == 0
         var endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
         if (hit.damage > 0 && spell.bind != -1) {
@@ -193,7 +193,7 @@ object MagicStyle : CombatStyle {
 
     private fun handleAncientMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
         attacker.message("Casting ancient spell: ${spell.name}")
-        val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spell = spell)
+        val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
         val splash = hit.damage == 0

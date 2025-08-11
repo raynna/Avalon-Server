@@ -5,13 +5,9 @@ import java.util.Arrays;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.item.meta.ItemMetadata;
-import com.rs.java.game.player.actions.combat.Combat;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
-import com.rs.java.utils.ItemBonuses;
-import com.rs.kotlin.game.player.combat.CombatCalculations;
 import com.rs.kotlin.game.player.equipment.BonusType;
 
 public final class CombatDefinitions implements Serializable {
@@ -679,7 +675,21 @@ public final class CombatDefinitions implements Serializable {
             }
         }
         recalculateRangedStrength(player);
+        calculateGoliath(player);
 
+    }
+
+    private void calculateGoliath(Player player) {
+        int goliathStrength = 0;
+
+        Item weapon = player.equipment.getItem(Equipment.SLOT_WEAPON);
+        if (weapon == null) {
+            Item gloves = player.equipment.getItem(Equipment.SLOT_HANDS);
+            if (gloves != null && hasGoliath(gloves)) {
+                goliathStrength += 820;
+            }
+        }
+        bonuses[BonusType.StregthBonus.getIndex()] += goliathStrength;
     }
 
     private void recalculateRangedStrength(Player player) {
@@ -708,7 +718,13 @@ public final class CombatDefinitions implements Serializable {
         bonuses[BonusType.RangedStrBonus.getIndex()] = rangedStrength;
     }
 
-    private boolean isGodArrow(Item ammo) {
+    public boolean hasGoliath(Item gloves) {
+        if (gloves == null)
+            return false;
+        return gloves.isItem("item.goliath_gloves_black") || gloves.isItem("item.goliath_gloves_red") || gloves.isItem("item.goliath_gloves_white") || gloves.isItem("item.goliath_gloves_yellow");
+    }
+
+    public boolean isGodArrow(Item ammo) {
         return ammo.isItem("item.zamorak_arrows") || ammo.isItem("item.saradomin_arrows") || ammo.isItem("item.guthix_arrows");
     }
 

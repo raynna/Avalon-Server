@@ -108,7 +108,7 @@ object RangedStyle : CombatStyle {
     override fun attack() {
         val hit = registerHit(attacker, defender, CombatType.RANGED, weapon = currentWeapon!!, attackStyle = attackStyle)
         if (attacker.combatDefinitions.isUsingSpecialAttack) {
-            currentWeapon?.specialAttack?.let { special ->
+            currentWeapon?.special?.let { special ->
                 val specialEnergy = attacker.combatDefinitions.specialAttackPercentage
                 if (specialEnergy >= special.energyCost) {
                     val context = CombatContext(

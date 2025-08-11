@@ -10,15 +10,17 @@ object CombatAnimations {
 
     fun getAnimation(itemId: Int, attackStyle: AttackStyle, styleIndex: Int): Int {
         StandardMelee.getWeaponByItemId(itemId)?.let { meleeWeapon ->
-            return meleeWeapon.animations[StyleKey(attackStyle, styleIndex)] ?: DEFAULT_ANIMATION
+            return meleeWeapon.animations[StyleKey(attackStyle, styleIndex)] ?: meleeWeapon.animationId?: DEFAULT_ANIMATION
         }
 
         RangeData.getWeaponByItemId(itemId)?.let { rangedWeapon ->
             return rangedWeapon.animationId?: DEFAULT_RANGE_ANIMATION
         }
-
+        if (itemId == -2) {
+            val goliathGloves = StandardMelee.getGoliathWeapon()
+            return goliathGloves.animations[StyleKey(attackStyle, styleIndex)] ?: DEFAULT_ANIMATION
+        }
         val unarmed = StandardMelee.getDefaultWeapon()
         return unarmed.animations[StyleKey(attackStyle, styleIndex)] ?: DEFAULT_ANIMATION
     }
-
 }

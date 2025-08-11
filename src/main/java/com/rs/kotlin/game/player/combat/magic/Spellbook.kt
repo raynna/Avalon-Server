@@ -20,7 +20,7 @@ abstract class Spellbook(val id: Int) {
         }
 
         @JvmStatic
-        fun getSpellByComponent(componentId: Int): Spell? {
+        fun getSpellById(componentId: Int): Spell? {
             return MODERN.spells.find { it.id == componentId }
                 ?: ANCIENT.spells.find { it.id == componentId }
                 ?: run {
@@ -1215,6 +1215,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             name = "Bind",
             level = 20,
             xp = 30.0,
+            damage = 10,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 3),
@@ -1232,6 +1233,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             name = "Snare",
             level = 50,
             xp = 60.0,
+            damage = 20,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 4),
@@ -1249,6 +1251,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             name = "Entangle",
             level = 79,
             xp = 90.0,
+            damage = 30,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 5),
@@ -1264,6 +1267,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
         Spell(
             id = 86,
             name = "Teleport Block",
+            damage = 20,
             level = 85,
             xp = 80.0,
             type = SpellType.Combat,
