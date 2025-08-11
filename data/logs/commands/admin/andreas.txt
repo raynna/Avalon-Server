@@ -7981,3 +7981,129 @@
 [11 August 2025 at 03:17:36 CEST] - ::varbit 7002 2
 [11 August 2025 at 03:17:37 CEST] - ::varbit 7003 3
 [11 August 2025 at 03:19:21 CEST] - ::inter 3005
+[11 August 2025 at 03:32:54 CEST] - ::varloop 0 100 1
+[11 August 2025 at 03:32:59 CEST] - ::varloop 100 200 1
+[11 August 2025 at 03:33:02 CEST] - ::varloop 100 200 1
+[11 August 2025 at 03:33:03 CEST] - ::varloop 100 200 1
+[11 August 2025 at 03:33:06 CEST] - ::varloop 200 300 1
+[11 August 2025 at 03:33:12 CEST] - ::varloop 500 1000 1
+[11 August 2025 at 03:33:16 CEST] - ::varloop 1000 2000 1
+[11 August 2025 at 03:33:29 CEST] - ::varloop 1000 1900 1
+[11 August 2025 at 03:33:32 CEST] - ::varloop 1000 1900 1
+[11 August 2025 at 03:33:36 CEST] - ::varloop 1500 2000 1
+[11 August 2025 at 03:33:39 CEST] - ::varloop 1500 1750 10
+[11 August 2025 at 03:33:42 CEST] - ::varloop 1500 1800 10
+[11 August 2025 at 03:33:44 CEST] - ::varloop 1500 1900 10
+[11 August 2025 at 03:33:47 CEST] - ::varloop 1500 2000 10
+[11 August 2025 at 03:33:49 CEST] - ::varloop 1500 2000 10
+[11 August 2025 at 03:33:54 CEST] - ::varloop 1000 2000 10
+[11 August 2025 at 03:34:08 CEST] - ::varloop 1100 1900 20
+[11 August 2025 at 03:34:12 CEST] - ::varloop 1200 1800 30
+[11 August 2025 at 03:34:17 CEST] - ::varloop 1300 1700 40
+[11 August 2025 at 03:34:25 CEST] - ::varloop 1700 1800 50
+[11 August 2025 at 03:34:32 CEST] - ::varloop 1200 1300 60
+[11 August 2025 at 03:34:37 CEST] - ::varloop 1200 1250 30
+[11 August 2025 at 03:34:41 CEST] - ::varloop 1200 1240 40
+[11 August 2025 at 03:34:47 CEST] - ::varloop 1240 1250 50
+[11 August 2025 at 03:34:56 CEST] - ::var 1241 1
+[11 August 2025 at 03:34:58 CEST] - ::var 1242 1
+[11 August 2025 at 03:34:59 CEST] - ::var 1243 1
+[11 August 2025 at 03:35:01 CEST] - ::var 1244 1
+[11 August 2025 at 03:35:02 CEST] - ::var 1245 1
+[11 August 2025 at 03:35:03 CEST] - ::var 1246 1
+[11 August 2025 at 03:35:04 CEST] - ::var 1247 1
+[11 August 2025 at 03:35:06 CEST] - ::var 1248 1
+[11 August 2025 at 03:35:07 CEST] - ::var 1249 1
+[11 August 2025 at 03:35:10 CEST] - ::var 1250 1
+[11 August 2025 at 03:35:11 CEST] - ::var 1250 50
+[11 August 2025 at 03:35:18 CEST] - ::varloop 1240 1250 100
+[11 August 2025 at 03:35:29 CEST] - ::var 1239 50
+[11 August 2025 at 03:35:30 CEST] - ::var 1239 40
+[11 August 2025 at 03:35:33 CEST] - ::var 1240 40
+[11 August 2025 at 03:35:38 CEST] - ::var 1240 1000
+[11 August 2025 at 03:36:08 CEST] - ::var 1240 1
+[11 August 2025 at 03:36:11 CEST] - ::var 1240 2
+[11 August 2025 at 03:36:16 CEST] - ::heal 
+[11 August 2025 at 03:36:18 CEST] - ::var 1240 2
+[11 August 2025 at 03:36:19 CEST] - ::var 1240 3
+[11 August 2025 at 03:36:20 CEST] - ::var 1240 4
+[11 August 2025 at 03:36:20 CEST] - ::var 1240 5
+[11 August 2025 at 03:36:21 CEST] - ::var 1240 6
+[11 August 2025 at 03:36:22 CEST] - ::var 1240 7
+[11 August 2025 at 03:36:23 CEST] - ::var 1240 8
+[11 August 2025 at 03:36:25 CEST] - ::var 1240 1
+[11 August 2025 at 03:36:28 CEST] - ::var 1240 50
+[11 August 2025 at 03:36:31 CEST] - ::var 1240 800
+[11 August 2025 at 03:36:53 CEST] - ::varbit 7198 10
+[11 August 2025 at 03:36:56 CEST] - ::var 1240 10
+[11 August 2025 at 03:36:59 CEST] - ::var 1240 20
+[11 August 2025 at 03:38:45 CEST] - ::lowhp 
+[11 August 2025 at 03:39:43 CEST] - ::lowhp 
+[11 August 2025 at 03:40:23 CEST] - ::varbit 7198 99
+[11 August 2025 at 03:40:40 CEST] - ::var 1240 100
+[11 August 2025 at 03:40:44 CEST] - ::var 1240 150
+[11 August 2025 at 03:40:48 CEST] - ::var 1240 1000
+[11 August 2025 at 03:40:55 CEST] - ::varbit 7198 99
+[11 August 2025 at 03:41:04 CEST] - ::heal 
+[11 August 2025 at 03:41:13 CEST] - ::varbitloop 7000 8000 5
+[11 August 2025 at 03:41:16 CEST] - ::varbitloop 7000 8000 6
+[11 August 2025 at 03:41:26 CEST] - ::varbitloop 0 1000 10
+[11 August 2025 at 03:41:30 CEST] - ::varbitloop 1000 2000 10
+[11 August 2025 at 03:41:35 CEST] - ::varbitloop 2000 3000 10
+[11 August 2025 at 03:41:39 CEST] - ::varbitloop 3000 4000 10
+[11 August 2025 at 03:41:48 CEST] - ::varbitloop 4000 5000 10
+[11 August 2025 at 03:41:51 CEST] - ::varbitloop 5000 6000 10
+[11 August 2025 at 03:41:55 CEST] - ::varbitloop 6000 7000 10
+[11 August 2025 at 03:41:59 CEST] - ::varbitloop 7000 8000 10
+[11 August 2025 at 03:42:07 CEST] - ::varbitloop 8000 9000 10
+[11 August 2025 at 03:42:12 CEST] - ::varbitloop 9000 10000 0
+[11 August 2025 at 03:42:14 CEST] - ::varbitloop 9000 10000 10
+[11 August 2025 at 03:42:20 CEST] - ::varbitloop 9000 12000 10
+[11 August 2025 at 03:44:18 CEST] - ::heal 
+[11 August 2025 at 03:44:51 CEST] - ::var 1240 50
+[11 August 2025 at 03:44:55 CEST] - ::var 1240 150
+[11 August 2025 at 03:44:59 CEST] - ::var 1240 300
+[11 August 2025 at 03:45:08 CEST] - ::varbit 7198 300
+[11 August 2025 at 03:45:13 CEST] - ::varbit 7198 500
+[11 August 2025 at 03:45:27 CEST] - ::varbit 7199 500
+[11 August 2025 at 03:45:30 CEST] - ::varbit 7200 500
+[11 August 2025 at 03:45:33 CEST] - ::varbit 350 10
+[11 August 2025 at 03:45:40 CEST] - ::varbit 399 10
+[11 August 2025 at 03:45:45 CEST] - ::varbit 7000 10
+[11 August 2025 at 03:45:47 CEST] - ::varbit 7001 10
+[11 August 2025 at 03:45:48 CEST] - ::varbit 7002 10
+[11 August 2025 at 03:45:50 CEST] - ::varbit 7003 10
+[11 August 2025 at 03:45:59 CEST] - ::varbitloop 7000 7100 10
+[11 August 2025 at 03:46:01 CEST] - ::varbitloop 7000 7100 500
+[11 August 2025 at 03:46:10 CEST] - ::varbitloop 7100 7200 500
+[11 August 2025 at 03:46:18 CEST] - ::varbitloop 7100 7200 550
+[11 August 2025 at 03:46:29 CEST] - ::varbitloop 7200 7300 600
+[11 August 2025 at 03:46:34 CEST] - ::varbitloop 7300 7400 600
+[11 August 2025 at 03:46:36 CEST] - ::varbitloop 7400 7400 600
+[11 August 2025 at 03:46:40 CEST] - ::varbitloop 7400 7500 600
+[11 August 2025 at 03:46:44 CEST] - ::varbitloop 7400 10000 600
+[11 August 2025 at 03:46:55 CEST] - ::varbitloop 1 1000 600
+[11 August 2025 at 03:47:02 CEST] - ::varbitloop 2000 3000 600
+[11 August 2025 at 03:47:10 CEST] - ::varbitloop 3000 4000 600
+[11 August 2025 at 03:47:16 CEST] - ::varbitloop 4000 5000 600
+[11 August 2025 at 03:47:25 CEST] - ::varbitloop 5000 6000 600
+[11 August 2025 at 03:47:32 CEST] - ::varbitloop 6000 7000 600
+[11 August 2025 at 03:47:43 CEST] - ::varloop 1 1000 600
+[11 August 2025 at 03:47:56 CEST] - ::varloop 1 1200 600
+[11 August 2025 at 03:48:03 CEST] - ::varloop 1241 2000 600
+[11 August 2025 at 03:48:10 CEST] - ::varloop 2000 3000 600
+[11 August 2025 at 03:48:15 CEST] - ::varloop 3000 4000 600
+[11 August 2025 at 03:48:19 CEST] - ::varloop 4000 5000 600
+[11 August 2025 at 03:48:23 CEST] - ::varloop 5000 6000 600
+[11 August 2025 at 03:48:29 CEST] - ::varloop 7000 8000 600
+[11 August 2025 at 03:48:35 CEST] - ::globalloop 10 20 1
+[11 August 2025 at 03:48:39 CEST] - ::globalloop 10 20 6000
+[11 August 2025 at 03:48:46 CEST] - ::globalloop 10 1000 600
+[11 August 2025 at 03:48:53 CEST] - ::globalloop 1000 2000 600
+[11 August 2025 at 03:49:00 CEST] - ::globalloop 2000 3000 600
+[11 August 2025 at 03:49:07 CEST] - ::globalloop 3000 4000 600
+[11 August 2025 at 03:49:12 CEST] - ::globalloop 4000 5000 600
+[11 August 2025 at 03:49:17 CEST] - ::globalloop 5000 6000 600
+[11 August 2025 at 03:49:23 CEST] - ::globalloop 6000 7000 600
+[11 August 2025 at 03:49:33 CEST] - ::globalloop 7000 8000 600
+[11 August 2025 at 03:49:37 CEST] - ::globalloop 8000 9000 600

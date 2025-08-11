@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class MusicScriptDumper {
+public class InterfaceScriptDumper {
 
-    public static void dumpAllMusic(int maxId) throws IOException {
+    public static void dump(int maxId) throws IOException {
         Map<Integer, Map<String, Object>> allMaps = new LinkedHashMap<>();
 
         for (int scriptId = 0; scriptId <= maxId; scriptId++) {
