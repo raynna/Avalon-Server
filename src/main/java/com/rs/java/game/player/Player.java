@@ -3484,7 +3484,7 @@ public class Player extends Entity {
         combatDefinitions.refreshAttackStyle();
         combatDefinitions.refreshAutoCastSpell();
         combatDefinitions.refreshAutoRelatie();
-        combatDefinitions.refreshBonuses();
+        combatDefinitions.updateBonuses();
         combatDefinitions.refreshSpecialAttackPercentage();
         combatDefinitions.refreshSpellBook();
         combatDefinitions.refreshSpellBookScrollBar_DefCast();

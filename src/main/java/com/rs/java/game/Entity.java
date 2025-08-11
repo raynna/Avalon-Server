@@ -72,6 +72,7 @@ public abstract class Entity extends WorldTile {
     private transient Graphics nextGraphics3;
     private transient Graphics nextGraphics4;
     private transient ArrayList<Hit> nextHits;
+    private Queue<Hit> hitOverflow = new LinkedList<>();
     private transient ForceMovement nextForceMovement;
     private transient ForceTalk nextForceTalk;
     private transient int nextFaceEntity;
@@ -122,7 +123,8 @@ public abstract class Entity extends WorldTile {
         receivedHits = new ConcurrentLinkedQueue<Hit>();
         receivedDamage = new ConcurrentHashMap<Entity, Integer>();
         temporaryAttributes = new ConcurrentHashMap<Object, Object>();
-        nextHits = new ArrayList<Hit>();
+        nextHits = new ArrayList<>();
+        hitOverflow = new LinkedList<>();
         nextWalkDirection = nextRunDirection - 1;
         lastFaceEntity = -1;
         nextFaceEntity = -2;
@@ -151,21 +153,6 @@ public abstract class Entity extends WorldTile {
         return (getX() >= 3011 && getX() <= 3132 && getY() >= 10052 && getY() <= 10175) || (getX() >= 2940 && getX() <= 3395 && getY() >= 3525 && getY() <= 4000) || (getX() >= 3264 && getX() <= 3279 && getY() >= 3279 && getY() <= 3672) || (getX() >= 2756 && getX() <= 2875 && getY() >= 5512 && getY() <= 5627) || (getX() >= 3158 && getX() <= 3181 && getY() >= 3679 && getY() <= 3697) || (getX() >= 2293 && getX() <= 2357 && getY() >= 3662 && getY() <= 3710) || (getX() >= 3280 && getX() <= 3183 && getY() >= 3885 && getY() <= 3888) || (getX() >= 3012 && getX() <= 3059 && getY() >= 10303 && getY() <= 10351) || (getX() >= 3078 && getX() <= 3134 && getY() >= 9923 && getY() <= 9999);
     }
 
-    public void applyHit(Hit hit) {
-        if (isDead())
-            hit.setDamage(0);
-        if (this instanceof Player) {
-            Player player = (Player) this;
-            if (player.invulnerable)
-                return;
-            if (player.healMode) {
-                if (hit.getDamage() >= 1)
-                    hit.setHealHit();
-            }
-        }
-        receivedHits.add(hit);
-    }
-
     public abstract void handleHit(Hit hit);
 
     public abstract void handleIncommingHit(Hit hit);
@@ -183,6 +170,7 @@ public abstract class Entity extends WorldTile {
 
     public void resetReceivedHits() {
         nextHits.clear();
+        hitOverflow.clear();
         receivedHits.clear();
         receivedDamage.clear();
     }
@@ -198,31 +186,47 @@ public abstract class Entity extends WorldTile {
     public void resetCombat() {
     }
 
-    public void processReceivedHits() {
-        Hit hit;
+    public void applyHit(Hit hit) {
         if (isDead())
-            return;
+            hit.setDamage(0);
         if (this instanceof Player) {
-            Player p2 = (Player) this;
-            if (p2.isTeleporting()) {
-                int count = 0;
-                while ((hit = receivedHits.poll()) != null && count++ < 12)
-                    hit.setDamage(-2);
+            Player player = (Player) this;
+            if (player.invulnerable)
                 return;
+            if (player.healMode) {
+                if (hit.getDamage() >= 1)
+                    hit.setHealHit();
             }
-            if (p2.getEmotesManager().getNextEmoteEnd() >= Utils.currentTimeMillis())
-                return;
-            if (p2.getLockDelay() > Utils.currentTimeMillis())
-                return;
         }
-        int count = 0;
-        while ((hit = receivedHits.poll()) != null && count++ < 10)
-            processHit(hit);
+        receivedHits.add(hit);
     }
 
-    public void applyHeal(Hit hit) {
-        hit.setHealHit();
-        processHit(hit);
+
+    private transient final int totalHitsProcess = 4;
+
+    public void processReceivedHits() {
+        if (isDead())
+            return;
+
+        if (this instanceof Player player) {
+            if (player.isTeleporting()) {
+                resetReceivedHits();
+                return;
+            }
+            if (player.getEmotesManager().getNextEmoteEnd() >= Utils.currentTimeMillis())
+                return;
+            if (player.getLockDelay() > Utils.currentTimeMillis())
+                return;
+        }
+
+        int processedCount = 0;
+        while (!receivedHits.isEmpty() && processedCount < totalHitsProcess) {
+            Hit hit = receivedHits.poll();
+            processHit(hit);
+            processedCount++;
+        }
+
+        processOverflowHits();
     }
 
     public void processHit(Hit hit) {
@@ -236,7 +240,23 @@ public abstract class Entity extends WorldTile {
                 return;
         }
         removeHitpoints(hit);
-        nextHits.add(hit);
+        if (nextHits.size() < totalHitsProcess) {
+            nextHits.add(hit);
+        } else {
+            hitOverflow.add(hit);
+        }
+    }
+
+    public void processOverflowHits() {
+        while (!hitOverflow.isEmpty() && nextHits.size() < totalHitsProcess) {
+            nextHits.add(hitOverflow.poll());
+        }
+    }
+
+
+    public void applyHeal(Hit hit) {
+        hit.setHealHit();
+        processHit(hit);
     }
 
     public void checkCombatLevel(Player player, Entity target) {
@@ -1147,6 +1167,7 @@ public abstract class Entity extends WorldTile {
         nextForceTalk = null;
         nextFaceEntity = -2;
         nextHits.clear();
+        processOverflowHits();
     }
 
     public abstract void finish();

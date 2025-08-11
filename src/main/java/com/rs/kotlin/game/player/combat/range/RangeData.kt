@@ -31,7 +31,8 @@ enum class AmmoType {
     THROWING,
     JAVELIN,
     CHINCHOMPA,
-    THROWNAXE
+    THROWNAXE,
+    NONE
 }
 
 enum class EffectType {

@@ -12,6 +12,7 @@ public final class Equipment implements Serializable {
 
 	private static final long serialVersionUID = -4147163237095647617L;
 
+
 	public static final byte SLOT_HEAD = 0, SLOT_CAPE = 1, SLOT_AMULET = 2, SLOT_WEAPON = 3, SLOT_CHEST = 4,
 			SLOT_SHIELD = 5, SLOT_LEGS = 7, SLOT_HANDS = 9, SLOT_FEET = 10, SLOT_RING = 12, SLOT_ARROWS = 13,
 			SLOT_AURA = 14;
@@ -44,8 +45,14 @@ public final class Equipment implements Serializable {
 		if (slots != null) {
 			player.getPackets().sendUpdateItems(94, items, slots);
 			player.getCombatDefinitions().checkAttackStyle();
+			for (int slot : slots) {
+				if (slot == Equipment.SLOT_WEAPON) {
+					if (player.combatDefinitions.usingSpecialAttack)
+						player.combatDefinitions.switchUsingSpecialAttack();
+				}
+			}
 		}
-		player.getCombatDefinitions().refreshBonuses();
+		player.getCombatDefinitions().updateBonuses();
 		refreshConfigs(slots == null);
 	}
 

@@ -1,5 +1,6 @@
 package com.rs.kotlin.game.player.combat.range
 
+import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
 import com.rs.java.game.World
@@ -12,7 +13,7 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.special.SpecialContext
+import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 
@@ -48,7 +49,7 @@ object RangedStyle : CombatStyle {
             return false
         }
 
-        if (currentAmmo == null && weaponAmmoType != AmmoType.THROWING && weaponAmmoType != AmmoType.DART) {
+        if (currentAmmo == null && weaponAmmoType != AmmoType.THROWING && weaponAmmoType != AmmoType.DART && weaponAmmoType != AmmoType.NONE) {
             attacker.message("You don't have any ammunition equipped.")
             return false
         }
@@ -70,7 +71,7 @@ object RangedStyle : CombatStyle {
                 return false
             }
         }
-        if (weaponAmmoType != AmmoType.THROWING && weaponAmmoType != AmmoType.DART) {
+        if (weaponAmmoType != AmmoType.THROWING && weaponAmmoType != AmmoType.DART && weaponAmmoType != AmmoType.NONE) {
             if (weaponAmmoType != ammoType) {
                 attacker.message("You can't use $ammoName with a $weaponName.")
                 return false
@@ -89,8 +90,14 @@ object RangedStyle : CombatStyle {
     }
 
     override fun getAttackSpeed(): Int {
-        val baseSpeed = currentWeapon?.attackSpeed ?: 4
+        var baseSpeed = 4
         val style = getAttackStyle()
+        if (currentWeapon?.attackSpeed != -1) {
+            baseSpeed = currentWeapon!!.attackSpeed!!
+        } else {
+            val definitions = ItemDefinitions.getItemDefinitions(currentWeapon!!.itemId);
+            baseSpeed = definitions.attackSpeed
+        }
         return baseSpeed + style.attackSpeedModifier
     }
 
@@ -104,7 +111,7 @@ object RangedStyle : CombatStyle {
             currentWeapon?.specialAttack?.let { special ->
                 val specialEnergy = attacker.combatDefinitions.specialAttackPercentage
                 if (specialEnergy >= special.energyCost) {
-                    val context = SpecialContext(
+                    val context = CombatContext(
                         combat = this,
                         attacker = attacker,
                         defender = defender,
@@ -121,8 +128,10 @@ object RangedStyle : CombatStyle {
             }
         }
         CombatAnimations.getAnimation(currentWeapon!!.itemId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
-        if (currentAmmo!!.startGfx != null) {
-            attacker.gfx(currentAmmo?.startGfx)
+        if (currentAmmo != null) {
+            if (currentAmmo!!.startGfx != null) {
+                attacker.gfx(currentAmmo?.startGfx)
+            }
         }
         sendProjectile()
         handleSpecialEffects()
@@ -227,6 +236,7 @@ object RangedStyle : CombatStyle {
             AmmoType.JAVELIN -> Projectile.JAVELIN
             AmmoType.CHINCHOMPA -> Projectile.CHINCHOMPA
             AmmoType.THROWNAXE -> Projectile.THROWING_KNIFE
+            AmmoType.NONE -> Projectile.ARROW
             null -> Projectile.BOLT
         }
         if (projectileId != -1) {
@@ -244,7 +254,7 @@ object RangedStyle : CombatStyle {
 
     private fun handleSpecialEffects() {
         currentAmmo?.specialEffect?.let { special ->
-                val context = SpecialContext(
+                val context = CombatContext(
                     combat = this,
                     attacker = attacker,
                     defender = defender,

@@ -58,13 +58,16 @@ class CombatAction(
         if (target.isDead) {
             return false
         }
-        //player.message("process");
+        player.message("process");
         val spellId = player.getCombatDefinitions().spellId
         style = when {
             spellId != 0 -> MagicStyle
             isRangedWeapon(player) -> RangedStyle
             else -> MeleeStyle
         }
+        player.message("style:$style");
+        if (style == MeleeStyle)
+            player.calcFollow(target, if (player.run) 2 else 1, true, true)
         ensureFollowTask(player);
         return true
     }
@@ -99,7 +102,10 @@ class CombatAction(
     }
 
     private fun ensureFollowTask(player: Player) {
-        if (followTask != null) return // already running
+        /*if (followTask != null) {
+            player.message("cant assign new followTask");
+            return // already running
+        }*/
 
         val requiredDistance = style.getAttackDistance()
         val size = player.size

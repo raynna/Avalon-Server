@@ -8107,3 +8107,149 @@
 [11 August 2025 at 03:49:23 CEST] - ::globalloop 6000 7000 600
 [11 August 2025 at 03:49:33 CEST] - ::globalloop 7000 8000 600
 [11 August 2025 at 03:49:37 CEST] - ::globalloop 8000 9000 600
+[11 August 2025 at 05:43:35 CEST] - ::heal 
+[11 August 2025 at 05:43:36 CEST] - ::item 4151 1
+[11 August 2025 at 05:43:40 CEST] - ::master 
+[11 August 2025 at 05:43:41 CEST] - ::heal 
+[11 August 2025 at 05:43:44 CEST] - ::item dragon def
+[11 August 2025 at 05:43:45 CEST] - ::item fire cape
+[11 August 2025 at 05:43:49 CEST] - ::item culimanncer gloves 10
+[11 August 2025 at 05:43:52 CEST] - ::item 7462
+[11 August 2025 at 05:43:53 CEST] - ::item neitiz
+[11 August 2025 at 05:43:56 CEST] - ::item bandos chest
+[11 August 2025 at 05:43:58 CEST] - ::item bandos tass
+[11 August 2025 at 05:44:01 CEST] - ::item dragon boot
+[11 August 2025 at 05:44:05 CEST] - ::item fury
+[11 August 2025 at 05:44:07 CEST] - ::item amulet of fu
+[11 August 2025 at 05:44:14 CEST] - ::item berserker ring i
+[11 August 2025 at 05:44:17 CEST] - ::item 15220 1
+[11 August 2025 at 05:47:16 CEST] - ::item 5698 1
+[11 August 2025 at 05:49:22 CEST] - ::master 
+[11 August 2025 at 05:49:23 CEST] - ::heal 
+[11 August 2025 at 05:49:24 CEST] - ::item 4151
+[11 August 2025 at 05:49:25 CEST] - ::item bandos chest
+[11 August 2025 at 05:49:27 CEST] - ::item bandos tass
+[11 August 2025 at 05:49:28 CEST] - ::item fire cape
+[11 August 2025 at 05:49:29 CEST] - ::item dragon def
+[11 August 2025 at 05:49:32 CEST] - ::item amulet of fur
+[11 August 2025 at 05:49:36 CEST] - ::item dragon boot
+[11 August 2025 at 05:49:38 CEST] - ::item neitiz
+[11 August 2025 at 05:49:42 CEST] - ::item 7462 1
+[11 August 2025 at 05:49:44 CEST] - ::item 15220 1
+[11 August 2025 at 05:49:46 CEST] - ::item 5698 1
+[11 August 2025 at 05:50:24 CEST] - ::spec 
+[11 August 2025 at 05:50:34 CEST] - ::spec 
+[11 August 2025 at 05:50:39 CEST] - ::tele 0,48,54,15,42
+[11 August 2025 at 05:51:30 CEST] - ::item saradomin bow
+[11 August 2025 at 05:51:33 CEST] - ::item saradomin arrow
+[11 August 2025 at 05:51:37 CEST] - ::item 19152 1000
+[11 August 2025 at 05:55:42 CEST] - ::heal 
+[11 August 2025 at 05:55:47 CEST] - ::item saradomin bow
+[11 August 2025 at 05:55:49 CEST] - ::item saradomin arrow
+[11 August 2025 at 05:55:51 CEST] - ::item 19152 1000
+[11 August 2025 at 05:55:55 CEST] - ::item zaryte bow
+[11 August 2025 at 05:56:12 CEST] - ::item pernix body
+[11 August 2025 at 05:56:14 CEST] - ::item pernix chaps
+[11 August 2025 at 05:56:16 CEST] - ::item pernix cowl
+[11 August 2025 at 05:56:22 CEST] - ::master 
+[11 August 2025 at 05:56:27 CEST] - ::item avas
+[11 August 2025 at 05:56:32 CEST] - ::item ava's
+[11 August 2025 at 05:56:37 CEST] - ::item 20068 1
+[11 August 2025 at 05:57:13 CEST] - ::item swift gloves
+[11 August 2025 at 05:57:17 CEST] - ::item glaiven boot
+[11 August 2025 at 05:57:22 CEST] - ::item fury
+[11 August 2025 at 05:57:24 CEST] - ::item amulet of fury
+[11 August 2025 at 07:00:35 CEST] - ::item 11283 1
+[11 August 2025 at 07:08:49 CEST] - ::item 2444 1
+[11 August 2025 at 07:09:40 CEST] - ::item 15332 1
+[11 August 2025 at 07:13:50 CEST] - ::heal 
+[11 August 2025 at 07:15:21 CEST] - ::item hand cannon shot
+[11 August 2025 at 07:15:24 CEST] - ::item 15243 100
+[11 August 2025 at 07:35:30 CEST] - ::inter 667
+[11 August 2025 at 07:35:32 CEST] - ::inter 667
+[11 August 2025 at 07:53:50 CEST] - ::heal 
+[11 August 2025 at 07:54:09 CEST] - ::item 892 1000
+[11 August 2025 at 09:04:34 CEST] - ::item 5698 1
+[11 August 2025 at 09:04:45 CEST] - ::heal 
+[11 August 2025 at 09:05:15 CEST] - ::spec 
+[11 August 2025 at 09:05:35 CEST] - ::spec 
+[11 August 2025 at 09:05:50 CEST] - ::spec 
+[11 August 2025 at 09:05:56 CEST] - ::spec 
+[11 August 2025 at 09:07:43 CEST] - ::item kayle sling
+[11 August 2025 at 09:09:15 CEST] - ::item 15486 1
+[11 August 2025 at 09:09:30 CEST] - ::runes 
+[11 August 2025 at 09:09:59 CEST] - ::item salve ammy
+[11 August 2025 at 09:10:01 CEST] - ::item salve
+[11 August 2025 at 09:10:09 CEST] - ::item 10588 1
+[11 August 2025 at 09:21:35 CEST] - ::empty 
+[11 August 2025 at 09:21:37 CEST] - ::item 4151 1
+[11 August 2025 at 09:21:38 CEST] - ::item 20072 1
+[11 August 2025 at 09:21:40 CEST] - ::item vesta
+[11 August 2025 at 09:21:44 CEST] - ::item 13893 1
+[11 August 2025 at 09:21:45 CEST] - ::item 1725 1
+[11 August 2025 at 09:21:47 CEST] - ::item 23659 1
+[11 August 2025 at 09:21:48 CEST] - ::item 7462 1
+[11 August 2025 at 09:21:50 CEST] - ::item 11732 1
+[11 August 2025 at 09:21:51 CEST] - ::item 10828 1
+[11 August 2025 at 09:21:55 CEST] - ::curses 
+[11 August 2025 at 09:21:58 CEST] - ::item 2440 1
+[11 August 2025 at 09:21:59 CEST] - ::item 2436 1
+[11 August 2025 at 09:22:00 CEST] - ::heal 
+[11 August 2025 at 09:22:04 CEST] - ::item 15220 1
+[11 August 2025 at 09:33:57 CEST] - ::heal 
+[11 August 2025 at 09:42:51 CEST] - ::heal 
+[11 August 2025 at 09:42:52 CEST] - ::item 2440 1
+[11 August 2025 at 09:42:52 CEST] - ::item 2436 1
+[11 August 2025 at 09:51:47 CEST] - ::prayers 
+[11 August 2025 at 09:51:58 CEST] - ::item bandos chest
+[11 August 2025 at 09:52:00 CEST] - ::item bandos tass
+[11 August 2025 at 09:53:33 CEST] - ::heal 
+[11 August 2025 at 09:55:43 CEST] - ::item 2440 1
+[11 August 2025 at 09:55:45 CEST] - ::item 2436
+[11 August 2025 at 09:56:41 CEST] - ::item 5698 1
+[11 August 2025 at 09:56:46 CEST] - ::item 2440 3
+[11 August 2025 at 09:56:47 CEST] - ::item 3024 1000
+[11 August 2025 at 09:59:06 CEST] - ::spec 
+[11 August 2025 at 09:59:21 CEST] - ::spec 
+[11 August 2025 at 10:02:05 CEST] - ::heal 
+[11 August 2025 at 10:03:17 CEST] - ::spec 
+[11 August 2025 at 10:04:09 CEST] - ::empty 
+[11 August 2025 at 10:04:11 CEST] - ::item 13893 1
+[11 August 2025 at 10:04:12 CEST] - ::item 13887 1
+[11 August 2025 at 10:04:14 CEST] - ::item 13896 1
+[11 August 2025 at 10:04:22 CEST] - ::item 21787 1
+[11 August 2025 at 10:04:26 CEST] - ::item 6585 1
+[11 August 2025 at 10:04:28 CEST] - ::item 11283 1
+[11 August 2025 at 10:04:46 CEST] - ::item 18349 1
+[11 August 2025 at 10:04:48 CEST] - ::item 18355 1
+[11 August 2025 at 10:04:50 CEST] - ::item 6889 1
+[11 August 2025 at 10:04:53 CEST] - ::item ahrims
+[11 August 2025 at 10:05:00 CEST] - ::item ahrim's
+[11 August 2025 at 10:05:05 CEST] - ::item item 4712 1
+[11 August 2025 at 10:05:06 CEST] - ::item 4714 1
+[11 August 2025 at 10:05:07 CEST] - ::item 4712 1
+[11 August 2025 at 10:05:20 CEST] - ::item 18335 1
+[11 August 2025 at 10:05:26 CEST] - ::item 2412 1
+[11 August 2025 at 10:05:30 CEST] - ::item 6920 1
+[11 August 2025 at 10:05:33 CEST] - ::item 5698 1
+[11 August 2025 at 10:05:35 CEST] - ::item 4736 1
+[11 August 2025 at 10:05:54 CEST] - ::item 15332 1
+[11 August 2025 at 10:05:56 CEST] - ::item 3024 3
+[11 August 2025 at 10:05:57 CEST] - ::item 6685 2
+[11 August 2025 at 10:05:59 CEST] - ::item 560 10000
+[11 August 2025 at 10:06:02 CEST] - ::item 565 10000
+[11 August 2025 at 10:06:05 CEST] - ::item 555 10000
+[11 August 2025 at 10:06:09 CEST] - ::item 15272 100
+[11 August 2025 at 10:06:11 CEST] - ::heal 
+[11 August 2025 at 10:06:18 CEST] - ::ancients 
+[11 August 2025 at 10:06:23 CEST] - ::curses 
+[11 August 2025 at 10:07:23 CEST] - ::spec 
+[11 August 2025 at 10:07:54 CEST] - ::heal 
+[11 August 2025 at 10:13:27 CEST] - ::spec 
+[11 August 2025 at 10:14:03 CEST] - ::spec 
+[11 August 2025 at 10:14:21 CEST] - ::prayers 
+[11 August 2025 at 10:14:36 CEST] - ::item 15332 2
+[11 August 2025 at 10:14:39 CEST] - ::runes 
+[11 August 2025 at 10:14:45 CEST] - ::ancients 
+[11 August 2025 at 10:14:46 CEST] - ::modern 
+[11 August 2025 at 10:25:55 CEST] - ::heal 

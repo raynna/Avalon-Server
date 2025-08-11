@@ -6,8 +6,8 @@ import com.rs.java.game.Hit
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.special.SpecialAttack
-import com.rs.kotlin.game.player.combat.special.SpecialEffect
+import com.rs.kotlin.game.player.combat.melee.MeleeWeapon
+import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 
@@ -109,6 +109,14 @@ import com.rs.kotlin.game.world.projectile.ProjectileManager
  */
 
 object StandardRanged : RangeData() {
+    fun getDefaultWeapon(): RangedWeapon = UNARMED
+
+    private val UNARMED = RangedWeapon(
+        itemId = -1,
+        name = "Unarmed",
+        weaponStyle = WeaponStyle.UNARMED,
+        ammoType = AmmoType.NONE
+    )
     override val weapons = listOf(
         RangedWeapon(
             itemId = 841,
@@ -189,6 +197,15 @@ object StandardRanged : RangeData() {
             animationId = 4230,
             ammoType = AmmoType.BOLT,
             allowedAmmoIds = setOf(8882)
+        ),
+        RangedWeapon(
+            itemId = 20171,
+            name = "Zaryte bow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackSpeed = 4,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.NONE
         ),
         RangedWeapon(
             itemId = 19143,

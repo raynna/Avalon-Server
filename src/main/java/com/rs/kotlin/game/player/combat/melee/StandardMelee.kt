@@ -1,10 +1,10 @@
 package com.rs.kotlin.game.player.combat.melee
 
+import com.rs.java.game.npc.NPC;
 import com.rs.java.game.Animation
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.kotlin.game.player.combat.*
-import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.*
 
 object StandardMelee : MeleeData() {
@@ -27,12 +27,12 @@ object StandardMelee : MeleeData() {
             damageMultiplier = 1.15,
             execute = { context ->
 
-                context.melee(1.15, 1.15, Hit.HitLook.MAGIC_DAMAGE)//melee roll with magic damage
-                context.melee(1.15, 1.15)//melee roll with melee damage
+                context.meleeHit(1.15, 1.15, Hit.HitLook.MAGIC_DAMAGE)//melee roll with magic damage
+                context.meleeHit(1.15, 1.15)//melee roll with melee damage
 
-                context.ranged()//range roll with range damage, no multipliers
+                context.rangedHit()//range roll with range damage, no multipliers
 
-                context.magic(1.0, hitLook = Hit.HitLook.MELEE_DAMAGE)//magic roll with melee damage
+                context.magicHit(1.0, hitLook = Hit.HitLook.MELEE_DAMAGE)//magic roll with melee damage
 
                 context.repeatHits(2)
 
@@ -76,10 +76,10 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate(Animation(11971))
                     context.defender.gfx(Graphics(2108, 0, 100))
-                    context.melee(1.15, 1.15, Hit.HitLook.MAGIC_DAMAGE)//melee roll with magic damage
-                    context.melee(1.15, 1.15)//melee roll with melee damage
+                    context.meleeHit(1.15, 1.15, Hit.HitLook.MAGIC_DAMAGE)//melee roll with magic damage
+                    context.meleeHit(1.15, 1.15)//melee roll with melee damage
 
-                    context.ranged()//range roll with range damage, no multipliers
+                    context.rangedHit()//range roll with range damage, no multipliers
 
                     //context.magic(1.0, hitLook = Hit.HitLook.MELEE_DAMAGE)//magic roll with melee damage
 
@@ -124,10 +124,8 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate(Animation(1062))
                     context.attacker.gfx(Graphics(252, 0, 100))
-                    context.melee()
-                    context.melee(hitLook = Hit.HitLook.RANGE_DAMAGE, delay = 1)
-                    context.melee(hitLook = Hit.HitLook.MAGIC_DAMAGE, delay = 1)
-                    context.melee(hitLook = Hit.HitLook.REGULAR_DAMAGE, delay = 2, hits = 5)
+                    context.meleeHit()
+                    context.meleeHit(delay = if (context.defender is NPC) 1 else 0)
                 }
             )
         ),

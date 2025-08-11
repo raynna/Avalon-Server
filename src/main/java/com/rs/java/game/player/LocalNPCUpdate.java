@@ -274,15 +274,15 @@ public final class LocalNPCUpdate {
 					data.writeSmart(0);
 				} else {
 					if (hit.getSoaking() != null) {
-						double hitAmount = !player.toggles("ONEXHITS", false) ? hit.getDamage() : Math.floor(hit.getDamage() * 0.1);
-						double soakAmount = !player.toggles("ONEXHITS", false) ? hit.getSoaking().getDamage() : Math.floor(hit.getSoaking().getDamage() * 0.1);
+						double hitAmount = !player.toggles("ONEXHITS", false) ? hit.getDamage() : Math.ceil(hit.getDamage() * 0.1);
+						double soakAmount = !player.toggles("ONEXHITS", false) ? hit.getSoaking().getDamage() : Math.ceil(hit.getSoaking().getDamage() * 0.1);
 						data.writeSmart(32767);
 						data.writeSmart(hit.getMark(player, n));
 						data.writeSmart((int)hitAmount);
 						data.writeSmart(hit.getSoaking().getMark(player, n));
 						data.writeSmart((int)soakAmount);
 					} else {
-						double hitAmount = !player.toggles("ONEXHITS", false) ? hit.getDamage() : Math.floor(hit.getDamage() * 0.1);
+						double hitAmount = !player.toggles("ONEXHITS", false) ? hit.getDamage() : Math.ceil(hit.getDamage() * 0.1);
 						data.writeSmart(hit.getMark(player, n));
 						data.writeSmart((int)hitAmount);
 					}

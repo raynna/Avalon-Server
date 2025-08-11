@@ -232,7 +232,7 @@ public final class DominionTower implements Serializable {
     private void teleportToArena(int mode) {
         player.setNextFaceWorldTile(new WorldTile(getBaseX() + 11, getBaseY() + 29, 0));
         player.getControlerManager().startControler("DTControler", mode);
-        player.getCombatDefinitions().refreshBonuses();
+        player.getCombatDefinitions().updateBonuses();
         player.unlock();
         player.setNextWorldTile(new WorldTile(getBaseX() + 10, getBaseY() + 29, 2));
         player.getMusicsManager().playMusic(MUSICS[Utils.random(MUSICS.length)]);
@@ -439,7 +439,7 @@ public final class DominionTower implements Serializable {
             player.getControlerManager().removeControlerWithoutCheck();
             player.lock();
             player.setNextWorldTile(tile);
-            player.getCombatDefinitions().refreshBonuses();
+            player.getCombatDefinitions().updateBonuses();
             nextBossIndex = -1;
             if (mode == ENDURANCE)
                 progress = 0;

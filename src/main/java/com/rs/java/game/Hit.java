@@ -24,7 +24,7 @@ public final class Hit {
 	private HitLook look;
 	private int damage;
 	private int maxHit;
-	private boolean critical;
+	public boolean critical;
 	private Hit soaking;
 	private int delay;
 
@@ -40,6 +40,10 @@ public final class Hit {
 	public void setMissedHit() {
 		look = HitLook.MISSED;
 		critical = false;
+	}
+
+	public boolean isCombatLook() {
+		return look == HitLook.MELEE_DAMAGE || look == HitLook.RANGE_DAMAGE || look == HitLook.MAGIC_DAMAGE;
 	}
 
 	public Hit(Entity source, int damage, HitLook look) {

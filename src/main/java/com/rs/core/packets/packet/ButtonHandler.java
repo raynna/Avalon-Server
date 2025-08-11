@@ -76,6 +76,7 @@ import com.rs.java.utils.Utils;
 import com.rs.java.utils.Weights;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.combat.magic.SpellHandler;
+import com.rs.kotlin.game.player.equipment.BonusType;
 
 /**
  * @Improved Andreas, Phillip - AvalonPK
@@ -89,8 +90,7 @@ public class ButtonHandler {
         if (Utils.getInterfaceDefinitionsSize() <= interfaceId) {
             return;
         }
-        if (player.isDead() || !player.getInterfaceManager().containsInterface(interfaceId))
-            return;
+        if (player.isDead() || !player.getInterfaceManager().containsInterface(interfaceId)) return;
         final int componentId = interfaceHash - (interfaceId << 16);
         if (componentId != 65535 && Utils.getInterfaceDefinitionsComponentsSize(interfaceId) <= componentId) {
             return;
@@ -99,8 +99,7 @@ public class ButtonHandler {
         final int slotId = stream.readUnsignedShortLE128();
         if (!player.getControlerManager().processButtonClick(interfaceId, componentId, slotId, slotId2, packetId))
             return;
-        if (interfaceId == 403)
-            Sawmill.handlePlanksConvertButtons(player, componentId, packetId);
+        if (interfaceId == 403) Sawmill.handlePlanksConvertButtons(player, componentId, packetId);
         if (interfaceId == 190 || interfaceId == 1243) {
             player.getQuestManager().handleButton(interfaceId, componentId, slotId);
         }
@@ -115,8 +114,7 @@ public class ButtonHandler {
         if (interfaceId == 1163 || interfaceId == 1164 || interfaceId == 1168 || interfaceId == 1170 || interfaceId == 1171 || interfaceId == 1173)
             player.getDominionTower().handleButtons(interfaceId, componentId, slotId, packetId);
         if (interfaceId == 3010) {
-            if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                player.getCustomStore().sendInfo(slotId2);
+            if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getCustomStore().sendInfo(slotId2);
             if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET || packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET || packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
                 player.getCustomStore().sendBuy(slotId2, packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET ? 1 : packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET ? 10 : 100);
             if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
@@ -131,10 +129,8 @@ public class ButtonHandler {
                 Integer achievement = (Integer) player.getTemporaryAttributtes().get("ACHIEVEMENTTAB");
                 if (achievement == 0) {
                     String category = (String) player.getTemporaryAttributtes().get("ACHIEVEMENTCATEGORY");
-                    if (category != null)
-                        AchievementsTab.openTasks(player, category);
-                    else
-                        AchievementsTab.open(player);
+                    if (category != null) AchievementsTab.openTasks(player, category);
+                    else AchievementsTab.open(player);
                 }
             }
             if (componentId == 77 || componentId == 101) {
@@ -174,12 +170,9 @@ public class ButtonHandler {
             } else if (interfaceId == 629 && componentId == 68) {
                 player.closeInterfaces();
             } else if ((interfaceId == 548 && componentId == 17) || (interfaceId == 746 && componentId == 54)) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                    player.getSkills().switchXPDisplay();
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.getSkills().switchXPPopup(false);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    player.getSkills().setupXPCounter();
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getSkills().switchXPDisplay();
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) player.getSkills().switchXPPopup(false);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) player.getSkills().setupXPCounter();
             } else if ((interfaceId == 746 && componentId == 207) || (interfaceId == 548 && componentId == 159) || (interfaceId == 548 && componentId == 194)) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                     player.getPackets().sendRunScript(5557, 1);
@@ -220,16 +213,11 @@ public class ButtonHandler {
                 GearTab.handleButtons(player, otherPreset != null ? otherPreset : null, componentId);
                 return;
             } else {
-                if (componentId == 62)
-                    JournalTab.open(player);
-                if (componentId == 61)
-                    TeleportTab.open(player);
-                if (componentId == 60)
-                    SettingsTab.open(player);
-                if (componentId == 26)
-                    GearTab.open(player, null);
-                if (componentId == 59)
-                    QuestTab.open(player);
+                if (componentId == 62) JournalTab.open(player);
+                if (componentId == 61) TeleportTab.open(player);
+                if (componentId == 60) SettingsTab.open(player);
+                if (componentId == 26) GearTab.open(player, null);
+                if (componentId == 59) QuestTab.open(player);
                 if (tab == null) {
                     JournalTab.open(player);
                 }
@@ -254,43 +242,29 @@ public class ButtonHandler {
                 }
             }
         } else if (interfaceId == 939) {
-            if (componentId == 112)
-                player.getDungManager().closePartyInterface();
+            if (componentId == 112) player.getDungManager().closePartyInterface();
             else if (componentId >= 59 && componentId <= 72) {
                 int playerIndex = (componentId - 59) / 3;
                 if ((componentId & 0x3) != 0)
                     player.getDungManager().pressOption(playerIndex, packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET ? 0 : packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET ? 1 : 2);
-                else
-                    player.getDungManager().pressOption(playerIndex, 3);
-            } else if (componentId == 45)
-                player.getDungManager().formParty();
-            else if (componentId == 33 || componentId == 36)
-                player.getDungManager().checkLeaveParty();
-            else if (componentId == 43)
-                player.getDungManager().invite();
-            else if (componentId == 102)
-                player.getDungManager().changeComplexity();
-            else if (componentId == 108)
-                player.getDungManager().changeFloor();
-            else if (componentId == 87)
-                player.getDungManager().openResetProgress();
-            else if (componentId == 94)
-                player.getDungManager().switchGuideMode();
+                else player.getDungManager().pressOption(playerIndex, 3);
+            } else if (componentId == 45) player.getDungManager().formParty();
+            else if (componentId == 33 || componentId == 36) player.getDungManager().checkLeaveParty();
+            else if (componentId == 43) player.getDungManager().invite();
+            else if (componentId == 102) player.getDungManager().changeComplexity();
+            else if (componentId == 108) player.getDungManager().changeFloor();
+            else if (componentId == 87) player.getDungManager().openResetProgress();
+            else if (componentId == 94) player.getDungManager().switchGuideMode();
         } else if (interfaceId == 949) {
-            if (componentId == 65)
-                player.getDungManager().acceptInvite();
-            else if (componentId == 61 || componentId == 63)
-                player.closeInterfaces();
+            if (componentId == 65) player.getDungManager().acceptInvite();
+            else if (componentId == 61 || componentId == 63) player.closeInterfaces();
         } else if (interfaceId == 938) {
             if (componentId >= 56 && componentId <= 81)
                 player.getDungManager().selectComplexity((componentId - 56) / 5 + 1);
-            else if (componentId == 39)
-                player.getDungManager().confirmComplexity();
+            else if (componentId == 39) player.getDungManager().confirmComplexity();
         } else if (interfaceId == 947) {
-            if (componentId >= 48 && componentId <= 107)
-                player.getDungManager().selectFloor((componentId - 48) + 1);
-            else if (componentId == 766)
-                player.getDungManager().confirmFloor();
+            if (componentId >= 48 && componentId <= 107) player.getDungManager().selectFloor((componentId - 48) + 1);
+            else if (componentId == 766) player.getDungManager().confirmFloor();
         } else if (interfaceId == 364 && componentId == 4) {
             player.getPackets().sendGameMessage(ItemExamines.getExamine(new Item(slotId2)));
         } else if (interfaceId == 1253 || interfaceId == 1252 || interfaceId == 1139) {
@@ -301,50 +275,40 @@ public class ButtonHandler {
                 return;
             }
         } else if (interfaceId == 398) {
-            if (componentId == 19)
-                player.getInterfaceManager().sendSettings();
+            if (componentId == 19) player.getInterfaceManager().sendSettings();
             else if (componentId == 15 || componentId == 1) {
                 player.getHouse().setBuildMode(componentId == 15);
-            } else if (componentId == 25 || componentId == 26)
-                player.getHouse().setArriveInPortal(componentId == 25);
-            else if (componentId == 27)
-                player.getHouse().expelGuests();
-            else if (componentId == 29)
-                House.leaveHouse(player);
+            } else if (componentId == 25 || componentId == 26) player.getHouse().setArriveInPortal(componentId == 25);
+            else if (componentId == 27) player.getHouse().expelGuests();
+            else if (componentId == 29) House.leaveHouse(player);
         } else if (interfaceId == 402) {
-            if (componentId >= 93 && componentId <= 115)
-                player.getHouse().createRoom(componentId - 93);
+            if (componentId >= 93 && componentId <= 115) player.getHouse().createRoom(componentId - 93);
         } else if (interfaceId == 394 || interfaceId == 396) {
-            if (componentId == 11)
-                player.getHouse().build(slotId);
+            if (componentId == 11) player.getHouse().build(slotId);
         } else if (interfaceId == 432) {
             Enchant enchant = EnchantingBolts.isEnchanting(new Item(getEnchantId(componentId)), new Item(getEnchantId2(componentId)));
             if (enchant != null) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                     int invQuantity = player.getInventory().getItems().getNumberOf(getEnchantId(componentId));
                     int quantity = 1;
-                    if (quantity > invQuantity)
-                        quantity = invQuantity;
+                    if (quantity > invQuantity) quantity = invQuantity;
                     player.getActionManager().setAction(new EnchantingBolts(enchant, quantity));
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     int invQuantity = player.getInventory().getItems().getNumberOf(getEnchantId(componentId));
                     int quantity = 5;
-                    if (quantity > invQuantity)
-                        quantity = invQuantity;
+                    if (quantity > invQuantity) quantity = invQuantity;
                     player.getActionManager().setAction(new EnchantingBolts(enchant, quantity));
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) {
                     int invQuantity = player.getInventory().getItems().getNumberOf(getEnchantId(componentId));
                     int quantity = 10;
-                    if (quantity > invQuantity)
-                        quantity = invQuantity;
+                    if (quantity > invQuantity) quantity = invQuantity;
                     player.getActionManager().setAction(new EnchantingBolts(enchant, quantity));
                 }
             }
         } else if (interfaceId == 1284) {
             if (player.getTemporaryAttributtes().get("untradeables") != null) {
                 Item item = player.getUntradeables().get(slotId);
-                if (item == null && componentId == 7)
-                    return;
+                if (item == null && componentId == 7) return;
                 switch (componentId) {
                     case 7:
                         if (player.getInventory().getFreeSlots() == 0 && !player.getInventory().containsItem(player.getUntradeables().get(slotId).getId(), 1)) {
@@ -406,10 +370,8 @@ public class ButtonHandler {
                 case 9:
                     switch (packetId) {
                         case WorldPacketsDecoder.ACTION_BUTTON1_PACKET:
-                            if (player.getNotes().getCurrentNote() == slotId)
-                                player.getNotes().removeCurrentNote();
-                            else
-                                player.getNotes().setCurrentNote(slotId);
+                            if (player.getNotes().getCurrentNote() == slotId) player.getNotes().removeCurrentNote();
+                            else player.getNotes().setCurrentNote(slotId);
                             break;
                         case WorldPacketsDecoder.ACTION_BUTTON2_PACKET:
                             player.getPackets().sendInputLongTextScript("Edit note:");
@@ -455,8 +417,7 @@ public class ButtonHandler {
                     player.getPackets().sendGameMessage("You have no slayer group, invite a player to start one.");
                 else
                     player.getPackets().sendGameMessage("Your current slayer group consists of you and " + p2.getDisplayName() + ".");
-            } else if (componentId == 24)
-                player.getSlayerManager().resetSocialGroup(true);
+            } else if (componentId == 24) player.getSlayerManager().resetSocialGroup(true);
             player.closeInterfaces();
         } else if (interfaceId == 675) {
             JewllerySmithing.handleButtonClick(player, componentId, packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET ? 1 : packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET ? 5 : 10);
@@ -478,41 +439,30 @@ public class ButtonHandler {
                 return;
             }
         } else if (interfaceId == 182) {
-            if (player.getInterfaceManager().containsInventoryInter())
-                return;
-            if (componentId == 13)
-                if (!player.hasFinished()) {
-                    player.logout(componentId == 6);
-                }
+            if (player.getInterfaceManager().containsInventoryInter()) return;
+            if (componentId == 13) if (!player.hasFinished()) {
+                player.logout(componentId == 6);
+            }
         } else if (interfaceId == 1165) {
             // if (componentId == 22)
             // Summoning.closeDreadnipInterface(player);
         } else if (interfaceId == 880) {
-            if (componentId >= 7 && componentId <= 19)
-                Familiar.setLeftclickOption(player, (componentId - 7) / 2);
-            else if (componentId == 21)
-                Familiar.confirmLeftOption(player);
-            else if (componentId == 25)
-                Familiar.setLeftclickOption(player, 7);
+            if (componentId >= 7 && componentId <= 19) Familiar.setLeftclickOption(player, (componentId - 7) / 2);
+            else if (componentId == 21) Familiar.confirmLeftOption(player);
+            else if (componentId == 25) Familiar.setLeftclickOption(player, 7);
         } else if (interfaceId == 662) {
             if (player.getFamiliar() == null) {
                 if (player.getPet() == null) {
                     return;
                 }
-                if (componentId == 49)
-                    player.getPet().call();
-                else if (componentId == 51)
-                    player.getDialogueManager().startDialogue("DismissD");
+                if (componentId == 49) player.getPet().call();
+                else if (componentId == 51) player.getDialogueManager().startDialogue("DismissD");
                 return;
             }
-            if (componentId == 49)
-                player.getFamiliar().call();
-            else if (componentId == 51)
-                player.getDialogueManager().startDialogue("DismissD");
-            else if (componentId == 67)
-                player.getFamiliar().takeBob();
-            else if (componentId == 69)
-                player.getFamiliar().renewFamiliar();
+            if (componentId == 49) player.getFamiliar().call();
+            else if (componentId == 51) player.getDialogueManager().startDialogue("DismissD");
+            else if (componentId == 67) player.getFamiliar().takeBob();
+            else if (componentId == 69) player.getFamiliar().renewFamiliar();
             else if (componentId == 74) {
                 if (player.getFamiliar().getSpecialAttack() == SpecialAttack.CLICK) {
                     if (player.getFamiliar().isOneclickAttack()) {
@@ -526,8 +476,7 @@ public class ButtonHandler {
                         player.getFamiliar().setSpecial(true);
                     } else {
                         player.getFamiliar().setSpecial(true);
-                        if (player.getFamiliar().hasSpecialOn())
-                            player.getFamiliar().submitSpecial(player);
+                        if (player.getFamiliar().hasSpecialOn()) player.getFamiliar().submitSpecial(player);
                     }
                 }
             }
@@ -543,16 +492,11 @@ public class ButtonHandler {
                     player.getPet().sendFollowerDetails();
                 }
             } else if (player.getFamiliar() != null) {
-                if (componentId == 11 || componentId == 20)
-                    player.getFamiliar().call();
-                else if (componentId == 12 || componentId == 21)
-                    player.getDialogueManager().startDialogue("DismissD");
-                else if (componentId == 13 || componentId == 22)
-                    player.getFamiliar().takeBob();
-                else if (componentId == 14 || componentId == 23)
-                    player.getFamiliar().renewFamiliar();
-                else if (componentId == 19 || componentId == 10)
-                    player.getFamiliar().sendFollowerDetails();
+                if (componentId == 11 || componentId == 20) player.getFamiliar().call();
+                else if (componentId == 12 || componentId == 21) player.getDialogueManager().startDialogue("DismissD");
+                else if (componentId == 13 || componentId == 22) player.getFamiliar().takeBob();
+                else if (componentId == 14 || componentId == 23) player.getFamiliar().renewFamiliar();
+                else if (componentId == 19 || componentId == 10) player.getFamiliar().sendFollowerDetails();
                 else if (componentId == 18) {
                     if (player.getFamiliar().getSpecialAttack() == SpecialAttack.CLICK) {
                         if (player.getFamiliar().isOneclickAttack()) {
@@ -566,19 +510,15 @@ public class ButtonHandler {
                             player.getFamiliar().setSpecial(true);
                         } else {
                             player.getFamiliar().setSpecial(true);
-                            if (player.getFamiliar().hasSpecialOn())
-                                player.getFamiliar().submitSpecial(player);
+                            if (player.getFamiliar().hasSpecialOn()) player.getFamiliar().submitSpecial(player);
                         }
                     }
                 }
             }
-        } else if (interfaceId == 309)
-            PlayerLook.handleHairdresserSalonButtons(player, componentId, slotId);
+        } else if (interfaceId == 309) PlayerLook.handleHairdresserSalonButtons(player, componentId, slotId);
         else if (interfaceId == 363) {
-            if (componentId == 4)
-                player.getTreasureTrailsManager().movePuzzlePeice(slotId);
-        } else if (interfaceId == 729)
-            PlayerLook.handleThessaliasMakeOverButtons(player, componentId, slotId);
+            if (componentId == 4) player.getTreasureTrailsManager().movePuzzlePeice(slotId);
+        } else if (interfaceId == 729) PlayerLook.handleThessaliasMakeOverButtons(player, componentId, slotId);
         else if (interfaceId == 728) {
             PlayerLook.handleYrsaShoes(player, componentId, slotId);
         } else if (interfaceId == 187) {
@@ -591,14 +531,10 @@ public class ButtonHandler {
                     player.getMusicsManager().addToPlayList(slotId / 2);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
                     player.getMusicsManager().removeFromPlayList(slotId / 2);
-            } else if (componentId == 4)
-                player.getMusicsManager().addPlayingMusicToPlayList();
-            else if (componentId == 10)
-                player.getMusicsManager().switchPlayListOn();
-            else if (componentId == 11)
-                player.getMusicsManager().clearPlayList();
-            else if (componentId == 13)
-                player.getMusicsManager().switchShuffleOn();
+            } else if (componentId == 4) player.getMusicsManager().addPlayingMusicToPlayList();
+            else if (componentId == 10) player.getMusicsManager().switchPlayListOn();
+            else if (componentId == 11) player.getMusicsManager().clearPlayList();
+            else if (componentId == 13) player.getMusicsManager().switchShuffleOn();
         } else if (interfaceId == 275) {
             if (componentId == 14) {
                 player.getPackets().sendOpenURL(Settings.WEBSITE_LINK);
@@ -606,43 +542,31 @@ public class ButtonHandler {
         } else if ((interfaceId == 590 && componentId == 8) || interfaceId == 464) {
             player.getEmotesManager().useBookEmote(interfaceId == 464 ? componentId : EmotesManager.getId(slotId, packetId));
         } else if (interfaceId == 192) {
-            if (componentId == 2)
-                player.getCombatDefinitions().switchDefensiveCasting();
-            else if (componentId == 7)
-                player.getCombatDefinitions().switchShowCombatSpells();
-            else if (componentId == 9)
-                player.getCombatDefinitions().switchShowTeleportSkillSpells();
-            else if (componentId == 11)
-                player.getCombatDefinitions().switchShowMiscallaneousSpells();
-            else if (componentId == 13)
-                player.getCombatDefinitions().switchShowSkillSpells();
+            if (componentId == 2) player.getCombatDefinitions().switchDefensiveCasting();
+            else if (componentId == 7) player.getCombatDefinitions().switchShowCombatSpells();
+            else if (componentId == 9) player.getCombatDefinitions().switchShowTeleportSkillSpells();
+            else if (componentId == 11) player.getCombatDefinitions().switchShowMiscallaneousSpells();
+            else if (componentId == 13) player.getCombatDefinitions().switchShowSkillSpells();
             else if (componentId >= 15 & componentId <= 17)
                 player.getCombatDefinitions().setSortSpellBook(componentId - 15);
             else {
                 SpellHandler.INSTANCE.selectCombatSpell(player, componentId);
             }
         } else if (interfaceId == 1276) {
-            if (componentId == 145)
-                player.getInterfaceManager().closeInventoryInterface();
-            else
-                player.getRunicStaff().processSpell(player, componentId, packetId);
+            if (componentId == 145) player.getInterfaceManager().closeInventoryInterface();
+            else player.getRunicStaff().processSpell(player, componentId, packetId);
         } else if (interfaceId == 334) {
             TradeStore tradeStore = (TradeStore) player.getTemporaryAttributtes().get("CUSTOM_TRADE");
-            if (componentId == 22)
-                player.closeInterfaces();
+            if (componentId == 22) player.closeInterfaces();
             else if (componentId == 21) {
-                if (tradeStore != null)
-                    player.getTradeStore().accept(false);
-                else
-                    player.getTrade().accept(false);
+                if (tradeStore != null) player.getTradeStore().accept(false);
+                else player.getTrade().accept(false);
             }
         } else if (interfaceId == 335) {
             TradeStore tradeStore = (TradeStore) player.getTemporaryAttributtes().get("CUSTOM_TRADE");
             if (tradeStore != null) {
-                if (componentId == 18)
-                    player.getTradeStore().accept(true);
-                else if (componentId == 20)
-                    player.closeInterfaces();
+                if (componentId == 18) player.getTradeStore().accept(true);
+                else if (componentId == 20) player.closeInterfaces();
                 else if (componentId == 32) {
                     if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
                         player.getTradeStore().removeItem(slotId, 1);
@@ -666,16 +590,13 @@ public class ButtonHandler {
                 }
             } else {
 
-                if (componentId == 18)
-                    player.getTrade().accept(true);
+                if (componentId == 18) player.getTrade().accept(true);
                 else if (componentId == 53) {
                     player.temporaryAttribute().put("trade_moneypouch_X_Slot", slotId);
                     player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
-                } else if (componentId == 20)
-                    player.closeInterfaces();
+                } else if (componentId == 20) player.closeInterfaces();
                 else if (componentId == 32) {
-                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                        player.getTrade().removeItem(slotId, 1);
+                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getTrade().removeItem(slotId, 1);
                     else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
                         player.getTrade().removeItem(slotId, 5);
                     else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
@@ -717,8 +638,7 @@ public class ButtonHandler {
                 }
             } else {
                 if (componentId == 0) {
-                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                        player.getTrade().addItem(slotId, 1);
+                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getTrade().addItem(slotId, 1);
                     else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
                         player.getTrade().addItem(slotId, 5);
                     else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
@@ -802,8 +722,7 @@ public class ButtonHandler {
                     // +
                     // ItemDefinitions.getItemDefinitions(slotId2).getCreateItemRequirements());
                 }
-            } else if (componentId == 18)
-                Summoning.switchInfusionOption(player);
+            } else if (componentId == 18) Summoning.switchInfusionOption(player);
         } else if (interfaceId == 207) {
             if (componentId == 0) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
@@ -822,8 +741,7 @@ public class ButtonHandler {
                     player.getInventory().sendExamine(slotId);
             }
         } else if (interfaceId == 665) {
-            if (player.getFamiliar() == null || player.getFamiliar().getBob() == null)
-                return;
+            if (player.getFamiliar() == null || player.getFamiliar().getBob() == null) return;
             if (componentId == 0) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
                     player.getFamiliar().getBob().addItem(slotId, 1);
@@ -841,8 +759,7 @@ public class ButtonHandler {
                     player.getInventory().sendExamine(slotId);
             }
         } else if (interfaceId == 671) {
-            if (player.getFamiliar() == null || player.getFamiliar().getBob() == null)
-                return;
+            if (player.getFamiliar() == null || player.getFamiliar().getBob() == null) return;
             if (componentId == 27) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
                     player.getFamiliar().getBob().removeItem(slotId, 1);
@@ -857,29 +774,21 @@ public class ButtonHandler {
                     player.temporaryAttribute().put("bob_isRemove", Boolean.TRUE);
                     player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
                 }
-            } else if (componentId == 29)
-                player.getFamiliar().takeBob();
+            } else if (componentId == 29) player.getFamiliar().takeBob();
         } else if (interfaceId == 916) {
             SkillsDialogue.handleSetQuantityButtons(player, componentId);
         } else if (interfaceId == 193) {
-            if (componentId == 5)
-                player.getCombatDefinitions().switchShowCombatSpells();
-            else if (componentId == 7)
-                player.getCombatDefinitions().switchShowTeleportSkillSpells();
+            if (componentId == 5) player.getCombatDefinitions().switchShowCombatSpells();
+            else if (componentId == 7) player.getCombatDefinitions().switchShowTeleportSkillSpells();
             else if (componentId >= 9 && componentId <= 11)
                 player.getCombatDefinitions().setSortSpellBook(componentId - 9);
-            else if (componentId == 18)
-                player.getCombatDefinitions().switchDefensiveCasting();
-            else
-                AncientMagicks.checkCombatSpell(player, componentId);
+            else if (componentId == 18) player.getCombatDefinitions().switchDefensiveCasting();
+            else AncientMagicks.checkCombatSpell(player, componentId);
         } else if (interfaceId == 645) {
             if (componentId == 16) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                    ItemSets.sendComponents(player, slotId2);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    ItemSets.exchangeSet(player, slotId2);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    ItemSets.examineSet(player, slotId2);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) ItemSets.sendComponents(player, slotId2);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) ItemSets.exchangeSet(player, slotId2);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) ItemSets.examineSet(player, slotId2);
             }
         } else if (interfaceId == 644) {
             if (componentId == 0) {
@@ -891,34 +800,22 @@ public class ButtonHandler {
                     player.getInventory().sendExamine(slotId);
             }
         } else if (interfaceId == 430) {
-            if (componentId == 5)
-                player.getCombatDefinitions().switchShowCombatSpells();
-            else if (componentId == 7)
-                player.getCombatDefinitions().switchShowTeleportSkillSpells();
-            else if (componentId == 9)
-                player.getCombatDefinitions().switchShowMiscallaneousSpells();
+            if (componentId == 5) player.getCombatDefinitions().switchShowCombatSpells();
+            else if (componentId == 7) player.getCombatDefinitions().switchShowTeleportSkillSpells();
+            else if (componentId == 9) player.getCombatDefinitions().switchShowMiscallaneousSpells();
             else if (componentId >= 11 & componentId <= 13)
                 player.getCombatDefinitions().setSortSpellBook(componentId - 11);
-            else if (componentId == 20)
-                player.getCombatDefinitions().switchDefensiveCasting();
-            else
-                LunarMagicks.hasRequirement(player, componentId);
+            else if (componentId == 20) player.getCombatDefinitions().switchDefensiveCasting();
+            else LunarMagicks.hasRequirement(player, componentId);
         } else if (interfaceId == 982) {
-            if (componentId == 5)
-                player.getInterfaceManager().sendSettings();
-            else if (componentId == 41)
-                player.setPrivateChatSetup(player.getPrivateChatSetup() == 0 ? 1 : 0);
-            else if (componentId >= 17 && componentId <= 36)
-                player.setClanChatSetup(componentId - 17);
-            else if (componentId >= 49 && componentId <= 66)
-                player.setPrivateChatSetup(componentId - 48);
-            else if (componentId >= 72 && componentId <= 91)
-                player.setFriendChatSetup(componentId - 72);
-            else if (componentId >= 97 && componentId <= 116)
-                player.setGuestChatSetup(componentId - 97);
+            if (componentId == 5) player.getInterfaceManager().sendSettings();
+            else if (componentId == 41) player.setPrivateChatSetup(player.getPrivateChatSetup() == 0 ? 1 : 0);
+            else if (componentId >= 17 && componentId <= 36) player.setClanChatSetup(componentId - 17);
+            else if (componentId >= 49 && componentId <= 66) player.setPrivateChatSetup(componentId - 48);
+            else if (componentId >= 72 && componentId <= 91) player.setFriendChatSetup(componentId - 72);
+            else if (componentId >= 97 && componentId <= 116) player.setGuestChatSetup(componentId - 97);
         } else if (interfaceId == 261) {
-            if (player.getInterfaceManager().containsInventoryInter())
-                return;
+            if (player.getInterfaceManager().containsInventoryInter()) return;
             if (componentId == 6) {
                 player.switchRCReport();
                 return;
@@ -926,19 +823,16 @@ public class ButtonHandler {
             if (componentId == 22) {
                 player.stopAll();
                 player.getInterfaceManager().sendInterface(742);
-            } else if (componentId == 12)
-                player.switchAllowChatEffects();
+            } else if (componentId == 12) player.switchAllowChatEffects();
             else if (componentId == 11) {
                 player.switchProfanity();
                 player.refreshProfanity();
-            } else if (componentId == 15)
-                player.switchAcceptAid();
+            } else if (componentId == 15) player.switchAcceptAid();
             else if (componentId == 16)
                 player.getInterfaceManager().sendTab(player.getInterfaceManager().isResizableScreen() ? 123 : 183, 398);
             else if (componentId == 13) { // chat setup
                 player.getInterfaceManager().sendSettings(982);
-            } else if (componentId == 14)
-                player.switchMouseButtons();
+            } else if (componentId == 14) player.switchMouseButtons();
             else if (componentId == 24) // audio options
                 player.getInterfaceManager().sendSettings(429);
             else if (componentId == 26) {
@@ -946,8 +840,7 @@ public class ButtonHandler {
                 SettingsTab.open(player);
             }
         } else if (interfaceId == 429) {
-            if (componentId == 18)
-                player.getInterfaceManager().sendSettings();
+            if (componentId == 18) player.getInterfaceManager().sendSettings();
         } else if (interfaceId == 940) {
             DungShop.handleButtons(player, componentId, slotId);
             return;
@@ -957,33 +850,22 @@ public class ButtonHandler {
                 Canoes.createShapedCanoe(player);
             }
         } else if (interfaceId == 95) {
-            if (componentId >= 23 && componentId <= 33)
-                CarrierTravel.handleCharterOptions(player, componentId);
+            if (componentId >= 23 && componentId <= 33) CarrierTravel.handleCharterOptions(player, componentId);
             return;
         } else if (interfaceId == 53) {
             int selectedArea = -1;
-            if (componentId == 47)
-                selectedArea = 0;
-            else if (componentId == 48)
-                selectedArea = 1;
-            else if (componentId == 3)
-                selectedArea = 2;
-            else if (componentId == 6)
-                selectedArea = 3;
-            else if (componentId == 49)
-                selectedArea = 4;
-            if (selectedArea != -1)
-                Canoes.deportCanoeStation(player, selectedArea);
+            if (componentId == 47) selectedArea = 0;
+            else if (componentId == 48) selectedArea = 1;
+            else if (componentId == 3) selectedArea = 2;
+            else if (componentId == 6) selectedArea = 3;
+            else if (componentId == 49) selectedArea = 4;
+            if (selectedArea != -1) Canoes.deportCanoeStation(player, selectedArea);
             return;
         } else if (interfaceId == 982) {
-            if (componentId == 5)
-                player.getInterfaceManager().sendSettings();
-            else if (componentId == 41)
-                player.setPrivateChatSetup(player.getPrivateChatSetup() == 0 ? 1 : 0);
-            else if (componentId >= 49 && componentId <= 66)
-                player.setPrivateChatSetup(componentId - 48);
-            else if (componentId >= 72 && componentId <= 91)
-                player.setFriendChatSetup(componentId - 72);
+            if (componentId == 5) player.getInterfaceManager().sendSettings();
+            else if (componentId == 41) player.setPrivateChatSetup(player.getPrivateChatSetup() == 0 ? 1 : 0);
+            else if (componentId >= 49 && componentId <= 66) player.setPrivateChatSetup(componentId - 48);
+            else if (componentId >= 72 && componentId <= 91) player.setFriendChatSetup(componentId - 72);
         } else if (interfaceId == Rscm.lookup("interface.prayerbook")) {
             WorldTasksManager.schedule(new WorldTask() {
                 @Override
@@ -1575,8 +1457,7 @@ public class ButtonHandler {
                 skillMenu = (Integer) player.temporaryAttribute().get("skillMenu");
             if (componentId >= 9 && componentId <= 25)
                 player.getPackets().sendVar(965, ((componentId - 9) * 1024) + skillMenu);
-            else if (componentId == 29)
-                player.stopAll();
+            else if (componentId == 29) player.stopAll();
         } else if (interfaceId == 387) {
             if (componentId == 6) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
@@ -1629,8 +1510,7 @@ public class ButtonHandler {
 
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
                     int capeId = player.getEquipment().getCapeId();
-                    if (capeId == 20769 || capeId == 20771)
-                        SkillCapeCustomizer.startCustomizing(player, capeId);
+                    if (capeId == 20769 || capeId == 20771) SkillCapeCustomizer.startCustomizing(player, capeId);
 
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) {
                     int capeId = player.getEquipment().getCapeId();
@@ -1646,8 +1526,7 @@ public class ButtonHandler {
 
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     int capeId = player.getEquipment().getCapeId();
-                    if (capeId == 20767)
-                        SkillCapeCustomizer.startCustomizing(player, capeId);
+                    if (capeId == 20767) SkillCapeCustomizer.startCustomizing(player, capeId);
                     if (capeId == 20769 || capeId == 20771) {// add wilderness
                         // block after
                         // level 20
@@ -1731,8 +1610,7 @@ public class ButtonHandler {
                     if (weaponId >= 18349 && weaponId <= 18357) {
                         player.getChargeManager().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(weaponId).getName() + " has ##% charges left.", weaponId, false);
                     }
-                    if (weaponId == 15484)
-                        player.getInterfaceManager().gazeOrbOfOculus();
+                    if (weaponId == 15484) player.getInterfaceManager().gazeOrbOfOculus();
                     if (weaponId == 9013) {
                         if (player.getSkullSkeptreCharges() == 1) {
                             player.getEquipment().deleteItem(9013, 1);
@@ -1837,8 +1715,7 @@ public class ButtonHandler {
                     player.getAuraManager().removeAura();
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
                     player.getEquipment().sendExamine(Equipment.SLOT_AURA);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.getAuraManager().activate();
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) player.getAuraManager().activate();
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
                     player.getAuraManager().sendAuraRemainingTime();
             } else if (componentId == 40) {
@@ -1850,51 +1727,36 @@ public class ButtonHandler {
                 openEquipmentBonuses(player, false);
             }
         } else if (interfaceId == 17) {
-            if (componentId == 28)
-                sendItemsKeptOnDeath(player, player.getVarsManager().getBitValue(9226) == 0);
+            if (componentId == 28) sendItemsKeptOnDeath(player, player.getVarsManager().getBitValue(9226) == 0);
         } else if (interfaceId == 449) {
             if (componentId == 1) {
 
                 Shop shop = (Shop) player.temporaryAttribute().get("Shop");
-                if (shop == null)
-                    return;
+                if (shop == null) return;
                 shop.sendInventory(player);
             } else if (componentId == 21) {
                 Shop shop = (Shop) player.temporaryAttribute().get("Shop");
-                if (shop == null)
-                    return;
+                if (shop == null) return;
                 Integer slot = (Integer) player.temporaryAttribute().get("ShopSelectedSlot");
-                if (slot == null)
-                    return;
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                    shop.buy(player, slot, 1);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    shop.buy(player, slot, 5);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    shop.buy(player, slot, 10);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                    shop.buy(player, slot, 50);
+                if (slot == null) return;
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) shop.buy(player, slot, 1);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) shop.buy(player, slot, 5);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) shop.buy(player, slot, 10);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) shop.buy(player, slot, 50);
 
             }
         } else if (interfaceId == 621) {
             if (componentId == 0) {
 
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
-                    player.getInventory().sendExamine(slotId);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET) player.getInventory().sendExamine(slotId);
                 else {
                     Shop shop = (Shop) player.temporaryAttribute().get("Shop");
-                    if (shop == null)
-                        return;
-                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                        shop.sendValue(player, slotId);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                        shop.sell(player, slotId, 1);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                        shop.sell(player, slotId, 5);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                        shop.sell(player, slotId, 10);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET)
-                        shop.sell(player, slotId, 50);
+                    if (shop == null) return;
+                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) shop.sendValue(player, slotId);
+                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) shop.sell(player, slotId, 1);
+                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) shop.sell(player, slotId, 5);
+                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) shop.sell(player, slotId, 10);
+                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) shop.sell(player, slotId, 50);
                 }
             }
         } else if (interfaceId == 640) {
@@ -1912,15 +1774,12 @@ public class ButtonHandler {
                 player.stopAll();
                 player.setNextWorldTile(new WorldTile(2974, 4384, player.getPlane()));
                 player.getControlerManager().startControler("CorpBeastControler");
-            } else if (componentId == 16)
-                player.closeInterfaces();
+            } else if (componentId == 16) player.closeInterfaces();
         } else if (interfaceId == 667) {
             if (componentId == 14) {
-                if (slotId >= 14)
-                    return;
+                if (slotId >= 14) return;
                 Item item = player.getEquipment().getItem(slotId);
-                if (item == null)
-                    return;
+                if (item == null) return;
 
                 if (packetId == WorldPacketsDecoder.EQUIPMENT_EXAMINE_PACKET)
                     player.getPackets().sendGameMessage(ItemExamines.getExamine(item));
@@ -1933,11 +1792,9 @@ public class ButtonHandler {
                 player.stopAll();
             }
             if (componentId == 9) {
-                if (slotId >= 14)
-                    return;
+                if (slotId >= 14) return;
                 Item item = player.getEquipment().getItem(slotId);
-                if (item == null)
-                    return;
+                if (item == null) return;
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON10_PACKET) {
                     sendItemStats(player, item);
                     return;
@@ -1955,18 +1812,15 @@ public class ButtonHandler {
             }
             if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) {
                 Item item = player.getInventory().getItem(slotId);
-                if (item == null)
-                    return;
+                if (item == null) return;
                 sendItemStats(player, item);
                 return;
             }
             if (player.getTemporaryAttributtes().get("rune_pouch_slot") != null) {
                 if (componentId == 0) {
-                    if (slotId >= player.getInventory().getItemsContainerSize())
-                        return;
+                    if (slotId >= player.getInventory().getItemsContainerSize()) return;
                     Item item = player.getInventory().getItem(slotId);
-                    if (item == null)
-                        return;
+                    if (item == null) return;
                     if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                         RunePouch.storeRunePouch(player, item, 1);
                         return;
@@ -1982,11 +1836,9 @@ public class ButtonHandler {
                 }
             } else {
                 if (componentId == 0) {
-                    if (slotId >= player.getInventory().getItemsContainerSize())
-                        return;
+                    if (slotId >= player.getInventory().getItemsContainerSize()) return;
                     Item item = player.getInventory().getItem(slotId);
-                    if (item == null)
-                        return;
+                    if (item == null) return;
                     if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                         long passedTime = Utils.currentTimeMillis() - WorldThread.getLastCycleTime();
                         WorldTasksManager.schedule(new WorldTask() {
@@ -2001,8 +1853,7 @@ public class ButtonHandler {
                                 ButtonHandler.sendWear(player, slot);
                             }
                         }, passedTime >= 300 ? 0 : passedTime > 150 ? 1 : 0);
-                        if (player.getSwitchItemCache().contains(slotId))
-                            return;
+                        if (player.getSwitchItemCache().contains(slotId)) return;
                         player.getSwitchItemCache().add(slotId);
                     } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
                         player.getInventory().sendExamine(slotId);
@@ -2010,11 +1861,9 @@ public class ButtonHandler {
             }
         } else if (interfaceId == Inventory.INVENTORY_INTERFACE) { // inventory
             if (componentId == 0) {
-                if (slotId > 27)
-                    return;
+                if (slotId > 27) return;
                 final Item item = player.getInventory().getItem(slotId);
-                if (item == null || item.getId() != slotId2)
-                    return;
+                if (item == null || item.getId() != slotId2) return;
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                     InventoryOptionsHandler.handleItemOption1(player, slotId, item, 1);//correct
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
@@ -2073,8 +1922,7 @@ public class ButtonHandler {
                         return;
                     }
                     player.toogleRun(player.isResting() ? false : true);
-                    if (player.isResting())
-                        player.stopAll();
+                    if (player.isResting()) player.stopAll();
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     if (player.isResting()) {
                         player.stopAll();
@@ -2109,28 +1957,19 @@ public class ButtonHandler {
                     player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
                     player.getInventory().sendExamine(slotId);
-            } else if (componentId == 18)
-                player.getBank().depositAllInventory(false);
-            else if (componentId == 22)
-                player.getBank().depositAllEquipment(false);
-            else if (componentId == 24)
-                player.getBank().depositAllBob(false);
-            else if (componentId == 20)
-                player.getBank().depositMoneyPouch(false);
+            } else if (componentId == 18) player.getBank().depositAllInventory(false);
+            else if (componentId == 22) player.getBank().depositAllEquipment(false);
+            else if (componentId == 24) player.getBank().depositAllBob(false);
+            else if (componentId == 20) player.getBank().depositMoneyPouch(false);
         } else if (interfaceId == 762) {
-            if (componentId == 15)
-                player.getBank().switchInsertItems();
+            if (componentId == 15) player.getBank().switchInsertItems();
             else if (componentId == 19) {
                 player.getPackets().sendVar(115, player.getBank().getWithdrawNotes() ? 1 : 0);
                 player.getBank().switchWithdrawNotes();
-            } else if (componentId == 33)
-                player.getBank().depositAllInventory(true);
-            else if (componentId == 37)
-                player.getBank().depositAllEquipment(true);
-            else if (componentId == 39)
-                player.getBank().depositAllBob(true);
-            else if (componentId == 35)
-                player.getBank().depositMoneyPouch(true);
+            } else if (componentId == 33) player.getBank().depositAllInventory(true);
+            else if (componentId == 37) player.getBank().depositAllEquipment(true);
+            else if (componentId == 39) player.getBank().depositAllBob(true);
+            else if (componentId == 35) player.getBank().depositMoneyPouch(true);
             else if (componentId == 46) {
                 long moneyPouch = player.getMoneyPouch().getTotal();
                 long bankValue = player.getBank().getBankValue();
@@ -2174,13 +2013,10 @@ public class ButtonHandler {
                 player.getPackets().sendHideIComponent(629, 69, true);
             } else if (componentId >= 46 && componentId <= 64) {
                 int tabId = 9 - ((componentId - 46) / 2);
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                    player.getBank().setCurrentTab(tabId);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.getBank().collapse(tabId);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getBank().setCurrentTab(tabId);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) player.getBank().collapse(tabId);
             } else if (componentId == 95) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                    player.getBank().withdrawItem(slotId, 1);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getBank().withdrawItem(slotId, 1);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
                     player.getBank().withdrawItem(slotId, 5);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
@@ -2195,8 +2031,7 @@ public class ButtonHandler {
                     player.getBank().withdrawItem(slotId, Integer.MAX_VALUE);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON6_PACKET)
                     player.getBank().withdrawItemButOne(slotId);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
-                    player.getBank().sendExamine(slotId);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) player.getBank().sendExamine(slotId);
 
             } else if (componentId == 119) {
                 openEquipmentBonuses(player, true);
@@ -2240,11 +2075,9 @@ public class ButtonHandler {
             } else if (componentId == 69) {
             }
         } else if (interfaceId == 767) {
-            if (componentId == 10)
-                player.getBank().openBank();
+            if (componentId == 10) player.getBank().openBank();
         } else if (interfaceId == 884) {
-            if (componentId == 4)
-                submitSpecialRequest(player);
+            if (componentId == 4) submitSpecialRequest(player);
             else if (componentId >= 7 && componentId <= 10) {
                 player.getCombatDefinitions().setAttackStyle(componentId - 7);
             } else if (componentId == 11) {
@@ -2258,11 +2091,9 @@ public class ButtonHandler {
                 player.getHintIconsManager().removeAll();
                 player.getPackets().sendVar(1159, 1);
             }
-        } else if (interfaceId == 20)
-            SkillCapeCustomizer.handleSkillCapeCustomizer(player, componentId);
+        } else if (interfaceId == 20) SkillCapeCustomizer.handleSkillCapeCustomizer(player, componentId);
         else if (interfaceId == 1056) {
-            if (componentId == 173)
-                player.getInterfaceManager().sendInterface(917);
+            if (componentId == 173) player.getInterfaceManager().sendInterface(917);
         } else if (interfaceId == 751) {
             if (componentId == 26) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
@@ -2274,19 +2105,13 @@ public class ButtonHandler {
             } else if (componentId == 14) {
                 player.getDialogueManager().startDialogue("Report");
             } else if (componentId == 32) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.setFilterGame(false);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                    player.setFilterGame(true);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) player.setFilterGame(false);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) player.setFilterGame(true);
             } else if (componentId == 29) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.setPublicStatus(0);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    player.setPublicStatus(1);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                    player.setPublicStatus(2);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET)
-                    player.setPublicStatus(3);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) player.setPublicStatus(0);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) player.setPublicStatus(1);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) player.setPublicStatus(2);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) player.setPublicStatus(3);
             } else if (componentId == 0) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
                     player.getFriendsIgnores().setFriendsChatStatus(0);
@@ -2295,62 +2120,42 @@ public class ButtonHandler {
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
                     player.getFriendsIgnores().setFriendsChatStatus(2);
             } else if (componentId == 23) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.setClanStatus(0);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    player.setClanStatus(1);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                    player.setClanStatus(2);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) player.setClanStatus(0);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) player.setClanStatus(1);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) player.setClanStatus(2);
             } else if (componentId == 20) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.setTradeStatus(0);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    player.setTradeStatus(1);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                    player.setTradeStatus(2);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) player.setTradeStatus(0);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) player.setTradeStatus(1);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) player.setTradeStatus(2);
             } else if (componentId == 23) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.setClanStatus(0);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    player.setClanStatus(1);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                    player.setClanStatus(2);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) player.setClanStatus(0);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) player.setClanStatus(1);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) player.setClanStatus(2);
             } else if (componentId == 17) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.setAssistStatus(0);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    player.setAssistStatus(1);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                    player.setAssistStatus(2);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) player.setAssistStatus(0);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) player.setAssistStatus(1);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) player.setAssistStatus(2);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET) {
                     // ASSIST XP Earned/Time
                 }
             }
         } else if (interfaceId == 105 || interfaceId == 107 || interfaceId == 109 || interfaceId == 449)
             player.getGeManager().handleButtons(interfaceId, componentId, slotId, packetId);
-        else if (interfaceId == 900)
-            PlayerLook.handleMageMakeOverButtons(player, componentId);
+        else if (interfaceId == 900) PlayerLook.handleMageMakeOverButtons(player, componentId);
         else if (interfaceId == 1265) {
             Shop shop = (Shop) player.temporaryAttribute().get("Shop");
-            if (shop == null)
-                return;
+            if (shop == null) return;
             Integer slot = (Integer) player.temporaryAttribute().get("ShopSelectedSlot");
             player.temporaryAttribute().put("shop_buying", true);
             boolean isBuying = player.temporaryAttribute().get("shop_buying") != null;
             if (componentId == 20) {
                 player.temporaryAttribute().put("ShopSelectedSlot", slotId);
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                    shop.sendInfo(player, slotId, isBuying);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    shop.handleShop(player, slotId, 1);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    shop.handleShop(player, slotId, 5);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                    shop.handleShop(player, slotId, 10);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET)
-                    shop.handleShop(player, slotId, 50);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
-                    shop.handleShop(player, slotId, 500);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) shop.sendInfo(player, slotId, isBuying);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) shop.handleShop(player, slotId, 1);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) shop.handleShop(player, slotId, 5);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) shop.handleShop(player, slotId, 10);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) shop.handleShop(player, slotId, 50);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET) shop.handleShop(player, slotId, 500);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
                     shop.handleShop(player, slotId, shop.getMainStock()[slot].getAmount());
             } else if (componentId == 201) {
@@ -2365,19 +2170,15 @@ public class ButtonHandler {
             } else if (componentId == 15) {
                 shop.setAmount(player, shop.getAmount() + 1);
             } else if (componentId == 214) {
-                if (shop.getAmount() > 1)
-                    shop.setAmount(player, shop.getAmount() - 1);
-                else
-                    player.getPackets().sendGameMessage("You can't set quantity to any lower.");
+                if (shop.getAmount() > 1) shop.setAmount(player, shop.getAmount() - 1);
+                else player.getPackets().sendGameMessage("You can't set quantity to any lower.");
             } else if (componentId == 217) {
                 if (shop.getAmount() == 1) {
                     player.getPackets().sendGameMessage("You can't set quantity to any lower.");
                     return;
                 }
-                if (shop.getAmount() > 5)
-                    shop.setAmount(player, shop.getAmount() - 5);
-                else
-                    shop.setAmount(player, 1);
+                if (shop.getAmount() > 5) shop.setAmount(player, shop.getAmount() - 5);
+                else shop.setAmount(player, 1);
             } else if (componentId == 220) {
                 if (shop.getAmount() == 1) {
                     player.getPackets().sendGameMessage("You can't set quantity to any lower.");
@@ -2385,8 +2186,7 @@ public class ButtonHandler {
                 }
                 shop.setAmount(player, 1);
             } else if (componentId == 211) {
-                if (slot == null)
-                    return;
+                if (slot == null) return;
                 shop.setAmount(player, isBuying ? shop.getMainStock()[slot].getAmount() : player.getInventory().getNumberOf(player.getInventory().getItem(slot).getId()));
             } else if (componentId == 29) {
                 player.getPackets().sendVar(2561, 93);
@@ -2398,29 +2198,21 @@ public class ButtonHandler {
         } else if (interfaceId == 1266) {
             player.temporaryAttribute().put("ShopSelectedSlot", slotId);
             if (componentId == 0) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
-                    player.getInventory().sendExamine(slotId);
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET) player.getInventory().sendExamine(slotId);
                 else {
                     Shop shop = (Shop) player.temporaryAttribute().get("Shop");
-                    if (shop == null)
-                        return;
+                    if (shop == null) return;
                     Integer slot = (Integer) player.temporaryAttribute().get("ShopSelectedSlot");
                     player.temporaryAttribute().remove("shop_buying");
                     player.getPackets().sendVar(2563, slotId);
-                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                        shop.sendValue(player, slotId);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                        shop.sell(player, slot, 1);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                        shop.sell(player, slot, 5);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                        shop.sell(player, slot, 10);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET)
-                        shop.sell(player, slot, 50);
+                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) shop.sendValue(player, slotId);
+                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) shop.sell(player, slot, 1);
+                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) shop.sell(player, slot, 5);
+                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) shop.sell(player, slot, 10);
+                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) shop.sell(player, slot, 50);
                 }
             }
-        } else if (interfaceId == 1028)
-            CharacterDesign.handleButtons(player, componentId, slotId, packetId);
+        } else if (interfaceId == 1028) CharacterDesign.handleButtons(player, componentId, slotId, packetId);
         else if (interfaceId == 1108 || interfaceId == 1109) {
             long currentTime = Utils.currentTimeMillis();
             if (player.getLockDelay() >= currentTime) {
@@ -2434,105 +2226,63 @@ public class ButtonHandler {
                 player.getPackets().sendGameMessage("You can't open this while perfoming an action.");
                 return;
             }
-            if (componentId == 30)
-                player.temporaryAttribute().put("clanflagselection", slotId);
+            if (componentId == 30) player.temporaryAttribute().put("clanflagselection", slotId);
             else if (componentId == 26) {
                 Integer flag = (Integer) player.temporaryAttribute().remove("clanflagselection");
                 player.stopAll();
-                if (flag != null)
-                    ClansManager.setClanFlagInterface(player, flag);
+                if (flag != null) ClansManager.setClanFlagInterface(player, flag);
             }
         } else if (interfaceId == 1096) {
-            if (componentId == 41)
-                ClansManager.viewClammateDetails(player, slotId);
-            else if (componentId == 94)
-                ClansManager.switchGuestsInChatCanEnterInterface(player);
-            else if (componentId == 95)
-                ClansManager.switchGuestsInChatCanTalkInterface(player);
-            else if (componentId == 96)
-                ClansManager.switchRecruitingInterface(player);
-            else if (componentId == 97)
-                ClansManager.switchClanTimeInterface(player);
-            else if (componentId == 124)
-                ClansManager.openClanMottifInterface(player);
-            else if (componentId == 131)
-                ClansManager.openClanMottoInterface(player);
-            else if (componentId == 240)
-                ClansManager.setTimeZoneInterface(player, -720 + slotId * 10);
-            else if (componentId == 262)
-                player.temporaryAttribute().put("editclanmatejob", slotId);
-            else if (componentId == 276)
-                player.temporaryAttribute().put("editclanmaterank", slotId);
-            else if (componentId == 309)
-                ClansManager.kickClanmate(player);
-            else if (componentId == 318)
-                ClansManager.saveClanmateDetails(player);
-            else if (componentId == 290)
-                ClansManager.setWorldIdInterface(player, slotId);
-            else if (componentId == 297)
-                ClansManager.openForumThreadInterface(player);
-            else if (componentId == 346)
-                ClansManager.openNationalFlagInterface(player);
-            else if (componentId == 113)
-                ClansManager.showClanSettingsClanMates(player);
-            else if (componentId == 120)
-                ClansManager.showClanSettingsSettings(player);
-            else if (componentId == 386)
-                ClansManager.showClanSettingsPermissions(player);
+            if (componentId == 41) ClansManager.viewClammateDetails(player, slotId);
+            else if (componentId == 94) ClansManager.switchGuestsInChatCanEnterInterface(player);
+            else if (componentId == 95) ClansManager.switchGuestsInChatCanTalkInterface(player);
+            else if (componentId == 96) ClansManager.switchRecruitingInterface(player);
+            else if (componentId == 97) ClansManager.switchClanTimeInterface(player);
+            else if (componentId == 124) ClansManager.openClanMottifInterface(player);
+            else if (componentId == 131) ClansManager.openClanMottoInterface(player);
+            else if (componentId == 240) ClansManager.setTimeZoneInterface(player, -720 + slotId * 10);
+            else if (componentId == 262) player.temporaryAttribute().put("editclanmatejob", slotId);
+            else if (componentId == 276) player.temporaryAttribute().put("editclanmaterank", slotId);
+            else if (componentId == 309) ClansManager.kickClanmate(player);
+            else if (componentId == 318) ClansManager.saveClanmateDetails(player);
+            else if (componentId == 290) ClansManager.setWorldIdInterface(player, slotId);
+            else if (componentId == 297) ClansManager.openForumThreadInterface(player);
+            else if (componentId == 346) ClansManager.openNationalFlagInterface(player);
+            else if (componentId == 113) ClansManager.showClanSettingsClanMates(player);
+            else if (componentId == 120) ClansManager.showClanSettingsSettings(player);
+            else if (componentId == 386) ClansManager.showClanSettingsPermissions(player);
             else if (componentId >= 395 && componentId <= 475) {
                 int selectedRank = (componentId - 395) / 8;
-                if (selectedRank == 10)
-                    selectedRank = 125;
-                else if (selectedRank > 5)
-                    selectedRank = 100 + selectedRank - 6;
+                if (selectedRank == 10) selectedRank = 125;
+                else if (selectedRank > 5) selectedRank = 100 + selectedRank - 6;
                 ClansManager.selectPermissionRank(player, selectedRank);
-            } else if (componentId == 489)
-                ClansManager.selectPermissionTab(player, 1);
-            else if (componentId == 498)
-                ClansManager.selectPermissionTab(player, 2);
-            else if (componentId == 506)
-                ClansManager.selectPermissionTab(player, 3);
-            else if (componentId == 514)
-                ClansManager.selectPermissionTab(player, 4);
-            else if (componentId == 522)
-                ClansManager.selectPermissionTab(player, 5);
+            } else if (componentId == 489) ClansManager.selectPermissionTab(player, 1);
+            else if (componentId == 498) ClansManager.selectPermissionTab(player, 2);
+            else if (componentId == 506) ClansManager.selectPermissionTab(player, 3);
+            else if (componentId == 514) ClansManager.selectPermissionTab(player, 4);
+            else if (componentId == 522) ClansManager.selectPermissionTab(player, 5);
         } else if (interfaceId == 1105) {
             if (componentId == 63 || componentId == 66)
                 ClansManager.setClanMottifTextureInterface(player, false, slotId);
-            else if (componentId == 35)
-                ClansManager.openSetMottifColor(player, 0);
-            else if (componentId == 80)
-                ClansManager.openSetMottifColor(player, 1);
-            else if (componentId == 92)
-                ClansManager.openSetMottifColor(player, 2);
-            else if (componentId == 104)
-                ClansManager.openSetMottifColor(player, 3);
-            else if (componentId == 120)
-                player.stopAll();
+            else if (componentId == 35) ClansManager.openSetMottifColor(player, 0);
+            else if (componentId == 80) ClansManager.openSetMottifColor(player, 1);
+            else if (componentId == 92) ClansManager.openSetMottifColor(player, 2);
+            else if (componentId == 104) ClansManager.openSetMottifColor(player, 3);
+            else if (componentId == 120) player.stopAll();
         } else if (interfaceId == 1110) {
-            if (componentId == 82)
-                ClansManager.joinClanChatChannel(player);
-            else if (componentId == 75)
-                ClansManager.openClanDetails(player);
-            else if (componentId == 78)
-                ClansManager.openClanSettings(player);
-            else if (componentId == 91)
-                ClansManager.joinGuestClanChat(player);
-            else if (componentId == 95)
-                ClansManager.banPlayer(player);
-            else if (componentId == 99)
-                ClansManager.unbanPlayer(player);
-            else if (componentId == 11)
-                ClansManager.unbanPlayer(player, slotId);
-            else if (componentId == 109)
-                ClansManager.leaveClan(player);
-        } else if (interfaceId == 1079)
-            player.closeInterfaces();
+            if (componentId == 82) ClansManager.joinClanChatChannel(player);
+            else if (componentId == 75) ClansManager.openClanDetails(player);
+            else if (componentId == 78) ClansManager.openClanSettings(player);
+            else if (componentId == 91) ClansManager.joinGuestClanChat(player);
+            else if (componentId == 95) ClansManager.banPlayer(player);
+            else if (componentId == 99) ClansManager.unbanPlayer(player);
+            else if (componentId == 11) ClansManager.unbanPlayer(player, slotId);
+            else if (componentId == 109) ClansManager.leaveClan(player);
+        } else if (interfaceId == 1079) player.closeInterfaces();
         else if (interfaceId == 374) {
             if (componentId >= 5 && componentId <= 9)
                 player.setNextWorldTile(new WorldTile(FightPitsViewingOrb.ORB_TELEPORTS[componentId - 5]));
-            else if (componentId == 15)
-                player.stopAll();
+            else if (componentId == 15) player.stopAll();
         } else if (interfaceId == 1092) {
             String[] lodestoneNames = new String[]{"Lunar Isle", "Al Kharid", "Ardougne", "Burthorpe", "Catherby", "Draynor Village", "Edgeville", "Falador", "Lumbridge", "Port Sarim", "Seer's Village", "Taverley", "Varrock", "Yannile"};
             if (componentId != 7 && !player.lodestone[componentId - 38]) {
@@ -2591,15 +2341,11 @@ public class ButtonHandler {
                     destTile = HomeTeleport.SEERS_VILLAGE_LODE_STONE;
                     break;
             }
-            if (destTile != null)
-                player.getActionManager().setAction(new HomeTeleport(destTile));
-        } else if (interfaceId == 1214)
-            player.getSkills().handleSetupXPCounter(componentId);
+            if (destTile != null) player.getActionManager().setAction(new HomeTeleport(destTile));
+        } else if (interfaceId == 1214) player.getSkills().handleSetupXPCounter(componentId);
         else if (interfaceId == 1292) {
-            if (componentId == 12)
-                Crucible.enterArena(player);
-            else if (componentId == 13)
-                player.closeInterfaces();
+            if (componentId == 12) Crucible.enterArena(player);
+            else if (componentId == 13) player.closeInterfaces();
         }
 
         if (interfaceId == 679) {
@@ -2617,8 +2363,7 @@ public class ButtonHandler {
 
     public static void sendItemStats(Player player, Item item) {
         StringBuilder b = new StringBuilder();
-        if (item.getId() == 772)
-            return;
+        if (item.getId() == 772) return;
         boolean hasBonuses = ItemBonuses.getItemBonuses(item.getId()) != null;
         for (int i = 0; i < 17; i++) {
             int bonus = hasBonuses ? ItemBonuses.getItemBonuses(item.getId())[i] : 0;
@@ -2642,14 +2387,11 @@ public class ButtonHandler {
     public static void unequip(final Player player, final int slotId) {
         player.stopAll(false, false);
         Item item = player.getEquipment().getItem(slotId);
-        if (item == null || !player.getInventory().addItemFromEquipment(item))
-            return;
+        if (item == null || !player.getInventory().addItemFromEquipment(item)) return;
         player.getEquipment().getItems().set(slotId, null);
         player.getEquipment().refresh(slotId);
-        if (item.getId() == 4024)
-            player.getAppearence().transformIntoNPC(-1);
-        if (slotId == 3)
-            player.getCombatDefinitions().decreaseSpecialAttack(0);
+        if (item.getId() == 4024) player.getAppearence().transformIntoNPC(-1);
+        if (slotId == 3) player.getCombatDefinitions().decreaseSpecialAttack(0);
         if (item.getId() == 15486 && player.staffOfLightSpecial > Utils.currentTimeMillis()) {
             player.setStaffOfLightSpecial(0);
             player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
@@ -2658,27 +2400,22 @@ public class ButtonHandler {
             player.setHitpoints(player.getMaxHitpoints());
             player.refreshHitPoints();
         }
-        if (Runecrafting.isTiara(item.getId()))
-            player.getPackets().sendVar(491, 0);
+        if (Runecrafting.isTiara(item.getId())) player.getPackets().sendVar(491, 0);
         player.getAppearence().generateAppearenceData();
         refreshEquipBonuses(player);
-        Weights.calculateWeight(player);
     }
 
     public static void registerUnequip(Player player, int[] slotIds) {
-        if (player.hasFinished() || player.isDead())
-            return;
+        if (player.hasFinished() || player.isDead()) return;
         for (int slotId : slotIds) {
             Item item = player.getEquipment().getItem(slotId);
-            if (item == null)
-                continue;
+            if (item == null) continue;
             unequip(player, slotId);
         }
     }
 
     public static void registerRemoveEquipment(final Player player, final int slotId) {
-        if (slotId >= 15)
-            return;
+        if (slotId >= 15) return;
         long passedTime = Utils.currentTimeMillis() - WorldThread.getLastCycleTime();
         WorldTasksManager.schedule(new WorldTask() {
 
@@ -2694,8 +2431,7 @@ public class ButtonHandler {
                 player.itemSwitch = false;
             }
         }, passedTime >= 600 ? 0 : passedTime > 330 ? 1 : 0);
-        if (player.getTakeOffSwitchItemCache().contains(slotId))
-            return;
+        if (player.getTakeOffSwitchItemCache().contains(slotId)) return;
         player.getTakeOffSwitchItemCache().add(slotId);
     }
 
@@ -2731,12 +2467,10 @@ public class ButtonHandler {
 
         boolean isTwoHandedWeapon = equipmentSlot == Equipment.SLOT_WEAPON && Equipment.isTwoHandedWeapon(inventoryItem);
 
-        if (isTwoHandedWeapon && player.getInventory().getItems().getFreeSlots() == 0
-                && player.getEquipment().getWeaponId() != -1 && player.getEquipment().hasShield()) {
+        if (isTwoHandedWeapon && player.getInventory().getItems().getFreeSlots() == 0 && player.getEquipment().getWeaponId() != -1 && player.getEquipment().hasShield()) {
             player.getPackets().sendGameMessage("Not enough free space in your inventory.");
             return false;
         }
-        Item oldItem = inventoryItem.clone();
         player.getInventory().getItems().set(slotId, null);
 
         if (equipmentSlot == Equipment.SLOT_WEAPON && isTwoHandedWeapon) {
@@ -2764,10 +2498,8 @@ public class ButtonHandler {
                 player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
             }
         }
-
+        Item currentlyEquipped = player.getEquipment().getItem(equipmentSlot);
         refreshEquipBonuses(player);
-        Weights.calculateWeight(player);
-
         return true;
     }
 
@@ -2866,16 +2598,13 @@ public class ButtonHandler {
     }
 
     public static void sendWear(Player player, int[] slotIds) {
-        if (player.hasFinished() || player.isDead())
-            return;
+        if (player.hasFinished() || player.isDead()) return;
         boolean worn = false;
         Item[] copy = player.getInventory().getItems().getItemsCopy();
         for (int slotId : slotIds) {
             Item item = player.getInventory().getItem(slotId);
-            if (item == null)
-                continue;
-            if (sendWear(player, slotId, item.getId()))
-                worn = true;
+            if (item == null) continue;
+            if (sendWear(player, slotId, item.getId())) worn = true;
         }
         player.getInventory().refreshItems(copy);
         if (worn) {
@@ -2911,8 +2640,7 @@ public class ButtonHandler {
 
         boolean inRiskArea = FfaZone.inRiskArea(player);
         int keptAmount = (player.hasSkull() || inRiskArea) ? 0 : 3;
-        if (protectPrayer)
-            keptAmount++;
+        if (protectPrayer) keptAmount++;
 
         System.out.println("Kept amount allowed: " + keptAmount);
 
@@ -2936,8 +2664,7 @@ public class ButtonHandler {
 
         for (int i = 1; i < 44; i++) {
             Item item = i >= 16 ? player.getInventory().getItem(i - 16) : player.getEquipment().getItem(i - 1);
-            if (item == null)
-                continue;
+            if (item == null) continue;
 
             int stageOnDeath = item.getDefinitions().getStageOnDeath();
             System.out.printf("Slot %d: Item ID %d, amount %d, stageOnDeath %d%n", i, item.getId(), item.getAmount(), stageOnDeath);
@@ -2963,8 +2690,7 @@ public class ButtonHandler {
 
         System.out.println("Dropped slots sorted by per-unit value descending:");
         for (SlotEntry slot : droppedSlots) {
-            System.out.printf("  Slot %d, itemId %d, amount %d, totalValue %d, perUnitValue %d%n",
-                    slot.slot, slot.itemId, slot.amount, slot.totalValue, slot.perUnitValue);
+            System.out.printf("  Slot %d, itemId %d, amount %d, totalValue %d, perUnitValue %d%n", slot.slot, slot.itemId, slot.amount, slot.totalValue, slot.perUnitValue);
         }
 
         ArrayList<Integer> keptItems = new ArrayList<>();
@@ -3006,12 +2732,7 @@ public class ButtonHandler {
         System.out.printf("Kept slots: %s%n", keptItems);
         System.out.printf("Dropped slots: %s%n", droppedItems);
 
-        return new Integer[][]{
-                keptItems.toArray(new Integer[0]),
-                droppedItems.toArray(new Integer[0]),
-                protectedItems.toArray(new Integer[0]),
-                atWilderness ? new Integer[0] : lostItems.toArray(new Integer[0])
-        };
+        return new Integer[][]{keptItems.toArray(new Integer[0]), droppedItems.toArray(new Integer[0]), protectedItems.toArray(new Integer[0]), atWilderness ? new Integer[0] : lostItems.toArray(new Integer[0])};
     }
 
 
@@ -3021,10 +2742,8 @@ public class ButtonHandler {
 
         for (int slot : slots[0]) {
             if (slot >= 0) {
-                Item item = slot >= 16 ? player.getInventory().getItem(slot - 16)
-                        : player.getEquipment().getItem(slot - 1);
-                if (item == null)
-                    continue;
+                Item item = slot >= 16 ? player.getInventory().getItem(slot - 16) : player.getEquipment().getItem(slot - 1);
+                if (item == null) continue;
                 keptItems.add(new Item(item.getId(), item.getAmount()));
             } else {
                 int realSlot = -(slot + 1000);
@@ -3036,26 +2755,17 @@ public class ButtonHandler {
         }
 
         for (int slot : slots[2]) {
-            Item item = slot >= 16 ? player.getInventory().getItem(slot - 16)
-                    : player.getEquipment().getItem(slot - 1);
-            if (item != null)
-                keptItems.add(new Item(item.getId(), item.getAmount()));
+            Item item = slot >= 16 ? player.getInventory().getItem(slot - 16) : player.getEquipment().getItem(slot - 1);
+            if (item != null) keptItems.add(new Item(item.getId(), item.getAmount()));
         }
 
         for (int slot : slots[1]) {
-            Item item = slot >= 16 ? player.getInventory().getItem(slot - 16)
-                    : player.getEquipment().getItem(slot - 1);
-            if (item != null)
-                droppedItems.add(new Item(item.getId(), item.getAmount()));
+            Item item = slot >= 16 ? player.getInventory().getItem(slot - 16) : player.getEquipment().getItem(slot - 1);
+            if (item != null) droppedItems.add(new Item(item.getId(), item.getAmount()));
         }
 
-        return new Item[][]{
-                keptItems.toArray(new Item[0]),
-                droppedItems.toArray(new Item[0])
-        };
+        return new Item[][]{keptItems.toArray(new Item[0]), droppedItems.toArray(new Item[0])};
     }
-
-
 
 
     public static void sendItemsKeptOnDeath(Player player, boolean wilderness) {
@@ -3069,15 +2779,13 @@ public class ButtonHandler {
         long riskedWealth = 0;
         long carriedWealth = 0;
         for (Item item : items[1]) {
-            if (item == null)
-                continue;
+            if (item == null) continue;
             long amount = item.getAmount();
             long price = GrandExchange.getPrice(item.getId());
             carriedWealth = riskedWealth += price * amount;
         }
         for (Item item : items[0]) {
-            if (item == null)
-                continue;
+            if (item == null) continue;
             long amount = item.getAmount();
             long price = GrandExchange.getPrice(item.getId());
             carriedWealth += price * amount;
@@ -3107,8 +2815,7 @@ public class ButtonHandler {
 
         player.getVarsManager().sendVarBit(9227, Math.max(keptSlotCount, 1));
         player.getVarsManager().sendVarBit(9226, (wilderness || inFfa) ? 1 : 0);
-        if (!inFfa)
-            player.getVarsManager().sendVarBit(9229, player.hasSkull() ? 1 : 0);
+        if (!inFfa) player.getVarsManager().sendVarBit(9229, player.hasSkull() ? 1 : 0);
         StringBuffer text = new StringBuffer();
         text.append("Items kept on death:").append("<br><br>");
         for (Item item : items[0]) {
@@ -3151,35 +2858,6 @@ public class ButtonHandler {
             });
         }
     }
-
-    /*
-     * /** Note: Trying to mess around with this to see what's causing the problem
-     * with the bank
-     *
-     * @param player
-     *
-     * @param banking
-     */
-    /*
-     * public static void openEquipmentBonuses(final Player player, boolean banking)
-     * { player.stopAll(); player.getInterfaceManager().sendInventoryInterface(670);
-     * player.getInterfaceManager().sendInterface(667);
-     * player.getPackets().sendUnlockIComponentOptionSlots(667, 9, 0, 14, 0);
-     * player.getPackets().sendConfigByFile(4894, banking ? 1 : 0);
-     * player.getPackets().sendItems(93, player.getInventory().getItems());
-     * player.getPackets().sendInterSetItemsOptionsScript(670, 0, 93, 4, 7, "Equip",
-     * "Compare", "Stats", "Examine");
-     * player.getPackets().sendUnlockIComponentOptionSlots(670, 0, 0, 27, 0, 1, 2,
-     * 3); player.getPackets().sendIComponentSettings(667, 14, 0, 13, 1030);
-     * refreshEquipBonuses(player); if (banking) {
-     * player.getTemporaryAttributtes().put("Banking", Boolean.TRUE);
-     * player.setCloseInterfacesEvent(new Runnable() {
-     *
-     * @Override public void run() {
-     * player.getTemporaryAttributtes().remove("Banking"); }
-     *
-     * }); } }
-     */
 
     public static void renewSummoningPoints(Player player) {
         int summonLevel = player.getSkills().getLevelForXp(Skills.SUMMONING);
@@ -3250,18 +2928,20 @@ public class ButtonHandler {
     }
 
     public static void refreshEquipBonuses(Player player) {
-        player.getPackets().sendGlobalVar(779, player.getEquipment().getWeaponRenderEmote());
-        for (int i = 0; i < 18; i++) {
-            String bonusName = (new StringBuilder(String.valueOf(names[i <= 4 ? i : i - 5]))).append(": ").toString();
-            int bonus = player.getCombatDefinitions().getBonuses()[i];
-            bonusName = (new StringBuilder(String.valueOf(bonusName))).append(bonus >= 0 ? "+" : "").append(bonus).toString();
-            if (i == 17 || i > 10 && i < 14)
-                bonusName = (new StringBuilder(String.valueOf(bonusName))).append("%").toString();
-
-            player.getPackets().sendWeight(player.getWeight());
-            player.getPackets().sendTextOnComponent(667, 28 + i, bonusName);
+        if (player.getInterfaceManager().containsInterface(667)) {
+            player.getPackets().sendGlobalVar(779, player.getEquipment().getWeaponRenderEmote());
+            for (int i = 0; i < BonusType.getEntries().size() - 1; i++) {
+                String bonusName = names[i <= BonusType.RangeAttack.getIndex() ? i : i - 5] + ": ";
+                int bonus = player.combatDefinitions.getBonuses()[i];
+                if (i == BonusType.StregthBonus.getIndex() || i == BonusType.RangedStrBonus.getIndex())
+                    bonus /= 10;
+                bonusName = bonusName + (bonus >= 0 ? "+" : "") + bonus;
+                if (i == BonusType.MagicDamage.getIndex() || i >= BonusType.AbsorbMelee.getIndex() && i <= BonusType.AbsorbMage.getIndex())
+                    bonusName = bonusName + "%";
+                player.getPackets().sendWeight(player.getWeight());
+                player.getPackets().sendTextOnComponent(667, 28 + i, bonusName);
+            }
         }
-
     }
 
     public static void refreshUntradeables(Player player) {

@@ -19,11 +19,11 @@ public final class ItemBonuses {
 			throw new RuntimeException("Missing item bonuses.");
 	}
 
-	public static final int[] getItemBonuses(int itemId) {
+	public static int[] getItemBonuses(int itemId) {
 		return itemBonuses.get(itemId);
 	}
 
-	private static final void loadItemBonuses() {
+	private static void loadItemBonuses() {
 		try {
 			RandomAccessFile in = new RandomAccessFile(PACKED_PATH, "r");
 			FileChannel channel = in.getChannel();

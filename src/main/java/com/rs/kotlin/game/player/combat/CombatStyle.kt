@@ -68,6 +68,10 @@ interface CombatStyle {
             Hit(defender, 0, resolvedHitLook)
         }
         hit.look = resolvedHitLook
+        if (hit.isCriticalHit && !hit.isCombatLook) {
+            println("attack isnt a combatlook")
+            hit.critical = false
+        }
         if (spell != null) {//TODO temporary fix for things like entangle and curse spells to hit
             if (landed && spell.damage == -1)
                 hit.damage = Utils.random(1, 10)

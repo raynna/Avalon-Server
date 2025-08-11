@@ -7,56 +7,13 @@ import com.rs.java.game.player.CombatDefinitions
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
+import com.rs.kotlin.game.npc.NpcBonusType
 import com.rs.kotlin.game.player.combat.damage.DamageMultipliers
 import com.rs.kotlin.game.player.combat.magic.Spell
+import com.rs.kotlin.game.player.equipment.BonusType
 import kotlin.math.floor
 
 object CombatCalculations {
-
-    enum class BonusType(val index: Int) {
-        StabAttack(0),
-        SlashAttack(1),
-        CrushAttack(2),
-        MagicAttack(3),
-        RangeAttack(4),
-        StabDefence(5),
-        SlashDefence(6),
-        CrushDefence(7),
-        MagicDefence(8),
-        RangeDefence(9),
-        SummoningDefence(10),
-        AbsorbMelee(11),
-        AbsorbMage(12),
-        AbsorbRange(13),
-        StregthBonus(14),
-        RangedStrBonus(15),
-        PrayerBonus(16),
-        MagicDamage(17),
-    }
-
-    enum class NpcBonusType(val index: Int) {
-        AttackLevel(0),
-        StrengthLevel(1),
-        DefenceLevel(2),
-        MagicLevel(3),
-        RangeLevel(4),
-
-        StabAttack(5),
-        SlashAttack(6),
-        CrushAttack(7),
-        MagicAttack(8),
-        RangeAttack(9),
-
-        StabDefence(10),
-        SlashDefence(11),
-        CrushDefence(12),
-        MagicDefence(13),
-        RangeDefence(14),
-
-        StrengthBonus(15),
-        AttackBonus(16);
-    }
-
 
     interface AccuracyCalculator {
         fun calculateAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean
@@ -87,9 +44,9 @@ object CombatCalculations {
 
             val defenceLevel = getDefenceLevel(target)
             val defenceBonus = getDefenceBonus(player, target, null)
-            var targetStyleBonus: Int = 0
-            var baseDefenceLevel: Int = 0
-            var effectiveDefenceLevel: Int = 0
+            var targetStyleBonus = 0
+            val baseDefenceLevel: Int
+            val effectiveDefenceLevel: Int
             val defenceRoll = if (target is Player) {
                 targetStyleBonus = getDefenceStyleBonus(target)
                 val prayerBonus = target.prayer.defenceMultiplier
@@ -124,11 +81,17 @@ object CombatCalculations {
 
             val baseStrengthLevel = getBaseStrengthLevel(player)
             val effectiveStrength = floor((baseStrengthLevel + styleBonus + 8) * voidBonus)
-            val baseDamage = 0.5 + ((effectiveStrength * (strengthBonus + 64)) / 64) * specialBonus
-            val maxHit = floor(baseDamage * specialMultiplier).toInt()
+            val baseDamage = 5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * specialBonus
+            val maxHit = (baseDamage * specialMultiplier).toInt()
 
-            val damage = Utils.random(maxHit)
+            var damage = Utils.random(maxHit)
+            if (target is NPC) {
+                if (target.id == 4474) {
+                    damage = maxHit
+                }
+            }
             val hit = Hit(player, damage, maxHit, Hit.HitLook.MELEE_DAMAGE)
+            player.message("specialMultiplier: $specialMultiplier");
             if (damage >= floor(baseDamage * 0.90)) {
                 hit.setCriticalMark()
             }
@@ -192,13 +155,18 @@ object CombatCalculations {
             val effectiveStrength = floor((baseStrength + styleBonus + 8) * voidBonus)
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.RangedStrBonus.index].toDouble()
 
-            val baseDamage = 0.5 + (((effectiveStrength) * (strengthBonus + 64.0)) / 64.0) * specialBonus
+            val baseDamage = 0.5 + (((effectiveStrength) * (strengthBonus/10 + 64.0)) / 64.0) * specialBonus
 
             val maxHit = floor(baseDamage * specialMultiplier).toInt()
 
-            val damage = Utils.random(maxHit)
+            var damage = Utils.random(maxHit)
+            if (target is NPC) {
+                if (target.id == 4474) {
+                    damage = maxHit
+                }
+            }
             val hit = Hit(player, damage, maxHit, Hit.HitLook.RANGE_DAMAGE)
-            if (damage > baseDamage) {
+            if (damage >= floor(baseDamage * 0.90)) {
                 hit.setCriticalMark()
             }
             player.message("Ranged Damage Calculation -> " +
@@ -235,10 +203,14 @@ object CombatCalculations {
                 levelMultiplier *= player.prayer.magicMultiplier
             }
             val maxHit = baseDamage * magicStrengthMultiplier * levelMultiplier
-            val damage = Utils.random(maxHit.toInt())
+            var damage = Utils.random(maxHit.toInt())
+            if (target is NPC) {
+                if (target.id == 4474) {
+                    damage = maxHit.toInt();
+                }
+            }
             val hit = Hit(player, damage, maxHit.toInt(), Hit.HitLook.MAGIC_DAMAGE)
-
-            if (damage > maxHit * 0.90) {
+            if (damage >= floor(maxHit * 0.90)) {
                 hit.setCriticalMark()
             }
             return hit

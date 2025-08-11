@@ -460,7 +460,7 @@ ItemDefinitions {
         return clientScriptData.size();
     }
 
-    private int getDataFromClientScript(int key, int defaultValue) {
+    public int getDataFromClientScript(int key, int defaultValue) {
         if (clientScriptData == null) {
             return defaultValue;
         }
@@ -482,7 +482,7 @@ ItemDefinitions {
         return getDataFromClientScript(14, 4);
     }
 
-    public int getAttackSpeed2() {
+    public int getWeaponType() {
         return getDataFromClientScript(686, 4);
     }
 
@@ -543,11 +543,11 @@ ItemDefinitions {
     }
 
     public int getStrengthBonus() {
-        return getDataFromClientScript(641, 0) / 10;
+        return getDataFromClientScript(641, 0);
     }
 
     public int getRangedStrengthBonus() {
-        return getDataFromClientScript(643, 0) / 10;
+        return getDataFromClientScript(643, 0);
     }
 
     public int getMagicBonus() {

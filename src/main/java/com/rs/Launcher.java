@@ -126,8 +126,6 @@ public final class Launcher {
 		NpcPluginLoader.init();
 		ItemPluginLoader.init();
 		WeaponScriptsManager.init();
-		for (int index = 0; index < Cache.STORE.getIndexes().length - 1; index++)
-			GenericClientScriptMapDumper.dumpAllMapsFromCacheIndex(index);
 		try {
 			ServerChannelHandler.init();
 		} catch (Throwable e) {
