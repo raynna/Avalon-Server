@@ -3193,8 +3193,10 @@ public class Player extends Entity {
             if (update)
                 getPackets().sendVarBit(7198, getHitpoints());
             getPackets().sendTextOnComponent(748, 8, getHitpoints() / 10 + "");
-        } else
-            getPackets().sendVarBit(7198, getHitpoints());
+        } else {
+            if (update)
+                getPackets().sendVarBit(7198, getHitpoints());
+        }
     }
 
     @Override

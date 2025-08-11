@@ -4,14 +4,14 @@ import com.rs.java.game.player.Player;
 
 public final class Hit {
 
-	public static enum HitLook {
+	public enum HitLook {
 
 		MISSED(8), REGULAR_DAMAGE(3), MELEE_DAMAGE(0), RANGE_DAMAGE(1), MAGIC_DAMAGE(2), REFLECTED_DAMAGE(
 				4), ABSORB_DAMAGE(5), POISON_DAMAGE(6), DESEASE_DAMAGE(7), HEALED_DAMAGE(9), CRITICAL_DAMAGE(
 						11), CANNON_DAMAGE(13);
 		private int mark;
 
-		private HitLook(int mark) {
+		HitLook(int mark) {
 			this.mark = mark;
 		}
 

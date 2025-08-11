@@ -5,7 +5,7 @@ import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.special.SpecialAttack
+import com.rs.kotlin.game.player.combat.special.*
 
 object StandardMelee : MeleeData() {
 
@@ -26,12 +26,35 @@ object StandardMelee : MeleeData() {
             accuracyMultiplier = 1.15,
             damageMultiplier = 1.15,
             execute = { context ->
-                val hit1 = context.combat.registerHit(context.attacker, context.defender, CombatType.MELEE, context.attackStyle, context.weapon)
-                val hit2 = context.combat.registerHit(context.attacker, context.defender, CombatType.MELEE, context.attackStyle, context.weapon)
-                context.combat.delayHits(
-                    PendingHit(hit1, 0),
-                    PendingHit(hit2, 0),
+
+                context.melee(1.15, 1.15, Hit.HitLook.MAGIC_DAMAGE)//melee roll with magic damage
+                context.melee(1.15, 1.15)//melee roll with melee damage
+
+                context.ranged()//range roll with range damage, no multipliers
+
+                context.magic(1.0, hitLook = Hit.HitLook.MELEE_DAMAGE)//magic roll with melee damage
+
+                context.repeatHits(2)
+
+                context.repeatHits(
+                    combatType = CombatType.MELEE,
+                    delays = listOf(0, 1),
+                    accuracyMultipliers = listOf(1.15, 1.15),
+                    damageMultipliers = listOf(1.15, 1.15)
                 )
+
+                context.hits {
+                    melee(1.15, 1.15, delay = 0)
+                    melee(1.15, 1.15, delay = 1)
+                }
+
+                context.hits {
+                    val melee = melee(1.25, 1.25, delay = 0)
+                    nextHit(melee, scale = 0.5, delay = 1)
+                    nextHit(melee, scale = 0.5, delay = 2)
+                    nextHit(melee, scale = 1.0, delay = 2)
+                }
+
             }
         )
     )
@@ -53,14 +76,33 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate(Animation(11971))
                     context.defender.gfx(Graphics(2108, 0, 100))
-                    val hit = context.combat.registerHit(context.attacker, context.defender, CombatType.MELEE, context.attackStyle, context.weapon)
-                    val hit2 = hit.copyWithDamage(hit.damage/2).setLook(Hit.HitLook.MAGIC_DAMAGE)
-                    val hit3 = hit2.copyWithDamage(hit2.damage/2).setLook(Hit.HitLook.RANGE_DAMAGE)
-                    context.combat.delayHits(
-                        PendingHit(hit, 0),
-                        PendingHit(hit2, 1),
-                        PendingHit(hit3, 1),
+                    context.melee(1.15, 1.15, Hit.HitLook.MAGIC_DAMAGE)//melee roll with magic damage
+                    context.melee(1.15, 1.15)//melee roll with melee damage
+
+                    context.ranged()//range roll with range damage, no multipliers
+
+                    //context.magic(1.0, hitLook = Hit.HitLook.MELEE_DAMAGE)//magic roll with melee damage
+
+                    context.repeatHits(2)
+
+                    context.repeatHits(
+                        combatType = CombatType.MELEE,
+                        delays = listOf(0, 1),
+                        accuracyMultipliers = listOf(1.15, 1.15),
+                        damageMultipliers = listOf(1.15, 1.15)
                     )
+
+                    context.hits {
+                        melee(1.15, 1.15, delay = 0)
+                        melee(1.15, 1.15, delay = 1)
+                    }
+
+                    context.hits {
+                        val melee = melee(1.25, 1.25, delay = 0)
+                        nextHit(melee, scale = 0.5, delay = 1)
+                        nextHit(melee, scale = 0.5, delay = 2)
+                        nextHit(melee, scale = 1.0, delay = 2)
+                    }
                 }
             )
         ),
@@ -80,22 +122,12 @@ object StandardMelee : MeleeData() {
                 accuracyMultiplier = 1.15,
                 damageMultiplier = 1.15,
                 execute = { context ->
-                    val special = context.weapon.specialAttack!!
                     context.attacker.animate(Animation(1062))
                     context.attacker.gfx(Graphics(252, 0, 100))
-                    fun registerSpecialHit() = context.combat.registerHit(
-                        context.attacker,
-                        context.defender,
-                        CombatType.MELEE,
-                        context.attackStyle,
-                        context.weapon,
-                        accuracyMultiplier = special.accuracyMultiplier,
-                        damageMultiplier = special.damageMultiplier
-                    )
-                    context.combat.delayHits(
-                        PendingHit(registerSpecialHit(), 0),
-                        PendingHit(registerSpecialHit(), 1)
-                    )
+                    context.melee()
+                    context.melee(hitLook = Hit.HitLook.RANGE_DAMAGE, delay = 1)
+                    context.melee(hitLook = Hit.HitLook.MAGIC_DAMAGE, delay = 1)
+                    context.melee(hitLook = Hit.HitLook.REGULAR_DAMAGE, delay = 2, hits = 5)
                 }
             )
         ),

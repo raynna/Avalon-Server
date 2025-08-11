@@ -62,17 +62,17 @@ interface CombatStyle {
                     requireNotNull(spell) { "Spell required for magic attack" }
                     CombatCalculations.calculateMagicMaxHit(attacker, defender, spell)
                 }
-                else -> null
+
             }
-        } else Hit(defender, 0, resolvedHitLook)
-        if (resolvedHitLook != null) {
-            hit?.setLook(resolvedHitLook)
+        } else {
+            Hit(defender, 0, resolvedHitLook)
         }
-        if (spell != null && hit != null) {//TODO temporary fix for things like entangle and curse spells to hit
+        hit.look = resolvedHitLook
+        if (spell != null) {//TODO temporary fix for things like entangle and curse spells to hit
             if (landed && spell.damage == -1)
                 hit.damage = Utils.random(1, 10)
         }
-        return hit!!
+        return hit
     }
 
 

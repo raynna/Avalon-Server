@@ -329,10 +329,8 @@ object CombatCalculations {
         val level = (when (target) {
             is NPC -> {
                 var defenceLevel = target.bonuses[NpcBonusType.DefenceLevel.index]
-                println("THIS NPC HAS defenceLevel: $defenceLevel")
                 if (defenceLevel <= 0) {
                     defenceLevel = target.combatLevel
-                    println("THIS NPC HAS NEW defenceLevel: $defenceLevel")
                 }
                 defenceLevel
             }
@@ -409,10 +407,8 @@ object CombatCalculations {
                 is Player -> target.combatDefinitions.bonuses[playerDefenceBonus.index]
                 is NPC -> {
                     var defenceBonus = target.bonuses[npcDefenceBonus.index]
-                    player.message("THIS NPC HAS defenceBonus $defenceBonus")
                     if (defenceBonus <= 0) {
                         defenceBonus = target.combatLevel / 3
-                        player.message("NEW BONUS $defenceBonus")
                     }
                     defenceBonus
                 }
