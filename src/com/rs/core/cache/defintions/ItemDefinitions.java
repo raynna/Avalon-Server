@@ -209,7 +209,6 @@ ItemDefinitions {
     }
 
 
-
     public static final ItemDefinitions getItemDefinitions(int itemId) {
         if (itemId < 0 || itemId >= itemsDefinitions.length)
             itemId = 0;
@@ -392,19 +391,19 @@ ItemDefinitions {
             return "";
         }
         print = false;
-		if (print) {
-			int optionId = 1;
-			StringBuilder builder = new StringBuilder();
-			builder.append("Clicked option=" + getInventoryOptions()[option - 1] + "("+option+"), Length=" + getInventoryOptions().length + ", Options: ");
-			for (String options : getInventoryOptions()) {
-				if (options == null)
-					builder.append("None(" + optionId + ") ");
-				else
-					builder.append(""+options.toLowerCase() + "(" + optionId + ") ");
-				optionId++;
-			}
-			Logger.log("ItemDefinitions", builder);
-		}
+        if (print) {
+            int optionId = 1;
+            StringBuilder builder = new StringBuilder();
+            builder.append("Clicked option=" + getInventoryOptions()[option - 1] + "(" + option + "), Length=" + getInventoryOptions().length + ", Options: ");
+            for (String options : getInventoryOptions()) {
+                if (options == null)
+                    builder.append("None(" + optionId + ") ");
+                else
+                    builder.append("" + options.toLowerCase() + "(" + optionId + ") ");
+                optionId++;
+            }
+            Logger.log("ItemDefinitions", builder);
+        }
         return getInventoryOptions()[option - 1].toLowerCase();
     }
 
@@ -455,16 +454,132 @@ ItemDefinitions {
         return false;
     }
 
-    public int getRenderAnimId() {
-        if (id == 18355 || id == 18351 || id == 18357)
-            return 1426;
+    public int getClientScriptSize() {
         if (clientScriptData == null)
-            return 1426;
-        Object animId = clientScriptData.get(644);
-        if (animId != null && animId instanceof Integer)
-            return (Integer) animId;
-        return 1426;
+            return 0;
+        return clientScriptData.size();
     }
+
+    private int getDataFromClientScript(int key, int defaultValue) {
+        if (clientScriptData == null) {
+            return defaultValue;
+        }
+        Object value = clientScriptData.get(key);
+        if (value instanceof Integer) {
+            return (Integer) value;
+        }
+        return defaultValue;
+    }
+
+    public int getRenderAnimId() {
+        if (id == 18355 || id == 18351 || id == 18357) {
+            return 1426;//i prefer the older chaotic non render anim
+        }
+        return getDataFromClientScript(644, 1426);
+    }
+
+    public int getAttackSpeed() {
+        return getDataFromClientScript(14, 4);
+    }
+
+    public int getAttackSpeed2() {
+        return getDataFromClientScript(686, 4);
+    }
+
+    public int getStabAttack() {
+       return getDataFromClientScript(0, 0);
+    }
+
+    public int getSlashAttack() {
+        return getDataFromClientScript(1, 0);
+    }
+
+    public int getCrushAttack() {
+        return getDataFromClientScript(2, 0);
+    }
+
+    public int getMagicAttack() {
+        return getDataFromClientScript(3, 0);
+    }
+
+    public int getRangeAttack() {
+        return getDataFromClientScript(4, 0);
+    }
+
+    public int getStabDefence() {
+        return getDataFromClientScript(5, 0);
+    }
+
+    public int getSummoningDefence() {
+        return getDataFromClientScript(417, 0);
+    }
+
+    public int getSlashDefence() {
+        return getDataFromClientScript(6, 0);
+    }
+
+    public int getCrushDefence() {
+        return getDataFromClientScript(7, 0);
+    }
+
+    public int getMagicDefence() {
+        return getDataFromClientScript(8, 0);
+    }
+
+    public int getRangeDefence() {
+        return getDataFromClientScript(9, 0);
+    }
+
+    public int getAbsorbMeleeBonus() {
+        return getDataFromClientScript(967, 0);
+    }
+
+    public int getAbsorbMagicBonus() {
+        return getDataFromClientScript(969, 0);
+    }
+
+    public int getAbsorbRangeBonus() {
+        return getDataFromClientScript(968, 0);
+    }
+
+    public int getStrengthBonus() {
+        return getDataFromClientScript(641, 0) / 10;
+    }
+
+    public int getRangedStrengthBonus() {
+        return getDataFromClientScript(643, 0) / 10;
+    }
+
+    public int getMagicBonus() {
+        return getDataFromClientScript(685, 0);
+    }
+
+    public int getPrayerBonus() {
+        return getDataFromClientScript(11, 0);
+    }
+
+    /*
+     * getAttackSpeed = clientScriptData.get(686);
+getStabAttack = clientScriptData.get(0);
+getSlashAttack = clientScriptData.get(1);
+getCrushAttack = clientScriptData.get(2);
+getMagicAttack = clientScriptData.get(3);
+getRangeAttack = clientScriptData.get(4);
+getStabDef = clientScriptData.get(5);
+getSlashDef = clientScriptData.get(6);
+getCrushDef = clientScriptData.get(7);
+getMagicDef = clientScriptData.get(8);
+getRangeDef = clientScriptData.get(9);
+getSummoningDef = clientScriptData.get(417);
+getAbsorbMeleeBonus = clientScriptData.get(967);
+getAbsorbMagicBonus = clientScriptData.get(969);
+getAbsorbRangeBonus = clientScriptData.get(968);
+getStrengthBonus = clientScriptData.get(641); (divided by 10)
+getRangedStrBonus = clientScriptData.get(643); (divided by 10)
+getMagicBonus = clientScriptData.get(685);
+getPrayerBonus = clientScriptData.get(11);
+getRenderAnimId = clientScriptData.get(644); (1426 if getRenderAnimId = null)
+     */
 
     public int getModelZoom() {
         return modelZoom;
@@ -622,7 +737,6 @@ ItemDefinitions {
                 itemRequiriments.put(Skills.ATTACK, 75);
             }
         }
-
         return itemRequiriments;
     }
 
@@ -952,15 +1066,6 @@ ItemDefinitions {
 
     public int getTeamId() {
         return teamId;
-    }
-
-    public int getAttackSpeed() {
-        if (clientScriptData == null)
-            return 4;
-        Object attackSpeed = clientScriptData.get(14);
-        if (attackSpeed != null && attackSpeed instanceof Integer)
-            return (int) attackSpeed;
-        return 4;
     }
 
     public int getTipitPrice() {

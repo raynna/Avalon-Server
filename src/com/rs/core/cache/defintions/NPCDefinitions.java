@@ -70,17 +70,23 @@ public final class NPCDefinitions {
 	public int npcId;
 	public int anInt901;
 
+	private static boolean loaded = false;
+
 	public static final NPCDefinitions getNPCDefinitions(int id) {
 		NPCDefinitions def = npcDefinitions.get(id);
 		if (def == null) {
-			def = new NPCDefinitions(id);
-			def.method694();
-			byte[] data = Cache.STORE.getIndexes()[18].getFile(id >>> 134238215, id & 0x7f);
-			if (data == null) {
-				// System.out.println("Failed loading NPC " + id + ".");
-			} else
-				def.readValueLoop(new InputStream(data));
-			npcDefinitions.put(id, def);
+			if (!loaded) {
+				loadAll();
+			}
+			def = npcDefinitions.get(id);
+			if (def == null) {
+				def = new NPCDefinitions(id);
+				def.method694();
+				byte[] data = Cache.STORE.getIndexes()[18].getFile(id >>> 7, id & 0x7f);
+				if (data != null)
+					def.readValueLoop(new InputStream(data));
+				npcDefinitions.put(id, def);
+			}
 		}
 		return def;
 	}
@@ -117,6 +123,7 @@ public final class NPCDefinitions {
 				npcDefinitions.put(npcId, def);
 			}
 		}
+		loaded = true;
 	}
 
 

@@ -1,10 +1,17 @@
 package com.rs.java.game.player;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.rs.Settings;
+import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
@@ -486,7 +493,15 @@ public final class Inventory implements Serializable {
 		player.message(builder.toString());
 		if (player.isDeveloperMode()) {
 			builder = new StringBuilder();
-			builder.append("FileId: ").append(item.getDefinitions().getFileId());
+			try {
+				dumpAllItemDefinitions();
+				dumpAllItemClientScriptData();
+				dumpScripts(item.getId());
+			} catch (Exception error) {
+				System.out.println(error.toString());
+			}
+			builder.append("ClientScriptData size: " + item.getDefinitions().getClientScriptSize());
+			builder.append(", FileId: ").append(item.getDefinitions().getFileId());
 			builder.append(", ArchiveId: ").append(item.getDefinitions().getArchiveId());
 			builder.append(", ItemId: " ).append(item.getId());
 			builder.append(", EquipmentType: " ).append(item.getDefinitions().getEquipType());
@@ -499,6 +514,27 @@ public final class Inventory implements Serializable {
 					.append(" (").append(item.getMetadata().getType()).append("), ")
 					.append(item.getMetadata().getValue());
 			player.message(metaBuilder.toString());
+		}
+	}
+
+
+	private void dumpScripts(int itemId) throws IOException {
+		ItemDefinitions def = ItemDefinitions.getItemDefinitions(itemId);
+		Map<Integer, Object> dumpMap = new HashMap<>();
+		if (def.getClientScriptData() != null) {
+			for (int i = 0; i <= 5000; i++) {
+				Object value = def.getClientScriptData().get(i);
+				if (value != null) {
+					dumpMap.put(i, value);
+				}
+			}
+		}
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		File dir = new File("./data/clientscripts/item");
+		File file = new File(dir, def.name + "(" + itemId + ")_clientscriptdata.json");
+		try (FileWriter writer = new FileWriter(file)) {
+			gson.toJson(dumpMap, writer);
 		}
 	}
 
@@ -518,6 +554,133 @@ public final class Inventory implements Serializable {
 		}
 		player.getPackets().sendItems(93, finalised);
 	}
+
+	private static void dumpAllItemDefinitions() throws IOException {
+		Map<String, Map<String, Object>> allObjects = new LinkedHashMap<>();
+
+		int itemCount = Utils.getItemDefinitionsSize();
+		System.out.println("Starting dump of " + itemCount + " items...");
+
+		int addedCount = 0;
+		for (int itemId = 0; itemId < itemCount; itemId++) {
+			ItemDefinitions def = ItemDefinitions.getItemDefinitions(itemId);
+			if (def == null)
+				continue;
+
+			Map<String, Object> defData = dumpItemDefinitionFields(def);
+
+			// Sanitize name for JSON key, fallback to ID if null or empty
+			String name = def.name != null && !def.name.isEmpty() ? def.name : "Item";
+			String safeName = name.replaceAll("[\\\\/:*?\"<>|]", "_") + "(" + itemId + ")";
+
+			allObjects.put(safeName, defData);
+			addedCount++;
+
+			if (addedCount % 100 == 0 || itemId == itemCount - 1) {
+				System.out.println("Dumped " + addedCount + " items so far (last id: " + itemId + ")");
+			}
+		}
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+		File dir = new File("./data/clientscripts/item");
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		File file = new File(dir, "all_item_definitions.json");
+		try (FileWriter writer = new FileWriter(file)) {
+			gson.toJson(allObjects, writer);
+		}
+
+		System.out.println("Finished dumping all item definitions. Total entries: " + addedCount);
+		System.out.println("Output file: " + file.getAbsolutePath());
+	}
+
+	private static Map<String, Object> dumpItemDefinitionFields(ItemDefinitions def) {
+		Map<String, Object> map = new LinkedHashMap<>();
+
+		// Use reflection to get all declared fields including private ones
+		Field[] fields = def.getClass().getDeclaredFields();
+
+		for (Field field : fields) {
+			if (Modifier.isStatic(field.getModifiers()))
+				continue; // skip static fields
+
+			field.setAccessible(true);
+			try {
+				Object value = field.get(def);
+
+				// Optional: If you want, you can filter or transform certain field types here,
+				// e.g. convert arrays to lists for JSON serialization
+
+				if (value != null && value.getClass().isArray()) {
+					// Convert arrays to lists for better Gson output
+					int length = java.lang.reflect.Array.getLength(value);
+					List<Object> list = new ArrayList<>();
+					for (int i = 0; i < length; i++) {
+						list.add(java.lang.reflect.Array.get(value, i));
+					}
+					map.put(field.getName(), list);
+				} else {
+					map.put(field.getName(), value);
+				}
+
+			} catch (IllegalAccessException e) {
+				// Failed to access field, skip or log
+				map.put(field.getName(), "ACCESS_ERROR");
+			}
+		}
+
+		return map;
+	}
+
+	private static void dumpAllItemClientScriptData() throws IOException {
+		Map<String, Map<Integer, Object>> itemScripts = new HashMap<>();
+
+		int itemCount = Utils.getItemDefinitionsSize();
+		System.out.println("Starting dump of clientScriptData for " + itemCount + " items...");
+
+		int addedCount = 0;
+		for (int itemId = 0; itemId < itemCount; itemId++) {
+			ItemDefinitions def = ItemDefinitions.getItemDefinitions(itemId);
+
+			if (def == null) {
+				System.out.println("Item id " + itemId + " is null, skipping...");
+				continue;
+			}
+
+			if (def.getClientScriptData() == null || def.getClientScriptData().isEmpty()) {
+				continue;  // no clientScriptData, skip
+			}
+
+			// Sanitize item name for JSON key
+			String safeName = def.getName().replaceAll("[\\\\/:*?\"<>|]", "_");
+
+			itemScripts.put(safeName + "(" + itemId + ")", new HashMap<>(def.getClientScriptData()));
+			addedCount++;
+
+			if (addedCount % 100 == 0 || itemId == itemCount - 1) {
+				System.out.println("Added " + addedCount + " item clientScriptData entries so far (last item id: " + itemId + ")");
+			}
+		}
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+		File dir = new File("./data/clientscripts/items");
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		File file = new File(dir, "all_item_clientscriptdata.json");
+		try (FileWriter writer = new FileWriter(file)) {
+			gson.toJson(itemScripts, writer);
+		}
+
+		System.out.println("Finished dumping all item clientScriptData. Total entries: " + addedCount);
+		System.out.println("Output file: " + file.getAbsolutePath());
+	}
+
 
 	public void replaceItem(int id, int amount, int slot) {
 		Item item = items.get(slot);

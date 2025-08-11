@@ -17,7 +17,7 @@ public final class ClientScriptMap {
 	private int defaultIntValue;
 	private HashMap<Long, Object> values;
 
-	private static final ConcurrentHashMap<Integer, ClientScriptMap> interfaceScripts = new ConcurrentHashMap<Integer, ClientScriptMap>();
+	public static final ConcurrentHashMap<Integer, ClientScriptMap> interfaceScripts = new ConcurrentHashMap<Integer, ClientScriptMap>();
 
 	public static void main(String[] args) throws IOException {
 		// Cache.STORE = new Store("C:/.jagex_cache_32/runescape/");
@@ -47,18 +47,23 @@ public final class ClientScriptMap {
 		}
 	}
 
-	public static final ClientScriptMap getMap(int scriptId) {
+	public static ClientScriptMap getMap(int scriptId) {
 		ClientScriptMap script = interfaceScripts.get(scriptId);
 		if (script != null)
 			return script;
-		byte[] data = Cache.STORE.getIndexes()[17].getFile(scriptId >>> 0xba9ed5a8, scriptId & 0xff);
+
+		// Split scriptId into group and file for cache indexing
+		int groupId = scriptId >>> 8;
+		int fileId = scriptId & 0xFF;
+
+		byte[] data = Cache.STORE.getIndexes()[17].getFile(groupId, fileId);
 		script = new ClientScriptMap();
 		if (data != null)
 			script.readValueLoop(new InputStream(data));
 		interfaceScripts.put(scriptId, script);
 		return script;
-
 	}
+
 
 	public int getDefaultIntValue() {
 		return defaultIntValue;
@@ -128,7 +133,7 @@ public final class ClientScriptMap {
 		return (String) value;
 	}
 
-	private void readValueLoop(InputStream stream) {
+	public void readValueLoop(InputStream stream) {
 		for (;;) {
 			int opcode = stream.readUnsignedByte();
 			if (opcode == 0)
@@ -165,7 +170,7 @@ public final class ClientScriptMap {
 		}
 	}
 
-	private ClientScriptMap() {
+	public ClientScriptMap() {
 		defaultStringValue = "null";
 	}
 }

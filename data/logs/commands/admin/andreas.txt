@@ -7919,3 +7919,48 @@
 [10 August 2025 at 05:05:09 CEST] - ::tele 0,48,54,20,37
 [10 August 2025 at 05:06:36 CEST] - ::item 861 1
 [10 August 2025 at 05:06:38 CEST] - ::item 892 1000
+[10 August 2025 at 11:42:47 CEST] - ::ecomode 2
+[10 August 2025 at 11:42:48 CEST] - ::runes 
+[10 August 2025 at 11:44:12 CEST] - ::empty 
+[10 August 2025 at 11:44:16 CEST] - ::brid 
+[10 August 2025 at 11:47:02 CEST] - ::item 5698 1
+[10 August 2025 at 11:47:05 CEST] - ::item 11283 1
+[10 August 2025 at 11:47:07 CEST] - ::item 11284 1
+[10 August 2025 at 11:57:07 CEST] - ::npc 50
+[10 August 2025 at 11:57:10 CEST] - ::tele 0,48,54,20,38
+[10 August 2025 at 11:58:25 CEST] - ::npc 2745
+[10 August 2025 at 11:58:37 CEST] - ::tele 0,48,54,16,40
+[10 August 2025 at 11:58:39 CEST] - ::tele 0,48,54,23,29
+[10 August 2025 at 11:58:46 CEST] - ::tele 0,48,54,30,33
+[10 August 2025 at 11:58:48 CEST] - ::tele 0,48,54,27,33
+[10 August 2025 at 11:58:49 CEST] - ::tele 0,48,54,28,33
+[11 August 2025 at 12:12:03 CEST] - ::tele 0,48,54,24,28
+[11 August 2025 at 12:37:34 CEST] - ::item 1 1
+[11 August 2025 at 01:28:46 CEST] - ::inter 1503
+[11 August 2025 at 01:28:51 CEST] - ::inter 1503
+[11 August 2025 at 01:28:54 CEST] - ::inter 10
+[11 August 2025 at 01:28:57 CEST] - ::inter 1503
+[11 August 2025 at 01:29:02 CEST] - ::inter 1503
+[11 August 2025 at 01:29:26 CEST] - ::varbit 105 0
+[11 August 2025 at 01:29:28 CEST] - ::inter 1503
+[11 August 2025 at 01:29:31 CEST] - ::inter 1504
+[11 August 2025 at 01:29:32 CEST] - ::inter 1502
+[11 August 2025 at 01:29:34 CEST] - ::inter 1501
+[11 August 2025 at 01:29:37 CEST] - ::inter 105
+[11 August 2025 at 01:29:41 CEST] - ::inter 115
+[11 August 2025 at 01:29:53 CEST] - ::inter 1504
+[11 August 2025 at 01:29:58 CEST] - ::inter 1504
+[11 August 2025 at 01:30:05 CEST] - ::inter 55
+[11 August 2025 at 01:30:15 CEST] - ::inter 62
+[11 August 2025 at 01:30:28 CEST] - ::item 6529 1
+[11 August 2025 at 01:30:33 CEST] - ::item 6306 1
+[11 August 2025 at 01:30:34 CEST] - ::item 8951 1
+[11 August 2025 at 01:31:17 CEST] - ::npc 40
+[11 August 2025 at 01:31:21 CEST] - ::tonpc 40
+[11 August 2025 at 01:31:29 CEST] - ::tonpc -1
+[11 August 2025 at 02:03:03 CEST] - ::item 9185 1
+[11 August 2025 at 02:03:06 CEST] - ::item 6585 1
+[11 August 2025 at 02:04:05 CEST] - ::item 15486 1
+[11 August 2025 at 02:05:49 CEST] - ::item ganodermic poncho
+[11 August 2025 at 02:13:02 CEST] - ::item runite bolt
+[11 August 2025 at 02:21:10 CEST] - ::item rune platebody

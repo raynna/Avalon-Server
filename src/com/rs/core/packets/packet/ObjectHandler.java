@@ -1,5 +1,7 @@
 package com.rs.core.packets.packet;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.ObjectDefinitions;
@@ -88,6 +90,13 @@ import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.InputStream;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 /**
  * @Improved Andreas
@@ -2020,12 +2029,102 @@ public final class ObjectHandler {
         player.getPackets().sendObjectMessage(0, object,
                 "It's " + player.grammar(object) + " " + object.getDefinitions().name + ".");
 
+        if (player.developerMode) {
+            try {
+                dumpAllObjectDefinitions();
+            } catch (Exception error) {
+                System.out.println(error.toString());
+            }
+        }
         if (Settings.DEBUG)
            System.out.println("ObjectHandler: examined object id : " + object.getId() + ", x" + object.getX() + ", y" + object.getY() + ", z"
                             + object.getPlane() + ", t" + object.getType() + ", r" + object.getRotation() + ", "
                             + object.getDefinitions().name + ", varbit: " + object.getConfigByFile() + ", var: "
                             + object.getConfig());
     }
+
+    private static void dumpAllObjectDefinitions() throws IOException {
+        Map<String, Map<String, Object>> allObjects = new LinkedHashMap<>();
+
+        int objectCount = Utils.getObjectDefinitionsSize();
+        System.out.println("Starting dump of " + objectCount + " objects...");
+
+        int addedCount = 0;
+        for (int objectId = 0; objectId < objectCount; objectId++) {
+            ObjectDefinitions def = ObjectDefinitions.getObjectDefinitions(objectId);
+            if (def == null)
+                continue;
+
+            Map<String, Object> defData = dumpObjectDefinitionFields(def);
+
+            // Sanitize name for JSON key, fallback to ID if null or empty
+            String name = def.name != null && !def.name.isEmpty() ? def.name : "Object";
+            String safeName = name.replaceAll("[\\\\/:*?\"<>|]", "_") + "(" + objectId + ")";
+
+            allObjects.put(safeName, defData);
+            addedCount++;
+
+            if (addedCount % 100 == 0 || objectId == objectCount - 1) {
+                System.out.println("Dumped " + addedCount + " objects so far (last id: " + objectId + ")");
+            }
+        }
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        File dir = new File("./data/clientscripts/objects");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        File file = new File(dir, "all_object_definitions.json");
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(allObjects, writer);
+        }
+
+        System.out.println("Finished dumping all object definitions. Total entries: " + addedCount);
+        System.out.println("Output file: " + file.getAbsolutePath());
+    }
+
+
+    private static Map<String, Object> dumpObjectDefinitionFields(ObjectDefinitions def) {
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        // Use reflection to get all declared fields including private ones
+        Field[] fields = def.getClass().getDeclaredFields();
+
+        for (Field field : fields) {
+            if (Modifier.isStatic(field.getModifiers()))
+                continue; // skip static fields
+
+            field.setAccessible(true);
+            try {
+                Object value = field.get(def);
+
+                // Optional: If you want, you can filter or transform certain field types here,
+                // e.g. convert arrays to lists for JSON serialization
+
+                if (value != null && value.getClass().isArray()) {
+                    // Convert arrays to lists for better Gson output
+                    int length = java.lang.reflect.Array.getLength(value);
+                    List<Object> list = new ArrayList<>();
+                    for (int i = 0; i < length; i++) {
+                        list.add(java.lang.reflect.Array.get(value, i));
+                    }
+                    map.put(field.getName(), list);
+                } else {
+                    map.put(field.getName(), value);
+                }
+
+            } catch (IllegalAccessException e) {
+                // Failed to access field, skip or log
+                map.put(field.getName(), "ACCESS_ERROR");
+            }
+        }
+
+        return map;
+    }
+
+
 
     private static void slashWeb(Player player, WorldObject object) {
         boolean usingKnife = false;

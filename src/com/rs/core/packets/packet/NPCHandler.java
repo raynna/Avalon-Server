@@ -1,8 +1,19 @@
 package com.rs.core.packets.packet;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.rs.Settings;
+import com.rs.core.cache.defintions.ItemDefinitions;
+import com.rs.core.cache.defintions.NPCDefinitions;
+import com.rs.core.cache.defintions.ObjectDefinitions;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.Animation;
 import com.rs.java.game.ForceTalk;
@@ -84,6 +95,22 @@ public class NPCHandler {
             }
             player.getPackets().sendGameMessage("Failed removing spawn!");
         }
+        if (player.isDeveloperMode()) {
+            //NPCDefinitions.loadAll();
+            try {
+                dumpAllObjectDefinitions();
+                dumpAllNpcClientScriptData();
+            } catch (Exception error) {
+                System.out.println(error.toString());
+            }
+            if (npc.getDefinitions().clientScriptData != null)
+                player.message("ClientScriptData Size:" + npc.getDefinitions().clientScriptData.size());
+            try {
+                dumpScripts(npc.getId());
+            } catch (Exception error) {
+                System.out.println(error.toString());
+            }
+        }
         if (Settings.DEBUG) {
             for (int i = 0; i < npc.getBonuses().length; i++) {
                 player.message("Bonus ["+i+"]: " + npc.getBonuses()[i]);
@@ -96,6 +123,167 @@ public class NPCHandler {
                 player.message("ModelId: " + id);
         }
     }
+
+    private static void dumpAllNpcClientScriptData() throws IOException {
+        Map<String, Map<Integer, Object>> npcScripts = new HashMap<>();
+
+        int npcCount = NPCDefinitions.getNpcDefinitionsSize();
+        System.out.println("Starting dump of clientScriptData for " + npcCount + " NPCs...");
+
+        int addedCount = 0;
+        for (int npcId = 0; npcId < npcCount; npcId++) {
+            NPCDefinitions def = NPCDefinitions.getNPCDefinitions(npcId);
+
+            if (def == null) {
+                System.out.println("NPC id " + npcId + " is null, skipping...");
+                continue;
+            }
+
+            if (def.clientScriptData == null || def.clientScriptData.isEmpty()) {
+                // Optionally log this if you want to see which have no data
+                // System.out.println("NPC id " + npcId + " (" + def.name + ") has no clientScriptData.");
+                continue;
+            }
+
+            def.getId(); // your existing call, in case it triggers loading
+
+            // Sanitize name for JSON key
+            String safeName = def.name.replaceAll("[\\\\/:*?\"<>|]", "_");
+
+            npcScripts.put(safeName + "(" + npcId + ")", new HashMap<>(def.clientScriptData));
+            addedCount++;
+
+            // Debug message every 100 NPCs or at the end
+            if (addedCount % 100 == 0 || npcId == npcCount - 1) {
+                System.out.println("Added " + addedCount + " NPC clientScriptData entries so far (last NPC id: " + npcId + ")");
+            }
+        }
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        File dir = new File("./data/clientscripts");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        File file = new File(dir, "all_npc_clientscriptdata.json");
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(npcScripts, writer);
+        }
+
+        System.out.println("Finished dumping all NPC clientScriptData. Total entries: " + addedCount);
+        System.out.println("Output file: " + file.getAbsolutePath());
+    }
+
+    private static void dumpAllObjectDefinitions() throws IOException {
+        Map<String, Map<String, Object>> allObjects = new LinkedHashMap<>();
+
+        int npcCount = Utils.getNPCDefinitionsSize();
+        System.out.println("Starting dump of " + npcCount + " npcs...");
+
+        int addedCount = 0;
+        for (int npcId = 0; npcId < npcCount; npcId++) {
+            NPCDefinitions def = NPCDefinitions.getNPCDefinitions(npcId);
+            if (def == null)
+                continue;
+
+            Map<String, Object> defData = dumpNpcDefinitionFields(def);
+
+            // Sanitize name for JSON key, fallback to ID if null or empty
+            String name = def.name != null && !def.name.isEmpty() ? def.name : "Npc";
+            String safeName = name.replaceAll("[\\\\/:*?\"<>|]", "_") + "(" + npcId + ")";
+
+            allObjects.put(safeName, defData);
+            addedCount++;
+
+            if (addedCount % 100 == 0 || npcId == npcCount - 1) {
+                System.out.println("Dumped " + addedCount + " objects so far (last id: " + npcId + ")");
+            }
+        }
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        File dir = new File("./data/clientscripts/npc");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        File file = new File(dir, "all_npc_definitions.json");
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(allObjects, writer);
+        }
+
+        System.out.println("Finished dumping all object definitions. Total entries: " + addedCount);
+        System.out.println("Output file: " + file.getAbsolutePath());
+    }
+
+    private static Map<String, Object> dumpNpcDefinitionFields(NPCDefinitions def) {
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        // Use reflection to get all declared fields including private ones
+        Field[] fields = def.getClass().getDeclaredFields();
+
+        for (Field field : fields) {
+            if (Modifier.isStatic(field.getModifiers()))
+                continue; // skip static fields
+
+            field.setAccessible(true);
+            try {
+                Object value = field.get(def);
+
+                // Optional: If you want, you can filter or transform certain field types here,
+                // e.g. convert arrays to lists for JSON serialization
+
+                if (value != null && value.getClass().isArray()) {
+                    // Convert arrays to lists for better Gson output
+                    int length = java.lang.reflect.Array.getLength(value);
+                    List<Object> list = new ArrayList<>();
+                    for (int i = 0; i < length; i++) {
+                        list.add(java.lang.reflect.Array.get(value, i));
+                    }
+                    map.put(field.getName(), list);
+                } else {
+                    map.put(field.getName(), value);
+                }
+
+            } catch (IllegalAccessException e) {
+                // Failed to access field, skip or log
+                map.put(field.getName(), "ACCESS_ERROR");
+            }
+        }
+
+        return map;
+    }
+
+
+
+    private static void dumpScripts(int npcId) throws IOException {
+        NPCDefinitions def = NPCDefinitions.getNPCDefinitions(npcId);
+        Map<Integer, Object> dumpMap = new HashMap<>();
+        if (def.clientScriptData != null) {
+            // Iterate only keys present instead of fixed 0-5000 range
+            for (Map.Entry<Integer, Object> entry : def.clientScriptData.entrySet()) {
+                dumpMap.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        File dir = new File("./data/clientscripts/npc");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        // Sanitize name for filename: remove or replace illegal characters
+        String safeName = def.name.replaceAll("[\\\\/:*?\"<>|]", "_");
+
+        File file = new File(dir, safeName + "(" + npcId + ")_clientscriptdata.json");
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(dumpMap, writer);
+        }
+
+        System.out.println("Dumped NPC clientScriptData for " + def.name + " (ID: " + npcId + ")");
+    }
+
 
     public static void handleOption1(final Player player, final InputStream stream) {
         int npcIndex = stream.readUnsignedShort128();

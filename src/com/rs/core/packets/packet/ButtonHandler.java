@@ -1989,7 +1989,6 @@ public class ButtonHandler {
                         return;
                     if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                         long passedTime = Utils.currentTimeMillis() - WorldThread.getLastCycleTime();
-                        player.itemSwitch = player.hasInstantSpecial(player.getEquipment().getItem(Equipment.SLOT_WEAPON));
                         WorldTasksManager.schedule(new WorldTask() {
 
                             @Override
