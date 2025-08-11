@@ -71,13 +71,12 @@ public final class Launcher {
 			Settings.DEBUG = true;
 		} else {
 			Settings.VPS_HOSTED = Boolean.parseBoolean(args[3]);
-			Settings.PORT_ID = Integer.valueOf(args[2]);
+			Settings.PORT_ID = Integer.parseInt(args[2]);
 			Settings.HOSTED = Boolean.parseBoolean(args[1]);
 			Settings.DEBUG = Boolean.parseBoolean(args[0]);
 		}
 		Cache.init();
 		Rscm.loadAll();
-		//RscmGenerator.INSTANCE.generateGroupedNpcRscm();
 		DropTablesSetup.setup();
 		AreaManager.init();
 		ItemsEquipIds.init();
@@ -126,8 +125,6 @@ public final class Launcher {
 		NpcPluginLoader.init();
 		ItemPluginLoader.init();
 		WeaponScriptsManager.init();
-		for (int index = 0; index < Cache.STORE.getIndexes().length - 1; index++)
-			GenericClientScriptMapDumper.dumpAllMapsFromCacheIndex(index);
 		try {
 			ServerChannelHandler.init();
 		} catch (Throwable e) {
@@ -225,10 +222,6 @@ public final class Launcher {
 	}
 
 	public static void closeServices() {
-		if (!Settings.DEBUG) {
-			//discord.getChannelByName("public-chat").sendMessage("Avalon is now offline!");
-			//discord.getChannelByName("server-status").sendMessage("Avalon is now offline!");
-		}
 		try {
 			TimeUnit.SECONDS.sleep(3);
 		} catch (InterruptedException e) {
@@ -236,7 +229,7 @@ public final class Launcher {
 		}
 		for (int cycle = 0;; cycle++) {
 			Logger.log("Launcher", "Logging out players... Cycle #" + cycle);
-			if (World.getPlayers().size() == 0 && World.getLobbyPlayers().size() == 0)
+			if (World.getPlayers().isEmpty() && World.getLobbyPlayers().isEmpty())
 				break;
 			for (Player player : World.getPlayers())
 				player.realFinish();
