@@ -18,8 +18,6 @@ import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.npc.NpcPluginLoader;
 import com.rs.java.game.npc.combat.CombatScriptsHandler;
 import com.rs.java.tools.GenericClientScriptMapDumper;
-import com.rs.java.tools.MusicScriptDumper;
-import com.rs.java.tools.SpecificIndexDump;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.drops.DropTablesSetup;
 import com.rs.java.game.objects.GlobalObjectAddition;
