@@ -48,7 +48,7 @@ class CombatAction(
         healthOverlay.sendOverlay(player, target)
         player.setNextFaceEntity(target);
         player.resetWalkSteps()
-        val requiredDistance = style.getAttackDistance()
+        val requiredDistance = getAdjustedFollowDistance(target);
         if (!Utils.isOnRange(
                 player.x,
                 player.y,
@@ -56,7 +56,9 @@ class CombatAction(
                 target.x,
                 target.y,
                 target.size,
-                requiredDistance)) {
+                requiredDistance
+            )
+        ) {
             player.calcFollow(target, if (player.run) 2 else 1, true, true);
 
         }
@@ -74,20 +76,27 @@ class CombatAction(
             isRangedWeapon(player) -> RangedStyle
             else -> MeleeStyle
         }
-        val requiredDistance = style.getAttackDistance()
-        if (!Utils.isOnRange(
-                player.x,
-                player.y,
-                player.size,
-                target.x,
-                target.y,
-                target.size,
-                requiredDistance)) {
-            player.calcFollow(target, if (player.run) 2 else 1, true, true);
-
-        }
+        player.calcFollow(target, if (player.run) 2 else 1, true, true);
         ensureFollowTask(player);
         return true
+    }
+
+    private fun getAdjustedFollowDistance(target: Entity): Int {
+        var baseDistance = style.getAttackDistance()
+        if ((style == MagicStyle || style == RangedStyle) && target.hasWalkSteps()) {
+            baseDistance = (baseDistance - 1).coerceAtLeast(0)
+        }
+        return baseDistance
+    }
+
+    private fun getAdjustedAttackRange(player: Player, target: Entity): Int {
+        var baseDistance = style.getAttackDistance()
+        if (style == MeleeStyle && target.hasWalkSteps()) {
+            if (!Utils.isOnRange(player.x, player.y, player.size, target.x, target.y, target.size, baseDistance)) {
+                baseDistance += 2
+            }
+        }
+        return baseDistance
     }
 
     override fun processWithDelay(player: Player): Int {
@@ -95,7 +104,7 @@ class CombatAction(
             return -1
         }
         //player.message("process with delay")
-        val requiredDistance = style.getAttackDistance()
+        val requiredDistance = getAdjustedAttackRange(player, target)
         if ((!player.clipedProjectile(target, requiredDistance == 0)) || !Utils.isOnRange(
                 player.x,
                 player.y,
@@ -106,6 +115,7 @@ class CombatAction(
                 requiredDistance
             )
         ) {
+            player.message("cant reach target");
             return 0
         }
         if (Utils.colides(player.x, player.y, player.size, target.x, target.y, target.size) && !target.hasWalkSteps()) {
@@ -140,7 +150,7 @@ class CombatAction(
             return // already running
         }*/
 
-        val requiredDistance = style.getAttackDistance()
+        val requiredDistance = getAdjustedFollowDistance(target);
         val size = player.size
 
         followTask = object : WorldTask() {

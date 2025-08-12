@@ -189,8 +189,7 @@ public abstract class Entity extends WorldTile {
     public void applyHit(Hit hit) {
         if (isDead())
             hit.setDamage(0);
-        if (this instanceof Player) {
-            Player player = (Player) this;
+        if (this instanceof Player player) {
             if (player.invulnerable)
                 return;
             if (player.healMode) {

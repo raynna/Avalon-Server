@@ -235,7 +235,7 @@ object StandardRanged : RangeData() {
                         context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
                     }
                     context.combat.delayHits(
-                        PendingHit(hit, context.combat.getHitDelay())
+                        PendingHit(hit, context.defender, context.combat.getHitDelay())
                     )
                 }
             )
@@ -269,7 +269,7 @@ object StandardRanged : RangeData() {
                         context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
                     }
                     context.combat.delayHits(
-                        PendingHit(hit, context.combat.getHitDelay())
+                        PendingHit(hit, context.defender, context.combat.getHitDelay())
                     )
                 }
             )
@@ -303,7 +303,7 @@ object StandardRanged : RangeData() {
                         context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
                     }
                     context.combat.delayHits(
-                        PendingHit(hit, context.combat.getHitDelay())
+                        PendingHit(hit, context.defender, context.combat.getHitDelay())
                     )
                 }
             )
@@ -336,8 +336,8 @@ object StandardRanged : RangeData() {
                         damageMultiplier = special.damageMultiplier
                     )
                     context.combat.delayHits(
-                        PendingHit(registerSpecialHit(), context.combat.getHitDelay() - 1),
-                        PendingHit(registerSpecialHit(), context.combat.getHitDelay())
+                        PendingHit(registerSpecialHit(), context.defender, context.combat.getHitDelay() - 1),
+                        PendingHit(registerSpecialHit(), context.defender, context.combat.getHitDelay())
                     )
                 }
             )
@@ -457,7 +457,7 @@ object StandardRanged : RangeData() {
                             hit.setCriticalMark()
                         }
                         context.combat.delayHits(
-                            PendingHit(hit, context.combat.getHitDelay() + 1)
+                            PendingHit(hit, context.defender, context.combat.getHitDelay() + 1)
                         )
                     }
                 }
@@ -492,7 +492,7 @@ object StandardRanged : RangeData() {
                             hit.setCriticalMark()
                         }
                         context.combat.delayHits(
-                            PendingHit(hit, context.combat.getHitDelay() + 1)
+                            PendingHit(hit, context.defender, context.combat.getHitDelay() + 1)
                         )
                     }
                 }
@@ -527,7 +527,7 @@ object StandardRanged : RangeData() {
                             hit.setCriticalMark()
                         }
                         context.combat.delayHits(
-                            PendingHit(hit, context.combat.getHitDelay() + 1)
+                            PendingHit(hit, context.defender, context.combat.getHitDelay() + 1)
                         )
                     }
                 }

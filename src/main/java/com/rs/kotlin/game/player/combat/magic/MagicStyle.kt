@@ -100,12 +100,13 @@ object MagicStyle : CombatStyle {
         var totalDamage = 0
         for (pending in hits) {
             val hit = pending.hit
+            val target = pending.target
             PrayerEffectHandler.handleOffensiveEffects(attacker, defender, hit)
             PrayerEffectHandler.handleProtectionEffects(attacker, defender, hit)
             totalDamage += hit.damage
             scheduleHit(pending.delay) {
                 if (hit.damage > 0)
-                    defender.applyHit(hit)
+                    target.applyHit(hit)
                 onHit(hit)
             }
         }
@@ -171,7 +172,7 @@ object MagicStyle : CombatStyle {
         if (hit.damage > 0 && spell.bind != -1) {
             defender.addFreezeDelay(spell.bind, true)
         }
-        delayHits(PendingHit(hit, getHitDelay()))
+        delayHits(PendingHit(hit, defender, getHitDelay()))
         if (manual) {
             WorldTasksManager.schedule(object : WorldTask() {
                 override fun run() {
@@ -220,7 +221,7 @@ object MagicStyle : CombatStyle {
                 ProjectileManager.send(spell.projectileType, spell.projectileId, attacker, defender)
             }
         }
-        delayHits(PendingHit(hit, getHitDelay()))
+        delayHits(PendingHit(hit, defender, getHitDelay()))
         if (manual) {
             WorldTasksManager.schedule(object : WorldTask() {
                 override fun run() {

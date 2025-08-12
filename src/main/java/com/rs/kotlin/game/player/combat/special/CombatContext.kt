@@ -47,7 +47,7 @@ fun CombatContext.repeatHits(
                 combatType = combatType,
                 accuracyMultiplier = special.accuracyMultiplier,
                 damageMultiplier = special.damageMultiplier
-            ), delays[i]
+            ), defender, delays[i]
         )
     }
     combat.delayHits(*pendingHits.toTypedArray())
@@ -68,7 +68,7 @@ fun CombatContext.repeatHits(
                 combatType = combatType,
                 accuracyMultiplier = accuracyMultipliers[i],
                 damageMultiplier = damageMultipliers[i]
-            ), delays[i]
+            ), defender, delays[i]
         )
     }
     combat.delayHits(*pendingHits.toTypedArray())
@@ -96,7 +96,7 @@ fun CombatContext.forcedHit(
         if (hit.look == Hit.HitLook.REGULAR_DAMAGE && hit.isCriticalHit) {
             hit.critical = false;
         }
-        PendingHit(hit, delay)
+        PendingHit(hit, defender, delay)
     }
 
     combat.delayHits(*pendingHits.toTypedArray())
@@ -125,7 +125,7 @@ fun CombatContext.meleeHit(
             damageMultiplier = dmgMul,
             hitLook = hitLook
         )
-        PendingHit(hit, delay)
+        PendingHit(hit, defender, delay)
     }
 
     combat.delayHits(*pendingHits.toTypedArray())
@@ -154,7 +154,7 @@ fun CombatContext.rangedHit(
             damageMultiplier = dmgMul,
             hitLook = hitLook
         )
-        PendingHit(hit, delay)
+        PendingHit(hit, defender, delay)
     }
     combat.delayHits(*pendingHits.toTypedArray())
     return pendingHits.map { it.hit }
@@ -183,7 +183,7 @@ fun CombatContext.magicHit(
             hitLook = hitLook,
             spellId = spellId
         )
-        PendingHit(hit, delay)
+        PendingHit(hit, defender, delay)
     }
     combat.delayHits(*pendingHits.toTypedArray())
     return pendingHits.map { it.hit }
@@ -199,7 +199,7 @@ class SpecialHitBuilder(private val context: CombatContext) {
         val h = context.registerHit(
             combatType = type, accuracyMultiplier = accuracyMultiplier, damageMultiplier = damageMultiplier
         )
-        hits += PendingHit(h, delay)
+        hits += PendingHit(h, context.defender, delay)
         return h
     }
 
@@ -225,7 +225,7 @@ class SpecialHitBuilder(private val context: CombatContext) {
         baseHit: Hit, scale: Double, delay: Int = 0
     ): Hit {
         val newHit = Hit(baseHit.source, (baseHit.damage * scale).toInt(), baseHit.look)
-        hits += PendingHit(newHit, delay)
+        hits += PendingHit(newHit, context.defender, delay)
         return newHit
     }
 

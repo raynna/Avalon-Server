@@ -109,11 +109,12 @@ object MeleeStyle : CombatStyle {
         var totalDamage = 0
         for (pending in hits) {
             val hit = pending.hit
+            val target = pending.target
             PrayerEffectHandler.handleOffensiveEffects(attacker, defender, hit);
             PrayerEffectHandler.handleProtectionEffects(attacker, defender, hit);
             totalDamage += hit.damage;
             scheduleHit(pending.delay) {
-                defender.applyHit(hit)
+                target.applyHit(hit)
                 onHit(hit)
             }
         }
