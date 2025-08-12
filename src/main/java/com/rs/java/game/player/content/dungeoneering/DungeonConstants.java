@@ -1,6 +1,8 @@
 package com.rs.java.game.player.content.dungeoneering;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import com.rs.java.utils.Logger;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
@@ -106,7 +108,7 @@ public class DungeonConstants {
 	public static final int[] DUNGEON_KEY_DOORS =
 	{ 50353, 50417, 50481, 53884, 55675 };
 
-	public static enum SkillDoors {
+	public enum SkillDoors {
 		RUNED_DOOR(Skills.RUNECRAFTING, new int[]
 		{ 50278, 50279, 50280, 53953, 55741 }, 791, 186, -1, -1, -1, -1, "You imbue the door with the wrong type of rune energy, and it reacts explosively."),
 		BARRED_DOOR(Skills.STRENGTH, new int[]
@@ -146,18 +148,18 @@ public class DungeonConstants {
 		{ -1, 50282, 50283, 53954, 55742 }, new int[]
 		{ 50284, 50285, 50286, 53955, 55743 }, 14566, -1, -1, -1, 14567, -1, "You dislodge some debris while attempting to fix the door, and it falls on you.");
 
-		private SkillDoors(int skillId, int[] closedThemeObjects, int openAnim, int openGfx, int openObjectAnim, int failObjectAnim, int failAnim, int failGfx, String failMessage) {
+		SkillDoors(int skillId, int[] closedThemeObjects, int openAnim, int openGfx, int openObjectAnim, int failObjectAnim, int failAnim, int failGfx, String failMessage) {
 			this(skillId, closedThemeObjects, null, openAnim, openGfx, openObjectAnim, failObjectAnim, failAnim, failGfx, failMessage);
 		}
 
-		private int skillId, openAnim, openGfx, openObjectAnim, failObjectAnim, failAnim, failGfx;
-		private int[] closedThemeObjects, openThemeObjects;
-		private String failMessage;
+		private final int skillId, openAnim, openGfx, openObjectAnim, failObjectAnim, failAnim, failGfx;
+		private final int[] closedThemeObjects, openThemeObjects;
+		private final String failMessage;
 
 		/*
 		 * set openThemeObjects if u want it to disappear after open
 		 */
-		private SkillDoors(int skillId, int[] closedThemeObjects, int[] openThemeObjects, int openAnim, int openGfx, int openObjectAnim, int failObjectAnim, int failAnim, int failGfx, String failMessage) {
+		SkillDoors(int skillId, int[] closedThemeObjects, int[] openThemeObjects, int openAnim, int openGfx, int openObjectAnim, int failObjectAnim, int failAnim, int failGfx, String failMessage) {
 			this.skillId = skillId;
 			this.closedThemeObjects = closedThemeObjects;
 			this.openThemeObjects = openThemeObjects;
@@ -214,7 +216,7 @@ public class DungeonConstants {
 	/*
 	 * keydoors only require the unlock objectid and itemid
 	 */
-	public static enum KeyDoors {
+	public enum KeyDoors {
 		ORANGE_TRIANGLE(0),
 		ORANGE_DIAMOND(1),
 		ORANGE_RECTANGLE(2),
@@ -279,9 +281,9 @@ public class DungeonConstants {
 		GOLD_CRESCENT(61),
 		GOLD_WEDGE(62),
 		GOLD_SHIELD(63);
-		private int index;
+		private final int index;
 
-		private KeyDoors(int index) {
+		KeyDoors(int index) {
 			this.index = index;
 		}
 
@@ -473,7 +475,7 @@ public class DungeonConstants {
 			new NormalRoom(62, 242, spot(13, 11), SOUTH_DOOR, WEST_DOOR), new NormalRoom(62, 244, spot(2, 3), NORTH_DOOR, SOUTH_DOOR), new NormalRoom(62, 246, spot(13, 11), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR), new NormalRoom(62, 248, spot(2, 3), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR, EAST_DOOR), new NormalRoom(64, 242, spot(7, 12), SOUTH_DOOR, WEST_DOOR), new NormalRoom(64, 244, spot(13, 12), NORTH_DOOR, SOUTH_DOOR), new NormalRoom(64, 246, spot(7, 7), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR), new NormalRoom(64, 248, spot(7, 7), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR, EAST_DOOR), new NormalRoom(66, 242, spot(12, 12), SOUTH_DOOR, WEST_DOOR), new NormalRoom(66, 244, spot(3, 4), NORTH_DOOR, SOUTH_DOOR), new NormalRoom(66, 246, spot(12, 12), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR), new NormalRoom(66, 248, spot(3, 3), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR, EAST_DOOR), new NormalRoom(68, 242, spot(12, 8), SOUTH_DOOR, WEST_DOOR), new NormalRoom(68, 244, spot(5, 8), NORTH_DOOR, SOUTH_DOOR), new NormalRoom(68, 246, spot(5, 8), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR), new NormalRoom(70, 242, spot(11, 10), SOUTH_DOOR, WEST_DOOR), new NormalRoom(70, 244, spot(8, 7), NORTH_DOOR, SOUTH_DOOR), new NormalRoom(70, 246, spot(8, 7), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR), new NormalRoom(72, 242, spot(9, 12), SOUTH_DOOR, WEST_DOOR), new NormalRoom(72, 244, spot(10, 8), NORTH_DOOR, SOUTH_DOOR), new NormalRoom(72, 246, spot(11, 8), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR), new NormalRoom(72, 248, spot(8, 5), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR, EAST_DOOR), new NormalRoom(74, 242, spot(3, 6), SOUTH_DOOR, WEST_DOOR), new NormalRoom(74, 244, spot(7, 5), NORTH_DOOR, SOUTH_DOOR), new NormalRoom(74, 246, spot(3, 7), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR), new NormalRoom(74, 248, spot(2, 6), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR, EAST_DOOR), new NormalRoom(76, 242, spot(11, 9), SOUTH_DOOR, WEST_DOOR), new NormalRoom(76, 244, spot(7, 7), NORTH_DOOR, SOUTH_DOOR), new NormalRoom(76, 246, spot(7, 7), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR), new NormalRoom(76, 248, spot(7, 11), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR, EAST_DOOR), new NormalRoom(78, 242, spot(12, 12), SOUTH_DOOR, WEST_DOOR), new NormalRoom(78, 244, spot(12, 12), NORTH_DOOR, SOUTH_DOOR), new NormalRoom(78, 246, spot(12, 3), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR), new NormalRoom(78, 248, spot(2, 3), NORTH_DOOR, SOUTH_DOOR, WEST_DOOR, EAST_DOOR), };
 
 
-	public static enum MapRoomIcon {
+	public enum MapRoomIcon {
 
 		MAP_1(2791, true, SOUTH_DOOR),
 		MAP_2(2792, true, WEST_DOOR),
@@ -495,11 +497,11 @@ public class DungeonConstants {
 		MAP_18(2789, false, NORTH_DOOR),
 		MAP_19(2790, false, EAST_DOOR);
 
-		private int[] doorsDirections;
-		private int spriteId;
-		private boolean open;
+		private final int[] doorsDirections;
+		private final int spriteId;
+		private final boolean open;
 
-		private MapRoomIcon(int spriteId, boolean open, int... doorsDirections) {
+		MapRoomIcon(int spriteId, boolean open, int... doorsDirections) {
 			this.doorsDirections = doorsDirections;
 			this.open = open;
 			this.spriteId = spriteId;
@@ -545,7 +547,7 @@ public class DungeonConstants {
 
 	public static final HandledRoom[] PUZZLE_ROOMS;
 
-	public static enum Puzzle {
+	public enum Puzzle {
 
 		CRYSTAL_PUZZLE(12, CrystalPuzzleRoom.class, all(spot(13, 5))),
 		TOXIN_MAZE(20, ToxinMaze.class, all(spot(7, 8)), false),
@@ -561,20 +563,20 @@ public class DungeonConstants {
 		COLOURED_RECESS(68, ColouredRecessRoom.class, list(spot(2, 3), spot(2, 3), spot(2, 3), spot(2, 3), spot(2, 3), spot(2, 5), spot(2, 3)), false),
 		SLIDING_TILES(76, SlidingTilesRoom.class, list(spot(1, 2), spot(13, 7), spot(1, 2), spot(13, 7), spot(1, 2), spot(13, 7), spot(1, 2)));
 
-		private int chunkX;
-		private Class<? extends VisibleRoom> clazz;
-		private boolean allowResources;
-		private int[][] keys;
+		private final int chunkX;
+		private final Class<? extends VisibleRoom> clazz;
+		private final boolean allowResources;
+		private final int[][] keys;
 
-		private Puzzle(int chunkX, Class<? extends VisibleRoom> clazz) {
+		Puzzle(int chunkX, Class<? extends VisibleRoom> clazz) {
 			this(chunkX, clazz, null);
 		}
 
-		private Puzzle(int chunkX, Class<? extends VisibleRoom> clazz, int[][] key) {
+		Puzzle(int chunkX, Class<? extends VisibleRoom> clazz, int[][] key) {
 			this(chunkX, clazz, key, true);
 		}
 
-		private Puzzle(int chunkX, Class<? extends VisibleRoom> clazz, int[][] keys, boolean allowResources) {
+		Puzzle(int chunkX, Class<? extends VisibleRoom> clazz, int[][] keys, boolean allowResources) {
 			this.chunkX = chunkX;
 			this.clazz = clazz;
 			this.keys = keys;
@@ -587,9 +589,10 @@ public class DungeonConstants {
 
 		public VisibleRoom newInstance() {
 			try {
-				return clazz.newInstance();
-			} catch (InstantiationException | IllegalAccessException e) {
-				e.printStackTrace();
+				return clazz.getDeclaredConstructor().newInstance();
+			} catch (InstantiationException | IllegalAccessException
+					 | InvocationTargetException | NoSuchMethodException e) {
+				Logger.log("DungeonConstants", e);
 				System.err.println("error creating puzzle instance");
 				return null;
 			}
@@ -600,14 +603,11 @@ public class DungeonConstants {
 			if (this == POLTERGEIST && floorType == 0) {
 				return false;
 			}
-			if (this == FLOWER_ROOTS && floorType == 0) {
-				return false;
-			}
+            return this != FLOWER_ROOTS || floorType != 0;
 			/*if(this == ICY_PRESSURE_PAD && floorType != 0) {
 			return false;
 			}*/
-			return true;
-		}
+        }
 
 		public boolean allowResources() {
 			return allowResources;
@@ -1081,14 +1081,11 @@ public class DungeonConstants {
 	}
 	
 	public static boolean isVisible(DungeonNPC npc, Entity target, boolean spell) {
-		if (target instanceof Player) {
-			Player player = (Player) target;
-			int cape = player.getEquipment().getHatId();
+		if (target instanceof Player player) {
+            int cape = player.getEquipment().getHatId();
 			if (cape == 15828 || cape == 17279) {
-				if (target.getTemporaryAttributtes().get("SHADOW_SILK_CD") != null || (!spell && npc.getShadowType() > NOT_VISIBLE))
-					return true;
-				return false;
-			}
+                return target.getTemporaryAttributtes().get("SHADOW_SILK_CD") != null || (!spell && npc.getShadowType() > NOT_VISIBLE);
+            }
 		}
 		return true;
 	}

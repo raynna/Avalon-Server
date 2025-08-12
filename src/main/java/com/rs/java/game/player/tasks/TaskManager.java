@@ -1,5 +1,6 @@
 package com.rs.java.game.player.tasks;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,7 @@ import com.rs.java.utils.Logger;
 public class TaskManager {
 
 	private ArrayList<Tasks> tasks = new ArrayList<Tasks>(
-			com.rs.java.game.player.content.tasksystem.TaskManager.Tasks.values().length);
+			Tasks.tasks.size());
 
 	public TaskManager(Player player) {
 
@@ -52,29 +53,24 @@ public class TaskManager {
 
 	public static class Tasks {
 
-		private static final Map<Object, Class<Task>> tasks = new HashMap<Object, Class<Task>>(1);
+		private static final Map<Object, Class<? extends Task>> tasks = new HashMap<>();
 
-		public static Task getTask(Object task) {
-			if (task instanceof Task) {
-				return (Task) task;
+		public static Task getTask(Object key) {
+			if (key instanceof Task) {
+				return (Task) key;
 			}
-			Class<Task> taskClass = tasks.get(task);
+			Class<? extends Task> taskClass = tasks.get(key);
 			if (taskClass == null) {
+				Logger.log("TaskManager", "No task class found for key: " + key);
 				return null;
 			}
 			try {
-				return taskClass.newInstance();
-			} catch (Throwable e) {
+				return taskClass.getDeclaredConstructor().newInstance();
+			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+					 InvocationTargetException e) {
 				Logger.handle(e);
-				;
 			}
 			return null;
 		}
-
-		static {
-
-		}
-
-	}
-
+    }
 }

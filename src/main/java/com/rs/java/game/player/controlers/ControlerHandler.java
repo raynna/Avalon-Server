@@ -1,5 +1,6 @@
 package com.rs.java.game.player.controlers;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import com.rs.java.game.minigames.clanwars.FfaZone;
@@ -25,7 +26,7 @@ public class ControlerHandler {
 	private static final HashMap<Object, Class<Controler>> handledControlers = new HashMap<Object, Class<Controler>>();
 
 	@SuppressWarnings("unchecked")
-	public static final void init() {
+	public static void init() {
 		try {
 			Class<Controler> value1 = (Class<Controler>) Class.forName(WildernessControler.class.getCanonicalName());
 			handledControlers.put("WildernessControler", value1);
@@ -101,22 +102,23 @@ public class ControlerHandler {
 		}
 	}
 
-	public static final void reload() {
+	public static void reload() {
 		handledControlers.clear();
 		init();
 	}
 
-	public static final Controler getControler(Object key) {
+	public static Controler getControler(Object key) {
 		if (key instanceof Controler)
 			return (Controler) key;
 		Class<Controler> classC = handledControlers.get(key);
 		if (classC == null)
 			return null;
 		try {
-			return classC.newInstance();
-		} catch (Throwable e) {
+			return classC.getDeclaredConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 			Logger.handle(e);
 		}
 		return null;
 	}
+
 }

@@ -1,5 +1,7 @@
 package com.rs.java.game.player.actions.combat.weaponscript;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import com.rs.java.utils.Logger;
@@ -15,22 +17,23 @@ public class WeaponScriptsManager {
 
 	public static final HashMap<Object, WeaponScript> weaponScripts = new HashMap<Object, WeaponScript>();
 
-	@SuppressWarnings("rawtypes")
-	public static final void init() {
+	public static void init() {
 		try {
-			Class[] classes = Utils.getClasses("com.rs.java.game.player.actions.combat.weaponscript.impl");
-			for (Class c : classes) {
+			Class<?>[] classes = Utils.getClasses("com.rs.java.game.player.actions.combat.weaponscript.impl");
+			for (Class<?> c : classes) {
 				if (c.isAnonymousClass())
 					continue;
-				Object o = c.newInstance();
+				Object o = c.getDeclaredConstructor().newInstance();
 				if (!(o instanceof WeaponScript))
 					continue;
 				WeaponScript script = (WeaponScript) o;
 				for (Object key : script.getKeys())
 					weaponScripts.put(key, script);
 			}
-		} catch (Throwable e) {
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException |
+                 ClassNotFoundException | IOException e) {
 			Logger.handle(e);
 		}
 	}
+
 }

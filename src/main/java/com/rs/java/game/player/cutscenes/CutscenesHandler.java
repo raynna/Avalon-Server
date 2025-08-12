@@ -1,5 +1,6 @@
 package com.rs.java.game.player.cutscenes;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import com.rs.java.utils.Logger;
@@ -9,7 +10,7 @@ public class CutscenesHandler {
 	private static final HashMap<Object, Class<Cutscene>> handledCutscenes = new HashMap<Object, Class<Cutscene>>();
 
 	@SuppressWarnings("unchecked")
-	public static final void init() {
+	public static void init() {
 		try {
 			Class<Cutscene> value1 = (Class<Cutscene>) Class.forName(EdgeWilderness.class.getCanonicalName());
 			handledCutscenes.put("EdgeWilderness", value1);
@@ -30,20 +31,21 @@ public class CutscenesHandler {
 		}
 	}
 
-	public static final void reload() {
+	public static void reload() {
 		handledCutscenes.clear();
 		init();
 	}
 
-	public static final Cutscene getCutscene(Object key) {
+	public static Cutscene getCutscene(Object key) {
 		Class<Cutscene> classC = handledCutscenes.get(key);
 		if (classC == null)
 			return null;
 		try {
-			return classC.newInstance();
-		} catch (Throwable e) {
+			return classC.getDeclaredConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 			Logger.handle(e);
 		}
 		return null;
 	}
+
 }

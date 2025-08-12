@@ -1,6 +1,7 @@
 package com.rs.java.game.cityhandler;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,17 +50,23 @@ public final class CityEventHandler {
         for (File file : files) {
             try {
                 String className = file.getName().replace(".java", "");
-                CityEvent event = (CityEvent) Class.forName("com.rs.java.game.cityhandler.impl." + className).newInstance();
+                CityEvent event = (CityEvent) Class.forName("com.rs.java.game.cityhandler.impl." + className)
+                        .getDeclaredConstructor()
+                        .newInstance();
                 if (!event.init()) {
                     return false;
                 }
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-                e.printStackTrace();
+            } catch (InstantiationException | IllegalAccessException
+                     | ClassNotFoundException | NoSuchMethodException
+                     | InvocationTargetException e) {
+                logger.info(e.toString());  // Ideally replace with Logger
+                System.err.println("Failed to load city event: " + file.getName());
             }
         }
         System.out.println("[CityEventHandler]: " + files.length + " city plugins were loaded.");
         return true;
     }
+
 
 
     public static boolean reload() throws Throwable {

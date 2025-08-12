@@ -4,6 +4,8 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -33,24 +35,25 @@ public class ItemPluginLoader {
         return null;
     }
 
-    @SuppressWarnings("rawtypes")
-    public static final void init() {
+    public static void init() {
         try {
-            String[] pluginFolders = {"com.rs.java.game.item.plugins",
+            String[] pluginFolders = {
+                    "com.rs.java.game.item.plugins",
                     "com.rs.java.game.item.plugins.weapons",
                     "com.rs.java.game.item.plugins.misc",
                     "com.rs.java.game.item.plugins.tools",
                     "com.rs.java.game.item.plugins.summoning",
                     "com.rs.java.game.item.plugins.skilling",
-                    "com.rs.java.game.item.plugins.minigames"};
-            Set<Class> processedClasses = new HashSet<>();
+                    "com.rs.java.game.item.plugins.minigames"
+            };
+            Set<Class<?>> processedClasses = new HashSet<>();
             for (String pluginFolder : pluginFolders) {
-                Class[] classes = Utils.getClasses(pluginFolder);
-                for (Class c : classes) {
+                Class<?>[] classes = Utils.getClasses(pluginFolder);
+                for (Class<?> c : classes) {
                     if (c.isAnonymousClass() || processedClasses.contains(c)) {
                         continue;
                     }
-                    Object o = c.newInstance();
+                    Object o = c.getDeclaredConstructor().newInstance();
                     if (!(o instanceof ItemPlugin plugin)) {
                         continue;
                     }
@@ -67,9 +70,12 @@ public class ItemPluginLoader {
                 }
             }
             System.out.println("[ItemPluginManager]: " + processedClasses.size() + " plugins were loaded.");
-        } catch (Throwable e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             Logger.handle(e);
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
+
 
 }

@@ -26,7 +26,7 @@ public final class WorldThread extends Thread {
 	}
 
 	@Override
-	public final void run() {
+	public void run() {
 		while (!CoresManager.shutdown) {
 			long cycleStart = Utils.currentTimeMillis();
 

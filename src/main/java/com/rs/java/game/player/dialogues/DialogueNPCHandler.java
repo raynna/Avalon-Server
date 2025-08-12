@@ -1,5 +1,6 @@
 package com.rs.java.game.player.dialogues;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import com.rs.java.utils.Logger;
@@ -29,19 +30,20 @@ public final class DialogueNPCHandler {
 		init();
 	}
 
-	public static final Dialogue getDialogue(Object key) {
+	public static Dialogue getDialogue(Object key) {
 		if (key instanceof Dialogue)
 			return (Dialogue) key;
 		Class<? extends Dialogue> classD = handledDialogues.get(key);
 		if (classD == null)
 			return null;
 		try {
-			return classD.newInstance();
-		} catch (Throwable e) {
+			return classD.getDeclaredConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 			Logger.handle(e);
 		}
 		return null;
 	}
+
 
 	private DialogueNPCHandler() {
 

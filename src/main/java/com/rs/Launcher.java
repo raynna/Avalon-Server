@@ -71,7 +71,7 @@ public final class Launcher {
 			Settings.DEBUG = true;
 		} else {
 			Settings.VPS_HOSTED = Boolean.parseBoolean(args[3]);
-			Settings.PORT_ID = Integer.valueOf(args[2]);
+			Settings.PORT_ID = Integer.parseInt(args[2]);
 			Settings.HOSTED = Boolean.parseBoolean(args[1]);
 			Settings.DEBUG = Boolean.parseBoolean(args[0]);
 		}
@@ -138,9 +138,6 @@ public final class Launcher {
 				Settings.ECONOMY_MODE == 2 ? "Full Spawn" : Settings.ECONOMY_MODE == 1 ? "Half Economy" : "Full Economy");
 		Logger.log("Debug", Settings.DEBUG ? "Debug is activated." : "Debug is inactived.");
 		Logger.log("Status", Settings.SERVER_NAME + " is now online.");
-		if (!Settings.DEBUG) {
-			//discord.getChannelByName("server-status").sendMessage("Avalon is now online!");
-		}
 		addAccountsSavingTask();
 		addCleanMemoryTask();
 	}
@@ -217,24 +214,21 @@ public final class Launcher {
 	public static void shutdown() {
 		try {
 			closeServices();
-		} finally {
-			System.exit(0);
+		} catch (Throwable t) {
+			Logger.log("Launcher", t);
 		}
+		System.exit(0);
 	}
 
 	public static void closeServices() {
-		if (!Settings.DEBUG) {
-			//discord.getChannelByName("public-chat").sendMessage("Avalon is now offline!");
-			//discord.getChannelByName("server-status").sendMessage("Avalon is now offline!");
-		}
 		try {
 			TimeUnit.SECONDS.sleep(3);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			Logger.log("Launcher", e);
 		}
 		for (int cycle = 0;; cycle++) {
 			Logger.log("Launcher", "Logging out players... Cycle #" + cycle);
-			if (World.getPlayers().size() == 0 && World.getLobbyPlayers().size() == 0)
+			if (World.getPlayers().isEmpty() && World.getLobbyPlayers().isEmpty())
 				break;
 			for (Player player : World.getPlayers())
 				player.realFinish();
@@ -245,7 +239,7 @@ public final class Launcher {
 			try {
 				Thread.sleep(2000);
 			} catch (Throwable t) {
-				t.printStackTrace();
+				Logger.log("Launcher", t);
 			}
 		}
 		ServerChannelHandler.shutdown();
@@ -255,13 +249,29 @@ public final class Launcher {
 	public static void restart() {
 		closeServices();
 		System.gc();
+
 		try {
-			Runtime.getRuntime().exec(
-					"java -XX:-OmitStackTraceInFastThrow -Xms1024m -cp bin;data/libs/netty-3.5.2.Final.jar;data/libs/RuneTopListV2.jar;data/libs/FileStore.jar;data/lib/GTLVote.jar;data/lib/mysql2.jar com.rs.Launcher false false false");
+			String javaBin = System.getProperty("java.home") + "/bin/java";
+			String classpath = "bin;data/libs/netty-3.5.2.Final.jar;data/libs/RuneTopListV2.jar;data/libs/FileStore.jar;data/lib/GTLVote.jar;data/lib/mysql2.jar";
+			String mainClass = "com.rs.Launcher";
+
+			ProcessBuilder builder = new ProcessBuilder(
+					javaBin,
+					"-XX:-OmitStackTraceInFastThrow",
+					"-Xms1024m",
+					"-cp",
+					classpath,
+					mainClass,
+					"false",
+					"false",
+					"false"
+			);
+
+			builder.start();
 			System.exit(0);
 		} catch (Throwable e) {
 			Logger.handle(e);
 		}
-
 	}
+
 }

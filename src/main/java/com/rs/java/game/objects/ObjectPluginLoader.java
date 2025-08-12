@@ -3,6 +3,9 @@ package com.rs.java.game.objects;
 import com.rs.java.game.WorldObject;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,27 +35,28 @@ public class ObjectPluginLoader {
 		return null;
 	}
 
-	@SuppressWarnings("rawtypes")
 	public static void init() {
 		try {
 			String[] pluginFolders = {"com.rs.java.game.objects.plugins"};
-			Set<Class> processedClasses = new HashSet<>();
+			Set<Class<?>> processedClasses = new HashSet<>();
 			for (String pluginFolder : pluginFolders) {
-				Class[] classes = Utils.getClasses(pluginFolder);
-				for (Class c : classes) {
+				Class<?>[] classes = Utils.getClasses(pluginFolder);
+				for (Class<?> c : classes) {
 					if (c.isAnonymousClass() || processedClasses.contains(c))
 						continue;
-					Object o = c.newInstance();
+					Object o = c.getDeclaredConstructor().newInstance();
 					if (!(o instanceof ObjectPlugin plugin))
 						continue;
-                    for (Object key : plugin.getKeys())
+					for (Object key : plugin.getKeys())
 						cachedObjectPlugins.put(key, plugin);
 					processedClasses.add(c);
 				}
 			}
 			System.out.println("[ObjectPluginLoader]: " + processedClasses.size() + " plugins were loaded.");
-		} catch (Throwable e) {
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException |
+                 ClassNotFoundException | IOException e) {
 			Logger.handle(e);
 		}
 	}
+
 }
