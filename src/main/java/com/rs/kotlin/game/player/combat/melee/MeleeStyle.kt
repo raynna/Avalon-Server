@@ -125,6 +125,7 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             effect.execute(combatContext)
             return
         }
+        attacker.animate(CombatAnimations.getAnimation(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle))
         val hit = combatContext.meleeHit()
         if (attacker.developerMode) {
             attacker.message("[Melee Attack] -> " +
@@ -142,14 +143,13 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val currentWeaponId = getCurrentWeaponId(attacker)
         val attackStyle = getAttackStyle(currentWeapon)
         var totalDamage = 0
-        attacker.animate(CombatAnimations.getAnimation(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle))
         for (pending in hits) {
             val hit = pending.hit
             val target = pending.target
             PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit);
             PrayerEffectHandler.handleProtectionEffects(attacker, target, hit);
             if (target is Player) {//handling this onHit for magic & range
-                target.delayedAnimation(CombatAnimations.getBlockAnimation(target), 60, false);
+                target.animate(CombatAnimations.getBlockAnimation(target));
             }
             totalDamage += hit.damage;
             scheduleHit(pending.delay) {

@@ -1503,7 +1503,6 @@ public class ButtonHandler {
                     }
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                     ButtonHandler.registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] Helm slot register unequip, componentId: " + componentId + ", helmSlot: " + Equipment.SLOT_HEAD);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
                     player.getEquipment().sendExamine(Equipment.SLOT_HEAD);
             } else if (componentId == 9) {
@@ -1536,8 +1535,7 @@ public class ButtonHandler {
                     }
 
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, Equipment.SLOT_CAPE);
 
             } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
                     player.getEquipment().sendExamine(Equipment.SLOT_CAPE);
@@ -1589,8 +1587,7 @@ public class ButtonHandler {
                         }
                     }
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, Equipment.SLOT_AMULET);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
                     player.getEquipment().sendExamine(Equipment.SLOT_AMULET);
             } else if (componentId == 15) {
@@ -1643,8 +1640,7 @@ public class ButtonHandler {
                         }, 2);
                     }
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, Equipment.SLOT_WEAPON);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
                     player.getEquipment().sendExamine(Equipment.SLOT_WEAPON);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) {
@@ -1665,15 +1661,13 @@ public class ButtonHandler {
                 }
             } else if (componentId == 18) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, Equipment.SLOT_CHEST);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
                     player.getEquipment().sendExamine(Equipment.SLOT_CHEST);
                 }
             } else if (componentId == 21) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, Equipment.SLOT_SHIELD);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     int shieldId = player.getEquipment().getShieldId();
                     if (shieldId >= 18359 && shieldId <= 18363) {
@@ -1684,22 +1678,19 @@ public class ButtonHandler {
                 }
             } else if (componentId == 24) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, Equipment.SLOT_LEGS);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
                     player.getEquipment().sendExamine(Equipment.SLOT_LEGS);
                 }
             } else if (componentId == 27) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, Equipment.SLOT_HANDS);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
                     player.getEquipment().sendExamine(Equipment.SLOT_HANDS);
                 }
             } else if (componentId == 30) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, Equipment.SLOT_FEET);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
                     player.getEquipment().sendExamine(Equipment.SLOT_FEET);
                 }
@@ -1708,22 +1699,19 @@ public class ButtonHandler {
                     if (player.getEquipment().getRingId() == 2550)
                         player.getPackets().sendGameMessage("Your " + ItemDefinitions.getItemDefinitions(2550).getName() + " has " + player.getChargeManager().getCharges(2550) + " left.");
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, Equipment.SLOT_RING);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
                     player.getEquipment().sendExamine(Equipment.SLOT_RING);
                 }
             } else if (componentId == 36) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, Equipment.SLOT_ARROWS);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
                     player.getEquipment().sendExamine(Equipment.SLOT_ARROWS);
                 }
             } else if (componentId == 45) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, Equipment.SLOT_AURA);
                     player.getAuraManager().removeAura();
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
                     player.getEquipment().sendExamine(Equipment.SLOT_AURA);
@@ -1796,8 +1784,7 @@ public class ButtonHandler {
                 if (packetId == WorldPacketsDecoder.EQUIPMENT_EXAMINE_PACKET)
                     player.getPackets().sendGameMessage(ItemExamines.getExamine(item));
                 else if (packetId == WorldPacketsDecoder.EQUIPMENT_REMOVE_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, slotId);
                     ButtonHandler.refreshEquipBonuses(player);
                 }
             }
@@ -1812,8 +1799,7 @@ public class ButtonHandler {
                     sendItemStats(player, item);
                     return;
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    registerUnEquip(player, Equipment.SLOT_HEAD);
-                    player.message("[Unequip] componentId: " + componentId);
+                    registerUnEquip(player, slotId);
                     player.getPackets().sendGlobalVar(779, player.getEquipment().getWeaponRenderEmote());
                     ButtonHandler.refreshEquipBonuses(player);
                 }
@@ -2458,7 +2444,6 @@ public class ButtonHandler {
 
     public static void registerUnEquip(Player player, int slotId) {
         if (player.getTakeOffSwitchItemCache().contains(slotId)) {
-            player.message("[registerUnequip] slotId: " + slotId + " already exists in cache.");
             return;
         }
         player.getTakeOffSwitchItemCache().add(slotId);

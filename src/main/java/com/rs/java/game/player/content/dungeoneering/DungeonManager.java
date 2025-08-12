@@ -1450,13 +1450,13 @@ public class DungeonManager {
 			player.getPackets().sendCSVarInteger(1320, party.getComplexity());
 			if (party.getComplexity() != 6)
 				multiplier -= (DungeonConstants.COMPLEXIYY_PENALTY_BASE[party.getSize()]
-						+ (new Double(5 - party.getComplexity())) * 0.06);
+						+ (5 - party.getComplexity()) * 0.06);
 			double levelDiffPenalty = party.getLevelDiferencePenalty(player);
 			player.getPackets().sendCSVarInteger(1321, (int) (levelDiffPenalty * 10000));
 			multiplier -= levelDiffPenalty;
 			double countedDeaths = Math.min(player.getVarsManager().getBitValue(7554), 6);
 			multiplier *= (1.0 - (countedDeaths * 0.1));
-			double floorXP = getXPForFloor(party.getFloor(), party.getSize()) * getVisibleRoomsCount()
+			double floorXP = (double) (getXPForFloor(party.getFloor(), party.getSize()) * getVisibleRoomsCount())
 					/ dungeon.getRoomsCount();
 			boolean tickedOff = player.getDungManager().isTickedOff(party.getFloor());
 			if (!tickedOff)

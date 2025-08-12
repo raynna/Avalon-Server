@@ -23,10 +23,8 @@ public class PrayerEffectHandler {
 
     public static void handleProtectionEffects(Entity source, Entity target, Hit hit) {
         if (target instanceof Player defender) {
-            defender.message("i am a player");
             Prayer protectionPrayer = getProtectionPrayer(defender, hit.getLook());
             if (protectionPrayer != null && protectionPrayer.isProtectionPrayer() && defender.getPrayer().isActive(protectionPrayer)) {
-                defender.message("I have prayer on");
                 handleActualProtectionPrayer(source, target, hit, protectionPrayer);
             }
         }

@@ -2201,7 +2201,7 @@ public class Player extends Entity {
         for (int i = 0; i < slot.length; i++)
             slot[i] = slots.get(i);
         if (!getSwitchItemCache().isEmpty()) {
-            getSwitchItemCache().clear(); // CLEAN
+            getSwitchItemCache().clear();
             ButtonHandler.sendWear(instance, slot);
         }
     }
@@ -2213,7 +2213,7 @@ public class Player extends Entity {
         for (int i = 0; i < slot.length; i++)
             slot[i] = slots.get(i);
         if (!getTakeOffSwitchItemCache().isEmpty()) {
-            getTakeOffSwitchItemCache().clear(); // CLEAN
+            getTakeOffSwitchItemCache().clear();
             ButtonHandler.sendTakeOff(instance, slot);
         }
     }
@@ -3711,7 +3711,7 @@ public class Player extends Entity {
                     for (Item runes : getRunePouch().getContainerItems()) {
                         if (runes == null)
                             continue;
-                        World.addGroundItem(new Item(runes.getId(), runes.getAmount()), deathTile, killer == null ? this : killer, true, 60);
+                        World.addGroundItem(new Item(runes.getId(), runes.getAmount()), deathTile, killer, true, 60);
                         getRunePouch().remove(runes);
                     }
                     message("Your rune pouch and your runes was lost at death.");
@@ -3722,9 +3722,7 @@ public class Player extends Entity {
                         if (charges.getKey() == null)
                             continue;
                         for (Item staffRunes : charges.getValue()) {
-                            if (item == null)
-                                continue;
-                            World.updateGroundItem(staffRunes, deathTile, killer == null ? this : killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
+                            World.updateGroundItem(staffRunes, deathTile, killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
                         }
                     }
                     message("All your runes in your runic staff were dropped.");
@@ -3740,7 +3738,7 @@ public class Player extends Entity {
                 inventory.addItem(item.getId(), item.getAmount());
             }
         }
-        World.addGroundItem(new Item(526, 1), deathTile, killer == null ? this : killer, true, 60);
+        World.addGroundItem(new Item(526, 1), deathTile, killer, true, 60);
         for (int i = 0; i < items[1].length; i++) {
             Item item = items[1][i];
             if (Settings.ECONOMY_MODE == 1 && !LimitedGEReader.itemIsLimited(item.getId()) && ItemConstants.isTradeable(item) && EconomyPrices.getPrice(item.getId()) == 0)// skip to drop free
@@ -3749,7 +3747,7 @@ public class Player extends Entity {
                 getChargeManager().breakItem(item);
             if (ItemConstants.removeAttachedId(item) != -1) {
                 if (ItemConstants.removeAttachedId2(item) != -1)
-                    World.updateGroundItem(new Item(ItemConstants.removeAttachedId2(item), 1), deathTile, killer == null ? this : killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
+                    World.updateGroundItem(new Item(ItemConstants.removeAttachedId2(item), 1), deathTile, killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
                 items[1][i] = new Item(ItemConstants.removeAttachedId(item));
             }
             if (ItemConstants.turnCoins(item) && (isAtWild() || FfaZone.inRiskArea(this))) {
@@ -3757,30 +3755,18 @@ public class Player extends Entity {
                 items[1][i] = new Item(995, price);
             }
             if (!ItemConstants.keptOnDeath(item))
-                killer.totalCurrentDrop += (item.getDefinitions().getTipitPrice() * item.getAmount());
+                killer.totalCurrentDrop += ((long) item.getDefinitions().getTipitPrice() * item.getAmount());
             item = items[1][i];
-            World.updateGroundItem(item, deathTile, killer == null ? this : killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
+            World.updateGroundItem(item, deathTile, killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
         }
-        message("You have lost approximately: " + HexColours.getShortMessage(Colour.RED, "" + Utils.getFormattedNumber(killer.totalCurrentDrop, ',')) + " coins!");
+        message("You have lost approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(killer.totalCurrentDrop, ',')) + " coins!");
         if (killer != this)
-            killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, "" + Utils.getFormattedNumber(killer.totalCurrentDrop, ',')) + " coins!");
-        if ((killer.totalCurrentDrop > killer.getHighestValuedKill()) && killer.hasWildstalker() && killer != null && killer != this) {
+            killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(killer.totalCurrentDrop, ',')) + " coins!");
+        if (killer.totalCurrentDrop > killer.getHighestValuedKill() && killer.hasWildstalker() && killer != this) {
             killer.setHighestValuedKill(killer.totalCurrentDrop);
-            killer.message("New highest value Wilderness kill: " + HexColours.getShortMessage(Colour.RED, "" + Utils.getFormattedNumber(killer.getHighestValuedKill(), ',')) + " coins!");
+            killer.message("New highest value Wilderness kill: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(killer.getHighestValuedKill(), ',')) + " coins!");
         }
         if (killer != this) {
-            int randomCoins = Utils.random(100000, 150000);
-            World.updateGroundItem(new Item(995, randomCoins), deathTile, killer == null ? this : killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
-            if (Utils.random(5) == 0) {
-                Item pkKey = new Item("pk key");
-                if (killer.getInventory().hasFreeSlots()) {
-                    killer.getInventory().addItem(pkKey);
-                    killer.message("You recieved a " + HexColours.getShortMessage(Colour.RED, pkKey.getName()) + ".");
-                } else {
-                    killer.getBank().addItem(pkKey, true);
-                    killer.message("You recieved a " + HexColours.getShortMessage(Colour.RED, pkKey.getName()) + ", but it was added to your bank.");
-                }
-            }
             double ep = killer.get(Keys.IntKey.EP) * 0.30;
             if (ep < 0)
                 ep = 0;
@@ -3789,7 +3775,7 @@ public class Player extends Entity {
             Artefacts rolledItem = Artefacts.values()[Utils.getRandom(Artefacts.values().length - 1)];
             if (c <= rolledItem.getChance()) {
                 killer.set(Keys.IntKey.EP, 0);
-                World.addGroundItem(new Item(rolledItem.getId(), 1), deathTile, killer == null ? this : killer, true, 60);
+                World.addGroundItem(new Item(rolledItem.getId(), 1), deathTile, killer, true, 60);
                 killer.message("You recieved a " + rolledItem.getName() + " as a pvp drop.");
             }
         }

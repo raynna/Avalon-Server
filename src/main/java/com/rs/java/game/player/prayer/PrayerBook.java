@@ -408,7 +408,7 @@ public class PrayerBook implements Serializable {
         }
 
         int configId = isAncientCurses() ? (isQuickPrayerMode() ? 1587 : 1582) : (isQuickPrayerMode() ? 1397 : 1395);
-        System.out.println("Sending config id: " + configId + ", configValue: " + configValue);
+        //System.out.println("Sending config id: " + configId + ", configValue: " + configValue);
 
         player.getPackets().sendVar(configId, (int) configValue);
     }

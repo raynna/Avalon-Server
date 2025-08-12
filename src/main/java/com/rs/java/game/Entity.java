@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.rs.Settings;
@@ -32,6 +33,7 @@ import com.rs.java.game.route.strategy.ObjectStrategy;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.HexColours;
+import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.NewPoison;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
@@ -67,6 +69,7 @@ public abstract class Entity extends WorldTile {
     // entity masks
     private transient UpdateMask updateMask;
     private transient Animation nextAnimation;
+    private transient Animation pendingAnimation;
     private transient boolean forceAnimation;
     private transient Graphics nextGraphics1;
     private transient Graphics nextGraphics2;
@@ -1424,10 +1427,18 @@ public abstract class Entity extends WorldTile {
         return mapRegionsIds;
     }
 
-    public void animate(Animation nextAnimation) {
+    public void animate(Animation animation) {
+        if (this.nextAnimation != null && animation != null) {
+            AnimationDefinitions newAnimation = AnimationDefinitions.getAnimationDefinitions(animation.getIds()[0]);
+            AnimationDefinitions nextAnim = AnimationDefinitions.getAnimationDefinitions(this.nextAnimation.getIds()[0]);
+            if (newAnimation.getPriority() >= nextAnim.getPriority()) {
+                this.nextAnimation = animation;
+            }
+        } else {
+            this.nextAnimation = animation;
+        }
         if (nextAnimation != null && nextAnimation.getIds()[0] >= 0)
             lastAnimationEnd = Utils.currentTimeMillis() + AnimationDefinitions.getAnimationDefinitions(nextAnimation.getIds()[0]).getEmoteTime();
-        this.nextAnimation = nextAnimation;
     }
 
     public void animateNoCheck(Animation nextAnimation) {
@@ -1446,15 +1457,6 @@ public abstract class Entity extends WorldTile {
     }
 
     public void delayedAnimation(int animationId, int milliseconds, boolean reset) {
-        if (reset) {
-            animate(new Animation(-1));
-        }
-        CoresManager.getFastExecutor().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                animate(new Animation(animationId));
-            }
-        }, milliseconds);
     }
 
     public void setNextAnimationNoPriority(Animation nextAnimation, Entity target) {

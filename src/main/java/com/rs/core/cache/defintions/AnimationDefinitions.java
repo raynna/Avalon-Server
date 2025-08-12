@@ -12,7 +12,7 @@ public class AnimationDefinitions {
 	public int[] anIntArray2139;
 	public int anInt2140;
 	public boolean aBoolean2141 = false;
-	public int anInt2142;
+	public int priority;
 	public int emoteItem;
 	public int anInt2144 = -1;
 	public int[][] handledSounds;
@@ -69,6 +69,10 @@ public class AnimationDefinitions {
 		return ms * 30;
 	}
 
+	public int getPriority() {
+		return priority;
+	}
+
 	public int getEmoteGameTickets() {
 		return getEmoteTime() / 1000;
 	}
@@ -89,7 +93,7 @@ public class AnimationDefinitions {
 				if ((opcode ^ 0xffffffff) == -5)
 					aBoolean2152 = true;
 				else if (opcode == 5)
-					anInt2142 = stream.readUnsignedByte();
+					priority = stream.readUnsignedByte();
 				else if (opcode != 6) {
 					if ((opcode ^ 0xffffffff) == -8)
 						emoteItem = stream.readUnsignedShort();
@@ -197,7 +201,7 @@ public class AnimationDefinitions {
 		emoteItem = -1;
 		anInt2140 = -1;
 		aBoolean2152 = false;
-		anInt2142 = 5;
+		priority = 5;
 		aBoolean2159 = false;
 		anInt2163 = -1;
 		anInt2155 = 2;

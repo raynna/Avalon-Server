@@ -225,6 +225,8 @@ class CombatAction(
         if (!style.canAttack(player, target)) {
             return false
         }
+        if (!player.controlerManager.canHit(target) || !player.controlerManager.keepCombating(target) || !player.controlerManager.canAttack(target))
+            return false
         if (player.isAtMultiArea && !target.isAtMultiArea) {
             if (target.attackedBy != player && target.attackedByDelay > Utils.currentTimeMillis()) {
                 player.message("That " + (if (player.getAttackedBy() is Player) "player" else "npc") + " is already in combat.")

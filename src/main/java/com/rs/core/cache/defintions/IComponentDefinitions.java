@@ -459,7 +459,7 @@ public class IComponentDefinitions {
 		for (int i_3_ = 0; i > i_3_; i_3_++) {
 			int i_4_ = buffer.readUnsignedByte();
 			if (i_4_ == 0) {
-				objects[i_3_] = new Integer(buffer.readInt());
+				objects[i_3_] = buffer.readInt();
 			} else if ((i_4_ ^ 0xffffffff) == -2) {
 				objects[i_3_] = buffer.readString();
 			}

@@ -97,7 +97,6 @@ object CombatCalculations {
                 }
             }
             val hit = Hit(player, damage, maxHit, Hit.HitLook.MELEE_DAMAGE)
-            player.message("specialMultiplier: $specialMultiplier");
             if (damage >= floor(baseDamage * 0.90)) {
                 hit.setCriticalMark()
             }
