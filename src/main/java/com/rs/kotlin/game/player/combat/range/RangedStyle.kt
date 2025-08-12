@@ -208,11 +208,14 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         for (pending in hits) {
             val hit = pending.hit
             val target = pending.target
-            PrayerEffectHandler.handleOffensiveEffects(attacker, defender, hit);
-            PrayerEffectHandler.handleProtectionEffects(attacker, defender, hit);
+            PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit);
+            PrayerEffectHandler.handleProtectionEffects(attacker, target, hit);
             consumeAmmo()
             totalDamage += hit.damage;
             scheduleHit(pending.delay) {
+                if (target is Player) {
+                    target.animate(CombatAnimations.getBlockAnimation(target))
+                }
                 target.applyHit(hit)
                 onHit(hit)
             }

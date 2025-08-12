@@ -116,10 +116,7 @@ public class InventoryOptionsHandler {
         /**item switching, wear is handled in player process*/
         if (!item.getDefinitions().isWearItem())
             return;
-        if (player.getSwitchItemCache().contains(slotId))
-            return;
-        player.stopAll(false, false, true, false);
-        player.getSwitchItemCache().add(slotId);
+        ButtonHandler.registerEquip(player, slotId);
     }
 
     public static void dig(final Player player) {

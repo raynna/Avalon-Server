@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.rs.Settings;
 import com.rs.core.cache.defintions.AnimationDefinitions;
 import com.rs.core.cache.defintions.ObjectDefinitions;
+import com.rs.core.thread.CoresManager;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.area.AreaManager;
 import com.rs.java.game.area.LividFarmArea;
@@ -1442,6 +1443,18 @@ public abstract class Entity extends WorldTile {
 
     public void animate(int animationId) {
         animate(new Animation(animationId));
+    }
+
+    public void delayedAnimation(int animationId, int milliseconds, boolean reset) {
+        if (reset) {
+            animate(new Animation(-1));
+        }
+        CoresManager.getFastExecutor().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                animate(new Animation(animationId));
+            }
+        }, milliseconds);
     }
 
     public void setNextAnimationNoPriority(Animation nextAnimation, Entity target) {

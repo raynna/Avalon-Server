@@ -99,6 +99,20 @@ enum class WeaponStyle(
             AttackStyle.DEFENSIVE to AttackBonusType.STAB
         ),
     ),
+    STAFF_OF_LIGHT(
+        styles(
+            AttackStyle.ACCURATE to AttackBonusType.STAB,
+            AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
+            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH,
+        ),
+    ),
+    STAFF(
+        styles(
+            AttackStyle.ACCURATE to AttackBonusType.CRUSH,
+            AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
+            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH,
+        ),
+    ),
     HAMMER(
         styles(
             AttackStyle.ACCURATE to AttackBonusType.CRUSH,

@@ -125,9 +125,7 @@ import com.rs.java.utils.IsaacKeyPair;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.MachineInformation;
 import com.rs.java.utils.Utils;
-import com.rs.java.game.player.VariableKeys.*;
 import com.rs.kotlin.game.player.combat.CombatStyle;
-import com.rs.kotlin.game.player.combat.melee.MeleeStyle;
 import com.rs.kotlin.game.player.combat.special.CombatContext;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 
@@ -2196,36 +2194,28 @@ public class Player extends Entity {
             WorldPacketsDecoder.decodeLogicPacket(this, packet);
     }
 
-    public void handleSwitch() {
+    public void processEquip() {
         final Player instance = this;
         List<Integer> slots = getSwitchItemCache();
         int[] slot = new int[slots.size()];
         for (int i = 0; i < slot.length; i++)
             slot[i] = slots.get(i);
-        if (getSwitchItemCache().size() > 0) {
+        if (!getSwitchItemCache().isEmpty()) {
             getSwitchItemCache().clear(); // CLEAN
             ButtonHandler.sendWear(instance, slot);
-            itemSwitch = false;
         }
     }
 
-    public void handleTakeoffSwitch() {
+    public void processUnequip() {
         final Player instance = this;
-        WorldTasksManager.schedule(new WorldTask() {
-
-            @Override
-            public void run() {
-                List<Integer> slots = getTakeOffSwitchItemCache();
-                int[] slot = new int[slots.size()];
-                for (int i = 0; i < slot.length; i++)
-                    slot[i] = slots.get(i);
-                if (getTakeOffSwitchItemCache().size() > 0) {
-                    getTakeOffSwitchItemCache().clear();
-                    ButtonHandler.registerUnequip(instance, slot);
-                }
-                itemSwitch = false;
-            }
-        }, 0);
+        List<Integer> slots = getTakeOffSwitchItemCache();
+        int[] slot = new int[slots.size()];
+        for (int i = 0; i < slot.length; i++)
+            slot[i] = slots.get(i);
+        if (!getTakeOffSwitchItemCache().isEmpty()) {
+            getTakeOffSwitchItemCache().clear(); // CLEAN
+            ButtonHandler.sendTakeOff(instance, slot);
+        }
     }
 
     public double getSpecialMaxHit() {
@@ -2450,7 +2440,8 @@ public class Player extends Entity {
             member = false;
         }
         farmingManager.process();
-        handleSwitch();
+        processEquip();
+        processUnequip();
         if (getAssist().isAssisting()) {
             getAssist().Check();
         }

@@ -96,7 +96,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 			}
 		}
 		// Handle non-stackable items efficiently
-		else if (item.getAmount() > 1) {
+		else if (item.getAmount() >= 1) {
 			int freeSlots = freeSlots();
 			if (freeSlots < item.getAmount()) {
 				return false;

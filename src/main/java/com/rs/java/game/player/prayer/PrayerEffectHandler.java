@@ -1,5 +1,6 @@
 package com.rs.java.game.player.prayer;
 
+import com.rs.core.thread.CoresManager;
 import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
@@ -13,16 +14,19 @@ import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.rs.java.game.Hit.HitLook;
 
 public class PrayerEffectHandler {
 
-    public static void handleProtectionEffects(Entity target, Entity source, Hit hit) {
+    public static void handleProtectionEffects(Entity source, Entity target, Hit hit) {
         if (target instanceof Player defender) {
+            defender.message("i am a player");
             Prayer protectionPrayer = getProtectionPrayer(defender, hit.getLook());
             if (protectionPrayer != null && protectionPrayer.isProtectionPrayer() && defender.getPrayer().isActive(protectionPrayer)) {
+                defender.message("I have prayer on");
                 handleActualProtectionPrayer(source, target, hit, protectionPrayer);
             }
         }
@@ -52,8 +56,10 @@ public class PrayerEffectHandler {
         int reflectDamage = (int)(hit.getDamage() * deflectPrayer.getReflectAmount());
         if (reflectDamage > 0) {
             attacker.applyHit(new Hit(defender, reflectDamage, HitLook.REFLECTED_DAMAGE));
-            defender.gfx(deflectPrayer.getActivationGraphics());
-            defender.animate(deflectPrayer.getActivationAnimation());
+            defender.gfx(deflectPrayer.getGraphic());
+            CoresManager.getSlowExecutor().schedule(() -> {
+                defender.animate(deflectPrayer.getAnimation());
+            }, 60, TimeUnit.MILLISECONDS);
         }
     }
 

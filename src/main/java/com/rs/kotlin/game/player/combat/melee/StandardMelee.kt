@@ -52,6 +52,7 @@ object StandardMelee : MeleeData() {
             name = "Abyssal whip",
             weaponStyle = WeaponStyle.WHIP,
             attackSpeed = 4,
+            blockAnimationId = 11974,
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to 11969,
                 StyleKey(AttackStyle.CONTROLLED, 1) to 11970,
@@ -99,6 +100,7 @@ object StandardMelee : MeleeData() {
             name = "Dragon dagger",
             weaponStyle = WeaponStyle.DAGGER,
             attackSpeed = 4,
+            blockAnimationId = 378,
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to 376,
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to 376,
@@ -138,10 +140,33 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
+            itemId = listOf(18355),
+            name = "Chaotic staff",
+            weaponStyle = WeaponStyle.STAFF,
+            blockAnimationId = 13046,
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to 401,
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to 401,
+                StyleKey(AttackStyle.DEFENSIVE, 2) to 401,
+            )
+        ),
+        MeleeWeapon(
+            itemId = listOf(15486, 15502, 15507, 22207, 22209, 22211, 22213),
+            name = "Staff of light",
+            weaponStyle = WeaponStyle.STAFF_OF_LIGHT,
+            blockAnimationId = 13046,
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to 15072,
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to 15071,
+                StyleKey(AttackStyle.DEFENSIVE, 2) to 414,
+            )
+        ),
+        MeleeWeapon(
             itemId = listOf(3204),
             name = "Dragon halberd",
             weaponStyle = WeaponStyle.HALBERD,
             attackRange = 1,
+            blockAnimationId = 430,
             animations = mapOf(
                 StyleKey(AttackStyle.CONTROLLED, 0) to 437,
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to 440,
@@ -164,6 +189,7 @@ object StandardMelee : MeleeData() {
             itemId = listOf(1321),
             name = "Scimitar",
             weaponStyle = WeaponStyle.SCIMITAR,
+            blockAnimationId = 15074,
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to 15071,
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to 15071,
@@ -175,6 +201,7 @@ object StandardMelee : MeleeData() {
             itemId = listOf(1307, 1309, 1311, 1313, 1315, 1317, 139),
             name = "2h sword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            blockAnimationId = 7050,
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to 7041,
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to 7041,
@@ -186,6 +213,7 @@ object StandardMelee : MeleeData() {
             itemId = listOf(7158),
             name = "Dragon 2h sword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            blockAnimationId = 7050,
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to 7041,
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to 7041,

@@ -1,6 +1,9 @@
 package com.rs.kotlin.game.player.combat.melee
 
 import com.rs.core.cache.defintions.ItemDefinitions
+import com.rs.core.tasks.WorldTask
+import com.rs.core.tasks.WorldTasksManager
+import com.rs.core.thread.CoresManager
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
 import com.rs.java.game.player.Equipment
@@ -10,6 +13,7 @@ import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.meleeHit
+import java.util.concurrent.TimeUnit
 
 class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
@@ -121,7 +125,6 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             effect.execute(combatContext)
             return
         }
-        CombatAnimations.getAnimation(combatContext.weaponId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
         val hit = combatContext.meleeHit()
         if (attacker.developerMode) {
             attacker.message("[Melee Attack] -> " +
@@ -135,20 +138,25 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     override fun delayHits(vararg hits: PendingHit) {
+        val currentWeapon = getCurrentWeapon(attacker)
+        val currentWeaponId = getCurrentWeaponId(attacker)
+        val attackStyle = getAttackStyle(currentWeapon)
         var totalDamage = 0
+        attacker.animate(CombatAnimations.getAnimation(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle))
         for (pending in hits) {
             val hit = pending.hit
             val target = pending.target
-            PrayerEffectHandler.handleOffensiveEffects(attacker, defender, hit);
-            PrayerEffectHandler.handleProtectionEffects(attacker, defender, hit);
+            PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit);
+            PrayerEffectHandler.handleProtectionEffects(attacker, target, hit);
+            if (target is Player) {//handling this onHit for magic & range
+                target.delayedAnimation(CombatAnimations.getBlockAnimation(target), 60, false);
+            }
             totalDamage += hit.damage;
             scheduleHit(pending.delay) {
                 target.applyHit(hit)
                 onHit(hit)
             }
         }
-        val currentWeapon = getCurrentWeapon(attacker)
-        val attackStyle = getAttackStyle(currentWeapon)
         attackStyle.xpMode.distributeXp(attacker, attackStyle, totalDamage);
     }
 

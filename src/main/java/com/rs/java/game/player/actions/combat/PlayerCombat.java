@@ -1637,15 +1637,10 @@ public class PlayerCombat extends Action {
             }
             MeleeHitDelay(player);
             player.setNextAnimationNoPriority(new Animation(getWeaponAttackEmote(weaponId, attackStyle)), player);
-            CoresManager.getSlowExecutor().schedule(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (target.getNextAnimation() != null)
-                        return;
-                    doDefenceEmote(target);
-                }
-
+            CoresManager.getSlowExecutor().schedule(() -> {
+                if (target.getNextAnimation() != null)
+                    return;
+                doDefenceEmote(target);
             }, 0, TimeUnit.MILLISECONDS);
         }
         playSound(soundId, player, target);

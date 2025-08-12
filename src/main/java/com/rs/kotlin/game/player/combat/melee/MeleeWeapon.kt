@@ -12,6 +12,7 @@ data class MeleeWeapon(
     override val attackRange: Int? = null,
     override val attackDelay: Int? = null,
     override val animationId: Int? = null,
+    override val blockAnimationId: Int? = null,
     override val special: SpecialAttack? = null,
     override val effect: SpecialEffect? = null,
     val animations: Map<StyleKey, Int> = emptyMap()

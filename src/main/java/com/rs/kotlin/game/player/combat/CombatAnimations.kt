@@ -1,5 +1,6 @@
 package com.rs.kotlin.game.player.combat
 
+import com.rs.java.game.player.Player
 import com.rs.kotlin.game.player.combat.melee.StandardMelee
 import com.rs.kotlin.game.player.combat.range.RangeData
 
@@ -7,6 +8,16 @@ object CombatAnimations {
 
     private const val DEFAULT_ANIMATION = 422
     private const val DEFAULT_RANGE_ANIMATION = 426
+
+    fun getBlockAnimation(player: Player): Int {
+        val shieldId = player.equipment.getShieldId()
+        ShieldBlockAnimations.getBlockAnimationFor(shieldId)?.let { return it }
+
+        val weaponId = player.equipment.getWeaponId()
+        StandardMelee.getWeaponByItemId(weaponId)?.blockAnimationId?.let { return it }
+
+        return ShieldBlockAnimations.DEFAULT_BLOCK_ANIM
+    }
 
     fun getAnimation(itemId: Int, attackStyle: AttackStyle, styleIndex: Int): Int {
         StandardMelee.getWeaponByItemId(itemId)?.let { meleeWeapon ->

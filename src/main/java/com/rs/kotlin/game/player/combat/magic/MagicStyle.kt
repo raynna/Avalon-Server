@@ -71,10 +71,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     override fun attack() {
         var spellId = attacker.combatDefinitions.spellId
         val manual = isManualCast(spellId)
-        attacker.message("spellId: $spellId")
         if (manual) {
-            attacker.message("manual cast: reset tempCast")
-            attacker.combatDefinitions.resetSpells(false)
             spellId -= MIN_SPELL_ID
         }
 
@@ -104,10 +101,13 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         for (pending in hits) {
             val hit = pending.hit
             val target = pending.target
-            PrayerEffectHandler.handleOffensiveEffects(attacker, defender, hit)
-            PrayerEffectHandler.handleProtectionEffects(attacker, defender, hit)
+            PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit)
+            PrayerEffectHandler.handleProtectionEffects(attacker, target, hit)
             totalDamage += hit.damage
             scheduleHit(pending.delay) {
+                if (target is Player) {
+                    target.animate(CombatAnimations.getBlockAnimation(target))
+                }
                 if (hit.damage > 0)
                     target.applyHit(hit)
                 onHit(hit)
@@ -232,6 +232,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         delayHits(PendingHit(hit, defender, getHitDelay()))
         if (manual) {
+            attacker.combatDefinitions.resetSpells(false)
             attacker.newActionManager.forceStop()
             attacker.resetWalkSteps()
             attacker.setNextFaceEntity(null)
@@ -249,7 +250,9 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     private fun addMagicExperience(totalDamage: Int) {
         var spellId = attacker.combatDefinitions.spellId
         val manual = isManualCast(spellId);
+        attacker.message("spellId ${spellId}")
         if (manual) {
+            attacker.combatDefinitions.resetSpells(false)
             spellId -= MIN_SPELL_ID;
         }
         val currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
@@ -257,9 +260,10 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             ModernMagicks.id -> ModernMagicks.getSpell(spellId)
             else -> null
         }
+        attacker.message("current spell:" + currentSpell?.name)
         val spellXp = currentSpell?.xp?:0.0
         val baseXp = (totalDamage * 0.3)
-        val combined = baseXp.plus(spellXp)
+        val combined = spellXp+baseXp
         if (attacker.getCombatDefinitions().isDefensiveCasting) {
             attacker.skills.addXp(Skills.DEFENCE, (totalDamage * 0.1))
             attacker.skills.addXp(Skills.MAGIC, (totalDamage * 0.133))

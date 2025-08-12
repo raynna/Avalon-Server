@@ -17,6 +17,8 @@ public enum AncientPrayer implements Prayer {
         @Override public double getDamageReduction() { return 0.6; }
         @Override public double getReflectChance() { return 0.5; }
         @Override public double getReflectAmount() { return 0.1; }
+        @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_deflect_magic")); }
+        @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
     },
     DEFLECT_MISSILES(8, 65, 12, "Deflect Missiles") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
@@ -27,6 +29,8 @@ public enum AncientPrayer implements Prayer {
         @Override public double getDamageReduction() { return 0.6; }
         @Override public double getReflectChance() { return 0.5; }
         @Override public double getReflectAmount() { return 0.1; }
+        @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_deflect_ranged")); }
+        @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
     },
     DEFLECT_MELEE(9, 65, 12, "Deflect Melee") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
@@ -37,12 +41,17 @@ public enum AncientPrayer implements Prayer {
         @Override public double getDamageReduction() { return 0.6; }
         @Override public double getReflectChance() { return 0.5; }
         @Override public double getReflectAmount() { return 0.1; }
+        @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_deflect_melee")); }
+        @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
     },
     DEFLECT_SUMMONING(6, 85, 12, "Deflect Summoning") {
         @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.OTHER}; }
         @Override public boolean isProtectionPrayer() { return true; }
         @Override public boolean isDeflectPrayer() { return true; }
         @Override public boolean isSummoningProtection() { return true; }
+        @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_deflect_summoning")); }
+        @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
+
     },
 
     SAP_WARRIOR(1, 50, 6, "Sap Warrior") {

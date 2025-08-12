@@ -12,6 +12,7 @@ interface Weapon {
     val attackRange: Int? get() = null
     val attackDelay: Int? get() = null
     val animationId: Int? get() = null
+    val blockAnimationId: Int? get() = null
     val special: SpecialAttack? get() = null
     val effect: SpecialEffect? get() = null
 
