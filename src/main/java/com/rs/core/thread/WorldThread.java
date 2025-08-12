@@ -9,9 +9,12 @@ import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class WorldThread extends Thread {
 
-	protected WorldThread() {
+	WorldThread() {
 		setPriority(Thread.MAX_PRIORITY);
 		setName("World Thread");
 	}
@@ -25,38 +28,55 @@ public final class WorldThread extends Thread {
 	@Override
 	public final void run() {
 		while (!CoresManager.shutdown) {
-			long currentTime = Utils.currentTimeMillis();
+			long cycleStart = Utils.currentTimeMillis();
+
 			try {
 				WorldTasksManager.processTasks();
 				AutomaticGroundItem.processGameTick();
+
+				List<Player> toCloseChannels = new ArrayList<>();
+
 				for (Player player : World.getPlayers()) {
 					if (player == null || !player.hasStarted() || player.hasFinished())
 						continue;
-					if (currentTime - player.getPacketsDecoderPing() > Settings.MAX_PACKETS_DECODER_PING_DELAY
-							&& player.getSession().getChannel().isOpen())
-						player.getSession().getChannel().close();
+
+					long pingDelay = cycleStart - player.getPacketsDecoderPing();
+					if (pingDelay > Settings.MAX_PACKETS_DECODER_PING_DELAY
+							&& player.getSession().getChannel().isOpen()) {
+						toCloseChannels.add(player);
+					}
+
 					player.processEntity();
 				}
+
 				for (NPC npc : World.getNPCs()) {
 					if (npc == null || npc.hasFinished())
 						continue;
 					npc.processEntity();
 				}
+
+				for (Player p : toCloseChannels) {
+					try {
+						p.getSession().getChannel().close();
+					} catch (Exception e) {
+						Logger.handle(e);
+					}
+				}
+
 			} catch (Throwable e) {
 				Logger.handle(e);
 			}
+
 			try {
 				for (Player player : World.getPlayers()) {
 					if (player == null || !player.hasStarted() || player.hasFinished())
 						continue;
+
 					player.getPackets().sendLocalPlayersUpdate();
 					player.getPackets().sendLocalNPCsUpdate();
-				}
-				for (Player player : World.getPlayers()) {
-					if (player == null || !player.hasStarted() || player.hasFinished())
-						continue;
 					player.resetMasks();
 				}
+
 				for (NPC npc : World.getNPCs()) {
 					if (npc == null || npc.hasFinished())
 						continue;
@@ -65,14 +85,17 @@ public final class WorldThread extends Thread {
 			} catch (Throwable e) {
 				Logger.handle(e);
 			}
+
 			LAST_CYCLE_CTM = Utils.currentTimeMillis();
-			long sleepTime = Settings.WORLD_CYCLE_TIME + currentTime - LAST_CYCLE_CTM;
-			if (sleepTime <= 0)
-				continue;
-			try {
-				Thread.sleep(sleepTime);
-			} catch (InterruptedException e) {
-				Logger.handle(e);
+
+			long elapsed = LAST_CYCLE_CTM - cycleStart;
+			long sleepTime = Settings.WORLD_CYCLE_TIME - elapsed;
+			if (sleepTime > 0) {
+				try {
+					Thread.sleep(sleepTime);
+				} catch (InterruptedException e) {
+					Logger.handle(e);
+				}
 			}
 		}
 	}
