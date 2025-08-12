@@ -5,7 +5,7 @@ import com.rs.kotlin.game.player.combat.WeaponStyle
 object SpecialRanged : RangeData() {
     override val weapons = listOf(
         RangedWeapon(
-            itemId = 861,
+            itemId = listOf(861),
             name = "Magic shortbow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -15,7 +15,7 @@ object SpecialRanged : RangeData() {
             ammoType = AmmoType.ARROW
         ),
         RangedWeapon(
-            itemId = 11235,
+            itemId = listOf(11235),
             name = "Dark bow",
             weaponStyle = WeaponStyle.LONGBOW,
             attackSpeed = 9,
@@ -25,7 +25,7 @@ object SpecialRanged : RangeData() {
         ),
         // Crossbows
         RangedWeapon(
-            itemId = 9185,
+            itemId = listOf(9185),
             name = "Rune crossbow",
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,

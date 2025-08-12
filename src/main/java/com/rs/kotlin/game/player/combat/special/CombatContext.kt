@@ -2,7 +2,10 @@ package com.rs.kotlin.game.player.combat.special
 
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
+import com.rs.java.game.World
+import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
+import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.magic.Spell
@@ -13,21 +16,65 @@ data class CombatContext(
     val attacker: Player,
     val defender: Entity,
     val weapon: Weapon,
+    val weaponId: Int,
     val ammo: RangedAmmo? = null,
     val combat: CombatStyle,
     val attackStyle: AttackStyle,
+    val attackBonusType: AttackBonusType,
     val usingSpecial: Boolean = false
 )
+
+fun CombatContext.rollMelee(
+    accuracyMultiplier: Double = 1.0,
+    damageMultiplier: Double = 1.0,
+    hitLook: Hit.HitLook? = null
+): Hit {
+    return registerHit(
+        combatType = CombatType.MELEE,
+        accuracyMultiplier = accuracyMultiplier,
+        damageMultiplier = damageMultiplier,
+        hitLook = hitLook
+    )
+}
+
+fun CombatContext.rollRanged(
+    accuracyMultiplier: Double = 1.0,
+    damageMultiplier: Double = 1.0,
+    hitLook: Hit.HitLook? = null
+): Hit {
+    return registerHit(
+        combatType = CombatType.RANGED,
+        accuracyMultiplier = accuracyMultiplier,
+        damageMultiplier = damageMultiplier,
+        hitLook = hitLook
+    )
+}
+
+fun CombatContext.rollMagic(
+    accuracyMultiplier: Double = 1.0,
+    damageMultiplier: Double = 1.0,
+    hitLook: Hit.HitLook? = null,
+    spellId: Int = -1
+): Hit {
+    return registerHit(
+        combatType = CombatType.MAGIC,
+        accuracyMultiplier = accuracyMultiplier,
+        damageMultiplier = damageMultiplier,
+        hitLook = hitLook,
+        spellId = spellId
+    )
+}
 
 fun CombatContext.registerHit(
     combatType: CombatType = CombatType.MELEE,
     accuracyMultiplier: Double = 1.0,
     damageMultiplier: Double = 1.0,
     hitLook: Hit.HitLook? = null,
-    spellId: Int = -1
+    spellId: Int = -1,
+    target: Entity = defender
 ): Hit = combat.registerHit(
     attacker = attacker,
-    defender = defender,
+    defender = target,
     combatType = combatType,
     attackStyle = attackStyle,
     weapon = weapon,
@@ -108,7 +155,8 @@ fun CombatContext.meleeHit(
     damageMultiplier: Double = 1.0,
     hitLook: Hit.HitLook? = null,
     delay: Int = 0,
-    hits: Int = 1
+    hits: Int = 1,
+    target: Entity = defender
 ): List<Hit> {
     val accMul = if (usingSpecial && weapon.special != null) {
         weapon.special!!.accuracyMultiplier
@@ -123,9 +171,10 @@ fun CombatContext.meleeHit(
             combatType = CombatType.MELEE,
             accuracyMultiplier = accMul,
             damageMultiplier = dmgMul,
-            hitLook = hitLook
+            hitLook = hitLook,
+            target = target,
         )
-        PendingHit(hit, defender, delay)
+        PendingHit(hit, target, delay)
     }
 
     combat.delayHits(*pendingHits.toTypedArray())
@@ -189,9 +238,107 @@ fun CombatContext.magicHit(
     return pendingHits.map { it.hit }
 }
 
+fun CombatContext.getMultiAttackTargets(
+    maxDistance: Int,
+    maxTargets: Int
+): List<Entity> {
+    val possibleTargets = mutableListOf<Entity>()
+    val attacker = this.attacker
+    val target = this.defender
+
+    possibleTargets.add(target)
+
+    if (!target.isAtMultiArea) return possibleTargets
+
+    val regions = target.mapRegionsIds
+
+    regionLoop@ for (regionId in regions) {
+        val region = World.getRegion(regionId) ?: continue
+
+        when (target) {
+            is Player -> {
+                val playerIndexes = region.playerIndexes ?: continue
+                for (playerIndex in playerIndexes) {
+                    val p2 = World.getPlayers().get(playerIndex) ?: continue
+                    if (
+                        p2 == attacker ||
+                        p2 == target ||
+                        p2.isDead ||
+                        !p2.hasStarted() ||
+                        p2.hasFinished() ||
+                        !p2.canPvp ||
+                        !p2.isAtMultiArea ||
+                        !p2.withinDistance(target, maxDistance) ||
+                        !attacker.controlerManager.canHit(p2) ||
+                        possibleTargets.size >= maxTargets
+                    ) continue
+                    possibleTargets.add(p2)
+                    if (possibleTargets.size >= maxTargets) break@regionLoop
+                }
+            }
+            is NPC -> {
+                val npcIndexes = region.npCsIndexes ?: continue
+                for (npcIndex in npcIndexes) {
+                    val n = World.getNPCByIndex(npcIndex)
+                    if (n == null) {
+                        println("DEBUG: NPC at index $npcIndex is null, skipping")
+                        continue
+                    }
+                    if (n == target) {
+                        println("DEBUG: NPC $n is the main target, skipping")
+                        continue
+                    }
+                    if (n == attacker.familiar) {
+                        println("DEBUG: NPC $n is attacker's familiar, skipping")
+                        continue
+                    }
+                    if (n.isDead) {
+                        println("DEBUG: NPC $n is dead, skipping")
+                        continue
+                    }
+                    if (n.hasFinished()) {
+                        println("DEBUG: NPC $n has finished, skipping")
+                        continue
+                    }
+                    if (!n.isAtMultiArea) {
+                        println("DEBUG: NPC $n is not at multi-area, skipping")
+                        continue
+                    }
+                    if (!n.withinDistance(target, maxDistance)) {
+                        println("DEBUG: NPC $n is out of max distance $maxDistance, skipping")
+                        continue
+                    }
+                    if (!n.definitions.hasAttackOption()) {
+                        println("DEBUG: NPC $n has no attack option, skipping")
+                        continue
+                    }
+                    if (!attacker.controlerManager.canHit(n)) {
+                        println("DEBUG: Attacker cannot hit NPC $n, skipping")
+                        continue
+                    }
+                    if (possibleTargets.size >= maxTargets) {
+                        println("DEBUG: Reached max targets $maxTargets, stopping")
+                        break@regionLoop
+                    }
+                    println("DEBUG: Adding NPC $n to possibleTargets")
+                    possibleTargets.add(n)
+                    if (possibleTargets.size >= maxTargets) break@regionLoop
+                }
+            }
+            else -> {
+                break@regionLoop
+            }
+        }
+    }
+    return possibleTargets
+}
+
+
+
 class SpecialHitBuilder(private val context: CombatContext) {
     private val hits = mutableListOf<PendingHit>()
-    private val special = context.weapon.special!!
+    private val special = context.weapon.special
+    private val effect = context.weapon.effect
 
     private fun addHit(
         type: CombatType, damageMultiplier: Double, accuracyMultiplier: Double, delay: Int
@@ -204,20 +351,20 @@ class SpecialHitBuilder(private val context: CombatContext) {
     }
 
     fun melee(
-        damageMultiplier: Double = special.damageMultiplier,
-        accuracyMultiplier: Double = special.accuracyMultiplier,
+        damageMultiplier: Double = special?.damageMultiplier?:1.0,
+        accuracyMultiplier: Double = special?.accuracyMultiplier?:1.0,
         delay: Int = 0
     ) = addHit(CombatType.MELEE, damageMultiplier, accuracyMultiplier, delay)
 
     fun ranged(
-        damageMultiplier: Double = special.damageMultiplier,
-        accuracyMultiplier: Double = special.accuracyMultiplier,
+        damageMultiplier: Double = special?.damageMultiplier?:1.0,
+        accuracyMultiplier: Double = special?.accuracyMultiplier?:1.0,
         delay: Int = 0
     ) = addHit(CombatType.RANGED, damageMultiplier, accuracyMultiplier, delay)
 
     fun magic(
-        damageMultiplier: Double = special.damageMultiplier,
-        accuracyMultiplier: Double = special.accuracyMultiplier,
+        damageMultiplier: Double = special?.damageMultiplier?:1.0,
+        accuracyMultiplier: Double = special?.accuracyMultiplier?:1.0,
         delay: Int = 0
     ) = addHit(CombatType.MAGIC, damageMultiplier, accuracyMultiplier, delay)
 
@@ -225,6 +372,16 @@ class SpecialHitBuilder(private val context: CombatContext) {
         baseHit: Hit, scale: Double, delay: Int = 0
     ): Hit {
         val newHit = Hit(baseHit.source, (baseHit.damage * scale).toInt(), baseHit.look)
+        hits += PendingHit(newHit, context.defender, delay)
+        return newHit
+    }
+
+    fun nextHit(
+        baseHit: Hit, maxHit: Int, delay: Int = 0
+    ): Hit {
+        val newHit = baseHit.copyWithDamage(Utils.random(maxHit))
+        if (!newHit.landed)
+            newHit.damage = 0
         hits += PendingHit(newHit, context.defender, delay)
         return newHit
     }

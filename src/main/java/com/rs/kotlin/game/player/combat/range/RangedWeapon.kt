@@ -5,7 +5,7 @@ import com.rs.kotlin.game.player.combat.Weapon
 import com.rs.kotlin.game.player.combat.WeaponStyle
 
 data class RangedWeapon(
-    override val itemId: Int,
+    override val itemId: List<Int>,
     override val name: String,
     override val weaponStyle: WeaponStyle,
     override val attackSpeed: Int? = 4,
@@ -15,7 +15,7 @@ data class RangedWeapon(
     override val special: SpecialAttack? = null,
     val poisonSeverity: Int = -1,
     val projectileId: Int? = null,
-    val ammoType: AmmoType,
+    val ammoType: AmmoType? = null,
     val maxAmmoTier: AmmoTier? = null,
     val allowedAmmoIds: Set<Int>? = null
 ) : Weapon

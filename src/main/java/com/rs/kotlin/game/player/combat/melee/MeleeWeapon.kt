@@ -5,7 +5,7 @@ import com.rs.kotlin.game.player.combat.special.SpecialAttack
 import com.rs.kotlin.game.player.combat.special.SpecialEffect
 
 data class MeleeWeapon(
-    override val itemId: Int,
+    override val itemId: List<Int>,
     override val name: String,
     override val weaponStyle: WeaponStyle,
     override val attackSpeed: Int? = 4,

@@ -1,5 +1,6 @@
 package com.rs.kotlin.game.player.combat.melee
 
+import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
 import com.rs.java.game.player.Equipment
@@ -10,69 +11,97 @@ import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.meleeHit
 
-object MeleeStyle : CombatStyle {
-
-
-    private var currentWeapon: Weapon = StandardMelee.getDefaultWeapon()
-    private var attackStyle: AttackStyle = AttackStyle.ACCURATE
-    private var attackBonusType: AttackBonusType = AttackBonusType.CRUSH
-
-    private lateinit var combatContext: CombatContext
-    private lateinit var attacker: Player
-    private lateinit var defender: Entity
+class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun canAttack(attacker: Player, defender: Entity): Boolean {
-        this.attacker = attacker;
-        this.defender = defender
-        val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
-        val gloves = attacker.equipment.getItem(Equipment.SLOT_HANDS.toInt()) ?: null
-        val hasGoliathGloves = attacker.combatDefinitions.hasGoliath(gloves)
-
-        currentWeapon = when {
-            weaponId != -1 && StandardMelee.getWeaponByItemId(weaponId) != null ->
-                StandardMelee.getWeaponByItemId(weaponId)!!
-            hasGoliathGloves ->
-                StandardMelee.getGoliathWeapon()
-            else ->
-                StandardMelee.getDefaultWeapon() // unarmed
-        }
-        attackStyle = getAttackStyle()
-        attackBonusType = getAttackBonusType()
-        combatContext = CombatContext(
+        val currentWeapon = getCurrentWeapon(attacker)
+        val currentWeaponId = getCurrentWeaponId(attacker)
+        val attackStyle = getAttackStyle(currentWeapon)
+        val attackBonusType = getAttackBonusType(currentWeapon)
+        val combatContext = CombatContext(
             combat = this,
-            attacker = MeleeStyle.attacker,
-            defender = MeleeStyle.defender,
+            attacker = this.attacker,
+            defender = this.defender,
             weapon = currentWeapon,
+            weaponId = currentWeaponId,
             attackStyle = attackStyle,
-
+            attackBonusType = attackBonusType
         )
+        //TODO
         return true
     }
 
-    fun getAttackStyle(): AttackStyle {
-        val attackStyleId = attacker.combatDefinitions.attackStyle
-        return currentWeapon.weaponStyle.styleSet.styleAt(attackStyleId)?: AttackStyle.ACCURATE
+    private fun getCurrentWeaponId(attacker: Player): Int {
+        val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
+        val gloves = attacker.equipment.getItem(Equipment.SLOT_HANDS.toInt())
+        val hasGoliathGloves = attacker.combatDefinitions.hasGoliath(gloves)
+        return when {
+            weaponId != -1 -> weaponId
+            hasGoliathGloves -> StandardMelee.getGoliathWeapon().itemId[0]
+            else -> -1
+        }
     }
 
-    fun getAttackBonusType(): AttackBonusType {
+
+    private fun getCurrentWeapon(attacker: Player): Weapon {
+        val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
+        val gloves = attacker.equipment.getItem(Equipment.SLOT_HANDS.toInt())
+        val hasGoliathGloves = attacker.combatDefinitions.hasGoliath(gloves)
+        return when {
+            weaponId != -1 && StandardMelee.getWeaponByItemId(weaponId) != null ->
+                StandardMelee.getWeaponByItemId(weaponId)!!
+            hasGoliathGloves -> StandardMelee.getGoliathWeapon()
+            else -> StandardMelee.getDefaultWeapon()
+        }
+    }
+
+    private fun getAttackStyle(currentWeapon: Weapon): AttackStyle {
         val attackStyleId = attacker.combatDefinitions.attackStyle
-        return currentWeapon.weaponStyle.styleSet.bonusAt(attackStyleId)?: AttackBonusType.CRUSH
+        return currentWeapon.weaponStyle.styleSet.styleAt(attackStyleId) ?: AttackStyle.ACCURATE
+    }
+
+    private fun getAttackBonusType(currentWeapon: Weapon): AttackBonusType {
+        val attackStyleId = attacker.combatDefinitions.attackStyle
+        return currentWeapon.weaponStyle.styleSet.bonusAt(attackStyleId) ?: AttackBonusType.CRUSH
     }
 
     override fun getAttackDistance(): Int {
+        val currentWeapon = getCurrentWeapon(attacker) // unarmed
         return currentWeapon.attackRange ?: 0
     }
 
     override fun getAttackSpeed(): Int {
-        val baseSpeed = currentWeapon.attackSpeed ?: 4
-        val style = getAttackStyle()
+        val currentWeapon = getCurrentWeapon(attacker)
+        val style = getAttackStyle(currentWeapon)
+        var baseSpeed = 4
+        if (currentWeapon.attackSpeed != -1) {
+            baseSpeed = currentWeapon.attackSpeed!!
+        } else {
+            val definitions = ItemDefinitions.getItemDefinitions(attacker.equipment.weaponId);
+            baseSpeed = definitions.attackSpeed
+        }
         return baseSpeed + style.attackSpeedModifier
     }
+
     override fun getHitDelay(): Int {
+        val currentWeapon = getCurrentWeapon(attacker) // unarmed
         return currentWeapon.attackDelay?:0
     }
 
     override fun attack() {
+        val currentWeapon = getCurrentWeapon(attacker)
+        val currentWeaponId = getCurrentWeaponId(attacker)
+        val attackStyle = getAttackStyle(currentWeapon)
+        val attackBonusType = getAttackBonusType(currentWeapon)
+        val combatContext = CombatContext(
+            combat = this,
+            attacker = attacker,
+            defender = defender,
+            weapon = currentWeapon,
+            weaponId = currentWeaponId,
+            attackStyle = attackStyle,
+            attackBonusType = attackBonusType,
+        )
         if (attacker.combatDefinitions.isUsingSpecialAttack) {
             currentWeapon.special?.let { special ->
                 val specialEnergy = attacker.combatDefinitions.specialAttackPercentage
@@ -88,11 +117,11 @@ object MeleeStyle : CombatStyle {
             }
         }
         currentWeapon.effect?.let { effect ->
-            CombatAnimations.getAnimation(currentWeapon.itemId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
+            CombatAnimations.getAnimation(combatContext.weaponId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
             effect.execute(combatContext)
             return
         }
-        CombatAnimations.getAnimation(currentWeapon.itemId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
+        CombatAnimations.getAnimation(combatContext.weaponId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
         val hit = combatContext.meleeHit()
         if (attacker.developerMode) {
             attacker.message("[Melee Attack] -> " +
@@ -118,6 +147,8 @@ object MeleeStyle : CombatStyle {
                 onHit(hit)
             }
         }
+        val currentWeapon = getCurrentWeapon(attacker)
+        val attackStyle = getAttackStyle(currentWeapon)
         attackStyle.xpMode.distributeXp(attacker, attackStyle, totalDamage);
     }
 

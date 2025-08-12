@@ -25,6 +25,7 @@ public final class Hit {
 	private int damage;
 	private int maxHit;
 	public boolean critical;
+	public boolean landed;
 	private Hit soaking;
 	private int delay;
 
@@ -46,24 +47,31 @@ public final class Hit {
 		return look == HitLook.MELEE_DAMAGE || look == HitLook.RANGE_DAMAGE || look == HitLook.MAGIC_DAMAGE;
 	}
 
+
+
 	public Hit(Entity source, int damage, HitLook look) {
-		this(source, damage, 0, look, 0);
+		this(source, damage, 0, look, 0, true);
 	}
 
 	public Hit(Entity source, int damage, HitLook look, int delay) {
-		this(source, damage, 0, look, delay);
+		this(source, damage, 0, look, delay, true);
 	}
 
 	public Hit(Entity source, int damage, int maxHit, HitLook look) {
-		this(source, damage, maxHit, look, 0);
+		this(source, damage, maxHit, look, 0, true);
 	}
 
-	public Hit(Entity source, int damage, int maxHit, HitLook look, int delay) {
+	public Hit(Entity source, int damage, int maxHit, HitLook look, boolean landed) {
+		this(source, damage, maxHit, look, 0, landed);
+	}
+
+	public Hit(Entity source, int damage, int maxHit, HitLook look, int delay, boolean landed) {
 		this.source = source;
 		this.damage = damage;
 		this.maxHit = maxHit;
 		this.look = look;
 		this.delay = delay;
+		this.landed = landed;
 	}
 
 	public boolean missed() {
@@ -136,7 +144,7 @@ public final class Hit {
 	}
 
 	public Hit copy() {
-		Hit copy = new Hit(this.source, this.damage, this.maxHit, this.look, this.delay);
+		Hit copy = new Hit(this.source, this.damage, this.maxHit, this.look, this.delay, this.landed);
 		copy.critical = this.critical;
 		copy.soaking = this.soaking; // shallow copy, adjust if needed
 		return copy;
@@ -144,7 +152,7 @@ public final class Hit {
 
 	// Overloaded copy with new damage example (optional)
 	public Hit copyWithDamage(int newDamage) {
-		Hit copy = new Hit(this.source, newDamage, this.maxHit, this.look, this.delay);
+		Hit copy = new Hit(this.source, newDamage, this.maxHit, this.look, this.delay, this.landed);
 		copy.critical = this.critical;
 		copy.soaking = this.soaking;
 		return copy;

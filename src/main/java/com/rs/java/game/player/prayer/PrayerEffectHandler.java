@@ -50,9 +50,11 @@ public class PrayerEffectHandler {
         if (Utils.randomDouble() >= deflectPrayer.getReflectChance()) return;
 
         int reflectDamage = (int)(hit.getDamage() * deflectPrayer.getReflectAmount());
-        attacker.applyHit(new Hit(defender, reflectDamage, HitLook.REFLECTED_DAMAGE));
-        defender.gfx(deflectPrayer.getActivationGraphics());
-        defender.animate(deflectPrayer.getActivationAnimation());
+        if (reflectDamage > 0) {
+            attacker.applyHit(new Hit(defender, reflectDamage, HitLook.REFLECTED_DAMAGE));
+            defender.gfx(deflectPrayer.getActivationGraphics());
+            defender.animate(deflectPrayer.getActivationAnimation());
+        }
     }
 
     public static void handleOffensiveEffects(Player attacker, Entity target, Hit hit) {

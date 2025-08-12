@@ -14,7 +14,7 @@ object StandardMelee : MeleeData() {
     fun getGoliathWeapon(): MeleeWeapon = GOLIATH_GLOVES
 
     private val UNARMED = MeleeWeapon(
-        itemId = -1,
+        itemId = listOf(-1),
         name = "Unarmed",
         weaponStyle = WeaponStyle.UNARMED,
         attackSpeed = 4,
@@ -25,7 +25,7 @@ object StandardMelee : MeleeData() {
         )
     )
     private val GOLIATH_GLOVES = MeleeWeapon(
-        itemId = -2,
+        itemId = listOf(-2),
         name = "Goliath gloves",//anims 14307 && 14393 && effect = 14417
         weaponStyle = WeaponStyle.UNARMED,
         attackSpeed = 4,
@@ -48,7 +48,7 @@ object StandardMelee : MeleeData() {
     )
     override val weapons = listOf(
         MeleeWeapon(
-            itemId = 4151,
+            itemId = listOf(4151),
             name = "Abyssal whip",
             weaponStyle = WeaponStyle.WHIP,
             attackSpeed = 4,
@@ -95,7 +95,7 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = 5698,
+            itemId = listOf(5698),
             name = "Dragon dagger",
             weaponStyle = WeaponStyle.DAGGER,
             attackSpeed = 4,
@@ -118,19 +118,27 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = 4747,
+            itemId = listOf(4747, 4958, 4959, 4960, 4961, 4962),
             name = "Torag's hammers",
             weaponStyle = WeaponStyle.HAMMER,
             effect = SpecialEffect(
                 execute = { context ->
                     context.attacker.animate(Animation(2068))
-                    context.meleeHit(delay = 0, damageMultiplier = 0.75)
-                    context.meleeHit(delay = 0, damageMultiplier = 0.75)
+
+                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
+                    val maxHit1 = (maxHit + 1)/2
+                    val maxHit2 = (maxHit / 2)
+                    val firstHit = context.rollMelee()
+                    val secondHit = context.rollMelee()
+                    context.hits {
+                            nextHit(baseHit = firstHit, maxHit = maxHit1)
+                            nextHit(baseHit = secondHit, maxHit = maxHit2)
+                    }
                 }
             )
         ),
         MeleeWeapon(
-            itemId = 3204,
+            itemId = listOf(3204),
             name = "Dragon halberd",
             weaponStyle = WeaponStyle.HALBERD,
             attackRange = 1,
@@ -153,10 +161,9 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = 1321,
-            name = "Bronze Scimitar",
+            itemId = listOf(1321),
+            name = "Scimitar",
             weaponStyle = WeaponStyle.SCIMITAR,
-            attackSpeed = 4,
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to 15071,
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to 15071,
@@ -165,16 +172,40 @@ object StandardMelee : MeleeData() {
             ),
         ),
         MeleeWeapon(
-            itemId = 1307,
-            name = "Iron 2h sword",
+            itemId = listOf(1307, 1309, 1311, 1313, 1315, 1317, 139),
+            name = "2h sword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
-            attackSpeed = 6,
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to 7041,
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to 7041,
                 StyleKey(AttackStyle.CONTROLLED, 2) to 7048,
                 StyleKey(AttackStyle.DEFENSIVE, 3) to 7049,
             ),
+        ),
+        MeleeWeapon(
+            itemId = listOf(7158),
+            name = "Dragon 2h sword",
+            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to 7041,
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to 7041,
+                StyleKey(AttackStyle.CONTROLLED, 2) to 7048,
+                StyleKey(AttackStyle.DEFENSIVE, 3) to 7049,
+            ),
+            special = SpecialAttack(
+                energyCost = 1,//test
+                accuracyMultiplier = 1.15,
+                damageMultiplier = 1.1,//animGFX 7078 1225 - Dragon 2H Sword Special (Power Stab)
+                execute = { context ->
+                    context.attacker.animate(Animation(7078))
+                    context.attacker.gfx(Graphics(1225, 0, 0))
+                    val targets = context.getMultiAttackTargets(2, 9)
+                    for (target in targets) {
+                        context.meleeHit(target = target, delay = 1)
+                    }
+                }
+            ),
         )
+
     )
 }

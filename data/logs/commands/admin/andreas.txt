@@ -8505,3 +8505,184 @@
 [12 August 2025 at 03:38:21 CEST] - ::item 892 1000
 [12 August 2025 at 03:38:57 CEST] - ::heal 
 [12 August 2025 at 03:40:45 CEST] - ::ecomode 2
+[12 August 2025 at 03:28:35 CEST] - ::item torag ham
+[12 August 2025 at 03:28:39 CEST] - ::item torag's hamm
+[12 August 2025 at 03:49:37 CEST] - ::ecomode 2
+[12 August 2025 at 03:49:47 CEST] - ::item 4747 1
+[12 August 2025 at 04:28:34 CEST] - ::npc 50
+[12 August 2025 at 04:53:05 CEST] - ::item 4747 1
+[12 August 2025 at 04:54:33 CEST] - ::item torag's hammer
+[12 August 2025 at 04:57:30 CEST] - ::npc 50
+[12 August 2025 at 04:57:54 CEST] - ::tele 0,1,1,23,18
+[12 August 2025 at 04:59:11 CEST] - ::npc 50
+[12 August 2025 at 04:59:32 CEST] - ::npc 50
+[12 August 2025 at 05:00:02 CEST] - ::tele 0,1,1,24,17
+[12 August 2025 at 05:02:34 CEST] - ::heal 
+[12 August 2025 at 05:05:51 CEST] - ::heal 
+[12 August 2025 at 05:05:54 CEST] - ::npc 50
+[12 August 2025 at 05:06:04 CEST] - ::tele 0,1,1,19,23
+[12 August 2025 at 05:06:12 CEST] - ::tele 0,1,1,23,18
+[12 August 2025 at 05:06:42 CEST] - ::heal 
+[12 August 2025 at 05:07:08 CEST] - ::npc 2745
+[12 August 2025 at 05:07:19 CEST] - ::heal 
+[12 August 2025 at 05:07:56 CEST] - ::tele 0,1,1,24,17
+[12 August 2025 at 05:09:00 CEST] - ::heal 
+[12 August 2025 at 05:09:26 CEST] - ::killnpc 2745
+[12 August 2025 at 05:09:29 CEST] - ::heal 
+[12 August 2025 at 05:09:32 CEST] - ::npc 50
+[12 August 2025 at 05:13:46 CEST] - ::heal 
+[12 August 2025 at 05:52:25 CEST] - ::item goliath
+[12 August 2025 at 05:54:07 CEST] - ::item 2h
+[12 August 2025 at 05:54:15 CEST] - ::item 1307 1
+[12 August 2025 at 05:55:22 CEST] - ::item dragon halberd
+[12 August 2025 at 05:57:26 CEST] - ::item adamant 2h
+[12 August 2025 at 05:57:41 CEST] - ::item rune 2h
+[12 August 2025 at 05:57:59 CEST] - ::item dragon 2h
+[12 August 2025 at 06:04:05 CEST] - ::gfx 1225
+[12 August 2025 at 06:04:10 CEST] - ::anim 7078
+[12 August 2025 at 06:04:31 CEST] - ::gfx 1225 0
+[12 August 2025 at 06:10:47 CEST] - ::tele 0,1,1,20,16
+[12 August 2025 at 06:10:49 CEST] - ::tele 0,48,54,23,45
+[12 August 2025 at 06:10:49 CEST] - ::tele 0,48,54,36,51
+[12 August 2025 at 06:10:50 CEST] - ::tele 0,48,54,51,57
+[12 August 2025 at 06:10:51 CEST] - ::tele 0,49,54,2,62
+[12 August 2025 at 06:10:51 CEST] - ::tele 0,49,55,11,7
+[12 August 2025 at 06:10:52 CEST] - ::tele 0,49,55,16,16
+[12 August 2025 at 06:10:52 CEST] - ::tele 0,49,55,17,19
+[12 August 2025 at 06:10:54 CEST] - ::npc 75
+[12 August 2025 at 06:10:56 CEST] - ::npc 75
+[12 August 2025 at 06:10:56 CEST] - ::npc 75
+[12 August 2025 at 06:10:57 CEST] - ::npc 75
+[12 August 2025 at 06:10:57 CEST] - ::npc 75
+[12 August 2025 at 06:10:57 CEST] - ::npc 75
+[12 August 2025 at 06:10:57 CEST] - ::npc 75
+[12 August 2025 at 06:10:57 CEST] - ::npc 75
+[12 August 2025 at 06:10:58 CEST] - ::npc 75
+[12 August 2025 at 06:10:58 CEST] - ::npc 75
+[12 August 2025 at 06:10:58 CEST] - ::npc 75
+[12 August 2025 at 06:10:58 CEST] - ::npc 75
+[12 August 2025 at 06:10:59 CEST] - ::npc 75
+[12 August 2025 at 06:15:45 CEST] - ::npc 75
+[12 August 2025 at 06:15:46 CEST] - ::npc 75
+[12 August 2025 at 06:15:46 CEST] - ::npc 75
+[12 August 2025 at 06:15:47 CEST] - ::npc 75
+[12 August 2025 at 06:15:47 CEST] - ::npc 75
+[12 August 2025 at 06:22:13 CEST] - ::npc 75
+[12 August 2025 at 06:22:14 CEST] - ::npc 75
+[12 August 2025 at 06:22:14 CEST] - ::npc 75
+[12 August 2025 at 06:22:14 CEST] - ::npc 75
+[12 August 2025 at 06:22:15 CEST] - ::npc 75
+[12 August 2025 at 06:22:15 CEST] - ::npc 75
+[12 August 2025 at 06:24:13 CEST] - ::npc 75
+[12 August 2025 at 06:24:13 CEST] - ::npc 75
+[12 August 2025 at 06:24:14 CEST] - ::npc 75
+[12 August 2025 at 06:24:14 CEST] - ::npc 75
+[12 August 2025 at 06:24:14 CEST] - ::npc 75
+[12 August 2025 at 06:24:14 CEST] - ::npc 75
+[12 August 2025 at 06:25:14 CEST] - ::npc 75
+[12 August 2025 at 06:25:15 CEST] - ::npc 75
+[12 August 2025 at 06:25:15 CEST] - ::npc 75
+[12 August 2025 at 06:25:15 CEST] - ::npc 75
+[12 August 2025 at 06:25:15 CEST] - ::npc 75
+[12 August 2025 at 06:25:25 CEST] - ::npc 75
+[12 August 2025 at 06:25:26 CEST] - ::npc 75
+[12 August 2025 at 06:25:26 CEST] - ::npc 75
+[12 August 2025 at 06:25:26 CEST] - ::npc 75
+[12 August 2025 at 06:25:26 CEST] - ::npc 75
+[12 August 2025 at 06:25:27 CEST] - ::npc 75
+[12 August 2025 at 06:25:27 CEST] - ::npc 75
+[12 August 2025 at 06:25:27 CEST] - ::npc 75
+[12 August 2025 at 06:25:27 CEST] - ::npc 75
+[12 August 2025 at 06:25:27 CEST] - ::npc 75
+[12 August 2025 at 06:25:27 CEST] - ::npc 75
+[12 August 2025 at 06:25:28 CEST] - ::npc 75
+[12 August 2025 at 06:25:28 CEST] - ::npc 75
+[12 August 2025 at 06:25:28 CEST] - ::npc 75
+[12 August 2025 at 06:25:28 CEST] - ::npc 75
+[12 August 2025 at 06:25:28 CEST] - ::npc 75
+[12 August 2025 at 06:25:29 CEST] - ::npc 75
+[12 August 2025 at 06:25:31 CEST] - ::npc 75
+[12 August 2025 at 06:25:31 CEST] - ::npc 75
+[12 August 2025 at 06:25:31 CEST] - ::npc 75
+[12 August 2025 at 06:25:31 CEST] - ::npc 75
+[12 August 2025 at 06:25:31 CEST] - ::npc 75
+[12 August 2025 at 06:25:33 CEST] - ::tele 0,49,55,10,21
+[12 August 2025 at 06:25:34 CEST] - ::npc 75
+[12 August 2025 at 06:25:34 CEST] - ::npc 75
+[12 August 2025 at 06:25:34 CEST] - ::npc 75
+[12 August 2025 at 06:26:29 CEST] - ::gfx 1225 0
+[12 August 2025 at 06:28:55 CEST] - ::npc 75
+[12 August 2025 at 06:28:55 CEST] - ::npc 75
+[12 August 2025 at 06:28:56 CEST] - ::npc 75
+[12 August 2025 at 06:28:56 CEST] - ::npc 75
+[12 August 2025 at 06:28:56 CEST] - ::npc 75
+[12 August 2025 at 06:28:56 CEST] - ::npc 75
+[12 August 2025 at 06:28:56 CEST] - ::npc 75
+[12 August 2025 at 06:28:57 CEST] - ::npc 75
+[12 August 2025 at 06:28:57 CEST] - ::npc 75
+[12 August 2025 at 06:28:57 CEST] - ::npc 75
+[12 August 2025 at 06:29:00 CEST] - ::heal 
+[12 August 2025 at 06:29:03 CEST] - ::heal 
+[12 August 2025 at 06:29:04 CEST] - ::heal 
+[12 August 2025 at 06:29:04 CEST] - ::heal 
+[12 August 2025 at 06:29:04 CEST] - ::heal 
+[12 August 2025 at 06:29:04 CEST] - ::heal 
+[12 August 2025 at 06:29:04 CEST] - ::heal 
+[12 August 2025 at 06:29:05 CEST] - ::heal 
+[12 August 2025 at 06:29:07 CEST] - ::tele 0,49,55,10,21
+[12 August 2025 at 06:29:08 CEST] - ::heal 
+[12 August 2025 at 06:29:08 CEST] - ::heal 
+[12 August 2025 at 06:29:09 CEST] - ::heal 
+[12 August 2025 at 06:29:09 CEST] - ::heal 
+[12 August 2025 at 06:29:09 CEST] - ::heal 
+[12 August 2025 at 06:29:09 CEST] - ::heal 
+[12 August 2025 at 06:29:09 CEST] - ::heal 
+[12 August 2025 at 06:29:09 CEST] - ::heal 
+[12 August 2025 at 06:29:11 CEST] - ::tele 0,49,55,11,22
+[12 August 2025 at 06:29:12 CEST] - ::heal 
+[12 August 2025 at 06:29:13 CEST] - ::heal 
+[12 August 2025 at 06:29:13 CEST] - ::heal 
+[12 August 2025 at 06:29:13 CEST] - ::heal 
+[12 August 2025 at 06:29:13 CEST] - ::heal 
+[12 August 2025 at 06:29:13 CEST] - ::heal 
+[12 August 2025 at 06:29:15 CEST] - ::npc 75
+[12 August 2025 at 06:29:15 CEST] - ::npc 75
+[12 August 2025 at 06:29:16 CEST] - ::npc 75
+[12 August 2025 at 06:29:16 CEST] - ::npc 75
+[12 August 2025 at 06:29:16 CEST] - ::npc 75
+[12 August 2025 at 06:29:16 CEST] - ::npc 75
+[12 August 2025 at 06:29:16 CEST] - ::npc 75
+[12 August 2025 at 06:29:17 CEST] - ::npc 75
+[12 August 2025 at 06:29:17 CEST] - ::npc 75
+[12 August 2025 at 06:29:18 CEST] - ::tele 0,49,55,10,20
+[12 August 2025 at 06:29:19 CEST] - ::npc 75
+[12 August 2025 at 06:29:19 CEST] - ::npc 75
+[12 August 2025 at 06:29:20 CEST] - ::npc 75
+[12 August 2025 at 06:29:20 CEST] - ::npc 75
+[12 August 2025 at 06:29:20 CEST] - ::npc 75
+[12 August 2025 at 06:29:20 CEST] - ::npc 75
+[12 August 2025 at 06:29:20 CEST] - ::npc 75
+[12 August 2025 at 06:36:38 CEST] - ::npc 75
+[12 August 2025 at 06:36:39 CEST] - ::npc 75
+[12 August 2025 at 06:36:39 CEST] - ::npc 75
+[12 August 2025 at 06:36:39 CEST] - ::npc 75
+[12 August 2025 at 06:36:39 CEST] - ::npc 75
+[12 August 2025 at 06:36:39 CEST] - ::npc 75
+[12 August 2025 at 06:37:47 CEST] - ::npc 75
+[12 August 2025 at 06:37:47 CEST] - ::npc 75
+[12 August 2025 at 06:37:47 CEST] - ::npc 75
+[12 August 2025 at 06:37:47 CEST] - ::npc 75
+[12 August 2025 at 06:37:48 CEST] - ::npc 75
+[12 August 2025 at 06:37:48 CEST] - ::npc 75
+[12 August 2025 at 06:37:48 CEST] - ::npc 75
+[12 August 2025 at 06:37:48 CEST] - ::npc 75
+[12 August 2025 at 06:37:48 CEST] - ::npc 75
+[12 August 2025 at 06:37:48 CEST] - ::npc 75
+[12 August 2025 at 06:37:49 CEST] - ::npc 75
+[12 August 2025 at 06:37:51 CEST] - ::heal 
+[12 August 2025 at 06:37:53 CEST] - ::npc 75
+[12 August 2025 at 06:37:53 CEST] - ::npc 75
+[12 August 2025 at 06:37:53 CEST] - ::npc 75
+[12 August 2025 at 06:37:54 CEST] - ::npc 75
+[12 August 2025 at 06:37:54 CEST] - ::npc 75
+[12 August 2025 at 06:37:54 CEST] - ::npc 75

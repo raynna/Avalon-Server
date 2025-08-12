@@ -5,7 +5,7 @@ import com.rs.kotlin.game.player.combat.special.SpecialAttack
 import com.rs.kotlin.game.player.combat.special.SpecialEffect
 
 interface Weapon {
-    val itemId: Int
+    val itemId: List<Int>  //
     val name: String
     val weaponStyle: WeaponStyle
     val attackSpeed: Int? get() = null

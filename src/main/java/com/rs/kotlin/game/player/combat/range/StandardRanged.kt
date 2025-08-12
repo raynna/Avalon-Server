@@ -111,14 +111,14 @@ object StandardRanged : RangeData() {
     fun getDefaultWeapon(): RangedWeapon = UNARMED
 
     private val UNARMED = RangedWeapon(
-        itemId = -1,
+        itemId = listOf(-1),
         name = "Unarmed",
         weaponStyle = WeaponStyle.UNARMED,
         ammoType = AmmoType.NONE
     )
     override val weapons = listOf(
         RangedWeapon(
-            itemId = 841,
+            itemId = listOf(841),
             name = "Shortbow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -128,7 +128,7 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.IRON_ARROW
         ),
         RangedWeapon(
-            itemId = 843,
+            itemId = listOf(843),
             name = "Oak shortbow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -138,7 +138,7 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.STEEL_ARROW
         ),
         RangedWeapon(
-            itemId = 839,
+            itemId = listOf(839),
             name = "Longbow",
             weaponStyle = WeaponStyle.LONGBOW,
             attackSpeed = 6,
@@ -148,7 +148,7 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.IRON_ARROW
         ),
         RangedWeapon(
-            itemId = 845,
+            itemId = listOf(845),
             name = "Oak longbow",
             weaponStyle = WeaponStyle.LONGBOW,
             attackSpeed = 6,
@@ -158,7 +158,7 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.STEEL_ARROW
         ),
         RangedWeapon(
-            itemId = 9174,
+            itemId = listOf(9174),
             name = "Bronze crossbow",
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
@@ -168,7 +168,7 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.BRONZE_BOLT
         ),
         RangedWeapon(
-            itemId = 9177,
+            itemId = listOf(9177),
             name = "Iron crossbow",
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
@@ -178,7 +178,7 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.IRON_BOLT
         ),
         RangedWeapon(
-            itemId = 9177,
+            itemId = listOf(9177),
             name = "Iron crossbow",
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
@@ -188,7 +188,7 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.IRON_BOLT
         ),
         RangedWeapon(
-            itemId = 8880,
+            itemId = listOf(8880),
             name = "Dorgeshuun c'bow",
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
@@ -198,7 +198,7 @@ object StandardRanged : RangeData() {
             allowedAmmoIds = setOf(8882)
         ),
         RangedWeapon(
-            itemId = 20171,
+            itemId = listOf(20171),
             name = "Zaryte bow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -207,7 +207,7 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.NONE
         ),
         RangedWeapon(
-            itemId = 19143,
+            itemId = listOf(19143),
             name = "Saradomin bow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -241,7 +241,7 @@ object StandardRanged : RangeData() {
             )
         ),
         RangedWeapon(
-            itemId = 19146,
+            itemId = listOf(19146),
             name = "Guthix bow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -275,7 +275,7 @@ object StandardRanged : RangeData() {
             )
         ),
         RangedWeapon(
-            itemId = 19149,
+            itemId = listOf(19149),
             name = "Zamorak bow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -309,7 +309,7 @@ object StandardRanged : RangeData() {
             )
         ),
         RangedWeapon(
-            itemId = 861,
+            itemId = listOf(861),
             name = "Magic shortbow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -345,7 +345,7 @@ object StandardRanged : RangeData() {
 
         //knifes
         RangedWeapon(
-            itemId = 864,
+            itemId = listOf(864),
             name = "Bronze knife",
             weaponStyle = WeaponStyle.THROWING,
             attackSpeed = 3,
@@ -355,7 +355,7 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.THROWING
         ),
         RangedWeapon(
-            itemId = 870,
+            itemId = listOf(870),
             name = "Bronze knife (p)",
             weaponStyle = WeaponStyle.THROWING,
             attackSpeed = 3,
@@ -368,7 +368,7 @@ object StandardRanged : RangeData() {
 
         //darts
         RangedWeapon(
-            itemId = 806,
+            itemId = listOf(806),
             name = "Bronze dart",
             weaponStyle = WeaponStyle.THROWING,
             attackSpeed = 3,
@@ -438,7 +438,7 @@ object StandardRanged : RangeData() {
             specialEffect = SpecialEffect(
                 chance = 10,
                 execute = { context ->
-                    val chance = if (context.weapon.itemId == 19146) 5 else 10
+                    val chance = if (context.weaponId == 19146) 5 else 10
                     context.ammo?.endGfx = null//TODO not having to reset this everytime
                     if (Utils.roll(1, chance)) {
                         val hit = context.combat.registerHit(
@@ -473,7 +473,7 @@ object StandardRanged : RangeData() {
             specialEffect = SpecialEffect(
                 chance = 10,
                 execute = { context ->
-                    val chance = if (context.weapon.itemId == 19143) 5 else 10
+                    val chance = if (context.weaponId == 19143) 5 else 10
                     context.ammo?.endGfx = null//TODO not having to reset this everytime
                     if (Utils.roll(1, chance)) {
                         val hit = context.combat.registerHit(
@@ -508,7 +508,7 @@ object StandardRanged : RangeData() {
             specialEffect = SpecialEffect(
                 chance = 10,
                 execute = { context ->
-                    val chance = if (context.weapon.itemId == 19149) 5 else 10
+                    val chance = if (context.weaponId == 19149) 5 else 10
                     context.ammo?.endGfx = null//TODO not having to reset this everytime
                     if (Utils.roll(1, chance)) {
                         val hit = context.combat.registerHit(

@@ -126,6 +126,9 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.MachineInformation;
 import com.rs.java.utils.Utils;
 import com.rs.java.game.player.VariableKeys.*;
+import com.rs.kotlin.game.player.combat.CombatStyle;
+import com.rs.kotlin.game.player.combat.melee.MeleeStyle;
+import com.rs.kotlin.game.player.combat.special.CombatContext;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 
 public class Player extends Entity {
@@ -252,6 +255,13 @@ public class Player extends Entity {
     public transient HashMap<Player, Integer> attackedBy = new HashMap<>();
     private int dfsCharges;
     private transient PlayerCombat playerCombat;
+
+    private transient CombatStyle melee;
+    private transient CombatStyle range;
+    private transient CombatStyle magic;
+
+    private transient CombatContext currentCombatContext;
+
     private Hit hitManager;
     private int recoilHits;
 
@@ -508,7 +518,7 @@ public class Player extends Entity {
     /**
      * @PvP
      */
-    private transient boolean canPvp;
+    public transient boolean canPvp;
 
     /**
      * @SafetyDungeon
@@ -1435,27 +1445,26 @@ public class Player extends Entity {
         godwarsKillcount.setPlayer(this);
         setDirection(Utils.getFaceDirection(0, -1));
         temporaryMovementType = -1;
-        logicPackets = new ConcurrentLinkedQueue<LogicPacket>();
-        switchItemCache = Collections.synchronizedList(new ArrayList<Integer>());
+        logicPackets = new ConcurrentLinkedQueue<>();
+        switchItemCache = Collections.synchronizedList(new ArrayList<>());
 
-        switchTakeOffItemCache = Collections.synchronizedList(new ArrayList<Integer>());
-
+        switchTakeOffItemCache = Collections.synchronizedList(new ArrayList<>());
         initEntity();
         packetsDecoderPing = Utils.currentTimeMillis();
         World.addPlayer(this);
         World.updateEntityRegion(this);
         if (passwordList == null)
-            passwordList = new ArrayList<String>();
+            passwordList = new ArrayList<>();
         if (ipList == null)
-            ipList = new ArrayList<String>();
+            ipList = new ArrayList<>();
         if (unlockedItems == null)
-            unlockedItems = new ArrayList<UnlockableItems>();
+            unlockedItems = new ArrayList<>();
         if (lastSkill == null)
-            lastSkill = new ArrayList<String>();
+            lastSkill = new ArrayList<>();
         if (lastlevelUp == null)
-            lastlevelUp = new ArrayList<String>();
+            lastlevelUp = new ArrayList<>();
         if (slayerTask == null)
-            slayerTask = new HashMap<Integer, String>();
+            slayerTask = new HashMap<>();
 
         updateIPnPass();
         if (getSkullSkeptreCharges() <= 0)

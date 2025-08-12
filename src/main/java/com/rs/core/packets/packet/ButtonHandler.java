@@ -2930,7 +2930,7 @@ public class ButtonHandler {
     public static void refreshEquipBonuses(Player player) {
         if (player.getInterfaceManager().containsInterface(667)) {
             player.getPackets().sendGlobalVar(779, player.getEquipment().getWeaponRenderEmote());
-            for (int i = 0; i < BonusType.getEntries().size() - 1; i++) {
+            for (int i = 0; i < BonusType.getEntries().size(); i++) {
                 String bonusName = names[i <= BonusType.RangeAttack.getIndex() ? i : i - 5] + ": ";
                 int bonus = player.combatDefinitions.getBonuses()[i];
                 if (i == BonusType.StregthBonus.getIndex() || i == BonusType.RangedStrBonus.getIndex())

@@ -34,14 +34,15 @@ class CombatAction(
     private lateinit var style: CombatStyle
 
     override fun start(player: Player): Boolean {
-        if (target.isDead) {
+        if (target.isDead || target.hasFinished()) {
+            stop(player, true)
             return false
         }
         val spellId = player.getCombatDefinitions().spellId
         style = when {
-            spellId != 0 -> MagicStyle
-            isRangedWeapon(player) -> RangedStyle
-            else -> MeleeStyle
+            spellId != 0 -> MagicStyle(player, target)
+            isRangedWeapon(player) -> RangedStyle(player, target)
+            else -> MeleeStyle(player, target)
         }
         player.temporaryTarget = target
         player.tickTimers.set(Keys.IntKey.LAST_ATTACK_TICK, 10)
@@ -67,14 +68,15 @@ class CombatAction(
     }
 
     override fun process(player: Player): Boolean {
-        if (target.isDead) {
+        if (target.isDead || target.hasFinished()) {
+            stop(player, true)
             return false
         }
         val spellId = player.getCombatDefinitions().spellId
         style = when {
-            spellId != 0 -> MagicStyle
-            isRangedWeapon(player) -> RangedStyle
-            else -> MeleeStyle
+            spellId != 0 -> MagicStyle(player, target)
+            isRangedWeapon(player) -> RangedStyle(player, target)
+            else -> MeleeStyle(player, target)
         }
         player.calcFollow(target, if (player.run) 2 else 1, true, true);
         ensureFollowTask(player);
@@ -83,7 +85,7 @@ class CombatAction(
 
     private fun getAdjustedFollowDistance(target: Entity): Int {
         var baseDistance = style.getAttackDistance()
-        if ((style == MagicStyle || style == RangedStyle) && target.hasWalkSteps()) {
+        if ((style is MagicStyle || style is RangedStyle) && target.hasWalkSteps()) {
             baseDistance = (baseDistance - 1).coerceAtLeast(0)
         }
         return baseDistance
@@ -91,7 +93,7 @@ class CombatAction(
 
     private fun getAdjustedAttackRange(player: Player, target: Entity): Int {
         var baseDistance = style.getAttackDistance()
-        if (style == MeleeStyle && target.hasWalkSteps()) {
+        if (style is MeleeStyle && target.hasWalkSteps()) {
             if (!Utils.isOnRange(player.x, player.y, player.size, target.x, target.y, target.size, baseDistance)) {
                 baseDistance += 2
             }
@@ -115,7 +117,7 @@ class CombatAction(
                 requiredDistance
             )
         ) {
-            player.message("cant reach target");
+            player.calcFollow(target,  if (player.run) 2 else 1, true, true)
             return 0
         }
         if (Utils.colides(player.x, player.y, player.size, target.x, target.y, target.size) && !target.hasWalkSteps()) {
@@ -130,6 +132,7 @@ class CombatAction(
             && dx == 1 && dy == 1
             && attackDistance < 1
         ) {
+            player.message("This delayed combat")
             return 0
         }
         return when (phase) {
@@ -155,7 +158,7 @@ class CombatAction(
 
         followTask = object : WorldTask() {
             override fun run() {
-                if (player.isDead || target.isDead || !player.isActive) {
+                if (player.isDead || target.isDead || target.hasFinished() || !player.isActive) {
                     stopFollowTask()
                     return
                 }
@@ -166,15 +169,7 @@ class CombatAction(
                     return
                 }
 
-                if (Utils.colides(
-                        player.x,
-                        player.y,
-                        size,
-                        target.x,
-                        target.y,
-                        target.size
-                    ) && !target.hasWalkSteps()
-                ) {
+                if (Utils.colides(player.x, player.y, size, target.x, target.y, target.size) && !target.hasWalkSteps()) {
                     if (player.isFrozen) {
                         player.packets.sendGameMessage("A magical force prevents you from moving.")
                         stopFollowTask()
@@ -225,6 +220,8 @@ class CombatAction(
     }
 
     private fun check(player: Player, target: Entity): Boolean {
+        if (target.isDead || target.hasFinished())
+            return false
         if (!style.canAttack(player, target)) {
             return false
         }
@@ -272,9 +269,6 @@ class CombatAction(
     private fun isRangedWeapon(player: Player): Boolean {
         val weaponId = player.equipment.getWeaponId()
         val ranged = RangeData.getWeaponByItemId(weaponId);
-        if (ranged != null) {
-            // println("[CombatAction] isRangedWeapon(): weaponId=${ranged.name}, ${ranged.ammoType.name}")
-        }
         return ranged != null
     }
 

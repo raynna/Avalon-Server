@@ -65,9 +65,12 @@ interface CombatStyle {
                 }
             }
         } else {
-            Hit(defender, 0, resolvedHitLook)
+            Hit(attacker, 0, resolvedHitLook)
         }
         hit.look = resolvedHitLook
+        if (!landed) {
+            hit.landed = false
+        }
         if (hit.isCriticalHit && !hit.isCombatLook) {
             hit.critical = false
         }

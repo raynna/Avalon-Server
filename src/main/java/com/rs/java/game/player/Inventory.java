@@ -494,8 +494,8 @@ public final class Inventory implements Serializable {
 		if (player.isDeveloperMode()) {
 			builder = new StringBuilder();
 			try {
-				dumpAllItemDefinitions();
-				dumpAllItemClientScriptData();
+				//dumpAllItemDefinitions();
+				//dumpAllItemClientScriptData();
 				dumpScripts(item.getId());
 			} catch (Exception error) {
 				System.out.println(error.toString());
