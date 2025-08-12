@@ -27,10 +27,12 @@ dependencies {
     implementation(files("lib/FileStore.jar"))
     implementation(files("lib/everythingrs-api.jar"))
     implementation(files("lib/ip2c.jar"))
-    implementation(files("lib/RS-Cache-Library.jar"))
 
     // Optional: Kotlin reflection if you want to use annotations
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.24")
+
+    // https://mvnrepository.com/artifact/com.displee/rs-cache-library
+    implementation("com.displee:rs-cache-library:7.3.0")
 }
 
 application {
