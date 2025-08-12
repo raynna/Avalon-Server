@@ -48,8 +48,18 @@ class CombatAction(
         healthOverlay.sendOverlay(player, target)
         player.setNextFaceEntity(target);
         player.resetWalkSteps()
-        if (style == MeleeStyle)
-            player.calcFollow(target, if (player.run) 2 else 1, true, true)
+        val requiredDistance = style.getAttackDistance()
+        if (!Utils.isOnRange(
+                player.x,
+                player.y,
+                player.size,
+                target.x,
+                target.y,
+                target.size,
+                requiredDistance)) {
+            player.calcFollow(target, if (player.run) 2 else 1, true, true);
+
+        }
         ensureFollowTask(player)
         return true
     }
@@ -64,8 +74,18 @@ class CombatAction(
             isRangedWeapon(player) -> RangedStyle
             else -> MeleeStyle
         }
-        if (style == MeleeStyle)
-            player.calcFollow(target, if (player.run) 2 else 1, true, true)
+        val requiredDistance = style.getAttackDistance()
+        if (!Utils.isOnRange(
+                player.x,
+                player.y,
+                player.size,
+                target.x,
+                target.y,
+                target.size,
+                requiredDistance)) {
+            player.calcFollow(target, if (player.run) 2 else 1, true, true);
+
+        }
         ensureFollowTask(player);
         return true
     }
@@ -76,16 +96,31 @@ class CombatAction(
         }
         //player.message("process with delay")
         val requiredDistance = style.getAttackDistance()
-        if ((!player.clipedProjectile(target, requiredDistance == 0)) || !Utils.isOnRange(player.x, player.y, player.size, target.x, target.y, target.size, requiredDistance)) {
+        if ((!player.clipedProjectile(target, requiredDistance == 0)) || !Utils.isOnRange(
+                player.x,
+                player.y,
+                player.size,
+                target.x,
+                target.y,
+                target.size,
+                requiredDistance
+            )
+        ) {
             return 0
         }
-        if (Utils.colides(player.x, player.y,   player.size, target.x, target.y, target.size) && !target.hasWalkSteps()) {
+        if (Utils.colides(player.x, player.y, player.size, target.x, target.y, target.size) && !target.hasWalkSteps()) {
             return 0
         }
+        val attackDistance = style.getAttackDistance()
+        val dx = abs(player.x - target.x)
+        val dy = abs(player.y - target.y)
         if (player.combatDefinitions.spellId <= 0
-            && player.equipment.weaponId != 24203 && target.size == 1
-            && abs(player.x - target.x) == 1 && abs(player.y - target.y) == 1) {
-            return 0;
+            && player.equipment.weaponId != 24203
+            && target.size == 1
+            && dx == 1 && dy == 1
+            && attackDistance < 1
+        ) {
+            return 0
         }
         return when (phase) {
             CombatPhase.HIT -> {
@@ -121,20 +156,28 @@ class CombatAction(
                     return
                 }
 
-                if (Utils.colides(player.x, player.y, size, target.x, target.y, target.size) && !target.hasWalkSteps()) {
-                    if (player.freezeDelay >= Utils.currentTimeMillis()) {
+                if (Utils.colides(
+                        player.x,
+                        player.y,
+                        size,
+                        target.x,
+                        target.y,
+                        target.size
+                    ) && !target.hasWalkSteps()
+                ) {
+                    if (player.isFrozen) {
                         player.packets.sendGameMessage("A magical force prevents you from moving.")
                         stopFollowTask()
                         return
                     }
-                    if (!handleCollisionMovement(player, target, size)) {
+                    if (handleCollisionMovement(player, target, size)) {
                         stopFollowTask()
                     }
                     return
                 }
 
                 if (shouldAdjustDiagonal(player, target)) {
-                    if (player.freezeDelay >= Utils.currentTimeMillis()) {
+                    if (player.isFrozen) {
                         player.packets.sendGameMessage("A magical force prevents you from moving.")
                         stopFollowTask()
                         return
@@ -144,7 +187,16 @@ class CombatAction(
                 }
 
                 player.resetWalkSteps()
-                if ((!player.clipedProjectile(target, requiredDistance == 0)) || !Utils.isOnRange(player.x, player.y, player.size, target.x, target.y, target.size, requiredDistance)) {
+                if ((!player.clipedProjectile(target, requiredDistance == 0)) || !Utils.isOnRange(
+                        player.x,
+                        player.y,
+                        player.size,
+                        target.x,
+                        target.y,
+                        target.size,
+                        requiredDistance
+                    )
+                ) {
                     val moved = lastTargetX != target.x || lastTargetY != target.y
                     lastTargetX = target.x
                     lastTargetY = target.y
@@ -198,6 +250,7 @@ class CombatAction(
 
     override fun stop(player: Player, interrupted: Boolean) {
         println("[CombatAction] stop(): Combat stopped (interrupted=$interrupted)")
+        player.setNextFaceEntity(null);
         style.onStop(interrupted)
     }
 
@@ -210,13 +263,13 @@ class CombatAction(
         val weaponId = player.equipment.getWeaponId()
         val ranged = RangeData.getWeaponByItemId(weaponId);
         if (ranged != null) {
-           // println("[CombatAction] isRangedWeapon(): weaponId=${ranged.name}, ${ranged.ammoType.name}")
+            // println("[CombatAction] isRangedWeapon(): weaponId=${ranged.name}, ${ranged.ammoType.name}")
         }
         return ranged != null
     }
 
     private fun handleCollisionMovement(player: Player, target: Entity, size: Int): Boolean {
-        if (player.freezeDelay >= System.currentTimeMillis()) {
+        if (player.isFrozen) {
             player.message("A magical force prevents you from moving.")
             return false
         }
@@ -256,9 +309,11 @@ class CombatAction(
     }
 
     private fun shouldAdjustDiagonal(player: Player, target: Entity): Boolean {
+        val attackDistance = style.getAttackDistance()
         return target.size == 1 &&
                 abs(player.x - target.x) == 1 &&
                 abs(player.y - target.y) == 1 &&
-                !target.hasWalkSteps()
+                !target.hasWalkSteps() &&
+                attackDistance < 1
     }
 }

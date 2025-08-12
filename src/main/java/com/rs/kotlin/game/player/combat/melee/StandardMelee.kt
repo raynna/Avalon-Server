@@ -36,7 +36,7 @@ object StandardMelee : MeleeData() {
         ),
         effect = SpecialEffect(
             execute = { context ->
-                if (Utils.roll(1, 15)) {
+                if (Utils.roll(1, 3)) {
                     context.defender.addFreezeDelay(16, false);
                     context.defender.gfx( Graphics(181, 0, 96))
                     context.forcedHit(delay = 1)
@@ -128,7 +128,29 @@ object StandardMelee : MeleeData() {
                     context.meleeHit(delay = 0, damageMultiplier = 0.75)
                 }
             )
-
+        ),
+        MeleeWeapon(
+            itemId = 3204,
+            name = "Dragon halberd",
+            weaponStyle = WeaponStyle.HALBERD,
+            attackRange = 1,
+            animations = mapOf(
+                StyleKey(AttackStyle.CONTROLLED, 0) to 437,
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to 440,
+                StyleKey(AttackStyle.DEFENSIVE, 2) to 438,
+            ),
+            special = SpecialAttack(
+                energyCost = 30,
+                accuracyMultiplier = 1.1,
+                damageMultiplier = 1.1,
+                execute = { context ->
+                    context.attacker.animate(Animation(1203))
+                    context.attacker.gfx(Graphics(282, 0, 100))
+                    context.meleeHit()
+                    if (context.defender.size > 1)
+                    context.meleeHit()
+                }
+            )
         ),
         MeleeWeapon(
             itemId = 1321,

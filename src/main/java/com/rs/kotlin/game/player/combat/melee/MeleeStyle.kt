@@ -36,7 +36,6 @@ object MeleeStyle : CombatStyle {
             else ->
                 StandardMelee.getDefaultWeapon() // unarmed
         }
-        attacker.message("currentWeapon ${currentWeapon.name}")
         attackStyle = getAttackStyle()
         attackBonusType = getAttackBonusType()
         combatContext = CombatContext(
@@ -93,6 +92,7 @@ object MeleeStyle : CombatStyle {
             effect.execute(combatContext)
             return
         }
+        CombatAnimations.getAnimation(currentWeapon.itemId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
         val hit = combatContext.meleeHit()
         if (attacker.developerMode) {
             attacker.message("[Melee Attack] -> " +
