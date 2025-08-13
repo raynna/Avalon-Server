@@ -14,8 +14,8 @@ public class Keys {
         OVERLOAD_TICKS(8, 0),
         RENEWAL_TICKS(9, 0),
         VENGEANCE_TICKS(10, 0),
-
         LAST_ATTACK_TICK(11, 0),
+        STAFF_OF_LIGHT_EFFECT(12, 0),
 
         COAL_STORED(15, 0),
 

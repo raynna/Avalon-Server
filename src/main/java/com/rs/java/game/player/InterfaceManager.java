@@ -85,6 +85,10 @@ public class InterfaceManager {
 	public void sendQuestTab() {
 		sendTab(isResizableScreen() ? 114 : 174, 3002);
 	}
+
+	public void sendSummoningTab() {
+		sendTab(resizableScreen ? 119 : 179, 662);
+	}
 	
 	public void sendDungTab() {
 		sendTab(isResizableScreen() ? 114 : 174, 939);
@@ -105,6 +109,11 @@ public class InterfaceManager {
 				isResizableScreen() ? RESIZABLE_INV_TAB_ID : FIXED_INV_TAB_ID, childId);
 	}
 
+	public void sendInventoryInterface(int childId, boolean noclip) {
+		player.getPackets().sendInterface(noclip, isResizableScreen() ? RESIZABLE_WINDOW_ID : FIXED_WINDOW_ID,
+				isResizableScreen() ? RESIZABLE_INV_TAB_ID : FIXED_INV_TAB_ID, childId);
+	}
+
 	public void sendTimerInterface(Player player) {
 		player.getInterfaceManager().sendOverlay(3000, false);
 		player.getPackets().sendTextOnComponent(3000, 5, "");
@@ -122,20 +131,19 @@ public class InterfaceManager {
 			setResizableScreen(false);
 			sendFixedInterfaces();
 		}
-		//player.getSkills().sendInterfaces();
 		player.getSkills().resetXPDisplay();
 		player.getCombatDefinitions().sendUnlockAttackStylesButtons();
 		player.getMusicsManager().unlockMusicPlayer();
 		player.getEmotesManager().unlockEmotesBook();
 		player.getInventory().unlockInventoryOptions();
 		player.getPrayer().refresh();
-		//player.getInterfaceManager().sendTimerInterface(player);
 		sendTimerInterface();
 		ClansManager.unlockBanList(player);
 		player.getPackets().sendTextOnComponent(182, 1,
 				"When you finished playing " + Settings.SERVER_NAME + ", click the log out button to save your progress properly.");
 		if (player.getFamiliar() != null && player.isActive())
 			player.getFamiliar().unlock();
+		player.getPackets().sendGlobalVar(234, 4);//overwrite questtab icon
 		player.getControlerManager().sendInterfaces();
 	}
 
@@ -162,7 +170,7 @@ public class InterfaceManager {
 		sendTab(197, 750);
 		sendTab(198, 747);
 		player.getPackets().sendInterface(true, 752, 9, 137);
-		sendTab(119, 1139);
+		sendTab(119, 662);
 		player.getPackets().sendGlobalVar(823, 1);
 		sendCombatStyles();
 		sendTaskSystem();
@@ -195,13 +203,13 @@ public class InterfaceManager {
 		player.getPackets().sendInterface(true, 752, 9, 137);
 		player.getPackets().sendInterface(true, 548, 9, 167);
 		//sendTab(player.getInterfaceManager().hasRezizableScreen() ? 11 : 0, 1252);
-		sendTab(119, 1139);
+		//sendTab(119, 1139);
 		sendMagicBook();
 		sendPrayerBook();
 		sendEquipment();
 		sendInventory();
 		sendQuestTab();
-		sendSof();
+		sendSummoningTab();
 		sendTab(181, 1109);// 551 ignore now friendchat
 		sendTab(182, 1110);// 589 old clan chat now new clan chat
 		sendTab(180, 550);// friend list
@@ -502,6 +510,8 @@ public class InterfaceManager {
 		});
 	}
 
+	//sum globalvarid 168 8
+	//
 	/*
 	 * returns lastGameTab
 	 */

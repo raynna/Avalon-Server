@@ -314,16 +314,19 @@ object SpellHandler {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER", "UNUSED_VARIABLE")
     private fun handleTelegrabSpell(player: Player, spell: Spell) {
-        val floorItem = player.temporaryAttribute()["spell_flooritem"] as? FloorItem ?: return
+        val _floorItem = player.temporaryAttribute()["spell_flooritem"] as? FloorItem ?: return
         player.message("Telegrab handler works")
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun handleTeleportOtherSpell(player: Player, spell: Spell) {
         val target = player.temporaryAttribute()["spell_target"] as? Player ?: return
         player.message("Teleport ${target.displayName} to ${spell.name}")
     }
 
+    @Suppress("UNUSED_VARIABLES")
     fun sendTeleportSpell(
         player: Player,
         upEmoteId: Int,

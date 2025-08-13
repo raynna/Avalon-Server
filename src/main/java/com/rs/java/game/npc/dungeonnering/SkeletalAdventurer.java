@@ -40,7 +40,7 @@ public final class SkeletalAdventurer extends DungeonBoss {
 		final NPCCombatDefinitions defs = getCombatDefinitions();
 		resetWalkSteps();
 		getCombat().removeTarget();
-		animate(null);
+		animate(-1);
 		boolean last = true;
 		List<Integer> npcsIndexes = World.getRegion(getRegionId()).getNPCsIndexes();
 		if (npcsIndexes != null) {

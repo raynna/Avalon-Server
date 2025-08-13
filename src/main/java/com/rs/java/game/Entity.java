@@ -4,13 +4,11 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.rs.Settings;
 import com.rs.core.cache.defintions.AnimationDefinitions;
 import com.rs.core.cache.defintions.ObjectDefinitions;
-import com.rs.core.thread.CoresManager;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.area.AreaManager;
 import com.rs.java.game.area.LividFarmArea;
@@ -22,6 +20,7 @@ import com.rs.java.game.npc.pet.Pet;
 import com.rs.java.game.npc.qbd.TorturedSoul;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.actions.combat.ModernMagicks;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.actions.combat.Poison;
@@ -33,7 +32,6 @@ import com.rs.java.game.route.strategy.ObjectStrategy;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.HexColours;
-import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.NewPoison;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
@@ -133,6 +131,10 @@ public abstract class Entity extends WorldTile {
         lastFaceEntity = -1;
         nextFaceEntity = -2;
         poison.setEntity(this);
+        if (tickManager == null) {
+            tickManager = new TickManager(this);
+        }
+        tickManager.init();
         if (newPoison == null) {
             newPoison = new NewPoison(this);
         }
@@ -1177,9 +1179,10 @@ public abstract class Entity extends WorldTile {
 
     public abstract int getMaxHitpoints();
 
-    public void processEntity() {
+   public void processEntity() {
         poison.processPoison();
         newPoison.processPoison();
+        tickManager.tick();
         processMovement();
         processReceivedHits();
         processReceivedDamage();
@@ -1197,17 +1200,11 @@ public abstract class Entity extends WorldTile {
     }
 
     public int getFreezeDelay() {
-        if (tickTimers.get(Keys.IntKey.FREEZE_TICKS) == null) {
-            return 0;
-        }
-        return tickTimers.get(Keys.IntKey.FREEZE_TICKS);
+        return tickManager.getTicksLeft(TickManager.Keys.FREEZE_TICKS);
     }
 
     public boolean isFrozen() {
-        if (tickTimers.get(Keys.IntKey.FREEZE_TICKS) == null) {
-            return false;
-        }
-        return tickTimers.get(Keys.IntKey.FREEZE_TICKS) > 0;
+        return tickManager.isActive(TickManager.Keys.FREEZE_TICKS);
     }
 
     public boolean isFreezeImmune() {
@@ -1218,18 +1215,23 @@ public abstract class Entity extends WorldTile {
     }
 
     public void freeze(int value) {
-        setTimer(Keys.IntKey.FREEZE_TICKS, value);
-        setTimer(Keys.IntKey.FREEZE_IMMUNE_TICKS, value + 5);
+       if (this instanceof Player player) {
+           tickManager.addTicks(TickManager.Keys.FREEZE_TICKS, value, () ->
+                   player.message("You are no longer frozen.")
+           );
+           tickManager.addTicks(TickManager.Keys.FREEZE_IMMUNE_TICKS, value + 5);
+       } else {
+           tickManager.addTicks(TickManager.Keys.FREEZE_TICKS, value);
+       }
     }
 
     public void addFreezeDelay(int ticks, boolean entangle) {
-        setTimer(Keys.IntKey.FREEZE_TICKS, ticks);
-        setTimer(Keys.IntKey.FREEZE_IMMUNE_TICKS, ticks + 5);
         if (this instanceof Player player) {
             player.message("Freeze for " + ticks + " ticks, entangle: " + entangle);
             player.message("FrozenTimer: " + getTimer(Keys.IntKey.FREEZE_TICKS));
         }
         if (!isFrozen()) {
+            freeze(ticks);
             resetWalkSteps();
             if (this instanceof Player player) {
                 player.resetWalkSteps();
@@ -1238,9 +1240,8 @@ public abstract class Entity extends WorldTile {
             }
         } else {
             if (entangle) {
-                if (this instanceof Player) {
-                    Player p = (Player) this;
-                    p.getPackets().sendGameMessage("This player is already effected by this spell.", true);
+                if (this instanceof Player player) {
+                    player.getPackets().sendGameMessage("This player is already effected by this spell.", true);
                 }
             }
         }
@@ -1350,6 +1351,12 @@ public abstract class Entity extends WorldTile {
 
     public Map<Keys.IntKey, Integer> tickTimers = new HashMap<>();
 
+    private TickManager tickManager = new TickManager(this);
+
+    public TickManager getTickManager() {
+        return tickManager;
+    }
+
     public void setTimer(Keys.IntKey key, int ticks) {
         tickTimers.put(key, ticks);
     }
@@ -1428,6 +1435,9 @@ public abstract class Entity extends WorldTile {
     }
 
     public void animate(Animation animation) {
+        if (animation == null) {
+            this.nextAnimation = new Animation(-1);
+        }
         if (this.nextAnimation != null && animation != null) {
             AnimationDefinitions newAnimation = AnimationDefinitions.getAnimationDefinitions(animation.getIds()[0]);
             AnimationDefinitions nextAnim = AnimationDefinitions.getAnimationDefinitions(this.nextAnimation.getIds()[0]);
@@ -1455,6 +1465,9 @@ public abstract class Entity extends WorldTile {
     public void animate(int animationId) {
         animate(new Animation(animationId));
     }
+    public void animate(String animation) {
+        animate(new Animation(animation));
+    }
 
     public void delayedAnimation(int animationId, int milliseconds, boolean reset) {
     }
@@ -1465,6 +1478,14 @@ public abstract class Entity extends WorldTile {
 
     public Animation getNextAnimation() {
         return nextAnimation;
+    }
+
+    public void gfx(String graphic) {
+        gfx(new Graphics(graphic));
+    }
+
+    public void gfx(String graphic, int height) {
+        gfx(new Graphics(graphic, height));
     }
 
     public void gfx(int gfxId) {

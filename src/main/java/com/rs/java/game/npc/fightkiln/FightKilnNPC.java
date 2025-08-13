@@ -60,7 +60,7 @@ public class FightKilnNPC extends NPC {
 		final NPCCombatDefinitions defs = getCombatDefinitions();
 		resetWalkSteps();
 		getCombat().removeTarget();
-		animate(null);
+		animate(-1);
 		controler.checkCrystal();
 		gfx(new Graphics(getDeathGfx()));
 		WorldTasksManager.schedule(new WorldTask() {

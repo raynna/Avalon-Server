@@ -325,7 +325,7 @@ public class InventoryOptionsHandler {
                 player.message("You do not have enough inventory slots. You need 8 or more.");
                 return;
             }
-            final int[] items = Item.getItems(
+            final int[] items = Item.getIdsArray(
                     "item.noose_wand",
                     "item.butterfly_net",
                     "item.bird_snare",

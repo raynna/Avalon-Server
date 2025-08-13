@@ -1329,8 +1329,8 @@ public class Player extends Entity {
             CustomDuelRule = new HashMap<>();
         if (geManager == null)
             geManager = new GrandExchangeManager();
-        if (squealOfFortune == null)
-            squealOfFortune = new SquealOfFortune();
+        //if (squealOfFortune == null)//DISABLED FOR NOW
+          //  squealOfFortune = new SquealOfFortune();
         if (pinpinpin != 1) {
             pinpinpin = 1;
             bankpins = new int[]{0, 0, 0, 0};
@@ -2760,9 +2760,9 @@ public class Player extends Entity {
         getSkills().switchXPPopup(true);
         if (machineInformation != null)
             machineInformation.sendSuggestions(this);
-        if (getSquealOfFortune().getEarnedSpins() > 0) {
+        /*if (getSquealOfFortune().getEarnedSpins() > 0) {
             getInterfaceManager().sendOverlay(1252, false);
-        }
+        }*/
         startGame(this);
         if (getBeam() != null) {
             setBeam(null);
@@ -3031,7 +3031,7 @@ public class Player extends Entity {
     }
 
     private ItemsContainer<Item> bobItems;
-    private Summoning.Pouch familiarPouch;
+    public Summoning.Pouch familiarPouch;
 
     public void forceLogout() {
         getPackets().sendLogout(false);

@@ -476,8 +476,7 @@ public class NPC extends Entity implements Serializable {
         combat.removeTarget();
         source.setAttackedByDelay(0);
         setBonuses();
-        animate(null);
-        animate(new Animation(defs.getDeathEmote()));
+        animate(defs.getDeathEmote());
         WorldTasksManager.schedule(new WorldTask() {
             int loop;
 

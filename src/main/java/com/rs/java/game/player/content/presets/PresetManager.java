@@ -7,8 +7,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.rs.Settings;
+import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.controlers.EdgevillePvPControler;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.HexColours.Colour;
@@ -63,12 +66,14 @@ public final class PresetManager implements Serializable {
 					true);
 			return;
 		}
-		final Item[] inventory = player.getInventory().getItems().getItemsCopy(),
-				equipment = player.getEquipment().getItems().getItemsCopy(), runes = player.getRunePouch().getContainerItems();
+		final Item[] inventory =
+				player.getInventory().getItems().getItemsCopy(),
+				equipment = player.getEquipment().getItems().getItemsCopy(),
+				runes = player.getRunePouch().getContainerItems();
 		PRESET_SETUPS.put(name,
 				new Preset(name, inventory, equipment, player.getPrayer().isAncientCurses(),
-                        (byte) player.getCombatDefinitions().spellBook, (Arrays.copyOf(player.getSkills().getXp(), 7)), runes));
-
+                        player.getCombatDefinitions().spellBook, (Arrays.copyOf(player.getSkills().getXp(), 7)), runes, player.getFamiliar().getPouch()));
+		player.message("Pouch: " + player.getFamiliar().getPouch().name());
 		player.getPackets().sendGameMessage("You've successfully stored the set " + name + ".", true);
 	}
 
@@ -199,8 +204,10 @@ public final class PresetManager implements Serializable {
 		if (data != null && data.length > 0) {
 			for (int i = 0; i < data.length; i++) {
 				final Item item = data[i];
-				if (item == null)
+				if (item == null) {
+					player.getInventory().addItem(0, 1);
 					continue;
+				}
 				if ((Settings.ECONOMY_MODE == 1 && set.getInventory()[i] != null
 						&& set.getInventory()[i].getDefinitions().getValue() >= Settings.LOWPRICE_LIMIT)
 						|| Settings.ECONOMY_MODE == 0
@@ -226,6 +233,24 @@ public final class PresetManager implements Serializable {
 				if (item != null) {
 					player.getRunePouch().add(item);
 					player.getRunePouch().shift();
+				}
+			}
+		}
+
+		Summoning.Pouch pouch = set.getFamiliar();
+		if (pouch != null) {
+			Item pouchItem = new Item(pouch.getRealPouchId());
+			if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
+				if (!player.getBank().containsOneItem(pouch.getRealPouchId())) {
+					player.getPackets().sendGameMessage("Couldn't find " + pouchItem.getName() + " in your bank.");
+				} else {
+					if (!Summoning.spawnFamiliar(player, pouch, true)) {
+						player.getPackets().sendGameMessage("Failed to spawn familiar from preset.");
+					}
+				}
+			} else {
+				if (!Summoning.spawnFamiliar(player, pouch, true)) {
+					player.getPackets().sendGameMessage("Failed to spawn familiar from preset.");
 				}
 			}
 		}

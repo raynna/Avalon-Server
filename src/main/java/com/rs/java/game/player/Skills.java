@@ -1076,7 +1076,7 @@ public final class Skills implements Serializable {
                         xpUpdateLock.unlock();
                     }
                 }
-            }, 60);
+            }, 120);
         }
     }
 

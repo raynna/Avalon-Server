@@ -29,25 +29,31 @@ import com.rs.java.utils.Utils;
 public class Summoning {
 
 	public static void spawnFamiliar(Player player, Pouch pouch) {
-		if (player.getFamiliarDelay() > Utils.currentTimeMillis()) {
-			player.getPackets()
-					.sendGameMessage("You gotta wait 5 seconds before spawning a familiar after dissmissing.");
-			return;
+		spawnFamiliar(player, pouch, false);
+	}
+
+	public static boolean spawnFamiliar(Player player, Pouch pouch, boolean force) {
+		if (!force) {
+			if (player.getFamiliarDelay() > Utils.currentTimeMillis()) {
+				player.getPackets()
+						.sendGameMessage("You gotta wait 5 seconds before spawning a familiar after dissmissing.");
+				return false;
+			}
 		}
 		if (player.getFamiliar() != null || player.getPet() != null) {
 			player.getPackets().sendGameMessage("You already have a follower.");
-			return;
+			return false;
 		}
 		if (!player.getControlerManager().canSummonFamiliar()
 				|| player.getSkills().getLevel(Skills.SUMMONING) < pouch.getSummoningCost()) {
 			player.getPackets().sendGameMessage("You don't have enough summoning points to an familiar.");
-			return;
+			return false;
 		}
 		int levelReq = getRequiredLevel(pouch.getRealPouchId());
 		if (player.getSkills().getLevelForXp(Skills.SUMMONING) < levelReq) {
 			player.getPackets()
 					.sendGameMessage("You need a summoning level of " + levelReq + " in order to use this pouch.");
-			return;
+			return false;
 		}
 		if (player.getCurrentFriendChat() != null) {
 			ClanWars war = player.getCurrentFriendChat().getClanWars();
@@ -55,14 +61,14 @@ public class Summoning {
 				if (war.get(Rules.NO_FAMILIARS)
 						&& (war.getFirstPlayers().contains(player) || war.getSecondPlayers().contains(player))) {
 					player.getPackets().sendGameMessage("You can't summon familiars during this war.");
-					return;
+					return false;
 				}
 			}
 		}
 		final Familiar npc = createFamiliar(player, pouch);
 		if (npc == null) {
 			player.getPackets().sendGameMessage("This familiar is not added yet.");
-			return;
+			return false;
 		}
 		if (npc.getName().toLowerCase().contains("unicorn"))
 			player.getTaskManager().checkComplete(Tasks.SUMMON_UNICORN_STALLION);
@@ -71,6 +77,7 @@ public class Summoning {
 		player.setFamiliar(npc);
 		player.getSkills().addXp(Skills.SUMMONING, 10);
 		player.getPackets().sendGlobalVar(168, 8);
+		return true;
 	}
 
 	public static Familiar createFamiliar(Player player, Pouch pouch) {

@@ -1265,7 +1265,7 @@ public final class Commands {
                     return true;
                 case "poisonme":
                     player.getNewPoison().startPoison(30);
-                        return true;
+                    return true;
                 case "serverdoubledrop":
                     try {
                         boolean doubledrop = Boolean.valueOf(cmd[1]);
@@ -1640,6 +1640,7 @@ public final class Commands {
                     var1 = Integer.valueOf(cmd[1]);
                     var2 = Integer.valueOf(cmd[2]);
                     varValue = Integer.valueOf(cmd[3]);
+                    player.getInterfaceManager().sendTab(95, 662);
                     for (int i = var1; i < var2; i++)
                         player.getPackets().sendGlobalVar(i, varValue);
                     player.message("sent global config " + var1 + "-" + var2 + ":value:" + varValue);
@@ -1926,10 +1927,17 @@ public final class Commands {
                     player.getPackets().sendItems(95, p211.getBank().getContainerCopy());
                     player.getBank().openPlayerBank(p211);
                     return true;
+                case "testtab":
+                    player.getInterfaceManager().sendTab(Integer.parseInt(cmd[1]), 662);
+                    player.getPackets().sendGlobalVar(168, 99);
+                        return true;
                 case "tab":
-                    player.getInterfaceManager().closeOverlay(true);
-                    player.getInterfaceManager().sendTab(Integer.parseInt(cmd[1]), 3043);
-                    player.message("send interface 3043, tab:" + Integer.parseInt(cmd[1]));
+                    int loops = Integer.parseInt(cmd[2]);
+                    for (int startId = Integer.parseInt(cmd[1]); startId < loops; startId++) {
+                        player.getInterfaceManager().sendTab(startId, 662);
+                        player.getPackets().sendGlobalVar(168, 99);
+                    }
+                    player.message("sending summoning tab");
                     return true;
                 case "healother":
                     if (cmd.length == 2 || cmd.length == 3) {
@@ -2118,8 +2126,8 @@ public final class Commands {
                             }
                         }
                         if (p != null) {
-                                p.setDuelkillCount(amount);
-                          return true;
+                            p.setDuelkillCount(amount);
+                            return true;
                         }
                     } else {
                         player.getPackets().sendGameMessage("Use: ::setduelkillsother username amount");

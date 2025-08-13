@@ -1,10 +1,13 @@
 package com.rs.kotlin.game.player.combat.melee
 
-import com.rs.java.game.npc.NPC;
 import com.rs.java.game.Animation
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
+import com.rs.java.game.item.Item
+import com.rs.java.game.npc.NPC
+import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
+import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.special.*
 
@@ -48,7 +51,7 @@ object StandardMelee : MeleeData() {
     )
     override val weapons = listOf(
         MeleeWeapon(
-            itemId = listOf(4151),
+            itemId = Weapon.itemIds("item.abyssal_whip"),
             name = "Abyssal whip",
             weaponStyle = WeaponStyle.WHIP,
             attackSpeed = 4,
@@ -96,7 +99,7 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = listOf(5698),
+            itemId = Item.getIds("item.dragon_dagger", "item.dragon_dagger_p"),
             name = "Dragon dagger",
             weaponStyle = WeaponStyle.DAGGER,
             attackSpeed = 4,
@@ -120,12 +123,15 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = listOf(4747, 4958, 4959, 4960, 4961, 4962),
+            itemId = Item.getIds(
+                "item.torag_s_hammers", "item.torag_s_hammers_100",
+                "item.torag_s_hammers_75", "item.torag_s_hammers_50",
+                "item.torag_s_hammers_25", "item.torag_s_hammers_0"),
             name = "Torag's hammers",
             weaponStyle = WeaponStyle.HAMMER,
             effect = SpecialEffect(
                 execute = { context ->
-                    context.attacker.animate(Animation(2068))
+                    context.attacker.animate(Animation("animation.torag_hammer_attack"))
 
                     val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
                     val maxHit1 = (maxHit + 1)/2
@@ -140,10 +146,10 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = listOf(18355),
+            itemId = Item.getIds("item.chaotic_staff", "item.chaotic_staff_broken"),
             name = "Chaotic staff",
             weaponStyle = WeaponStyle.STAFF,
-            blockAnimationId = 13046,
+            blockAnimationId = Animation.getId("animation.staff_of_light_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to 401,
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to 401,
@@ -151,14 +157,29 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = listOf(15486, 15502, 15507, 22207, 22209, 22211, 22213),
+            itemId = Item.getIds(
+                "item.staff_of_light", "item.staff_of_light_lended",
+                "item.staff_of_light_red", "item.staff_of_light_gold",
+                "item.staff_of_light_blue", "item.staff_of_light_green"),
             name = "Staff of light",
             weaponStyle = WeaponStyle.STAFF_OF_LIGHT,
-            blockAnimationId = 13046,
+            blockAnimationId = Animation.getId("animation.staff_of_light_block"),
             animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to 15072,
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to 15071,
-                StyleKey(AttackStyle.DEFENSIVE, 2) to 414,
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.staff_of_light_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.staff_of_light_slash"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.staff_crush"),
+            ),
+            special = SpecialAttack(
+                energyCost = 100,
+                instant = true,
+                execute = { context ->
+                    context.attacker.animate("animation.staff_of_light_special")
+                    context.attacker.gfx("graphic.staff_of_light_special")
+                    context.attacker.tickManager.addMinutes(TickManager.Keys.STAFF_OF_LIGHT_EFFECT, 1) {
+                        context.attacker.message("Your staff of light effect fades.")
+                    }
+
+                }
             )
         ),
         MeleeWeapon(
@@ -182,6 +203,29 @@ object StandardMelee : MeleeData() {
                     context.meleeHit()
                     if (context.defender.size > 1)
                     context.meleeHit()
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = listOf(Rscm.lookup("item.armadyl_godsword"), Rscm.lookup("item.armadyl_godsword_2"), Rscm.lookup("item.lucky_armadyl_godsword")),
+            name = "Armadyl godsword",
+            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            blockAnimationId = 7050,
+            animations = mapOf(
+                StyleKey(AttackStyle.CONTROLLED, 0) to 437,
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to 440,
+                StyleKey(AttackStyle.DEFENSIVE, 2) to 438,
+            ),
+            special = SpecialAttack(
+                energyCost = 30,
+                accuracyMultiplier = 1.1,
+                damageMultiplier = 1.1,
+                execute = { context ->
+                    context.attacker.animate(Animation(1203))
+                    context.attacker.gfx(Graphics(282, 0, 100))
+                    context.meleeHit()
+                    if (context.defender.size > 1)
+                        context.meleeHit()
                 }
             )
         ),

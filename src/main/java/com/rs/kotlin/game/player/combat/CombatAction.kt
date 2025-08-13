@@ -259,6 +259,8 @@ class CombatAction(
 
     override fun stop(player: Player, interrupted: Boolean) {
         println("[CombatAction] stop(): Combat stopped (interrupted=$interrupted)")
+        stopFollowTask();
+        player.resetWalkSteps();
         player.setNextFaceEntity(null);
         style.onStop(interrupted)
     }

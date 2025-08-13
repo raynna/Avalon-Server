@@ -11,6 +11,11 @@ public final class Animation {
 		this(id, 0);
 	}
 
+	public static int getId(String name) {
+		String key = name.startsWith("animation.") ? name : "animation." + name;
+		return Rscm.lookup(key);
+	}
+
 	public Animation(String animation) {
 		this(Rscm.lookup(animation), 0);
 	}

@@ -106,25 +106,11 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             attackStyle = attackStyle,
             attackBonusType = attackBonusType,
         )
-        if (attacker.combatDefinitions.isUsingSpecialAttack) {
-            currentWeapon.special?.let { special ->
-                val specialEnergy = attacker.combatDefinitions.specialAttackPercentage
-                if (specialEnergy >= special.energyCost) {
-                    val specialContext = combatContext.copy(usingSpecial = true)
-                    special.execute(specialContext);
-                    attacker.combatDefinitions.decreaseSpecialAttack(special.energyCost);
-                    return
-                } else {
-                    attacker.message("You don't have enough special attack energy.")
-                    attacker.combatDefinitions.switchUsingSpecialAttack()
-                }
-            }
-        }
-        currentWeapon.effect?.let { effect ->
-            CombatAnimations.getAnimation(combatContext.weaponId, attackStyle, attacker.combatDefinitions.attackStyle).let { attacker.animate(it) }
-            effect.execute(combatContext)
+        if (executeSpecialAttack(combatContext)) {
             return
         }
+        if (executeEffect(combatContext))
+            return
         attacker.animate(CombatAnimations.getAnimation(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle))
         val hit = combatContext.meleeHit()
         if (attacker.developerMode) {

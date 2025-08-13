@@ -9,6 +9,7 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.magic.Spell
 import com.rs.kotlin.game.player.combat.magic.Spellbook
+import com.rs.kotlin.game.player.combat.special.CombatContext
 
 interface CombatStyle {
     fun canAttack(attacker: Player, defender: Entity): Boolean
@@ -75,6 +76,39 @@ interface CombatStyle {
             hit.critical = false
         }
         return hit
+    }
+
+    fun executeEffect(combatContext: CombatContext): Boolean {
+        combatContext.weapon.effect?.let { effect ->
+            CombatAnimations.getAnimation(combatContext.weaponId, combatContext.attackStyle, combatContext.attacker.combatDefinitions.attackStyle).let { combatContext.attacker.animate(it) }
+            effect.execute(combatContext)
+            return true;
+        }
+        return false;
+    }
+
+    fun executeSpecialAttack(combatContext: CombatContext): Boolean {
+        if (combatContext.attacker.combatDefinitions.isUsingSpecialAttack) {
+            val special = combatContext.weapon.special
+            if (special != null) {
+                val specialEnergy = combatContext.attacker.combatDefinitions.specialAttackPercentage
+                if (specialEnergy >= special.energyCost) {
+                    val specialContext = combatContext.copy(usingSpecial = true)
+                    special.execute(specialContext)
+                    combatContext.attacker.combatDefinitions.decreaseSpecialAttack(special.energyCost)
+                    return true
+                } else {
+                    combatContext.attacker.message("You don't have enough special attack energy.")
+                    combatContext.attacker.combatDefinitions.switchUsingSpecialAttack()
+                    return false
+                }
+            } else {
+                combatContext.attacker.message("This weapon has no special attack.")
+                combatContext.attacker.combatDefinitions.switchUsingSpecialAttack()
+                return false
+            }
+        }
+        return false
     }
 
 

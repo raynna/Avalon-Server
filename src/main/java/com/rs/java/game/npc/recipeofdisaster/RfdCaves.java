@@ -24,7 +24,7 @@ public class RfdCaves extends RfdNPC {
 		final NPCCombatDefinitions defs = getCombatDefinitions();
 		resetWalkSteps();
 		getCombat().removeTarget();
-		animate(null);
+		animate(-1);
 		final WorldTile tile = this;
 		WorldTasksManager.schedule(new WorldTask() {
 			int loop;

@@ -79,7 +79,7 @@ public class GodwarsArmadylFaction extends NPC {
 		final NPCCombatDefinitions defs = getCombatDefinitions();
 		resetWalkSteps();
 		getCombat().removeTarget();
-		animate(null);
+		animate(-1);
 		WorldTasksManager.schedule(new WorldTask() {
 			int loop;
 

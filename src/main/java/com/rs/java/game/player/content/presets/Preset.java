@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.actions.skills.summoning.Summoning;
 
 public final class Preset implements Serializable {
 
@@ -16,9 +17,10 @@ public final class Preset implements Serializable {
 	private final String name;
 	private final double[] xp;
 	private final Item[] runes;
+	private final Summoning.Pouch familiarPouch;
 
 	public Preset(String id, final Item[] inventory, final Item[] equipment, boolean curses, byte spellBook,
-			double[] xp, Item[] runes) {
+			double[] xp, Item[] runes, Summoning.Pouch pouch) {
 		this.name = id;
 		this.inventory = inventory;
 		this.equipment = equipment;
@@ -26,6 +28,7 @@ public final class Preset implements Serializable {
 		this.spellBook = spellBook;
 		this.xp = xp;
 		this.runes = runes;
+		this.familiarPouch = pouch;
 		/*int i = 0;
 		for (Entry<Integer, Item[]> charges : runicStaff.entrySet()) {
 			if (charges == null)
@@ -63,23 +66,23 @@ public final class Preset implements Serializable {
 		return runes;
 	}
 
+	public Summoning.Pouch getFamiliar() {
+		return familiarPouch;
+	}
+
 	public boolean isAncientCurses() {
 		return curses;
 	}
 
-	public final byte getSpellBook() {
+	public byte getSpellBook() {
 		return spellBook;
 	}
 
-	public final double[] getLevels() {
+	public double[] getLevels() {
 		return xp;
 	}
 
-//    public final int getId() {
-//        return name;
-//    }
-
-	public final int getId(final Player player) {
+	public int getId(final Player player) {
 		int i = 0;
 		for (Entry<String, Preset> gear : player.getPresetManager().PRESET_SETUPS.entrySet()) {
 			if (gear.getKey().toLowerCase().equals(name)) {

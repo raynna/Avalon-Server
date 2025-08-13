@@ -41,7 +41,7 @@ public class CastleWarBarricade extends NPC {
 		resetWalkSteps();
 		getCombat().removeTarget();
 		if (this.getId() != 1533) {
-			animate(null);
+			animate(-1);
 			reset();
 			setLocation(getRespawnTile());
 			finish();

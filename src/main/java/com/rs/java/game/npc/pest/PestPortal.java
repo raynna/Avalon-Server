@@ -92,7 +92,7 @@ public class PestPortal extends NPC {
 	public void sendDeath(Entity source) {
 		final NPCCombatDefinitions defs = getCombatDefinitions();
 		resetWalkSteps();
-		animate(null);
+		animate(-1);
 		WorldTasksManager.schedule(new WorldTask() {
 			int loop;
 

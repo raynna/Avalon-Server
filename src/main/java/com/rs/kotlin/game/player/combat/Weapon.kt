@@ -1,4 +1,5 @@
 package com.rs.kotlin.game.player.combat
+import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.melee.StandardMelee
 import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.special.SpecialAttack
@@ -19,6 +20,19 @@ interface Weapon {
     companion object {
         fun getWeapon(itemId: Int): Weapon {
             return RangeData.getWeaponByItemId(itemId) ?: StandardMelee.getWeaponByItemId(itemId) ?: StandardMelee.getDefaultWeapon()
+        }
+
+        fun itemIds(vararg items: Any): List<Int> {
+            return items.map {
+                when (it) {
+                    is Int -> it
+                    is String -> {
+                        val key = if (it.startsWith("item.")) it else "item.$it"
+                        Rscm.lookup(key)
+                    }
+                    else -> throw IllegalArgumentException("Item must be Int or String")
+                }
+            }
         }
     }
 }

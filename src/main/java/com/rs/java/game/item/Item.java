@@ -3,6 +3,7 @@ package com.rs.java.game.item;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.ItemsEquipIds;
@@ -21,21 +22,37 @@ public class Item implements Serializable {
 	private int amount;
 	private ItemMetadata metadata;
 
-	public static int[] getItems(String... names) {
+	public static List<Integer> getIds(Object... ids) {
+		return Arrays.stream(ids)
+				.map(obj -> {
+					if (obj instanceof Integer) {
+						return (Integer) obj;
+					} else if (obj instanceof String name) {
+                        String key = name.startsWith("item.") ? name : "item." + name;
+						return Rscm.lookup(key);
+					} else {
+						throw new IllegalArgumentException("Item must be Integer or String, got: " + obj.getClass());
+					}
+				})
+				.toList();
+	}
+
+
+	public static int[] getIdsArray(String... names) {
 		return Arrays.stream(names)
 				.map(name -> name.startsWith("item.") ? name : "item." + name)
 				.mapToInt(Rscm::lookup)
 				.toArray();
 	}
 
-	public static int getItem(String name) {
+	public static int getId(String name) {
 		String key = name.startsWith("item.") ? name : "item." + name;
 		return Rscm.lookup(key);
 	}
 
 	public static boolean isItem(int id, String... names) {
 		for (String name : names) {
-			if (id == getItem(name)) {
+			if (id == getId(name)) {
 				return true;
 			}
 		}

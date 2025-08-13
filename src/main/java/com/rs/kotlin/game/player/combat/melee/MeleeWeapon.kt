@@ -17,3 +17,4 @@ data class MeleeWeapon(
     override val effect: SpecialEffect? = null,
     val animations: Map<StyleKey, Int> = emptyMap()
 ) : Weapon
+
