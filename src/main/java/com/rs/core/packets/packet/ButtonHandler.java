@@ -89,7 +89,7 @@ public class ButtonHandler {
         if (Utils.getInterfaceDefinitionsSize() <= interfaceId) {
             return;
         }
-        if (player.isDead() || !player.getInterfaceManager().containsInterface(interfaceId)) return;
+        if (player.isDead());
         final int componentId = interfaceHash - (interfaceId << 16);
         if (componentId != 65535 && Utils.getInterfaceDefinitionsComponentsSize(interfaceId) <= componentId) {
             return;
@@ -2454,6 +2454,10 @@ public class ButtonHandler {
         if (player.getSwitchItemCache().contains(slotId)) return;
         player.getSwitchItemCache().add(slotId);
         player.stopAll(false, false, true);
+        if (slotId == Equipment.SLOT_WEAPON) {
+            if (player.combatDefinitions.usingSpecialAttack)
+                player.combatDefinitions.switchUsingSpecialAttack();
+        }
     }
 
     public static boolean sendWear(Player player, int slotId, int itemId) {
@@ -2519,6 +2523,8 @@ public class ButtonHandler {
                 player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
             }
         }
+        if (equipmentSlot == Equipment.SLOT_WEAPON)
+            player.itemSwitch = false;
         Item currentlyEquipped = player.getEquipment().getItem(equipmentSlot);
         refreshEquipBonuses(player);
         return true;

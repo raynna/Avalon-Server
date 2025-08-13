@@ -2198,8 +2198,9 @@ public class Player extends Entity {
         final Player instance = this;
         List<Integer> slots = getSwitchItemCache();
         int[] slot = new int[slots.size()];
-        for (int i = 0; i < slot.length; i++)
+        for (int i = 0; i < slot.length; i++) {
             slot[i] = slots.get(i);
+        }
         if (!getSwitchItemCache().isEmpty()) {
             getSwitchItemCache().clear();
             ButtonHandler.sendWear(instance, slot);
@@ -2210,8 +2211,9 @@ public class Player extends Entity {
         final Player instance = this;
         List<Integer> slots = getTakeOffSwitchItemCache();
         int[] slot = new int[slots.size()];
-        for (int i = 0; i < slot.length; i++)
+        for (int i = 0; i < slot.length; i++) {
             slot[i] = slots.get(i);
+        }
         if (!getTakeOffSwitchItemCache().isEmpty()) {
             getTakeOffSwitchItemCache().clear();
             ButtonHandler.sendTakeOff(instance, slot);
@@ -2788,6 +2790,12 @@ public class Player extends Entity {
             getVarsManager().sendVarBit(pair.getKey(), pair.getValue());
         }
         if (familiarPouch != null) {
+            if (familiar != null) {
+                familiar.setPlayer(this.getUsername());
+                if (familiar.getOwner() == null) {
+                    familiar.setOwner(World.getPlayer(familiar.getOwnerUsername()));
+                }
+            }
             familiar = Summoning.createFamiliar(this, familiarPouch);
             if (bobItems != null) {
                 for (Item item : bobItems.getItemsCopy()) {

@@ -24,18 +24,20 @@ public abstract class Familiar extends NPC implements Serializable {
 	private static final long serialVersionUID = -3255206534594320406L;
 
 	private transient Player owner;
-	private int ticks;
-	private int trackTimer;
+	private String ownerUsername;
+	private transient int ticks;
+	private transient int trackTimer;
 	public int specialEnergy;
-	public boolean specialActivated;
+	public transient boolean specialActivated;
 	private transient boolean finished = false;
-	private boolean trackDrain;
+	private transient boolean trackDrain;
 
 	private BeastOfBurden bob;
 	private Pouch pouch;
 
 	public Familiar(Player owner, Pouch pouch, WorldTile tile, int mapAreaNameHash, boolean canBeAttackFromOutOfArea) {
 		super(Summoning.getNPCId(pouch.getRealPouchId()), tile, mapAreaNameHash, canBeAttackFromOutOfArea, false);
+		this.ownerUsername = owner.getUsername();
 		this.owner = owner;
 		this.pouch = pouch;
 		resetTickets();
@@ -44,6 +46,10 @@ public abstract class Familiar extends NPC implements Serializable {
 			bob = new BeastOfBurden(getBOBSize());
 		call(true);
 		setRun(true);
+	}
+
+	public void setPlayer(String username) {
+		this.owner = World.getPlayer(username);
 	}
 
 	public void store() {
@@ -109,6 +115,10 @@ public abstract class Familiar extends NPC implements Serializable {
 		} else {
 			owner.getDialogueManager().startDialogue("SimpleMessage", "Your Familiar does not support a dialogue yet.");
 		}
+	}
+
+	public String getOwnerUsername() {
+		return this.ownerUsername;
 	}
 
 	@SuppressWarnings("unused")

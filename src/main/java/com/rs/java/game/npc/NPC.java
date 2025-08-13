@@ -92,8 +92,6 @@ public class NPC extends Entity implements Serializable {
     private transient boolean changedCombatLevel;
     private transient boolean locked;
 
-    private double charmDropPercentage;
-
 
     public static int[] getNpcs(String... names) {
         return Arrays.stream(names)
@@ -676,7 +674,7 @@ public class NPC extends Entity implements Serializable {
         item.setAmount(0);
     }
 
-    boolean sendDp = false;
+    private transient boolean sendDp = false;
 
     public void sendLootshare(Player player, Item item) {
         int size = getSize();
@@ -1192,14 +1190,6 @@ public class NPC extends Entity implements Serializable {
         this.locked = locked;
     }
 
-    public double getCharmDropPercentage() {
-        return charmDropPercentage;
-    }
-
-    public void setCharmDropPercentage(double charmDropPercentage) {
-        this.charmDropPercentage = charmDropPercentage;
-    }
-
     public SecondaryBar getNextSecondaryBar() {
         return nextSecondaryBar;
     }
@@ -1224,7 +1214,7 @@ public class NPC extends Entity implements Serializable {
         this.owner = owner;
     }
 
-    String[] rdtMobs = {"Aberrant spectre", "Abyssal demon", "Abyssal Leech", "Ancient mage", "Ankou",
+    transient String[] rdtMobs = {"Aberrant spectre", "Abyssal demon", "Abyssal Leech", "Ancient mage", "Ankou",
             "Armoured zombie", "Aviansie",
 
             "Banshee", "Basilisk", "Barbarian", "Black demon", "Black dragon", "Black knight", "Bloodveld",

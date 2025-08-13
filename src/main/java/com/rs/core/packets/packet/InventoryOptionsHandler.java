@@ -116,6 +116,7 @@ public class InventoryOptionsHandler {
         /**item switching, wear is handled in player process*/
         if (!item.getDefinitions().isWearItem())
             return;
+        player.itemSwitch = true;
         ButtonHandler.registerEquip(player, slotId);
     }
 

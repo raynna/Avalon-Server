@@ -95,7 +95,7 @@ public class Summoning {
 		return false;
 	}
 
-	public static enum Pouch {
+	public enum Pouch {
 
 		SPIRIT_WOLF(67, 12047, 0.1, 4.8, 360000, 1),
 

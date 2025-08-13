@@ -22,6 +22,7 @@ public class BeastOfBurden implements Serializable {
 	private static final long serialVersionUID = -2090871604834210257L;
 
 	private transient Player player;
+	private String playerName;
 	private transient Familiar familiar;
 
 	public ItemsContainer<Item> beastItems;
@@ -32,6 +33,7 @@ public class BeastOfBurden implements Serializable {
 
 	public void setEntitys(Player player, Familiar familiar) {
 		this.player = player;
+		this.playerName = player.getUsername();
 		this.familiar = familiar;
 	}
 
