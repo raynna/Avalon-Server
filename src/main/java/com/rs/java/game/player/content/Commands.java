@@ -1927,9 +1927,10 @@ public final class Commands {
                     player.getPackets().sendItems(95, p211.getBank().getContainerCopy());
                     player.getBank().openPlayerBank(p211);
                     return true;
-                case "testtab":
-                    player.getInterfaceManager().sendTab(Integer.parseInt(cmd[1]), 662);
-                    player.getPackets().sendGlobalVar(168, 99);
+                case "testtab"://163 is 99
+                    //
+                    player.getInterfaceManager().sendTab(167, 662);
+                    player.getPackets().sendGlobalVar(168, 98);
                         return true;
                 case "tab":
                     int loops = Integer.parseInt(cmd[2]);
