@@ -24,7 +24,7 @@ class SummoningCharms(private val dropTable: DropTable) {
         entries.add(CharmEntry(itemId, amount, percent))
     }
 
-    fun roll(player: Player): Drop? {
+    fun roll(): Drop? {
         val totalChance = entries.sumOf { it.percent }
         if (totalChance == 0.0) return null
 

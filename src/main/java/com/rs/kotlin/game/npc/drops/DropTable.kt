@@ -170,7 +170,7 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
 
         tertiaryDrops.forEach { it.roll(player)?.let { drop -> drops.add(drop) } }
 
-        charmTable?.roll(player)?.let { drops.add(it) }
+        charmTable?.roll()?.let { drops.add(it) }
 
         return drops
     }

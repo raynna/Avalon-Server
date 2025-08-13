@@ -13,9 +13,6 @@ object DropTableRegistry {
             npcDropTables[npcId] = table
             mappedIds += npcId
         }
-        val npcKeysSample = mappedIds.take(10).joinToString(", ") { "$it(${npcKeyFromId(it)})" }
-        val more = if (mappedIds.size > 10) ", ..." else ""
-       // println("[DropTable] Mapped ${mappedIds.size} NPC IDs (${npcKeysSample}$more) to table ${table.nameOrClass()}")
     }
 
     @JvmStatic
@@ -27,9 +24,6 @@ object DropTableRegistry {
                 mappedIds += npcId
             }
         }
-        val npcKeysSample = mappedIds.take(10).joinToString(", ") { "$it(${npcKeyFromId(it)})" }
-        val more = if (mappedIds.size > 10) ", ..." else ""
-       // println("[DropTable] Mapped total ${mappedIds.size} NPC IDs (${npcKeysSample}$more) to table ${table.nameOrClass()}")
     }
 
     /**

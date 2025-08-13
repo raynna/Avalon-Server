@@ -32,10 +32,7 @@ object RscmGenerator {
         for ((key, npcIds) in grouped.toSortedMap(compareBy({ it.first }, { it.second }))) {
             val (base, level) = key
             val groupName = if (level > 0) "${base}_lv$level" else base
-            val comment = if (level > 0) "# Combat Lvl. $level" else "# Friendly NPCs"
-            // Format list as [id1, id2, id3]
             val idsString = npcIds.joinToString(", ", "[", "]")
-            //entries += comment
             entries += "$groupName=$idsString"
         }
 
