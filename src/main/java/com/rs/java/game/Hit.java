@@ -24,6 +24,7 @@ public final class Hit {
 	private HitLook look;
 	private int damage;
 	private int maxHit;
+	private int baseMaxHit;
 	public boolean critical;
 	public boolean landed;
 	private Hit soaking;
@@ -31,6 +32,14 @@ public final class Hit {
 
 	public void setCriticalMark() {
 		critical = true;
+	}
+
+	public boolean checkCritical(int baseDamage, int maxHit) {
+		if (baseDamage > Math.floor(maxHit * 0.90)) {
+			this.critical = true;
+			return true;
+		}
+		return false;
 	}
 
 	public void setHealHit() {
@@ -112,8 +121,10 @@ public final class Hit {
 	}
 
 	public int getMaxHit() { return maxHit; }
+	public int getBaseMaxHit() { return baseMaxHit; }
 
 	public void setMaxHit(int maxHit) { this.maxHit = maxHit; }
+	public void setBaseMaxHit(int maxHit) { this.baseMaxHit = maxHit; }
 
 	public void setDamage(int damage) {
 		this.damage = damage;

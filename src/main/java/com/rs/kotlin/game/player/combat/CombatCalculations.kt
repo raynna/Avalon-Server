@@ -12,6 +12,7 @@ import com.rs.kotlin.game.player.combat.magic.Spell
 import com.rs.kotlin.game.player.combat.magic.Spellbook
 import com.rs.kotlin.game.player.equipment.BonusType
 import kotlin.math.floor
+import kotlin.math.max
 
 object CombatCalculations {
 
@@ -88,15 +89,17 @@ object CombatCalculations {
             val baseStrengthLevel = getBaseStrengthLevel(player)
             val effectiveStrength = floor((baseStrengthLevel + styleBonus + 8) * voidBonus)
             val baseDamage = 5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * specialBonus
+            val hit = Hit(player, 0, 0, Hit.HitLook.MELEE_DAMAGE)
             val maxHit = (baseDamage * specialMultiplier).toInt()
-
             var damage = Utils.random(maxHit)
             if (target is NPC) {
                 if (target.id == 4474) {
                     damage = maxHit
                 }
             }
-            val hit = Hit(player, damage, maxHit, Hit.HitLook.MELEE_DAMAGE)
+            hit.baseMaxHit = baseDamage.toInt()
+            hit.maxHit = maxHit
+            hit.damage = damage
             if (damage >= floor(baseDamage * 0.90)) {
                 hit.setCriticalMark()
             }

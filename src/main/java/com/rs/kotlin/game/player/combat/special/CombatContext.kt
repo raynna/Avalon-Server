@@ -250,10 +250,10 @@ fun CombatContext.magicHit(
 }
 
 fun CombatContext.getDragonClawsHits(swings: Int = 4): List<Hit> {
-    val hits = MutableList(swings) { rollMelee() }//roll for accuracy
-
+    val hits = MutableList(swings) { rollMelee() }//roll for accuracy & damage
     val firstHitIndex = hits.indexOfFirst { it.damage > 0 }
-    val maxHit = CombatCalculations.calculateMeleeMaxHit(attacker, defender).maxHit//roll hit & get max hit
+    val hit = CombatCalculations.calculateMeleeMaxHit(attacker, defender)
+    val maxHit = hit.maxHit
 
     if (firstHitIndex == -1) {//all misses
         if (Math.random() < 2.0 / 3.0) {
@@ -264,38 +264,48 @@ fun CombatContext.getDragonClawsHits(swings: Int = 4): List<Hit> {
                 intArrayOf(0, 1, 0, 1)
             )
             val pattern = patterns.random()
-            hits.forEachIndexed { i, hit -> hit.damage = pattern[i] }
+            hits.forEachIndexed { i, h ->
+                h.damage = pattern[i]
+            }
         }
     } else {//not a full miss
         when (firstHitIndex) {
             0 -> {
-                val first = (0.5 * maxHit + (maxHit - 1..maxHit).random()).toInt().coerceAtMost(maxHit - 1)
+                val first = ((maxHit / 2)..< maxHit - 1).random()
                 hits[0].damage = first
                 hits[1].damage = first / 2
                 hits[2].damage = hits[1].damage / 2
                 hits[3].damage = hits[2].damage + 1
             }
+
             1 -> {
                 val second = ((maxHit * 3 / 8)..(maxHit * 7 / 8)).random()
                 hits[1].damage = second
                 hits[2].damage = second / 2
                 hits[3].damage = hits[2].damage
             }
+
             2 -> {
                 val third = ((maxHit / 4)..(maxHit * 3 / 4)).random()
                 hits[2].damage = third
                 hits[3].damage = third
             }
+
             3 -> {
                 val fourth = ((maxHit / 4)..(maxHit * 5 / 4)).random().coerceAtMost(maxHit)
                 hits[3].damage = fourth
             }
         }
-    }
+        //critical checks
+        if (hits[0].damage > 0) {
+            hits[1].checkCritical(hits[0].damage, hit.baseMaxHit)
+            hits[2].checkCritical(hits[0].damage, hit.baseMaxHit)
+            hits[3].checkCritical(hits[0].damage, hit.baseMaxHit)
+        }
 
+    }
     return hits
 }
-
 
 fun CombatContext.getMultiAttackTargets(
     maxDistance: Int,
@@ -335,6 +345,7 @@ fun CombatContext.getMultiAttackTargets(
                     if (possibleTargets.size >= maxTargets) break@regionLoop
                 }
             }
+
             is NPC -> {
                 val npcIndexes = region.npCsIndexes ?: continue
                 for (npcIndex in npcIndexes) {
@@ -370,6 +381,7 @@ fun CombatContext.getMultiAttackTargets(
                     if (possibleTargets.size >= maxTargets) break@regionLoop
                 }
             }
+
             else -> {
                 break@regionLoop
             }
@@ -379,14 +391,18 @@ fun CombatContext.getMultiAttackTargets(
 }
 
 
-
 class SpecialHitBuilder(private val context: CombatContext) {
     private val hits = mutableListOf<PendingHit>()
     private val special = context.weapon.special
     private val effect = context.weapon.effect
 
 
-    fun addHit(defender: Entity = context.defender, damage: Int, look: Hit.HitLook? = null, type: CombatType = CombatType.MELEE, delay: Int = 0
+    fun addHit(
+        defender: Entity = context.defender,
+        damage: Int,
+        look: Hit.HitLook? = null,
+        type: CombatType = CombatType.MELEE,
+        delay: Int = 0
     ): Hit {
         val resolvedHitLook = look ?: when (type) {
             CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
@@ -398,7 +414,12 @@ class SpecialHitBuilder(private val context: CombatContext) {
         return hit
     }
 
-    fun addHit(defender: Entity = context.defender, hit: Hit, look: Hit.HitLook? = null, type: CombatType = CombatType.MELEE, delay: Int = 0
+    fun addHit(
+        defender: Entity = context.defender,
+        hit: Hit,
+        look: Hit.HitLook? = null,
+        type: CombatType = CombatType.MELEE,
+        delay: Int = 0
     ): Hit {
         val resolvedHitLook = look ?: when (type) {
             CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
@@ -411,7 +432,10 @@ class SpecialHitBuilder(private val context: CombatContext) {
     }
 
     fun createHit(
-        type: CombatType = CombatType.MELEE, damageMultiplier: Double = 1.0, accuracyMultiplier: Double = 1.0, delay: Int = 0
+        type: CombatType = CombatType.MELEE,
+        damageMultiplier: Double = 1.0,
+        accuracyMultiplier: Double = 1.0,
+        delay: Int = 0
     ): Hit {
         val h = context.registerHit(
             combatType = type, accuracyMultiplier = accuracyMultiplier, damageMultiplier = damageMultiplier
@@ -421,20 +445,20 @@ class SpecialHitBuilder(private val context: CombatContext) {
     }
 
     fun melee(
-        damageMultiplier: Double = special?.damageMultiplier?:1.0,
-        accuracyMultiplier: Double = special?.accuracyMultiplier?:1.0,
+        damageMultiplier: Double = special?.damageMultiplier ?: 1.0,
+        accuracyMultiplier: Double = special?.accuracyMultiplier ?: 1.0,
         delay: Int = 0
     ) = createHit(CombatType.MELEE, damageMultiplier, accuracyMultiplier, delay)
 
     fun ranged(
-        damageMultiplier: Double = special?.damageMultiplier?:1.0,
-        accuracyMultiplier: Double = special?.accuracyMultiplier?:1.0,
+        damageMultiplier: Double = special?.damageMultiplier ?: 1.0,
+        accuracyMultiplier: Double = special?.accuracyMultiplier ?: 1.0,
         delay: Int = 0
     ) = createHit(CombatType.RANGED, damageMultiplier, accuracyMultiplier, delay)
 
     fun magic(
-        damageMultiplier: Double = special?.damageMultiplier?:1.0,
-        accuracyMultiplier: Double = special?.accuracyMultiplier?:1.0,
+        damageMultiplier: Double = special?.damageMultiplier ?: 1.0,
+        accuracyMultiplier: Double = special?.accuracyMultiplier ?: 1.0,
         delay: Int = 0
     ) = createHit(CombatType.MAGIC, damageMultiplier, accuracyMultiplier, delay)
 
