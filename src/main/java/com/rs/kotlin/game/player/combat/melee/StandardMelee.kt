@@ -96,7 +96,7 @@ object StandardMelee : MeleeData() {
                 energyCost = 25,
                 accuracyMultiplier = 1.15,
                 damageMultiplier = 1.15,
-                execute = { context ->
+                execute = { context ->  //TODO USING WHIP AS A TEST WEAPON ATM
                     context.attacker.animate(Animation(11971))
                     context.defender.gfx(Graphics(2108, 0, 100))
                     context.meleeHit(1.15, 1.15, Hit.HitLook.MAGIC_DAMAGE)//melee roll with magic damage
@@ -130,24 +130,26 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = Item.getIds("item.dragon_dagger", "item.dragon_dagger_p"),
+            itemId = Item.getIds(
+                "item.dragon_dagger", "item.dragon_dagger_p",
+                "item.dragon_dagger_p+", "item.dragon_dagger_p++"),
             name = "Dragon dagger",
             weaponStyle = WeaponStyle.DAGGER,
             attackSpeed = 4,
-            blockAnimationId = 378,
+            blockAnimationId = Animation.getId("animation.dragon_dagger_block"),
             animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to 376,
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to 376,
-                StyleKey(AttackStyle.AGGRESSIVE, 2) to 377,
-                StyleKey(AttackStyle.DEFENSIVE, 3) to 376,
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.dragon_dagger_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.dragon_dagger_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.dragon_dagger_slash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.dragon_dagger_stab"),
             ),
             special = SpecialAttack(
                 energyCost = 25,
                 accuracyMultiplier = 1.15,
                 damageMultiplier = 1.15,
                 execute = { context ->
-                    context.attacker.animate(Animation(1062))
-                    context.attacker.gfx(Graphics(252, 0, 100))
+                    context.attacker.animate("animation.dragon_dagger_special")
+                    context.attacker.gfx("graphic.dragon_dagger_special", 100)
                     context.meleeHit()
                     context.meleeHit(delay = if (context.defender is NPC) 1 else 0)
                 }
