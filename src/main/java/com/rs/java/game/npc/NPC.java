@@ -186,6 +186,10 @@ public class NPC extends Entity implements Serializable {
             int level = getCombatLevel();
             if (level > 750)
                 level = 750;
+            if (id == 7891) {
+                level = 250;
+
+            }
             for (int i = 0; i < bonuses.length; i++) {
                 if (i >= 5 && i <= 9 || i >= 15)
                     bonuses[i] = 0;

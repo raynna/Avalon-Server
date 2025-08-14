@@ -35,12 +35,8 @@ public final class Hit {
 	}
 
 	public boolean checkCritical(int baseDamage, int maxHit) {
-		if (baseDamage > Math.floor(maxHit * 0.90)) {
-			this.critical = true;
-			return true;
-		}
-		return false;
-	}
+        return baseDamage > Math.floor(maxHit * 0.90);
+    }
 
 	public void setHealHit() {
 		look = HitLook.HEALED_DAMAGE;

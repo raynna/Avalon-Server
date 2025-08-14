@@ -251,58 +251,56 @@ fun CombatContext.magicHit(
 
 fun CombatContext.getDragonClawsHits(swings: Int = 4): List<Hit> {
     val hits = MutableList(swings) { rollMelee() }//roll for accuracy & damage
-    val firstHitIndex = hits.indexOfFirst { it.damage > 0 }
+    val firstHitIndex = hits.indexOfFirst { it.damage > 9 }
+    hits.forEach { it.critical = false }
     val hit = CombatCalculations.calculateMeleeMaxHit(attacker, defender)
     val maxHit = hit.maxHit
-
+    val baseMax = hit.baseMaxHit
     if (firstHitIndex == -1) {//all misses
         if (Math.random() < 2.0 / 3.0) {
             val patterns = listOf(
-                intArrayOf(1, 1, 0, 0),
-                intArrayOf(0, 0, 1, 1),
-                intArrayOf(1, 0, 1, 0),
-                intArrayOf(0, 1, 0, 1)
+                intArrayOf(9, 9, 0, 0),//randomise 1-9 for each pattern where damage isnt 0
+                intArrayOf(0, 0, 9, 9),
+                intArrayOf(9, 0, 9, 0),
+                intArrayOf(0, 9, 0, 9)
             )
             val pattern = patterns.random()
             hits.forEachIndexed { i, h ->
-                h.damage = pattern[i]
+                h.damage = if (pattern[i] > 0) Utils.random(1, pattern[i]) else 0
             }
         }
     } else {//not a full miss
         when (firstHitIndex) {
             0 -> {
-                val first = ((maxHit / 2)..< maxHit - 1).random()
-                hits[0].damage = first
-                hits[1].damage = first / 2
-                hits[2].damage = hits[1].damage / 2
-                hits[3].damage = hits[2].damage + 1
+                val first = ((maxHit / 2).. maxHit - 1).random()
+                hits[0].damage = first//if maxHit 400 = 200-400
+                hits[1].damage = (first + 1) / 2//half of above
+                hits[2].damage = (hits[1].damage + 1) / 2//halv of above
+                hits[3].damage = hits[2].damage + 1//same as above
             }
-
             1 -> {
                 val second = ((maxHit * 3 / 8)..(maxHit * 7 / 8)).random()
-                hits[1].damage = second
-                hits[2].damage = second / 2
-                hits[3].damage = hits[2].damage
+                hits[1].damage = second//if maxHit 400 = 150-350
+                hits[2].damage = (second + 1) / 2//half of above
+                hits[3].damage = hits[2].damage//same as above
             }
-
             2 -> {
                 val third = ((maxHit / 4)..(maxHit * 3 / 4)).random()
-                hits[2].damage = third
-                hits[3].damage = third
+                hits[2].damage = third//if maxHit 400 = 100-300
+                hits[3].damage = third//same as above
             }
 
             3 -> {
-                val fourth = ((maxHit / 4)..(maxHit * 5 / 4)).random().coerceAtMost(maxHit)
-                hits[3].damage = fourth
+                val fourth = ((maxHit / 4)..(maxHit * 5 / 4)).random()
+                hits[3].damage = fourth//if maxHit 400 = 100-500
             }
         }
-        //critical checks
-        if (hits[0].damage > 0) {
-            hits[1].checkCritical(hits[0].damage, hit.baseMaxHit)
-            hits[2].checkCritical(hits[0].damage, hit.baseMaxHit)
-            hits[3].checkCritical(hits[0].damage, hit.baseMaxHit)
+        val firstNonZero = hits[firstHitIndex]//set critical marks based of first hit in success rolls
+        if (firstNonZero.checkCritical(firstNonZero.damage, baseMax)) {
+            for (i in firstHitIndex until hits.size) {
+                hits[i].critical = true
+            }
         }
-
     }
     return hits
 }

@@ -63,24 +63,22 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.claws_slash"),
             ),
             special = SpecialAttack(
-                energyCost = 50,
+                energyCost = 1,
                 damageMultiplier = 1.5,
                 execute = { context ->
                     context.attacker.animate("animation.dragon_claws_special")
                     context.attacker.gfx("graphic.dragon_claws_special")
-                    for (delay in 20..80 step 20) {
+                    for (delay in 15..60 step 15) {//TODO get rid of magic number for sounds
                         context.attacker.packets.sendSound(7464, delay, 1)
                     }
                     val dragonClawsHits = context.getDragonClawsHits(4)
-                    val firstHitIndex = dragonClawsHits.indexOfFirst { it.damage > 1 }
+                    val firstHitIndex = dragonClawsHits.indexOfFirst { it.damage > 9 }
                     context.hits {
                         dragonClawsHits.forEachIndexed { i, hit ->
                             val delay = if (firstHitIndex == -1) 0 else i / 2
                             addHit(hit = hit.copy(), delay = delay)
                         }
                     }
-
-
                 }
             )
         ),
