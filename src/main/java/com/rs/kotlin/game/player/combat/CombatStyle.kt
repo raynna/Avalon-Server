@@ -27,6 +27,25 @@ interface CombatStyle {
             }
         }, delay)
     }
+    fun addHit(
+        damage: Int,
+        attacker: Player,
+        defender: Entity,
+        combatType: CombatType,
+        hitLook: Hit.HitLook? = null
+    ): Hit {
+        val resolvedHitLook = hitLook ?: when (combatType) {
+            CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
+            CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
+            CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
+        }
+        val hit = Hit(attacker, damage, resolvedHitLook)
+        if (hit.isCriticalHit && !hit.isCombatLook) {
+            hit.critical = false
+        }
+        return hit
+    }
+
     fun registerHit(
         attacker: Player,
         defender: Entity,

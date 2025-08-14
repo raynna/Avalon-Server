@@ -47,7 +47,7 @@ dagger_slash=395
 dagger_stab=396
 block_unknown=397
 block_unknown2=398
-warhammer_pound=401
+chaotic_staff_attack=401
 two_handed_chop=406
 two_handed_slash=407
 polish_sword=409
@@ -296,4 +296,32 @@ godsword_chop=13050
 godsword_block=13051
 godsword_slash=13052
 godsword_smash=13053
-armadyl_godsword_special=11979
+armadyl_godsword_special=11989
+abyssal_whip_attack=11968
+abyssal_whip_attack2=11969
+abyssal_whip_attack3=11970
+abyssal_whip_special=11971
+abyssal_whip_block=11974
+dharok_greataxe_slash=12002
+dharok_greataxe_smash=12003
+dharok_greataxe_block=12004
+zamorak_godsword_special=7070
+scimitar_slash=15071
+scimitar_stab=15072
+scimitar_block=15074
+two_handed_slash=7041
+two_handed_chop=7042
+two_handed_smash=7048
+two_handed_block=7049
+two_handed_defend=7050
+dragon_2h_special=7078
+claws_slash=393
+claws_block=397
+claws_stab=1067
+dragon_claws_special=10961
+#animGFX 11991 2114 - Bandos Godsword Spec
+#animGFX 12019 2109 - Saradomin Godsword Spec
+#animGfx 12006 stab zamorakian spear
+#animGfx 12008 block zamorakian spear
+#animGfx 11993 special saradomin sword
+#animGFX 24010 1950 - Dragon Claws Special Attack “Slice And Dice” (Legacy)

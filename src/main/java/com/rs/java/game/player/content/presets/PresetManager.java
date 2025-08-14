@@ -72,7 +72,7 @@ public final class PresetManager implements Serializable {
 				runes = player.getRunePouch().getContainerItems();
 		PRESET_SETUPS.put(name,
 				new Preset(name, inventory, equipment, player.getPrayer().isAncientCurses(),
-                        player.getCombatDefinitions().spellBook, (Arrays.copyOf(player.getSkills().getXp(), 7)), runes, player.getFamiliar().getPouch()));
+                        player.getCombatDefinitions().spellBook, (Arrays.copyOf(player.getSkills().getXp(), 7)), runes, (player.getFamiliar().getPouch() != null ? player.getFamiliar().getPouch() : null)));
 		player.message("Pouch: " + player.getFamiliar().getPouch().name());
 		player.getPackets().sendGameMessage("You've successfully stored the set " + name + ".", true);
 	}

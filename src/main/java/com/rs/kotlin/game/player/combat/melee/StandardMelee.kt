@@ -5,6 +5,7 @@ import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
+import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
@@ -41,7 +42,7 @@ object StandardMelee : MeleeData() {
             execute = { context ->
                 if (Utils.roll(1, 3)) {
                     context.defender.addFreezeDelay(16, false);
-                    context.defender.gfx( Graphics(181, 0, 96))
+                    context.defender.gfx(Graphics(181, 0, 96))
                     context.forcedHit(delay = 1)
                 } else {
                     context.meleeHit()
@@ -51,10 +52,42 @@ object StandardMelee : MeleeData() {
     )
     override val weapons = listOf(
         MeleeWeapon(
+            itemId = Weapon.itemIds("item.dragon_claws", "item.dragon_claws_2", "item.lucky_dragon_claws"),
+            name = "Dragon claws",
+            weaponStyle = WeaponStyle.CLAWS,
+            blockAnimationId = Animation.getId("animation.claws_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.claws_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.claws_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.claws_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.claws_slash"),
+            ),
+            special = SpecialAttack(
+                energyCost = 50,
+                damageMultiplier = 1.5,
+                execute = { context ->
+                    context.attacker.animate("animation.dragon_claws_special")
+                    context.attacker.gfx("graphic.dragon_claws_special")
+                    for (delay in 20..80 step 20) {
+                        context.attacker.packets.sendSound(7464, delay, 1)
+                    }
+                    val dragonClawsHits = context.getDragonClawsHits(4)
+                    val firstHitIndex = dragonClawsHits.indexOfFirst { it.damage > 1 }
+                    context.hits {
+                        dragonClawsHits.forEachIndexed { i, hit ->
+                            val delay = if (firstHitIndex == -1) 0 else i / 2
+                            addHit(hit = hit.copy(), delay = delay)
+                        }
+                    }
+
+
+                }
+            )
+        ),
+        MeleeWeapon(
             itemId = Weapon.itemIds("item.abyssal_whip"),
             name = "Abyssal whip",
             weaponStyle = WeaponStyle.WHIP,
-            attackSpeed = 4,
             blockAnimationId = 11974,
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to 11969,
@@ -126,7 +159,8 @@ object StandardMelee : MeleeData() {
             itemId = Item.getIds(
                 "item.torag_s_hammers", "item.torag_s_hammers_100",
                 "item.torag_s_hammers_75", "item.torag_s_hammers_50",
-                "item.torag_s_hammers_25", "item.torag_s_hammers_0"),
+                "item.torag_s_hammers_25", "item.torag_s_hammers_0"
+            ),
             name = "Torag's hammers",
             weaponStyle = WeaponStyle.HAMMER,
             effect = SpecialEffect(
@@ -134,13 +168,13 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate(Animation("animation.torag_hammer_attack"))
 
                     val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
-                    val maxHit1 = (maxHit + 1)/2
+                    val maxHit1 = (maxHit + 1) / 2
                     val maxHit2 = (maxHit / 2)
                     val firstHit = context.rollMelee()
                     val secondHit = context.rollMelee()
                     context.hits {
-                            nextHit(baseHit = firstHit, maxHit = maxHit1)
-                            nextHit(baseHit = secondHit, maxHit = maxHit2)
+                        nextHit(baseHit = firstHit, maxHit = maxHit1)
+                        nextHit(baseHit = secondHit, maxHit = maxHit2)
                     }
                 }
             )
@@ -151,16 +185,17 @@ object StandardMelee : MeleeData() {
             weaponStyle = WeaponStyle.STAFF,
             blockAnimationId = Animation.getId("animation.staff_of_light_block"),
             animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to 401,
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to 401,
-                StyleKey(AttackStyle.DEFENSIVE, 2) to 401,
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_staff_attack"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_staff_attack"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.chaotic_staff_attack"),
             )
         ),
         MeleeWeapon(
             itemId = Item.getIds(
                 "item.staff_of_light", "item.staff_of_light_lended",
                 "item.staff_of_light_red", "item.staff_of_light_gold",
-                "item.staff_of_light_blue", "item.staff_of_light_green"),
+                "item.staff_of_light_blue", "item.staff_of_light_green"
+            ),
             name = "Staff of light",
             weaponStyle = WeaponStyle.STAFF_OF_LIGHT,
             blockAnimationId = Animation.getId("animation.staff_of_light_block"),
@@ -202,76 +237,128 @@ object StandardMelee : MeleeData() {
                     context.attacker.gfx(Graphics(282, 0, 100))
                     context.meleeHit()
                     if (context.defender.size > 1)
-                    context.meleeHit()
-                }
-            )
-        ),
-        MeleeWeapon(
-            itemId = listOf(Rscm.lookup("item.armadyl_godsword"), Rscm.lookup("item.armadyl_godsword_2"), Rscm.lookup("item.lucky_armadyl_godsword")),
-            name = "Armadyl godsword",
-            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
-            blockAnimationId = 7050,
-            animations = mapOf(
-                StyleKey(AttackStyle.CONTROLLED, 0) to 437,
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to 440,
-                StyleKey(AttackStyle.DEFENSIVE, 2) to 438,
-            ),
-            special = SpecialAttack(
-                energyCost = 30,
-                accuracyMultiplier = 1.1,
-                damageMultiplier = 1.1,
-                execute = { context ->
-                    context.attacker.animate(Animation(1203))
-                    context.attacker.gfx(Graphics(282, 0, 100))
-                    context.meleeHit()
-                    if (context.defender.size > 1)
                         context.meleeHit()
                 }
             )
         ),
         MeleeWeapon(
-            itemId = listOf(1321),
-            name = "Scimitar",
-            weaponStyle = WeaponStyle.SCIMITAR,
-            blockAnimationId = 15074,
-            animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to 15071,
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to 15071,
-                StyleKey(AttackStyle.CONTROLLED, 2) to 15072,
-                StyleKey(AttackStyle.DEFENSIVE, 3) to 15071,
+            itemId = listOf(
+                Rscm.lookup("item.armadyl_godsword"),
+                Rscm.lookup("item.armadyl_godsword_2"),
+                Rscm.lookup("item.lucky_armadyl_godsword")
             ),
-        ),
-        MeleeWeapon(
-            itemId = listOf(1307, 1309, 1311, 1313, 1315, 1317, 139),
-            name = "2h sword",
+            name = "Armadyl godsword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
-            blockAnimationId = 7050,
+            blockAnimationId = Animation.getId("animation.godsword_block"),
             animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to 7041,
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to 7041,
-                StyleKey(AttackStyle.CONTROLLED, 2) to 7048,
-                StyleKey(AttackStyle.DEFENSIVE, 3) to 7049,
-            ),
-        ),
-        MeleeWeapon(
-            itemId = listOf(7158),
-            name = "Dragon 2h sword",
-            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
-            blockAnimationId = 7050,
-            animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to 7041,
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to 7041,
-                StyleKey(AttackStyle.CONTROLLED, 2) to 7048,
-                StyleKey(AttackStyle.DEFENSIVE, 3) to 7049,
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.godsword_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.godsword_smash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.godsword_slash"),
             ),
             special = SpecialAttack(
-                energyCost = 1,//test
-                accuracyMultiplier = 1.15,
-                damageMultiplier = 1.1,//animGFX 7078 1225 - Dragon 2H Sword Special (Power Stab)
+                energyCost = 50,
+                accuracyMultiplier = 2.0,
+                damageMultiplier = 1.375,
                 execute = { context ->
-                    context.attacker.animate(Animation(7078))
-                    context.attacker.gfx(Graphics(1225, 0, 0))
-                    val targets = context.getMultiAttackTargets(2, 9)
+                    context.attacker.animate("animation.armadyl_godsword_special")
+                    context.attacker.gfx("graphic.armadyl_godsword_special")
+                    context.meleeHit()
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = listOf(
+                Rscm.lookup("item.zamorak_godsword"),
+                Rscm.lookup("item.zamorak_godsword_2"),
+                Rscm.lookup("item.lucky_zamorak_godsword")
+            ),
+            name = "Zamorak godsword",
+            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            blockAnimationId = Animation.getId("animation.godsword_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.godsword_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.godsword_smash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.godsword_slash"),
+            ),
+            special = SpecialAttack(
+                energyCost = 50,
+                accuracyMultiplier = 2.0,
+                damageMultiplier = 1.1,
+                execute = { context ->
+                    context.attacker.animate("animation.zamorak_godsword_special")
+                    context.attacker.gfx("graphic.zamorak_godsword_start")
+                    context.hits {
+                        val hit = melee()
+                        if (hit.damage > 0) {
+                            context.defender.gfx("graphic.zamorak_godsword_target")
+                            context.defender.tickManager.addTicks(TickManager.Keys.FREEZE_IMMUNE_TICKS, 37)
+                            context.defender.tickManager.addTicks(TickManager.Keys.FREEZE_TICKS, 32) {
+                                if (context.defender is Player)
+                                    context.defender.message("Your staff of light effect fades.")
+                                context.defender.gfx("graphic.zamorak_godsword_end")
+                            }
+                        }
+                    }
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.bronze_scimitar", "item.iron_scimitar",
+                "item.steel_scimitar", "item.black_scimitar",
+                "item.mithril_scimitar", "item.adamant_scimitar",
+                "item.rune_scimitar", "item.corrupt_dragon_scimitar",
+                "item.c_dragon_scimitar_deg", "item.sacred_clay_scimitar"
+            ),
+            name = "Scimitar",
+            weaponStyle = WeaponStyle.SCIMITAR,
+            blockAnimationId = Animation.getId("animation.scimitar_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.scimitar_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.scimitar_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.scimitar_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.scimitar_slash"),
+            ),
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.bronze_2h_sword", "item.iron_2h_sword",
+                "item.steel_2h_sword", "item.black_2h_sword",
+                "item.mithril_2h_sword", "item.adamant_2h_sword",
+                "item.rune_2h_sword", "item.white_2h_sword"
+            ),
+            name = "2h sword",
+            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            blockAnimationId = Animation.getId("animation.two_handed_defend"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.two_handed_chop"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.two_handed_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.two_handed_smash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.two_handed_block"),
+            ),
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds("item.dragon_2h_sword", "item.lucky_dragon_2h_sword"),
+            name = "Dragon 2h sword",
+            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            blockAnimationId = Animation.getId("animation.two_handed_defend"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.two_handed_chop"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.two_handed_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.two_handed_smash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.two_handed_block"),
+            ),
+            special = SpecialAttack(
+                energyCost = 100,
+                accuracyMultiplier = 1.15,
+                damageMultiplier = 1.1,
+                execute = { context ->
+                    context.attacker.animate("animation.dragon_2h_special")
+                    context.attacker.gfx("graphic.dragon_2h_special")
+                    context.meleeHit()//we want to also process hit on main target
+                    val targets = context.getMultiAttackTargets(1, 8)
                     for (target in targets) {
                         context.meleeHit(target = target, delay = 1)
                     }
