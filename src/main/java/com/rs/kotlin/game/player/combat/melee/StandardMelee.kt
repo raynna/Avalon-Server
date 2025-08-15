@@ -63,8 +63,7 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.claws_slash"),
             ),
             special = SpecialAttack(
-                energyCost = 1,
-                damageMultiplier = 1.5,
+                energyCost = 50,
                 execute = { context ->
                     context.attacker.animate("animation.dragon_claws_special")
                     context.attacker.gfx("graphic.dragon_claws_special")
