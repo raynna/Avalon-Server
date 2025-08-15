@@ -13,11 +13,13 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.damage.SoakDamage
 import com.rs.kotlin.game.player.combat.melee.StandardMelee
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.rangedHit
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
+import kotlin.math.min
 
 class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
@@ -173,6 +175,9 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     override fun onHit(hit: Hit) {
+        if (defender is Player) {
+            defender.animate(CombatAnimations.getBlockAnimation(defender))
+        }
         val currentWeapon = getCurrentWeapon()
         val currentAmmo = getCurrentAmmo()
         if (currentAmmo != null) {
@@ -208,10 +213,11 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         for (pending in hits) {
             val hit = pending.hit
             val target = pending.target
-            PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit);
-            PrayerEffectHandler.handleProtectionEffects(attacker, target, hit);
+            PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit)
+            PrayerEffectHandler.handleProtectionEffects(attacker, target, hit)
+            SoakDamage.handleAbsorb(attacker, target, hit)
             consumeAmmo()
-            totalDamage += hit.damage;
+            totalDamage += min(hit.damage, target.hitpoints)
             scheduleHit(pending.delay) {
                 if (target is Player) {
                     target.animate(CombatAnimations.getBlockAnimation(target))

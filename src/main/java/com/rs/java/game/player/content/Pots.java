@@ -883,7 +883,7 @@ public final class Pots {
 		//	return true;
 		if (!pot.effect.canDrink(player))
 			return true;
-		player.addPotDelay(2);
+		player.addPotLock(2);
 		pot.effect.extra(player);
 		int dosesLeft = getDoses(pot, item) - 1;
 		if (dosesLeft == 0 && (pot.isFlask() || player.toggles("BREAK_VIALS", false))) {

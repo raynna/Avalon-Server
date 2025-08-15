@@ -3437,6 +3437,17 @@ public class Player extends Entity {
         getPackets().sendRunEnergy();
     }
 
+    public void transferRunEnergy(Player target) {
+        int drainAmount = (int) Math.ceil(target.getRunEnergy() * 0.1);
+        drainAmount = Math.min(drainAmount, target.getRunEnergy());
+        for (int i = 0; i < drainAmount; i++) {
+            target.drainRunEnergy();
+        }
+        int newEnergy = Math.min(100, this.getRunEnergy() + drainAmount);
+        setRunEnergy(newEnergy);
+    }
+
+
     public boolean isResting() {
         return resting;
     }
@@ -4233,7 +4244,6 @@ public class Player extends Entity {
     }
 
     public boolean isFoodLocked() {
-        message("foodlocked? " + getTickManager().isActive(TickManager.Keys.FOOD_LOCK_TICK));
         return getTickManager().isActive(TickManager.Keys.FOOD_LOCK_TICK);
     }
 

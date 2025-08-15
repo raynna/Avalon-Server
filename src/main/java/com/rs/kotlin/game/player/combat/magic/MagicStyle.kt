@@ -12,7 +12,9 @@ import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.damage.SoakDamage
 import com.rs.kotlin.game.world.projectile.ProjectileManager
+import kotlin.math.min
 
 class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
@@ -103,7 +105,8 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             val target = pending.target
             PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit)
             PrayerEffectHandler.handleProtectionEffects(attacker, target, hit)
-            totalDamage += hit.damage
+            SoakDamage.handleAbsorb(attacker, target, hit)
+            totalDamage += min(hit.damage, target.hitpoints)
             scheduleHit(pending.delay) {
                 if (target is Player) {
                     target.animate(CombatAnimations.getBlockAnimation(target))
@@ -117,6 +120,9 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     override fun onHit(hit: Hit) {
+        if (defender is Player) {
+            defender.animate(CombatAnimations.getBlockAnimation(defender))
+        }
         val spellId = attacker.combatDefinitions.spellId
         val currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
             AncientMagicks.id -> AncientMagicks.getSpell(spellId)

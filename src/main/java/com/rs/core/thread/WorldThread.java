@@ -74,6 +74,12 @@ public final class WorldThread extends Thread {
 
 					player.getPackets().sendLocalPlayersUpdate();
 					player.getPackets().sendLocalNPCsUpdate();
+				}
+
+				for (Player player : World.getPlayers()) {
+					if (player == null || !player.hasStarted()
+							|| player.hasFinished())
+						continue;
 					player.resetMasks();
 				}
 

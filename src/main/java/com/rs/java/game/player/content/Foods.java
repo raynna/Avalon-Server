@@ -561,8 +561,6 @@ public class Foods {
 		Food food = Food.forId(item.getId());
 		if (food == null)
 			return false;
-		if (player.getBrewDelay() > Utils.currentTimeMillis())
-			return true;
 		//if (!player.getControlerManager().canEat(food))
 		//	return true;
 		if (player.isDead())
@@ -574,6 +572,8 @@ public class Foods {
 		String name = ItemDefinitions.getItemDefinitions(food.getId()).getName().toLowerCase();
 		int foodTick = name.contains("pie") ? 2 : 3;
 		if (!food.isComboFood()) {
+			if (player.isPotLocked())
+				return true;
 			player.addFoodLock(foodTick);
 		} else {
 			player.addFoodLock(foodTick);

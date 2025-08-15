@@ -92,38 +92,17 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.DEFENSIVE, 2) to 11968,
             ),
             special = SpecialAttack(
-                energyCost = 25,
-                accuracyMultiplier = 1.15,
-                damageMultiplier = 1.15,
+                energyCost = 50,
+                accuracyMultiplier = 1.25,
                 execute = { context ->  //TODO USING WHIP AS A TEST WEAPON ATM
                     context.attacker.animate(Animation(11971))
                     context.defender.gfx(Graphics(2108, 0, 100))
-                    context.meleeHit(1.15, 1.15, Hit.HitLook.MAGIC_DAMAGE)//melee roll with magic damage
-                    context.meleeHit(1.15, 1.15)//melee roll with melee damage
-
-                    context.rangedHit()//range roll with range damage, no multipliers
-
-                    //context.magic(1.0, hitLook = Hit.HitLook.MELEE_DAMAGE)//magic roll with melee damage
-
-                    context.repeatHits(2)
-
-                    context.repeatHits(
-                        combatType = CombatType.MELEE,
-                        delays = listOf(0, 1),
-                        accuracyMultipliers = listOf(1.15, 1.15),
-                        damageMultipliers = listOf(1.15, 1.15)
-                    )
-
-                    context.hits {
-                        melee(1.15, 1.15, delay = 0)
-                        melee(1.15, 1.15, delay = 1)
-                    }
-
-                    context.hits {
-                        val melee = melee(1.25, 1.25, delay = 0)
-                        nextHit(melee, scale = 0.5, delay = 1)
-                        nextHit(melee, scale = 0.5, delay = 2)
-                        nextHit(melee, scale = 1.0, delay = 2)
+                    val hit = context.meleeHit()
+                    if (hit[0].damage > 0) {
+                        if (context.defender is Player) {
+                            context.attacker.transferRunEnergy(context.defender)
+                            context.defender.message("You feel drained!")
+                        }
                     }
                 }
             )

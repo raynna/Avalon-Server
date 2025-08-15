@@ -108,8 +108,8 @@ public class ComboFoods {
 		String name = ItemDefinitions.getItemDefinitions(food.getId()).getName().toLowerCase();
 		player.getPackets().sendGameMessage("You eat the " + name + ".");
 		player.animate(EAT_ANIM);
-		player.getTickManager().addTicks(TickManager.Keys.SPECIAL_FOOD_LOCK_TICK, 2);
-		player.getActionManager().setActionDelay(player.getActionManager().getActionDelay() + 3);
+		player.addSpecialFoodLock(3);
+		player.addFoodLock(3);
 		player.getInventory().getItems().set(slot, food.getNewId() == 0 ? null : new Item(food.getNewId(), 1));
 		player.getInventory().refresh(slot);
 		WorldTasksManager.schedule(new WorldTask() {

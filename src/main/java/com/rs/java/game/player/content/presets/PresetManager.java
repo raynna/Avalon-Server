@@ -248,14 +248,12 @@ public final class PresetManager implements Serializable {
 				} else {
 					if (!Summoning.spawnFamiliar(player, pouch, true)) {
 						player.getPackets().sendGameMessage("Failed to spawn familiar from preset.");
-						return;
-					}
-					player.getBank().removeItem(pouch.getRealPouchId());
+					} else
+						player.getBank().removeItem(pouch.getRealPouchId());
 				}
 			} else {
 				if (!Summoning.spawnFamiliar(player, pouch, true)) {
 					player.getPackets().sendGameMessage("Failed to spawn familiar from preset.");
-					return;
 				}
 			}
 		}

@@ -11,9 +11,11 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.damage.SoakDamage
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.meleeHit
 import java.util.concurrent.TimeUnit
+import kotlin.math.min
 
 class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
@@ -132,12 +134,13 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         for (pending in hits) {
             val hit = pending.hit
             val target = pending.target
-            PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit);
-            PrayerEffectHandler.handleProtectionEffects(attacker, target, hit);
+            PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit)
+            PrayerEffectHandler.handleProtectionEffects(attacker, target, hit)
+            SoakDamage.handleAbsorb(attacker, target, hit)
             if (target is Player) {//handling this onHit for magic & range
                 target.animate(CombatAnimations.getBlockAnimation(target));
             }
-            totalDamage += hit.damage;
+            totalDamage += min(hit.damage, target.hitpoints)
             scheduleHit(pending.delay) {
                 target.applyHit(hit)
                 onHit(hit)

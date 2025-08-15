@@ -1151,7 +1151,7 @@ public abstract class Entity extends WorldTile {
     }
 
     public boolean needMasksUpdate() {
-        return nextFaceEntity != -2 || nextAnimation != null || forceAnimation || nextGraphics1 != null || nextGraphics2 != null || nextGraphics3 != null || nextGraphics4 != null || (nextWalkDirection == -1 && nextFaceWorldTile != null) || !nextHits.isEmpty() || nextForceMovement != null || updateMask != null || nextForceTalk != null;
+        return nextFaceEntity != -2 || nextAnimation != null || nextGraphics1 != null || nextGraphics2 != null || nextGraphics3 != null || nextGraphics4 != null || (nextWalkDirection == -1 && nextFaceWorldTile != null) || !nextHits.isEmpty() || nextForceMovement != null || updateMask != null || nextForceTalk != null;
     }
 
     public boolean isDead() {
@@ -1160,7 +1160,6 @@ public abstract class Entity extends WorldTile {
 
     public void resetMasks() {
         nextAnimation = null;
-        forceAnimation = false;
         nextGraphics1 = null;
         nextGraphics2 = null;
         nextGraphics3 = null;
@@ -1172,7 +1171,6 @@ public abstract class Entity extends WorldTile {
         nextForceTalk = null;
         nextFaceEntity = -2;
         nextHits.clear();
-        processOverflowHits();
     }
 
     public abstract void finish();

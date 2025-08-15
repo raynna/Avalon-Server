@@ -2653,8 +2653,6 @@ public class ButtonHandler {
         int keptAmount = (player.hasSkull() || inRiskArea) ? 0 : 3;
         if (protectPrayer) keptAmount++;
 
-        System.out.println("Kept amount allowed: " + keptAmount);
-
         class SlotEntry {
             int slot;
             int itemId;
@@ -2678,31 +2676,21 @@ public class ButtonHandler {
             if (item == null) continue;
 
             int stageOnDeath = item.getDefinitions().getStageOnDeath();
-            System.out.printf("Slot %d: Item ID %d, amount %d, stageOnDeath %d%n", i, item.getId(), item.getAmount(), stageOnDeath);
 
             if (!atWilderness && stageOnDeath == 1) {
                 protectedItems.add(i);
-                System.out.println(" -> Marked as protected (not wilderness and stage 1)");
             } else if (ItemConstants.keptOnDeath(item) && atWilderness) {
                 protectedItems.add(i);
-                System.out.println(" -> Marked as protected (keptOnDeath & wilderness)");
             } else if (stageOnDeath == -1) {
                 lostItems.add(i);
-                System.out.println(" -> Marked as lost");
             } else {
                 int price = GrandExchange.getPrice(item.getId());
                 long totalValue = (long) price * item.getAmount();
                 droppedSlots.add(new SlotEntry(i, item.getId(), item.getAmount(), totalValue, price));
-                System.out.printf(" -> Marked as dropped with totalValue %d and perUnitValue %d%n", totalValue, price);
             }
         }
 
         droppedSlots.sort((a, b) -> Long.compare(b.perUnitValue, a.perUnitValue));
-
-        System.out.println("Dropped slots sorted by per-unit value descending:");
-        for (SlotEntry slot : droppedSlots) {
-            System.out.printf("  Slot %d, itemId %d, amount %d, totalValue %d, perUnitValue %d%n", slot.slot, slot.itemId, slot.amount, slot.totalValue, slot.perUnitValue);
-        }
 
         ArrayList<Integer> keptItems = new ArrayList<>();
         ArrayList<Integer> droppedItems = new ArrayList<>();
@@ -2712,7 +2700,6 @@ public class ButtonHandler {
         for (SlotEntry entry : droppedSlots) {
             if (keptUnits >= keptAmount) {
                 droppedItems.add(entry.slot);
-                System.out.printf("Dropping entire slot %d with %d units%n", entry.slot, entry.amount);
                 continue;
             }
 
@@ -2721,7 +2708,6 @@ public class ButtonHandler {
             if (entry.amount <= remaining) {
                 keptItems.add(entry.slot);
                 keptUnits += entry.amount;
-                System.out.printf("Keeping entire slot %d with %d units (total kept: %d)%n", entry.slot, entry.amount, keptUnits);
             } else {
                 // Partial stack handling
                 int keptPart = remaining;
@@ -2734,15 +2720,8 @@ public class ButtonHandler {
                 droppedItems.add(entry.slot);
                 keptUnits += keptPart;
 
-                System.out.printf("Keeping %d units from slot %d (partial stack). Total kept: %d%n", keptPart, entry.slot, keptUnits);
-                System.out.printf("Dropping remaining %d units from slot %d%n", droppedPart, entry.slot);
             }
         }
-
-        System.out.printf("Final kept units: %d / %d%n", keptUnits, keptAmount);
-        System.out.printf("Kept slots: %s%n", keptItems);
-        System.out.printf("Dropped slots: %s%n", droppedItems);
-
         return new Integer[][]{keptItems.toArray(new Integer[0]), droppedItems.toArray(new Integer[0]), protectedItems.toArray(new Integer[0]), atWilderness ? new Integer[0] : lostItems.toArray(new Integer[0])};
     }
 

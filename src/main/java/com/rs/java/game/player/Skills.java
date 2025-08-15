@@ -1059,24 +1059,21 @@ public final class Skills implements Serializable {
         pendingXp.merge(skill, xp, (oldVal, newVal) -> oldVal + newVal);
 
         if (xpUpdateScheduled.compareAndSet(false, true)) {
-            CoresManager.getFastExecutor().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    xpUpdateLock.lock();
-                    try {
-                        ConcurrentHashMap<Integer, Double> copy = new ConcurrentHashMap<>(pendingXp);
-                        pendingXp.clear();
-                        xpUpdateScheduled.set(false);
+            CoresManager.getSlowExecutor().schedule(() -> {
+                xpUpdateLock.lock();
+                try {
+                    ConcurrentHashMap<Integer, Double> copy = new ConcurrentHashMap<>(pendingXp);
+                    pendingXp.clear();
+                    xpUpdateScheduled.set(false);
 
-                        for (Integer skillId : copy.keySet()) {
-                            double amount = copy.get(skillId);
-                            addXp(skillId, amount); // Your existing addXp method
-                        }
-                    } finally {
-                        xpUpdateLock.unlock();
+                    for (Integer skillId : copy.keySet()) {
+                        double amount = copy.get(skillId);
+                        addXp(skillId, amount); // Your existing addXp method
                     }
+                } finally {
+                    xpUpdateLock.unlock();
                 }
-            }, 120);
+            }, 60, TimeUnit.MILLISECONDS);
         }
     }
 
