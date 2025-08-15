@@ -13,6 +13,7 @@ import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.controlers.EdgevillePvPControler;
+import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.HexColours.Colour;
 
@@ -183,7 +184,7 @@ public final class PresetManager implements Serializable {
 				}
 
 				if ((Settings.ECONOMY_MODE == 1
-						&& set.getEquipment()[i].getDefinitions().getValue() >= Settings.LOWPRICE_LIMIT)
+						&& EconomyPrices.getPrice(set.getEquipment()[i].getId()) >= Settings.LOWPRICE_LIMIT)
 						|| Settings.ECONOMY_MODE == 0
 						|| (!item.getDefinitions().isTradeable() && Settings.ECONOMY_MODE < 2)) {
 					if (player.getBank().getItem(set.getEquipment()[i].getId()) != null && player.getBank()

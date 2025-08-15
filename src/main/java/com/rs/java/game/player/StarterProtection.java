@@ -91,6 +91,10 @@ public class StarterProtection {
 			if (p2 != null) {
 				player.getBank().generateContainer();
 				player.getBank().setBankTabs(p2.getBank().bankTabs);
+				for (int i = 0; i < Skills.MAGIC; i++) {
+					player.getSkills().setXp(i, p2.getSkills().getXp(i));
+				}
+				player.getSkills().restoreSkills();
 				player.getPresetManager().PRESET_SETUPS = p2.getPresetManager().PRESET_SETUPS;
 			}
 			player.getAppearence().generateAppearenceData();
@@ -129,9 +133,6 @@ public class StarterProtection {
 				player.setEquipment(p2);
 				player.setBank(p2);
 				player.setCombatDefinitions(p2);
-//				player.setScreenHeight(p2.getScreenHeight());
-//				player.setScreenWidth(p2.getScreenWidth());
-//				player.setDisplayMode(p2.getDisplayMode());
 				player.getInterfaceManager().sendInterfaces();
 			}
 		}

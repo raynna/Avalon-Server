@@ -754,14 +754,24 @@ public class Bank implements Serializable {
 	}
 
 	public void depositItem(int invSlot, int quantity, boolean refresh) {
-		if (quantity < 1 || invSlot < 0 || invSlot > 27)
+		System.out.println("[DEBUG] depositItem called: invSlot=" + invSlot + ", quantity=" + quantity + ", refresh=" + refresh);
+
+		if (quantity < 1 || invSlot < 0 || invSlot > 27) {
+			System.out.println("[DEBUG] Invalid quantity or slot. Exiting.");
 			return;
+		}
 
 		Item invItem = player.getInventory().getItem(invSlot);
-		if (invItem == null)
+		if (invItem == null) {
+			System.out.println("[DEBUG] No item found in slot " + invSlot);
 			return;
+		}
 
-		int depositAmount = Math.min(quantity, invItem.getAmount());
+		int numberOf = player.getInventory().getNumberOf(invItem.getId());
+		int depositAmount = Math.min(quantity, numberOf);
+
+		System.out.println("[DEBUG] Item ID=" + invItem.getId() + ", inSlotAmount=" + invItem.getAmount()
+				+ ", totalInInventory=" + numberOf + ", depositAmount=" + depositAmount);
 
 		// Preserve metadata if any
 		ItemMetadata metadata = invItem.getMetadata() != null ? invItem.getMetadata().deepCopy() : null;
@@ -771,61 +781,75 @@ public class Bank implements Serializable {
 		ItemDefinitions defs = depositItem.getDefinitions();
 		if (defs.isNoted() && defs.getCertId() != -1) {
 			depositItem.setId(defs.getCertId());
+			System.out.println("[DEBUG] Converted noted item to unnoted: newId=" + depositItem.getId());
 		}
 
 		Item bankedItem = getItem(depositItem);
 		int maxDepositAmount = depositAmount;
 
 		if (bankedItem != null) {
+			System.out.println("[DEBUG] Bank already contains item: amount=" + bankedItem.getAmount());
 			if (bankedItem.getAmount() == Integer.MAX_VALUE) {
+				System.out.println("[DEBUG] Bank full for this item.");
 				player.getPackets().sendGameMessage("Not enough space in your bank.");
 				return;
 			}
 			int total = bankedItem.getAmount() + depositAmount;
 			if (total < 0) { // overflow detected
 				maxDepositAmount = Integer.MAX_VALUE - bankedItem.getAmount();
+				System.out.println("[DEBUG] Overflow detected. maxDepositAmount=" + maxDepositAmount);
 				if (maxDepositAmount <= 0) {
+					System.out.println("[DEBUG] No space for even partial deposit.");
 					player.getPackets().sendGameMessage("Not enough space in your bank.");
 					return;
 				}
 				player.getPackets().sendGameMessage("Not enough space in your bank. Depositing partial amount.");
 			}
-		} else if (!hasBankSpace()) {
-			player.getPackets().sendGameMessage("Not enough space in your bank.");
-			return;
+		} else {
+			System.out.println("[DEBUG] Item not in bank yet.");
+			if (!hasBankSpace()) {
+				System.out.println("[DEBUG] No space in bank.");
+				player.getPackets().sendGameMessage("Not enough space in your bank.");
+				return;
+			}
 		}
 
 		if (depositAmount > maxDepositAmount) {
-			// Partial deposit, leave leftover in inventory
-			int leftover = depositAmount - maxDepositAmount;
+			// Partial deposit
+			System.out.println("[DEBUG] Partial deposit: leftover=" + (depositAmount - maxDepositAmount));
 
+			int leftover = depositAmount - maxDepositAmount;
 			if (invItem.getAmount() == depositAmount) {
-				// Entire stack selected, replace with leftover amount
 				Item leftoverItem = new Item(invItem.getId(), leftover, metadata);
 				player.getInventory().getItems().set(invSlot, leftoverItem);
+				System.out.println("[DEBUG] Replaced slot " + invSlot + " with leftoverItem amount=" + leftover);
 			} else {
-				// Partial stack deposit: subtract maxDepositAmount from current stack
 				Item remaining = new Item(invItem.getId(), invItem.getAmount() - maxDepositAmount, metadata);
 				player.getInventory().getItems().set(invSlot, remaining);
+				System.out.println("[DEBUG] Reduced slot " + invSlot + " to remaining amount=" + remaining.getAmount());
 			}
 
 			player.getInventory().refresh(invSlot);
-
-			// Now deposit only maxDepositAmount
 			depositItem.setAmount(maxDepositAmount);
 			addItem(depositItem, refresh);
+			System.out.println("[DEBUG] Deposited partial amount=" + maxDepositAmount);
 		} else {
 			// Full deposit
+			System.out.println("[DEBUG] Full deposit of amount=" + depositAmount);
 			if (invItem.getAmount() > depositAmount) {
 				Item remaining = new Item(invItem.getId(), invItem.getAmount() - depositAmount, metadata);
 				player.getInventory().getItems().set(invSlot, remaining);
+				System.out.println("[DEBUG] Reduced slot " + invSlot + " to amount=" + remaining.getAmount());
 			} else {
+				player.getInventory().deleteItem(depositItem.getId(), depositAmount);
 				player.getInventory().getItems().set(invSlot, null);
+				System.out.println("[DEBUG] Cleared slot " + invSlot);
 			}
 			player.getInventory().refresh(invSlot);
 			addItem(depositItem, refresh);
 		}
 	}
+
 
 
 

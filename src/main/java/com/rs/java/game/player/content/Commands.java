@@ -127,122 +127,58 @@ public final class Commands {
             int amount = 0;
             int itemId = 0;
             switch (cmd[0]) {
-                case "flowertest":
-                    String[] flowers = {"red", "blue", "yellow", "orange", "pastel", "rainbow"};
-                    Map<String, Integer> map1 = new HashMap<String, Integer>();
-                    Map<String, Integer> map2 = new HashMap<String, Integer>();
-                    String flowerType = null;
-                    String flowerType2 = null;
-                    for (int i = 0; i < flowers.length; i++) {
-                        map1.put(flowers[i], 0);
-                        map2.put(flowers[i], 0);
-                    }
-                    for (int i = 1; i <= 5; i++) {
-                        flowerType = flowers[Utils.getRandom(flowers.length)];
-                        flowerType2 = flowers[Utils.getRandom(flowers.length)];
-                        map1.put(flowerType, map1.get(flowerType).intValue() + 1);
-                        map2.put(flowerType2, map2.get(flowerType2).intValue() + 1);
-                        System.out.println("flowerType: " + flowerType + ", flowerType2: " + flowerType2);
-                    }
-                    for (Map.Entry<String, Integer> flowa : map1.entrySet()) {
-                        System.out.println(flowa.getKey() + " - " + flowa.getValue());
-                    }
-                    StringBuilder builder = new StringBuilder();
-                    StringBuilder builder2 = new StringBuilder();
-
-                    WorldTasksManager.schedule(new WorldTask() {
-
-                        int index;
-
-                        @Override
-                        public void run() {
-                            if (index >= 5) {
-                                stop();
-                                return;
-                            }
-                            builder.append(map1.keySet().toArray()[index].toString() + " - ");
-                            builder2.append(map2.keySet().toArray()[index].toString() + " - ");
-                            index++;
-                            System.out.println("name1 Flowers: " + builder.toString() + "\nname2 Flowers: " + builder2.toString() + "");
-                        }
-                    }, 0, 2);
-                    return true;
-                case "add":
-                    player.add(Keys.IntKey.EP, 10);
-                    return true;
-                case "store":
-                    player.getPackets().sendOpenURL("http://avalonrsps718.everythingrs.com/services/store");
-                    return true;
-                case "highscores":
-                    player.getPackets().sendOpenURL("https://avalon-rsps.com/highscores/");
-                    return true;
-                case "webge":
-                case "ge":
-                    player.getPackets().sendOpenURL("https://avalon-rsps.com/grand-exchange/");
-                    return true;
-                case "vote":
-                    player.getPackets().sendOpenURL(Settings.VOTE_LINK);
-                    return true;
-                case "website":
-                case "forum":
-                case "forums":
-                    player.getPackets().sendOpenURL(Settings.WEBSITE_LINK);
-                    return true;
-                case "update":
-                case "updates":
-                    player.getPackets().sendOpenURL(Settings.UPDATE_LINK);
-                    return true;
-                case "voted":
-                    if (cmd.length == 1) {
-                        player.getPackets().sendGameMessage("Please use [::reward id], [::reward id amount], or [::reward id all].");
+                case "item":
+                    if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
+                        player.message("You can't use ::item in this mode.");
                         return true;
                     }
-                    //TODO: check for votepoints >= 10 give box, and else give points per vote
-                    player.message("Checking your vote statistics..");
-                    final String playerName = player.getUsername();
-                    final String idToString = cmd[1];
-                    final String rewardAmount = cmd.length == 3 ? cmd[2] : "1";
-                    com.everythingrs.vote.Vote.service.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                com.everythingrs.vote.Vote[] reward = com.everythingrs.vote.Vote.reward("JkQT2VoUwdun6IyLu2xk0lc7fOH4RV077Gc5g6hUpwA6Q2E5Yaxxu24tQt86i4B26RbIGl40", playerName, idToString, rewardAmount);
-                                if (reward[0].message != null) {
-                                    player.getPackets().sendGameMessage(reward[0].message);
-                                    return;
-                                }
-                                player.getInventory().addItem(new Item(reward[0].reward_id, reward[0].give_amount));
-                                player.getPackets().sendGameMessage("Thank you for voting! You now have " + reward[0].vote_points + " vote points.");
-                            } catch (Exception e) {
-                                player.getPackets().sendGameMessage("Api Services are currently offline. Please check back shortly");
-                                e.printStackTrace();
+                    if (player.isAtWild()) {
+                        player.getPackets().sendGameMessage("You can't use ::" + cmd[0] + " in pvp.");
+                        return true;
+                    }
+                    try {
+                        String input = String.join(" ", Arrays.copyOfRange(cmd, 1, cmd.length));
+
+                        amount = 1;
+                        String searchTerm = input;
+
+                        String[] parts = input.split(" ");
+                        if (parts.length > 1 && parts[parts.length - 1].matches("\\d+")) {
+                            amount = Integer.parseInt(parts[parts.length - 1]);
+                            searchTerm = String.join(" ", Arrays.copyOfRange(parts, 0, parts.length - 1));
+                        }
+
+                        ItemDefinitions itemDef = null;
+
+                        try {
+                            itemId = Integer.parseInt(searchTerm);
+                            itemDef = ItemDefinitions.getItemDefinitions(itemId);
+                        } catch (NumberFormatException e) {
+                            List<ItemDefinitions> results = ItemDefinitions.searchItems(searchTerm, 10);
+                            player.message("Results for '" + searchTerm + "':");
+                            for (ItemDefinitions def : results) {
+                                player.message("- " + def.getName() + " (<col=ff0000>" + def.getId() + "</col>)");
+                            }
+                            if (!results.isEmpty()) {
+                                itemDef = results.get(0);
                             }
                         }
 
-                    });
-                    return true;
-                case "claimshop":
-                    new java.lang.Thread() {
-                        public void run() {
-                            try {
-                                com.everythingrs.donate.Donation[] donations = com.everythingrs.donate.Donation.donations("JkQT2VoUwdun6IyLu2xk0lc7fOH4RV077Gc5g6hUpwA6Q2E5Yaxxu24tQt86i4B26RbIGl40", player.getUsername());
-                                if (donations.length == 0) {
-                                    player.getPackets().sendGameMessage("You currently don't have any items waiting. You must donate first!");
-                                    return;
-                                }
-                                if (donations[0].message != null) {
-                                    player.getPackets().sendGameMessage(donations[0].message);
-                                }
-                                for (com.everythingrs.donate.Donation donate : donations) {
-                                    player.getInventory().addItem(donate.product_id, donate.product_amount);
-//								player.donatedAmount += donate.product_price * donate.amount_purchased;
-                                }
-                                player.getPackets().sendGameMessage("Thank you for donating! ");
-                            } catch (Exception e) {
-                                player.message("Api Services are currently offline. Please check back shortly");
+                        if (itemDef == null) {
+                            player.getPackets().sendGameMessage("No item found for: '" + searchTerm + "'");
+                            return true;
+                        }
+                        if (Settings.ECONOMY_MODE < Settings.FULL_SPAWN) {
+                            if (EconomyPrices.getPrice(itemId) > 0) {
+                                player.message("This item isn't free, therefor it cannot be spawned, look for this item in shops.");
+                                return true;
                             }
                         }
-                    }.start();
+                        player.getInventory().addItem(itemDef.getId(), amount);
+                        player.getPackets().sendGameMessage("You spawn " + amount + " x " + itemDef.getName() + ".");
+                    } catch (Exception e) {
+                        player.getPackets().sendGameMessage("Use: ::item id|name (optional: amount)");
+                    }
                     return true;
                 case "claim":
                     ButtonHandler.refreshUntradeables(player);
@@ -377,15 +313,6 @@ public final class Commands {
                     player.getPackets().sendGameMessage("You have teleported to castle.");
                     return true;
 
-                case "bh":
-                    if (!player.canUseCommand()) {
-                        player.getPackets().sendGameMessage("You can't use ::" + cmd[0] + " at this location.");
-                        return true;
-                    }
-                    Magic.sendNormalTeleportSpell(player, 0, 0, new WorldTile(3153, 3709, 0));
-                    player.getPackets().sendGameMessage("You have teleported to bounty hunter crater.");
-                    return true;
-
                 case "altar":
                     if (!player.canUseCommand()) {
                         player.getPackets().sendGameMessage("You can't use ::" + cmd[0] + " at this location.");
@@ -445,9 +372,7 @@ public final class Commands {
                             "::kbd *Teleports outside king black dragon lair. MULTI");
                     player.getPackets().sendTextOnComponent(275, 20,
                             "::50ports *Teleports to lvl 50 wilderness portal. MULTI");
-                    player.getPackets().sendTextOnComponent(275, 21,
-                            "::bh *Teleports inside the Bounty hunter crate. MULTI");
-                    player.getPackets().sendTextOnComponent(275, 22, "::revs *Teleports to rev cave. SINGLE & MULTI");
+                   player.getPackets().sendTextOnComponent(275, 22, "::revs *Teleports to rev cave. SINGLE & MULTI");
                     player.getPackets().sendTextOnComponent(275, 23,
                             "::altar *Teleports to an altar deep in west of wilderness.");
                     player.getPackets().sendTextOnComponent(275, 24,
@@ -498,12 +423,6 @@ public final class Commands {
                     player.getPackets().sendVar1(744, 0);
                     player.getPackets().sendInterface(true, 752, 7, 389);
                     player.getPackets().sendRunScript(570, new Object[]{"Price checker"});
-                    return true;
-                case "closeticket":
-                    TicketSystem.closeTicket(player);
-                    return true;
-                case "checkoffers":
-                    GrandExchange.sendOfferTracker(player);
                     return true;
                 case "droplog":
                     player.getDropLogs().displayInterface();
@@ -2529,54 +2448,6 @@ public final class Commands {
                     return true;
                 case "freezeme":
                     player.addFreezeDelay(16, false);
-                    return true;
-                case "item":
-                    if (player.isAtWild()) {
-                        player.getPackets().sendGameMessage("You can't use ::" + cmd[0] + " in the wilderness.");
-                        return true;
-                    }
-                    try {
-                        // Combine all arguments except the command itself into a single search string
-                        String input = String.join(" ", Arrays.copyOfRange(cmd, 1, cmd.length));
-
-                        amount = 1;
-                        String searchTerm = input;
-
-                        // Check if last part is a number (optional amount)
-                        String[] parts = input.split(" ");
-                        if (parts.length > 1 && parts[parts.length - 1].matches("\\d+")) {
-                            amount = Integer.parseInt(parts[parts.length - 1]);
-                            searchTerm = String.join(" ", Arrays.copyOfRange(parts, 0, parts.length - 1));
-                        }
-
-                        ItemDefinitions itemDef = null;
-
-                        // Try parsing input as an integer ID
-                        try {
-                            itemId = Integer.parseInt(searchTerm);
-                            itemDef = ItemDefinitions.getItemDefinitions(itemId);
-                        } catch (NumberFormatException e) {
-                            // Not an ID, try searching by name
-                            List<ItemDefinitions> results = ItemDefinitions.searchItems(searchTerm, 10);
-                            player.message("Results for '" + searchTerm + "':");
-                            for (ItemDefinitions def : results) {
-                                player.message("- " + def.getName() + " (<col=ff0000>" + def.getId() + "</col>)");
-                            }
-                            if (!results.isEmpty()) {
-                                itemDef = results.get(0);
-                            }
-                        }
-
-                        if (itemDef == null) {
-                            player.getPackets().sendGameMessage("No item found for: '" + searchTerm + "'");
-                            return true;
-                        }
-
-                        player.getInventory().addItem(itemDef.getId(), amount);
-                        player.getPackets().sendGameMessage("You spawn " + amount + " x " + itemDef.getName() + ".");
-                    } catch (Exception e) {
-                        player.getPackets().sendGameMessage("Use: ::item id|name (optional: amount)");
-                    }
                     return true;
                 case "appearence":
                     player.getAppearence().setLook(Integer.parseInt(cmd[1]), Integer.parseInt(cmd[2]));

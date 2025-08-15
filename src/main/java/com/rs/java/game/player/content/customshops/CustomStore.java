@@ -40,14 +40,10 @@ public class CustomStore extends CustomStoreData {
 			player.getPackets().sendHideIComponent(INTERFACE_ID, i, true);
 		refreshInterface();
 		player.getInterfaceManager().sendInterface(INTERFACE_ID);
-		player.setCloseInterfacesEvent(new Runnable() {
-
-			@Override
-			public void run() {
-				player.getTemporaryAttributtes().remove("CUSTOM_STORE_TYPE");
-				player.getTemporaryAttributtes().remove("CUSTOM_STORE_TYPE");
-			}
-		});
+		player.setCloseInterfacesEvent(() -> {
+            player.getTemporaryAttributtes().remove("CUSTOM_STORE_TYPE");
+            player.getTemporaryAttributtes().remove("CUSTOM_STORE");
+        });
 	}
 
 	private boolean isGeneralStore(int store) {
