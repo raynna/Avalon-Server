@@ -30,7 +30,7 @@ public final class Settings {
 	/**
 	 * 0 full eco, 1 eco spawn, 2 spawn
 	 * */
-	public static int ECONOMY_MODE = 1;
+	public static int ECONOMY_MODE = 2;
 
 	public static int FULL_ECONOMY = 0;
 	public static int HALF_ECONOMOY = 1;

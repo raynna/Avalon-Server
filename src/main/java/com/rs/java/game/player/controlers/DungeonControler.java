@@ -1347,9 +1347,9 @@ public class DungeonControler extends Controler {
 	public boolean processItemOnPlayer(Player p2, Item item) {
 		Food food = Food.forId(item.getId());
 		if (food != null) {
-			if (p2.getFoodDelay() > Utils.currentTimeMillis() || p2.getPotDelay() > Utils.currentTimeMillis())
+			if (p2.isFoodLocked() || p2.isPotLocked())
 				return true;
-			p2.addFoodDelay(1000);
+			p2.addPotLock(1000);
 			p2.applyHit(new Hit(p2, food.getHeal() * 10, HitLook.HEALED_DAMAGE));
 			healedDamage += food.getHeal() * 10;
 			p2.getActionManager().addActionDelay(3);

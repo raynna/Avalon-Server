@@ -15,7 +15,7 @@ public class StatRestoreShare {
 			player.message("You can only use this spell on restore potions.");
 			return false;
 		}
-		if (player.getPotDelay() > Utils.currentTimeMillis())
+		if (player.isPotLocked())
 			return false;
 		player.addXp(Skills.MAGIC, xp);
 		Pots.pot(player, item, slotId);

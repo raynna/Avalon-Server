@@ -91,10 +91,15 @@ public class StarterProtection {
 			if (p2 != null) {
 				player.getBank().generateContainer();
 				player.getBank().setBankTabs(p2.getBank().bankTabs);
-				for (int i = 0; i < Skills.MAGIC; i++) {
+				for (int i = 0; i <= Skills.MAGIC; i++) {
 					player.getSkills().setXp(i, p2.getSkills().getXp(i));
 				}
+				player.getSkills().setXp(Skills.SUMMONING, p2.getSkills().getXp(Skills.SUMMONING));
 				player.getSkills().restoreSkills();
+				player.setFamiliar(p2.getFamiliar());
+				player.setSummoningLeftClickOption(p2.getSummoningLeftClickOption());
+				player.getVarsManager().sendVar(1493, player.getSummoningLeftClickOption());
+				player.getVarsManager().sendVar(1494, player.getSummoningLeftClickOption());
 				player.getPresetManager().PRESET_SETUPS = p2.getPresetManager().PRESET_SETUPS;
 			}
 			player.getAppearence().generateAppearenceData();
@@ -135,10 +140,13 @@ public class StarterProtection {
 				player.setCombatDefinitions(p2);
 				player.getInterfaceManager().sendInterfaces();
 			}
+			player.getMoneyPouch().addMoney(2000000, false);
+			player.getDialogueManager().startDialogue("StarterQuickStatsD");
 		}
-		player.getMoneyPouch().addMoney(2000000, false);
+		player.heal(player.getMaxHitpoints());
+		player.getPrayer().restorePrayer(990);
+		player.combatDefinitions.switchAutoRelatie();
 		player.getAppearence().generateAppearenceData();
-		player.getDialogueManager().startDialogue("StarterQuickStatsD");
 	}
 
 	public static final boolean containsIP(String ip) {

@@ -289,13 +289,13 @@ public class NPC extends Entity implements Serializable {
 
     public void loadNPCFaceTile() {
         if (getId() == 2241)
-            faceWorldTile(this, "north");
+            faceWorldTile(this, "west");
         if (getId() == 960)
             faceWorldTile(this, "south");
         if (getId() == 7891)
-            faceWorldTile(this, "west");
-        if (getId() == 4474)
             faceWorldTile(this, "north");
+        if (getId() == 4474)
+            faceWorldTile(this, "west");
         if (getId() == 3785)
             faceWorldTile(this, "north");
     }

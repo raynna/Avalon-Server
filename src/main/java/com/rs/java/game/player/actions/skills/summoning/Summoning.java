@@ -76,7 +76,6 @@ public class Summoning {
 		player.getSkills().drainSummoning(pouch.getSummoningCost());
 		player.setFamiliar(npc);
 		player.getSkills().addXp(Skills.SUMMONING, 10);
-		player.getPackets().sendGlobalVar(168, 8);
 		return true;
 	}
 

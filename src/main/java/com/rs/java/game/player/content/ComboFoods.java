@@ -9,7 +9,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
-import com.rs.java.utils.Utils;
+import com.rs.java.game.player.TickManager;
 
 /**
  * 
@@ -103,13 +103,12 @@ public class ComboFoods {
 		Food food = Food.forId(item.getId());
 		if (food == null)
 			return false;
-		if (player.getComboFoodDelay() > Utils.currentTimeMillis())
+		if (player.isSpecialFoodLocked())
 			return true;
 		String name = ItemDefinitions.getItemDefinitions(food.getId()).getName().toLowerCase();
 		player.getPackets().sendGameMessage("You eat the " + name + ".");
 		player.animate(EAT_ANIM);
-		long combofoodDelay = 1200;
-		player.addComboFoodDelay(combofoodDelay);
+		player.getTickManager().addTicks(TickManager.Keys.SPECIAL_FOOD_LOCK_TICK, 2);
 		player.getActionManager().setActionDelay(player.getActionManager().getActionDelay() + 3);
 		player.getInventory().getItems().set(slot, food.getNewId() == 0 ? null : new Item(food.getNewId(), 1));
 		player.getInventory().refresh(slot);

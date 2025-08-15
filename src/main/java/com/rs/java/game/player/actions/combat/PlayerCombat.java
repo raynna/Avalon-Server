@@ -37,7 +37,6 @@ import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.MapAreas;
 import com.rs.java.utils.Utils;
-import com.rs.java.game.player.VariableKeys.*;
 
 /**
  * @Improved Andreas - AvalonPK
@@ -1276,7 +1275,7 @@ public class PlayerCombat extends Action {
                         final Player other = (Player) target;
                         other.lock(5);
                         other.stopAll();
-                        other.addFoodDelay(3000);
+                        other.addPotLock(3000);
                         if (!target.addWalkSteps(target.getX() - player.getX() + target.getX(),
                                 target.getY() - player.getY() + target.getY(), 1))
                             player.setNextFaceEntity(target);

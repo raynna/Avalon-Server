@@ -8,7 +8,7 @@ data class MeleeWeapon(
     override val itemId: List<Int>,
     override val name: String,
     override val weaponStyle: WeaponStyle,
-    override val attackSpeed: Int? = 4,
+    override val attackSpeed: Int? = -1,
     override val attackRange: Int? = null,
     override val attackDelay: Int? = null,
     override val animationId: Int? = null,

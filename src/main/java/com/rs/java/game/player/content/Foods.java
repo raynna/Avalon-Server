@@ -10,6 +10,7 @@ import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.utils.Utils;
 
 /**
@@ -566,17 +567,17 @@ public class Foods {
 		//	return true;
 		if (player.isDead())
 			return true;
-		if (food.isComboFood() && player.getComboFoodDelay() > Utils.currentTimeMillis())
+		if (food.isComboFood() && player.isSpecialFoodLocked())
 			return true;
-		if (!food.isComboFood() && player.getFoodDelay() > Utils.currentTimeMillis())
+		if (!food.isComboFood() && player.isFoodLocked())
 			return true;
 		String name = ItemDefinitions.getItemDefinitions(food.getId()).getName().toLowerCase();
-		long foodDelay = name.contains("pie") ? 1200 : 1800;
+		int foodTick = name.contains("pie") ? 2 : 3;
 		if (!food.isComboFood()) {
-			player.addFoodDelay(foodDelay);
+			player.addFoodLock(foodTick);
 		} else {
-			player.addFoodDelay(foodDelay);
-			player.addComboFoodDelay(foodDelay);
+			player.addFoodLock(foodTick);
+			player.addSpecialFoodLock(foodTick);
 		}
 		player.playSound(2393, 1);
 		player.getPackets().sendGameMessage("You eat the " + name + ".");

@@ -2903,7 +2903,7 @@ public class Player extends Entity {
                 return;
             }
         }
-        if (getPlayerRank().getRank()[0] == Rank.DEVELOPER || getPlayerRank().getRank()[0] == Rank.MODERATOR)
+        if (getPlayerRank().isDeveloper() || getPlayerRank().isModerator())
             getPlayerRank().setRank(0, Rank.PLAYER);
     }
 
@@ -4218,20 +4218,34 @@ public class Player extends Entity {
         potDelay = time + Utils.currentTimeMillis();
     }
 
-    public long getPotDelay() {
-        return potDelay;
+    public boolean isPotLocked() {
+        return getTickManager().isActive(TickManager.Keys.POT_LOCK_TICK);
     }
 
-    public void addFoodDelay(long time) {
-        foodDelay = time + Utils.currentTimeMillis();
+    public void addPotLock(int ticks) {
+        getTickManager().addTicks(TickManager.Keys.POT_LOCK_TICK, ticks);
     }
 
-    public void setFoodDelay(long time) {
-        foodDelay = time;
+    public void addFoodLock(int ticks) {
+        if (!isFoodLocked())
+            getNewActionManager().setActionDelay(getNewActionManager().getActionDelay() + ticks);
+        getTickManager().addTicks(TickManager.Keys.FOOD_LOCK_TICK, ticks);
     }
 
-    public long getFoodDelay() {
-        return foodDelay;
+    public boolean isFoodLocked() {
+        message("foodlocked? " + getTickManager().isActive(TickManager.Keys.FOOD_LOCK_TICK));
+        return getTickManager().isActive(TickManager.Keys.FOOD_LOCK_TICK);
+    }
+
+    public int getFoodLockTicks() {
+        int ticks = 0;
+        if (isFoodLocked()) {
+            ticks = getTickManager().getTicksLeft(TickManager.Keys.FOOD_LOCK_TICK);
+        } else {
+            ticks = getSpecialFoodLockTicks();
+        }
+        return ticks;
+
     }
 
     public void addBrewDelay(long time) {
@@ -4267,20 +4281,16 @@ public class Player extends Entity {
         return InventoryPoints;
     }
 
-    public void addComboFoodDelay(long time) {
-        combofoodDelay = time + Utils.currentTimeMillis();
+    public void addSpecialFoodLock(int ticks) {
+        getTickManager().addTicks(TickManager.Keys.SPECIAL_FOOD_LOCK_TICK, ticks);
     }
 
-    public void setComboFoodDelay(long time) {
-        combofoodDelay = time;
+    public boolean isSpecialFoodLocked() {
+        return getTickManager().isActive(TickManager.Keys.SPECIAL_FOOD_LOCK_TICK);
     }
 
-    public long getComboFoodDelay() {
-        return combofoodDelay;
-    }
-
-    public void setPoisonImmune(long time) {
-        poisonImmune = time;
+    public int getSpecialFoodLockTicks() {
+        return getTickManager().getTicksLeft(TickManager.Keys.SPECIAL_FOOD_LOCK_TICK);
     }
 
     public void addPoisonImmune(long time) {
@@ -4290,10 +4300,6 @@ public class Player extends Entity {
 
     public long getPoisonImmune() {
         return poisonImmune;
-    }
-
-    public void addFireImmune(long time) {
-        fireImmune = time + Utils.currentTimeMillis();
     }
 
     public long getFireImmune() {

@@ -169,13 +169,13 @@ public final class Commands {
                             return true;
                         }
                         if (Settings.ECONOMY_MODE < Settings.FULL_SPAWN) {
-                            if (EconomyPrices.getPrice(itemId) > 0) {
+                            if (EconomyPrices.getPrice(itemId) > 0 && !player.getRank().isDeveloper()) {
                                 player.message("This item isn't free, therefor it cannot be spawned, look for this item in shops.");
                                 return true;
                             }
                         }
                         player.getInventory().addItem(itemDef.getId(), amount);
-                        player.getPackets().sendGameMessage("You spawn " + amount + " x " + itemDef.getName() + ".");
+                        player.getPackets().sendGameMessage("You spawn " + amount + " x " + itemDef.getName() + "("+ itemId + ").");
                     } catch (Exception e) {
                         player.getPackets().sendGameMessage("Use: ::item id|name (optional: amount)");
                     }

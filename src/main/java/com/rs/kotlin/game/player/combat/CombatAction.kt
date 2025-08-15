@@ -45,7 +45,7 @@ class CombatAction(
             else -> MeleeStyle(player, target)
         }
         player.temporaryTarget = target
-        player.tickTimers.set(Keys.IntKey.LAST_ATTACK_TICK, 10)
+        player.tickTimers[Keys.IntKey.LAST_ATTACK_TICK] = 10
         healthOverlay.sendOverlay(player, target)
         player.setNextFaceEntity(target);
         player.resetWalkSteps()
@@ -105,6 +105,8 @@ class CombatAction(
         if (!process(player) || !check(player, target)) {
             return -1
         }
+        if (player.isFoodLocked || player.isSpecialFoodLocked)
+            return 0
         //player.message("process with delay")
         val requiredDistance = getAdjustedAttackRange(player, target)
         if ((!player.clipedProjectile(target, requiredDistance == 0)) || !Utils.isOnRange(
@@ -142,7 +144,8 @@ class CombatAction(
                     style.attack()
                 }
                 phase = CombatPhase.HIT
-                style.getAttackSpeed() - 1
+                val foodLock = player.getFoodLockTicks()
+                style.getAttackSpeed() + foodLock - 1
             }
         }
     }

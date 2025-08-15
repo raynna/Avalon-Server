@@ -82,6 +82,14 @@ public class PlayerRank implements Serializable {
 		return rank.getIconId();
 	}
 
+	public boolean isDeveloper() {
+		return rank[0] == Rank.DEVELOPER;
+	}
+
+	public boolean isModerator() {
+		return rank[0] == Rank.MODERATOR;
+	}
+
 	public boolean isIronman() {
 		return rank[2] == Rank.IRONMAN || rank[2] == Rank.HARDCORE_IRONMAN;
 	}

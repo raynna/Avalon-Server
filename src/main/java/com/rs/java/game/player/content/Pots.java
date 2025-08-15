@@ -589,7 +589,7 @@ public final class Pots {
 
 			@Override
 			public boolean canDrink(Player player) {
-				if (player.getComboFoodDelay() > Utils.currentTimeMillis())
+				if (player.isSpecialFoodLocked())
 					return false;
 				return true;
 			}
@@ -877,13 +877,13 @@ public final class Pots {
 		Pot pot = getPot(item.getId());
 		if (pot == null)
 			return false;
-		if (player.getPotDelay() > Utils.currentTimeMillis())
+		if (player.isPotLocked())
 			return true;
 		//if (!player.getControlerManager().canPot(pot))
 		//	return true;
 		if (!pot.effect.canDrink(player))
 			return true;
-		player.addPotDelay(1200);
+		player.addPotDelay(2);
 		pot.effect.extra(player);
 		int dosesLeft = getDoses(pot, item) - 1;
 		if (dosesLeft == 0 && (pot.isFlask() || player.toggles("BREAK_VIALS", false))) {

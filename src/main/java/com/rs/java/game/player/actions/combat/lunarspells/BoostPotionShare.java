@@ -19,7 +19,7 @@ public class BoostPotionShare {
 					"You can only use this spell on strength, attack, defence, ranging, magic and combat potions.");
 			return false;
 		}
-		if (player.getPotDelay() > Utils.currentTimeMillis())
+		if (player.isPotLocked())
 			return false;
 		player.addXp(Skills.MAGIC, xp);
 		Pots.pot(player, item, slotId);

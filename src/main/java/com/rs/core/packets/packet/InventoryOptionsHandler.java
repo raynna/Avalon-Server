@@ -492,10 +492,9 @@ public class InventoryOptionsHandler {
         }
         if (itemId == 7509) {
             long foodDelay = player.getHitpoints() < 50 ? 1800 : 200;
-            if (player.getFoodDelay() > Utils.currentTimeMillis())
+            if (player.isFoodLocked())
                 return;
-            player.getActionManager().setActionDelay((int) foodDelay / 5000);
-            player.addFoodDelay(foodDelay);
+            player.addPotLock(3);
             player.getActionManager().setActionDelay(player.getActionManager().getActionDelay() + 4);
             player.animate(new Animation(829));
             if (player.getHitpoints() == 1)
@@ -533,10 +532,9 @@ public class InventoryOptionsHandler {
         }
         if (itemId == 7510) {
             long foodDelay = player.getHitpoints() < 200 ? 1800 : 200;
-            if (player.getFoodDelay() > Utils.currentTimeMillis())
+            if (player.isFoodLocked())
                 return;
-            player.getActionManager().setActionDelay((int) foodDelay / 5000);
-            player.addFoodDelay(foodDelay);
+            player.addPotLock(3);
             player.getActionManager().setActionDelay(player.getActionManager().getActionDelay() + 4);
             player.animate(new Animation(829));
             if (player.getHitpoints() == 1)
@@ -548,16 +546,14 @@ public class InventoryOptionsHandler {
             player.setNextForceTalk(new ForceTalk("Ow! I nearly broke a tooth!"));
         }
         if (itemId == 10476) {
-            long foodDelay = 1800;
             int runEnergy = (int) (player.getRunEnergy() * 1.1);
-            if (player.getFoodDelay() > Utils.currentTimeMillis())
+            if (player.isFoodLocked())
                 return;
             player.getInventory().deleteItem(itemId, 1);
             if (runEnergy > 100)
                 runEnergy = 100;
             player.setRunEnergy(runEnergy);
-            player.getActionManager().setActionDelay((int) foodDelay / 1000);
-            player.addFoodDelay(foodDelay);
+            player.addPotLock(3);
             player.getActionManager().setActionDelay(player.getActionManager().getActionDelay() + 4);
             player.animate(new Animation(829));
             player.heal(10 + Utils.random(20));
