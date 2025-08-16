@@ -16,6 +16,7 @@ import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.damage.SoakDamage
 import com.rs.kotlin.game.player.combat.melee.StandardMelee
 import com.rs.kotlin.game.player.combat.special.CombatContext
+import com.rs.kotlin.game.player.combat.special.meleeHit
 import com.rs.kotlin.game.player.combat.special.rangedHit
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
@@ -134,24 +135,12 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             weaponId = currentWeaponId,
             ammo = currentAmmo,
         )
-        val hit =
-            registerHit(attacker, defender, CombatType.RANGED, weapon = currentWeapon, attackStyle = attackStyle)
-        if (attacker.combatDefinitions.isUsingSpecialAttack) {
-            currentWeapon.special?.let { special ->
-                val specialEnergy = attacker.combatDefinitions.specialAttackPercentage
-                if (specialEnergy >= special.energyCost) {
-                    val context = combatContext.copy()
-                    special.execute(context)
-                    attacker.combatDefinitions.decreaseSpecialAttack(special.energyCost);
-                    return
-                } else {
-                    attacker.message("You don't have enough special attack energy.")
-                    attacker.combatDefinitions.switchUsingSpecialAttack()
-                }
-            }
+        if (executeSpecialAttack(attacker, defender)) {
+            return
         }
-        CombatAnimations.getAnimation(combatContext.weaponId, attackStyle, attacker.combatDefinitions.attackStyle)
-            .let { attacker.animate(it) }
+        if (executeEffect(combatContext))
+            return
+        attacker.animate(CombatAnimations.getAnimation(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle))
         if (currentAmmo != null) {
             if (currentAmmo.startGfx != null) {
                 attacker.gfx(currentAmmo.startGfx)
@@ -159,7 +148,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         sendProjectile()
         handleSpecialEffects()
-        combatContext.rangedHit()
+        val hit = combatContext.rangedHit(delay = getHitDelay())
         attacker.message(
             "Ranged Attack -> " +
                     "Weapon: ${currentWeapon.name}, " +
@@ -168,8 +157,8 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                     "Ammo: ${currentAmmo?.name}, " +
                     "Style: ${attackStyle}, " +
                     "StyleBonus: ${attackBonusType}, " +
-                    "MaxHit: ${hit.maxHit}, " +
-                    "Hit: ${hit.damage}"
+                    "MaxHit: ${hit[0].damage}, " +
+                    "Hit: ${hit[0].damage}"
         )
 
     }
@@ -219,6 +208,10 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             SoakDamage.handleAbsorb(attacker, target, hit)
             consumeAmmo()
             totalDamage += min(hit.damage, target.hitpoints)
+            attacker.chargeManager.processOutgoingHit()
+            if (target is Player) {
+                target.chargeManager.processIncommingHit()
+            }
             scheduleHit(pending.delay) {
                 if (target is Player) {
                     target.animate(CombatAnimations.getBlockAnimation(target))

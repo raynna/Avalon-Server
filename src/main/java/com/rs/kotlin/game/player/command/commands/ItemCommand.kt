@@ -20,16 +20,18 @@ class ItemCommand : Command {
 
         val cmdArgs = CommandArguments(args)
 
-        val rawAmountArg = cmdArgs.last() ?: "1"
+        val rawAmountArg = args.lastOrNull() ?: "1"
         val amount = if (rawAmountArg.startsWith("+")) {
             rawAmountArg.drop(1).toIntOrNull() ?: 1
         } else {
             rawAmountArg.toIntOrNull() ?: 1
         }
 
-        val searchTerm = args
-            .filterNot { it.contains("=") || it == rawAmountArg }
-            .joinToString(" ")
+        val searchArgs = if (rawAmountArg.toIntOrNull() != null || rawAmountArg.startsWith("+")) {
+            args.dropLast(1)
+        } else args
+
+        val searchTerm = searchArgs.joinToString(" ")
             .replace("_", " ")
             .lowercase()
 
@@ -37,6 +39,7 @@ class ItemCommand : Command {
             player.message("Usage: $usage")
             return true
         }
+
 
         val itemDef = searchTerm.toIntOrNull()?.let { ItemDefinitions.getItemDefinitions(it) }
             ?: run {

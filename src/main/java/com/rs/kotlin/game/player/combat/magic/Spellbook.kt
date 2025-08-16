@@ -2,6 +2,7 @@ package com.rs.kotlin.game.player.combat.magic
 
 import com.rs.java.game.Graphics
 import com.rs.java.game.WorldTile
+import com.rs.java.game.player.Player
 import com.rs.kotlin.game.world.projectile.Projectile
 
 abstract class Spellbook(val id: Int) {
@@ -20,13 +21,15 @@ abstract class Spellbook(val id: Int) {
         }
 
         @JvmStatic
-        fun getSpellById(componentId: Int): Spell? {
-            return MODERN.spells.find { it.id == componentId }
-                ?: ANCIENT.spells.find { it.id == componentId }
-                ?: run {
-                    println("Warning: Both MODERN and ANCIENT spellbooks were null!")
-                    null
-                }
+        fun getSpellById(player: Player, spellId: Int): Spell? {
+            return when (player.combatDefinitions.getSpellBook()) {
+                MODERN_ID -> MODERN.spells.find { it.id == spellId }
+                ANCIENT_ID -> ANCIENT.spells.find { it.id == spellId }
+                else -> null
+            } ?: run {
+                println("Warning: Spell id $spellId not found in player's active spellbook")
+                null
+            }
         }
     }
     abstract val spells: List<Spell>

@@ -165,6 +165,7 @@ object SpellHandler {
                 player.packets.sendGameMessage(
                     "You don't have enough ${ItemDefinitions.getItemDefinitions(runeId).name} to cast this spell."
                 )
+                player.combatDefinitions.resetSpells(true);
                 return false
             }
 

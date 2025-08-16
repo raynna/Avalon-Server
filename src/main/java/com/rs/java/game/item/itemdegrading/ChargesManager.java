@@ -129,19 +129,36 @@ public class ChargesManager implements Serializable {
 		return newId != -1 ? newId : item.getId();
 	}
 
-	public void checkPercentage(String message, int itemId, boolean reverse) {
-		int charges = getCharges(itemId);
-		int maxCharges = 0;
-		DegradeData data = getDegradeData(itemId);
-		if (data == null) return;
-		if (data.getCurrentItem().getId() == itemId) {
-			maxCharges = (data.getType() == DegradeType.AT_INCOMMING_HIT
-					|| data.getType() == DegradeType.AT_OUTGOING_HIT) ? data.getHits() : data.getTime().getTicks();
+	public void checkPercentage(String message, Item item, boolean reverse) {
+		ItemMetadata metaData = item.getMetadata();
+		if (metaData == null)
+			return;
+		DegradeData data = getDegradeData(item.getId());
+		int charges = (int) metaData.getValue();
+
+		if (data == null) {
+			return;
 		}
-		int percentage = reverse ? (charges == 0 ? 0 : (100 - (charges * 100 / maxCharges)))
+
+		int maxCharges = 0;
+		if (data.getCurrentItem().getId() == item.getId()) {
+			maxCharges = (data.getType() == DegradeType.AT_INCOMMING_HIT
+					|| data.getType() == DegradeType.AT_OUTGOING_HIT)
+					? data.getHits()
+					: data.getTime().getTicks();
+		}
+
+		if (maxCharges <= 0) {
+			return;
+		}
+
+		int percentage = reverse
+				? (charges == 0 ? 0 : 100 - (charges * 100 / maxCharges))
 				: charges == 0 ? 100 : (charges * 100 / maxCharges);
+
 		player.message(message.replace("##", String.valueOf(percentage)));
 	}
+
 
 	public int getPercentage(Item item, boolean reverse) {
 		int charges = getCharges(item.getId());
@@ -185,27 +202,37 @@ public class ChargesManager implements Serializable {
 			switch (degradeData.getType()) {
 				case WEAR:
 				case IN_COMBAT:
-					item.setMetadata(new DegradeTicksMetaData(degradeData.getTime().getTicks()));
+					item.setMetadata(new DegradeTicksMetaData(degradeData.getTime().getTicks(), -1));
 					break;
 				case AT_INCOMMING_HIT:
 				case AT_OUTGOING_HIT:
-				case HITS://TODO MIGHT NOT NEED ANYMORE
-					item.setMetadata(new DegradeHitsMetaData(degradeData.getHits()));
+				case HITS:
+					item.setMetadata(new DegradeHitsMetaData(degradeData.getHits(), -1));
 					break;
 			}
 			metaData = item.getMetadata();
 		}
+
 		int charges = (int) metaData.getValue();
-		charges--;
+		charges--; // decrement
+		//player.message(metaData.getDisplaySuffix() + ", charges of: " + item.getName() + ": " + charges);
 		if (charges > 0) {
-			metaData.setValue(charges);
-			item.setMetadata(metaData);
+			metaData.setValue(charges); // update metadata
 			int total = getTotalCharges(metaData, degradeData);
-			if (charges % Math.floor(total * DEGRADE_MESSAGE_INTERVAL) == 0) {
-				checkPercentage("Your " + definitions.getName() + " has degraded ##%.", item.getId(), true);
+
+			int percentage = (charges * 100 / total);
+
+			int displayPercentage = (percentage / 5) * 5;
+			int lastPercentage = metaData.getLastDisplayedPercentage() != -1 ? metaData.getLastDisplayedPercentage() : 105; // >100 so first always prints
+			if (displayPercentage < lastPercentage && displayPercentage > 0) {
+				checkPercentage("Your " + definitions.getName() + " has ##% charges left.", item, false);
+				metaData.setLastDisplayedPercentage(displayPercentage);
 			}
 			return;
 		}
+
+
+		// Charges reached 0
 		Item newItem = degradeData.getDegradedItem() != null ? degradeData.getDegradedItem() : degradeData.getBrokenItem();
 		if (newItem == null) {
 			if (definitions.getName().contains("(deg)")) {
@@ -220,9 +247,11 @@ public class ChargesManager implements Serializable {
 			Item copy = newItem.clone();
 			player.getEquipment().getItems().set(slot, copy);
 		}
+
 		player.getEquipment().refresh(slot);
 		player.getAppearence().generateAppearenceData();
 	}
+
 
 	public DegradeData getDegradeData(int itemId) {
 		for (DegradeData degradeData : data) {

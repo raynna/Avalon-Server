@@ -45,6 +45,7 @@ class CombatAction(
             isRangedWeapon(player) -> RangedStyle(player, target)
             else -> MeleeStyle(player, target)
         }
+        player.combatStyle = style
         player.tickTimers[Keys.IntKey.LAST_ATTACK_TICK] = 10
         player.temporaryTarget = target;
         val healthOverlay = HealthOverlay()
@@ -71,6 +72,22 @@ class CombatAction(
             isRangedWeapon(player) -> RangedStyle(player, target)
             else -> MeleeStyle(player, target)
         }
+        player.temporaryTarget = target;
+        for (queued in player.queuedInstantCombats.toList()) {
+            val queuedStyle = queued.context.combat
+
+            if (!player.isOutOfRange(target, queuedStyle.getAttackDistance())) {
+                if (player.combatDefinitions.specialAttackPercentage < queued.special.energyCost) {
+                    player.queuedInstantCombats.clear()
+                    break
+                }
+                player.combatDefinitions.decreaseSpecialAttack(queued.special.energyCost)
+                queued.special.execute(queued.context)
+                player.queuedInstantCombats.remove(queued)
+            }
+        }
+
+        player.combatStyle = style
         val requiredDistance = getAdjustedFollowDistance(target);
         if (player.isOutOfRange(target, requiredDistance)) {
             player.resetWalkSteps()

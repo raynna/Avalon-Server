@@ -187,7 +187,7 @@ public class NPC extends Entity implements Serializable {
             if (level > 750)
                 level = 750;
             if (id == 7891) {
-                level = 250;
+                level = 70;
 
             }
             for (int i = 0; i < bonuses.length; i++) {

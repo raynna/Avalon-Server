@@ -58,6 +58,16 @@ public class RunePouchMetaData implements ItemMetadata {
         }
     }
 
+    @Override
+    public Integer getLastDisplayedPercentage() {
+        return 0;
+    }
+
+    @Override
+    public void setLastDisplayedPercentage(Object value) {
+
+    }
+
     public boolean isEmpty() {
         return runes.isEmpty();
     }

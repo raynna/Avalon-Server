@@ -82,7 +82,6 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 				if (data[i] != null && data[i].getId() == item.getId()) {
 					Item oldItem = data[i];
 					long total = (long) oldItem.getAmount() + item.getAmount();
-					System.out.println(total);
 					// Overflow check
 					if (total > Integer.MAX_VALUE || total < 0) {
 						total = Integer.MAX_VALUE;

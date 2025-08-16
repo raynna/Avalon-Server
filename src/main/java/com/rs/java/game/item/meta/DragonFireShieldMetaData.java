@@ -24,6 +24,16 @@ public class DragonFireShieldMetaData implements ItemMetadata {
     }
 
     @Override
+    public Integer getLastDisplayedPercentage() {
+        return 0;
+    }
+
+    @Override
+    public void setLastDisplayedPercentage(Object value) {
+
+    }
+
+    @Override
     public int getMaxValue() {
         return 50;
     }

@@ -3,9 +3,11 @@ package com.rs.java.game.item.meta;
 
 public class DegradeHitsMetaData implements ItemMetadata {
     private int charges;
+    private int lastDisplayedPercentage;
 
-    public DegradeHitsMetaData(int charges) {
+    public DegradeHitsMetaData(int charges, int lastDisplayedPercentage) {
         this.charges = charges;
+        this.lastDisplayedPercentage = lastDisplayedPercentage;
     }
 
     @Override
@@ -21,6 +23,16 @@ public class DegradeHitsMetaData implements ItemMetadata {
     @Override
     public void setValue(Object value) {
         this.charges = (int) value;
+    }
+
+    @Override
+    public Integer getLastDisplayedPercentage() {
+        return lastDisplayedPercentage;
+    }
+
+    @Override
+    public void setLastDisplayedPercentage(Object value) {
+        lastDisplayedPercentage = (int) value;
     }
 
     @Override
@@ -45,12 +57,13 @@ public class DegradeHitsMetaData implements ItemMetadata {
 
     @Override
     public ItemMetadata deepCopy() {
-        return new DegradeHitsMetaData(charges);
+        return new DegradeHitsMetaData(charges, lastDisplayedPercentage);
     }
 
     @Override
     public String getDisplaySuffix() {
         return "(" + charges + " charges)";
     }
+
 
 }

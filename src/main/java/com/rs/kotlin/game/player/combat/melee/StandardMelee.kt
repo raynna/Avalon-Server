@@ -11,7 +11,6 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.special.*
-import java.lang.Math.random
 
 object StandardMelee : MeleeData() {
 
@@ -63,7 +62,7 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.claws_stab"),
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.claws_slash"),
             ),
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 50,
                 execute = { context ->
                     context.attacker.animate("animation.dragon_claws_special")
@@ -93,7 +92,7 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.scimitar_stab"),
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.scimitar_slash"),
             ),
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 60,
                 execute = { context ->
                     context.attacker.animate(14788)
@@ -140,7 +139,7 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.CONTROLLED, 1) to 11970,
                 StyleKey(AttackStyle.DEFENSIVE, 2) to 11968,
             ),
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 50,
                 accuracyMultiplier = 1.25,
                 execute = { context ->  //TODO USING WHIP AS A TEST WEAPON ATM
@@ -170,7 +169,7 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.dragon_dagger_slash"),
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.dragon_dagger_stab"),
             ),
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 25,
                 accuracyMultiplier = 1.15,
                 damageMultiplier = 1.15,
@@ -188,7 +187,6 @@ object StandardMelee : MeleeData() {
                 "item.dragon_dagger_p+", "item.dragon_dagger_p++"),
             name = "Dragon dagger",
             weaponStyle = WeaponStyle.DAGGER,
-            attackSpeed = 4,
             blockAnimationId = Animation.getId("animation.dragon_dagger_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.dragon_dagger_stab"),
@@ -196,7 +194,7 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.dragon_dagger_slash"),
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.dragon_dagger_stab"),
             ),
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 25,
                 accuracyMultiplier = 1.15,
                 damageMultiplier = 1.15,
@@ -205,6 +203,26 @@ object StandardMelee : MeleeData() {
                     context.attacker.gfx("graphic.dragon_dagger_special", 100)
                     context.meleeHit()
                     context.meleeHit(delay = if (context.defender is NPC) 1 else 0)
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.granite_maul"),
+            name = "Granite maul",
+            weaponStyle = WeaponStyle.HAMMER,
+            blockAnimationId = Animation.getId("animation.granite_maul_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.granite_maul_attack"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.granite_maul_attack"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.granite_maul_attack"),
+            ),
+            special = SpecialAttack.InstantCombat(
+                energyCost = 50,
+                execute = { context ->
+                    context.attacker.animate("animation.granite_maul_special_attack")
+                    context.attacker.gfx("graphic.granite_maul_special", 100)
+                    context.meleeHit()
                 }
             )
         ),
@@ -257,14 +275,13 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.staff_of_light_slash"),
                 StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.staff_crush"),
             ),
-            special = SpecialAttack(
+            special = SpecialAttack.Instant(
                 energyCost = 100,
-                instant = true,
-                execute = { context ->
-                    context.attacker.animate("animation.staff_of_light_special")
-                    context.attacker.gfx("graphic.staff_of_light_special")
-                    context.attacker.tickManager.addMinutes(TickManager.Keys.STAFF_OF_LIGHT_EFFECT, 1) {
-                        context.attacker.message("Your staff of light effect fades.")
+                execute = { attacker ->
+                    attacker.animate("animation.staff_of_light_special")
+                    attacker.gfx("graphic.staff_of_light_special")
+                    attacker.tickManager.addMinutes(TickManager.Keys.STAFF_OF_LIGHT_EFFECT, 1) {
+                        attacker.message("Your staff of light effect fades.")
                     }
 
                 }
@@ -281,7 +298,7 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to 440,
                 StyleKey(AttackStyle.DEFENSIVE, 2) to 438,
             ),
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 30,
                 accuracyMultiplier = 1.1,
                 damageMultiplier = 1.1,
@@ -291,6 +308,44 @@ object StandardMelee : MeleeData() {
                     context.meleeHit()
                     if (context.defender.size > 1)
                         context.meleeHit()
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = listOf(
+                Rscm.lookup("item.saradomin_sword"),
+                Rscm.lookup("item.saradomin_sword_2"),
+                Rscm.lookup("item.lucky_saradomin_sword")
+            ),
+            name = "Saradomin sword",
+            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            blockAnimationId = Animation.getId("animation.two_handed_defend"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.two_handed_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.two_handed_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.two_handed_smash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.two_handed_slash"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 100,
+                damageMultiplier = 1.1,
+                execute = { context ->
+                    context.attacker.animate("animation.saradomin_sword_special")
+                    context.attacker.gfx("graphic.saradomin_sword_special_start")
+                    context.attacker.playSound(3853, 1)
+                    context.hits {
+                        val meleeHit = melee(delay = 0)
+                        context.defender.gfx("graphic.saradomin_sword_special_end")
+                        var randomHit = if (meleeHit.damage > 0) (50..150).random() else 0
+                        if (context.defender is Player) {
+                            if (context.defender.prayer.isMageProtecting) {
+                                randomHit = 0
+                            }
+                        }
+                        val magicHit = Hit(context.attacker, randomHit, Hit.HitLook.MAGIC_DAMAGE)
+                        magicHit.critical = true
+                        addHit(context.defender, magicHit)
+                    }
                 }
             )
         ),
@@ -309,7 +364,7 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.godsword_smash"),
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.godsword_slash"),
             ),
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 50,
                 accuracyMultiplier = 2.0,
                 damageMultiplier = 1.375,
@@ -335,7 +390,7 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.godsword_smash"),
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.godsword_slash"),
             ),
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 50,
                 accuracyMultiplier = 2.0,
                 damageMultiplier = 1.1,
@@ -377,6 +432,48 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
+                "item.bronze_longsword", "item.iron_longsword", "item.steel_longsword", "item.black_longsword", "item.mithril_longsword", "item.adamant_longsword", "item.rune_longsword", "item.corrupt_dragon_longsword", "item.c_dragon_longsword_deg" ,"item.corrupt_vesta_s_longsword", "item.c_vesta_s_longsword_deg", "item.chaotic_longsword", "item.chaotic_longsword_broken"
+            ),
+            name = "Longsword",
+            weaponStyle = WeaponStyle.SCIMITAR,
+            blockAnimationId = Animation.getId("animation.chaotic_rapier_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.chaotic_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.chaotic_slash"),
+            ),
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.chaotic_rapier", "item.chaotic_rapier_broken", "item.brackish_blade"
+            ),
+            name = "Rapier",
+            weaponStyle = WeaponStyle.RAPIER,
+            blockAnimationId = Animation.getId("animation.chaotic_rapier_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.chaotic_slash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.chaotic_stab"),
+            ),
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.chaotic_maul", "item.chaotic_maul_broken"
+            ),
+            name = "Chaotic maul",
+            weaponStyle = WeaponStyle.MAUL,
+            attackDelay = 1,
+            blockAnimationId = Animation.getId("animation.chaotic_maul_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_crush"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.chaotic_crush"),
+            ),
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
                 "item.bronze_2h_sword", "item.iron_2h_sword",
                 "item.steel_2h_sword", "item.black_2h_sword",
                 "item.mithril_2h_sword", "item.adamant_2h_sword",
@@ -403,7 +500,7 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.two_handed_smash"),
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.two_handed_block"),
             ),
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 100,
                 accuracyMultiplier = 1.15,
                 damageMultiplier = 1.1,

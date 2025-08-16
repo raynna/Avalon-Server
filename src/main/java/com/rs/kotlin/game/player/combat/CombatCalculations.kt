@@ -8,6 +8,8 @@ import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.npc.NpcBonusType
 import com.rs.kotlin.game.player.combat.damage.DamageMultipliers
+import com.rs.kotlin.game.player.combat.magic.AncientMagicks
+import com.rs.kotlin.game.player.combat.magic.ModernMagicks
 import com.rs.kotlin.game.player.combat.magic.Spell
 import com.rs.kotlin.game.player.combat.magic.Spellbook
 import com.rs.kotlin.game.player.equipment.BonusType
@@ -212,7 +214,7 @@ object CombatCalculations {
         }
 
         fun calculateMaxHit(player: Player, target: Entity, spellId: Int): Hit {
-            val spell = Spellbook.getSpellById(spellId)
+            val spell = Spellbook.getSpellById(player, spellId);
             val baseDamage = spell?.damage?:10
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
@@ -346,7 +348,6 @@ object CombatCalculations {
         val weapon = Weapon.getWeapon(player.equipment.weaponId)
         val bonus = when (weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)) {
             AttackStyle.ACCURATE_RANGE -> 3
-            AttackStyle.ACCURATE -> 3
             AttackStyle.AGGRESSIVE -> 3
             AttackStyle.CONTROLLED -> 1
             else -> 0

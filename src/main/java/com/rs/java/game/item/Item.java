@@ -149,6 +149,10 @@ public class Item implements Serializable {
 		return ItemsEquipIds.getEquipId(id);
 	}
 
+	public int getEquipSlot() {
+		return getDefinitions().equipSlot;
+	}
+
 	public String getName() {
 		return getDefinitions().getName();
 	}

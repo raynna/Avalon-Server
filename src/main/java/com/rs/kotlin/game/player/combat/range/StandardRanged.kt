@@ -215,7 +215,7 @@ object StandardRanged : RangeData() {
             animationId = 426,
             ammoType = AmmoType.ARROW,
             maxAmmoTier = AmmoTier.RUNE_ARROW,
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 55,
                 damageMultiplier = 1.5,
                 execute = { context ->
@@ -249,7 +249,7 @@ object StandardRanged : RangeData() {
             animationId = 426,
             ammoType = AmmoType.ARROW,
             maxAmmoTier = AmmoTier.RUNE_ARROW,
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 55,
                 damageMultiplier = 1.5,
                 execute = { context ->
@@ -283,7 +283,7 @@ object StandardRanged : RangeData() {
             animationId = 426,
             ammoType = AmmoType.ARROW,
             maxAmmoTier = AmmoTier.RUNE_ARROW,
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 55,
                 damageMultiplier = 1.5,
                 execute = { context ->
@@ -317,7 +317,7 @@ object StandardRanged : RangeData() {
             animationId = 426,
             ammoType = AmmoType.ARROW,
             maxAmmoTier = AmmoTier.RUNE_ARROW,
-            special = SpecialAttack(
+            special = SpecialAttack.Combat(
                 energyCost = 55,
                 accuracyMultiplier = 1.0,
                 damageMultiplier = 1.0,

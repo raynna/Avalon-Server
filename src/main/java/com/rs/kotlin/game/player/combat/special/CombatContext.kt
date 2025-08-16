@@ -416,14 +416,9 @@ class SpecialHitBuilder(private val context: CombatContext) {
         defender: Entity = context.defender,
         hit: Hit,
         look: Hit.HitLook? = null,
-        type: CombatType = CombatType.MELEE,
         delay: Int = 0
     ): Hit {
-        val resolvedHitLook = look ?: when (type) {
-            CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
-            CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
-            CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
-        }
+        val resolvedHitLook = look ?: hit.look
         hit.look = resolvedHitLook
         hits += PendingHit(hit, defender, delay);
         return hit

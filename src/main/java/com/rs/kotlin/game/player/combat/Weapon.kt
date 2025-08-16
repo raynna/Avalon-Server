@@ -1,4 +1,5 @@
 package com.rs.kotlin.game.player.combat
+import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.melee.StandardMelee
 import com.rs.kotlin.game.player.combat.range.RangeData
@@ -18,6 +19,11 @@ interface Weapon {
     val effect: SpecialEffect? get() = null
 
     companion object {
+        @JvmStatic
+        fun isRangedWeapon(player: Player): Boolean {
+            val weaponId = player.equipment.getWeaponId()
+            return RangeData.getWeaponByItemId(weaponId) != null
+        }
         fun getWeapon(itemId: Int): Weapon {
             return RangeData.getWeaponByItemId(itemId) ?: StandardMelee.getWeaponByItemId(itemId) ?: StandardMelee.getDefaultWeapon()
         }

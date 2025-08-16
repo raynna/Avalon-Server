@@ -121,6 +121,21 @@ enum class WeaponStyle(
             AttackStyle.DEFENSIVE to AttackBonusType.CRUSH,
         ),
     ),
+    RAPIER(
+        styles(
+            AttackStyle.ACCURATE to AttackBonusType.STAB,
+            AttackStyle.AGGRESSIVE to AttackBonusType.STAB,
+            AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
+            AttackStyle.DEFENSIVE to AttackBonusType.STAB,
+        ),
+    ),
+    MAUL(
+        styles(
+            AttackStyle.ACCURATE to AttackBonusType.CRUSH,
+            AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
+            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH
+        ),
+    ),
     HAMMER(
         styles(
             AttackStyle.ACCURATE to AttackBonusType.CRUSH,

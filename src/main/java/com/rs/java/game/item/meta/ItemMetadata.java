@@ -7,6 +7,8 @@ public interface ItemMetadata extends Serializable {
     Integer getType();
     Object getValue();
     void setValue(Object value);
+    Integer getLastDisplayedPercentage();
+    void setLastDisplayedPercentage(Object value);
 
     default int getMaxValue() {
         return Integer.MAX_VALUE;
@@ -38,4 +40,5 @@ public interface ItemMetadata extends Serializable {
     default int getBonusOverride(CombatBonusType type, int baseBonus) {
         return baseBonus;
     }//TODO
+
 }

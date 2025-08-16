@@ -873,7 +873,7 @@ public final class WorldPacketsDecoder extends Decoder {
 				}
 				break;
 				case 193: { // Ancient spellbook
-					Spell spell = AncientMagicks.getSpellById(componentId);
+					Spell spell = Spellbook.getSpellById(player, componentId);
 					if (spell == null)
 						return;
 
@@ -922,7 +922,7 @@ public final class WorldPacketsDecoder extends Decoder {
 				}
 				case 192: { // Modern spellbook
 					player.message("componentId " + componentId + " when casting modern spell");
-					Spell spell = ModernMagicks.getSpellById(componentId);
+					Spell spell = Spellbook.getSpellById(player, componentId);
 					if (spell == null)
 						return;
 
@@ -1054,7 +1054,7 @@ public final class WorldPacketsDecoder extends Decoder {
 					}
 					break;
 				case 193: { // Ancient spellbook on NPC
-					Spell spell = AncientMagicks.getSpellById(componentId);
+					Spell spell = Spellbook.getSpellById(player, componentId);
 					if (spell == null)
 						return;
 
@@ -1115,7 +1115,7 @@ public final class WorldPacketsDecoder extends Decoder {
 					break;
 				}
 				case 192: { // Modern spellbook on NPC
-					Spell spell = ModernMagicks.getSpellById(componentId);
+					Spell spell = Spellbook.getSpellById(player, componentId);
 					if (spell == null)
 						return;
 

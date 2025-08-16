@@ -9,8 +9,15 @@ import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.magic.Spell
+import com.rs.kotlin.game.player.combat.magic.SpellType
 import com.rs.kotlin.game.player.combat.magic.Spellbook
+import com.rs.kotlin.game.player.combat.melee.MeleeStyle
+import com.rs.kotlin.game.player.combat.melee.StandardMelee
+import com.rs.kotlin.game.player.combat.range.RangeData
+import com.rs.kotlin.game.player.combat.range.RangedStyle
+import com.rs.kotlin.game.player.combat.range.RangedWeapon
 import com.rs.kotlin.game.player.combat.special.CombatContext
+import com.rs.kotlin.game.player.combat.special.SpecialAttack
 
 interface CombatStyle {
     fun canAttack(attacker: Player, defender: Entity): Boolean
@@ -22,10 +29,12 @@ interface CombatStyle {
     fun delayHits(vararg hits: PendingHit)
     fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         if (defender is Player) {
+            defender.chargeManager.processHit(hit)
             if (defender.combatDefinitions.isAutoRelatie && !defender.newActionManager.hasActionWorking()) {
                 defender.newActionManager.setAction(CombatAction(attacker));
             }
         }
+        defender.handleHit(hit);
     }
     fun scheduleHit(delay: Int, action: () -> Unit) {
         WorldTasksManager.schedule(object : WorldTask() {
@@ -113,33 +122,75 @@ interface CombatStyle {
         return false;
     }
 
-    fun executeSpecialAttack(combatContext: CombatContext): Boolean {
-        if (combatContext.attacker.combatDefinitions.isUsingSpecialAttack) {
-            val special = combatContext.weapon.special
-            var specialCost = special?.energyCost ?:0
-            val hasRingOfVigour = combatContext.attacker.getEquipment().containsOneItem(Item.getId("item.ring_of_vigour"))
-            if (hasRingOfVigour)
-                specialCost = (specialCost * 0.9).toInt()
-            if (special != null) {
-                val specialEnergy = combatContext.attacker.combatDefinitions.specialAttackPercentage
-                if (specialEnergy >= specialCost) {
-                    val specialContext = combatContext.copy(usingSpecial = true)
-                    special.execute(specialContext)
-                    combatContext.attacker.combatDefinitions.decreaseSpecialAttack(specialCost)
-                    return true
-                } else {
-                    combatContext.attacker.message("You don't have enough special attack energy.")
-                    combatContext.attacker.combatDefinitions.switchUsingSpecialAttack()
-                    return false
+    fun isRangedWeapon(player: Player): Boolean {
+        val weaponId = player.equipment.getWeaponId()
+        val ranged = RangeData.getWeaponByItemId(weaponId);
+        return ranged != null
+    }
+
+
+    fun executeSpecialAttack(player: Player, target: Entity? = null): Boolean {
+        val weapon = Weapon.getWeapon(player.equipment.weaponId) ?: return false
+        val special = weapon.special ?: return false
+        if (!player.combatDefinitions.isUsingSpecialAttack)
+            return false
+
+        // Deduct energy, apply Ring of Vigour, etc.
+        var specialCost = special.energyCost
+        if (player.getEquipment().containsOneItem(Item.getId("item.ring_of_vigour"))) {
+            specialCost = (specialCost * 0.9).toInt()
+        }
+
+        if (player.combatDefinitions.specialAttackPercentage < specialCost) {
+            player.message("You don't have enough special attack energy.")
+            player.combatDefinitions.switchUsingSpecialAttack()
+            return false
+        }
+
+        when (special) {
+            is SpecialAttack.Instant -> {
+                special.execute(player)
+            }
+            is SpecialAttack.InstantCombat -> {
+                val actualTarget = target ?: player.temporaryTarget ?: return false
+                val style = if (isRangedWeapon(player)) RangedStyle(player, actualTarget) else MeleeStyle(player, actualTarget)
+                val combatContext = CombatContext(
+                    combat = style,
+                    attacker = player,
+                    defender = actualTarget,
+                    weapon = weapon,
+                    weaponId = player.equipment.weaponId,
+                    attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
+                    attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!
+                )
+                special.execute(combatContext)
+            }
+            is SpecialAttack.Combat -> {
+                if (target == null) return false
+                val style = when {
+                    isRangedWeapon(player) -> RangedStyle(player, target)
+                    else -> MeleeStyle(player, target)
                 }
-            } else {
-                combatContext.attacker.message("This weapon has no special attack.")
-                combatContext.attacker.combatDefinitions.switchUsingSpecialAttack()
-                return false
+
+                val combatContext = CombatContext(
+                    combat = style,
+                    attacker = player,
+                    defender = target,
+                    weapon = weapon,
+                    weaponId = player.equipment.weaponId,
+                    attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
+                    attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!
+                )
+
+                special.execute(combatContext)
             }
         }
-        return false
+
+        player.combatDefinitions.decreaseSpecialAttack(specialCost)
+        return true
     }
+
+
 
 
 

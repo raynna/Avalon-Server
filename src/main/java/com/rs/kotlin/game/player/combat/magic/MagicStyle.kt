@@ -107,6 +107,10 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             PrayerEffectHandler.handleProtectionEffects(attacker, target, hit)
             SoakDamage.handleAbsorb(attacker, target, hit)
             totalDamage += min(hit.damage, target.hitpoints)
+            attacker.chargeManager.processOutgoingHit()
+            if (target is Player) {//handling this onHit for magic & range
+                target.chargeManager.processIncommingHit()
+            }
             scheduleHit(pending.delay) {
                 if (target is Player) {
                     target.animate(CombatAnimations.getBlockAnimation(target))
@@ -199,6 +203,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 }
             })
         }
+        if (attacker.isDeveloperMode)
         attacker.message(
             "Magic Attack -> " +
                     "Spell: ${spell.name.toString()}, " +
@@ -210,6 +215,8 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun handleAncientMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
+        if (!SpellHandler.checkAndRemoveRunes(attacker, spell))
+            return
         val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }

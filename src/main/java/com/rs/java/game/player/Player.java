@@ -48,6 +48,7 @@ import com.rs.java.game.objects.GlobalObjectAddition;
 import com.rs.java.game.objects.GlobalObjectDeletion;
 import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
+import com.rs.java.game.player.actions.combat.QueuedInstantCombat;
 import com.rs.java.game.player.prayer.AncientPrayer;
 import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.player.prayer.PrayerBook;
@@ -127,6 +128,7 @@ import com.rs.java.utils.MachineInformation;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.combat.CombatStyle;
 import com.rs.kotlin.game.player.combat.special.CombatContext;
+import com.rs.kotlin.game.player.combat.special.SpecialAttack;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 
 public class Player extends Entity {
@@ -143,6 +145,28 @@ public class Player extends Entity {
     private transient boolean active;
     private String password;
     private String displayName;
+
+
+    public transient CombatStyle combatStyle;
+
+    private transient List<QueuedInstantCombat> queuedInstantCombats = new ArrayList<>();
+
+    public void addQueuedSpecialAttack(CombatContext context, SpecialAttack.InstantCombat special) {
+        queuedInstantCombats.add(new QueuedInstantCombat(context, special));
+    }
+
+    public List<QueuedInstantCombat> getQueuedInstantCombats() {
+        return queuedInstantCombats;
+    }
+
+    public void clearQueuedSpecialAttack(QueuedInstantCombat queued) {
+        queuedInstantCombats.remove(queued);
+    }
+
+
+    public boolean isOutOfRange(Entity target, int distance) {
+        return !clipedProjectile(target, distance == 0) || !Utils.isOnRange(this.getX(), this.getY(), this.getSize(), target.getX(), target.getY(), target.getSize(), distance);
+    }
 
     /**
      * @varpbit
@@ -1311,6 +1335,8 @@ public class Player extends Entity {
             if (getPuzzleBox() == null)
                 puzzleBox = new PuzzleBox(this, puzzle.getFirstTileId());
         }
+        if (queuedInstantCombats == null)
+            queuedInstantCombats = new ArrayList<>();
         if (taskManager == null)
             taskManager = new TaskManager();
         if (runicStaff == null)

@@ -29,32 +29,30 @@ public final class PresetManager implements Serializable {
 	}
 
 	public PresetManager() {
-		PRESET_SETUPS = new HashMap<String, Preset>();
+		PRESET_SETUPS = new HashMap<>();
 	}
 
-	private final int getMaxSize() {
+	private int getMaxSize() {
 		return 28;
 	}
 
 	public void reset() {
 		PRESET_SETUPS.clear();
-		player.getPackets().sendGameMessage(
-				"All of your sets have been cleared. You now have " + getMaxSize() + " available slots.");
+		player.message("All of your sets have been cleared. You now have " + getMaxSize() + " available slots.");
 	}
 
 	public void removePreset(String name) {
 		if (name == "")
 			return;
 		name = name.toLowerCase();
-		player.getPackets()
-				.sendGameMessage((PRESET_SETUPS.remove(name) == null ? "No set was found for the query: " + name
+		player.message((PRESET_SETUPS.remove(name) == null ? "No set was found for the query: " + name
 						: "Successfully removed the set: " + name) + ".");
 	}
 
 	public void savePreset(String name) {
 		final int size = PRESET_SETUPS.size(), max = getMaxSize();
 		if (size >= max) {
-			player.getPackets().sendGameMessage("You were unable to store the set " + name
+			player.message("You were unable to store the set " + name
 					+ " as your maximum capacity (" + max + ") has been reached.", true);
 			return;
 		}
@@ -63,7 +61,7 @@ public final class PresetManager implements Serializable {
 		name = name.toLowerCase();
 		final Preset set = PRESET_SETUPS.get(name);
 		if (set != null) {
-			player.getPackets().sendGameMessage("You were unable to store the set " + name + " as it already exists.",
+			player.message("You were unable to store the set " + name + " as it already exists.",
 					true);
 			return;
 		}
@@ -76,16 +74,16 @@ public final class PresetManager implements Serializable {
 		PRESET_SETUPS.put(name,
 				new Preset(name, inventory, equipment, player.getPrayer().isAncientCurses(),
                         player.getCombatDefinitions().spellBook, (Arrays.copyOf(player.getSkills().getXp(), 7)), runes, pouch));
-		player.getPackets().sendGameMessage("You've successfully stored the set " + name + ".", true);
+		player.message("You've successfully stored the set " + name + ".", true);
 	}
 
 	public void printPresets() {
 		final int size = PRESET_SETUPS.size();
-		player.getPackets().sendGameMessage("You have used " + size + "/" + getMaxSize() + " available setups.", true);
+		player.message("You have used " + size + "/" + getMaxSize() + " available setups.", true);
 		if (size > 0) {
-			player.getPackets().sendGameMessage("<col=ff0000>Your available setups are:", true);
+			player.message("<col=ff0000>Your available setups are:", true);
 			for (final String key : PRESET_SETUPS.keySet()) {
-				player.getPackets().sendGameMessage(key, true);
+				player.message(key, true);
 			}
 		}
 	}
@@ -94,25 +92,22 @@ public final class PresetManager implements Serializable {
 		if (name == "")
 			return;
 		if (player.isAtWild()) {
-			player.getPackets().sendGameMessage(
-					HexColours.getMessage(Colour.RED, "You can't load gear presets in the wilderness."));
+			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in the wilderness."));
 			return;
 		}
 		if (player.getControlerManager().getControler() != null
 				&& !(player.getControlerManager().getControler() instanceof EdgevillePvPControler)) {
-			player.getPackets()
-					.sendGameMessage(HexColours.getMessage(Colour.RED, "You can't load gear presets in here."));
+			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in here."));
 			return;
 		}
 		if (EdgevillePvPControler.isAtPvP(player) && !EdgevillePvPControler.isAtBank(player)) {
-			player.getPackets()
-					.sendGameMessage(HexColours.getMessage(Colour.RED, "You can't load gear presets in pvp area."));
+			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in pvp area."));
 			return;
 		}
 		name = name.toLowerCase();
 		final Preset set = (p2 != null ? p2.getPresetManager().PRESET_SETUPS.get(name) : PRESET_SETUPS.get(name));
 		if (set == null) {
-			player.getPackets().sendGameMessage("You were unable to load the set " + name + " as it does not exist.",
+			player.message("You were unable to load the set " + name + " as it does not exist.",
 					true);
 			return;
 		}
@@ -143,14 +138,8 @@ public final class PresetManager implements Serializable {
 					player.message("Added " + item.getName() + " x " + item.getAmount() + " to your bank.");
 					player.getBank().addItem(item, true);
 				}
-			} // to focus more whats not setting
+			}
 		}
-
-		// Lol have no clue why after this line it seems to reset it? ye the preset one
-		// this
-		// player.getStaffCharges().clear();
-		// So u gonna comment it out? i guess, i gotta check if values are correct
-		// ingame
 
 		player.getRunePouch().reset();
 		player.getInventory().reset();
@@ -160,6 +149,14 @@ public final class PresetManager implements Serializable {
 		player.getAppearence().generateAppearenceData();
 		player.refreshHitPoints();
 		player.getPrayer().reset();
+		double[] presetXp = set.getLevels();
+		if (presetXp != null && presetXp.length >= 7) {
+			for (int i = 0; i < 7; i++) {
+				player.getSkills().setXp(i, presetXp[i]);
+				player.getSkills().set(i, player.getSkills().getLevelForXp(i));
+				player.getSkills().refresh(i);
+			}
+		}
 		Item[] data = set.getEquipment();
 		if (data != null && data.length > 0) {
 			skip: for (int i = 0; i < data.length; i++) {
@@ -175,8 +172,7 @@ public final class PresetManager implements Serializable {
 						if (level < 0 || level > 120)
 							continue;
 						if (player.getSkills().getLevelForXp(skillId) < level) {
-							player.getPackets()
-									.sendGameMessage("You were unable to equip your " + item.getName().toLowerCase()
+							player.message("You were unable to equip your " + item.getName().toLowerCase()
 											+ ", as you don't meet the requirements to wear them.", true);
 							continue skip;
 						}
@@ -192,8 +188,7 @@ public final class PresetManager implements Serializable {
 						int[] slot = player.getBank().getItemSlot(set.getEquipment()[i].getId());
 						player.getBank().removeItem2(slot, item.getAmount(), true, false);
 					} else {
-						player.getPackets().sendGameMessage(
-								"Couldn't find item " + item.getAmount() + " x " + item.getName() + " in bank.");
+						player.message("Couldn't find item " + item.getAmount() + " x " + item.getName() + " in bank.");
 						continue;
 					}
 				}
@@ -220,8 +215,7 @@ public final class PresetManager implements Serializable {
 						player.getBank().removeItem2(slot, item.getAmount(), true, false);
 					} else {
 						player.getInventory().addItem(0, 1);
-						player.getPackets().sendGameMessage(
-								"Couldn't find item " + item.getAmount() + " x " + item.getName() + " in bank.");
+						player.message("Couldn't find item " + item.getAmount() + " x " + item.getName() + " in bank.");
 						continue;
 					}
 				}
@@ -244,18 +238,14 @@ public final class PresetManager implements Serializable {
 			Item pouchItem = new Item(pouch.getRealPouchId());
 			if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
 				if (!player.getBank().containsOneItem(pouch.getRealPouchId())) {
-					player.getPackets().sendGameMessage("Couldn't find " + pouchItem.getName() + " in your bank.");
+					player.message("Couldn't find " + pouchItem.getName() + " in your bank.");
 				} else {
-					if (!Summoning.spawnFamiliar(player, pouch, true)) {
-						player.getPackets().sendGameMessage("Failed to spawn familiar from preset.");
-					} else
+					if (Summoning.spawnFamiliar(player, pouch, true))
 						player.getBank().removeItem(pouch.getRealPouchId());
 				}
 			} else {
-				if (!Summoning.spawnFamiliar(player, pouch, true)) {
-					player.getPackets().sendGameMessage("Failed to spawn familiar from preset.");
-				}
-			}
+                Summoning.spawnFamiliar(player, pouch, true);
+            }
 		}
 		player.getInventory().deleteItem(0, 28);
 		player.getCombatDefinitions().setSpellBook(set.getSpellBook(), false);
@@ -263,7 +253,7 @@ public final class PresetManager implements Serializable {
 		player.getAppearence().generateAppearenceData();
 		player.getSkills().switchXPPopup(true);
 		player.getSkills().switchXPPopup(true);
-		player.getPackets().sendGameMessage("Loaded setup: " + name + ".");
+		player.message("Loaded setup: " + name + ".");
 
 	}
 

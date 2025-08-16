@@ -116,7 +116,6 @@ public class InventoryOptionsHandler {
         /**item switching, wear is handled in player process*/
         if (!item.getDefinitions().isWearItem())
             return;
-        player.itemSwitch = true;
         ButtonHandler.registerEquip(player, slotId);
     }
 
@@ -1012,7 +1011,8 @@ public class InventoryOptionsHandler {
         if (itemId == 20767 || itemId == 20769 || itemId == 20771)
             SkillCapeCustomizer.startCustomizing(player, itemId);
         if (itemId >= 18349 && itemId <= 18363) {
-            player.getChargeManager().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(itemId).getName() + " has ##% charges left.", itemId, false);
+            Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
+            player.getChargeManager().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(itemId).getName() + " has ##% charges left.", weapon, false);
         } else if (itemId == 9013) {
             if (player.getSkullSkeptreCharges() == 1) {
                 player.getInventory().deleteItem(slotId, item);

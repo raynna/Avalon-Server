@@ -18,7 +18,6 @@ import com.rs.java.game.minigames.duel.DuelControler;
 import com.rs.java.game.minigames.lividfarm.LividStore;
 import com.rs.java.game.minigames.pest.CommendationExchange;
 import com.rs.java.game.npc.familiar.Familiar;
-import com.rs.java.game.npc.familiar.Familiar.SpecialAttack;
 import com.rs.java.game.player.CharacterDesign;
 import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.EmotesManager;
@@ -74,7 +73,12 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.player.combat.CombatStyle;
+import com.rs.kotlin.game.player.combat.Weapon;
 import com.rs.kotlin.game.player.combat.magic.SpellHandler;
+import com.rs.kotlin.game.player.combat.melee.MeleeStyle;
+import com.rs.kotlin.game.player.combat.melee.StandardMelee;
+import com.rs.kotlin.game.player.combat.special.SpecialAttack;
 import com.rs.kotlin.game.player.equipment.BonusType;
 
 /**
@@ -463,7 +467,7 @@ public class ButtonHandler {
             else if (componentId == 67) player.getFamiliar().takeBob();
             else if (componentId == 69) player.getFamiliar().renewFamiliar();
             else if (componentId == 74) {
-                if (player.getFamiliar().getSpecialAttack() == SpecialAttack.CLICK) {
+                if (player.getFamiliar().getSpecialAttack() == Familiar.SpecialAttack.CLICK) {
                     if (player.getFamiliar().isOneclickAttack()) {
                         int scrollId = Summoning.getScrollId(player.getFamiliar().getPouch().getRealPouchId());
                         if (!player.getInventory().containsItem(scrollId, 1)) {
@@ -497,7 +501,7 @@ public class ButtonHandler {
                 else if (componentId == 14 || componentId == 23) player.getFamiliar().renewFamiliar();
                 else if (componentId == 19 || componentId == 10) player.getFamiliar().sendFollowerDetails();
                 else if (componentId == 18) {
-                    if (player.getFamiliar().getSpecialAttack() == SpecialAttack.CLICK) {
+                    if (player.getFamiliar().getSpecialAttack() == Familiar.SpecialAttack.CLICK) {
                         if (player.getFamiliar().isOneclickAttack()) {
                             int scrollId = Summoning.getScrollId(player.getFamiliar().getPouch().getRealPouchId());
                             if (!player.getInventory().containsItem(scrollId, 1)) {
@@ -1608,7 +1612,8 @@ public class ButtonHandler {
                         return;
                     }
                     if (weaponId >= 18349 && weaponId <= 18357) {
-                        player.getChargeManager().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(weaponId).getName() + " has ##% charges left.", weaponId, false);
+                        Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
+                        player.getChargeManager().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(weaponId).getName() + " has ##% charges left.", weapon, false);
                     }
                     if (weaponId == 15484) player.getInterfaceManager().gazeOrbOfOculus();
                     if (weaponId == 9013) {
@@ -1671,7 +1676,8 @@ public class ButtonHandler {
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     int shieldId = player.getEquipment().getShieldId();
                     if (shieldId >= 18359 && shieldId <= 18363) {
-                        player.getChargeManager().checkPercentage(ItemDefinitions.getItemDefinitions(shieldId).getName() + " has ##% charges left.", shieldId, false);
+                        Item shield = player.getEquipment().getItem(Equipment.SLOT_SHIELD);
+                        player.getChargeManager().checkPercentage(ItemDefinitions.getItemDefinitions(shieldId).getName() + " has ##% charges left.", shield, false);
                     }
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
                     player.getEquipment().sendExamine(Equipment.SLOT_SHIELD);
@@ -2077,7 +2083,7 @@ public class ButtonHandler {
         } else if (interfaceId == 767) {
             if (componentId == 10) player.getBank().openBank();
         } else if (interfaceId == 884) {
-            if (componentId == 4) submitSpecialRequest(player);
+            if (componentId == 4) SpecialAttack.submitSpecialRequest(player);
             else if (componentId >= 7 && componentId <= 10) {
                 player.getCombatDefinitions().setAttackStyle(componentId - 7);
             } else if (componentId == 11) {
@@ -2454,7 +2460,8 @@ public class ButtonHandler {
         if (player.getSwitchItemCache().contains(slotId)) return;
         player.getSwitchItemCache().add(slotId);
         player.stopAll(false, false, true);
-        if (slotId == Equipment.SLOT_WEAPON) {
+        if (player.getInventory().getItem(slotId).getEquipSlot() == Equipment.SLOT_WEAPON) {
+            player.itemSwitch = true;
             if (player.combatDefinitions.usingSpecialAttack)
                 player.combatDefinitions.switchUsingSpecialAttack();
         }
@@ -2518,8 +2525,10 @@ public class ButtonHandler {
                 player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
             }
         }
-        if (equipmentSlot == Equipment.SLOT_WEAPON)
+        if (equipmentSlot == Equipment.SLOT_WEAPON) {
             player.itemSwitch = false;
+            player.getQueuedInstantCombats().clear();
+        }
         Item currentlyEquipped = player.getEquipment().getItem(equipmentSlot);
         refreshEquipBonuses(player);
         return true;
