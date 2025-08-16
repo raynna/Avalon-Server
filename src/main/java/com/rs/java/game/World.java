@@ -123,7 +123,7 @@ public final class World {
         Update.ProcessUpdates();
         LivingRockCavern.init();
         WarriorsGuild.init();
-        executeShootingStar();
+        //TODO DISABLED FOR NOW executeShootingStar();
         artisanWorkShopBonusExp();
     }
 

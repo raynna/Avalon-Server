@@ -119,7 +119,7 @@ public class StarterProtection {
 		player.switchShiftDrop();
 		player.switchZoom();
 		player.switchItemsLook();
-		player.getSquealOfFortune().giveEarnedSpins(3);
+		//player.getSquealOfFortune().giveEarnedSpins(3);
 		if (Settings.ECONOMY_MODE > 0) {
 			player.getControlerManager().startControler("EdgevillePvPControler");
 			player.getControlerManager().moved();

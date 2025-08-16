@@ -1717,33 +1717,30 @@ public class DungeonManager {
 		visibleMap = new VisibleRoom[DungeonConstants.DUNGEON_RATIO[party
 				.getSize()][0]][DungeonConstants.DUNGEON_RATIO[party.getSize()][1]];
 		// slow executor loads dungeon as it may take up to few secs
-		CoresManager.getSlowExecutor().execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					clearKeyList();
-					// generates dungeon structure
-					dungeon = new Dungeon(DungeonManager.this, party.getFloor(), party.getComplexity(),
-							party.getSize());
-					time = Utils.currentTimeMillis();
-					// finds an empty map area bounds
-					boundChuncks = MapBuilder.findEmptyChunkBound(dungeon.getMapWidth() * 2,
-							(dungeon.getMapHeight() * 2));
-					// reserves all map area
-					MapBuilder.cutMap(boundChuncks[0], boundChuncks[1], dungeon.getMapWidth() * 2,
-							(dungeon.getMapHeight() * 2), 0);
-					// set dungeon
-					setDungeon();
-					// loads start room
-					loadRoom(dungeon.getStartRoomReference());
-					stage = 1;
-				} catch (Throwable e) {
+		CoresManager.getSlowExecutor().execute(() -> {
+            try {
+                clearKeyList();
+                // generates dungeon structure
+                dungeon = new Dungeon(DungeonManager.this, party.getFloor(), party.getComplexity(),
+                        party.getSize());
+                time = Utils.currentTimeMillis();
+                // finds an empty map area bounds
+                boundChuncks = MapBuilder.findEmptyChunkBound(dungeon.getMapWidth() * 2,
+                        (dungeon.getMapHeight() * 2));
+                // reserves all map area
+                MapBuilder.cutMap(boundChuncks[0], boundChuncks[1], dungeon.getMapWidth() * 2,
+                        (dungeon.getMapHeight() * 2), 0);
+                // set dungeon
+                setDungeon();
+                // loads start room
+                loadRoom(dungeon.getStartRoomReference());
+                stage = 1;
+            } catch (Throwable e) {
 
-					e.printStackTrace();
-					Logger.handle(e);
-				}
-			}
-		});
+                e.printStackTrace();
+                Logger.handle(e);
+            }
+        });
 	}
 
 	public boolean hasStarted() {
