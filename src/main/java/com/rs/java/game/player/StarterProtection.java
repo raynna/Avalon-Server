@@ -12,6 +12,8 @@ import com.rs.Settings;
 import com.rs.java.game.World;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.command.CommandRegistry;
+import com.rs.kotlin.game.player.command.commands.CommandsCommand;
 
 /**
  * 
@@ -147,6 +149,7 @@ public class StarterProtection {
 		player.getPrayer().restorePrayer(990);
 		player.combatDefinitions.switchAutoRelatie();
 		player.getAppearence().generateAppearenceData();
+		CommandRegistry.execute(player, "command");
 	}
 
 	public static final boolean containsIP(String ip) {

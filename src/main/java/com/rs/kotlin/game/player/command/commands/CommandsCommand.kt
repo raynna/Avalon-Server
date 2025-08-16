@@ -25,14 +25,19 @@ class CommandsCommand : Command {
 
         var lineId = startLine
         for ((name, cmd) in availableCommands) {
-            val text = "::${name} - ${cmd.description}<br><col=aaaaaa>Usage: ${cmd.usage}</col>"
-            player.packets.sendTextOnComponent(interfaceId, lineId, text)
-            lineId++
+            val textLine1 = "::${name} - ${cmd.description}"
+            player.packets.sendTextOnComponent(interfaceId, lineId, textLine1)
+
+            val textLine2 = "<shad=00000><col=ffaa00>Usage: ${cmd.usage}</col></shad>"
+            player.packets.sendTextOnComponent(interfaceId, lineId + 1, textLine2)
+
+            lineId += 2
         }
 
-        for (i in lineId..150) {
+        for (i in lineId..310) {
             player.packets.sendTextOnComponent(interfaceId, i, "")
         }
+
 
         return true
     }
