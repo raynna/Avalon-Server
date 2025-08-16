@@ -16,11 +16,6 @@ class AncientCursesCommand : Command {
             player.message("You can't use ::curses in this mode.")
             return true
         }
-
-        if (args.isEmpty()) {
-            player.message("Usage: $usage")
-            return true
-        }
         val isAncientCurses = player.prayer.isAncientCurses
         if (isAncientCurses) {
             player.message("Your prayerbook is already set to ancient curses.");

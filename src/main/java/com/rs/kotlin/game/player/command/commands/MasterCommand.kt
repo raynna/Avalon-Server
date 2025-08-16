@@ -21,10 +21,6 @@ class MasterCommand : Command {
             player.message("You can't use ::master here.")
             return true
         }
-        if (player.getEquipment().wearingArmour()) {
-            player.message("You can't wear any armour when using ::master.")
-            return true
-        }
         for (i in Skills.ATTACK..Skills.MAGIC) {
             player.skills[i] = 99
             player.skills.setXp(i, Skills.getXPForLevel(99).toDouble())

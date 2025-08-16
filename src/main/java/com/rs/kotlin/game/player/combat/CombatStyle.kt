@@ -3,19 +3,14 @@ package com.rs.kotlin.game.player.combat
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
+import com.rs.java.game.ForceTalk
 import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
 import com.rs.java.game.player.Player
-import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.magic.Spell
-import com.rs.kotlin.game.player.combat.magic.SpellType
-import com.rs.kotlin.game.player.combat.magic.Spellbook
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
-import com.rs.kotlin.game.player.combat.melee.StandardMelee
 import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.range.RangedStyle
-import com.rs.kotlin.game.player.combat.range.RangedWeapon
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.SpecialAttack
 
@@ -32,6 +27,11 @@ interface CombatStyle {
             defender.chargeManager.processHit(hit)
             if (defender.combatDefinitions.isAutoRelatie && !defender.newActionManager.hasActionWorking()) {
                 defender.newActionManager.setAction(CombatAction(attacker));
+            }
+            if (defender.hasVengeance()) {
+                defender.setVengeance(false);
+                defender.nextForceTalk = ForceTalk("Taste vengeance!")
+                attacker.applyHit(Hit(defender, (hit.damage * 0.75).toInt(), Hit.HitLook.REGULAR_DAMAGE));
             }
         }
         defender.handleHit(hit);
@@ -161,7 +161,8 @@ interface CombatStyle {
                     weapon = weapon,
                     weaponId = player.equipment.weaponId,
                     attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
-                    attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!
+                    attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
+                    usingSpecial = true,
                 )
                 special.execute(combatContext)
             }
@@ -179,7 +180,8 @@ interface CombatStyle {
                     weapon = weapon,
                     weaponId = player.equipment.weaponId,
                     attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
-                    attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!
+                    attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
+                    usingSpecial = true,
                 )
 
                 special.execute(combatContext)

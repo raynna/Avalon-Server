@@ -16,11 +16,6 @@ class PrayerCommand : Command {
             player.message("You can't use ::prayers in this mode.")
             return true
         }
-
-        if (args.isEmpty()) {
-            player.message("Usage: $usage")
-            return true
-        }
         player.prayer.setPrayerBook(!player.prayer.isAncientCurses)
         return true
     }

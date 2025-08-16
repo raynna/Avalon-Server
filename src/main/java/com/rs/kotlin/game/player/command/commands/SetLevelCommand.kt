@@ -14,7 +14,7 @@ class SetLevelCommand : Command {
 
     override fun execute(player: Player, args: List<String>): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
-            player.message("You can't use ::item in this mode.")
+            player.message("You can't use ::setlevel in this mode.")
             return true
         }
         if (!player.canUseCommand()) {
@@ -38,8 +38,12 @@ class SetLevelCommand : Command {
         if (level < 0)
             level = 0
 
+        val previousLevel = player.skills.getLevelForXp(skill)
         player.skills[skill] = level
         player.skills.setXp(skill, Skills.getXPForLevel(level).toDouble())
+        if (previousLevel < level) {
+            player.dialogueManager.startDialogue("LevelUp", skill)
+        }
         player.skills.switchXPPopup(true)
         player.skills.switchXPPopup(true)
         player.appearence.generateAppearenceData()

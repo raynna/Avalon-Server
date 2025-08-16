@@ -2327,7 +2327,7 @@ public class Player extends Entity {
     }
 
     private void checkTimers() {
-        if (!isFrozen() && getTeleBlockDelay() < Utils.currentTimeMillis() && getVengDelay() < Utils.currentTimeMillis() && getOverloadDelay() < Utils.currentTimeMillis() && getDisruptionDelay() < Utils.currentTimeMillis() && getPrayerRenewalDelay() < Utils.currentTimeMillis() && !OwnedObjectManager.containsObjectValue(this, 6)) {
+        if (!isFrozen() && getTeleBlockDelay() < Utils.currentTimeMillis() && getTickManager().isActive(TickManager.Keys.VENGEANCE_COOLDOWN) && getOverloadDelay() < Utils.currentTimeMillis() && getDisruptionDelay() < Utils.currentTimeMillis() && getPrayerRenewalDelay() < Utils.currentTimeMillis() && !OwnedObjectManager.containsObjectValue(this, 6)) {
             if (getInterfaceManager().containsInterface(3039))
                 getInterfaceManager().removeInterface(getInterfaceManager().isResizableScreen() ? 26 : 31, 3039);
         } else {
@@ -2353,10 +2353,10 @@ public class Player extends Entity {
             getPackets().sendHideIComponent(3039, 2, true);
             getPackets().sendHideIComponent(3039, 3, true);
         }
-        if (getVengDelay() >= Utils.currentTimeMillis()) {
+        if (getTickManager().isActive(TickManager.Keys.VENGEANCE_COOLDOWN)) {
             getPackets().sendHideIComponent(3039, 4, false);
             getPackets().sendHideIComponent(3039, 5, false);
-            getPackets().sendTextOnComponent(3039, 5, getTimeLeft(getVengDelay()) + "");
+            getPackets().sendTextOnComponent(3039, 5, getTimeLeft(getTickManager().getTicksLeft(TickManager.Keys.VENGEANCE_COOLDOWN)) + "");
         } else {
             getPackets().sendHideIComponent(3039, 4, true);
             getPackets().sendHideIComponent(3039, 5, true);
@@ -4391,6 +4391,10 @@ public class Player extends Entity {
 
     public void setVengeance(boolean value) {
         set(Keys.BooleanKey.VENGEANCE_ACTIVE, value);
+    }
+
+    public boolean hasVengeance() {
+        return get(Keys.BooleanKey.VENGEANCE_ACTIVE);
     }
 
     public void setDisruption(boolean value) {

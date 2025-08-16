@@ -55,8 +55,8 @@ public class TickManager {
         }
     }
 
-    public void addSeconds(Keys key, int minutes) {
-        addSeconds(key, minutes, null);
+    public void addSeconds(Keys key, int seconds) {
+        addSeconds(key, seconds, null);
     }
 
 
