@@ -73,6 +73,7 @@ import com.rs.java.utils.Utils;
 import com.rs.java.utils.huffman.Huffman;
 import com.rs.kotlin.game.player.combat.CombatAction;
 import com.rs.kotlin.game.player.combat.magic.*;
+import com.rs.kotlin.game.player.command.CommandRegistry;
 
 public final class WorldPacketsDecoder extends Decoder {
 
@@ -876,8 +877,7 @@ public final class WorldPacketsDecoder extends Decoder {
 					if (spell == null)
 						return;
 
-					player.setNextFaceWorldTile(new WorldTile(p2.getCoordFaceX(p2.getSize()),
-							p2.getCoordFaceY(p2.getSize()), p2.getPlane()));
+					player.setNextFaceEntity(p2);
 
 					if (spell.getType() instanceof SpellType.Combat) {
 						if (!player.getControlerManager().canAttack(p2))
@@ -926,8 +926,7 @@ public final class WorldPacketsDecoder extends Decoder {
 					if (spell == null)
 						return;
 
-					player.setNextFaceWorldTile(new WorldTile(p2.getCoordFaceX(p2.getSize()),
-							p2.getCoordFaceY(p2.getSize()), p2.getPlane()));
+					player.setNextFaceEntity(p2);
 
 					if (spell.getType() instanceof SpellType.Combat) {
 						if (!player.getControlerManager().canAttack(p2))
@@ -1055,13 +1054,11 @@ public final class WorldPacketsDecoder extends Decoder {
 					}
 					break;
 				case 193: { // Ancient spellbook on NPC
-					player.message("Used spell in ancients on npc");
 					Spell spell = AncientMagicks.getSpellById(componentId);
 					if (spell == null)
 						return;
 
-					player.setNextFaceWorldTile(new WorldTile(npc.getCoordFaceX(npc.getSize()),
-							npc.getCoordFaceY(npc.getSize()), npc.getPlane()));
+					player.setNextFaceEntity(npc);
 
 					if (spell.getType() instanceof SpellType.Combat) {
 						if (!npc.getDefinitions().hasAttackOption() && !(npc instanceof Familiar)) {
@@ -1118,13 +1115,11 @@ public final class WorldPacketsDecoder extends Decoder {
 					break;
 				}
 				case 192: { // Modern spellbook on NPC
-					player.message("componentId " + componentId + " when casting modern spell");
 					Spell spell = ModernMagicks.getSpellById(componentId);
 					if (spell == null)
 						return;
 
-					player.setNextFaceWorldTile(new WorldTile(npc.getCoordFaceX(npc.getSize()),
-							npc.getCoordFaceY(npc.getSize()), npc.getPlane()));
+					player.setNextFaceEntity(npc);
 
 					if (spell.getType() instanceof SpellType.Combat) {
 						if (!npc.getDefinitions().hasAttackOption()) {
@@ -1365,8 +1360,6 @@ public final class WorldPacketsDecoder extends Decoder {
 				return;
 			if (!player.isActive() || !player.getInterfaceManager().containsInterface(interfaceId))
 				return;
-			if (Settings.DEBUG)
-				Logger.log(this, "Dialogue: " + interfaceId + ", " + buttonId + ", " + junk);
 			int componentId = interfaceHash - (interfaceId << 16);
 			player.getDialogueManager().continueDialogue(interfaceId, componentId);
 		} else if (packetId == WORLD_MAP_CLICK) {
@@ -2027,8 +2020,6 @@ public final class WorldPacketsDecoder extends Decoder {
 			} else if (fromInterfaceId == 34 && toInterfaceId == 34)
 				player.getNotes().switchNotes(fromSlot, toSlot);
 
-			if (Settings.DEBUG)
-				System.out.println("Switch item " + fromInterfaceId + ", " + fromSlot + ", " + toSlot);
 		} else if (packetId == DONE_LOADING_REGION_PACKET) {
 			if (!player.clientHasLoadedMapRegion())
 				player.setClientHasLoadedMapRegion();
@@ -2193,8 +2184,10 @@ public final class WorldPacketsDecoder extends Decoder {
 			if (message.contains("0hdr2ufufl9ljlzlyla") || message.startsWith("0hdr"))
 				return;
 			if (message.startsWith("::") || message.startsWith(";;")) {
-				Commands.processCommand(player, message.replace("::", "").replace(";;", ""), false, false);
-				return;
+				String rawCommand = message.substring(2); // removes first two chars (:: or ;;)
+				if (CommandRegistry.execute(player, rawCommand)) {
+					return;
+				}
 			}
 			if (player.isMuted()) {
 				player.message("You're currently muted. Time left: " + player.getMuteTime());
@@ -2220,6 +2213,9 @@ public final class WorldPacketsDecoder extends Decoder {
 			@SuppressWarnings("unused")
 			boolean unknown = stream.readUnsignedByte() == 1;
 			String command = stream.readString();
+			if (CommandRegistry.execute(player, command)) {
+				return;
+			}
 			if (!Commands.processCommand(player, command, true, clientCommand))
 				Logger.log(this, "Command: " + command);
 		} else if (packetId == COLOR_ID_PACKET) {

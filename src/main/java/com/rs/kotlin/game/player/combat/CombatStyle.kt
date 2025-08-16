@@ -4,6 +4,7 @@ import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
+import com.rs.java.game.item.Item
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.damage.PendingHit
@@ -19,7 +20,13 @@ interface CombatStyle {
     fun attack()
     fun onStop(interrupted: Boolean)
     fun delayHits(vararg hits: PendingHit)
-    fun onHit(hit: Hit)
+    fun onHit(attacker: Player, defender: Entity, hit: Hit) {
+        if (defender is Player) {
+            if (defender.combatDefinitions.isAutoRelatie && !defender.newActionManager.hasActionWorking()) {
+                defender.newActionManager.setAction(CombatAction(attacker));
+            }
+        }
+    }
     fun scheduleHit(delay: Int, action: () -> Unit) {
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
@@ -109,12 +116,16 @@ interface CombatStyle {
     fun executeSpecialAttack(combatContext: CombatContext): Boolean {
         if (combatContext.attacker.combatDefinitions.isUsingSpecialAttack) {
             val special = combatContext.weapon.special
+            var specialCost = special?.energyCost ?:0
+            val hasRingOfVigour = combatContext.attacker.getEquipment().containsOneItem(Item.getId("item.ring_of_vigour"))
+            if (hasRingOfVigour)
+                specialCost = (specialCost * 0.9).toInt()
             if (special != null) {
                 val specialEnergy = combatContext.attacker.combatDefinitions.specialAttackPercentage
-                if (specialEnergy >= special.energyCost) {
+                if (specialEnergy >= specialCost) {
                     val specialContext = combatContext.copy(usingSpecial = true)
                     special.execute(specialContext)
-                    combatContext.attacker.combatDefinitions.decreaseSpecialAttack(special.energyCost)
+                    combatContext.attacker.combatDefinitions.decreaseSpecialAttack(specialCost)
                     return true
                 } else {
                     combatContext.attacker.message("You don't have enough special attack energy.")

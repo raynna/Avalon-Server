@@ -11,6 +11,7 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.special.*
+import java.lang.Math.random
 
 object StandardMelee : MeleeData() {
 
@@ -82,6 +83,54 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
+            itemId = Weapon.itemIds("item.korasi_sword"),
+            name = "Korasi's sword",
+            weaponStyle = WeaponStyle.SCIMITAR,
+            blockAnimationId = Animation.getId("animation.scimitar_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.scimitar_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.scimitar_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.scimitar_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.scimitar_slash"),
+            ),
+            special = SpecialAttack(
+                energyCost = 60,
+                execute = { context ->
+                    context.attacker.animate(14788)
+                    context.attacker.gfx(1729)
+                    context.attacker.playSound(3853, 1)
+                    context.attacker.playSound(3865, 1)
+                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
+
+                    val isMultiCombat = context.defender.isAtMultiArea
+
+                    val firstHitDamage = if (isMultiCombat) {
+                        (0..((1.5 * maxHit).toInt())).random()
+                    } else {
+                        ((0.5 * maxHit).toInt() .. (1.5 * maxHit).toInt()).random()
+                    }
+
+                    val firstHit = Hit(context.attacker, firstHitDamage, Hit.HitLook.MAGIC_DAMAGE)
+                    if (firstHit.checkCritical(firstHitDamage, maxHit))
+                        firstHit.critical = true
+                    context.hits {
+                        addHit(context.defender, firstHit)
+                        context.defender.gfx(1730)
+                        if (isMultiCombat) {
+                            val extraTargets = context.getMultiAttackTargets(maxDistance = 1, maxTargets = 2)
+                            val damages = listOf(firstHitDamage / 2, firstHitDamage / 4)
+
+                            for ((index, target) in extraTargets.withIndex()) {
+                                if (index >= damages.size) break
+                                target.gfx(1730)
+                                addHit(target, firstHit.copyWithDamage(damages[index]), delay = 0)
+                            }
+                        }
+                    }
+                }
+            )
+        ),
+        MeleeWeapon(
             itemId = Weapon.itemIds("item.abyssal_whip"),
             name = "Abyssal whip",
             weaponStyle = WeaponStyle.WHIP,
@@ -110,6 +159,32 @@ object StandardMelee : MeleeData() {
         MeleeWeapon(
             itemId = Item.getIds(
                 "item.dragon_dagger", "item.dragon_dagger_p",
+                "item.dragon_dagger_p+", "item.dragon_dagger_p++"),
+            name = "Dragon dagger",
+            weaponStyle = WeaponStyle.DAGGER,
+            attackSpeed = 4,
+            blockAnimationId = Animation.getId("animation.dragon_dagger_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.dragon_dagger_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.dragon_dagger_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.dragon_dagger_slash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.dragon_dagger_stab"),
+            ),
+            special = SpecialAttack(
+                energyCost = 25,
+                accuracyMultiplier = 1.15,
+                damageMultiplier = 1.15,
+                execute = { context ->
+                    context.attacker.animate("animation.dragon_dagger_special")
+                    context.attacker.gfx("graphic.dragon_dagger_special", 100)
+                    context.meleeHit()
+                    context.meleeHit(delay = if (context.defender is NPC) 1 else 0)
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.dragon_mace", "item.dragon_mace",
                 "item.dragon_dagger_p+", "item.dragon_dagger_p++"),
             name = "Dragon dagger",
             weaponStyle = WeaponStyle.DAGGER,

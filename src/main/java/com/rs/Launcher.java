@@ -59,6 +59,7 @@ import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.WeaponTypesLoader;
 import com.rs.java.utils.Weights;
 import com.rs.java.utils.huffman.Huffman;
+import com.rs.kotlin.game.player.command.CommandRegistry;
 
 public final class Launcher {
 
@@ -126,6 +127,7 @@ public final class Launcher {
 		NpcPluginLoader.init();
 		ItemPluginLoader.init();
 		WeaponScriptsManager.init();
+		CommandRegistry.registerCommands();
 		try {
 			ServerChannelHandler.init();
 		} catch (Throwable e) {

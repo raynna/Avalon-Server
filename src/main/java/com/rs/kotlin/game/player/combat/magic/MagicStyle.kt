@@ -43,6 +43,8 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 attacker.message("You don't have the correct staff to cast ${currentSpell.name}.")
                 return false
             }
+            if (!SpellHandler.checkAndRemoveRunes(attacker, currentSpell))
+                return false;
         }
         return true
     }
@@ -83,8 +85,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             else -> null
         }
 
-        attacker.message("${ModernMagicks.id} vs ${attacker.combatDefinitions.getSpellBook()}")
-
         if (currentSpell == null) {
             attacker.message("Invalid spell ID: $spellId")
             return
@@ -113,13 +113,14 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 }
                 if (hit.damage > 0)
                     target.applyHit(hit)
-                onHit(hit)
+                onHit(attacker, target, hit)
             }
         }
         addMagicExperience(totalDamage)
     }
 
-    override fun onHit(hit: Hit) {
+    override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
+        super.onHit(attacker, defender, hit)
         if (defender is Player) {
             defender.animate(CombatAnimations.getBlockAnimation(defender))
         }
@@ -144,7 +145,8 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun handleModernMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
-        attacker.message("Casting modern spell: ${spell.name}")
+        if (!SpellHandler.checkAndRemoveRunes(attacker, spell))
+            return
         val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
         val splash = hit.damage == 0
         val endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
@@ -208,7 +210,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun handleAncientMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
-        attacker.message("Casting ancient spell: ${spell.name}")
         val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
@@ -243,6 +244,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             attacker.resetWalkSteps()
             attacker.setNextFaceEntity(null)
         }
+        if (attacker.isDeveloperMode)
         attacker.message(
             "Magic Attack -> " +
                     "Spell: ${spell.name.toString()}, " +
@@ -256,7 +258,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     private fun addMagicExperience(totalDamage: Int) {
         var spellId = attacker.combatDefinitions.spellId
         val manual = isManualCast(spellId);
-        attacker.message("spellId ${spellId}")
         if (manual) {
             attacker.combatDefinitions.resetSpells(false)
             spellId -= MIN_SPELL_ID;
@@ -266,7 +267,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             ModernMagicks.id -> ModernMagicks.getSpell(spellId)
             else -> null
         }
-        attacker.message("current spell:" + currentSpell?.name)
         val spellXp = currentSpell?.xp?:0.0
         val baseXp = (totalDamage * 0.3)
         val combined = spellXp+baseXp

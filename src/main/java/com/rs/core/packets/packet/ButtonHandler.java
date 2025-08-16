@@ -2466,11 +2466,6 @@ public class ButtonHandler {
         }
 
         Item inventoryItem = player.getInventory().getItem(slotId);
-        if (inventoryItem.getMetadata() != null) {
-            player.message(inventoryItem.getDisplayName() + " has metadata: " + inventoryItem.getMetadata().getDisplaySuffix());
-        } else {
-            player.message(inventoryItem.getDisplayName() + " has no metadata");
-        }
         if (inventoryItem == null || inventoryItem.getId() != itemId) {
             return false;
         }

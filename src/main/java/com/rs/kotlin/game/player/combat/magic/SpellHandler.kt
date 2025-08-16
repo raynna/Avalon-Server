@@ -43,10 +43,11 @@ object SpellHandler {
     }
 
     fun cast(player: Player, spellId: Int, autocast: Boolean = false) {
-        player.message("Cast spellId $spellId")
         val spell = getSpellForPlayer(player, spellId) ?: return
         if (!canCast(player, spell)) return
-        if (!checkAndRemoveRunes(player, spell)) return
+        if (spell.type != SpellType.Combat) {
+            if (!checkAndRemoveRunes(player, spell)) return
+        }
         if (spell.type == SpellType.Object) {
             if (spell.name.equals("Charge Water Orb", ignoreCase = true)) {
                 handleOrbChargingSpell(player, spell)
@@ -100,7 +101,6 @@ object SpellHandler {
     }
 
     fun getSpellForPlayer(player: Player, spellId: Int): Spell? {
-        player.message("SpellBook: ${player.combatDefinitions.getSpellBook()} && ancients is: ${AncientMagicks.id}")
         return when (player.combatDefinitions.getSpellBook()) {
             AncientMagicks.id -> AncientMagicks.getSpell(spellId)
             ModernMagicks.id -> ModernMagicks.getSpell(spellId)
@@ -144,7 +144,7 @@ object SpellHandler {
         return true
     }
 
-    private fun checkAndRemoveRunes(player: Player, spell: Spell): Boolean {
+    fun checkAndRemoveRunes(player: Player, spell: Spell): Boolean {
         if (staffOfLightEffect(player)) {
             player.packets.sendGameMessage("Your spell draws its power completely from your staff.")
             return true
@@ -213,7 +213,6 @@ object SpellHandler {
     }
 
     private fun hasRune(player: Player, runeId: Int, amount: Int): Boolean {
-        player.message("number of ${player.inventory.getNumberOf(runeId)}")
         return if (hasRunePouch(player)) {
             player.runePouch.contains(Item(runeId, amount)) ||
                     player.inventory.containsItem(runeId, amount)
@@ -234,9 +233,7 @@ object SpellHandler {
 
     private fun handleCombatSpell(player: Player, spell: Spell, autocast: Boolean) {
         if (!autocast) {
-            player.message("Not autocast for spell ${spell.name}")
             player.temporaryAttribute()["tempCastSpell"] = spell.id
-            player.message("set tempCastSpell to ${spell.id}, tempCastSpell is now: ${player.temporaryAttribute()["tempCastSpell"]}")
         }
         val target = player.temporaryAttribute()["spell_target"] as? Entity ?: run {
             player.message("Invalid spell target")

@@ -22,6 +22,7 @@ public class PlayerRank implements Serializable {
 		if (rank == null)
 			rank = new Rank[3];
 		rank[0] = Rank.PLAYER;
+
 	}
 
 	public void setPlayer(Player player) {
@@ -36,6 +37,14 @@ public class PlayerRank implements Serializable {
 		this.rank[index] = rank;
 		if (this.rank[index] != Rank.DEVELOPER && this.rank[index] != Rank.MODERATOR)
 			World.sendNewsMessage(player.getDisplayName() + " is now a " + rank.getRankName() + "!", false);
+	}
+
+	public boolean isAtLeast(Rank other) {
+		Rank current = rank[0]; // primary rank
+		if (current == null) {
+			return false;
+		}
+		return current.ordinal() >= other.ordinal();
 	}
 
 	public void addRank(Rank rank) {

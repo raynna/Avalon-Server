@@ -31,7 +31,7 @@ public class ItemPluginLoader {
                 }
             }
         }
-        System.out.println("[ItemPluginLoader] "+item.getName()+"("+item.getId()+"): Found no plugin for this item.");
+        //System.out.println("[ItemPluginLoader] "+item.getName()+"("+item.getId()+"): Found no plugin for this item.");
         return null;
     }
 

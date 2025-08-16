@@ -15,6 +15,7 @@ class SummoningCharms(private val dropTable: DropTable) {
     private val entries = mutableListOf<CharmEntry>()
 
     fun gold(amount: Int = 1, percent: Double) = add("item.gold_charm", amount, percent)
+    
     fun green(amount: Int = 1, percent: Double) = add("item.green_charm", amount, percent)
     fun crimson(amount: Int = 1, percent: Double) = add("item.crimson_charm", amount, percent)
     fun blue(amount: Int = 1, percent: Double) = add("item.blue_charm", amount, percent)

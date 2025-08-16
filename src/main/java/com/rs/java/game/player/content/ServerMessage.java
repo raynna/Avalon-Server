@@ -33,11 +33,8 @@ public class ServerMessage {
 	}
 
 	public static void sendGlobalMessage(Player player, String data, boolean staff) {
-		if (Settings.discordEnabled)
-		//Launcher.getDiscordBot().getChannelByName("server-yell-chat")
-		//		.sendMessage("```[Ingame -> Discord] \n" + player.getDisplayName() + ": " + data + "```");
 		if (player.isDeveloper()) {
-			String edits = String.format("[<shad=000000><col=ffce00>Server Message</col></shad>] <img=1>%s: %s",
+			String edits = String.format("[<shad=000000><col=F27C1D>Server Message</col></shad>] <img=1>%s: %s",
 					player.getDisplayName(), data);
 			sendNews(true, edits, staff, false);
 			return;
@@ -45,17 +42,17 @@ public class ServerMessage {
 
 		if (player.isModerator()) {
 			String edits = String.format(
-					"[<shad=000000><col=007FB5>Player Moderator</col></shad>] <img=0>%s: <col=007FB5>%s",
+					"[<shad=000000><col=948D8D>Player Moderator</col></shad>] <img=0>%s: <col=007FB5>%s",
 					player.getDisplayName(), data);
 			sendNews(true, edits, staff, false);
 			return;
 		} else if (player.getPlayerRank().getRank()[0] == Rank.YOUTUBER) {// ff005a
-			String edits = String.format("[<shad=000000><col=ff0000>Youtuber</col></shad>] <img=8>%s: %s",
+			String edits = String.format("[<shad=000000><col=FF0000>Youtuber</col></shad>] <img=8>%s: %s",
 					player.getDisplayName(), data);
 			sendNews(false, edits, false, false);
 			return;
 		} else {
-			String edits = String.format("[Player] %s: %s", player.getDisplayName(), data);
+			String edits = String.format("<shad=000000><col=#088F8F>[Player] %s</col>: %s", player.getDisplayName(), data);
 			sendNews(false, edits, false, false);
 			return;
 		}

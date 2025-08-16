@@ -174,7 +174,8 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     }
 
-    override fun onHit(hit: Hit) {
+    override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
+        super.onHit(attacker, defender, hit)
         if (defender is Player) {
             defender.animate(CombatAnimations.getBlockAnimation(defender))
         }
@@ -223,7 +224,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                     target.animate(CombatAnimations.getBlockAnimation(target))
                 }
                 target.applyHit(hit)
-                onHit(hit)
+                onHit(attacker, target, hit)
             }
         }
         attackStyle.xpMode.distributeXp(attacker, attackStyle, totalDamage);

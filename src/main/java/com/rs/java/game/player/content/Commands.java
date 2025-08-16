@@ -92,7 +92,7 @@ public final class Commands {
     }
 
     public static boolean processCommand(Player player, String command, boolean console, boolean clientCommand) {
-        if (command.length() == 0)
+        if (command.isEmpty())
             return false;
         String[] cmd = command.toLowerCase().split(" ");
         if (cmd.length == 0)
@@ -160,7 +160,7 @@ public final class Commands {
                                 player.message("- " + def.getName() + " (<col=ff0000>" + def.getId() + "</col>)");
                             }
                             if (!results.isEmpty()) {
-                                itemDef = results.get(0);
+                                itemDef = results.getFirst();
                             }
                         }
 
@@ -2988,6 +2988,8 @@ public final class Commands {
                     player.animate(new Animation(animId));
                     player.gfx(new Graphics(gfxId, 0, height));
                     return true;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + cmd[0]);
             }
         }
         return false;

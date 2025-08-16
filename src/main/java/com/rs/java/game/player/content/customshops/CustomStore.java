@@ -28,7 +28,7 @@ public class CustomStore extends CustomStoreData {
 	public void sendInterface(int type) {
 		if (type == 3) {
 			SkillcapeStore.generateCapes(player);
-			if (SkillcapeStore.capes.size() == 0) {
+			if (SkillcapeStore.capes.isEmpty()) {
 				player.message("You don't have any level 99s therefor Max won't sell you any.");
 				return;
 			}
@@ -63,22 +63,17 @@ public class CustomStore extends CustomStoreData {
 		}
 		player.getInterfaceManager().closeScreenInterface();
 		player.getTemporaryAttributtes().put("CUSTOM_STORE_TYPE", type);
-		player.temporaryAttribute().put("customStore", this);
+		player.temporaryAttribute().put("CUSTOM_STORE", this);
 		for (int i = 25; i <= COMPONENTS[COMPONENTS.length - 1]; i += 6)// hides all containers
 			player.getPackets().sendHideIComponent(INTERFACE_ID, i, true);
 		player.getPackets().sendHideIComponent(INTERFACE_ID, 17, true);// hides total coins text
 		refreshInterface();
 		player.getInterfaceManager().sendInterface(INTERFACE_ID);
-		player.setCloseInterfacesEvent(new Runnable() {
-
-			@Override
-			public void run() {
-				viewingPlayers.remove(player);
-				player.getTemporaryAttributtes().remove("customStore");
-				player.getTemporaryAttributtes().remove("CUSTOM_STORE");
-				player.getTemporaryAttributtes().remove("CUSTOM_STORE_TYPE");
-			}
-		});
+		player.setCloseInterfacesEvent(() -> {
+            viewingPlayers.remove(player);
+            player.getTemporaryAttributtes().remove("CUSTOM_STORE");
+            player.getTemporaryAttributtes().remove("CUSTOM_STORE_TYPE");
+        });
 	}
 
 	public int getShopId() {
@@ -86,10 +81,9 @@ public class CustomStore extends CustomStoreData {
 	}
 
 	private static int getShopType(Player player) {
-		int shopType = (Integer) player.getTemporaryAttributtes().get("CUSTOM_STORE_TYPE");
 		if (player.getTemporaryAttributtes().get("CUSTOM_STORE_TYPE") == null)
 			return -1;
-		return shopType;
+        return (int) (Integer) player.getTemporaryAttributtes().get("CUSTOM_STORE_TYPE");
 	}
 
 	public void sendInventory(Player player) {

@@ -22,8 +22,6 @@ class CombatAction(
         HIT
     }
 
-    private val healthOverlay = HealthOverlay()
-
     private var lastTargetX = -1
     private var lastTargetY = -1
 
@@ -38,17 +36,19 @@ class CombatAction(
             stop(player, true)
             return false
         }
+        player.faceEntity(target)
+        player.setNextFaceEntity(target);
+        player.resetWalkSteps()
         val spellId = player.getCombatDefinitions().spellId
         style = when {
             spellId != 0 -> MagicStyle(player, target)
             isRangedWeapon(player) -> RangedStyle(player, target)
             else -> MeleeStyle(player, target)
         }
-        player.temporaryTarget = target
         player.tickTimers[Keys.IntKey.LAST_ATTACK_TICK] = 10
+        player.temporaryTarget = target;
+        val healthOverlay = HealthOverlay()
         healthOverlay.sendOverlay(player, target)
-        player.setNextFaceEntity(target);
-        player.resetWalkSteps()
         val requiredDistance = getAdjustedFollowDistance(target);
         if (player.isOutOfRange(target, requiredDistance)) {
             player.calcFollow(target, if (player.run) 2 else 1, true, true)
@@ -156,11 +156,11 @@ class CombatAction(
                     return
                 }
                 if (player.newActionManager.getCurrentAction() == null) {
-                    stop();
+                    stop()
                     return
                 }
                 if (player.newActionManager.getCurrentAction() != this@CombatAction) {
-                    stop();
+                    stop()
                     return
                 }
 
@@ -214,8 +214,8 @@ class CombatAction(
     }
 
     override fun stop(player: Player, interrupted: Boolean) {
-        stopFollowTask();
-        player.resetWalkSteps();
+        stopFollowTask()
+        //player.resetWalkSteps();
         player.setNextFaceEntity(null);
         style.onStop(interrupted)
     }
