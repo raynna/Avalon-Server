@@ -7,14 +7,13 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.npc.NpcBonusType
-import com.rs.kotlin.game.player.combat.damage.DamageMultipliers
-import com.rs.kotlin.game.player.combat.magic.AncientMagicks
-import com.rs.kotlin.game.player.combat.magic.ModernMagicks
+import com.rs.kotlin.game.player.combat.damage.CombatMultipliers
 import com.rs.kotlin.game.player.combat.magic.Spell
 import com.rs.kotlin.game.player.combat.magic.Spellbook
 import com.rs.kotlin.game.player.equipment.BonusType
+import com.rs.kotlin.game.player.equipment.EquipmentSets
+import com.rs.kotlin.game.player.equipment.EquipmentSets.getDharokMultiplier
 import kotlin.math.floor
-import kotlin.math.max
 
 object CombatCalculations {
 
@@ -35,8 +34,9 @@ object CombatCalculations {
             val bonusType = getAttackBonusIndex(player)
             val attackBonus = player.combatDefinitions.bonuses[bonusType].toDouble()
             val styleBonus = getAttackStyleBonus(player)
-            val voidBonus = 1.0//TODO void bonus
-            val specialBonus = DamageMultipliers.getMultiplier(player,  target, DamageMultipliers.Style.MELEE)//TODO THINGS LIKE SLAYER HELMET, SALVE AMMY ETC
+            val equipmentSet = EquipmentSets.getSet(player)
+            val voidBonus = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.MELEE)
+            val specialBonus = CombatMultipliers.getMultiplier(player,  target, CombatMultipliers.Style.MELEE)//TODO THINGS LIKE SLAYER HELMET, SALVE AMMY ETC
 
             val effectiveAttackLevel = floor((baseAttack + styleBonus + 8) * voidBonus)//DONE
             val attackRoll = floor((effectiveAttackLevel * (attackBonus + 64)) * specialBonus)//DONE
@@ -84,12 +84,16 @@ object CombatCalculations {
 
         override fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double): Hit {
             val styleBonus = getStrengthStyleBonus(player)
-            val voidBonus = 1.0//TODO VOID BONUS getVoidBonus(player)
-            val specialBonus = DamageMultipliers.getMultiplier(player, target, DamageMultipliers.Style.MELEE)
+
+            val equipmentSet = EquipmentSets.getSet(player)
+            val dharokMultiplier = getDharokMultiplier(player)
+            val voidBonus = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.MELEE)
+            val specialBonus = CombatMultipliers.getMultiplier(player, target, CombatMultipliers.Style.MELEE)
+
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.StregthBonus.index].toDouble()
 
             val baseStrengthLevel = getBaseStrengthLevel(player)
-            val effectiveStrength = floor((baseStrengthLevel + styleBonus + 8) * voidBonus)
+            val effectiveStrength = floor((baseStrengthLevel + styleBonus + 8) * voidBonus * dharokMultiplier)
             val baseDamage = 5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * specialBonus
             val hit = Hit(player, 0, 0, Hit.HitLook.MELEE_DAMAGE)
             val maxHit = (baseDamage * specialMultiplier).toInt()
@@ -102,7 +106,7 @@ object CombatCalculations {
             hit.baseMaxHit = baseDamage.toInt()
             hit.maxHit = maxHit
             hit.damage = damage
-            if (damage >= floor(baseDamage * 0.90)) {
+            if (damage >= floor(baseDamage * 0.95)) {
                 hit.setCriticalMark()
             }
             if (player.developerMode) {
@@ -127,8 +131,9 @@ object CombatCalculations {
             val bonusType = getAttackBonusIndex(player)
             val rangeBonus = player.combatDefinitions.bonuses[bonusType]
             val styleBonus = getAttackStyleBonus(player)
-            val voidBonus = 1.0//TODO void bonus
-            val specialBonus = DamageMultipliers.getMultiplier(player, target, DamageMultipliers.Style.RANGE)
+            val equipmentSet = EquipmentSets.getSet(player)
+            val voidBonus = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.RANGE)
+            val specialBonus = CombatMultipliers.getMultiplier(player, target, CombatMultipliers.Style.RANGE)
 
             val effectiveRangedAttack = floor((baseRangeLevel + styleBonus + 8) * voidBonus)//DONE
             val rangeRoll = floor((effectiveRangedAttack * (rangeBonus + 64)) * specialBonus)//DONE
@@ -164,15 +169,15 @@ object CombatCalculations {
             val rangedLvl = player.skills.getLevel(Skills.RANGE).toDouble()
             val prayerBonus = player.prayer.rangedMultiplier
             val styleBonus = getStrengthStyleBonus(player)
-            val voidBonus = 1.0//TODO getVoidModifier(player)
-            val specialBonus = DamageMultipliers.getMultiplier(player, target, DamageMultipliers.Style.MELEE)
+            val equipmentSet = EquipmentSets.getSet(player)
+            val voidBonus = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.RANGE)
+            val specialBonus = CombatMultipliers.getMultiplier(player, target, CombatMultipliers.Style.MELEE)
 
             val baseStrength = floor(rangedLvl * prayerBonus)
             val effectiveStrength = floor((baseStrength + styleBonus + 8) * voidBonus)
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.RangedStrBonus.index].toDouble()
 
             val baseDamage = 0.5 + (((effectiveStrength) * (strengthBonus/10 + 64.0)) / 64.0) * specialBonus
-
             val maxHit = floor(baseDamage * specialMultiplier).toInt()
 
             var damage = Utils.random(maxHit)
@@ -182,7 +187,7 @@ object CombatCalculations {
                 }
             }
             val hit = Hit(player, damage, maxHit, Hit.HitLook.RANGE_DAMAGE)
-            if (damage >= floor(baseDamage * 0.90)) {
+            if (damage >= floor(baseDamage * 0.95)) {
                 hit.setCriticalMark()
             }
             if (player.developerMode) {
@@ -203,8 +208,11 @@ object CombatCalculations {
         override fun calculateAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean {
             val bonusType = getAttackBonusIndex(player)
             val magicBonus = player.combatDefinitions.bonuses[bonusType]
-            val specialBonus = DamageMultipliers.getMultiplier(player, target, DamageMultipliers.Style.MAGIC)
-            var effectiveMagicLevel = getBaseMagicLevel(player)
+            val specialBonus = CombatMultipliers.getMultiplier(player, target, CombatMultipliers.Style.MAGIC)
+            val equipmentSet = EquipmentSets.getSet(player)
+            val voidAccuracy = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.MAGIC)
+
+            var effectiveMagicLevel = getBaseMagicLevel(player) * voidAccuracy
             val attack = effectiveMagicLevel * (magicBonus + 64) * specialBonus
 
             val (defenceBonus, effectiveDefenceLevel) = getMagicDefenceValues(target)
@@ -218,12 +226,14 @@ object CombatCalculations {
             val baseDamage = spell?.damage?:10
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
+            val equipmentSet = EquipmentSets.getSet(player)
+            val voidDamage = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.MAGIC)
 
             var levelMultiplier = getMagicLevelMultiplier(player)
             if (target is NPC) {//just to make sure magic is a bit stronger for monsters so magic is a viable style in pvm
                 levelMultiplier *= player.prayer.magicMultiplier
             }
-            val maxHit = baseDamage * magicStrengthMultiplier * levelMultiplier
+            val maxHit = baseDamage * magicStrengthMultiplier * levelMultiplier * voidDamage
             var damage = Utils.random(maxHit.toInt())
             if (target is NPC) {
                 if (target.id == 4474) {
@@ -231,7 +241,7 @@ object CombatCalculations {
                 }
             }
             val hit = Hit(player, damage, maxHit.toInt(), Hit.HitLook.MAGIC_DAMAGE)
-            if (damage >= floor(maxHit * 0.90)) {
+            if (damage >= floor(maxHit * 0.95)) {
                 hit.setCriticalMark()
             }
             return hit

@@ -430,8 +430,14 @@ class SpecialHitBuilder(private val context: CombatContext) {
         accuracyMultiplier: Double = 1.0,
         delay: Int = 0
     ): Hit {
+        val accMultiplier = special?.takeIf { context.usingSpecial && it.accuracyMultiplier > 1.0 }?.accuracyMultiplier
+            ?: accuracyMultiplier
+
+        val dmgMultiplier = special?.takeIf { context.usingSpecial && it.damageMultiplier > 1.0 }?.damageMultiplier
+            ?: damageMultiplier
+
         val h = context.registerHit(
-            combatType = type, accuracyMultiplier = accuracyMultiplier, damageMultiplier = damageMultiplier
+            combatType = type, accuracyMultiplier = accMultiplier, damageMultiplier = dmgMultiplier
         )
         hits += PendingHit(h, context.defender, delay)
         return h
@@ -444,14 +450,14 @@ class SpecialHitBuilder(private val context: CombatContext) {
     ) = createHit(CombatType.MELEE, damageMultiplier, accuracyMultiplier, delay)
 
     fun ranged(
-        damageMultiplier: Double = special?.damageMultiplier ?: 1.0,
-        accuracyMultiplier: Double = special?.accuracyMultiplier ?: 1.0,
+        damageMultiplier: Double = 1.0,
+        accuracyMultiplier: Double = 1.0,
         delay: Int = 0
     ) = createHit(CombatType.RANGED, damageMultiplier, accuracyMultiplier, delay)
 
     fun magic(
-        damageMultiplier: Double = special?.damageMultiplier ?: 1.0,
-        accuracyMultiplier: Double = special?.accuracyMultiplier ?: 1.0,
+        damageMultiplier: Double = 1.0,
+        accuracyMultiplier: Double = 1.0,
         delay: Int = 0
     ) = createHit(CombatType.MAGIC, damageMultiplier, accuracyMultiplier, delay)
 

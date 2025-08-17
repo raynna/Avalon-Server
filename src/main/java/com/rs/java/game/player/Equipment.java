@@ -156,6 +156,15 @@ public final class Equipment implements Serializable {
 		return false;
 	}
 
+	public boolean containsAll(int... itemIds) {
+		for (int itemId : itemIds) {
+			if (!items.containsOne(new Item(itemId, 1))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public static boolean hideArms(Item item) {
 		String name = item.getName().toLowerCase();
 		if (name.contains("d'hide body") || name.contains("dragonhide body") || name.equals("stripy pirate shirt")

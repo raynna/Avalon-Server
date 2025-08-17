@@ -9,6 +9,7 @@ data class RangedAmmo(
     val levelRequired: Int,
     val poisonSeverity: Int = -1,
     val startGfx: Graphics? = null,
+    val doubleGfx: Graphics? = null,
     var endGfx: Graphics? = null,
     val projectileId: Int,
     val dropOnGround: Boolean = true,

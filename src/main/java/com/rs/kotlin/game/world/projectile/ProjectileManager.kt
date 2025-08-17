@@ -37,6 +37,119 @@ object ProjectileManager {
         )
     }
 
+
+    @JvmStatic
+    fun sendWithDelayAndCallback(
+        projectile: Projectile,
+        gfxId: Int,
+        attacker: Entity,
+        defender: Entity,
+        delayDifference: Int,
+        hitGraphic: Graphics? = null,
+        onLanded: (() -> Unit)? = null
+    ) {
+        // Send projectile with delay
+        val baseType = ProjectileRegistry.get(projectile) ?: run {
+            println("Unknown projectile type: $projectile")
+            return
+        }
+
+        val newDelay = baseType.copy(
+            delay = (baseType.delay + delayDifference).coerceIn(0, 255)
+        )
+
+        val duration = sendProjectile(
+            player = if (attacker is Player) attacker else defender as? Player
+                ?: error("Either attacker or defender must be a Player"),
+            receiver = defender,
+            startTile = WorldTile(
+                attacker.getCoordFaceX(attacker.size),
+                attacker.getCoordFaceY(attacker.size),
+                attacker.plane
+            ),
+            endTile = WorldTile(
+                defender.getCoordFaceX(defender.size),
+                defender.getCoordFaceY(defender.size),
+                defender.plane
+            ),
+            gfx = gfxId,
+            type = baseType,
+            creatorSize = attacker.size,
+            adjustedDelay = newDelay.delay
+        )
+
+        // Schedule when projectile lands
+        val delayTicks = ((duration + 29) / 30) - 1
+        WorldTasksManager.schedule(object : WorldTask() {
+            override fun run() {
+                if (hitGraphic != null) {
+                    val rotation = calculateRotation(
+                        WorldTile(attacker.getCoordFaceX(attacker.size), attacker.getCoordFaceY(attacker.size), attacker.plane),
+                        WorldTile(defender.getCoordFaceX(defender.size), defender.getCoordFaceY(defender.size), defender.plane)
+                    )
+                    defender.gfx(hitGraphic.id, hitGraphic.height, rotation)
+                }
+
+                // Custom callback
+                onLanded?.invoke()
+            }
+        }, delayTicks.coerceAtLeast(0))
+    }
+
+
+    @JvmStatic
+    fun sendWithDelayAndGfx(
+        projectile: Projectile,
+        gfxId: Int,
+        attacker: Entity,
+        defender: Entity,
+        delayDifference: Int,
+        hitGraphic: Graphics
+    ) {
+        // Send projectile with delay
+        val baseType = ProjectileRegistry.get(projectile) ?: run {
+            println("Unknown projectile type: $projectile")
+            return
+        }
+
+        val newDelay = baseType.copy(
+            delay = (baseType.delay + delayDifference).coerceIn(0, 255)
+        )
+
+        val duration = sendProjectile(
+            player = if (attacker is Player) attacker else defender as? Player
+                ?: error("Either attacker or defender must be a Player"),
+            receiver = defender,
+            startTile = WorldTile(
+                attacker.getCoordFaceX(attacker.size),
+                attacker.getCoordFaceY(attacker.size),
+                attacker.plane
+            ),
+            endTile = WorldTile(
+                defender.getCoordFaceX(defender.size),
+                defender.getCoordFaceY(defender.size),
+                defender.plane
+            ),
+            gfx = gfxId,
+            type = baseType,
+            creatorSize = attacker.size,
+            adjustedDelay = newDelay.delay
+        )
+
+        // Schedule hit graphic when projectile lands
+        val delayTicks = ((duration + 29) / 30) - 1
+        WorldTasksManager.schedule(object : WorldTask() {
+            override fun run() {
+                val rotation = calculateRotation(
+                    WorldTile(attacker.getCoordFaceX(attacker.size), attacker.getCoordFaceY(attacker.size), attacker.plane),
+                    WorldTile(defender.getCoordFaceX(defender.size), defender.getCoordFaceY(defender.size), defender.plane)
+                )
+                defender.gfx(hitGraphic.id, hitGraphic.height, rotation)
+            }
+        }, delayTicks.coerceAtLeast(0))
+    }
+
+
     @JvmStatic
     fun sendWithHeightAndHitGraphic(
         projectile: Projectile,

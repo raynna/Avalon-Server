@@ -22,6 +22,8 @@ public final class CityEventHandler {
     private static final String PATH = Paths.get(
             System.getProperty("user.dir"),
             "src",
+            "main",
+            "java",
             "com",
             "rs",
             "java",

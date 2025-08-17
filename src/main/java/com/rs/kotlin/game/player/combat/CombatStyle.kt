@@ -131,6 +131,7 @@ interface CombatStyle {
 
     fun executeSpecialAttack(player: Player, target: Entity? = null): Boolean {
         val weapon = Weapon.getWeapon(player.equipment.weaponId) ?: return false
+        val ammo = RangeData.getAmmoByItemId(player.equipment.ammoId)
         val special = weapon.special ?: return false
         if (!player.combatDefinitions.isUsingSpecialAttack)
             return false
@@ -178,6 +179,7 @@ interface CombatStyle {
                     attacker = player,
                     defender = target,
                     weapon = weapon,
+                    ammo = ammo,
                     weaponId = player.equipment.weaponId,
                     attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
                     attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,

@@ -14,6 +14,7 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 
@@ -198,14 +199,14 @@ public class PrayerBook implements Serializable {
         if (isDisabledInClanWars()) {
             return false;
         }
-        if (isPrayerDelayActive()) {
-            return false;
+        if (prayer.isProtectionPrayer()) {
+            return !isPrayerDelayActive();
         }
         return true;
     }
 
     private boolean isPrayerDelayActive() {
-        if (player.getPrayerDelay() >= Utils.currentTimeMillis()) {
+        if (player.getTickManager().isActive(TickManager.Keys.DISABLED_PROTECTION_PRAYER_TICK)) {
             player.getPackets().sendGameMessage("You are currently injured and cannot use protection prayers!");
             return true;
         }

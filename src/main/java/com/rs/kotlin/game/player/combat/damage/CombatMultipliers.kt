@@ -5,7 +5,7 @@ import com.rs.java.game.Entity
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 
-class DamageMultipliers() {
+class CombatMultipliers() {
 
     enum class Style {
         MELEE, RANGE, MAGIC, HYBRID

@@ -112,10 +112,12 @@ public class TickManager {
         RENEWAL_TICKS(9, 0),
         VENGEANCE_TICKS(10, 0),
         LAST_ATTACK_TICK(11, 0),
-        STAFF_OF_LIGHT_EFFECT(12, 0),
-        FOOD_LOCK_TICK(13, 0),
-        SPECIAL_FOOD_LOCK_TICK(14, 0),
-        POT_LOCK_TICK(15, 0),
+        LAST_ATTACKED_TICK(12, 0),
+        STAFF_OF_LIGHT_EFFECT(13, 0),
+        FOOD_LOCK_TICK(14, 0),
+        SPECIAL_FOOD_LOCK_TICK(15, 0),
+        POT_LOCK_TICK(16, 0),
+        DISABLED_PROTECTION_PRAYER_TICK(17, 0),
 
         COAL_STORED(18, 0),
 

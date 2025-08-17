@@ -3019,8 +3019,8 @@ public class Player extends Entity {
         if (!active)
             return;
         long currentTime = Utils.currentTimeMillis();
-        if (getAttackedByDelay() + 10000 > currentTime) {
-            message("You can't log out until 10 seconds after the end of combat.");
+        if (getTickManager().isActive(TickManager.Keys.LAST_ATTACKED_TICK)) {
+            message("You can't log out during combat which is for another " + getTickToSeconds(getTickManager().getTicksLeft(TickManager.Keys.LAST_ATTACKED_TICK)) + " seconds.");
             return;
         }
         if (getEmotesManager().getNextEmoteEnd() >= currentTime) {

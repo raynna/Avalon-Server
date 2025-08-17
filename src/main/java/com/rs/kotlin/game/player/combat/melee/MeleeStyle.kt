@@ -39,7 +39,7 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val hasGoliathGloves = attacker.combatDefinitions.hasGoliath(gloves)
         return when {
             weaponId != -1 -> weaponId
-            hasGoliathGloves -> StandardMelee.getGoliathWeapon().itemId[0]
+            hasGoliathGloves && weaponId == -1 -> StandardMelee.getGoliathWeapon().itemId[0]
             else -> -1
         }
     }

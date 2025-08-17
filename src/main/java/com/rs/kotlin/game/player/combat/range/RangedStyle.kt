@@ -68,7 +68,12 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun getAttackDistance(): Int {
         val currentWeapon = getCurrentWeapon()
-        return currentWeapon.attackRange ?: 5
+        val baseRange = currentWeapon.attackRange ?: 5
+        return when (getAttackStyle(currentWeapon)) {
+            AttackStyle.LONGRANGE -> (baseRange + 2).coerceAtMost(10)
+            AttackStyle.ACCURATE, AttackStyle.RAPID -> baseRange.coerceAtMost(10)
+            else -> baseRange.coerceAtMost(10)
+        }
     }
 
 
@@ -97,6 +102,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             }
         } else if (maxTier != null) {
             if (ammoTier == null || !maxTier.canUse(ammoTier)) {
+                attacker.message("maxTier: $maxTier - ammoTier: $ammoTier")
                 attacker.message("You cannot use $ammoName with a $weaponName.")
                 return false
             }
@@ -134,11 +140,12 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             weapon = currentWeapon,
             weaponId = currentWeaponId,
             ammo = currentAmmo,
+            usingSpecial = false
         )
         if (executeSpecialAttack(attacker, defender)) {
             return
         }
-        if (executeEffect(combatContext))
+        if (executeEffect(combatContext.copy(usingSpecial = false)))
             return
         attacker.animate(CombatAnimations.getAnimation(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle))
         if (currentAmmo != null) {
@@ -149,6 +156,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         sendProjectile()
         handleSpecialEffects()
         val hit = combatContext.rangedHit(delay = getHitDelay())
+        if (attacker.isDeveloperMode)
         attacker.message(
             "Ranged Attack -> " +
                     "Weapon: ${currentWeapon.name}, " +
@@ -207,6 +215,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             PrayerEffectHandler.handleProtectionEffects(attacker, target, hit)
             SoakDamage.handleAbsorb(attacker, target, hit)
             consumeAmmo()
+            attacker.packets.sendSound(2702, 0, 1)
             totalDamage += min(hit.damage, target.hitpoints)
             attacker.chargeManager.processOutgoingHit()
             if (target is Player) {

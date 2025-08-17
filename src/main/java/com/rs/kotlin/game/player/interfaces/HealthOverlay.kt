@@ -6,6 +6,7 @@ import com.rs.java.game.Entity
 import com.rs.java.game.Keys
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.TickManager
 import com.rs.java.utils.HexColours
 
 class HealthOverlay {
@@ -28,7 +29,7 @@ class HealthOverlay {
         if (!player.temporaryTarget.withinDistance(player.temporaryTarget, 32)) {
             return true
         }
-        if (player.tickTimers.getOrDefault(Keys.IntKey.LAST_ATTACK_TICK, 0) <= 0) {
+        if (!player.tickManager.isActive(TickManager.Keys.LAST_ATTACK_TICK)) {
             return true
         }
         return false

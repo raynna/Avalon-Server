@@ -21,6 +21,12 @@ object CommandRegistry {
         register("lunars", "lunar", command = LunarsCommand())
         register("setlevel", "level", command = SetLevelCommand())
         register("master", "max", command = MasterCommand())
+        register("special", "spec", command = SpecCommand())
+        register("heal", "healme", command = HealCommand())
+        register("void", "voidknight", "voids", command = VoidCommand())
+        register("dharoks", "dharok", "dh", command = DharoksCommand())
+        register("ahrims", "ahrim", command = AhrimsCommand())
+
     }
 
     @JvmStatic

@@ -289,10 +289,7 @@ public class PlayerCombat extends Action {
         }
 
         if (weapon.isAnyOf("item.dark_bow",
-                "item.dark_bow_2",
-                "item.dark_bow_3",
-                "item.dark_bow_4",
-                "item.dark_bow_5")) {
+                "item.dark_bow_lent")) {
             return adjustDelayForAttackStyle(VERY_LONG_DELAY, player, weapon, attackStyle);
         }
 

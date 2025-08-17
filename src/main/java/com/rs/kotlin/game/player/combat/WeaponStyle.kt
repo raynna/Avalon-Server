@@ -142,6 +142,14 @@ enum class WeaponStyle(
             AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
             AttackStyle.DEFENSIVE to AttackBonusType.CRUSH
         ),
+    ),
+    MACE(
+        styles(
+            AttackStyle.ACCURATE to AttackBonusType.CRUSH,
+            AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
+            AttackStyle.CONTROLLED to AttackBonusType.STAB,
+            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH
+        ),
     );
 
     companion object {

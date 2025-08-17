@@ -156,6 +156,33 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
+            itemId = Weapon.itemIds("item.dragon_scimitar"),
+            name = "Dragon scimitar",
+            weaponStyle = WeaponStyle.SCIMITAR,
+            blockAnimationId = Animation.getId("animation.scimitar_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.scimitar_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.scimitar_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.scimitar_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.scimitar_slash"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 55,
+                accuracyMultiplier = 1.25,
+                execute = { context ->
+                    context.attacker.animate("animation.dragon_scimitar_special")
+                    context.defender.gfx("graphic.dragon_scimitar_special", 100)
+                    val hit = context.meleeHit()
+                    if (hit[0].damage > 0) {
+                        if (context.defender is Player) {
+                            context.defender.prayer.closeProtectionPrayers()
+                            context.defender.tickManager.addTicks(TickManager.Keys.DISABLED_PROTECTION_PRAYER_TICK, 8)
+                        }
+                    }
+                }
+            )
+        ),
+        MeleeWeapon(
             itemId = Item.getIds(
                 "item.dragon_dagger", "item.dragon_dagger_p",
                 "item.dragon_dagger_p+", "item.dragon_dagger_p++"),
@@ -176,6 +203,8 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_dagger_special")
                     context.attacker.gfx("graphic.dragon_dagger_special", 100)
+                    context.attacker.packets.sendSound(2537, 0, 1)
+                    context.attacker.packets.sendSound(2537, 15, 1)
                     context.meleeHit()
                     context.meleeHit(delay = if (context.defender is NPC) 1 else 0)
                 }
@@ -183,26 +212,24 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
-                "item.dragon_mace", "item.dragon_mace",
-                "item.dragon_dagger_p+", "item.dragon_dagger_p++"),
-            name = "Dragon dagger",
-            weaponStyle = WeaponStyle.DAGGER,
-            blockAnimationId = Animation.getId("animation.dragon_dagger_block"),
+                "item.dragon_mace", "item.dragon_mace"),
+            name = "Dragon mace",
+            weaponStyle = WeaponStyle.MACE,
+            blockAnimationId = Animation.getId("animation.mace_block"),
             animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.dragon_dagger_stab"),
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.dragon_dagger_stab"),
-                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.dragon_dagger_slash"),
-                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.dragon_dagger_stab"),
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.mace_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.mace_crush"),
             ),
             special = SpecialAttack.Combat(
                 energyCost = 25,
-                accuracyMultiplier = 1.15,
-                damageMultiplier = 1.15,
+                accuracyMultiplier = 1.25,
+                damageMultiplier = 1.50,
                 execute = { context ->
-                    context.attacker.animate("animation.dragon_dagger_special")
-                    context.attacker.gfx("graphic.dragon_dagger_special", 100)
+                    context.attacker.animate("animation.dragon_mace_special")
+                    context.attacker.gfx("graphic.dragon_mace_special", 100)
                     context.meleeHit()
-                    context.meleeHit(delay = if (context.defender is NPC) 1 else 0)
                 }
             )
         ),
@@ -222,6 +249,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.granite_maul_special_attack")
                     context.attacker.gfx("graphic.granite_maul_special", 100)
+                    context.attacker.packets.sendSound(2541, 0, 1)
                     context.meleeHit()
                 }
             )
@@ -256,9 +284,9 @@ object StandardMelee : MeleeData() {
             weaponStyle = WeaponStyle.STAFF,
             blockAnimationId = Animation.getId("animation.staff_of_light_block"),
             animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_staff_attack"),
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_staff_attack"),
-                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.chaotic_staff_attack"),
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.mace_crush"),
             )
         ),
         MeleeWeapon(
@@ -411,6 +439,22 @@ object StandardMelee : MeleeData() {
                     }
                 }
             )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.dharok_s_greataxe","item.dharok_s_greataxe_100",
+                "item.dharok_s_greataxe_75","item.dharok_s_greataxe_50",
+                "item.dharok_s_greataxe_25","item.dharok_s_greataxe_0"
+            ),
+            name = "Dharok's greataxe",
+            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            blockAnimationId = Animation.getId("animation.dharok_greataxe_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.dharok_greataxe_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.dharok_greataxe_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.dharok_greataxe_smash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.dharok_greataxe_slash"),
+            ),
         ),
         MeleeWeapon(
             itemId = Item.getIds(

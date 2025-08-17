@@ -3,12 +3,15 @@ package com.rs.kotlin.game.player.combat.range
 import com.rs.java.game.Animation
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
+import com.rs.java.game.item.Item
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
+import kotlin.math.max
+import kotlin.math.min
 
 
 /** Range Attack distances
@@ -188,6 +191,24 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.IRON_BOLT
         ),
         RangedWeapon(
+            itemId = Item.getIds("item.rune_crossbow"),
+            name = "Rune crossbow",
+            weaponStyle = WeaponStyle.CROSSBOW,
+            attackRange = 7,
+            animationId = 4230,
+            ammoType = AmmoType.BOLT,
+            maxAmmoTier = AmmoTier.RUNE_BOLT
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.chaotic_crossbow", "item.chaotic_crossbow_broken"),
+            name = "Rune crossbow",
+            weaponStyle = WeaponStyle.CROSSBOW,
+            attackRange = 7,
+            animationId = 4230,
+            ammoType = AmmoType.BOLT,
+            maxAmmoTier = AmmoTier.RUNE_BOLT
+        ),
+        RangedWeapon(
             itemId = listOf(8880),
             name = "Dorgeshuun c'bow",
             weaponStyle = WeaponStyle.CROSSBOW,
@@ -201,10 +222,45 @@ object StandardRanged : RangeData() {
             itemId = listOf(20171),
             name = "Zaryte bow",
             weaponStyle = WeaponStyle.SHORTBOW,
-            attackSpeed = 4,
-            attackRange = 7,
-            animationId = 426,
-            ammoType = AmmoType.NONE
+            attackRange = 10,
+            ammoType = AmmoType.NONE,
+            effect = SpecialEffect(
+                execute = { context ->
+                    context.attacker.animate("animation.bow_attack")
+                    context.attacker.gfx(2962, 100)
+                    ProjectileManager.send(Projectile.ARROW, 1066, context.attacker, context.defender)
+                    context.hits {
+                        ranged(delay = context.combat.getHitDelay())
+                    }
+                }
+            )
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.crystal_bow_full",
+                "item.crystal_bow_9_10",
+                "item.crystal_bow_8_10",
+                "item.crystal_bow_7_10",
+                "item.crystal_bow_6_10",
+                "item.crystal_bow_5_10",
+                "item.crystal_bow_4_10",
+                "item.crystal_bow_3_10",
+                "item.crystal_bow_2_10",
+                "item.crystal_bow_1_10"),
+            name = "Crystal bow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 10,
+            ammoType = AmmoType.NONE,
+            effect = SpecialEffect(
+                execute = { context ->
+                    context.attacker.animate("animation.bow_attack")
+                    context.attacker.gfx(250, 100)
+                    ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
+                    context.hits {
+                        ranged(delay = context.combat.getHitDelay())
+                    }
+                }
+            )
         ),
         RangedWeapon(
             itemId = listOf(19143),
@@ -309,7 +365,7 @@ object StandardRanged : RangeData() {
             )
         ),
         RangedWeapon(
-            itemId = listOf(861),
+            itemId = Item.getIds("item.magic_shortbow"),
             name = "Magic shortbow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -324,6 +380,7 @@ object StandardRanged : RangeData() {
                 execute = { context ->
                     val special = context.weapon.special!!
                     context.attacker.animate(Animation(1074))
+                    context.attacker.packets.sendSound(2545, 0, 1)
                     ProjectileManager.sendWithDelay(Projectile.ARROW, 249, context.attacker, context.defender, -5)
                     ProjectileManager.sendWithDelay(Projectile.ARROW, 249, context.attacker, context.defender, -25)
                     fun registerSpecialHit() = context.combat.registerHit(
@@ -341,6 +398,73 @@ object StandardRanged : RangeData() {
                     )
                 }
             )
+        ),
+
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.dark_bow", "item.dark_bow_lent",
+                "item.dark_bow_blue", "item.dark_bow_yellow",
+                "item.dark_bow_green", "item.dark_bow_white"),
+            name = "Dark bow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 10,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.DRAGON_ARROW,
+            special = SpecialAttack.Combat(
+                energyCost = 65,
+                execute = { context ->
+                    context.attacker.animate("animation.bow_attack")
+                    val arrowProjectile = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1099 else 1102
+                    val endGraphic = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1100 else 1103
+                    val soundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3733 else 3736
+                    val hitSoundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3731 else 3732
+                    ProjectileManager.sendWithDelayAndCallback(
+                        Projectile.ARROW, arrowProjectile, context.attacker, context.defender, 0, hitGraphic = Graphics(endGraphic)) {
+                        context.attacker.packets.sendSound(hitSoundId, 0, 1)
+                    }
+                    ProjectileManager.sendWithDelayAndCallback(
+                        Projectile.ARROW, arrowProjectile, context.attacker, context.defender, 15, hitGraphic = Graphics(endGraphic)) {
+                        context.attacker.packets.sendSound(hitSoundId, 0, 1)
+                    }
+                    context.attacker.packets.sendSound(soundId, 0, 1)
+                    context.attacker.packets.sendSound(soundId, 30, 1)
+                    context.hits {
+                        val minDamage = (if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 80 else 50)
+                        val multiplier = (if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1.5 else 1.3)
+
+                        val firstHit = ranged(delay = context.combat.getHitDelay() - 1, damageMultiplier = multiplier)
+                        val secondHit = ranged(delay = context.combat.getHitDelay(), damageMultiplier = multiplier)
+
+                        firstHit.damage = min(max(firstHit.damage, minDamage), 480)
+                        secondHit.damage = min(max(secondHit.damage, minDamage), 480)
+                    }
+                }
+            ),
+            effect = SpecialEffect(
+                execute = { context ->
+                    context.attacker.animate("animation.bow_attack")
+                    val startGfx = context.ammo?.doubleGfx
+                    context.attacker.gfx(startGfx)
+                    val projectile = context.ammo?.projectileId!!
+                    ProjectileManager.sendWithDelay(Projectile.ARROW, projectile, context.attacker, context.defender, 0)
+                    ProjectileManager.sendWithDelay(Projectile.ARROW, projectile, context.attacker, context.defender, 25)
+                    context.hits {
+                        ranged(delay = context.combat.getHitDelay() - 1)
+                        ranged(delay = context.combat.getHitDelay())
+                    }
+                }
+            )
+        ),
+
+        RangedWeapon(
+            itemId = Item.getIds("item.sling", "item.kayle_s_sling"),
+            name = "Sling",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 4,
+            projectileId = 32,
+            animationId = 789,
+            ammoType = AmmoType.NONE
         ),
 
         //knifes
@@ -386,7 +510,8 @@ object StandardRanged : RangeData() {
             ammoTier = AmmoTier.BRONZE_ARROW,
             levelRequired = 1,
             projectileId = 10,
-            startGfx = Graphics(19, 100)
+            startGfx = Graphics(19, 100),
+            doubleGfx = Graphics(1104, 100)
         ),
         RangedAmmo(
             itemId = 884,
@@ -395,6 +520,7 @@ object StandardRanged : RangeData() {
             levelRequired = 1,
             projectileId = 9,
             startGfx = Graphics(18, 100),
+            doubleGfx = Graphics(1105, 100)
         ),
         RangedAmmo(
             itemId = 886,
@@ -403,6 +529,7 @@ object StandardRanged : RangeData() {
             levelRequired = 1,
             projectileId = 11,
             startGfx = Graphics(20, 100),
+            doubleGfx = Graphics(1106, 100)
         ),
         RangedAmmo(
             itemId = 888,
@@ -411,6 +538,7 @@ object StandardRanged : RangeData() {
             levelRequired = 1,
             projectileId = 12,
             startGfx = Graphics(21, 100),
+            doubleGfx = Graphics(1107, 100)
         ),
         RangedAmmo(
             itemId = 890,
@@ -419,6 +547,7 @@ object StandardRanged : RangeData() {
             levelRequired = 1,
             projectileId = 13,
             startGfx = Graphics(22, 100),
+            doubleGfx = Graphics(1108, 100)
         ),
         RangedAmmo(
             itemId = 892,
@@ -427,6 +556,16 @@ object StandardRanged : RangeData() {
             levelRequired = 1,
             projectileId = 15,
             startGfx = Graphics(24, 100),
+            doubleGfx = Graphics(1109, 100)
+        ),
+        RangedAmmo(
+            itemId = 11212,
+            name = "Dragon arrow",
+            ammoTier = AmmoTier.DRAGON_ARROW,
+            levelRequired = 1,
+            projectileId = 1120,
+            startGfx = Graphics(1116, 100),
+            doubleGfx = Graphics(1111, 100),
         ),
         RangedAmmo(
             itemId = 19157,
@@ -434,6 +573,7 @@ object StandardRanged : RangeData() {
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
             projectileId = 98,
+            doubleGfx = Graphics(124, 100),
             startGfx = Graphics(95, 100),
             specialEffect = SpecialEffect(
                 chance = 10,
@@ -469,6 +609,7 @@ object StandardRanged : RangeData() {
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
             projectileId = 99,
+            doubleGfx = Graphics(125, 100),
             startGfx = Graphics(96, 100),
             specialEffect = SpecialEffect(
                 chance = 10,
@@ -504,6 +645,7 @@ object StandardRanged : RangeData() {
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
             projectileId = 100,
+            doubleGfx = Graphics(126, 100),
             startGfx = Graphics(97, 100),
             specialEffect = SpecialEffect(
                 chance = 10,
@@ -540,6 +682,7 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.BRONZE_BOLT,
             levelRequired = 1,
+            startGfx = Graphics(955, 96),
             projectileId = 27,
         ),
         RangedAmmo(
@@ -548,6 +691,7 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.IRON_BOLT,
             levelRequired = 1,
+            startGfx = Graphics(955, 96),
             projectileId = 27,
         ),
         RangedAmmo(
@@ -557,6 +701,7 @@ object StandardRanged : RangeData() {
             ammoTier = AmmoTier.IRON_BOLT,
             levelRequired = 1,
             poisonSeverity = 20,
+            startGfx = Graphics(955, 96),
             projectileId = 27,
         ),
         RangedAmmo(
@@ -566,6 +711,7 @@ object StandardRanged : RangeData() {
             ammoTier = AmmoTier.IRON_BOLT,
             levelRequired = 1,
             poisonSeverity = 25,
+            startGfx = Graphics(955, 96),
             projectileId = 27,
         ),
         RangedAmmo(
@@ -575,14 +721,88 @@ object StandardRanged : RangeData() {
             ammoTier = AmmoTier.IRON_BOLT,
             levelRequired = 1,
             poisonSeverity = 30,
+            startGfx = Graphics(955, 96),
             projectileId = 27,
+        ),
+        RangedAmmo(
+            itemId = Item.getId("item.adamant_bolts"),
+            name = "Adamant bolts",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.ADAMANT_BOLT,
+            levelRequired = 46,
+            startGfx = Graphics(955, 96),
+            projectileId = 27
+        ),
+        RangedAmmo(
+            itemId = Item.getId("item.diamond_bolts"),
+            name = "Diamond bolts",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.ADAMANT_BOLT,
+            levelRequired = 46,
+            startGfx = Graphics(955, 96),
+            projectileId = 27
+        ),
+        RangedAmmo(
+            itemId = Item.getId("item.diamond_bolts_e"),
+            name = "Diamond bolts (e)",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.ADAMANT_BOLT,
+            levelRequired = 46,
+            startGfx = Graphics(955, 96),
+            projectileId = 27
+        ),
+        RangedAmmo(
+            itemId = Item.getId("item.runite_bolts"),
+            name = "Rune bolts",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.RUNE_BOLT,
+            levelRequired = 61,
+            startGfx = Graphics(955, 96),
+            projectileId = 27
+        ),
+        RangedAmmo(
+            itemId = Item.getId("item.dragon_bolts"),
+            name = "Dragon bolts",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.RUNE_BOLT,
+            levelRequired = 61,
+            startGfx = Graphics(955, 96),
+            projectileId = 27
+        ),
+        RangedAmmo(
+            itemId = Item.getId("item.dragon_bolts_e"),
+            name = "Dragon bolts (e)",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.RUNE_BOLT,
+            levelRequired = 61,
+            startGfx = Graphics(955, 96),
+            projectileId = 27
+        ),
+        RangedAmmo(
+            itemId = Item.getId("item.onyx_bolts"),
+            name = "Onyx bolts",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.RUNE_BOLT,
+            levelRequired = 61,
+            startGfx = Graphics(955, 96),
+            projectileId = 27
+        ),
+        RangedAmmo(
+            itemId = Item.getId("item.onyx_bolts_e"),
+            name = "Onyx bolts (e)",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.RUNE_BOLT,
+            levelRequired = 61,
+            startGfx = Graphics(955, 96),
+            projectileId = 27
         ),
         RangedAmmo(
             itemId = 8882,
             name = "Bone bolts",
             ammoType = AmmoType.BOLT,
             levelRequired = 10,
-            projectileId = 27,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
         )
     )
 }

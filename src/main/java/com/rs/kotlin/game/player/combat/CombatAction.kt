@@ -5,6 +5,7 @@ import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
 import com.rs.java.game.Keys
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.action.NewAction
 import com.rs.kotlin.game.player.combat.magic.MagicStyle
@@ -118,7 +119,8 @@ class CombatAction(
         return when (phase) {
             CombatPhase.HIT -> {
                 if (validateAttack(player, target)) {
-                    player.tickTimers[Keys.IntKey.LAST_ATTACK_TICK] = 10
+                    player.tickManager.addSeconds(TickManager.Keys.LAST_ATTACK_TICK, 10)
+                    target.tickManager.addSeconds(TickManager.Keys.LAST_ATTACKED_TICK, 10)
                     style.attack()
                 }
                 phase = CombatPhase.HIT
