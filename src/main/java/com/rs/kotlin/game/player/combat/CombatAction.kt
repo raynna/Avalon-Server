@@ -195,6 +195,13 @@ class CombatAction(
                     return
                 }
                 if (shouldAdjustDiagonal(player, target)) {
+                    val targetShouldAdjustDiagonal = if (target is Player) shouldAdjustDiagonal(target, player) else false
+                    val targetHasPriority = hasMovementPriority(target as? Player ?: player, player)
+
+                    if (targetShouldAdjustDiagonal && targetHasPriority) {
+                        player.resetWalkSteps()
+                        return
+                    }
                     if (player.isFrozen) {
                         player.packets.sendGameMessage("A magical force prevents you from moving.")
                         stopFollowTask()
@@ -300,6 +307,15 @@ class CombatAction(
                 attackDistance < 1
     }
 
+    private fun shouldAdjustDiagonal(target: Player, player: Player): Boolean {
+        val attackDistance = style.getAttackDistance()
+        return player.size == 1 &&
+                abs(target.x - player.x) == 1 &&
+                abs(target.y - player.y) == 1 &&
+                !player.hasWalkSteps() &&
+                attackDistance < 1
+    }
+
     private fun shouldAdjustDiagonal(player: Player, target: Entity): Boolean {
         val attackDistance = style.getAttackDistance()
         return target.size == 1 &&
@@ -307,5 +323,10 @@ class CombatAction(
                 abs(player.y - target.y) == 1 &&
                 !target.hasWalkSteps() &&
                 attackDistance < 1
+    }
+
+    private fun hasMovementPriority(player: Player, target: Entity): Boolean {
+        if (target !is Player) return true // NPCs always yield to players
+        return player.index < target.index
     }
 }

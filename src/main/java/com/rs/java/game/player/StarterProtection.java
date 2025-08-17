@@ -74,7 +74,6 @@ public class StarterProtection {
 	}
 
 	public static final void sendStarterPack(Player player) {
-		addStarter(player);
 		player.recievedStarter = true;
 		player.reset();
 		player.message("Experience rate: " + Settings.SKILLING_XP_RATE + "x for skilling, 1x in wilderness for combat.");
@@ -98,6 +97,8 @@ public class StarterProtection {
 					player.getSkills().setXp(i, p2.getSkills().getXp(i));
 				}
 				player.getSkills().setXp(Skills.SUMMONING, p2.getSkills().getXp(Skills.SUMMONING));
+				player.getSkills().setXp(Skills.SLAYER, Skills.getXPForLevel(99));
+				player.getSkills().setXp(Skills.AGILITY, Skills.getXPForLevel(99));
 				player.getSkills().restoreSkills();
 				player.setFamiliar(p2.getFamiliar());
 				player.setSummoningLeftClickOption(p2.getSummoningLeftClickOption());

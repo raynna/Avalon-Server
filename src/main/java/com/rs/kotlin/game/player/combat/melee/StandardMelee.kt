@@ -132,7 +132,14 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = Weapon.itemIds("item.abyssal_whip"),
+            itemId = Weapon.itemIds(
+                "item.abyssal_whip", "item.abyssal_whip_2",
+                "item.abyssal_whip_3", "item.abyssal_whip_4",
+                "item.abyssal_whip_5", "item.abyssal_whip_6",
+                "item.abyssal_whip_7", "item.abyssal_whip_8",
+                "item.abyssal_vine_whip", "item.abyssal_vine_whip_2",
+                "item.abyssal_vine_whip_3","item.abyssal_vine_whip_4",
+                "item.abyssal_vine_whip_5"),
             name = "Abyssal whip",
             weaponStyle = WeaponStyle.WHIP,
             blockAnimationId = 11974,

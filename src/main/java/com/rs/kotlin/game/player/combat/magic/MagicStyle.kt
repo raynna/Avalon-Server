@@ -271,7 +271,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             else -> null
         }
         val spellXp = currentSpell?.xp?:0.0
-        val baseXp = (totalDamage * 0.3)
+        val baseXp = (totalDamage * 0.2)
         val combined = spellXp+baseXp
         if (attacker.getCombatDefinitions().isDefensiveCasting) {
             attacker.skills.addXpDelayed(Skills.DEFENCE, (totalDamage * 0.1))

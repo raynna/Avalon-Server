@@ -29,7 +29,6 @@ class HealthOverlay {
             return true
         }
         if (!player.tickManager.isActive(TickManager.TickKeys.LAST_ATTACK_TICK)) {
-            player.message("last attack tick not active")
             return true
         }
         return false
