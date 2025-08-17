@@ -13,7 +13,6 @@ class HealthOverlay {
     fun sendOverlay(player: Player, target: Entity) {
         checkCombatLevel(player, target)
         updateHealthOverlay(player, target, false)
-        player.message("send overlay")
         if (player.toggles("HEALTHBAR", false) && (!player.interfaceManager.containsTab(getHealthOverlayId(player)))) {
             player.interfaceManager.sendTab(getHealthOverlayId(player), 3037)
             val pixels: Int = (target.hitpoints.toDouble() / target.getMaxHitpoints() * 126.0).toInt()
@@ -39,7 +38,6 @@ class HealthOverlay {
     fun closeOverlay(player: Player) {
         if (player.interfaceManager.containsTab(getHealthOverlayId(player))) {
             if (checkForClose(player) && player.interfaceManager.containsTab(getHealthOverlayId(player))) {
-                player.message("overlay closed")
                 player.removeTemporaryTarget()
                 player.interfaceManager.closeTab(player.interfaceManager.isResizableScreen, getHealthOverlayId(player))
             }
