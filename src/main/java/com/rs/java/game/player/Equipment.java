@@ -45,12 +45,6 @@ public final class Equipment implements Serializable {
 		if (slots != null) {
 			player.getPackets().sendUpdateItems(94, items, slots);
 			player.getCombatDefinitions().checkAttackStyle();
-			for (int slot : slots) {
-				/*if (slot == Equipment.SLOT_WEAPON) {
-					if (player.combatDefinitions.usingSpecialAttack)
-						player.combatDefinitions.switchUsingSpecialAttack();
-				}*/
-			}
 		}
 		player.getCombatDefinitions().updateBonuses();
 		refreshConfigs(slots == null);

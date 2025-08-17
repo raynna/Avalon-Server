@@ -17,7 +17,7 @@ public class AccountCreation {
 	}
 
 	public static void savePlayer(Player player) {
-		GSONParser.save(player, System.getProperty("user.dir") + "/data/characters/" + player.getDisplayName() + ".json", Player.class);
+		GSONParser.save(player, System.getProperty("user.dir") + "/data/characters/" + player.getUsername().replace(" ", "_") + ".json", Player.class);
 	}
 
 	public static boolean exists(String username) {

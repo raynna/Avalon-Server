@@ -695,7 +695,6 @@ public class Magic {
 		}
 
 		checkRunes1(player, true, runes);
-		player.tele(7);
 		player.stopAll();
 		if (xp != 0)
 			player.getSkills().addXp(Skills.MAGIC, xp);
@@ -783,7 +782,6 @@ public class Magic {
 			return false;
 		player.stopAll();
 		player.lock(5);
-		player.tele(7);
 		player.animate(new Animation(14293));
 		player.gfx(new Graphics(94));
 		WorldTasksManager.schedule(new WorldTask() {
@@ -855,7 +853,6 @@ public class Magic {
 		player.getInventory().deleteItem(itemId, 1);
 		player.resetAllDamage();
 		player.stopAll();
-		player.tele(7);
 		player.lock(5);
 		player.animate(new Animation(9597));
 		player.gfx(new Graphics(1680));

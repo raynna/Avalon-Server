@@ -1077,6 +1077,13 @@ public final class WorldPacketsDecoder extends Decoder {
 								return;
 							}
 							if (!familiar.canAttack(player)) {
+								if (!familiar.isAtMultiArea()) {
+									Player owner = familiar.getOwner();
+									player.setNextFaceEntity(owner);
+									player.getTemporaryAttributtes().put("spell_target", owner);
+									SpellHandler.castOnPlayer(player, spell.getId(), owner);
+									return;
+								}
 								player.getPackets().sendGameMessage("You can't attack this npc.");
 								return;
 							}
@@ -1138,6 +1145,13 @@ public final class WorldPacketsDecoder extends Decoder {
 								return;
 							}
 							if (!familiar.canAttack(player)) {
+								if (!familiar.isAtMultiArea()) {
+									Player owner = familiar.getOwner();
+									player.setNextFaceEntity(owner);
+									player.getTemporaryAttributtes().put("spell_target", owner);
+									SpellHandler.castOnPlayer(player, spell.getId(), owner);
+									return;
+								}
 								player.getPackets().sendGameMessage("You can't attack this npc.");
 								return;
 							}

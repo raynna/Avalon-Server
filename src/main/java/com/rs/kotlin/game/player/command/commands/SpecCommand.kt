@@ -3,10 +3,8 @@ package com.rs.kotlin.game.player.command.commands
 import com.rs.Settings
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Ranks
-import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
 import com.rs.kotlin.game.player.command.Command
-import kotlin.math.floor
 
 class SpecCommand : Command {
     override val requiredRank = Ranks.Rank.PLAYER
@@ -22,8 +20,9 @@ class SpecCommand : Command {
             player.message("You can't use ::spec here.")
             return true
         }
-        if (player.tickManager.isActive(TickManager.Keys.LAST_ATTACKED_TICK)) {
-            player.message("You can't use ::spec for another ${player.getTickToSeconds(player.tickManager.getTicksLeft(TickManager.Keys.LAST_ATTACKED_TICK))} seconds.")
+        if (player.tickManager.isActive(TickManager.TickKeys.LAST_ATTACKED_TICK)) {
+            player.message("You can't use ::spec for another ${player.getTickToSeconds(player.tickManager.getTicksLeft(
+                TickManager.TickKeys.LAST_ATTACKED_TICK))} seconds.")
             return true
         }
         player.getCombatDefinitions().resetSpecialAttack()

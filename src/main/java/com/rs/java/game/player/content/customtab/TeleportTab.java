@@ -355,7 +355,7 @@ public class TeleportTab extends CustomTab {
 			openTeleports(player, type);
 			return;
 		}
-		if (player.isInCombat(10000)) {
+		if (player.isInCombat()) {
 			player.getPackets().sendGameMessage("You can't use this teleport in combat.");
 			return;
 		}

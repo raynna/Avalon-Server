@@ -35,7 +35,7 @@ public class ReferSystem {
 			player.message("Unable to refer as it is not allowed to do it to yourself.");
 			return;
 		}
-		if (p2.isInCombat(10000) || p2.isLocked() || p2.getInterfaceManager().containsScreenInter()
+		if (p2.isInCombat() || p2.isLocked() || p2.getInterfaceManager().containsScreenInter()
 				|| p2.getControlerManager().getControler() != null || AntiBot.getInstance().hasEvent) {
 			player.message(value + " is busy. Please wait for them to be done.");
 			return;

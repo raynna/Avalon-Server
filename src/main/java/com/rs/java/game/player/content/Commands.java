@@ -231,7 +231,7 @@ public final class Commands {
                         player.getPackets().sendGameMessage("You can't use ::" + cmd[0] + " at this location.");
                         return true;
                     }
-                    if (player.isInCombat(10000)) {
+                    if (player.isInCombat()) {
                         player.getPackets().sendGameMessage("You can't teleport out of combat.");
                         return true;
                     }

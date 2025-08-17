@@ -20,6 +20,7 @@ import com.rs.java.game.player.prayer.PrayerEffectHandler;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.combat.CombatAction;
 
 public abstract class CombatScript {
 
@@ -96,7 +97,7 @@ public abstract class CombatScript {
                     if (target instanceof Player player) {
                         player.closeInterfaces();
                         if (player.getCombatDefinitions().isAutoRelatie() && !player.getActionManager().hasSkillWorking() && !player.hasWalkSteps())
-                            player.getActionManager().setAction(new PlayerCombat(npc));
+                            player.getNewActionManager().setAction(new CombatAction(npc));
                     } else {
                         NPC n = (NPC) target;
                         if (!n.isUnderCombat() || n.canBeAttackedByAutoRelatie()) n.setTarget(npc);

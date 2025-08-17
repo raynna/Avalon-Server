@@ -179,7 +179,7 @@ object StandardMelee : MeleeData() {
                     if (hit[0].damage > 0) {
                         if (context.defender is Player) {
                             context.defender.prayer.closeProtectionPrayers()
-                            context.defender.tickManager.addTicks(TickManager.Keys.DISABLED_PROTECTION_PRAYER_TICK, 8)
+                            context.defender.tickManager.addTicks(TickManager.TickKeys.DISABLED_PROTECTION_PRAYER_TICK, 8)
                         }
                     }
                 }
@@ -312,7 +312,7 @@ object StandardMelee : MeleeData() {
                 execute = { attacker ->
                     attacker.animate("animation.staff_of_light_special")
                     attacker.gfx("graphic.staff_of_light_special")
-                    attacker.tickManager.addMinutes(TickManager.Keys.STAFF_OF_LIGHT_EFFECT, 1) {
+                    attacker.tickManager.addMinutes(TickManager.TickKeys.STAFF_OF_LIGHT_EFFECT, 1) {
                         attacker.message("Your staff of light effect fades.")
                     }
 
@@ -434,8 +434,8 @@ object StandardMelee : MeleeData() {
                         val hit = melee()
                         if (hit.damage > 0) {
                             context.defender.gfx("graphic.zamorak_godsword_target")
-                            context.defender.tickManager.addTicks(TickManager.Keys.FREEZE_IMMUNE_TICKS, 37)
-                            context.defender.tickManager.addTicks(TickManager.Keys.FREEZE_TICKS, 32) {
+                            context.defender.tickManager.addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, 37)
+                            context.defender.tickManager.addTicks(TickManager.TickKeys.FREEZE_TICKS, 32) {
                                 if (context.defender is Player)
                                     context.defender.message("Your staff of light effect fades.")
                                 context.defender.gfx("graphic.zamorak_godsword_end")

@@ -149,8 +149,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun handleModernMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
-        if (!SpellHandler.checkAndRemoveRunes(attacker, spell))
-            return
         val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
         val splash = hit.damage == 0
         val endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
@@ -215,8 +213,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun handleAncientMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
-        if (!SpellHandler.checkAndRemoveRunes(attacker, spell))
-            return
         val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
@@ -224,7 +220,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         var endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
         if (hit.damage > 0 && spell.bind != -1) {
             if (!defender.isFreezeImmune) {
-                defender.freeze(spell.bind)
+                defender.addFreezeDelay(spell.bind, false)
             } else {
                 if (spell.name.contains("ice barrage", ignoreCase = true)) {
                     endGraphic = Graphics(1677, 100)
@@ -278,12 +274,12 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val baseXp = (totalDamage * 0.3)
         val combined = spellXp+baseXp
         if (attacker.getCombatDefinitions().isDefensiveCasting) {
-            attacker.skills.addXp(Skills.DEFENCE, (totalDamage * 0.1))
-            attacker.skills.addXp(Skills.MAGIC, (totalDamage * 0.133))
+            attacker.skills.addXpDelayed(Skills.DEFENCE, (totalDamage * 0.1))
+            attacker.skills.addXpDelayed(Skills.MAGIC, (totalDamage * 0.133))
         } else {
-            attacker.skills.addXp(Skills.MAGIC, combined)
+            attacker.skills.addXpDelayed(Skills.MAGIC, combined)
         }
-        attacker.skills.addXp(Skills.HITPOINTS, (totalDamage * 0.133))
+        attacker.skills.addXpDelayed(Skills.HITPOINTS, (totalDamage * 0.133))
     }
 
     private fun isManualCast(spellId: Int): Boolean {

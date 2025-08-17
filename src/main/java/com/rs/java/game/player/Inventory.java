@@ -16,7 +16,9 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
+import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.item.meta.MetaDataType;
+import com.rs.java.game.item.meta.RunePouchMetaData;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.utils.*;
@@ -41,24 +43,38 @@ public final class Inventory implements Serializable {
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
-	
+
 
 	public void init() {
-		Item[] finalised = new Item[32];
+		int pouchCount = 0;
+		for (Item item : player.getInventory().getItems().toArray()) {
+			if (item != null && item.getId() == RUNE_POUCH) {
+				pouchCount++;
+			}
+		}
+
+		Item[] finalised = new Item[28 + (pouchCount * 3)];
+
 		for (int i = 0; i < 28; i++) {
 			finalised[i] = items.get(i);
 		}
-		if (player.getInventory().containsOneItem(RUNE_POUCH)) {
-			ItemsContainer<Item> pouchRunes = player.getRunePouch();
-			for (int i = 0; i < 3; i++) {
-				Item rune = pouchRunes.get(i);
-				finalised[29 + i] = (rune != null) ? rune.clone() : null;
+
+		int overlayIndex = 28;
+		for (Item item : player.getInventory().getItems().toArray()) {
+			if (item == null || item.getId() != RUNE_POUCH) continue;
+
+			ItemMetadata meta = item.getMetadata();
+			if (meta instanceof RunePouchMetaData) {
+				Item[] runes = ((RunePouchMetaData) meta).getRunesToArray();
+				for (int i = 0; i < 3; i++) {
+					finalised[overlayIndex++] = runes[i];
+				}
 			}
-		} else {
-			Arrays.fill(finalised, 29, 32, null);
 		}
+
 		player.getPackets().sendItems(93, finalised);
 	}
+
 
 	public void unlockInventoryOptions() {
 		player.getPackets().sendComponentSettings(INVENTORY_INTERFACE, 0, 0, 27, 4554126);
@@ -71,22 +87,38 @@ public final class Inventory implements Serializable {
 	}
 
 	public void refresh(int... slots) {
-		Item[] finalised = new Item[32];
+		int pouchCount = 0;
+		for (Item item : player.getInventory().getItems().toArray()) {
+			if (item != null && item.getId() == RUNE_POUCH) {
+				pouchCount++;
+			}
+		}
+
+		Item[] finalised = new Item[28 + (pouchCount * 3)];
+
 		for (int i = 0; i < 28; i++) {
 			finalised[i] = items.get(i);
 		}
-		if (player.getInventory().containsOneItem(RUNE_POUCH)) {
-			ItemsContainer<Item> pouchRunes = player.getRunePouch();
-			for (int i = 0; i < 3; i++) {
-				Item rune = pouchRunes.get(i);
-				finalised[29 + i] = (rune != null) ? rune.clone() : null;
-				player.getPackets().sendUpdateItems(93, finalised, 29 + i);
+
+		int overlayIndex = 28;
+		for (Item item : player.getInventory().getItems().toArray()) {
+			if (item == null || item.getId() != RUNE_POUCH) continue;
+
+			ItemMetadata meta = item.getMetadata();
+			if (meta instanceof RunePouchMetaData) {
+				Item[] runes = ((RunePouchMetaData) meta).getRunesToArray();
+				for (int i = 0; i < 3; i++) {
+					finalised[overlayIndex++] = runes[i];
+				}
 			}
-		} else {
-			Arrays.fill(finalised, 29, 32, null);
 		}
-		player.getPackets().sendUpdateItems(93, finalised, slots);
+		if (slots != null && slots.length > 0) {
+			player.getPackets().sendUpdateItems(93, finalised, slots);
+		} else {
+			player.getPackets().sendItems(93, finalised);
+		}
 	}
+
 
 	public long getInventoryValue() {
 		long value = 0;
@@ -539,18 +571,30 @@ public final class Inventory implements Serializable {
 	}
 
 	public void refresh() {
-		Item[] finalised = new Item[32];
+		int pouchCount = 0;
+		for (Item item : player.getInventory().getItems().toArray()) {
+			if (item != null && item.getId() == RUNE_POUCH) {
+				pouchCount++;
+			}
+		}
+
+		Item[] finalised = new Item[28 + (pouchCount * 3)];
+
 		for (int i = 0; i < 28; i++) {
 			finalised[i] = items.get(i);
 		}
-		if (player.getInventory().containsOneItem(RUNE_POUCH)) {
-			ItemsContainer<Item> pouchRunes = player.getRunePouch();
-			for (int i = 0; i < 3; i++) {
-				Item rune = pouchRunes.get(i);
-				finalised[29 + i] = (rune != null) ? rune.clone() : null;
+
+		int overlayIndex = 28;
+		for (Item item : player.getInventory().getItems().toArray()) {
+			if (item == null || item.getId() != RUNE_POUCH) continue;
+
+			ItemMetadata meta = item.getMetadata();
+			if (meta instanceof RunePouchMetaData) {
+				Item[] runes = ((RunePouchMetaData) meta).getRunesToArray();
+				for (int i = 0; i < 3; i++) {
+					finalised[overlayIndex++] = runes[i];
+				}
 			}
-		} else {
-			Arrays.fill(finalised, 29, 32, null);
 		}
 		player.getPackets().sendItems(93, finalised);
 	}

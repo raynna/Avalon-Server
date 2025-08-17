@@ -15,7 +15,6 @@ import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.TickManager;
-import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 
 public class PrayerBook implements Serializable {
@@ -206,7 +205,7 @@ public class PrayerBook implements Serializable {
     }
 
     private boolean isPrayerDelayActive() {
-        if (player.getTickManager().isActive(TickManager.Keys.DISABLED_PROTECTION_PRAYER_TICK)) {
+        if (player.getTickManager().isActive(TickManager.TickKeys.DISABLED_PROTECTION_PRAYER_TICK)) {
             player.getPackets().sendGameMessage("You are currently injured and cannot use protection prayers!");
             return true;
         }

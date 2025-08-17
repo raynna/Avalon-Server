@@ -113,6 +113,51 @@ public class RunePouchMetaData implements ItemMetadata {
         return items;
     }
 
+    /**
+     * Updates the runes in the pouch from an array of Items.
+     * Null entries are ignored. Enforces max 3 rune types and max value per rune.
+     *
+     * @param items Array of Items representing runes.
+     */
+    public void updateRunes(Item[] items) {
+        runes.clear();
+        if (items == null) return;
+
+        for (Item item : items) {
+            if (item == null) continue;
+            int amount = Math.min(item.getAmount(), getMaxValue()); // enforce max value
+            runes.put(item.getId(), amount);
+        }
+
+        if (runes.size() > getMaxEntries()) {
+            throw new IllegalStateException("Rune pouch can only hold 3 rune types.");
+        }
+    }
+
+    /**
+     * Replaces the current runes with the provided map.
+     * Enforces max 3 rune types and max value per rune.
+     *
+     * @param newRunes Map of runeId -> amount
+     */
+    public void updateRunes(Map<Integer, Integer> newRunes) {
+        if (newRunes == null) return;
+
+        runes.clear(); // Remove existing runes
+
+        for (Map.Entry<Integer, Integer> entry : newRunes.entrySet()) {
+            int amount = entry.getValue();
+            if (amount > getMaxValue()) {
+                amount = getMaxValue(); // enforce max value
+            }
+            runes.put(entry.getKey(), amount);
+        }
+
+        if (runes.size() > getMaxEntries()) {
+            throw new IllegalStateException("Rune pouch can only hold 3 rune types.");
+        }
+    }
+
     @Override
     public boolean isStackableWith(ItemMetadata other) {
         return false;

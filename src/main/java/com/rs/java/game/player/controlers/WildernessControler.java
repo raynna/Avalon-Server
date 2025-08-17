@@ -206,7 +206,7 @@ public class WildernessControler extends Controler {
 	}
 
 	public void loseEP() {
-		if (player.getEP() >= 10 && player.isInCombat(10000)) {
+		if (player.getEP() >= 10 && player.isInCombat()) {
 			player.removeEP( 10);
 			player.message("You lose 10% EP for teleporting while being in combat.");
 		}

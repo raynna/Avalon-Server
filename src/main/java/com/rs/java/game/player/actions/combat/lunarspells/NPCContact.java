@@ -8,7 +8,7 @@ import com.rs.java.utils.Utils;
 public class NPCContact { 
 	
 	public static boolean cast(Player player, double xp) {
-		if (player.isInCombat(10000) || player.getControlerManager().getControler() instanceof DuelArena) {
+		if (player.isInCombat() || player.getControlerManager().getControler() instanceof DuelArena) {
 			player.getPackets().sendGameMessage("You can't npc contact right now.");
 			return false;
 		}

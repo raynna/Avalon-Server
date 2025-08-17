@@ -41,7 +41,7 @@ sealed class SpecialAttack(
     companion object {
         @JvmStatic
         fun submitSpecialRequest(player: Player) {
-            val weapon = Weapon.getWeapon(player.equipment.weaponId) ?: return
+            val weapon = Weapon.getWeapon(player.equipment.weaponId)
             val special = weapon.special ?: return
 
             when (special) {
@@ -80,7 +80,7 @@ sealed class SpecialAttack(
                     )
                     CoresManager.getSlowExecutor().execute {
                         try {
-                            if (player.isOutOfRange(target, style.getAttackDistance())) {
+                            if (player.isOutOfRange(target, style.getAttackDistance()) || player.shouldAdjustDiagonal(player, target, 0)) {
                                 player.addQueuedSpecialAttack(combatContext, special)
                             } else {
                                 special.execute(combatContext)

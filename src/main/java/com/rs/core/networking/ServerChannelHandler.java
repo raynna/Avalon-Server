@@ -100,11 +100,11 @@ public final class ServerChannelHandler extends SimpleChannelHandler {
 	}
 
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent ee) throws Exception {
+	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent ee) {
 
 	}
 
-	public static final void shutdown() {
+	public static void shutdown() {
 		channels.close().awaitUninterruptibly();
 		bootstrap.releaseExternalResources();
 	}

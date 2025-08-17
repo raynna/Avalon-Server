@@ -10,7 +10,9 @@ import com.rs.java.game.player.controlers.*
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.item.FloorItem
+import com.rs.java.game.item.meta.RunePouchMetaData
 import com.rs.java.game.npc.NPC
+import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.actions.combat.modernspells.Alchemy
 import com.rs.java.game.player.actions.combat.modernspells.BonesTo
 import com.rs.java.game.player.actions.combat.modernspells.Charge
@@ -20,6 +22,8 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.CombatAction
 
 object SpellHandler {
+
+    @JvmStatic
     fun selectCombatSpell(player: Player, spellId: Int) {
         val spell = getSpellForPlayer(player, spellId) ?: return
 
@@ -165,7 +169,7 @@ object SpellHandler {
                 player.packets.sendGameMessage(
                     "You don't have enough ${ItemDefinitions.getItemDefinitions(runeId).name} to cast this spell."
                 )
-                player.combatDefinitions.resetSpells(true);
+                player.combatDefinitions.resetSpells(true)
                 return false
             }
 
@@ -173,17 +177,38 @@ object SpellHandler {
         }
 
         runesToRemove.forEach { rune ->
-            if (hasRunePouch(player) && player.runePouch.contains(rune)) {
-                player.runePouch.remove(rune)
-                player.runePouch.shift()
-                player.inventory.refresh()
-            } else {
+            var removed = false
+
+            for (item in player.inventory.items.toArray()) {
+                if (item == null || item.id != Item.getId("item.rune_pouch")) continue
+
+                val meta = item.metadata
+                if (meta is RunePouchMetaData) {
+                    val pouchRunes = meta.getRunesToArray()
+                    for (pouchRune in pouchRunes) {
+                        if (pouchRune.id == rune.id && pouchRune.amount >= rune.amount) {
+                            pouchRune.amount -= rune.amount
+                            meta.updateRunes(pouchRunes)
+                            player.inventory.refresh()
+                            removed = true
+                            break
+                        }
+                    }
+                }
+
+                if (removed) break
+            }
+
+            // If not removed from pouch, remove from inventory
+            if (!removed) {
                 player.inventory.deleteItem(rune.id, rune.amount)
+                player.inventory.refresh()
             }
         }
 
         return true
     }
+
 
     private fun hasInfiniteRune(player: Player, runeId: Int): Boolean {
         val weaponName = ItemDefinitions.getItemDefinitions(player.equipment.weaponId).name.lowercase()
@@ -214,13 +239,25 @@ object SpellHandler {
     }
 
     private fun hasRune(player: Player, runeId: Int, amount: Int): Boolean {
-        return if (hasRunePouch(player)) {
-            player.runePouch.contains(Item(runeId, amount)) ||
-                    player.inventory.containsItem(runeId, amount)
-        } else {
-            player.inventory.getNumberOf(runeId) >= amount
+        if (hasRunePouch(player)) {
+            for (item in player.inventory.items.toArray()) {
+                if (item == null || item.id != Item.getId("item.rune_pouch")) continue
+
+                val meta = item.metadata
+                if (meta is RunePouchMetaData) {
+                    val runes = meta.runes
+                    val countInPouch = runes[runeId] ?: 0
+                    if (countInPouch >= amount) {
+                        return true
+                    }
+                }
+            }
         }
+
+        // Check inventory as fallback
+        return player.inventory.getNumberOf(runeId) >= amount
     }
+
 
     private fun hasRunePouch(player: Player): Boolean {
         return player.inventory.containsOneItem(RuneDefinitions.RUNE_POUCH)
@@ -229,7 +266,7 @@ object SpellHandler {
     private fun staffOfLightEffect(player: Player): Boolean {
         val weaponId = player.equipment.weaponId
         return (weaponId == 15486 || weaponId in listOf(22207, 22209, 22211, 22213)) &&
-                Utils.getRandom(3) == 0
+                Utils.getRandom(5) == 0
     }
 
     private fun handleCombatSpell(player: Player, spell: Spell, autocast: Boolean) {
@@ -341,14 +378,13 @@ object SpellHandler {
         if (!player.controlerManager.processMagicTeleport(tile)) {
             return
         }
-
+        player.message("teleport new system");
         player.stopAll()
         player.resetReceivedHits()
 
         val delay = if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) 6 else 4
-
-        player.tele((5 + delay).toLong())
-        player.lock((3 + delay).toLong())
+        player.tickManager.addTicks(TickManager.TickKeys.TELEPORTING_TICK, delay + 2)
+        player.lock(delay)
 
         if (upEmoteId != -1) {
             player.animate(Animation(upEmoteId))
@@ -363,8 +399,7 @@ object SpellHandler {
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
                 if (tile.x == 3222 && tile.y == 3222) { // House teleport
-                    player.tele(4)
-                    player.setFreezeDelay(0)
+                    player.freeze(0)
                     player.interfaceManager.closeChatBoxInterface()
                     player.controlerManager.forceStop()
                     player.house.enterMyHouse()
@@ -381,13 +416,13 @@ object SpellHandler {
                     teleTile = tile
                 }
 
-                player.setNextWorldTile(teleTile)
+                player.nextWorldTile = teleTile
                 player.animate(Animation(if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) -1 else 8941))
                 player.gfx(Graphics(if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) -1 else 1577))
                 player.packets.sendSound(5524, 0, 2)
                 player.setNextFaceWorldTile(WorldTile(teleTile.x, teleTile.y - 1, teleTile.plane))
                 player.direction = 6
-                player.setFreezeDelay(0)
+                player.unfreeze()
                 player.interfaceManager.closeChatBoxInterface()
                 player.controlerManager.forceStop()
                 stop()

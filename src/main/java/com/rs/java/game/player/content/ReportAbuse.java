@@ -20,7 +20,7 @@ import com.rs.java.utils.Utils;
 public class ReportAbuse {
 
 	public static void open(Player player) {
-		if (player.isInCombat(10000)) {
+		if (player.isInCombat()) {
 			player.message("You can't open report abuse under attack.");
 			return;
 		}
@@ -76,7 +76,7 @@ public class ReportAbuse {
 			writer.write("In controler?: " + (offender.getControlerManager().getControler() != null
 					? offender.getControlerManager().getControler().getClass().getSimpleName() : "No."));
 			writer.newLine();
-			writer.write("In combat?: " + (offender.isInCombat(10000) ? "Yes." : "No."));
+			writer.write("In combat?: " + (offender.isInCombat() ? "Yes." : "No."));
 			writer.newLine();
 			writer.write("Locked?: " + (offender.isLocked() ? "Yes." : "No."));
 			writer.newLine();

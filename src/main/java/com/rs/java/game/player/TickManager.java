@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class TickManager {
 
-    private final Map<Keys, Integer> tickTimers = new HashMap<>();
-    private transient Map<Keys, Runnable> tickCallbacks = new HashMap<>();
+    private final Map<TickKeys, Integer> tickTimers = new HashMap<>();
+    private transient Map<TickKeys, Runnable> tickCallbacks = new HashMap<>();
     private transient Entity entity;
     private String entityName;
 
@@ -36,18 +36,18 @@ public class TickManager {
      * Called when a timer expires. Pass the entity so the subclass can act on it
      */
 
-    public void addTicks(Keys key, int ticks, Runnable callback) {
+    public void addTicks(TickKeys key, int ticks, Runnable callback) {
         tickTimers.put(key, ticks);
         if (callback != null) {
             tickCallbacks.put(key, callback);
         }
     }
 
-    public void addTicks(Keys key, int ticks) {
+    public void addTicks(TickKeys key, int ticks) {
         addTicks(key, ticks, null);
     }
 
-    public void addSeconds(Keys key, int seconds, Runnable callback) {
+    public void addSeconds(TickKeys key, int seconds, Runnable callback) {
         int ticks = (int) Math.ceil(seconds / 0.6);
         tickTimers.put(key, ticks);
         if (callback != null) {
@@ -55,12 +55,12 @@ public class TickManager {
         }
     }
 
-    public void addSeconds(Keys key, int seconds) {
+    public void addSeconds(TickKeys key, int seconds) {
         addSeconds(key, seconds, null);
     }
 
 
-    public void addMinutes(Keys key, int minutes, Runnable callback) {
+    public void addMinutes(TickKeys key, int minutes, Runnable callback) {
         int ticks = (int) Math.ceil((minutes * 60) / 0.6);
         tickTimers.put(key, ticks);
         if (callback != null) {
@@ -68,14 +68,14 @@ public class TickManager {
         }
     }
 
-    public void addMinutes(Keys key, int minutes) {
+    public void addMinutes(TickKeys key, int minutes) {
         addMinutes(key, minutes, null);
     }
 
     public void tick() {
-        Iterator<Map.Entry<Keys, Integer>> it = tickTimers.entrySet().iterator();
+        Iterator<Map.Entry<TickKeys, Integer>> it = tickTimers.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Keys, Integer> entry = it.next();
+            Map.Entry<TickKeys, Integer> entry = it.next();
             int ticksLeft = entry.getValue() - 1;
             if (ticksLeft <= 0) {
                 it.remove();
@@ -91,17 +91,33 @@ public class TickManager {
         }
     }
 
-    public boolean isActive(Keys key) {
+    /**
+     * Removes a tick timer and its associated callback.
+     */
+    public void remove(TickKeys key) {
+        tickTimers.remove(key);
+        tickCallbacks.remove(key);
+    }
+
+    /**
+     * Resets a tick timer to its default value.
+     * If the timer doesn't exist, it will be initialized with the default value.
+     */
+    public void reset() {
+        tickTimers.clear();
+        tickCallbacks.clear();
+    }
+
+    public boolean isActive(TickKeys key) {
         return tickTimers.containsKey(key);
     }
 
-    public int getTicksLeft(Keys key) {
+    public int getTicksLeft(TickKeys key) {
         return tickTimers.getOrDefault(key, 0);
     }
 
-    public enum Keys {
-
-        KEYS_OPENED(1, 0),
+    public enum TickKeys {
+        ENTITY_LOCK_TICK(0, 0),
         FREEZE_TICKS(2, 0),
         FREEZE_IMMUNE_TICKS(3, 0),
         VENGEANCE_COOLDOWN(4, 0),
@@ -118,20 +134,15 @@ public class TickManager {
         SPECIAL_FOOD_LOCK_TICK(15, 0),
         POT_LOCK_TICK(16, 0),
         DISABLED_PROTECTION_PRAYER_TICK(17, 0),
+        TELEPORTING_TICK(18, 0),
 
-        COAL_STORED(18, 0),
-
-
-        HIGHEST_ATTACK_LEVEL(20, 0),
-        HIGHEST_STRENGTH_LEVEL(21,0),
-        HIGHEST_DEFENCE_LEVEL(22, 0),
-        HIGHEST_RANGED_LEVEL(23, 0),
-        HIGHEST_PRAYER_LEVEL(24, 0),
-        HIGHEST_MAGIC_LEVEL(25, 0), DISRUPTION_SHIELD(11, 0), TELEPORT_BLOCK(11, 0), TELEPORT_BLOCK_IMMUNITY(12, 0), KILLCOUNT(30, 0), DEATHCOUNT(31, 0), EP(32, 0), PK_POINTS(33, 0), KILLSTREAK(34, 0), KILLSTREAK_RECORD(35, 0);
+        DISRUPTION_SHIELD(11, 0),
+        TELEPORT_BLOCK(11, 0),
+        TELEPORT_BLOCK_IMMUNITY(12, 0);
         private final int uid;
         private final int defaultValue;
 
-        Keys(int uid, int defaultValue) {
+        TickKeys(int uid, int defaultValue) {
             this.uid = uid;
             this.defaultValue = defaultValue;
         }

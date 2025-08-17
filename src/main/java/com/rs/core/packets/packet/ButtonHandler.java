@@ -161,7 +161,7 @@ public class ButtonHandler {
                     player.getPackets().sendGameMessage("Please finish what you're doing before opening the world map.");
                     return;
                 }
-                if (player.isInCombat(10000)) {
+                if (player.isInCombat()) {
                     player.getPackets().sendGameMessage("It wouldn't be wise to open World Map during combat.");
                     return;
                 }
@@ -553,7 +553,7 @@ public class ButtonHandler {
             else if (componentId >= 15 & componentId <= 17)
                 player.getCombatDefinitions().setSortSpellBook(componentId - 15);
             else {
-                SpellHandler.INSTANCE.selectCombatSpell(player, componentId);
+                SpellHandler.selectCombatSpell(player, componentId);
             }
         } else if (interfaceId == 1276) {
             if (componentId == 145) player.getInterfaceManager().closeInventoryInterface();
@@ -786,7 +786,7 @@ public class ButtonHandler {
             else if (componentId >= 9 && componentId <= 11)
                 player.getCombatDefinitions().setSortSpellBook(componentId - 9);
             else if (componentId == 18) player.getCombatDefinitions().switchDefensiveCasting();
-            else AncientMagicks.checkCombatSpell(player, componentId);
+            else SpellHandler.selectCombatSpell(player, componentId);
         } else if (interfaceId == 645) {
             if (componentId == 16) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) ItemSets.sendComponents(player, slotId2);

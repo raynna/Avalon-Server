@@ -281,9 +281,11 @@ public class NPC extends Entity implements Serializable {
         }
         if (getId() == 7891) {
             setName("Dummy");
+            setRandomWalk(0);
         }
         if (getId() == 4474) {
             setName("Max Hit Dummy");
+            setRandomWalk(0);
         }
     }
 
@@ -293,7 +295,7 @@ public class NPC extends Entity implements Serializable {
         if (getId() == 960)
             faceWorldTile(this, "south");
         if (getId() == 7891)
-            faceWorldTile(this, "north");
+            faceWorldTile(this, "west");
         if (getId() == 4474)
             faceWorldTile(this, "west");
         if (getId() == 3785)

@@ -13,6 +13,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.actions.combat.modernspells.ChargeOrb;
 import com.rs.java.game.player.actions.combat.modernspells.Alchemy;
 import com.rs.java.game.player.actions.combat.modernspells.BonesTo;
@@ -763,11 +764,11 @@ public class ModernMagicks {
 		if (!player.getControlerManager().processMagicTeleport(tile))
 			return false;
 		player.stopAll();
-		player.tele(5 + delay);
 		player.resetReceivedHits();
 		if (xp != 0)
 			player.getSkills().addXp(Skills.MAGIC, xp);
 		removeRunes(player);
+		player.getTickManager().addTicks(TickManager.TickKeys.TELEPORTING_TICK, delay + 3);
 		player.lock(3 + delay);
 		if (upEmoteId != -1)
 			player.animate(new Animation(upEmoteId));
@@ -779,7 +780,6 @@ public class ModernMagicks {
 			@Override
 			public void run() {
 				if (tile.getX() == 3222 && tile.getY() == 3222) {
-					player.tele(4);
 					player.setFreezeDelay(0);
 					player.getInterfaceManager().closeChatBoxInterface();
 					player.getControlerManager().forceStop();

@@ -49,9 +49,7 @@ import com.rs.java.game.objects.GlobalObjectDeletion;
 import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.actions.combat.QueuedInstantCombat;
-import com.rs.java.game.player.prayer.AncientPrayer;
-import com.rs.java.game.player.prayer.NormalPrayer;
-import com.rs.java.game.player.prayer.PrayerBook;
+import com.rs.java.game.player.prayer.*;
 import com.rs.java.game.player.Ranks.Rank;
 import com.rs.kotlin.game.player.action.NewActionManager;
 import com.rs.java.game.player.actions.skills.construction.House;
@@ -166,6 +164,14 @@ public class Player extends Entity {
 
     public boolean isOutOfRange(Entity target, int distance) {
         return !clipedProjectile(target, distance == 0) || !Utils.isOnRange(this.getX(), this.getY(), this.getSize(), target.getX(), target.getY(), target.getSize(), distance);
+    }
+
+    public boolean shouldAdjustDiagonal(Player player, Entity target, int attackDistance) {
+        return target.getSize() == 1 &&
+                Math.abs(player.getX() - target.getX()) == 1 &&
+                Math.abs(player.getY() - target.getY()) == 1 &&
+                !target.hasWalkSteps() &&
+                attackDistance < 1;
     }
 
     /**
@@ -1944,6 +1950,7 @@ public class Player extends Entity {
         poisonImmune = 0;
         fireImmune = 0;
         castedVeng = false;
+        getTickManager().reset();
         setRunEnergy(100);
         appearence.generateAppearenceData();
     }
@@ -2327,7 +2334,7 @@ public class Player extends Entity {
     }
 
     private void checkTimers() {
-        if (!isFrozen() && getTeleBlockDelay() < Utils.currentTimeMillis() && getTickManager().isActive(TickManager.Keys.VENGEANCE_COOLDOWN) && getOverloadDelay() < Utils.currentTimeMillis() && getDisruptionDelay() < Utils.currentTimeMillis() && getPrayerRenewalDelay() < Utils.currentTimeMillis() && !OwnedObjectManager.containsObjectValue(this, 6)) {
+        if (!isFrozen() && getTeleBlockDelay() < Utils.currentTimeMillis() && getTickManager().isActive(TickManager.TickKeys.VENGEANCE_COOLDOWN) && getOverloadDelay() < Utils.currentTimeMillis() && getDisruptionDelay() < Utils.currentTimeMillis() && getPrayerRenewalDelay() < Utils.currentTimeMillis() && !OwnedObjectManager.containsObjectValue(this, 6)) {
             if (getInterfaceManager().containsInterface(3039))
                 getInterfaceManager().removeInterface(getInterfaceManager().isResizableScreen() ? 26 : 31, 3039);
         } else {
@@ -2353,10 +2360,10 @@ public class Player extends Entity {
             getPackets().sendHideIComponent(3039, 2, true);
             getPackets().sendHideIComponent(3039, 3, true);
         }
-        if (getTickManager().isActive(TickManager.Keys.VENGEANCE_COOLDOWN)) {
+        if (getTickManager().isActive(TickManager.TickKeys.VENGEANCE_COOLDOWN)) {
             getPackets().sendHideIComponent(3039, 4, false);
             getPackets().sendHideIComponent(3039, 5, false);
-            getPackets().sendTextOnComponent(3039, 5, getTimeLeft(getTickManager().getTicksLeft(TickManager.Keys.VENGEANCE_COOLDOWN)) + "");
+            getPackets().sendTextOnComponent(3039, 5, getTimeLeft(getTickManager().getTicksLeft(TickManager.TickKeys.VENGEANCE_COOLDOWN)) + "");
         } else {
             getPackets().sendHideIComponent(3039, 4, true);
             getPackets().sendHideIComponent(3039, 5, true);
@@ -3019,8 +3026,8 @@ public class Player extends Entity {
         if (!active)
             return;
         long currentTime = Utils.currentTimeMillis();
-        if (getTickManager().isActive(TickManager.Keys.LAST_ATTACKED_TICK)) {
-            message("You can't log out during combat which is for another " + getTickToSeconds(getTickManager().getTicksLeft(TickManager.Keys.LAST_ATTACKED_TICK)) + " seconds.");
+        if (getTickManager().isActive(TickManager.TickKeys.LAST_ATTACKED_TICK)) {
+            message("You can't log out during combat which is for another " + getTickToSeconds(getTickManager().getTicksLeft(TickManager.TickKeys.LAST_ATTACKED_TICK)) + " seconds.");
             return;
         }
         if (getEmotesManager().getNextEmoteEnd() >= currentTime) {
@@ -3652,6 +3659,8 @@ public class Player extends Entity {
         resetWalkSteps();
         lock(7);
         stopAll();
+        Player killer = getMostDamageReceivedSourcePlayer();
+        WrathEffect.handleWrathEffect(this, killer);
         animate(new Animation(836));
         if (familiar != null)
             familiar.sendDeath(this);
@@ -4043,7 +4052,7 @@ public class Player extends Entity {
     }
 
     public boolean isLocked() {
-        return lockDelay > Utils.currentTimeMillis();
+        return getTickManager().isActive(TickManager.TickKeys.ENTITY_LOCK_TICK);
     }
 
     public long getThievingDelay() {
@@ -4059,21 +4068,15 @@ public class Player extends Entity {
     }
 
     public void lock() {
-        lockDelay = Long.MAX_VALUE;
+        lock(Integer.MAX_VALUE);
     }
 
-    public void lock(long time) {
-        lockDelay = Utils.currentTimeMillis() + (time * 600);
+    public void lock(int time) {
+        getTickManager().addTicks(TickManager.TickKeys.ENTITY_LOCK_TICK, time);
     }
-
-    private transient long teleDelay;
 
     public boolean isTeleporting() {
-        return teleDelay >= Utils.currentTimeMillis();
-    }
-
-    public void tele(long time) {
-        teleDelay = Utils.currentTimeMillis() + (time * 600);
+        return getTickManager().isActive(TickManager.TickKeys.TELEPORTING_TICK);
     }
 
     public void specDelay(long time) {
@@ -4256,27 +4259,27 @@ public class Player extends Entity {
     }
 
     public boolean isPotLocked() {
-        return getTickManager().isActive(TickManager.Keys.POT_LOCK_TICK);
+        return getTickManager().isActive(TickManager.TickKeys.POT_LOCK_TICK);
     }
 
     public void addPotLock(int ticks) {
-        getTickManager().addTicks(TickManager.Keys.POT_LOCK_TICK, ticks);
+        getTickManager().addTicks(TickManager.TickKeys.POT_LOCK_TICK, ticks);
     }
 
     public void addFoodLock(int ticks) {
         if (!isFoodLocked())
             getNewActionManager().setActionDelay(getNewActionManager().getActionDelay() + ticks);
-        getTickManager().addTicks(TickManager.Keys.FOOD_LOCK_TICK, ticks);
+        getTickManager().addTicks(TickManager.TickKeys.FOOD_LOCK_TICK, ticks);
     }
 
     public boolean isFoodLocked() {
-        return getTickManager().isActive(TickManager.Keys.FOOD_LOCK_TICK);
+        return getTickManager().isActive(TickManager.TickKeys.FOOD_LOCK_TICK);
     }
 
     public int getFoodLockTicks() {
         int ticks = 0;
         if (isFoodLocked()) {
-            ticks = getTickManager().getTicksLeft(TickManager.Keys.FOOD_LOCK_TICK);
+            ticks = getTickManager().getTicksLeft(TickManager.TickKeys.FOOD_LOCK_TICK);
         } else {
             ticks = getSpecialFoodLockTicks();
         }
@@ -4318,15 +4321,15 @@ public class Player extends Entity {
     }
 
     public void addSpecialFoodLock(int ticks) {
-        getTickManager().addTicks(TickManager.Keys.SPECIAL_FOOD_LOCK_TICK, ticks);
+        getTickManager().addTicks(TickManager.TickKeys.SPECIAL_FOOD_LOCK_TICK, ticks);
     }
 
     public boolean isSpecialFoodLocked() {
-        return getTickManager().isActive(TickManager.Keys.SPECIAL_FOOD_LOCK_TICK);
+        return getTickManager().isActive(TickManager.TickKeys.SPECIAL_FOOD_LOCK_TICK);
     }
 
     public int getSpecialFoodLockTicks() {
-        return getTickManager().getTicksLeft(TickManager.Keys.SPECIAL_FOOD_LOCK_TICK);
+        return getTickManager().getTicksLeft(TickManager.TickKeys.SPECIAL_FOOD_LOCK_TICK);
     }
 
     public void addPoisonImmune(long time) {
@@ -4380,8 +4383,8 @@ public class Player extends Entity {
         return hintIconsManager;
     }
 
-    public boolean isInCombat(int milliseconds) {
-        return getAttackedByDelay() + milliseconds > Utils.currentTimeMillis();
+    public boolean isInCombat() {
+        return getTickManager().isActive(TickManager.TickKeys.LAST_ATTACKED_TICK);
     }
 
     public Map<Integer, Item[]> getStaffCharges() {

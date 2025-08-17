@@ -742,7 +742,6 @@ public class LunarMagicks {
 		if (xp != 0)
 			player.getSkills().addXp(Skills.MAGIC, xp);
 		removeRunes(player);
-		player.tele(5 + delay);
 		player.lock(3 + delay);
 		if (upEmoteId != -1)
 			player.animate(new Animation(upEmoteId));

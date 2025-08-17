@@ -16,6 +16,7 @@ import com.rs.java.game.item.meta.DegradeTicksMetaData;
 import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.utils.Utils;
 
 /**
@@ -58,7 +59,7 @@ public class ChargesManager implements Serializable {
 			if (data.getType() == DegradeType.WEAR)
 				degrade(item, slot);
 			else if (data.getType() == DegradeType.IN_COMBAT
-					&& player.getAttackedByDelay() > Utils.currentTimeMillis())
+					&& player.getTickManager().isActive(TickManager.TickKeys.LAST_ATTACKED_TICK))
 				degrade(item, slot);
 		}
 	}

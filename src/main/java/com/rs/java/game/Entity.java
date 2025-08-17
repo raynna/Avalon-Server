@@ -398,7 +398,7 @@ public abstract class Entity extends WorldTile {
     }
 
     public void resetReceivedDamage() {
-        receivedDamage.values().clear();
+        receivedDamage.clear();
     }
 
     public void resetAllDamage() {
@@ -1198,11 +1198,11 @@ public abstract class Entity extends WorldTile {
     }
 
     public int getFreezeDelay() {
-        return tickManager.getTicksLeft(TickManager.Keys.FREEZE_TICKS);
+        return tickManager.getTicksLeft(TickManager.TickKeys.FREEZE_TICKS);
     }
 
     public boolean isFrozen() {
-        return tickManager.isActive(TickManager.Keys.FREEZE_TICKS);
+        return tickManager.isActive(TickManager.TickKeys.FREEZE_TICKS);
     }
 
     public boolean isFreezeImmune() {
@@ -1214,13 +1214,17 @@ public abstract class Entity extends WorldTile {
 
     public void freeze(int value) {
        if (this instanceof Player player) {
-           tickManager.addTicks(TickManager.Keys.FREEZE_TICKS, value, () ->
+           tickManager.addTicks(TickManager.TickKeys.FREEZE_TICKS, value, () ->
                    player.message("You are no longer frozen.")
            );
-           tickManager.addTicks(TickManager.Keys.FREEZE_IMMUNE_TICKS, value + 5);
+           tickManager.addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, value + 5);
        } else {
-           tickManager.addTicks(TickManager.Keys.FREEZE_TICKS, value);
+           tickManager.addTicks(TickManager.TickKeys.FREEZE_TICKS, value);
        }
+    }
+
+    public void unfreeze() {
+       tickManager.remove(TickManager.TickKeys.FREEZE_TICKS);
     }
 
     public void addFreezeDelay(int ticks, boolean entangle) {
@@ -1228,7 +1232,7 @@ public abstract class Entity extends WorldTile {
             player.message("Freeze for " + ticks + " ticks, entangle: " + entangle);
             player.message("FrozenTimer: " + getTimer(Keys.IntKey.FREEZE_TICKS));
         }
-        if (!isFrozen()) {
+        if (!tickManager.isActive(TickManager.TickKeys.FREEZE_TICKS) && !tickManager.isActive(TickManager.TickKeys.FREEZE_IMMUNE_TICKS)) {
             freeze(ticks);
             resetWalkSteps();
             if (this instanceof Player player) {

@@ -26,6 +26,7 @@ object CommandRegistry {
         register("void", "voidknight", "voids", command = VoidCommand())
         register("dharoks", "dharok", "dh", command = DharoksCommand())
         register("ahrims", "ahrim", command = AhrimsCommand())
+        register("runepouch", "rp", "pouch", command = RunePouchCommand())
 
     }
 

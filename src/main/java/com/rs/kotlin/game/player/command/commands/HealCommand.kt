@@ -22,9 +22,9 @@ class HealCommand : Command {
             player.message("You can't use ::heal here.")
             return true
         }
-        if (player.tickManager.isActive(TickManager.Keys.LAST_ATTACKED_TICK)) {
+        if (player.tickManager.isActive(TickManager.TickKeys.LAST_ATTACKED_TICK)) {
             player.message("You can't use ::heal for another ${player.getTickToSeconds(player.tickManager.getTicksLeft(
-                TickManager.Keys.LAST_ATTACKED_TICK))} seconds.")
+                TickManager.TickKeys.LAST_ATTACKED_TICK))} seconds.")
             return true
         }
         player.prayer.restorePrayer(

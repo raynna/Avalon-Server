@@ -75,6 +75,7 @@ public class StarterProtection {
 
 	public static final void sendStarterPack(Player player) {
 		addStarter(player);
+		player.recievedStarter = true;
 		player.reset();
 		player.message("Experience rate: " + Settings.SKILLING_XP_RATE + "x for skilling, 1x in wilderness for combat.");
 		World.sendWorldMessage(

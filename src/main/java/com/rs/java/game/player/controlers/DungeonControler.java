@@ -681,7 +681,7 @@ public class DungeonControler extends Controler {
 																														// challenge
 																														// doors
 		) {
-			if (object.getId() == DungeonConstants.DUNGEON_BOSS_DOORS[floorType] && player.isInCombat(1800)) {
+			if (object.getId() == DungeonConstants.DUNGEON_BOSS_DOORS[floorType] && player.isInCombat()) {
 				player.getPackets().sendGameMessage("This door is too complex to unlock while in combat.");
 				return false;
 			}

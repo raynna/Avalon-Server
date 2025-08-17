@@ -3,7 +3,6 @@ package com.rs.kotlin.game.player.interfaces
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
-import com.rs.java.game.Keys
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
@@ -14,6 +13,7 @@ class HealthOverlay {
     fun sendOverlay(player: Player, target: Entity) {
         checkCombatLevel(player, target)
         updateHealthOverlay(player, target, false)
+        player.message("send overlay")
         if (player.toggles("HEALTHBAR", false) && (!player.interfaceManager.containsTab(getHealthOverlayId(player)))) {
             player.interfaceManager.sendTab(getHealthOverlayId(player), 3037)
             val pixels: Int = (target.hitpoints.toDouble() / target.getMaxHitpoints() * 126.0).toInt()
@@ -29,7 +29,8 @@ class HealthOverlay {
         if (!player.temporaryTarget.withinDistance(player.temporaryTarget, 32)) {
             return true
         }
-        if (!player.tickManager.isActive(TickManager.Keys.LAST_ATTACK_TICK)) {
+        if (!player.tickManager.isActive(TickManager.TickKeys.LAST_ATTACK_TICK)) {
+            player.message("last attack tick not active")
             return true
         }
         return false
@@ -38,6 +39,7 @@ class HealthOverlay {
     fun closeOverlay(player: Player) {
         if (player.interfaceManager.containsTab(getHealthOverlayId(player))) {
             if (checkForClose(player) && player.interfaceManager.containsTab(getHealthOverlayId(player))) {
+                player.message("overlay closed")
                 player.removeTemporaryTarget()
                 player.interfaceManager.closeTab(player.interfaceManager.isResizableScreen, getHealthOverlayId(player))
             }

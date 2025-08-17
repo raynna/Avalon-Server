@@ -49,7 +49,7 @@ public class GambleTest {
 			player.message("Please finish with what you are doing.");
 			return;
 		}
-		if (player.isInCombat(10000)) {
+		if (player.isInCombat()) {
 			player.message("You can't do this while in combat.");
 			return;
 		}

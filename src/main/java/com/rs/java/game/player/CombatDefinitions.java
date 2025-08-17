@@ -2,6 +2,8 @@ package com.rs.java.game.player;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.item.Item;
@@ -33,6 +35,8 @@ public final class CombatDefinitions implements Serializable {
     private transient int[] bonuses;
 
     // saving stuff
+
+    private Map<Integer, Byte> weaponAttackStyles = new HashMap<>();
 
     private byte attackStyle;
     private byte specialAttackPercentage;
@@ -770,21 +774,35 @@ public final class CombatDefinitions implements Serializable {
         refreshSpellBookScrollBar_DefCast();
     }
 
+    private final Map<Integer, Byte> lastWeaponAttackStyle = new HashMap<>();
+
     public void checkAttackStyle() {
-        if (autoCastSpell == 0) setAttackStyle(attackStyle);
+        if (autoCastSpell == 0) {
+            int weaponId = player.getEquipment().getWeaponId();
+            attackStyle = lastWeaponAttackStyle.getOrDefault(weaponId, attackStyle);
+            refreshAttackStyle();
+        }
     }
 
     public void setAttackStyle(int style) {
         int maxSize = 3;
         int weaponId = player.getEquipment().getWeaponId();
         String name = weaponId == -1 ? "" : ItemDefinitions.getItemDefinitions(weaponId).getName().toLowerCase();
-        if (weaponId == -1 || PlayerCombat.isRanging(player) != 0 || name.contains("halberd")) maxSize = 2;
+
+        if (weaponId == -1 || PlayerCombat.isRanging(player) != 0 || name.contains("halberd")) {
+            maxSize = 2;
+        }
         if (style > maxSize) style = maxSize;
+
         if (style != attackStyle) {
             attackStyle = (byte) style;
+            lastWeaponAttackStyle.put(weaponId, attackStyle);
+
             if (autoCastSpell > 1) resetSpells(true);
             else refreshAttackStyle();
-        } else if (autoCastSpell > 1) resetSpells(true);
+        } else if (autoCastSpell > 1) {
+            resetSpells(true);
+        }
     }
 
     public void refreshAttackStyle() {

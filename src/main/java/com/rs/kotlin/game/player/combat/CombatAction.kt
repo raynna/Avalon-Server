@@ -47,7 +47,7 @@ class CombatAction(
             else -> MeleeStyle(player, target)
         }
         player.combatStyle = style
-        player.tickTimers[Keys.IntKey.LAST_ATTACK_TICK] = 10
+        player.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
         player.temporaryTarget = target;
         val healthOverlay = HealthOverlay()
         healthOverlay.sendOverlay(player, target)
@@ -77,7 +77,7 @@ class CombatAction(
         for (queued in player.queuedInstantCombats.toList()) {
             val queuedStyle = queued.context.combat
 
-            if (!player.isOutOfRange(target, queuedStyle.getAttackDistance())) {
+            if (!player.isOutOfRange(target, queuedStyle.getAttackDistance()) && !shouldAdjustDiagonal(player, target)) {
                 if (player.combatDefinitions.specialAttackPercentage < queued.special.energyCost) {
                     player.queuedInstantCombats.clear()
                     break
@@ -119,8 +119,8 @@ class CombatAction(
         return when (phase) {
             CombatPhase.HIT -> {
                 if (validateAttack(player, target)) {
-                    player.tickManager.addSeconds(TickManager.Keys.LAST_ATTACK_TICK, 10)
-                    target.tickManager.addSeconds(TickManager.Keys.LAST_ATTACKED_TICK, 10)
+                    player.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
+                    target.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACKED_TICK, 10)
                     style.attack()
                 }
                 phase = CombatPhase.HIT
@@ -281,11 +281,6 @@ class CombatAction(
             { player.addWalkSteps(player.x, target.y + target.size) },
             { player.addWalkSteps(player.x, target.y - size) }
         ).any { it() }
-    }
-
-    private fun Player.isOutOfRange(target: Entity, requiredDistance: Int): Boolean {
-        return !this.clipedProjectile(target, requiredDistance == 0) ||
-                !Utils.isOnRange(this.x, this.y, this.size, target.x, target.y, target.size, requiredDistance)
     }
 
     private fun Player.isCollidingWithTarget(target: Entity): Boolean {
