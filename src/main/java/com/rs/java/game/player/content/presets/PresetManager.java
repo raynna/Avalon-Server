@@ -9,6 +9,7 @@ import java.util.Map;
 import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
@@ -192,7 +193,14 @@ public final class PresetManager implements Serializable {
 						continue;
 					}
 				}
-				player.getEquipment().getItems().set(i, new Item(set.getEquipment()[i].getId(), item.getAmount()));
+				if (item.getId() == 11283 || item.getId() == 11284) {
+					if (item.getMetadata() == null) {
+						item.setMetadata(new DragonFireShieldMetaData(50));
+					} else {
+						item.getMetadata().setValue(50);
+					}
+				}
+				player.getEquipment().getItems().set(i, item);
 				player.getEquipment().refresh(i);
 			}
 		}
@@ -217,6 +225,13 @@ public final class PresetManager implements Serializable {
 						player.getInventory().addItem(0, 1);
 						player.message("Couldn't find item " + item.getAmount() + " x " + item.getName() + " in bank.");
 						continue;
+					}
+				}
+				if (item.getId() == 11283 || item.getId() == 11284) {
+					if (item.getMetadata() == null) {
+						item.setMetadata(new DragonFireShieldMetaData(50));
+					} else {
+						item.getMetadata().setValue(50);
 					}
 				}
 				player.getInventory().addItem(item);

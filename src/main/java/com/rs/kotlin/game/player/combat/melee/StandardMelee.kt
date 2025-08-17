@@ -67,9 +67,11 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_claws_special")
                     context.attacker.gfx("graphic.dragon_claws_special")
-                    for (delay in 15..60 step 15) {//TODO get rid of magic number for sounds
+
+                    listOf(15, 25, 35, 45).forEach { delay ->
                         context.attacker.packets.sendSound(7464, delay, 1)
                     }
+
                     val dragonClawsHits = context.getDragonClawsHits(4)
                     val firstHitIndex = dragonClawsHits.indexOfFirst { it.damage > 9 }
                     context.hits {
@@ -172,6 +174,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_scimitar_special")
                     context.defender.gfx("graphic.dragon_scimitar_special", 100)
+                    context.attacker.packets.sendSound(2540, 0, 1)
                     val hit = context.meleeHit()
                     if (hit[0].damage > 0) {
                         if (context.defender is Player) {
@@ -229,6 +232,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_mace_special")
                     context.attacker.gfx("graphic.dragon_mace_special", 100)
+                    context.attacker.packets.sendSound(2541, 0, 1)
                     context.meleeHit()
                 }
             )
@@ -333,6 +337,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate(Animation(1203))
                     context.attacker.gfx(Graphics(282, 0, 100))
+                    context.attacker.packets.sendSound(2533, 0, 1)
                     context.meleeHit()
                     if (context.defender.size > 1)
                         context.meleeHit()
