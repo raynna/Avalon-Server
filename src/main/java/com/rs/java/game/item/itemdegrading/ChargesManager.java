@@ -44,8 +44,8 @@ public class ChargesManager implements Serializable {
 
 	private static final DegradeData[] data = DegradeData.values();
 
-	private final double DEGRADE_MESSAGE_INTERVAL = 0.05;
-	private final int CRUMBLE_DUST_HEAD = 1859, CRUMBLE_DUST_CHEST = 1861, CRUMBLE_DUST_LEGS = 1860;
+	private transient final double DEGRADE_MESSAGE_INTERVAL = 0.05;
+	private transient final int CRUMBLE_DUST_HEAD = 1859, CRUMBLE_DUST_CHEST = 1861, CRUMBLE_DUST_LEGS = 1860;
 
 	public void process() {
 		Item[] items = player.getEquipment().getItems().getContainerItems();

@@ -251,7 +251,7 @@ fun CombatContext.magicHit(
 
 fun CombatContext.getDragonClawsHits(swings: Int = 4): List<Hit> {
     val hits = MutableList(swings) { rollMelee() }//roll for accuracy & damage
-    val firstHitIndex = hits.indexOfFirst { it.damage > 9 }
+    val firstHitIndex = hits.indexOfFirst { it.damage > 0 }
     hits.forEach { it.critical = false }
     val hit = CombatCalculations.calculateMeleeMaxHit(attacker, defender)
     val maxHit = hit.maxHit
@@ -274,20 +274,20 @@ fun CombatContext.getDragonClawsHits(swings: Int = 4): List<Hit> {
             0 -> {
                 val first = ((maxHit / 2).. maxHit - 1).random()
                 hits[0].damage = first//if maxHit 400 = 200-400
-                hits[1].damage = (first + 1) / 2//half of above
+                hits[1].damage = (hits[0].damage + 1) / 2//half of above
                 hits[2].damage = (hits[1].damage + 1) / 2//halv of above
                 hits[3].damage = hits[2].damage + 1//same as above
             }
             1 -> {
                 val second = ((maxHit * 3 / 8)..(maxHit * 7 / 8)).random()
                 hits[1].damage = second//if maxHit 400 = 150-350
-                hits[2].damage = (second + 1) / 2//half of above
+                hits[2].damage = (hits[1].damage + 1) / 2//half of above
                 hits[3].damage = hits[2].damage//same as above
             }
             2 -> {
                 val third = ((maxHit / 4)..(maxHit * 3 / 4)).random()
                 hits[2].damage = third//if maxHit 400 = 100-300
-                hits[3].damage = third//same as above
+                hits[3].damage = hits[2].damage//same as above
             }
 
             3 -> {
