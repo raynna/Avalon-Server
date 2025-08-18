@@ -6,21 +6,21 @@ import com.rs.java.game.player.Player
 import com.rs.kotlin.game.player.combat.damage.CombatMultipliers
 
 object EquipmentSets {
-    private val VOID_MAGE_HELM = 11663
-    private val VOID_RANGE_HELM = 11664
-    private val VOID_MELEE_HELM = 11665
+    private val VOID_MAGE_HELM = Item.getId("item.void_mage_helm")
+    private val VOID_RANGE_HELM = Item.getId("item.void_ranger_helm")
+    private val VOID_MELEE_HELM = Item.getId("item.void_melee_helm")
     private val VOID_HELMETS = listOf(VOID_MAGE_HELM, VOID_RANGE_HELM, VOID_MELEE_HELM)
-    private val ELITE_VOID_TOPS = listOf(19785, 19787, 19789, 19803)// melee/range/mage helms
-    private val ELITE_VOID_BOTTOMS = listOf(19786, 19788, 19790, 19804)// melee/range/mage helms
-    private val VOID_TOP = 8839
-    private val VOID_ROBE = 8840
-    private val VOID_GLOVES = 8842
-    private val VOID_DEFLECTOR = 19712
+    private val ELITE_VOID_TOPS = listOf(19785, 19787, 19789, 19803)
+    private val ELITE_VOID_BOTTOMS = listOf(19786, 19788, 19790, 19804)
+    private val VOID_TOP = Item.getId("item.void_knight_top")
+    private val VOID_ROBE = Item.getId("item.void_knight_robe")
+    private val VOID_GLOVES = Item.getId("item.void_knight_gloves")
+    private val VOID_DEFLECTOR = Item.getId("item.void_knight_deflector_2")
 
-    private val DHAROK_HELM = listOf(4716, 4726, 4736, 4746, 4756)
-    private val DHAROK_TOP = listOf(4718, 4728, 4738, 4748, 4758)
-    private val DHAROK_LEGS = listOf(4720, 4730, 4740, 4750, 4760)
-    private val DHAROK_GREATAXE = listOf(4722, 4732, 4742, 4752, 4762)
+    private val DHAROK_HELM = Item.getIds("item.dharok_s_helm", "item.dharok_s_helm_100", "item.dharok_s_helm_75","item.dharok_s_helm_50", "item.dharok_s_helm_25", "item.dharok_s_helm_0")
+    private val DHAROK_TOP = Item.getIds("item.dharok_s_platebody", "item.dharok_s_platebody_100", "item.dharok_s_platebody_75", "item.dharok_s_platebody_50", "item.dharok_s_platebody_25","item.dharok_s_platebody_0" )
+    private val DHAROK_LEGS = Item.getIds("item.dharok_s_platelegs", "item.dharok_s_platelegs_100", "item.dharok_s_platelegs_75", "item.dharok_s_platelegs_50", "item.dharok_s_platelegs_25", "item.dharok_s_platelegs_0")
+    private val DHAROK_GREATAXE = Item.getIds("item.dharok_s_greataxe", "item.dharok_s_greataxe_100", "item.dharok_s_greataxe_75", "item.dharok_s_greataxe_50", "item.dharok_s_greataxe_25", "item.dharok_s_greataxe_0")
 
 
     val VOID_SET = EquipmentRequirement(
@@ -76,11 +76,11 @@ object EquipmentSets {
     fun getDamageMultiplier(set: EquipmentSet, style: CombatMultipliers.Style): Double {
         return when (set) {
             EquipmentSet.VOID_MELEE -> if (style == CombatMultipliers.Style.MELEE) 1.10 else 1.0
-            EquipmentSet.VOID_RANGE -> if (style == CombatMultipliers.Style.RANGE) 1.10 else 1.0
+            EquipmentSet.VOID_RANGE -> if (style == CombatMultipliers.Style.RANGE) 1.20 else 1.0
             EquipmentSet.VOID_MAGIC -> 1.0 // base void mage = accuracy only, no damage boost
 
             EquipmentSet.ELITE_VOID_MELEE -> if (style == CombatMultipliers.Style.MELEE) 1.10 else 1.0
-            EquipmentSet.ELITE_VOID_RANGE -> if (style == CombatMultipliers.Style.RANGE) 1.125 else 1.0 // 12.5% dmg
+            EquipmentSet.ELITE_VOID_RANGE -> if (style == CombatMultipliers.Style.RANGE) 1.225 else 1.0 // 12.5% dmg
             EquipmentSet.ELITE_VOID_MAGIC -> if (style == CombatMultipliers.Style.MAGIC) 1.05 else 1.0  // +5% dmg
 
             EquipmentSet.DHAROK -> 1.0
@@ -92,11 +92,11 @@ object EquipmentSets {
     fun getAccuracyMultiplier(set: EquipmentSet, style: CombatMultipliers.Style): Double {
         return when (set) {
             EquipmentSet.VOID_MELEE -> if (style == CombatMultipliers.Style.MELEE) 1.10 else 1.0
-            EquipmentSet.VOID_RANGE -> if (style == CombatMultipliers.Style.RANGE) 1.10 else 1.0
+            EquipmentSet.VOID_RANGE -> if (style == CombatMultipliers.Style.RANGE) 1.20 else 1.0
             EquipmentSet.VOID_MAGIC -> if (style == CombatMultipliers.Style.MAGIC) 1.45 else 1.0
 
             EquipmentSet.ELITE_VOID_MELEE -> if (style == CombatMultipliers.Style.MELEE) 1.10 else 1.0
-            EquipmentSet.ELITE_VOID_RANGE -> if (style == CombatMultipliers.Style.RANGE) 1.10 else 1.0 // elite bonus is dmg only
+            EquipmentSet.ELITE_VOID_RANGE -> if (style == CombatMultipliers.Style.RANGE) 1.20 else 1.0 // elite bonus is dmg only
             EquipmentSet.ELITE_VOID_MAGIC -> if (style == CombatMultipliers.Style.MAGIC) 1.45 else 1.0 // same as normal for accuracy
 
             EquipmentSet.DHAROK -> 1.0
@@ -107,32 +107,32 @@ object EquipmentSets {
 
     private fun isWearingVoidMelee(equipment: Equipment): Boolean {
         return VOID_SET.isSatisfied(equipment) &&
-                equipment.containsAny(11665) // melee helm
+                equipment.containsAny(VOID_MELEE_HELM)
     }
 
     private fun isWearingVoidRange(equipment: Equipment): Boolean {
         return VOID_SET.isSatisfied(equipment) &&
-                equipment.containsAny(11664) // range helm
+                equipment.containsAny(VOID_RANGE_HELM)
     }
 
     private fun isWearingVoidMagic(equipment: Equipment): Boolean {
         return VOID_SET.isSatisfied(equipment) &&
-                equipment.containsAny(11663) // magic helm
+                equipment.containsAny(VOID_MAGE_HELM)
     }
 
     private fun isWearingEliteVoidMelee(equipment: Equipment): Boolean {
         return ELITE_VOID_SET.isSatisfied(equipment) &&
-                equipment.containsAny(11665)
+                equipment.containsAny(VOID_MELEE_HELM)
     }
 
     private fun isWearingEliteVoidRange(equipment: Equipment): Boolean {
         return ELITE_VOID_SET.isSatisfied(equipment) &&
-                equipment.containsAny(11664)
+                equipment.containsAny(VOID_RANGE_HELM)
     }
 
     private fun isWearingEliteVoidMagic(equipment: Equipment): Boolean {
         return ELITE_VOID_SET.isSatisfied(equipment) &&
-                equipment.containsAny(11663)
+                equipment.containsAny(VOID_MAGE_HELM)
     }
 
 

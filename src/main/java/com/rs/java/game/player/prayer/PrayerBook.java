@@ -530,7 +530,6 @@ public class PrayerBook implements Serializable {
 
     public void processPrayerDrain(int ticks) {
         processLeechDecay(ticks);
-
         if (!hasActivePrayers()) {
             return;
         }
@@ -947,7 +946,6 @@ public class PrayerBook implements Serializable {
         player.getPackets().sendGlobalVar("globalvar.prayer_switch_quickpray", usingQuickPrayer ? 1 : 0);
         player.getPackets().sendVar("var.active_prayerbook", isAncientCurses() ? 1 : 0);
         player.getPackets().sendUnlockOptions(271, usingQuickPrayer ? 42 : 8, 0, 29, 0);
-
     }
 
     public boolean isAncientCurses() {

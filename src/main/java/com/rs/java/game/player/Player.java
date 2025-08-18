@@ -2444,7 +2444,7 @@ public class Player extends Entity {
     }
 
     private transient int beamDelay = 0;
-    public transient int healTick = 0;
+    public transient double healTick = 0;
     public transient int runTick = 0;
     public transient double drainTick = 0;
     public transient int miscTick = 0;
@@ -2518,7 +2518,7 @@ public class Player extends Entity {
             runTick = leftOver;
             restoreRunEnergy();
         }
-        drainTick += (double) (Math.min(getWeight(), 64) / 100 + 0.64);
+        drainTick += Math.min(getWeight(), 64) / 100 + 0.64;
         if (hasWalkSteps() && getRun()) {
             if (drainTick >= 1.0) {
                 double leftOver = (drainTick - 1.0);
@@ -2530,12 +2530,22 @@ public class Player extends Entity {
         /*
          * Heal Tick Actions
          */
-        healTick++;
+
+        double ticksPerHeal = 10;
         boolean usingRenewal = getPrayer().isActive(NormalPrayer.RAPID_RENEWAL);
         boolean usingRapidHeal = getPrayer().isActive(NormalPrayer.RAPID_HEAL);
-        if (healTick % (usingRenewal ? 2 : isResting() ? 2 : usingRapidHeal ? 5 : 10) == 0)
+
+        if (usingRenewal) {
+            ticksPerHeal = 2.5;
+        } else if (usingRapidHeal) {
+            ticksPerHeal = 5;
+        }
+
+        healTick += 1.0;
+        if (healTick >= ticksPerHeal) {
             restoreHitPoints();
-        /**/
+            healTick -= ticksPerHeal;
+        }
         for (Player player : World.getPlayers()) {
             if (player == null || attackedBy.isEmpty())
                 continue;
@@ -3162,7 +3172,7 @@ public class Player extends Entity {
         }
         boolean update = super.restoreHitPoints();
         if (update) {
-            refreshHitPoints(false);
+            refreshHitPoints(update);
         }
         return update;
     }
@@ -3222,22 +3232,12 @@ public class Player extends Entity {
     }
 
     public void refreshHitPoints() {
-        if (toggles("ONEXHITS", false)) {
-            getPackets().sendVarBit(7198, getHitpoints());
-            getPackets().sendTextOnComponent(748, 8, getHitpoints() / 10 + "");
-        } else
-            getPackets().sendVarBit(7198, getHitpoints());
+        getPackets().sendVarBit(7198, getHitpoints());
     }
 
     public void refreshHitPoints(boolean update) {
-        if (toggles("ONEXHITS", false)) {
-            if (update)
-                getPackets().sendVarBit(7198, getHitpoints());
-            getPackets().sendTextOnComponent(748, 8, getHitpoints() / 10 + "");
-        } else {
-            if (update)
-                getPackets().sendVarBit(7198, getHitpoints());
-        }
+        if (update)
+            getPackets().sendVarBit(7198, getHitpoints());
     }
 
     @Override

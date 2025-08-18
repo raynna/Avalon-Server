@@ -2754,7 +2754,7 @@ public class PlayerCombat extends Action {
                     if (player.toggles("ONEXPPERHIT", false)) {
                         if (magicXP > 0)
                             player.getSkills().addXpNoBonus(Skills.MAGIC,
-                                    (player.toggles("ONEXHITS", false) ? Math.round(damage) / 10 : damage));
+                                    (player.toggles("ONEXHITS", false) ? Math.ceil(damage) / 10 : damage));
                     } else {
                         if (magicXP > 0) {
                             if (player.getCombatDefinitions().isDefensiveCasting() || (hasPolyporeStaff(player)

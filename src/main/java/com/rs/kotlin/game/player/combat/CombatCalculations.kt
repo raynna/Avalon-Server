@@ -99,9 +99,9 @@ object CombatCalculations {
 
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.StregthBonus.index].toDouble()
 
-            val baseStrengthLevel = getBaseStrengthLevel(player)
-            val effectiveStrength = floor((baseStrengthLevel + styleBonus + 8) * voidBonus * dharokMultiplier)
-            val baseDamage = 5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * specialBonus
+            val baseStrengthLevel = getBaseStrengthLevel(player)//correct
+            val effectiveStrength = floor((baseStrengthLevel + styleBonus + 8 * voidBonus) * dharokMultiplier)
+            val baseDamage = 0.5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * specialBonus
             val hit = Hit(player, 0, 0, Hit.HitLook.MELEE_DAMAGE)
             val maxHit = (baseDamage * specialMultiplier).toInt()
             var damage = Utils.random(maxHit)
@@ -193,7 +193,7 @@ object CombatCalculations {
             val effectiveStrength = floor((baseStrength + styleBonus + 8) * voidBonus)
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.RangedStrBonus.index].toDouble()
 
-            val baseDamage = 0.5 + (((effectiveStrength) * (strengthBonus/10 + 64.0)) / 64.0) * specialBonus
+            val baseDamage = 0.5 + (effectiveStrength * (strengthBonus + 640) / 640) * specialBonus
             val maxHit = floor(baseDamage * specialMultiplier).toInt()
 
             var damage = Utils.random(maxHit)

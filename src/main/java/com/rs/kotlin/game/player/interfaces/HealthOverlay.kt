@@ -7,6 +7,7 @@ import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
 import com.rs.java.utils.HexColours
+import kotlin.math.ceil
 
 class HealthOverlay {
 
@@ -91,7 +92,7 @@ class HealthOverlay {
 
     private fun buildHpText(viewer: Player, currentHp: Int, maxHp: Int): String {
         return if (viewer.toggles("ONEXHITS", false)) {
-            "${currentHp / 10}/${maxHp / 10}"
+            "${ceil(currentHp / 10.0).toInt()}/${ceil(maxHp / 10.0).toInt()}"
         } else {
             "$currentHp/$maxHp"
         }

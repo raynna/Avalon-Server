@@ -434,16 +434,17 @@ public final class LocalPlayerUpdate {
 					data.writeSmart(hit.getMark(player, p));
 					data.writeSmart(0);
 				} else {
+					int reduced = (int) Math.max(1, Math.ceil(hit.getDamage() / 10.0));
+					double hitAmount = !player.toggles("ONEXHITS", false) ? hit.getDamage() : reduced;
 					if (hit.getSoaking() != null) {
-						double hitAmount = !player.toggles("ONEXHITS", false) ? hit.getDamage() : Math.floor(hit.getDamage() * 0.1);
-						double soakAmount = !player.toggles("ONEXHITS", false) ? hit.getSoaking().getDamage() : Math.floor(hit.getSoaking().getDamage() * 0.1);
+						int reducedSoak = (int) Math.max(1, Math.ceil(hit.getSoaking().getDamage() / 10.0));
+						double soakAmount = !player.toggles("ONEXHITS", false) ? hit.getSoaking().getDamage() : reducedSoak;
 						data.writeSmart(32767);
 						data.writeSmart(hit.getMark(player, p));
 						data.writeSmart((int)hitAmount);
 						data.writeSmart(hit.getSoaking().getMark(player, p));
 						data.writeSmart((int)soakAmount);
 					} else {
-						double hitAmount = !player.toggles("ONEXHITS", false) ? hit.getDamage() : Math.floor(hit.getDamage() * 0.1);
 						data.writeSmart(hit.getMark(player, p));
 						data.writeSmart((int)hitAmount);
 					}

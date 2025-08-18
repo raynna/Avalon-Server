@@ -65,7 +65,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             distance <= 6 -> 3
             else -> 4
         }
-        return delay.coerceAtLeast(1) // Minimum 1 tick delay
+        return delay.coerceAtLeast(1)
     }
 
     override fun getAttackDistance(): Int {
@@ -108,7 +108,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             SoakDamage.handleAbsorb(attacker, target, hit)
             totalDamage += min(hit.damage, target.hitpoints)
             attacker.chargeManager.processOutgoingHit()
-            if (target is Player) {//handling this onHit for magic & range
+            if (target is Player) {
                 target.chargeManager.processIncommingHit()
             }
             scheduleHit(pending.delay) {
@@ -204,7 +204,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (attacker.isDeveloperMode)
         attacker.message(
             "Magic Attack -> " +
-                    "Spell: ${spell.name.toString()}, " +
+                    "Spell: ${spell.name}, " +
                     "SpellType: ${spell.type}, " +
                     "BaseDamage: ${spell.damage}, " +
                     "MaxHit: ${hit.maxHit}, " +

@@ -19,6 +19,7 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.actions.HomeTeleport;
 import com.rs.java.game.player.actions.WaterFilling.Fill;
 import com.rs.java.game.player.content.ItemConstants;
@@ -695,10 +696,12 @@ public class Magic {
 		}
 
 		checkRunes1(player, true, runes);
+		player.lock(delay);
+		player.getTickManager().addTicks(TickManager.TickKeys.TELEPORTING_TICK, delay + 1);
 		player.stopAll();
+		player.resetReceivedHits();
 		if (xp != 0)
 			player.getSkills().addXp(Skills.MAGIC, xp);
-		player.lock(3 + delay);
 		if (upEmoteId != -1)
 			player.animate(new Animation(upEmoteId));
 		if (upGraphicId != -1)
@@ -780,8 +783,11 @@ public class Magic {
 	public static boolean useLumberTele(final Player player, final WorldTile tile) {
 		if (!player.getControlerManager().processItemTeleport(tile))
 			return false;
+		int lockTime = 5;
+		player.lock(lockTime);
+		player.getTickManager().addTicks(TickManager.TickKeys.TELEPORTING_TICK, lockTime + 1);
 		player.stopAll();
-		player.lock(5);
+		player.resetReceivedHits();
 		player.animate(new Animation(14293));
 		player.gfx(new Graphics(94));
 		WorldTasksManager.schedule(new WorldTask() {
@@ -851,9 +857,11 @@ public class Magic {
 			return false;
 		}
 		player.getInventory().deleteItem(itemId, 1);
-		player.resetAllDamage();
+		int lockTime = 5;
+		player.lock(lockTime);
+		player.getTickManager().addTicks(TickManager.TickKeys.TELEPORTING_TICK, lockTime + 1);
 		player.stopAll();
-		player.lock(5);
+		player.resetReceivedHits();
 		player.animate(new Animation(9597));
 		player.gfx(new Graphics(1680));
 		WorldTasksManager.schedule(new WorldTask() {
