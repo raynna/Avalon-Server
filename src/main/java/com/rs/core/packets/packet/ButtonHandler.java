@@ -2565,22 +2565,24 @@ public class ButtonHandler {
     private static void removeShieldForTwoHandedWeapon(Player player, int slotId, Item inventoryItem) {
         Item shield = player.getEquipment().getItem(Equipment.SLOT_SHIELD);
         if (shield != null) {
-            if (!player.getInventory().getItems().add(new Item(shield))) {
-                player.getInventory().getItems().set(slotId, new Item(inventoryItem));
+            if (!player.getInventory().getItems().add(shield)) {
+                player.getInventory().getItems().set(slotId, inventoryItem);
                 return;
             }
             player.getEquipment().getItems().set(Equipment.SLOT_SHIELD, null);
+            player.getEquipment().refresh(Equipment.SLOT_SHIELD);
         }
     }
 
     private static void removeWeaponIfTwoHanded(Player player, int slotId, Item inventoryItem) {
         Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
         if (weapon != null && Equipment.isTwoHandedWeapon(weapon)) {
-            if (!player.getInventory().getItems().add(new Item(weapon))) {
-                player.getInventory().getItems().set(slotId, new Item(inventoryItem));
+            if (!player.getInventory().getItems().add(weapon)) {
+                player.getInventory().getItems().set(slotId, inventoryItem);
                 return;
             }
             player.getEquipment().getItems().set(Equipment.SLOT_WEAPON, null);
+            player.getEquipment().refresh(Equipment.SLOT_WEAPON);
         }
     }
 
