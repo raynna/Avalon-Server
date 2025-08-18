@@ -23,9 +23,9 @@ object StandardMelee : MeleeData() {
         weaponStyle = WeaponStyle.UNARMED,
         attackSpeed = 4,
         animations = mapOf(
-            StyleKey(AttackStyle.ACCURATE, 0) to 422,
-            StyleKey(AttackStyle.AGGRESSIVE, 1) to 423,
-            StyleKey(AttackStyle.DEFENSIVE, 2) to 422,
+            StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.punch"),
+            StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.kick"),
+            StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.punch"),
         )
     )
     private val GOLIATH_GLOVES = MeleeWeapon(
@@ -34,15 +34,15 @@ object StandardMelee : MeleeData() {
         weaponStyle = WeaponStyle.UNARMED,
         attackSpeed = 4,
         animations = mapOf(
-            StyleKey(AttackStyle.ACCURATE, 0) to 14307,
-            StyleKey(AttackStyle.AGGRESSIVE, 1) to 14393,
-            StyleKey(AttackStyle.DEFENSIVE, 2) to 14307,
+            StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.goliath_gloves_punch"),
+            StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.goliath_gloves_uppcut"),
+            StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.goliath_gloves_punch"),
         ),
         effect = SpecialEffect(
             execute = { context ->
                 if (Utils.roll(1, 3)) {
                     context.defender.addFreezeDelay(16, false);
-                    context.defender.gfx(Graphics(181, 0, 96))
+                    context.defender.gfx("graphic.entangle", 100)
                     context.forcedHit(delay = 1)
                 } else {
                     context.meleeHit()
@@ -69,7 +69,7 @@ object StandardMelee : MeleeData() {
                     context.attacker.gfx("graphic.dragon_claws_special")
 
                     listOf(15, 25, 35, 45).forEach { delay ->
-                        context.attacker.packets.sendSound(7464, delay, 1)
+                        context.attacker.playSound("sound.claw_attack", delay, 1)
                     }
 
                     val dragonClawsHits = context.getDragonClawsHits(4)
@@ -97,10 +97,10 @@ object StandardMelee : MeleeData() {
             special = SpecialAttack.Combat(
                 energyCost = 60,
                 execute = { context ->
-                    context.attacker.animate(14788)
-                    context.attacker.gfx(1729)
-                    context.attacker.playSound(3853, 1)
-                    context.attacker.playSound(3865, 1)
+                    context.attacker.animate("animation.korasi_sword_special")
+                    context.attacker.gfx("graphic.korasi_special_attack_start")
+                    context.attacker.playSound("sound.saradomin_sword_special", 1)
+                    context.attacker.playSound("sound.armadyl_godsword_special", 1)
                     val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
 
                     val isMultiCombat = context.defender.isAtMultiArea
@@ -116,14 +116,14 @@ object StandardMelee : MeleeData() {
                         firstHit.critical = true
                     context.hits {
                         addHit(context.defender, firstHit)
-                        context.defender.gfx(1730)
+                        context.defender.gfx("graphic.korasi_special_attack_end")
                         if (isMultiCombat) {
                             val extraTargets = context.getMultiAttackTargets(maxDistance = 1, maxTargets = 2)
                             val damages = listOf(firstHitDamage / 2, firstHitDamage / 4)
 
                             for ((index, target) in extraTargets.withIndex()) {
                                 if (index >= damages.size) break
-                                target.gfx(1730)
+                                target.gfx("graphic.korasi_special_attack_end")
                                 addHit(target, firstHit.copyWithDamage(damages[index]), delay = 0)
                             }
                         }
@@ -142,18 +142,19 @@ object StandardMelee : MeleeData() {
                 "item.abyssal_vine_whip_5"),
             name = "Abyssal whip",
             weaponStyle = WeaponStyle.WHIP,
-            blockAnimationId = 11974,
+            blockAnimationId = Animation.getId("animation.abyssal_whip_block"),
             animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to 11969,
-                StyleKey(AttackStyle.CONTROLLED, 1) to 11970,
-                StyleKey(AttackStyle.DEFENSIVE, 2) to 11968,
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.abyssal_whip_attack"),
+                StyleKey(AttackStyle.CONTROLLED, 1) to Animation.getId("animation.abyssal_whip_attack2"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.abyssal_whip_attack3"),
             ),
             special = SpecialAttack.Combat(
                 energyCost = 50,
                 accuracyMultiplier = 1.25,
                 execute = { context ->  //TODO USING WHIP AS A TEST WEAPON ATM
-                    context.attacker.animate(Animation(11971))
-                    context.defender.gfx(Graphics(2108, 0, 100))
+                    context.attacker.animate("animation.abyssal_whip_special")
+                    context.defender.gfx("graphic.abyssal_whip_special", 100)
+                    //TODO GET SOUND
                     val hit = context.meleeHit()
                     if (hit[0].damage > 0) {
                         if (context.defender is Player) {
@@ -181,7 +182,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_scimitar_special")
                     context.defender.gfx("graphic.dragon_scimitar_special", 100)
-                    context.attacker.packets.sendSound(2540, 0, 1)
+                    context.attacker.playSound("sound.dragon_scimitar_special", 1)
                     val hit = context.meleeHit()
                     if (hit[0].damage > 0) {
                         if (context.defender is Player) {
@@ -213,8 +214,8 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_dagger_special")
                     context.attacker.gfx("graphic.dragon_dagger_special", 100)
-                    context.attacker.packets.sendSound(2537, 0, 1)
-                    context.attacker.packets.sendSound(2537, 15, 1)
+                    context.attacker.playSound("sound.dragon_dagger_special", 0,1)
+                    context.attacker.playSound("sound.dragon_dagger_special", 15, 1)
                     context.meleeHit()
                     context.meleeHit(delay = if (context.defender is NPC) 1 else 0)
                 }
@@ -239,7 +240,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_mace_special")
                     context.attacker.gfx("graphic.dragon_mace_special", 100)
-                    context.attacker.packets.sendSound(2541, 0, 1)
+                    context.attacker.playSound("sound.dragon_mace_special", 1)
                     context.meleeHit()
                 }
             )
@@ -260,7 +261,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.granite_maul_special_attack")
                     context.attacker.gfx("graphic.granite_maul_special", 100)
-                    context.attacker.packets.sendSound(2541, 0, 1)
+                    context.attacker.playSound("sound.granite_maul_special", 1)
                     context.meleeHit()
                 }
             )
@@ -327,24 +328,24 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = listOf(3204),
+            itemId = Item.getIds("item.dragon_halberd"),
             name = "Dragon halberd",
             weaponStyle = WeaponStyle.HALBERD,
             attackRange = 1,
-            blockAnimationId = 430,
+            blockAnimationId = Animation.getId("animation.halberd_block"),
             animations = mapOf(
-                StyleKey(AttackStyle.CONTROLLED, 0) to 437,
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to 440,
-                StyleKey(AttackStyle.DEFENSIVE, 2) to 438,
+                StyleKey(AttackStyle.CONTROLLED, 0) to Animation.getId("animation.halberd_jab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.halberd_swipe"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.halberd_fend"),
             ),
             special = SpecialAttack.Combat(
                 energyCost = 30,
                 accuracyMultiplier = 1.1,
                 damageMultiplier = 1.1,
                 execute = { context ->
-                    context.attacker.animate(Animation(1203))
-                    context.attacker.gfx(Graphics(282, 0, 100))
-                    context.attacker.packets.sendSound(2533, 0, 1)
+                    context.attacker.animate("animation.dragon_halberd_special")
+                    context.attacker.gfx("graphic.dragon_halberd_special", 100)
+                    context.attacker.playSound("sound.dragon_halberd_special", 1)
                     context.meleeHit()
                     if (context.defender.size > 1)
                         context.meleeHit()
@@ -372,7 +373,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.saradomin_sword_special")
                     context.attacker.gfx("graphic.saradomin_sword_special_start")
-                    context.attacker.playSound(3853, 1)
+                    context.attacker.playSound("sound.saradomin_sword_special", 1)
                     context.hits {
                         val meleeHit = melee(delay = 0)
                         context.defender.gfx("graphic.saradomin_sword_special_end")
@@ -411,6 +412,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.armadyl_godsword_special")
                     context.attacker.gfx("graphic.armadyl_godsword_special")
+                    context.attacker.playSound("sound.armadyl_godsword_special", 1)
                     context.meleeHit()
                 }
             )

@@ -33,6 +33,7 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.NewPoison;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 
@@ -1759,6 +1760,36 @@ public abstract class Entity extends WorldTile {
                     if (player == null || !player.isActive() || !withinDistance(player))
                         continue;
                     player.getPackets().sendSound(soundId, 0, type);
+                }
+            }
+        }
+    }
+
+    public void playSound(String sound, int type) {
+        int soundId = Rscm.lookup(sound);
+        for (int regionId : getMapRegionsIds()) {
+            List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
+            if (playerIndexes != null) {
+                for (int playerIndex : playerIndexes) {
+                    Player player = World.getPlayers().get(playerIndex);
+                    if (player == null || !player.isActive() || !withinDistance(player))
+                        continue;
+                    player.getPackets().sendSound(soundId, 0, type);
+                }
+            }
+        }
+    }
+
+    public void playSound(String sound, int delay, int type) {
+        int soundId = Rscm.lookup(sound);
+        for (int regionId : getMapRegionsIds()) {
+            List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
+            if (playerIndexes != null) {
+                for (int playerIndex : playerIndexes) {
+                    Player player = World.getPlayers().get(playerIndex);
+                    if (player == null || !player.isActive() || !withinDistance(player))
+                        continue;
+                    player.getPackets().sendSound(soundId, delay, type);
                 }
             }
         }
