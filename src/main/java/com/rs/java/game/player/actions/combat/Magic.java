@@ -778,7 +778,7 @@ public class Magic {
 		return true;
 	}
 
-	private static WorldTile pvp = new WorldTile(85, 78, 0);
+	private static WorldTile pvp = new WorldTile(85, 80, 0);
 
 	public static boolean useLumberTele(final Player player, final WorldTile tile) {
 		if (!player.getControlerManager().processItemTeleport(tile))
@@ -882,7 +882,7 @@ public class Magic {
 						teleTile = tile;
 					}
 					player.setNextWorldTile(
-							player.getControlerManager().getControler() instanceof EdgevillePvPControler ? pvp
+							EdgevillePvPControler.isAtPvP(player) ? pvp
 									: teleTile);
 					player.getControlerManager().magicTeleported(ITEM_TELEPORT);
 					if (player.getControlerManager().getControler() == null)

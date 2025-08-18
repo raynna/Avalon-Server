@@ -286,7 +286,7 @@ object SpellHandler {
                 player,
                 if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) 9599 else 8939,
                 if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) 1681 else 1576,
-                spell.xp,
+                spell,
                 location
             )
         }
@@ -366,7 +366,7 @@ object SpellHandler {
         player: Player,
         upEmoteId: Int,
         upGraphicId: Int,
-        xp: Double,
+        spell: Spell,
         tile: WorldTile
     ) {
         if (player.controlerManager.controler.let { it is FfaZone || it is CrucibleControler ||
@@ -386,6 +386,7 @@ object SpellHandler {
         player.tickManager.addTicks(TickManager.TickKeys.TELEPORTING_TICK, delay + 2)
         player.lock(delay)
 
+        player.skills.addXpDelayed(Skills.MAGIC, spell.xp)
         if (upEmoteId != -1) {
             player.animate(Animation(upEmoteId))
         }
@@ -408,12 +409,14 @@ object SpellHandler {
                 }
 
                 var teleTile = tile
+                if (spell.name.contains("home teleport", ignoreCase = true) && EdgevillePvPControler.isAtPvP(player)) {
+                    teleTile = WorldTile(85, 80, 0)
+                }
                 for (trycount in 0 until 10) {
-                    teleTile = WorldTile(tile, 2)
+                    teleTile = WorldTile(teleTile, 2)
                     if (World.canMoveNPC(tile.plane, teleTile.x, teleTile.y, player.size)) {
                         break
                     }
-                    teleTile = tile
                 }
 
                 player.nextWorldTile = teleTile
