@@ -108,7 +108,7 @@ object StandardMelee : MeleeData() {
                     val firstHitDamage = if (isMultiCombat) {
                         (0..((1.5 * maxHit).toInt())).random()
                     } else {
-                        ((0.5 * maxHit).toInt() .. (1.5 * maxHit).toInt()).random()
+                        ((0.5 * maxHit).toInt()..(1.5 * maxHit).toInt()).random()
                     }
 
                     val firstHit = Hit(context.attacker, firstHitDamage, Hit.HitLook.MAGIC_DAMAGE)
@@ -138,8 +138,9 @@ object StandardMelee : MeleeData() {
                 "item.abyssal_whip_5", "item.abyssal_whip_6",
                 "item.abyssal_whip_7", "item.abyssal_whip_8",
                 "item.abyssal_vine_whip", "item.abyssal_vine_whip_2",
-                "item.abyssal_vine_whip_3","item.abyssal_vine_whip_4",
-                "item.abyssal_vine_whip_5"),
+                "item.abyssal_vine_whip_3", "item.abyssal_vine_whip_4",
+                "item.abyssal_vine_whip_5"
+            ),
             name = "Abyssal whip",
             weaponStyle = WeaponStyle.WHIP,
             blockAnimationId = Animation.getId("animation.abyssal_whip_block"),
@@ -187,7 +188,10 @@ object StandardMelee : MeleeData() {
                     if (hit[0].damage > 0) {
                         if (context.defender is Player) {
                             context.defender.prayer.closeProtectionPrayers()
-                            context.defender.tickManager.addTicks(TickManager.TickKeys.DISABLED_PROTECTION_PRAYER_TICK, 8)
+                            context.defender.tickManager.addTicks(
+                                TickManager.TickKeys.DISABLED_PROTECTION_PRAYER_TICK,
+                                8
+                            )
                         }
                     }
                 }
@@ -196,7 +200,8 @@ object StandardMelee : MeleeData() {
         MeleeWeapon(
             itemId = Item.getIds(
                 "item.dragon_dagger", "item.dragon_dagger_p",
-                "item.dragon_dagger_p+", "item.dragon_dagger_p++"),
+                "item.dragon_dagger_p+", "item.dragon_dagger_p++"
+            ),
             name = "Dragon dagger",
             weaponStyle = WeaponStyle.DAGGER,
             attackSpeed = 4,
@@ -214,7 +219,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_dagger_special")
                     context.attacker.gfx("graphic.dragon_dagger_special", 100)
-                    context.attacker.playSound("sound.dragon_dagger_special", 0,1)
+                    context.attacker.playSound("sound.dragon_dagger_special", 0, 1)
                     context.attacker.playSound("sound.dragon_dagger_special", 15, 1)
                     context.meleeHit()
                     context.meleeHit(delay = if (context.defender is NPC) 1 else 0)
@@ -223,7 +228,8 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
-                "item.dragon_mace", "item.dragon_mace"),
+                "item.dragon_mace", "item.dragon_mace"
+            ),
             name = "Dragon mace",
             weaponStyle = WeaponStyle.MACE,
             blockAnimationId = Animation.getId("animation.mace_block"),
@@ -247,7 +253,8 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
-                "item.granite_maul"),
+                "item.granite_maul"
+            ),
             name = "Granite maul",
             weaponStyle = WeaponStyle.HAMMER,
             blockAnimationId = Animation.getId("animation.granite_maul_block"),
@@ -299,6 +306,41 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
                 StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.mace_crush"),
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.ancient_staff", "item.ancient_staff_2", "item.ancient_staff_3",
+                "item.ancient_staff_4", "item.ancient_staff_5", "item.ancient_staff_6",
+                "item.ancient_staff_7", "item.ancient_staff_8", "item.ancient_staff_9",
+                "item.ancient_staff_10", "item.staff", "item.staff_of_air",
+                "item.staff_of_water", "item.staff_of_earth", "item.staff_of_fire",
+                "item.battlestaff", "item.air_battlestaff", "item.water_battlestaff",
+                "item.earth_battlestaff", "item.fire_battlestaff", "item.lava_battlestaff",
+                "item.mud_battlestaff", "item.mystic_air_staff", "item.mystic_water_staff",
+                "item.mystic_earth_staff", "item.mystic_fire_staff", "item.mystic_lava_staff",
+                "item.mystic_mud_staff", "item.staff_of_armadyl", "item.ahrim_s_staff",
+                "item.ahrim_s_staff_100", "item.ahrim_s_staff_75", "item.ahrim_s_staff_50",
+                "item.ahrim_s_staff_25", "item.ahrim_s_staff_0", "item.gravite_staff",
+                "item.zuriel_s_staff", "item.zuriel_s_staff_deg", "item.corrupt_zuriel_s_staff",
+                "item.corrupt_zuriel_s_staff_deg", "item.staff_of_armadyl", "item.armadyl_battlestaff",
+                "item.beginner_wand", "item.apprentice_wand", "item.master_wand",
+                "item.iban_s_staff", "item.slayer_s_staff", "item.guthix_staff",
+                "item.zamorak_staff", "item.saradomin_staff", "item.necromancer_s_air_staff",
+                "item.necromancer_s_water_staff", "item.necromancer_s_earth_staff", "item.necromancer_s_fire_staff",
+                "item.necromancer_s_mud_staff", "item.necromancer_s_lava_staff", "item.necromancer_s_steam_staff",
+                "item.skeletal_staff_of_air", "item.skeletal_staff_of_water", "item.skeletal_staff_of_earth",
+                "item.skeletal_staff_of_fire", "item.skeletal_battlestaff_of_air", "item.skeletal_battlestaff_of_water",
+                "item.skeletal_battlestaff_of_earth", "item.skeletal_battlestaff_of_fire", "item.skeletal_lava_battlestaff",
+                "item.skeletal_mud_battlestaff", "item.skeletal_steam_battlestaff", "item.lunar_staff"
+            ),
+            name = "Staff & Wand",
+            weaponStyle = WeaponStyle.STAFF,
+            blockAnimationId = Animation.getId("animation.staff_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.staff_bash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.staff_bash"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.staff_bash"),
             )
         ),
         MeleeWeapon(
@@ -456,9 +498,9 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
-                "item.dharok_s_greataxe","item.dharok_s_greataxe_100",
-                "item.dharok_s_greataxe_75","item.dharok_s_greataxe_50",
-                "item.dharok_s_greataxe_25","item.dharok_s_greataxe_0"
+                "item.dharok_s_greataxe", "item.dharok_s_greataxe_100",
+                "item.dharok_s_greataxe_75", "item.dharok_s_greataxe_50",
+                "item.dharok_s_greataxe_25", "item.dharok_s_greataxe_0"
             ),
             name = "Dharok's greataxe",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
@@ -490,7 +532,19 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
-                "item.bronze_longsword", "item.iron_longsword", "item.steel_longsword", "item.black_longsword", "item.mithril_longsword", "item.adamant_longsword", "item.rune_longsword", "item.corrupt_dragon_longsword", "item.c_dragon_longsword_deg" ,"item.corrupt_vesta_s_longsword", "item.c_vesta_s_longsword_deg", "item.chaotic_longsword", "item.chaotic_longsword_broken"
+                "item.bronze_longsword",
+                "item.iron_longsword",
+                "item.steel_longsword",
+                "item.black_longsword",
+                "item.mithril_longsword",
+                "item.adamant_longsword",
+                "item.rune_longsword",
+                "item.corrupt_dragon_longsword",
+                "item.c_dragon_longsword_deg",
+                "item.corrupt_vesta_s_longsword",
+                "item.c_vesta_s_longsword_deg",
+                "item.chaotic_longsword",
+                "item.chaotic_longsword_broken"
             ),
             name = "Longsword",
             weaponStyle = WeaponStyle.SCIMITAR,
