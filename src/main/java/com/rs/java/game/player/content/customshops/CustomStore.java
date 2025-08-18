@@ -254,7 +254,7 @@ public class CustomStore extends CustomStoreData {
 													+ " " + getPointsName(TYPE, SHOP) + ".")));
 				}
 		} else {
-			for (int i = 0; i < getShopType(TYPE).length; i++)
+			for (int i = 0; i < getShopType(TYPE).length - 1; i++)
 				if (itemId == getShopType(TYPE)[i][0]) {
 					price = getShopType(TYPE)[i][2];
 					player.getPackets()
