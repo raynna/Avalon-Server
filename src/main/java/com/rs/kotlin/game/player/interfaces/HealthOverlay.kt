@@ -8,6 +8,7 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
 import com.rs.java.utils.HexColours
 import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 class HealthOverlay {
 
@@ -16,9 +17,10 @@ class HealthOverlay {
         updateHealthOverlay(player, target, false)
         if (player.toggles("HEALTHBAR", false) && (!player.interfaceManager.containsTab(getHealthOverlayId(player)))) {
             player.interfaceManager.sendTab(getHealthOverlayId(player), 3037)
-            val pixels: Int = (target.hitpoints.toDouble() / target.getMaxHitpoints() * 126.0).toInt()
+            val pixels: Int = (target.hitpoints.toDouble() / target.getMaxHitpoints() * 126.0).roundToInt()
             player.packets.sendRunScript(6252, pixels)
             player.packets.sendRunScript(6253, 0)
+            target.temporaryAttribute()["last_hp_${player.index}"] = target.hitpoints
         }
     }
 
@@ -70,14 +72,31 @@ class HealthOverlay {
             }
         }
         if (updateScript) {
-            val pixels: Int = (target.hitpoints.toDouble() / target.getMaxHitpoints() * 126.0).toInt()
-            player.packets.sendRunScript(6252, pixels)
+            val maxHp = target.getMaxHitpoints().toDouble()
+            val currentHp = target.hitpoints
+            val lastHp = target.temporaryAttribute()["last_hp_${player.index}"] as? Int ?: currentHp
+
+            val damageTaken = (lastHp - currentHp).coerceAtLeast(0)
+
+            val newPixels = (currentHp.toDouble() / maxHp * 126.0).roundToInt()
+            val oldPixels = (lastHp.toDouble() / maxHp * 126.0).roundToInt()
+
+            val pixelLoss = ((damageTaken.toDouble() / maxHp) * 126.0).roundToInt()
+
+            val adjustedPixels = if (damageTaken > 0) {
+                (oldPixels - pixelLoss).coerceAtLeast(newPixels).coerceAtLeast(0)
+            } else {
+                newPixels
+            }
+
+            player.packets.sendRunScript(6252, adjustedPixels)
             WorldTasksManager.schedule(object : WorldTask() {
                 override fun run() {
-                    player.packets.sendRunScript(6253, pixels)
+                    player.packets.sendRunScript(6253, adjustedPixels)
                     stop()
                 }
             }, 0, 1)
+            target.temporaryAttribute()["last_hp_${player.index}"] = currentHp
         }
     }
 

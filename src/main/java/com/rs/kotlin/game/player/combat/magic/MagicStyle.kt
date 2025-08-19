@@ -269,7 +269,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         val isOneXpPerHit = attacker.toggles("ONEXPPERHIT", false)
         val isOneXHits = attacker.toggles("ONEXHITS", false)
-        if (isOneXpPerHit && totalDamage > 0) {
+        if (isOneXpPerHit) {
             val xp = if (isOneXHits) ceil(totalDamage / 10.0) else totalDamage
             attacker.skills.addXpDelayed(Skills.HITPOINTS, xp.toDouble())
             return
