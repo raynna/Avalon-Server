@@ -12,7 +12,7 @@ class RunePouchCommand : Command {
     override val description = "Gives you a fresh rune pouch"
     override val usage = "::runepouch"
 
-    override fun execute(player: Player, args: List<String>): Boolean {
+    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::runepouch in this mode.")
             return true

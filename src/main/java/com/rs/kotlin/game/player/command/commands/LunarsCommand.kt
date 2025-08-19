@@ -11,7 +11,7 @@ class LunarsCommand : Command {
     override val description = "Change to lunar spellbook."
     override val usage = "::lunars"
 
-    override fun execute(player: Player, args: List<String>): Boolean {
+    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::lunars in this mode.")
             return true

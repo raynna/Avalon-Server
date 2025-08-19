@@ -1001,7 +1001,7 @@ public final class Utils {
 	 */
 	public static String formatPlayerNameForDisplay(String name) {
 		if (name == null)
-			return "Error grabbing name";
+			return null;
 		name = name.replaceAll("_", " ");
 		name = name.toLowerCase();
 		StringBuilder newName = new StringBuilder();

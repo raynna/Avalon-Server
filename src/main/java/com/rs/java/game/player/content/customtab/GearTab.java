@@ -150,7 +150,7 @@ public class GearTab extends CustomTab {
 						return;
 					}
 				} else {
-					player.getPackets().sendGameMessage("Are you sure you want to overwrite this preset? Click again to confirm.");
+					player.getPackets().sendGameMessage("Are you sure you want to overwrite this preset? Click (+) again to confirm.");
 					player.getTemporaryAttributtes().put("CONFIRM_OVERWRITE", true);
 					return;
 				}
@@ -185,10 +185,16 @@ public class GearTab extends CustomTab {
 				player.getPackets().sendTextOnComponent(3002, i, gear.getKey());
 				if (compId == i) {
 					Integer selectedGear = (Integer) player.getTemporaryAttributtes().get("SELECTEDGEAR");
+					boolean ownPresets = otherName == null;
 					if (selectedGear != null) {
 						if (gear.getValue().getId(p2 != null ? p2 : player) == selectedGear) {
-							player.getTemporaryAttributtes().remove("SELECTEDGEAR");
-							player.getPackets().sendTextOnComponent(3002, i, gear.getKey());
+							if (ownPresets) {
+								player.temporaryAttribute().put("RENAME_SETUP", true);
+								player.getPackets().sendRunScript(109, "Enter new setup name: ");
+							} else {
+								player.getTemporaryAttributtes().remove("SELECTEDGEAR");
+								player.getPackets().sendTextOnComponent(3002, i, gear.getKey());
+							}
 						} else {
 							player.getTemporaryAttributtes().put("SELECTEDGEAR",
 									gear.getValue().getId(p2 != null ? p2 : player));

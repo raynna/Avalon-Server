@@ -11,7 +11,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -2334,7 +2333,7 @@ public class Player extends Entity {
     }
 
     private void checkTimers() {
-        if (!isFrozen() && getTeleBlockDelay() < Utils.currentTimeMillis() && getTickManager().isActive(TickManager.TickKeys.VENGEANCE_COOLDOWN) && getOverloadDelay() < Utils.currentTimeMillis() && getDisruptionDelay() < Utils.currentTimeMillis() && getPrayerRenewalDelay() < Utils.currentTimeMillis() && !OwnedObjectManager.containsObjectValue(this, 6)) {
+        if (!isFrozen() && getTeleBlockDelay() < Utils.currentTimeMillis() && getTickManager().isActive(TickManager.TickKeys.VENGEANCE_COOLDOWN) && getOverloadTicksLeft() <= 0 && getDisruptionDelay() < Utils.currentTimeMillis() && getPrayerRenewalTicksLeft() <= 0 && !OwnedObjectManager.containsObjectValue(this, 6)) {
             if (getInterfaceManager().containsInterface(3039))
                 getInterfaceManager().removeInterface(getInterfaceManager().isResizableScreen() ? 26 : 31, 3039);
         } else {
@@ -2384,18 +2383,18 @@ public class Player extends Entity {
             getPackets().sendHideIComponent(3039, 9, true);
             getPackets().sendHideIComponent(3039, 10, true);
         }
-        if (getPrayerRenewalDelay() >= Utils.currentTimeMillis()) {
+        if (getPrayerRenewalTicksLeft() > 0) {
             getPackets().sendHideIComponent(3039, 11, false);
             getPackets().sendHideIComponent(3039, 12, false);
-            getPackets().sendTextOnComponent(3039, 12, getTimeLeft(getPrayerRenewalDelay()) + "");
+            getPackets().sendTextOnComponent(3039, 12, getTimeLeft(getPrayerRenewalTicksLeft()) + "");
         } else {
             getPackets().sendHideIComponent(3039, 11, true);
             getPackets().sendHideIComponent(3039, 12, true);
         }
-        if (getOverloadDelay() > 0) {
+        if (getOverloadTicksLeft() > 0) {
             getPackets().sendHideIComponent(3039, 13, false);
             getPackets().sendHideIComponent(3039, 14, false);
-            getPackets().sendTextOnComponent(3039, 14, getTimeLeft(getOverloadDelay()) + "");
+            getPackets().sendTextOnComponent(3039, 14, getTimeLeft(getOverloadTicksLeft()) + "");
         } else {
             getPackets().sendHideIComponent(3039, 13, true);
             getPackets().sendHideIComponent(3039, 14, true);
@@ -2598,26 +2597,42 @@ public class Player extends Entity {
         }
         HealthOverlay healthOverlay = new HealthOverlay();
         healthOverlay.closeOverlay(this);
-        if (getOverloadDelay() > 0) {
-            if (getOverloadDelay() == 0 || isDead()) {
+        if (getOverloadTicksLeft() > 0) {
+            if (getOverloadTicksLeft() == 0) {
                 Pots.resetOverLoadEffect(this);
                 return;
             }
-            if (getOverloadDelay() == 48)
+            if (getOverloadTicksLeft() == 48)
                 message("<col=0000FF>Your overload effect will wear off in 30 seconds.");
-            if (getOverloadDelay() % 40 == 0)
+            if (getOverloadTicksLeft() % 40 == 0)
                 Pots.applyOverLoadEffect(this);
         }
-        if (getPrayerRenewalDelay() > 0) {
-            if (getPrayerRenewalDelay() == 0 || isDead()) {
+        if (getAntifire() > 0) {
+            if (getAntifire() == 0) {
+                message("<col=0000FF>Your dragonfire-breath protection has ran out.");
+                return;
+            }
+            if (getAntifire() == 48)
+                message("<col=0000FF>Your dragonfire-breath protection effect will wear off in 30 seconds.");
+        }
+        if (getSuperAntifire() > 0) {
+            if (getSuperAntifire() == 0) {
+                message("<col=0000FF>Your dragonfire-breath protection has ran out.");
+                return;
+            }
+            if (getSuperAntifire() == 48)
+                message("<col=0000FF>Your dragonfire-breath protection effect will wear off in 30 seconds.");
+        }
+        if (getPrayerRenewalTicksLeft() > 0) {
+            if (getPrayerRenewalTicksLeft() == 0) {
                 message("<col=0000FF>Your prayer renewal has ended.");
                 return;
             } else {
-                if (getPrayerRenewalDelay() == 48)
+                if (getPrayerRenewalTicksLeft() == 48)
                     message("<col=0000FF>Your prayer renewal will wear off in 30 seconds.");
                 if (!prayer.hasFullPrayerPoints()) {
                     getPrayer().restorePrayer(1);
-                    if ((getPrayerRenewalDelay() - 1) % 40 == 0)
+                    if ((getPrayerRenewalTicksLeft() - 1) % 40 == 0)
                         gfx(new Graphics(1295));
                 }
             }
@@ -4359,20 +4374,21 @@ public class Player extends Entity {
         return fireImmune;
     }
 
-    public void addAntifire(long time) {
-        antiFire = time + Utils.currentTimeMillis();
+    public void addAntifire(int minutes) {
+        getTickManager().addMinutes(TickManager.TickKeys.ANTI_FIRE_TICKS, minutes);
     }
 
     public long getAntifire() {
-        return antiFire;
+        return getTickManager().getTicksLeft(TickManager.TickKeys.ANTI_FIRE_TICKS);
     }
 
-    public void addSuperAntifire(long time) {
-        superAntifire = time + Utils.currentTimeMillis();
+    public void addSuperAntifire(int minutes) {
+        getTickManager().addMinutes(TickManager.TickKeys.SUPER_ANTI_FIRE_TICKS, minutes);
+        getTickManager().remove(TickManager.TickKeys.ANTI_FIRE_TICKS);
     }
 
     public long getSuperAntifire() {
-        return superAntifire;
+        return getTickManager().getTicksLeft(TickManager.TickKeys.SUPER_ANTI_FIRE_TICKS);
     }
 
     public long getLastLoggedIn() {
@@ -4430,8 +4446,8 @@ public class Player extends Entity {
         set(Keys.IntKey.TELEPORT_BLOCK, ticks);
     }
 
-    public void setPrayerRenewal(int ticks) {
-        set(Keys.IntKey.RENEWAL_TICKS, ticks);
+    public void setPrayerRenewal(int minutes) {
+        getTickManager().addMinutes(TickManager.TickKeys.PRAYER_RENEWAL_TICKS, minutes);
     }
 
     public int getTickToSeconds(int ticks) {
@@ -4461,7 +4477,7 @@ public class Player extends Entity {
     }
 
     public void setOverload(int ticks) {
-        set(Keys.IntKey.OVERLOAD_TICKS, ticks);
+        getTickManager().addTicks(TickManager.TickKeys.OVERLOAD_TICKS, ticks);
     }
 
 
@@ -4489,12 +4505,12 @@ public class Player extends Entity {
         return temporaryTarget;
     }
 
-    public int getOverloadDelay() {
-        return tickTimers.getOrDefault(Keys.IntKey.OVERLOAD_TICKS, 0);
+    public int getOverloadTicksLeft() {
+        return getTickManager().getTicksLeft(TickManager.TickKeys.OVERLOAD_TICKS);
     }
 
-    public int getPrayerRenewalDelay() {
-        return tickTimers.getOrDefault(Keys.IntKey.RENEWAL_TICKS, 0);
+    public int getPrayerRenewalTicksLeft() {
+        return getTickManager().getTicksLeft(TickManager.TickKeys.PRAYER_RENEWAL_TICKS);
     }
 
     public int getVengDelay() {

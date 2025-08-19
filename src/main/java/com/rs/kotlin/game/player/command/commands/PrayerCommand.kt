@@ -11,7 +11,7 @@ class PrayerCommand : Command {
     override val description = "Change between regular and curses prayerbook."
     override val usage = "::prayers"
 
-    override fun execute(player: Player, args: List<String>): Boolean {
+    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::prayers in this mode.")
             return true

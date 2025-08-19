@@ -1,5 +1,6 @@
 package com.rs.kotlin.game.player.command
 
+import com.everythingrs.net.packet.impl.Yell
 import com.rs.java.game.player.Player
 import com.rs.kotlin.game.player.command.commands.*
 
@@ -27,7 +28,10 @@ object CommandRegistry {
         register("dharoks", "dharok", "dh", command = DharoksCommand())
         register("ahrims", "ahrim", command = AhrimsCommand())
         register("runepouch", "rp", "pouch", command = RunePouchCommand())
-
+        register("yell", "worldmessage", command = YellCommand())
+        val teleportCommand = TeleportCommand()
+        register(*teleportCommand.getAllTriggers().toTypedArray(), command = teleportCommand)
+        register("location", "locations", "teleports", command = LocationsCommand(teleportCommand))
     }
 
     @JvmStatic
@@ -47,8 +51,8 @@ object CommandRegistry {
         val parts = input.trim().split("\\s+".toRegex())
         if (parts.isEmpty()) return false
 
-        val name = parts[0].lowercase()
-        val args = parts.drop(1)
+        val name = parts[0].lowercase()        // the trigger used
+        val args = parts.drop(1)                // everything after the trigger
 
         val command = commands[name]
         if (command == null) {
@@ -61,8 +65,7 @@ object CommandRegistry {
             return true
         }
 
-
-        return command.execute(player, args)
+        return command.execute(player, args, name)
     }
 
     fun getAllPrimary(): Map<String, Command> {

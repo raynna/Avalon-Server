@@ -12,7 +12,7 @@ class MasterCommand : Command {
     override val description = "Sets all combat stats to level 99"
     override val usage = "::master"
 
-    override fun execute(player: Player, args: List<String>): Boolean {
+    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::master in this mode.")
             return true

@@ -11,7 +11,7 @@ class NormalPrayersCommand : Command {
     override val description = "Change to normal prayers."
     override val usage = "::normals"
 
-    override fun execute(player: Player, args: List<String>): Boolean {
+    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::normals in this mode.")
             return true

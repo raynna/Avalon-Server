@@ -58,7 +58,7 @@ public class WildernessControler extends Controler {
 		}
 		if (changed)
 			player.getPackets().sendGameMessage("Your extreme potion bonus has been reduced.");
-		if (player.getOverloadDelay() > 1)
+		if (player.getOverloadTicksLeft() > 1)
 			Pots.resetOverLoadEffect(player);
 	}
 

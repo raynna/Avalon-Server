@@ -7,5 +7,6 @@ interface Command {
     val requiredRank: Ranks.Rank
     val description: String
     val usage: String
-    fun execute(player: Player, args: List<String>): Boolean
+
+    fun execute(player: Player, args: List<String>, trigger: String): Boolean
 }

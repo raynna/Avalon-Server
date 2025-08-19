@@ -36,7 +36,8 @@ public abstract class CombatScript {
 
     public static void delayHit(NPC npc, int delay, final Entity target, final Hit... hits) {
         for (Hit hit : hits) {
-            target.handleIncommingHit(hit);
+            if (target instanceof Player p2)
+                p2.handleIncommingHit(hit);
             int attackSpeed = npc.getAttackSpeed() * 600;
             npc.setAttackDelay((attackSpeed / 2) + 4800);
             if (target instanceof Player playerTarget) {

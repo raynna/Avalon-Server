@@ -11,6 +11,7 @@ import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.controlers.CrucibleControler;
 import com.rs.java.game.player.controlers.WildernessControler;
 import com.rs.core.tasks.WorldTask;
@@ -346,7 +347,7 @@ public final class Pots {
 		ANTI_FIRE() {
 			@Override
 			public void extra(final Player player) {
-				player.addAntifire(360000);
+				player.addAntifire(600);
 				final long current = player.getAntifire();
 				player.getPackets().sendGameMessage("You are now immune to dragonfire.");
 				WorldTasksManager.schedule(new WorldTask() {
@@ -374,8 +375,7 @@ public final class Pots {
 		SUPER_ANTI_FIRE() {
 			@Override
 			public void extra(final Player player) {
-				player.addSuperAntifire(360000);
-				player.antiFire = 0;
+				player.addSuperAntifire(6);
 				final long current = player.getSuperAntifire();
 				player.getPackets().sendGameMessage("You are now immune to dragonfire.");
 				WorldTasksManager.schedule(new WorldTask() {
@@ -637,7 +637,7 @@ public final class Pots {
 
 			@Override
 			public void extra(final Player player) {
-				player.setOverload(480);
+				player.setOverload(600);
 				applyOverLoadEffect(player);
 				// player.getPackets().sendGameMessage("You are now immune to for " +
 				// getOverloadTimeleft(player) + "");
@@ -666,7 +666,7 @@ public final class Pots {
 		PRAYER_RENEWAL() {
 			@Override
 			public void extra(Player player) {
-				player.setPrayerRenewal(480);
+				player.setPrayerRenewal(6);
 			}
 		},
 		SUPER_RESTORE(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.MAGIC, Skills.RANGE, Skills.AGILITY,
@@ -782,8 +782,8 @@ public final class Pots {
 	}
 
 	public static String getOverloadTimeleft(Player player) {
-		int minutes = (int) ((player.getOverloadDelay() * 0.6) / 60);
-		int seconds = (int) ((player.getOverloadDelay() * 0.6) / 1000 * 60);
+		int minutes = (int) ((player.getOverloadTicksLeft() * 0.6) / 60);
+		int seconds = (int) ((player.getOverloadTicksLeft() * 0.6) / 1000 * 60);
 		String secondsMessage = (seconds != 1 ? seconds + " seconds" : "second");
 		String minutesMessage = (minutes != 1 ? minutes + " minutes" : "minute");
 		return (minutes > 0 ? minutesMessage + " and " : "") + secondsMessage;

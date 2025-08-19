@@ -1,11 +1,9 @@
 package com.rs.kotlin.game.player.combat
 
-import com.rs.core.thread.CoresManager
-import com.rs.core.thread.WorldThread
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
-import com.rs.java.utils.Utils
 import java.util.*
+import kotlin.math.ceil
 
 enum class AttackStyle(
     val attackSpeedModifier: Int = 0,
@@ -32,7 +30,13 @@ enum class XpMode {
         val baseXp = damage * 0.4
         val hpXp = damage * 0.133
         val type = attackStyle.combatType
-
+        val isOneXpPerHit = player.toggles("ONEXPPERHIT", false)
+        val isOneXHits = player.toggles("ONEXHITS", false)
+        if (isOneXpPerHit && damage > 0) {
+            val xp = if (isOneXHits) ceil(damage / 10.0) else damage
+            player.skills.addXpDelayed(Skills.HITPOINTS, xp.toDouble())
+            return
+        }
         if (hitpoints) {
             xpToAdd[Skills.HITPOINTS] = hpXp
         }

@@ -11,7 +11,7 @@ class DharoksCommand : Command {
     override val description = "Gives you all dharoks pieces."
     override val usage = "::dharoks"
 
-    override fun execute(player: Player, args: List<String>): Boolean {
+    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::dharoks in this mode.")
             return true

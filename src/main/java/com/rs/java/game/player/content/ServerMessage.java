@@ -1,79 +1,87 @@
 package com.rs.java.game.player.content;
 
-import com.rs.Settings;
 import com.rs.java.game.World;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Ranks.Rank;
 
 public class ServerMessage {
 
+	private static final String[] INVALID_CHARS = {
+			"<euro", "<img", "<img=", "<col", "<col=", "<shad", "<shad=", "<str>", "<u>"
+	};
+
+	/**
+	 * Filters a message for illegal characters and sends globally if valid.
+	 *
+	 * @param player The player sending the message.
+	 * @param data The message content.
+	 * @param staff Whether the message is staff-only.
+	 */
 	public static void filterMessage(Player player, String data, boolean staff) {
-		// Moderator/Administrator accounts cannot be ignored, regular accounts
-		// can just turn game to "filter"
-		// Regular accounts can also do ::hideyell if they want filter off
-		// ingame...
-		String[] invalid = { "<euro", "<img", "<img=", "<col", "<col=", "<shad", "<shad=", "<str>", "<u>" };
-
-		/*
-		 * if (player.isYellMuted) { unused. player.getPackets().sendGameMessage(
-		 * "%s has removed your ability to use the yell system.", player.yellMutedBy);
-		 * return; }
-		 */
-
-		if (!player.isDeveloper()) {
-			for (String s : invalid) {
-				if (data.contains(s)) {
-					player.getPackets().sendGameMessage("Your message failed to send due to illegal charachters.");
-					return;
-				}
-			}
+		if (!player.isDeveloper() && containsInvalidChars(data)) {
+			player.getPackets().sendGameMessage("Your message failed to send due to illegal characters.");
+			return;
 		}
 
 		sendGlobalMessage(player, data, staff);
 	}
 
+	/**
+	 * Sends a global message formatted based on player rank.
+	 */
 	public static void sendGlobalMessage(Player player, String data, boolean staff) {
+		String formatted;
+
 		if (player.isDeveloper()) {
-			String edits = String.format("[<shad=000000><col=F27C1D>Server Message</col></shad>] <img=1>%s: %s",
+			formatted = String.format("[<shad=000000><col=F27C1D>Server Message</col></shad>] <img=1>%s: %s",
 					player.getDisplayName(), data);
-			sendNews(true, edits, staff, false);
+			sendNews(true, formatted, staff, false);
 			return;
 		}
 
 		if (player.isModerator()) {
-			String edits = String.format(
-					"[<shad=000000><col=948D8D>Player Moderator</col></shad>] <img=0>%s: <col=007FB5>%s",
+			formatted = String.format("[<shad=000000><col=948D8D>Player Moderator</col></shad>] <img=0>%s: <col=007FB5>%s",
 					player.getDisplayName(), data);
-			sendNews(true, edits, staff, false);
+			sendNews(true, formatted, staff, false);
 			return;
-		} else if (player.getPlayerRank().getRank()[0] == Rank.YOUTUBER) {// ff005a
-			String edits = String.format("[<shad=000000><col=FF0000>Youtuber</col></shad>] <img=8>%s: %s",
+		}
+
+		if (player.getPlayerRank().getRank()[0] == Rank.YOUTUBER) {
+			formatted = String.format("[<col=ff1100>Youtuber</col>] <img=8>%s: %s",
 					player.getDisplayName(), data);
-			sendNews(false, edits, false, false);
+			sendNews(false, formatted, false, false);
 			return;
-		} else {
-			String edits = String.format("<shad=000000><col=#088F8F>[Player] %s</col>: %s", player.getDisplayName(), data);
-			sendNews(false, edits, false, false);
-			return;
+		}
+
+		formatted = String.format("[<col=003fff>Player</col>] %s: %s",
+				player.getDisplayName(), data);
+		sendNews(false, formatted, false, false);
+	}
+
+	/**
+	 * Sends the message to all players in the world.
+	 */
+	public static void sendNews(boolean important, String message, boolean staffOnly, boolean autoColor) {
+		for (Player user : World.getPlayers()) {
+			if (user == null || !user.isActive()) continue;
+			if (!important && user.isYellOff()) continue;
+			if (staffOnly && !user.isStaff()) continue;
+
+			if (autoColor) {
+				user.getPackets().sendColoredMessage(message, important);
+			} else {
+				user.getPackets().sendGameMessage(message, true);
+			}
 		}
 	}
 
-	public static void sendNews(boolean important, String args, boolean staffOnly, boolean autoColor) {
-		for (Player user : World.getPlayers()) {
-			if (user == null || !user.isActive()
-			// if the user has yell off and it's not a staff msg
-					|| (user.isYellOff() && important == false)
-					// if the user is not a staff
-					|| (staffOnly && !user.isStaff())) {
-
-				continue;
-			}
-			if (autoColor) {
-				user.getPackets().sendColoredMessage(args, important);
-			} else {
-				user.getPackets().sendGameMessage(args, true);
-			}
-			args = args.replaceAll("<shad", "");
+	/**
+	 * Checks if the message contains any invalid characters.
+	 */
+	private static boolean containsInvalidChars(String data) {
+		for (String invalid : INVALID_CHARS) {
+			if (data.contains(invalid)) return true;
 		}
+		return false;
 	}
 }

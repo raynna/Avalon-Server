@@ -11,7 +11,7 @@ class SpecCommand : Command {
     override val description = "Restores your special attack"
     override val usage = "::spec"
 
-    override fun execute(player: Player, args: List<String>): Boolean {
+    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::spec in this mode.")
             return true

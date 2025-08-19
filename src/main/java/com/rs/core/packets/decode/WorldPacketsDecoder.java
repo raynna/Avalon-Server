@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -52,6 +53,7 @@ import com.rs.java.game.player.content.customtab.SettingsTab;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.game.player.content.pet.Pets;
+import com.rs.java.game.player.content.presets.Preset;
 import com.rs.java.game.player.content.randomevent.AntiBot;
 import com.rs.java.game.player.content.unlockables.UnlockableManager;
 import com.rs.java.game.player.controlers.construction.SawmillController;
@@ -1491,7 +1493,39 @@ public final class WorldPacketsDecoder extends Decoder {
 				player.temporaryAttribute().remove("SAVESETUP");
 				player.getPresetManager().savePreset(value);
 				GearTab.refresh(player);
-			} else if (player.temporaryAttribute().get("OTHERPRESET") == Boolean.TRUE) {
+			} else if (player.temporaryAttribute().get("RENAME_SETUP") == Boolean.TRUE) {
+				player.temporaryAttribute().remove("RENAME_SETUP");
+
+				Integer selectedGear = (Integer) player.getTemporaryAttributtes().get("SELECTEDGEAR");
+				if (selectedGear != null) {
+					String keyToRename = null;
+					Preset presetToRename = null;
+					for (Map.Entry<String, Preset> entry : player.getPresetManager().PRESET_SETUPS.entrySet()) {
+						if (entry.getValue().getId(player) == selectedGear) {
+							keyToRename = entry.getKey();
+							presetToRename = entry.getValue();
+							break;
+						}
+					}
+
+					if (keyToRename != null && presetToRename != null) {
+						player.getPresetManager().PRESET_SETUPS.remove(keyToRename);
+
+						presetToRename.setName(value);
+
+						player.getPresetManager().PRESET_SETUPS.put(value, presetToRename);
+
+						player.getTemporaryAttributtes().remove("SELECTEDGEAR"); // clear selection
+
+						player.getPackets().sendGameMessage("Preset \"" + keyToRename + "\" renamed to \"" + value + "\".");
+						GearTab.refresh(player);
+					} else {
+						player.getPackets().sendGameMessage("Could not find the preset to rename.");
+					}
+				} else {
+					player.getPackets().sendGameMessage("No preset selected to rename.");
+				}
+		} else if (player.temporaryAttribute().get("OTHERPRESET") == Boolean.TRUE) {
 				player.temporaryAttribute().remove("OTHERPRESET");
 				String otherName = Utils.formatPlayerNameForDisplay(value);
 				Player p2 = World.getPlayerByDisplayName(otherName);

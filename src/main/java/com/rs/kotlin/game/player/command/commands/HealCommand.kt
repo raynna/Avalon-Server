@@ -13,7 +13,7 @@ class HealCommand : Command {
     override val description = "Restores your health, prayer & special attack"
     override val usage = "::heal"
 
-    override fun execute(player: Player, args: List<String>): Boolean {
+    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::heal in this mode.")
             return true

@@ -75,7 +75,6 @@ public final class Inventory implements Serializable {
 		player.getPackets().sendItems(93, finalised);
 	}
 
-
 	public void unlockInventoryOptions() {
 		player.getPackets().sendComponentSettings(INVENTORY_INTERFACE, 0, 0, 27, 4554126);
 		player.getPackets().sendComponentSettings(INVENTORY_INTERFACE, 0, 28, 55, 2097152);

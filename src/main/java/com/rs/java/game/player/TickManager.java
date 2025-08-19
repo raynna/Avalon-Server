@@ -117,15 +117,17 @@ public class TickManager {
     }
 
     public enum TickKeys {
+
+        /**
+         * Entity timers
+         */
+
         ENTITY_LOCK_TICK(0, 0),
         FREEZE_TICKS(2, 0),
         FREEZE_IMMUNE_TICKS(3, 0),
         VENGEANCE_COOLDOWN(4, 0),
         POISON_TICKS(5, 0),
         POISON_SEVERITY(6, 0),
-        POISON_IMMUNE_TICKS(7, 0),
-        OVERLOAD_TICKS(8, 0),
-        RENEWAL_TICKS(9, 0),
         VENGEANCE_TICKS(10, 0),
         LAST_ATTACK_TICK(11, 0),
         LAST_ATTACKED_TICK(12, 0),
@@ -135,6 +137,24 @@ public class TickManager {
         POT_LOCK_TICK(16, 0),
         DISABLED_PROTECTION_PRAYER_TICK(17, 0),
         TELEPORTING_TICK(18, 0),
+
+
+        /**
+         * Potion timers
+         */
+
+        OVERLOAD_TICKS(50, 0),
+        RENEWAL_TICKS(51, 0),
+        POISON_IMMUNE_TICKS(52, 0),
+        ANTI_FIRE_TICKS(53, 0),
+        SUPER_ANTI_FIRE_TICKS(54, 0),
+        PRAYER_RENEWAL_TICKS(55, 0),
+
+
+
+
+
+
 
         DISRUPTION_SHIELD(11, 0),
         TELEPORT_BLOCK(11, 0),

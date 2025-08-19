@@ -14,7 +14,7 @@ public final class Preset implements Serializable {
 	private final Item[] inventory, equipment;
 	private final boolean curses;
 	private final byte spellBook;
-	private final String name;
+	private String name;
 	private final double[] xp;
 	private final Item[] runes;
 	private final Summoning.Pouch familiarPouch;
@@ -52,6 +52,14 @@ public final class Preset implements Serializable {
 			}
 			System.out.println("Preset name: " + name + "saved, spellId: " + pair.getKey());
 		}*/
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public Item[] getInventory() {

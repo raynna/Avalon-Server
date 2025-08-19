@@ -11,7 +11,7 @@ class ModernsCommand : Command {
     override val description = "Change to ancient spellbook."
     override val usage = "::moderns"
 
-    override fun execute(player: Player, args: List<String>): Boolean {
+    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::moderns in this mode.")
             return true

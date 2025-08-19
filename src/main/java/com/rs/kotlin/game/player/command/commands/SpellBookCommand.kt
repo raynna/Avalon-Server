@@ -10,7 +10,7 @@ class SpellBookCommand : Command {
     override val description = "Change between magic spellbooks."
     override val usage = "::spellbook"
 
-    override fun execute(player: Player, args: List<String>): Boolean {
+    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::spellbook in this mode.")
             return true

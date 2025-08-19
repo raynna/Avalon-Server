@@ -14,6 +14,7 @@ import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.damage.SoakDamage
 import com.rs.kotlin.game.world.projectile.ProjectileManager
+import kotlin.math.ceil
 import kotlin.math.min
 
 class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
@@ -269,6 +270,13 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             AncientMagicks.id -> AncientMagicks.getSpell(spellId)
             ModernMagicks.id -> ModernMagicks.getSpell(spellId)
             else -> null
+        }
+        val isOneXpPerHit = attacker.toggles("ONEXPPERHIT", false)
+        val isOneXHits = attacker.toggles("ONEXHITS", false)
+        if (isOneXpPerHit && totalDamage > 0) {
+            val xp = if (isOneXHits) ceil(totalDamage / 10.0) else totalDamage
+            attacker.skills.addXpDelayed(Skills.HITPOINTS, xp.toDouble())
+            return
         }
         val spellXp = currentSpell?.xp?:0.0
         val baseXp = (totalDamage * 0.2)
