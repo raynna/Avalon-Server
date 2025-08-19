@@ -57,7 +57,7 @@ public class KingBlackDragonCombat extends CombatScript {
 			case 1: // Breath attacks
 				if (player != null) {
 					int specialChance = inMelee ? 1 : 0;
-					int breathTypeRoll = Utils.random(2 + specialChance); // 0 normal, 1-2 special
+					int breathTypeRoll = Utils.random(4); // 0–3 inclusive // 0 normal, 1-2 special
 
 					int rawDamage;
 					int projectileId;
@@ -109,6 +109,8 @@ public class KingBlackDragonCombat extends CombatScript {
 				break;
 			case 1: // Shocking
 				for (Skills.SkillData skills : Skills.SkillData.values()) {
+					if (skills.getId() == Skills.PRAYER || skills.getId() == Skills.HITPOINTS || skills.getId() == Skills.SUMMONING)
+						continue;
 					player.getSkills().drainLevel(skills.getId(), 2);
 				}
 				break;
