@@ -41,7 +41,7 @@ public abstract class CombatScript {
             int attackSpeed = npc.getAttackSpeed() * 600;
             npc.setAttackDelay((attackSpeed / 2) + 4800);
             if (target instanceof Player playerTarget) {
-                PrayerEffectHandler.handleProtectionEffects(playerTarget, npc, hit);
+                PrayerEffectHandler.handleProtectionEffects(npc, playerTarget, hit);
             }
             handleAbsorb(target, hit);
             handleStaffOfLightReduction(target, hit);
