@@ -18,7 +18,6 @@ public class TickManager {
 
     public void init() {
         this.tickCallbacks = new HashMap<>();
-        this.entity = World.getPlayer(this.entityName);
     }
 
     public TickManager(Entity entity) {
@@ -27,8 +26,9 @@ public class TickManager {
 
     public void setEntity(Entity entity) {
         this.entity = entity;
-        if (this.entity instanceof Player) {
-            this.entity = World.getPlayer(this.entityName);
+        if (this.entity instanceof Player player) {
+            this.entityName = player.getUsername();
+            this.entity = World.getPlayer(player.getUsername());
         }
     }
 

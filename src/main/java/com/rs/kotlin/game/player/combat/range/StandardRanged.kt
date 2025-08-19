@@ -1,5 +1,7 @@
 package com.rs.kotlin.game.player.combat.range
 
+import com.rs.core.tasks.WorldTask
+import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Animation
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
@@ -10,8 +12,10 @@ import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
+import com.rs.kotlin.game.world.projectile.ProjectileType
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.reflect.typeOf
 
 
 /** Range Attack distances
@@ -275,24 +279,14 @@ object StandardRanged : RangeData() {
                 energyCost = 55,
                 damageMultiplier = 1.5,
                 execute = { context ->
-                    val special = context.weapon.special!!
                     context.attacker.animate(Animation(426))
                     ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
-                    val hit = context.combat.registerHit(
-                        context.attacker,
-                        context.defender,
-                        CombatType.RANGED,
-                        context.attackStyle,
-                        context.weapon,
-                        accuracyMultiplier = special.accuracyMultiplier,
-                        damageMultiplier = special.damageMultiplier
-                    )
-                    if (hit.damage > 0) {
-                        context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
+                    context.hits {
+                        val rangedHit = ranged()
+                        if (rangedHit.damage > 0) {
+                            context.attacker.applyHeal(rangedHit.copyWithDamage(rangedHit.damage))
+                        }
                     }
-                    context.combat.delayHits(
-                        PendingHit(hit, context.defender, context.combat.getHitDelay())
-                    )
                 }
             )
         ),
@@ -309,24 +303,14 @@ object StandardRanged : RangeData() {
                 energyCost = 55,
                 damageMultiplier = 1.5,
                 execute = { context ->
-                    val special = context.weapon.special!!
                     context.attacker.animate(Animation(426))
                     ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
-                    val hit = context.combat.registerHit(
-                        context.attacker,
-                        context.defender,
-                        CombatType.RANGED,
-                        context.attackStyle,
-                        context.weapon,
-                        accuracyMultiplier = special.accuracyMultiplier,
-                        damageMultiplier = special.damageMultiplier
-                    )
-                    if (hit.damage > 0) {
-                        context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
+                    context.hits {
+                        val rangedHit = ranged()
+                        if (rangedHit.damage > 0) {
+                            context.attacker.applyHeal(rangedHit.copyWithDamage(rangedHit.damage))
+                        }
                     }
-                    context.combat.delayHits(
-                        PendingHit(hit, context.defender, context.combat.getHitDelay())
-                    )
                 }
             )
         ),
@@ -343,24 +327,14 @@ object StandardRanged : RangeData() {
                 energyCost = 55,
                 damageMultiplier = 1.5,
                 execute = { context ->
-                    val special = context.weapon.special!!
                     context.attacker.animate(Animation(426))
                     ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
-                    val hit = context.combat.registerHit(
-                        context.attacker,
-                        context.defender,
-                        CombatType.RANGED,
-                        context.attackStyle,
-                        context.weapon,
-                        accuracyMultiplier = special.accuracyMultiplier,
-                        damageMultiplier = special.damageMultiplier
-                    )
-                    if (hit.damage > 0) {
-                        context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
+                    context.hits {
+                        val rangedHit = ranged()
+                        if (rangedHit.damage > 0) {
+                            context.attacker.applyHeal(rangedHit.copyWithDamage(rangedHit.damage))
+                        }
                     }
-                    context.combat.delayHits(
-                        PendingHit(hit, context.defender, context.combat.getHitDelay())
-                    )
                 }
             )
         ),
@@ -378,24 +352,16 @@ object StandardRanged : RangeData() {
                 accuracyMultiplier = 1.0,
                 damageMultiplier = 1.0,
                 execute = { context ->
-                    val special = context.weapon.special!!
                     context.attacker.animate(Animation(1074))
                     context.attacker.packets.sendSound(2545, 0, 1)
-                    ProjectileManager.sendWithDelay(Projectile.ARROW, 249, context.attacker, context.defender, -5)
-                    ProjectileManager.sendWithDelay(Projectile.ARROW, 249, context.attacker, context.defender, -25)
-                    fun registerSpecialHit() = context.combat.registerHit(
-                        context.attacker,
-                        context.defender,
-                        CombatType.RANGED,
-                        context.attackStyle,
-                        context.weapon,
-                        accuracyMultiplier = special.accuracyMultiplier,
-                        damageMultiplier = special.damageMultiplier
-                    )
-                    context.combat.delayHits(
-                        PendingHit(registerSpecialHit(), context.defender, context.combat.getHitDelay() - 1),
-                        PendingHit(registerSpecialHit(), context.defender, context.combat.getHitDelay())
-                    )
+                    ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
+                    ProjectileManager.sendDelayed(Projectile.ARROW, 249, context.attacker, context.defender, delayTicks = 1)
+                    context.hits {
+                        val distance = Utils.getDistance(context.attacker, context.defender)
+                        val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
+                        ranged(delay = firstDelay)
+                        ranged(delay = secondDelay)
+                    }
                 }
             )
         ),
@@ -419,22 +385,24 @@ object StandardRanged : RangeData() {
                     val endGraphic = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1100 else 1103
                     val soundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3733 else 3736
                     val hitSoundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3731 else 3732
-                    ProjectileManager.sendWithDelayAndCallback(
-                        Projectile.ARROW, arrowProjectile, context.attacker, context.defender, 0, hitGraphic = Graphics(endGraphic)) {
+                    ProjectileManager.send(
+                        Projectile.DRAGON_ARROW, arrowProjectile, context.attacker, context.defender, heightOffset = 0, hitGraphic = Graphics(endGraphic)) {
                         context.attacker.packets.sendSound(hitSoundId, 0, 1)
                     }
-                    ProjectileManager.sendWithDelayAndCallback(
-                        Projectile.ARROW, arrowProjectile, context.attacker, context.defender, 15, hitGraphic = Graphics(endGraphic)) {
+                    ProjectileManager.sendDelayed(
+                        Projectile.DRAGON_ARROW, arrowProjectile, context.attacker, context.defender, delayTicks = 1, heightOffset = 15, hitGraphic = Graphics(endGraphic)) {
                         context.attacker.packets.sendSound(hitSoundId, 0, 1)
                     }
                     context.attacker.packets.sendSound(soundId, 0, 1)
                     context.attacker.packets.sendSound(soundId, 30, 1)
                     context.hits {
+                        val distance = Utils.getDistance(context.attacker, context.defender)
+                        val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
                         val minDamage = (if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 80 else 50)
                         val multiplier = (if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1.5 else 1.3)
 
-                        val firstHit = ranged(delay = context.combat.getHitDelay() - 1, damageMultiplier = multiplier)
-                        val secondHit = ranged(delay = context.combat.getHitDelay(), damageMultiplier = multiplier)
+                        val firstHit = ranged(delay = firstDelay, damageMultiplier = multiplier)
+                        val secondHit = ranged(delay = secondDelay, damageMultiplier = multiplier)
 
                         firstHit.damage = min(max(firstHit.damage, minDamage), 480)
                         secondHit.damage = min(max(secondHit.damage, minDamage), 480)
@@ -447,11 +415,15 @@ object StandardRanged : RangeData() {
                     val startGfx = context.ammo?.doubleGfx
                     context.attacker.gfx(startGfx)
                     val projectile = context.ammo?.projectileId!!
-                    ProjectileManager.sendWithDelay(Projectile.ARROW, projectile, context.attacker, context.defender, 0)
-                    ProjectileManager.sendWithDelay(Projectile.ARROW, projectile, context.attacker, context.defender, 25)
+                    ProjectileManager.send(Projectile.DRAGON_ARROW, projectile, context.attacker, context.defender,heightOffset = 0)
+                    ProjectileManager.sendDelayed(
+                        projectile = Projectile.DRAGON_ARROW, gfxId = projectile, attacker = context.attacker, defender = context.defender, delayTicks = 1, heightOffset = 10) {
+                    }
                     context.hits {
-                        ranged(delay = context.combat.getHitDelay() - 1)
-                        ranged(delay = context.combat.getHitDelay())
+                        val distance = Utils.getDistance(context.attacker, context.defender)
+                        val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
+                        ranged(delay = firstDelay)
+                        ranged(delay = secondDelay)
                     }
                 }
             )

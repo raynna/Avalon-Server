@@ -15,6 +15,7 @@ import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.damage.SoakDamage
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 import kotlin.math.ceil
+import kotlin.math.max
 import kotlin.math.min
 
 class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
@@ -60,13 +61,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun getHitDelay(): Int {
         val distance = Utils.getDistance(attacker, defender)
-        val delay = when {
-            distance <= 1 -> 1
-            distance <= 3 -> 2
-            distance <= 6 -> 3
-            else -> 4
-        }
-        return delay.coerceAtLeast(1)
+        return max(2, 1 + (1 + distance) / 3)
     }
 
     override fun getAttackDistance(): Int {
@@ -166,24 +161,24 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (spell.projectileIds.isNotEmpty()) {
             val heightDifferences = listOf(10, 0, -10)
             spell.projectileIds.zip(heightDifferences).forEach { (projectileId, heightDiff) ->
-                ProjectileManager.sendWithHeightAndHitGraphic(
+                ProjectileManager.send(
                     spell.projectileType,
                     projectileId,
-                    heightDiff,
-                    attacker,
-                    defender,
-                    endGraphic
+                    heightOffset = heightDiff,
+                    attacker = attacker,
+                    defender = defender,
+                    hitGraphic = endGraphic
                 )
             }
         }
         if (spell.projectileId != -1) {
             if (endGraphic.id != -1) {
-                ProjectileManager.sendWithHitGraphic(
+                ProjectileManager.send(
                     spell.projectileType,
                     spell.projectileId,
-                    attacker,
-                    defender,
-                    endGraphic
+                    attacker = attacker,
+                    defender = defender,
+                    hitGraphic = endGraphic
                 )
             } else {
                 ProjectileManager.send(spell.projectileType, spell.projectileId, attacker, defender)
@@ -192,6 +187,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (hit.damage > 0 && spell.bind != -1) {
             defender.addFreezeDelay(spell.bind, true)
         }
+        attacker.message("hitDelay ${getHitDelay()}")
         delayHits(PendingHit(hit, defender, getHitDelay()))
         if (manual) {
             WorldTasksManager.schedule(object : WorldTask() {
@@ -230,12 +226,12 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         if (spell.projectileId != -1) {
             if (spell.endGraphic.id != -1) {
-                ProjectileManager.sendWithHitGraphic(
+                ProjectileManager.send(
                     spell.projectileType,
                     spell.projectileId,
-                    attacker,
-                    defender,
-                    endGraphic,
+                    attacker = attacker,
+                    defender = defender,
+                    hitGraphic = endGraphic,
                 )
             } else {
                 ProjectileManager.send(spell.projectileType, spell.projectileId, attacker, defender)

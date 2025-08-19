@@ -2,6 +2,7 @@ package com.rs.kotlin.game.world.projectile
 
 enum class Projectile(val typeName: String) {
     ARROW("arrow"),
+    DRAGON_ARROW("dragon arrow"),
     BOLT("bolt"),
     DART("dart"),
     THROWING_KNIFE("throwing_knife"),

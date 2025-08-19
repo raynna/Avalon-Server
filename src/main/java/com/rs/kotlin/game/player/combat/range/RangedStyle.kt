@@ -20,6 +20,7 @@ import com.rs.kotlin.game.player.combat.special.meleeHit
 import com.rs.kotlin.game.player.combat.special.rangedHit
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
+import kotlin.math.floor
 import kotlin.math.min
 
 class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
@@ -323,10 +324,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun getHitDelay(): Int {
         val distance = Utils.getDistance(attacker, defender)
-        return when {
-            distance <= 2 -> 1//TODO UNSURE OF CORRECT VALUES
-            distance <= 4 -> 2
-            else -> 3
-        }
+        return 1 + (3 + distance) / 6
     }
+
 }

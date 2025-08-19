@@ -194,8 +194,11 @@ interface CombatStyle {
         return true
     }
 
-
-
+    fun getDarkBowHitDelays(distance: Int): Pair<Int, Int> {
+        val firstDelay = 1 + (3 + distance) / 6
+        val secondDelay = 1 + (2 + distance) / 3
+        return firstDelay to secondDelay
+    }
 
 
 }

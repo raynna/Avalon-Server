@@ -93,7 +93,7 @@ public class PrayerEffectHandler {
         int damage = Math.min(hit.getDamage(), target.getHitpoints());
         if (damage <= 0) return;
         Prayer soulSplit = AncientPrayer.SOUL_SPLIT;
-        ProjectileManager.send(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), attacker, target);
+        ProjectileManager.sendSimple(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), attacker, target);
         int healAmount = (int)(damage * soulSplit.getHealPercentage());
         if (healAmount > 0 && attacker.getHitpoints() < attacker.getMaxHitpoints()) {
             attacker.heal(healAmount, true, true);
@@ -111,7 +111,7 @@ public class PrayerEffectHandler {
 
                 target.gfx(soulSplit.getGraphic());
                 if (soulSplit.getProjectile() != null)
-                    ProjectileManager.send(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), target, attacker);
+                    ProjectileManager.sendSimple(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), target, attacker);
             }
         }, Utils.getDistance(attacker, target) > 2 ? 2 : 1);
     }
@@ -147,7 +147,7 @@ public class PrayerEffectHandler {
 
     private static void playLeechEffects(Player attacker, Entity target, AncientPrayer prayer) {
         attacker.animateNoCheck(new Animation(Rscm.lookup("animation.curses_leech")));
-        ProjectileManager.sendWithHitGraphic(Projectile.LEECH, prayer.getProjectile().getId(), attacker, target, prayer.getGraphic());
+        ProjectileManager.sendWithGraphic(Projectile.LEECH, prayer.getProjectile().getId(), attacker, target, prayer.getGraphic());
         String statAffected = prayer.getName().replace("Leech ", "");
         attacker.getPackets().sendGameMessage("Your curse drains " + statAffected + " from the enemy, boosting your " + statAffected + ".", true);
         if (target instanceof Player p2) {
@@ -179,7 +179,7 @@ public class PrayerEffectHandler {
         if (target instanceof Player defender) {
             attacker.animateNoCheck(new Animation(Rscm.lookup("animation.curses_leech")));
             World.sendLeechProjectile(attacker, defender, prayer.getProjectile().getId());
-            ProjectileManager.send(Projectile.LEECH, prayer.getProjectile().getId(), attacker, defender);
+            ProjectileManager.sendSimple(Projectile.LEECH, prayer.getProjectile().getId(), attacker, defender);
             if (prayer == AncientPrayer.LEECH_ENERGY) {
                 handleRunEnergyDrain(attacker, defender, prayer);
             } else if (prayer == AncientPrayer.LEECH_SPECIAL) {

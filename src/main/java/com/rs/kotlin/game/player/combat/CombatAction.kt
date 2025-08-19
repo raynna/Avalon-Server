@@ -210,13 +210,13 @@ class CombatAction(
                     player.calcFollow(target, if (player.run) 2 else 1, true, true)
                     return
                 }
+                player.resetWalkSteps()
                 if (player.isOutOfRange(target, requiredDistance)) {
                     val moved = lastTargetX != target.x || lastTargetY != target.y
                     lastTargetX = target.x
                     lastTargetY = target.y
                     player.resetWalkSteps()
                     if (moved || (!player.hasWalkSteps() && player.newActionManager.getCurrentAction() != null)) {
-                        player.resetWalkSteps()
                         player.calcFollow(target, if (player.run) 2 else 1, true, true)
                     }
                 }
