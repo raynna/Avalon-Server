@@ -3,22 +3,27 @@ package com.rs.java.game.npc.combat.impl;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
+import com.rs.java.game.npc.combat.DragonFire;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.prayer.AncientPrayer;
 import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.world.projectile.Projectile;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 public class MetalDragonCombat extends CombatScript {
 
-	private static final int[] DRAGON_SHIELDS = {11283, 11284, 1540};
+	private static final int DRAGON_SLAM_ANIMATION = 80, DRAGON_HEADBUTT_ANIMATION = 91, DRAGONFIRE_BREATH_ANIMATION = 84, DRAGON_DEATH_ANIMATION = 92;
+	private static final int DRAGONFIRE_GFX = 1, DRAGONFIRE_TOXIC_PROJECTILE = 393, DRAGONFIRE_NORMAL_PROJECTILE = 394, DRAGONFIRE_ICY_PROJECTILE = 395, DRAGONFIRE_SHOCKING_PROJECTILE = 396;
+
 
 	@Override
 	public Object[] getKeys() {
@@ -48,94 +53,25 @@ public class MetalDragonCombat extends CombatScript {
 
 	private void performMeleeAttack(NPC npc, Entity target) {
 		NPCCombatDefinitions defs = npc.getCombatDefinitions();
-		npc.animate(new Animation(defs.getAttackEmote()));
-		delayHit(npc, 0, target,
-				getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+		npc.animate(new Animation(Utils.roll(1, 2) ? DRAGON_SLAM_ANIMATION : DRAGON_HEADBUTT_ANIMATION));
+		int damage = NpcCombatCalculations.getRandomMaxHit(
+				npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target
+		);
+
+		delayHit(npc, 0, target, getMeleeHit(npc, damage));
 	}
 
 	private void performDragonfireAttack(NPC npc, Entity target) {
 		if (!(target instanceof Player player)) return;
 
-		int damage = Utils.getRandom(650);
-		npc.animate(new Animation(13160));
-		World.sendDragonfireProjectile(npc, target, 393);
+		int rawDamage = Utils.getRandom(650);
 
-		damage = applyDragonfireMitigation(player, damage);
-		delayHit(npc, Utils.getDistance(player, npc) > 2 ? 2 : 1, player, getRegularHit(npc, damage));
+		npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
+		ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, DRAGONFIRE_NORMAL_PROJECTILE, npc, target);
 
-		handleDragonfireShield(player);
-	}
+		int mitigated = DragonFire.applyDragonfireMitigation(player, rawDamage);
+		delayHit(npc, Utils.getDistance(player, npc) > 2 ? 2 : 1, player, getRegularHit(npc, mitigated));
 
-	private int applyDragonfireMitigation(Player player, int damage) {
-		if (player.getSuperAntifire() > 0) {
-			player.getPackets().sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-			return 0;
-		}
-
-		boolean shield = playerHasDragonShield(player);
-		boolean antifire = player.getAntifire() > 0;
-		boolean prayer = player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC)
-				|| player.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC);
-
-		if (shield || antifire) {
-			damage *= 0.1;
-			String source = shield ? "shield" : "potion";
-
-			if (prayer) {
-				player.getPackets().sendGameMessage(
-						"Your " + source + " and prayer fully protect you from the heat of the dragon's breath.");
-				return 0;
-			} else {
-				player.getPackets().sendGameMessage(
-						"Your " + source + " protects you from most of the dragon's breath.");
-				return damage;
-			}
-		}
-
-		if (prayer) {
-			player.getPackets().sendGameMessage("Your prayer protects you from some of the heat of the dragon's breath!");
-			damage *= 0.1;
-			return damage;
-		}
-
-		player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
-		return damage;
-	}
-
-	private boolean playerHasDragonShield(Player player) {
-		int shieldId = player.getEquipment().getShieldId();
-		for (int id : DRAGON_SHIELDS) {
-			if (shieldId == id) return true;
-		}
-		return false;
-	}
-
-	private void handleDragonfireShield(Player player) {
-		if (!player.getEquipment().containsOneItem(11283, 11284)) return;
-
-		Item shield = player.getEquipment().getItem(Equipment.SLOT_SHIELD);
-		if (shield == null) return;
-
-		ItemMetadata meta = shield.getMetadata();
-		if (meta == null) {
-			if (shield.getId() == 11283) {
-				shield.setMetadata(new DragonFireShieldMetaData(0));
-			} else if (shield.getId() == 11284) {
-				shield.setId(11283);
-				shield.setMetadata(new DragonFireShieldMetaData(0));
-				player.getEquipment().refresh(Equipment.SLOT_SHIELD);
-				player.getAppearence().generateAppearenceData();
-			}
-		}
-
-		if (shield.getMetadata() instanceof DragonFireShieldMetaData dfsMeta) {
-			if (dfsMeta.getValue() < dfsMeta.getMaxValue()) {
-				dfsMeta.increment(1);
-				player.animate(new Animation(6695));
-				player.gfx(new Graphics(1164, 1, 100));
-				player.getPackets().sendGameMessage("Your dragonfire shield absorbs the dragon breath.");
-				player.getEquipment().refresh(Equipment.SLOT_SHIELD);
-			}
-		}
+		DragonFire.handleDragonfireShield(player);
 	}
 }
