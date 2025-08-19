@@ -34,10 +34,6 @@ public final class CombatDefinitions implements Serializable {
     public transient boolean usingSpecialAttack;
     private transient int[] bonuses;
 
-    // saving stuff
-
-    private Map<Integer, Byte> weaponAttackStyles = new HashMap<>();
-
     private byte attackStyle;
     private byte specialAttackPercentage;
     private boolean autoRetaliate;
@@ -284,13 +280,13 @@ public final class CombatDefinitions implements Serializable {
         }
     }
 
-    public static final int getMeleeDefenceBonus(int bonusId) {
+    public static int getMeleeDefenceBonus(int bonusId) {
         if (bonusId == STAB_ATTACK) return STAB_DEF;
         if (bonusId == SLASH_DEF) return SLASH_DEF;
         return CRUSH_DEF;
     }
 
-    public static final int getMeleeBonusStyle(int weaponId, int attackStyle) {
+    public static int getMeleeBonusStyle(int weaponId, int attackStyle) {
         if (weaponId != -1) {
             if (weaponId == -2) {
                 return CRUSH_ATTACK;
@@ -388,7 +384,7 @@ public final class CombatDefinitions implements Serializable {
 
     public static int LONGRANGE = 5;
 
-    public final int getStyle(int weaponId, int attackStyle) {
+    public int getStyle(int weaponId, int attackStyle) {
         if (weaponId != -1 && weaponId != -2) {
             String weaponName = ItemDefinitions.getItemDefinitions(weaponId).getName().toLowerCase();
             if (weaponName.contains("whip")) {
@@ -793,10 +789,9 @@ public final class CombatDefinitions implements Serializable {
             maxSize = 2;
         }
         if (style > maxSize) style = maxSize;
-
+        lastWeaponAttackStyle.put(weaponId, attackStyle);
         if (style != attackStyle) {
             attackStyle = (byte) style;
-            lastWeaponAttackStyle.put(weaponId, attackStyle);
 
             if (autoCastSpell > 1) resetSpells(true);
             else refreshAttackStyle();

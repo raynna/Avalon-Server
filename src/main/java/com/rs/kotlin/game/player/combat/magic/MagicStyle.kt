@@ -29,9 +29,11 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun canAttack(attacker: Player, defender: Entity): Boolean {
         val combatDefs = attacker.combatDefinitions
-        val spellId = combatDefs.spellId
+        var spellId = combatDefs.spellId
         val spellBookId = combatDefs.getSpellBook()
-
+        if (spellId >= MIN_SPELL_ID) {
+            spellId -= MIN_SPELL_ID;
+        }
         val currentSpell = when (spellBookId) {
             AncientMagicks.id -> AncientMagicks.getSpell(spellId)
             ModernMagicks.id -> ModernMagicks.getSpell(spellId)
