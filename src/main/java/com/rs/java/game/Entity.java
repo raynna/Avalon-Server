@@ -1129,10 +1129,7 @@ public abstract class Entity extends WorldTile {
     }
 
     public boolean isFreezeImmune() {
-        if (tickTimers.get(Keys.IntKey.FREEZE_IMMUNE_TICKS) == null) {
-            return false;
-        }
-        return tickTimers.get(Keys.IntKey.FREEZE_IMMUNE_TICKS) > 0;
+        return tickManager.isActive(TickManager.TickKeys.FREEZE_IMMUNE_TICKS);
     }
 
     public void freeze(int value) {
@@ -1143,6 +1140,7 @@ public abstract class Entity extends WorldTile {
            tickManager.addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, value + 5);
        } else {
            tickManager.addTicks(TickManager.TickKeys.FREEZE_TICKS, value);
+           tickManager.addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, value + 5);
        }
     }
 
@@ -1151,11 +1149,7 @@ public abstract class Entity extends WorldTile {
     }
 
     public void addFreezeDelay(int ticks, boolean entangle) {
-        if (this instanceof Player player) {
-            player.message("Freeze for " + ticks + " ticks, entangle: " + entangle);
-            player.message("FrozenTimer: " + getTimer(Keys.IntKey.FREEZE_TICKS));
-        }
-        if (!tickManager.isActive(TickManager.TickKeys.FREEZE_TICKS) && !tickManager.isActive(TickManager.TickKeys.FREEZE_IMMUNE_TICKS)) {
+        if (!isFrozen() && !isFreezeImmune()) {
             freeze(ticks);
             resetWalkSteps();
             if (this instanceof Player player) {
