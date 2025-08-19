@@ -96,6 +96,10 @@ public class StarterProtection {
 				for (int i = 0; i <= Skills.MAGIC; i++) {
 					player.getSkills().setXp(i, p2.getSkills().getXp(i));
 				}
+				player.setPrivateChatSetup(p2.getPrivateChatSetup());
+				player.setFriendChatSetup(p2.getFriendChatSetup());
+				player.setClanChatSetup(p2.getClanChatSetup());
+				player.setGuestChatSetup(p2.getGuestChatSetup());
 				player.getSkills().setXp(Skills.SUMMONING, p2.getSkills().getXp(Skills.SUMMONING));
 				player.getSkills().setXp(Skills.SLAYER, Skills.getXPForLevel(99));
 				player.getSkills().setXp(Skills.AGILITY, Skills.getXPForLevel(99));
@@ -107,7 +111,7 @@ public class StarterProtection {
 				player.getPresetManager().PRESET_SETUPS = p2.getPresetManager().PRESET_SETUPS;
 			}
 			player.getAppearence().generateAppearenceData();
-			player.getPresetManager().loadPreset("hybrid", null);
+			player.getPresetManager().loadPreset("max hybrid", null);
 		}
 		if (player.getCurrentFriendChat() == null) {
 			FriendChatsManager.joinChat(Settings.HELP_CC_NAME, player, true);

@@ -2724,11 +2724,10 @@ public class Player extends Entity {
         interfaceManager.sendInterfaces();
         bank.init();
         farmingManager.init();
+        friendsIgnores.init();
         getPackets().sendRunEnergy();
         refreshAllowChatEffects();
         refreshMouseButtons();
-        refreshPrivateChatSetup();
-        refreshOtherChatsSetup();
         refreshAcceptAid();
         refreshProfanity();
         refreshRCReport();
@@ -2773,7 +2772,6 @@ public class Player extends Entity {
         equipment.init();
         skills.init();
         combatDefinitions.init();
-        friendsIgnores.init();
         refreshHitPoints();
         prayer.onLogin();
         getPoison().refresh();
@@ -2793,11 +2791,16 @@ public class Player extends Entity {
         updateMovementType = true;
         appearence.generateAppearenceData();
         OwnedObjectManager.linkKeys(this);
+        startGame(this);
         warriorCheck();
         for (int skill = 0; skill < 25; skill++) {
             if (getSkills().getXp(skill) <= 200000000)
                 continue;
             getSkills().setXp(skill, 200000000);
+        }
+        for (Entry<Integer, Integer> pair : getVarBitList().entrySet()) {
+            getVarsManager().sendVarBit(pair.getKey(), 0);
+            getVarsManager().sendVarBit(pair.getKey(), pair.getValue());
         }
         getSkills().switchXPPopup(true);
         getSkills().switchXPPopup(true);
@@ -2806,12 +2809,10 @@ public class Player extends Entity {
         /*if (getSquealOfFortune().getEarnedSpins() > 0) {
             getInterfaceManager().sendOverlay(1252, false);
         }*/
-        startGame(this);
         if (getBeam() != null) {
             setBeam(null);
             setBeamItem(null);
         }
-        friendsIgnores.init();
         if (currentFriendChatOwner != null) {
             FriendChatsManager.joinChat(currentFriendChatOwner, this, false);
             if (currentFriendChat == null) {
@@ -2827,11 +2828,6 @@ public class Player extends Entity {
         getSkills().switchXPPopup(true);
         squealOfFortune.giveDailySpins();
         controlerManager.login();
-        Iterator<Entry<Integer, Integer>> it = getVarBitList().entrySet().iterator();
-        while (it.hasNext()) {
-            HashMap.Entry<Integer, Integer> pair = (HashMap.Entry<Integer, Integer>) it.next();
-            getVarsManager().sendVarBit(pair.getKey(), pair.getValue());
-        }
         if (familiarPouch != null) {
             if (familiar != null) {
                 familiar.setPlayer(this.getUsername());
@@ -2853,6 +2849,8 @@ public class Player extends Entity {
         } else {
             petManager.init(this);
         }
+        refreshPrivateChatSetup();
+        refreshOtherChatsSetup();
         refreshSpawnedItems();
         refreshSpawnedObjects();
     }
@@ -4209,25 +4207,41 @@ public class Player extends Entity {
     }
 
     public void refreshOtherChatsSetup() {
-        getVarsManager().setVarBit(9188, friendChatSetup);
-        getVarsManager().setVarBit(3612, clanChatSetup);
-        getVarsManager().forceSendVarBit(9191, guestChatSetup);
+        getVarsManager().setVarBit(9188, friendChatSetup, true);
+        getVarsManager().setVarBit(3612, clanChatSetup, true);
+        getVarsManager().setVarBit(9191, guestChatSetup, true);
     }
 
     public void setClanChatSetup(int clanChatSetup) {
         this.clanChatSetup = clanChatSetup;
+        refreshOtherChatsSetup();
     }
 
     public void setGuestChatSetup(int guestChatSetup) {
         this.guestChatSetup = guestChatSetup;
+        refreshOtherChatsSetup();
+    }
+
+    public int getGuestChatSetup() {
+        return this.guestChatSetup;
+    }
+
+    public int getClanChatSetup() {
+        return this.clanChatSetup;
     }
 
     public void setPrivateChatSetup(int privateChatSetup) {
         this.privateChatSetup = privateChatSetup;
+        refreshPrivateChatSetup();
     }
 
     public void setFriendChatSetup(int friendChatSetup) {
         this.friendChatSetup = friendChatSetup;
+        refreshOtherChatsSetup();
+    }
+
+    public int getFriendChatSetup() {
+        return this.friendChatSetup;
     }
 
     public int getPrivateChatSetup() {

@@ -378,13 +378,12 @@ object SpellHandler {
         if (!player.controlerManager.processMagicTeleport(tile)) {
             return
         }
-        player.message("teleport new system");
-        player.stopAll()
-        player.resetReceivedHits()
 
         val delay = if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) 6 else 4
         player.tickManager.addTicks(TickManager.TickKeys.TELEPORTING_TICK, delay + 2)
         player.lock(delay)
+        player.stopAll()
+        player.resetReceivedHits()
 
         player.skills.addXpDelayed(Skills.MAGIC, spell.xp)
         if (upEmoteId != -1) {
@@ -409,12 +408,14 @@ object SpellHandler {
                 }
 
                 var teleTile = tile
-                if (spell.name.contains("home teleport", ignoreCase = true) && EdgevillePvPControler.isAtPvP(player)) {
+                player.message("spellName: " + spell.name)
+                if (spell.name.contains("home", ignoreCase = true) && (EdgevillePvPControler.isAtPvP(player) || EdgevillePvPControler.isAtBank(player))) {
+                    player.message("in pvp & name contains home");
                     teleTile = WorldTile(85, 80, 0)
                 }
                 for (trycount in 0 until 10) {
                     teleTile = WorldTile(teleTile, 2)
-                    if (World.canMoveNPC(tile.plane, teleTile.x, teleTile.y, player.size)) {
+                    if (World.canMoveNPC(teleTile.plane, teleTile.x, teleTile.y, player.size)) {
                         break
                     }
                 }

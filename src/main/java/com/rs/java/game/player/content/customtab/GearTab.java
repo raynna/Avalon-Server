@@ -10,6 +10,9 @@ import com.rs.java.utils.Utils;
 
 public class GearTab extends CustomTab {
 
+
+	private static int EQUIPMENT_SPRITE = 675, CLOSE_SPRITE = 8553, ADD_SPRITE = 1842, REMOVE_SPRITE = 1845, SEARCH_SPRITE = 8486;
+
 	public static void refresh(Player player) {
 		int i = 3;
 		player.getTemporaryAttributtes().put("CUSTOMTAB", 3);
@@ -50,23 +53,24 @@ public class GearTab extends CustomTab {
 		player.getPackets().sendHideIComponent(3002, BACK_BUTTON, false);
 		player.getPackets().sendHideIComponent(3002, FORWARD_BUTTON, true);
 		player.getPackets().sendHideIComponent(3002, BLUE_STAR_COMP, false);
-		player.getPackets().sendIComponentSprite(3002, BLUE_STAR_COMP, 8553);// 9747
+		player.getPackets().sendIComponentSprite(3002, BLUE_STAR_COMP, CLOSE_SPRITE);// 9747
 		player.getPackets().sendHideIComponent(3002, GREEN_STAR_COMP, false);
-		player.getPackets().sendIComponentSprite(3002, RED_STAR_COMP, 675);
+		player.getPackets().sendIComponentSprite(3002, RED_STAR_COMP, EQUIPMENT_SPRITE);
 		if (p2 == null) {
 			player.getPackets().sendHideIComponent(3002, PURPLE_STAR_COMP, false);
 			player.getPackets().sendHideIComponent(3002, YELLOW_STAR_COMP, false);
-			player.getPackets().sendIComponentSprite(3002, PURPLE_STAR_COMP, 1842);
-			player.getPackets().sendIComponentSprite(3002, YELLOW_STAR_COMP, 1845);
+			player.getPackets().sendIComponentSprite(3002, PURPLE_STAR_COMP, ADD_SPRITE);
+			player.getPackets().sendIComponentSprite(3002, YELLOW_STAR_COMP, REMOVE_SPRITE);
 		} else {
 			player.getPackets().sendHideIComponent(3002, PURPLE_STAR_COMP, true);
 			player.getPackets().sendHideIComponent(3002, YELLOW_STAR_COMP, true);
 		}
-		player.getPackets().sendIComponentSprite(3002, GREEN_STAR_COMP, 8486);
+		player.getPackets().sendIComponentSprite(3002, GREEN_STAR_COMP, SEARCH_SPRITE);
 		if (p2 != null)
 			player.getPackets().sendTextOnComponent(3002, 25, otherName + "<br> Presets");
 		else
 			player.getPackets().sendTextOnComponent(3002, 25, "Gear Setups");
+		player.getTemporaryAttributtes().remove("CONFIRM_OVERWRITE");
 		int i = 3;
 		for (Entry<String, Preset> gear : p2 != null ? p2.getPresetManager().PRESET_SETUPS.entrySet()
 				: player.getPresetManager().PRESET_SETUPS.entrySet()) {
@@ -120,14 +124,43 @@ public class GearTab extends CustomTab {
 		if (compId == 59) {
 			Integer selectedGear = (Integer) player.getTemporaryAttributtes().get("SELECTEDGEAR");
 			if (selectedGear != null) {
-				player.getPackets().sendGameMessage("Overwrite setup?");
-				return;
+				Boolean confirm = (Boolean) player.getTemporaryAttributtes().get("CONFIRM_OVERWRITE");
+				if (confirm != null && confirm) {
+					String keyToOverwrite = null;
+					for (Entry<String, Preset> gear : player.getPresetManager().PRESET_SETUPS.entrySet()) {
+						if (gear != null && gear.getValue().getId(player) == selectedGear) {
+							keyToOverwrite = gear.getKey();
+							break;
+						}
+					}
+
+					if (keyToOverwrite != null) {
+						player.getPresetManager().removePreset(keyToOverwrite);
+
+						player.getPresetManager().savePreset(keyToOverwrite);
+
+						player.getPackets().sendGameMessage("Preset \"" + keyToOverwrite + "\" has been overwritten.");
+						open(player, null);
+						player.getTemporaryAttributtes().remove("SELECTEDGEAR");
+						player.getTemporaryAttributtes().remove("CONFIRM_OVERWRITE");
+						return;
+					} else {
+						player.getPackets().sendGameMessage("Could not find the preset to overwrite.");
+						player.getTemporaryAttributtes().remove("CONFIRM_OVERWRITE");
+						return;
+					}
+				} else {
+					player.getPackets().sendGameMessage("Are you sure you want to overwrite this preset? Click again to confirm.");
+					player.getTemporaryAttributtes().put("CONFIRM_OVERWRITE", true);
+					return;
+				}
 			} else {
 				player.temporaryAttribute().remove("OTHERPRESET");
 				player.temporaryAttribute().put("SAVESETUP", true);
 				player.getPackets().sendRunScript(109, "Enter setup name: ");
 			}
 		}
+
 		if (compId == 26) {
 			Integer selectedGear = (Integer) player.getTemporaryAttributtes().get("SELECTEDGEAR");
 			if (selectedGear != null) {

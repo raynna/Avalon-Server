@@ -46,7 +46,7 @@ public final class Settings {
 	 */
 	public static final String SERVER_NAME = "Avalon";
 	public static final String FORMAL_SERVER_NAME = "Avalon";
-	public static final String HELP_CC_NAME = "help";
+	public static final String HELP_CC_NAME = "Andreas";
 	public static final String LASTEST_UPDATE = "";
 	public static final String CACHE_PATH = System.getProperty("user.dir") + "/data/cache/";
 	public static final int RECEIVE_DATA_LIMIT = 7500;

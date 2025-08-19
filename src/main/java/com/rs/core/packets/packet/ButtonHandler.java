@@ -834,6 +834,8 @@ public class ButtonHandler {
             else if (componentId == 16)
                 player.getInterfaceManager().sendTab(player.getInterfaceManager().isResizableScreen() ? 123 : 183, 398);
             else if (componentId == 13) { // chat setup
+                player.refreshPrivateChatSetup();
+                player.refreshOtherChatsSetup();
                 player.getInterfaceManager().sendSettings(982);
             } else if (componentId == 14) player.switchMouseButtons();
             else if (componentId == 24) // audio options
