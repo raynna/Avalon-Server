@@ -387,24 +387,25 @@ ItemDefinitions {
     }
 
     public String getInventoryOption(boolean print, int option) {
-        if (getInventoryOptions() == null) {
+        String[] options = getInventoryOptions();
+        if (options == null || option < 1 || option > options.length) {
             return "";
         }
-        print = false;
+        String opt = options[option - 1];
+        if (opt == null) {
+            return "";
+        }
         if (print) {
             int optionId = 1;
             StringBuilder builder = new StringBuilder();
-            builder.append("Clicked option=" + getInventoryOptions()[option - 1] + "(" + option + "), Length=" + getInventoryOptions().length + ", Options: ");
-            for (String options : getInventoryOptions()) {
-                if (options == null)
-                    builder.append("None(" + optionId + ") ");
-                else
-                    builder.append("" + options.toLowerCase() + "(" + optionId + ") ");
+            builder.append("Clicked option=" + opt + "(" + option + "), Length=" + options.length + ", Options: ");
+            for (String s : options) {
+                builder.append((s == null ? "None" : s.toLowerCase()) + "(" + optionId + ") ");
                 optionId++;
             }
-            Logger.log("ItemDefinitions", builder);
+            //Logger.log("ItemDefinitions", builder);
         }
-        return getInventoryOptions()[option - 1].toLowerCase();
+        return opt.toLowerCase();
     }
 
     public boolean containsOption(String option) {

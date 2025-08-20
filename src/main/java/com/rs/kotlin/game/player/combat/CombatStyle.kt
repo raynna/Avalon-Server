@@ -8,6 +8,8 @@ import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
+import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.RangeData
@@ -38,6 +40,13 @@ interface CombatStyle {
         if (defender is NPC) {
             if (!defender.isUnderCombat || defender.canBeAttackedByAutoRelatie()) {
                 defender.setTarget(attacker)
+            }
+            if (defender.id == Rscm.lookup("npc.magic_dummy") || defender.id == Rscm.lookup("npc.melee_dummy")) {
+                if (attacker.prayer.prayerPoints < attacker.skills.getLevelForXp(Skills.PRAYER) * 10) {
+                    attacker.prayer.restorePrayer(attacker.skills.getLevelForXp(Skills.PRAYER) * 10)
+                }
+                if (attacker.combatDefinitions.specialAttackPercentage < 100)
+                    attacker.combatDefinitions.increaseSpecialAttack(100)
             }
         }
         defender.handleHit(hit);

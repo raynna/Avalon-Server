@@ -772,9 +772,14 @@ public final class CombatDefinitions implements Serializable {
 
     private final Map<Integer, Byte> lastWeaponAttackStyle = new HashMap<>();
 
+    public void refreshAttackStyle() {
+        player.getPackets().sendVar(43, autoCastSpell > 0 ? 4 : attackStyle);
+    }
+
     public void checkAttackStyle() {
         if (autoCastSpell == 0) {
             int weaponId = player.getEquipment().getWeaponId();
+            //Load saved attack style for this weapon
             attackStyle = lastWeaponAttackStyle.getOrDefault(weaponId, attackStyle);
             refreshAttackStyle();
         }
@@ -789,7 +794,10 @@ public final class CombatDefinitions implements Serializable {
             maxSize = 2;
         }
         if (style > maxSize) style = maxSize;
-        lastWeaponAttackStyle.put(weaponId, attackStyle);
+
+        //Save the new style
+        lastWeaponAttackStyle.put(weaponId, (byte) style);
+
         if (style != attackStyle) {
             attackStyle = (byte) style;
 
@@ -800,9 +808,6 @@ public final class CombatDefinitions implements Serializable {
         }
     }
 
-    public void refreshAttackStyle() {
-        player.getPackets().sendVar(43, autoCastSpell > 0 ? 4 : attackStyle);
-    }
 
     public void sendUnlockAttackStylesButtons() {
         for (int componentId = 7; componentId <= 10; componentId++)
@@ -824,10 +829,13 @@ public final class CombatDefinitions implements Serializable {
     }
 
     public void increaseSpecialAttack(int amount) {
-        if (specialAttackPercentage + amount < 101) {
-            specialAttackPercentage += amount;
+        if (specialAttackPercentage + amount > 100) {
+            specialAttackPercentage = 100;
             refreshSpecialAttackPercentage();
+            return;
         }
+        specialAttackPercentage += (byte) amount;
+        refreshSpecialAttackPercentage();
     }
 
     public boolean hasRingOfVigour() {
