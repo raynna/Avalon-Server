@@ -6,6 +6,7 @@ import com.rs.java.game.Entity
 import com.rs.java.game.ForceTalk
 import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
+import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
@@ -32,6 +33,11 @@ interface CombatStyle {
                 defender.setVengeance(false);
                 defender.nextForceTalk = ForceTalk("Taste vengeance!")
                 attacker.applyHit(Hit(defender, (hit.damage * 0.75).toInt(), Hit.HitLook.REGULAR_DAMAGE));
+            }
+        }
+        if (defender is NPC) {
+            if (!defender.isUnderCombat || defender.canBeAttackedByAutoRelatie()) {
+                defender.setTarget(attacker)
             }
         }
         defender.handleHit(hit);

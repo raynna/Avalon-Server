@@ -1492,7 +1492,7 @@ public final class World {
         if (!stackable && item.getAmount() > 1) {
             Item copy = item.clone();
             for (int i = 0; i < copy.getAmount(); i++) {
-                //item.setAmount(1);
+                item.setAmount(1);
                 addGroundItem(item, tile, owner, false, hiddenTime, type, ironmanName);
             }
         } else {
