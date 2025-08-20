@@ -61,6 +61,8 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.NPCSpawns;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.command.CommandRegistry;
+import com.rs.kotlin.tool.WikiApi;
 
 /**
  * @Improved Andreas, Phillip - AvalonPK
@@ -111,10 +113,21 @@ public class NPCHandler {
                 System.out.println(error.toString());
             }
         }
+        if (!WikiApi.INSTANCE.hasData(npc.getId())) {
+            WikiApi.INSTANCE.dumpData(npc.getId(), npc.getName(), npc.getCombatLevel());
+        }
+        if (npc.getCombatData() == null) {
+            npc.setBonuses();
+        }
+        try {
+            // Build the input string like a player typed it
+            String input = "lookupnpc " + npc.getId();
+            CommandRegistry.execute(player, input);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            player.message("Failed to look up NPC stats for " + npc.getName());
+        }
         if (Settings.DEBUG) {
-            for (int i = 0; i < npc.getBonuses().length; i++) {
-                player.message("Bonus ["+i+"]: " + npc.getBonuses()[i]);
-            }
             player.message("NpcId: " + npc.getId() + ", Index: " + npcIndex);
             player.message(npc.getName() + " size:" + npc.getSize());
             player.message("Visible On Map: " + npc.getDefinitions().isVisibleOnMap);

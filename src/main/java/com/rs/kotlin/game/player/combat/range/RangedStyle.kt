@@ -221,6 +221,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             attacker.packets.sendSound(2702, 0, 1)
             totalDamage += min(hit.damage, target.hitpoints)
             attacker.chargeManager.processOutgoingHit()
+            target.handleIncommingHit(hit);
             if (target is Player) {
                 target.chargeManager.processIncommingHit()
             }

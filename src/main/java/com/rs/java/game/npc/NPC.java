@@ -25,6 +25,8 @@ import com.rs.java.game.npc.combat.NPCCombat;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.npc.combatdata.CombatData;
+import com.rs.kotlin.game.npc.combatdata.CombatDataParser;
 import com.rs.kotlin.game.npc.drops.DropTable;
 import com.rs.kotlin.game.npc.drops.DropTableRegistry;
 import com.rs.kotlin.game.npc.drops.Drop;
@@ -92,6 +94,12 @@ public class NPC extends Entity implements Serializable {
     private transient boolean changedCombatLevel;
     private transient boolean locked;
 
+    private CombatData combatData;
+
+
+    public CombatData getCombatData() {
+        return combatData;
+    }
 
     public static int[] getNpcs(String... names) {
         return Arrays.stream(names)
@@ -180,6 +188,12 @@ public class NPC extends Entity implements Serializable {
     }
 
     public void setBonuses() {
+        if (combatLevel != 0) {
+            combatData = CombatDataParser.getData(id);
+            if (combatData != null) {
+                System.out.println("Found data for " + id + ", CombatLevel: " + combatData.combatLevel);
+            }
+        }
         bonuses = NPCBonuses.getBonuses(id);
         if (bonuses == null) {
             bonuses = new int[17];

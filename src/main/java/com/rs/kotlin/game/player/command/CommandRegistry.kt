@@ -29,6 +29,7 @@ object CommandRegistry {
         register("ahrims", "ahrim", command = AhrimsCommand())
         register("runepouch", "rp", "pouch", command = RunePouchCommand())
         register("yell", "worldmessage", command = YellCommand())
+        register("npcstats", "lookupnpc", command = LookupStatsCommand())
         val teleportCommand = TeleportCommand()
         register(*teleportCommand.getAllTriggers().toTypedArray(), command = teleportCommand)
         register("location", "locations", "teleports", command = LocationsCommand(teleportCommand))

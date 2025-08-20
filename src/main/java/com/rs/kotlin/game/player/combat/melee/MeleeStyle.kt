@@ -134,6 +134,7 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             PrayerEffectHandler.handleProtectionEffects(attacker, target, hit)
             SoakDamage.handleAbsorb(attacker, target, hit)
             attacker.chargeManager.processOutgoingHit()
+            target.handleIncommingHit(hit);
             if (target is Player) {//handling this onHit for magic & range
                 target.animate(CombatAnimations.getBlockAnimation(target));
                 target.chargeManager.processIncommingHit()

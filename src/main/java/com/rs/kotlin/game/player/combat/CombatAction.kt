@@ -97,6 +97,9 @@ class CombatAction(
             player.resetWalkSteps()
             player.calcFollow(target, if (player.run) 2 else 1, true, true)
         }
+        if (player.isOutOfRegion(target)) {
+            return false
+        }
         return true
     }
 
@@ -175,6 +178,10 @@ class CombatAction(
         followTask = object : WorldTask() {
             override fun run() {
                 if (player.isDead || target.isDead || target.hasFinished() || !player.isActive) {
+                    stop()
+                    return
+                }
+                if (player.isOutOfRegion(target)) {
                     stop()
                     return
                 }

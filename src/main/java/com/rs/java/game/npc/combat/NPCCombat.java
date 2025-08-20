@@ -70,9 +70,7 @@ public final class NPCCombat {
         Entity target = this.target;
         if (!isTargetValid(target)) return null;
 
-        // Handle familiars targeting their owner
-        if (target instanceof Familiar) {
-            Familiar familiar = (Familiar) target;
+        if (target instanceof Familiar familiar) {
             Player owner = familiar.getOwner();
             if (owner != null) {
                 target = owner;
@@ -247,7 +245,7 @@ public final class NPCCombat {
     }
 
 
-    protected void doDefenceEmote(Entity target) {
+    void doDefenceEmote(Entity target) {
         target.setNextAnimationNoPriority(new Animation(Combat.getDefenceEmote(target)), target);
     }
 

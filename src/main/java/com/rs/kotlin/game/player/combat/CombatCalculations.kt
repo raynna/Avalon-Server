@@ -240,7 +240,7 @@ object CombatCalculations {
             if (!weapon.isAnyOf("item.zaryte_bow", "item.zaryte_bow_2")) {
                 return Triple(1.0, 1.0, 0)
             }
-
+            target.setBonuses()
             val magicLevel = target.bonuses[NpcBonusType.MagicLevel.index]
             val magicAttack = target.bonuses[NpcBonusType.MagicAttack.index]
 

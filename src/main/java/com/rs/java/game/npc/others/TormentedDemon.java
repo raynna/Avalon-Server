@@ -8,7 +8,9 @@ import com.rs.java.game.Hit;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
+import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
+import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
@@ -17,6 +19,32 @@ import com.rs.java.utils.Utils;
 public final class TormentedDemon extends NPC {
 
 	private static final long serialVersionUID = -3391513753727542071L;
+
+	// Constants for combat/prayer
+	private static final int MAX_PRAYERS = 3;
+	private static final int MELEE = 0;
+	private static final int MAGIC = 1;
+	private static final int RANGE = 2;
+
+	// Damage & shield constants
+	private static final double SHIELD_DAMAGE_REDUCTION = 0.25;
+	private static final int SHIELD_COOLDOWN = 60;
+	private static final int DAMAGE_THRESHOLD = 310;
+	private static final int MIN_DAMAGE_ON_MISS = 20;
+
+	// Attack tick constants
+	private static final int MAX_ATTACK_TICKS = 26;
+	private static final int ATTACK_STYLE_CHANGE_DELAY = 6;
+
+	// Animations & graphics
+	private static final Animation RANDOM_PROJECTILE_ANIM = new Animation(10918);
+	private static final Graphics SHIELD_GFX = new Graphics(1885);
+	private static final Graphics SPLASH_GFX = new Graphics(1883);
+
+	// Projectile constants
+	private static final int RANDOM_PROJECTILE_ID = 1884;
+	private static final int RANDOM_PROJECTILE_RADIUS = 3;
+	private static final int RANDOM_PROJECTILE_RANGE = 7;
 
 	private boolean[] demonPrayer;
 	private int[] cachedDamage;
@@ -27,12 +55,12 @@ public final class TormentedDemon extends NPC {
 	private int currentType = 0;
 
 	public TormentedDemon(int id, WorldTile tile, int mapAreaNameHash, boolean canBeAttackFromOutOfArea,
-			boolean spawned) {
+						  boolean spawned) {
 		super(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
-		demonPrayer = new boolean[3];
-		cachedDamage = new int[3];
+		demonPrayer = new boolean[MAX_PRAYERS];
+		cachedDamage = new int[MAX_PRAYERS];
 		setForceTargetDistance(64);
-		setForceAgressiveDistance(10);
+		setForceAgressiveDistance(6);
 		shieldTimer = 0;
 		switchPrayers(Utils.random(1, 2));
 	}
@@ -45,128 +73,135 @@ public final class TormentedDemon extends NPC {
 	@Override
 	public void processNPC() {
 		super.processNPC();
-		if (isDead())
-			return;
+		if (isDead()) return;
+
 		if (getCombat().process()) {
-			if (attackTicks < 26)
-				attackTicks++;
-			if (getAttackTicks() == 26) {// 16 seconds change random attackstyle
-				resetAttackTicks();
-				int attackType = Utils.getRandom(2);
-				while (attackType == getCurrentCombatType()) {// make sure it cant pick same attack style twice.
-					attackType = Utils.getRandom(2);
-				}
-				sendRandomProjectile();// always send random projectile when changign attackstyle that can hit nearby
-				// players, even when hiding
-				setPreviousCombatType(getCurrentCombatType());
-				setCurrentCombatType(attackType);
-				getCombat().setCombatDelay(6);
-			}
-			if (shieldTimer > 0)
-				shieldTimer--;
-			if (cachedDamage[currentType] >= 310) {// if damage more than 310, change prayer
-				demonPrayer = new boolean[3];
-				int pray = currentType;
-				switchPrayers(pray);
-				cachedDamage = new int[3];
-			}
+			incrementAttackTicks();
+			handleAttackStyleChange();
+			decrementShieldTimer();
+			checkDamageThreshold();
+		}
+	}
+
+	private void incrementAttackTicks() {
+		if (attackTicks < MAX_ATTACK_TICKS) attackTicks++;
+	}
+
+	private void handleAttackStyleChange() {
+		if (attackTicks < MAX_ATTACK_TICKS) return;
+
+		resetAttackTicks();
+
+		int attackType = Utils.getRandom(2);
+		while (attackType == getCurrentCombatType()) {
+			attackType = Utils.getRandom(2);
+		}
+
+		sendRandomProjectile();
+		setPreviousCombatType(getCurrentCombatType());
+		setCurrentCombatType(attackType);
+		getCombat().setCombatDelay(ATTACK_STYLE_CHANGE_DELAY);
+	}
+
+	private void decrementShieldTimer() {
+		if (shieldTimer > 0) shieldTimer--;
+	}
+
+	private void checkDamageThreshold() {
+		if (cachedDamage[currentType] >= DAMAGE_THRESHOLD) {
+			demonPrayer = new boolean[MAX_PRAYERS];
+			switchPrayers(currentType);
+			cachedDamage = new int[MAX_PRAYERS];
 		}
 	}
 
 	@Override
-	public void handleIncommingHit(final Hit hit) {// process before hit is applied
+	public void handleIncommingHit(final Hit hit) {
 		super.handleIncommingHit(hit);
-		if (shieldTimer <= 0 && hit.getDamage() > 0) {// 75% of damage is absorbed
-			hit.setDamage((int) (hit.getDamage() * 0.25));
-			gfx(new Graphics(1885));
+
+		if (shieldTimer <= 0 && hit.getDamage() > 0) {
+			hit.setDamage((int) (hit.getDamage() * SHIELD_DAMAGE_REDUCTION));
+			gfx(SHIELD_GFX);
 		}
-		if (hit.getLook() == HitLook.MELEE_DAMAGE) {
-			currentType = 0;
-			if (hit.getSource() instanceof Player) {// darklight
-				Player player = (Player) hit.getSource();
-				if (demonPrayer[currentType] && player.getTemporaryAttributtes().get("VERAC_EFFECT") == Boolean.FALSE) {
-					hit.setDamage(0);// hits 0 if pray melee unless verac effect
-				} else {
-					if ((player.getEquipment().getWeaponId() == 6746 || player.getEquipment().getWeaponId() == 2402)
-							&& hit.getLook() == HitLook.MELEE_DAMAGE && hit.getDamage() > 0) {
-						shieldTimer = 60;// resets shield timer every > 0 hit
-						player.getPackets().sendGameMessage("The demon is temporarily weakend by your weapon.");
-					}
-					cachedDamage[currentType] += hit.getDamage();
-				}
-			}
-		} else if (hit.getLook() == HitLook.MAGIC_DAMAGE) {
-			currentType = 1;
-			if (demonPrayer[currentType])
-				hit.setDamage(0);
-			else
-				cachedDamage[currentType] += hit.getDamage();
-		} else if (hit.getLook() == HitLook.RANGE_DAMAGE || hit.getLook() == HitLook.CANNON_DAMAGE) {
-			currentType = 2;
-			if (demonPrayer[currentType])
-				hit.setDamage(0);
-			else
-				cachedDamage[currentType] += hit.getDamage();
+
+		switch (hit.getLook()) {
+			case MELEE_DAMAGE -> handleMeleeHit(hit);
+			case MAGIC_DAMAGE -> handleMagicHit(hit);
+			case RANGE_DAMAGE, CANNON_DAMAGE -> handleRangedHit(hit);
 		}
+
 		if (hit.getDamage() <= 0) {
-			cachedDamage[currentType] += 20;// always 20+ even on miss
+			cachedDamage[currentType] += MIN_DAMAGE_ON_MISS;
 		}
-		if (hit.getSource() instanceof Player) {// darklight
-			Player player = (Player) hit.getSource();
+
+		if (hit.getSource() instanceof Player player) {
 			if (shieldTimer <= 0 && hit.getDamage() > 0)
 				player.getPackets().sendGameMessage("The demon shield absorbs most of your damage.");
 		}
 	}
 
+	private void handleMeleeHit(Hit hit) {
+		currentType = MELEE;
+		if (hit.getSource() instanceof Player player) {
+			if (demonPrayer[currentType] && !Boolean.TRUE.equals(player.getTemporaryAttributtes().get("VERAC_EFFECT"))) {
+				hit.setDamage(0);
+			} else {
+				Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
+				if (weapon.isAnyOf("item.darklight", "item.silverlight") && hit.getDamage() > 0) {
+					shieldTimer = SHIELD_COOLDOWN;
+					player.getPackets().sendGameMessage("The demon is temporarily weakened by your weapon.");
+				}
+				cachedDamage[currentType] += hit.getDamage();
+			}
+		}
+	}
+
+	private void handleMagicHit(Hit hit) {
+		currentType = MAGIC;
+		if (demonPrayer[currentType]) hit.setDamage(0);
+		else cachedDamage[currentType] += hit.getDamage();
+	}
+
+	private void handleRangedHit(Hit hit) {
+		currentType = RANGE;
+		if (demonPrayer[currentType]) hit.setDamage(0);
+		else cachedDamage[currentType] += hit.getDamage();
+	}
+
 	public void sendRandomProjectile() {
-		WorldTile tile = new WorldTile(getX() + Utils.random(-7, 7), getY() + Utils.random(-7, 7), getPlane());
-		animate(new Animation(10918));
-		World.sendGroundProjectile(this, tile, 1884);
+		WorldTile tile = new WorldTile(getX() + Utils.random(-RANDOM_PROJECTILE_RANGE, RANDOM_PROJECTILE_RANGE),
+				getY() + Utils.random(-RANDOM_PROJECTILE_RANGE, RANDOM_PROJECTILE_RANGE), getPlane());
+		animate(RANDOM_PROJECTILE_ANIM);
+		World.sendGroundProjectile(this, tile, RANDOM_PROJECTILE_ID);
+
 		NPC npc = this;
 		WorldTasksManager.schedule(new WorldTask() {
-
 			@Override
 			public void run() {
 				for (int regionId : getMapRegionsIds()) {
 					List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
-					if (playerIndexes != null) {
-						for (int npcIndex : playerIndexes) {
-							Player player = World.getPlayers().get(npcIndex);
-							if (player == null || player.isDead() || player.hasFinished() || !player.hasStarted()
-									|| Utils.getDistance(player, tile) > 3 || player.getAttackedBy() != npc)
-								continue;
-							player.gfx(new Graphics(1883, 0, 0));
-							player.getPackets().sendGameMessage("The demon's magical attack splashes on you.");
-							player.applyHit(new Hit(npc, Utils.random(138, 289), HitLook.MAGIC_DAMAGE, 0));
-						}
+					if (playerIndexes == null) continue;
+
+					for (int playerIndex : playerIndexes) {
+						Player player = World.getPlayers().get(playerIndex);
+						if (player == null || player.isDead() || player.hasFinished() || !player.hasStarted()
+								|| Utils.getDistance(player, tile) > RANDOM_PROJECTILE_RADIUS || player.getAttackedBy() != npc)
+							continue;
+
+						player.gfx(SPLASH_GFX);
+						player.message("The demon's magical attack splashes on you.");
+						player.applyHit(new Hit(npc, Utils.random(138, 289), HitLook.MAGIC_DAMAGE, 0));
 					}
 				}
 			}
 		}, 2);
 	}
 
-	public int getCurrentCombatType() {
-		return currentCombatType;
-	}
-
-	public void setCurrentCombatType(int combatType) {
-		this.currentCombatType = combatType;
-	}
-
-	public int getPreviousCombatType() {
-		return previousCombatType;
-	}
-
-	public void setPreviousCombatType(int combatType) {
-		this.previousCombatType = combatType;
-	}
-
-	public int getAttackTicks() {
-		return attackTicks;
-	}
-
-	public void resetAttackTicks() {
-		attackTicks = 0;
-	}
-
+	// Getters and setters
+	public int getCurrentCombatType() { return currentCombatType; }
+	public void setCurrentCombatType(int combatType) { this.currentCombatType = combatType; }
+	public int getPreviousCombatType() { return previousCombatType; }
+	public void setPreviousCombatType(int combatType) { this.previousCombatType = combatType; }
+	public int getAttackTicks() { return attackTicks; }
+	public void resetAttackTicks() { attackTicks = 0; }
 }

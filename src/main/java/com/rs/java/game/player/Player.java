@@ -165,6 +165,10 @@ public class Player extends Entity {
         return !clipedProjectile(target, distance == 0) || !Utils.isOnRange(this.getX(), this.getY(), this.getSize(), target.getX(), target.getY(), target.getSize(), distance);
     }
 
+    public boolean isOutOfRegion(Entity target) {
+        return !Utils.isOnRange(this.getX(), this.getY(), this.getSize(), target.getX(), target.getY(), target.getSize(), 32);
+    }
+
     public boolean shouldAdjustDiagonal(Player player, Entity target, int attackDistance) {
         return target.getSize() == 1 &&
                 Math.abs(player.getX() - target.getX()) == 1 &&

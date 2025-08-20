@@ -106,6 +106,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             SoakDamage.handleAbsorb(attacker, target, hit)
             totalDamage += min(hit.damage, target.hitpoints)
             attacker.chargeManager.processOutgoingHit()
+            target.handleIncommingHit(hit);
             if (target is Player) {
                 target.chargeManager.processIncommingHit()
             }
