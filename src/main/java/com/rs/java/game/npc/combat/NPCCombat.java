@@ -56,36 +56,6 @@ public final class NPCCombat {
         return false;
     }
 
-    private boolean walking;
-
-    public boolean isUnderTarget(Entity target, NPC npc) {
-        if (Utils.colides(npc.getX(), npc.getY(), npc.getSize(), target.getX(), target.getY(), target.getSize())) {
-            int x = target.getX() + target.getSize();
-            int y = npc.getY();
-            if (!npc.addWalkSteps(x, y)) {
-                npc.resetWalkSteps();
-                x = target.getX() - npc.getSize();
-                y = npc.getY();
-                if (!npc.addWalkSteps(x, y)) {
-                    npc.resetWalkSteps();
-                    x = npc.getX();
-                    y = target.getY() - target.getSize();
-                    if (!npc.addWalkSteps(x, y)) {
-                        npc.resetWalkSteps();
-                        x = npc.getX();
-                        y = target.getY() - npc.getSize();
-                        if (!npc.addWalkSteps(x, y)) {
-                            npc.resetWalkSteps();
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-
     private int combatAttack() {
         Entity target = getValidTarget();
         if (target == null) return 0;
@@ -284,6 +254,8 @@ public final class NPCCombat {
     public Entity getTarget() {
         return target;
     }
+
+    public boolean hasTarget() { return this.target != null; }
 
     public void setTarget(Entity target) {
         this.target = target;

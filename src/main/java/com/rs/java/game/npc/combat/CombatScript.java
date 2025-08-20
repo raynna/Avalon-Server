@@ -99,6 +99,11 @@ public abstract class CombatScript {
                         player.closeInterfaces();
                         if (player.getCombatDefinitions().isAutoRelatie() && !player.getActionManager().hasSkillWorking() && !player.hasWalkSteps())
                             player.getNewActionManager().setAction(new CombatAction(npc));
+                        if (player.familiarAutoAttack) {
+                            if (player.getFamiliar() != null && !player.getFamiliar().getCombat().hasTarget() && player.isAtMultiArea()) {
+                                player.getFamiliar().setTarget(npc);
+                            }
+                        }
                     } else {
                         NPC n = (NPC) target;
                         if (!n.isUnderCombat() || n.canBeAttackedByAutoRelatie()) n.setTarget(npc);

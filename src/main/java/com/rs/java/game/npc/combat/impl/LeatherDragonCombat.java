@@ -20,6 +20,7 @@ public class LeatherDragonCombat extends CombatScript {
 	private static final int DRAGON_SLAM_ANIMATION = 80, DRAGON_HEADBUTT_ANIMATION = 91, DRAGONFIRE_BREATH_ANIMATION = 84, DRAGON_DEATH_ANIMATION = 92;
 	private static final int DRAGONFIRE_GFX = 1, DRAGONFIRE_TOXIC_PROJECTILE = 393, DRAGONFIRE_NORMAL_PROJECTILE = 394, DRAGONFIRE_ICY_PROJECTILE = 395, DRAGONFIRE_SHOCKING_PROJECTILE = 396;
 
+	private static final int NEW_DRAGON_MELEE_ANIMATION = 12252, NEW_DRAGON_FIRE_ANIMATION = 12259;
 
 
 	@Override
@@ -56,7 +57,7 @@ public class LeatherDragonCombat extends CombatScript {
 	}
 
 	private void performMeleeAttack(NPC npc, Entity target, NPCCombatDefinitions defs) {
-	npc.animate(new Animation(Utils.roll(1, 2) ? DRAGON_SLAM_ANIMATION : DRAGON_HEADBUTT_ANIMATION));
+	npc.animate(new Animation(NEW_DRAGON_MELEE_ANIMATION));
 
 		int damage = NpcCombatCalculations.getRandomMaxHit(
 				npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target
@@ -70,7 +71,7 @@ public class LeatherDragonCombat extends CombatScript {
 			return;
 		}
 
-		npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
+		npc.animate(new Animation(NEW_DRAGON_FIRE_ANIMATION));
 
 		npc.gfx(DRAGONFIRE_GFX, 100);
 

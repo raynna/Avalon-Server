@@ -3,7 +3,6 @@ package com.rs.kotlin.game.player.combat
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
-import com.rs.java.game.Keys
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
@@ -114,6 +113,11 @@ class CombatAction(
         }
         if (player.isDiagonalMeleeBlocked(target, style)) {
             return 0
+        }
+        if (player.familiarAutoAttack) {
+            if (player.familiar != null && !player.familiar.combat.hasTarget() && player.isAtMultiArea && target.isAtMultiArea) {
+                player.familiar.setTarget(target)
+            }
         }
 
         return when (phase) {

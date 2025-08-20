@@ -12,10 +12,10 @@ public class FamiliarOptions extends Dialogue {
 	@Override
 	public void start() {
 		sendOptions("<col=ff000>Current HP: " + player.getFamiliar().getHitpoints(),
-				(player.familiarAutoAttack ? "Disable " : "Enable ") + "'Auto Retailiate (BETA)'",
+				(player.familiarAutoAttack ? "Disable " : "Enable ") + "'Auto Retailiate'",
 				"View basic information about " + player.getFamiliar().getName(),
 				player.storedScrolls >= 1 ? "Take out the stored " + player.getFamiliar().getSpecialName() + " scrolls."
-						: "You do not have any stored scrolls. (BETA)",
+						: "You do not have any stored scrolls.",
 				"Talk with your " + player.getFamiliar().getName());
 		stage = 1;
 	}
@@ -29,11 +29,7 @@ public class FamiliarOptions extends Dialogue {
 		case 1:
 			switch (componentId) {
 			case OPTION_1:
-				if (player.familiarAutoAttack) {
-					player.familiarAutoAttack = false;
-				} else {
-					player.familiarAutoAttack = true;
-				}
+				player.familiarAutoAttack = !player.familiarAutoAttack;
 				sendDialogue("Your familiar will now: " + (player.familiarAutoAttack
 						? "Auto retailiate<br><col=ff0000>Only works in Multi!" : "No longer auto retailiate."));
 				stage = END;
@@ -56,7 +52,7 @@ public class FamiliarOptions extends Dialogue {
 				} else {
 					sendDialogue(
 							"You do not have any stored scrolls! Use the specific scroll for the familiar, and it will use special attack automatically if it has any."
-									+ " (Cannot be used on BOB familiars) <col=ff0000>BETA");
+									+ " (Cannot be used on BOB familiars)");
 					stage = END;
 				}
 				break;

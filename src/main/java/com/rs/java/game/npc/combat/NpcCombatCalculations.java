@@ -17,14 +17,14 @@ public class NpcCombatCalculations {
 
         // --- Attacker (NPC) Accuracy Roll ---
         double attackRoll = calculateAttackRoll(npc, attackStyle, bonuses);
-        System.out.println(npc.getName() + " attack roll: " + attackRoll);
+        //System.out.println(npc.getName() + " attack roll: " + attackRoll);
         // --- Defender (Target) Defence Roll ---
         double defenceRoll = calculateDefenceRoll(npc, attackStyle, target);
-        if (target instanceof Player player)
-        System.out.println(player.getUsername() + " defence roll: " + defenceRoll);
+        //if (target instanceof Player player)
+            //System.out.println(player.getUsername() + " defence roll: " + defenceRoll);
         // --- Hit chance ---
         boolean hitChance = calculateHitProbability(attackRoll, defenceRoll);
-        System.out.println("HitChance: " + hitChance);
+        //System.out.println("HitChance: " + hitChance);
         // --- Roll damage ---
         if (!hitChance) {
             return 0; // Missed
@@ -40,19 +40,19 @@ public class NpcCombatCalculations {
             case NPCCombatDefinitions.MAGE -> {
                 int mageLevel = bonuses[NpcBonusType.MagicLevel.getIndex()];
                 int mageBonus = bonuses[NpcBonusType.MagicAttack.getIndex()];
-                System.out.println(npc.getName() + " used magic attack, MagicLevel: " + mageLevel + ", MageAttack: " + mageBonus);
+                //System.out.println(npc.getName() + " used magic attack, MagicLevel: " + mageLevel + ", MageAttack: " + mageBonus);
                 return effectiveRoll(mageLevel, mageBonus);
             }
             case NPCCombatDefinitions.RANGE -> {
                 int rangeLevel = bonuses[NpcBonusType.RangeLevel.getIndex()];
                 int rangeBonus = bonuses[NpcBonusType.RangeAttack.getIndex()];
-                System.out.println(npc.getName() + " used ranged attack, RangeLevel: " + rangeLevel + ", RangeAttack: " + rangeBonus);
+                //System.out.println(npc.getName() + " used ranged attack, RangeLevel: " + rangeLevel + ", RangeAttack: " + rangeBonus);
                 return effectiveRoll(rangeLevel, rangeBonus);
             }
             default -> {
                 int atkLevel = bonuses[NpcBonusType.AttackLevel.getIndex()];
                 int atkBonus = (int) getMeleeAttackBonus(npc, bonuses);
-                System.out.println(npc.getName() + " used melee attack, AttackLevel: " + atkLevel + ", AttackBonus: " + atkBonus);
+                //System.out.println(npc.getName() + " used melee attack, AttackLevel: " + atkLevel + ", AttackBonus: " + atkBonus);
                 return effectiveRoll(atkLevel, atkBonus);
             }
         }
@@ -141,7 +141,7 @@ public class NpcCombatCalculations {
         } else {
             probability = attackRoll / (2.0 * (defenceRoll + 1.0));
         }
-        System.out.println("random: " + random + " vs probability: " + probability);
+        //System.out.println("random: " + random + " vs probability: " + probability);
         return random < probability;
     }
 

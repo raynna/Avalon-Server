@@ -530,7 +530,7 @@ public class Player extends Entity {
      * @Summoning
      */
     private transient Familiar familiar;
-    public boolean familiarAutoAttack = false;
+    public boolean familiarAutoAttack = true;
     public int storedScrolls;
     private transient long familiarDelay;
 
