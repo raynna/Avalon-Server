@@ -198,18 +198,18 @@ public class JournalTab extends CustomTab {
 			public void usage(Player p) {
 				double kill = p.getKillCount();
 				double death = p.getDeathCount();
-				double dr = kill / death;
-				p.getPackets().sendGameMessage("My kill/death ratio is: " + new DecimalFormat("##.#").format(dr) + ".");
+				double dr = death == 0 ? kill : (kill / death);
+				p.getPackets().sendGameMessage("My kill/death ratio is: " + new DecimalFormat("0.00").format(dr) + ".");
 				p.setNextForceTalk(
-						new ForceTalk("My kill/death ratio is: " + new DecimalFormat("##.#").format(dr) + "."));
+						new ForceTalk("My kill/death ratio is: " + new DecimalFormat("0.00").format(dr) + "."));
 			}
 
 			@Override
 			public String text(Player p) {
 				double kill = p.getKillCount();
 				double death = p.getDeathCount();
-				double dr = kill / death;
-				return "K/D Ratio: <col=04BB3B>" + new DecimalFormat("##.#").format(dr);
+				double dr = death == 0 ? kill : (kill / death);
+				return "K/D Ratio: <col=04BB3B>" + new DecimalFormat("0.00").format(dr);
 			}
 		},
 		PLAYERXP(17) {
