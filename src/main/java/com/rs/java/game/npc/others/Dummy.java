@@ -17,11 +17,16 @@ public class Dummy extends NPC {
 		setForceMultiAttacked(true);
 	}
 
+	 @Override
+	 public void setTarget(Entity entity) {
+		//do nothing
+	 }
+
 	@Override
 	public void processNPC() {
-		if (isDead())
-			return;
-		super.processNPC();
+		//if (isDead())
+		//	return;
+		//super.processNPC();
 	}
 
 	@Override

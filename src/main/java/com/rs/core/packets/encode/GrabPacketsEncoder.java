@@ -16,7 +16,7 @@ public final class GrabPacketsEncoder extends Encoder {
 
 	private int encryptionValue;
 
-	public static final OutputStream getUkeysFile() {
+	public static OutputStream getUkeysFile() {
 		if (UKEYS_FILE == null)
 			UKEYS_FILE = Cache.generateUkeysFile();
 		return getContainerPacketData(255, 255, UKEYS_FILE);
@@ -26,7 +26,7 @@ public final class GrabPacketsEncoder extends Encoder {
 		super(connection);
 	}
 
-	public final void sendOutdatedClientPacket() {
+	public void sendOutdatedClientPacket() {
 		OutputStream stream = new OutputStream(1);
 		stream.writeByte(6);
 		ChannelFuture future = session.write(stream);
@@ -36,7 +36,7 @@ public final class GrabPacketsEncoder extends Encoder {
 			session.getChannel().close();
 	}
 
-	public final void sendStartUpPacket() {
+	public void sendStartUpPacket() {
 		OutputStream stream = new OutputStream(1 + Settings.GRAB_SERVER_KEYS.length * 4);
 		stream.writeByte(0);
 		for (int key : Settings.GRAB_SERVER_KEYS)
@@ -44,7 +44,7 @@ public final class GrabPacketsEncoder extends Encoder {
 		session.write(stream);
 	}
 
-	public final void sendCacheArchive(int indexId, int containerId, boolean priority) {
+	public void sendCacheArchive(int indexId, int containerId, boolean priority) {
 		if (indexId == 255 && containerId == 255)
 			session.write(getUkeysFile());
 		else {
@@ -52,7 +52,7 @@ public final class GrabPacketsEncoder extends Encoder {
 		}
 	}
 
-	public final ChannelBuffer getArchivePacketData(int indexId, int archiveId, boolean priority) {
+	public ChannelBuffer getArchivePacketData(int indexId, int archiveId, boolean priority) {
 		byte[] archive = indexId == 255 ? Cache.STORE.getIndex255().getArchiveData(archiveId)
 				: Cache.STORE.getIndexes()[indexId].getMainFile().getArchiveData(archiveId);
 		if (archive == null)
@@ -86,7 +86,7 @@ public final class GrabPacketsEncoder extends Encoder {
 	/*
 	 * only using for ukeys atm, doesnt allow keys encode
 	 */
-	public static final OutputStream getContainerPacketData(int indexFileId, int containerId, byte[] archive) {
+	public static OutputStream getContainerPacketData(int indexFileId, int containerId, byte[] archive) {
 		OutputStream stream = new OutputStream(archive.length + 4);
 		stream.writeByte(indexFileId);
 		stream.writeInt(containerId);

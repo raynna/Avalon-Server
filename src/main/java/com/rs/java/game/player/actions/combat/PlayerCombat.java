@@ -434,22 +434,6 @@ public class PlayerCombat extends Action {
             if (spell == null)
                 return -1;
             String spellName = spell.name().replace("_", " ").toLowerCase();
-            if (spell == ModernCombatSpellsStore.CRUMBLE_UNDEAD) {
-                player.setNextFaceEntity(target);
-                if (target instanceof NPC) {
-                    NPC n = (NPC) target;
-                    boolean undead = false;
-                    for (String string : Settings.UNDEAD_NPCS) {
-                        if (n.getDefinitions().getName().toLowerCase().contains(string) || n.getId() == 4474) {
-                            undead = true;
-                        }
-                    }
-                    if (!undead || (target instanceof Player)) {
-                        player.message("You can only cast crumble undead on undead monsters.");
-                        return -1;
-                    }
-                }
-            }
             if (spell == ModernCombatSpellsStore.BIND || spell == ModernCombatSpellsStore.SNARE
                     || spell == ModernCombatSpellsStore.ENTANGLE) {
                 if (target.isFrozen()) {
@@ -691,10 +675,6 @@ public class PlayerCombat extends Action {
         double attack = Math.round(player.getSkills().getLevel(Skills.MAGIC) * player.getPrayer().getMagicMultiplier()) + 8;
         if (fullVoidEquipped(player, 11663, 11674))
             attack *= hasEliteVoid(player) ? 1.475 : 1.45;
-        if (target instanceof NPC) {
-            NPC n = (NPC) target;
-            attack *= NpcDamageBoost.getMultiplier(player, n, NpcDamageBoost.Style.MAGIC);
-        }
         attack = attack * (1 + attackBonus / 64);
         A = Math.round(attack);
         if (target instanceof Player) {
@@ -754,12 +734,6 @@ public class PlayerCombat extends Action {
         max_hit *= boost;
         if (Utils.random(3) == 0 && fullAhrimsEquipped(player)) {
             max_hit *= 1.05;
-        }
-        if (target instanceof NPC) {
-            NPC n = (NPC) target;
-            max_hit *= NpcDamageBoost.getMultiplier(player, n, NpcDamageBoost.Style.MAGIC);
-            if (player.getAuraManager().isActivated())
-                max_hit *= player.getAuraManager().getMagicAccurayMultiplier();
         }
         return max_hit;
     }
@@ -1814,10 +1788,6 @@ public class PlayerCombat extends Action {
                     double multiplier = getSpecialAccuracyModifier(player);
                     range *= multiplier;
                 }
-                if (target instanceof NPC) {
-                    NPC n = (NPC) target;
-                    range *= NpcDamageBoost.getMultiplier(player, n, NpcDamageBoost.Style.RANGE);
-                }
                 if ((player.getEquipment().getWeaponId() == 20173 || player.getEquipment().getWeaponId() == 20171)
                         && !(player.getControlerManager().getControler() instanceof WildernessControler)) {
                     range += getZaryteBowModifier(1, target);
@@ -1997,12 +1967,6 @@ public class PlayerCombat extends Action {
                 effectiveStrength = Math.floor(effectiveStrength * (hasEliteVoid(player) ? 1.135 : 1.1));
             double baseDamage = 5 + effectiveStrength * (1 + (strengthBonus / 64));
             int maxHit = (int) Math.floor(baseDamage * specMultiplier * otherBonus);
-            if (target instanceof NPC) {
-                NPC n = (NPC) target;
-                int oldMaxHit = maxHit;
-                maxHit *= NpcDamageBoost.getMultiplier(player, n, NpcDamageBoost.Style.MELEE);
-                int newMaxHit = maxHit;
-            }
             maxHit *= PlayerDamageBoost.getMultiplier(player);
             int style = player.getCombatDefinitions().getStyle(weaponId, attackStyle);
             if (style == CombatDefinitions.AGGRESSIVE)
@@ -2032,12 +1996,6 @@ public class PlayerCombat extends Action {
             double strengthBonus = player.getCombatDefinitions().getBonuses()[CombatDefinitions.RANGED_STR_BONUS];
             double baseDamage = 5 + (((effectiveStrength + 8) * (strengthBonus + 64)) / 64);
             int maxHit = (int) Math.floor(baseDamage * specMultiplier * otherBonus);
-            if (target instanceof NPC) {
-                NPC n = (NPC) target;
-                int oldMaxHit = maxHit;
-                maxHit *= NpcDamageBoost.getMultiplier(player, n, NpcDamageBoost.Style.RANGE);
-                int newMaxHit = maxHit;
-            }
             if (player.getCombatDefinitions().getStyle(weaponId, attackStyle) == CombatDefinitions.ACCURATE)
                 maxHit += 3;
             if (performHexbow(weaponId, target)) {

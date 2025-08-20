@@ -6,7 +6,9 @@ import com.rs.java.game.Animation
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
+import com.rs.java.game.npc.NPC
 import com.rs.java.utils.Utils
+import com.rs.kotlin.game.npc.NpcBonusType
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.*
@@ -15,6 +17,7 @@ import com.rs.kotlin.game.world.projectile.ProjectileManager
 import com.rs.kotlin.game.world.projectile.ProjectileType
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.pow
 import kotlin.reflect.typeOf
 
 
@@ -233,8 +236,12 @@ object StandardRanged : RangeData() {
                     context.attacker.animate("animation.bow_attack")
                     context.attacker.gfx(2962, 100)
                     ProjectileManager.send(Projectile.ARROW, 1066, context.attacker, context.defender)
+
+
+
                     context.hits {
-                        ranged(delay = context.combat.getHitDelay())
+                        ranged(
+                            delay = context.combat.getHitDelay())
                     }
                 }
             )

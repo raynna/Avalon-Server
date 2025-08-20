@@ -3,6 +3,7 @@ package com.rs.kotlin.game.player.combat
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
 import com.rs.java.game.npc.NPC
+import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
@@ -14,6 +15,7 @@ import com.rs.kotlin.game.player.equipment.BonusType
 import com.rs.kotlin.game.player.equipment.EquipmentSets
 import com.rs.kotlin.game.player.equipment.EquipmentSets.getDharokMultiplier
 import kotlin.math.floor
+import kotlin.math.pow
 import kotlin.time.times
 
 object CombatCalculations {
@@ -39,7 +41,11 @@ object CombatCalculations {
             val styleBonus = getAttackStyleBonus(player)
             val equipmentSet = EquipmentSets.getSet(player)
             val voidBonus = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.MELEE)
-            val specialBonus = CombatMultipliers.getMultiplier(player,  target, CombatMultipliers.Style.MELEE)//TODO THINGS LIKE SLAYER HELMET, SALVE AMMY ETC
+            val specialBonus = CombatMultipliers.getMultiplier(
+                player,
+                target,
+                CombatMultipliers.Style.MELEE
+            )//TODO THINGS LIKE SLAYER HELMET, SALVE AMMY ETC
 
             var effectiveAttack = player.skills.getLevel(Skills.ATTACK) * player.prayer.attackMultiplier
             effectiveAttack += styleBonus + 8
@@ -122,7 +128,7 @@ object CombatCalculations {
                             "BaseDamage: ${baseDamage}, " +
                             "MaxHit: ${maxHit}, " +
                             "Rolled Damage: ${damage}, " +
-                            "Critical?: ${damage >= floor(baseDamage * 0.90)}"
+                            "Critical?: ${damage >= floor(baseDamage * 0.95)}"
                 )
             }
             return hit
@@ -140,12 +146,12 @@ object CombatCalculations {
             val equipmentSet = EquipmentSets.getSet(player)
             val voidBonus = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.RANGE)
             val specialBonus = CombatMultipliers.getMultiplier(player, target, CombatMultipliers.Style.RANGE)
+            val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getZaryteBowBoost(player, target)
 
             var effectiveAttack = player.skills.getLevel(Skills.RANGE) * player.prayer.rangedMultiplier
             effectiveAttack += styleBonus + 8
-            effectiveAttack *= voidBonus
+            effectiveAttack *= voidBonus * zaryteAccuracy
             val attackRoll = effectiveAttack * (rangeBonus + 64) * specialBonus
-
             /*
             * Range Defence Calculation
             */
@@ -170,14 +176,16 @@ object CombatCalculations {
                 ((getDefenceLevel(target) + 9) * (defenceBonus + 64))//DONE
             }
             if (player.developerMode) {
-            player.message("[Combat Accuracy] - " +
-                    "bonusType: ${bonusType}, " +
-                    "AttackBonus: $rangeBonus, " +
-                    "DefenceBonus: $defenceBonus, " +
-                    "Attack: $attackRoll, " +
-                    "Defence: $defenceRoll, " +
-                    "")
-                }
+                player.message(
+                    "[Combat Accuracy] - " +
+                            "bonusType: ${bonusType}, " +
+                            "AttackBonus: $rangeBonus, " +
+                            "DefenceBonus: $defenceBonus, " +
+                            "Attack: $attackRoll, " +
+                            "Defence: $defenceRoll, " +
+                            ""
+                )
+            }
             return calculateHitProbability(attackRoll.toInt(), defenceRoll.toInt())
         }
 
@@ -188,14 +196,13 @@ object CombatCalculations {
             val equipmentSet = EquipmentSets.getSet(player)
             val voidBonus = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.RANGE)
             val specialBonus = CombatMultipliers.getMultiplier(player, target, CombatMultipliers.Style.MELEE)
+            val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getZaryteBowBoost(player, target)
 
             val baseStrength = floor(rangedLvl * prayerBonus)
-            val effectiveStrength = floor((baseStrength + styleBonus + 8) * voidBonus)
+            val effectiveStrength = floor((baseStrength + styleBonus + 8) * voidBonus * zaryteDamage)
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.RangedStrBonus.index].toDouble()
-
             val baseDamage = 0.5 + (effectiveStrength * (strengthBonus + 640) / 640) * specialBonus
-            val maxHit = floor(baseDamage * specialMultiplier).toInt()
-
+            var maxHit = floor(baseDamage * specialMultiplier).toInt()
             var damage = Utils.random(maxHit)
             if (target is NPC) {
                 if (target.id == 4474) {
@@ -203,6 +210,13 @@ object CombatCalculations {
                 }
             }
             val hit = Hit(player, damage, maxHit, Hit.HitLook.RANGE_DAMAGE)
+            if (zaryteMaxHit > 0) {
+                if (hit.damage > zaryteMaxHit) {
+                    hit.damage = zaryteMaxHit;
+                }
+                if (hit.damage >= floor(zaryteMaxHit * 0.95))
+                    hit.setCriticalMark()
+            }
             if (damage >= floor(baseDamage * 0.95)) {
                 hit.setCriticalMark()
             }
@@ -218,7 +232,30 @@ object CombatCalculations {
             }
             return hit
         }
+
+        fun getZaryteBowBoost(player: Player, target: Entity): Triple<Double, Double, Int> {
+            if (target !is NPC) return Triple(1.0, 1.0, 0)
+
+            val weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON.toInt())
+            if (!weapon.isAnyOf("item.zaryte_bow", "item.zaryte_bow_2")) {
+                return Triple(1.0, 1.0, 0)
+            }
+
+            val magicLevel = target.bonuses[NpcBonusType.MagicLevel.index]
+            val magicAttack = target.bonuses[NpcBonusType.MagicAttack.index]
+
+            val effectiveMagic = (magicLevel + magicAttack).toDouble() / 2
+
+            val maxMagic = 255.0
+            val damageMultiplier = (1.0 + (effectiveMagic / maxMagic) * (2.5 - 1.0)).coerceIn(1.0, 2.5)
+
+            val accuracyMultiplier = (1.0 + (effectiveMagic / maxMagic) * (1.4 - 1.0)).coerceIn(1.0, 1.4)
+
+            val damageCap = 810
+            return Triple(accuracyMultiplier, damageMultiplier, damageCap)
+        }
     }
+
 
     private object MagicCombat : AccuracyCalculator {
         override fun calculateAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean {
@@ -239,7 +276,7 @@ object CombatCalculations {
 
         fun calculateMaxHit(player: Player, target: Entity, spellId: Int): Hit {
             val spell = Spellbook.getSpellById(player, spellId);
-            val baseDamage = spell?.damage?:10
+            val baseDamage = spell?.damage ?: 10
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
             val equipmentSet = EquipmentSets.getSet(player)
@@ -285,11 +322,13 @@ object CombatCalculations {
 
                     Pair(defenceBonus, effectiveDefence.toInt())
                 }
+
                 is NPC -> {
                     val defenceBonus = target.bonuses?.get(NpcBonusType.MagicDefence.index) ?: (target.combatLevel / 3)
                     val defenceLevel = target.bonuses?.get(NpcBonusType.DefenceLevel.index) ?: target.combatLevel
                     Pair(defenceBonus, defenceLevel + 9)
                 }
+
                 else -> Pair(0, 0)
             }
         }
@@ -358,6 +397,7 @@ object CombatCalculations {
                 }
                 defenceLevel
             }
+
             is Player -> target.skills.getLevel(Skills.DEFENCE)
             else -> 0
         })
@@ -412,31 +452,32 @@ object CombatCalculations {
     }
 
     private fun getDefenceBonus(player: Player, target: Entity, spell: Spell?): Int {
-            val targetWeapon = Weapon.getWeapon(player.equipment.weaponId)
-            val bonusStyle = targetWeapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)
-            val npcDefenceBonus = when (bonusStyle) {
-                AttackBonusType.STAB -> NpcBonusType.StabDefence
-                AttackBonusType.SLASH -> NpcBonusType.SlashDefence
-                AttackBonusType.CRUSH -> NpcBonusType.CrushDefence
-                else -> if (spell != null) NpcBonusType.MagicDefence else NpcBonusType.RangeDefence
-            }
-            val playerDefenceBonus = when (bonusStyle) {
-                AttackBonusType.STAB -> BonusType.StabDefence
-                AttackBonusType.SLASH -> BonusType.SlashDefence
-                AttackBonusType.CRUSH -> BonusType.CrushDefence
-                else -> if (spell != null) BonusType.MagicDefence else BonusType.RangeDefence
-            }
-            val defenceBonus = when (target) {
-                is Player -> target.combatDefinitions.bonuses[playerDefenceBonus.index]
-                is NPC -> {
-                    var defenceBonus = target.bonuses[npcDefenceBonus.index]
-                    if (defenceBonus <= 0) {
-                        defenceBonus = target.combatLevel / 3
-                    }
-                    defenceBonus
+        val targetWeapon = Weapon.getWeapon(player.equipment.weaponId)
+        val bonusStyle = targetWeapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)
+        val npcDefenceBonus = when (bonusStyle) {
+            AttackBonusType.STAB -> NpcBonusType.StabDefence
+            AttackBonusType.SLASH -> NpcBonusType.SlashDefence
+            AttackBonusType.CRUSH -> NpcBonusType.CrushDefence
+            else -> if (spell != null) NpcBonusType.MagicDefence else NpcBonusType.RangeDefence
+        }
+        val playerDefenceBonus = when (bonusStyle) {
+            AttackBonusType.STAB -> BonusType.StabDefence
+            AttackBonusType.SLASH -> BonusType.SlashDefence
+            AttackBonusType.CRUSH -> BonusType.CrushDefence
+            else -> if (spell != null) BonusType.MagicDefence else BonusType.RangeDefence
+        }
+        val defenceBonus = when (target) {
+            is Player -> target.combatDefinitions.bonuses[playerDefenceBonus.index]
+            is NPC -> {
+                var defenceBonus = target.bonuses[npcDefenceBonus.index]
+                if (defenceBonus <= 0) {
+                    defenceBonus = target.combatLevel / 3
                 }
-                else -> 0
+                defenceBonus
             }
-            return defenceBonus
+
+            else -> 0
+        }
+        return defenceBonus
     }
 }

@@ -18,9 +18,9 @@ public class DagannothKings extends NPC {
 
 	@Override
 	public void processNPC() {
-		super.processNPC();
 		if (isDead())
 			return;
+		super.processNPC();
 	}
 
 	@Override

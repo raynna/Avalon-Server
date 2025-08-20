@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.player.combat.damage
 
-import com.rs.Settings
 import com.rs.java.game.Entity
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
@@ -35,11 +34,15 @@ class CombatMultipliers() {
     }
 
     companion object {
+        var UNDEAD_NPCS: Array<String> = arrayOf(
+            "ghost", "zombie", "revenant", "skeleton", "abberant spectre", "banshee",
+            "ghoul", "vampire", "skeletal"
+        )
         fun getMultiplier(player: Player, target: Entity, style: Style): Double {
             var multiplier = 1.0
             if (target is NPC) {
                 val maxHitDummy = target.id == 4474
-                val isUndead = Settings.UNDEAD_NPCS.any { undeadName ->
+                val isUndead = UNDEAD_NPCS.any { undeadName ->
                     target.definitions.name.contains(undeadName, ignoreCase = true)
                 }
 

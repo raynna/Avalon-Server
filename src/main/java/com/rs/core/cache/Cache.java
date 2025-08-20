@@ -20,7 +20,7 @@ public final class Cache {
 		STORE = new Store(Settings.CACHE_PATH);
 	}
 
-	public static final byte[] generateUkeysFile() {
+	public static byte[] generateUkeysFile() {
 		OutputStream stream = new OutputStream();
 		stream.writeByte(STORE.getIndexes().length);
 		for (int index = 0; index < STORE.getIndexes().length; index++) {

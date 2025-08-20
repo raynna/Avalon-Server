@@ -11,7 +11,7 @@ public final class ClientPacketsDecoder extends Decoder {
 	}
 
 	@Override
-	public final void decode(InputStream stream) {
+	public void decode(InputStream stream) {
 		session.setDecoder(-1);
 		int packetId = stream.readUnsignedByte();
 		switch (packetId) {
@@ -28,7 +28,7 @@ public final class ClientPacketsDecoder extends Decoder {
 		}
 	}
 
-	private final void decodeLogin(InputStream stream) {
+	private void decodeLogin(InputStream stream) {
 		if (stream.getRemaining() != 0) {
 			session.getChannel().close();
 			return;
@@ -38,7 +38,7 @@ public final class ClientPacketsDecoder extends Decoder {
 		session.getLoginPackets().sendStartUpPacket();
 	}
 
-	private final void decodeGrab(InputStream stream) {
+	private void decodeGrab(InputStream stream) {
 		int size = stream.readUnsignedByte();
 		if (stream.getRemaining() < size) {
 			session.getChannel().close();
