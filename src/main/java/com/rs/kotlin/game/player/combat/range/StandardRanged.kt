@@ -386,11 +386,11 @@ object StandardRanged : RangeData() {
                     val soundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3733 else 3736
                     val hitSoundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3731 else 3732
                     ProjectileManager.send(
-                        Projectile.DRAGON_ARROW, arrowProjectile, context.attacker, context.defender, heightOffset = 0, hitGraphic = Graphics(endGraphic)) {
+                        Projectile.DRAGON_ARROW, arrowProjectile, context.attacker, context.defender, heightOffset = 0, hitGraphic = Graphics(endGraphic, 100)) {
                         context.attacker.packets.sendSound(hitSoundId, 0, 1)
                     }
                     ProjectileManager.sendDelayed(
-                        Projectile.DRAGON_ARROW, arrowProjectile, context.attacker, context.defender, delayTicks = 1, heightOffset = 15, hitGraphic = Graphics(endGraphic)) {
+                        Projectile.DRAGON_ARROW, arrowProjectile, context.attacker, context.defender, delayTicks = 1, heightOffset = 15, hitGraphic = Graphics(endGraphic, 100)) {
                         context.attacker.packets.sendSound(hitSoundId, 0, 1)
                     }
                     context.attacker.packets.sendSound(soundId, 0, 1)
@@ -444,7 +444,6 @@ object StandardRanged : RangeData() {
             itemId = listOf(864),
             name = "Bronze knife",
             weaponStyle = WeaponStyle.THROWING,
-            attackSpeed = 3,
             attackRange = 4,
             projectileId = 212,
             animationId = 9057,
@@ -454,7 +453,6 @@ object StandardRanged : RangeData() {
             itemId = listOf(870),
             name = "Bronze knife (p)",
             weaponStyle = WeaponStyle.THROWING,
-            attackSpeed = 3,
             attackRange = 4,
             projectileId = 212,
             poisonSeverity = 20,
@@ -467,7 +465,6 @@ object StandardRanged : RangeData() {
             itemId = listOf(806),
             name = "Bronze dart",
             weaponStyle = WeaponStyle.THROWING,
-            attackSpeed = 3,
             attackRange = 3,
             projectileId = 226,
             animationId = 582,

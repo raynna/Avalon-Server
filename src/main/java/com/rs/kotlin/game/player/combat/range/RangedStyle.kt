@@ -115,7 +115,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 return false
             }
         }
-        if (weaponAmmoType != AmmoType.THROWING && weaponAmmoType != AmmoType.DART && weaponAmmoType != AmmoType.NONE) {
+        if (!isThrowing(currentWeapon) && weaponAmmoType != AmmoType.NONE) {
             if (weaponAmmoType != ammoType) {
                 attacker.message("You can't use $ammoName with a $weaponName.")
                 return false
@@ -149,9 +149,11 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (executeEffect(combatContext.copy(usingSpecial = false)))
             return
         attacker.animate(CombatAnimations.getAnimation(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle))
-        if (currentAmmo != null) {
-            if (currentAmmo.startGfx != null) {
-                attacker.gfx(currentAmmo.startGfx)
+        if (!isThrowing(currentWeapon) && currentWeapon.ammoType != AmmoType.NONE) {
+            if (currentAmmo != null) {
+                if (currentAmmo.startGfx != null) {
+                    attacker.gfx(currentAmmo.startGfx)
+                }
             }
         }
         sendProjectile()
@@ -293,6 +295,10 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 attacker, defender
             )
         }
+    }
+
+    private fun isThrowing(weapon: RangedWeapon):Boolean {
+        return weapon.ammoType == AmmoType.DART || weapon.ammoType == AmmoType.THROWING || weapon.ammoType == AmmoType.JAVELIN || weapon.ammoType == AmmoType.THROWNAXE
     }
 
     private fun dropAmmoOnGround() {
