@@ -2,10 +2,7 @@ package com.rs.kotlin.game.npc.drops
 
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerDropTable
-import com.rs.kotlin.game.npc.drops.tables.BlackDragonDropTable
-import com.rs.kotlin.game.npc.drops.tables.GoblinDropTable
-import com.rs.kotlin.game.npc.drops.tables.GoblinLvl5DropTable
-import com.rs.kotlin.game.npc.drops.tables.RockCrabTable
+import com.rs.kotlin.game.npc.drops.tables.*
 
 object DropTablesSetup {
 
@@ -38,6 +35,9 @@ object DropTablesSetup {
             Rscm.lookupList("npc_group.goblin_lv17"),
             Rscm.lookupList("npc_group.goblin_lv25"))
         registerDropTable(RockCrabTable.table, Rscm.lookupList("npc_group.rock_crab_lv13"))
+        registerDropTable(DagannothRexTable.table, Rscm.lookup("npc.dagannoth_rex_lv303"))
+        registerDropTable(DagannothPrimeTable.table, Rscm.lookup("npc.dagannoth_prime_lv303"))
+        registerDropTable(DagannothSupremeTable.table, Rscm.lookup("npc.dagannoth_supreme_lv303"))
 
         DropTableRegistry.logDropTableSizes();
     }
