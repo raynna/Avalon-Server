@@ -18,28 +18,28 @@ object NechryaelDropTable {
             blue(amount = 1, percent = 0.851)
         }
 
-        mainDrops {
-            drop("item.adamant_platelegs", numerator = 4, denominator = 116)
-            drop("item.rune_2h_sword", numerator = 4, denominator = 116)
-            drop("item.rune_full_helm", numerator = 3, denominator = 116)
-            drop("item.adamant_kiteshield", numerator = 2, denominator = 116)
-            drop("item.rune_boots", numerator = 1, denominator = 116)
+        mainDrops(116) {
+            drop("item.adamant_platelegs", weight = 4)
+            drop("item.rune_2h_sword", weight = 4)
+            drop("item.rune_full_helm", weight = 3)
+            drop("item.adamant_kiteshield", weight = 2)
+            drop("item.rune_boots", weight = 1)
 
-            drop("item.chaos_rune", amount = 37, numerator = 8, denominator = 116)
-            drop("item.death_rune", amount = 5, numerator = 6, denominator = 116)
-            drop("item.death_rune", amount = 10, numerator = 6, denominator = 116)
-            drop("item.law_rune", amount = 25..35, numerator = 5, denominator = 116)
-            drop("item.blood_rune", amount = 15..20, numerator = 4, denominator = 116)
+            drop("item.chaos_rune", amount = 37, weight = 8)
+            drop("item.death_rune", amount = 5, weight = 6)
+            drop("item.death_rune", amount = 10, weight = 6)
+            drop("item.law_rune", amount = 25..35, weight = 5)
+            drop("item.blood_rune", amount = 15..20, weight = 4)
 
-            drop("item.coins", amount = 1000..1499, numerator = 13, denominator = 116)
-            drop("item.coins", amount = 1500..2000, numerator = 10, denominator = 116)
-            drop("item.coins", amount = 2500..2999, numerator = 6, denominator = 116)
-            drop("item.coins", amount = 3000..35000, numerator = 3, denominator = 116)
-            drop("item.coins", amount = 500..999, numerator = 2, denominator = 116)
-            drop("item.coins", amount = 5000, numerator = 1, denominator = 116)
+            drop("item.coins", amount = 1000..1499, weight = 13)
+            drop("item.coins", amount = 1500..2000, weight = 10)
+            drop("item.coins", amount = 2500..2999, weight = 6)
+            drop("item.coins", amount = 3000..35000, weight = 3)
+            drop("item.coins", amount = 500..999, weight = 2)
+            drop("item.coins", amount = 5000, weight = 1)
 
-            drop("item.soft_clay_noted", amount = 25, numerator = 4, denominator = 116)
-            drop("item.tuna", numerator = 3, denominator = 116)
+            drop("item.soft_clay_noted", amount = 25, weight = 4)
+            drop("item.tuna", weight = 3)
         }
 
         tertiaryDrops {

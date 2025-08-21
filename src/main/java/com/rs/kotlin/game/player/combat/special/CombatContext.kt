@@ -19,6 +19,7 @@ data class CombatContext(
     val combat: CombatStyle,
     val attackStyle: AttackStyle,
     val attackBonusType: AttackBonusType,
+    val hit: Hit? = null,
     val usingSpecial: Boolean = false
 )
 
@@ -91,6 +92,23 @@ fun CombatContext.registerHit(
     weapon = weapon,
     spellId = spellId,
     accuracyMultiplier = accuracyMultiplier,
+    damageMultiplier = damageMultiplier,
+    hitLook = hitLook
+)
+
+fun CombatContext.registerDamage(
+    combatType: CombatType = CombatType.MELEE,
+    damageMultiplier: Double = 1.0,
+    hitLook: Hit.HitLook? = null,
+    spellId: Int = -1,
+    target: Entity = defender
+): Hit = combat.registerDamage(
+    attacker = attacker,
+    defender = target,
+    combatType = combatType,
+    attackStyle = attackStyle,
+    weapon = weapon,
+    spellId = spellId,
     damageMultiplier = damageMultiplier,
     hitLook = hitLook
 )

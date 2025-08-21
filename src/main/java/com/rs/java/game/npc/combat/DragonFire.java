@@ -1,10 +1,12 @@
 package com.rs.java.game.npc.combat;
 
 import com.rs.java.game.Animation;
+import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.item.meta.ItemMetadata;
+import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 
@@ -13,6 +15,20 @@ public class DragonFire {
     private static final int[] DRAGON_SHIELDS = {11283, 11284, 1540};
     private static final int DRAGONFIRE_ABSORB_ANIMATION = 6695;
     private static final int DRAGONFIRE_ABSORB_GFX = 1164;
+
+
+    public static boolean hasFireProtection(Entity entity) {
+        if (entity instanceof NPC) return false;
+        if (!(entity instanceof Player player)) return false;
+
+        if (player.getSuperAntifire() > 0)
+            return true;
+        if (player.getAntifire() > 0)
+            return true;
+        if (player.getPrayer().isMageProtecting())
+            return true;
+        return hasDragonShield(player);
+    }
 
     /**
      * Applies dragonfire mitigation to a damage value and sends the appropriate messages.

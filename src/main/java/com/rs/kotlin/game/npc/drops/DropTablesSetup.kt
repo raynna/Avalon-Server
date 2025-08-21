@@ -3,7 +3,6 @@ package com.rs.kotlin.game.npc.drops
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerDropTable
 import com.rs.kotlin.game.npc.drops.tables.*
-import com.rs.kotlin.game.player.combat.magic.ElementType
 
 object DropTablesSetup {
 
@@ -23,7 +22,7 @@ object DropTablesSetup {
         gemDropTable = GemTableEntry()
         superRareTable = SuperRareTableEntry()
         herbDropTable = HerbTableEntry()
-        registerDropTable(BlackDragonDropTable.table, Rscm.lookupList("npc_group.black_dragon_lv227"))
+        registerDropTable(BlackDragonDropTable.blackDragonTable, Rscm.lookupList("npc_group.black_dragon_lv227"))
         registerDropTable(GoblinDropTable.table, Rscm.lookupList("npc_group.goblin_lv1"), Rscm.lookupList("npc_group.goblin_lv2"))
         registerDropTable(GoblinLvl5DropTable.table,
             Rscm.lookupList("npc_group.goblin_lv5"),
@@ -48,13 +47,14 @@ object DropTablesSetup {
         registerDropTable(AbyssalDemonTable.table,
             Rscm.lookupList("npc_group.abyssal_demon"),
             Rscm.lookupList("npc_group.abyssal_demon_lv124"))
-        registerDropTable(DarkBeastTable.table, Rscm.lookup("npc.dark_beast_lv182"))
+        registerDropTable(DarkBeastTable.darkBeasts, Rscm.lookup("npc.dark_beast_lv182"))
         registerDropTable(GargoyleDropTable.table, Rscm.lookupList("npc_group.gargoyle_lv111"))
         registerDropTable(NechryaelDropTable.table, Rscm.lookupList("npc_group.nechryael_lv115"))
         registerDropTable(BloodveldDropTable.table,
             Rscm.lookupList("npc_group.bloodveld_lv76"),
             Rscm.lookupList("npc_group.bloodveld_lv81"))
         registerDropTable(InfernalMageDropTable.table, Rscm.lookupList("npc_group.infernal_mage_lv66"))
+        registerDropTable(AberrantSpectreDropTable.table, Rscm.lookupList("npc_group.aberrant_spectre_lv96"))
 
 
         DropTableRegistry.logDropTableSizes();

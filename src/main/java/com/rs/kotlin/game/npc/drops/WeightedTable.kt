@@ -5,6 +5,11 @@ import java.util.concurrent.ThreadLocalRandom
 
 class WeightedTable {
     private val entries = mutableListOf<WeightedDropEntry>()
+    private var tableSize: Int = 0    // added for mainDrops(128) scaling
+
+    fun setSize(size: Int) {
+        tableSize = size
+    }
 
     fun add(entry: WeightedDropEntry) {
         entries.add(entry)
@@ -13,11 +18,7 @@ class WeightedTable {
     fun size() = entries.size
 
     fun roll(player: Player): Drop? {
-        val totalWeight = entries.sumOf { it.weight }
-        if (totalWeight == 0) {
-            return null
-        }
-        val rand = ThreadLocalRandom.current().nextInt(totalWeight)
+        val rand = ThreadLocalRandom.current().nextInt(tableSize)
         var acc = 0
         for (entry in entries) {
             acc += entry.weight

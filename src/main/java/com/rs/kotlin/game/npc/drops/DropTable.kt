@@ -4,20 +4,29 @@ import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.DropTablesSetup.gemDropTable
 import com.rs.kotlin.game.npc.drops.DropTablesSetup.herbDropTable
+import java.util.concurrent.ThreadLocalRandom
 
 fun dropTable(
     rolls: Int = 1,
-    herbTable: Boolean = false,
+    herbTable: HerbTableConfig? = null,
     rareDropTable: Boolean = false,
     block: DropTable.() -> Unit
 ): DropTable = DropTable(rolls).apply {
-    if (herbTable) herbTable { player, drops ->
-        herbDropTable.roll(player)?.also(drops::add) != null
+    if (herbTable != null) herbTable { player, drops ->
+        val roll = ThreadLocalRandom.current().nextInt(herbTable.denominator)
+        if (roll < herbTable.numerator) {
+            herbDropTable.roll(player)?.let { baseDrop ->
+                val rolledAmount = herbTable.amount.random()
+                drops.add(baseDrop.copy(amount = rolledAmount))
+            }
+            true
+        } else false
     }
 
     if (rareDropTable) gemTable { player, drops ->
         gemDropTable.roll(player)?.also(drops::add) != null
     }
+
     block()
 }
 
@@ -34,10 +43,9 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
     private var herbTableRoller: ((Player, MutableList<Drop>) -> Boolean)? = null
     private var currentContext: DropType? = null
 
-    override fun toString(): String {
-        return "DropTable(name='$name')"
-    }
+    override fun toString(): String = "DropTable(name='$name')"
 
+    // ------------------ Scopes ------------------
     fun alwaysDrops(block: MutableList<DropEntry>.() -> Unit) {
         currentContext = DropType.ALWAYS
         alwaysDrops.block()
@@ -47,24 +55,27 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
     fun preRollDrops(block: MutableList<DropEntry>.() -> Unit) {
         currentContext = DropType.PREROLL
         preRollDrops.block()
-        currentContext = null;
+        currentContext = null
     }
 
-    fun mainDrops(block: MutableList<WeightedDropEntry>.() -> Unit) {
+    fun mainDrops(size: Int, block: MutableList<WeightedDropEntry>.() -> Unit) {
         currentContext = DropType.MAIN
+        mainDrops.setSize(size)
         mainDrops.mutableEntries().block()
         currentContext = null
     }
+
+    fun specialDrops(size: Int, block: MutableList<WeightedDropEntry>.() -> Unit) {
+        currentContext = DropType.SPECIAL
+        specialDrops.setSize(size)
+        specialDrops.mutableEntries().block()
+        currentContext = null
+    }
+
     fun tertiaryDrops(block: MutableList<TertiaryDropEntry>.() -> Unit) {
         currentContext = DropType.TERTIARY
         tertiaryDrops.block()
-        currentContext = null;
-    }
-
-    fun specialDrops(block: MutableList<WeightedDropEntry>.() -> Unit) {
-        currentContext = DropType.SPECIAL
-        specialDrops.mutableEntries().block()
-        currentContext = null;
+        currentContext = null
     }
 
     fun charmDrops(block: SummoningCharms.() -> Unit) {
@@ -83,103 +94,71 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
         herbTableRoller = block
     }
 
+    // ------------------ Drop DSL ------------------
     fun DropTable.drop(
         item: String,
         amount: IntRange = 1..1,
-        numerator: Int = 1,
+        weight: Int = 1,                 // new weight for main/special
+        numerator: Int = 1,              // still used for tertiary/pre-roll
         denominator: Int = 4,
         condition: ((Player) -> Boolean)? = null,
         customLogic: ((Player, Drop?) -> Unit)? = null
     ) {
         val ctx = currentContext ?: error("Cannot call drop() outside a drop type scope")
-        addDrop(ctx, Rscm.lookup(item), amount, numerator, denominator, condition, customLogic)
-    }
-
-    fun DropTable.drop(
-        item: String,
-        amount: Int,
-        numerator: Int = 1,
-        denominator: Int = 4,
-        condition: ((Player) -> Boolean)? = null,
-        customLogic: ((Player, Drop?) -> Unit)? = null
-    ) = drop(item, amount..amount, numerator, denominator, condition, customLogic)
-
-    private fun addDrop(
-        context: DropType,
-        item: Int,
-        amount: IntRange,
-        numerator: Int = 1,
-        denominator: Int = 4,
-        condition: ((Player) -> Boolean)? = null,
-        customLogic: ((Player, Drop?) -> Unit)? = null
-    ) {
-        when (context) {
-            DropType.ALWAYS, DropType.PREROLL -> {
-                val entry = DropEntry(item, amount, always = context == DropType.ALWAYS, condition = condition)
-                    if (context == DropType.ALWAYS) alwaysDrops.add(entry)
-                    else preRollDrops.add(entry)
-            }
-
-            DropType.MAIN, DropType.SPECIAL -> {
-                val entry = WeightedDropEntry(item, amount, numerator, denominator, condition, customLogic)
-                if (context == DropType.MAIN) mainDrops.add(entry)
-                else specialDrops.add(entry)
-            }
-
+        when (ctx) {
+            DropType.ALWAYS, DropType.PREROLL -> addDrop(ctx, Rscm.lookup(item), amount, numerator, denominator, condition, customLogic)
+            DropType.MAIN -> mainDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
+            DropType.SPECIAL -> specialDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
             DropType.TERTIARY -> {
                 if (numerator <= 0 || denominator <= 0) {
                     System.err.println("Invalid tertiary drop rate for item $item")
                     return
                 }
-                val entry = TertiaryDropEntry(item, amount, numerator, denominator, condition)
-                tertiaryDrops.add(entry)
+                tertiaryDrops.add(TertiaryDropEntry(Rscm.lookup(item), amount, numerator, denominator, condition))
             }
-
-            DropType.CHARM -> {
-                throw UnsupportedOperationException("Please use charmDrops { } block for charms instead of drop()")
-            }
+            DropType.CHARM -> throw UnsupportedOperationException("Use charmDrops { } block for charms")
         }
     }
 
+    fun DropTable.drop(item: String, amount: Int, weight: Int = 1, numerator: Int = 1, denominator: Int = 4,
+                       condition: ((Player) -> Boolean)? = null, customLogic: ((Player, Drop?) -> Unit)? = null) =
+        drop(item, amount..amount, weight, numerator, denominator, condition, customLogic)
+
+    private fun addDrop(context: DropType, item: Int, amount: IntRange, numerator: Int = 1, denominator: Int = 4,
+                        condition: ((Player) -> Boolean)? = null, customLogic: ((Player, Drop?) -> Unit)? = null) {
+        val entry = DropEntry(item, amount, always = context == DropType.ALWAYS, condition = condition)
+        when (context) {
+            DropType.ALWAYS -> alwaysDrops.add(entry)
+            DropType.PREROLL -> preRollDrops.add(entry)
+            else -> error("Cannot addDrop to context $context")
+        }
+    }
+
+    // ------------------ Rolling ------------------
     fun rollDrops(player: Player): List<Drop> {
         val drops = mutableListOf<Drop>()
 
-        alwaysDrops.forEach { it.roll(player)?.let { drop -> drops.add(drop) } }
+        alwaysDrops.forEach { it.roll(player)?.let(drops::add) }
+        preRollDrops.forEach { it.roll(player)?.let(drops::add) }
 
-        preRollDrops.forEach { it.roll(player)?.let { drop -> drops.add(drop) } }
+        gemTableRoller?.let { if (it(player, drops)) return drops }
+        herbTableRoller?.let { if (it(player, drops)) return drops }
 
-        gemTableRoller?.let {
-            if (it(player, drops)) {
-                return drops
-            }
-        }
-        herbTableRoller?.let {
-            if (it(player, drops)) {
-                return drops;
-            }
-        }
-
-       // mainDrops.mutableEntries().forEach { entry ->
-         //   println("  itemId=${entry.itemId}, amount=${entry.rollAmount()}, weight=${entry.weight}, numerator=${entry.numerator}, denominator=${entry.denominator}")
-        //}
         repeat(rolls) {
             if (gemTableRoller?.invoke(player, drops) == true) return@repeat
-            val drop = mainDrops.roll(player)
-            drop?.let(drops::add)
+            mainDrops.roll(player)?.let(drops::add)
         }
 
-        tertiaryDrops.forEach { it.roll(player)?.let { drop -> drops.add(drop) } }
+        if (specialDrops.size() > 0) {
+            specialDrops.roll(player)?.let(drops::add)
+        }
 
-        charmTable?.roll()?.let { drops.add(it) }
+        tertiaryDrops.forEach { it.roll(player)?.let(drops::add) }
+        charmTable?.roll()?.let(drops::add)
 
         return drops
     }
 
-    fun totalDropCount(): Int {
-        return alwaysDrops.size +
-                preRollDrops.size +
-                mainDrops.size() +
-                tertiaryDrops.size +
-                specialDrops.size()
-    }
+    fun totalDropCount(): Int =
+        alwaysDrops.size + preRollDrops.size + mainDrops.size() + tertiaryDrops.size + specialDrops.size()
 }

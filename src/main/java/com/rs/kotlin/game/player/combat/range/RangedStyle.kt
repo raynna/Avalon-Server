@@ -96,7 +96,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             attacker.message("You don't have any ammunition equipped.")
             return false
         }
-        attacker.message("currentAmmo ${currentAmmo?.name}")
         if (allowedAmmos != null) {
             if (!allowedAmmos.contains(ammoId)) {
                 attacker.message("You cannot use $ammoName with a $weaponName.")
@@ -104,7 +103,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             }
         } else if (maxTier != null) {
             if (ammoTier == null || !maxTier.canUse(ammoTier)) {
-                attacker.message("maxTier: $maxTier - ammoTier: $ammoTier")
                 attacker.message("You cannot use $ammoName with a $weaponName.")
                 return false
             }
@@ -158,7 +156,9 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             }
         }
         sendProjectile()
-        handleSpecialEffects()
+        if (executeAmmoEffect(combatContext)) {
+            return
+        }
         val hit = combatContext.rangedHit(delay = getHitDelay())
         if (attacker.isDeveloperMode)
         attacker.message(
@@ -210,6 +210,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun delayHits(vararg hits: PendingHit) {
         val currentWeapon = getCurrentWeapon()
+        val currentAmmo = getCurrentAmmo()
         val attackStyle = getAttackStyle(currentWeapon)
         var totalDamage = 0
         for (pending in hits) {
@@ -307,27 +308,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val ammoId = attacker.getEquipment().ammoId
         if (!Utils.roll(1, 3))
             World.updateGroundItem(Item(ammoId, 1), defender.tile, attacker);
-    }
-
-    private fun handleSpecialEffects() {
-        val currentWeapon = getCurrentWeapon()
-        val currentWeaponId = getCurrentWeaponId(attacker)
-        val currentAmmo = getCurrentAmmo()
-        val attackStyle = getAttackStyle(currentWeapon)
-        val attackBonusType = getAttackBonusType(currentWeapon)
-        currentAmmo?.specialEffect?.let { effect ->
-            val combatContext = CombatContext(
-                combat = this,
-                attacker = attacker,
-                defender = defender,
-                attackStyle = attackStyle,
-                attackBonusType = attackBonusType,
-                weapon = currentWeapon,
-                weaponId = currentWeaponId,
-                ammo = currentAmmo,
-            )
-            effect.execute(combatContext)
-        }
     }
 
     override fun getHitDelay(): Int {

@@ -1,12 +1,13 @@
 package com.rs.kotlin.game.npc.drops.tables
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
+import com.rs.kotlin.game.npc.drops.HerbTableConfig
 import com.rs.kotlin.game.npc.drops.dropTable
 
 object GoblinLvl5DropTable {
 
     val table =
-        dropTable(herbTable = true, rolls = 1) {
+        dropTable(herbTable = HerbTableConfig(numerator = 2), rolls = 1) {
 
             alwaysDrops {
                 drop("item.bones")
@@ -19,28 +20,28 @@ object GoblinLvl5DropTable {
                 blue(amount = 1, percent = 0.0537)
             }
 
-            mainDrops {//item: Any, amount: Int = 1, numerator: Int = 1, denominator: Int = 4
-                drop("item.bronze_spear", numerator = 9, denominator = 128)
-                drop("item.bronze_hatchet", numerator = 3, denominator = 128)
-                drop("item.bronze_scimitar", numerator = 1, denominator = 128)
-                drop("item.bronze_arrow", amount = 7, numerator = 3, denominator = 128)
-                drop("item.mind_rune", amount = 2, numerator = 3, denominator = 128)
-                drop("item.earth_rune", amount = 4, numerator = 3, denominator = 128)
-                drop("item.body_rune", amount = 2, numerator = 3, denominator = 128)
-                drop("item.bronze_javelin", amount = 5, numerator = 2, denominator = 128)
-                drop("item.chaos_rune", numerator = 1, denominator = 128)
-                drop("item.nature_rune", numerator = 1, denominator = 128)
-                drop("item.coins", amount = 1, numerator = 34, denominator = 128)
-                drop("item.coins", amount = 3, numerator = 13, denominator = 128)
-                drop("item.coins", amount = 5, numerator = 8, denominator = 128)
-                drop("item.coins", amount = 16, numerator = 7, denominator = 128)
-                drop("item.coins", amount = 24, numerator = 3, denominator = 128)
-                drop("item.goblin_mail", numerator = 10, denominator = 128)
-                drop("item.hammer", numerator = 9, denominator = 128)
-                drop("item.goblin_book", numerator = 2, denominator = 128)
-                drop("item.grapes", numerator = 1, denominator = 128)
-                drop("item.cape", numerator = 1, denominator = 128)
-                drop("item.tin_ore", numerator = 1, denominator = 128)
+            mainDrops(128) {
+                drop("item.bronze_spear", weight = 9)
+                drop("item.bronze_hatchet", weight = 3)
+                drop("item.bronze_scimitar", weight = 1)
+                drop("item.bronze_arrow", amount = 7, weight = 3)
+                drop("item.mind_rune", amount = 2, weight = 3)
+                drop("item.earth_rune", amount = 4, weight = 3)
+                drop("item.body_rune", amount = 2, weight = 3)
+                drop("item.bronze_javelin", amount = 5, weight = 2)
+                drop("item.chaos_rune", weight = 1)
+                drop("item.nature_rune", weight = 1)
+                drop("item.coins", amount = 1, weight = 34)
+                drop("item.coins", amount = 3, weight = 13)
+                drop("item.coins", amount = 5, weight = 8)
+                drop("item.coins", amount = 16, weight = 7)
+                drop("item.coins", amount = 24, weight = 3)
+                drop("item.goblin_mail", weight = 10)
+                drop("item.hammer", weight = 9)
+                drop("item.goblin_book", weight = 2)
+                drop("item.grapes", weight = 1)
+                drop("item.cape", weight = 1)
+                drop("item.tin_ore", weight = 1)
             }
 
             preRollDrops {

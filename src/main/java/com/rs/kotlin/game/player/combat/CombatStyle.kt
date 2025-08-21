@@ -77,6 +77,36 @@ interface CombatStyle {
         return hit
     }
 
+    fun registerDamage(
+     attacker: Player,
+        defender: Entity,
+        combatType: CombatType,
+        attackStyle: AttackStyle = AttackStyle.ACCURATE,
+        weapon: Weapon? = null,
+        spellId: Int = -1,
+        damageMultiplier: Double = 1.0,
+        hitLook: Hit.HitLook? = null
+    ): Hit {
+        val resolvedHitLook = hitLook ?: when (combatType) {
+            CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
+            CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
+            CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
+        }
+        val hit = when (combatType) {
+                CombatType.MELEE -> CombatCalculations.calculateMeleeMaxHit(attacker, defender, damageMultiplier)
+                CombatType.RANGED -> CombatCalculations.calculateRangedMaxHit(attacker, defender, damageMultiplier)
+                CombatType.MAGIC -> {
+                    requireNotNull(spellId) { "Spell required for magic attack" }
+                    CombatCalculations.calculateMagicMaxHit(attacker, defender, spellId)
+                }
+            }
+        hit.look = resolvedHitLook
+        if (hit.isCriticalHit && !hit.isCombatLook) {
+            hit.critical = false
+        }
+        return hit
+    }
+
     fun registerHit(
         attacker: Player,
         defender: Entity,
@@ -135,6 +165,12 @@ interface CombatStyle {
             return true;
         }
         return false;
+    }
+
+    fun executeAmmoEffect(combatContext: CombatContext): Boolean {
+        val ammo = combatContext.ammo ?: return false
+        val effect = ammo.specialEffect ?: return false
+        return effect.execute(combatContext)
     }
 
     fun isRangedWeapon(player: Player): Boolean {

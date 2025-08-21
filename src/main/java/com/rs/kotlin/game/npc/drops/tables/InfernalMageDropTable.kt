@@ -37,29 +37,29 @@ object InfernalMageDropTable {
             )
         }
 
-        mainDrops {
-            drop("item.staff", numerator = 8, denominator = 128)
-            drop("item.staff_of_fire", numerator = 1, denominator = 128)
+        mainDrops(128) {
+            drop("item.staff", weight = 8)
+            drop("item.staff_of_fire", weight = 1)
 
-            drop("item.earth_rune", amount = 10, numerator = 6, denominator = 128)
-            drop("item.fire_rune", amount = 10, numerator = 6, denominator = 128)
-            drop("item.earth_rune", amount = 36, numerator = 4, denominator = 128)
-            drop("item.air_rune", amount = 10, numerator = 3, denominator = 128)
-            drop("item.water_rune", amount = 10, numerator = 3, denominator = 128)
-            drop("item.air_rune", amount = 18, numerator = 2, denominator = 128)
-            drop("item.water_rune", amount = 18, numerator = 2, denominator = 128)
-            drop("item.earth_rune", amount = 18, numerator = 2, denominator = 128)
-            drop("item.fire_rune", amount = 18, numerator = 2, denominator = 128)
+            drop("item.earth_rune", amount = 10, weight = 6)
+            drop("item.fire_rune", amount = 10, weight = 6)
+            drop("item.earth_rune", amount = 36, weight = 4)
+            drop("item.air_rune", amount = 10, weight = 3)
+            drop("item.water_rune", amount = 10, weight = 3)
+            drop("item.air_rune", amount = 18, weight = 2)
+            drop("item.water_rune", amount = 18, weight = 2)
+            drop("item.earth_rune", amount = 18, weight = 2)
+            drop("item.fire_rune", amount = 18, weight = 2)
 
-            drop("item.death_rune", amount = 7, numerator = 18, denominator = 128)
-            drop("item.mind_rune", amount = 18, numerator = 2, denominator = 128)
-            drop("item.body_rune", amount = 18, numerator = 2, denominator = 128)
-            drop("item.blood_rune", amount = 4, numerator = 2, denominator = 128)
+            drop("item.death_rune", amount = 7, weight = 18)
+            drop("item.mind_rune", amount = 18, weight = 2)
+            drop("item.body_rune", amount = 18, weight = 2)
+            drop("item.blood_rune", amount = 4, weight = 2)
 
-            drop("item.coins", amount = 1, numerator = 21, denominator = 128)
-            drop("item.coins", amount = 2, numerator = 16, denominator = 128)
-            drop("item.coins", amount = 4, numerator = 9, denominator = 128)
-            drop("item.coins", amount = 29, numerator = 3, denominator = 128)
+            drop("item.coins", amount = 1, weight = 21)
+            drop("item.coins", amount = 2, weight = 16)
+            drop("item.coins", amount = 4, weight = 9)
+            drop("item.coins", amount = 29, weight = 3)
         }
 
     }.apply { name = "Infernal Mage" }

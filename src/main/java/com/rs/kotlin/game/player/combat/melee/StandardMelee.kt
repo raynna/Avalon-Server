@@ -47,6 +47,7 @@ object StandardMelee : MeleeData() {
                 } else {
                     context.meleeHit()
                 }
+                true
             }
         )
     )
@@ -294,6 +295,7 @@ object StandardMelee : MeleeData() {
                         nextHit(baseHit = firstHit, maxHit = maxHit1)
                         nextHit(baseHit = secondHit, maxHit = maxHit2)
                     }
+                    true
                 }
             )
         ),

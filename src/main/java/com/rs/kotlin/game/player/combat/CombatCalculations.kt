@@ -400,7 +400,6 @@ object CombatCalculations {
                 if (defenceLevel <= 0) {
                     defenceLevel = target.combatLevel
                 }
-                println("${target.name} defence level: $defenceLevel")
                 defenceLevel
             }
 
