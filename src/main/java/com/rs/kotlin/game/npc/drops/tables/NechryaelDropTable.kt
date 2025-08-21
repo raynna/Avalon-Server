@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.npc.drops.tables
 
-import com.rs.java.game.player.Skills
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.drops.dropTable
 
@@ -41,8 +40,6 @@ object NechryaelDropTable {
 
             drop("item.soft_clay_noted", amount = 25, numerator = 4, denominator = 116)
             drop("item.tuna", numerator = 3, denominator = 116)
-
-
         }
 
         tertiaryDrops {
