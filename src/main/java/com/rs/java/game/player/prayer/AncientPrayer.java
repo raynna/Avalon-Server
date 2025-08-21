@@ -55,19 +55,19 @@ public enum AncientPrayer implements Prayer {
     },
 
     SAP_WARRIOR(1, 50, 6, "Sap Warrior") {
-        @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.LEECH_CURSES, PrayerConflictGroup.MELEE}; }
+        @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.LEECH_CURSES, PrayerConflictGroup.SPECIAL_DRAIN, PrayerConflictGroup.MELEE}; }
         @Override public int getAffectedStatIndex() { return Skills.ATTACK; }
     },
     SAP_RANGER(2, 52, 6, "Sap Ranger") {
-        @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.LEECH_CURSES, PrayerConflictGroup.MELEE}; }
+        @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.LEECH_CURSES, PrayerConflictGroup.SPECIAL_DRAIN, PrayerConflictGroup.MELEE}; }
         @Override public int getAffectedStatIndex() { return Skills.RANGE; }
     },
     SAP_MAGE(3, 54, 6, "Sap Mage") {
-        @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.LEECH_CURSES, PrayerConflictGroup.MELEE}; }
+        @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.LEECH_CURSES, PrayerConflictGroup.SPECIAL_DRAIN, PrayerConflictGroup.MELEE}; }
         @Override public int getAffectedStatIndex() { return Skills.MAGIC; }
     },
     SAP_SPIRIT(4, 56, 6, "Sap Spirit") {
-        @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.LEECH_CURSES, PrayerConflictGroup.MELEE}; }//TODO LEECH SPEC GROUP
+        @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.LEECH_CURSES, PrayerConflictGroup.SPECIAL_DRAIN, PrayerConflictGroup.MELEE}; }//TODO LEECH SPEC GROUP
         @Override public int getAffectedStatIndex() { return Skills.PRAYER; }
     },
 
@@ -139,7 +139,7 @@ public enum AncientPrayer implements Prayer {
     },
     TURMOIL(19, 95, 18, "Turmoil", Rscm.lookup("graphic.curses_turmoil"), Rscm.lookup("animation.curses_turmoil")) {
         @Override public PrayerConflictGroup[] getConflictGroups() {
-            return new PrayerConflictGroup[]{PrayerConflictGroup.LEECH_CURSES, PrayerConflictGroup.SAP_CURSES};
+            return new PrayerConflictGroup[]{PrayerConflictGroup.LEECH_CURSES, PrayerConflictGroup.SAP_CURSES, PrayerConflictGroup.ENERGY_DRAIN, PrayerConflictGroup.SPECIAL_DRAIN};
         }
         @Override public boolean hasSpecialRequirements(Player player) {
             return player.getSkills().getLevelForXp(Skills.DEFENCE) >= 30;

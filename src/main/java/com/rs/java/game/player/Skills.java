@@ -1068,7 +1068,7 @@ public final class Skills implements Serializable {
 
                     for (Integer skillId : copy.keySet()) {
                         double amount = copy.get(skillId);
-                        addXp(skillId, amount); // Your existing addXp method
+                        addXp(skillId, amount);
                     }
                 } finally {
                     xpUpdateLock.unlock();

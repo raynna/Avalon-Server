@@ -9,6 +9,7 @@ enum class Projectile(val typeName: String) {
     JAVELIN("javelin"),
     CHINCHOMPA("chinchompa"),
     ELEMENTAL_SPELL("elemental_spell"),
+    ANCIENT_SPELL("ancient_spell"),
     SAP("sap"),
     LEECH("leech"),
     SOULSPLIT("soulsplit"),
