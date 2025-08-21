@@ -11,10 +11,15 @@ abstract class RangeData {
             weapon.itemId.map { id -> id to weapon }
         }.toMap()
     }
-    val ammoMap: Map<Int, RangedAmmo> by lazy { ammunition.associateBy { it.itemId } }
+
+    val ammoMap: Map<Int, RangedAmmo> by lazy {
+        ammunition.flatMap { ammo ->
+            ammo.itemId.map { id -> id to ammo }
+        }.toMap()
+    }
 
     companion object {
-        private val allData: List<RangeData> = listOf(StandardRanged, SpecialRanged)
+        private val allData: List<RangeData> = listOf(StandardRanged)
 
         fun getWeaponByItemId(itemId: Int): RangedWeapon? {
             return allData.firstNotNullOfOrNull { rangeData ->
@@ -24,8 +29,11 @@ abstract class RangeData {
 
         @JvmStatic
         fun getAmmoByItemId(itemId: Int): RangedAmmo? {
-            return allData.firstNotNullOfOrNull { it.ammoMap[itemId] }
+            return allData.firstNotNullOfOrNull { rangeData ->
+                rangeData.ammoMap[itemId]
+            }
         }
+
     }
 }
 

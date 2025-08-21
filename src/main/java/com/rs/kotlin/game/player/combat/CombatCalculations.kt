@@ -160,7 +160,7 @@ object CombatCalculations {
                 defenceBonus = target.combatDefinitions.bonuses[BonusType.RangeDefence.index]
             }
             if (target is NPC) {
-                defenceBonus = target.bonuses[NpcBonusType.RangeDefence.index]
+                defenceBonus = target.combatData.rangedDefence.standard
             }
 
             val defenceRoll = if (target is Player) {
@@ -237,20 +237,25 @@ object CombatCalculations {
             if (target !is NPC) return Triple(1.0, 1.0, 0)
 
             val weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON.toInt())
-            if (!weapon.isAnyOf("item.zaryte_bow", "item.zaryte_bow_2")) {
-                return Triple(1.0, 1.0, 0)
-            }
+            val isZaryte = weapon.isAnyOf("item.zaryte_bow", "item.zaryte_bow_2")
+            val isHexhunter = weapon.isAnyOf("item.hexhunter_bow", "item.hexhunter_bow_b")
+
+            if (!isZaryte && !isHexhunter) return Triple(1.0, 1.0, 0)
             target.setBonuses()
-            val magicLevel = target.bonuses[NpcBonusType.MagicLevel.index]
-            val magicAttack = target.bonuses[NpcBonusType.MagicAttack.index]
+            val magicLevel = target.combatData.magicLevel
+            val magicAttack = target.combatData.magicBonus
 
             val effectiveMagic = (magicLevel + magicAttack).toDouble() / 2
 
             val maxMagic = 255.0
-            val damageMultiplier = (1.0 + (effectiveMagic / maxMagic) * (2.5 - 1.0)).coerceIn(1.0, 2.5)
+            var damageMultiplier = (1.0 + (effectiveMagic / maxMagic) * (2.5 - 1.0)).coerceIn(1.0, 2.5)
 
-            val accuracyMultiplier = (1.0 + (effectiveMagic / maxMagic) * (1.4 - 1.0)).coerceIn(1.0, 1.4)
-
+            var accuracyMultiplier = (1.0 + (effectiveMagic / maxMagic) * (1.4 - 1.0)).coerceIn(1.0, 1.4)
+            if (isHexhunter) {
+                damageMultiplier *= 2
+                accuracyMultiplier *= 2
+            }
+            println("damageMultiplier from bow: $damageMultiplier, accuracy: $accuracyMultiplier")
             val damageCap = 810
             return Triple(accuracyMultiplier, damageMultiplier, damageCap)
         }
@@ -324,8 +329,8 @@ object CombatCalculations {
                 }
 
                 is NPC -> {
-                    val defenceBonus = target.bonuses?.get(NpcBonusType.MagicDefence.index) ?: (target.combatLevel / 3)
-                    val defenceLevel = target.bonuses?.get(NpcBonusType.DefenceLevel.index) ?: target.combatLevel
+                    val defenceBonus = target.combatData.magicDefence.magic ?: (target.combatLevel / 3)
+                    val defenceLevel = target.combatData.defenceLevel ?: target.combatLevel
                     Pair(defenceBonus, defenceLevel + 9)
                 }
 
@@ -391,10 +396,11 @@ object CombatCalculations {
     private fun getDefenceLevel(target: Entity): Int {
         val level = (when (target) {
             is NPC -> {
-                var defenceLevel = target.bonuses[NpcBonusType.DefenceLevel.index]
+                var defenceLevel = target.combatData.defenceLevel
                 if (defenceLevel <= 0) {
                     defenceLevel = target.combatLevel
                 }
+                println("${target.name} defence level: $defenceLevel")
                 defenceLevel
             }
 
@@ -452,32 +458,35 @@ object CombatCalculations {
     }
 
     private fun getDefenceBonus(player: Player, target: Entity, spell: Spell?): Int {
+        val attackStyle = player.combatDefinitions.attackStyle // This should return your AttackStyle enum
         val targetWeapon = Weapon.getWeapon(player.equipment.weaponId)
-        val bonusStyle = targetWeapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)
-        val npcDefenceBonus = when (bonusStyle) {
-            AttackBonusType.STAB -> NpcBonusType.StabDefence
-            AttackBonusType.SLASH -> NpcBonusType.SlashDefence
-            AttackBonusType.CRUSH -> NpcBonusType.CrushDefence
-            else -> if (spell != null) NpcBonusType.MagicDefence else NpcBonusType.RangeDefence
-        }
-        val playerDefenceBonus = when (bonusStyle) {
-            AttackBonusType.STAB -> BonusType.StabDefence
-            AttackBonusType.SLASH -> BonusType.SlashDefence
-            AttackBonusType.CRUSH -> BonusType.CrushDefence
-            else -> if (spell != null) BonusType.MagicDefence else BonusType.RangeDefence
-        }
-        val defenceBonus = when (target) {
-            is Player -> target.combatDefinitions.bonuses[playerDefenceBonus.index]
-            is NPC -> {
-                var defenceBonus = target.bonuses[npcDefenceBonus.index]
-                if (defenceBonus <= 0) {
-                    defenceBonus = target.combatLevel / 3
+        val bonusStyle = targetWeapon.weaponStyle.styleSet.bonusAt(attackStyle)// should be your AttackStyle enum
+
+        return when (target) {
+            is Player -> {
+                val playerBonusType = when (bonusStyle) {
+                    AttackBonusType.STAB -> BonusType.StabDefence
+                    AttackBonusType.SLASH -> BonusType.SlashDefence
+                    AttackBonusType.CRUSH -> BonusType.CrushDefence
+                    AttackBonusType.RANGE -> BonusType.RangeDefence
+                    else -> BonusType.MagicDefence
                 }
-                defenceBonus
+                target.combatDefinitions.bonuses[playerBonusType.index]
+            }
+
+            is NPC -> {
+                val npcData = target.combatData
+                val defence = when (bonusStyle) {
+                    AttackBonusType.STAB -> npcData.meleeDefence.stab
+                    AttackBonusType.SLASH -> npcData.meleeDefence.slash
+                    AttackBonusType.CRUSH -> npcData.meleeDefence.crush
+                    AttackBonusType.RANGE -> npcData.rangedDefence.standard
+                    else -> npcData.magicDefence.magic
+                }
+                if (defence > 0) defence else target.combatLevel / 3
             }
 
             else -> 0
         }
-        return defenceBonus
     }
 }

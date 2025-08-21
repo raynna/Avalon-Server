@@ -27,7 +27,7 @@ public final class Logger {
 		System.out.println(text);
 	}
 
-	private Logger() {
+	public Logger(String dungeonManager) {
 
 	}
 

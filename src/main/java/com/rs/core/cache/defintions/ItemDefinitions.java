@@ -1069,6 +1069,18 @@ getRenderAnimId = clientScriptData.get(644); (1426 if getRenderAnimId = null)
         return teamId;
     }
 
+    public boolean isBindItem() {
+        if (inventoryOptions == null)
+            return false;
+        for (String option : inventoryOptions) {
+            if (option == null)
+                continue;
+            if (option.equalsIgnoreCase("bind"))
+                return true;
+        }
+        return false;
+    }
+
     public int getTipitPrice() {
         try {
             for (String lines : FileUtilities.readFile(System.getProperty("user.dir") + "/prices/prices.txt")) {

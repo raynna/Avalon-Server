@@ -21,13 +21,14 @@ class MasterCommand : Command {
             player.message("You can't use ::master here.")
             return true
         }
-        for (i in Skills.ATTACK..Skills.MAGIC) {
+        val MAX_SKILL = if (player.isDeveloper) Skills.DUNGEONEERING else Skills.MAGIC
+        for (i in Skills.ATTACK..MAX_SKILL) {
             player.skills[i] = 99
             player.skills.setXp(i, Skills.getXPForLevel(99).toDouble())
         }
         player.skills[Skills.SUMMONING] = 99
         player.skills.setXp(Skills.SUMMONING, Skills.getXPForLevel(99).toDouble())
-        for (i in Skills.ATTACK..Skills.MAGIC)
+        for (i in Skills.ATTACK..MAX_SKILL)
             player.dialogueManager.startDialogue("LevelUp", i)
         player.dialogueManager.startDialogue("LevelUp", Skills.SUMMONING)
         player.skills.switchXPPopup(true)

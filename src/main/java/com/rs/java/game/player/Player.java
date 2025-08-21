@@ -2759,6 +2759,7 @@ public class Player extends Entity {
             getDialogueManager().startDialogue("SimpleItemMessage", 617, "Welcome back Avalon Member " + Utils.formatPlayerNameForDisplay(getUsername()) + ".");
         }
         getPackets().sendGameMessage("Welcome to %s.", Settings.SERVER_NAME);
+        getPackets().sendGameMessage("Current Mode: " + getGameMode());
         getPackets().sendWeight(getWeight());
         toolbelt.init();
         getAssist().CheckROS();
@@ -2872,6 +2873,16 @@ public class Player extends Entity {
         refreshOtherChatsSetup();
         refreshSpawnedItems();
         refreshSpawnedObjects();
+    }
+
+    private String getGameMode() {
+        switch (Settings.ECONOMY_MODE) {
+            case Settings.FULL_SPAWN:
+                return "Full Spawn";
+            case Settings.HALF_ECONOMY:
+                return "Half Economy";
+        }
+        return "Full Economy";
     }
 
     private void sendUnlockedObjectConfigs() {

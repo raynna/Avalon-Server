@@ -129,6 +129,14 @@ enum class WeaponStyle(
             AttackStyle.DEFENSIVE to AttackBonusType.STAB,
         ),
     ),
+    SPEAR(
+        styles(
+            AttackStyle.CONTROLLED to AttackBonusType.STAB,
+            AttackStyle.CONTROLLED to AttackBonusType.SLASH,
+            AttackStyle.CONTROLLED to AttackBonusType.CRUSH,
+            AttackStyle.DEFENSIVE to AttackBonusType.STAB,
+        ),
+    ),
     MAUL(
         styles(
             AttackStyle.ACCURATE to AttackBonusType.CRUSH,
@@ -141,6 +149,22 @@ enum class WeaponStyle(
             AttackStyle.ACCURATE to AttackBonusType.CRUSH,
             AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
             AttackStyle.DEFENSIVE to AttackBonusType.CRUSH
+        ),
+    ),
+    BATTLEAXE(
+        styles(
+            AttackStyle.ACCURATE to AttackBonusType.SLASH,
+            AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
+            AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
+            AttackStyle.DEFENSIVE to AttackBonusType.SLASH
+        ),
+    ),
+    KATANA(
+        styles(
+            AttackStyle.ACCURATE to AttackBonusType.SLASH,
+            AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
+            AttackStyle.CONTROLLED to AttackBonusType.STAB,
+            AttackStyle.DEFENSIVE to AttackBonusType.SLASH
         ),
     ),
     MACE(

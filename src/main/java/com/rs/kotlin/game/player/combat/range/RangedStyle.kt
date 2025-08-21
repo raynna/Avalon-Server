@@ -40,8 +40,8 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun getCurrentAmmo(): RangedAmmo? {
-        val ammoId = attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]?.id ?: -1
-        return RangeData.getAmmoByItemId(ammoId)
+        val ammoItem = attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]
+        return RangeData.getAmmoByItemId(ammoItem.id)
     }
 
     private fun getAttackStyle(currentWeapon: RangedWeapon): AttackStyle {
@@ -81,9 +81,9 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     override fun canAttack(attacker: Player, defender: Entity): Boolean {
         val currentWeapon = getCurrentWeapon()
         val currentAmmo = getCurrentAmmo()
+        val ammoId = attacker.getEquipment().ammoId
         val ammoTier = currentAmmo?.ammoTier
         val ammoType = currentAmmo?.ammoType
-        val ammoId = currentAmmo?.itemId
         val ammoName = currentAmmo?.name
         val ammoLevelReq = currentAmmo?.levelRequired
 
@@ -96,6 +96,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             attacker.message("You don't have any ammunition equipped.")
             return false
         }
+        attacker.message("currentAmmo ${currentAmmo?.name}")
         if (allowedAmmos != null) {
             if (!allowedAmmos.contains(ammoId)) {
                 attacker.message("You cannot use $ammoName with a $weaponName.")
@@ -303,9 +304,9 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun dropAmmoOnGround() {
-        val currentAmmo = getCurrentAmmo()
+        val ammoId = attacker.getEquipment().ammoId
         if (!Utils.roll(1, 3))
-            World.updateGroundItem(Item(currentAmmo!!.itemId, 1), defender.tile, attacker);
+            World.updateGroundItem(Item(ammoId, 1), defender.tile, attacker);
     }
 
     private fun handleSpecialEffects() {

@@ -446,11 +446,11 @@ public class PrayerBook implements Serializable {
         } else if (target instanceof NPC npc) {
             switch (statIndex) {
                 case BonusIndex.ATTACK:
-                    return npc.getBonuses()[CombatDefinitions.NPC_ATTACK_LEVEL];
+                    return npc.getCombatData().attackLevel;
                 case BonusIndex.STRENGTH:
-                    return npc.getBonuses()[CombatDefinitions.NPC_STRENGTH_LEVEL];
+                    return npc.getCombatData().strengthLevel;
                 case BonusIndex.DEFENCE:
-                    return npc.getBonuses()[CombatDefinitions.NPC_DEFENCE_LEVEL];
+                    return npc.getCombatData().defenceLevel;
             }
         }
         return -1;

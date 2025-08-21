@@ -6,17 +6,18 @@ import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.game.npc.NpcBonusType;
+import com.rs.kotlin.game.npc.combatdata.CombatData;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.player.equipment.BonusType;
 
 public class NpcCombatCalculations {
 
-    public static int getRandomMaxHit(NPC npc, int maxHit, int attackStyle, Entity target) {
+    public static int getRandomMaxHit(NPC npc, int maxHit, NpcAttackStyle attackStyle, Entity target) {
         npc.setBonuses(); // Ensure NPC bonuses are loaded
-        int[] bonuses = npc.getBonuses();
+        CombatData data = npc.getCombatData();
 
         // --- Attacker (NPC) Accuracy Roll ---
-        double attackRoll = calculateAttackRoll(npc, attackStyle, bonuses);
+        double attackRoll = calculateAttackRoll(npc, attackStyle, data);
         //System.out.println(npc.getName() + " attack roll: " + attackRoll);
         // --- Defender (Target) Defence Roll ---
         double defenceRoll = calculateDefenceRoll(npc, attackStyle, target);
@@ -33,38 +34,29 @@ public class NpcCombatCalculations {
         return Utils.getRandom(maxHit); // Random damage up to max
     }
 
-    private static double calculateAttackRoll(NPC npc, int style, int[] bonuses) {
-        if (bonuses == null) return npc.getCombatLevel();
+    private static double calculateAttackRoll(NPC npc, NpcAttackStyle style, CombatData data) {
+        if (data == null) return npc.getCombatLevel();
 
         switch (style) {
-            case NPCCombatDefinitions.MAGE -> {
-                int mageLevel = bonuses[NpcBonusType.MagicLevel.getIndex()];
-                int mageBonus = bonuses[NpcBonusType.MagicAttack.getIndex()];
+            case MAGIC -> {
+                int mageLevel = data.magicLevel;
+                int mageBonus = data.magicBonus;
                 //System.out.println(npc.getName() + " used magic attack, MagicLevel: " + mageLevel + ", MageAttack: " + mageBonus);
                 return effectiveRoll(mageLevel, mageBonus);
             }
-            case NPCCombatDefinitions.RANGE -> {
-                int rangeLevel = bonuses[NpcBonusType.RangeLevel.getIndex()];
-                int rangeBonus = bonuses[NpcBonusType.RangeAttack.getIndex()];
+            case RANGED -> {
+                int rangeLevel = data.rangedLevel;
+                int rangeBonus = data.rangedBonus;
                 //System.out.println(npc.getName() + " used ranged attack, RangeLevel: " + rangeLevel + ", RangeAttack: " + rangeBonus);
                 return effectiveRoll(rangeLevel, rangeBonus);
             }
             default -> {
-                int atkLevel = bonuses[NpcBonusType.AttackLevel.getIndex()];
-                int atkBonus = (int) getMeleeAttackBonus(npc, bonuses);
+                int atkLevel = data.attackLevel;
+                int atkBonus = data.attackBonus;
                 //System.out.println(npc.getName() + " used melee attack, AttackLevel: " + atkLevel + ", AttackBonus: " + atkBonus);
                 return effectiveRoll(atkLevel, atkBonus);
             }
         }
-    }
-
-    private static double getMeleeAttackBonus(NPC npc, int[] bonuses) {
-        int type = npc.getCombatDefinitions().getAttackType();
-        return switch (type) {
-            case NPCCombatDefinitions.STAB -> bonuses[NpcBonusType.StabAttack.getIndex()];
-            case NPCCombatDefinitions.SLASH -> bonuses[NpcBonusType.SlashAttack.getIndex()];
-            default -> bonuses[NpcBonusType.CrushAttack.getIndex()];
-        };
     }
 
     private static double effectiveRoll(int level, int bonus) {
@@ -72,7 +64,7 @@ public class NpcCombatCalculations {
         return Math.round(effective * (1 + bonus + 64.0));
     }
 
-    private static double calculateDefenceRoll(NPC npc, int style, Entity target) {
+    private static double calculateDefenceRoll(NPC npc, NpcAttackStyle style, Entity target) {
         if (target instanceof Player player) {
             return calculatePlayerDefenceRoll(player, style, npc);
         }
@@ -82,16 +74,16 @@ public class NpcCombatCalculations {
         return 1; // fallback
     }
 
-    private static double calculatePlayerDefenceRoll(Player player, int style, NPC npc) {
+    private static double calculatePlayerDefenceRoll(Player player, NpcAttackStyle style, NPC npc) {
         int[] playerBonuses = player.getCombatDefinitions().getBonuses();
 
         switch (style) {
-            case NPCCombatDefinitions.MAGE -> {
+            case MAGIC -> {
                 double magicDef = player.getSkills().getLevel(Skills.DEFENCE) * 0.3
                         + player.getSkills().getLevel(Skills.MAGIC) * 0.7 * player.getPrayer().getMagicMultiplier();
                 return effectiveDefRoll(magicDef, playerBonuses[BonusType.MagicDefence.getIndex()]);
             }
-            case NPCCombatDefinitions.RANGE -> {
+            case RANGED -> {
                 double def = player.getSkills().getLevel(Skills.DEFENCE) * player.getPrayer().getDefenceMultiplier();
                 return effectiveDefRoll(def, playerBonuses[BonusType.RangeDefence.getIndex()]);
             }
@@ -104,26 +96,27 @@ public class NpcCombatCalculations {
     }
 
     private static int getPlayerMeleeDefenceBonus(Player player, NPC npc) {
-        int type = npc.getCombatDefinitions().getAttackType();
+        NpcAttackStyle type = NpcAttackStyle.fromList(npc.getCombatData().attackStyles);
         int[] bonuses = player.getCombatDefinitions().getBonuses();
         return switch (type) {
-            case NPCCombatDefinitions.STAB -> bonuses[BonusType.StabDefence.getIndex()];
-            case NPCCombatDefinitions.SLASH -> bonuses[BonusType.SlashDefence.getIndex()];
+            case STAB -> bonuses[BonusType.StabDefence.getIndex()];
+            case SLASH -> bonuses[BonusType.SlashDefence.getIndex()];
             default -> bonuses[BonusType.CrushDefence.getIndex()];
         };
     }
 
-    private static double calculateNpcDefenceRoll(NPC targetNpc, int style) {
-        int[] bonuses = targetNpc.getBonuses();
-        if (bonuses == null) return targetNpc.getCombatLevel();
+    private static double calculateNpcDefenceRoll(NPC targetNpc, NpcAttackStyle style) {
+        CombatData data = targetNpc.getCombatData();
+        if (data == null) return targetNpc.getCombatLevel();
 
-        int defLevel = bonuses[CombatDefinitions.NPC_DEFENCE_LEVEL];
+        int defLevel = data.defenceLevel;
         int defBonus = switch (style) {
-            case NPCCombatDefinitions.MAGE -> bonuses[CombatDefinitions.NPC_MAGIC_BONUS];
-            case NPCCombatDefinitions.RANGE -> bonuses[CombatDefinitions.NPC_RANGE_BONUS];
-            default -> bonuses[CombatDefinitions.NPC_STAB_BONUS];
+            case MAGIC -> data.magicDefence.getMagic();
+            case RANGED -> data.rangedDefence.getStandardBonus();
+            case STAB -> data.meleeDefence.getStabBonus();
+            case SLASH -> data.meleeDefence.getSlashBonus();
+            default -> data.meleeDefence.getCrushBonus();
         };
-
         return effectiveDefRoll(defLevel, defBonus);
     }
 

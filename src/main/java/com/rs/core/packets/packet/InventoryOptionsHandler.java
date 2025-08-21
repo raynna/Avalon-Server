@@ -1013,6 +1013,8 @@ public class InventoryOptionsHandler {
         if (itemId >= 18349 && itemId <= 18363) {
             Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
             player.getChargeManager().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(itemId).getName() + " has ##% charges left.", weapon, false);
+        } else if (item.getDefinitions().isBindItem()) {
+                player.getDungManager().bind(item, slotId);
         } else if (itemId == 9013) {
             if (player.getSkullSkeptreCharges() == 1) {
                 player.getInventory().deleteItem(slotId, item);
@@ -1235,6 +1237,8 @@ public class InventoryOptionsHandler {
             }
             player.getToolbelt().addItem(new Item(itemId));
             return;
+        } else if (item.getDefinitions().isBindItem()) {
+                player.getDungManager().bind(item, slotId);
         } else if (itemId == 20802) {
             if (player.getKillCount() < 100) {
                 player.getInventory().deleteItem(itemId, 1);

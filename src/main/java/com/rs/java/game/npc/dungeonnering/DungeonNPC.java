@@ -14,12 +14,13 @@ import com.rs.java.game.player.content.dungeoneering.DungeonUtils;
 import com.rs.java.game.player.content.dungeoneering.RoomReference;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.WeaponTypesLoader.WeaponType;
+import com.rs.kotlin.game.npc.combatdata.CombatData;
 
 @SuppressWarnings("serial")
 public class DungeonNPC extends NPC {
 
 	private DungeonManager manager;
-	private int[] bonuses;
+	private CombatData combatData;
 	private boolean marked;
 	private double multiplier;
 
@@ -39,7 +40,7 @@ public class DungeonNPC extends NPC {
 	}
 
 	public void resetBonuses() {
-		bonuses = manager.getBonuses(this instanceof DungeonBoss, getCombatLevel());
+		combatData = manager.getCombatData(this instanceof DungeonBoss, getCombatLevel());
 	}
 
 	/*
@@ -123,8 +124,8 @@ public class DungeonNPC extends NPC {
 	}
 
 	@Override
-	public int[] getBonuses() {
-		return bonuses == null ? super.getBonuses() : bonuses;
+	public CombatData getCombatData() {
+		return combatData == null ? super.getCombatData() : combatData;
 	}
 
 	public void setMarked(boolean marked) {

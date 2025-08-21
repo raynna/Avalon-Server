@@ -897,15 +897,7 @@ public class DungManager implements Serializable {
 	}
 
 	public void leaveParty() {
-		if (party != null) {
-			int index = party.getIndex(player);
-			DungeonManager dungeon = player.getDungManager().getParty().getDungeon();
-			if (dungeon != null && dungeon.rewardsTimer != null)
-				dungeon.rewardsTimer.increaseReadyCount();
-			for (Player p2 : party.getTeam()) {
-				p2.getPackets().sendCSVarInteger(1397 + index, 2);
-			}
+		if (party != null)
 			party.leaveParty(player, false);
-		}
 	}
 }

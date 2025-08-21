@@ -15,6 +15,7 @@ import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -49,7 +50,7 @@ public class KingBlackDragonCombat extends CombatScript {
 
 		switch (attackStyle) {
 			case 0: // Melee
-				int meleeHit = NpcCombatCalculations.getRandomMaxHit(npc, 250, NPCCombatDefinitions.MELEE, target);
+				int meleeHit = NpcCombatCalculations.getRandomMaxHit(npc, 250, NpcAttackStyle.CRUSH, target);
 				npc.animate(new Animation(Utils.roll(1, 2) ? DRAGON_SLAM_ANIMATION : DRAGON_HEADBUTT_ANIMATION));
 				delayHit(npc, 0, target, getMeleeHit(npc, meleeHit));
 				break;
@@ -65,21 +66,21 @@ public class KingBlackDragonCombat extends CombatScript {
 
 					switch (breathTypeRoll) {
 						case 0: // Normal dragonfire
-							rawDamage = NpcCombatCalculations.getRandomMaxHit(npc, 650, NPCCombatDefinitions.MAGE, player);
+							rawDamage = NpcCombatCalculations.getRandomMaxHit(npc, 650, NpcAttackStyle.MAGIC, player);
 							projectileId = DRAGONFIRE_NORMAL_PROJECTILE;
 							break;
 						case 1: // Toxic (poison)
-							rawDamage = NpcCombatCalculations.getRandomMaxHit(npc, 500, NPCCombatDefinitions.MAGE, player);
+							rawDamage = NpcCombatCalculations.getRandomMaxHit(npc, 500, NpcAttackStyle.MAGIC, player);
 							projectileId = DRAGONFIRE_TOXIC_PROJECTILE;
 							applySpecialEffect = true;
 							break;
 						case 2: // Shocking
-							rawDamage = NpcCombatCalculations.getRandomMaxHit(npc, 500, NPCCombatDefinitions.MAGE, player);
+							rawDamage = NpcCombatCalculations.getRandomMaxHit(npc, 500, NpcAttackStyle.MAGIC, player);
 							projectileId = DRAGONFIRE_SHOCKING_PROJECTILE;
 							applySpecialEffect = true;
 							break;
 						default: // Icy
-							rawDamage = NpcCombatCalculations.getRandomMaxHit(npc, 500, NPCCombatDefinitions.MAGE, player);
+							rawDamage = NpcCombatCalculations.getRandomMaxHit(npc, 500, NpcAttackStyle.MAGIC, player);
 							projectileId = DRAGONFIRE_ICY_PROJECTILE;
 							applySpecialEffect = true;
 							break;

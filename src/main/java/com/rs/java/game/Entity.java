@@ -907,7 +907,7 @@ public abstract class Entity extends WorldTile {
             }
             return true;
         }
-        return findBasicRoute(this, (Entity) target, maxStepsCount, true);
+        return findBasicRoute(this, target, maxStepsCount, true);
         /*
          * else if (true == true) { //just keeping old code System.out.println("test");
          * return findBasicRoute(this, (Entity) target, maxStepsCount, true); }

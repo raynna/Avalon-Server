@@ -25,8 +25,7 @@ import com.rs.java.game.npc.combat.NPCCombat;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.kotlin.Rscm;
-import com.rs.kotlin.game.npc.combatdata.CombatData;
-import com.rs.kotlin.game.npc.combatdata.CombatDataParser;
+import com.rs.kotlin.game.npc.combatdata.*;
 import com.rs.kotlin.game.npc.drops.DropTable;
 import com.rs.kotlin.game.npc.drops.DropTableRegistry;
 import com.rs.kotlin.game.npc.drops.Drop;
@@ -194,25 +193,42 @@ public class NPC extends Entity implements Serializable {
                 System.out.println("Found data for " + id + ", CombatLevel: " + combatData.combatLevel);
             }
         }
-        bonuses = NPCBonuses.getBonuses(id);
-        if (bonuses == null) {
-            bonuses = new int[17];
-            int level = getCombatLevel();
-            if (level > 750)
-                level = 750;
-            if (id == 7891) {
-                level = 70;
+        // If no predefined data, generate standard CombatData
+        int level = getCombatLevel();
 
-            }
-            for (int i = 0; i < bonuses.length; i++) {
-                if (i >= 5 && i <= 9 || i >= 15)
-                    bonuses[i] = 0;
-                else if (i >= 10 && i <= 14)
-                    bonuses[i] = level / 3;
-                else
-                    bonuses[i] = level - (level / 4);
-            }
-        }
+        // Clamp level to reasonable max
+        if (level > 750) level = 750;
+        if (id == 7891) level = 70; // special case
+
+        // Generate standard CombatData
+        int defenceLevel = level / 2; // simple formula, can adjust
+        int meleeAttack = level - (level / 4);
+        int magicAttack = level / 2;
+        int rangedAttack = level / 2;
+        int constitution = level * 10 + 1;
+        int maxHit = (int) Math.ceil(level * 0.05); // can adjust
+
+        combatData = new CombatData(
+                level, // combatLevel
+                meleeAttack, // attackLevel
+                meleeAttack, // strengthLevel
+                defenceLevel, // defenceLevel
+                magicAttack, // magicLevel
+                rangedAttack, // rangedLevel
+                constitution, // constitutionLevel
+                0, 0, 0, 0, 0, 0, // bonuses (unused)
+                new MeleeDefence(defenceLevel, defenceLevel, defenceLevel),
+                new MagicDefence(magicAttack / 2),
+                new RangedDefence(rangedAttack / 2, rangedAttack / 2, rangedAttack / 2),
+                new Immunities(false, false, false, false, false),
+                0.0, // xpBonus
+                new MaxHit(maxHit),
+                true, // aggressive
+                List.of("Crush"), // default attack style
+                4, // attackSpeedTicks
+                0, // respawnTicks
+                level // slayerXp
+        );
     }
 
     @Override

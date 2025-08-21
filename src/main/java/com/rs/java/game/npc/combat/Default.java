@@ -6,8 +6,13 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.World;
+import com.rs.kotlin.game.npc.combatdata.CombatData;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.player.combat.AttackStyle;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
+
+import java.util.List;
 
 public class Default extends CombatScript {
 
@@ -19,27 +24,29 @@ public class Default extends CombatScript {
 	@Override
 	public int attack(NPC npc, Entity target) {
 		NPCCombatDefinitions defs = npc.getCombatDefinitions();
-		int attackStyle = defs.getAttackStyle();
+		npc.setBonuses();
+		CombatData data = npc.getCombatData();
+		NpcAttackStyle attackStyle = NpcAttackStyle.fromList(npc.getCombatData().attackStyles);
 
 		int damage = NpcCombatCalculations.getRandomMaxHit(
 				npc,
-				defs.getMaxHit(),
+				data.maxHit.getMaxhit() * 10,
 				attackStyle,
 				target
 		);
 
 		switch (attackStyle) {
-			case NPCCombatDefinitions.MELEE ->
+			case STAB, SLASH, CRUSH ->
 					delayHit(npc, 0, target, getMeleeHit(npc, damage));
 
-			case NPCCombatDefinitions.RANGE -> {
+			case RANGED -> {
 				delayHit(npc, 2, target, getRangeHit(npc, damage));
 				if (defs.getAttackProjectile() != -1) {
 					ProjectileManager.sendSimple(Projectile.ARROW, defs.getAttackProjectile(), npc, target);
 				}
 			}
 
-			case NPCCombatDefinitions.MAGE -> {
+			case MAGIC -> {
 				delayHit(npc, 2, target, getMagicHit(npc, damage));
 				if (defs.getAttackProjectile() != -1) {
 					ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, defs.getAttackProjectile(), npc, target);
@@ -52,6 +59,6 @@ public class Default extends CombatScript {
 		}
 		npc.animate(new Animation(defs.getAttackEmote()));
 
-		return defs.getAttackDelay();
+		return data.attackSpeedTicks;
 	}
 }

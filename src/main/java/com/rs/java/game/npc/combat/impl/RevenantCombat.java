@@ -11,6 +11,7 @@ import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -98,7 +99,7 @@ public class RevenantCombat extends CombatScript {
 
 
 	private void performMagicAttack(NPC npc, Entity target, NPCCombatDefinitions defs) {
-		int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target);
+		int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, target);
 		delayHit(npc, 2, target, getMagicHit(npc, damage));
 		ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, 1276, npc, target);
 
@@ -119,14 +120,14 @@ public class RevenantCombat extends CombatScript {
 	}
 
 	private void performRangeAttack(NPC npc, Entity target, NPCCombatDefinitions defs) {
-		int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target);
+		int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.RANGED, target);
 		delayHit(npc, 2, target, getRangeHit(npc, damage));
 		ProjectileManager.sendSimple(Projectile.ARROW, 1278, npc, target);
 		npc.animate(new Animation(getRangeAnimation(npc)));
 	}
 
 	private void performMeleeAttack(NPC npc, Entity target, NPCCombatDefinitions defs) {
-		int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target);
+		int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target);
 		delayHit(npc, 0, target, getMeleeHit(npc, damage));
 		npc.animate(new Animation(defs.getAttackEmote()));
 	}

@@ -4,7 +4,7 @@ import com.rs.java.game.Graphics
 import com.rs.kotlin.game.player.combat.special.SpecialEffect
 
 data class RangedAmmo(
-    val itemId: Int,
+    val itemId: List<Int>,
     val name: String,
     val levelRequired: Int,
     val poisonSeverity: Int = -1,

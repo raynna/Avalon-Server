@@ -53,6 +53,22 @@ public class WorldPacketsEncoder extends Encoder {
 			sendCSVarInteger1(id, value);
 	}
 
+	public void sendCSVarString(int id, String string) {
+		OutputStream stream = new OutputStream();
+		if (string.length() >= 253) {
+			stream.writePacketVarShort(player, 34);
+			stream.writeString(string);
+			stream.writeShort(id);
+			stream.endPacketVarShort();
+		} else {
+			stream.writePacketVarByte(player, 134);
+			stream.writeShort(id);
+			stream.writeString(string);
+			stream.endPacketVarByte();
+		}
+		session.write(stream);
+	}
+
 	public void sendClientState(int id) {
 		OutputStream stream = new OutputStream(3);
 		stream.writePacket(player, 150);
@@ -65,6 +81,33 @@ public class WorldPacketsEncoder extends Encoder {
 		stream.writePacket(player, 154);
 		stream.writeByteC(value);
 		stream.writeShort128(id);
+		session.write(stream);
+	}
+
+	public void sendExecuteScript(int scriptId, Object... params) { // who was the idiot, who made this script send parameters in reverse order?!?!?!?!?!?!?!?!?!?!?!??!?!?!?!?!?!?!?!?
+		OutputStream stream = new OutputStream();
+		stream.writePacketVarShort(player, 119);
+		String parameterTypes = "";
+		if (params != null) {
+			for (int count = params.length - 1; count >= 0; count--) {
+				if (params[count] instanceof String)
+					parameterTypes += "s"; // string
+				else
+					parameterTypes += "i"; // integer
+			}
+		}
+		stream.writeString(parameterTypes);
+		if (params != null) {
+			int index = 0;
+			for (int count = parameterTypes.length() - 1; count >= 0; count--) {
+				if (parameterTypes.charAt(count) == 's')
+					stream.writeString((String) params[index++]);
+				else
+					stream.writeInt((Integer) params[index++]);
+			}
+		}
+		stream.writeInt(scriptId);
+		stream.endPacketVarShort();
 		session.write(stream);
 	}
 

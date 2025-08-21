@@ -32,9 +32,9 @@ public final class Settings {
 	 * */
 	public static int ECONOMY_MODE = 2;
 
-	public static int FULL_ECONOMY = 0;
-	public static int HALF_ECONOMOY = 1;
-	public static int FULL_SPAWN = 2;
+	public static final int FULL_ECONOMY = 0;
+	public static final int HALF_ECONOMY = 1;
+	public static final int FULL_SPAWN = 2;
 	
 	/**
 	 * price and <- is free if eco mode 1

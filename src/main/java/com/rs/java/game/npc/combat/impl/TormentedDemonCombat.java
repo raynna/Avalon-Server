@@ -9,11 +9,11 @@ import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.others.TormentedDemon;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 public class TormentedDemonCombat extends CombatScript {
-
 
 	//GFX
 	private static final int HIT_GFX = 2883;
@@ -66,21 +66,21 @@ public class TormentedDemonCombat extends CombatScript {
 	}
 
 	private void attackMelee(NPC npc, Entity target) {
-		int damage = NpcCombatCalculations.getRandomMaxHit(npc, MELEE_MAX_HIT, NPCCombatDefinitions.MELEE, target);
+		int damage = NpcCombatCalculations.getRandomMaxHit(npc, MELEE_MAX_HIT, NpcAttackStyle.SLASH, target);
 		npc.animate(MELEE_ANIMATION);
 		npc.gfx(MELEE_GFX);
 		delayHit(npc, 0, target, getMeleeHit(npc, damage));
 	}
 
 	private void attackMagic(NPC npc, Entity target) {
-		int damage = NpcCombatCalculations.getRandomMaxHit(npc, MAGIC_MAX_HIT, NPCCombatDefinitions.MAGE, target);
+		int damage = NpcCombatCalculations.getRandomMaxHit(npc, MAGIC_MAX_HIT, NpcAttackStyle.MAGIC, target);
 		npc.animate(MAGIC_ANIMATION);
 		ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, MAGIC_PROJECTILE_ID, npc, target);
 		delayHit(npc, 2, target, getMagicHit(npc, damage));
 	}
 
 	private void attackRanged(NPC npc, Entity target) {
-		int damage = NpcCombatCalculations.getRandomMaxHit(npc, RANGED_MAX_HIT, NPCCombatDefinitions.RANGE, target);
+		int damage = NpcCombatCalculations.getRandomMaxHit(npc, RANGED_MAX_HIT, NpcAttackStyle.RANGED, target);
 		npc.animate(RANGED_ANIMATION);
 		ProjectileManager.sendSimple(Projectile.ARROW, RANGE_PROJECTILE_ID, npc, target);
 		delayHit(npc, 2, target, getRangeHit(npc, damage));

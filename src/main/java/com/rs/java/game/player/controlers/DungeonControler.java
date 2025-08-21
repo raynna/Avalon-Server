@@ -1096,7 +1096,7 @@ public class DungeonControler extends Controler {
 			if (interfaceId == 933) {
 				if (componentId >= 318 && componentId <= 322) {
 					if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
-						dungeon.leave(player);
+						leaveDungeon();
 					} else {
 						if (voteStage == 2)
 							return false;

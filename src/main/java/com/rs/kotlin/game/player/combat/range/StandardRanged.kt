@@ -208,7 +208,7 @@ object StandardRanged : RangeData() {
         ),
         RangedWeapon(
             itemId = Item.getIds("item.chaotic_crossbow", "item.chaotic_crossbow_broken"),
-            name = "Rune crossbow",
+            name = "Chaotic crossbow",
             weaponStyle = WeaponStyle.CROSSBOW,
             attackRange = 7,
             animationId = 4230,
@@ -216,17 +216,17 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.RUNE_BOLT
         ),
         RangedWeapon(
-            itemId = listOf(8880),
+            itemId = Item.getIds("item.dorgeshuun_c_bow"),
             name = "Dorgeshuun c'bow",
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
             attackRange = 7,
             animationId = 4230,
             ammoType = AmmoType.BOLT,
-            allowedAmmoIds = setOf(8882)
+            allowedAmmoIds = setOf(Item.getId("item.bone_bolts"))
         ),
         RangedWeapon(
-            itemId = listOf(20171),
+            itemId = Item.getIds("item.zaryte_bow","item.zaryte_bow_2"),
             name = "Zaryte bow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackRange = 10,
@@ -236,12 +236,10 @@ object StandardRanged : RangeData() {
                     context.attacker.animate("animation.bow_attack")
                     context.attacker.gfx(2962, 100)
                     ProjectileManager.send(Projectile.ARROW, 1066, context.attacker, context.defender)
-
-
-
                     context.hits {
                         ranged(
-                            delay = context.combat.getHitDelay())
+                            delay = context.combat.getHitDelay()
+                        )
                     }
                 }
             )
@@ -257,7 +255,8 @@ object StandardRanged : RangeData() {
                 "item.crystal_bow_4_10",
                 "item.crystal_bow_3_10",
                 "item.crystal_bow_2_10",
-                "item.crystal_bow_1_10"),
+                "item.crystal_bow_1_10"
+            ),
             name = "Crystal bow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackRange = 10,
@@ -362,7 +361,13 @@ object StandardRanged : RangeData() {
                     context.attacker.animate(Animation(1074))
                     context.attacker.packets.sendSound(2545, 0, 1)
                     ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
-                    ProjectileManager.sendDelayed(Projectile.ARROW, 249, context.attacker, context.defender, delayTicks = 1)
+                    ProjectileManager.sendDelayed(
+                        Projectile.ARROW,
+                        249,
+                        context.attacker,
+                        context.defender,
+                        delayTicks = 1
+                    )
                     context.hits {
                         val distance = Utils.getDistance(context.attacker, context.defender)
                         val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
@@ -377,7 +382,8 @@ object StandardRanged : RangeData() {
             itemId = Item.getIds(
                 "item.dark_bow", "item.dark_bow_lent",
                 "item.dark_bow_blue", "item.dark_bow_yellow",
-                "item.dark_bow_green", "item.dark_bow_white"),
+                "item.dark_bow_green", "item.dark_bow_white"
+            ),
             name = "Dark bow",
             weaponStyle = WeaponStyle.LONGBOW,
             attackRange = 10,
@@ -393,11 +399,24 @@ object StandardRanged : RangeData() {
                     val soundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3733 else 3736
                     val hitSoundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3731 else 3732
                     ProjectileManager.send(
-                        Projectile.DRAGON_ARROW, arrowProjectile, context.attacker, context.defender, heightOffset = 0, hitGraphic = Graphics(endGraphic, 100)) {
+                        Projectile.DRAGON_ARROW,
+                        arrowProjectile,
+                        context.attacker,
+                        context.defender,
+                        heightOffset = 0,
+                        hitGraphic = Graphics(endGraphic, 100)
+                    ) {
                         context.attacker.packets.sendSound(hitSoundId, 0, 1)
                     }
                     ProjectileManager.sendDelayed(
-                        Projectile.DRAGON_ARROW, arrowProjectile, context.attacker, context.defender, delayTicks = 1, heightOffset = 15, hitGraphic = Graphics(endGraphic, 100)) {
+                        Projectile.DRAGON_ARROW,
+                        arrowProjectile,
+                        context.attacker,
+                        context.defender,
+                        delayTicks = 1,
+                        heightOffset = 15,
+                        hitGraphic = Graphics(endGraphic, 100)
+                    ) {
                         context.attacker.packets.sendSound(hitSoundId, 0, 1)
                     }
                     context.attacker.packets.sendSound(soundId, 0, 1)
@@ -422,9 +441,21 @@ object StandardRanged : RangeData() {
                     val startGfx = context.ammo?.doubleGfx
                     context.attacker.gfx(startGfx)
                     val projectile = context.ammo?.projectileId!!
-                    ProjectileManager.send(Projectile.DRAGON_ARROW, projectile, context.attacker, context.defender,heightOffset = 0)
+                    ProjectileManager.send(
+                        Projectile.DRAGON_ARROW,
+                        projectile,
+                        context.attacker,
+                        context.defender,
+                        heightOffset = 0
+                    )
                     ProjectileManager.sendDelayed(
-                        projectile = Projectile.DRAGON_ARROW, gfxId = projectile, attacker = context.attacker, defender = context.defender, delayTicks = 1, heightOffset = 10) {
+                        projectile = Projectile.DRAGON_ARROW,
+                        gfxId = projectile,
+                        attacker = context.attacker,
+                        defender = context.defender,
+                        delayTicks = 1,
+                        heightOffset = 10
+                    ) {
                     }
                     context.hits {
                         val distance = Utils.getDistance(context.attacker, context.defender)
@@ -476,12 +507,277 @@ object StandardRanged : RangeData() {
             projectileId = 226,
             animationId = 582,
             ammoType = AmmoType.DART
-        )
+        ),
+        /** Dungeoneering Range Weapons */
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.tangle_gum_shortbow", "item.tangle_gum_shortbow_b"
+            ),
+            name = "Tanglegum shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.NOVITE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.tangle_gum_longbow", "item.tangle_gum_longbow_b"
+            ),
+            name = "Tanglegum longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.NOVITE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.seeping_elm_shortbow", "item.seeping_elm_shortbow_b"
+            ),
+            name = "Seeping elm shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.BATHUS_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.seeping_elm_longbow", "item.seeping_elm_longbow_b"
+            ),
+            name = "Seeping elm longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.BATHUS_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.blood_spindle_shortbow", "item.blood_spindle_shortbow_b"
+            ),
+            name = "Blood spindle shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.MARMAROS_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.blood_spindle_longbow", "item.blood_spindle_longbow_b"
+            ),
+            name = "Blood spindle longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.MARMAROS_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.utuku_shortbow", "item.utuku_shortbow_b"
+            ),
+            name = "Utuku shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.KRATONITE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.utuku_longbow", "item.utuku_longbow_b"
+            ),
+            name = "Utuku longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.KRATONITE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.spinebeam_shortbow", "item.spinebeam_shortbow_b"
+            ),
+            name = "Spinebeam shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.FRACTITE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.spinebeam_longbow", "item.spinebeam_longbow_b"
+            ),
+            name = "Spinebeam longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.FRACTITE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.bovistrangler_shortbow", "item.bovistrangler_shortbow_b"
+            ),
+            name = "Bovistrangler shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.ZEPHYRIUM_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.bovistrangler_longbow", "item.bovistrangler_longbow_b"
+            ),
+            name = "Bovistrangler longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.ZEPHYRIUM_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.thigat_shortbow", "item.thigat_shortbow_b"
+            ),
+            name = "Thigat shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.ARGONITE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.thigat_longbow", "item.thigat_longbow_b"
+            ),
+            name = "Thigat longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.ARGONITE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.thigat_longbow", "item.thigat_longbow_b"
+            ),
+            name = "Thigat longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.ARGONITE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.corpsethorn_shortbow", "item.corpsethorn_shortbow_b"
+            ),
+            name = "Corpsethorn shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.KATAGON_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.corpsethorn_longbow", "item.corpsethorn_longbow_b"
+            ),
+            name = "Corpsethorn longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.KATAGON_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.entgallow_shortbow", "item.entgallow_shortbow_b"
+            ),
+            name = "Entgallow shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.GORGONITE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.entgallow_longbow", "item.entgallow_longbow_b"
+            ),
+            name = "Entgallow longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.GORGONITE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.grave_creeper_shortbow", "item.grave_creeper_shortbow_b"
+            ),
+            name = "Grave creeper shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.PROMETHIUM_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.grave_creeper_longbow", "item.grave_creeper_longbow_b"
+            ),
+            name = "Grave creeper longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.PROMETHIUM_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.hexhunter_bow", "item.hexhunter_bow_b"
+            ),
+            name = "Hexhunter bow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.SAGITTARIAN_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.sagittarian_shortbow", "item.sagittarian_shortbow_b"
+            ),
+            name = "Sagittarian shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.SAGITTARIAN_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.sagittarian_longbow", "item.sagittarian_longbow_b"
+            ),
+            name = "Sagittarian longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackRange = 9,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.SAGITTARIAN_ARROW
+        ),
     )
 
     override val ammunition = listOf(
         RangedAmmo(
-            itemId = 882,
+            itemId = Item.getIds("item.bronze_arrow"),
             name = "Bronze arrow",
             ammoTier = AmmoTier.BRONZE_ARROW,
             levelRequired = 1,
@@ -490,7 +786,7 @@ object StandardRanged : RangeData() {
             doubleGfx = Graphics(1104, 100)
         ),
         RangedAmmo(
-            itemId = 884,
+            itemId = Item.getIds("item.iron_arrow"),
             name = "Iron arrow",
             ammoTier = AmmoTier.IRON_ARROW,
             levelRequired = 1,
@@ -499,7 +795,7 @@ object StandardRanged : RangeData() {
             doubleGfx = Graphics(1105, 100)
         ),
         RangedAmmo(
-            itemId = 886,
+            itemId = Item.getIds("item.steel_arrow"),
             name = "Steel arrow",
             ammoTier = AmmoTier.STEEL_ARROW,
             levelRequired = 1,
@@ -508,7 +804,7 @@ object StandardRanged : RangeData() {
             doubleGfx = Graphics(1106, 100)
         ),
         RangedAmmo(
-            itemId = 888,
+            itemId = Item.getIds("item.mithril_arrow"),
             name = "Mithril arrow",
             ammoTier = AmmoTier.MITHRIL_ARROW,
             levelRequired = 1,
@@ -517,7 +813,7 @@ object StandardRanged : RangeData() {
             doubleGfx = Graphics(1107, 100)
         ),
         RangedAmmo(
-            itemId = 890,
+            itemId = Item.getIds("item.adamant_arrow"),
             name = "Adamant arrow",
             ammoTier = AmmoTier.ADAMANT_ARROW,
             levelRequired = 1,
@@ -526,7 +822,7 @@ object StandardRanged : RangeData() {
             doubleGfx = Graphics(1108, 100)
         ),
         RangedAmmo(
-            itemId = 892,
+            itemId = Item.getIds("item.rune_arrow"),
             name = "Rune arrow",
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
@@ -535,7 +831,7 @@ object StandardRanged : RangeData() {
             doubleGfx = Graphics(1109, 100)
         ),
         RangedAmmo(
-            itemId = 11212,
+            itemId = Item.getIds("item.dragon_arrow"),
             name = "Dragon arrow",
             ammoTier = AmmoTier.DRAGON_ARROW,
             levelRequired = 1,
@@ -544,7 +840,7 @@ object StandardRanged : RangeData() {
             doubleGfx = Graphics(1111, 100),
         ),
         RangedAmmo(
-            itemId = 19157,
+            itemId = Item.getIds("item.guthix_arrows"),
             name = "Guthix arrow",
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
@@ -580,7 +876,7 @@ object StandardRanged : RangeData() {
             )
         ),
         RangedAmmo(
-            itemId = 19152,
+            itemId = Item.getIds("item.saradomin_arrows"),
             name = "Saradomin arrow",
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
@@ -616,7 +912,7 @@ object StandardRanged : RangeData() {
             )
         ),
         RangedAmmo(
-            itemId = 19162,
+            itemId = Item.getIds("item.zamorak_arrows"),
             name = "Zamorak arrow",
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
@@ -653,7 +949,7 @@ object StandardRanged : RangeData() {
         ),
         // Bolts
         RangedAmmo(
-            itemId = 877,
+            itemId = Item.getIds("item.bronze_bolts"),
             name = "Bronze bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.BRONZE_BOLT,
@@ -662,7 +958,7 @@ object StandardRanged : RangeData() {
             projectileId = 27,
         ),
         RangedAmmo(
-            itemId = 9140,
+            itemId = Item.getIds("item.iron_bolts"),
             name = "Iron bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.IRON_BOLT,
@@ -671,7 +967,7 @@ object StandardRanged : RangeData() {
             projectileId = 27,
         ),
         RangedAmmo(
-            itemId = 9287,
+            itemId = Item.getIds("item.iron_bolts_p"),
             name = "Iron bolts (p)",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.IRON_BOLT,
@@ -681,7 +977,7 @@ object StandardRanged : RangeData() {
             projectileId = 27,
         ),
         RangedAmmo(
-            itemId = 9294,
+            itemId = Item.getIds("item.iron_bolts_p_2"),
             name = "Iron bolts (p+)",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.IRON_BOLT,
@@ -691,7 +987,7 @@ object StandardRanged : RangeData() {
             projectileId = 27,
         ),
         RangedAmmo(
-            itemId = 9301,
+            itemId = Item.getIds("item.iron_bolts_p_3"),
             name = "Iron bolts (p++)",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.IRON_BOLT,
@@ -701,7 +997,7 @@ object StandardRanged : RangeData() {
             projectileId = 27,
         ),
         RangedAmmo(
-            itemId = Item.getId("item.adamant_bolts"),
+            itemId = Item.getIds("item.adamant_bolts", "item.adamant_bolts_p"),
             name = "Adamant bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.ADAMANT_BOLT,
@@ -710,7 +1006,7 @@ object StandardRanged : RangeData() {
             projectileId = 27
         ),
         RangedAmmo(
-            itemId = Item.getId("item.diamond_bolts"),
+            itemId = Item.getIds("item.diamond_bolts"),
             name = "Diamond bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.ADAMANT_BOLT,
@@ -719,7 +1015,7 @@ object StandardRanged : RangeData() {
             projectileId = 27
         ),
         RangedAmmo(
-            itemId = Item.getId("item.diamond_bolts_e"),
+            itemId = Item.getIds("item.diamond_bolts_e"),
             name = "Diamond bolts (e)",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.ADAMANT_BOLT,
@@ -728,7 +1024,7 @@ object StandardRanged : RangeData() {
             projectileId = 27
         ),
         RangedAmmo(
-            itemId = Item.getId("item.runite_bolts"),
+            itemId = Item.getIds("item.runite_bolts"),
             name = "Rune bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.RUNE_BOLT,
@@ -737,7 +1033,7 @@ object StandardRanged : RangeData() {
             projectileId = 27
         ),
         RangedAmmo(
-            itemId = Item.getId("item.dragon_bolts"),
+            itemId = Item.getIds("item.dragon_bolts"),
             name = "Dragon bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.RUNE_BOLT,
@@ -746,7 +1042,7 @@ object StandardRanged : RangeData() {
             projectileId = 27
         ),
         RangedAmmo(
-            itemId = Item.getId("item.dragon_bolts_e"),
+            itemId = Item.getIds("item.dragon_bolts_e"),
             name = "Dragon bolts (e)",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.RUNE_BOLT,
@@ -755,7 +1051,7 @@ object StandardRanged : RangeData() {
             projectileId = 27
         ),
         RangedAmmo(
-            itemId = Item.getId("item.onyx_bolts"),
+            itemId = Item.getIds("item.onyx_bolts"),
             name = "Onyx bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.RUNE_BOLT,
@@ -764,7 +1060,7 @@ object StandardRanged : RangeData() {
             projectileId = 27
         ),
         RangedAmmo(
-            itemId = Item.getId("item.onyx_bolts_e"),
+            itemId = Item.getIds("item.onyx_bolts_e"),
             name = "Onyx bolts (e)",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.RUNE_BOLT,
@@ -773,12 +1069,113 @@ object StandardRanged : RangeData() {
             projectileId = 27
         ),
         RangedAmmo(
-            itemId = 8882,
+            itemId = Item.getIds("item.bone_bolts"),
             name = "Bone bolts",
             ammoType = AmmoType.BOLT,
             levelRequired = 10,
             projectileId = 696,
             startGfx = Graphics(697, 96),
-        )
+        ),
+
+        /**Dungeoneering arrows*/
+        RangedAmmo(
+            itemId = Item.getIds("item.novite_arrows", "item.novite_arrows_b"),
+            name = "Novite arrows",
+            ammoType = AmmoType.ARROW,
+            ammoTier = AmmoTier.NOVITE_ARROW,
+            levelRequired = 1,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.bathus_arrows", "item.bathus_arrows_b"),
+            name = "Bathus arrows",
+            ammoType = AmmoType.ARROW,
+            ammoTier = AmmoTier.BATHUS_ARROW,
+            levelRequired = 10,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.marmaros_arrows", "item.marmaros_arrows_b"),
+            name = "Marmaros arrows",
+            ammoType = AmmoType.ARROW,
+            ammoTier = AmmoTier.MARMAROS_ARROW,
+            levelRequired = 20,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.kratonite_arrows", "item.kratonite_arrows_b"),
+            name = "Kratonite arrows",
+            ammoType = AmmoType.ARROW,
+            ammoTier = AmmoTier.KRATONITE_ARROW,
+            levelRequired = 30,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.fractite_arrows", "item.fractite_arrows_b"),
+            name = "Fractite arrows",
+            ammoType = AmmoType.ARROW,
+            ammoTier = AmmoTier.FRACTITE_ARROW,
+            levelRequired = 40,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.zephyrium_arrows", "item.zephyrium_arrows_b"),
+            name = "Zephyrium arrows",
+            ammoType = AmmoType.ARROW,
+            ammoTier = AmmoTier.ZEPHYRIUM_ARROW,
+            levelRequired = 50,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.argonite_arrows", "item.argonite_arrows_b"),
+            name = "Argonite arrows",
+            ammoType = AmmoType.ARROW,
+            ammoTier = AmmoTier.ARGONITE_ARROW,
+            levelRequired = 60,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.katagon_arrows", "item.katagon_arrows_b"),
+            name = "Katagon arrows",
+            ammoType = AmmoType.ARROW,
+            ammoTier = AmmoTier.KATAGON_ARROW,
+            levelRequired = 70,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.gorgonite_arrows", "item.gorgonite_arrows_b"),
+            name = "Katagon arrows",
+            ammoType = AmmoType.ARROW,
+            ammoTier = AmmoTier.GORGONITE_ARROW,
+            levelRequired = 80,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.promethium_arrows", "item.promethium_arrows_b"),
+            name = "Promethium arrows",
+            ammoType = AmmoType.ARROW,
+            ammoTier = AmmoTier.PROMETHIUM_ARROW,
+            levelRequired = 90,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.sagittarian_arrows", "item.sagittarian_arrows_b"),
+            name = "Sagittarian arrows",
+            ammoType = AmmoType.ARROW,
+            ammoTier = AmmoTier.SAGITTARIAN_ARROW,
+            levelRequired = 99,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
     )
 }

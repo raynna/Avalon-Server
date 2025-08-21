@@ -14,6 +14,7 @@ import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 
 public class LeatherDragonCombat extends CombatScript {
 
@@ -60,7 +61,7 @@ public class LeatherDragonCombat extends CombatScript {
 	npc.animate(new Animation(NEW_DRAGON_MELEE_ANIMATION));
 
 		int damage = NpcCombatCalculations.getRandomMaxHit(
-				npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target
+				npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target
 		);
 
 		delayHit(npc, 0, target, getMeleeHit(npc, damage));

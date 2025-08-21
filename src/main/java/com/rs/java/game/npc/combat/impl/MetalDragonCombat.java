@@ -16,6 +16,7 @@ import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.prayer.AncientPrayer;
 import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -55,7 +56,7 @@ public class MetalDragonCombat extends CombatScript {
 		NPCCombatDefinitions defs = npc.getCombatDefinitions();
 		npc.animate(new Animation(Utils.roll(1, 2) ? DRAGON_SLAM_ANIMATION : DRAGON_HEADBUTT_ANIMATION));
 		int damage = NpcCombatCalculations.getRandomMaxHit(
-				npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target
+				npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target
 		);
 
 		delayHit(npc, 0, target, getMeleeHit(npc, damage));
