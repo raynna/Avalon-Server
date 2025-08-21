@@ -131,8 +131,7 @@ public final class Pet extends NPC {
 	 * Picks up the pet.
 	 */
 	public void pickup() {
-		if (owner.getPet().getId() != Pets.ABYSSAL_MINION.getBabyNpcId())
-			owner.getInventory().addItem(itemId, 1);
+		owner.getInventory().addItem(itemId, 1);
 		owner.setPet(null);
 		owner.getPetManager().setNpcId(-1);
 		owner.getPetManager().setItemId(-1);

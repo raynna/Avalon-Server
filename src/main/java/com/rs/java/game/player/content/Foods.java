@@ -11,6 +11,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.TickManager;
+import com.rs.java.game.player.controlers.DungeonControler;
 import com.rs.java.utils.Utils;
 
 /**
@@ -275,7 +276,103 @@ public class Foods {
 
 		TANGLED_TOAD_LEGS(2187, 15, true),
 
-		CHOCOLATE_BOMB(2185, 15, true);
+		CHOCOLATE_BOMB(2185, 15, true),
+
+		/**
+		 * Dungeoneering Food
+		 */
+
+		RAW_CAVE_POTATO(17817, 2, Effect.RAW_CAVE_POTATO),
+
+		CAVE_POTATO(18093, 2),
+
+		GISSEL_POTATO(18095, 6),
+
+		EDICAP_POTATO(18097, 12),
+
+		HEIM_CRAB(18159, 2),
+
+		HEIM_CRAB_POTATO(18099, 5),
+
+		HIEM_CRAB_GISSEL(18119, 8),
+
+		HIEM_CRAB_EDICAP(18139, 14),
+
+		REDEYE(18161, 5),
+
+		REDEYE_POTATO(18101, 8),
+
+		REDEYE_GISSEL(18121, 11),
+
+		REDEYE_EDICAP(18141, 17),
+
+		DUSK_EEL(18163, 7),
+
+		DUSK_EEL_POTATO(18103, 10),
+
+		DUSK_EEL_GISSEL(18123, 13),
+
+		DUSK_EEL_EDICAP(18143, 19),
+
+		GIANT_FLATFISH(18165, 10),
+
+		GIANT_FLATFISH_POTATO(18105, 13),
+
+		GIANT_FLATFISH_GISSEL(18125, 16),
+
+		GIANT_FLATFISH_EDICAP(18145, 22),
+
+		SHORTFINNED_EEL(18167, 12),
+
+		SHORTFINNED_EEL_POTATO(18107, 15),
+
+		SHORTFINNED_EEL_GISSEL(18127, 18),
+
+		SHORTFINNED_EEL_EDICAP(18147, 24),
+
+		WEB_SNIPPER(18169, 15),
+
+		WEB_SNIPPER_EEL_POTATO(18109, 18),
+
+		WEB_SNIPPER_GISSEL(18129, 21),
+
+		WEB_SNIPPER_EDICAP(18149, 27),
+
+		BOULDABASS(18171, 17),
+
+		BOULDABASS_POTATO(18111, 20),
+
+		BOULDABASS_GISSEL(18131, 23),
+
+		BOULDABASS_EDICAP(18151, 29),
+
+		SALVE_EEL(18173, 20),
+
+		SALVE_EEL_POTATO(18113, 23),
+
+		SALVE_EEL_GISSEL(18133, 26),
+
+		SALVE_EEL_EDICAP(18153, 32),
+
+		BLUE_CRAB(18175, 22),
+
+		BLUE_CRAB_POTATO(18115, 25),
+
+		BLUE_CRAB_GISSEL(18135, 28),
+
+		BLUE_CRAB_EDICAP(18155, 34),
+
+		CAVE_MORAY_CRAB(18177, 25),
+
+		CAVE_MORAY_POTATO(18117, 28),
+
+		CAVE_MORAY_GISSEL(18137, 31),
+
+		CAVE_MORAY_EDICAP(18157, 37),
+
+		BANNANA_DUNG(18199, 2),
+
+		BANNANA_DUNG_O(17381, 2);
 
 		/**
 		 * The food id
@@ -549,6 +646,14 @@ public class Foods {
 				Player player = (Player) object;
 				player.applyHit(new Hit(player, 50, HitLook.POISON_DAMAGE));
 			}
+		},
+		RAW_CAVE_POTATO {
+
+			@Override
+			public void effect(Object object) {
+				Player player = (Player) object;
+				player.getPackets().sendGameMessage("You must really be hungry.", true);
+			}
 		};
 
 		public void effect(Object object) {
@@ -562,7 +667,7 @@ public class Foods {
 		if (food == null)
 			return false;
 		//if (!player.getControlerManager().canEat(food))
-		//	return true;
+			//return true;
 		if (player.isDead())
 			return true;
 		if (food.isComboFood() && player.isSpecialFoodLocked())
@@ -591,7 +696,11 @@ public class Foods {
 		}
 		if (player.getHitpoints() >= (player.getMaxHitpoints() + (food.getExtraHP() * 10)))
 			return false;
-		player.heal(food.getHeal() * 10, food.getExtraHP() * 10);
+		if (player.getControlerManager().getControler() instanceof DungeonControler) {
+			player.applyHeal(new Hit(player, food.getHeal() * 10, HitLook.HEALED_DAMAGE));
+		} else {
+			player.heal(food.getHeal() * 10, food.getExtraHP() * 10);
+		}
 		player.getPackets().sendGameMessage("It heals some health.");
 		return true;
 	}

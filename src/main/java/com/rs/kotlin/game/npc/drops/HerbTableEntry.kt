@@ -35,25 +35,19 @@ class HerbTableEntry : DropEntry(-1, 1..1) {
     }
 
     override fun roll(player: Player): Drop? {
-        println("[HerbTableEntry] roll() called for player=${player.username}")
 
         val chance = ThreadLocalRandom.current().nextInt(LAND_DENOMINATOR)
-        println("[HerbTableEntry] chance roll: $chance (needs < $LAND_CHANCE to proceed)")
 
         if (chance >= LAND_CHANCE) {
-            println("[HerbTableEntry] roll failed chance check, returning null")
             return null
         }
 
         val entries = if (player.hasRingOfWealth()) {
-            println("[HerbTableEntry] player has Ring of Wealth, filtering 'nothing' drops")
             table.mutableEntries().filter { it.itemId != -1 }
         } else {
-            println("[HerbTableEntry] player does NOT have Ring of Wealth, using full table")
             table.mutableEntries()
         }
 
-        println("[HerbTableEntry] entries count after filter: ${entries.size}")
 
         val tempTable = WeightedTable()
         entries.forEach { tempTable.add(it) }
@@ -61,21 +55,17 @@ class HerbTableEntry : DropEntry(-1, 1..1) {
         val drop = tempTable.roll(player)
 
         if (drop == null) {
-            println("[HerbTableEntry] no drop rolled from WeightedTable")
             return null
         }
 
-        println("[HerbTableEntry] rolled drop: itemId=${drop.itemId}, amount=${drop.amount}")
 
         return when (drop.itemId) {
             -1 -> {
-                println("[HerbTableEntry] rolled 'nothing', returning null")
                 null
             }
             else -> drop
         }
     }
-
 
     companion object {
         private const val LAND_CHANCE = 64  // numerator

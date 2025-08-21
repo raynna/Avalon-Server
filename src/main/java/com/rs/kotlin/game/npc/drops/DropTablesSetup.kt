@@ -24,8 +24,7 @@ object DropTablesSetup {
         herbDropTable = HerbTableEntry()
         registerDropTable(BlackDragonDropTable.table, Rscm.lookupList("npc_group.black_dragon_lv227"))
         registerDropTable(GoblinDropTable.table, Rscm.lookupList("npc_group.goblin_lv1"), Rscm.lookupList("npc_group.goblin_lv2"))
-        registerDropTable(
-            GoblinLvl5DropTable.table,
+        registerDropTable(GoblinLvl5DropTable.table,
             Rscm.lookupList("npc_group.goblin_lv5"),
             Rscm.lookupList("npc_group.goblin_lv11"),
             Rscm.lookupList("npc_group.goblin_lv12"),
@@ -38,6 +37,17 @@ object DropTablesSetup {
         registerDropTable(DagannothRexTable.table, Rscm.lookup("npc.dagannoth_rex_lv303"))
         registerDropTable(DagannothPrimeTable.table, Rscm.lookup("npc.dagannoth_prime_lv303"))
         registerDropTable(DagannothSupremeTable.table, Rscm.lookup("npc.dagannoth_supreme_lv303"))
+        registerDropTable(CrawlingHandTable.table,
+            Rscm.lookupList("npc_group.crawling_hand"),
+            Rscm.lookupList("npc_group.crawling_hand_lv7"),
+            Rscm.lookupList("npc_group.crawling_hand_lv8"),
+            Rscm.lookupList("npc_group.crawling_hand_lv11"),
+            Rscm.lookupList("npc_group.crawling_hand_lv12"))
+        registerDropTable(BansheeTable.table, Rscm.lookup("npc.banshee_lv23"))
+        registerDropTable(AbyssalDemonTable.table,
+            Rscm.lookupList("npc_group.abyssal_demon"),
+            Rscm.lookupList("npc_group.abyssal_demon_lv124"))
+        registerDropTable(DarkBeastTable.table, Rscm.lookup("npc.dark_beast_lv182"))
 
         DropTableRegistry.logDropTableSizes();
     }
