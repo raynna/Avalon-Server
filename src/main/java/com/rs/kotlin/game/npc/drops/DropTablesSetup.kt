@@ -49,6 +49,7 @@ object DropTablesSetup {
             Rscm.lookupList("npc_group.abyssal_demon_lv124"))
         registerDropTable(DarkBeastTable.table, Rscm.lookup("npc.dark_beast_lv182"))
         registerDropTable(GargoyleDropTable.table, Rscm.lookupList("npc_group.gargoyle_lv111"))
+        registerDropTable(NechryaelDropTable.table, Rscm.lookupList("npc_group.nechryael_lv115"))
 
         DropTableRegistry.logDropTableSizes();
     }
