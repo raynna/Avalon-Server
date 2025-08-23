@@ -28,7 +28,13 @@ public class CorporealBeastCombat extends CombatScript {
 		if (handleStompAttack(npc)) {
 			return npc.getAttackSpeed();
 		}
-
+		final WorldTile randomStart = new WorldTile(npc, 3); // random offset
+		final WorldTile randomEnd = new WorldTile(randomStart, 3); // random offset
+		ProjectileManager.sendSimpleToTile(Projectile.STANDARD_MAGIC_INSTANT, 1824, randomStart, randomEnd);
+		/*if (target instanceof Player player) {
+			player.getPackets().sendTileMessage("Starting here", randomStart, 2000, 0, 0x00FF00);
+			player.getPackets().sendTileMessage("Ending here", randomEnd, 2000, 0, 0xFF0000);
+		}*/
 		int attackStyle = decideAttackStyle(npc, target);
 
 		switch (attackStyle) {
@@ -171,10 +177,7 @@ public class CorporealBeastCombat extends CombatScript {
 			}
 
 			// Send projectile from previous tile to this AoE tile
-			ProjectileManager.sendSimpleToTile(Projectile.STANDARD_MAGIC_INSTANT, 1824, originTile, aoeTile);
-
-			// Update origin for next projectile
-			originTile = aoeTile;
+			ProjectileManager.sendSimpleToTile(Projectile.STANDARD_MAGIC_INSTANT, 1824, baseTile, aoeTile);
 
 			// Schedule hit graphics
 			WorldTasksManager.schedule(new WorldTask() {

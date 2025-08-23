@@ -9,7 +9,6 @@ import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import kotlin.math.max
-import kotlin.math.pow
 
 object ProjectileManager {
 
@@ -33,7 +32,7 @@ object ProjectileManager {
             println("Unknown projectile type: $projectile")
             return
         }
-        sendProjectile(startTile = startTile, endTile = endTile, gfx = gfxId, type = type, creatorSize = 1);
+        sendProjectile(defender = null, startTile = startTile, endTile = endTile, gfx = gfxId, type = type, creatorSize = 1);
     }
 
     @JvmStatic
@@ -110,7 +109,7 @@ object ProjectileManager {
             defender.plane
         )
 
-        val duration = sendProjectile(startTile, endTile, gfxId, type = adjustedType, attacker.size)
+        val duration = sendProjectile(defender, startTile, endTile, gfxId, type = adjustedType, attacker.size)
         val delayTicks = max(0, (duration / 30.0).toInt() - 1)
 
         if (hitGraphic != null) {
@@ -127,6 +126,7 @@ object ProjectileManager {
     }
 
     private fun sendProjectile(
+        defender: Entity? = null,
         startTile: WorldTile,
         endTile: WorldTile,
         gfx: Int,
@@ -144,27 +144,26 @@ object ProjectileManager {
         for (player in players) {
             val stream = player.packets.createWorldTileStream(startTile)
             stream.writePacket(player, 20)
-
-            val localX = startTile.getLocalX(player.lastLoadedMapRegionTile, player.mapSize)
-            val localY = startTile.getLocalY(player.lastLoadedMapRegionTile, player.mapSize)
-            val offsetX = localX and 0x7
-            val offsetY = localY and 0x7
-            stream.writeByte((offsetX shl 3) or offsetY)
+            val flags: Int = ((startTile.xInChunk shl 3) or startTile.yInChunk)
+            stream.writeByte(flags)
             stream.writeByte(endTile.x - startTile.x)
             stream.writeByte(endTile.y - startTile.y)
-
-            stream.writeShort(0) // tile projectile, no entity
+            val index = when (defender) {
+                null -> 0
+                is Player -> -(defender.index + 1)
+                else -> defender.index + 1
+            }
+            stream.writeShort(index)//lock or not
 
             stream.writeShort(gfx)
             stream.writeByte(type.startHeight)
             stream.writeByte(type.endHeight)
-            val delayTicks = (1 + type.delay) * 30
-            stream.writeShort(delayTicks)
+            val delay = (1 + type.delay) * 30
+            stream.writeShort(delay)
             stream.writeShort(travelDuration)
-            stream.writeByte(type.arc)
-            val finalOffset = (creatorSize shl 6) + (type.displacement shl 6)
-            stream.writeShort(finalOffset)
-
+            stream.writeByte(type.angle)
+            val slope = creatorSize * 64 + type.displacement * 64
+            stream.writeShort(slope)
             player.session.write(stream)
         }
 

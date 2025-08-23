@@ -157,7 +157,6 @@ public final class WorldPacketsDecoder extends Decoder {
 	private final static int INTERFACE_ON_PLAYER = 50;
 	private final static int INTERFACE_ON_NPC = 66;
 	private final static int COLOR_ID_PACKET = 97;
-
 	private final static int REPORT_ABUSE_PACKET = 11;
 	private final static int GRAND_EXCHANGE_ITEM_SELECT_PACKET = 71;
 	private final static int TELEKINETIC_GRAB_SPELL_PACKET = 69;

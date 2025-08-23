@@ -646,9 +646,9 @@ public class WorldPacketsEncoder extends Encoder {
 	public OutputStream createWorldTileStream(WorldTile tile) {
 		OutputStream stream = new OutputStream(4);
 		stream.writePacket(player, 158);
-		stream.writeByte128(tile.getLocalY(player.getLastLoadedMapRegionTile(), player.getMapSize()) >> 3);
+		stream.writeByte128(tile.getChunkYInScene(player));
 		stream.writeByteC(tile.getPlane());
-		stream.write128Byte(tile.getLocalX(player.getLastLoadedMapRegionTile(), player.getMapSize()) >> 3);
+		stream.write128Byte(tile.getChunkXInScene(player));
 		return stream;
 	}
 

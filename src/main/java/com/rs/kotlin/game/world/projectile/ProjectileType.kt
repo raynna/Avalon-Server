@@ -5,6 +5,6 @@ data class ProjectileType(
     val endHeight: Int = 28,
     val speed: Int,
     val delay: Int = 1,
-    val arc: Int = 0,
+    val angle: Int = 0,
     val displacement: Int = 64
 )
