@@ -58,8 +58,8 @@ public class HybridMage extends CombatScript {
 		} else {
 			npc.animate(new Animation(1979));
 			World.sendProjectile(npc, target, 368, 60, 32, 50, 50, 0);
-			delayHit(npc, getMageDelay(npc, target), target,
-					getMagicHit(npc, getRandomMaxHit(npc, 340, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, getMageDelay(npc, target),
+                    getMagicHit(npc, getRandomMaxHit(npc, 340, NPCCombatDefinitions.MAGE, target)));
 			if (HybridMelee.specialAttack <= 95)
 				HybridMelee.specialAttack += 5;
 			if (getRandom >= 3 && getRandom <= 5) {

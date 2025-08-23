@@ -28,18 +28,18 @@ public class HarAkenTentacleCombat extends CombatScript {
 		switch (attackStyle) {
 		case 0:
 			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, 0, target,
-					getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit() - 36, NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0,
+                    getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit() - 36, NPCCombatDefinitions.MELEE, target)));
 			break;
 		case 1:
 			npc.animate(new Animation(npc.getId() == 15209 ? 16253 : 16242));
 			World.sendElementalProjectile(npc, target, npc.getId() == 15209 ? 3004 : 2922);
 			if (npc.getId() == 15209)
-				delayHit(npc, 2, target,
-						getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+				delayHit(npc, target, 2,
+                        getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			else
-				delayHit(npc, 2, target,
-						getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+				delayHit(npc, target, 2,
+                        getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			break;
 		}
 		return defs.getAttackDelay();

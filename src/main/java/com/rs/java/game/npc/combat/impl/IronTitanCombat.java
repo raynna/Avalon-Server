@@ -44,7 +44,7 @@ public class IronTitanCombat extends CombatScript {
 					} else {
 						appliedDamage = getRandomMaxHit(npc, 230, NPCCombatDefinitions.MAGE, target);
 					}
-					delayHit(npc, 2, target, getMagicHit(npc, appliedDamage));
+					delayHit(npc, target, 2, getMagicHit(npc, appliedDamage));
 					long familiarDelay = 3000;
 					familiar.getOwner().addFamiliarDelay(familiarDelay);
 					familiar.getOwner().getSkills().addXp(Skills.MAGIC, appliedDamage / 3);
@@ -58,7 +58,7 @@ public class IronTitanCombat extends CombatScript {
 					} else {
 						appliedDamage = getRandomMaxHit(npc, 230, NPCCombatDefinitions.MELEE, target);
 					}
-					delayHit(npc, 2, target, getMeleeHit(npc, appliedDamage));
+					delayHit(npc, target, 2, getMeleeHit(npc, appliedDamage));
 					long familiarDelay = 3000;
 					familiar.getOwner().addFamiliarDelay(familiarDelay);
 					familiar.getOwner().getSkills().addXp(Skills.DEFENCE, appliedDamage / 3);
@@ -69,13 +69,13 @@ public class IronTitanCombat extends CombatScript {
 				damage = getRandomMaxHit(npc, 255, NPCCombatDefinitions.MAGE, target);
 				npc.animate(new Animation(7694));
 				World.sendSlowBowProjectile(npc, target, 1452);
-				delayHit(npc, Utils.getDistance(npc, target) > 3 ? 3 : 2, target, getMagicHit(npc, damage));
+				delayHit(npc, target, Utils.getDistance(npc, target) > 3 ? 3 : 2, getMagicHit(npc, damage));
 				familiar.getOwner().getSkills().addXp(Skills.MAGIC, damage / 3);
 			} else {// melee
 				damage = getRandomMaxHit(npc, 244, NPCCombatDefinitions.MELEE, target);
 				npc.animate(new Animation(7946));
 				npc.gfx(new Graphics(1447));
-				delayHit(npc, 1, target, getMeleeHit(npc, damage));
+				delayHit(npc, target, 1, getMeleeHit(npc, damage));
 				familiar.getOwner().getSkills().addXp(Skills.DEFENCE, damage / 3);
 			}
 		}

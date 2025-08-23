@@ -2,16 +2,11 @@ package com.rs.java.game.npc.combat.impl;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.item.Item;
-import com.rs.java.game.item.meta.DragonFireShieldMetaData;
-import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
-import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
@@ -64,7 +59,7 @@ public class LeatherDragonCombat extends CombatScript {
 				npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target
 		);
 
-		delayHit(npc, 0, target, getMeleeHit(npc, damage));
+		delayHit(npc, target, 0, getMeleeHit(npc, damage));
 	}
 
 	private void performDragonfireAttack(NPC npc, Entity target, NPCCombatDefinitions defs) {
@@ -79,7 +74,7 @@ public class LeatherDragonCombat extends CombatScript {
 		int rawDamage = Utils.getRandom(650);
 		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, rawDamage);
 
-		delayHit(npc, 1, player, getRegularHit(npc, mitigatedDamage));
+		delayHit(npc, player, 1, getRegularHit(npc, mitigatedDamage));
 
 		DragonFire.handleDragonfireShield(player);
 	}

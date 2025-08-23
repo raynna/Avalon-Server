@@ -36,16 +36,16 @@ public class IcyBonesCombat extends CombatScript {
 				target.setFreezeDelay(8);
 			}
 			if (mage)
-				delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+				delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			else
-				delayHit(npc, 2, target, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+				delayHit(npc, target, 2, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			World.sendElementalProjectile(npc, target, 2595);
 			return npc.getAttackSpeed();
 		}
 		if (Utils.random(3) == 0 && Utils.isOnRange(target.getX(), target.getY(), target.getSize(), npc.getX(), npc.getY(), npc.getSize(), 0) && ((IcyBones) npc).sendSpikes()) {
 			npc.gfx(new Graphics(2596));
 			npc.animate(new Animation(13790));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			return npc.getAttackSpeed();
 		}
 		boolean onRange = false;
@@ -54,7 +54,7 @@ public class IcyBonesCombat extends CombatScript {
 				int damage = getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, player);
 				if (damage != 0 && player.getPrayer().isMeleeProtecting())
 					player.getPackets().sendGameMessage("Your prayer offers only partial protection against the attack.");
-				delayHit(npc, 0, player, getMeleeHit(npc, damage));
+				delayHit(npc, player, 0, getMeleeHit(npc, damage));
 				onRange = true;
 			}
 		}

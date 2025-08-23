@@ -39,7 +39,7 @@ public class ToKashBloodChillerCombat extends CombatScript {
 
 		if (perfectDamage) {
 			((Player) target).getAppearence().transformIntoNPC(-1);
-			delayHit(npc, 0, target, getRangeHit(npc, getRandomMaxHit(npc, (int) Utils.random(boss.getMaxHit() * 0.90, boss.getMaxHit()), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 0, getRangeHit(npc, getRandomMaxHit(npc, (int) Utils.random(boss.getMaxHit() * 0.90, boss.getMaxHit()), NPCCombatDefinitions.MAGE, target)));
 		}
 
 		boolean special = boss.canSpecialAttack() && Utils.random(10) == 0;
@@ -65,11 +65,11 @@ public class ToKashBloodChillerCombat extends CombatScript {
 
 			if (meleeAttack) {
 				npc.animate(new Animation(14392));
-				delayHit(npc, 0, target, getRangeHit(npc, getRandomMaxHit(npc, 200, NPCCombatDefinitions.MELEE, target)));
+				delayHit(npc, target, 0, getRangeHit(npc, getRandomMaxHit(npc, 200, NPCCombatDefinitions.MELEE, target)));
 			} else {
 				npc.animate(new Animation(14398));
 				World.sendElementalProjectile(npc, target, 2546);
-				delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 200, NPCCombatDefinitions.MAGE, target)));
+				delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, 200, NPCCombatDefinitions.MAGE, target)));
 			}
 			return meleeAttack ? 4 : 5;
 		}

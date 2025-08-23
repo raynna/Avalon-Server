@@ -49,7 +49,7 @@ public class WarpedGulegaCombat extends CombatScript {
 					for (Entity t : boss.getPossibleTargets(true, true)) {
 						tileLoop: for (WorldTile tile : attackTiles) {
 							if (t.getX() == tile.getX() && t.getY() == tile.getY()) {
-								delayHit(npc, 0, t, getMeleeHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NPCCombatDefinitions.MELEE, t)));
+								delayHit(npc, t, 0, getMeleeHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NPCCombatDefinitions.MELEE, t)));
 								break tileLoop;
 							}
 						}
@@ -63,7 +63,7 @@ public class WarpedGulegaCombat extends CombatScript {
 			for (Entity t : npc.getPossibleTargets(true, true)) {
 				World.sendElementalProjectile(npc, t, 2883);
 				t.gfx(new Graphics(2884, 90, 0));
-				delayHit(npc, 2, t, getRangeHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NPCCombatDefinitions.RANGE, t)));
+				delayHit(npc, t, 2, getRangeHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NPCCombatDefinitions.RANGE, t)));
 			}
 			break;
 		case 2://reg magic aeo
@@ -71,7 +71,7 @@ public class WarpedGulegaCombat extends CombatScript {
 			for (Entity t : npc.getPossibleTargets(true, true)) {
 				World.sendElementalProjectile(npc, t, 2880);
 				t.gfx(new Graphics(2881, 90, 0));
-				delayHit(npc, 2, t, getMagicHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NPCCombatDefinitions.MAGE, t)));
+				delayHit(npc, t, 2, getMagicHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NPCCombatDefinitions.MAGE, t)));
 			}
 			break;
 		case 0:

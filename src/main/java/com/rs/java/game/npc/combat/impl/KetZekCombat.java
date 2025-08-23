@@ -35,7 +35,7 @@ public class KetZekCombat extends CombatScript {
 		case 0:
 			hit = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target);
 			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, 0, target, getMeleeHit(npc, hit));
+			delayHit(npc, target, 0, getMeleeHit(npc, hit));
 			break;
 		case 1:
 			commenceMagicAttack(npc, target, hit);
@@ -49,7 +49,7 @@ public class KetZekCombat extends CombatScript {
 		npc.animate(new Animation(16136));
 		// npc.setNextGraphics(new Graphics(1622, 0, 96 << 16));
 		World.sendElementalProjectile(npc, target, 2984);
-		delayHit(npc, 2, target, getMagicHit(npc, hit));
+		delayHit(npc, target, 2, getMagicHit(npc, hit));
 		WorldTasksManager.schedule(new WorldTask() {
 
 			@Override

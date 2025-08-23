@@ -30,13 +30,13 @@ public class TokHaarMej extends CombatScript {
 		case 0:
 			hit = getRandomMaxHit(npc, defs.getMaxHit() - 36, NPCCombatDefinitions.MELEE, target);
 			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, 0, target, getMeleeHit(npc, hit));
+			delayHit(npc, target, 0, getMeleeHit(npc, hit));
 			break;
 		case 1:
 			hit = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target);
 			npc.animate(new Animation(16122));
 			World.sendElementalProjectile(npc, target, 2991);
-			delayHit(npc, 2, target, getMagicHit(npc, hit));
+			delayHit(npc, target, 2, getMagicHit(npc, hit));
 			break;
 		}
 		return defs.getAttackDelay();

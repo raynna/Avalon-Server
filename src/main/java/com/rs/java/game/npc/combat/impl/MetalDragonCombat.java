@@ -2,19 +2,12 @@ package com.rs.java.game.npc.combat.impl;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.item.Item;
-import com.rs.java.game.item.meta.DragonFireShieldMetaData;
-import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.Equipment;
-import com.rs.java.game.player.prayer.AncientPrayer;
-import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.world.projectile.Projectile;
@@ -59,7 +52,7 @@ public class MetalDragonCombat extends CombatScript {
 				npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target
 		);
 
-		delayHit(npc, 0, target, getMeleeHit(npc, damage));
+		delayHit(npc, target, 0, getMeleeHit(npc, damage));
 	}
 
 	private void performDragonfireAttack(NPC npc, Entity target) {
@@ -71,7 +64,7 @@ public class MetalDragonCombat extends CombatScript {
 		ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, DRAGONFIRE_NORMAL_PROJECTILE, npc, target);
 
 		int mitigated = DragonFire.applyDragonfireMitigation(player, rawDamage);
-		delayHit(npc, Utils.getDistance(player, npc) > 2 ? 2 : 1, player, getRegularHit(npc, mitigated));
+		delayHit(npc, player, Utils.getDistance(player, npc) > 2 ? 2 : 1, getRegularHit(npc, mitigated));
 
 		DragonFire.handleDragonfireShield(player);
 	}

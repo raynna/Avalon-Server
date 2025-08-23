@@ -54,7 +54,7 @@ public class ThunderCombat extends CombatScript {
 				int damage = getRandomMaxHit(npc, defs.getMaxHit(),
 						NPCCombatDefinitions.MAGE, t);
 				if (damage > 0) {
-					delayHit(npc, 1, t, getMagicHit(npc, damage));
+					delayHit(npc, t, 1, getMagicHit(npc, damage));
 					t.gfx(new Graphics(3428));
 				}
 			}
@@ -64,9 +64,8 @@ public class ThunderCombat extends CombatScript {
 			npc.setCapDamage(800);
 			delayHit(
 					npc,
-					0,
-					target,
-					getMeleeHit(
+                    target, 0,
+                    getMeleeHit(
 							npc,
 							getRandomMaxHit(npc, defs.getMaxHit(),
 									NPCCombatDefinitions.MELEE, target)));

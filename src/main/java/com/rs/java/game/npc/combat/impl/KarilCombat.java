@@ -31,7 +31,7 @@ public class KarilCombat extends CombatScript {
 			targetPlayer.getSkills().set(Skills.AGILITY, currentLevel < drain ? 0 : currentLevel - drain);
 		}
 		World.sendCBOWProjectile(npc, target, defs.getAttackProjectile());
-		delayHit(npc, 2, target, getRangeHit(npc, damage));
+		delayHit(npc, target, 2, getRangeHit(npc, damage));
 		return defs.getAttackDelay();
 	}
 }

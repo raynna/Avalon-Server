@@ -26,7 +26,7 @@ public class ToragCombat extends CombatScript {
 			Player targetPlayer = (Player) target;
 			targetPlayer.setRunEnergy(targetPlayer.getRunEnergy() > 4 ? targetPlayer.getRunEnergy() - 4 : 0);
 		}
-		delayHit(npc, 0, target, getMeleeHit(npc, damage));
+		delayHit(npc, target, 0, getMeleeHit(npc, damage));
 		return defs.getAttackDelay();
 	}
 }

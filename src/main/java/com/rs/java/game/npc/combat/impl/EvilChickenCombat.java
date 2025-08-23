@@ -48,8 +48,8 @@ public class EvilChickenCombat extends CombatScript {
 			break;
 		}
 		target.gfx(new Graphics(337));
-		delayHit(npc, 0, target,
-				getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+		delayHit(npc, target, 0,
+                getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 		return defs.getAttackDelay();
 	}
 }

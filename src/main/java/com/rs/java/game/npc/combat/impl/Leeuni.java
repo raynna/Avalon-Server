@@ -34,9 +34,8 @@ public class Leeuni extends CombatScript {
 			for (Entity t : npc.getPossibleTargets()) {
 				delayHit(
 						npc,
-						1,
-						t,
-						getMagicHit(
+                        t, 1,
+                        getMagicHit(
 								npc,
 								getRandomMaxHit(npc, 540,
 										NPCCombatDefinitions.MAGE, t)));
@@ -63,9 +62,8 @@ public class Leeuni extends CombatScript {
 			
 			delayHit(
 					npc,
-					0,
-					target,
-					getMeleeHit(
+                    target, 0,
+                    getMeleeHit(
 							npc,
 							getRandomMaxHit(npc, 330,
 									NPCCombatDefinitions.MELEE, target)));
@@ -73,9 +71,8 @@ public class Leeuni extends CombatScript {
 			npc.animate(new Animation(15046));
 			delayHit(
 					npc,
-					0,
-					target,
-					getMeleeHit(
+                    target, 0,
+                    getMeleeHit(
 							npc,
 							getRandomMaxHit(npc, 440,
 									NPCCombatDefinitions.MELEE, target)));

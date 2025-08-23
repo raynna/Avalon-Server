@@ -22,7 +22,7 @@ public class DharokCombat extends CombatScript {
 			double perc = 1 - (npc.getHitpoints() / npc.getMaxHitpoints());
 			damage += perc * 380;
 		}
-		delayHit(npc, 0, target, getMeleeHit(npc, damage));
+		delayHit(npc, target, 0, getMeleeHit(npc, damage));
 		return defs.getAttackDelay();
 	}
 }

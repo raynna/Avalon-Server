@@ -69,8 +69,8 @@ public class GiantMoleCombat extends CombatScript {
 
 		} else {
 			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, 0, target,
-					getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0,
+                    getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 		}
 		return defs.getAttackDelay();
 	}

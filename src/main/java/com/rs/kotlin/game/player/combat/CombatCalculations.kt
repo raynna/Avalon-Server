@@ -7,7 +7,6 @@ import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
-import com.rs.kotlin.game.npc.NpcBonusType
 import com.rs.kotlin.game.player.combat.damage.CombatMultipliers
 import com.rs.kotlin.game.player.combat.magic.Spell
 import com.rs.kotlin.game.player.combat.magic.Spellbook

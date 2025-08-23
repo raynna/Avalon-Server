@@ -21,8 +21,8 @@ public class YtMejKotCombat extends CombatScript {
 	public int attack(NPC npc, Entity target) {
 		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
 		npc.animate(new Animation(defs.getAttackEmote()));
-		delayHit(npc, 0, target,
-				getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), defs.getAttackStyle(), target)));
+		delayHit(npc, target, 0,
+                getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), defs.getAttackStyle(), target)));
 		if (npc.getHitpoints() < npc.getMaxHitpoints() / 2) {
 			if (npc.temporaryAttribute().remove("Heal") != null) {
 				npc.gfx(new Graphics(2980, 0, 100));

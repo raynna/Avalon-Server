@@ -58,11 +58,11 @@ public class GravecreeperCombat extends CombatScript {
 		case 0://range
 			npc.animate(new Animation(14504));
 			World.sendElementalProjectile(npc, target, 2753);
-			delayHit(npc, 1, target, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, 1, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			break;
 		case 1://melee
 			npc.animate(new Animation(14503));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			break;
 		}
 		return 4;

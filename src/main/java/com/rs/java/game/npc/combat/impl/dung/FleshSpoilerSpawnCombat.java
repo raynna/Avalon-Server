@@ -18,7 +18,7 @@ public class FleshSpoilerSpawnCombat extends CombatScript {
 	@Override
 	public int attack(NPC npc, Entity target) {
 		npc.animate(new Animation(Utils.random(3) == 0 ? 14474 : 14475));
-		delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+		delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 		return 3;
 	}
 }

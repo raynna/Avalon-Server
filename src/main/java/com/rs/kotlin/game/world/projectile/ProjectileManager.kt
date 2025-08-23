@@ -28,6 +28,15 @@ object ProjectileManager {
     }
 
     @JvmStatic
+    fun sendSimpleToTile(projectile: Projectile, gfxId: Int, startTile: WorldTile, endTile: WorldTile) {
+        val type = ProjectileRegistry.get(projectile) ?: run {
+            println("Unknown projectile type: $projectile")
+            return
+        }
+        sendProjectile(startTile = startTile, endTile = endTile, gfx = gfxId, type = type, creatorSize = 1);
+    }
+
+    @JvmStatic
     fun sendWithGraphic(projectile: Projectile, gfxId: Int, attacker: Entity, defender: Entity, hitGraphic: Graphics) {
         send(
             projectile = projectile,
@@ -101,7 +110,7 @@ object ProjectileManager {
             defender.plane
         )
 
-        val duration = sendProjectile(attacker, defender, startTile, endTile, gfxId, type = adjustedType, attacker.size)
+        val duration = sendProjectile(startTile, endTile, gfxId, type = adjustedType, attacker.size)
         val delayTicks = max(0, (duration / 30.0).toInt() - 1)
 
         if (hitGraphic != null) {
@@ -118,8 +127,6 @@ object ProjectileManager {
     }
 
     private fun sendProjectile(
-        attacker: Entity,
-        defender: Entity?,
         startTile: WorldTile,
         endTile: WorldTile,
         gfx: Int,
@@ -129,52 +136,41 @@ object ProjectileManager {
         val distance = Utils.getDistance(startTile.x, startTile.y, endTile.x, endTile.y)
         val travelDuration = type.speed + 20 + (distance * 5) + (distance * distance / 8)
 
-        // Send projectile to all nearby players in attacker's regions
-        for (regionId in attacker.mapRegionsIds) {
-            val playerIndexes = World.getRegion(regionId)?.playerIndexes ?: continue
-
-            for (playerIndex in playerIndexes) {
-                val player = World.getPlayers().get(playerIndex) ?: continue
-                if (!player.hasStarted() || player.hasFinished()) continue
-
-                val nearShooter = player.withinDistance(attacker)
-                val nearTarget = defender?.let { player.withinDistance(it) } ?: player.withinDistance(endTile)
-
-                if (!nearShooter && !nearTarget) continue
-
-                val stream = player.packets.createWorldTileStream(startTile)
-                stream.writePacket(player, 20)
-
-                val localX = startTile.getLocalX(player.lastLoadedMapRegionTile, player.mapSize)
-                val localY = startTile.getLocalY(player.lastLoadedMapRegionTile, player.mapSize)
-                val offsetX = localX and 0x7
-                val offsetY = localY and 0x7
-                stream.writeByte((offsetX shl 3) or offsetY)
-                stream.writeByte(endTile.x - startTile.x)
-                stream.writeByte(endTile.y - startTile.y)
-
-                val index = when (defender) {
-                    null -> 0
-                    is Player -> -(defender.index + 1)
-                    else -> defender.index + 1
-                }
-
-                stream.writeShort(index)
-                stream.writeShort(gfx)
-                stream.writeByte(type.startHeight)
-                stream.writeByte(type.endHeight)
-                val delayTicks = (1 + type.delay) * 30
-                stream.writeShort(delayTicks)
-                stream.writeShort(travelDuration)
-                stream.writeByte(type.arc)
-                val finalOffset = (creatorSize shl 6) + (type.displacement shl 6)
-                stream.writeShort(finalOffset)
-
-                player.session.write(stream)
-            }
+        val players = World.getPlayers().stream().filter { player ->
+            player.hasStarted() && !player.hasFinished() &&
+                    (player.withinDistance(startTile) || player.withinDistance(endTile))
         }
+
+        for (player in players) {
+            val stream = player.packets.createWorldTileStream(startTile)
+            stream.writePacket(player, 20)
+
+            val localX = startTile.getLocalX(player.lastLoadedMapRegionTile, player.mapSize)
+            val localY = startTile.getLocalY(player.lastLoadedMapRegionTile, player.mapSize)
+            val offsetX = localX and 0x7
+            val offsetY = localY and 0x7
+            stream.writeByte((offsetX shl 3) or offsetY)
+            stream.writeByte(endTile.x - startTile.x)
+            stream.writeByte(endTile.y - startTile.y)
+
+            stream.writeShort(0) // tile projectile, no entity
+
+            stream.writeShort(gfx)
+            stream.writeByte(type.startHeight)
+            stream.writeByte(type.endHeight)
+            val delayTicks = (1 + type.delay) * 30
+            stream.writeShort(delayTicks)
+            stream.writeShort(travelDuration)
+            stream.writeByte(type.arc)
+            val finalOffset = (creatorSize shl 6) + (type.displacement shl 6)
+            stream.writeShort(finalOffset)
+
+            player.session.write(stream)
+        }
+
         return travelDuration
     }
+
 
     fun calculateRotation(startTile: WorldTile, endTile: WorldTile): Int {
         val dx = endTile.x - startTile.x

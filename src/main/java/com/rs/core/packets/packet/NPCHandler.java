@@ -97,9 +97,9 @@ public class NPCHandler {
             }
             player.getPackets().sendGameMessage("Failed removing spawn!");
         }
-        if (player.isDeveloperMode()) {
+        /*if (player.isDeveloperMode()) {
             //NPCDefinitions.loadAll();
-            try {
+           try {
                 dumpAllObjectDefinitions();
                 dumpAllNpcClientScriptData();
             } catch (Exception error) {
@@ -112,7 +112,7 @@ public class NPCHandler {
             } catch (Exception error) {
                 System.out.println(error.toString());
             }
-        }
+        */
         if (!WikiApi.INSTANCE.hasData(npc.getId())) {
             WikiApi.INSTANCE.dumpData(npc.getId(), npc.getName(), npc.getCombatLevel());
         }

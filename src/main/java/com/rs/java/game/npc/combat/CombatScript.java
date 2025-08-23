@@ -15,11 +15,11 @@ import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.prayer.PrayerEffectHandler;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.player.combat.CombatAction;
 
 public abstract class CombatScript {
@@ -34,7 +34,27 @@ public abstract class CombatScript {
      */
     public abstract int attack(NPC npc, Entity target);
 
-    public static void delayHit(NPC npc, int delay, final Entity target, final Hit... hits) {
+    public static void hit(int delay, NPC attacker, Entity defender, NpcAttackStyle style) {
+        Hit damage = attacker.meleeHit(defender, attacker.getMaxHit());
+        HitLook look;
+        switch (style) {
+            case STAB: case SLASH: case CRUSH:
+                look = HitLook.MELEE_DAMAGE;
+                break;
+            case RANGED:
+                look = HitLook.RANGE_DAMAGE;
+                break;
+            case MAGIC:
+                look = HitLook.MAGIC_DAMAGE;
+                break;
+            default:
+                look = HitLook.REGULAR_DAMAGE;
+        }
+        Hit hit = new Hit(attacker, damage.getDamage(), look);
+        delayHit(attacker, defender, delay, hit);
+    }
+
+    public static void delayHit(NPC npc, final Entity target, int delay, final Hit... hits) {
         for (Hit hit : hits) {
             if (target instanceof Player p2)
                 p2.handleIncommingHit(hit);

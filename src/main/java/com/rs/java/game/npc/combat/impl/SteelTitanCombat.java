@@ -3,7 +3,6 @@ package com.rs.java.game.npc.combat.impl;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
@@ -75,10 +74,10 @@ public class SteelTitanCombat extends CombatScript {
 
 			if (distant) {
 				ProjectileManager.sendWithGraphic(Projectile.ELEMENTAL_SPELL, RANGE_PROJECTILE, npc, target, new Graphics(RANGE_HIT_GFX, 100));
-				delayHit(npc, 2, target, getRangeHit(npc, damage));
+				delayHit(npc, target, 2, getRangeHit(npc, damage));
 				applyFamiliarXP(familiar, damage, Skills.RANGE);
 			} else {
-				delayHit(npc, 2, target, getMeleeHit(npc, damage));
+				delayHit(npc, target, 2, getMeleeHit(npc, damage));
 				applyFamiliarXP(familiar, damage, Skills.STRENGTH);
 			}
 
@@ -96,7 +95,7 @@ public class SteelTitanCombat extends CombatScript {
 				damage = NpcCombatCalculations.getRandomMaxHit(npc, REGULAR_MAGIC_MAX, NpcAttackStyle.MAGIC, target);
 				npc.animate(new Animation(MAGIC_ANIMATION));
 				ProjectileManager.sendWithGraphic(Projectile.ELEMENTAL_SPELL, RANGE_PROJECTILE, npc, target, new Graphics(RANGE_HIT_GFX, 100));
-				delayHit(npc, Utils.getDistance(npc, target) > 3 ? 2 : 1, target, getMagicHit(npc, damage));
+				delayHit(npc, target, Utils.getDistance(npc, target) > 3 ? 2 : 1, getMagicHit(npc, damage));
 				applyFamiliarXP(familiar, damage, Skills.MAGIC);
 				break;
 
@@ -104,13 +103,13 @@ public class SteelTitanCombat extends CombatScript {
 				damage = NpcCombatCalculations.getRandomMaxHit(npc, REGULAR_RANGE_MAX, NpcAttackStyle.RANGED, target);
 				npc.animate(new Animation(SPECIAL_ANIMATION));
 				ProjectileManager.sendWithGraphic(Projectile.ELEMENTAL_SPELL, RANGE_PROJECTILE, npc, target, new Graphics(MAGE_HIT_GFX, 0));
-				delayHit(npc, Utils.getDistance(npc, target) > 3 ? 2 : 1, target, getRangeHit(npc, damage));
+				delayHit(npc, target, Utils.getDistance(npc, target) > 3 ? 2 : 1, getRangeHit(npc, damage));
 				applyFamiliarXP(familiar, damage, Skills.RANGE);
 				break;
 			case 2:
 				damage = NpcCombatCalculations.getRandomMaxHit(npc, REGULAR_MELEE_MAX, NpcAttackStyle.CRUSH, target);
 				npc.animate(new Animation(MELEE_ANIMATION));
-				delayHit(npc, 0, target, getMeleeHit(npc, damage));
+				delayHit(npc, target, 0, getMeleeHit(npc, damage));
 				applyFamiliarXP(familiar, damage, Skills.STRENGTH);
 				break;
 

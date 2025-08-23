@@ -25,11 +25,11 @@ public class ThornySnailCombat extends CombatScript {
 			npc.animate(new Animation(8148));
 			npc.gfx(new Graphics(1385));
 			World.sendElementalProjectile(npc, target, 1386);
-			delayHit(npc, 1, target, getRangeHit(npc, getRandomMaxHit(npc, 80, NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, 1, getRangeHit(npc, getRandomMaxHit(npc, 80, NPCCombatDefinitions.RANGE, target)));
 			npc.gfx(new Graphics(1387));
 		} else {
 			npc.animate(new Animation(8143));
-			delayHit(npc, 1, target, getRangeHit(npc, getRandomMaxHit(npc, 40, NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, 1, getRangeHit(npc, getRandomMaxHit(npc, 40, NPCCombatDefinitions.RANGE, target)));
 		}
 		return defs.getAttackDelay();
 	}

@@ -72,7 +72,7 @@ public class NomadCombat extends CombatScript {
 			if (distanceX > size || distanceX < -1 || distanceY > size || distanceY < -1)
 				return 0;
 			npc.animate(new Animation(12696));
-			delayHit(npc, 0, target, getRegularHit(npc, getRandomMaxHit(npc, 322, NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getRegularHit(npc, getRandomMaxHit(npc, 322, NPCCombatDefinitions.MELEE, target)));
 			return 2;
 		} else {
 			if (target instanceof Player && nomad.useSpecialSpecialMove()) {
@@ -156,7 +156,7 @@ public class NomadCombat extends CombatScript {
 								secondLoop = true;
 							} else {
 								if (npc.clipedProjectile(target, false)) {
-									delayHit(npc, 2, target, getRegularHit(npc, 750));
+									delayHit(npc, target, 2, getRegularHit(npc, 750));
 									World.sendElementalProjectile(npc, target, 1658);
 								}
 								nomad.setCantFollowUnderCombat(false);
@@ -210,7 +210,7 @@ public class NomadCombat extends CombatScript {
 									}
 								}, 9);
 							} else {
-								delayHit(npc, 2, target, getRegularHit(npc, player.getMaxHitpoints() - 1));
+								delayHit(npc, target, 2, getRegularHit(npc, player.getMaxHitpoints() - 1));
 								World.sendElementalProjectile(npc, target, 2280);
 								nomad.setCantFollowUnderCombat(false);
 								nomad.setNextMovePerform();
@@ -226,7 +226,7 @@ public class NomadCombat extends CombatScript {
 			} else {
 				npc.animate(new Animation(12697));
 				int damage = getRandomMaxHit(npc, 322, NPCCombatDefinitions.MAGE, target);
-				delayHit(npc, 2, target, getRegularHit(npc, damage));
+				delayHit(npc, target, 2, getRegularHit(npc, damage));
 				if (damage == 0) {
 					WorldTasksManager.schedule(new WorldTask() {
 						@Override

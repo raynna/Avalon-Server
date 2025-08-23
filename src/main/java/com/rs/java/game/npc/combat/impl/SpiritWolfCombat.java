@@ -38,7 +38,7 @@ public class SpiritWolfCombat extends CombatScript {
 				familiar.getOwner().getPackets().sendGameMessage("Your familiar cannot scare other familiars.");
 		} else {
 			npc.animate(new Animation(6829));
-			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 40, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, 40, NPCCombatDefinitions.MAGE, target)));
 		}
 		return defs.getAttackDelay();
 	}

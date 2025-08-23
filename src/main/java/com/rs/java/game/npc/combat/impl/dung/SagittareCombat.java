@@ -47,9 +47,9 @@ public class SagittareCombat extends CombatScript {
 					continue;
 				World.sendElementalProjectile(npc, t, attack == 0 ? 2533 : 2535);
 				if (attack == 0)
-					delayHit(npc, 1, t, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
+					delayHit(npc, t, 1, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
 				else
-					delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
+					delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
 			}
 			break;
 		case 3://Bind attacks
@@ -68,10 +68,10 @@ public class SagittareCombat extends CombatScript {
 				if (isMagicAttack) {
 					if (!player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC))
 						bindTarget = true;
-					delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
+					delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
 				} else {
 					bindTarget = Utils.random(2) == 0;//50/50
-					delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
+					delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
 				}
 				if (bindTarget) {
 					player.setFreezeDelay(8);

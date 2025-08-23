@@ -1,6 +1,8 @@
 package com.rs.kotlin.game.world.projectile
 
 enum class Projectile(val typeName: String) {
+    STANDARD_MAGIC("standard_magic"),
+    STANDARD_MAGIC_INSTANT("standard_magic_instant"),
     ARROW("arrow"),
     DRAGON_ARROW("dragon arrow"),
     BOLT("bolt"),

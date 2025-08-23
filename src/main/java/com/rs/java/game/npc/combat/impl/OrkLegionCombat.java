@@ -23,7 +23,7 @@ public class OrkLegionCombat extends CombatScript {
 		npc.animate(new Animation(cdef.getAttackEmote()));
 		if (Utils.getRandom(3) == 0)
 			npc.setNextForceTalk(new ForceTalk(messages[Utils.getRandom(messages.length > 3 ? 3 : 0)]));
-		delayHit(npc, 0, target, getMeleeHit(npc, cdef.getMaxHit()));
+		delayHit(npc, target, 0, getMeleeHit(npc, cdef.getMaxHit()));
 		return cdef.getAttackDelay();
 	}
 

@@ -37,7 +37,7 @@ public class BulwarkBeastCombat extends CombatScript {
 			for (Entity t : targets) {
 				if (Utils.isOnRange(t.getX(), t.getY(), t.getSize(), npc.getX(), npc.getY(), npc.getSize(), 0)) {
 					t.gfx(new Graphics(2400));
-					delayHit(npc, 1, t, getRegularHit(npc, 1 + Utils.random((int) (npc.getMaxHit() * 0.7))));
+					delayHit(npc, t, 1, getRegularHit(npc, 1 + Utils.random((int) (npc.getMaxHit() * 0.7))));
 				}
 			}
 			return npc.getAttackSpeed();
@@ -65,12 +65,12 @@ public class BulwarkBeastCombat extends CombatScript {
 			for (Entity t : targets) {
 				World.sendProjectileToTile(npc, t, 2395);
 				t.gfx(new Graphics(2396, 75, 0));
-				delayHit(npc, 1, t, getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
+				delayHit(npc, t, 1, getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
 			}
 			break;
 		case 2:
 			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			break;
 		}
 		return npc.getAttackSpeed();

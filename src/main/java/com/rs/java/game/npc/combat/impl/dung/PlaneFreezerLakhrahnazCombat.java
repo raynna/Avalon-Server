@@ -34,14 +34,14 @@ public class PlaneFreezerLakhrahnazCombat extends CombatScript {
 				for (Entity t : npc.getPossibleTargets()) {
 					World.sendElementalProjectile(npc, t, 2577);
 					t.gfx(new Graphics(2578, 70, 0));
-					delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MAGE, target)));
+					delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MAGE, target)));
 				}
 				break;
 			case 1:
 				npc.animate(new Animation(defs.getAttackEmote()));
 				int dir = Utils.random(Utils.DIRECTION_DELTA_X.length);
 				target.addWalkSteps(target.getX() + Utils.DIRECTION_DELTA_X[dir], target.getY() + Utils.DIRECTION_DELTA_Y[dir], 1);
-				delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MELEE, target)));
+				delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MELEE, target)));
 				break;
 			}
 			return npc.getAttackSpeed();
@@ -50,7 +50,7 @@ public class PlaneFreezerLakhrahnazCombat extends CombatScript {
 		npc.gfx(new Graphics(2574));
 		World.sendElementalProjectile(npc, target, 2595);
 		target.gfx(new Graphics(2576, 70, 0));
-		delayHit(npc, 1, target, getRangeHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.RANGE, target)));
+		delayHit(npc, target, 1, getRangeHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.RANGE, target)));
 		return npc.getAttackSpeed();
 	}
 }

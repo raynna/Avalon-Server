@@ -100,7 +100,7 @@ public class RevenantCombat extends CombatScript {
 
 	private void performMagicAttack(NPC npc, Entity target, NPCCombatDefinitions defs) {
 		int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, target);
-		delayHit(npc, 2, target, getMagicHit(npc, damage));
+		delayHit(npc, target, 2, getMagicHit(npc, damage));
 		ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, 1276, npc, target);
 
 		if (damage > 0) {
@@ -121,14 +121,14 @@ public class RevenantCombat extends CombatScript {
 
 	private void performRangeAttack(NPC npc, Entity target, NPCCombatDefinitions defs) {
 		int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.RANGED, target);
-		delayHit(npc, 2, target, getRangeHit(npc, damage));
+		delayHit(npc, target, 2, getRangeHit(npc, damage));
 		ProjectileManager.sendSimple(Projectile.ARROW, 1278, npc, target);
 		npc.animate(new Animation(getRangeAnimation(npc)));
 	}
 
 	private void performMeleeAttack(NPC npc, Entity target, NPCCombatDefinitions defs) {
 		int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target);
-		delayHit(npc, 0, target, getMeleeHit(npc, damage));
+		delayHit(npc, target, 0, getMeleeHit(npc, damage));
 		npc.animate(new Animation(defs.getAttackEmote()));
 	}
 }

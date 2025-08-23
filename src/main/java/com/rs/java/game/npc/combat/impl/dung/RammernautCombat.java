@@ -70,7 +70,7 @@ public class RammernautCombat extends CombatScript {
 
 		//default melee attack can be protected with prayer
 		npc.animate(new Animation(defs.getAttackEmote()));
-		delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+		delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 		return npc.getAttackSpeed();
 	}
 }

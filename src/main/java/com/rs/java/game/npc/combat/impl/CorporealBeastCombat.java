@@ -1,21 +1,18 @@
 package com.rs.java.game.npc.combat.impl;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldTile;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.corporeal.CorporealBeast;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.world.projectile.Projectile;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 public class CorporealBeastCombat extends CombatScript {
 
@@ -26,98 +23,172 @@ public class CorporealBeastCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
-		if (npc.getHitpoints() <= npc.getMaxHitpoints() / 2) {
-			CorporealBeast beast = (CorporealBeast) npc;
-			beast.spawnDarkEnergyCore();
-		}
-		int size = npc.getSize();
-		final ArrayList<Entity> possibleTargets = npc.getPossibleTargets();
-		boolean stomp = false;
-		for (Entity t : possibleTargets) {
-			int distanceX = t.getX() - npc.getX();
-			int distanceY = t.getY() - npc.getY();
-			if (distanceX < size && distanceX > -1 && distanceY < size && distanceY > -1) {
-				stomp = true;
-				delayHit(npc, 0, t,
-						getRegularHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, t)));
-			}
-		}
-		if (stomp) {
-			npc.animate(new Animation(10496));
-			npc.gfx(new Graphics(1834));
-			return defs.getAttackDelay();
-		}
-		int attackStyle = Utils.getRandom(4);
-		if (attackStyle == 0 || attackStyle == 1) { // melee
-			int distanceX = target.getX() - npc.getX();
-			int distanceY = target.getY() - npc.getY();
-			if (distanceX > size || distanceX < -1 || distanceY > size || distanceY < -1) {
-				attackStyle = 2 + Utils.getRandom(2); // set mage
-			} else {
-				npc.animate(new Animation(attackStyle == 0 ? defs.getAttackEmote() : 10058));
-				delayHit(npc, 0, target,
-						getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
-				return defs.getAttackDelay();
-			}
-		}
-		if (attackStyle == 2) { // powerfull mage spiky ball
-			npc.animate(new Animation(10410));
-			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 650, NPCCombatDefinitions.MAGE, target)));
-			World.sendProjectileToTile(npc, target, 1825);
-		} else if (attackStyle == 3) { // translucent ball of energy
-			npc.animate(new Animation(10410));
-			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 550, NPCCombatDefinitions.MAGE, target)));
-			if (target instanceof Player) {
-				WorldTasksManager.schedule(new WorldTask() {
-					@Override
-					public void run() {
-						int skill = Utils.getRandom(2);
-						skill = skill == 0 ? Skills.MAGIC : (skill == 1 ? Skills.SUMMONING : Skills.PRAYER);
-						Player player = (Player) target;
-						if (skill == Skills.PRAYER)
-							player.getPrayer().drainPrayer(10 + Utils.getRandom(40));
-						else {
-							int lvl = player.getSkills().getLevel(skill);
-							lvl -= 1 + Utils.getRandom(4);
-							player.getSkills().set(skill, lvl < 0 ? 0 : lvl);
-						}
-						player.getPackets()
-								.sendGameMessage("Your " + Skills.SKILL_NAME[skill] + " has been slighly drained!");
-					}
+		spawnDarkCoreIfNeeded(npc);
 
-				}, 1);
-				World.sendProjectileToTile(npc, target, 1823);
+		if (handleStompAttack(npc)) {
+			return npc.getAttackSpeed();
+		}
+
+		int attackStyle = decideAttackStyle(npc, target);
+
+		switch (attackStyle) {
+			case 0:
+			case 1:
+				handleMeleeAttack(npc, target, attackStyle);
+				break;
+			case 2:
+				handleMagicSpikyBall(npc, target);
+				break;
+			case 3:
+				handleMagicDrainBall(npc, target);
+				break;
+			case 4:
+				handleAoEExplosion(npc, target);
+				break;
+		}
+
+		return npc.getAttackSpeed();
+	}
+
+	private void spawnDarkCoreIfNeeded(NPC npc) {
+		if (npc.getHitpoints() <= npc.getMaxHitpoints() / 2) {
+			((CorporealBeast) npc).spawnDarkEnergyCore();
+		}
+	}
+
+	private boolean handleStompAttack(NPC npc) {
+		List<Entity> possibleTargets = npc.getPossibleTargets();
+		int size = npc.getSize();
+		boolean stomped = false;
+
+		for (Entity t : possibleTargets) {
+			if (isWithinNpcSize(npc, t, size)) {
+				stomped = true;
+				Hit aoeHit = npc.meleeHit(t, npc.getMaxHit());
+				delayHit(npc, t, 0, aoeHit);
 			}
-		} else if (attackStyle == 4) {
-			npc.animate(new Animation(10410));
-			final WorldTile tile = new WorldTile(target);
-			World.sendProjectileToTile(npc, tile, 1824);
+		}
+
+		if (stomped) {
+			npc.animate(10496);
+			npc.gfx(1834);
+		}
+
+		return stomped;
+	}
+
+	private boolean isWithinNpcSize(NPC npc, Entity target, int size) {
+		int dx = target.getX() - npc.getX();
+		int dy = target.getY() - npc.getY();
+		return dx < size && dx > -1 && dy < size && dy > -1;
+	}
+
+	private int decideAttackStyle(NPC npc, Entity target) {
+		int style = Utils.getRandom(5);
+		if (target instanceof Player player)
+			player.message("Style: " + style);
+
+		if (style <= 1) {
+			if (!isInMeleeRange(npc, target)) {
+				style = 2 + Utils.getRandom(2);
+			}
+		}
+		return style;
+	}
+
+	private boolean isInMeleeRange(NPC npc, Entity target) {
+		int dx = target.getX() - npc.getX();
+		int dy = target.getY() - npc.getY();
+		int size = npc.getSize();
+		return !(dx > size || dx < -1 || dy > size || dy < -1);
+	}
+
+	private void handleMeleeAttack(NPC npc, Entity target, int style) {
+		npc.animate(style == 0 ? npc.getAttackAnimation() : 10058);
+		Hit meleeHit = npc.meleeHit(target, npc.getMaxHit());
+		delayHit(npc, target, 0, meleeHit);
+	}
+
+	private void handleMagicSpikyBall(NPC npc, Entity target) {
+		npc.animate(10410);
+		Hit magicHit = npc.magicHit(target, 650);
+		delayHit(npc, target, 1, magicHit);
+		ProjectileManager.sendSimple(Projectile.STANDARD_MAGIC_INSTANT, 1825, npc, target);
+	}
+
+	private void handleMagicDrainBall(NPC npc, Entity target) {
+		npc.animate(10410);
+		Hit magicHit = npc.magicHit(target, 550);
+		delayHit(npc, target, 1, magicHit);
+		ProjectileManager.sendSimple(Projectile.STANDARD_MAGIC_INSTANT, 1823, npc, target);
+
+		if (target instanceof Player p2) {
+			drainRandomSkill(p2);
+		}
+	}
+
+	private void handleAoEExplosion(NPC npc, Entity target) {
+		npc.animate(10410);
+		final WorldTile initialTile = new WorldTile(target);
+		ProjectileManager.sendSimple(Projectile.STANDARD_MAGIC_INSTANT, 1824, npc, target);
+
+		WorldTasksManager.schedule(new WorldTask() {
+			@Override
+			public void run() {
+				performAoEProjectiles(npc, initialTile);
+			}
+		}, 1);
+	}
+
+
+	private void drainRandomSkill(Player player) {
+		WorldTasksManager.schedule(new WorldTask() {
+			@Override
+			public void run() {
+				int roll = Utils.getRandom(2);
+				int skill = (roll == 0 ? Skills.MAGIC : roll == 1 ? Skills.SUMMONING : Skills.PRAYER);
+
+				if (skill == Skills.PRAYER) {
+					player.getPrayer().drainPrayer(10 + Utils.getRandom(40));
+				} else {
+					int lvl = player.getSkills().getLevel(skill);
+					player.getSkills().set(skill, Math.max(0, lvl - (1 + Utils.getRandom(4))));
+				}
+
+				player.message("Your " + Skills.SKILL_NAME[skill] + " has been slightly drained!");
+			}
+		}, 1);
+	}
+
+	private void performAoEProjectiles(NPC npc, WorldTile baseTile) {
+		List<Entity> targets = npc.getPossibleTargets();
+		WorldTile originTile = baseTile;
+		for (int i = 0; i < 6; i++) {
+			final WorldTile aoeTile = new WorldTile(baseTile, 3); // random offset
+
+			if (!World.canMoveNPC(aoeTile.getPlane(), aoeTile.getX(), aoeTile.getY(), 1)) {
+				continue;
+			}
+
+			// Send projectile from previous tile to this AoE tile
+			ProjectileManager.sendSimpleToTile(Projectile.STANDARD_MAGIC_INSTANT, 1824, originTile, aoeTile);
+
+			// Update origin for next projectile
+			originTile = aoeTile;
+
+			// Schedule hit graphics
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
-					for (int i = 0; i < 6; i++) {
-						final WorldTile newTile = new WorldTile(tile, 3);
-						if (!World.canMoveNPC(newTile.getPlane(), newTile.getX(), newTile.getY(), 1))
-							continue;
-						World.sendProjectileToTile(npc, tile, 1824);
-						for (Entity t : possibleTargets) {
-							if (Utils.getDistance(newTile.getX(), newTile.getY(), t.getX(), t.getY()) > 1
-									|| !t.clipedProjectile(newTile, false))
-								continue;
-							delayHit(npc, 0, t,
-									getMagicHit(npc, getRandomMaxHit(npc, 350, NPCCombatDefinitions.MAGE, t)));
+					for (Entity t : targets) {
+						if (Utils.getDistance(aoeTile, t) <= 1 && t.clipedProjectile(aoeTile, false)) {
+							Hit magicHit = npc.magicHit(t, 350);
+							delayHit(npc, t, 0, magicHit);
 						}
-						WorldTasksManager.schedule(new WorldTask() {
-							@Override
-							public void run() {
-								World.sendGraphics(npc, new Graphics(1806), newTile);
-							}
-						});
 					}
+					World.sendGraphics(npc, new Graphics(1806), aoeTile);
 				}
-			}, 1);
+			});
 		}
-		return defs.getAttackDelay();
 	}
 }

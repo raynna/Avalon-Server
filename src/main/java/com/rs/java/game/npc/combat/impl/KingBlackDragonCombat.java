@@ -2,16 +2,11 @@ package com.rs.java.game.npc.combat.impl;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.item.Item;
-import com.rs.java.game.item.meta.DragonFireShieldMetaData;
-import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
-import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.utils.Utils;
@@ -52,7 +47,7 @@ public class KingBlackDragonCombat extends CombatScript {
 			case 0: // Melee
 				int meleeHit = NpcCombatCalculations.getRandomMaxHit(npc, 250, NpcAttackStyle.CRUSH, target);
 				npc.animate(new Animation(Utils.roll(1, 2) ? DRAGON_SLAM_ANIMATION : DRAGON_HEADBUTT_ANIMATION));
-				delayHit(npc, 0, target, getMeleeHit(npc, meleeHit));
+				delayHit(npc, target, 0, getMeleeHit(npc, meleeHit));
 				break;
 
 			case 1: // Breath attacks
@@ -90,7 +85,7 @@ public class KingBlackDragonCombat extends CombatScript {
 
 					npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
 					ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, projectileId, npc, target);
-					delayHit(npc, Utils.getDistance(npc, target) > 2 ? 2 : 1, target, getRegularHit(npc, damage));
+					delayHit(npc, target, Utils.getDistance(npc, target) > 2 ? 2 : 1, getRegularHit(npc, damage));
 					DragonFire.handleDragonfireShield(player);
 
 					if (applySpecialEffect) {

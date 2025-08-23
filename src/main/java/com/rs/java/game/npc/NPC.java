@@ -23,6 +23,7 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.combat.NPCCombat;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.combatdata.*;
@@ -191,6 +192,7 @@ public class NPC extends Entity implements Serializable {
             combatData = CombatDataParser.getData(id);
             if (combatData != null) {
                 System.out.println("Found data for " + id + ", CombatLevel: " + combatData.combatLevel);
+                return;
             }
         }
         // If no predefined data, generate standard CombatData
@@ -278,7 +280,9 @@ public class NPC extends Entity implements Serializable {
 
     @Override
     public int getMaxHitpoints() {
-        return getCombatDefinitions().getHitpoints();
+        if (combatData == null)
+            setBonuses();
+        return combatData.constitutionLevel * 10;
     }
 
     public int getId() {
@@ -900,10 +904,6 @@ public class NPC extends Entity implements Serializable {
         return getDefinitions().size;
     }
 
-    public int getMaxHit() {
-        return getCombatDefinitions().getMaxHit();
-    }
-
     public int[] getBonuses() {
         return bonuses;
     }
@@ -1233,14 +1233,6 @@ public class NPC extends Entity implements Serializable {
         this.nextSecondaryBar = secondaryBar;
     }
 
-    public double getDropRateFactor() {
-        return dropRateFactor;
-    }
-
-    public void setDropRateFactor(double dropRateFactor) {
-        this.dropRateFactor = dropRateFactor;
-    }
-
     public Player getOwner() {
         return owner;
     }
@@ -1249,81 +1241,68 @@ public class NPC extends Entity implements Serializable {
         this.owner = owner;
     }
 
-    transient String[] rdtMobs = {"Aberrant spectre", "Abyssal demon", "Abyssal Leech", "Ancient mage", "Ankou",
-            "Armoured zombie", "Aviansie",
-
-            "Banshee", "Basilisk", "Barbarian", "Black demon", "Black dragon", "Black knight", "Bloodveld",
-            "Blue dragon", "Bork", "Brine rat", "Bronze dragon",
-
-            "Cave bug", "Cave crawlers", "Cave horror", "Cave slime", "Catablepon", "Chaos druid", "Chaos dwarf",
-            "Chaos dwarf hand cannoneer", "Chaos dwogre", "Chaos elemental", "Cockroach drone", "Cockroach soldier",
-            "Cockroach worker", "Cockatrice", "Commander Zilyana", "Corporeal Beast", "Crawling Hand", "Cyclops",
-
-            "Dark beast", "Desert lizard", "Desert strykewyrm", "Dust devil", "Dagannoth", "Dagannoth Rex",
-            "Dagannoth Supreme", "Dagannoth Prime", "Dwarf",
-
-            "Earth elemental", "Earth warrior", "Elf warrior",
-
-            "Fire elemental", "Fire giant", "Flesh Crawler", "Frost dragon",
-
-            "Ganodermic beast", "Gargoyle", "General Graardor", "Ghast", "Ghostly warrior", "Giant mole",
-            "Giant skeleton", "Glacor", "Gorak", "Greater demon", "Green dragon", "Grotworm",
-
-            "Harpie Bug Swarm", "Hill giant", "Hobgoblin",
-
-            "Ice fiend", "Ice giant", "Ice strykewyrm", "Ice troll male", "Ice troll female", "Ice troll runt",
-            "Iron dragon", "Ice warrior",
-
-            "Jelly", "Jogre", "Jungle horror", "Jungle strykewyrm",
-
-            "Kalphite guardian", "Kalphite Queen", "Kalphite soldier", "Kalphite worker", "Killerwatt",
-            "King Black Dragon", "Kraka", "Kree'arra", "K'ril Tsutsaroth", "Kurask",
-
-            "Lesser demon", "Lesser reborn warrior", "Lesser reborn mage", "Lesser reborn ranger", "Locust rider",
-
-            "Mature grotworm", "Mighty Banshee", "Minotaur", "Mithril dragon", "Molanisk", "Moss giant",
-            "Mountain troll", "Mummy", "Mutated bloodveld", "Mutated jadinko", "Mutated Zygomite",
-
-            "Nechryael", "Nex",
-
-            "Ogre", "Ogre statue", "Otherworldly being",
-
-            "Pee Hat", "Pyrefiend",
-
-            "Queen Black Dragon",
-
-            "Red Dragon",
-
-            "Greater reborn warrior", "Greater reborn mage", "Greater reborn ranger",
-
-            "Rock Crab", "Rock Lobster", "'Rum'-pumped crab",
-
-            "Shadow warrior", "Skeleton", "Skeletal wyvern", "Spiritual Mage", "Spiritual Warrior", "Steel dragon",
-            "Suqah",
-
-            "Terror dog", "Thug", "Tormented demon", "Tortured soul", "Tribesman", "Troll General", "Turoth",
-            "TzHaar-Hur", "TzHaar-Ket", "TzHaar-Ket", "TzHaar-Xil",
-
-            "Vampyre", "Vyerlady", "Vyrelord", "Vyrewatch",
-
-            "Wallasalki", "Waterfiend", "Water elemental", "Warped terrorbird", "Warped tortoise", "Werewolf",
-            "White Knight",
-
-            "Zombie"
-
-    };
-
-    public boolean isRDTMob() {
-        for (String mob : rdtMobs) {
-            if (getName().contains(mob))
-                return true;
-        }
-        return false;
-    }
-
     public int getAttackSpeed() {
-        return getCombatDefinitions().getAttackDelay();
+        return combatData.attackSpeedTicks;
     }
+    public int getMaxHit() {
+        return combatData.maxHit.getMaxhit() * 10;
+    }
+
+    public int getAttackAnimation() {
+        return getCombatDefinitions().getAttackEmote();
+    }
+
+    public int getProjectileId() {
+        return getCombatDefinitions().getAttackProjectile();
+    }
+
+    public int getAttackGfx() {
+        return getCombatDefinitions().getAttackProjectile();
+    }
+
+    public Hit meleeHit(Entity target, int maxHit) {
+        return meleeHit(target, maxHit, HitLook.MELEE_DAMAGE);
+    }
+
+    public Hit meleeHit(Entity target, int maxHit, HitLook look) {
+        int damage = NpcCombatCalculations.getRandomMaxHit(
+                this, maxHit, NpcAttackStyle.CRUSH, target);
+        return new Hit(this, damage, look);
+    }
+
+    public Hit meleeHit(Entity target, int maxHit, NpcAttackStyle style) {
+        int damage = NpcCombatCalculations.getRandomMaxHit(
+                this, maxHit, style, target);
+        return new Hit(this, damage, HitLook.MELEE_DAMAGE);
+    }
+
+    public Hit magicHit(Entity target, int maxHit) {
+        HitLook look = HitLook.MAGIC_DAMAGE;
+        if (getAttackStyle() == NpcAttackStyle.MAGICAL_MELEE)
+            look = HitLook.MELEE_DAMAGE;
+        return magicHit(target, maxHit, look);
+    }
+
+    public Hit magicHit(Entity target, int maxHit, HitLook look) {
+        int damage = NpcCombatCalculations.getRandomMaxHit(
+                this, maxHit, NpcAttackStyle.MAGIC, target);
+        return new Hit(this, damage, look);
+    }
+
+    public Hit rangedHit(Entity target, int maxHit) {
+        return rangedHit(target, maxHit, HitLook.RANGE_DAMAGE);
+    }
+
+    public Hit rangedHit(Entity target, int maxHit, HitLook look) {
+        int damage = NpcCombatCalculations.getRandomMaxHit(
+                this, maxHit, NpcAttackStyle.RANGED, target);
+        return new Hit(this, damage, look);
+    }
+
+    public NpcAttackStyle getAttackStyle() {
+        return NpcAttackStyle.fromList(combatData.attackStyles);
+    }
+
 
     @Override
     public double getProtectionPrayerEffectiveness() {

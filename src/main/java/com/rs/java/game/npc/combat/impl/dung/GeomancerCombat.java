@@ -52,7 +52,7 @@ public class GeomancerCombat extends CombatScript {
 				sendEarthBlast(npc, target, true);
 			else {
 				npc.animate(new Animation(12989));
-				delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+				delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			}
 			break;
 		case 1://EARTH BLAST
@@ -82,7 +82,7 @@ public class GeomancerCombat extends CombatScript {
 				continue;
 			t.gfx(new Graphics(2726, 75, 100));
 			World.sendElementalProjectile(npc, t, 2720);
-			delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * .7), NPCCombatDefinitions.MAGE, t)));
+			delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * .7), NPCCombatDefinitions.MAGE, t)));
 		}
 	}
 
@@ -156,7 +156,7 @@ public class GeomancerCombat extends CombatScript {
 					}
 				}
 			}
-			delayHit(npc, 1, t, getMagicHit(npc, (int) (damage * .50)));
+			delayHit(npc, t, 1, getMagicHit(npc, (int) (damage * .50)));
 			t.gfx(new Graphics(2147));
 			World.sendElementalProjectile(npc, t, 2368);
 		}

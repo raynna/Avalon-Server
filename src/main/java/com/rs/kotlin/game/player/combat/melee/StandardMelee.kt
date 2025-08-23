@@ -564,6 +564,7 @@ object StandardMelee : MeleeData() {
                 "item.gorgonite_spear", "item.gorgonite_spear_b",
                 "item.promethium_spear", "item.promethium_spear_b",
                 "item.primal_spear", "item.primal_spear_b",
+                "item.zamorakian_spear", "item.dragon_spear"//TODO THESE 2 WILL BE THEIR OWN WEAPON LATER ON FOR SPECIAL ATTACK
             ),
             name = "Spear",
             weaponStyle = WeaponStyle.SPEAR,

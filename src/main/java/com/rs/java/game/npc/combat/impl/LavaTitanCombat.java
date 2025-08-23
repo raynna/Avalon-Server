@@ -26,7 +26,7 @@ public class LavaTitanCombat extends CombatScript {
 		if (usingSpecial) {// priority over regular attack
 			npc.animate(new Animation(7883));
 			npc.gfx(new Graphics(1491));
-			delayHit(npc, 1, target, getMeleeHit(npc, getRandomMaxHit(npc, 140, NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 1, getMeleeHit(npc, getRandomMaxHit(npc, 140, NPCCombatDefinitions.MELEE, target)));
 			if (damage <= 4 && target instanceof Player) {
 				Player player = (Player) target;
 				player.getCombatDefinitions()
@@ -36,10 +36,10 @@ public class LavaTitanCombat extends CombatScript {
 			damage = getRandomMaxHit(npc, 140, NPCCombatDefinitions.MELEE, target);
 			npc.animate(new Animation(7980));
 			npc.gfx(new Graphics(1490));
-			delayHit(npc, 1, target, getMeleeHit(npc, damage));
+			delayHit(npc, target, 1, getMeleeHit(npc, damage));
 		}
 		if (Utils.getRandom(10) == 0)// 1/10 chance of happening
-			delayHit(npc, 1, target, getMeleeHit(npc, Utils.getRandom(50)));
+			delayHit(npc, target, 1, getMeleeHit(npc, Utils.getRandom(50)));
 		return defs.getAttackDelay();
 	}
 }

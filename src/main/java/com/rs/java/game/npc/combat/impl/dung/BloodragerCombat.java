@@ -29,7 +29,7 @@ public class BloodragerCombat extends CombatScript {
 			damage = getRandomMaxHit(npc, (int) (npc.getMaxHit() * (1.05 * tier)), NPCCombatDefinitions.MELEE, target);
 		} else
 			damage = getRandomMaxHit(npc, def.getMaxHit(), NPCCombatDefinitions.MELEE, target);
-		delayHit(npc, usingSpecial ? 1 : 0, target, getMeleeHit(npc, damage));
+		delayHit(npc, target, usingSpecial ? 1 : 0, getMeleeHit(npc, damage));
 		npc.animate(new Animation(13617));
 		return npc.getAttackSpeed();
 	}

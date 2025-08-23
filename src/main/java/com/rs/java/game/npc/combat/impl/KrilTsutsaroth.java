@@ -68,7 +68,7 @@ public class KrilTsutsaroth extends CombatScript {
 			npc.animate(new Animation(14962));
 			npc.gfx(new Graphics(1210));
 			for (Entity t : npc.getPossibleTargets()) {
-				delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, 300, NPCCombatDefinitions.MAGE, t)));
+				delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, 300, NPCCombatDefinitions.MAGE, t)));
 				World.sendElementalProjectile(npc, t, 1211);
 				if (Utils.getRandom(4) == 0)
 					t.getPoison().makePoisoned(168);
@@ -77,7 +77,7 @@ public class KrilTsutsaroth extends CombatScript {
 		case 1:// main attack
 			int[] attackEmote = { 14374, 14375 };
 			npc.animate(new Animation(attackEmote[Utils.getRandom(attackEmote.length - 1)]));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, 463, NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, 463, NPCCombatDefinitions.MELEE, target)));
 			break;
 		case 2:// melee attack
 			int damage = 463;// normal
@@ -93,8 +93,8 @@ public class KrilTsutsaroth extends CombatScript {
 				}
 			}
 			npc.animate(new Animation(damage > 463 ? 14968 : 14963));
-			delayHit(npc, 0, target,
-					getMeleeHit(npc, getRandomMaxHit(npc, damage, NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0,
+                    getMeleeHit(npc, getRandomMaxHit(npc, damage, NPCCombatDefinitions.MELEE, target)));
 			break;
 		}
 		return defs.getAttackDelay();

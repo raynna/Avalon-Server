@@ -58,8 +58,8 @@ public class HybridRange extends CombatScript {
 		} else {
 			npc.animate(new Animation(4230));
 			World.sendCBOWProjectile(npc, target, 740);
-			delayHit(npc, getRangeDelay(npc, target), target,
-					getRangeHit(npc, getRandomMaxHit(npc, 450, NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, getRangeDelay(npc, target),
+                    getRangeHit(npc, getRandomMaxHit(npc, 450, NPCCombatDefinitions.RANGE, target)));
 			if (HybridMelee.specialAttack <= 95)
 				HybridMelee.specialAttack += 5;
 			if (getRandom >= 3 && getRandom <= 5) {

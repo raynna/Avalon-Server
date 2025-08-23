@@ -23,14 +23,14 @@ public class Waterfiend extends CombatScript {
 		if (attackStyle == 0) { // Range
 			npc.animate(new Animation(defs.getAttackEmote()));
 			World.sendFastBowProjectile(npc, target, 12);
-			delayHit(npc, 1, target,
-					getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, 1,
+                    getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			return defs.getAttackDelay();
 		} else {//Magic
 			npc.animate(new Animation(defs.getAttackEmote()));
 			World.sendFastBowProjectile(npc, target, 2706);
-			delayHit(npc, 1, target,
-					getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1,
+                    getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			return defs.getAttackDelay();
 		}
 	}

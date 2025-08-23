@@ -36,14 +36,14 @@ public class MossTitanCombat extends CombatScript {
 		} else {
 			damage = getRandomMaxHit(npc, 160, NPCCombatDefinitions.MELEE, target);
 			npc.animate(new Animation(8222));
-			delayHit(npc, 1, target, getMeleeHit(npc, damage));
+			delayHit(npc, target, 1, getMeleeHit(npc, damage));
 		}
 		return defs.getAttackDelay();
 	}
 
 	public void sendSpecialAttack(Entity target, NPC npc) {
 		if (target.isAtMultiArea() && WildernessControler.isAtWild(target)) {
-			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 160, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, 160, NPCCombatDefinitions.MAGE, target)));
 			World.sendElementalProjectile(npc, target, 1462);
 			if (Utils.getRandom(3) == 0)// 1/3 chance of being poisioned
 				target.getPoison().makePoisoned(58);

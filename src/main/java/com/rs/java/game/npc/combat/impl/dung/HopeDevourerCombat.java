@@ -36,7 +36,7 @@ public class HopeDevourerCombat extends CombatScript {
 		for (Player player : manager.getParty().getTeam()) {
 			if (Utils.colides(player.getX(), player.getY(), player.getSize(), npc.getX(), npc.getY(), npc.getSize())) {
 				stomp = true;
-				delayHit(npc, 0, player, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, player)));
+				delayHit(npc, player, 0, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, player)));
 			}
 		}
 		if (stomp) {
@@ -60,7 +60,7 @@ public class HopeDevourerCombat extends CombatScript {
 							healedDamage += damage;
 							player.setPrayerDelay(1000);
 							t.gfx(new Graphics(2845, 75, 0));
-							delayHit(npc, 0, t, getMagicHit(npc, damage));
+							delayHit(npc, t, 0, getMagicHit(npc, damage));
 						}
 					}
 					npc.heal(healedDamage);
@@ -79,7 +79,7 @@ public class HopeDevourerCombat extends CombatScript {
 				Player player = (Player) target;
 				player.getSkills().set(Skills.DEFENCE, (int) (player.getSkills().getLevel(Skills.DEFENCE) - (damage * .05)));
 			}
-			delayHit(npc, 0, target, getMeleeHit(npc, damage));
+			delayHit(npc, target, 0, getMeleeHit(npc, damage));
 			WorldTasksManager.schedule(new WorldTask() {
 				private int ticks;
 				private WorldTile tile;
@@ -121,7 +121,7 @@ public class HopeDevourerCombat extends CombatScript {
 					damage = 0;
 				}
 			}
-			delayHit(npc, 0, target, getMeleeHit(npc, damage));
+			delayHit(npc, target, 0, getMeleeHit(npc, damage));
 		}
 		return 6;
 	}

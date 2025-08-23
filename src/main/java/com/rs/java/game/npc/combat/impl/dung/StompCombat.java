@@ -60,7 +60,7 @@ public class StompCombat extends CombatScript {
 		switch (attackStyle) {
 		case 0:
 			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			break;
 		case 1:
 			npc.animate(new Animation(13449));
@@ -68,7 +68,7 @@ public class StompCombat extends CombatScript {
 			for (Entity t : npc.getPossibleTargets()) {
 				World.sendElementalProjectile(npc, t, 2402);
 				t.gfx(new Graphics(2403, 70, 0));
-				delayHit(npc, 1, t, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+				delayHit(npc, t, 1, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			}
 			break;
 		case 2:
@@ -76,7 +76,7 @@ public class StompCombat extends CombatScript {
 			npc.gfx(new Graphics(2404));
 			World.sendElementalProjectile(npc, target, 2405);
 			target.gfx(new Graphics(2406, 120, 0));
-			delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			break;
 
 		}

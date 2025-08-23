@@ -4,15 +4,10 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
-import com.rs.java.game.World;
 import com.rs.kotlin.game.npc.combatdata.CombatData;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
-import com.rs.kotlin.game.player.combat.AttackStyle;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
-
-import java.util.List;
 
 public class Default extends CombatScript {
 
@@ -37,17 +32,17 @@ public class Default extends CombatScript {
 
 		switch (attackStyle) {
 			case STAB, SLASH, CRUSH ->
-					delayHit(npc, 0, target, getMeleeHit(npc, damage));
+					delayHit(npc, target, 0, getMeleeHit(npc, damage));
 
 			case RANGED -> {
-				delayHit(npc, 2, target, getRangeHit(npc, damage));
+				delayHit(npc, target, 2, getRangeHit(npc, damage));
 				if (defs.getAttackProjectile() != -1) {
 					ProjectileManager.sendSimple(Projectile.ARROW, defs.getAttackProjectile(), npc, target);
 				}
 			}
 
 			case MAGIC -> {
-				delayHit(npc, 2, target, getMagicHit(npc, damage));
+				delayHit(npc, target, 2, getMagicHit(npc, damage));
 				if (defs.getAttackProjectile() != -1) {
 					ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, defs.getAttackProjectile(), npc, target);
 				}

@@ -47,7 +47,7 @@ public class MercenaryMageCombat extends CombatScript {
 						if (player.withinDistance(center, 3)) {
 							if (!player.getMusicsManager().hasMusic(843))
 								player.getMusicsManager().playMusic(843);
-							delayHit(npc, 0, player, new Hit(npc, Utils.random(1500), HitLook.REGULAR_DAMAGE));
+							delayHit(npc, player, 0, new Hit(npc, Utils.random(1500), HitLook.REGULAR_DAMAGE));
 						}
 					}
 				}
@@ -70,7 +70,7 @@ public class MercenaryMageCombat extends CombatScript {
 						if (player == null || player.isDead() || player.hasFinished())
 							continue;
 						if (player.withinDistance(center, 1)) {
-							delayHit(npc, 0, player, new Hit(npc, Utils.random(300), HitLook.REGULAR_DAMAGE));
+							delayHit(npc, player, 0, new Hit(npc, Utils.random(300), HitLook.REGULAR_DAMAGE));
 						}
 					}
 					if (count++ == 10) {
@@ -110,7 +110,7 @@ public class MercenaryMageCombat extends CombatScript {
 							if (Math.abs(player.getY() - center.getY()) > 5)
 								continue;
 						}
-						delayHit(npc, 0, player, new Hit(npc, Utils.random(1500), HitLook.REGULAR_DAMAGE));
+						delayHit(npc, player, 0, new Hit(npc, Utils.random(1500), HitLook.REGULAR_DAMAGE));
 					}
 					if (count++ == 5) {
 						stop();
@@ -120,8 +120,8 @@ public class MercenaryMageCombat extends CombatScript {
 			}, 0, 0);
 			World.sendProjectileToTile(npc, center, 2196);
 		} else if (attackStyle == 3) {
-			delayHit(npc, 2, target,
-					getMagicHit(npc, getRandomMaxHit(npc, Utils.random(3000), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 2,
+                    getMagicHit(npc, getRandomMaxHit(npc, Utils.random(3000), NPCCombatDefinitions.MAGE, target)));
 			World.sendElementalProjectile(npc, target, 2873);
 			npc.animate(new Animation(14221));
 			npc.setNextForceTalk(new ForceTalk(ATTACKS[Utils.random(ATTACKS.length)]));

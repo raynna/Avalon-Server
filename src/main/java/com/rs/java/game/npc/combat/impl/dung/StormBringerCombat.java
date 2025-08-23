@@ -36,7 +36,7 @@ public class StormBringerCombat extends CombatScript {
 		npc.gfx(new Graphics(2591));
 		npc.animate(new Animation(13620));
 		World.sendElementalProjectile(npc, target, 2592);//2593
-		delayHit(npc, 2, target, getRangeHit(npc, damage));
+		delayHit(npc, target, 2, getRangeHit(npc, damage));
 		if (damage > 0) {
 			WorldTasksManager.schedule(new WorldTask() {
 

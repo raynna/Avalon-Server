@@ -35,7 +35,7 @@ public class NightGazerKhighorahkCombat extends CombatScript {
 		gazer.animate(new Animation(13425));
 		for (Entity target : gazer.getPossibleTargets()) {
 			World.sendElementalProjectile(gazer, target, 2385);
-			delayHit(gazer, 1, target, getRangeHit(gazer, getRandomMaxHit(gazer, (int) (gazer.getMaxHit() * 0.6), NPCCombatDefinitions.RANGE, target)));
+			delayHit(gazer, target, 1, getRangeHit(gazer, getRandomMaxHit(gazer, (int) (gazer.getMaxHit() * 0.6), NPCCombatDefinitions.RANGE, target)));
 		}
 
 		if (!gazer.isSecondStage()) {
@@ -143,13 +143,13 @@ public class NightGazerKhighorahkCombat extends CombatScript {
 			if (Utils.random(3) == 0) { //range single target
 				npc.animate(new Animation(gazer.isSecondStage() ? 13433 : 13434));
 				World.sendElementalProjectile(npc, target, 2385);
-				delayHit(npc, 3, target, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+				delayHit(npc, target, 3, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 				return npc.getAttackSpeed() + 1;
 			} else { //magic
 				npc.animate(new Animation(gazer.isSecondStage() ? 13430 : 13431));
 				World.sendElementalProjectile(npc, target, 2385);
 				target.gfx(new Graphics(2386, 70, 100));
-				delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+				delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 				return npc.getAttackSpeed();
 			}
 		}

@@ -69,20 +69,20 @@ public class TormentedDemonCombat extends CombatScript {
 		int damage = NpcCombatCalculations.getRandomMaxHit(npc, MELEE_MAX_HIT, NpcAttackStyle.SLASH, target);
 		npc.animate(MELEE_ANIMATION);
 		npc.gfx(MELEE_GFX);
-		delayHit(npc, 0, target, getMeleeHit(npc, damage));
+		delayHit(npc, target, 0, getMeleeHit(npc, damage));
 	}
 
 	private void attackMagic(NPC npc, Entity target) {
 		int damage = NpcCombatCalculations.getRandomMaxHit(npc, MAGIC_MAX_HIT, NpcAttackStyle.MAGIC, target);
 		npc.animate(MAGIC_ANIMATION);
 		ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, MAGIC_PROJECTILE_ID, npc, target);
-		delayHit(npc, 2, target, getMagicHit(npc, damage));
+		delayHit(npc, target, 2, getMagicHit(npc, damage));
 	}
 
 	private void attackRanged(NPC npc, Entity target) {
 		int damage = NpcCombatCalculations.getRandomMaxHit(npc, RANGED_MAX_HIT, NpcAttackStyle.RANGED, target);
 		npc.animate(RANGED_ANIMATION);
 		ProjectileManager.sendSimple(Projectile.ARROW, RANGE_PROJECTILE_ID, npc, target);
-		delayHit(npc, 2, target, getRangeHit(npc, damage));
+		delayHit(npc, target, 2, getRangeHit(npc, damage));
 	}
 }

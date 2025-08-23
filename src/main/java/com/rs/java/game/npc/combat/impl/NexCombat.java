@@ -98,7 +98,7 @@ public class NexCombat extends CombatScript {
 				return defs.getAttackDelay();
 			}
 			int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target);
-			delayHit(npc, 0, target, getMeleeHit(npc, damage));
+			delayHit(npc, target, 0, getMeleeHit(npc, damage));
 			npc.animate(new Animation(defs.getAttackEmote()));
 			return defs.getAttackDelay();
 		} else {
@@ -143,7 +143,7 @@ public class NexCombat extends CombatScript {
 				for (Entity t : npc.getPossibleTargets()) {
 					World.sendElementalProjectile(npc, t, 471);
 					int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, t);
-					delayHit(npc, 1, t, getMagicHit(npc, damage));
+					delayHit(npc, t, 1, getMagicHit(npc, damage));
 					if (damage > 0 && Utils.getRandom(5) == 0)
 						t.getPoison().makePoisoned(80);
 				}
@@ -228,8 +228,8 @@ public class NexCombat extends CombatScript {
 					if (distance <= 10) {
 						int damage = 800 - (distance * 800 / 11);
 						World.sendElementalProjectile(npc, t, 380);
-						delayHit(npc, 1, t,
-								getRangeHit(npc, getRandomMaxHit(npc, damage, NPCCombatDefinitions.RANGE, t)));
+						delayHit(npc, t, 1,
+                                getRangeHit(npc, getRandomMaxHit(npc, damage, NPCCombatDefinitions.RANGE, t)));
 						WorldTasksManager.schedule(new WorldTask() {
 							@Override
 							public void run() {
@@ -259,7 +259,7 @@ public class NexCombat extends CombatScript {
 								for (final Entity t : npc.getPossibleTargets()) {
 									World.sendElementalProjectile(npc, t, 374);
 									final int damage = getRandomMaxHit(npc, 290, NPCCombatDefinitions.MAGE, t);
-									delayHit(npc, 1, t, getMagicHit(npc, damage));
+									delayHit(npc, t, 1, getMagicHit(npc, damage));
 									WorldTasksManager.schedule(new WorldTask() {
 										@Override
 										public void run() {
@@ -312,15 +312,15 @@ public class NexCombat extends CombatScript {
 				}
 				npc.animate(new Animation(6986));
 				World.sendElementalProjectile(npc, target, 374);
-				delayHit(npc, 1, target,
-						getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+				delayHit(npc, target, 1,
+                        getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 				return defs.getAttackDelay();
 			} else if (nex.getAttacksStage() == 3) {
 				npc.animate(new Animation(6986));
 				for (final Entity t : npc.getPossibleTargets()) {
 					World.sendElementalProjectile(npc, t, 362);
 					int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, t);
-					delayHit(npc, 1, t, getMagicHit(npc, damage));
+					delayHit(npc, t, 1, getMagicHit(npc, damage));
 					if (damage > 0 && Utils.getRandom(5) == 0) {// 1/6
 																// probability
 																// freezing
@@ -340,7 +340,7 @@ public class NexCombat extends CombatScript {
 				for (Entity t : npc.getPossibleTargets()) {
 					World.sendElementalProjectile(npc, t, 471);
 					int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, t);
-					delayHit(npc, 1, t, getMagicHit(npc, damage));
+					delayHit(npc, t, 1, getMagicHit(npc, damage));
 				}
 				return defs.getAttackDelay();
 			}

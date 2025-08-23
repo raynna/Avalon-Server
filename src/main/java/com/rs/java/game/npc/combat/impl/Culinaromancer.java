@@ -25,16 +25,16 @@ public class Culinaromancer extends CombatScript {
 		int attackStyle = Utils.random(2);
 		if (attackStyle == 0 || attackStyle == 1) { // Melee
 			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, 0, target,
-					getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0,
+                    getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			return defs.getAttackDelay();
 		}
 		if (attackStyle == 2) {
 			World.sendCBOWProjectile(npc, target, 362);
 			npc.animate(new Animation(1979));
 			target.addFreezeDelay(5000, false);
-			delayHit(npc, 1, target,
-					getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1,
+                    getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {

@@ -461,6 +461,8 @@ public final class World {
             n = new Max(id, tile, canBeAttackFromOutOfArea);
         else
             n = new NPC(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
+        if (n != null)
+            n.setBonuses();
         return n;
     }
 

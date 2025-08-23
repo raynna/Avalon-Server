@@ -131,7 +131,7 @@ public class YkLagorThunderousCombat extends CombatScript {
 				if (player.getPrayer().getPrayerPoints() > 0 && damage > 0)
 					player.getPrayer().drainPrayer((int) (damage * .5));
 			}
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			break;
 		case 1:
 			sendMagicalAttack(boss, false);
@@ -176,7 +176,7 @@ public class YkLagorThunderousCombat extends CombatScript {
 				if (player.isDead() || !npc.getManager().isAtBossRoom(player))
 					continue;
 				World.sendElementalProjectile(npc, player, 2733);
-				delayHit(npc, 1, player, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, player)));
+				delayHit(npc, player, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, player)));
 				player.gfx(new Graphics(2755, 85, 0));
 			}
 		}

@@ -76,7 +76,7 @@ public class ForgottenMage extends CombatScript {
 			World.sendElementalProjectile(npc, target, 2736);
 		} else
 			World.sendElementalProjectile(npc, target, projectileId);
-		delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, NPCCombatDefinitions.MAGE, projectileId, target)));
+		delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, NPCCombatDefinitions.MAGE, projectileId, target)));
 		if (hit == -1)
 			return;
 		WorldTasksManager.schedule(new WorldTask() {

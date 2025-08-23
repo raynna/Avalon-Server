@@ -2,16 +2,11 @@ package com.rs.java.game.npc.combat.impl;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.item.Item;
-import com.rs.java.game.item.meta.DragonFireShieldMetaData;
-import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
-import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
@@ -46,7 +41,7 @@ public class FrostDragonCombat extends CombatScript {
 							npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target
 					);
 					npc.animate(new Animation(Utils.roll(1, 2) ? DRAGON_SLAM_ANIMATION : DRAGON_HEADBUTT_ANIMATION));
-					delayHit(npc, 0, target, getMeleeHit(npc, damage));
+					delayHit(npc, target, 0, getMeleeHit(npc, damage));
 					return defs.getAttackDelay();
 				}
 			case 1: // Dragon breath / frost breath
@@ -56,20 +51,20 @@ public class FrostDragonCombat extends CombatScript {
 				int mitigated = DragonFire.applyDragonfireMitigation(p, rawDamage);
 				npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION)); // dragon breath animation
 				ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, DRAGONFIRE_NORMAL_PROJECTILE, npc, target);
-				delayHit(npc, Utils.getDistance(npc, target) > 2 ? 2 : 1, target, getRegularHit(npc, mitigated));
+				delayHit(npc, target, Utils.getDistance(npc, target) > 2 ? 2 : 1, getRegularHit(npc, mitigated));
 				DragonFire.handleDragonfireShield(p);
 				break;
 			case 2: // Ice arrow range
 				int magicDamage = Utils.getRandom(250);
 				npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
 				ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, ICE_ARROW_PROJECTILE, npc, target);
-				delayHit(npc, 1, target, getRangeHit(npc, magicDamage));
+				delayHit(npc, target, 1, getRangeHit(npc, magicDamage));
 				break;
 			case 3: // Standard ranged
 				int rangeDamage = Utils.getRandom(250);
 				npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
 				ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, WATER_PROJECTILE, npc, target);
-				delayHit(npc, 1, target, getMagicHit(npc, rangeDamage));
+				delayHit(npc, target, 1, getMagicHit(npc, rangeDamage));
 				break;
 		}
 

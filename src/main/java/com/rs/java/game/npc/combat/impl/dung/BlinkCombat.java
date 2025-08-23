@@ -50,7 +50,7 @@ public class BlinkCombat extends CombatScript {
 						if (t instanceof Player)
 							((Player) t).getPackets().sendGameMessage("You are hit by a powerful magical blast.");
 						t.gfx(new Graphics(2855, 0, 50));
-						delayHit(boss, 0, t, new Hit(boss, (int) Utils.random(boss.getMaxHit() * .6D, boss.getMaxHit()), HitLook.MAGIC_DAMAGE));
+						delayHit(boss, t, 0, new Hit(boss, (int) Utils.random(boss.getMaxHit() * .6D, boss.getMaxHit()), HitLook.MAGIC_DAMAGE));
 					}
 				}
 			}, 5);
@@ -91,7 +91,7 @@ public class BlinkCombat extends CombatScript {
 									entityLoop: for (Entity t : boss.getPossibleTargets()) {
 										if (!t.matches(tile))
 											continue entityLoop;
-										delayHit(boss, delay, t, getRangeHit(boss, getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
+										delayHit(boss, t, delay, getRangeHit(boss, getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
 									}
 								}
 								stop();
@@ -102,7 +102,7 @@ public class BlinkCombat extends CombatScript {
 				} else {
 					boss.animate(new Animation(14949));
 					World.sendProjectileToTile(boss, target, 2853);
-					delayHit(boss, 1, target, getRangeHit(boss, getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+					delayHit(boss, target, 1, getRangeHit(boss, getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 				}
 			} else {
 				if (Utils.random(7) == 0) {
@@ -117,12 +117,12 @@ public class BlinkCombat extends CombatScript {
 					if (((Player) target).getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC))
 						damage *= .5D;
 				}
-				delayHit(boss, 1, target, getMagicHit(boss, damage));
+				delayHit(boss, target, 1, getMagicHit(boss, damage));
 			}
 			return 5;
 		} else {
 			boss.animate(new Animation(12310));
-			delayHit(boss, 0, target, getMeleeHit(boss, getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(boss, target, 0, getMeleeHit(boss, getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			return 4;
 		}
 	}

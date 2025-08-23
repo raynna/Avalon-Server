@@ -32,15 +32,15 @@ public class StrykewyrmCombat extends CombatScript {
 				attackStyle = 2 + Utils.random(2);
 			else {
 				npc.animate(new Animation(defs.getAttackEmote()));
-				delayHit(npc, 0, target,
-						getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+				delayHit(npc, target, 0,
+                        getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 				return defs.getAttackDelay();
 			}
 		}
 		if (attackStyle == 2 || attackStyle == 3) { // mage
 			npc.animate(new Animation(12794));
 			final Hit hit = getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target));
-			delayHit(npc, 1, target, hit);
+			delayHit(npc, target, 1, hit);
 			World.sendSlowBowProjectile(npc, target, defs.getAttackProjectile());
 			if (npc.getId() == 9463) {
 				WorldTasksManager.schedule(new WorldTask() {
@@ -83,7 +83,7 @@ public class StrykewyrmCombat extends CombatScript {
 						int distanceY = target.getY() - npc.getY();
 						int size = npc.getSize();
 						if (distanceX < size && distanceX > -1 && distanceY < size && distanceY > -1)
-							delayHit(npc, 0, target, new Hit(npc, 300, HitLook.REGULAR_DAMAGE));
+							delayHit(npc, target, 0, new Hit(npc, 300, HitLook.REGULAR_DAMAGE));
 						count++;
 					} else if (count == 2) {
 						npc.getCombat().setCombatDelay(defs.getAttackDelay());

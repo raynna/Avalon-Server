@@ -13,6 +13,8 @@ object ProjectileRegistry {
         register(Projectile.SOULSPLIT, ProjectileType(startHeight = 4, endHeight = 4, speed = 60, arc = 0))
         register(Projectile.CANNON, ProjectileType(speed = 42, arc = 5))
         register(Projectile.ELEMENTAL_SPELL, ProjectileType(speed = 60, arc = 10))
+        register(Projectile.STANDARD_MAGIC, ProjectileType(speed = 60, arc = 10))
+        register(Projectile.STANDARD_MAGIC_INSTANT, ProjectileType(delay = 0, speed = 60, arc = 10))
         register(Projectile.ANCIENT_SPELL, ProjectileType(startHeight = 8, endHeight = 0, speed = 60, arc = 15))
         register(Projectile.SLAYER_DART, ProjectileType(speed = 60, arc = 10))
         register(Projectile.IBAN_BLAST, ProjectileType(startHeight = 51, speed = 60, arc = 10))

@@ -38,7 +38,7 @@ public class RuneboundBehemothCombat extends CombatScript {
 		for (Entity t : npc.getPossibleTargets()) {
 			if (Utils.colides(t.getX(), t.getY(), t.getSize(), npc.getX(), npc.getY(), npc.getSize())) {
 				trample = true;
-				delayHit(npc, 0, t, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, t)));
+				delayHit(npc, t, 0, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, t)));
 				if (t instanceof Player)
 					((Player) t).getPackets().sendGameMessage("The beast tramples you.");
 			}
@@ -112,20 +112,20 @@ public class RuneboundBehemothCombat extends CombatScript {
 		switch (attack) {
 		case 0://melee
 			boss.animate(new Animation(14423));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			break;
 		case 1://green exploding blob attack (magic)
 			boss.animate(new Animation(14427));
 			//boss.setNextGraphics(new Graphics(2413));
 			World.sendElementalProjectile(npc, target, 2414);
-			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			target.gfx(new Graphics(2417, 80, 0));
 			break;
 		case 2://green blob attack (range)
 			boss.animate(new Animation(14424));
 			boss.gfx(new Graphics(2394));
 			World.sendElementalProjectile(npc, target, 2395);
-			delayHit(npc, 1, target, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, 1, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			target.gfx(new Graphics(2396, 80, 0));
 			break;
 		}

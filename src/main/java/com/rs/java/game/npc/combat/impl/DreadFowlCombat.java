@@ -25,19 +25,19 @@ public class DreadFowlCombat extends CombatScript {
 		if (usingSpecial) {// priority over regular attack
 			npc.animate(new Animation(7810));
 			npc.gfx(new Graphics(1318));
-			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 40, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, 40, NPCCombatDefinitions.MAGE, target)));
 			World.sendProjectileToTile(npc, target, 1376);
 		} else {
 			if (Utils.getRandom(10) == 0) {// 1/10 chance of random special
 											// (weaker)
 				npc.animate(new Animation(7810));
 				npc.gfx(new Graphics(1318));
-				delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 30, NPCCombatDefinitions.MAGE, target)));
+				delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, 30, NPCCombatDefinitions.MAGE, target)));
 				World.sendProjectileToTile(npc, target, 1376);
 			} else {
 				npc.animate(new Animation(7810));
-				delayHit(npc, 1, target,
-						getMeleeHit(npc, getRandomMaxHit(npc, 30, NPCCombatDefinitions.MELEE, target)));
+				delayHit(npc, target, 1,
+                        getMeleeHit(npc, getRandomMaxHit(npc, 30, NPCCombatDefinitions.MELEE, target)));
 			}
 		}
 		return defs.getAttackDelay();

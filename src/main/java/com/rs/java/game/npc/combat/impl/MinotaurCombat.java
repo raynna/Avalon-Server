@@ -29,7 +29,7 @@ public class MinotaurCombat extends CombatScript {
 			World.sendElementalProjectile(npc, target, 1333);
 		} else {
 			npc.animate(new Animation(6829));
-			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, 40, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, 40, NPCCombatDefinitions.MAGE, target)));
 		}
 		return defs.getAttackDelay();
 	}

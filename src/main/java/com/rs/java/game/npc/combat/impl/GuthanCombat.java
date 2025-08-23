@@ -18,7 +18,7 @@ public class GuthanCombat extends CombatScript {
 		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
 		npc.animate(new Animation(defs.getAttackEmote()));
 		int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target);
-		delayHit(npc, 0, target, getMeleeHit(npc, damage));
+		delayHit(npc, target, 0, getMeleeHit(npc, damage));
 		return defs.getAttackDelay();
 	}
 }

@@ -64,7 +64,7 @@ public class NecroLordCombat extends CombatScript {
 			npc.animate(new Animation(14209));
 			npc.gfx(new Graphics(2716));
 			World.sendElementalProjectile(npc, target, 2721);
-			delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			target.gfx(new Graphics(2726, 75, 80));
 			break;
 		case 2:

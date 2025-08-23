@@ -59,9 +59,9 @@ public class NpcCombatCalculations {
         }
     }
 
-    private static double effectiveRoll(int level, int bonus) {
-        double effective = Math.round(level) + 8;
-        return Math.round(effective * (1 + bonus + 64.0));
+    private static int effectiveRoll(int level, int bonus) {
+        int effectiveLevel = level + 9;
+        return effectiveLevel * (bonus + 64);
     }
 
     private static double calculateDefenceRoll(NPC npc, NpcAttackStyle style, Entity target) {
@@ -79,17 +79,17 @@ public class NpcCombatCalculations {
 
         switch (style) {
             case MAGIC -> {
-                double magicDef = player.getSkills().getLevel(Skills.DEFENCE) * 0.3
-                        + player.getSkills().getLevel(Skills.MAGIC) * 0.7 * player.getPrayer().getMagicMultiplier();
+                int magicDef = (int) (player.getSkills().getLevel(Skills.DEFENCE) * 0.3
+                                        + player.getSkills().getLevel(Skills.MAGIC) * 0.7 * player.getPrayer().getMagicMultiplier());
                 return effectiveDefRoll(magicDef, playerBonuses[BonusType.MagicDefence.getIndex()]);
             }
             case RANGED -> {
-                double def = player.getSkills().getLevel(Skills.DEFENCE) * player.getPrayer().getDefenceMultiplier();
+                int def = (int) (player.getSkills().getLevel(Skills.DEFENCE) * player.getPrayer().getDefenceMultiplier());
                 return effectiveDefRoll(def, playerBonuses[BonusType.RangeDefence.getIndex()]);
             }
             default -> {
                 int meleeDefBonus = getPlayerMeleeDefenceBonus(player, npc);
-                double def = player.getSkills().getLevel(Skills.DEFENCE) * player.getPrayer().getDefenceMultiplier();
+                int def = (int) (player.getSkills().getLevel(Skills.DEFENCE) * player.getPrayer().getDefenceMultiplier());
                 return effectiveDefRoll(def, meleeDefBonus);
             }
         }
@@ -105,7 +105,7 @@ public class NpcCombatCalculations {
         };
     }
 
-    private static double calculateNpcDefenceRoll(NPC targetNpc, NpcAttackStyle style) {
+    private static int calculateNpcDefenceRoll(NPC targetNpc, NpcAttackStyle style) {
         CombatData data = targetNpc.getCombatData();
         if (data == null) return targetNpc.getCombatLevel();
 
@@ -120,9 +120,9 @@ public class NpcCombatCalculations {
         return effectiveDefRoll(defLevel, defBonus);
     }
 
-    private static double effectiveDefRoll(double level, int bonus) {
-        double effective = Math.round(level) + 8;
-        return Math.round(effective * (1 + bonus + 64.0));
+    private static int effectiveDefRoll(int level, int bonus) {
+        int effective = level + 8;
+        return effective * (bonus + 64);
     }
 
     private static boolean calculateHitProbability(double attackRoll, double defenceRoll) {

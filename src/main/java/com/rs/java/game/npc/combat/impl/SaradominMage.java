@@ -21,12 +21,12 @@ public class SaradominMage extends CombatScript {
 		int attackStyle = Utils.getRandom(2);
 		if (attackStyle == 0) {
 			npc.animate(new Animation(811));
-			delayHit(npc, 1, target,
-					getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1,
+                    getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 		} else {
 			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, 0, target,
-					getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0,
+                    getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 		}
 		return defs.getAttackDelay();
 	}

@@ -39,8 +39,8 @@ public class MithrilDragonCombat extends CombatScript {
 			case 1:// Melee
 			case 2:// Melee
 				npc.animate(new Animation(14247));
-				delayHit(npc, 0, target,
-						getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+				delayHit(npc, target, 0,
+                        getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 				break;
 			case 3:// Close range dragonfire ratio is about 1:5
 				damage = Utils.getRandom(650);
@@ -69,7 +69,7 @@ public class MithrilDragonCombat extends CombatScript {
 						&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES)
 						&& !player.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES))
 					player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
-				delayHit(npc, 1, target, getRegularHit(npc, damage));
+				delayHit(npc, target, 1, getRegularHit(npc, damage));
 				if (player.getEquipment().getShieldId() == 11283) {
 					if (player.getDfsCharges() < 50) {
 						player.animate(new Animation(6695));
@@ -95,13 +95,13 @@ public class MithrilDragonCombat extends CombatScript {
 				damage = Utils.getRandom(250);
 				npc.animate(new Animation(14252));
 				World.sendFastBowProjectile(npc, target, 12);
-				delayHit(npc, 1, target, getRangeHit(npc, damage));
+				delayHit(npc, target, 1, getRangeHit(npc, damage));
 				break;
 			case 5:// Magical Attack 1:5
 				damage = Utils.getRandom(250);
 				npc.animate(new Animation(14252));
 				World.sendProjectile(npc, target, 2706, 28, 18, 50, 50, 0);
-				delayHit(npc, 1, target, getMagicHit(npc, damage));
+				delayHit(npc, target, 1, getMagicHit(npc, damage));
 				break;
 			}
 			return defs.getAttackDelay();
@@ -118,7 +118,7 @@ public class MithrilDragonCombat extends CombatScript {
 				damage = Utils.getRandom(250);
 				npc.animate(new Animation(14252));
 				World.sendFastBowProjectile(npc, target, 12);
-				delayHit(npc, 1, target, getRangeHit(npc, damage));
+				delayHit(npc, target, 1, getRangeHit(npc, damage));
 				break;
 			case 1: // Longrange Dfire
 				damage = Utils.getRandom(650);
@@ -147,7 +147,7 @@ public class MithrilDragonCombat extends CombatScript {
 						&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES)
 						&& !player.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES))
 					player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
-				delayHit(npc, 1, target, getRegularHit(npc, damage));
+				delayHit(npc, target, 1, getRegularHit(npc, damage));
 				if (player.getEquipment().getShieldId() == 11283) {
 					if (player.getDfsCharges() < 50) {
 						player.animate(new Animation(6695));
@@ -173,13 +173,13 @@ public class MithrilDragonCombat extends CombatScript {
 				damage = Utils.getRandom(250);
 				npc.animate(new Animation(14252));
 				World.sendProjectile(npc, target, 2706, 28, 18, 50, 50, 0);
-				delayHit(npc, 1, target, getMagicHit(npc, damage));
+				delayHit(npc, target, 1, getMagicHit(npc, damage));
 				break;
 			case 3: // Range
 				damage = Utils.getRandom(250);
 				npc.animate(new Animation(14252));
 				World.sendFastBowProjectile(npc, target, 12);
-				delayHit(npc, 1, target, getRangeHit(npc, damage));
+				delayHit(npc, target, 1, getRangeHit(npc, damage));
 				break;
 			}
 			return defs.getAttackDelay();

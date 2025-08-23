@@ -27,8 +27,8 @@ public class Karamel extends CombatScript {
 		int attackStyle = Utils.getRandom(2);
 		if (attackStyle == 0) { // range
 			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, 1, target,
-					getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, 1,
+                    getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			return defs.getAttackDelay();
 		}
 		if (attackStyle == 2 || attackStyle == 1) {
@@ -37,8 +37,8 @@ public class Karamel extends CombatScript {
 			npc.setNextForceTalk(new ForceTalk("Semolina-Go!"));
 			Player p2 = (Player) target;
 			p2.addFreezeDelay(5000, false);
-			delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MAGE, target)));
-			delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MAGE, target)));
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {

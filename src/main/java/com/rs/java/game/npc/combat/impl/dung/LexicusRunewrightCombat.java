@@ -62,14 +62,14 @@ public class LexicusRunewrightCombat extends CombatScript {
 			boss.gfx(new Graphics(range_style ? 2408 : 2424));
 			World.sendElementalProjectile(npc, target, range_style ? 2409 : 2425);
 			if (range_style)
-				delayHit(npc, 1, target, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+				delayHit(npc, target, 1, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			else
-				delayHit(npc, 1, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+				delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			target.gfx(new Graphics(range_style ? 2410 : 2426, 75, 0));
 			break;
 		case 4://MELEE
 			boss.animate(new Animation(13469));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			break;
 		}
 		return 5;

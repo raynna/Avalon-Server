@@ -18,8 +18,8 @@ public class ZamorakMage extends CombatScript {
 	public int attack(final NPC npc, final Entity target) {
 		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
 		npc.animate(new Animation(defs.getAttackEmote()));
-		delayHit(npc, 1, target,
-				getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+		delayHit(npc, target, 1,
+                getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 		return defs.getAttackDelay();
 	}
 }

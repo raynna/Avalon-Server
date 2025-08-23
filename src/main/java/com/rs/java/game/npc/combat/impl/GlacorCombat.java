@@ -43,8 +43,8 @@ public class GlacorCombat extends CombatScript {
 				if (Utils.isOnRange(npc.getX(), npc.getY(), npc.getSize(), target.getX(), target.getY(),
 						target.getSize(), 0)) {
 					npc.animate(new Animation(9955));
-					delayHit(npc, 0, target,
-							getMeleeHit(npc, getRandomMaxHit(npc, 350, NPCCombatDefinitions.MELEE, target)));
+					delayHit(npc, target, 0,
+                            getMeleeHit(npc, getRandomMaxHit(npc, 350, NPCCombatDefinitions.MELEE, target)));
 				} else
 					sendDistancedAttack(glacor, target);
 				break;
@@ -76,10 +76,10 @@ public class GlacorCombat extends CombatScript {
 	private void sendDistancedAttack(Glacor npc, final Entity target) {
 		boolean isRangedAttack = npc.isRangeAttack();
 		if (isRangedAttack) {
-			delayHit(npc, 2, target, getRangeHit(npc, getRandomMaxHit(npc, 294, NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, 2, getRangeHit(npc, getRandomMaxHit(npc, 294, NPCCombatDefinitions.RANGE, target)));
 			World.sendElementalProjectile(npc, target, 962);
 		} else {
-			delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, 264, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, 264, NPCCombatDefinitions.MAGE, target)));
 			World.sendElementalProjectile(npc, target, 634);
 			if (Utils.random(5) == 0) {
 				WorldTasksManager.schedule(new WorldTask() {

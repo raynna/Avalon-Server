@@ -53,11 +53,11 @@ public class JadinkoCombat extends CombatScript {
 
 	private void magicAttack(NPC npc, Entity target) {
 		npc.animate(new Animation(npc.getId() == 13820 ? 3031 : 3215));
-		delayHit(npc, 2, target, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+		delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 	}
 
 	private void meleeAttack(NPC npc, Entity target) {
 		npc.animate(new Animation(npc.getId() == 13820 ? 3009 : 3214));
-		delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+		delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 	}
 }

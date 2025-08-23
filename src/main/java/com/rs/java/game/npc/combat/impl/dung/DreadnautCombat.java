@@ -41,7 +41,7 @@ public class DreadnautCombat extends CombatScript {
 				player.getPackets().sendGameMessage("You have been injured and are unable to use protection prayers.");
 				player.setPrayerDelay(8000);
 			}
-			delayHit(npc, 1, target, getMeleeHit(npc, damage));
+			delayHit(npc, target, 1, getMeleeHit(npc, damage));
 		} else {
 			npc.animate(new Animation(14973));
 			npc.gfx(new Graphics(2856));
@@ -56,7 +56,7 @@ public class DreadnautCombat extends CombatScript {
 					boss.addSpot(new WorldTile(t));
 				} else
 					t.gfx(new Graphics(2858, 75, 0));
-				delayHit(npc, 1, t, getMeleeHit(npc, damage));
+				delayHit(npc, t, 1, getMeleeHit(npc, damage));
 			}
 		}
 		return 5;

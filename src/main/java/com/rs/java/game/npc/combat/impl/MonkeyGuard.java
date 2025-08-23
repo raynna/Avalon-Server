@@ -26,8 +26,8 @@ public class MonkeyGuard extends CombatScript {
 				npc.animate(new Animation(1405));
 				return defs.getAttackDelay();
 			}
-			delayHit(npc, 0, target,
-					getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0,
+                    getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			npc.animate(new Animation(defs.getAttackEmote()));
 			break;
 		}

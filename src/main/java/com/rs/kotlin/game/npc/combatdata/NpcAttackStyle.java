@@ -8,6 +8,7 @@ public enum NpcAttackStyle {
     CRUSH,
     RANGED,
     MAGIC,
+    MAGICAL_MELEE,
     UNKNOWN;
 
     public static NpcAttackStyle fromList(List<String> styles) {
@@ -18,6 +19,7 @@ public enum NpcAttackStyle {
             if (lower.contains("crush")) return CRUSH;
             if (lower.contains("ranged")) return RANGED;
             if (lower.contains("magic")) return MAGIC;
+            if (lower.contains("magical melee")) return MAGICAL_MELEE;
         }
         return UNKNOWN;
     }

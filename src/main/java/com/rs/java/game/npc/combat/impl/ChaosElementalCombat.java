@@ -1,14 +1,8 @@
 package com.rs.java.game.npc.combat.impl;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldTile;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
-import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.Utils;
@@ -40,7 +34,6 @@ public class ChaosElementalCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		NPCCombatDefinitions defs = npc.getCombatDefinitions();
 		int attackOption = Utils.getRandom(10);
 
 		if (attackOption <= 8) {
@@ -51,7 +44,7 @@ public class ChaosElementalCombat extends CombatScript {
 			performTeleportAttack(npc, target);
 		}
 
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 
@@ -59,23 +52,23 @@ public class ChaosElementalCombat extends CombatScript {
 	private void performOffensiveAttack(NPC npc, Entity target) {
 		npc.animate(ATTACK_ANIMATION);
 
-		int attackType = Utils.random(9); // 0–8
+		int attackType = Utils.random(9);
 		switch (attackType) {
-			case 0: case 1: case 2: case 3: case 4: // Magic
-				int magicHit = NpcCombatCalculations.getRandomMaxHit(npc, MAX_MAGIC_HIT, NpcAttackStyle.MAGIC, target);
-				delayHit(npc, 2, target, getMagicHit(npc, magicHit));
+			case 0: case 1: case 2: case 3: case 4:
+				Hit magicHit = npc.magicHit(target, MAX_MAGIC_HIT);
+				delayHit(npc, target, 2, magicHit);
 				ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, PROJECTILE_DEFAULT, npc, target);
 				break;
 
 			case 5: case 6: case 7: case 8: // Range
-				int rangeHit = NpcCombatCalculations.getRandomMaxHit(npc, MAX_MAGIC_HIT, NpcAttackStyle.RANGED, target);
-				delayHit(npc, 2, target, getMagicHit(npc, rangeHit));
+				Hit rangeHit = npc.rangedHit(target, MAX_MAGIC_HIT);
+				delayHit(npc, target, 2, rangeHit);
 				ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, PROJECTILE_DEFAULT, npc, target);
 				break;
 
 			default: // Fallback melee
-				int meleeHit = NpcCombatCalculations.getRandomMaxHit(npc, MAX_MELEE_HIT, NpcAttackStyle.CRUSH, target);
-				delayHit(npc, 2, target, getMeleeHit(npc, meleeHit));
+				Hit meleeHit = npc.meleeHit(target, MAX_MELEE_HIT);
+				delayHit(npc, target, 0, meleeHit);
 				ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, PROJECTILE_DEFAULT, npc, target);
 				break;
 		}

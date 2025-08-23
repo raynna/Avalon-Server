@@ -106,7 +106,7 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
     ) {
         val ctx = currentContext ?: error("Cannot call drop() outside a drop type scope")
         when (ctx) {
-            DropType.ALWAYS, DropType.PREROLL -> addDrop(ctx, Rscm.lookup(item), amount, numerator, denominator, condition, customLogic)
+            DropType.ALWAYS, DropType.PREROLL -> addDrop(ctx, Rscm.lookup(item), amount, condition, customLogic)
             DropType.MAIN -> mainDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
             DropType.SPECIAL -> specialDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
             DropType.TERTIARY -> {
@@ -124,8 +124,7 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
                        condition: ((Player) -> Boolean)? = null, customLogic: ((Player, Drop?) -> Unit)? = null) =
         drop(item, amount..amount, weight, numerator, denominator, condition, customLogic)
 
-    private fun addDrop(context: DropType, item: Int, amount: IntRange, numerator: Int = 1, denominator: Int = 4,
-                        condition: ((Player) -> Boolean)? = null, customLogic: ((Player, Drop?) -> Unit)? = null) {
+    private fun addDrop(context: DropType, item: Int, amount: IntRange, condition: ((Player) -> Boolean)? = null, customLogic: ((Player, Drop?) -> Unit)? = null) {
         val entry = DropEntry(item, amount, always = context == DropType.ALWAYS, condition = condition)
         when (context) {
             DropType.ALWAYS -> alwaysDrops.add(entry)
@@ -134,7 +133,6 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
         }
     }
 
-    // ------------------ Rolling ------------------
     fun rollDrops(player: Player): List<Drop> {
         val drops = mutableListOf<Drop>()
 

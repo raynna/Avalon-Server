@@ -1,10 +1,9 @@
 package com.rs.java.game.npc.combat.impl;
 
-import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
+import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 
 public class BloodveldCombat extends CombatScript {
 
@@ -15,10 +14,9 @@ public class BloodveldCombat extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
-		npc.animate(new Animation(defs.getAttackEmote()));
-		int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target);
-		delayHit(npc, 0, target, getMeleeHit(npc, damage));
-		return defs.getAttackDelay();
+		npc.animate(npc.getAttackAnimation());
+		Hit mageHit = npc.magicHit(target, npc.getMaxHit());//roll magic accuracy but hit with melee
+		delayHit(npc, target, 0, mageHit);
+		return npc.getAttackSpeed();
 	}
 }

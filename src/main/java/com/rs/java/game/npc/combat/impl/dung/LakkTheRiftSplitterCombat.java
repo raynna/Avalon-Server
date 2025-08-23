@@ -41,8 +41,8 @@ public class LakkTheRiftSplitterCombat extends CombatScript {
 			if (Utils.colides(player.getX(), player.getY(), player.getSize(), npc.getX(), npc.getY(), npc.getSize())) {
 				smash = true;
 				player.setPrayerDelay(1000);
-				delayHit(npc, 0, player, getRegularHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * .85), NPCCombatDefinitions.MELEE, player)));
-				delayHit(npc, 0, player, getRegularHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * .60), NPCCombatDefinitions.MELEE, player)));
+				delayHit(npc, player, 0, getRegularHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * .85), NPCCombatDefinitions.MELEE, player)));
+				delayHit(npc, player, 0, getRegularHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * .60), NPCCombatDefinitions.MELEE, player)));
 			}
 		}
 		if (smash) {
@@ -85,7 +85,7 @@ public class LakkTheRiftSplitterCombat extends CombatScript {
 		boolean melee = onRange && Utils.random(2) == 0;
 		if (melee) {
 			npc.animate(new Animation(14375));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 		} else
 			regularMagicAttack(target, npc);
 		return 5;
@@ -101,7 +101,7 @@ public class LakkTheRiftSplitterCombat extends CombatScript {
 				player.getPrayer().drainPrayer((int) (damage * .5));
 				player.getPackets().sendGameMessage("Your prayer points feel drained.");
 			} else
-				delayHit(npc, 1, player, getMagicHit(npc, damage));
+				delayHit(npc, player, 1, getMagicHit(npc, damage));
 		}
 		target.gfx(new Graphics(2580, 75, 0));
 	}

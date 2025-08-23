@@ -31,8 +31,8 @@ public class JadCombat extends CombatScript {
 				attackStyle = Utils.random(2); // set mage
 			else {
 				npc.animate(new Animation(defs.getAttackEmote()));
-				delayHit(npc, 1, target,
-						getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+				delayHit(npc, target, 1,
+                        getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 				return defs.getAttackDelay();
 			}
 		}
@@ -42,7 +42,7 @@ public class JadCombat extends CombatScript {
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
-					delayHit(npc, 2, target, getRangeHit(npc,
+					delayHit(npc, target, 2, getRangeHit(npc,
 							getRandomMaxHit(npc, defs.getMaxHit() - 2, NPCCombatDefinitions.RANGE, target)));
 					WorldTasksManager.schedule(new WorldTask() {
 						@Override
@@ -58,7 +58,7 @@ public class JadCombat extends CombatScript {
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
-					delayHit(npc, 2, target, getMagicHit(npc,
+					delayHit(npc, target, 2, getMagicHit(npc,
 							getRandomMaxHit(npc, defs.getMaxHit() - 2, NPCCombatDefinitions.MAGE, target)));
 							World.sendJadProjectile(npc, target, 2996);
 				}

@@ -1,12 +1,8 @@
 package com.rs.java.game.npc.combat.impl;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.ForceTalk;
-import com.rs.java.game.Graphics;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.utils.Utils;
 
 public class CommanderZilyanaCombat extends CombatScript {
@@ -18,7 +14,6 @@ public class CommanderZilyanaCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
 		if (Utils.getRandom(4) == 0) {
 			switch (Utils.getRandom(9)) {
 			case 0:
@@ -64,22 +59,22 @@ public class CommanderZilyanaCombat extends CombatScript {
 			}
 		}
 		if (Utils.getRandom(1) == 0) { // mage magical attack
-			npc.animate(new Animation(6967));
+			npc.animate(6967);
 			for (Entity t : npc.getPossibleTargets()) {
 				if (!t.withinDistance(npc, 3))
 					continue;
-				int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, t);
-				if (damage > 0) {
-					delayHit(npc, 1, t, getMagicHit(npc, damage));
+				Hit magicHit = npc.magicHit(target, npc.getMaxHit());
+				if (magicHit.getDamage() > 0) {
+					delayHit(npc, t, 1, magicHit);
 					t.gfx(new Graphics(1194));
 				}
 			}
 
 		} else { // melee attack
-			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, 0, target,
-					getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			npc.animate(npc.getAttackAnimation());
+			Hit meleeHit = npc.meleeHit(target, npc.getMaxHit());
+			delayHit(npc, target, 0, meleeHit);
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 }

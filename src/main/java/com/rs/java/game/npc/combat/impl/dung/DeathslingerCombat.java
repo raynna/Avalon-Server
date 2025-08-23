@@ -34,7 +34,7 @@ public class DeathslingerCombat extends CombatScript {
 			damage = getRandomMaxHit(npc, NPCCombatDefinitions.RANGE, damage, target);
 		npc.animate(new Animation(13615));
 		World.sendProjectileToTile(npc, target, 2448);
-		delayHit(npc, 2, target, getRangeHit(npc, damage));
+		delayHit(npc, target, 2, getRangeHit(npc, damage));
 		return npc.getCombatDefinitions().getAttackDelay();
 	}
 }

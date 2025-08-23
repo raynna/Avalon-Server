@@ -72,31 +72,31 @@ public class KalGerWarmongerCombat extends CombatScript {
 		}
 		if (boss.getType() == 1) {//NO WEAPONS HUR
 			npc.animate(new Animation(14392));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 		} else if (boss.getType() == 2) {//LONG
 			npc.animate(new Animation(14416));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 		} else if (boss.getType() == 3) {//STAFF
 			npc.animate(new Animation(14996));
 			npc.gfx(new Graphics(2874));
 			for (Entity t : boss.getPossibleTargets()) {
 				World.sendElementalProjectile(boss, t, 2875);
 				t.gfx(new Graphics(2873));
-				delayHit(npc, 0, t, getMagicHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
+				delayHit(npc, t, 0, getMagicHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
 			}
 		} else if (boss.getType() == 4) {//2H
 			npc.animate(new Animation(14450));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 		} else if (boss.getType() == 5) {//BOW
 			npc.animate(new Animation(14537));
 			npc.gfx(new Graphics(2885));
 			for (Entity t : boss.getPossibleTargets()) {
 				World.sendElementalProjectile(boss, t, 2886);
-				delayHit(npc, 2, t, getRangeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
+				delayHit(npc, t, 2, getRangeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
 			}
 		} else if (boss.getType() == 6) {//MAUL
 			npc.animate(new Animation(14963));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 			return 3;//SUPER OP MODE!
 		}
 		return 4;

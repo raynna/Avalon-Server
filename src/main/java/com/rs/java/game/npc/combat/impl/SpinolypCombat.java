@@ -22,7 +22,7 @@ public class SpinolypCombat extends CombatScript {
 		World.sendNPCProjectile(npc, target, npc.getCombatDefinitions().getAttackProjectile());
 		// range based magic attack
 		int damage = getRandomMaxHit(npc, 10, NPCCombatDefinitions.RANGE, target);
-		delayHit(npc, 1, target, getMagicHit(npc, damage));
+		delayHit(npc, target, 1, getMagicHit(npc, damage));
 		// drain prayer points on sucessfull hit
 		if (damage > 0) {
 			if (target instanceof Player) {

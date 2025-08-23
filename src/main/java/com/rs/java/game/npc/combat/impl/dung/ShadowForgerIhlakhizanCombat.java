@@ -135,14 +135,14 @@ public class ShadowForgerIhlakhizanCombat extends CombatScript {
 			npc.gfx(new Graphics(2375));
 			World.sendElementalProjectile(npc, target, 2376);
 			target.gfx(new Graphics(2377, 120, 0));
-			delayHit(npc, 3, target, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 3, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
 			break;
 		case 1:
 			npc.animate(new Animation(defs.getAttackEmote()));
 			for (Entity t : npc.getPossibleTargets()) {
 				if (!Utils.isOnRange(npc.getX(), npc.getY(), npc.getSize(), t.getX(), t.getY(), t.getSize(), 0))
 					continue;
-				delayHit(npc, 0, t, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, t)));
+				delayHit(npc, t, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, t)));
 			}
 			break;
 		}

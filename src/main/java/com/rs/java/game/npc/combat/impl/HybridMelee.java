@@ -25,7 +25,7 @@ public class HybridMelee extends CombatScript {
 		specialAttack -= 25;
 		npc.animate(new Animation(1062));
 		npc.gfx(new Graphics(252, 0, 100));
-		delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, 340, NPCCombatDefinitions.MELEE, target)),
+		delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, 340, NPCCombatDefinitions.MELEE, target)),
 				getMeleeHit(npc, getRandomMaxHit(npc, 340, NPCCombatDefinitions.MELEE, target)));
 		WorldTasksManager.schedule(new WorldTask() {
 			@Override

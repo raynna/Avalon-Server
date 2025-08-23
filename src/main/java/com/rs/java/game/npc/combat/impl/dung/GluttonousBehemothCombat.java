@@ -64,7 +64,7 @@ public class GluttonousBehemothCombat extends CombatScript {
 		for (Player player : manager.getParty().getTeam()) {
 			if (Utils.colides(player.getX(), player.getY(), player.getSize(), npc.getX(), npc.getY(), npc.getSize())) {
 				stomp = true;
-				delayHit(npc, 0, player, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, player)));
+				delayHit(npc, player, 0, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, player)));
 			}
 		}
 		if (stomp) {
@@ -77,7 +77,7 @@ public class GluttonousBehemothCombat extends CombatScript {
 				attackStyle = Utils.getRandom(1);
 			else {
 				npc.animate(new Animation(defs.getAttackEmote()));
-				delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+				delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
 				return npc.getAttackSpeed();
 			}
 		}
@@ -85,7 +85,7 @@ public class GluttonousBehemothCombat extends CombatScript {
 			npc.animate(new Animation(13719));
 			World.sendElementalProjectile(npc, target, 2612);
 			int damage = getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target);
-			delayHit(npc, 2, target, getMagicHit(npc, damage));
+			delayHit(npc, target, 2, getMagicHit(npc, damage));
 			if (damage != 0) {
 				WorldTasksManager.schedule(new WorldTask() {
 					@Override
@@ -97,7 +97,7 @@ public class GluttonousBehemothCombat extends CombatScript {
 		} else if (attackStyle == 1) {
 			npc.animate(new Animation(13721));
 			World.sendElementalProjectile(npc, target, 2610);
-			delayHit(npc, 2, target, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, 2, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {

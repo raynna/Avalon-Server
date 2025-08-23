@@ -35,7 +35,7 @@ public class BalLakThePummelerCombat extends CombatScript {
 		for (Player player : manager.getParty().getTeam()) {
 			if (Utils.colides(player.getX(), player.getY(), player.getSize(), npc.getX(), npc.getY(), npc.getSize())) {
 				smash = true;
-				delayHit(npc, 0, player, getRegularHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, player)));
+				delayHit(npc, player, 0, getRegularHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, player)));
 			}
 		}
 		if (smash) {
@@ -68,7 +68,7 @@ public class BalLakThePummelerCombat extends CombatScript {
 						player.getPackets().sendGameMessage("You are injured and currently cannot use protection prayers.");
 					}
 				}
-				delayHit(npc, 0, t, getRegularHit(npc, damage), getRegularHit(npc, damage2));
+				delayHit(npc, t, 0, getRegularHit(npc, damage), getRegularHit(npc, damage2));
 			}
 			return npc.getAttackSpeed();
 		}
@@ -79,8 +79,8 @@ public class BalLakThePummelerCombat extends CombatScript {
 			final boolean firstHand = Utils.random(2) == 0;
 
 			boss.animate(new Animation(firstHand ? defs.getAttackEmote() : defs.getAttackEmote() + 1));
-			delayHit(npc, 0, target, getMeleeHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.8), NPCCombatDefinitions.MELEE, target)));
-			delayHit(npc, 2, target, getMeleeHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.8), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.8), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 2, getMeleeHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.8), NPCCombatDefinitions.MELEE, target)));
 			WorldTasksManager.schedule(new WorldTask() {
 
 				@Override
@@ -95,7 +95,7 @@ public class BalLakThePummelerCombat extends CombatScript {
 			boss.gfx(new Graphics(2441));
 			for (Entity t : npc.getPossibleTargets()) {
 				World.sendProjectileToTile(npc, t, 2872);
-				delayHit(npc, 1, t, getMagicHit(npc, getRandomMaxHit(npc, (int) (boss.getMaxHit() * 0.6), NPCCombatDefinitions.MAGE, t)));
+				delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, (int) (boss.getMaxHit() * 0.6), NPCCombatDefinitions.MAGE, t)));
 			}
 			return npc.getAttackSpeed() - 2;
 		}

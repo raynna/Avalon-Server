@@ -27,7 +27,7 @@ public class TzKihCombat extends CombatScript {
 					damage = getRandomMaxHit(npc, 70, NPCCombatDefinitions.MELEE, target);
 					if (target instanceof Player)
 						((Player) target).getPrayer().drainPrayer(damage);
-					delayHit(npc, 0, entity, getMeleeHit(npc, damage));
+					delayHit(npc, entity, 0, getMeleeHit(npc, damage));
 				}
 			}
 			return defs.getAttackDelay();
@@ -36,7 +36,7 @@ public class TzKihCombat extends CombatScript {
 		damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target);
 		if (target instanceof Player)
 			((Player) target).getPrayer().drainPrayer(damage + 10);
-		delayHit(npc, 0, target, getMeleeHit(npc, damage));
+		delayHit(npc, target, 0, getMeleeHit(npc, damage));
 		return defs.getAttackDelay();
 	}
 }
