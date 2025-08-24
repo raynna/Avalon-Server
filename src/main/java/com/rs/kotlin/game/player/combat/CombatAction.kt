@@ -12,6 +12,7 @@ import com.rs.kotlin.game.player.combat.magic.MagicStyle
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.range.RangedStyle
+import com.rs.kotlin.game.player.combat.special.SpecialAttack
 import com.rs.kotlin.game.player.interfaces.HealthOverlay
 import kotlin.math.abs
 
@@ -90,7 +91,8 @@ class CombatAction(
             handleCollisionMovement(player, target, player.size)
         }
 
-        val toExecute = mutableListOf<QueuedInstantCombat>()
+
+        val toExecute = mutableListOf<QueuedInstantCombat<out SpecialAttack>>()
         var totalEnergyCost = 0
 
         for (queued in player.queuedInstantCombats.toList()) {
@@ -111,11 +113,24 @@ class CombatAction(
 
         if (toExecute.isNotEmpty()) {
             for (queued in toExecute) {
-                player.combatDefinitions.decreaseSpecialAttack(queued.special.energyCost)
-                queued.special.execute(queued.context)
-                player.queuedInstantCombats.remove(queued)
+                if (queued.special is SpecialAttack.InstantCombat) {
+                    player.combatDefinitions.decreaseSpecialAttack(queued.special.energyCost)
+                    queued.special.execute(queued.context)
+                    player.queuedInstantCombats.remove(queued)
+                }
             }
             player.stopAll(false, true, true)
+        }
+
+        val activeInstantSpecial = player.activeInstantSpecial
+        if (activeInstantSpecial != null) {
+            player.clearActiveInstantSpecial()
+            val special = activeInstantSpecial.special
+            if (special is SpecialAttack.InstantRangeCombat) {
+                special.execute(activeInstantSpecial.context)
+                player.stopAll(false, true, true)
+                return true
+            }
         }
 
         player.combatStyle = style

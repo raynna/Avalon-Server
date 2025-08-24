@@ -24,9 +24,11 @@ public class Dummy extends NPC {
 
 	@Override
 	public void processNPC() {
-		//if (isDead())
-		//	return;
-		//super.processNPC();
+		if (isDead()) {
+			heal(10000);
+			return;
+		}
+		super.processNPC();
 	}
 
 	@Override

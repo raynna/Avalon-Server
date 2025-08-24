@@ -239,6 +239,22 @@ interface CombatStyle {
 
                 special.execute(combatContext)
             }
+
+            is SpecialAttack.InstantRangeCombat -> {
+                val actualTarget = target ?: player.temporaryTarget ?: return false
+                val style = if (isRangedWeapon(player)) RangedStyle(player, actualTarget) else MeleeStyle(player, actualTarget)
+                val combatContext = CombatContext(
+                    combat = style,
+                    attacker = player,
+                    defender = actualTarget,
+                    weapon = weapon,
+                    weaponId = player.equipment.weaponId,
+                    attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
+                    attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
+                    usingSpecial = true,
+                )
+                special.execute(combatContext)
+            }
         }
 
         player.combatDefinitions.decreaseSpecialAttack(specialCost)

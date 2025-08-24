@@ -8,6 +8,7 @@ import com.rs.java.game.World
 import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
+import com.rs.kotlin.Rscm
 import kotlin.math.max
 
 object ProjectileManager {
@@ -74,6 +75,54 @@ object ProjectileManager {
                 )
             }
         }, max(0, delayTicks - 1))
+    }
+
+    fun send(
+        projectile: Projectile,
+        gfx: String,
+        attacker: Entity,
+        defender: Entity,
+        heightOffset: Int = 0,
+        hitGraphic: Graphics? = null,
+        speedAdjustment: Int = 0,
+        onLanded: (() -> Unit)? = null
+    ) {
+        val type = ProjectileRegistry.get(projectile) ?: run {
+            println("Unknown projectile type: $projectile")
+            return
+        }
+
+        val adjustedType = type.copy(
+            startHeight = (type.startHeight + heightOffset).coerceIn(0, 255),
+            endHeight = (type.endHeight + heightOffset).coerceIn(0, 255),
+            speed = type.speed + speedAdjustment,
+        )
+
+        val startTile = WorldTile(
+            attacker.getCoordFaceX(attacker.size),
+            attacker.getCoordFaceY(attacker.size),
+            attacker.plane
+        )
+        val endTile = WorldTile(
+            defender.getCoordFaceX(defender.size),
+            defender.getCoordFaceY(defender.size),
+            defender.plane
+        )
+        val gfxId = Rscm.lookup(gfx);
+        val duration = sendProjectile(defender, startTile, endTile, gfxId, type = adjustedType, attacker.size)
+        val delayTicks = max(0, (duration / 30.0).toInt() - 1)
+
+        if (hitGraphic != null) {
+            WorldTasksManager.schedule(object : WorldTask() {
+                override fun run() {
+                    val rotation = calculateRotation(startTile, endTile)
+                    defender.gfx(hitGraphic.id, hitGraphic.height, rotation)
+                    onLanded?.invoke()
+                }
+            }, delayTicks)
+        } else {
+            onLanded?.invoke()
+        }
     }
 
 

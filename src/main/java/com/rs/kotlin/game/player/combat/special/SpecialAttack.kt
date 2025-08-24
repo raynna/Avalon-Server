@@ -37,6 +37,13 @@ sealed class SpecialAttack(
         override val damageMultiplier: Double = 1.0
     ) : SpecialAttack(energyCost)
 
+    class InstantRangeCombat(
+        energyCost: Int,
+        val execute: (context: CombatContext) -> Unit,
+        override val accuracyMultiplier: Double = 1.0,
+        override val damageMultiplier: Double = 1.0
+    ) : SpecialAttack(energyCost)
+
 
     companion object {
         @JvmStatic
@@ -57,16 +64,42 @@ sealed class SpecialAttack(
                     player.combatDefinitions.decreaseSpecialAttack(special.energyCost)
                     return
                 }
-                is InstantCombat -> {
-                    /*if (player.itemSwitch)
-                        return*/
+                is InstantRangeCombat -> {
                     if (player.combatDefinitions.specialAttackPercentage < special.energyCost) {
                         player.message("You don't have enough special attack energy.")
                         return
                     }
 
-                    val target = player.temporaryTarget ?: return
+                    // Toggle special attack without executing
+                    player.combatDefinitions.switchUsingSpecialAttack()
 
+                    if (player.combatDefinitions.isUsingSpecialAttack) {
+                        val target = player.temporaryTarget ?: return
+                        val style = if (Weapon.isRangedWeapon(player)) RangedStyle(player, target) else MeleeStyle(player, target)
+                        val combatContext = CombatContext(
+                            combat = style,
+                            attacker = player,
+                            defender = target,
+                            weapon = weapon,
+                            weaponId = player.equipment.weaponId,
+                            attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
+                            attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!
+                        )
+                        player.setActiveInstantSpecial(combatContext, special)
+                        return
+                    } else {
+                        player.clearActiveInstantSpecial()
+                        return
+                    }
+                }
+                is InstantCombat -> {
+                    if (player.newActionManager.getActionDelay() == 0) {
+                        player.message(
+                            "Warning: Since the maul's special is an instant attack, it will be wasted when used on a first strike.")
+                        player.combatDefinitions.switchUsingSpecialAttack()
+                        return
+                    }
+                    val target = player.temporaryTarget ?: return
                     val style =
                         if (Weapon.isRangedWeapon(player)) RangedStyle(player, target) else MeleeStyle(player, target)
                     val combatContext = CombatContext(
@@ -78,24 +111,7 @@ sealed class SpecialAttack(
                         attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
                         attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!
                     )
-                    //CoresManager.getSlowExecutor().execute {
-                        try {
-                            if (player.temporaryTarget == null) {
-                                player.message("You don't have a target to perform this special on.")
-                                return
-                            }
-                            if (player.isOutOfRange(target, style.getAttackDistance()) || player.shouldAdjustDiagonal(player, target, 0)) {
-                                player.addQueuedSpecialAttack(combatContext, special)
-                            } else {
-                                player.addQueuedSpecialAttack(combatContext, special)
-                                //special.execute(combatContext)
-                                //player.combatDefinitions.decreaseSpecialAttack(special.energyCost)
-                                //player.stopAll(false, true, true)
-                            }
-                        } catch (e: Throwable) {
-                            Logger.handle(e)
-                        }
-                    //}
+                    player.addQueuedSpecialAttack(combatContext, special)
                     return
                 }
             }

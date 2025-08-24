@@ -150,17 +150,31 @@ public class Player extends Entity {
 
     public transient CombatStyle combatStyle;
 
-    private transient List<QueuedInstantCombat> queuedInstantCombats = new ArrayList<>();
+    private transient QueuedInstantCombat<SpecialAttack.InstantRangeCombat> activeInstantSpecial = null;
 
-    public void addQueuedSpecialAttack(CombatContext context, SpecialAttack.InstantCombat special) {
-        queuedInstantCombats.add(new QueuedInstantCombat(context, special));
+    public void setActiveInstantSpecial(CombatContext context, SpecialAttack.InstantRangeCombat special) {
+        activeInstantSpecial = new QueuedInstantCombat<>(context, special);
     }
 
-    public List<QueuedInstantCombat> getQueuedInstantCombats() {
+    public QueuedInstantCombat<SpecialAttack.InstantRangeCombat> getActiveInstantSpecial() {
+        return activeInstantSpecial;
+    }
+
+    public void clearActiveInstantSpecial() {
+        activeInstantSpecial = null;
+    }
+
+    private transient List<QueuedInstantCombat<SpecialAttack.InstantCombat>> queuedInstantCombats = new ArrayList<>();
+
+    public void addQueuedSpecialAttack(CombatContext context, SpecialAttack.InstantCombat special) {
+        queuedInstantCombats.add(new QueuedInstantCombat<>(context, special));
+    }
+
+    public List<QueuedInstantCombat<SpecialAttack.InstantCombat>> getQueuedInstantCombats() {
         return queuedInstantCombats;
     }
 
-    public void clearQueuedSpecialAttack(QueuedInstantCombat queued) {
+    public void clearQueuedSpecialAttack(QueuedInstantCombat<SpecialAttack.InstantCombat> queued) {
         queuedInstantCombats.remove(queued);
     }
 
@@ -2459,6 +2473,22 @@ public class Player extends Entity {
 
     private transient int gameTick = 0;
 
+    public void processActiveInstantSpecial() {
+        QueuedInstantCombat<? extends SpecialAttack> activeSpecial = getActiveInstantSpecial();
+        if (activeSpecial == null) {
+            return;
+        }
+        if (getCombatDefinitions().usingSpecialAttack) {
+            if (activeSpecial.special instanceof SpecialAttack.InstantRangeCombat) {
+                faceEntity(activeInstantSpecial.context.getDefender());
+                activeSpecial.execute();
+                combatDefinitions.decreaseSpecialAttack(activeSpecial.special.getEnergyCost());
+                stopAll(false, true, true);
+            }
+        }
+        clearActiveInstantSpecial();
+    }
+
     public void processQueuedInstantSpecials() {
         if (getTemporaryTarget() == null || queuedInstantCombats.isEmpty())
             return;
@@ -2469,7 +2499,6 @@ public class Player extends Entity {
             return;
         }
 
-        // Rebuild style context (important if weapon/style changed)
         int spellId = combatDefinitions.getSpellId();
         CombatStyle style;
         if (spellId != 0) {
@@ -2499,8 +2528,9 @@ public class Player extends Entity {
 
         if (!toExecute.isEmpty()) {
             for (QueuedInstantCombat queued : toExecute) {
+                faceEntity(queued.context.getDefender());
                 combatDefinitions.decreaseSpecialAttack(queued.special.getEnergyCost());
-                queued.special.getExecute().invoke(queued.context);
+                queued.execute();
                 queuedInstantCombats.remove(queued);
             }
             stopAll(false, true, true);
@@ -2534,6 +2564,7 @@ public class Player extends Entity {
         processEquip();
         processUnequip();
         processQueuedInstantSpecials();
+        processActiveInstantSpecial();
         if (getAssist().isAssisting()) {
             getAssist().Check();
         }

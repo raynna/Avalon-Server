@@ -41,8 +41,12 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     private fun getCurrentAmmo(): RangedAmmo? {
         val ammoItem = attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]
-        return RangeData.getAmmoByItemId(ammoItem.id)
+        if (ammoItem != null) {
+            return RangeData.getAmmoByItemId(ammoItem.id);
+        }
+        return null
     }
+
 
     private fun getAttackStyle(currentWeapon: RangedWeapon): AttackStyle {
         val styleId = attacker.combatDefinitions.attackStyle

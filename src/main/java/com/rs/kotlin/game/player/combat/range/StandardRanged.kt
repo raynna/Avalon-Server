@@ -233,8 +233,8 @@ object StandardRanged : RangeData() {
             effect = SpecialEffect(
                 execute = { context ->
                     context.attacker.animate("animation.bow_attack")
-                    context.attacker.gfx(2962, 100)
-                    ProjectileManager.send(Projectile.ARROW, 1066, context.attacker, context.defender)
+                    context.attacker.gfx("graphic.zaryte_bow_start", 100)
+                    ProjectileManager.send(Projectile.ARROW, "graphic.zaryte_bow_projectile", context.attacker, context.defender)
                     context.hits {
                         ranged(
                             delay = context.combat.getHitDelay()
@@ -264,8 +264,8 @@ object StandardRanged : RangeData() {
             effect = SpecialEffect(
                 execute = { context ->
                     context.attacker.animate("animation.bow_attack")
-                    context.attacker.gfx(250, 100)
-                    ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
+                    context.attacker.gfx("graphic.crystal_bow_start", 100)
+                    ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
                     context.hits {
                         ranged(delay = context.combat.getHitDelay())
                     }
@@ -274,7 +274,7 @@ object StandardRanged : RangeData() {
             )
         ),
         RangedWeapon(
-            itemId = listOf(19143),
+            itemId = Item.getIds("item.saradomin_bow"),
             name = "Saradomin bow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -287,7 +287,7 @@ object StandardRanged : RangeData() {
                 damageMultiplier = 1.5,
                 execute = { context ->
                     context.attacker.animate(Animation(426))
-                    ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
+                    ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
                     context.hits {
                         val rangedHit = ranged()
                         if (rangedHit.damage > 0) {
@@ -298,7 +298,7 @@ object StandardRanged : RangeData() {
             )
         ),
         RangedWeapon(
-            itemId = listOf(19146),
+            itemId = Item.getIds("item.guthix_bow"),
             name = "Guthix bow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -311,7 +311,7 @@ object StandardRanged : RangeData() {
                 damageMultiplier = 1.5,
                 execute = { context ->
                     context.attacker.animate(Animation(426))
-                    ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
+                    ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
                     context.hits {
                         val rangedHit = ranged()
                         if (rangedHit.damage > 0) {
@@ -322,7 +322,7 @@ object StandardRanged : RangeData() {
             )
         ),
         RangedWeapon(
-            itemId = listOf(19149),
+            itemId = Item.getIds("item.zamorak_bow"),
             name = "Zamorak bow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -335,7 +335,7 @@ object StandardRanged : RangeData() {
                 damageMultiplier = 1.5,
                 execute = { context ->
                     context.attacker.animate(Animation(426))
-                    ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
+                    ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
                     context.hits {
                         val rangedHit = ranged()
                         if (rangedHit.damage > 0) {
@@ -361,7 +361,7 @@ object StandardRanged : RangeData() {
                 execute = { context ->
                     context.attacker.animate(Animation(1074))
                     context.attacker.packets.sendSound(2545, 0, 1)
-                    ProjectileManager.send(Projectile.ARROW, 249, context.attacker, context.defender)
+                    ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
                     ProjectileManager.sendDelayed(
                         Projectile.ARROW,
                         249,
@@ -510,6 +510,37 @@ object StandardRanged : RangeData() {
             animationId = 582,
             ammoType = AmmoType.DART
         ),
+
+        RangedWeapon(
+            itemId = Item.getIds("item.morrigan_s_throwing_axe"),
+            name = "Morrigan's throwing axe",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 4,
+            animationId = 10504,
+            ammoType = AmmoType.THROWING,
+            effect = SpecialEffect(
+                execute = { context ->
+                    context.attacker.animate("animation.morrigans_throwing_axe_attack")
+                    context.attacker.gfx("graphic.morrigans_throwing_axe_start", 100)
+                    ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
+                    context.hits {
+                        ranged(
+                            delay = context.combat.getHitDelay()
+                        )
+                    }
+                    true
+                }
+            ),
+            special = SpecialAttack.InstantRangeCombat(
+                energyCost = 25,
+                execute = { context ->
+                    context.attacker.animate("animation.morrigans_throwing_axe_attack")
+                    context.attacker.gfx("graphic.morrigans_throwing_axe_start", 100)
+                    ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
+                    context.rangedHit(delay = context.combat.getHitDelay());
+                }
+            )
+            ),
         /** Dungeoneering Range Weapons */
         RangedWeapon(
             itemId = Item.getIds(
