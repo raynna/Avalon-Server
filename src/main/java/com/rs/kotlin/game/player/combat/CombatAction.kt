@@ -5,6 +5,7 @@ import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
+import com.rs.java.game.player.actions.combat.QueuedInstantCombat
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.action.NewAction
 import com.rs.kotlin.game.player.combat.magic.MagicStyle
@@ -57,6 +58,13 @@ class CombatAction(
         if (player.isDiagonalMeleeBlocked(target, style)) {
             player.calcFollow(target, if (player.run) 2 else 1, true, true)
         }
+        if (player.isCollidingWithTarget(target)) {
+            if (player.isFrozen) {
+                player.packets.sendGameMessage("A magical force prevents you from moving.")
+                return true
+            }
+            handleCollisionMovement(player, target, player.size)
+        }
         ensureFollowTask(player)
         return true
     }
@@ -73,18 +81,41 @@ class CombatAction(
             else -> MeleeStyle(player, target)
         }
         player.temporaryTarget = target;
+
+        if (player.isCollidingWithTarget(target)) {
+            if (player.isFrozen) {
+                player.packets.sendGameMessage("A magical force prevents you from moving.")
+                return true
+            }
+            handleCollisionMovement(player, target, player.size)
+        }
+
+        val toExecute = mutableListOf<QueuedInstantCombat>()
+        var totalEnergyCost = 0
+
         for (queued in player.queuedInstantCombats.toList()) {
             val queuedStyle = queued.context.combat
 
-            if (!player.isOutOfRange(target, queuedStyle.getAttackDistance()) && !shouldAdjustDiagonal(player, target)) {
-                if (player.combatDefinitions.specialAttackPercentage < queued.special.energyCost) {
+            if (!player.isOutOfRange(target, queuedStyle.getAttackDistance()) &&
+                !shouldAdjustDiagonal(player, target)
+            ) {
+                val cost = queued.special.energyCost
+                if (player.combatDefinitions.specialAttackPercentage < totalEnergyCost + cost) {
                     player.queuedInstantCombats.clear()
                     break
                 }
+                totalEnergyCost += cost
+                toExecute.add(queued)
+            }
+        }
+
+        if (toExecute.isNotEmpty()) {
+            for (queued in toExecute) {
                 player.combatDefinitions.decreaseSpecialAttack(queued.special.energyCost)
                 queued.special.execute(queued.context)
                 player.queuedInstantCombats.remove(queued)
             }
+            player.stopAll(false, true, true)
         }
 
         player.combatStyle = style

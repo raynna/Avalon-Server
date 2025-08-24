@@ -58,8 +58,8 @@ sealed class SpecialAttack(
                     return
                 }
                 is InstantCombat -> {
-                    if (player.itemSwitch)
-                        return
+                    /*if (player.itemSwitch)
+                        return*/
                     if (player.combatDefinitions.specialAttackPercentage < special.energyCost) {
                         player.message("You don't have enough special attack energy.")
                         return
@@ -78,18 +78,24 @@ sealed class SpecialAttack(
                         attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
                         attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!
                     )
-                    CoresManager.getSlowExecutor().execute {
+                    //CoresManager.getSlowExecutor().execute {
                         try {
+                            if (player.temporaryTarget == null) {
+                                player.message("You don't have a target to perform this special on.")
+                                return
+                            }
                             if (player.isOutOfRange(target, style.getAttackDistance()) || player.shouldAdjustDiagonal(player, target, 0)) {
                                 player.addQueuedSpecialAttack(combatContext, special)
                             } else {
-                                special.execute(combatContext)
-                                player.combatDefinitions.decreaseSpecialAttack(special.energyCost)
+                                player.addQueuedSpecialAttack(combatContext, special)
+                                //special.execute(combatContext)
+                                //player.combatDefinitions.decreaseSpecialAttack(special.energyCost)
+                                //player.stopAll(false, true, true)
                             }
                         } catch (e: Throwable) {
                             Logger.handle(e)
                         }
-                    }
+                    //}
                     return
                 }
             }

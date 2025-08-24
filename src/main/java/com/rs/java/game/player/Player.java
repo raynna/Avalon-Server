@@ -124,6 +124,10 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.MachineInformation;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.combat.CombatStyle;
+import com.rs.kotlin.game.player.combat.Weapon;
+import com.rs.kotlin.game.player.combat.magic.MagicStyle;
+import com.rs.kotlin.game.player.combat.melee.MeleeStyle;
+import com.rs.kotlin.game.player.combat.range.RangedStyle;
 import com.rs.kotlin.game.player.combat.special.CombatContext;
 import com.rs.kotlin.game.player.combat.special.SpecialAttack;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
@@ -2455,6 +2459,55 @@ public class Player extends Entity {
 
     private transient int gameTick = 0;
 
+    public void processQueuedInstantSpecials() {
+        if (getTemporaryTarget() == null || queuedInstantCombats.isEmpty())
+            return;
+
+        Entity target = getTemporaryTarget();
+        if (target.isDead() || target.hasFinished()) {
+            queuedInstantCombats.clear();
+            return;
+        }
+
+        // Rebuild style context (important if weapon/style changed)
+        int spellId = combatDefinitions.getSpellId();
+        CombatStyle style;
+        if (spellId != 0) {
+            style = new MagicStyle(this, target);
+        } else if (Weapon.isRangedWeapon(this)) {
+            style = new RangedStyle(this, target);
+        } else {
+            style = new MeleeStyle(this, target);
+        }
+        this.combatStyle = style;
+
+        List<QueuedInstantCombat> toExecute = new ArrayList<>();
+        int totalEnergyCost = 0;
+        for (QueuedInstantCombat queued : new ArrayList<>(queuedInstantCombats)) {
+            CombatStyle queuedStyle = queued.context.getCombat();
+            if (!isOutOfRange(target, queuedStyle.getAttackDistance()) &&
+                    !shouldAdjustDiagonal(this, target, queuedStyle.getAttackDistance())) {
+                int cost = queued.special.getEnergyCost();
+                if (combatDefinitions.getSpecialAttackPercentage() < totalEnergyCost + cost) {
+                    queuedInstantCombats.clear();
+                    break;
+                }
+                totalEnergyCost += cost;
+                toExecute.add(queued);
+            }
+        }
+
+        if (!toExecute.isEmpty()) {
+            for (QueuedInstantCombat queued : toExecute) {
+                combatDefinitions.decreaseSpecialAttack(queued.special.getEnergyCost());
+                queued.special.getExecute().invoke(queued.context);
+                queuedInstantCombats.remove(queued);
+            }
+            stopAll(false, true, true);
+        }
+    }
+
+
     public int getGameTicks() {
         return gameTick;
     }
@@ -2480,6 +2533,7 @@ public class Player extends Entity {
         farmingManager.process();
         processEquip();
         processUnequip();
+        processQueuedInstantSpecials();
         if (getAssist().isAssisting()) {
             getAssist().Check();
         }
