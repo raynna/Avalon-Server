@@ -114,6 +114,7 @@ class CombatAction(
         if (toExecute.isNotEmpty()) {
             for (queued in toExecute) {
                 if (queued.special is SpecialAttack.InstantCombat) {
+                    player.faceEntity(queued.context.defender)
                     player.combatDefinitions.decreaseSpecialAttack(queued.special.energyCost)
                     queued.special.execute(queued.context)
                     player.queuedInstantCombats.remove(queued)
@@ -127,6 +128,7 @@ class CombatAction(
             player.clearActiveInstantSpecial()
             val special = activeInstantSpecial.special
             if (special is SpecialAttack.InstantRangeCombat) {
+                player.faceEntity(activeInstantSpecial.context.defender)
                 special.execute(activeInstantSpecial.context)
                 player.stopAll(false, true, true)
                 return true
