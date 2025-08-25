@@ -19,8 +19,6 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
-import com.rs.core.NewPacket.PacketRegistry;
-import com.rs.core.NewPacket.WorldPacketsDecoderV2;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.CreationKiln;
@@ -2247,10 +2245,8 @@ public class Player extends Entity {
 
     public void processLogicPackets() {
         LogicPacket packet;
-        PacketRegistry registry = getSession().getWorldPacketRegistry();
         while ((packet = logicPackets.poll()) != null)
-            WorldPacketsDecoderV2.decodeLogicPacket(this, packet, registry);
-            //WorldPacketsDecoder.decodeLogicPacket(this, packet);
+            WorldPacketsDecoder.decodeLogicPacket(this, packet);
     }
 
     public void processEquip() {
@@ -3455,10 +3451,6 @@ public class Player extends Entity {
 
     public WorldPacketsEncoder getPackets() {
         return session.getWorldPackets();
-    }
-
-    public WorldPacketsEncoder getNewPackets() {
-        return getSession().getWorldPacketsEncoder();
     }
 
     public boolean hasStarted() {
