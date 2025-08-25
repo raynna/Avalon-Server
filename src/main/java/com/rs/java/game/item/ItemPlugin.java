@@ -59,6 +59,8 @@ public abstract class ItemPlugin {
 
     public void sendPluginLog(int option, Item item, String optionName, boolean executed) {
         StringBuilder builder = new StringBuilder();
+        if (optionName.toLowerCase().contains("wield") || optionName.toLowerCase().contains("wear") || optionName.toLowerCase().contains("weild"))
+            return;
         builder.append("Option ").append(option).append(" - Class: ").append(this.getClass().getSimpleName()).append(".java, ");
         if (executed) {
             builder.append("Executed: '").append(optionName).append("' on ").append(item.getName()).append("(").append(item.getId()).append(")");

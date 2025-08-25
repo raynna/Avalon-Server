@@ -320,9 +320,9 @@ class CombatAction(
 
     private fun getAdjustedAttackRange(player: Player, target: Entity): Int {
         var baseDistance = style.getAttackDistance()
-        if (style is MeleeStyle && target.hasWalkSteps()) {
+        if (style is MeleeStyle && target.hasWalkSteps() && player.hasWalkSteps()) {
             if (!Utils.isOnRange(player.x, player.y, player.size, target.x, target.y, target.size, baseDistance)) {
-                baseDistance += 2
+                baseDistance += 1
             }
         }
         return baseDistance

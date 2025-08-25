@@ -1276,6 +1276,209 @@
       "krystilia"
     ]
   },
+  "1157": {
+    "id": 1157,
+    "name": "Kalphite Guardian",
+    "members": true,
+    "combatLevel": 141,
+    "attackLevel": 110,
+    "strengthLevel": 110,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 170,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 25,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 30,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "4",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 12
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 170,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1158": {
+    "id": 1158,
+    "name": "Kalphite Queen",
+    "members": true,
+    "combatLevel": 333,
+    "attackLevel": 300,
+    "strengthLevel": 300,
+    "defenceLevel": 300,
+    "magicLevel": 150,
+    "rangedLevel": 1,
+    "constitutionLevel": 255,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "5",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "maxHit": {
+      "maxhit": 31
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1160": {
+    "id": 1160,
+    "name": "Kalphite Queen",
+    "members": true,
+    "combatLevel": 333,
+    "attackLevel": 300,
+    "strengthLevel": 300,
+    "defenceLevel": 300,
+    "magicLevel": 150,
+    "rangedLevel": 1,
+    "constitutionLevel": 255,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "5",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "maxHit": {
+      "maxhit": 31
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "1329": {
     "id": 1329,
     "name": "Black unicorn Foal",
@@ -1954,6 +2157,317 @@
       "turael",
       "spria",
       "mazchna"
+    ]
+  },
+  "2025": {
+    "id": 2025,
+    "name": "Ahrim the Blighted",
+    "members": true,
+    "combatLevel": 98,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 100,
+    "magicLevel": 100,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 68,
+    "magicBonus": 0,
+    "magicStrengthBonus": 73,
+    "rangedBonus": -19,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 103,
+      "slash": 85,
+      "crush": 117
+    },
+    "magicDefence": {
+      "magic": 73
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A vengeful spirit corrupted by dark magic.",
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "maxhit": 20
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "2026": {
+    "id": 2026,
+    "name": "Dharok the Wretched",
+    "members": true,
+    "combatLevel": 115,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 105,
+    "magicBonus": 0,
+    "magicStrengthBonus": -58,
+    "rangedBonus": -18,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 252,
+      "slash": 250,
+      "crush": 244
+    },
+    "magicDefence": {
+      "magic": -11
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 249,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A vengeful spirit corrupted by dark magic.",
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 15.0,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 7,
+    "respawnTicks": 25,
+    "slayerXp": 115,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "2028": {
+    "id": 2028,
+    "name": "Karil the Tainted",
+    "members": true,
+    "combatLevel": 98,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 100,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": -26,
+    "rangedBonus": 134,
+    "rangedStrengthBonus": 55,
+    "meleeDefence": {
+      "stab": 79,
+      "slash": 71,
+      "crush": 90
+    },
+    "magicDefence": {
+      "magic": 106
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 100,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A vengeful spirit corrupted by dark magic.",
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 20
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 100,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "2029": {
+    "id": 2029,
+    "name": "Torag the Corrupted",
+    "members": true,
+    "combatLevel": 115,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 72,
+    "magicBonus": 0,
+    "magicStrengthBonus": -33,
+    "rangedBonus": -11,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 221,
+      "slash": 235,
+      "crush": 222
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 221,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A vengeful spirit corrupted by dark magic.",
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 12.5,
+    "maxHit": {
+      "maxhit": 23
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "2030": {
+    "id": 2030,
+    "name": "Verac the Defiled",
+    "members": true,
+    "combatLevel": 115,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 72,
+    "magicBonus": 0,
+    "magicStrengthBonus": -42,
+    "rangedBonus": -14,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 227,
+      "slash": 230,
+      "crush": 221
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A vengeful spirit corrupted by dark magic.",
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 12.5,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel",
+      "kuradal"
     ]
   },
   "2783": {
@@ -3000,6 +3514,57 @@
       "turael",
       "spria"
     ]
+  },
+  "4291": {
+    "id": 4291,
+    "name": "Cyclops",
+    "members": true,
+    "combatLevel": 56,
+    "attackLevel": 0,
+    "strengthLevel": 0,
+    "defenceLevel": 0,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 0,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
   },
   "4381": {
     "id": 4381,

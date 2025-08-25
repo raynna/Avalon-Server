@@ -81,7 +81,6 @@ class LookupStatsCommand : Command {
 
         // Other
         sendLine("Aggressive", combatData.aggressive)
-        sendLine("XP Bonus", combatData.xpBonus)
         sendLine("Max Hit", combatData.maxHit.maxhit)
         sendLine("Attack Speed Ticks", combatData.attackSpeedTicks)
         sendLine("Respawn Ticks", combatData.respawnTicks)

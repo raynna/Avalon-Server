@@ -479,6 +479,30 @@ class SpecialHitBuilder(private val context: CombatContext) {
         delay: Int = 0
     ) = createHit(CombatType.MAGIC, damageMultiplier, accuracyMultiplier, delay)
 
+    fun CombatContext.applyBleed(
+        baseHit: Hit,
+        bleedPercent: Double = 0.75,
+        maxTickDamage: Int = 50,
+        initialDelay: Int = 1,
+        tickInterval: Int = 1
+    ) {
+        if (baseHit.damage <= 0) return
+
+        var remainingBleed = (baseHit.damage * bleedPercent).toInt()
+        var delay = initialDelay
+
+        while (remainingBleed > 0) {
+            val tickDamage = minOf(maxTickDamage, remainingBleed)
+            remainingBleed -= tickDamage
+
+            this.hits {
+                nextHit(Hit(baseHit.source, tickDamage, baseHit.look), delay = delay + tickInterval)
+            }
+            delay += tickInterval
+        }
+    }
+
+
     fun nextHit(
         baseHit: Hit, scale: Double = 1.0, delay: Int = 0
     ): Hit {

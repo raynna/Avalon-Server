@@ -1033,9 +1033,9 @@ public class DungeonManager {
 
 		int attackLevel = (int) ((party.getAttackLevel() + (level / 3.0) / 1.2) * (boss ? 1.0 : 0.5));
 		int strengthLevel = level - (level / 4);
-		int defenceLevel = (int) (npcDefenceLevel + (level * 0.3) / (boss ? 2 : 3));
-		int rangedLevel = (int) ((party.getRangeLevel() + (level * 0.3)) * (boss ? 1.0 : 0.5));
-		int magicLevel = (int) ((party.getAttackLevel() + (level * 0.3)) * (boss ? 1.0 : 0.5));
+		int defenceLevel = (int) (npcDefenceLevel + (level * 0.1) / (boss ? 2 : 3));
+		int rangedLevel = (int) ((party.getRangeLevel() + (level * 0.5)) * (boss ? 1.0 : 0.5));
+		int magicLevel = (int) ((party.getAttackLevel() + (level * 0.5)) * (boss ? 1.0 : 0.5));
 		int constitutionLevel = level * (boss ? 20 : 10) + 1;
 		int maxHit = (int) (level * 0.1);
 
@@ -1057,7 +1057,6 @@ public class DungeonManager {
 				new MagicDefence((int) (defenceLevel * 0.5)),
 				new RangedDefence((int) (defenceLevel * 0.5), (int) (defenceLevel * 0.5), (int) (defenceLevel * 0.5)),
 				new Immunities(false, false, false, false, false),
-				0.0, // xpBonus
 				new MaxHit(maxHit),
 				true, // aggressive
 				List.of("Stab"), // attackStyles, could randomize for multi-style NPCs

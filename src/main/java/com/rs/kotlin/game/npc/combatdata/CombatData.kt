@@ -18,7 +18,6 @@ data class CombatData(
     @JvmField val magicDefence: MagicDefence,
     @JvmField val rangedDefence: RangedDefence,
     @JvmField val immunities: Immunities,
-    @JvmField val xpBonus: Double,
     @JvmField val maxHit: MaxHit,
     @JvmField val aggressive: Boolean,
     @JvmField val attackStyles: List<String>,

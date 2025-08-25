@@ -276,11 +276,10 @@ public final class LoginPacketsDecoder extends Decoder {
 		}
 		Player player;
 		if (!AccountCreation.exists(username)) {
-			Logger.log(this, "account: " + username + " doesnt exist");
+			Logger.log(this, "account: " + username + " doesnt exist, creating new account.");
 			player = new Player(password);
 		} else {
 			player = AccountCreation.loadPlayer(username);
-			Logger.log(this, "load: " + username + "");
 			if (player == null) {
 				session.getLoginPackets().sendClientPacket(20);
 				return;

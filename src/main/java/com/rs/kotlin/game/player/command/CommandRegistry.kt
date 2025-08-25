@@ -31,6 +31,8 @@ object CommandRegistry {
         register("yell", "worldmessage", command = YellCommand())
         register("npcstats", "lookupnpc", command = LookupStatsCommand())
         register("droptest", "testdrop", command = DropTestCommand())
+        register("customtitle", "title", command = CustomTitleCommand())
+        register("teleto", "tpto", "teleportto", command = TeleportToCommand())
         val teleportCommand = TeleportCommand()
         register(*teleportCommand.getAllTriggers().toTypedArray(), command = teleportCommand)
         register("location", "locations", "teleports", command = LocationsCommand(teleportCommand))

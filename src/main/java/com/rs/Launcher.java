@@ -187,6 +187,15 @@ public final class Launcher {
 				continue;
 			AccountCreation.savePlayer(player);
 		}
+		Logger.log("Launcher", "There is currently " + World.getPlayers().size() + " players online.");
+
+		String playerNames = World.getPlayers().stream()
+				.filter(p -> p != null && p.hasStarted() && !p.hasFinished())
+				.map(Player::getUsername) // Or Player::getName depending on your method
+				.toList()
+				.toString();
+
+		Logger.log("Launcher", "Players: " + playerNames);
 		IPBanL.save();
 		GrandExchange.save();
 		// PlayerOwnedShops.save();

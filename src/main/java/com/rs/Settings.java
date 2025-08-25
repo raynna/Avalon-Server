@@ -145,6 +145,7 @@ public final class Settings {
 	public static final int[] MAP_SIZES = { 104, 120, 136, 168, 72 };
 
 	public static final String GRAB_SERVER_TOKEN = "hAJWGrsaETglRjuwxMwnlA/d5W6EgYWx";
+	
 	public static final int[] GRAB_SERVER_KEYS = { 1441, 78700, 44880, 39771, 363186, 44375, 0, 16140, 7316, 271148,
 			810710, 216189, 379672, 454149, 933950, 21006, 25367, 17247, 1244, 1, 14856, 1494, 119, 882901, 1818764,
 			3963, 3618 };
@@ -164,7 +165,7 @@ public final class Settings {
 			13887, 13890, 13893, 13896, 13899, 13902, 13905, 14484, 19784, 11694, 13738, 13740, 13742, 13744, 15017,
 			15018, 15019, 15020, 15220, 23659, 6570 };
 	
-	public static final String[] DEVELOPERS = { "starter", "bank", "andreas", "manager", "diz", "bit_new22", "user1", "user2", "user3"};
+	public static final String[] DEVELOPERS = { "bigcow", "starter", "bank", "andreas", "manager", "diz", "bit_new22", "user1", "user2", "user3"};
 	
 	public static final String[] MODERATORS = {};
 	

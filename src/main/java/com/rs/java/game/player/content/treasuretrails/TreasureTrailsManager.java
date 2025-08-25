@@ -771,7 +771,8 @@ public class TreasureTrailsManager implements Serializable {
 									&& item.getDefinitions().isStackable())
 								player.getInventory().addItem(item);
 							else
-								World.updateGroundItem(item, player.getLastWorldTile(), player, 60, 0);
+								player.getBank().addItem(item, true);
+								//World.updateGroundItem(item, player.getLastWorldTile(), player, 60, 0);
 						}
 					}
 

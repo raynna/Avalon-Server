@@ -17,7 +17,6 @@ import com.rs.kotlin.game.world.projectile.ProjectileManager
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.reflect.jvm.internal.impl.builtins.StandardNames.FqNames.target
 
 
 /** Range Attack distances
@@ -409,16 +408,16 @@ object StandardRanged : RangeData() {
                     ) {
                         context.attacker.packets.sendSound(hitSoundId, 0, 1)
                     }
-                    ProjectileManager.sendDelayed(
+                    ProjectileManager.send(
                         Projectile.DRAGON_ARROW,
                         arrowProjectile,
                         context.attacker,
                         context.defender,
-                        delayTicks = 1,
-                        heightOffset = 15,
+                        angleOffset = 15,
+                        delayOffset = 10,
                         hitGraphic = Graphics(endGraphic, 100)
                     ) {
-                        context.attacker.packets.sendSound(hitSoundId, 0, 1)
+                        context.attacker.packets.sendSound(hitSoundId, 10, 1)
                     }
                     context.attacker.packets.sendSound(soundId, 0, 1)
                     context.attacker.packets.sendSound(soundId, 30, 1)
@@ -446,10 +445,17 @@ object StandardRanged : RangeData() {
                         Projectile.DRAGON_ARROW,
                         projectile,
                         context.attacker,
-                        context.defender,
-                        heightOffset = 0
+                        context.defender
                     )
-                    ProjectileManager.sendDelayed(
+                    ProjectileManager.send(
+                        Projectile.DRAGON_ARROW,
+                        projectile,
+                        context.attacker,
+                        context.defender,
+                        angleOffset = 10,
+                        delayOffset = 10,
+                    )
+                   /* ProjectileManager.sendDelayed(
                         projectile = Projectile.DRAGON_ARROW,
                         gfxId = projectile,
                         attacker = context.attacker,
@@ -457,7 +463,7 @@ object StandardRanged : RangeData() {
                         delayTicks = 1,
                         heightOffset = 10
                     ) {
-                    }
+                    }*/
                     context.hits {
                         val distance = Utils.getDistance(context.attacker, context.defender)
                         val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
@@ -521,7 +527,7 @@ object StandardRanged : RangeData() {
             effect = SpecialEffect(
                 execute = { context ->
                     context.attacker.animate("animation.morrigans_throwing_axe_attack")
-                    context.attacker.gfx("graphic.morrigans_throwing_axe_start", 100)
+                    context.attacker.gfx("graphic.morrigans_throwing_axe_start")
                     ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
                     context.hits {
                         ranged(
@@ -535,12 +541,51 @@ object StandardRanged : RangeData() {
                 energyCost = 25,
                 execute = { context ->
                     context.attacker.animate("animation.morrigans_throwing_axe_attack")
-                    context.attacker.gfx("graphic.morrigans_throwing_axe_start", 100)
+                    context.attacker.gfx("graphic.morrigans_throwing_axe_start")
                     ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
-                    context.rangedHit(delay = context.combat.getHitDelay());
+                    context.hits {
+                        val rangedHit = ranged(delay = context.combat.getHitDelay())
+                        rangedHit.damage = (rangedHit.damage * 0.6).toInt()
+                    }
                 }
             )
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.morrigan_s_javelin", "item.morrigan_s_javelin_p", "item.morrigan_s_javelin_p+", "item.morrigan_s_javelin_p++"),
+            name = "Morrigan's Javelin",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = 10501,
+            ammoType = AmmoType.JAVELIN,
+            effect = SpecialEffect(
+                execute = { context ->
+                    context.attacker.animate("animation.morrigans_javelin_attack")
+                    context.attacker.gfx("graphic.morrigans_javelin_start")
+                    ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_javelin_projectile", context.attacker, context.defender)
+                    context.hits {
+                        ranged(
+                            delay = context.combat.getHitDelay()
+                        )
+                    }
+                    true
+                }
             ),
+            special = SpecialAttack.Combat(
+                energyCost = 50,
+                execute = { context ->
+                    context.attacker.animate("animation.morrigans_javelin_attack")
+                    context.attacker.gfx("graphic.morrigans_javelin_start")
+                    ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_javelin_projectile", context.attacker, context.defender)
+                    context.hits {
+                        val delay = context.combat.getHitDelay()
+                        val rangedHit = ranged(accuracyMultiplier = 1.5, delay = delay)
+                        if (rangedHit.damage > 0) {
+                            context.applyBleed(baseHit = rangedHit, bleedPercent = .75, maxTickDamage =50, initialDelay = delay, tickInterval = 2)
+                        }
+                    }
+                }
+            )
+        ),
         /** Dungeoneering Range Weapons */
         RangedWeapon(
             itemId = Item.getIds(

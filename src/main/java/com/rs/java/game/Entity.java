@@ -35,6 +35,7 @@ import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.NewPoison;
+import com.rs.kotlin.game.player.combat.damage.PendingHit;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 
 public abstract class Entity extends WorldTile {
@@ -207,6 +208,24 @@ public abstract class Entity extends WorldTile {
         receivedHits.add(hit);
     }
 
+    public void applyBleed(Hit originalHit, double bleedPercent, int maxTickDamage, int initialDelay, int tickInterval) {
+        if (originalHit == null || originalHit.getDamage() <= 0 || bleedPercent <= 0) return;
+
+        int totalBleed = (int) Math.round(originalHit.getDamage() * bleedPercent);
+        int remaining = totalBleed;
+        int delay = initialDelay;
+
+        while (remaining > 0) {
+            int chunk = Math.min(maxTickDamage, remaining);
+            remaining -= chunk;
+
+            BleedHit bleedHit = new BleedHit(originalHit.getSource(), chunk, HitLook.REGULAR_DAMAGE, delay);
+            receivedHits.add(bleedHit);
+
+            delay += tickInterval;
+        }
+    }
+
 
     private transient final int totalHitsProcess = 4;
 
@@ -224,14 +243,21 @@ public abstract class Entity extends WorldTile {
             if (player.getLockDelay() > Utils.currentTimeMillis())
                 return;
         }
-
         int processedCount = 0;
-        while (!receivedHits.isEmpty() && processedCount < totalHitsProcess) {
-            Hit hit = receivedHits.poll();
+        Iterator<Hit> iterator = receivedHits.iterator();
+        while (iterator.hasNext() && processedCount < totalHitsProcess) {
+            Hit hit = iterator.next();
+
+            if (hit instanceof BleedHit bleed) {
+                if (!bleed.tick()) {
+                    continue;
+                }
+            }
+
+            iterator.remove();
             processHit(hit);
             processedCount++;
         }
-
         processOverflowHits();
     }
 

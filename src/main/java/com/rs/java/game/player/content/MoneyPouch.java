@@ -77,6 +77,7 @@ public class MoneyPouch implements Serializable {
 			}
 
 			// Add leftover coins to inventory or drop on ground
+			player.getPackets().sendRunScript(5561, 1, spaceLeft);
 			addLeftoverCoins(spaceLeft, delete);
 			return;
 		}
@@ -85,7 +86,7 @@ public class MoneyPouch implements Serializable {
 		setTotal(total + amount);
 		sendAddMessage(amount);
 		refresh();
-
+		player.getPackets().sendRunScript(5561, 1, amount);
 		if (delete) {
 			player.getInventory().deleteItem(new Item(995, amount));
 		}

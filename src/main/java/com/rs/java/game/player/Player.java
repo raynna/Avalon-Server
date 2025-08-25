@@ -19,6 +19,8 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
+import com.rs.core.NewPacket.PacketRegistry;
+import com.rs.core.NewPacket.WorldPacketsDecoderV2;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.CreationKiln;
@@ -137,6 +139,7 @@ public class Player extends Entity {
     public static final int TELE_MOVE_TYPE = 127, WALK_MOVE_TYPE = 1, RUN_MOVE_TYPE = 2;
 
     private static final long serialVersionUID = 2011932556974180375L;
+    public int chatType;
 
     /**
      * @Player
@@ -2244,8 +2247,10 @@ public class Player extends Entity {
 
     public void processLogicPackets() {
         LogicPacket packet;
+        PacketRegistry registry = getSession().getWorldPacketRegistry();
         while ((packet = logicPackets.poll()) != null)
-            WorldPacketsDecoder.decodeLogicPacket(this, packet);
+            WorldPacketsDecoderV2.decodeLogicPacket(this, packet, registry);
+            //WorldPacketsDecoder.decodeLogicPacket(this, packet);
     }
 
     public void processEquip() {
@@ -2958,6 +2963,7 @@ public class Player extends Entity {
         refreshOtherChatsSetup();
         refreshSpawnedItems();
         refreshSpawnedObjects();
+        Logger.log("Player", username + " has logged in.");
     }
 
     private String getGameMode() {
@@ -3180,6 +3186,7 @@ public class Player extends Entity {
         if (getPlayerRank().getRank()[0] != Rank.DEVELOPER) {
             com.everythingrs.hiscores.Hiscores.update("JkQT2VoUwdun6IyLu2xk0lc7fOH4RV077Gc5g6hUpwA6Q2E5Yaxxu24tQt86i4B26RbIGl40", "Normal Mode", this.getUsername(), 0, playerXP, false);
         }
+        Logger.log("Player", username + " has logged out.");
         TicketSystem.destroyChatOnLogOut(this);
         AntiBot.getInstance().destroy(this);
         getPackets().sendLogout(lobby);
@@ -3190,6 +3197,7 @@ public class Player extends Entity {
     public Summoning.Pouch familiarPouch;
 
     public void forceLogout() {
+        Logger.log("Player", username + " has been logged out.");
         getPackets().sendLogout(false);
         active = false;
         realFinish();
@@ -3447,6 +3455,10 @@ public class Player extends Entity {
 
     public WorldPacketsEncoder getPackets() {
         return session.getWorldPackets();
+    }
+
+    public WorldPacketsEncoder getNewPackets() {
+        return getSession().getWorldPacketsEncoder();
     }
 
     public boolean hasStarted() {

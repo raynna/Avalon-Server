@@ -2,7 +2,7 @@ package com.rs.java.game;
 
 import com.rs.java.game.player.Player;
 
-public final class Hit {
+public class Hit {
 
 	public enum HitLook {
 

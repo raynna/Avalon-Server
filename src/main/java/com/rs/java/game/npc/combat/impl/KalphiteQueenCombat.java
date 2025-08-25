@@ -5,11 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldTile;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
@@ -33,8 +29,10 @@ public class KalphiteQueenCombat extends CombatScript {
 		if (target instanceof Player)
 		    arrayList.add((Player) target);
 		World.sendFastBowProjectile(fromEntity, target, 70);
-		delayHit(startTile, target, 0, getMagicHit(startTile,
-				getRandomMaxHit(startTile, startTile.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+		if (fromEntity instanceof NPC npc) {
+			Hit magicHit = npc.magicHit(t, npc.getMaxHit());
+			delayHit(npc, t, 2, magicHit);
+		}
 		WorldTasksManager.schedule(new WorldTask() {
 
 		    @Override
@@ -53,8 +51,10 @@ public class KalphiteQueenCombat extends CombatScript {
 			arrayList.add((Player) target);
 		World.sendFastBowProjectile(fromEntity, target, 70);
 		//World.sendProjectile(fromEntity, target, 280, fromEntity == startTile ? 70 : 20, 20, 60, 30, 0, 0);
-		delayHit(startTile, target, 0, getMagicHit(startTile,
-				getRandomMaxHit(startTile, startTile.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+		if (fromEntity instanceof NPC npc) {
+			Hit magicHit = npc.magicHit(t, npc.getMaxHit());
+			delayHit(npc, t, 2, magicHit);
+		}
 		WorldTasksManager.schedule(new WorldTask() {
 
 			@Override
@@ -116,16 +116,16 @@ public class KalphiteQueenCombat extends CombatScript {
 				attackStyle = Utils.random(2); // set mage
 			else {
 				npc.animate(new Animation(defs.getAttackEmote()));
-				delayHit(npc, target, 0,
-                        getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+				Hit meleeHit = npc.meleeHit(target, npc.getMaxHit());
+				delayHit(npc, target, 0, meleeHit);
 				return defs.getAttackDelay();
 			}
 		}
 		npc.animate(new Animation(npc.getId() == 1158 ? 6240 : 6234));
 		if (attackStyle == 1) { // range easy one
 			for (final Entity t : npc.getPossibleTargets()) {
-				delayHit(npc, t, 2,
-                        getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
+				Hit rangeHit = npc.rangedHit(target, npc.getMaxHit());
+				delayHit(npc, t, 0, rangeHit);
 				World.sendDragonfireProjectile(npc, t, 288);
 				//World.sendProjectile(npc, t, 288, 46, 31, 50, 30, 16, 0);
 			}

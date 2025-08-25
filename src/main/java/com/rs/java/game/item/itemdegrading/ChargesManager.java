@@ -183,13 +183,11 @@ public class ChargesManager implements Serializable {
 		if (data == null || data.getCurrentItem().getId() != item.getId())
 			return;
 
-		// Only initialize charges if they don't exist
 		charges.computeIfAbsent(item.getId(), k -> {
 			player.message("Your " + ItemDefinitions.getItemDefinitions(item.getId()).getName() + " has started degrading.");
-			return data.getHits(); // Initialize with default charges (400)
+			return data.getHits();
 		});
 
-		// No charge removal or degradation logic here - handled in handleRingOfRecoil
 	}
 
 	private void degrade(Item item, int slot) {
@@ -223,11 +221,13 @@ public class ChargesManager implements Serializable {
 
 			int percentage = (charges * 100 / total);
 
-			int displayPercentage = (percentage / 5) * 5;
-			int lastPercentage = metaData.getLastDisplayedPercentage() != -1 ? metaData.getLastDisplayedPercentage() : 105; // >100 so first always prints
-			if (displayPercentage < lastPercentage && displayPercentage > 0) {
-				checkPercentage("Your " + definitions.getName() + " has ##% charges left.", item, false);
-				metaData.setLastDisplayedPercentage(displayPercentage);
+			if (item.getName().contains("(deg)") || item.getName().contains("100") || item.getName().contains("75") || item.getName().contains("50") || item.getName().contains("25")) {
+				int displayPercentage = (percentage / 5) * 25;
+				int lastPercentage = metaData.getLastDisplayedPercentage() != -1 ? metaData.getLastDisplayedPercentage() : 105; // >100 so first always prints
+				if (displayPercentage < lastPercentage && displayPercentage > 0) {
+					checkPercentage("Your " + definitions.getName() + " has ##% charges left.", item, false);
+					metaData.setLastDisplayedPercentage(displayPercentage);
+				}
 			}
 			return;
 		}

@@ -31,8 +31,8 @@ interface CombatStyle {
             if (defender.combatDefinitions.isAutoRelatie && !defender.newActionManager.hasActionWorking()) {
                 defender.newActionManager.setAction(CombatAction(attacker));
             }
-            if (defender.hasVengeance()) {
-                defender.setVengeance(false);
+            if (defender.hasVengeance() && hit.damage > 0) {
+                defender.setVengeance(false)
                 defender.nextForceTalk = ForceTalk("Taste vengeance!")
                 attacker.applyHit(Hit(defender, (hit.damage * 0.75).toInt(), Hit.HitLook.REGULAR_DAMAGE));
             }

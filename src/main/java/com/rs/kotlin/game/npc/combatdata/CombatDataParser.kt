@@ -65,7 +65,6 @@ object CombatDataParser {
                 thralls = immunities["thralls"].asBoolean,
                 burn = immunities["burn"].asBoolean
             ),
-            xpBonus = json["xpBonus"].asDouble,
             maxHit = MaxHit(maxHit["maxhit"].asInt),
             aggressive = json["aggressive"].asBoolean,
             attackStyles = json["attackStyles"].asJsonArray.map { it.asString },

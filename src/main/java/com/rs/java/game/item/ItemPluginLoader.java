@@ -18,7 +18,7 @@ public class ItemPluginLoader {
     public static ItemPlugin getPlugin(Item item) {
         ItemPlugin plugin = cachedItemPlugins.getOrDefault(item.getId(), cachedItemPlugins.get(item.getName()));
         if (plugin != null) {
-            System.out.println("[ItemPluginLoader] "+item.getName()+"("+item.getId()+"): plugin was found by Id.");
+            //System.out.println("[ItemPluginLoader] "+item.getName()+"("+item.getId()+"): plugin was found by Id.");
             return plugin;
         }
         for (Map.Entry<Object, ItemPlugin> entry : cachedItemPlugins.entrySet()) {

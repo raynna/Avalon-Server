@@ -149,9 +149,11 @@ object SpellHandler {
     }
 
     fun checkAndRemoveRunes(player: Player, spell: Spell): Boolean {
-        if (staffOfLightEffect(player)) {
-            player.packets.sendGameMessage("Your spell draws its power completely from your staff.")
-            return true
+        if (spell.type == SpellType.Combat) {
+            if (staffOfLightEffect(player)) {
+                player.packets.sendGameMessage("Your spell draws its power completely from your staff.")
+                return true
+            }
         }
 
         val runesToRemove = mutableListOf<Item>()
@@ -199,7 +201,6 @@ object SpellHandler {
                 if (removed) break
             }
 
-            // If not removed from pouch, remove from inventory
             if (!removed) {
                 player.inventory.deleteItem(rune.id, rune.amount)
                 player.inventory.refresh()

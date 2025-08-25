@@ -131,7 +131,9 @@ object ProjectileManager {
         gfxId: Int,
         attacker: Entity,
         defender: Entity,
+        angleOffset: Int = 0,
         heightOffset: Int = 0,
+        delayOffset: Int = 0,
         hitGraphic: Graphics? = null,
         speedAdjustment: Int = 0,
         onLanded: (() -> Unit)? = null
@@ -140,10 +142,11 @@ object ProjectileManager {
             println("Unknown projectile type: $projectile")
             return
         }
-
         val adjustedType = type.copy(
             startHeight = (type.startHeight + heightOffset).coerceIn(0, 255),
-            endHeight = (type.endHeight + heightOffset).coerceIn(0, 255),
+            endHeight = (type.endHeight).coerceIn(0, 255),
+            angle = (type.angle + angleOffset).coerceIn(0, 255),
+            delay = ((1 + type.delay) * 30 + delayOffset).coerceIn(0, 255),
             speed = type.speed + speedAdjustment,
         )
 
@@ -183,7 +186,7 @@ object ProjectileManager {
         creatorSize: Int
     ): Int {
         val distance = Utils.getDistance(startTile.x, startTile.y, endTile.x, endTile.y)
-        val travelDuration = type.speed + 20 + (distance * 5) + (distance * distance / 8)
+        val travelDuration = type.speed + 20 + (distance * 4) + (distance * distance / 8)
 
         val players = World.getPlayers().stream().filter { player ->
             player.hasStarted() && !player.hasFinished() &&
@@ -207,7 +210,7 @@ object ProjectileManager {
             stream.writeShort(gfx)
             stream.writeByte(type.startHeight)
             stream.writeByte(type.endHeight)
-            val delay = (1 + type.delay) * 30
+            val delay = if (type.delay > 30) type.delay else (1 + type.delay) * 30
             stream.writeShort(delay)
             stream.writeShort(travelDuration)
             stream.writeByte(type.angle)

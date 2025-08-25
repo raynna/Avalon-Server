@@ -191,7 +191,7 @@ public class NPC extends Entity implements Serializable {
         if (combatLevel != 0) {
             combatData = CombatDataParser.getData(id);
             if (combatData != null) {
-                System.out.println("Found data for " + id + ", CombatLevel: " + combatData.combatLevel);
+                //System.out.println("Found data for " + id + ", CombatLevel: " + combatData.combatLevel);
                 return;
             }
         }
@@ -207,7 +207,7 @@ public class NPC extends Entity implements Serializable {
         int meleeAttack = level - (level / 4);
         int magicAttack = level / 2;
         int rangedAttack = level / 2;
-        int constitution = level * 10 + 1;
+        int constitution = level / 2 + 1;
         int maxHit = (int) Math.ceil(level * 0.05); // can adjust
 
         combatData = new CombatData(
@@ -223,7 +223,6 @@ public class NPC extends Entity implements Serializable {
                 new MagicDefence(magicAttack / 2),
                 new RangedDefence(rangedAttack / 2, rangedAttack / 2, rangedAttack / 2),
                 new Immunities(false, false, false, false, false),
-                0.0, // xpBonus
                 new MaxHit(maxHit),
                 true, // aggressive
                 List.of("Crush"), // default attack style

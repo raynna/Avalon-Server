@@ -96,7 +96,7 @@ public class PrayerEffectHandler {
         ProjectileManager.sendSimple(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), attacker, target);
         int healAmount = (int)(damage * soulSplit.getHealPercentage());
         if (healAmount > 0 && attacker.getHitpoints() < attacker.getMaxHitpoints()) {
-            attacker.heal(healAmount, true, true);
+            attacker.heal(healAmount, true, false);
         }
         if (target instanceof Player targetPlayer) {
             int prayerDrain = (int)(damage * soulSplit.getEnemyDrainPercentage());

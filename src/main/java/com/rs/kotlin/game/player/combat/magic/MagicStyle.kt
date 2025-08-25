@@ -47,8 +47,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 attacker.message("You don't have the correct staff to cast ${currentSpell.name}.")
                 return false
             }
-            if (!SpellHandler.checkAndRemoveRunes(attacker, currentSpell))
-                return false;
         }
         return true
     }
@@ -159,6 +157,8 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 return
             }
         }
+        if (!SpellHandler.checkAndRemoveRunes(attacker, spell))
+            return;
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
         if (spell.projectileIds.isNotEmpty()) {
@@ -190,7 +190,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (hit.damage > 0 && spell.bind != -1) {
             defender.addFreezeDelay(spell.bind, true)
         }
-        attacker.message("hitDelay ${getHitDelay()}")
         delayHits(PendingHit(hit, defender, getHitDelay()))
         if (manual) {
             WorldTasksManager.schedule(object : WorldTask() {
@@ -213,6 +212,8 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun handleAncientMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
+        if (!SpellHandler.checkAndRemoveRunes(attacker, spell))
+            return
         val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
