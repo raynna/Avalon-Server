@@ -3,6 +3,7 @@ package com.rs.kotlin.game.player.combat.melee
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
+import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.prayer.PrayerEffectHandler
@@ -20,6 +21,12 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val currentWeaponId = getCurrentWeaponId(attacker)
         val attackStyle = getAttackStyle(currentWeapon)
         val attackBonusType = getAttackBonusType(currentWeapon)
+        if (defender is NPC) {
+            if (defender.name.contains("aviansie", ignoreCase = true) || defender.id == NPC.getNpc("npc.kree_arra_lv580")) {
+                attacker.message("You can't use melee on flying enemies.")
+                return false;
+            }
+        }
         val combatContext = CombatContext(
             combat = this,
             attacker = this.attacker,
@@ -124,20 +131,17 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun delayHits(vararg hits: PendingHit) {
         val currentWeapon = getCurrentWeapon(attacker)
-        val currentWeaponId = getCurrentWeaponId(attacker)
         val attackStyle = getAttackStyle(currentWeapon)
         var totalDamage = 0
         for (pending in hits) {
-            val hit = pending.hit
             val target = pending.target
-            PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit)
-            PrayerEffectHandler.handleProtectionEffects(attacker, target, hit)
-            SoakDamage.handleAbsorb(attacker, target, hit)
-            attacker.chargeManager.processOutgoingHit()
-            target.handleIncommingHit(hit);
-            if (target is Player) {//handling this onHit for magic & range
-                target.animate(CombatAnimations.getBlockAnimation(target));
-                target.chargeManager.processIncommingHit()
+            super.outgoingHit(attacker, target, pending)
+            val hit = pending.hit
+            if (target is Player) {
+                if (target.hasStaffOfLightActive()) {
+                    hit.damage = (hit.damage * 0.5).toInt()
+                    target.gfx(2320)
+                }
             }
             totalDamage += min(hit.damage, target.hitpoints)
             scheduleHit(pending.delay) {
@@ -146,10 +150,6 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             }
         }
         attackStyle.xpMode.distributeXp(attacker, attackStyle, totalDamage);
-    }
-
-    override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
-        super.onHit(attacker, defender, hit)
     }
 
     override fun onStop(interrupted: Boolean) {

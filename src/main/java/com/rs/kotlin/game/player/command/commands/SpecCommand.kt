@@ -1,6 +1,8 @@
 package com.rs.kotlin.game.player.command.commands
 
 import com.rs.Settings
+import com.rs.java.game.Animation
+import com.rs.java.game.Graphics
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Ranks
 import com.rs.java.game.player.TickManager
@@ -26,6 +28,8 @@ class SpecCommand : Command {
             return true
         }
         player.getCombatDefinitions().resetSpecialAttack()
+        player.animate(Animation(8502))
+        player.gfx(Graphics(1308))
         player.message("Your special attack has been restored.")
         return true
     }

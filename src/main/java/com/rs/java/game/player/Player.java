@@ -3772,6 +3772,7 @@ public class Player extends Entity {
             isDreaming = false;
         if (!controlerManager.sendDeath())
             return;
+        dead = true;
         getInterfaceManager().closeOverlay(false);
         resetWalkSteps();
         lock(7);
@@ -3817,6 +3818,7 @@ public class Player extends Entity {
                     reset();
                     setNextWorldTile(new WorldTile(Settings.RESPAWN_PLAYER_LOCATION));
                     animate(new Animation(-1));
+                    dead = false;
                     if (getPlayerRank().isHardcore())
                         getIronman().takeLife(instance, killer == instance ? null : killer);
                 } else if (loop == 3) {
@@ -4607,6 +4609,28 @@ public class Player extends Entity {
     public Entity getTemporaryTarget() {
         Entity temporaryTarget = (Entity) temporaryAttribute().get("temporaryTarget");
         return temporaryTarget;
+    }
+
+    public boolean hasStaffOfLight() {
+        Item weapon = getEquipment().getItem(Equipment.SLOT_WEAPON);
+        return weapon.isAnyOf(
+                "item.staff_of_light",
+                "item.staff_of_light_blue",
+                "item.staff_of_light_gold",
+                "item.staff_of_light_green",
+                "item.staff_of_light_red");
+    }
+
+    public boolean hasStaffOfLightActive() {
+        return getTickManager().getTicksLeft(TickManager.TickKeys.STAFF_OF_LIGHT_EFFECT) > 0;
+    }
+
+    public void setStaffOfLightEffect(int minutes) {
+        getTickManager().addMinutes(TickManager.TickKeys.STAFF_OF_LIGHT_EFFECT, minutes);
+    }
+
+    public void resetStaffOfLightEffect() {
+        getTickManager().remove(TickManager.TickKeys.STAFF_OF_LIGHT_EFFECT);
     }
 
     public int getOverloadTicksLeft() {

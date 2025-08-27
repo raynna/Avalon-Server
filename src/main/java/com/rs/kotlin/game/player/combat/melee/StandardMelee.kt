@@ -365,7 +365,7 @@ object StandardMelee : MeleeData() {
                     attacker.animate("animation.staff_of_light_special")
                     attacker.gfx("graphic.staff_of_light_special")
                     attacker.tickManager.addMinutes(TickManager.TickKeys.STAFF_OF_LIGHT_EFFECT, 1) {
-                        attacker.message("Your staff of light effect fades.")
+                        attacker.message("The power of the light fades. Your resistance to melee attacks return to normal.")
                     }
 
                 }

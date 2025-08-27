@@ -181,9 +181,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         super.onHit(attacker, defender, hit)
-        if (defender is Player) {
-            defender.animate(CombatAnimations.getBlockAnimation(defender))
-        }
         val currentWeapon = getCurrentWeapon()
         val currentAmmo = getCurrentAmmo()
         if (currentAmmo != null) {
@@ -214,27 +211,16 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun delayHits(vararg hits: PendingHit) {
         val currentWeapon = getCurrentWeapon()
-        val currentAmmo = getCurrentAmmo()
         val attackStyle = getAttackStyle(currentWeapon)
         var totalDamage = 0
         for (pending in hits) {
             val hit = pending.hit
             val target = pending.target
-            PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit)
-            PrayerEffectHandler.handleProtectionEffects(attacker, target, hit)
-            SoakDamage.handleAbsorb(attacker, target, hit)
+            super.outgoingHit(attacker, target, pending)
             consumeAmmo()
             attacker.packets.sendSound(2702, 0, 1)
             totalDamage += min(hit.damage, target.hitpoints)
-            attacker.chargeManager.processOutgoingHit()
-            target.handleIncommingHit(hit);
-            if (target is Player) {
-                target.chargeManager.processIncommingHit()
-            }
             scheduleHit(pending.delay) {
-                if (target is Player) {
-                    target.animate(CombatAnimations.getBlockAnimation(target))
-                }
                 target.applyHit(hit)
                 onHit(attacker, target, hit)
             }

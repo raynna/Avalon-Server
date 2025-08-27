@@ -530,7 +530,6 @@ public class InventoryOptionsHandler {
             return;
         }
         if (itemId == 7510) {
-            long foodDelay = player.getHitpoints() < 200 ? 1800 : 200;
             if (player.isFoodLocked())
                 return;
             player.addPotLock(3);

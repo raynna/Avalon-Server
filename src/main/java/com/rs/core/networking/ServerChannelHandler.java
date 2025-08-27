@@ -40,7 +40,7 @@ public final class ServerChannelHandler extends SimpleChannelHandler {
 		bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(CoresManager.serverBossChannelExecutor,
 				CoresManager.serverWorkerChannelExecutor, CoresManager.serverWorkersCount));
 		bootstrap.getPipeline().addLast("handler", this);
-		bootstrap.setOption("reuseAddress", true); // reuses adress for bind
+		bootstrap.setOption("reuseAddress", true);
 		bootstrap.setOption("child.tcpNoDelay", true);
 		bootstrap.setOption("child.TcpAckFrequency", true);
 		bootstrap.setOption("child.keepAlive", true);

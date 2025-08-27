@@ -877,6 +877,8 @@ public final class Pots {
 		Pot pot = getPot(item.getId());
 		if (pot == null)
 			return false;
+		if (player.isDead())
+			return true;
 		if (player.isPotLocked())
 			return true;
 		//if (!player.getControlerManager().canPot(pot))

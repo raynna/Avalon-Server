@@ -99,19 +99,9 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         for (pending in hits) {
             val hit = pending.hit
             val target = pending.target
-            PrayerEffectHandler.handleOffensiveEffects(attacker, target, hit)
-            PrayerEffectHandler.handleProtectionEffects(attacker, target, hit)
-            SoakDamage.handleAbsorb(attacker, target, hit)
+            super.outgoingHit(attacker, target, pending)
             totalDamage += min(hit.damage, target.hitpoints)
-            attacker.chargeManager.processOutgoingHit()
-            target.handleIncommingHit(hit);
-            if (target is Player) {
-                target.chargeManager.processIncommingHit()
-            }
             scheduleHit(pending.delay) {
-                if (target is Player) {
-                    target.animate(CombatAnimations.getBlockAnimation(target))
-                }
                 if (hit.damage > 0)
                     target.applyHit(hit)
                 onHit(attacker, target, hit)
@@ -122,9 +112,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         super.onHit(attacker, defender, hit)
-        if (defender is Player) {
-            defender.animate(CombatAnimations.getBlockAnimation(defender))
-        }
         val spellId = attacker.combatDefinitions.spellId
         val currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
             AncientMagicks.id -> AncientMagicks.getSpell(spellId)

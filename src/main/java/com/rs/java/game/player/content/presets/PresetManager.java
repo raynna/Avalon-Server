@@ -17,6 +17,8 @@ import com.rs.java.game.player.controlers.EdgevillePvPControler;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.HexColours.Colour;
+import com.rs.kotlin.game.player.command.CommandRegistry;
+import com.rs.kotlin.game.player.command.commands.HealCommand;
 
 public final class PresetManager implements Serializable {
 
@@ -117,16 +119,25 @@ public final class PresetManager implements Serializable {
 		Item[] equipment = player.getEquipment().getItems().getItemsCopy();
 		Item[] runes = player.getRunePouch().getContainerItems();
 		for (Item item : inventory) {
-			if (item != null)
-				player.getBank().addItem(item, true);
+			if (item == null) continue;
+			if (Settings.ECONOMY_MODE == Settings.FULL_SPAWN) {
+				if (item.getMetadata() != null) continue;
+			}
+			player.getBank().addItem(item, true);
 		}
 		for (Item item : equipment) {
-			if (item != null)
-				player.getBank().addItem(item, true);
+			if (item == null) continue;
+			if (Settings.ECONOMY_MODE == Settings.FULL_SPAWN) {
+				if (item.getMetadata() != null) continue;
+			}
+			player.getBank().addItem(item, true);
 		}
 		for (Item item : runes) {
-			if (item != null)
-				player.getBank().addItem(item, true);
+			if (item == null) continue;
+			if (Settings.ECONOMY_MODE == Settings.FULL_SPAWN) {
+				if (item.getMetadata() != null) continue;
+			}
+			player.getBank().addItem(item, true);
 		}
 
 		Iterator<Map.Entry<Integer, Item[]>> iterator = player.getStaffCharges().entrySet().iterator();
@@ -268,6 +279,7 @@ public final class PresetManager implements Serializable {
 		player.getAppearence().generateAppearenceData();
 		player.getSkills().switchXPPopup(true);
 		player.getSkills().switchXPPopup(true);
+		CommandRegistry.execute(player, "heal");
 		player.message("Loaded setup: " + name + ".");
 
 	}

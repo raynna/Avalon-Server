@@ -7,10 +7,16 @@ import com.rs.java.game.ForceTalk
 import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
+import com.rs.java.game.player.CombatDefinitions
+import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
+import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.damage.SoakDamage
+import com.rs.kotlin.game.player.combat.effects.EquipmentEffects
+import com.rs.kotlin.game.player.combat.magic.MagicStyle
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.range.RangedStyle
@@ -25,8 +31,32 @@ interface CombatStyle {
     fun attack()
     fun onStop(interrupted: Boolean)
     fun delayHits(vararg hits: PendingHit)
+
+    fun outgoingHit(attacker: Player, defender: Entity, pending: PendingHit) {
+        val hit = pending.hit
+        PrayerEffectHandler.handleProtectionEffects(attacker, defender, hit)//protection prayers first
+        EquipmentEffects.applyOutgoing(attacker, defender, hit, this)//divine, keris applied second
+        if (defender is Player) {
+            EquipmentEffects.applyIncoming(defender, hit, this)//divine, keris applied second
+        }
+        SoakDamage.handleAbsorb(attacker, defender, hit)//soak applied last, after all effect reductions
+        attacker.chargeManager.processOutgoingHit()
+        PrayerEffectHandler.handleOffensiveEffects(attacker, defender, hit)//boost prayers effects, like increase turmoil or leech prayers
+        // last, due to soulsplit would heal confusing heals if not & rest is just increase prayer %
+        if (defender is Player) {
+            if (this is MeleeStyle) {
+                defender.animate(CombatAnimations.getBlockAnimation(defender))
+            }
+            defender.chargeManager.processIncommingHit()
+        }
+        defender.handleIncommingHit(hit);
+    }
+
     fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         if (defender is Player) {
+            if (this is RangedStyle || this is MagicStyle) {
+                defender.animate(CombatAnimations.getBlockAnimation(defender))
+            }
             defender.chargeManager.processHit(hit)
             if (defender.combatDefinitions.isAutoRelatie && !defender.newActionManager.hasActionWorking()) {
                 defender.newActionManager.setAction(CombatAction(attacker));

@@ -3,6 +3,8 @@ package com.rs.java.game.player;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -15,22 +17,31 @@ import com.rs.java.utils.ItemExamines;
 
 public class Trade {
 
-	private transient Player player, target;
-	private ItemsContainer<Item> items;
+	private static final int COINS_ID = 995;
+
+	private final transient Player player;
+    private transient Player target;
+	private final ItemsContainer<Item> items;
 	private boolean tradeModified;
 	private boolean accepted;
 
 	public Trade(Player player) {
 		this.player = player; // player reference
-		items = new ItemsContainer<Item>(28, false);
+		this.items = new ItemsContainer<>(28, false);
 	}
 
 	/*
 	 * called to both players
 	 */
 	public void openTrade(Player target) {
-		synchronized (this) {
-			synchronized (target.getTrade()) {
+		if (target == null) return;
+
+		Trade a = this;
+		Trade b = target.getTrade();
+
+		Trade[] order = ordered(a, b);
+		synchronized (order[0]) {
+			synchronized (order[1]) {
 				this.target = target;
 				player.getPackets().sendTextOnComponent(335, 17, "Trading With: " + target.getDisplayName());
 				player.getPackets().sendGlobalString(203, target.getDisplayName());
@@ -42,12 +53,7 @@ public class Trade {
 				refreshStageMessage(true);
 				player.getInterfaceManager().sendInterface(335);
 				player.getInterfaceManager().sendInventoryInterface(336);
-				player.setCloseInterfacesEvent(new Runnable() {
-					@Override
-					public void run() {
-						closeTrade(CloseTradeStage.CANCEL);
-					}
-				});
+				player.setCloseInterfacesEvent(() -> closeTrade(CloseTradeStage.CANCEL));
 			}
 		}
 	}
@@ -56,21 +62,23 @@ public class Trade {
 		synchronized (this) {
 			if (!isTrading())
 				return;
-			synchronized (target.getTrade()) {
+			Trade other = safeOtherTrade();
+			if (other == null) return;
+			synchronized (other) {
 				Item item = items.get(slot);
 				if (item == null)
 					return;
 				Item[] itemsBefore = items.getItemsCopy();
 				int maxAmount = items.getNumberOf(item);
-				if (amount < maxAmount)
-					item = new Item(item.getId(), amount);
-				else
-					item = new Item(item.getId(), maxAmount);
-				items.remove(slot, item);
-				if (item.getId() != 995)
-					player.getInventory().addItem(item);
-				else
-					player.getMoneyPouch().addMoney(item.getAmount(), false);
+				Item toRemove = new Item(item.getId(), Math.min(amount, maxAmount));
+				items.remove(slot, toRemove);
+
+				if (toRemove.getId() != COINS_ID) {
+					player.getInventory().addItem(toRemove);
+				} else {
+					player.getMoneyPouch().addMoney(toRemove.getAmount(), false);
+				}
+
 				refreshItems(itemsBefore);
 				cancelAccepted();
 				setTradeModified(true);
@@ -89,8 +97,9 @@ public class Trade {
 			accepted = false;
 			canceled = true;
 		}
-		if (target.getTrade().accepted) {
-			target.getTrade().accepted = false;
+		Trade other = safeOtherTrade();
+		if (other != null && other.accepted) {
+			other.accepted = false;
 			canceled = true;
 		}
 		if (canceled)
@@ -101,7 +110,9 @@ public class Trade {
 		synchronized (this) {
 			if (!isTrading())
 				return;
-			synchronized (target.getTrade()) {
+			Trade other = safeOtherTrade();
+			if (other == null) return;
+			synchronized (other) {
 				Item item = player.getInventory().getItem(slot);
 				if (item == null)
 					return;
@@ -109,11 +120,13 @@ public class Trade {
 					player.getPackets().sendGameMessage("That item isn't tradeable.");
 					return;
 				}
+
 				Item[] itemsBefore = items.getItemsCopy();
+
 				int maxAmount = player.getInventory().getItems().getNumberOf(item);
-				int itemAmount = amount;
-				if (itemAmount > maxAmount)
-					itemAmount = maxAmount;
+				int itemAmount = Math.min(amount, maxAmount);
+
+				// Cap protection (legacy behavior preserved)
 				for (Item tradeItems : items.getContainerItems()) {
 					if (tradeItems == null)
 						continue;
@@ -121,30 +134,40 @@ public class Trade {
 						player.getPackets().sendGameMessage("You can't trade more of that item.");
 						return;
 					}
-					if (tradeItems.getAmount() + itemAmount < 0) {
+					if (tradeItems.getAmount() + itemAmount < 0) { // overflow guard
 						itemAmount = Integer.MAX_VALUE - tradeItems.getAmount();
 					}
 				}
+
+				if (itemAmount <= 0) return;
+
 				items.add(new Item(item.getId(), itemAmount));
 				player.getInventory().deleteItem(slot, new Item(item.getId(), itemAmount));
+
 				refreshItems(itemsBefore);
 				cancelAccepted();
+				setTradeModified(true);
 			}
 		}
 	}
 
-	public void addPouch(int slot, int amount) {
+	public void addPouch(int amount) {
 		synchronized (this) {
 			if (!isTrading())
 				return;
-			synchronized (target.getTrade()) {
+			Trade other = safeOtherTrade();
+			if (other == null) return;
+			synchronized (other) {
 				Item[] itemsBefore = items.getItemsCopy();
-				if (player.getMoneyPouch().getTotal() == 0) {
+				int pouchTotal = player.getMoneyPouch().getTotal();
+				if (pouchTotal == 0) {
 					player.getPackets().sendGameMessage("You don't have enough money to do that.");
 					return;
 				}
-				int itemAmount;
-				itemAmount = amount;
+
+				int itemAmount = amount;
+
+				// Cap protection (legacy behavior preserved)
 				for (Item tradeItem : items.getContainerItems()) {
 					if (tradeItem == null)
 						continue;
@@ -152,17 +175,23 @@ public class Trade {
 						player.getPackets().sendGameMessage("You can't trade more of that item.");
 						return;
 					}
-					if (tradeItem.getAmount() + amount < 0) {
+					if (tradeItem.getAmount() + amount < 0) { // overflow guard
 						itemAmount = Integer.MAX_VALUE - tradeItem.getAmount();
 						player.getPackets().sendGameMessage("You can't trade more of that item.");
 					}
 				}
-				if (itemAmount > player.getMoneyPouch().getTotal())
-					itemAmount = player.getMoneyPouch().getTotal();
-				items.add(new Item(995, itemAmount));
+
+				if (itemAmount > pouchTotal)
+					itemAmount = pouchTotal;
+
+				if (itemAmount <= 0) return;
+
+				items.add(new Item(COINS_ID, itemAmount));
 				player.getMoneyPouch().removeMoneyMisc(itemAmount);
+
 				refreshItems(itemsBefore);
 				cancelAccepted();
+				setTradeModified(true);
 			}
 		}
 	}
@@ -223,7 +252,9 @@ public class Trade {
 		synchronized (this) {
 			if (!isTrading())
 				return;
-			synchronized (target.getTrade()) {
+			Trade other = safeOtherTrade();
+			if (other == null) return;
+			synchronized (other) {
 				if (firstStage) {
 					nextStage();
 				} else {
@@ -272,26 +303,44 @@ public class Trade {
 		player.getPackets().sendGameMessage(ItemExamines.getExamine(item));
 	}
 
-	public boolean nextStage() {
+	public void nextStage() {
 		if (!isTrading())
-			return false;
-		if (player.getInventory().getItems().getUsedSlots() + target.getTrade().items.getUsedSlots() > 28) {
-			player.setCloseInterfacesEvent(null);
-			player.closeInterfaces();
-			closeTrade(CloseTradeStage.NO_SPACE);
-			return false;
+			return;
+
+		Player otherPlayer = target;
+		if (otherPlayer == null) return;
+
+		boolean iFit = canFitIncoming(player, otherPlayer.getTrade().items);
+		boolean theyFit = canFitIncoming(otherPlayer, this.items);
+
+		if (!iFit || !theyFit) {
+			if (!iFit) {
+				notifyNoSpace(player, "You don't have enough space in your inventory to continue the trade.");
+				notifyNoSpace(otherPlayer, player.getDisplayName() + " doesn't have enough space in their inventory to continue the trade.");
+				outOfSpaceMessage(player, otherPlayer.getDisplayName() + " doesn't have enough space in their inventory to continue the trade.");
+			}
+			if (!theyFit) {
+				notifyNoSpace(player, otherPlayer.getDisplayName() + " doesn't have enough space in their inventory to continue the trade.");
+				notifyNoSpace(otherPlayer, "You don't have enough space in your inventory to continue the trade.");
+				outOfSpaceMessage(otherPlayer, otherPlayer.getDisplayName() + " doesn't have enough space in their inventory to continue the trade.");
+			}
+			return;
 		}
+
 		accepted = false;
 		player.getInterfaceManager().sendInterface(334);
 		player.getInterfaceManager().closeInventoryInterface();
 		player.getPackets().sendHideIComponent(334, 55, !(tradeModified || target.getTrade().tradeModified));
 		refreshBothStageMessage(false);
-		return true;
 	}
 
 	public void refreshBothStageMessage(boolean firstStage) {
 		refreshStageMessage(firstStage);
 		target.getTrade().refreshStageMessage(firstStage);
+	}
+
+	public void outOfSpaceMessage(Player player, String message) {
+		player.getPackets().sendTextOnComponent(335, 39, message);
 	}
 
 	public void refreshStageMessage(boolean firstStage) {
@@ -313,7 +362,8 @@ public class Trade {
 	}
 
 	public void refreshTradeWealth() {
-		int wealth = getTradeWealth();
+		long wealthLong = getTradeWealth(); // compute in long
+		int wealth = wealthLong > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) wealthLong;
 		player.getPackets().sendGlobalVar(729, wealth);
 		target.getPackets().sendGlobalVar(697, wealth);
 	}
@@ -324,17 +374,31 @@ public class Trade {
 				"has " + (freeSlots == 0 ? "no" : freeSlots) + " free" + "<br>inventory slots");
 	}
 
-	public int getTradeWealth() {
-		int wealth = 0;
+	private static boolean canFitIncoming(Player receiver, ItemsContainer<Item> incoming) {
+		if (receiver == null || incoming == null) return false;
+		int invUsed = receiver.getInventory().getItems().getUsedSlots();
+		int incomingStacks = incoming.getUsedSlots();
+		return invUsed + incomingStacks <= 28;
+	}
+
+	private void notifyNoSpace(Player p, String msg) {
+		if (p != null && p.getPackets() != null) {
+			p.getPackets().sendGameMessage(msg);
+		}
+	}
+
+
+	public long getTradeWealth() {
+		long wealth = 0L;
 		for (Item item : items.getContainerItems()) {
 			if (item == null)
 				continue;
-			wealth += EconomyPrices.getPrice(item.getId()) * item.getAmount();
+			wealth += (long) EconomyPrices.getPrice(item.getId()) * (long) item.getAmount();
 		}
 		return wealth;
 	}
 
-	private static enum CloseTradeStage {
+	public enum CloseTradeStage {
 		CANCEL, NO_SPACE, DONE
 	}
 
@@ -345,11 +409,18 @@ public class Trade {
 	}
 
 	public static void archiveTrade(Player player, Player p2, ItemsContainer<Item> items, ItemsContainer<Item> items2) {
+		if (player == null || p2 == null) return;
+		String safeUser = sanitizeUsername(player.getUsername());
+		Path dir = Path.of("data", "logs", "trade");
+		Path file = dir.resolve(safeUser + ".txt");
+
 		try {
-			String location = "";
-			location = "data/logs/trade/" + player.getUsername() + ".txt";
-			BufferedWriter writer = new BufferedWriter(new FileWriter(location, true));
-			writer.write("[" + currentTime("dd MMMMM yyyy 'at' hh:mm:ss z") + "] - " + player.getUsername() + " traded "
+			Files.createDirectories(dir);
+		} catch (IOException ignore) {
+		}
+
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file.toFile(), true))) {
+			writer.write("[" + currentTime("yyyy-MM-dd HH:mm:ss 'UTC'") + "] - " + player.getUsername() + " traded "
 					+ p2.getUsername());
 			writer.newLine();
 			writer.write(player.getUsername() + " items:");
@@ -370,45 +441,64 @@ public class Trade {
 			}
 			writer.newLine();
 			writer.flush();
-			writer.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 
 	public void closeTrade(CloseTradeStage stage) {
-		synchronized (this) {
-			archiveTrade(player, target, items, target.getTrade().items);
-			synchronized (target.getTrade()) {
-				Player oldTarget = target;
-				target = null;
-				tradeModified = false;
-				accepted = false;
+		// Snapshot the other player/trade early & null-check
+		Player oldTarget = this.target;
+		if (oldTarget == null) {
+			// Nothing to do; already closed on this side.
+			return;
+		}
+		Trade otherTrade = oldTarget.getTrade();
+
+		Trade[] order = ordered(this, otherTrade);
+		synchronized (order[0]) {
+			// Log once while we still have both snapshots
+			archiveTrade(player, oldTarget, this.items, otherTrade.items);
+
+			synchronized (order[1]) {
+				// Clear local state / perform transfer
+				this.target = null;
+				this.tradeModified = false;
+				this.accepted = false;
+
 				if (CloseTradeStage.DONE != stage) {
-					player.getInventory().getItems().addAll(items);
-					player.getInventory().init();
-					items.clear();
-				} else {
-					player.getPackets().sendGameMessage("Accepted trade.");
-					ItemsContainer<Item> items = oldTarget.getTrade().items;
+					// Return my offered items
 					for (Item tradedItems : items.getContainerItems()) {
 						if (tradedItems == null)
 							continue;
-						if (tradedItems.getId() == 995)
+						if (tradedItems.getId() == COINS_ID)
 							player.getMoneyPouch().addMoney(tradedItems.getAmount(), false);
 						else
 							player.getInventory().addItem(tradedItems);
 					}
-					/*
-					 * player.getInventory().getItems() .addAll(oldTarget.getTrade().items);
-					 */
+					//player.getInventory().getItems().addAll(items);
 					player.getInventory().init();
-					oldTarget.getTrade().items.clear();
+					items.clear();
+				} else {
+					player.getPackets().sendGameMessage("Accepted trade.");
+                    for (Item tradedItems : otherTrade.items.getContainerItems()) {
+						if (tradedItems == null)
+							continue;
+						if (tradedItems.getId() == COINS_ID)
+							player.getMoneyPouch().addMoney(tradedItems.getAmount(), false);
+						else
+							player.getInventory().addItem(tradedItems);
+					}
+					player.getInventory().init();
+					otherTrade.items.clear();
 				}
-				if (oldTarget.getTrade().isTrading()) {
+
+				if (otherTrade.isTrading()) {
 					oldTarget.setCloseInterfacesEvent(null);
 					oldTarget.closeInterfaces();
-					oldTarget.getTrade().closeTrade(stage);
+					// This will re-enter but locks are ordered and 'synchronized' is reentrant
+					otherTrade.closeTrade(stage);
+
 					if (CloseTradeStage.CANCEL == stage)
 						oldTarget.getPackets().sendGameMessage("<col=ff0000>Other player declined trade!");
 					else if (CloseTradeStage.NO_SPACE == stage) {
@@ -422,4 +512,30 @@ public class Trade {
 		}
 	}
 
+	// ---------- helpers ----------
+
+	private static Trade[] ordered(Trade a, Trade b) {
+		if (a == b) return new Trade[]{a, b};
+		// Prefer stable name-based ordering; if names are equal, fall back to identity hash
+		String an = a.player != null ? a.player.getUsername() : "";
+		String bn = b.player != null ? b.player.getUsername() : "";
+		int cmp = an.compareToIgnoreCase(bn);
+		if (cmp < 0) return new Trade[]{a, b};
+		if (cmp > 0) return new Trade[]{b, a};
+		// Equal usernames (unlikely) -> identityHashCode
+		return (System.identityHashCode(a) < System.identityHashCode(b))
+				? new Trade[]{a, b}
+				: new Trade[]{b, a};
+	}
+
+	private Trade safeOtherTrade() {
+		Player t = this.target;
+		return (t != null) ? t.getTrade() : null;
+	}
+
+	private static String sanitizeUsername(String username) {
+		if (username == null) return "unknown";
+		// Allow only safe filename chars
+		return username.replaceAll("[^A-Za-z0-9._-]", "_");
+	}
 }

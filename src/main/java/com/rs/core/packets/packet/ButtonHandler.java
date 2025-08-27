@@ -73,11 +73,7 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
-import com.rs.kotlin.game.player.combat.CombatStyle;
-import com.rs.kotlin.game.player.combat.Weapon;
 import com.rs.kotlin.game.player.combat.magic.SpellHandler;
-import com.rs.kotlin.game.player.combat.melee.MeleeStyle;
-import com.rs.kotlin.game.player.combat.melee.StandardMelee;
 import com.rs.kotlin.game.player.combat.special.SpecialAttack;
 import com.rs.kotlin.game.player.equipment.BonusType;
 
@@ -93,7 +89,7 @@ public class ButtonHandler {
         if (Utils.getInterfaceDefinitionsSize() <= interfaceId) {
             return;
         }
-        if (player.isDead());
+        if (player.isDead()) ;
         final int componentId = interfaceHash - (interfaceId << 16);
         if (componentId != 65535 && Utils.getInterfaceDefinitionsComponentsSize(interfaceId) <= componentId) {
             return;
@@ -1543,7 +1539,7 @@ public class ButtonHandler {
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                     registerUnEquip(player, Equipment.SLOT_CAPE);
 
-            } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
+                } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {
                     player.getEquipment().sendExamine(Equipment.SLOT_CAPE);
                 }
             } else if (componentId == 12) {
@@ -2436,8 +2432,9 @@ public class ButtonHandler {
         player.getEquipment().refresh(slotId);
         if (item.getId() == 4024) player.getAppearence().transformIntoNPC(-1);
         if (slotId == 3) player.getCombatDefinitions().decreaseSpecialAttack(0);
-        if (item.getId() == 15486 && player.staffOfLightSpecial > Utils.currentTimeMillis()) {
-            player.setStaffOfLightSpecial(0);
+
+        if (player.hasStaffOfLight() && player.hasStaffOfLightActive()) {
+            player.resetStaffOfLightEffect();
             player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
         }
         if (player.getHitpoints() > (player.getMaxHitpoints() * 1.15)) {
@@ -2520,18 +2517,11 @@ public class ButtonHandler {
             player.setHitpoints(player.getMaxHitpoints());
             player.refreshHitPoints();
         }
-
-        if (equipmentSlot == Equipment.SLOT_WEAPON && itemId != 15486) {
-            if (player.staffOfLightSpecial > Utils.currentTimeMillis()) {
-                player.setStaffOfLightSpecial(0);
-                player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
-            }
-        }
+        Item currentlyEquipped = player.getEquipment().getItem(equipmentSlot);
         if (equipmentSlot == Equipment.SLOT_WEAPON) {
             player.itemSwitch = false;
             player.getQueuedInstantCombats().clear();
         }
-        Item currentlyEquipped = player.getEquipment().getItem(equipmentSlot);
         refreshEquipBonuses(player);
         return true;
     }
@@ -2582,6 +2572,10 @@ public class ButtonHandler {
             if (!player.getInventory().getItems().add(weapon)) {
                 player.getInventory().getItems().set(slotId, inventoryItem);
                 return;
+            }
+            if (player.hasStaffOfLight() && player.hasStaffOfLightActive()) {
+                player.resetStaffOfLightEffect();
+                player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
             }
             player.getEquipment().getItems().set(Equipment.SLOT_WEAPON, null);
             player.getEquipment().refresh(Equipment.SLOT_WEAPON);

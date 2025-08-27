@@ -342,8 +342,9 @@ public abstract class Entity extends WorldTile {
                 overlay.updateHealthOverlay(player, target, true);
             }
         }
-        if (hitpoints <= 0)
+        if (hitpoints <= 0) {
             sendDeath(hit.getSource());
+        }
     }
 
     public void resetReceivedDamage() {
@@ -1103,8 +1104,10 @@ public abstract class Entity extends WorldTile {
         return nextFaceEntity != -2 || nextAnimation != null || nextGraphics1 != null || nextGraphics2 != null || nextGraphics3 != null || nextGraphics4 != null || (nextWalkDirection == -1 && nextFaceWorldTile != null) || !nextHits.isEmpty() || nextForceMovement != null || updateMask != null || nextForceTalk != null;
     }
 
+    public boolean dead = false;
+
     public boolean isDead() {
-        return hitpoints == 0;
+        return dead || hitpoints == 0;
     }
 
     public void resetMasks() {

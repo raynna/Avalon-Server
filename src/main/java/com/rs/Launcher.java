@@ -2,6 +2,7 @@ package com.rs;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.alex.store.Index;
@@ -187,21 +188,20 @@ public final class Launcher {
 				continue;
 			AccountCreation.savePlayer(player);
 		}
-		Logger.log("Launcher", "There is currently " + World.getPlayers().size() + " players online.");
+		if (!World.getPlayers().isEmpty())
+			Logger.log("Launcher", "There is currently " + World.getPlayers().size() + " players online.");
 
-		String playerNames = World.getPlayers().stream()
+		List<String> playerNames = World.getPlayers().stream()
 				.filter(p -> p != null && p.hasStarted() && !p.hasFinished())
-				.map(Player::getUsername) // Or Player::getName depending on your method
-				.toList()
-				.toString();
+				.map(Player::getUsername)
+				.toList();
 
-		Logger.log("Launcher", "Players: " + playerNames);
+		if (!playerNames.isEmpty()) {
+			Logger.log("Launcher", "Players: " + playerNames);
+		}
 		IPBanL.save();
 		GrandExchange.save();
-		// PlayerOwnedShops.save();
 		Time = Time("dd MMMMM yyyy 'at' hh:mm:ss z");
-		// System.out.println("Saved players " + Time + ", " + World.getPlayers().size()
-		// + " players online.");
 	}
 
 	public static void cleanMemory(boolean force) {
