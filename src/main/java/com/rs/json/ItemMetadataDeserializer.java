@@ -14,6 +14,8 @@ public class ItemMetadataDeserializer implements JsonDeserializer<ItemMetadata> 
         TYPE_MAP.put(MetaDataType.RUNE_POUCH.getId(), RunePouchMetaData.class);
         TYPE_MAP.put(MetaDataType.DEGRADE_TICKS.getId(), DegradeTicksMetaData.class);
         TYPE_MAP.put(MetaDataType.DEGRADE_HITS.getId(), DegradeHitsMetaData.class);
+        TYPE_MAP.put(MetaDataType.POLYPORE.getId(), PolyporeStaffMetaData.class);
+        TYPE_MAP.put(MetaDataType.GREATER_RUNIC.getId(), GreaterRunicStaffMetaData.class);
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemId;
+import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 
@@ -262,68 +263,44 @@ public class GreaterRunicStaff implements Serializable {
         }
     }
 
-    public int getCharges() {
-        int amount = 0;
-        int index = 0;
-        RunicStaffSpellStore s = RunicStaffSpellStore.getSpell(getSpellId());
-        if (s == null)
-            return -1;
-        for (Entry<Integer, Item[]> charges : player.getStaffCharges().entrySet()) {
-            if (charges.getValue() == null)
-                continue;
-            for (Item item : charges.getValue()) {
-                if (item == null)
-                    continue;
-                amount = item.getAmount() / s.rune[index].getAmount();
-                index++;
-            }
-        }
-        return amount;
+    private GreaterRunicStaffMetaData getMeta() {
+        Item weapon = player.getEquipment().getItem(3);
+        if (weapon == null) return null;
+        return weapon.getMetadata() instanceof GreaterRunicStaffMetaData m ? m : null;
     }
 
-    public void removeCharge(int amount, int spellId) {
-        Item[] spellRunes = null;
-        RunicStaffSpellStore s = RunicStaffSpellStore.getSpell(spellId);
-        if (s == null)
-            return;
-        spellRunes = s.rune;
-        int index = 0;
-        for (Entry<Integer, Item[]> charges : player.getStaffCharges().entrySet()) {
-            if (charges.getKey() == null)
-                continue;
-            for (Item item : charges.getValue()) {
-                if (item == null)
-                    continue;
-                if (spellId != getSpellId()) {
-                    continue;
-                }
-                item.setAmount(item.getAmount() - spellRunes[index].getAmount() * amount);
-                index++;
-            }
+    private GreaterRunicStaffMetaData getOrCreateMeta() {
+        Item weapon = player.getEquipment().getItem(3);
+        if (weapon == null) return null;
+        GreaterRunicStaffMetaData meta = weapon.getMetadata() instanceof GreaterRunicStaffMetaData m ? m : null;
+        if (meta == null) {
+            meta = new GreaterRunicStaffMetaData();
+            weapon.setMetadata(meta);
         }
-        boolean hasCharges = true;
-        for (Entry<Integer, Item[]> charges : player.getStaffCharges().entrySet()) {
-            if (charges.getKey() == null)
-                continue;
-            for (Item item : charges.getValue()) {
-                if (item == null)
-                    continue;
-                if (!hasCharges)
-                    continue;
-                if (spellId != charges.getKey())
-                    continue;
-                if (item.getAmount() <= 0) {
-                    hasCharges = false;
-                }
-            }
-            if (!hasCharges) {
-                setStaffValues(spellId, null);
-                player.getEquipment().getItem(3).setId(24202);
+        return meta;
+    }
+
+    public int getCharges() {
+        GreaterRunicStaffMetaData meta = getOrCreateMeta();
+        return meta != null ? meta.getCharges() : 0;
+    }
+
+    public void removeCharge(int spellId, int amount) {
+        GreaterRunicStaffMetaData meta = getOrCreateMeta();
+        if (meta == null) return;
+
+        if (meta.getSpellId() != spellId) return;
+
+        meta.removeCharges(amount);
+
+        if (meta.getCharges() <= 0) {
+            Item weapon = player.getEquipment().getItem(3);
+            if (weapon != null) {
+                weapon.setId(24202); // drained version
                 player.getEquipment().refresh(3);
                 player.getAppearence().generateAppearenceData();
                 player.getPackets().sendGameMessage("You are out of charges in your runic staff.");
             }
-            return;
         }
     }
 
@@ -351,24 +328,34 @@ public class GreaterRunicStaff implements Serializable {
                 return false;
             }
         }
-        player.getRunicStaff().setSpellId(component, spellId);
+        Item item = (Item) player.getTemporaryAttributtes().get("CHOOSE_STAFF_SPELL");
+        player.getRunicStaff().setSpellId(item, component, spellId);
         return true;
     }
 
-    public void setSpellId(int component, int spellId) {
+    public void setSpellId(Item staff, int component, int spellId) {
         setStaffValues(spellId, null);
         this.component = component;
         RunicStaffSpellStore s = RunicStaffSpellStore.getSpellStore(spellId, component);
         if (s == null)
             return;
-        player.getPackets().sendGameMessage("Runic staff can now charge " + s.name().toLowerCase().replace('_', ' ') + ".");
+        if (staff.getMetadata() == null) {
+            staff.setMetadata(new GreaterRunicStaffMetaData(s.spellId, 0));
+        }
+        GreaterRunicStaffMetaData data = (GreaterRunicStaffMetaData) staff.getMetadata();
+        if (staff.getMetadata() != null) {
+            ((GreaterRunicStaffMetaData) staff.getMetadata()).setSpellId(s.spellId);
+            player.message("Runic staff can now charge " + s.name().toLowerCase().replace('_', ' ') + ".");
+        }
         if (wearing) {
             player.getEquipment().getItem(3).setId(24202);
             player.getEquipment().refresh(3);
             player.getAppearence().generateAppearenceData();
         } else {
-            player.getInventory().deleteItem(24201, 1);
-            player.getInventory().addItem(24202, 1);
+            Item newStaff = new Item(staff.clone());
+            newStaff.setId(24202);
+            player.getInventory().deleteItem(staff);
+            player.getInventory().addItem(newStaff);
         }
     }
 
@@ -450,24 +437,68 @@ public class GreaterRunicStaff implements Serializable {
 
     public boolean wearing;
 
-	public void clearSpell(boolean wearing) {
-        if (wearing) {
-            player.getEquipment().getItem(3).setId(24201);
-            player.getEquipment().refresh(3);
-            player.getAppearence().generateAppearenceData();
-        } else {
-            player.getInventory().deleteItem(24202, 1);
-            player.getInventory().addItem(24201, 1);
+    public void clearSpell(boolean wearing, boolean bank) {
+        Item item = (Item) player.getTemporaryAttributtes().get("GREATER_RUNIC_STAFF");
+        GreaterRunicStaffMetaData meta = (GreaterRunicStaffMetaData) item.getMetadata();
+        if (meta == null || meta.getSpellId() == -1 || meta.getCharges() <= 0) {
+            player.getPackets().sendGameMessage("Your runic staff has no stored spells.");
+            return;
         }
-        setStaffValues(-1, null);
-		player.getPackets().sendGameMessage("You clear your greater runic staff spell.");
-	}
 
-    public void openChooseSpell(Player player) {
+        int spellId = meta.getSpellId();
+        int charges = meta.getCharges();
+
+        RunicStaffSpellStore s = RunicStaffSpellStore.getSpell(spellId);
+        if (s == null) {
+            player.getPackets().sendGameMessage("Unknown spell stored in staff.");
+            return;
+        }
+
+        // Calculate runes to return
+        for (Item rune : s.getRune()) {
+            int totalAmount = rune.getAmount() * charges;
+            if (bank) {
+                player.getBank().addItem(rune.getId(), totalAmount, true);
+            } else {
+                if (!player.getInventory().hasFreeSlots() && !player.getInventory().containsItem(rune.getId(), 1)) {
+                    player.getPackets().sendGameMessage("You don't have enough inventory space to clear the staff.");
+                    return; // stop if they can’t fit all runes
+                }
+                player.getInventory().addItem(rune.getId(), totalAmount);
+            }
+        }
+
+        // Reset metadata
+        meta.removeCharges(charges); // sets spellId = -1 and charges = 0
+
+        // Swap item back to empty variant
+        Item weapon = player.getEquipment().getItem(3);
+        if (weapon != null) {
+            if (wearing) {
+                weapon.setId(24201); // empty staff
+                player.getEquipment().refresh(3);
+                player.getAppearence().generateAppearenceData();
+            } else {
+                player.getInventory().deleteItem(24202, 1); // delete charged
+                player.getInventory().addItem(24201, 1);    // add empty
+            }
+        }
+
+        if (bank) {
+            player.getPackets().sendGameMessage("You clear your runic staff.");
+            player.getPackets().sendGameMessage("All your runes in your runic staff were banked.");
+        } else {
+            player.getPackets().sendGameMessage("You clear your greater runic staff spell.");
+        }
+    }
+
+
+    public void openChooseSpell(Player player, Item item) {
         if (player.getCombatDefinitions().getSpellBook() == 430) {
             player.getPackets().sendGameMessage("You can't currently set lunar spells to your runic staff.");
             return;
         }
+        player.temporaryAttribute().put("CHOOSE_STAFF_SPELL", item);
         player.getInterfaceManager().sendInventoryInterface(1276);
     }
 
@@ -498,70 +529,55 @@ public class GreaterRunicStaff implements Serializable {
         player.getStaffCharges().put(spellId, runes);
     }
 
-    public void chargeStaff(int amount, int spellId) {
-        int index = 0;
-        if (getCharges() == 1000) {
-            player.getPackets().sendGameMessage("You can't have more than 1,000 spells charged.");
+    public void chargeStaff(int amount, int spellId, boolean inventory) {
+        Item staff = (Item) player.getTemporaryAttributtes().remove("GREATER_RUNIC_STAFF");
+        GreaterRunicStaffMetaData meta = (GreaterRunicStaffMetaData) staff.getMetadata();
+        if (meta == null) return;
+
+        RunicStaffSpellStore s = RunicStaffSpellStore.getSpell(spellId);
+        if (s == null) return;
+
+        if (meta.getSpellId() != -1 && meta.getSpellId() != spellId) {
+            player.getPackets().sendGameMessage("Your staff already contains a different spell. Clear it first.");
             return;
         }
-        RunicStaffSpellStore s = RunicStaffSpellStore.getSpellStore(spellId, component);
-        if (s == null)
+
+        int current = meta.getCharges();
+        int toAdd = Math.min(amount, meta.getMaxValue() - current);
+        if (toAdd <= 0) {
+            player.getPackets().sendGameMessage("You can't have more than 1,000 charges.");
             return;
-        for (Entry<Integer, Item[]> charges : player.getStaffCharges().entrySet()) {
-            if (charges.getValue() == null)
-                continue;
-            for (Item item : charges.getValue()) {
-                if (item == null)
-                    continue;
-                if (s.spellId != charges.getKey())
-                    continue;
-                if (item.getAmount() / s.getRune()[index].getAmount() + amount > 1000) {
-                    amount = 1000 - item.getAmount() / s.getRune()[index].getAmount();
-                }
-                index++;
-            }
         }
-        for (Item item : s.getRune()) {
-            if (item == null)
-                continue;
-            if (!player.getInventory().containsItem(item.getId(), item.getAmount() * amount)) {
-                player.getPackets().sendGameMessage("You need at least " + item.getAmount() * amount + " " + item.getName() + "s to charge this staff.");
+
+        for (Item rune : s.getRune()) {
+            if (!player.getInventory().containsItem(rune.getId(), rune.getAmount() * toAdd)) {
+                player.getPackets().sendGameMessage("You need at least " + rune.getAmount() * toAdd + " " + rune.getName() + "s.");
                 return;
             }
         }
-        for (Item item : s.getRune()) {
-            if (item == null)
-                continue;
-            player.getInventory().deleteItem(item.getId(), item.getAmount() * amount);
+
+        for (Item rune : s.getRune()) {
+            player.getInventory().deleteItem(rune.getId(), rune.getAmount() * toAdd);
         }
-        if (wearing) {
-            if (player.getEquipment().getWeaponId() == 24202) {
-                player.getEquipment().getItem(3).setId(24203);
-                player.getEquipment().refresh(3);
-                player.getAppearence().generateAppearenceData();
-            }
-        } else if (player.getInventory().containsItem(24202, 1)) {
-            player.getInventory().deleteItem(24202, 1);
-            player.getInventory().addItem(24203, 1);
+
+        meta.addCharges(toAdd);
+        if (meta.getSpellId() == -1) {
+            meta = new GreaterRunicStaffMetaData(spellId, meta.getCharges());
+            player.getEquipment().getItem(3).setMetadata(meta);
         }
-        Item[] runes = null;
-        if (!hasRunes()) {
-            runes = getRunes(s.getRune(), amount);
-            setStaffValues(spellId, runes);
+        if (inventory) {
+            staff.setId(24203);
+            player.getInventory().refresh();
         } else {
-            index = 0;
-            for (Entry<Integer, Item[]> charges : player.getStaffCharges().entrySet()) {
-                if (charges.getValue() == null)
-                    continue;
-                for (Item item : charges.getValue()) {
-                    if (item == null)
-                        continue;
-                    item.setAmount(item.getAmount() + (s.getRune()[index].getAmount() * amount));
-                    index++;
-                }
+        Item weapon = player.getEquipment().getItem(3);
+        if (weapon.getId() == 24202) {
+            weapon.setId(24203); // charged variant
+            player.getEquipment().refresh(3);
+            player.getAppearence().generateAppearenceData();
             }
         }
-        player.getPackets().sendGameMessage("You charge your staff with " + amount + " " + s.name().toLowerCase().replace('_', ' ') + " spells.");
+
+        player.getPackets().sendGameMessage("You charge your staff with " + toAdd + " " + s.name().toLowerCase().replace('_', ' ') + " spells.");
     }
 
     private Item[] getRunes(Item[] runes, int amount) {

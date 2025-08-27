@@ -27,7 +27,7 @@ abstract class Spellbook(val id: Int) {
                 ANCIENT_ID -> ANCIENT.spells.find { it.id == spellId }
                 else -> null
             } ?: run {
-                println("Warning: Spell id $spellId not found in player's active spellbook")
+                //println("Warning: Spell id $spellId not found in player's active spellbook")
                 null
             }
         }

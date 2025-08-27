@@ -7,7 +7,9 @@ public enum MetaDataType {
     DRAGONFIRE_SHIELD(0),
     RUNE_POUCH(1),
     DEGRADE_TICKS(2),
-    DEGRADE_HITS(3);
+    DEGRADE_HITS(3),
+    POLYPORE(4),
+    GREATER_RUNIC(5);
 
     private final int id;
 

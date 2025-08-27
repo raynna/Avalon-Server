@@ -10,6 +10,7 @@ import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
+import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
@@ -204,11 +205,35 @@ public final class PresetManager implements Serializable {
 						continue;
 					}
 				}
-				if (item.getId() == 11283 || item.getId() == 11284) {
-					if (item.getMetadata() == null) {
-						item.setMetadata(new DragonFireShieldMetaData(50));
-					} else {
-						item.getMetadata().setValue(50);
+				if (Settings.ECONOMY_MODE > Settings.FULL_ECONOMY) {//just to force charges on some items if spawnmode
+					if (item.isAnyOf("item.dragonfire_shield_charged", "item.dragonfire_shield_uncharged")) {
+						if (item.getMetadata() == null) {
+							item.setMetadata(new DragonFireShieldMetaData(50));
+							if (item.isItem("item.dragonfire_shield_uncharged")) {
+								item.setId(Item.getId("item.dragonfire_shield_charged"));
+							}
+						} else {
+							item.getMetadata().setValue(50);
+						}
+					}
+					if (item.isAnyOf("item.greater_runic_staff_charged", "item.greater_runic_staff_uncharged")) {
+						if (item.isItem("item.greater_runic_staff_uncharged")) {
+							player.message("changed to charged version");
+							item.setId(Item.getId("item.greater_runic_staff_charged"));
+						}
+						player.message("checking runic staff metadata");
+						GreaterRunicStaffMetaData staffData = (GreaterRunicStaffMetaData) item.getMetadata();
+						if (staffData == null) {
+							player.message("no data found setting spell Id 23 and 250 charges");
+							item.setMetadata(new GreaterRunicStaffMetaData(23, 250));
+						} else {
+							if (staffData.getCharges() == 0 || staffData.getSpellId() == -1) {
+								player.message("staff had 0 charges or -1 spellid");
+								staffData.setSpellId(23);
+								staffData.setValue(250);
+							}
+							player.message("Already has charged: " + item.getMetadata().getValue());
+						}
 					}
 				}
 				player.getEquipment().getItems().set(i, item);
@@ -238,11 +263,35 @@ public final class PresetManager implements Serializable {
 						continue;
 					}
 				}
-				if (item.getId() == 11283 || item.getId() == 11284) {
-					if (item.getMetadata() == null) {
-						item.setMetadata(new DragonFireShieldMetaData(50));
-					} else {
-						item.getMetadata().setValue(50);
+				if (Settings.ECONOMY_MODE > Settings.FULL_ECONOMY) {//just to force charges on some items if spawnmode
+					if (item.isAnyOf("item.dragonfire_shield_charged", "item.dragonfire_shield_uncharged")) {
+						if (item.getMetadata() == null) {
+							item.setMetadata(new DragonFireShieldMetaData(50));
+							if (item.isItem("item.dragonfire_shield_uncharged")) {
+								item.setId(Item.getId("item.dragonfire_shield_charged"));
+							}
+						} else {
+							item.getMetadata().setValue(50);
+						}
+					}
+					if (item.isAnyOf("item.greater_runic_staff_charged", "item.greater_runic_staff_uncharged")) {
+						if (item.isItem("item.greater_runic_staff_uncharged")) {
+							player.message("changed to charged version");
+							item.setId(Item.getId("item.greater_runic_staff_charged"));
+						}
+						player.message("checking runic staff metadata");
+						GreaterRunicStaffMetaData staffData = (GreaterRunicStaffMetaData) item.getMetadata();
+						if (staffData == null) {
+							player.message("no data found setting spell Id 23 and 250 charges");
+							item.setMetadata(new GreaterRunicStaffMetaData(23, 250));
+						} else {
+							if (staffData.getCharges() == 0 || staffData.getSpellId() == -1) {
+								player.message("staff had 0 charges or -1 spellid");
+								staffData.setSpellId(23);
+								staffData.setValue(250);
+							}
+							player.message("Already has charged: " + item.getMetadata().getValue());
+						}
 					}
 				}
 				player.getInventory().addItem(item);

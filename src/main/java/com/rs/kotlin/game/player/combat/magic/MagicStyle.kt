@@ -13,6 +13,8 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.damage.SoakDamage
+import com.rs.kotlin.game.player.combat.magic.special.GreaterRunicStaff
+import com.rs.kotlin.game.player.combat.magic.special.PolyporeStaff
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 import kotlin.math.ceil
 import kotlin.math.max
@@ -75,15 +77,31 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             spellId -= MIN_SPELL_ID
         }
 
-        val currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
+        var currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
             AncientMagicks.id -> AncientMagicks.getSpell(spellId)
             ModernMagicks.id -> ModernMagicks.getSpell(spellId)
             else -> null
         }
 
         if (currentSpell == null) {
-            attacker.message("Invalid spell ID: $spellId")
-            return
+            val hasPolypore = PolyporeStaff.hasWeapon(attacker)
+            if (hasPolypore) {
+                PolyporeStaff.cast(this, attacker, defender);
+                return
+            }
+            val hasRunicStaff = GreaterRunicStaff.hasWeapon(attacker);
+            if (hasRunicStaff && GreaterRunicStaff.getSpellId(attacker) != -1) {
+                spellId = GreaterRunicStaff.getSpellId(attacker)
+                currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
+                    AncientMagicks.id -> AncientMagicks.getSpell(spellId)
+                    ModernMagicks.id -> ModernMagicks.getSpell(spellId)
+                    else -> null
+                }
+            }
+            if (currentSpell == null) {
+                attacker.message("Invalid spell ID: $spellId")
+                return
+            }
         }
 
         when (attacker.combatDefinitions.getSpellBook()) {

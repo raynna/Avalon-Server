@@ -10,8 +10,10 @@ import com.rs.java.game.player.controlers.*
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.item.FloorItem
+import com.rs.java.game.item.meta.GreaterRunicStaffMetaData
 import com.rs.java.game.item.meta.RunePouchMetaData
 import com.rs.java.game.npc.NPC
+import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.actions.combat.modernspells.Alchemy
 import com.rs.java.game.player.actions.combat.modernspells.BonesTo
@@ -149,6 +151,14 @@ object SpellHandler {
     }
 
     fun checkAndRemoveRunes(player: Player, spell: Spell): Boolean {
+        val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt())
+        if (weapon?.metadata is GreaterRunicStaffMetaData) {
+            val data = weapon.metadata as GreaterRunicStaffMetaData
+            if (spell.id == data.spellId && data.charges > 0) {
+                data.removeCharges(1)
+                return true
+            }
+        }
         if (spell.type == SpellType.Combat) {
             if (staffOfLightEffect(player)) {
                 player.packets.sendGameMessage("Your spell draws its power completely from your staff.")

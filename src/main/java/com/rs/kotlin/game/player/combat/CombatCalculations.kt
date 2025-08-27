@@ -280,7 +280,12 @@ object CombatCalculations {
 
         fun calculateMaxHit(player: Player, target: Entity, spellId: Int): Hit {
             val spell = Spellbook.getSpellById(player, spellId);
-            val baseDamage = spell?.damage ?: 10
+            val baseDamage = spell?.damage
+                ?: if (spellId == 1000) {
+                    (5 * player.skills.getLevel(Skills.MAGIC)) - 180
+                } else {
+                    10
+                }
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
             val equipmentSet = EquipmentSets.getSet(player)

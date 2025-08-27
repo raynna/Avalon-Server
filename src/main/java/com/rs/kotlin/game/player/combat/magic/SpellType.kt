@@ -2,6 +2,7 @@ package com.rs.kotlin.game.player.combat.magic
 
 import com.rs.java.game.Graphics
 import com.rs.java.game.WorldTile
+import com.rs.java.game.player.Player
 import com.rs.kotlin.game.world.projectile.Projectile
 
 sealed class SpellType {
@@ -55,7 +56,12 @@ data class Spell(
     val projectileType: Projectile = Projectile.ELEMENTAL_SPELL,
     val projectileId: Int = -1,
     val projectileIds: List<Int> = emptyList(),
-    val requiredItem: Int? = null
+    val requiredItem: Int? = null,
+
+    val builtInWeapon: Boolean = false,
+    val chargeCost: Int = 0,
+    val canCastWithWeapon: ((Player) -> Boolean)? = null,
+    val onConsumeCharge: ((Player) -> Unit)? = null
 ) {
     fun isElemental(): Boolean {
         return element in listOf(

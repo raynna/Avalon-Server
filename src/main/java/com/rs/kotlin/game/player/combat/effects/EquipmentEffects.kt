@@ -88,7 +88,7 @@ object EquipmentEffects {
                 val base = hit.damage
                 val prevented = (base * 0.25).toInt()
                 hit.damage = (hit.damage - prevented).coerceAtLeast(0)
-                defender.gfx(93, 0);
+                defender.gfx(93, 0);//533, -100 might be a good one too
             }
         }
     )

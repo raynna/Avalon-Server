@@ -4,8 +4,12 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemPlugin;
+import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
+import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.GreaterRunicStaff.*;
+import com.rs.kotlin.game.player.combat.magic.Spell;
+import com.rs.kotlin.game.player.combat.magic.Spellbook;
 
 import java.util.Map;
 
@@ -18,9 +22,11 @@ public class GreaterRunicStaff extends ItemPlugin {
 
     @Override
     public boolean processItem(Player player, Item item, int slotId, String option) {
+        player.temporaryAttribute().put("GREATER_RUNIC_STAFF", item);
+        player.temporaryAttribute().put("INTERACT_STAFF_FROM_INVENTORY", true);
         switch (option) {
             case "set spell":
-                player.getRunicStaff().openChooseSpell(player);
+                player.getRunicStaff().openChooseSpell(player, item);
                 return true;
             case "charge":
                 player.getDialogueManager().startDialogue("GreaterRunicStaffD");
@@ -37,13 +43,21 @@ public class GreaterRunicStaff extends ItemPlugin {
                     player.getSwitchItemCache().add(slotId);
                     return true;
                 }
-                RunicStaffSpellStore s = RunicStaffSpellStore.getSpell(player.getRunicStaff().getSpellId());
-                if (s == null)
-                    return true;
-                player.message("You currently have " + player.getRunicStaff().getCharges() + " " + s.name().toLowerCase().replace('_', ' ') + " charges left.");
+                if (item.getMetadata() == null) {
+                    item.setMetadata(new GreaterRunicStaffMetaData(0, 0));
+                }
+                if (item.getMetadata() instanceof GreaterRunicStaffMetaData data) {
+                    Spell spell = Spellbook.getSpellById(player, data.getSpellId());
+                    if (spell == null) {
+                        player.message("You dont have any spell selected");
+                        return true;
+                    }
+                    int charges = data.getCharges();
+                    player.message("You currently have " + charges + " " + spell.getName() + " charges left.");
+                }
                 return true;
             case "clear spell":
-                player.getRunicStaff().clearSpell(false);
+                player.getRunicStaff().clearSpell(false, false);
                 return true;
             case "empty charge":
                 player.getRunicStaff().clearCharges(false, false);

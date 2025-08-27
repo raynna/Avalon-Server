@@ -20,6 +20,7 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ground.AutomaticGroundItem;
+import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
 import com.rs.java.game.minigames.clanwars.ClanWars;
 import com.rs.java.game.minigames.duel.DuelArena;
 import com.rs.java.game.npc.NPC;
@@ -1864,8 +1865,11 @@ public final class WorldPacketsDecoder extends Decoder {
 		// Runic staff charge
 		if (player.temporaryAttribute().get("charge_staff") == Boolean.TRUE) {
 			player.temporaryAttribute().put("charge_staff", Boolean.FALSE);
+			Item item = (Item) player.getTemporaryAttributtes().get("GREATER_RUNIC_STAFF");
+			Boolean inventory = (Boolean) player.getTemporaryAttributtes().get("INTERACT_STAFF_FROM_INVENTORY");
+			GreaterRunicStaffMetaData data = (GreaterRunicStaffMetaData) item.getMetadata();
 			if (value <= 0) value = 1;
-			player.getRunicStaff().chargeStaff(value, player.getRunicStaff().getSpellId());
+			player.getRunicStaff().chargeStaff(value, data.getSpellId(), inventory);
 			return;
 		}
 

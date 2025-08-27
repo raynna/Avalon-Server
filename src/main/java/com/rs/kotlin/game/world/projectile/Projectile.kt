@@ -20,5 +20,6 @@ enum class Projectile(val typeName: String) {
     IBAN_BLAST("iban_blast"),
     STORM_OF_ARMADYL("storm_of_armadyl"),
     TELEPORT_BLOCK("teleport_block"),
-    CRUMBLE_UNDEAD("crumble_undead")
+    CRUMBLE_UNDEAD("crumble_undead"),
+    POLYPORE_STAFF("polypore_staff")
 }

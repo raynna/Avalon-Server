@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
+import com.rs.java.game.item.meta.MetaDataType;
 import com.rs.java.game.player.actions.skills.firemaking.Bonfire;
 import com.rs.java.utils.ItemExamines;
 
@@ -85,6 +86,14 @@ public final class Equipment implements Serializable {
 		if (item == null)
 			return;
 		player.getPackets().sendGameMessage(ItemExamines.getExamine(item));
+		if (item.getMetadata() != null) {
+			StringBuilder metaBuilder = new StringBuilder("Metadata: ");
+			metaBuilder
+					.append(MetaDataType.fromId(item.getMetadata().getType()))
+					.append(" (").append(item.getMetadata().getType()).append("), ")
+					.append(item.getMetadata().getValue());
+			player.message(metaBuilder.toString());
+		}
 	}
 
 	public void refreshConfigs(boolean init) {

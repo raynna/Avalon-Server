@@ -103,6 +103,7 @@ public class StarterProtection {
 				player.getSkills().setXp(Skills.SUMMONING, p2.getSkills().getXp(Skills.SUMMONING));
 				player.getSkills().setXp(Skills.SLAYER, Skills.getXPForLevel(99));
 				player.getSkills().setXp(Skills.AGILITY, Skills.getXPForLevel(99));
+				player.getSkills().setXp(Skills.RUNECRAFTING, Skills.getXPForLevel(99));
 				player.getSkills().restoreSkills();
 				player.setFamiliar(p2.getFamiliar());
 				player.setSummoningLeftClickOption(p2.getSummoningLeftClickOption());

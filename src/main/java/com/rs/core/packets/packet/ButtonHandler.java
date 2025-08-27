@@ -11,6 +11,9 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
+import com.rs.java.game.item.meta.ItemMetadata;
+import com.rs.java.game.item.meta.PolyporeStaffMetaData;
 import com.rs.java.game.item.plugins.misc.RunePouch;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.minigames.crucible.Crucible;
@@ -40,18 +43,9 @@ import com.rs.java.game.player.actions.skills.smithing.DungeoneeringSmithing;
 import com.rs.java.game.player.actions.skills.smithing.JewllerySmithing;
 import com.rs.java.game.player.actions.skills.smithing.Smithing.ForgingInterface;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
-import com.rs.java.game.player.content.Canoes;
-import com.rs.java.game.player.content.CarrierTravel;
-import com.rs.java.game.player.content.DungShop;
+import com.rs.java.game.player.content.*;
 import com.rs.java.game.player.content.GreaterRunicStaff.RunicStaffSpellStore;
-import com.rs.java.game.player.content.ItemConstants;
-import com.rs.java.game.player.content.ItemSets;
-import com.rs.java.game.player.content.PlayerLook;
-import com.rs.java.game.player.content.Pots;
 import com.rs.java.game.player.content.Pots.Pot;
-import com.rs.java.game.player.content.Shop;
-import com.rs.java.game.player.content.SkillCapeCustomizer;
-import com.rs.java.game.player.content.SkillsDialogue;
 import com.rs.java.game.player.content.clans.ClansManager;
 import com.rs.java.game.player.content.customshops.TradeStore;
 import com.rs.java.game.player.content.customtab.AchievementsTab;
@@ -1594,23 +1588,42 @@ public class ButtonHandler {
                     player.getEquipment().sendExamine(Equipment.SLOT_AMULET);
             } else if (componentId == 15) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
+                    Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
+                    if (weapon.isAnyOf("item.polypore_staff", "item.polypore_staff_degraded")) {
+                        if (weapon.getMetadata() == null) {
+                            weapon.setMetadata(new PolyporeStaffMetaData(3000));
+                        }
+                        ItemMetadata data = weapon.getMetadata();
+                        if (data instanceof PolyporeStaffMetaData) {
+                            player.message("Your " + weapon.getName() + " currently has " + data.getValue() + " charges left.");
+                            return;
+                        }
+                    }
                     int weaponId = player.getEquipment().getWeaponId();
                     if (weaponId == 24202 || weaponId == 24203) {
-                        for (RunicStaffSpellStore s : RunicStaffSpellStore.values()) {
-                            if (s.spellId != player.getRunicStaff().getSpellId() || s.component != player.getRunicStaff().getComponentId()) {
-                                continue;
-                            }
-                            player.getPackets().sendGameMessage("You currently have " + player.getRunicStaff().getCharges() + " " + s.name().toLowerCase().replace('_', ' ') + " charges left.");
+                        if (weapon.getMetadata() == null) {
+                            weapon.setMetadata(new GreaterRunicStaffMetaData(-1, 0));
                         }
-                        return;
+                        if (weapon.getMetadata() != null && weapon.getMetadata() instanceof GreaterRunicStaffMetaData) {
+                            if (((GreaterRunicStaffMetaData) weapon.getMetadata()).getSpellId() == -1) {
+                                player.message("Your greater runic staff doesn't have any spell selected");
+                                return;
+                            }
+                            for (RunicStaffSpellStore s : RunicStaffSpellStore.values()) {
+                                if (s.spellId != ((GreaterRunicStaffMetaData) weapon.getMetadata()).getSpellId()) {
+                                    continue;
+                                }
+                                player.getPackets().sendGameMessage("You currently have " + ((GreaterRunicStaffMetaData) weapon.getMetadata()).getCharges() + " " + s.name().toLowerCase().replace('_', ' ') + " charges left.");
+                            }
+                            return;
+                        }
                     }
                     if (weaponId == 24201) {
-                        player.getRunicStaff().openChooseSpell(player);
+                        player.getRunicStaff().openChooseSpell(player, weapon);
                         player.getRunicStaff().wearing = true;
                         return;
                     }
                     if (weaponId >= 18349 && weaponId <= 18357) {
-                        Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
                         player.getChargeManager().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(weaponId).getName() + " has ##% charges left.", weapon, false);
                     }
                     if (weaponId == 15484) player.getInterfaceManager().gazeOrbOfOculus();
@@ -1648,18 +1661,26 @@ public class ButtonHandler {
                     player.getEquipment().sendExamine(Equipment.SLOT_WEAPON);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) {
                     int weaponId = player.getEquipment().getWeaponId();
+                    Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
                     if (weaponId == 24202 || weaponId == 24203) {
+                        player.getTemporaryAttributtes().put("GREATER_RUNIC_STAFF", weapon);
+                        player.getTemporaryAttributtes().put("INTERACT_STAFF_FROM_INVENTORY", false);
                         player.getDialogueManager().startDialogue("GreaterRunicStaffD");
                         return;
                     }
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) {
                     int weaponId = player.getEquipment().getWeaponId();
+                    Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
                     if (weaponId == 24203) {
+                        player.getTemporaryAttributtes().put("GREATER_RUNIC_STAFF", weapon);
+                        player.getTemporaryAttributtes().put("INTERACT_STAFF_FROM_INVENTORY", false);
                         player.getRunicStaff().clearCharges(true, false);
                         return;
                     }
                     if (weaponId == 24202) {
-                        player.getRunicStaff().clearSpell(true);
+                        player.getTemporaryAttributtes().put("GREATER_RUNIC_STAFF", weapon);
+                        player.getTemporaryAttributtes().put("INTERACT_STAFF_FROM_INVENTORY", false);
+                        player.getRunicStaff().clearSpell(true, false);
                     }
                 }
             } else if (componentId == 18) {
@@ -2424,7 +2445,10 @@ public class ButtonHandler {
     public static boolean sendTakeOff(final Player player, final int slotId, int itemId) {
         player.stopAll(false, false);
         Item item = player.getEquipment().getItem(slotId);
-
+        if (player.hasStaffOfLight() && player.hasStaffOfLightActive()) {
+            player.resetStaffOfLightEffect();
+            player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
+        }
         if (!player.getInventory().addItem(item)) {
             return false;
         }
@@ -2433,10 +2457,6 @@ public class ButtonHandler {
         if (item.getId() == 4024) player.getAppearence().transformIntoNPC(-1);
         if (slotId == 3) player.getCombatDefinitions().decreaseSpecialAttack(0);
 
-        if (player.hasStaffOfLight() && player.hasStaffOfLightActive()) {
-            player.resetStaffOfLightEffect();
-            player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
-        }
         if (player.getHitpoints() > (player.getMaxHitpoints() * 1.15)) {
             player.setHitpoints(player.getMaxHitpoints());
             player.refreshHitPoints();

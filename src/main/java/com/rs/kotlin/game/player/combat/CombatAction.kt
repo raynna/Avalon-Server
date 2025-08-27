@@ -5,10 +5,13 @@ import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
+import com.rs.java.game.player.actions.combat.Magic
 import com.rs.java.game.player.actions.combat.QueuedInstantCombat
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.action.NewAction
 import com.rs.kotlin.game.player.combat.magic.MagicStyle
+import com.rs.kotlin.game.player.combat.magic.special.GreaterRunicStaff
+import com.rs.kotlin.game.player.combat.magic.special.PolyporeStaff
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.range.RangedStyle
@@ -44,6 +47,8 @@ class CombatAction(
         val spellId = player.getCombatDefinitions().spellId
         style = when {
             spellId != 0 -> MagicStyle(player, target)
+            GreaterRunicStaff.hasWeapon(player) && GreaterRunicStaff.getSpellId(player) != -1 -> MagicStyle(player, target);
+            PolyporeStaff.hasWeapon(player) -> MagicStyle(player, target)
             isRangedWeapon(player) -> RangedStyle(player, target)
             else -> MeleeStyle(player, target)
         }
@@ -78,6 +83,8 @@ class CombatAction(
         val spellId = player.getCombatDefinitions().spellId
         style = when {
             spellId != 0 -> MagicStyle(player, target)
+            GreaterRunicStaff.hasWeapon(player) && GreaterRunicStaff.getSpellId(player) != -1 -> MagicStyle(player, target);
+            PolyporeStaff.hasWeapon(player) -> MagicStyle(player, target)
             isRangedWeapon(player) -> RangedStyle(player, target)
             else -> MeleeStyle(player, target)
         }

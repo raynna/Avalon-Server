@@ -20,6 +20,7 @@ object ProjectileRegistry {
         register(Projectile.IBAN_BLAST, ProjectileType(startHeight = 51, speed = 60, angle = 10))
         register(Projectile.STORM_OF_ARMADYL, ProjectileType(startHeight = 0, endHeight = 0, speed = 60, angle = 0))
         register(Projectile.TELEPORT_BLOCK, ProjectileType(startHeight = 21, endHeight = 28, speed = 60, angle = 10))
+        register(Projectile.POLYPORE_STAFF, ProjectileType(startHeight = 51, endHeight = 28, speed = 52, angle = 10))
     }
 
     fun register(projectile: Projectile, type: ProjectileType) {
