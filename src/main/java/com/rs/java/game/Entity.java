@@ -22,7 +22,6 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.actions.combat.ModernMagicks;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.actions.combat.Poison;
 import com.rs.java.game.player.content.UpdateMask;
 import com.rs.java.game.player.prayer.NormalPrayer;
@@ -31,11 +30,9 @@ import com.rs.java.game.route.strategy.EntityStrategy;
 import com.rs.java.game.route.strategy.ObjectStrategy;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
-import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.NewPoison;
-import com.rs.kotlin.game.player.combat.damage.PendingHit;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 
 public abstract class Entity extends WorldTile {
@@ -230,8 +227,8 @@ public abstract class Entity extends WorldTile {
     private transient final int totalHitsProcess = 4;
 
     public void processReceivedHits() {
-        if (isDead())
-            return;
+        /*if (isDead())
+            return;*/
 
         if (this instanceof Player player) {
             if (player.isTeleporting()) {
@@ -262,14 +259,15 @@ public abstract class Entity extends WorldTile {
     }
 
     public void processHit(Hit hit) {
-        if (isDead())
-            return;
+        /*if (isDead())
+            return;*/
         if (this instanceof Player) {
             Player p = (Player) this;
             if (hit.getDamage() < 0)
                 return;
-            if (p.isDead())
-                return;
+            if (p.isDead()) {
+                //hit.setDamage(0);
+            }
         }
         removeHitpoints(hit);
         if (nextHits.size() < totalHitsProcess) {
@@ -322,10 +320,10 @@ public abstract class Entity extends WorldTile {
                 }
             }
         }
-        if (hitpoints < hit.getDamage()) {
+        /*if (hitpoints < hit.getDamage()) {
             getPoison().reset();
             hit.setDamage(hitpoints);
-        }
+        }*/
 
         setHitpoints(hitpoints < hit.getDamage() ? 0 : hitpoints - hit.getDamage());
         if (hit.getSource() instanceof Player) {

@@ -210,7 +210,7 @@ public class EdgevillePvPControler extends Controler {
         if (instance.hasFinished() || !instance.isActive())
             return false;
         player.resetWalkSteps();
-        player.lock(7);
+        player.lock(6);
         player.animate(new Animation(836));
         Player killer = player.getMostDamageReceivedSourcePlayer();
         WrathEffect.handleWrathEffect(player, killer);

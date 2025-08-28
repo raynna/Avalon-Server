@@ -701,8 +701,13 @@ public final class WorldPacketsDecoder extends Decoder {
 	private static void handleWalking(Player player, InputStream stream) {
 		if (!basicPlayerActiveAndLoaded(player))
 			return;
-		if (player.isDead() || player.isLocked())
+		if (player.isDead()) {
+			player.resetWalkSteps();
 			return;
+		}
+		if (player.isLocked()) {
+			return;
+		}
 		if (player.isFrozen()) {
 			player.getPackets().sendGameMessage("A magical force prevents you from moving.");
 			player.stopAll(true, false, true);

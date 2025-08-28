@@ -3776,8 +3776,8 @@ public class Player extends Entity {
         dead = true;
         getInterfaceManager().closeOverlay(false);
         resetWalkSteps();
-        lock(7);
         stopAll();
+        lock(6);
         Player killer = getMostDamageReceivedSourcePlayer();
         WrathEffect.handleWrathEffect(this, killer);
         animate(new Animation(836));
