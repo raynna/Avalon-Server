@@ -11,6 +11,7 @@ Place the contents of the cache zip into the /data/cache/ directory.
 
 [Cache](https://mega.nz/file/kFBwwKwb#GxIZ5dwHzsvW7_6ApFD7HG0xx0TTD0ROCOoymbecPuc)
 [Client](https://github.com/raynna/avalon-client)
+[Discord](https://discord.gg/7q2n6jXKcW)
 Run the server using `Launcher.java` or by running the jar from the command line using
 
 `java -jar Client.jar`
