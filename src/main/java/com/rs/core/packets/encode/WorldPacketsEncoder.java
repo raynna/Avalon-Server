@@ -1,5 +1,6 @@
 package com.rs.core.packets.encode;
 
+import com.rs.discord.DiscordAnnouncer;
 import com.rs.kotlin.Rscm;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
@@ -32,6 +33,8 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.MapArchiveKeys;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.huffman.Huffman;
+
+import java.util.List;
 
 public class WorldPacketsEncoder extends Encoder {
 
@@ -1345,6 +1348,19 @@ public class WorldPacketsEncoder extends Encoder {
 		else
 			session.getChannel().close();
 		TicketSystem.destroyChatOnLogOut(player);
+		List<String> playerNames = World.getPlayers().stream()
+				.filter(p -> p != null && p.hasStarted() && !p.hasFinished())
+				.map(Player::getUsername)
+				.sorted(String.CASE_INSENSITIVE_ORDER)
+				.toList();
+		String namesDisplay = playerNames.isEmpty()
+				? "-"
+				: String.join(", ", playerNames); // nice comma-separated list
+		DiscordAnnouncer.announce(
+				"Players Status",
+				"Players online: " + namesDisplay,
+				"Total: " + playerNames.size(), 0
+		);
 	}
 
 	public void sendInventoryMessage(int border, int slotId, String message) {

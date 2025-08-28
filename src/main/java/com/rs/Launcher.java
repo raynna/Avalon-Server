@@ -224,10 +224,13 @@ public final class Launcher {
 
 		long now = System.currentTimeMillis();
 		if (!playerNames.equals(lastAnnouncedPlayers) && (now - lastDiscordAnnounce >= (long) MINUTES_TO_ANNOUNCE * 60 * 1000)) {
+			String namesDisplay = playerNames.isEmpty()
+					? "-"
+					: String.join(", ", playerNames); // nice comma-separated list
 			DiscordAnnouncer.announce(
 					"Players Status",
-					"Players online: " + playerNames,
-					"Count: " + playerNames.size(), 0
+					"Players online: " + namesDisplay,
+					"Total: " + playerNames.size(), 0
 			);
 			lastAnnouncedPlayers = playerNames;
 			lastDiscordAnnounce = now;

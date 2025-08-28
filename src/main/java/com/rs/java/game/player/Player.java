@@ -1385,7 +1385,7 @@ public class Player extends Entity {
         if (geManager == null)
             geManager = new GrandExchangeManager();
         //if (squealOfFortune == null)//DISABLED FOR NOW
-          //  squealOfFortune = new SquealOfFortune();
+        //  squealOfFortune = new SquealOfFortune();
         if (pinpinpin != 1) {
             pinpinpin = 1;
             bankpins = new int[]{0, 0, 0, 0};
@@ -2758,7 +2758,7 @@ public class Player extends Entity {
         auraManager.process();
         actionManager.process();
         newActionManager.process();
-       // newActionManager.process()
+        // newActionManager.process()
         controlerManager.process();
 
     }
@@ -2961,6 +2961,20 @@ public class Player extends Entity {
         refreshSpawnedItems();
         refreshSpawnedObjects();
         Logger.log("Player", username + " has logged in.");
+        List<String> playerNames = World.getPlayers().stream()
+                .filter(p -> p != null && p.hasStarted() && !p.hasFinished())
+                .map(Player::getUsername)
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .toList();
+        long now = System.currentTimeMillis();
+        String namesDisplay = playerNames.isEmpty()
+                ? "-"
+                : String.join(", ", playerNames); // nice comma-separated list
+        DiscordAnnouncer.announce(
+                "Players Status",
+                "Players online: " + namesDisplay,
+                "Total: " + playerNames.size(), 0
+        );
     }
 
     private String getGameMode() {
@@ -4523,6 +4537,7 @@ public class Player extends Entity {
         super.heal(amount, message, hitmark);
         refreshHitPoints();
     }
+
     @Override
     public void heal(int ammount, int extra) {
         super.heal(ammount, extra);
@@ -4582,7 +4597,7 @@ public class Player extends Entity {
     }
 
     public String getTimeLeft(int ticks) {
-        int seconds = (int)Math.ceil(ticks * 0.6);
+        int seconds = (int) Math.ceil(ticks * 0.6);
         int minutes = seconds / 60;
         seconds = seconds % 60;  // remaining seconds after minutes
 
