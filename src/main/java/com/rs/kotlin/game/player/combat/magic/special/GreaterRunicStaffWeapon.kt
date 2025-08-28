@@ -1,20 +1,11 @@
 package com.rs.kotlin.game.player.combat.magic.special
 
-import com.rs.java.game.Entity
-import com.rs.java.game.Graphics
-import com.rs.java.game.item.Item
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData
-import com.rs.java.game.item.meta.PolyporeStaffMetaData
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
-import com.rs.kotlin.game.player.combat.CombatType
-import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.magic.MagicStyle
 import com.rs.kotlin.game.player.combat.magic.WeaponSpellRegistry
-import com.rs.kotlin.game.world.projectile.Projectile
-import com.rs.kotlin.game.world.projectile.ProjectileManager
 
-object GreaterRunicStaff : WeaponSpellRegistry.Provider {
+object GreaterRunicStaffWeapon : WeaponSpellRegistry.Provider {
 
     override val weaponIds = setOf(22498, 22494)
 

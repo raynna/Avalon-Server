@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rs.Settings;
+import com.rs.discord.DiscordAnnouncer;
 import com.rs.java.game.World;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
 import com.rs.java.utils.Utils;
@@ -80,6 +81,7 @@ public class StarterProtection {
 		World.sendWorldMessage(
 				"<img=5><col=b25200>News: " + player.getDisplayName() + " has joined " + Settings.SERVER_NAME + "!",
 				false);
+		DiscordAnnouncer.announce("First time player!", player.getDisplayName() + " has joined the server for the very first time!.");
 		// if (Settings.discordEnabled) {
 		// Launcher.getDiscordBot().getChannel("568087421837770754").sendMessage(":tada:
 		// " + Utils.formatPlayerNameForDisplay(player.getUsername().toString()) + " has
@@ -156,6 +158,8 @@ public class StarterProtection {
 		player.getPrayer().restorePrayer(990);
 		player.combatDefinitions.switchAutoRelatie();
 		player.getAppearence().generateAppearenceData();
+		player.getSkills().switchXPPopup(true);
+		player.getSkills().switchXPPopup(true);
 		CommandRegistry.execute(player, "command");
 	}
 

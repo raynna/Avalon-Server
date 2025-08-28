@@ -345,6 +345,9 @@ new_spear_stab=12006
 new_spear_block=12008
 morrigans_throwing_axe_attack=10504
 morrigans_javelin_attack=10501
+longsword_slash=12311
+longsword_stab=12310
+vestas_longsword_special=10502
 #animGFX 11991 2114 - Bandos Godsword Spec
 #animGFX 12019 2109 - Saradomin Godsword Spec
 #animGfx 12006 stab zamorakian spear

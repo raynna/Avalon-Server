@@ -9,6 +9,9 @@ import com.alex.store.Index;
 import com.rs.core.cache.Cache;
 import com.rs.core.cache.defintions.*;
 import com.rs.core.thread.CoresManager;
+import com.rs.discord.DiscordAnnouncer;
+import com.rs.discord.DiscordRoutes;
+import com.rs.discord.DiscordWebhook;
 import com.rs.java.game.Region;
 import com.rs.java.game.World;
 import com.rs.java.game.area.AreaManager;
@@ -143,7 +146,15 @@ public final class Launcher {
 		Logger.log("Status", Settings.SERVER_NAME + " is now online.");
 		addAccountsSavingTask();
 		addCleanMemoryTask();
-	}
+        DiscordRoutes.INSTANCE.init();
+        DiscordWebhook.INSTANCE.setWebhookUrl(Settings.eventsWebhook);
+
+        DiscordAnnouncer.announceGlobalEvent(
+                "Server Online",
+                "World is up and running!",
+                null
+        );
+    }
 
 	private static void addCleanMemoryTask() {
 		CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
@@ -153,6 +164,14 @@ public final class Launcher {
                 Logger.handle(e);
             }
         }, 0, 10, TimeUnit.SECONDS);
+	}
+
+	private static String envOrProp(String env, String prop, String defVal) {
+		String v = System.getenv(env);
+		if (v != null && !v.isBlank()) return v;
+		v = System.getProperty(prop);
+		if (v != null && !v.isBlank()) return v;
+		return defVal;
 	}
 
 	private static int i = 0;

@@ -7,6 +7,7 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.prayer.WrathEffect;
 import com.rs.java.game.player.teleportation.Teleports.TeleportLocations;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
@@ -211,6 +212,8 @@ public class EdgevillePvPControler extends Controler {
         player.resetWalkSteps();
         player.lock(7);
         player.animate(new Animation(836));
+        Player killer = player.getMostDamageReceivedSourcePlayer();
+        WrathEffect.handleWrathEffect(player, killer);
         if (player.getFamiliar() != null)
             player.getFamiliar().sendDeath(player);
         player.checkPetDeath();

@@ -49,7 +49,8 @@ object CombatCalculations {
             var effectiveAttack = player.skills.getLevel(Skills.ATTACK) * player.prayer.attackMultiplier
             effectiveAttack += styleBonus + 8
             effectiveAttack *= voidBonus
-            val attackRoll = effectiveAttack * (attackBonus + 64) * specialBonus
+
+            val attackRoll = effectiveAttack * (attackBonus + 64) * specialBonus * accuracyMultiplier
 
 
             /*
@@ -150,7 +151,7 @@ object CombatCalculations {
             var effectiveAttack = player.skills.getLevel(Skills.RANGE) * player.prayer.rangedMultiplier
             effectiveAttack += styleBonus + 8
             effectiveAttack *= voidBonus * zaryteAccuracy
-            val attackRoll = effectiveAttack * (rangeBonus + 64) * specialBonus
+            val attackRoll = effectiveAttack * (rangeBonus + 64) * specialBonus * accuracyMultiplier
             /*
             * Range Defence Calculation
             */

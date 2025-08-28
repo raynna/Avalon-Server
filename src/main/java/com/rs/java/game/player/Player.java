@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.discord.DiscordAnnouncer;
 import com.rs.java.CreationKiln;
 import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
@@ -61,7 +62,7 @@ import com.rs.java.game.player.content.ArtisanWorkshop;
 import com.rs.java.game.player.content.Commands;
 import com.rs.java.game.player.content.CustomGear;
 import com.rs.java.game.player.content.FadingScreen;
-import com.rs.java.game.player.content.GreaterRunicStaff;
+import com.rs.java.game.player.content.GreaterRunicStaffManager;
 import com.rs.java.game.player.content.GrotwormLair;
 import com.rs.java.game.player.content.Ironman;
 import com.rs.java.game.player.content.ItemConstants;
@@ -1236,7 +1237,7 @@ public class Player extends Entity {
         this.password = password;
         farmingManager = new FarmingManager();
         grotwormLair = new GrotwormLair();
-        runicStaff = new GreaterRunicStaff();
+        runicStaff = new GreaterRunicStaffManager();
         ironman = new Ironman();
         advlog = new AdventuresLog();
         appearence = new Appearence();
@@ -1368,7 +1369,7 @@ public class Player extends Entity {
         if (taskManager == null)
             taskManager = new TaskManager();
         if (runicStaff == null)
-            runicStaff = new GreaterRunicStaff();
+            runicStaff = new GreaterRunicStaffManager();
         if (ironman == null)
             ironman = new Ironman();
         if (toolbelt == null)
@@ -4114,6 +4115,23 @@ public class Player extends Entity {
         add(Keys.IntKey.PK_POINTS, totalPts);
         getAdventureLog().addActivity("I have killed " + killed.getDisplayName() + " in a PvP zone.");
         message("You now have a killstreak of " + HexColours.getShortMessage(Colour.RED, "" + get(Keys.IntKey.KILLSTREAK)) + (get(Keys.IntKey.KILLSTREAK) > 1 ? " kills." : " kill.") + (get(Keys.IntKey.KILLSTREAK) > get(Keys.IntKey.KILLSTREAK_RECORD) ? " " + HexColours.getShortMessage(Colour.RED, "New Record!") : ""));
+        if (get(Keys.IntKey.KILLSTREAK) > 1) {
+            if (this != null) {
+                DiscordAnnouncer.announceKillstreak(
+                        getDisplayName(),
+                        get(Keys.IntKey.KILLSTREAK)
+                );
+            }
+        }
+        if (killed.get(Keys.IntKey.KILLSTREAK) > 1) {
+            if (killed != null && this != null) {
+                DiscordAnnouncer.announceKillstreakEnded(
+                        killed.getDisplayName(),
+                        getDisplayName(),
+                        killed.get(Keys.IntKey.KILLSTREAK)
+                );
+            }
+        }
         if (killed.get(Keys.IntKey.KILLSTREAK) >= 5)
             World.sendNewsMessage(getDisplayName() + " has ended " + killed.getDisplayName() + (killed.getDisplayName().endsWith("s") ? "'" : "s") + " killstreak of " + killed.get(Keys.IntKey.KILLSTREAK) + "!", false);
         message("You gained " + HexColours.getShortMessage(Colour.RED, "" + Utils.getFormattedNumber(totalPts, ',')) + " pk points, you now have " + HexColours.getShortMessage(Colour.RED, "" + Utils.getFormattedNumber(get(Keys.IntKey.PK_POINTS), ',')) + " pk points.");
@@ -4613,7 +4631,7 @@ public class Player extends Entity {
 
     public boolean hasStaffOfLight() {
         Item weapon = getEquipment().getItem(Equipment.SLOT_WEAPON);
-        return weapon.isAnyOf(
+        return weapon != null && weapon.isAnyOf(
                 "item.staff_of_light",
                 "item.staff_of_light_blue",
                 "item.staff_of_light_gold",
@@ -6157,9 +6175,9 @@ public class Player extends Entity {
         return squealOfFortune;
     }
 
-    private GreaterRunicStaff runicStaff;
+    private GreaterRunicStaffManager runicStaff;
 
-    public GreaterRunicStaff getRunicStaff() {
+    public GreaterRunicStaffManager getRunicStaff() {
         return runicStaff;
 
     }

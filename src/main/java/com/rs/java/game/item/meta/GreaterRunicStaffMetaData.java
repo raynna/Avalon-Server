@@ -1,14 +1,6 @@
 package com.rs.java.game.item.meta;
 
 
-import com.rs.java.game.item.Item;
-import com.rs.java.game.player.content.GreaterRunicStaff;
-import com.rs.kotlin.game.player.combat.magic.Spellbook;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 public class GreaterRunicStaffMetaData implements ItemMetadata {
 
     private int spellId = -1;
@@ -40,11 +32,9 @@ public class GreaterRunicStaffMetaData implements ItemMetadata {
     public void removeCharges(int amount) {
         charges -= amount;
         if (charges <= 0) {
-            spellId = -1;
             charges = 0;
         }
     }
-
 
     @Override
     public Integer getType() {

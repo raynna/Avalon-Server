@@ -6,14 +6,14 @@ import com.rs.java.game.Entity
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.java.game.npc.NPC
+import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
-import com.rs.java.game.player.prayer.PrayerEffectHandler
+import com.rs.java.game.player.actions.combat.PlayerCombat
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.damage.SoakDamage
-import com.rs.kotlin.game.player.combat.magic.special.GreaterRunicStaff
+import com.rs.kotlin.game.player.combat.magic.special.GreaterRunicStaffWeapon
 import com.rs.kotlin.game.player.combat.magic.special.PolyporeStaff
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 import kotlin.math.ceil
@@ -89,13 +89,17 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 PolyporeStaff.cast(this, attacker, defender);
                 return
             }
-            val hasRunicStaff = GreaterRunicStaff.hasWeapon(attacker);
-            if (hasRunicStaff && GreaterRunicStaff.getSpellId(attacker) != -1) {
-                spellId = GreaterRunicStaff.getSpellId(attacker)
+            val hasRunicStaff = GreaterRunicStaffWeapon.hasWeapon(attacker);
+            if (hasRunicStaff && GreaterRunicStaffWeapon.getSpellId(attacker) != -1) {
+                spellId = GreaterRunicStaffWeapon.getSpellId(attacker)
                 currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
                     AncientMagicks.id -> AncientMagicks.getSpell(spellId)
                     ModernMagicks.id -> ModernMagicks.getSpell(spellId)
                     else -> null
+                }
+                if (currentSpell == null) {
+                    attacker.message("Your greater runic staff has a spell from another magic book.")
+                    return
                 }
             }
             if (currentSpell == null) {
@@ -130,12 +134,32 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         super.onHit(attacker, defender, hit)
-        val spellId = attacker.combatDefinitions.spellId
-        val currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
+        var spellId = attacker.combatDefinitions.spellId
+        var currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
             AncientMagicks.id -> AncientMagicks.getSpell(spellId)
             ModernMagicks.id -> ModernMagicks.getSpell(spellId)
             else -> null
         }
+
+        if (defender is Player && GreaterRunicStaffWeapon.hasWeapon(defender)) {
+            spellId = GreaterRunicStaffWeapon.getSpellId(attacker)
+            currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
+                AncientMagicks.id -> AncientMagicks.getSpell(spellId)
+                ModernMagicks.id -> ModernMagicks.getSpell(spellId)
+                else -> null
+            }
+            if (Utils.roll(1,15)) {
+                hit.damage = -2
+                attacker.message("Your ${currentSpell?.name} is resisted by ${defender.displayName}'s greater runic staff.")
+                defender.message("Your greater runic staff resists ${attacker.displayName}'s ${currentSpell?.name}.")
+            }
+            else if (Utils.roll(1, 4)) {
+                defender.runicStaff.chargeCombat(1)
+                attacker.message("${defender.displayName} absorbs your ${currentSpell?.name} into their greater runic staff!")
+                defender.message("You absorb ${attacker.displayName}'s ${currentSpell?.name} into your greater runic staff.")
+            }
+        }
+
         if (hit.damage == 0) {
             defender.gfx(SPLASH_GRAPHIC)
             return
@@ -271,10 +295,20 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             attacker.combatDefinitions.resetSpells(false)
             spellId -= MIN_SPELL_ID;
         }
-        val currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
+        var currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
             AncientMagicks.id -> AncientMagicks.getSpell(spellId)
             ModernMagicks.id -> ModernMagicks.getSpell(spellId)
             else -> null
+        }
+        val hasRunicStaff = GreaterRunicStaffWeapon.hasWeapon(attacker);
+        if (hasRunicStaff && GreaterRunicStaffWeapon.getSpellId(attacker) != -1) {
+            spellId = GreaterRunicStaffWeapon.getSpellId(attacker)
+            currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
+                AncientMagicks.id -> AncientMagicks.getSpell(spellId)
+                ModernMagicks.id -> ModernMagicks.getSpell(spellId)
+                else -> null
+            }
+            if (currentSpell == null) return
         }
         val isOneXpPerHit = attacker.toggles("ONEXPPERHIT", false)
         val isOneXHits = attacker.toggles("ONEXHITS", false)

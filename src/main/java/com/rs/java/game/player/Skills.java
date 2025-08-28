@@ -11,6 +11,7 @@ import com.rs.Settings;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.thread.CoresManager;
+import com.rs.discord.DiscordAnnouncer;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.utils.HexColours;
@@ -906,6 +907,11 @@ public final class Skills implements Serializable {
         if (newLevel > oldLevel) {
             level[skill] += levelDifference;
             player.getDialogueManager().startDialogue("LevelUp", skill);
+            DiscordAnnouncer.announceLevelUp(
+                    player.getDisplayName(),
+                    Skills.SKILL_NAME[skill],
+                    newLevel
+            );
             sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
             sendLevelAttributtes(player, skill, oldLevel, newLevel);
             if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {
@@ -954,6 +960,11 @@ public final class Skills implements Serializable {
         if (newLevel > oldLevel) {
             level[skill] += levelDiff;
             player.getDialogueManager().startDialogue("LevelUp", skill);
+            DiscordAnnouncer.announceLevelUp(
+                    player.getDisplayName(),
+                    Skills.SKILL_NAME[skill],
+                    newLevel
+            );
             sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
             sendLevelAttributtes(player, skill, oldLevel, newLevel);
             if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {
@@ -1019,6 +1030,11 @@ public final class Skills implements Serializable {
         if (newLevel > oldLevel) {
             level[skill] += levelDiff;
             player.getDialogueManager().startDialogue("LevelUp", skill);
+            DiscordAnnouncer.announceLevelUp(
+                    player.getDisplayName(),
+                    Skills.SKILL_NAME[skill],
+                    newLevel
+            );
             sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
             sendLevelAttributtes(player, skill, oldLevel, newLevel);
             if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {
@@ -1148,6 +1164,11 @@ public final class Skills implements Serializable {
         if (newLevel > oldLevel) {
             level[skill] += levelDiff;
             player.getDialogueManager().startDialogue("LevelUp", skill);
+            DiscordAnnouncer.announceLevelUp(
+                    player.getDisplayName(),
+                    Skills.SKILL_NAME[skill],
+                    newLevel
+            );
             sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
             sendLevelAttributtes(player, skill, oldLevel, newLevel);
             if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {

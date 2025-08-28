@@ -44,7 +44,7 @@ import com.rs.java.game.player.actions.skills.smithing.JewllerySmithing;
 import com.rs.java.game.player.actions.skills.smithing.Smithing.ForgingInterface;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.content.*;
-import com.rs.java.game.player.content.GreaterRunicStaff.RunicStaffSpellStore;
+import com.rs.java.game.player.content.GreaterRunicStaffManager.RunicStaffSpellStore;
 import com.rs.java.game.player.content.Pots.Pot;
 import com.rs.java.game.player.content.clans.ClansManager;
 import com.rs.java.game.player.content.customshops.TradeStore;
@@ -862,12 +862,13 @@ public class ButtonHandler {
             else if (componentId >= 49 && componentId <= 66) player.setPrivateChatSetup(componentId - 48);
             else if (componentId >= 72 && componentId <= 91) player.setFriendChatSetup(componentId - 72);
         } else if (interfaceId == Rscm.lookup("interface.prayerbook")) {
-            WorldTasksManager.schedule(new WorldTask() {
+            player.getPrayer().handlePrayerClick(componentId, slotId);
+            /*WorldTasksManager.schedule(new WorldTask() {
                 @Override
                 public void run() {
                     player.getPrayer().handlePrayerClick(componentId, slotId);
                 }
-            });
+            });*/
         } else if (interfaceId == 1213) {// level up orb
             player.stopAll();
             int lvlupSkill = -1;
@@ -2429,16 +2430,17 @@ public class ButtonHandler {
     public static void sendTakeOff(Player player, int[] slotIds) {
         if (player.hasFinished() || player.isDead()) return;
         boolean worn = false;
-        Item[] copy = player.getEquipment().getItems().getItemsCopy();
         for (int slotId : slotIds) {
             Item item = player.getEquipment().getItem(slotId);
             if (item == null) continue;
-            if (sendTakeOff(player, slotId, item.getId())) worn = true;
+            if (sendTakeOff(player, slotId, item.getId())) {
+                worn = true;
+            }
         }
-        player.getEquipment().refreshItems(copy);
+        player.getEquipment().refresh();
         if (worn) {
             player.getAppearence().generateAppearenceData();
-            player.getPackets().sendSound(2240, 0, 1);
+            player.getPackets().sendSound(2241, 0, 1);
         }
     }
 
@@ -2589,13 +2591,13 @@ public class ButtonHandler {
     private static void removeWeaponIfTwoHanded(Player player, int slotId, Item inventoryItem) {
         Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
         if (weapon != null && Equipment.isTwoHandedWeapon(weapon)) {
-            if (!player.getInventory().getItems().add(weapon)) {
-                player.getInventory().getItems().set(slotId, inventoryItem);
-                return;
-            }
             if (player.hasStaffOfLight() && player.hasStaffOfLightActive()) {
                 player.resetStaffOfLightEffect();
                 player.getPackets().sendGameMessage("The power of the light fades. Your resistance to melee attacks return to normal.");
+            }
+            if (!player.getInventory().getItems().add(weapon)) {
+                player.getInventory().getItems().set(slotId, inventoryItem);
+                return;
             }
             player.getEquipment().getItems().set(Equipment.SLOT_WEAPON, null);
             player.getEquipment().refresh(Equipment.SLOT_WEAPON);

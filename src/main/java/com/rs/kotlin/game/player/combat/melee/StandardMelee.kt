@@ -84,6 +84,35 @@ object StandardMelee : MeleeData() {
                 }
             )
         ),
+        MeleeWeapon(//player.animate(new Animation(10502));
+            itemId = Weapon.itemIds("item.vesta_s_longsword", "item.vesta_s_longsword_deg"),
+            name = "Vesta's longsword",
+            weaponStyle = WeaponStyle.SCIMITAR,
+            blockAnimationId = Animation.getId("animation.scimitar_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.longsword_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.longsword_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.longsword_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.longsword_slash"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 25,
+                execute = { context ->
+                    context.attacker.animate("animation.vestas_longsword_special")
+                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
+                    val roll = context.rollMelee(accuracyMultiplier = 1.75);
+                    val damage = ((0.2 * maxHit).toInt() .. (1.2 * maxHit).toInt()).random()
+                    context.hits {
+                        val hit = Hit(context.attacker, damage, Hit.HitLook.MELEE_DAMAGE);
+                        if (roll.damage > 0) {
+                            addHit(context.defender, hit)
+                        } else {
+                            addHit(context.defender, Hit(context.attacker, 0, Hit.HitLook.MELEE_DAMAGE));
+                        }
+                    }
+                }
+            )
+        ),
         MeleeWeapon(
             itemId = Weapon.itemIds("item.korasi_sword"),
             name = "Korasi's sword",

@@ -218,21 +218,16 @@ public final class PresetManager implements Serializable {
 					}
 					if (item.isAnyOf("item.greater_runic_staff_charged", "item.greater_runic_staff_uncharged")) {
 						if (item.isItem("item.greater_runic_staff_uncharged")) {
-							player.message("changed to charged version");
 							item.setId(Item.getId("item.greater_runic_staff_charged"));
 						}
-						player.message("checking runic staff metadata");
 						GreaterRunicStaffMetaData staffData = (GreaterRunicStaffMetaData) item.getMetadata();
 						if (staffData == null) {
-							player.message("no data found setting spell Id 23 and 250 charges");
 							item.setMetadata(new GreaterRunicStaffMetaData(23, 250));
 						} else {
 							if (staffData.getCharges() == 0 || staffData.getSpellId() == -1) {
-								player.message("staff had 0 charges or -1 spellid");
 								staffData.setSpellId(23);
 								staffData.setValue(250);
 							}
-							player.message("Already has charged: " + item.getMetadata().getValue());
 						}
 					}
 				}
@@ -276,21 +271,16 @@ public final class PresetManager implements Serializable {
 					}
 					if (item.isAnyOf("item.greater_runic_staff_charged", "item.greater_runic_staff_uncharged")) {
 						if (item.isItem("item.greater_runic_staff_uncharged")) {
-							player.message("changed to charged version");
 							item.setId(Item.getId("item.greater_runic_staff_charged"));
 						}
-						player.message("checking runic staff metadata");
 						GreaterRunicStaffMetaData staffData = (GreaterRunicStaffMetaData) item.getMetadata();
 						if (staffData == null) {
-							player.message("no data found setting spell Id 23 and 250 charges");
 							item.setMetadata(new GreaterRunicStaffMetaData(23, 250));
 						} else {
 							if (staffData.getCharges() == 0 || staffData.getSpellId() == -1) {
-								player.message("staff had 0 charges or -1 spellid");
 								staffData.setSpellId(23);
 								staffData.setValue(250);
 							}
-							player.message("Already has charged: " + item.getMetadata().getValue());
 						}
 					}
 				}

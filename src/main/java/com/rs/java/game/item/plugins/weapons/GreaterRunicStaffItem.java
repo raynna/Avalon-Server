@@ -5,15 +5,14 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemPlugin;
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
-import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.content.GreaterRunicStaff.*;
+import com.rs.java.game.player.content.GreaterRunicStaffManager;
 import com.rs.kotlin.game.player.combat.magic.Spell;
 import com.rs.kotlin.game.player.combat.magic.Spellbook;
 
 import java.util.Map;
 
-public class GreaterRunicStaff extends ItemPlugin {
+public class GreaterRunicStaffItem extends ItemPlugin {
 
     @Override
     public Object[] getKeys() {
@@ -69,22 +68,33 @@ public class GreaterRunicStaff extends ItemPlugin {
     @Override
     public boolean processDestroy(Player player, Item item, int slotId) {
         if (item.getId() == 24203) {
-            for (Map.Entry<Integer, Item[]> charges : player.getStaffCharges().entrySet()) {
-                if (charges.getValue() == null)
-                    continue;
-                for (Item staffRunes : charges.getValue()) {
-                    if (item == null)
-                        continue;
-                    World.updateGroundItem(staffRunes, new WorldTile(player), player, player.isAtWild() ? 0 : 60, 0);
+            GreaterRunicStaffMetaData meta = item.getMetadata() instanceof GreaterRunicStaffMetaData m ? m : null;
+            if (meta != null && meta.getSpellId() > -1 && meta.getCharges() > 0) {
+                GreaterRunicStaffManager.RunicStaffSpellStore s = GreaterRunicStaffManager.RunicStaffSpellStore.getSpell(meta.getSpellId());
+                if (s != null) {
+                    for (Item rune : s.getRune()) {
+                        int totalAmount = rune.getAmount() * meta.getCharges();
+                        if (totalAmount > 0) {
+                            World.updateGroundItem(
+                                    new Item(rune.getId(), totalAmount),
+                                    new WorldTile(player),
+                                    player,
+                                    player.isAtWild() ? 0 : 60,
+                                    0
+                            );
+                        }
+                    }
+                    player.message("All your runes in your runic staff were dropped.");
                 }
             }
-            player.message("All your runes in your runic staff were dropped.");
         }
-        if (player.getRunicStaff().getSpellId() > 0) {
-            player.getRunicStaff().setStaffValues(-1, null);
+
+        GreaterRunicStaffMetaData meta = item.getMetadata() instanceof GreaterRunicStaffMetaData m ? m : null;
+        if (meta != null && meta.getSpellId() > -1) {
+            meta.removeCharges(meta.getCharges());
             player.getPackets().sendGameMessage("You clear your greater runic staff spell.");
-            player.getStaffCharges().clear();
         }
+
         player.getInventory().dropItem(slotId, item, false);
         return true;
     }
