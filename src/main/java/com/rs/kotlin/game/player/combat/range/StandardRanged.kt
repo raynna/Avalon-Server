@@ -359,7 +359,7 @@ object StandardRanged : RangeData() {
                 damageMultiplier = 1.0,
                 execute = { context ->
                     context.attacker.animate(Animation(1074))
-                    context.attacker.packets.sendSound(2545, 0, 1)
+                    context.attacker.playSound(2545,  1)
                     ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
                     ProjectileManager.sendDelayed(
                         Projectile.ARROW,
@@ -406,7 +406,7 @@ object StandardRanged : RangeData() {
                         heightOffset = 0,
                         hitGraphic = Graphics(endGraphic, 100)
                     ) {
-                        context.attacker.packets.sendSound(hitSoundId, 0, 1)
+                        context.attacker.playSound(hitSoundId,  1)
                     }
                     ProjectileManager.send(
                         Projectile.DRAGON_ARROW,
@@ -417,10 +417,10 @@ object StandardRanged : RangeData() {
                         delayOffset = 10,
                         hitGraphic = Graphics(endGraphic, 100)
                     ) {
-                        context.attacker.packets.sendSound(hitSoundId, 10, 1)
+                        context.attacker.playSound(hitSoundId,  10,1)
                     }
-                    context.attacker.packets.sendSound(soundId, 0, 1)
-                    context.attacker.packets.sendSound(soundId, 30, 1)
+                    context.attacker.playSound(soundId,  1)
+                    context.attacker.playSound(soundId,  30,1)
                     context.hits {
                         val distance = Utils.getDistance(context.attacker, context.defender)
                         val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)

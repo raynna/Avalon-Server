@@ -898,8 +898,8 @@ public final class Pots {
 		for (int skillId : pot.effect.affectedSkills)
 			player.getSkills().set(skillId, pot.effect.getAffectedSkill(player, skillId,
 					player.getSkills().getLevel(skillId), player.getSkills().getLevelForXp(skillId)));
-		player.setNextAnimationNoPriority(new Animation(829), player);
-		player.getPackets().sendSound(4580, 0, 1);
+		player.animate(829);
+		player.playLocalSound(4580,  1);
 		if (player.toggles("BREAK_VIALS", false) && dosesLeft == 0) {
 			player.getPackets().sendGameMessage("You smash your vials like the barbarian taught you.");
 		} else if (pot.isFlask() || pot.isPotion()) {

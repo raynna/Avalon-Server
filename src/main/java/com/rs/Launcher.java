@@ -201,20 +201,37 @@ public final class Launcher {
 
 	public static String Time;
 
+	private static long lastDiscordAnnounce = 0;
+	private static List<String> lastAnnouncedPlayers = List.of();
+	private final static int MINUTES_TO_ANNOUNCE = 1;
+
 	public static void saveFiles() {
 		for (Player player : World.getPlayers()) {
 			if (player == null || !player.hasStarted() || player.hasFinished())
 				continue;
 			AccountCreation.savePlayer(player);
 		}
-		if (!World.getPlayers().isEmpty())
+
+		if (!World.getPlayers().isEmpty()) {
 			Logger.log("Launcher", "There is currently " + World.getPlayers().size() + " players online.");
+		}
 
 		List<String> playerNames = World.getPlayers().stream()
 				.filter(p -> p != null && p.hasStarted() && !p.hasFinished())
 				.map(Player::getUsername)
+				.sorted(String.CASE_INSENSITIVE_ORDER)
 				.toList();
 
+		long now = System.currentTimeMillis();
+		if (!playerNames.equals(lastAnnouncedPlayers) && (now - lastDiscordAnnounce >= (long) MINUTES_TO_ANNOUNCE * 60 * 1000)) {
+			DiscordAnnouncer.announce(
+					"Players Status",
+					"Players online: " + playerNames,
+					"Count: " + playerNames.size(), 0
+			);
+			lastAnnouncedPlayers = playerNames;
+			lastDiscordAnnounce = now;
+		}
 		if (!playerNames.isEmpty()) {
 			Logger.log("Launcher", "Players: " + playerNames);
 		}
@@ -222,6 +239,7 @@ public final class Launcher {
 		GrandExchange.save();
 		Time = Time("dd MMMMM yyyy 'at' hh:mm:ss z");
 	}
+
 
 	public static void cleanMemory(boolean force) {
 		if (force) {

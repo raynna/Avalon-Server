@@ -684,7 +684,7 @@ public class Foods {
 			player.addFoodLock(foodTick);
 			player.addSpecialFoodLock(foodTick);
 		}
-		player.playSound(2393, 1);
+		player.playLocalSound(2393, 1);
 		player.getPackets().sendGameMessage("You eat the " + name + ".");
 		player.animate(EAT_ANIM);
 		player.getInventory().getItems().set(slot, food.getNewId() == 0 ? null : new Item(food.getNewId(), 1));

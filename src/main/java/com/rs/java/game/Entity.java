@@ -320,10 +320,12 @@ public abstract class Entity extends WorldTile {
                 }
             }
         }
-        /*if (hitpoints < hit.getDamage()) {
-            getPoison().reset();
-            hit.setDamage(hitpoints);
-        }*/
+        if (this instanceof NPC) {
+            if (hitpoints < hit.getDamage()) {
+                getPoison().reset();
+                hit.setDamage(hitpoints);
+            }
+        }
 
         setHitpoints(hitpoints < hit.getDamage() ? 0 : hitpoints - hit.getDamage());
         if (hit.getSource() instanceof Player) {
@@ -1127,7 +1129,7 @@ public abstract class Entity extends WorldTile {
 
     public abstract int getMaxHitpoints();
 
-   public void processEntity() {
+    public void processEntity() {
         poison.processPoison();
         newPoison.processPoison();
         tickManager.tick();
@@ -1160,19 +1162,19 @@ public abstract class Entity extends WorldTile {
     }
 
     public void freeze(int value) {
-       if (this instanceof Player player) {
-           tickManager.addTicks(TickManager.TickKeys.FREEZE_TICKS, value, () ->
-                   player.message("You are no longer frozen.")
-           );
-           tickManager.addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, value + 5);
-       } else {
-           tickManager.addTicks(TickManager.TickKeys.FREEZE_TICKS, value);
-           tickManager.addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, value + 5);
-       }
+        if (this instanceof Player player) {
+            tickManager.addTicks(TickManager.TickKeys.FREEZE_TICKS, value, () ->
+                    player.message("You are no longer frozen.")
+            );
+            tickManager.addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, value + 5);
+        } else {
+            tickManager.addTicks(TickManager.TickKeys.FREEZE_TICKS, value);
+            tickManager.addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, value + 5);
+        }
     }
 
     public void unfreeze() {
-       tickManager.remove(TickManager.TickKeys.FREEZE_TICKS);
+        tickManager.remove(TickManager.TickKeys.FREEZE_TICKS);
     }
 
     public void addFreezeDelay(int ticks, boolean entangle) {
@@ -1411,6 +1413,7 @@ public abstract class Entity extends WorldTile {
     public void animate(int animationId) {
         animate(new Animation(animationId));
     }
+
     public void animate(String animation) {
         animate(new Animation(animation));
     }
@@ -1694,6 +1697,12 @@ public abstract class Entity extends WorldTile {
         return nextHits;
     }
 
+    public void playLocalSound(int soundId, int type) {
+        if (this instanceof Player player) {
+            player.getPackets().sendSound(soundId, 0, type);
+        }
+    }
+
     public void playSound(int soundId, int type) {
         for (int regionId : getMapRegionsIds()) {
             List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
@@ -1707,6 +1716,21 @@ public abstract class Entity extends WorldTile {
             }
         }
     }
+
+    public void playSound(int soundId, int delay, int type) {
+        for (int regionId : getMapRegionsIds()) {
+            List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
+            if (playerIndexes != null) {
+                for (int playerIndex : playerIndexes) {
+                    Player player = World.getPlayers().get(playerIndex);
+                    if (player == null || !player.isActive() || !withinDistance(player))
+                        continue;
+                    player.getPackets().sendSound(soundId, delay, type);
+                }
+            }
+        }
+    }
+
 
     public void playSound(String sound, int type) {
         int soundId = Rscm.lookup(sound);

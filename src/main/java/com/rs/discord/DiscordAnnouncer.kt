@@ -11,6 +11,11 @@ object DiscordAnnouncer {
     }
 
     @JvmStatic
+    fun announce(title: String, message: String, footer: String) {
+        announce(title, message, footer, 0x57F287)
+    }
+
+    @JvmStatic
     fun announce(title: String, message: String, footer: String = "", color: Int = 0x57F287) {
         DiscordWebhook.enqueue(
             WebhookPayload(

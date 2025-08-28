@@ -26,11 +26,20 @@ object DiscordWebhook {
 
     init {
         thread(name = "DiscordWebhookWorker", isDaemon = true) {
+            val minInterval = 250L
+            var lastSend = 0L
+
             while (true) {
                 val payload = queue.take()
+
+                val now = System.currentTimeMillis()
+                val diff = now - lastSend
+                if (diff < minInterval) {
+                    Thread.sleep(minInterval - diff)
+                }
+
                 sendNowWithRetry(payload)
-                // Light pacing to avoid spam bursts in edge cases
-                Thread.sleep(150)
+                lastSend = System.currentTimeMillis()
             }
         }
     }
@@ -44,19 +53,21 @@ object DiscordWebhook {
     @JvmStatic
     private fun sendNowWithRetry(payload: WebhookPayload) {
         val url = webhookUrl ?: return
-        val body = adapter.toJson(payload).toRequestBody(JSON.toMediaType())
 
         var attempts = 0
         var backoffMs = 500L
 
         while (attempts < 5) {
             attempts++
+
+            // Rebuild request body each attempt (OkHttp request bodies are one-shot)
+            val body = adapter.toJson(payload).toRequestBody(JSON.toMediaType())
             val req = Request.Builder().url(url).post(body).build()
+
             client.newCall(req).execute().use { resp ->
                 when {
-                    resp.isSuccessful || resp.code == 204 -> return // done
+                    resp.isSuccessful || resp.code == 204 -> return // success
                     resp.code == 429 -> {
-                        // Rate limit: respect retry_after if present
                         val retryAfterMs = resp.header("Retry-After")?.toLongOrNull()?.let { it * 1000 }
                             ?: 1000L
                         Thread.sleep(retryAfterMs)
@@ -65,10 +76,7 @@ object DiscordWebhook {
                         Thread.sleep(backoffMs)
                         backoffMs = (backoffMs * 2).coerceAtMost(8000)
                     }
-                    else -> {
-                        // 4xx error; probably bad payload or webhook revoked
-                        return
-                    }
+                    else -> return // 4xx: unrecoverable
                 }
             }
         }
@@ -88,8 +96,8 @@ data class Embed(
     val title: String? = null,
     val description: String? = null,
     val url: String? = null,
-    val color: Int? = null,               // 0xRRGGBB
-    val timestamp: String? = null,        // ISO-8601 (e.g., Instant.now().toString())
+    val color: Int? = null,
+    val timestamp: String? = null,
     val fields: List<EmbedField>? = null,
     val footer: EmbedFooter? = null,
     val thumbnail: EmbedImage? = null,
