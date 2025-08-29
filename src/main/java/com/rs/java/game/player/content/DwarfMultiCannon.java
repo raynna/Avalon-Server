@@ -213,7 +213,7 @@ public class DwarfMultiCannon {
 					player.addCannonBalls(-1);
 					if (player.toggles("ONEXPPERHIT", false))
 						player.getSkills().addXpNoBonus(Skills.RANGE,
-								(player.toggles("ONEXHITS", false) ? Math.round(damage) / 10 : damage));
+								(player.getVarsManager().getBitValue(1485) == 1 ? Math.round(damage) / 10 : damage));
 					else
 						player.getSkills().addXp(Skills.RANGE, damage / 5);
 					if (Utils.getRandom(100) < 25) {
@@ -228,7 +228,7 @@ public class DwarfMultiCannon {
 							player.addCannonBalls(-1);
 						if (player.toggles("ONEXPPERHIT", false))
 							player.getSkills().addXpNoBonus(Skills.RANGE,
-									(player.toggles("ONEXHITS", false) ? Math.round(damage) / 10 : damage));
+									(player.getVarsManager().getBitValue(1485) == 1 ? Math.round(damage) / 10 : damage));
 						else
 							player.getSkills().addXp(Skills.RANGE, damage / 5);
 					}

@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.player.command
 
-import com.everythingrs.net.packet.impl.Yell
 import com.rs.java.game.player.Player
 import com.rs.kotlin.game.player.command.commands.*
 

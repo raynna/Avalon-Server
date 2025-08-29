@@ -1,6 +1,7 @@
 package com.rs.java.game.player.content.customtab;
 
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.controlers.WildernessControler;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.HexColours.Colour;
@@ -127,57 +128,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        DROPS(12) {
-            @Override
-            public void usage(Player p) {
-            }
-
-            @Override
-            public String text(Player p) {
-                return "<u>Drop Settings";
-            }
-        },
-
-        LOOTBEAMS(13) {
-            @Override
-            public void usage(Player p) {
-                p.toggles.put("LOOTBEAMS", !p.toggles("LOOTBEAMS", false));
-            }
-
-            @Override
-            public String text(Player p) {
-                return "Lootbeams: " + (p.toggles("LOOTBEAMS", false) ? "<col=04BB3B>On" : "<col=BB0404>Off");
-            }
-        },
-
-        UNTRADEABLEMESSAGE(14) {
-            @Override
-            public void usage(Player p) {
-                p.toggles.put("UNTRADEABLEMESSAGE", !p.toggles("UNTRADEABLEMESSAGE", false));
-            }
-
-            @Override
-            public String text(Player p) {
-                return "Untradeable Message: "
-                        + (p.toggles("UNTRADEABLEMESSAGE", false) ? "<col=04BB3B>On" : "<col=BB0404>Off");
-            }
-        },
-
-        DROPVALUE(15) {
-            @Override
-            public void usage(Player p) {
-                p.getTemporaryAttributtes().put("SET_DROPVALUE", Boolean.TRUE);
-                p.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
-            }
-
-            @Override
-            public String text(Player p) {
-                int dropValue = Integer.parseInt(p.getToggleValue(p.toggles.get("DROPVALUE")));
-                return "Valuable Drop: " + (dropValue < 1 ? HexColours.getMessage(Colour.RED, "0 - click to set") : HexColours.getMessage(Colour.GREEN, "" + Utils.getFormattedNumber(dropValue, ',') + " gp"));
-            }
-        },
-
-        COMBATSETTINGS(17) {
+        COMBATSETTINGS(12) {
             @Override
             public void usage(Player p) {
             }
@@ -188,7 +139,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        ONEXPPERHIT(18) {
+        ONEXPPERHIT(13) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("ONEXPPERHIT", !p.toggles("ONEXPPERHIT", false));
@@ -202,11 +153,12 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        ONEXHITS(19) {
+        ONEXHITS(14) {
             @Override
             public void usage(Player p) {
-                p.toggles.put("ONEXHITS", !p.toggles("ONEXHITS", false));
-                p.getPrayer().refresh();
+                boolean active = p.getVarsManager().getBitValue(1485) == 1;
+                p.getVarsManager().sendVarBit(1485, active ? 0 : 1, true);
+                p.getVarsManager().forceSendVarBit(9816, p.getPrayer().getPrayerPoints());
                 p.refreshHitPoints();
                 p.getSkills().switchXPPopup(true);
                 p.getSkills().switchXPPopup(true);
@@ -214,7 +166,58 @@ public class SettingsTab extends CustomTab {
 
             @Override
             public String text(Player p) {
-                return "1x Hitmarks: " + (p.toggles("ONEXHITS", false) ? "<col=04BB3B>On" : "<col=BB0404>Off");
+                boolean active = p.getVarsManager().getBitValue(1485) == 1;
+                return "1x Hitpoints & prayer: " + (active ? "<col=04BB3B>On" : "<col=BB0404>Off");
+            }
+        },
+
+        DROPS(16) {
+            @Override
+            public void usage(Player p) {
+            }
+
+            @Override
+            public String text(Player p) {
+                return "<u>Drop Settings";
+            }
+        },
+
+        LOOTBEAMS(17) {
+            @Override
+            public void usage(Player p) {
+                p.toggles.put("LOOTBEAMS", !p.toggles("LOOTBEAMS", false));
+            }
+
+            @Override
+            public String text(Player p) {
+                return "Lootbeams: " + (p.toggles("LOOTBEAMS", false) ? "<col=04BB3B>On" : "<col=BB0404>Off");
+            }
+        },
+
+        UNTRADEABLEMESSAGE(18) {
+            @Override
+            public void usage(Player p) {
+                p.toggles.put("UNTRADEABLEMESSAGE", !p.toggles("UNTRADEABLEMESSAGE", false));
+            }
+
+            @Override
+            public String text(Player p) {
+                return "Untradeable Message: "
+                        + (p.toggles("UNTRADEABLEMESSAGE", false) ? "<col=04BB3B>On" : "<col=BB0404>Off");
+            }
+        },
+
+        DROPVALUE(19) {
+            @Override
+            public void usage(Player p) {
+                p.getTemporaryAttributtes().put("SET_DROPVALUE", Boolean.TRUE);
+                p.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
+            }
+
+            @Override
+            public String text(Player p) {
+                int dropValue = Integer.parseInt(p.getToggleValue(p.toggles.get("DROPVALUE")));
+                return "Valuable Drop: " + (dropValue < 1 ? HexColours.getMessage(Colour.RED, "0 - click to set") : HexColours.getMessage(Colour.GREEN, "" + Utils.getFormattedNumber(dropValue, ',') + " gp"));
             }
         },
 

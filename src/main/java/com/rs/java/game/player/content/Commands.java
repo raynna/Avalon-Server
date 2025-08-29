@@ -1182,6 +1182,9 @@ public final class Commands {
                 case "lowhp":
                     player.applyHit(new Hit(player, player.getHitpoints() - 1, HitLook.REGULAR_DAMAGE));
                     return true;
+                case "lowpray":
+                    player.getPrayer().drainPrayer((int) (player.getPrayer().getPrayerPoints() * 0.98));
+                    return true;
                 case "poisonme":
                     player.getNewPoison().startPoison(30);
                     return true;

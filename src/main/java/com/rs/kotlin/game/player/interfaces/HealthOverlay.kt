@@ -110,7 +110,7 @@ class HealthOverlay {
     }
 
     private fun buildHpText(viewer: Player, currentHp: Int, maxHp: Int): String {
-        return if (viewer.toggles("ONEXHITS", false)) {
+        return if (viewer.getVarsManager().getBitValue(1485) == 1) {
             "${ceil(currentHp / 10.0).toInt()}/${ceil(maxHp / 10.0).toInt()}"
         } else {
             "$currentHp/$maxHp"

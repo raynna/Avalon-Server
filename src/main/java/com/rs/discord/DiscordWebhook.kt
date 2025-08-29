@@ -1,5 +1,6 @@
 package com.rs.discord
 
+import com.rs.Settings
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -46,6 +47,8 @@ object DiscordWebhook {
 
     fun enqueue(payload: WebhookPayload) {
         if (webhookUrl.isNullOrBlank()) return
+        if (Settings.TEST_SERVER)
+            return;
         println("DiscordWebhook: sending to $webhookUrl")
         queue.offer(payload)
     }

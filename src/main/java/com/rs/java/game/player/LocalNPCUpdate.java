@@ -273,7 +273,8 @@ public final class LocalNPCUpdate {
 					data.writeSmart(hit.getMark(player, n));
 					data.writeSmart(0);
 				} else {
-					boolean oneXHits = player.toggles("ONEXHITS", false);
+
+					boolean oneXHits = player.getVarsManager().getBitValue(1485) == 1;
                     int reduced = (int) Math.max(1, Math.ceil(hit.getDamage() / 10.0));
                     double hitAmount = oneXHits ? reduced : hit.getDamage();
                     if (hit.getSoaking() != null) {

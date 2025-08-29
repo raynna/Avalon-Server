@@ -31,7 +31,7 @@ enum class XpMode {
         val hpXp = damage * 0.133
         val type = attackStyle.combatType
         val isOneXpPerHit = player.toggles("ONEXPPERHIT", false)
-        val isOneXHits = player.toggles("ONEXHITS", false)
+        val isOneXHits = player.varsManager.getBitValue(1485) == 1
         if (isOneXpPerHit && damage > 0) {
             val xp = if (isOneXHits) ceil(damage / 10.0) else damage
             player.skills.addXpDelayed(Skills.HITPOINTS, xp.toDouble())

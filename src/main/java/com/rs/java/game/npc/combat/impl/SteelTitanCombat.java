@@ -119,7 +119,7 @@ public class SteelTitanCombat extends CombatScript {
 	private void applyFamiliarXP(Familiar familiar, int damage, int skill) {
 		Player owner = familiar.getOwner();
 		if (owner.toggles("ONEXPPERHIT", false)) {
-			int xp = owner.toggles("ONEXHITS", false) ? Math.round(damage) / 10 : damage;
+			int xp = damage;
 			owner.getSkills().addXpNoBonus(skill, xp);
 		} else {
 			owner.getSkills().addXp(skill, damage / 3);

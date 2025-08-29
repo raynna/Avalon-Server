@@ -913,8 +913,8 @@ public class PrayerBook implements Serializable {
         return player.getSkills().getLevelForXp(Skills.PRAYER) * PRAYER_POINTS_PER_LEVEL;
     }
 
-    private void refreshPrayerPoints() {
-        player.getVarsManager().sendVar("var.prayer_points", prayerPoints);
+    public void refreshPrayerPoints() {
+        player.getVarsManager().sendVarBit(9816, prayerPoints, true);
     }
 
     private EnumSet<? extends Prayer> getActivePrayerSet() {
@@ -939,8 +939,8 @@ public class PrayerBook implements Serializable {
     }
 
     public void refresh() {
-        refreshPrayerPoints();
         player.getInterfaceManager().sendPrayerBook();
+        refreshPrayerPoints();
         recalculatePrayer();
         player.getAppearence().generateAppearenceData();
         player.getPackets().sendGlobalVar("globalvar.prayer_switch_quickpray", usingQuickPrayer ? 1 : 0);

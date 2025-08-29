@@ -87,7 +87,7 @@ public class PlayerCombat extends Action {
             name.append(p2.getDisplayName());
             p1.getPackets().sendTextOnComponent(3037, 6, name.toString());
             p1.getPackets().sendTextOnComponent(3037, 7,
-                    (p1.toggles("ONEXHITS", false) ? p2.getHitpoints() / 10 + "/" + p2.getMaxHitpoints() / 10
+                    (p1.getVarsManager().getBitValue(1485) == 1 ? p2.getHitpoints() / 10 + "/" + p2.getMaxHitpoints() / 10
                             : p2.getHitpoints() + "/" + p2.getMaxHitpoints()));
         } else {
             NPC npc = (NPC) target;
@@ -95,7 +95,7 @@ public class PlayerCombat extends Action {
             p1.getPackets().sendTextOnComponent(3037, 6, npc.getName());
             checkCombatLevel(p1, npc);
             p1.getPackets().sendTextOnComponent(3037, 7,
-                    (p1.toggles("ONEXHITS", false) ? npc.getHitpoints() / 10 + "/" + npc.getMaxHitpoints() / 10
+                    (p1.getVarsManager().getBitValue(1485) == 1 ? npc.getHitpoints() / 10 + "/" + npc.getMaxHitpoints() / 10
                             : npc.getHitpoints() + "/" + npc.getMaxHitpoints()));
         }
     }
@@ -2667,7 +2667,7 @@ public class PlayerCombat extends Action {
                     if (player.toggles("ONEXPPERHIT", false)) {
                         if (rangeXP > 0)
                             player.getSkills().addXpNoBonus(Skills.RANGE,
-                                    (player.toggles("ONEXHITS", false) ? Math.round(damage) / 10 : damage));
+                                    (player.getVarsManager().getBitValue(1485) == 1 ? Math.round(damage) / 10 : damage));
                     } else {
                         if (attackStyle == 2 && player.getEquipment().getAmmoId() != 24116) {
                             player.getSkills().addXp(Skills.RANGE, (damage * 0.2));
@@ -2686,11 +2686,11 @@ public class PlayerCombat extends Action {
                         if (xpStyle != CombatDefinitions.SHARED) {
                             if (meleeXP > 0)
                                 player.getSkills().addXpNoBonus(xpStyle,
-                                        (player.toggles("ONEXHITS", false) ? Math.round(damage) / 10 : damage));
+                                        (player.getVarsManager().getBitValue(1485) == 1 ? Math.round(damage) / 10 : damage));
                         } else {
                             if (meleeXP > 0)
                                 player.getSkills().addXpNoBonus(Skills.STRENGTH,
-                                        ((player.toggles("ONEXHITS", false) ? Math.round(damage) / 10 : damage)));
+                                        ((player.getVarsManager().getBitValue(1485) == 1 ? Math.round(damage) / 10 : damage)));
                         }
                     } else {
                         if (meleeXP > 0) {
@@ -2712,7 +2712,7 @@ public class PlayerCombat extends Action {
                     if (player.toggles("ONEXPPERHIT", false)) {
                         if (magicXP > 0)
                             player.getSkills().addXpNoBonus(Skills.MAGIC,
-                                    (player.toggles("ONEXHITS", false) ? Math.ceil(damage) / 10 : damage));
+                                    (player.getVarsManager().getBitValue(1485) == 1 ? Math.ceil(damage) / 10 : damage));
                     } else {
                         if (magicXP > 0) {
                             if (player.getCombatDefinitions().isDefensiveCasting() || (hasPolyporeStaff(player)
@@ -4233,10 +4233,10 @@ public class PlayerCombat extends Action {
             int xpStyle = player.getCombatDefinitions().getXpStyle(weaponId, attackStyle);
             if (xpStyle != CombatDefinitions.SHARED) {
                 player.getSkills().addXpNoBonus(xpStyle,
-                        (player.toggles("ONEXHITS", false) ? Math.round(damage) / 10 : damage));
+                        (player.getVarsManager().getBitValue(1485) == 1 ? Math.round(damage) / 10 : damage));
             } else {
                 player.getSkills().addXpNoBonus(Skills.STRENGTH,
-                        ((player.toggles("ONEXHITS", false) ? Math.round(damage) / 10 : damage)));
+                        ((player.getVarsManager().getBitValue(1485) == 1 ? Math.round(damage) / 10 : damage)));
             }
         } else {
             if (meleeXP > 0) {
