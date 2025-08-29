@@ -914,7 +914,7 @@ public class PrayerBook implements Serializable {
     }
 
     public void refreshPrayerPoints() {
-        player.getVarsManager().sendVarBit(9816, prayerPoints, true);
+        player.getVarsManager().forceSendVarBit(9816, prayerPoints);
     }
 
     private EnumSet<? extends Prayer> getActivePrayerSet() {
