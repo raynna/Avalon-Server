@@ -5,22 +5,42 @@ import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
 import com.rs.java.utils.HexColours
+import com.rs.kotlin.game.player.combat.CombatAction
+import com.rs.kotlin.game.player.combat.Weapon
+import com.rs.kotlin.game.player.combat.special.CombatContext
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 class HealthOverlay {
 
+    private data class OverlayState(
+        val hpText: String,
+        val hitchance: Int,
+        val skillRows: List<String>
+    )
+
     fun sendOverlay(player: Player, target: Entity) {
         checkCombatLevel(player, target)
         updateHealthOverlay(player, target, false)
-        if (player.toggles("HEALTHBAR", false) && (!player.interfaceManager.containsTab(getHealthOverlayId(player)))) {
+        if (player.toggles("HEALTHBAR", false) &&
+            (!player.interfaceManager.containsTab(getHealthOverlayId(player)))
+        ) {
             player.interfaceManager.sendTab(getHealthOverlayId(player), 3037)
-            val pixels: Int = (target.hitpoints.toDouble() / target.getMaxHitpoints() * 126.0).roundToInt()
+            val pixels: Int =
+                (target.hitpoints.toDouble() / target.getMaxHitpoints() * 126.0).roundToInt()
             player.packets.sendRunScript(6252, pixels)
             player.packets.sendRunScript(6253, 0)
             target.temporaryAttribute()["last_hp_${player.index}"] = target.hitpoints
+        }
+    }
+
+    fun checkCombatLevel(player: Player, target: Entity) {
+        when (target) {
+            is NPC -> checkNpcCombatLevel(player, target)
+            is Player -> checkPlayerCombatLevel(player, target)
         }
     }
 
@@ -39,9 +59,14 @@ class HealthOverlay {
 
     fun closeOverlay(player: Player) {
         if (player.interfaceManager.containsTab(getHealthOverlayId(player))) {
-            if (checkForClose(player) && player.interfaceManager.containsTab(getHealthOverlayId(player))) {
+            if (checkForClose(player) &&
+                player.interfaceManager.containsTab(getHealthOverlayId(player))
+            ) {
                 player.removeTemporaryTarget()
-                player.interfaceManager.closeTab(player.interfaceManager.isResizableScreen, getHealthOverlayId(player))
+                player.interfaceManager.closeTab(
+                    player.interfaceManager.isResizableScreen,
+                    getHealthOverlayId(player)
+                )
             }
         }
     }
@@ -51,36 +76,54 @@ class HealthOverlay {
     }
 
     fun updateHealthOverlay(player: Player, target: Entity, updateScript: Boolean) {
+        val name: String
+        val hpText: String
+
         when (target) {
             is Player -> {
-                checkCombatLevel(player, target)
-
-                val name = buildTargetName(target)
-                player.packets.sendTextOnComponent(3037, 6, name)
-
-                val hpText = buildHpText(player, target.hitpoints, target.maxHitpoints)
-                player.packets.sendTextOnComponent(3037, 7, hpText)
+                checkPlayerCombatLevel(player, target)
+                name = buildTargetName(target)
+                hpText = buildHpText(player, target.hitpoints, target.maxHitpoints)
             }
 
             is NPC -> {
-                player.packets.sendTextOnComponent(3037, 6, target.name)
-
-                checkCombatLevel(player, target)
-
-                val hpText = buildHpText(player, target.hitpoints, target.maxHitpoints)
-                player.packets.sendTextOnComponent(3037, 7, hpText)
+                checkNpcCombatLevel(player, target)
+                name = target.name
+                hpText = buildHpText(player, target.hitpoints, target.maxHitpoints)
             }
+
+            else -> return
         }
+
+        val hitchance = (getHitchance(player, target) * 100).roundToInt()
+        val skillRows = buildSkillRows(player)
+
+        val newState = OverlayState(hpText, hitchance, skillRows)
+        val lastState = player.temporaryAttribute()["overlay_state"] as? OverlayState
+
+        if (lastState != newState) {
+            player.temporaryAttribute()["overlay_state"] = newState
+
+            player.packets.sendTextOnComponent(3037, 6, name)
+            player.packets.sendTextOnComponent(3037, 7, hpText)
+
+            player.packets.sendHideIComponent(3037, 9, false)
+            player.packets.sendHideIComponent(3037, 9, false)
+            player.packets.sendTextOnComponent(3037, 9, "Hit%: ${getHitchanceColour(hitchance)}$hitchance%")
+
+            updateSkillRows(player, skillRows)
+        }
+
         if (updateScript) {
             val maxHp = target.getMaxHitpoints().toDouble()
             val currentHp = target.hitpoints
-            val lastHp = target.temporaryAttribute()["last_hp_${player.index}"] as? Int ?: currentHp
+            val lastHp =
+                target.temporaryAttribute()["last_hp_${player.index}"] as? Int ?: currentHp
 
             val damageTaken = (lastHp - currentHp).coerceAtLeast(0)
 
             val newPixels = (currentHp.toDouble() / maxHp * 126.0).roundToInt()
             val oldPixels = (lastHp.toDouble() / maxHp * 126.0).roundToInt()
-
             val pixelLoss = ((damageTaken.toDouble() / maxHp) * 126.0).roundToInt()
 
             val adjustedPixels = if (damageTaken > 0) {
@@ -110,37 +153,140 @@ class HealthOverlay {
     }
 
     private fun buildHpText(viewer: Player, currentHp: Int, maxHp: Int): String {
-        return if (viewer.getVarsManager().getBitValue(1485) == 1) {
+        return if (viewer.varsManager.getBitValue(1485) == 1) {
             "${ceil(currentHp / 10.0).toInt()}/${ceil(maxHp / 10.0).toInt()}"
         } else {
             "$currentHp/$maxHp"
         }
     }
 
-    fun checkCombatLevel(player: Player, target: Entity) {
-        when (target) {
-            is NPC -> checkNpcCombatLevel(player, target)
-            is Player -> checkPlayerCombatLevel(player, target)
+    private fun buildSkillRows(player: Player): List<String> {
+        data class SkillRow(
+            val name: String,
+            val iconSpriteId: Int,
+            val current: Int,
+            val base: Int
+        ) {
+            val delta = current - base
+            val boosted = delta > 0
+            val drained = delta < 0
+            val changed = boosted || drained
         }
+
+        val allSkills = listOf(
+            SkillRow(
+                "Attack", 1478,
+                player.skills.getLevel(Skills.ATTACK),
+                player.skills.getLevelForXp(Skills.ATTACK)
+            ),
+            SkillRow(
+                "Strength", 1479,
+                player.skills.getLevel(Skills.STRENGTH),
+                player.skills.getLevelForXp(Skills.STRENGTH)
+            ),
+            SkillRow(
+                "Defence", 1480,
+                player.skills.getLevel(Skills.DEFENCE),
+                player.skills.getLevelForXp(Skills.DEFENCE)
+            ),
+            SkillRow(
+                "Ranged", 1481,
+                player.skills.getLevel(Skills.RANGE),
+                player.skills.getLevelForXp(Skills.RANGE)
+            ),
+            SkillRow(
+                "Magic", 1483,
+                player.skills.getLevel(Skills.MAGIC),
+                player.skills.getLevelForXp(Skills.MAGIC)
+            )
+        )
+
+        return allSkills
+            .filter { it.changed }
+            .sortedWith(
+                compareByDescending<SkillRow> { it.boosted }
+                    .thenBy { it.name }
+            )
+            .map { row ->
+                val (colour, shad) = if (row.boosted) {
+                    "00FF00" to "<shad=000000>"
+                } else {
+                    "FF0000" to "<shad=000000>"
+                }
+                "$shad<col=$colour>${row.current}/${row.base}</col>|${row.iconSpriteId}"
+            }
+    }
+
+    private fun updateSkillRows(player: Player, skillRows: List<String>) {
+        data class RowDef(val textId: Int, val iconId: Int, val boxId: Int)
+        val rows = listOf(
+            RowDef(13, 14, 12),
+            RowDef(16, 17, 15),
+            RowDef(19, 20, 18),
+            RowDef(22, 23, 21),
+            RowDef(25, 26, 24)
+        )
+
+        rows.forEachIndexed { i, row ->
+            if (i < skillRows.size) {
+                val entry = skillRows[i]
+                val parts = entry.split("|")
+                val text = parts[0]
+                val spriteId = parts[1].toInt()
+
+                player.packets.sendHideIComponent(3037, row.boxId, false)
+                player.packets.sendHideIComponent(3037, row.iconId, false)
+                player.packets.sendHideIComponent(3037, row.textId, false)
+
+                player.packets.sendIComponentSprite(3037, row.iconId, spriteId)
+                player.packets.sendTextOnComponent(3037, row.textId, text)
+            } else {
+                player.packets.sendHideIComponent(3037, row.boxId, true)
+                player.packets.sendHideIComponent(3037, row.iconId, true)
+                player.packets.sendHideIComponent(3037, row.textId, true)
+                player.packets.sendTextOnComponent(3037, row.textId, "")
+            }
+        }
+    }
+
+    /** Hitchance wrapper */
+    private fun getHitchance(player: Player, target: Entity): Double {
+        val combatStyle = CombatAction.getCombatStyle(player, target)
+        val weapon = Weapon.getWeapon(player.equipment.weaponId)
+        val combatContext =
+            if (player.combatDefinitions.isUsingSpecialAttack && weapon.special != null) {
+                CombatContext(
+                    combat = combatStyle,
+                    attacker = player,
+                    defender = target,
+                    weapon = weapon,
+                    weaponId = player.equipment.weaponId,
+                    attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
+                    attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
+                    usingSpecial = true
+                )
+            } else null
+
+        return combatStyle.getHitChance(player, target, 1.0, combatContext)
     }
 
     private fun checkNpcCombatLevel(player: Player, npc: NPC) {
         val playerLevel = getRelevantCombatLevel(player)
         val npcLevel = npc.combatLevel
 
-        player.packets.sendHideIComponent(3037, 8, npcLevel == 0)
-        player.packets.sendHideIComponent(3037, 9, npcLevel == 0)
+        player.packets.sendHideIComponent(3037, 10, npcLevel == 0)
+        player.packets.sendHideIComponent(3037, 11, npcLevel == 0)
 
         val levelText = "Level: ${getLevelColour(playerLevel, npcLevel)}$npcLevel"
-        player.packets.sendTextOnComponent(3037, 9, levelText)
+        player.packets.sendTextOnComponent(3037, 11, levelText)
     }
 
     private fun checkPlayerCombatLevel(player: Player, target: Player) {
         val playerLevel = getRelevantCombatLevel(player)
         val targetLevel = target.skills.combatLevel
 
-        player.packets.sendHideIComponent(3037, 8, false)
-        player.packets.sendHideIComponent(3037, 9, false)
+        player.packets.sendHideIComponent(3037, 10, false)
+        player.packets.sendHideIComponent(3037, 11, false)
 
         val levelDisplay = if (player.isAtWild || player.isAtPvP) {
             "$targetLevel+${target.skills.summoningCombatLevel}"
@@ -149,7 +295,7 @@ class HealthOverlay {
         }
 
         val levelText = "Lvl: ${getLevelColour(playerLevel, targetLevel)}$levelDisplay"
-        player.packets.sendTextOnComponent(3037, 9, levelText)
+        player.packets.sendTextOnComponent(3037, 11, levelText)
     }
 
     private fun getRelevantCombatLevel(player: Player): Int {
@@ -160,12 +306,23 @@ class HealthOverlay {
         }
     }
 
-    private fun getLevelColour(playerLevel: Int, targetLevel: Int): String {
+    private fun getHitchanceColour(hitchance: Int): String {
+        val shad = "<shad=000000>"
         return when {
-            playerLevel > targetLevel -> HexColours.Colour.GREEN.hex
-            playerLevel == targetLevel -> HexColours.Colour.YELLOW.hex
-            else -> HexColours.Colour.RED.hex
+            hitchance <= 25 -> "$shad<col=FF0000>"
+            hitchance in 26..75 -> "$shad<col=FFFF00>"
+            hitchance > 75 -> "$shad<col=00FF00>"
+            else -> "$shad<col=FFFFFF>"
         }
     }
 
+
+    private fun getLevelColour(playerLevel: Int, targetLevel: Int): String {
+        val shad = "<shad=000000>"
+        return when {
+            playerLevel > targetLevel -> "$shad<col=00FF00>"
+            playerLevel == targetLevel -> "$shad<col=FFFF00>"
+            else -> "$shad<col=FF0000>"
+        }
+    }
 }

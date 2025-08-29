@@ -88,6 +88,29 @@ interface CombatStyle {
             }
         }, delay)
     }
+
+    fun getHitChance(
+        attacker: Player,
+        defender: Entity,
+        accuracyMultiplier: Double = 1.0,
+        combatContext: CombatContext? = null
+    ): Double {
+        var finalMultiplier = accuracyMultiplier
+
+        if (combatContext?.usingSpecial == true) {
+            val special = combatContext.weapon.special
+            if (special is SpecialAttack.Combat ||
+                special is SpecialAttack.InstantCombat ||
+                special is SpecialAttack.InstantRangeCombat) {
+                finalMultiplier *= special.accuracyMultiplier ?: 1.0
+            }
+        }
+
+        return CombatCalculations.getHitChance(attacker, defender, this, finalMultiplier)
+    }
+
+
+
     fun addHit(
         damage: Int,
         attacker: Player,

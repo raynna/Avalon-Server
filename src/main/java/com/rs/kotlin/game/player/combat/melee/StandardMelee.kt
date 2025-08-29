@@ -97,10 +97,11 @@ object StandardMelee : MeleeData() {
             ),
             special = SpecialAttack.Combat(
                 energyCost = 25,
+                accuracyMultiplier = 1.75,
                 execute = { context ->
                     context.attacker.animate("animation.vestas_longsword_special")
                     val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
-                    val roll = context.rollMelee(accuracyMultiplier = 1.75);
+                    val roll = context.rollMelee();
                     val damage = ((0.2 * maxHit).toInt() .. (1.2 * maxHit).toInt()).random()
                     context.hits {
                         val hit = Hit(context.attacker, damage, Hit.HitLook.MELEE_DAMAGE);

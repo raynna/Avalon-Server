@@ -22,6 +22,26 @@ class CombatAction(
     private val target: Entity
 ) : NewAction() {
 
+    companion object {
+        @JvmStatic
+        fun getCombatStyle(player: Player, target: Entity): CombatStyle {
+            val spellId = player.getCombatDefinitions().spellId
+            return when {
+                spellId != 0 -> MagicStyle(player, target)
+                GreaterRunicStaffWeapon.hasWeapon(player) && GreaterRunicStaffWeapon.getSpellId(player) != -1 -> MagicStyle(player, target)
+                PolyporeStaff.hasWeapon(player) -> MagicStyle(player, target)
+                isRangedWeapon(player) -> RangedStyle(player, target)
+                else -> MeleeStyle(player, target)
+            }
+        }
+
+        private fun isRangedWeapon(player: Player): Boolean {
+            val weaponId = player.equipment.getWeaponId()
+            val ranged = RangeData.getWeaponByItemId(weaponId)
+            return ranged != null
+        }
+    }
+
     enum class CombatPhase {
         HIT
     }
@@ -79,6 +99,8 @@ class CombatAction(
             stop(player, true)
             return false
         }
+        val healthOverlay = HealthOverlay()
+        healthOverlay.updateHealthOverlay(player, target, true)
         val spellId = player.getCombatDefinitions().spellId
         style = when {
             spellId != 0 -> MagicStyle(player, target)
