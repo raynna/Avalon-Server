@@ -16,6 +16,7 @@ import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.range.RangedStyle
 import com.rs.kotlin.game.player.combat.special.SpecialAttack
 import com.rs.kotlin.game.player.interfaces.HealthOverlay
+import com.rs.kotlin.game.world.pvp.PvpManager
 import kotlin.math.abs
 
 class CombatAction(
@@ -74,8 +75,7 @@ class CombatAction(
         player.combatStyle = style
         player.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
         player.temporaryTarget = target;
-        val healthOverlay = HealthOverlay()
-        healthOverlay.sendOverlay(player, target)
+        player.healthOverlay.sendOverlay(player, target)
         val requiredDistance = getAdjustedFollowDistance(target);
         if (player.isOutOfRange(target, requiredDistance)) {
             player.calcFollow(target, if (player.run) 2 else 1, true, true)
@@ -99,8 +99,7 @@ class CombatAction(
             stop(player, true)
             return false
         }
-        val healthOverlay = HealthOverlay()
-        healthOverlay.updateHealthOverlay(player, target, true)
+        player.healthOverlay.updateHealthOverlay(player, target, true)
         val spellId = player.getCombatDefinitions().spellId
         style = when {
             spellId != 0 -> MagicStyle(player, target)
@@ -204,6 +203,8 @@ class CombatAction(
                 if (validateAttack(player, target)) {
                     player.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
                     target.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACKED_TICK, 10)
+                    if (target is Player)
+                        PvpManager.onPlayerDamagedByPlayer(target, player);
                     style.attack()
                 }
                 phase = CombatPhase.HIT
@@ -221,6 +222,8 @@ class CombatAction(
         }
         if (!player.controlerManager.canHit(target) || !player.controlerManager.keepCombating(target) || !player.controlerManager.canAttack(target))
             return false
+        if (!PvpManager.canPlayerAttack(player, target))
+            return false;
         if (player.isAtMultiArea && !target.isAtMultiArea) {
             if (target.attackedBy != player && target.attackedByDelay > Utils.currentTimeMillis()) {
                 player.message("That " + (if (player.getAttackedBy() is Player) "player" else "npc") + " is already in combat.")

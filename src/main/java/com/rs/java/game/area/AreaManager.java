@@ -30,6 +30,7 @@ public class AreaManager {
 			areas().add(new FFASafe());
 			areas().add(new FFASafePvP());
 			areas().add(new FFASafeZone());
+			areas().add(new EdgevilleBank());
 			//end of FFA
 			areas().add(new LividFarmArea());
 		} catch (Exception e) {

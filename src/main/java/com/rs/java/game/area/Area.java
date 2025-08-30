@@ -24,7 +24,7 @@ public abstract class Area {
 	}
 
 	public enum Environment {
-		NORMAL, DESERT, GODWARS;
+		NORMAL, DESERT, GODWARS, SAFEZONE;
 	}
 
 }

@@ -334,11 +334,11 @@ public abstract class Entity extends WorldTile {
         }
         Entity attacker = hit.getSource();
         if (attacker instanceof Player player && attacker != this) {
-            if (player.toggles("HEALTHBAR", false)) {
+            if (player.toggles("HEALTH_OVERLAY", false)) {
                 Entity target = this;
-                HealthOverlay overlay = new HealthOverlay();
+                HealthOverlay overlay = player.healthOverlay;
                 player.setTemporaryTarget(this);
-                overlay.checkCombatLevel(player, target);
+                //overlay.checkCombatLevel(player, target);
                 overlay.updateHealthOverlay(player, target, true);
             }
         }
@@ -1163,10 +1163,10 @@ public abstract class Entity extends WorldTile {
 
     public void freeze(int value) {
         if (this instanceof Player player) {
-            tickManager.addTicks(TickManager.TickKeys.FREEZE_TICKS, value, () ->
+            player.getTickManager().addTicks(TickManager.TickKeys.FREEZE_TICKS, value, () ->
                     player.message("You are no longer frozen.")
             );
-            tickManager.addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, value + 5);
+            player.getTickManager().addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, value + 5);
         } else {
             tickManager.addTicks(TickManager.TickKeys.FREEZE_TICKS, value);
             tickManager.addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, value + 5);
@@ -1299,7 +1299,7 @@ public abstract class Entity extends WorldTile {
 
     public Map<Keys.IntKey, Integer> tickTimers = new HashMap<>();
 
-    private TickManager tickManager = new TickManager(this);
+    protected TickManager tickManager = new TickManager(this);
 
     public TickManager getTickManager() {
         return tickManager;

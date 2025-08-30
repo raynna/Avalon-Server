@@ -147,7 +147,7 @@ public class PlayerCombat extends Action {
         player.getTemporaryAttributtes().put("temporaryActionDelay", 4 * 1000 + Utils.currentTimeMillis());
         checkCombatLevel(player, target);
         updateHealthOverlay(player, target);
-        if (player.toggles("HEALTHBAR", false)
+        if (player.toggles("HEALTH_OVERLAY", false)
                 && (!player.getInterfaceManager().containsTab(getHealthOverlayId(player)))) {
             player.getInterfaceManager().sendTab(getHealthOverlayId(player), 3037);
             final int pixels = (int) ((double) target.getHitpoints() / target.getMaxHitpoints() * 126D);

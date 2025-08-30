@@ -132,6 +132,8 @@ import com.rs.kotlin.game.player.combat.range.RangedStyle;
 import com.rs.kotlin.game.player.combat.special.CombatContext;
 import com.rs.kotlin.game.player.combat.special.SpecialAttack;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
+import com.rs.kotlin.game.player.interfaces.TimerOverlay;
+import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public class Player extends Entity {
 
@@ -148,6 +150,9 @@ public class Player extends Entity {
     private transient boolean active;
     private String password;
     private String displayName;
+
+    public HealthOverlay healthOverlay = new HealthOverlay();
+    public TimerOverlay timerOverlay = new TimerOverlay();
 
 
     public transient CombatStyle combatStyle;
@@ -1274,6 +1279,7 @@ public class Player extends Entity {
         CustomDuelRule = new HashMap<>();
         lividFarm = new LividFarm();
         artisan = new ArtisanWorkshop();
+        this.tickManager = new TickManager(this);
         for (Puzzles puzzle : Puzzles.values()) {
             puzzleBox = new PuzzleBox(this, puzzle.getFirstTileId());
         }
@@ -1458,6 +1464,14 @@ public class Player extends Entity {
         newActionManager = new NewActionManager(this);
         if (farmingManager == null)
             farmingManager = new FarmingManager();
+        if (this.tickManager == null) {
+            this.tickManager = new TickManager(this);
+        }
+        this.tickManager.setEntity(this);
+        if (healthOverlay == null)
+            healthOverlay = new HealthOverlay();
+        if (timerOverlay == null)
+            timerOverlay = new TimerOverlay();
         farmingManager.setPlayer(this);
         treasureTrailsManager.setPlayer(this);
         lividFarm.setPlayer(this);
@@ -2544,6 +2558,9 @@ public class Player extends Entity {
         return gameTick;
     }
 
+
+
+
     @Override
     public void processEntity() {
         processLogicPackets();
@@ -2557,6 +2574,7 @@ public class Player extends Entity {
             addItemEvent = null;
         }
         super.processEntity();
+        PvpManager.refreshAll(this);
         if (memberTill < Utils.currentTimeMillis() && isMember()) {
             message("Your membership has expired.");
             memberTill = 0;
@@ -2570,7 +2588,7 @@ public class Player extends Entity {
         if (getAssist().isAssisting()) {
             getAssist().Check();
         }
-        checkTimers();
+        //checkTimers();
         prayer.processPrayerDrain(gameTick);
         gameTick++;
         if (miscTick % 10 == 0)
@@ -2686,7 +2704,6 @@ public class Player extends Entity {
             message("The power of the light fades. Your resistance to melee attacks return to normal.");
             staffOfLightSpecial = 0;
         }
-        HealthOverlay healthOverlay = new HealthOverlay();
         healthOverlay.closeOverlay(this);
         if (getOverloadTicksLeft() > 0) {
             if (getOverloadTicksLeft() == 0) {
@@ -2960,6 +2977,8 @@ public class Player extends Entity {
         refreshOtherChatsSetup();
         refreshSpawnedItems();
         refreshSpawnedObjects();
+        getTickManager().rebuildOverlay();
+        PvpManager.onLogin(this);
         Logger.log("Player", username + " has logged in.");
         List<String> playerNames = World.getPlayers().stream()
                 .filter(p -> p != null && p.hasStarted() && !p.hasFinished())
@@ -3197,7 +3216,10 @@ public class Player extends Entity {
         if (getPlayerRank().getRank()[0] != Rank.DEVELOPER) {
             com.everythingrs.hiscores.Hiscores.update("JkQT2VoUwdun6IyLu2xk0lc7fOH4RV077Gc5g6hUpwA6Q2E5Yaxxu24tQt86i4B26RbIGl40", "Normal Mode", this.getUsername(), 0, playerXP, false);
         }
+
         Logger.log("Player", username + " has logged out.");
+        PvpManager.onLogout(this);
+        timerOverlay.clearAll(this);
         TicketSystem.destroyChatOnLogOut(this);
         AntiBot.getInstance().destroy(this);
         getPackets().sendLogout(lobby);
@@ -4590,10 +4612,10 @@ public class Player extends Entity {
     }
 
     public int getTickToSeconds(int ticks) {
-        Integer seconds = (int) ((Integer) ticks * 0.6);
+        Integer seconds = (int) (ticks * 0.6);
         if (seconds == null)
             return 0;
-        return seconds.intValue();
+        return seconds;
     }
 
     public String getTimeLeft(int ticks) {
@@ -4617,6 +4639,28 @@ public class Player extends Entity {
 
     public void setOverload(int ticks) {
         getTickManager().addTicks(TickManager.TickKeys.OVERLOAD_TICKS, ticks);
+    }
+
+    public void freeze(int ticks) {
+        getTickManager().addTicks(TickManager.TickKeys.FREEZE_TICKS, ticks,
+                () -> message("You are no longer frozen."));
+        getTickManager().addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, ticks + 5);
+    }
+
+    public void addFreezeDelay(int ticks, boolean entangle) {
+        if (!isFrozen() && !isFreezeImmune()) {
+            this.freeze(ticks);
+            resetWalkSteps();
+            Player player = this;
+            player.resetWalkSteps();
+            if (!entangle)
+                player.message("You have been frozen.");
+        } else {
+            if (entangle) {
+                Player player = this;
+                player.getPackets().sendGameMessage("This player is already effected by this spell.", true);
+            }
+        }
     }
 
 

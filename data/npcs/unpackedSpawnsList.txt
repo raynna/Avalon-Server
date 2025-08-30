@@ -4605,7 +4605,7 @@
 // Monk, 0, added by: dajudgement
 651 - 3148 3207 0
 // Warrior, 0, added by: dajudgement
-650 - 3148 3205 0
+650 - 3091 3493 0
 // Unicorn, 15, added by: dajudgement
 89 - 3142 3211 0
 // Goblin, 5, added by: dajudgement
@@ -13645,7 +13645,7 @@
 //Explorer Jack spawned by andreas
 13295 - 3090 3499 0
 //Make-over Mage spawned by andreas
-2676 - 3090 3489 0
+2676 - 3091 3494 0
 //Melee dummy spawned by andreas
 7891 - 3084 3498 0
 //Magic dummy spawned by andreas
@@ -13730,8 +13730,6 @@
 969 - 3383 3260 0
 //Bolkoy spawned by andreas
 471 - 2528 3161 1
-//Warrior spawned by andreas
-650 - 3088 3487 0
 231 - 3086 3487 0
 //Pikkupstix spawned by andreas
 6988 - 3096 3485 0

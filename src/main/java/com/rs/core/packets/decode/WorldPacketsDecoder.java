@@ -77,6 +77,7 @@ import com.rs.java.utils.huffman.Huffman;
 import com.rs.kotlin.game.player.combat.CombatAction;
 import com.rs.kotlin.game.player.combat.magic.*;
 import com.rs.kotlin.game.player.command.CommandRegistry;
+import com.rs.kotlin.game.world.pvp.PvpManager;
 
 /**
  * Refactored for readability & maintainability while preserving public API,
@@ -958,7 +959,8 @@ public final class WorldPacketsDecoder extends Decoder {
 				player.message("inviteBy is null");
 			return;
 		}
-
+		if (!PvpManager.canPlayerAttack(player, p2))
+			return;
 		if (!player.getControlerManager().canPlayerOption1(p2))
 			return;
 		if (!player.isCanPvp())
@@ -2329,7 +2331,7 @@ public final class WorldPacketsDecoder extends Decoder {
 			return;
 		} else if (player.temporaryAttribute().get("RENAME_SETUP") == Boolean.TRUE) {
 			player.temporaryAttribute().remove("RENAME_SETUP");
-			Integer selectedGear = (Integer) player.getTemporaryAttributtes().get("SELECTEDGEAR");
+			Integer selectedGear = (Integer) player.getTemporaryAttributtes().get("SELECTED_RENAME");
 			if (selectedGear != null) {
 				String keyToRename = null;
 				Preset presetToRename = null;
@@ -2344,7 +2346,7 @@ public final class WorldPacketsDecoder extends Decoder {
 					player.getPresetManager().PRESET_SETUPS.remove(keyToRename);
 					presetToRename.setName(value);
 					player.getPresetManager().PRESET_SETUPS.put(value, presetToRename);
-					player.getTemporaryAttributtes().remove("SELECTEDGEAR");
+					player.getTemporaryAttributtes().remove("SELECTED_RENAME");
 					player.getPackets().sendGameMessage("Preset \"" + keyToRename + "\" renamed to \"" + value + "\".");
 					GearTab.refresh(player);
 				} else {

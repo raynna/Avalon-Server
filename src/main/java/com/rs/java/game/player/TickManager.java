@@ -2,6 +2,8 @@ package com.rs.java.game.player;
 
 import com.rs.java.game.Entity;
 import com.rs.java.game.World;
+import com.rs.java.game.npc.NPC;
+import com.rs.kotlin.game.player.interfaces.TimerOverlay;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,7 +30,7 @@ public class TickManager {
         this.entity = entity;
         if (this.entity instanceof Player player) {
             this.entityName = player.getUsername();
-            this.entity = World.getPlayer(player.getUsername());
+            this.entity = player;
         }
     }
 
@@ -36,10 +38,41 @@ public class TickManager {
      * Called when a timer expires. Pass the entity so the subclass can act on it
      */
 
+    private static final Map<TickKeys, TimerOverlay.TimerType> TICK_TO_OVERLAY = Map.ofEntries(
+            Map.entry(TickKeys.OVERLOAD_TICKS, TimerOverlay.TimerType.OVERLOAD),
+            Map.entry(TickKeys.RENEWAL_TICKS, TimerOverlay.TimerType.RENEWAL),
+            Map.entry(TickKeys.PRAYER_RENEWAL_TICKS, TimerOverlay.TimerType.RENEWAL),
+            Map.entry(TickKeys.ANTI_FIRE_TICKS, TimerOverlay.TimerType.ANTIFIRE),
+            Map.entry(TickKeys.SUPER_ANTI_FIRE_TICKS, TimerOverlay.TimerType.ANTIFIRE),
+            Map.entry(TickKeys.TELEPORT_BLOCK, TimerOverlay.TimerType.TELEBLOCK),
+            Map.entry(TickKeys.FREEZE_TICKS, TimerOverlay.TimerType.FREEZE),
+            Map.entry(TickKeys.VENGEANCE_COOLDOWN, TimerOverlay.TimerType.VENGEANCE),
+            Map.entry(TickKeys.POISON_IMMUNE_TICKS, TimerOverlay.TimerType.ANTIPOISON)
+    );
+
+    private void syncOverlay(TickKeys key, int ticks) {
+        if (entity instanceof Player player) {
+            TimerOverlay.TimerType type = TICK_TO_OVERLAY.get(key);
+            if (type != null) {
+                player.timerOverlay.startTimer(player, type, ticks, false);
+            }
+        }
+    }
+
     public void addTicks(TickKeys key, int ticks, Runnable callback) {
         tickTimers.put(key, ticks);
         if (callback != null) {
             tickCallbacks.put(key, callback);
+        }
+        syncOverlay(key, ticks);
+    }
+
+    public void rebuildOverlay() {
+        for (Map.Entry<TickKeys, Integer> e : tickTimers.entrySet()) {
+            int ticks = e.getValue();
+            if (ticks > 0) {
+                syncOverlay(e.getKey(), ticks);
+            }
         }
     }
 
@@ -53,6 +86,7 @@ public class TickManager {
         if (callback != null) {
             tickCallbacks.put(key, callback);
         }
+        syncOverlay(key, ticks);
     }
 
     public void addSeconds(TickKeys key, int seconds) {
@@ -66,6 +100,7 @@ public class TickManager {
         if (callback != null) {
             tickCallbacks.put(key, callback);
         }
+        syncOverlay(key, ticks);
     }
 
     public void addMinutes(TickKeys key, int minutes) {

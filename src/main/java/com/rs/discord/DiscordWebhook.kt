@@ -47,8 +47,9 @@ object DiscordWebhook {
 
     fun enqueue(payload: WebhookPayload) {
         if (webhookUrl.isNullOrBlank()) return
-        if (Settings.TEST_SERVER)
+        if (Settings.TESTSERVER) {
             return;
+        }
         println("DiscordWebhook: sending to $webhookUrl")
         queue.offer(payload)
     }

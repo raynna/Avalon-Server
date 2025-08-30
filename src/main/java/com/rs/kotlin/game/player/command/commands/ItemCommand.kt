@@ -4,8 +4,8 @@ import com.rs.Settings
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Ranks
+import com.rs.java.utils.EconomyPrices
 import com.rs.kotlin.game.player.command.Command
-import com.rs.kotlin.game.player.command.CommandArguments
 
 class ItemCommand : Command {
     override val requiredRank = Ranks.Rank.PLAYER
@@ -55,7 +55,12 @@ class ItemCommand : Command {
         if (noted && finalItem.id == itemDef.id) {
             player.message("${itemDef.name} cannot be spawned as noted.")
         }
-
+        if (Settings.ECONOMY_MODE < Settings.FULL_SPAWN) {
+            if (EconomyPrices.getPrice(itemId!!) > 0 && !player.rank.isDeveloper) {
+                player.message("This item costs money, look for this item in shops.")
+                return true
+            }
+        }
         player.inventory.addItem(finalItem.id, amount)
         player.message("You spawn $amount x ${finalItem.name} (<col=ff0000>${finalItem.id}</col>).")
         return true

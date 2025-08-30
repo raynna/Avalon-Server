@@ -137,7 +137,7 @@ public class InterfaceManager {
 		player.getEmotesManager().unlockEmotesBook();
 		player.getInventory().unlockInventoryOptions();
 		player.getPrayer().refresh();
-		sendTimerInterface();
+		//sendTimerInterface();
 		ClansManager.unlockBanList(player);
 		player.getPackets().sendTextOnComponent(182, 1,
 				"When you finished playing " + Settings.SERVER_NAME + ", click the log out button to save your progress properly.");
@@ -221,7 +221,7 @@ public class InterfaceManager {
 		sendSettings();
 		sendTaskSystem();
 		sendCombatStyles();
-		sendTimerInterface();
+		//sendTimerInterface();
 	}
 	
 	public void sendTimerInterface() {

@@ -60,9 +60,10 @@ public class GearTab extends CustomTab {
 		//player.getPackets().sendIComponentSprite(3002, RED_STAR_COMP, EQUIPMENT_SPRITE);
 		player.getPackets().sendIComponentSprite(3002, RED_STAR_COMP, "sprite.add_to_bag");
 		player.getPackets().sendHideIComponent(3002, RED_STAR_COMP, true);
+		player.getPackets().sendHideIComponent(3002, YELLOW_STAR_COMP, true);
 		if (p2 == null) {
 			player.getPackets().sendHideIComponent(3002, PURPLE_STAR_COMP, false);
-			player.getPackets().sendHideIComponent(3002, YELLOW_STAR_COMP, false);
+			player.getPackets().sendHideIComponent(3002, YELLOW_STAR_COMP, true);
 			player.getPackets().sendIComponentSprite(3002, PURPLE_STAR_COMP, "sprite.add_note");
 			player.getPackets().sendIComponentSprite(3002, YELLOW_STAR_COMP, "sprite.remove_note");
 			//player.getPackets().sendIComponentSprite(3002, PURPLE_STAR_COMP, ADD_SPRITE);
@@ -91,6 +92,7 @@ public class GearTab extends CustomTab {
 
 	public static void removeAttributtes(Player player) {
 		player.getTemporaryAttributtes().remove("CONFIRM_OVERWRITE");
+		player.getTemporaryAttributtes().remove("CONFIRM_DELETE");
 		player.getTemporaryAttributtes().remove("RENAME_SETUP");
 		//player.getDialogueManager().finishDialogue();
 	}
@@ -175,7 +177,7 @@ public class GearTab extends CustomTab {
 						return;
 					}
 				} else {
-					player.getPackets().sendGameMessage("Are you sure you want to overwrite this preset? Click (+) again to confirm.");
+					player.getPackets().sendGameMessage("Are you sure you want to overwrite this preset? Click <img=14> to confirm.");
 					player.getPackets().sendIComponentSprite(3002, PURPLE_STAR_COMP, "sprite.green_checkmark_2");
 					player.getTemporaryAttributtes().put("CONFIRM_OVERWRITE", true);
 					return;
@@ -205,7 +207,7 @@ public class GearTab extends CustomTab {
 					player.getTemporaryAttributtes().remove("CONFIRM_DELETE");
 				} else {
 					// first click = ask for confirmation
-					player.getPackets().sendGameMessage("Are you sure you want to delete this preset? Click (-) again to confirm.");
+					player.getPackets().sendGameMessage("Are you sure you want to delete this preset? Click <img=14> to confirm.");
 					player.getPackets().sendIComponentSprite(3002, YELLOW_STAR_COMP, "sprite.green_checkmark_2");
 					player.getTemporaryAttributtes().put("CONFIRM_DELETE", true);
 				}
@@ -232,6 +234,7 @@ public class GearTab extends CustomTab {
 						player.getPackets().sendTextOnComponent(3002, i, gear.getKey()); // remove highlight
 						player.getPackets().sendIComponentSprite(3002, GREEN_STAR_COMP, "sprite.search");
 						player.getPackets().sendHideIComponent(3002, RED_STAR_COMP, true);
+						player.getPackets().sendHideIComponent(3002, YELLOW_STAR_COMP, true);
 						player.getPackets().sendIComponentSprite(3002, PURPLE_STAR_COMP, "sprite.add_note");
 						removeAttributtes(player);
 
@@ -241,7 +244,9 @@ public class GearTab extends CustomTab {
 						player.getPackets().sendTextOnComponent(3002, i, gear.getKey() + "<img=12>");
 						player.getPackets().sendIComponentSprite(3002, GREEN_STAR_COMP, 1832);
 						player.getPackets().sendHideIComponent(3002, RED_STAR_COMP, false);
+						player.getPackets().sendHideIComponent(3002, YELLOW_STAR_COMP, false);
 						player.getPackets().sendIComponentSprite(3002, PURPLE_STAR_COMP, "sprite.out_of_bag");
+						player.getPackets().sendIComponentSprite(3002, YELLOW_STAR_COMP, "sprite.remove_note");
 						removeAttributtes(player);
 					}
 				}

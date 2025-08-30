@@ -120,9 +120,13 @@ public class StarterProtection {
 			FriendChatsManager.joinChat(Settings.HELP_CC_NAME, player, true);
 			FriendChatsManager.refreshChat(player);
 		}
-		player.toggles.put("ONEXHITS", false);
+		player.toggles.put("ONEXHITS", true);
 		player.toggles.put("ONEXPPERHIT", false);
-		player.toggles.put("HEALTHBAR", true);
+		player.toggles.put("HEALTH_OVERLAY", true);
+		player.toggles.put("HITCHANCE_OVERLAY", true);
+		player.toggles.put("LEVELSTATUS_OVERLAY", true);
+		player.toggles.put("KDRINTER", true);
+		player.toggles.put("BREAK_VIALS", true);
 		player.toggles.put("DROPVALUE", 10000);
 		player.toggles.put("LOOTBEAMS", true);
 		player.switchShiftDrop();

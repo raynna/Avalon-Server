@@ -343,6 +343,15 @@ public class WorldPacketsEncoder extends Encoder {
 		session.write(stream);
 	}
 
+	public void sendIComponentSprite(int interfaceId, int componentId, String sprite) {
+		int spriteId = Rscm.lookup(sprite);
+		OutputStream stream = new OutputStream(11);
+		stream.writePacket(player, 121);
+		stream.writeInt(spriteId);
+		stream.writeIntV2(interfaceId << 16 | componentId);
+		session.write(stream);
+	}
+
 	public void sendIComponentSprite(int interfaceId, int componentId, int spriteId) {
 		OutputStream stream = new OutputStream(11);
 		stream.writePacket(player, 121);

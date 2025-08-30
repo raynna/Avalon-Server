@@ -202,6 +202,7 @@ public class EdgevillePvPControler extends Controler {
             player.getPackets().sendSpriteOnIComponent(3043, 2, inSafeSprite);
         else
             player.getPackets().sendSpriteOnIComponent(3043, 2, inDangerSprite);
+        WildernessControler.showKDRInter(player);
     }
 
     @Override

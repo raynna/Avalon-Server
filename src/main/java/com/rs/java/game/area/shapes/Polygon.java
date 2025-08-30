@@ -22,18 +22,41 @@ public class Polygon extends Shape {
 
 	@Override
 	public boolean inside(WorldTile location) {
-		boolean inside = false;
-		int y = location.getY(), x = location.getX();
+		int x = location.getX();
+		int y = location.getY();
 
-		for (int i = 0, j = sides() - 1; i < sides(); j = i++) {
-			if ((points()[i][1] < y && points()[j][1] >= y) || (points()[j][1] < y && points()[i][1] >= y)) {
-				if (points()[i][0] + (y - points()[i][1]) / (points()[j][1] - points()[i][1])
-						* (points()[j][0] - points()[i][0]) < x) {
-					inside = !inside;
+		for (int i = 0, j = sides - 1; i < sides; j = i++) {
+			int xi = points[i][0], yi = points[i][1];
+			int xj = points[j][0], yj = points[j][1];
+
+			if (y >= Math.min(yi, yj) && y <= Math.max(yi, yj)) {
+				if (yj != yi) {
+					double xOnEdge = xi + (double)(xj - xi) * (y - yi) / (double)(yj - yi);
+					if (Math.abs(x - xOnEdge) < 1e-9) {
+						return true;
+					}
+				}
+			}
+			if (x >= Math.min(xi, xj) && x <= Math.max(xi, xj)) {
+				if (xj != xi) {
+					double yOnEdge = yi + (double)(yj - yi) * (x - xi) / (double)(xj - xi);
+					if (Math.abs(y - yOnEdge) < 1e-9) {
+						return true;
+					}
 				}
 			}
 		}
 
+		boolean inside = false;
+		for (int i = 0, j = sides - 1; i < sides; j = i++) {
+			int xi = points[i][0], yi = points[i][1];
+			int xj = points[j][0], yj = points[j][1];
+
+			boolean intersect = ((yi > y) != (yj > y)) &&
+					(x <= (double)(xj - xi) * (y - yi) / (double)(yj - yi) + xi);
+			if (intersect)
+				inside = !inside;
+		}
 		return inside;
 	}
 

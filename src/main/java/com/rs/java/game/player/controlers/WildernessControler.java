@@ -215,26 +215,41 @@ public class WildernessControler extends Controler {
 	public void showSkull() {
 		player.getInterfaceManager().sendTab(player.getInterfaceManager().hasRezizableScreen() ? 11 : 0, 381);
 		if (player.toggles("KDRINTER", false)) {
-			double kill = player.getKillCount();
-			double death = player.getDeathCount();
-			double dr = kill / death;
+			int kills = player.getKillCount();
+			int deaths = player.getDeathCount();
+
+			String ratioText;
+			if (deaths == 0) {
+				ratioText = String.valueOf(kills);
+			} else {
+				double dr = (double) kills / deaths;
+				ratioText = String.format("%.2f", dr);
+			}
+
 			player.getInterfaceManager().sendTab(10, 3040);
-			player.getPackets().sendTextOnComponent(3040, 2, "Kills: " + (int) kill);
-			player.getPackets().sendTextOnComponent(3040, 3, "Deaths: " + (int) death);
-			player.getPackets().sendTextOnComponent(3040, 4, "Ratio: " + dr);
+			player.getPackets().sendTextOnComponent(3040, 2, "Kills: " + kills);
+			player.getPackets().sendTextOnComponent(3040, 3, "Deaths: " + deaths);
+			player.getPackets().sendTextOnComponent(3040, 4, "Ratio: " + ratioText);
 		}
 	}
 
 	public static void showKDRInter(Player player) {
 		if (player.toggles("KDRINTER", false)) {
-			player.message("send kdr");
-			double kill = player.getKillCount();
-			double death = player.getDeathCount();
-			double dr = kill / death;
-			player.getInterfaceManager().sendTab(10, 3040);
-			player.getPackets().sendTextOnComponent(3040, 2, "Kills: " + (int) kill);
-			player.getPackets().sendTextOnComponent(3040, 3, "Deaths: " + (int) death);
-			player.getPackets().sendTextOnComponent(3040, 4, "Ratio: " + dr);
+			int kills = player.getKillCount();
+			int deaths = player.getDeathCount();
+
+			String ratioText;
+			if (deaths == 0) {
+				ratioText = String.valueOf(kills);
+			} else {
+				double dr = (double) kills / deaths;
+				ratioText = String.format("%.2f", dr);
+			}
+			if (!player.getInterfaceManager().containsInterface(3040))
+				player.getInterfaceManager().sendTab(31, 3040);
+			player.getPackets().sendTextOnComponent(3040, 2, "Kills: " + kills);
+			player.getPackets().sendTextOnComponent(3040, 3, "Deaths: " + deaths);
+			player.getPackets().sendTextOnComponent(3040, 4, "Ratio: " + ratioText);
 		}
 	}
 

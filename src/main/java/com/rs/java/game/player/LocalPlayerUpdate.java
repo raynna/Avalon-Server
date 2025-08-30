@@ -435,10 +435,10 @@ public final class LocalPlayerUpdate {
 					data.writeSmart(0);
 				} else {
 					int reduced = (int) Math.max(1, Math.ceil(hit.getDamage() / 10.0));
-					double hitAmount = !player.toggles("ONEXHITS", false) ? hit.getDamage() : reduced;
+					double hitAmount = player.getVarsManager().getBitValue(1485) == 0 ? hit.getDamage() : reduced;
 					if (hit.getSoaking() != null) {
 						int reducedSoak = (int) Math.max(1, Math.ceil(hit.getSoaking().getDamage() / 10.0));
-						double soakAmount = !player.toggles("ONEXHITS", false) ? hit.getSoaking().getDamage() : reducedSoak;
+						double soakAmount = player.getVarsManager().getBitValue(1485) == 0 ? hit.getSoaking().getDamage() : reducedSoak;
 						data.writeSmart(32767);
 						data.writeSmart(hit.getMark(player, p));
 						data.writeSmart((int)hitAmount);

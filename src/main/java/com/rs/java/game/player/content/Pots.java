@@ -1,5 +1,6 @@
 package com.rs.java.game.player.content;
 
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 import com.rs.java.game.Animation;
@@ -17,6 +18,7 @@ import com.rs.java.game.player.controlers.WildernessControler;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.interfaces.TimerOverlay;
 
 /**
  * 
@@ -638,6 +640,7 @@ public final class Pots {
 			@Override
 			public void extra(final Player player) {
 				player.setOverload(600);
+				player.timerOverlay.startTimer(player, TimerOverlay.TimerType.OVERLOAD, 600, false);
 				applyOverLoadEffect(player);
 				// player.getPackets().sendGameMessage("You are now immune to for " +
 				// getOverloadTimeleft(player) + "");

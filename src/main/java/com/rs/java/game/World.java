@@ -54,6 +54,7 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.world.pvp.PvpManager;
 
 /**
  * @Improved Andreas - AvalonPK
@@ -515,6 +516,8 @@ public final class World {
         } else {
             if (entity instanceof Player player) {
                 player.getControlerManager().moved();
+                PvpManager.onMoved(player);
+                PvpManager.onMoved(player);
                 if (player.hasStarted())
                     checkControlersAtMove(player);
             }
