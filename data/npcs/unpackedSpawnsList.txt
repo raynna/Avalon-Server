@@ -2418,11 +2418,6 @@
 //Doris - 0
 3381 - 3081 3495 0
 637 - 3106 3500 0
-//Mugger - 6
-175 - 3082 3494 0
-//Edgeville clerk
-2241 - 3097 3494 0
-528 - 3078 3512 0
 //Man - 2
 //Man - 2
 8070 - 3089 3515 0
@@ -4604,8 +4599,6 @@
 652 - 3151 3209 0
 // Monk, 0, added by: dajudgement
 651 - 3148 3207 0
-// Warrior, 0, added by: dajudgement
-650 - 3091 3493 0
 // Unicorn, 15, added by: dajudgement
 89 - 3142 3211 0
 // Goblin, 5, added by: dajudgement
@@ -13005,10 +12998,6 @@
 1604 - 3428 3538 1
 //Aberrant spectre spawned by andreas
 1604 - 3422 3536 1
-//Portal spawned by andreas
-8020 - 3087 3502 0
-//Wizard spawned by andreas
-5195 - 3086 3502 0
 //Crawling Hand spawned by andreas
 1648 - 3411 3538 0
 //Crawling Hand spawned by andreas
@@ -13642,14 +13631,6 @@
 1592 - 1632 5285 0
 //Steel dragon spawned by andreas
 1592 - 1624 5276 0
-//Explorer Jack spawned by andreas
-13295 - 3090 3499 0
-//Make-over Mage spawned by andreas
-2676 - 3091 3494 0
-//Melee dummy spawned by andreas
-7891 - 3084 3498 0
-//Magic dummy spawned by andreas
-4474 - 3084 3496 0
 //Fishing spot spawned by andreas
 6267 - 3106 3484 0
 //Fishing spot spawned by andreas
@@ -13662,10 +13643,6 @@
 313 - 3103 3477 0
 //Cavefish shoal spawned by andreas
 8841 - 3103 3476 0
-//Estate agent spawned by andreas
-4247 - 3085 3486 0
-//Sawmill operator spawned by andreas
-4250 - 3085 3492 0
 //Chaos Elemental spawned by andreas
 3200 - 3265 3923 0
 1266 - 2670 3713 0
@@ -13724,28 +13701,12 @@
 9085 - 3093 3485 0
 //Max spawned by andreas
 3373 - 3089 3483 0
-//Surgeon General Tafani spawned by andreas
-961 - 3086 3495 0
 //Jeed spawned by andreas
 969 - 3383 3260 0
 //Bolkoy spawned by andreas
 471 - 2528 3161 1
-231 - 3086 3487 0
 //Pikkupstix spawned by andreas
 6988 - 3096 3485 0
-//Magic dummy spawned by andreas
-4474 - 87 83 0
-//Melee dummy spawned by andreas
-7891 - 88 83 0
-//Mandrith spawned by andreas
-6537 - 85 73 0
-//Warrior spawned by andreas
-650 - 83 77 0
-//Forester spawned by andreas
-//Sigmund The Merchant spawned by andreas
-1282 - 83 79 0
-//Sigmund The Merchant spawned by andreas
-1282 - 3087 3487 0
 //Yak spawned by zed
 5529 - 2325 3797 0
 //Yak spawned by zed
@@ -16839,3 +16800,23 @@
 912 - 3102 3937 0
 //Battle mage spawned by andreas
 912 - 3107 3939 0
+//Mandrith spawned by andreas
+6537 - 3093 3489 0
+//Surgeon General Tafani spawned by andreas
+961 - 3093 3492 0
+//Magic dummy spawned by andreas
+4474 - 3095 3499 0
+//Melee dummy spawned by andreas
+7891 - 3096 3499 0
+//Portal spawned by andreas
+8020 - 3096 3494 0
+//Wizard spawned by andreas
+5195 - 3097 3494 0
+//Edgeville clerk
+2241 - 3096 3490 0
+//Warrior spawned by andreas
+650 - 3096 3489 0
+//Make-over Mage spawned by andreas
+2676 - 3096 3490 0
+//Grand Exchange clerk spawned by andreas
+2593 - 3096 3492 0

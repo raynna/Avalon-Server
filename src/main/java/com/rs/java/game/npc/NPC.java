@@ -304,6 +304,10 @@ public class NPC extends Entity implements Serializable {
             setName("Combat Shops");
             setRandomWalk(0);
         }
+        if (getId() == 2676) {
+            setName("Customise character");
+            setRandomWalk(0);
+        }
         if (getId() == 1282) {
             setRandomWalk(0);
         }
@@ -346,6 +350,7 @@ public class NPC extends Entity implements Serializable {
             return;
         if (routeEvent != null && routeEvent.processEvent(this))
             routeEvent = null;
+        loadNPCSettings();
         loadNPCFaceTile();
         if (!combat.process()) {
             if (!isForceWalking()) {

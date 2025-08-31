@@ -45,7 +45,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             xp = 0.0,
             type = SpellType.Teleport,
             runes = emptyList(),
-            teleportLocation = WorldTile(3087, 3496, 0)
+            teleportLocation = WorldTile(3093, 3495, 0)
         ),
         Spell(
             id = 40,
@@ -522,7 +522,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             xp = 0.0,
             type = SpellType.Teleport,
             runes = emptyList(),
-            teleportLocation = WorldTile(3087, 3496, 0)
+            teleportLocation = WorldTile(3093, 3495, 0)
         ),
         Spell(
             id = 37,

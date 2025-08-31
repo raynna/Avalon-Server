@@ -82,13 +82,8 @@ public class StarterProtection {
 				"<img=5><col=b25200>News: " + player.getDisplayName() + " has joined " + Settings.SERVER_NAME + "!",
 				false);
 		DiscordAnnouncer.announce("First time player!", player.getDisplayName() + " has joined the server for the very first time!.");
-		// if (Settings.discordEnabled) {
-		// Launcher.getDiscordBot().getChannel("568087421837770754").sendMessage(":tada:
-		// " + Utils.formatPlayerNameForDisplay(player.getUsername().toString()) + " has
-		// just logged in to " + Settings.SERVER_NAME + " for the first time! :heart:");
-		// }
-		if (Settings.ECONOMY_MODE > 0) {
-			String otherName = Utils.formatPlayerNameForDisplay("Bank");
+		if (Settings.ECONOMY_MODE  == Settings.FULL_SPAWN) {
+			String otherName = Utils.formatPlayerNameForDisplay("fullspawn");
 			Player p2 = World.getPlayerByDisplayName(otherName);
 			if (p2 == null)
 				p2 = AccountCreation.loadPlayer(otherName);
@@ -116,6 +111,50 @@ public class StarterProtection {
 			player.getAppearence().generateAppearenceData();
 			player.getPresetManager().loadPreset("max hybrid", null);
 		}
+		if (Settings.ECONOMY_MODE  == Settings.FULL_SPAWN) {
+			String otherName = Utils.formatPlayerNameForDisplay("halfeco");
+			Player p2 = World.getPlayerByDisplayName(otherName);
+			if (p2 == null)
+				p2 = AccountCreation.loadPlayer(otherName);
+			if (p2 != null) {
+				player.getBank().generateContainer();
+				player.getBank().setBankTabs(p2.getBank().bankTabs);
+				for (int i = 0; i <= Skills.MAGIC; i++) {
+					player.getSkills().setXp(i, p2.getSkills().getXp(i));
+				}
+				player.setPrivateChatSetup(p2.getPrivateChatSetup());
+				player.setFriendChatSetup(p2.getFriendChatSetup());
+				player.setClanChatSetup(p2.getClanChatSetup());
+				player.setGuestChatSetup(p2.getGuestChatSetup());
+				player.getSkills().setXp(Skills.SUMMONING, p2.getSkills().getXp(Skills.SUMMONING));
+				player.getSkills().setXp(Skills.SLAYER, Skills.getXPForLevel(99));
+				player.getSkills().setXp(Skills.AGILITY, Skills.getXPForLevel(99));
+				player.getSkills().setXp(Skills.RUNECRAFTING, Skills.getXPForLevel(99));
+				player.getSkills().restoreSkills();
+				player.setFamiliar(p2.getFamiliar());
+				player.setSummoningLeftClickOption(p2.getSummoningLeftClickOption());
+				player.getVarsManager().sendVar(1493, player.getSummoningLeftClickOption());
+				player.getVarsManager().sendVar(1494, player.getSummoningLeftClickOption());
+				player.getPresetManager().PRESET_SETUPS = p2.getPresetManager().PRESET_SETUPS;
+			}
+			player.getAppearence().generateAppearenceData();
+			player.getPresetManager().loadPreset("max hybrid", null);
+		}
+		if (Settings.ECONOMY_MODE == 0) {
+			String otherName = Utils.formatPlayerNameForDisplay("economy");
+			Player p2 = World.getPlayerByDisplayName(otherName);
+			if (p2 == null)
+				p2 = AccountCreation.loadPlayer(otherName);
+			if (p2 != null) {
+				player.setInventory(p2);
+				player.setEquipment(p2);
+				player.setBank(p2);
+				player.setCombatDefinitions(p2);
+				player.getInterfaceManager().sendInterfaces();
+			}
+			player.getMoneyPouch().addMoney(2000000, false);
+			player.getDialogueManager().startDialogue("StarterQuickStatsD");
+		}
 		if (player.getCurrentFriendChat() == null) {
 			FriendChatsManager.joinChat(Settings.HELP_CC_NAME, player, true);
 			FriendChatsManager.refreshChat(player);
@@ -132,32 +171,6 @@ public class StarterProtection {
 		player.switchShiftDrop();
 		player.switchZoom();
 		player.switchItemsLook();
-		//player.getSquealOfFortune().giveEarnedSpins(3);
-		if (Settings.ECONOMY_MODE > 0) {
-			player.getControlerManager().startControler("EdgevillePvPControler");
-			player.getControlerManager().moved();
-		}
-		/*
-		 * if (!StarterIPS.contains(player.getSession().getIP())) { player.sm(
-		 * "<col=99000><u>You have already received the max amount of starter packs registered on your IP address."
-		 * ); return; }
-		 */
-		//addStarterIP(player.getSession().getIP());
-		if (Settings.ECONOMY_MODE == 0) {
-			String otherName = Utils.formatPlayerNameForDisplay("Starter");
-			Player p2 = World.getPlayerByDisplayName(otherName);
-			if (p2 == null)
-				p2 = AccountCreation.loadPlayer(otherName);
-			if (p2 != null) {
-				player.setInventory(p2);
-				player.setEquipment(p2);
-				player.setBank(p2);
-				player.setCombatDefinitions(p2);
-				player.getInterfaceManager().sendInterfaces();
-			}
-			player.getMoneyPouch().addMoney(2000000, false);
-			player.getDialogueManager().startDialogue("StarterQuickStatsD");
-		}
 		player.heal(player.getMaxHitpoints());
 		player.getPrayer().restorePrayer(990);
 		player.combatDefinitions.switchAutoRelatie();

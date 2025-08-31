@@ -134,6 +134,7 @@ import com.rs.kotlin.game.player.combat.special.SpecialAttack;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 import com.rs.kotlin.game.player.interfaces.TimerOverlay;
 import com.rs.kotlin.game.world.pvp.PvpManager;
+import com.rs.kotlin.game.world.pvp.SafeZoneService;
 
 public class Player extends Entity {
 
@@ -1237,7 +1238,7 @@ public class Player extends Entity {
     }
 
     public Player(String password) {
-        super(Settings.ECONOMY_MODE > 0 ? Teleports.TeleportLocations.EDGEVILLE_PVP_INSTANCE.getLocation() : Settings.START_PLAYER_LOCATION);
+        super(Settings.START_PLAYER_LOCATION);
         setHitpoints(Settings.START_PLAYER_HITPOINTS);
         this.password = password;
         farmingManager = new FarmingManager();
@@ -3992,7 +3993,7 @@ public class Player extends Entity {
     }
 
     public final boolean isAtWild() {
-        return isAtPvP() || (getX() >= 3011 && getX() <= 3132 && getY() >= 10052 && getY() <= 10175) || (getX() >= 2940 && getX() <= 3395 && getY() >= 3525 && getY() <= 4000) || (getX() >= 3264 && getX() <= 3279 && getY() >= 3279 && getY() <= 3672) || (getX() >= 3158 && getX() <= 3181 && getY() >= 3679 && getY() <= 3697) || (getX() >= 3280 && getX() <= 3183 && getY() >= 3885 && getY() <= 3888) || (getX() >= 3012 && getX() <= 3059 && getY() >= 10303 && getY() <= 10351) || (getX() >= 3060 && getX() <= 3072 && getY() >= 10251 && getY() <= 10263);
+        return SafeZoneService.INSTANCE.isAtSafezone(this) || !SafeZoneService.INSTANCE.isAtSafezone(this) || (getX() >= 3011 && getX() <= 3132 && getY() >= 10052 && getY() <= 10175) || (getX() >= 2940 && getX() <= 3395 && getY() >= 3525 && getY() <= 4000) || (getX() >= 3264 && getX() <= 3279 && getY() >= 3279 && getY() <= 3672) || (getX() >= 3158 && getX() <= 3181 && getY() >= 3679 && getY() <= 3697) || (getX() >= 3280 && getX() <= 3183 && getY() >= 3885 && getY() <= 3888) || (getX() >= 3012 && getX() <= 3059 && getY() >= 10303 && getY() <= 10351) || (getX() >= 3060 && getX() <= 3072 && getY() >= 10251 && getY() <= 10263);
     }
 
     public final boolean isAtPvP() {

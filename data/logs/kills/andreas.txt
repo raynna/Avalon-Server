@@ -44,3 +44,13 @@
 [12 August 2025 at 11:17:20 CEST] - andreas died to manager
 [12 August 2025 at 11:17:38 CEST] - andreas died to manager
 [13 August 2025 at 12:03:02 CEST] - andreas died to manager
+[30 August 2025 at 06:44:46 CEST] - andreas killed manager
+[30 August 2025 at 06:46:49 CEST] - andreas killed manager
+[30 August 2025 at 06:47:52 CEST] - andreas killed manager
+[30 August 2025 at 06:52:40 CEST] - andreas died to manager
+[30 August 2025 at 06:53:35 CEST] - andreas killed manager
+[30 August 2025 at 07:03:55 CEST] - andreas killed manager
+[30 August 2025 at 07:11:02 CEST] - andreas killed manager
+[30 August 2025 at 07:16:18 CEST] - andreas died to manager
+[30 August 2025 at 07:18:40 CEST] - andreas died to manager
+[30 August 2025 at 07:23:06 CEST] - andreas died to manager

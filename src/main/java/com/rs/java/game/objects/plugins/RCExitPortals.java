@@ -18,7 +18,7 @@ public class RCExitPortals extends ObjectPlugin {
 	@Override
 	public boolean processObject(Player player, WorldObject object) {
 		int id = object.getId();
-		 if (id == 2468 && object.getX() == 3089 && object.getY() == 3493) {
+		 if (id == 2468 && object.getX() == 3091 && object.getY() == 3493) {
 			EdgevillePvPControler.enterPVP(player);
 			return false;
 		} else if (id == 2465 && object.getX() == 83 && object.getY() == 80) {

@@ -19,8 +19,6 @@ public class GlobalObjectAddition {
     private static void readToStoreCollection() throws Exception {
 
         objects.add(new WorldObject(37548, 4, 1, 3082, 3513, 0));
-        objects.add(new WorldObject(409, 10, 0, 3095, 3499, 0));
-        objects.add(new WorldObject(409, 10, 0, 3095, 3499, 0));
 
         /**
          * Carpet in edgeville bank

@@ -4562,6 +4562,62 @@
     "categories": [],
     "assignedBy": []
   },
+  "5195": {
+    "id": 5195,
+    "name": "Wizard",
+    "members": false,
+    "combatLevel": 9,
+    "attackLevel": 8,
+    "strengthLevel": 8,
+    "defenceLevel": 5,
+    "magicLevel": 10,
+    "rangedLevel": 1,
+    "constitutionLevel": 14,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 3
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[21 January]] [[2001]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Slightly magical.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "5334": {
     "id": 5334,
     "name": "Skeleton",
