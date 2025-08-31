@@ -11,7 +11,6 @@ import com.rs.core.cache.defintions.AnimationDefinitions;
 import com.rs.core.cache.defintions.ObjectDefinitions;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.area.AreaManager;
-import com.rs.java.game.area.LividFarmArea;
 import com.rs.java.game.minigames.lividfarm.LividFarmControler;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.familiar.Familiar;
@@ -517,18 +516,7 @@ public abstract class Entity extends WorldTile {
             loadMapRegions();
         if (this instanceof Player) {
             Player player = (Player) this;
-            if (AreaManager.get(this) != null) {
-                if (AreaManager.get(this) instanceof LividFarmArea) {
-                    if (!(player.getControlerManager().getControler() instanceof LividFarmControler)) {
-                        player.getControlerManager().startControler("LividFarmHandler");
-                    }
-                }
-            }
-            if (!(AreaManager.get(this) instanceof LividFarmArea)) {
-                if (player.getControlerManager().getControler() instanceof LividFarmControler) {
-                    player.getControlerManager().forceStop();
-                }
-            }
+            //todo check players location
         }
     }
 
@@ -1155,6 +1143,19 @@ public abstract class Entity extends WorldTile {
 
     public boolean isFrozen() {
         return tickManager.isActive(TickManager.TickKeys.FREEZE_TICKS);
+    }
+
+    public boolean isTeleportBlocked() {
+        return tickManager.isActive(TickManager.TickKeys.TELEPORT_BLOCK);
+    }
+
+    public boolean isTeleportBlockImmune() {
+        return tickManager.isActive(TickManager.TickKeys.TELEPORT_BLOCK_IMMUNITY);
+    }
+
+    public void teleportBlock(int seconds) {
+        tickManager.addSeconds(TickManager.TickKeys.TELEPORT_BLOCK, seconds);
+        tickManager.addSeconds(TickManager.TickKeys.TELEPORT_BLOCK_IMMUNITY, seconds + 5);
     }
 
     public boolean isFreezeImmune() {

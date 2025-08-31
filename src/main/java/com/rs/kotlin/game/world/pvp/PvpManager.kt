@@ -4,8 +4,8 @@ import com.rs.java.game.Entity
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.HexColours
+import java.util.*
 import kotlin.math.abs
-import java.util.WeakHashMap
 
 object PvpManager {
 
@@ -32,10 +32,23 @@ object PvpManager {
     private fun isEffectivelySafeForSelf(p: Player): Boolean = isRawSafe(p) && !hasGrace(p)
 
     @JvmStatic
+    fun isInDangerous(player: Player): Boolean {
+        return !isEffectivelySafeForSelf(player)
+    }
+
+    @JvmStatic
     fun onPlayerDamagedByPlayer(victim: Player, attacker: Player) { // NEW
         val t = now()
         lastPvpHitAt[victim] = t
         lastPvpHitAt[attacker] = t
+        if (!attacker.attackedBy.containsKey(victim))
+            attacker.setWildernessSkull()
+    }
+
+    @JvmStatic
+    fun onDeath(deadPlayer: Player, killer: Player) {
+        lastPvpHitAt[deadPlayer] = null
+        lastPvpHitAt[killer] = null
     }
 
     private fun onEnterRawSafezone(player: Player) { // NEW
@@ -54,6 +67,7 @@ object PvpManager {
         if (!enabled) return
         ensureInterfaceOpen(player)
         refreshAll(player)
+        onMoved(player)
     }
 
     @JvmStatic
@@ -173,6 +187,10 @@ object PvpManager {
             player.packets.sendTextOnComponent(3040, 2, "Kills: $kills")
             player.packets.sendTextOnComponent(3040, 3, "Deaths: $deaths")
             player.packets.sendTextOnComponent(3040, 4, "Ratio: $ratioText")
+        } else {
+            if (player.interfaceManager.containsInterface(3040)) {
+                player.interfaceManager.closeTab(31)
+            }
         }
     }
 

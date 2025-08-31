@@ -17,15 +17,15 @@ public final class YanilleBank extends Area {
 		return "Yanille Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public YanilleBank() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(2609, 3088, 0),
 				new WorldTile(2609, 3097, 0),
 				new WorldTile(2616, 3097, 0),
 				new WorldTile(2616, 3088, 0),
 				new WorldTile(2609, 3088, 0),
-		}) };
+		}) );
 	}
 
 	@Override

@@ -141,6 +141,8 @@ class CombatAction(
         if (toExecute.isNotEmpty()) {
             for (queued in toExecute) {
                 if (queued.special is SpecialAttack.InstantCombat) {
+                    if (!check(player, target))
+                        return false
                     player.faceEntity(queued.context.defender)
                     player.combatDefinitions.decreaseSpecialAttack(queued.special.energyCost)
                     queued.special.execute(queued.context)
@@ -155,6 +157,8 @@ class CombatAction(
             player.clearActiveInstantSpecial()
             val special = activeInstantSpecial.special
             if (special is SpecialAttack.InstantRangeCombat) {
+                if (!check(player, target))
+                    return false
                 player.faceEntity(activeInstantSpecial.context.defender)
                 special.execute(activeInstantSpecial.context)
                 player.stopAll(false, true, true)
@@ -203,8 +207,9 @@ class CombatAction(
                 if (validateAttack(player, target)) {
                     player.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
                     target.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACKED_TICK, 10)
-                    if (target is Player)
-                        PvpManager.onPlayerDamagedByPlayer(target, player);
+                    if (target is Player) {
+                        PvpManager.onPlayerDamagedByPlayer(target, player)
+                    }
                     style.attack()
                 }
                 phase = CombatPhase.HIT

@@ -807,6 +807,18 @@ public class PrayerBook implements Serializable {
         return false;
     }
 
+    public boolean hasProtectFromMelee() {
+        return  isActive(NormalPrayer.PROTECT_FROM_MELEE) || isActive(AncientPrayer.DEFLECT_MELEE);
+    }
+
+    public boolean hasProtectFromRanging() {
+        return  isActive(NormalPrayer.PROTECT_FROM_MISSILES) || isActive(AncientPrayer.DEFLECT_MISSILES);
+    }
+
+    public boolean hasProtectFromMagic() {
+       return  isActive(NormalPrayer.PROTECT_FROM_MAGIC) || isActive(AncientPrayer.DEFLECT_MAGIC);
+    }
+
     public boolean hasProtectItemPrayerActive() {
         for (Prayer prayer : getActivePrayers()) {
             return prayer.isProtectItemPrayer();

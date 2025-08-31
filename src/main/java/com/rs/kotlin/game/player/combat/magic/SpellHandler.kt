@@ -159,12 +159,6 @@ object SpellHandler {
                 return true
             }
         }
-        if (spell.type == SpellType.Combat) {
-            if (staffOfLightEffect(player)) {
-                player.packets.sendGameMessage("Your spell draws its power completely from your staff.")
-                return true
-            }
-        }
 
         val runesToRemove = mutableListOf<Item>()
 
@@ -186,6 +180,12 @@ object SpellHandler {
             }
 
             runesToRemove.add(Item(runeId, requirement.amount))
+        }
+        if (spell.type == SpellType.Combat) {
+            if (staffOfLightEffect(player)) {
+                player.packets.sendGameMessage("Your spell draws its power completely from your staff.")
+                return true
+            }
         }
 
         runesToRemove.forEach { rune ->
@@ -385,7 +385,10 @@ object SpellHandler {
             player.packets.sendGameMessage("You cannot teleport out of here.")
             return
         }
-
+        if (player.isTeleportBlocked) {
+            player.message("You are teleport blocked!")
+            return
+        }
         if (!player.controlerManager.processMagicTeleport(tile)) {
             return
         }

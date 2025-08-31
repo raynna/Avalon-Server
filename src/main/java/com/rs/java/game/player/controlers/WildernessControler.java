@@ -6,6 +6,8 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.ForceMovement;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
+import com.rs.java.game.area.Area;
+import com.rs.java.game.area.AreaManager;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
@@ -113,7 +115,7 @@ public class WildernessControler extends Controler {
 				player.getPackets().sendGameMessage("The difference between your combat level and the combat level of "
 						+ p2.getDisplayName() + " is too great.");
 				player.getPackets()
-						.sendGameMessage("You needs to move deeper into the Wilderness before you can attack him.");
+						.sendGameMessage("You need to move deeper into the Wilderness before you can attack him.");
 				return false;
 			}
 			if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > getWildLevel(p2)) {
@@ -260,15 +262,42 @@ public class WildernessControler extends Controler {
 	@Override
 	public boolean processObjectClick1(final WorldObject object) {
 		if (isDitch(object.getId())) {
-			player.lock();
+			player.lock(3);
 			player.animate(new Animation(6132));
-			final WorldTile toTile = new WorldTile(
-					object.getRotation() == 1 || object.getRotation() == 3 ? object.getX() + 2 : player.getX(),
-					object.getRotation() == 0 || object.getRotation() == 2 ? object.getY() - 1 : player.getY(),
-					object.getPlane());
 
-			player.setNextForceMovement(new ForceMovement(new WorldTile(player), 1, toTile, 2,
-					object.getRotation() == 0 || object.getRotation() == 2 ? ForceMovement.SOUTH : ForceMovement.EAST));
+			int dx = 0, dy = 0;
+
+			switch (object.getRotation()) {
+				case 0: // ditch facing south
+					dy = (player.getY() > object.getY()) ? -3 : +3;
+					break;
+				case 2: // ditch facing north
+					dy = (player.getY() < object.getY()) ? +3 : -3;
+					break;
+				case 1: // ditch facing west
+					dx = (player.getX() < object.getX()) ? +3 : -3;
+					break;
+				case 3: // ditch facing east
+					dx = (player.getX() > object.getX()) ? -3 : +3;
+					break;
+			}
+
+			final WorldTile toTile = new WorldTile(
+					player.getX() + dx,
+					player.getY() + dy,
+					object.getPlane()
+			);
+
+			int direction;
+			if (dx > 0) direction = ForceMovement.EAST;
+			else if (dx < 0) direction = ForceMovement.WEST;
+			else if (dy > 0) direction = ForceMovement.NORTH;
+			else direction = ForceMovement.SOUTH;
+
+			player.setNextForceMovement(
+					new ForceMovement(new WorldTile(player), 1, toTile, 2, direction)
+			);
+
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
@@ -277,13 +306,15 @@ public class WildernessControler extends Controler {
 					removeIcon();
 					removeControler();
 					player.resetReceivedDamage();
-					player.unlock();
 				}
 			}, 2);
+
 			return false;
 		}
 		return true;
 	}
+
+
 
 	@Override
 	public boolean processObjectClick2(final WorldObject object) {
@@ -343,29 +374,20 @@ public class WildernessControler extends Controler {
 	public void moved() {
 		boolean isAtWild = isAtWild(player);
 		boolean isAtWildSafe = isAtWildSafe(player);
-		if (!player.isAtWild() && !isAtWildSafe && !isAtWild && !showingSkull) {
-			player.setCanPvp(false);
+		player.message("Wild: " + isAtWild + ", Safe: " + isAtWildSafe);
+		if (isAtWildSafe) {
 			removeIcon();
 			removeControler();
-		} else if (!showingSkull && isAtWild && !isAtWildSafe) {
-			showingSkull = true;
-			player.setCanPvp(true);
+		}
+		if (isAtWild && !isAtWildSafe) {
 			showSkull();
 			player.getPackets().sendGlobalVar(1000, player.getSkills().getCombatLevel() + player.getSkills().getSummoningCombatLevel());
 			player.getAppearence().generateAppearenceData();
 			checkBoosts(player);
-		} else if (showingSkull && (isAtWildSafe || !isAtWild)) {
-			removeIcon();
-		} else if (!isAtWildSafe && !isAtWild) {
-			player.setCanPvp(false);
-			removeIcon();
 		}
 	}
 
 	public void removeIcon() {
-		if (showingSkull) {
-			showingSkull = false;
-			player.setCanPvp(false);
 			if (player.toggles("KDRINTER", false)) {
 				if (player.getInterfaceManager().containsTab(10))
 					player.getInterfaceManager().closeTab(player.getInterfaceManager().hasRezizableScreen(), 10);
@@ -374,7 +396,6 @@ public class WildernessControler extends Controler {
 			player.getAppearence().generateAppearenceData();
 			player.getEquipment().refresh(null);
 			player.getPackets().sendGlobalVar(1000, 0);
-		}
 	}
 
 	@Override
@@ -387,31 +408,30 @@ public class WildernessControler extends Controler {
 		removeIcon();
 	}
 
-	public static final boolean isAtWild(WorldTile tile) {
-		return (tile.getX() >= 3011 && tile.getX() <= 3132 && tile.getY() >= 10052 && tile.getY() <= 10175)
-				|| (tile.getX() >= 2940 && tile.getX() <= 3395 && tile.getY() >= 3525 && tile.getY() <= 4000)
-				|| (tile.getX() >= 3264 && tile.getX() <= 3279 && tile.getY() >= 3525 && tile.getY() <= 3672)
-				|| (tile.getX() >= 2756 && tile.getX() <= 2875 && tile.getY() >= 5512 && tile.getY() <= 5627)
-				|| (tile.getX() >= 3158 && tile.getX() <= 3181 && tile.getY() >= 3679 && tile.getY() <= 3697)
-				|| (tile.getX() >= 3280 && tile.getX() <= 3183 && tile.getY() >= 3885 && tile.getY() <= 3888)
-				|| (tile.getX() >= 3012 && tile.getX() <= 3059 && tile.getY() >= 10303 && tile.getY() <= 10351)
-				|| (tile.getX() >= 3060 && tile.getX() <= 3072 && tile.getY() >= 10251 && tile.getY() <= 10263);
+	public static boolean isAtWild(WorldTile tile) {
+		for (Area area : AreaManager.getAll(tile)) {
+			if (area.environment() == Area.Environment.WILDERNESS
+					&& !isAtWildSafe(tile)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
-	public static boolean isAtWildSafe(Player player) {
-		return (player.getX() >= 2940 && player.getX() <= 3395 && player.getY() >= 3524 && player.getY() <= 3523
-				|| player.getX() >= 2327 && player.getX() <= 2332 && player.getY() >= 3686 && player.getY() <= 3693
-				|| player.getX() >= 2994 && player.getX() <= 3030 && player.getY() >= 3526 && player.getY() <= 3533
-				|| player.getX() >= 3005 && player.getX() <= 3025 && player.getY() >= 3534 && player.getY() <= 3543
-				|| player.getX() >= 3001 && player.getX() <= 3004 && player.getY() >= 3534 && player.getY() <= 3538
-				|| player.getX() >= 3386 && player.getX() <= 3396 && player.getY() >= 3612 && player.getY() <= 3630);
+	public static boolean isAtWildSafe(WorldTile tile) {
+		for (Area area : AreaManager.getAll(tile)) {
+			if (area.environment() == Area.Environment.WILDERNESS_SAFE) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static int getWildLevel(Player player) {
 		if ((player.getX() >= 3060 && player.getX() <= 3072 && player.getY() >= 10251 && player.getY() <= 10263))
 			return 42;
 		if (player.getY() > 9900)
-			return (player.getY() - 9912) / 8 + 1;
+			return (player.getY() - 9912) / 8;
 		return (player.getY() - 3520) / 8 + 1;
 	}
 }

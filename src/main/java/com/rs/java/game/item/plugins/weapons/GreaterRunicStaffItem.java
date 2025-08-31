@@ -79,7 +79,7 @@ public class GreaterRunicStaffItem extends ItemPlugin {
                                     new Item(rune.getId(), totalAmount),
                                     new WorldTile(player),
                                     player,
-                                    player.isAtWild() ? 0 : 60,
+                                    player.inPkingArea() ? 0 : 60,
                                     0
                             );
                         }

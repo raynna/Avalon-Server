@@ -49,6 +49,26 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 attacker.message("You don't have the correct staff to cast ${currentSpell.name}.")
                 return false
             }
+            if (spellBookId == ModernMagicks.id && currentSpell.id == 86) {
+                if (defender is NPC) {
+                    attacker.message("You can't cast teleport block on a npc.");
+                    return false
+                }
+                if (defender is Player) {
+                    if (defender.isTeleportBlocked || defender.isTeleportBlockImmune) {
+                        attacker.message("${defender.displayName} is already affected by this spell.")
+                        return false
+                    }
+                }
+            }
+            if (spellBookId == ModernMagicks.id && currentSpell.bind != -1) {
+                if (defender.isFrozen || defender.isFreezeImmune) {
+                    attacker.message("Your target is already affected by this spell.")
+                    return false
+                }
+            }
+            if (!SpellHandler.checkAndRemoveRunes(attacker, currentSpell))
+                return false
         }
         return true
     }
@@ -134,15 +154,10 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         super.onHit(attacker, defender, hit)
-        var spellId = attacker.combatDefinitions.spellId
-        var currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
-            AncientMagicks.id -> AncientMagicks.getSpell(spellId)
-            ModernMagicks.id -> ModernMagicks.getSpell(spellId)
-            else -> null
-        }
+        var currentSpell = attacker.temporaryAttributtes["CASTED_SPELL"] as? Spell
 
         if (defender is Player && GreaterRunicStaffWeapon.hasWeapon(defender)) {
-            spellId = GreaterRunicStaffWeapon.getSpellId(attacker)
+            val spellId = GreaterRunicStaffWeapon.getSpellId(attacker)
             currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
                 AncientMagicks.id -> AncientMagicks.getSpell(spellId)
                 ModernMagicks.id -> ModernMagicks.getSpell(spellId)
@@ -165,6 +180,15 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             return
         }
         if (currentSpell != null) {
+            attacker.message("spellName ${currentSpell.name}")
+            if (currentSpell.name.contains("teleport block", ignoreCase = true)) {
+                attacker.message("spell was teleport block")
+                val blockTime = defender.temporaryAttributtes.remove("TELEBLOCK_QUEUE") as? Int
+                if (blockTime != null && blockTime != -1) {
+                    attacker.message("apply teleblock $blockTime")
+                    defender.teleportBlock(blockTime)
+                }
+            }
             if (currentSpell.endGraphic.id != -1 && currentSpell.projectileId == -1 && currentSpell.projectileIds.isEmpty()) {
                 defender.gfx(currentSpell.endGraphic)
             }
@@ -186,8 +210,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 return
             }
         }
-        if (!SpellHandler.checkAndRemoveRunes(attacker, spell))
-            return;
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
         if (spell.projectileIds.isNotEmpty()) {
@@ -219,6 +241,17 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (hit.damage > 0 && spell.bind != -1) {
             defender.addFreezeDelay(spell.bind, true)
         }
+        if (spell.id == 86 && hit.damage > 0) {
+            var seconds = 300
+            if (defender is Player) {
+                if (defender.prayer.hasProtectFromMagic()) {
+                    seconds /= 2;
+                }
+                defender.temporaryAttributtes["TELEBLOCK_QUEUE"] = seconds
+                attacker.message("Time to tb in seconds ${defender.temporaryAttributtes["TELEBLOCK_QUEUE"]}")
+            }
+        }
+        attacker.temporaryAttributtes["CASTED_SPELL"] = spell
         delayHits(PendingHit(hit, defender, getHitDelay()))
         if (manual) {
             WorldTasksManager.schedule(object : WorldTask() {
@@ -241,8 +274,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun handleAncientMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
-        if (!SpellHandler.checkAndRemoveRunes(attacker, spell))
-            return
         val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }

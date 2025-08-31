@@ -17,10 +17,10 @@ public final class VarrockEastBank extends Area {
 		return "Varrock East Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] { new WorldTile(3250, 3416, 0), new WorldTile(3250, 3423, 0),
-				new WorldTile(3257, 3423, 0), new WorldTile(3257, 3416, 0) }) };
+	public VarrockEastBank() {
+		super(
+				new Polygon(new WorldTile[] { new WorldTile(3250, 3416, 0), new WorldTile(3250, 3423, 0),
+				new WorldTile(3257, 3423, 0), new WorldTile(3257, 3416, 0) }) );
 	}
 
 	@Override

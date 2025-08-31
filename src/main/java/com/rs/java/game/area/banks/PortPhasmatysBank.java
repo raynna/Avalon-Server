@@ -17,15 +17,15 @@ public final class PortPhasmatysBank extends Area {
 		return "Port Phasmatys Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public PortPhasmatysBank() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(3686, 3461, 0),
 				new WorldTile(3686, 3471, 0),
 				new WorldTile(3699, 3471, 0),
 				new WorldTile(3699, 3461, 0),
 				new WorldTile(3686, 3461, 0),
-		}) };
+		}) );
 	}
 
 	@Override

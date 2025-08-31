@@ -17,10 +17,10 @@ public final class EdgevilleBank extends Area {
 		return "Edgeville Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] { new WorldTile(3098, 3499, 0), new WorldTile(3098, 3488, 0),
-				new WorldTile(3091, 3488, 0), new WorldTile(3091, 3499, 0) }) };
+	public EdgevilleBank() {
+		super(
+				new Polygon(new WorldTile[] { new WorldTile(3098, 3499, 0), new WorldTile(3098, 3488, 0),
+				new WorldTile(3091, 3488, 0), new WorldTile(3091, 3499, 0) }) );
 	}
 
 	@Override

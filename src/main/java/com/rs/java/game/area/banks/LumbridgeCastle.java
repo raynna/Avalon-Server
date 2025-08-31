@@ -17,9 +17,9 @@ public final class LumbridgeCastle extends Area {
 		return "Lumbridge Castle & Yard";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public LumbridgeCastle() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(3229, 3217, 0),//done
 				new WorldTile(3230, 3216, 0),//done
 				new WorldTile(3230, 3212, 0),//done
@@ -45,7 +45,7 @@ public final class LumbridgeCastle extends Area {
 				new WorldTile(3230, 3221, 0),
 				new WorldTile(3229, 3220, 0),
 				new WorldTile(3229, 3217, 0),
-		}) };
+		}) );
 	}
 
 	@Override

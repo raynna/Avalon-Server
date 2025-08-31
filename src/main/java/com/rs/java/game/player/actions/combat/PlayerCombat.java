@@ -103,7 +103,7 @@ public class PlayerCombat extends Action {
     public void checkCombatLevel(Player player, Entity target) {
         if (target instanceof NPC) {
             NPC npc = (NPC) target;
-            int level = player.isAtWild() ? player.getSkills().getCombatLevel() : player.getSkills().getCombatLevelWithSummoning();
+            int level = player.inPkingArea() ? player.getSkills().getCombatLevel() : player.getSkills().getCombatLevelWithSummoning();
             int targetLevel = npc.getCombatLevel();
             player.getPackets().sendHideIComponent(3037, 8, npc.getCombatLevel() == 0);
             player.getPackets().sendHideIComponent(3037, 9, npc.getCombatLevel() == 0);
@@ -119,7 +119,7 @@ public class PlayerCombat extends Action {
             player.getPackets().sendTextOnComponent(3037, 9, builder.toString());
         } else {
             Player p2 = (Player) target;
-            int level = player.isAtWild() ? player.getSkills().getCombatLevel() : player.getSkills().getCombatLevelWithSummoning();
+            int level = player.inPkingArea() ? player.getSkills().getCombatLevel() : player.getSkills().getCombatLevelWithSummoning();
             int targetLevel = p2.getSkills().getCombatLevel();
             player.getPackets().sendHideIComponent(3037, 8, false);
             player.getPackets().sendHideIComponent(3037, 9, false);
@@ -131,7 +131,7 @@ public class PlayerCombat extends Action {
                 builder.append(HexColours.Colour.YELLOW.getHex());
             if (level < targetLevel)
                 builder.append(HexColours.Colour.RED.getHex());
-            builder.append((player.isAtWild() || player.isAtPvP() ? targetLevel + "+" + p2.getSkills().getSummoningCombatLevel() : p2.getSkills().getCombatLevelWithSummoning()));
+            builder.append((player.inPkingArea() || player.isAtPvP() ? targetLevel + "+" + p2.getSkills().getSummoningCombatLevel() : p2.getSkills().getCombatLevelWithSummoning()));
             player.getPackets().sendTextOnComponent(3037, 9, builder.toString());
         }
     }
@@ -2636,7 +2636,7 @@ public class PlayerCombat extends Action {
                 if (player.getTemporaryAttributtes().get("GODMODE") != null)
                     hit.setDamage(n.getHitpoints());
             }
-            if (player.isAtWild() && player.get(Keys.IntKey.EP) != 100 && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
+            if (player.inPkingArea() && player.get(Keys.IntKey.EP) != 100 && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
                 if (Utils.getRandom(2) == 0) {
                     int random = Utils.random(5) + 1;
                     if (player.get(Keys.IntKey.EP) + random > 100)

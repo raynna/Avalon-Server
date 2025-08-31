@@ -510,7 +510,8 @@ public class DoorsAndGates extends ObjectPlugin {
 		WorldObject closedDoor = new WorldObject(object.getId() - 1, object.getType(), object.getRotation() - 1,
 				object.getX(), object.getY(), object.getPlane());
 		if (object.getId() == 11715 && (object.getX() == 2959 && object.getY() == 3334 && object.getPlane() == 0)
-				|| (object.getX() == 2960 && object.getY() == 3343 && object.getPlane() == 0)) {
+				|| (object.getX() == 2960 && object.getY() == 3343 && object.getPlane() == 0)
+				|| (object.getX() == 2446 && object.getY() == 3090) || (object.getX() == 2446 && object.getY() == 3089)) {
 			player.getPackets().sendGameMessage("It won't budge!");
 			return false;
 		}

@@ -17,15 +17,16 @@ public final class DraynorBank extends Area {
 		return "Draynor Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public DraynorBank() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(3088, 3240, 0),
 				new WorldTile(3088, 3246, 0),
 				new WorldTile(3097, 3246, 0),
 				new WorldTile(3097, 3240, 0),
 				new WorldTile(3088, 3240, 0),
-		}) };
+		})
+		);
 	}
 
 	@Override

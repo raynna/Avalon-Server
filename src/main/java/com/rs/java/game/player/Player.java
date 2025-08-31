@@ -29,6 +29,8 @@ import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.*;
 import com.rs.java.game.Hit.HitLook;
+import com.rs.java.game.area.Area;
+import com.rs.java.game.area.AreaManager;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
@@ -634,7 +636,6 @@ public class Player extends Entity {
      * @MapRegion
      */
     private transient boolean clientLoadedMapRegion;
-    private Region region;
     private boolean forceNextMapLoadRefresh;
 
     /**
@@ -1194,7 +1195,7 @@ public class Player extends Entity {
 
     public long getWealth() {
         boolean skulled = hasSkull();
-        boolean wilderness = isAtWild();
+        boolean wilderness = inPkingArea();
         Integer[][] slots = ButtonHandler.getItemSlotsKeptOnDeath(this, wilderness, skulled, getPrayer().hasProtectItemPrayerActive());
         Item[][] items = getItemsKeptOnDeath(this, slots);
         long riskedWealth = 0;
@@ -3157,19 +3158,31 @@ public class Player extends Entity {
         // getPackets().sendPlayerOption("Req assist", 5, false);
     }
 
+    private WorldTile lastMultiTile;
+
     @Override
     public void checkMultiArea() {
         if (!started)
             return;
-        boolean isAtMultiArea = isForceMultiArea() ? true : World.isMultiArea(this);
-        if (isAtMultiArea) {
-            setAtMultiArea(isAtMultiArea);
+
+        WorldTile tile = getTile();
+        Area area = AreaManager.get(tile);
+        if (area != null && area.environment() == Area.Environment.MULTI) {
             getPackets().sendGlobalVar(616, 1);
-        } else if (!isAtMultiArea) {
-            setAtMultiArea(isAtMultiArea);
-            getPackets().sendGlobalVar(616, 0);
+            setAtMultiArea(true);
+            return;
         }
+
+        if (isForceMultiArea()) {
+            getPackets().sendGlobalVar(616, 1);
+            setAtMultiArea(true);
+            return;
+        }
+        getPackets().sendGlobalVar(616, 0);
+        setAtMultiArea(false);
     }
+
+
 
     @Override
     public double getProtectionPrayerEffectiveness() {
@@ -3677,9 +3690,6 @@ public class Player extends Entity {
         return playerCombat;
     }
 
-    public Region getRegion() {
-        return region;
-    }
 
     public CombatDefinitions getCombatDefinitions() {
         return combatDefinitions;
@@ -3817,6 +3827,9 @@ public class Player extends Entity {
         lock(6);
         Player killer = getMostDamageReceivedSourcePlayer();
         WrathEffect.handleWrathEffect(this, killer);
+        if (killer != null) {
+            PvpManager.onDeath(this, killer);
+        }
         animate(new Animation(836));
         if (familiar != null)
             familiar.sendDeath(this);
@@ -3899,7 +3912,7 @@ public class Player extends Entity {
 
     public void sendItemsOnDeath(Player killer, boolean dropItems) {
 
-        Integer[][] slots = ButtonHandler.getItemSlotsKeptOnDeath(this, isAtWild(), dropItems, getPrayer().hasProtectItemPrayerActive());
+        Integer[][] slots = ButtonHandler.getItemSlotsKeptOnDeath(this, inPkingArea(), dropItems, getPrayer().hasProtectItemPrayerActive());
         sendItemsOnDeath(killer, new WorldTile(this), new WorldTile(this), true, slots);
     }
 
@@ -3918,7 +3931,7 @@ public class Player extends Entity {
         for (int i = 0; i < items[0].length; i++) {
             Item item = items[0][i];
             if (ItemConstants.keptOnDeath(item)) {
-                if (item.getId() == 24497 && isAtWild()) {
+                if (item.getId() == 24497 && inPkingArea()) {
                     for (Item runes : getRunePouch().getContainerItems()) {
                         if (runes == null)
                             continue;
@@ -3928,7 +3941,7 @@ public class Player extends Entity {
                     message("Your rune pouch and your runes was lost at death.");
                     items[0][i] = new Item(-1);
                     item = items[0][i];
-                } else if ((item.getId() == 24203) && isAtWild()) {
+                } else if ((item.getId() == 24203) && inPkingArea()) {
                     for (Entry<Integer, Item[]> charges : getStaffCharges().entrySet()) {
                         if (charges.getKey() == null)
                             continue;
@@ -3941,8 +3954,8 @@ public class Player extends Entity {
                 } else {
                     item = items[0][i];
                     //World.addGroundItem(item, deathTile, this, true, 60);
-                    // getInventory().addItem(item);
-                    getUntradeables().add(item);
+                    getInventory().addItem(item);
+                    //getUntradeables().add(item);
                 }
             } else {
                 item = items[0][i];
@@ -3961,21 +3974,29 @@ public class Player extends Entity {
                     World.updateGroundItem(new Item(ItemConstants.removeAttachedId2(item), 1), deathTile, killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
                 items[1][i] = new Item(ItemConstants.removeAttachedId(item));
             }
-            if (ItemConstants.turnCoins(item) && (isAtWild() || FfaZone.inRiskArea(this))) {
+            if (ItemConstants.turnCoins(item) && (inPkingArea() || FfaZone.inRiskArea(this))) {
                 int price = item.getDefinitions().getHighAlchPrice();
                 items[1][i] = new Item(995, price);
+            }
+            if (inPkingArea() && Settings.ECONOMY_MODE == Settings.HALF_ECONOMY && killer.toggles.get("IGNORE_LOW_VALUE") == Boolean.TRUE) {
+                if (item.getDefinitions().getTipitPrice() == 0) {
+                    continue;
+                }
             }
             if (!ItemConstants.keptOnDeath(item))
                 killer.totalCurrentDrop += ((long) item.getDefinitions().getTipitPrice() * item.getAmount());
             item = items[1][i];
             World.updateGroundItem(item, deathTile, killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
         }
-        message("You have lost approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(killer.totalCurrentDrop, ',')) + " coins!");
+        message("You have lost approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
+        int randomCoins = Utils.randomise(25000, 100000);
+        World.updateGroundItem(new Item(995, randomCoins), deathTile, killer, 60, 1);
+        killer.message("You recieved an extra " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(randomCoins, ',')) + " coins for killing: " + getDisplayName() + ".");
         if (killer != this)
-            killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(killer.totalCurrentDrop, ',')) + " coins!");
+            killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
         if (killer.totalCurrentDrop > killer.getHighestValuedKill() && killer.hasWildstalker() && killer != this) {
             killer.setHighestValuedKill(killer.totalCurrentDrop);
-            killer.message("New highest value Wilderness kill: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(killer.getHighestValuedKill(), ',')) + " coins!");
+            killer.message("New highest value Wilderness kill: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.getHighestValuedKill())) + " coins!");
         }
         if (killer != this) {
             double ep = killer.get(Keys.IntKey.EP) * 0.30;
@@ -3993,11 +4014,19 @@ public class Player extends Entity {
     }
 
     public final boolean isAtWild() {
-        return SafeZoneService.INSTANCE.isAtSafezone(this) || !SafeZoneService.INSTANCE.isAtSafezone(this) || (getX() >= 3011 && getX() <= 3132 && getY() >= 10052 && getY() <= 10175) || (getX() >= 2940 && getX() <= 3395 && getY() >= 3525 && getY() <= 4000) || (getX() >= 3264 && getX() <= 3279 && getY() >= 3279 && getY() <= 3672) || (getX() >= 3158 && getX() <= 3181 && getY() >= 3679 && getY() <= 3697) || (getX() >= 3280 && getX() <= 3183 && getY() >= 3885 && getY() <= 3888) || (getX() >= 3012 && getX() <= 3059 && getY() >= 10303 && getY() <= 10351) || (getX() >= 3060 && getX() <= 3072 && getY() >= 10251 && getY() <= 10263);
+        return WildernessControler.isAtWild(getTile());
+    }
+
+    public final boolean isAtBank() {
+        return SafeZoneService.isAtSafezone(this);
+    }
+
+    public final boolean inPkingArea() {
+        return isAtWild() || isAtPvP();
     }
 
     public final boolean isAtPvP() {
-        return EdgevillePvPControler.isAtPvP(this) && !EdgevillePvPControler.isAtBank(this);
+        return !isAtWild() && PvpManager.isInDangerous(this);
     }
 
     public final boolean isInClanwars() {
@@ -4266,7 +4295,7 @@ public class Player extends Entity {
     }
 
     public void unlock() {
-        lockDelay = 0;
+        getTickManager().remove(TickManager.TickKeys.ENTITY_LOCK_TICK);
     }
 
     public void startteleporting() {
@@ -5169,7 +5198,7 @@ public class Player extends Entity {
     }
 
     public boolean canUseCommand() {
-        if (isAtWild() || getControlerManager().getControler() instanceof FightPitsArena || getControlerManager().getControler() instanceof CorpBeastControler || getControlerManager().getControler() instanceof PestControlLobby || getControlerManager().getControler() instanceof PestControlGame || getControlerManager().getControler() instanceof ZGDControler || getControlerManager().getControler() instanceof GodWars || getControlerManager().getControler() instanceof DTControler || getControlerManager().getControler() instanceof DuelArena || getControlerManager().getControler() instanceof CastleWarsPlaying || getControlerManager().getControler() instanceof CastleWarsWaiting || getControlerManager().getControler() instanceof FightCaves || getControlerManager().getControler() instanceof FightKiln || FfaZone.inPvpArea(this) || getControlerManager().getControler() instanceof NomadsRequiem || getControlerManager().getControler() instanceof QueenBlackDragonController || getControlerManager().getControler() instanceof WarControler) {
+        if (inPkingArea() || getControlerManager().getControler() instanceof FightPitsArena || getControlerManager().getControler() instanceof CorpBeastControler || getControlerManager().getControler() instanceof PestControlLobby || getControlerManager().getControler() instanceof PestControlGame || getControlerManager().getControler() instanceof ZGDControler || getControlerManager().getControler() instanceof GodWars || getControlerManager().getControler() instanceof DTControler || getControlerManager().getControler() instanceof DuelArena || getControlerManager().getControler() instanceof CastleWarsPlaying || getControlerManager().getControler() instanceof CastleWarsWaiting || getControlerManager().getControler() instanceof FightCaves || getControlerManager().getControler() instanceof FightKiln || FfaZone.inPvpArea(this) || getControlerManager().getControler() instanceof NomadsRequiem || getControlerManager().getControler() instanceof QueenBlackDragonController || getControlerManager().getControler() instanceof WarControler) {
             return false;
         }
         if (getControlerManager().getControler() instanceof CrucibleControler) {

@@ -1535,6 +1535,65 @@
     "categories": [],
     "assignedBy": []
   },
+  "1459": {
+    "id": 1459,
+    "name": "Monkey Guard",
+    "members": true,
+    "combatLevel": 167,
+    "attackLevel": 130,
+    "strengthLevel": 130,
+    "defenceLevel": 200,
+    "magicLevel": 130,
+    "rangedLevel": 1,
+    "constitutionLevel": 130,
+    "attackBonus": 50,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[6 December]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A huge brutish gorilla armoured with dangerous looking vambraces.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "maxhit": 14
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 130,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
   "1604": {
     "id": 1604,
     "name": "Aberrant spectre",

@@ -3,6 +3,7 @@ package com.rs.kotlin.game.player.interfaces
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.TickManager
 import com.rs.kotlin.Rscm
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.max
@@ -17,10 +18,12 @@ class TimerOverlay {
         VENGEANCE("Vengeance",         Rscm.lookup("sprite.vengeance")),
         RENEWAL("Prayer renewal",      Rscm.lookup("sprite.prayer_renwal")),
         ANTIFIRE("Antifire",           Rscm.lookup("sprite.fire_wave")),
+        SUPER_ANTIFIRE("Super Antifire",           Rscm.lookup("sprite.fire_wave")),
         ENTANGLE("Entangle",           Rscm.lookup("sprite.entangle")),
         FREEZE("Frozen",               Rscm.lookup("sprite.ice_barrage")),
         TELEBLOCK("TeleportBlock",     Rscm.lookup("sprite.teleport_block")),
         ANTIPOISON("Antipoison",       Rscm.lookup("sprite.green_plusheart")),
+        LOCKED("Player Lock",       940),//940 //1436 //1767
     }
 
     data class LiveTimer(
@@ -58,8 +61,8 @@ class TimerOverlay {
         return created
     }
 
-    private fun getTimerOverlayTab(player: Player): Int {
-        return if (player.interfaceManager.isResizableScreen) 0 else 31
+    private fun getTimerOverlayTab(player: Player): Int {//used: 0, 30, 31, 44
+        return if (player.interfaceManager.isResizableScreen) 0 else 29 //27 shows but dissapears when moved
     }
 
     fun startTimer(
@@ -126,6 +129,13 @@ class TimerOverlay {
         }
     }
 
+    object TimerOverlayTools {
+        fun isGoneInTickManager(player: Player, type: TimerType): Boolean {
+            val key = TickManager.OVERLAY_TO_TICK[type] ?: return false
+            return !player.tickManager.isActive(key)
+        }
+    }
+
     private fun ensureTicking(player: Player) {
         val st = state(player)
         if (st.ticking) return
@@ -149,7 +159,10 @@ class TimerOverlay {
                 }*/
 
                 val before = st.timers.size
-                st.timers.values.removeIf { it.isExpired(now) }
+                st.timers.values.removeIf { timer ->
+                    timer.isExpired(now) ||
+                            TimerOverlayTools.isGoneInTickManager(player, timer.type)
+                }
                 val after = st.timers.size
                 if (before != after) {
                     println("[TimerOverlay] ${player.displayName}: removed ${before - after} expired timers at tick=$now")
@@ -195,6 +208,9 @@ class TimerOverlay {
     }
 
     private fun formatTicks(ticks: Int): String {
+        if (ticks >= 10000) {
+            return "∞"
+        }
         val totalSeconds = (ticks * 0.6).toInt()
         val m = totalSeconds / 60
         val s = totalSeconds % 60

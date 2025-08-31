@@ -17,15 +17,15 @@ public final class MobilisingArmiesBank extends Area {
 		return "Mobilising Armies Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public MobilisingArmiesBank() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(2440, 2840, 0),
 				new WorldTile(2440, 2843, 0),
 				new WorldTile(2405, 2843, 0),
 				new WorldTile(2405, 2840, 0),
 				new WorldTile(2440, 2840, 0),
-		}) };
+		}) );
 	}
 
 	@Override

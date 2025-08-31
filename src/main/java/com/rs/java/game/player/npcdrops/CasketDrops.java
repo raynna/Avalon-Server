@@ -58,7 +58,7 @@ public class CasketDrops {
 
 	public static Casket calculateDrop(Player player, NPC npc) {
 		final double DROP_CHANCE = ((0.125 * (npc.getCombatLevel() / 5)) * (player.isMember() ? 1.2 : 1))
-				* (player.isAtWild() ? 1.2 : 1);
+				* (player.inPkingArea() ? 1.2 : 1);
 		if (Utils.getRandom(100) > DROP_CHANCE)
 			return null;
 		if (npc.getCombatLevel() < 10)

@@ -246,7 +246,7 @@ object CombatCalculations {
             if (target !is NPC) return Triple(1.0, 1.0, 0)
 
             val weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON.toInt())
-            val isZaryte = weapon.isAnyOf("item.zaryte_bow", "item.zaryte_bow_2")
+            val isZaryte = weapon.isAnyOf("item.zaryte_bow", "item.zaryte_bow_degraded")
             val isHexhunter = weapon.isAnyOf("item.hexhunter_bow", "item.hexhunter_bow_b")
 
             if (!isZaryte && !isHexhunter) return Triple(1.0, 1.0, 0)

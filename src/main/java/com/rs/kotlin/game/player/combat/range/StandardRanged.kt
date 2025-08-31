@@ -224,7 +224,7 @@ object StandardRanged : RangeData() {
             allowedAmmoIds = setOf(Item.getId("item.bone_bolts"))
         ),
         RangedWeapon(
-            itemId = Item.getIds("item.zaryte_bow", "item.zaryte_bow_2"),
+            itemId = Item.getIds("item.zaryte_bow", "item.zaryte_bow_degraded"),
             name = "Zaryte bow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackRange = 10,

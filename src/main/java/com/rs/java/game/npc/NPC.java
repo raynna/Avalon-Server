@@ -855,7 +855,7 @@ public class NPC extends Entity implements Serializable {
                 handleBonecrusher(player, drop, item, false);
                 return;
             }
-            if (player.isAtWild() && item.getName().toLowerCase().contains("dragon bones")) {
+            if (player.inPkingArea() && item.getName().toLowerCase().contains("dragon bones")) {
                 item.setId(item.getDefinitions().getCertId());// bones into noted
             }
             if (item.getName().toLowerCase().contains("grimy")) {

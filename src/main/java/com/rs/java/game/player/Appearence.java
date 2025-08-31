@@ -11,6 +11,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.player.content.clans.ClansManager;
 import com.rs.core.packets.OutputStream;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public class Appearence implements Serializable {
 
@@ -295,7 +296,7 @@ public class Appearence implements Serializable {
 			stream.writeByte(colour[index]);
 		stream.writeShort(getRenderEmote());
 		stream.writeString(player.getDisplayName());
-		boolean pvpArea = World.isPvpArea(player);
+		boolean pvpArea = World.isPvpArea(player) || PvpManager.isInDangerous(player);
 		int summoningLevels = player.getSkills().getCombatLevelWithSummoning() - player.getSkills().getCombatLevel();
 		stream.writeByte(pvpArea ? player.getSkills().getCombatLevel() : player.getSkills().getCombatLevelWithSummoning());
 		stream.writeByte(pvpArea ? player.getSkills().getCombatLevelWithSummoning() : 0);

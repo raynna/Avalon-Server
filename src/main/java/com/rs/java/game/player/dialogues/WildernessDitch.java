@@ -41,14 +41,41 @@ public class WildernessDitch extends Dialogue {
 	public void run(int interfaceId, int componentId) {
 		if (interfaceId == 382 && componentId == 19) {
 			player.stopAll();
-			player.lock(4);
+			player.lock(3);
 			player.animate(new Animation(6132));
+
+			int dx = 0, dy = 0;
+			switch (ditch.getRotation()) {
+				case 0: // facing south
+					dy = (player.getY() > ditch.getY()) ? -3 : +3;
+					break;
+				case 2: // facing north
+					dy = (player.getY() < ditch.getY()) ? +3 : -3;
+					break;
+				case 1: // facing west
+					dx = (player.getX() < ditch.getX()) ? +3 : -3;
+					break;
+				case 3: // facing east
+					dx = (player.getX() > ditch.getX()) ? -3 : +3;
+					break;
+			}
+
 			final WorldTile toTile = new WorldTile(
-					ditch.getRotation() == 3 || ditch.getRotation() == 1 ? ditch.getX() - 1 : player.getX(),
-					ditch.getRotation() == 0 || ditch.getRotation() == 2 ? ditch.getY() + 2 : player.getY(),
-					ditch.getPlane());
-			player.setNextForceMovement(new ForceMovement(new WorldTile(player), 1, toTile, 2,
-					ditch.getRotation() == 0 || ditch.getRotation() == 2 ? ForceMovement.NORTH : ForceMovement.WEST));
+					player.getX() + dx,
+					player.getY() + dy,
+					ditch.getPlane()
+			);
+
+			int direction;
+			if (dx > 0) direction = ForceMovement.EAST;
+			else if (dx < 0) direction = ForceMovement.WEST;
+			else if (dy > 0) direction = ForceMovement.NORTH;
+			else direction = ForceMovement.SOUTH;
+
+			player.setNextForceMovement(
+					new ForceMovement(new WorldTile(player), 1, toTile, 2, direction)
+			);
+
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
@@ -61,11 +88,13 @@ public class WildernessDitch extends Dialogue {
 					}
 				}
 			}, 2);
-		} else
+		} else {
 			player.closeInterfaces();
+		}
 		playersOn.remove(player);
 		end();
 	}
+
 
 	@Override
 	public void finish() {

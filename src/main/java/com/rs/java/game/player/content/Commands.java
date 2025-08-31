@@ -132,7 +132,7 @@ public final class Commands {
                         player.message("You can't use ::item in this mode.");
                         return true;
                     }
-                    if (player.isAtWild()) {
+                    if (player.inPkingArea()) {
                         player.getPackets().sendGameMessage("You can't use ::" + cmd[0] + " in pvp.");
                         return true;
                     }
@@ -2240,7 +2240,7 @@ public final class Commands {
                     return true;
 
                 case "showrisk":
-                    Integer[][] slots = ButtonHandler.getItemSlotsKeptOnDeath(player, player.isAtWild(), player.hasSkull(),
+                    Integer[][] slots = ButtonHandler.getItemSlotsKeptOnDeath(player, player.inPkingArea(), player.hasSkull(),
                             player.getPrayer().hasProtectItemPrayerActive());
                     Item[][] riskitems = ButtonHandler.getItemsKeptOnDeath(player, slots);
                     long riskedWealth = 0;
@@ -2434,7 +2434,7 @@ public final class Commands {
                     }
                     return true;
                 case "bitem":
-                    if (player.isAtWild()) {
+                    if (player.inPkingArea()) {
                         player.getPackets().sendGameMessage("You can't use ::" + cmd[0] + " in the wilderness.");
                         return true;
                     }

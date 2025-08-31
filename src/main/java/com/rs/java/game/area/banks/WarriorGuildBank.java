@@ -17,9 +17,9 @@ public final class WarriorGuildBank extends Area {
 		return "Warrior Guild Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public WarriorGuildBank() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(2843, 3533, 0),
 				new WorldTile(2843, 3537, 0),
 				new WorldTile(2841, 3537, 0),
@@ -27,7 +27,7 @@ public final class WarriorGuildBank extends Area {
 				new WorldTile(2848, 3540, 0),
 				new WorldTile(2848, 3533, 0),
 				new WorldTile(2843, 3533, 0),
-		}) };
+		}) );
 	}
 
 	@Override

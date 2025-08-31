@@ -17,15 +17,15 @@ public final class MageBank extends Area {
 		return "Mage Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public MageBank() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(2527, 4710, 0),
 				new WorldTile(2527, 4725, 0),
 				new WorldTile(2548, 4725, 0),
 				new WorldTile(2548, 4710, 0),
 				new WorldTile(2527, 4710, 0),
-		}) };
+		}) );
 	}
 
 	@Override

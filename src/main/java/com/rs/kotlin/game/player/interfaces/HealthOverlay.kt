@@ -205,7 +205,7 @@ class HealthOverlay {
     private fun buildPlayerLevelText(player: Player, target: Player): String {
         val playerLevel = getRelevantCombatLevel(player)
         val targetLevel = target.skills.combatLevel
-        val levelDisplay = if (player.isAtWild || player.isAtPvP) {
+        val levelDisplay = if (player.inPkingArea() || player.isAtPvP) {
             "$targetLevel+${target.skills.summoningCombatLevel}"
         } else {
             "${target.skills.combatLevelWithSummoning}"
@@ -365,7 +365,7 @@ class HealthOverlay {
         player.packets.sendHideIComponent(3037, 10, false)
         player.packets.sendHideIComponent(3037, 11, false)
 
-        val levelDisplay = if (player.isAtWild || player.isAtPvP) {
+        val levelDisplay = if (player.inPkingArea() || player.isAtPvP) {
             "$targetLevel+${target.skills.summoningCombatLevel}"
         } else {
             "${target.skills.combatLevelWithSummoning}"
@@ -376,7 +376,7 @@ class HealthOverlay {
     }
 
     private fun getRelevantCombatLevel(player: Player): Int {
-        return if (player.isAtWild) {
+        return if (player.inPkingArea()) {
             player.skills.combatLevel
         } else {
             player.skills.combatLevelWithSummoning

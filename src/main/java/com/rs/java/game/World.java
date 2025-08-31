@@ -504,8 +504,10 @@ public final class World {
                     player.getMusicsManager().checkMusic(musicId);
                 if (player.getControlerManager() != null)
                     player.getControlerManager().moved();
-                if (player.hasStarted())
+                if (player.hasStarted()) {
                     checkControlersAtMove(player);
+                    PvpManager.onMoved(player);
+                }
             } else {
                 if (entity.getLastRegionId() > 0)
                     getRegion(entity.getLastRegionId()).removeNPCIndex(entity.getIndex());
@@ -517,9 +519,10 @@ public final class World {
             if (entity instanceof Player player) {
                 player.getControlerManager().moved();
                 PvpManager.onMoved(player);
-                PvpManager.onMoved(player);
-                if (player.hasStarted())
+                if (player.hasStarted()) {
                     checkControlersAtMove(player);
+                    PvpManager.onMoved(player);
+                }
             }
             entity.checkMultiArea();
         }
@@ -1558,7 +1561,7 @@ public final class World {
 
         if (!canPickupItem(player, floorItem)) return false;
 
-        if (floorItem.getId() == 995 && !player.isAtWild() && !FfaZone.inRiskArea(player)) {
+        if (floorItem.getId() == 995 && !player.inPkingArea() && !FfaZone.inRiskArea(player)) {
             return handleCoinPickup(player, floorItem, region, regionId);
         }
 
@@ -2101,19 +2104,14 @@ public final class World {
         );
     }
 
-    private static final Set<String> MULTI_AREAS = Set.of(
-            "Multi Area", "Wildy Agility Multi", "Godwars", "ForinthryMulti", "Nex Multi",
-            "Corp Multi", "Tormdemon Multi", "KQ Multi", "Chaos Tunnel Multi", "Dks Multi", "KBD Multi"
-    );
-
     public static boolean isMultiArea(WorldTile tile) {
         Area area = AreaManager.get(tile);
-        return (area != null && MULTI_AREAS.contains(area.name())) || Bork.atBork(tile);
+        return (area != null && area.environment() == Area.Environment.MULTI);
     }
 
     public static boolean atMultiArea(Player player) {
         Area area = AreaManager.get(player);
-        return (area != null && MULTI_AREAS.contains(area.name())) || Bork.atBork(player);
+        return (area != null && area.environment() == Area.Environment.MULTI);
     }
 
 

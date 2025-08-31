@@ -17,9 +17,9 @@ public final class FaladorWestBank extends Area {
 		return "Falador West Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public FaladorWestBank() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(2943, 3368, 0),
 				new WorldTile(2943, 3373, 0),
 				new WorldTile(2947, 3373, 0),
@@ -27,7 +27,7 @@ public final class FaladorWestBank extends Area {
 				new WorldTile(2949, 3369, 0),
 				new WorldTile(2949, 3368, 0),
 				new WorldTile(2943, 3368, 0),
-		}) };
+		}) );
 	}
 
 	@Override

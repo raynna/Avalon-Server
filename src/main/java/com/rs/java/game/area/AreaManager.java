@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.area.banks.*;
+import com.rs.java.game.area.multi.*;
+import com.rs.java.game.area.zones.WildernessArea;
+import com.rs.java.game.area.zones.WildernessSafeArea;
 import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
@@ -15,22 +18,29 @@ public class AreaManager {
 
 	public static void init() {
 		try {
-			areas(new ArrayList<Area>());
-			areas().add(new Multi());
-			areas().add(new WildyAgilityArea());
-			areas().add(new Godwars());
-			areas().add(new NexMulti());
-			areas().add(new CorpMulti());
-			areas().add(new DKSMulti());
-			areas().add(new ChaosTunnelMulti());
-			areas().add(new TormDemonMulti());
-			areas().add(new KalphiteQueenMulti());
-			areas().add(new ForinthryDungeonMulti());
-			areas().add(new KingBlackDragon());
-			// FFA
-			areas().add(new FFASafe());
-			areas().add(new FFASafePvP());
-			areas().add(new FFASafeZone());
+			areas(new ArrayList<>());
+
+			//multi
+			areas().add(new WildernessMulti());
+			areas().add(new AlkharidMulti());
+			areas().add(new WhiteWolfMountainMulti());
+			areas().add(new ApeAtollMulti());
+			areas().add(new PestControlMulti());
+			areas().add(new FaladorMulti());
+			areas().add(new BarbarianVillageMulti());
+			areas().add(new BurthorpeMulti());
+			areas().add(new CastleWarsMulti());
+			areas().add(new PiscatorisColonyMulti());
+			areas().add(new Islands());
+			areas().add(new MorytaniaMulti());
+			areas().add(new GodwarsMulti());
+			areas().add(new KingBlackDragonMulti());
+			areas().add(new WaterbirthDungeonMulti());
+			areas().add(new KalphiteLairMulti());
+
+			//zones
+			areas().add(new WildernessArea());
+			areas().add(new WildernessSafeArea());
 
 			//pvp safezones
 			areas().add(new EdgevilleBank());
@@ -57,39 +67,28 @@ public class AreaManager {
 			areas().add(new MageBank());
 			areas().add(new WarriorGuildBank());
 
-
-			//end of FFA
-			areas().add(new LividFarmArea());
 		} catch (Exception e) {
 			System.out.print(e);
 		}
 	}
 
-	public static Area get(final WorldTile location) {
+	public static List<Area> getAll(final WorldTile location) {
+		List<Area> result = new ArrayList<>();
 		try {
-			Area current = null;
-			boolean found = false;
 			for (Area area : areas()) {
-
-				for (Shape shape : area.shapes()) {
-
-					if (shape.inside(location)) {
-						current = area;
-						found = true;
-						break;
-					}
-
+				if (area.contains(location)) {
+					result.add(area);
 				}
-
-				if (!found)
-					continue;
-
-				return current;
 			}
 		} catch (Exception e) {
-			System.out.print(e);
+			System.out.println("Error while checking areas: " + e);
 		}
-		return null;
+		return result;
+	}
+
+	public static Area get(final WorldTile location) {
+		List<Area> matches = getAll(location);
+		return matches.isEmpty() ? null : matches.get(0);
 	}
 
 	public static void update(final Player player, final Area area) {

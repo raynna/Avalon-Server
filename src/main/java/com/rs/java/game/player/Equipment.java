@@ -98,58 +98,74 @@ public final class Equipment implements Serializable {
 
 	public void refreshConfigs(boolean init) {
 		double hpIncrease = 0;
-		for (int index = 0; index < items.getSize(); index++) {
-			Item item = items.get(index);
-			if (item == null)
-				continue;
-			int id = item.getId();
-			if (id == 4024) {
-				player.getAppearence().transformIntoNPC(4024 - 2544);
-				return;
-			}
-			if (player.getAppearence().isNPC()) {
-				player.getAppearence().transformIntoNPC(-1);
-			}
-			if (index == Equipment.SLOT_HEAD) {
-				if (id == 20135 || id == 20137 // torva
-						|| id == 20147 || id == 20149 // pernix
-						|| id == 20159 || id == 20161 // virtus
-				)
-					hpIncrease += 66;
+		boolean hasTransformItem = false;
 
-			} else if (index == Equipment.SLOT_CHEST) {
-				if (id == 20139 || id == 20141 // torva
-						|| id == 20151 || id == 20153 // pernix
-						|| id == 20163 || id == 20165 // virtus
-				)
+		for (int slot = 0; slot < items.getSize(); slot++) {
+			Item item = items.get(slot);
+			if (item == null) continue;
+
+			int id = item.getId();
+
+			if (id == 4024) hasTransformItem = true;
+
+			if (slot == Equipment.SLOT_HEAD) {
+				if (item.isAnyOf(
+						"item.torva_full_helm", "item.torva_full_helm_degraded",
+						"item.virtus_mask", "item.virtus_mask_degraded",
+						"item.pernix_cowl", "item.pernix_cowl_degraded")) {
+					hpIncrease += 66;
+				}
+
+			} else if (slot == Equipment.SLOT_CHEST) {
+				if (item.isAnyOf(
+						"item.torva_platebody", "item.torva_platebody_degraded",
+						"item.virtus_robe_top", "item.virtus_robe_top_degraded",
+						"item.pernix_body", "item.pernix_body_degraded")) {
 					hpIncrease += 200;
-			} else if (index == Equipment.SLOT_LEGS) {
-				if (id == 20143 || id == 20145 // torva
-						|| id == 20155 || id == 20157 // pernix
-						|| id == 20167 || id == 20169 // virtus
-				)
+				}
+
+			} else if (slot == Equipment.SLOT_LEGS) {
+				if (item.isAnyOf(
+						"item.torva_platelegs", "item.torva_platelegs_degraded",
+						"item.virtus_robe_legs", "item.virtus_robe_legs_degraded",
+						"item.pernix_chaps", "item.pernix_chaps_degraded")) {
 					hpIncrease += 134;
+				}
 			}
 		}
+
+		int baseMax = player.getSkills().getLevel(Skills.HITPOINTS) * 10;
+
 		if (player.getLastBonfire() > 0) {
-			int maxhp = player.getSkills().getLevel(Skills.HITPOINTS) * 10;
-			hpIncrease += (maxhp * Bonfire.getBonfireBoostMultiplier(player)) - maxhp;
+			hpIncrease += (baseMax * Bonfire.getBonfireBoostMultiplier(player)) - baseMax;
 		}
 		if (player.getHpBoostMultiplier() != 0) {
-			int maxhp = player.getSkills().getLevel(Skills.HITPOINTS) * 10;
-			hpIncrease += maxhp * player.getHpBoostMultiplier();
+			hpIncrease += baseMax * player.getHpBoostMultiplier();
 		}
-		if (player.getEquipment().getWeaponId() == 10501) {
-			player.sendDefaultPlayersOptions();
-		} else {
-			player.sendDefaultPlayersOptions();
+
+		if (hasTransformItem) {
+			if (!player.getAppearence().isNPC())
+				player.getAppearence().transformIntoNPC(4024 - 2544);
+		} else if (player.getAppearence().isNPC()) {
+			player.getAppearence().transformIntoNPC(-1);
 		}
-		if (hpIncrease != equipmentHpIncrease) {
-			equipmentHpIncrease = (int) hpIncrease;
-			if (!init)
+
+		player.sendDefaultPlayersOptions();
+
+		int newIncrease = (int) hpIncrease;
+		if (newIncrease != equipmentHpIncrease) {
+			int prevMax = baseMax + equipmentHpIncrease;
+			equipmentHpIncrease = newIncrease;
+			int newMax = baseMax + equipmentHpIncrease;
+
+			if (!init) {
+				if (player.getHitpoints() > newMax)
+					player.setHitpoints(newMax);
 				player.refreshHitPoints();
+			}
 		}
 	}
+
 
 	public boolean containsOneItem(int... itemIds) {
 		for (int itemId : itemIds) {

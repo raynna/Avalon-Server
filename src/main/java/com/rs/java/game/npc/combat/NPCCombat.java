@@ -179,6 +179,7 @@ public final class NPCCombat {
                 && Math.abs(npc.getY() - target.getY()) == 1
                 && !target.hasWalkSteps()
                 && size == 1) {
+            npc.resetWalkSteps();
             if (!npc.addWalkSteps(target.getX(), npc.getY(), 1))
                 npc.addWalkSteps(npc.getX(), target.getY(), 1);
             return true;

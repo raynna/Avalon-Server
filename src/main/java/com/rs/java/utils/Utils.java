@@ -145,6 +145,21 @@ public final class Utils {
 		}
 		return getFormattedNumber(amount, ',');
 	}
+
+	public static String getFormattedBigNumber(long amount) {
+		DecimalFormat noDecimal = new DecimalFormat("#");
+		DecimalFormat oneDecimal = new DecimalFormat("#.#");
+		DecimalFormat threeDecimal = new DecimalFormat("#.###");
+
+		if (amount >= 1_000_000_000L) {
+			return threeDecimal.format(amount / 1_000_000_000.0) + "b";
+		} else if (amount >= 10_000_000) {
+			return oneDecimal.format(amount / 1_000_000.0) + "m";
+		} else if (amount >= 100_000) {
+			return noDecimal.format(amount / 1_000.0) + "k";
+		}
+		return getFormattedNumber(amount, ',');
+	}
 	
 	public static String format(int number) {
 		return NumberFormat.getNumberInstance(Locale.UK).format(number);

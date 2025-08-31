@@ -1365,8 +1365,8 @@ public class InventoryOptionsHandler {
                 return;
             }
         } else if (itemId == 995) {
-            if (player.isAtWild() || FfaZone.inRiskArea(player)) {
-                player.message("You can't store money in your money pouch in the " + (player.isAtWild() ? "wilderness." : "risk ffa zone."));
+            if (player.inPkingArea() || FfaZone.inRiskArea(player)) {
+                player.message("You can't store money in your money pouch in the " + (player.inPkingArea() ? "wilderness." : "risk ffa zone."));
                 return;
             }
             player.getMoneyPouch().addMoneyFromInventory(player.getInventory().getItems().getNumberOf(995), true);

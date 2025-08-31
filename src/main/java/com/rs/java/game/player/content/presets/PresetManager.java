@@ -95,13 +95,8 @@ public final class PresetManager implements Serializable {
 	public void loadPreset(String name, Player p2) {
 		if (name == "")
 			return;
-		if (player.isAtWild()) {
-			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in the wilderness."));
-			return;
-		}
-		if (player.getControlerManager().getControler() != null
-				&& !(player.getControlerManager().getControler() instanceof EdgevillePvPControler)) {
-			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in here."));
+		if (player.inPkingArea()) {
+			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in player killing areas."));
 			return;
 		}
 		if (EdgevillePvPControler.isAtPvP(player) && !EdgevillePvPControler.isAtBank(player)) {

@@ -12,7 +12,7 @@ public class PlayerDamageBoost extends PlayerCombat {
         int multiplier = 1;
         if (hasBerskerNecklace(player))
             multiplier *= 1.2;
-        if (player.getAuraManager().isActivated() && player.getAuraManager().usingBerserker() && !player.isAtWild())
+        if (player.getAuraManager().isActivated() && player.getAuraManager().usingBerserker() && !player.inPkingArea())
             multiplier *= 1.1;
         return multiplier;
     }

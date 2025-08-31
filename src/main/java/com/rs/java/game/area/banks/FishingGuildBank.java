@@ -17,15 +17,15 @@ public final class FishingGuildBank extends Area {
 		return "Fishing Guild Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public FishingGuildBank() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(2583, 3420, 0),
 				new WorldTile(2583, 3424, 0),
 				new WorldTile(2587, 3424, 0),
 				new WorldTile(2587, 3420, 0),
 				new WorldTile(2583, 3420, 0),
-		}) };
+		}) );
 	}
 
 	@Override

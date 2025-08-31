@@ -17,15 +17,15 @@ public final class OoglogBank extends Area {
 		return "Ooglog Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public OoglogBank() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(2556, 2836, 0),
 				new WorldTile(2556, 2841, 0),
 				new WorldTile(2559, 2841, 0),
 				new WorldTile(2559, 2836, 0),
 				new WorldTile(2556, 2836, 0),
-		}) };
+		}) );
 	}
 
 	@Override

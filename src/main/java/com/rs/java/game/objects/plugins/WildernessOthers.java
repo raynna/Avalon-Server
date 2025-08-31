@@ -17,40 +17,83 @@ public class WildernessOthers extends ObjectPlugin {
 
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { 42611, 65621, 65620, 65619, 65618, 65617, 65616, 27254, 12202, 12230, 15522, 38811, 37929, 37928, 38815 };
+		return new Object[] { 42611, 65621, 65620, 65619, 65618, 65617, 65616, 27254, 12202, 12230, 15522, 38811, 37929, 37928, 38815, 1440, 141, 1442, 1443, 1444, 65076, 65077, 65078, 65079, 65080, 65081, 65082, 65083, 65084, 65085, 65086, 65087 };
 	}
-	
+	//player.getDialogueManager().startDialogue("WildernessDitch", object);
 	@Override
 	public boolean processObject(Player player, WorldObject object) {
 		int id = object.getId();
-		if (WildernessControler.isDitch(id)) {// wild ditch
-			if (((object.getRotation() == 0 || object.getRotation() == 2) && player.getY() < object.getY())
-					|| (object.getRotation() == 1 || object.getRotation() == 3)
-							&& player.getX() > object.getX()) {
+		if (WildernessControler.isDitch(id)) {
+			// if player is outside wilderness -> show dialogue first
+			boolean needsDialogue = false;
+			switch (object.getRotation()) {
+				case 0: // ditch facing south
+					if (player.getY() < object.getY())
+						needsDialogue = true;
+					break;
+				case 2: // ditch facing north
+					if (player.getY() < object.getY())
+						needsDialogue = true;
+					break;
+				case 1: // ditch facing west
+					if (player.getX() > object.getX())
+						needsDialogue = true;
+					break;
+				case 3: // ditch facing east
+					if (player.getX() > object.getX())
+						needsDialogue = true;
+					break;
+			}
+
+			if (needsDialogue) {
 				player.getDialogueManager().startDialogue("WildernessDitch", object);
 				return false;
-			} else {
-				player.lock();
-				player.animate(new Animation(6132));
-				final WorldTile toTile = new WorldTile(
-						object.getRotation() == 1 || object.getRotation() == 3 ? object.getX() + 1
-								: player.getX(),
-						object.getRotation() == 0 || object.getRotation() == 2 ? object.getY() - 1
-								: player.getY(),
-						object.getPlane());
-				player.setNextForceMovement(new ForceMovement(new WorldTile(player), 1, toTile, 2,
-						object.getRotation() == 0 || object.getRotation() == 2 ? ForceMovement.SOUTH
-								: ForceMovement.EAST));
-				WorldTasksManager.schedule(new WorldTask() {
-					@Override
-					public void run() {
-						player.setNextWorldTile(toTile);
-						player.faceObject(object);
-						player.unlock();
-					}
-				}, 2);
-				return false;
 			}
+
+			// otherwise perform the jump
+			player.lock(3);
+			player.animate(new Animation(6132));
+
+			int dx = 0, dy = 0;
+			switch (object.getRotation()) {
+				case 0: // south
+					dy = (player.getY() > object.getY()) ? -3 : +3;
+					break;
+				case 2: // north
+					dy = (player.getY() < object.getY()) ? +3 : -3;
+					break;
+				case 1: // west
+					dx = (player.getX() < object.getX()) ? +3 : -3;
+					break;
+				case 3: // east
+					dx = (player.getX() > object.getX()) ? -3 : +3;
+					break;
+			}
+
+			final WorldTile toTile = new WorldTile(
+					player.getX() + dx,
+					player.getY() + dy,
+					object.getPlane()
+			);
+
+			int direction;
+			if (dx > 0) direction = ForceMovement.EAST;
+			else if (dx < 0) direction = ForceMovement.WEST;
+			else if (dy > 0) direction = ForceMovement.NORTH;
+			else direction = ForceMovement.SOUTH;
+
+			player.setNextForceMovement(
+					new ForceMovement(new WorldTile(player), 1, toTile, 2, direction)
+			);
+
+			WorldTasksManager.schedule(new WorldTask() {
+				@Override
+				public void run() {
+					player.setNextWorldTile(toTile);
+					player.faceObject(object);
+				}
+			}, 2);
+			return true;
 		} else if (id == 42611) {// Magic Portal
 			player.getDialogueManager().startDialogue("MagicPortal");
 			// } else if
@@ -69,7 +112,7 @@ public class WildernessOthers extends ObjectPlugin {
 				return false;
 			}
 			if (player.getX() != object.getX() || player.getY() != object.getY()) {
-				player.lock();
+				player.lock(2);
 				player.addWalkSteps(object.getX(), object.getY());
 				WorldTasksManager.schedule(new WorldTask() {
 					@Override

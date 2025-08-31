@@ -372,12 +372,11 @@ public class Magic {
 	}
 
 	private static void useHomeTele(Player player) {
-		if (player.isAtWild() || player.isCanPvp()) {
+		if (player.inPkingArea() || player.isCanPvp()) {
 			player.stopAll();
 			player.getActionManager().setAction(new HomeTeleport(Settings.HOME_PLAYER_LOCATION));
 		} else {
 			player.stopAll();
-			player.teleporting(player.getControlerManager().getControler() instanceof WildernessControler ? 10 : 8);
 			if (player.getCombatDefinitions().spellBook == 2) {// lunar
 				sendLunarTeleportSpell(player, 0, 0, new WorldTile(Settings.HOME_PLAYER_LOCATION));
 			} else if (player.getCombatDefinitions().spellBook == 0) {// normal
@@ -672,6 +671,10 @@ public class Magic {
 			player.getPackets().sendGameMessage("Your Magic level is not high enough for this spell.");
 			return false;
 		}
+		if (player.isTeleportBlocked()) {
+			player.message("You are teleport blocked!");
+			return false;
+		}
 		if (player.getControlerManager().getControler() instanceof FfaZone
 				|| player.getControlerManager().getControler() instanceof CrucibleControler
 				|| player.getControlerManager().getControler() instanceof FightKiln
@@ -783,6 +786,10 @@ public class Magic {
 	public static boolean useLumberTele(final Player player, final WorldTile tile) {
 		if (!player.getControlerManager().processItemTeleport(tile))
 			return false;
+		if (player.isTeleportBlocked()) {
+			player.message("You are been teleport blocked!");
+			return false;
+		}
 		int lockTime = 5;
 		player.lock(lockTime);
 		player.getTickManager().addTicks(TickManager.TickKeys.TELEPORTING_TICK, lockTime + 1);
@@ -850,6 +857,10 @@ public class Magic {
 	public static boolean useTeleTab(int itemId, final Player player, final WorldTile tile) {
 		if (!player.getControlerManager().processItemTeleport(tile))
 			return false;
+		if (player.isTeleportBlocked()) {
+			player.message("You are been teleport blocked!");
+			return false;
+		}
 		if (player.getControlerManager().getControler() instanceof FfaZone
 				|| player.getControlerManager().getControler() instanceof CrucibleControler
 				|| player.getControlerManager().getControler() instanceof FightKiln) {
@@ -919,6 +930,10 @@ public class Magic {
 	}
 
 	public static void useEctoPhial(final Player player, Item item) {
+		if (player.isTeleportBlocked()) {
+			player.message("You are been teleport blocked!");
+			return;
+		}
 		player.lock(6);
 		player.getPackets().sendGameMessage("You empty the ectoplasm onto the floor...");
 		player.gfx(new Graphics(1688));
@@ -1334,6 +1349,10 @@ public class Magic {
 			final boolean randomize, final int teleType, final boolean dung, int... runes) {
 		if (player.isLocked())
 			return false;
+		if (player.isTeleportBlocked()) {
+			player.message("You are been teleport blocked!");
+			return false;
+		}
 		if (player.getSkills().getLevel(Skills.MAGIC) < level) {
 			player.getPackets().sendGameMessage("Your Magic level is not high enough for this spell.");
 			return false;

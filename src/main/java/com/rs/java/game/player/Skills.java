@@ -1103,10 +1103,10 @@ public final class Skills implements Serializable {
             exp *= 1;
         } else {
             if ((skill >= Skills.ATTACK && skill <= Skills.RANGE) || skill == Skills.MAGIC) {
-                if (player.getTemporaryTarget() != null && player.isAtWild()
+                if (player.getTemporaryTarget() != null && player.inPkingArea()
                         && !(player.getTemporaryTarget() instanceof NPC))
                     exp *= 1;
-                else if (player.getTemporaryTarget() != null && player.isAtWild()
+                else if (player.getTemporaryTarget() != null && player.inPkingArea()
                         && (player.getTemporaryTarget() instanceof NPC))
                     exp *= Settings.COMBAT_XP_RATE;
                 else
@@ -1128,7 +1128,7 @@ public final class Skills implements Serializable {
         exp *= Settings.BONUS_EXP_WEEK_MULTIPLIER;
         if (Settings.BONUS_EXP_WEEK_MULTIPLIER > 1) {
             if (skill >= 0 && skill <= 6 && skill != 5) {
-                if (player.getTemporaryTarget() != null && player.isAtWild()
+                if (player.getTemporaryTarget() != null && player.inPkingArea()
                         && !(player.getTemporaryTarget() instanceof NPC)) {
                     player.getVarsManager().sendVar(2044, 0);
                 } else

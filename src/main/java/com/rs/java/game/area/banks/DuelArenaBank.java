@@ -17,13 +17,13 @@ public final class DuelArenaBank extends Area {
 		return "Duel arena Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public DuelArenaBank() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(3380, 3267, 0),
 				new WorldTile(3380, 3273, 0),
 				new WorldTile(3385, 3273, 0),
-				new WorldTile(3385, 3267, 0) }) };
+				new WorldTile(3385, 3267, 0) }) );
 	}
 
 	@Override

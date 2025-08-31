@@ -736,6 +736,10 @@ public class LunarMagicks {
 			player.getPackets().sendGameMessage("You cannot teleport out of here.");
 			return false;
 		}
+		if (player.isTeleportBlocked()) {
+			player.message("You are been teleport blocked!");
+			return false;
+		}
 		if (!player.getControlerManager().processMagicTeleport(tile))
 			return false;
 		player.stopAll();

@@ -8,6 +8,7 @@ import com.rs.kotlin.game.player.interfaces.TimerOverlay;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class TickManager {
@@ -40,14 +41,14 @@ public class TickManager {
 
     private static final Map<TickKeys, TimerOverlay.TimerType> TICK_TO_OVERLAY = Map.ofEntries(
             Map.entry(TickKeys.OVERLOAD_TICKS, TimerOverlay.TimerType.OVERLOAD),
-            Map.entry(TickKeys.RENEWAL_TICKS, TimerOverlay.TimerType.RENEWAL),
             Map.entry(TickKeys.PRAYER_RENEWAL_TICKS, TimerOverlay.TimerType.RENEWAL),
             Map.entry(TickKeys.ANTI_FIRE_TICKS, TimerOverlay.TimerType.ANTIFIRE),
-            Map.entry(TickKeys.SUPER_ANTI_FIRE_TICKS, TimerOverlay.TimerType.ANTIFIRE),
+            Map.entry(TickKeys.SUPER_ANTI_FIRE_TICKS, TimerOverlay.TimerType.SUPER_ANTIFIRE),
             Map.entry(TickKeys.TELEPORT_BLOCK, TimerOverlay.TimerType.TELEBLOCK),
             Map.entry(TickKeys.FREEZE_TICKS, TimerOverlay.TimerType.FREEZE),
             Map.entry(TickKeys.VENGEANCE_COOLDOWN, TimerOverlay.TimerType.VENGEANCE),
-            Map.entry(TickKeys.POISON_IMMUNE_TICKS, TimerOverlay.TimerType.ANTIPOISON)
+            Map.entry(TickKeys.POISON_IMMUNE_TICKS, TimerOverlay.TimerType.ANTIPOISON),
+            Map.entry(TickKeys.ENTITY_LOCK_TICK, TimerOverlay.TimerType.LOCKED)
     );
 
     private void syncOverlay(TickKeys key, int ticks) {
@@ -107,11 +108,18 @@ public class TickManager {
         addMinutes(key, minutes, null);
     }
 
+    public static final Map<TimerOverlay.TimerType, TickKeys> OVERLAY_TO_TICK =
+            TICK_TO_OVERLAY.entrySet().stream()
+                    .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+
+
     public void tick() {
         Iterator<Map.Entry<TickKeys, Integer>> it = tickTimers.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<TickKeys, Integer> entry = it.next();
             int ticksLeft = entry.getValue() - 1;
+            if (ticksLeft >= 1000000)//avoid infinite timers to run
+                it.remove();
             if (ticksLeft <= 0) {
                 it.remove();
 

@@ -17,15 +17,15 @@ public final class NardahBank extends Area {
 		return "Nardah Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
+	public NardahBank() {
+		super(
+				new Polygon(new WorldTile[] {
 				new WorldTile(3427, 2889, 0),
 				new WorldTile(3427, 2894, 0),
 				new WorldTile(3430, 2894, 0),
 				new WorldTile(3430, 2889, 0),
 				new WorldTile(3427, 2889, 0),
-		}) };
+		}) );
 	}
 
 	@Override

@@ -17,15 +17,16 @@ public final class CatherbyBank extends Area {
 		return "Catherby Bank";
 	}
 
-	@Override
-	public Shape[] shapes() {
-		return new Shape[] { new Polygon(new WorldTile[] {
-				new WorldTile(2806, 3438, 0),
-				new WorldTile(2806, 3441, 0),
-				new WorldTile(2812, 3441, 0),
-				new WorldTile(2812, 3438, 0),
-				new WorldTile(2806, 3438, 0),
-		}) };
+	public CatherbyBank() {
+		super(
+				new Polygon(new WorldTile[] {
+						new WorldTile(2806, 3438, 0),
+						new WorldTile(2806, 3441, 0),
+						new WorldTile(2812, 3441, 0),
+						new WorldTile(2812, 3438, 0),
+						new WorldTile(2806, 3438, 0) // closing point
+				})
+		);
 	}
 
 	@Override

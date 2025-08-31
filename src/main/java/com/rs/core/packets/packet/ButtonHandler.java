@@ -2650,7 +2650,7 @@ public class ButtonHandler {
 
     public static void openItemsKeptOnDeath(Player player) {
         player.getInterfaceManager().sendInterface(17);
-        sendItemsKeptOnDeath(player, player.isAtWild() ? true : false);
+        sendItemsKeptOnDeath(player, player.inPkingArea() ? true : false);
     }
 
     public static final class PartialKeepRecord {
