@@ -3,6 +3,7 @@ package com.rs.kotlin.game.world.pvp
 import com.rs.java.game.Entity
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.controlers.WildernessControler
 import com.rs.java.utils.HexColours
 import java.util.*
 import kotlin.math.abs
@@ -213,10 +214,11 @@ object PvpManager {
     }
 
     private fun buildLevelRangeText(player: Player): String {
-        val wild = levelRange
+        val levelRange = levelRange
+        val wildyLevel = if (player.controlerManager.controler is WildernessControler) WildernessControler.getWildLevel(player) else 0
         val c = player.skills.combatLevel
-        val minus = c - wild
-        val plus = c + wild
+        val minus = c - levelRange - wildyLevel
+        val plus = c + levelRange + wildyLevel
         return when {
             minus < 4 -> "3 - $plus"
             plus > 137 -> "$minus - 138"

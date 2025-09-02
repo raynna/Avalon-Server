@@ -420,7 +420,7 @@ public class WildernessControler extends Controler {
 
 	public static boolean isAtWildSafe(WorldTile tile) {
 		for (Area area : AreaManager.getAll(tile)) {
-			if (area.environment() == Area.Environment.WILDERNESS_SAFE) {
+			if (area.environment() == Area.Environment.WILDERNESS_SAFE || tile.getY() >= 3524) {
 				return true;
 			}
 		}

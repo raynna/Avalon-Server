@@ -13,7 +13,7 @@ public class PKPointsData extends CustomStore {
 		super(player);
 	}
 
-	protected static final int CURRENCY_SPRITE = 1583;
+	protected static final int CURRENCY_SPRITE = 1244;
 
 	protected static String TITLE = "PK Points Store";
 

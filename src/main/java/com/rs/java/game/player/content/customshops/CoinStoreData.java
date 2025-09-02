@@ -13,7 +13,7 @@ public class CoinStoreData extends CustomStore {
 		super(player);
 	}
 
-	protected static final int CURRENCY_SPRITE = 1371;
+	protected static final int CURRENCY_SPRITE = 2181;
 
 	protected static String TITLE = "Coins Store";
 	

@@ -967,34 +967,6 @@ public final class WorldPacketsDecoder extends Decoder {
 			return;
 		if (!player.getControlerManager().canAttack(p2))
 			return;
-
-		if (!player.isCanPvp() || !p2.isCanPvp()) {
-			player.getPackets().sendGameMessage("You can only attack players in a player-vs-player area.");
-			return;
-		}
-
-		// Multi-combat rules
-		if (player.isAtMultiArea() && !p2.isAtMultiArea()) {
-			if (p2.getAttackedBy() != player && p2.getAttackedByDelay() > Utils.currentTimeMillis()) {
-				player.getPackets().sendGameMessage("That player is already in combat.");
-				return;
-			}
-		}
-		if (!p2.isAtMultiArea() && !player.isAtMultiArea()) {
-			if (player.getAttackedBy() != p2 && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
-				player.getPackets().sendGameMessage("You are already in combat.");
-				return;
-			}
-			if (p2.getAttackedBy() != player && p2.getAttackedByDelay() > Utils.currentTimeMillis()) {
-				if (p2.getAttackedBy() instanceof NPC) {
-					p2.setAttackedBy(player);
-				} else {
-					player.getPackets().sendGameMessage("That player is already in combat.");
-					return;
-				}
-			}
-		}
-
 		player.stopAll(false);
 		player.getNewActionManager().setAction(new CombatAction(p2));
 	}
@@ -1050,16 +1022,6 @@ public final class WorldPacketsDecoder extends Decoder {
 		} else if (!npc.isForceMultiAttacked()) {
 			// Multi-combat rules
 			if (player.isAtMultiArea() && !npc.isAtMultiArea()) {
-				if (npc.getAttackedBy() != player && npc.getAttackedByDelay() > Utils.currentTimeMillis()) {
-					player.getPackets().sendGameMessage("This npc is already in combat.");
-					return;
-				}
-			}
-			if (!npc.isAtMultiArea() && !player.isAtMultiArea()) {
-				if (player.getAttackedBy() != npc && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
-					player.getPackets().sendGameMessage("You are already in combat.");
-					return;
-				}
 				if (npc.getAttackedBy() != player && npc.getAttackedByDelay() > Utils.currentTimeMillis()) {
 					player.getPackets().sendGameMessage("This npc is already in combat.");
 					return;

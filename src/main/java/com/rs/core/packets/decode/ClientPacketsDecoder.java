@@ -50,10 +50,10 @@ public final class ClientPacketsDecoder extends Decoder {
 			session.getGrabPackets().sendOutdatedClientPacket();
 			return;
 		}
-		if (!stream.readString().equals(Settings.GRAB_SERVER_TOKEN)) {
+		/*if (!stream.readString().equals(Settings.GRAB_SERVER_TOKEN)) {
 			session.getChannel().close();
 			return;
-		}
+		}*/
 		session.setDecoder(1);
 		session.getGrabPackets().sendStartUpPacket();
 	}

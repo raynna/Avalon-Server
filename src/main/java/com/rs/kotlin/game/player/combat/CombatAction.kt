@@ -183,7 +183,7 @@ class CombatAction(
     }
 
     override fun processWithDelay(player: Player): Int {
-        if (!process(player) || !check(player, target)) {
+        if (!process(player)) {
             return -1
         }
         val requiredDistance = getAdjustedAttackRange(player, target)
@@ -204,6 +204,8 @@ class CombatAction(
 
         return when (phase) {
             CombatPhase.HIT -> {
+                if (!check(player, target))
+                    return -1
                 if (validateAttack(player, target)) {
                     player.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
                     target.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACKED_TICK, 10)
@@ -313,6 +315,7 @@ class CombatAction(
                     player.resetWalkSteps()
                     if (moved || (!player.hasWalkSteps() && player.newActionManager.getCurrentAction() != null)) {
                         player.calcFollow(target, if (player.run) 2 else 1, true, true)
+                        return
                     }
                 }
             }
