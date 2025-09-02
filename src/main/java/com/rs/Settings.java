@@ -16,6 +16,11 @@ public final class Settings {
 	
 	public static boolean ECONOMY;
 	public static boolean FREE_TO_PLAY = false;
+	public static boolean TEST_SERVER = true;
+
+	public static final String eventsWebhook = "https://discord.com/api/webhooks/1410684655065366668/u9yH0erh_h2-m6TAjclgWa8CalXV0UWjtpOSmT2LCUkdg-z2Lto38vodeZAXoiyoIAJ1";
+	public static final String levelupsWebhook = "https://discord.com/api/webhooks/NEW_LEVELUPS_URL"; // optional
+
 
 	/**
 	 * Should we send SQL queries such as recent trades, etc.. to database?
