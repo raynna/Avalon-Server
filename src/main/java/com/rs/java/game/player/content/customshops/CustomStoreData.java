@@ -248,24 +248,6 @@ public class CustomStoreData {
 		melee.add(new Item("tzhaar-ket-om"));
 		melee.add(new Item("granite mace"));
 
-		/*melee.add(new Item("vesta's chainbody"));
-		melee.add(new Item("vesta's plateskirt"));
-		melee.add(new Item("statius's full helm"));
-		melee.add(new Item("statius's platebody"));
-		melee.add(new Item("statius's platelegs"));
-		melee.add(new Item("vesta's spear"));
-		melee.add(new Item("vesta's longsword"));
-		melee.add(new Item("statius's warhammer"));
-
-		melee.add(new Item("corrupt vesta's chainbody"));
-		melee.add(new Item("corrupt vesta's plateskirt"));
-		melee.add(new Item("corrupt statius's full helm"));
-		melee.add(new Item("corrupt statius's platebody"));
-		melee.add(new Item("corrupt statius's platelegs"));
-		melee.add(new Item("corrupt vesta's spear"));
-		melee.add(new Item("corrupt vesta's longsword"));
-		melee.add(new Item("corrupt statius's warhammer"));*/
-
 		range.add(new Item("coif"));
 		range.add(new Item("leather body"));
 		range.add(new Item("hardleather body"));

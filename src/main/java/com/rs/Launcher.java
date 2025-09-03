@@ -64,6 +64,7 @@ import com.rs.java.utils.WeaponTypesLoader;
 import com.rs.java.utils.Weights;
 import com.rs.java.utils.huffman.Huffman;
 import com.rs.kotlin.game.player.command.CommandRegistry;
+import com.rs.kotlin.game.player.shop.ShopInitializer;
 
 public final class Launcher {
 
@@ -132,6 +133,7 @@ public final class Launcher {
 		ItemPluginLoader.init();
 		WeaponScriptsManager.init();
 		CommandRegistry.registerCommands();
+		ShopInitializer.initializeShops();
 		try {
 			ServerChannelHandler.init();
 		} catch (Throwable e) {

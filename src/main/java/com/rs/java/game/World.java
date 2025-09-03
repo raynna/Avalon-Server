@@ -67,7 +67,7 @@ public final class World {
 
 
     private static TimerRepository timers = new TimerRepository();
-    private static final EntityList<Player> players = new EntityList<>(Settings.PLAYERS_LIMIT);
+    public static final EntityList<Player> players = new EntityList<>(Settings.PLAYERS_LIMIT);
 
     private static final EntityList<NPC> npcs = new EntityList<>(Settings.NPCS_LIMIT);
     private static final Map<Integer, Region> regions = Collections.synchronizedMap(new HashMap<>());

@@ -284,6 +284,32 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
+                "item.annihilation"
+            ),
+            attackSpeed = 5,
+            name = "Annihilation",
+            weaponStyle = WeaponStyle.MACE,
+            blockAnimationId = Animation.getId("animation.mace_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.mace_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.mace_crush"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 50,
+                accuracyMultiplier = 1.50,
+                damageMultiplier = 1.20,
+                execute = { context ->
+                    context.attacker.animate("animation.dragon_mace_special")
+                    context.attacker.gfx("graphic.dragon_mace_special", 100)
+                    context.attacker.playSound("sound.dragon_mace_special", 1)
+                    context.meleeHit()
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
                 "item.granite_maul"
             ),
             name = "Granite maul",
@@ -338,6 +364,29 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
                 StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.mace_crush"),
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds("item.obliteration"),
+            name = "Obliteration",
+            weaponStyle = WeaponStyle.STAFF,
+            blockAnimationId = Animation.getId("animation.staff_of_light_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.mace_crush"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 100,
+                execute = { context ->
+                    context.attacker.animate(10518)
+                    context.attacker.gfx(1853)
+                    context.hits {
+                        val magicHit = magic(spellId = 39, delay = context.combat.getHitDelay(), damageMultiplier = 1.5, accuracyMultiplier = 1.5)
+
+                    }
+
+                }
             )
         ),
         MeleeWeapon(

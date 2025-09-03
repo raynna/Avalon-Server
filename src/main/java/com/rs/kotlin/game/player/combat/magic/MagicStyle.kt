@@ -91,6 +91,9 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     override fun attack() {
+        if (executeSpecialAttack(attacker, defender)) {
+            return
+        }
         var spellId = attacker.combatDefinitions.spellId
         val manual = isManualCast(spellId)
         if (manual) {

@@ -184,7 +184,7 @@ public final class LocalNPCUpdate {
 		if (n.getNextFaceEntity() != -2 || (added && n.getLastFaceEntity() != -1)) {
 			applyFaceEntityMask(n, data);
 		}
-		if (n.getNextFaceWorldTile() != null) {
+		if (n.getNextFaceWorldTile() != null && n.getNextRunDirection() == -1 && n.getNextWalkDirection() == -1) {
 			applyFaceWorldTileMask(n, data);
 		}
 		if (n.getNextAnimation() != null) {

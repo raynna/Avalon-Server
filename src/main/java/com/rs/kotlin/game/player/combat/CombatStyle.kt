@@ -17,6 +17,7 @@ import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.damage.SoakDamage
 import com.rs.kotlin.game.player.combat.effects.EquipmentEffects
 import com.rs.kotlin.game.player.combat.magic.MagicStyle
+import com.rs.kotlin.game.player.combat.magic.special.ObliterationWeapon
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.range.RangedStyle
@@ -186,7 +187,7 @@ interface CombatStyle {
                 requireNotNull(weapon) { "Weapon required for ranged attack" }
                 CombatCalculations.calculateRangedAccuracy(attacker, defender, accuracyMultiplier)
             }
-            CombatType.MAGIC -> CombatCalculations.calculateMagicAccuracy(attacker, defender)
+            CombatType.MAGIC -> CombatCalculations.calculateMagicAccuracy(attacker, defender, accuracyMultiplier)
         }
 
         val hit = if (landed) {
@@ -194,8 +195,7 @@ interface CombatStyle {
                 CombatType.MELEE -> CombatCalculations.calculateMeleeMaxHit(attacker, defender, damageMultiplier)
                 CombatType.RANGED -> CombatCalculations.calculateRangedMaxHit(attacker, defender, damageMultiplier)
                 CombatType.MAGIC -> {
-                    requireNotNull(spellId) { "Spell required for magic attack" }
-                    CombatCalculations.calculateMagicMaxHit(attacker, defender, spellId)
+                    CombatCalculations.calculateMagicMaxHit(attacker, defender, spellId, damageMultiplier)
                 }
             }
         } else {
@@ -274,6 +274,7 @@ interface CombatStyle {
             is SpecialAttack.Combat -> {
                 if (target == null) return false
                 val style = when {
+                    ObliterationWeapon.hasWeapon(player) -> MagicStyle(player, target);
                     isRangedWeapon(player) -> RangedStyle(player, target)
                     else -> MeleeStyle(player, target)
                 }

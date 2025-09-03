@@ -10,6 +10,7 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.action.NewAction
 import com.rs.kotlin.game.player.combat.magic.MagicStyle
 import com.rs.kotlin.game.player.combat.magic.special.GreaterRunicStaffWeapon
+import com.rs.kotlin.game.player.combat.magic.special.ObliterationWeapon
 import com.rs.kotlin.game.player.combat.magic.special.PolyporeStaff
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.RangeData
@@ -31,6 +32,7 @@ class CombatAction(
                 spellId != 0 -> MagicStyle(player, target)
                 GreaterRunicStaffWeapon.hasWeapon(player) && GreaterRunicStaffWeapon.getSpellId(player) != -1 -> MagicStyle(player, target)
                 PolyporeStaff.hasWeapon(player) -> MagicStyle(player, target)
+                ObliterationWeapon.hasWeapon(player) && player.combatDefinitions.isUsingSpecialAttack -> MagicStyle(player, target);
                 isRangedWeapon(player) -> RangedStyle(player, target)
                 else -> MeleeStyle(player, target)
             }
@@ -65,13 +67,7 @@ class CombatAction(
         player.setNextFaceEntity(target);
         player.resetWalkSteps()
         val spellId = player.getCombatDefinitions().spellId
-        style = when {
-            spellId != 0 -> MagicStyle(player, target)
-            GreaterRunicStaffWeapon.hasWeapon(player) && GreaterRunicStaffWeapon.getSpellId(player) != -1 -> MagicStyle(player, target);
-            PolyporeStaff.hasWeapon(player) -> MagicStyle(player, target)
-            isRangedWeapon(player) -> RangedStyle(player, target)
-            else -> MeleeStyle(player, target)
-        }
+        style = getCombatStyle(player, target)
         player.combatStyle = style
         player.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
         player.temporaryTarget = target;
@@ -100,14 +96,7 @@ class CombatAction(
             return false
         }
         player.healthOverlay.updateHealthOverlay(player, target, true)
-        val spellId = player.getCombatDefinitions().spellId
-        style = when {
-            spellId != 0 -> MagicStyle(player, target)
-            GreaterRunicStaffWeapon.hasWeapon(player) && GreaterRunicStaffWeapon.getSpellId(player) != -1 -> MagicStyle(player, target);
-            PolyporeStaff.hasWeapon(player) -> MagicStyle(player, target)
-            isRangedWeapon(player) -> RangedStyle(player, target)
-            else -> MeleeStyle(player, target)
-        }
+        style = getCombatStyle(player, target)
         player.temporaryTarget = target;
 
         if (player.isCollidingWithTarget(target)) {

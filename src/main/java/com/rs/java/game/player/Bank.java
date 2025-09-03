@@ -11,6 +11,7 @@ import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.Rscm;
 
 public class Bank implements Serializable {
 
@@ -60,6 +61,41 @@ public class Bank implements Serializable {
 		}
 		return 0;
 	}
+
+	public int getAmountOfItem(String itemName) {
+		if (bankTabs == null)
+			return 0;
+		int itemId = Rscm.lookup(itemName);
+		for (int index = 0; index < bankTabs.length; index++) {
+			if (bankTabs[index] == null)
+				continue;
+			for (Item reference : bankTabs[index]) {
+				if (reference == null)
+					continue;
+				if (reference.getId() == itemId)
+					return reference.getAmount();
+			}
+		}
+		return 0;
+	}
+
+	public int getAmountOfItem(int itemId) {
+		if (bankTabs == null)
+			return 0;
+		for (int index = 0; index < bankTabs.length; index++) {
+			if (bankTabs[index] == null)
+				continue;
+			for (Item reference : bankTabs[index]) {
+				if (reference == null)
+					continue;
+				if (reference.getId() == itemId)
+					return reference.getAmount();
+			}
+		}
+		return 0;
+	}
+
+
 
 	@SuppressWarnings("unused")
 	private void checkPinStatus() {

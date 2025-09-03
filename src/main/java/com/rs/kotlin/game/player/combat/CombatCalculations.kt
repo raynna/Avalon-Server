@@ -282,14 +282,14 @@ object CombatCalculations {
            var effectiveMagic = player.skills.getLevel(Skills.MAGIC) * player.prayer.magicMultiplier
            effectiveMagic += 9//TODO STYLE ACCURACY FOR POLYPORE
            effectiveMagic *= voidAccuracy
-           val attackRoll = effectiveMagic * (magicBonus + 64) * specialBonus
+           val attackRoll = effectiveMagic * (magicBonus + 64) * specialBonus * accuracyMultiplier
 
            val (defenceBonus, effectiveDefenceLevel) = getEffectiveMagicDefence(target)
            val defenceRoll = effectiveDefenceLevel * (defenceBonus + 64)
             return computeHitChance(attackRoll.toInt(), defenceRoll.toInt())
         }
 
-        fun calculateMaxHit(player: Player, target: Entity, spellId: Int): Hit {
+        fun calculateMaxHit(player: Player, target: Entity, spellId: Int, specialMultiplier: Double = 1.0): Hit {
             val spell = Spellbook.getSpellById(player, spellId);
             val baseDamage = spell?.damage
                 ?: if (spellId == 1000) {
@@ -306,7 +306,7 @@ object CombatCalculations {
             if (target is NPC) {//just to make sure magic is a bit stronger for monsters so magic is a viable style in pvm
                 levelMultiplier *= player.prayer.magicMultiplier
             }
-            val maxHit = baseDamage * magicStrengthMultiplier * levelMultiplier * voidDamage
+            val maxHit = baseDamage * magicStrengthMultiplier * levelMultiplier * voidDamage * specialMultiplier
             var damage = Utils.random(maxHit.toInt())
             if (target is NPC) {
                 if (target.id == 4474) {
@@ -374,8 +374,8 @@ object CombatCalculations {
     fun calculateRangedAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean =
         Math.random() < RangedCombat.getHitChance(player, target, accuracyMultiplier)
 
-    fun calculateMagicAccuracy(player: Player, target: Entity): Boolean =
-        Math.random() < MagicCombat.getHitChance(player, target, 1.0)
+    fun calculateMagicAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean =
+        Math.random() < MagicCombat.getHitChance(player, target, accuracyMultiplier)
 
     fun calculateMeleeMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): Hit =
         MeleeCombat.calculateMaxHit(player, target, specialMultiplier)
@@ -383,8 +383,8 @@ object CombatCalculations {
     fun calculateRangedMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): Hit =
         RangedCombat.calculateMaxHit(player, target, specialMultiplier)
 
-    fun calculateMagicMaxHit(player: Player, target: Entity, spellId: Int): Hit =
-        MagicCombat.calculateMaxHit(player, target, spellId)
+    fun calculateMagicMaxHit(player: Player, target: Entity, spellId: Int, specialMultiplier: Double = 1.0): Hit =
+        MagicCombat.calculateMaxHit(player, target, spellId, specialMultiplier)
 
 
     private fun calculateHitProbability(attack: Int, defence: Int): Boolean {

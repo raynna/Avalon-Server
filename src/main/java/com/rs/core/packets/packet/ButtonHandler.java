@@ -11,6 +11,7 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
 import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.item.meta.PolyporeStaffMetaData;
@@ -69,6 +70,10 @@ import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 import com.rs.kotlin.game.player.combat.special.SpecialAttack;
+import com.rs.kotlin.game.player.customtab.GearTabDSL;
+import com.rs.kotlin.game.player.customtab.JournalTabDSL;
+import com.rs.kotlin.game.player.customtab.SettingsTabDSL;
+import com.rs.kotlin.game.player.customtab.TeleportTabDSL;
 import com.rs.kotlin.game.player.equipment.BonusType;
 
 /**
@@ -107,15 +112,8 @@ public class ButtonHandler {
         if (interfaceId == 1163 || interfaceId == 1164 || interfaceId == 1168 || interfaceId == 1170 || interfaceId == 1171 || interfaceId == 1173)
             player.getDominionTower().handleButtons(interfaceId, componentId, slotId, packetId);
         if (interfaceId == 3010) {
-            if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getCustomStore().sendInfo(slotId2);
-            if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET || packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET || packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                player.getCustomStore().sendBuy(slotId2, packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET ? 1 : packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET ? 10 : 100);
-            if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
-                player.temporaryAttribute().put("CUSTOM_STORE_X", slotId2);
-                player.getPackets().sendRunScript(108, "How many would you like to buy?");
-            }
-            if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
-                player.message(ItemExamines.getExamine(new Item(slotId2)));
+            System.out.println("slotId2: " + slotId2 + ", packet: " + packetId + ", slot: " + slotId);
+            player.getShopSystem().handleItemOption(slotId2, packetId);
         } else if (interfaceId == 548 || interfaceId == 746) {
             if (componentId == 75 || componentId == 99) {
                 player.getTemporaryAttributtes().put("ACHIEVEMENTTAB", 0);
@@ -130,15 +128,15 @@ public class ButtonHandler {
                 player.getTemporaryAttributtes().remove("ACHIEVEMENTTAB");
                 Integer tab = (Integer) player.temporaryAttribute().get("CUSTOMTAB");
                 if (tab == null || tab == 0) {
-                    JournalTab.open(player);
+                    JournalTabDSL.INSTANCE.open(player);
                 } else if (tab == 1) {
-                    TeleportTab.open(player);
+                    TeleportTabDSL.INSTANCE.open(player);
                 } else if (tab == 2) {
-                    SettingsTab.open(player);
+                    SettingsTabDSL.INSTANCE.open(player);
                 } else if (tab == 3) {
-                    GearTab.open(player, null);
+                    GearTabDSL.INSTANCE.open(player, null);
                 } else if (tab == 4) {
-                    QuestTab.open(player);
+                    GearTabDSL.INSTANCE .open(player, null);
                 }
             }
             if ((interfaceId == 548 && componentId == 148) || (interfaceId == 746 && componentId == 199)) {
@@ -203,7 +201,7 @@ public class ButtonHandler {
                 return;
             } else if (tab != null && tab == 3) {
                 String otherPreset = (String) player.getTemporaryAttributtes().get("OTHERPRESET_NAME");
-                GearTab.handleButtons(player, otherPreset != null ? otherPreset : null, componentId);
+                GearTab.handleButtons(player, otherPreset, componentId);
                 return;
             } else {
                 if (componentId == 62) JournalTab.open(player);
@@ -226,7 +224,7 @@ public class ButtonHandler {
                         return;
                     } else if (tab == 3) {
                         String otherPreset = (String) player.getTemporaryAttributtes().get("OTHERPRESET_NAME");
-                        GearTab.handleButtons(player, otherPreset != null ? otherPreset : null, componentId);
+                        GearTab.handleButtons(player, otherPreset, componentId);
                         return;
                     } else if (tab == 4) {
                         QuestTab.handleButtons(player, componentId);
@@ -2388,18 +2386,90 @@ public class ButtonHandler {
     }
 
     public static void sendItemStats(Player player, Item item) {
-        StringBuilder b = new StringBuilder();
         if (item.getId() == 772) return;
-        boolean hasBonuses = ItemBonuses.getItemBonuses(item.getId()) != null;
-        for (int i = 0; i < 17; i++) {
-            int bonus = hasBonuses ? ItemBonuses.getItemBonuses(item.getId())[i] : 0;
-            String label = CombatDefinitions.BONUS_LABELS[i];
-            String sign = bonus > 0 ? "+" : "";
-            b.append(label).append(": ").append(sign).append(bonus).append((Objects.equals(label, "Magic Damage") || Objects.equals(label, "Absorb Melee") || Objects.equals(label, "Absorb Magic") || Objects.equals(label, "Absorb Ranged")) ? "%" : "").append("<br>");
+
+        StringBuilder b = new StringBuilder();
+
+        // Create a temporary bonuses array for this single item
+        int[] bonuses = new int[BonusType.getEntries().size()];
+        Arrays.fill(bonuses, 0);
+
+        ItemDefinitions definitions = item.getDefinitions();
+        if (definitions != null) {
+            // Get base bonuses from item definitions
+            for (BonusType bonus : BonusType.getEntries()) {
+                int value = definitions.getDataFromClientScript(bonus.getClientScriptId(), 0);
+                if (bonus == BonusType.RangedStrBonus) {
+                    // Special handling for ranged strength
+                    continue;
+                }
+                bonuses[bonus.getIndex()] += value;
+            }
+
+            // Handle special item metadata (like Dragonfire Shield)
+            ItemMetadata metadata = item.getMetadata();
+            if (metadata instanceof DragonFireShieldMetaData dfsMeta) {
+                int extraDef = dfsMeta.getValue();
+                for (int i = BonusType.StabDefence.getIndex(); i <= BonusType.CrushDefence.getIndex(); i++) {
+                    bonuses[i] += extraDef;
+                }
+                bonuses[BonusType.RangeDefence.getIndex()] += extraDef;
+            }
+
+            // Handle ranged strength separately
+            if (item.getEquipSlot() == Equipment.SLOT_WEAPON || item.getEquipSlot() == Equipment.SLOT_ARROWS) {
+                int rangedStrength = definitions.getRangedStrengthBonus();
+                if (rangedStrength > 0) {
+                    bonuses[BonusType.RangedStrBonus.getIndex()] += rangedStrength;
+                }
+
+                // Handle god arrows special scaling
+                if (item.getEquipSlot() == Equipment.SLOT_ARROWS && isGodArrow(item)) {
+                    int rangedLevel = player.getSkills().getLevel(Skills.RANGE);
+                    int scaling = Math.min((int) Math.floor((rangedLevel / 70.0) * 49), 49);
+                    bonuses[BonusType.RangedStrBonus.getIndex()] += scaling * 10;
+                }
+            }
+
+            // Handle goliath gloves if it's gloves
+            if (item.getEquipSlot() == Equipment.SLOT_HANDS && hasGoliath(item)) {
+                bonuses[BonusType.StregthBonus.getIndex()] += 820;
+            }
         }
+
+        // Now format and display the bonuses
+        for (int i = 0; i < bonuses.length; i++) {
+            int bonus = bonuses[i];
+            String bonusName = CombatDefinitions.BONUS_LABELS[i] + ": ";
+
+            // Apply the same transformations as in refreshEquipBonuses
+            if (i == BonusType.StregthBonus.getIndex() || i == BonusType.RangedStrBonus.getIndex()) {
+                bonus /= 10; // Strength and Ranged Strength are divided by 10
+            }
+
+            bonusName = bonusName + (bonus >= 0 ? "+" : "") + bonus;
+
+            // Add percentage sign for specific bonuses
+            if (i == BonusType.MagicDamage.getIndex() ||
+                    (i >= BonusType.AbsorbMelee.getIndex() && i <= BonusType.AbsorbMage.getIndex())) {
+                bonusName = bonusName + "%";
+            }
+
+            // Only show bonuses that are not zero
+            if (bonus != 0) {
+                b.append(bonusName).append("<br>");
+            }
+        }
+
+        // If no bonuses found, show message
+        if (b.length() == 0) {
+            b.append("No combat bonuses<br>");
+        }
+
         player.getPackets().sendGlobalString(321, "Stats for " + item.getName());
         player.getPackets().sendGlobalString(324, b.toString());
         player.getPackets().sendHideIComponent(667, 49, false);
+
         player.setCloseInterfacesEvent(new Runnable() {
             @Override
             public void run() {
@@ -2408,6 +2478,19 @@ public class ButtonHandler {
                 player.getPackets().sendHideIComponent(667, 49, true);
             }
         });
+    }
+
+    // Helper methods (should be static or accessible)
+    private static boolean hasGoliath(Item gloves) {
+        if (gloves == null)
+            return false;
+        return gloves.isItem("item.goliath_gloves_black") || gloves.isItem("item.goliath_gloves_red") ||
+                gloves.isItem("item.goliath_gloves_white") || gloves.isItem("item.goliath_gloves_yellow");
+    }
+
+    private static boolean isGodArrow(Item ammo) {
+        return ammo.isItem("item.zamorak_arrows") || ammo.isItem("item.saradomin_arrows") ||
+                ammo.isItem("item.guthix_arrows");
     }
 
 

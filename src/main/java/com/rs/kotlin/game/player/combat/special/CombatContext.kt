@@ -400,7 +400,8 @@ class SpecialHitBuilder(private val context: CombatContext) {
         type: CombatType = CombatType.MELEE,
         damageMultiplier: Double = 1.0,
         accuracyMultiplier: Double = 1.0,
-        delay: Int = 0
+        delay: Int = 0,
+        spellId: Int = -1
     ): Hit {
         val accMultiplier = special?.takeIf { context.usingSpecial && it.accuracyMultiplier > 1.0 }?.accuracyMultiplier
             ?: accuracyMultiplier
@@ -409,7 +410,7 @@ class SpecialHitBuilder(private val context: CombatContext) {
             ?: damageMultiplier
 
         val h = context.registerHit(
-            combatType = type, accuracyMultiplier = accMultiplier, damageMultiplier = dmgMultiplier
+            combatType = type, spellId = spellId, accuracyMultiplier = accMultiplier, damageMultiplier = dmgMultiplier
         )
         hits += PendingHit(h, context.defender, delay)
         return h
@@ -430,8 +431,9 @@ class SpecialHitBuilder(private val context: CombatContext) {
     fun magic(
         damageMultiplier: Double = 1.0,
         accuracyMultiplier: Double = 1.0,
-        delay: Int = 0
-    ) = createHit(CombatType.MAGIC, damageMultiplier, accuracyMultiplier, delay)
+        delay: Int = 0,
+        spellId: Int
+    ) = createHit(CombatType.MAGIC, spellId = spellId, damageMultiplier = damageMultiplier, accuracyMultiplier =  accuracyMultiplier, delay = delay)
 
     fun CombatContext.applyBleed(
         baseHit: Hit,

@@ -77,6 +77,7 @@ import com.rs.java.utils.huffman.Huffman;
 import com.rs.kotlin.game.player.combat.CombatAction;
 import com.rs.kotlin.game.player.combat.magic.*;
 import com.rs.kotlin.game.player.command.CommandRegistry;
+import com.rs.kotlin.game.player.shop.ShopSystem;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
 /**
@@ -1762,10 +1763,9 @@ public final class WorldPacketsDecoder extends Decoder {
 		}
 
 		// Custom store
-		if (player.getTemporaryAttributtes().get("CUSTOM_STORE_X") != null) {
-			int itemId = (int) player.getTemporaryAttributtes().remove("CUSTOM_STORE_X");
+		if (player.getTemporaryAttributtes().get("SHOP_BUY_X_ITEM") != null) {
 			if (value <= 0) return;
-			player.getCustomStore().sendBuy(itemId, value);
+			player.getShopSystem().handleBuyXInput(value);
 			return;
 		}
 

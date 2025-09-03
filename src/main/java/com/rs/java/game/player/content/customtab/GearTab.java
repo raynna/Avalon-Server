@@ -242,7 +242,7 @@ public class GearTab extends CustomTab {
 					} else {
 						player.getTemporaryAttributtes().put("SELECTEDGEAR", gearId);
 						player.getPackets().sendTextOnComponent(3002, i, gear.getKey() + "<img=12>");
-						player.getPackets().sendIComponentSprite(3002, GREEN_STAR_COMP, 1832);
+						player.getPackets().sendIComponentSprite(3002, GREEN_STAR_COMP, "sprite.edit_note");
 						player.getPackets().sendHideIComponent(3002, RED_STAR_COMP, false);
 						player.getPackets().sendHideIComponent(3002, YELLOW_STAR_COMP, false);
 						player.getPackets().sendIComponentSprite(3002, PURPLE_STAR_COMP, "sprite.out_of_bag");

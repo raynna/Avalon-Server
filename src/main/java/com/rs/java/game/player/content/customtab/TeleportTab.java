@@ -233,9 +233,9 @@ public class TeleportTab extends CustomTab {
 		private final int componentId;
 		private final int category;
 		private final String text;
-		private final boolean dangerous;
-		private final String order;
-		private final boolean skilling;
+		public final boolean dangerous;
+		public final String order;
+		public final boolean skilling;
 		private final int levelReq;
 
 		TeleportTabData(String order, int componentId, int category, String text) {

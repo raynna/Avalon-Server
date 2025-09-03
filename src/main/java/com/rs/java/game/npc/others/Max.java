@@ -102,7 +102,6 @@ public class Max extends NPC {
 	}
 
 	public void reset() {
-		faceWorldTile(this, "north");
 		count = 0;
 		setStage(-1);
 		skillCount = 0;

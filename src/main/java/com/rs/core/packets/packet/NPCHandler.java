@@ -3,6 +3,7 @@ package com.rs.core.packets.packet;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -97,22 +98,31 @@ public class NPCHandler {
             }
             player.getPackets().sendGameMessage("Failed removing spawn!");
         }
-        /*if (player.isDeveloperMode()) {
-            //NPCDefinitions.loadAll();
-           try {
+        if (player.isDeveloperMode()) {
+            NPCDefinitions.loadAll();
+            try {
                 dumpAllObjectDefinitions();
                 dumpAllNpcClientScriptData();
+                dumpAllNpcDefinitions("C:/Users/andre/Documents/Github/727-source/data/npcs/defs");
             } catch (Exception error) {
                 System.out.println(error.toString());
             }
-            if (npc.getDefinitions().clientScriptData != null)
-                player.message("ClientScriptData Size:" + npc.getDefinitions().clientScriptData.size());
+
             try {
-                dumpScripts(npc.getId());
+                for (NPC npcInWorld : World.getNPCs()) {
+                    if (npcInWorld == null)
+                        continue;
+                    try {
+                        dumpScripts(npcInWorld.getId());
+                    } catch (Exception e) {
+                        System.out.println("Failed dumping NPC " + npcInWorld.getId() + ": " + e);
+                    }
+                }
             } catch (Exception error) {
                 System.out.println(error.toString());
             }
-        */
+        }
+
         if (!WikiApi.INSTANCE.hasData(npc.getId())) {
             WikiApi.INSTANCE.dumpData(npc.getId(), npc.getName(), npc.getCombatLevel());
         }
@@ -136,6 +146,38 @@ public class NPCHandler {
                 player.message("ModelId: " + id);
         }
     }
+
+    public static void dumpAllNpcDefinitions(String path) throws IOException {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(path))) {
+            for (var entry : NPCDefinitions.getNpcDefinitions().entrySet()) {
+                int id = entry.getKey();
+                NPCDefinitions defs = entry.getValue();
+
+                writer.println("=== NPC " + id + " ===");
+                writer.println("Name: " + defs.getName());
+                writer.println("Combat Level: " + defs.combatLevel);
+                writer.println("Render Emote: " + defs.renderEmote);
+                writer.println("anInt842 (walk?): " + defs.anInt842);
+                writer.println("anInt846: " + defs.anInt846);
+                writer.println("anInt870: " + defs.anInt870);
+                writer.println("anInt871: " + defs.anInt871);
+                writer.println("anInt872: " + defs.anInt872);
+                writer.println("anInt874: " + defs.anInt874);
+                writer.println("anInt876: " + defs.anInt876);
+                writer.println("anInt899: " + defs.anInt899);
+                writer.println("anInt901: " + defs.anInt901);
+
+                if (defs.clientScriptData != null && !defs.clientScriptData.isEmpty()) {
+                    writer.println("ClientScriptData:");
+                    for (var data : defs.clientScriptData.entrySet()) {
+                        writer.println("  " + data.getKey() + " = " + data.getValue());
+                    }
+                }
+                writer.println();
+            }
+        }
+    }
+
 
     private static void dumpAllNpcClientScriptData() throws IOException {
         Map<String, Map<Integer, Object>> npcScripts = new HashMap<>();

@@ -400,6 +400,11 @@ public final class Inventory implements Serializable {
 		return items.getNumberOf(itemId);
 	}
 
+	public int getAmountOf(String itemName) {
+		int itemId = Rscm.lookup(itemName);
+		return items.getNumberOf(itemId);
+	}
+
 	public Item getItem(int slot) {
 		return items.get(slot);
 	}
@@ -750,5 +755,43 @@ public final class Inventory implements Serializable {
 			}
 		}
 		return true;
+	}
+
+	public boolean hasSpaceFor(int itemId, int amount) {
+		ItemDefinitions itemDef = ItemDefinitions.getItemDefinitions(itemId);
+		boolean isStackable = itemDef.isStackable() || itemDef.isNoted();
+
+		if (isStackable) {
+			return items.containsOne(new Item(itemId, 1)) || items.getFreeSlots() >= 1;
+		} else {
+			return items.getFreeSlots() >= amount;
+		}
+	}
+
+	// Alternative more precise version that considers stack limits
+	public boolean hasSpaceForPrecise(int itemId, int amount, boolean isNoted) {
+		ItemDefinitions itemDef = ItemDefinitions.getItemDefinitions(itemId);
+		boolean isStackable = itemDef.isStackable() || isNoted;
+
+		if (!isStackable) {
+			return items.getFreeSlots() >= amount;
+		}
+
+		// Check existing stacks first
+		int remainingAmount = amount;
+		for (Item item : items.getContainerItems()) {
+			if (item != null && item.getId() == itemId) {
+				int spaceAvailable = Integer.MAX_VALUE - item.getAmount(); // Adjust if you have max stack limits
+				if (spaceAvailable > 0) {
+					remainingAmount -= spaceAvailable;
+					if (remainingAmount <= 0) {
+						return true;
+					}
+				}
+			}
+		}
+
+		// If we still need space, calculate how many new slots we need
+		return items.getFreeSlots() >= 1;
 	}
 }

@@ -51,31 +51,16 @@ import com.rs.java.game.objects.GlobalObjectDeletion;
 import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.actions.combat.QueuedInstantCombat;
+import com.rs.java.game.player.content.*;
 import com.rs.java.game.player.prayer.*;
 import com.rs.java.game.player.Ranks.Rank;
+import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.action.NewActionManager;
 import com.rs.java.game.player.actions.skills.construction.House;
 import com.rs.java.game.player.actions.skills.farming.FarmingManager;
 import com.rs.java.game.player.actions.skills.hunter.HunterImplings;
 import com.rs.java.game.player.actions.skills.slayer.SlayerManager;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
-import com.rs.java.game.player.content.AdventuresLog;
-import com.rs.java.game.player.content.ArtisanWorkshop;
-import com.rs.java.game.player.content.Commands;
-import com.rs.java.game.player.content.CustomGear;
-import com.rs.java.game.player.content.FadingScreen;
-import com.rs.java.game.player.content.GreaterRunicStaffManager;
-import com.rs.java.game.player.content.GrotwormLair;
-import com.rs.java.game.player.content.Ironman;
-import com.rs.java.game.player.content.ItemConstants;
-import com.rs.java.game.player.content.KillScoreBoard;
-import com.rs.java.game.player.content.MoneyPouch;
-import com.rs.java.game.player.content.Notes;
-import com.rs.java.game.player.content.Pots;
-import com.rs.java.game.player.content.PuzzleBox;
-import com.rs.java.game.player.content.Puzzles;
-import com.rs.java.game.player.content.SkillCapeCustomizer;
-import com.rs.java.game.player.content.TicketSystem;
 import com.rs.java.game.player.content.WildernessArtefacts.Artefacts;
 import com.rs.java.game.player.content.clans.ClanMember;
 import com.rs.java.game.player.content.clans.ClansManager;
@@ -135,6 +120,7 @@ import com.rs.kotlin.game.player.combat.special.CombatContext;
 import com.rs.kotlin.game.player.combat.special.SpecialAttack;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 import com.rs.kotlin.game.player.interfaces.TimerOverlay;
+import com.rs.kotlin.game.player.shop.ShopSystem;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 import com.rs.kotlin.game.world.pvp.SafeZoneService;
 
@@ -916,6 +902,11 @@ public class Player extends Entity {
     /**
      * @Shops
      */
+    private transient ShopSystem shop;
+
+    public ShopSystem getShopSystem() {
+        return shop;
+    }
     private transient CustomStore cstore;
 
     public CustomStore getCustomStore() {
@@ -1271,6 +1262,7 @@ public class Player extends Entity {
         clueScrollRewards = new ItemsContainer<Item>(10, true);
         varsManager = new VarsManager(this);
         cstore = new CustomStore(this);
+        shop = new ShopSystem(this);
         geManager = new GrandExchangeManager();
         slayerManager = new SlayerManager();
         squealOfFortune = new SquealOfFortune();
@@ -1415,6 +1407,8 @@ public class Player extends Entity {
             varsManager = new VarsManager(this);
         if (cstore == null)
             cstore = new CustomStore(this);
+        if (shop == null)
+            shop = new ShopSystem(this);
         if (notes == null)
             notes = new Notes();
         if (dropLogs == null)
@@ -5288,6 +5282,11 @@ public class Player extends Entity {
         getInventory().addItem(itemId, amount);
     }
 
+    public void addItem(String itemName, int amount) {
+        int itemId = Rscm.lookup(itemName);
+        getInventory().addItem(itemId, amount);
+    }
+
     public void addItemDrop(int itemId, int amount) {
         getInventory().addItemDrop(itemId, amount);
     }
@@ -6408,5 +6407,10 @@ public class Player extends Entity {
     }
 
     public int lavaflowCrustsMined;
+
+
+    public int getPvpTokens() {
+        return getInventory().getAmountOf("item.fist_of_guthix_token");
+    }
 
 }

@@ -253,7 +253,7 @@ public class Mandrith extends Dialogue {
                 break;
             case 30:
                 player.getInterfaceManager().closeChatBoxInterface();
-                player.getCustomStore().sendInterface(player, 0, 102);
+                player.getShopSystem().openShop(10);
                 break;
             case 31:
                 player.getInterfaceManager().closeChatBoxInterface();

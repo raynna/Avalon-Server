@@ -5328,6 +5328,62 @@
     "categories": [],
     "assignedBy": []
   },
+  "5848": {
+    "id": 5848,
+    "name": "Outlaw",
+    "members": false,
+    "combatLevel": 32,
+    "attackLevel": 35,
+    "strengthLevel": 30,
+    "defenceLevel": 25,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": -21,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 March]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A mean looking outlaw. Don\u0027t get too close!",
+    "attributes": [],
+    "xpBonus": -97.5,
+    "maxHit": {
+      "maxhit": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 2,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "5849": {
     "id": 5849,
     "name": "Outlaw",

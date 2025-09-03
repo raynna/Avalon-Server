@@ -43,7 +43,7 @@ public class CombatStoreDialogue extends Action {
 		private int buttonId;
 		private Item itemShow;
 
-		private CombatStores(Item itemShow, int buttonId) {
+		CombatStores(Item itemShow, int buttonId) {
 			this.itemShow = itemShow;
 			this.buttonId = buttonId;
 		}
@@ -69,7 +69,7 @@ public class CombatStoreDialogue extends Action {
 	public boolean start(Player player) {
 		if (prod == null || player == null)
 			return false;
-		player.getCustomStore().sendInterface(player, 0, prod.getButtonId() + 1);
+		player.getShopSystem().openShop(prod.getButtonId() + 1);
 		stop(player);
 		return true;
 	}

@@ -320,11 +320,13 @@ public class NPC extends Entity implements Serializable {
         }
         if (getId() == 7891) {
             setName("Dummy");
+
+
             setRandomWalk(0);
         }
         if (getId() == 4474) {
             setName("Max Hit Dummy");
-            setRandomWalk(0);
+            setRandomWalk(1);
         }
     }
 
@@ -333,10 +335,6 @@ public class NPC extends Entity implements Serializable {
             faceWorldTile(this, "west");
         if (getId() == 960)
             faceWorldTile(this, "south");
-        if (getId() == 7891)
-            faceWorldTile(this, "west");
-        if (getId() == 4474)
-            faceWorldTile(this, "west");
         if (getId() == 3785)
             faceWorldTile(this, "north");
     }
@@ -351,7 +349,6 @@ public class NPC extends Entity implements Serializable {
         if (routeEvent != null && routeEvent.processEvent(this))
             routeEvent = null;
         loadNPCSettings();
-        loadNPCFaceTile();
         if (!combat.process()) {
             if (!isForceWalking()) {
                 if (!cantInteract) {
