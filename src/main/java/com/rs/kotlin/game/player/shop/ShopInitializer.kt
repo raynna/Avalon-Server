@@ -46,6 +46,10 @@ object ShopInitializer {
                 item("item.teleport_to_house")
                 item("item.lumber_yard_teleport")
                 item(8015)  // Bones to peaches
+                item("item.wolpertinger_pouch")
+                item("item.magic_focus_scroll")
+                item("item.steel_titan_pouch")
+                item("item.steel_of_legends_scroll")
 
                 item("item.potion_flask")
             }
@@ -200,7 +204,10 @@ object ShopInitializer {
                 title = "Magic Equipment Store"
                 currency = CurrencyType.COINS
                 isGlobal = true
-
+                item("item.air_rune")
+                item("item.water_rune")
+                item("item.earth_rune")
+                item("item.fire_rune")
                 item("item.chaos_rune")
                 item("item.death_rune")
                 item("item.blood_rune")

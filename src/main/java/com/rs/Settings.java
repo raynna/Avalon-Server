@@ -14,16 +14,8 @@ public final class Settings {
 	public static int PORT_ID;
 	public static boolean VPS_HOSTED;
 
-	public static boolean TEST_SERVER = true;
-
 	public static boolean ECONOMY;
 	public static boolean FREE_TO_PLAY = false;
-	public static boolean TEST_SERVER = true;
-
-	public static final String eventsWebhook = "https://discord.com/api/webhooks/1410684655065366668/u9yH0erh_h2-m6TAjclgWa8CalXV0UWjtpOSmT2LCUkdg-z2Lto38vodeZAXoiyoIAJ1";
-	public static final String levelupsWebhook = "https://discord.com/api/webhooks/NEW_LEVELUPS_URL"; // optional
-
-
 	/**
 	 * Should we send SQL queries such as recent trades, etc.. to database?
 	 */
@@ -33,7 +25,7 @@ public final class Settings {
 	 * Should DiscordBot be launched
 	 */
 	public static final boolean discordEnabled = false;
-	public static final boolean TESTSERVER = false;
+	public static final boolean TEST_SERVER = false;
 
 	// With this (not final so you can set via args/props/env):
 	public static boolean DISCORD_ENABLED = true; // or false by default if you prefer
@@ -182,7 +174,7 @@ public final class Settings {
 			13887, 13890, 13893, 13896, 13899, 13902, 13905, 14484, 19784, 11694, 13738, 13740, 13742, 13744, 15017,
 			15018, 15019, 15020, 15220, 23659, 6570 };
 
-	public static final String[] DEVELOPERS = { "fullspawn", "halfeco", "economy", "bigcow", "starter", "bank", "andreas", "manager", "diz", "bit_new22", "user1", "user2", "user3"};
+	public static final String[] DEVELOPERS = { "fullspawn", "halfeco", "economy", "starter", "bank", "andreas", "manager", "diz", "bit_new22", "user1", "user2", "user3"};
 
 	public static final String[] MODERATORS = {};
 

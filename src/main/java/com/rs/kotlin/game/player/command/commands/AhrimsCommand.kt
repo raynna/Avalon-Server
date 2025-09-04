@@ -19,7 +19,7 @@ class AhrimsCommand : Command {
         if (!player.canUseCommand()) {
             player.message("You can't use ::ahrims here.")
             return true
-        }
+        }//Summoning.spawnFamiliar(player, Pouch.WOLPERTINGER);
         if (!player.getInventory().hasFreeSlots()) {
             player.message("You don't have any inventory space for any ahrims pieces.")
             return true;

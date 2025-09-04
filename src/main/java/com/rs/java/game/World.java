@@ -6,8 +6,6 @@ import java.util.concurrent.TimeUnit;
 import com.rs.Launcher;
 import com.rs.Settings;
 import com.rs.core.thread.CoresManager;
-import com.rs.java.game.area.Area;
-import com.rs.java.game.area.AreaManager;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.map.MapUtils;
@@ -54,6 +52,8 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.world.area.Area;
+import com.rs.kotlin.game.world.area.AreaManager;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
 /**
@@ -506,6 +506,7 @@ public final class World {
                     player.getControlerManager().moved();
                 if (player.hasStarted()) {
                     checkControlersAtMove(player);
+                    AreaManager.INSTANCE.onMoved(player);
                     PvpManager.onMoved(player);
                 }
             } else {
@@ -521,6 +522,7 @@ public final class World {
                 PvpManager.onMoved(player);
                 if (player.hasStarted()) {
                     checkControlersAtMove(player);
+                    AreaManager.INSTANCE.onMoved(player);
                     PvpManager.onMoved(player);
                 }
             }

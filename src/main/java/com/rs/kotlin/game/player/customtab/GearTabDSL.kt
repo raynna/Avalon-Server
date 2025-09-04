@@ -36,10 +36,10 @@ object GearTabDSL {
     }
 
     fun open(player: Player, otherName: String? = null) {
-        player.temporaryAttributtes["CUSTOMTAB"] = 3
-        player.temporaryAttributtes.remove("ACHIEVEMENTTAB")
-        player.temporaryAttributtes.remove("SELECTEDGEAR")
-        if (otherName == null) player.temporaryAttributtes.remove("OTHERPRESET_NAME")
+        player.temporaryAttributes()["CUSTOMTAB"] = 3
+        player.temporaryAttributes().remove("ACHIEVEMENTTAB")
+        player.temporaryAttributes().remove("SELECTEDGEAR")
+        if (otherName == null) player.temporaryAttributes().remove("OTHERPRESET_NAME")
         doOpen(player, otherName)
     }
 
@@ -76,7 +76,7 @@ object GearTabDSL {
                 pk.sendIComponentSprite(IFACE, YELLOW, "sprite.remove_note")
 
                 // selection-dependent chrome
-                val selectedId = p.temporaryAttributtes["SELECTEDGEAR"] as? Int
+                val selectedId = p.temporaryAttributes()["SELECTEDGEAR"] as? Int
                 val pkVisSel = selectedId != null
                 // show load + delete only when selected (own page)
                 pk.sendHideIComponent(IFACE, RED, !pkVisSel)                 // load
@@ -90,10 +90,10 @@ object GearTabDSL {
                 }
 
                 // reset confirm icons unless currently confirming
-                if (p.temporaryAttributtes["CONFIRM_OVERWRITE"] != true) {
+                if (p.temporaryAttributes()["CONFIRM_OVERWRITE"] != true) {
                     pk.sendIComponentSprite(IFACE, PURPLE, "sprite.add_note")
                 }
-                if (p.temporaryAttributtes["CONFIRM_DELETE"] != true) {
+                if (p.temporaryAttributes()["CONFIRM_DELETE"] != true) {
                     pk.sendIComponentSprite(IFACE, YELLOW, "sprite.remove_note")
                 }
             }
@@ -106,22 +106,22 @@ object GearTabDSL {
                 action(
                     text = { p ->
                         val id = preset.getId(other ?: player)
-                        val sel = p.temporaryAttributtes["SELECTEDGEAR"] as? Int
+                        val sel = p.temporaryAttributes()["SELECTEDGEAR"] as? Int
                         if (sel != null && sel == id) "$name<img=12>" else name
                     }
                 ) { p ->
                     val id = preset.getId(other ?: player)
-                    val sel = p.temporaryAttributtes["SELECTEDGEAR"] as? Int
+                    val sel = p.temporaryAttributes()["SELECTEDGEAR"] as? Int
                     // toggle selection
                     if (sel != null && sel == id) {
-                        p.temporaryAttributtes.remove("SELECTEDGEAR")
+                        p.temporaryAttributes().remove("SELECTEDGEAR")
                         p.packets.sendIComponentSprite(IFACE, GREEN, "sprite.search")
                         p.packets.sendHideIComponent(IFACE, RED, true)
                         p.packets.sendHideIComponent(IFACE, YELLOW, true)
                         p.packets.sendIComponentSprite(IFACE, PURPLE, "sprite.add_note")
                         removeTransientFlags(p)
                     } else {
-                        p.temporaryAttributtes["SELECTEDGEAR"] = id
+                        p.temporaryAttributes()["SELECTEDGEAR"] = id
                         if (!viewingOther) {
                             p.packets.sendIComponentSprite(IFACE, GREEN, 1832) // rename icon
                             p.packets.sendHideIComponent(IFACE, RED, false)
@@ -147,14 +147,14 @@ object GearTabDSL {
 
             // Green (61): rename selected (own) OR search other presets (no selection)
             handle(GREEN) { p ->
-                val sel = p.temporaryAttributtes["SELECTEDGEAR"] as? Int
+                val sel = p.temporaryAttributes()["SELECTEDGEAR"] as? Int
                 if (sel != null) {
                     // rename
                     val source = (other ?: player).presetManager.PRESET_SETUPS.entries
                     val exists = source.firstOrNull { it.value.getId(other ?: player) == sel }
                     if (exists != null) {
-                        p.temporaryAttributtes["RENAME_SETUP"] = true
-                        p.temporaryAttributtes["SELECTED_RENAME"] = sel
+                        p.temporaryAttributes()["RENAME_SETUP"] = true
+                        p.temporaryAttributes()["SELECTED_RENAME"] = sel
                         p.packets.sendRunScript(109, "Enter new setup name: ")
                     }
                 } else {
@@ -167,7 +167,7 @@ object GearTabDSL {
 
             // Red (60): load selected
             handle(RED) { p ->
-                val sel = p.temporaryAttributtes["SELECTEDGEAR"] as? Int
+                val sel = p.temporaryAttributes()["SELECTEDGEAR"] as? Int
                 if (sel == null) { p.packets.sendGameMessage("You don't have any gear setup selected."); return@handle }
                 val srcOwner = (other ?: player)
                 val entry = srcOwner.presetManager.PRESET_SETUPS.entries
@@ -179,9 +179,9 @@ object GearTabDSL {
             // Purple (59): save/overwrite (own only)
             handle(PURPLE) { p ->
                 if (viewingOther) return@handle
-                val sel = p.temporaryAttributtes["SELECTEDGEAR"] as? Int
+                val sel = p.temporaryAttributes()["SELECTEDGEAR"] as? Int
                 if (sel != null) {
-                    val confirm = p.temporaryAttributtes["CONFIRM_OVERWRITE"] as? Boolean ?: false
+                    val confirm = p.temporaryAttributes()["CONFIRM_OVERWRITE"] as? Boolean ?: false
                     if (confirm) {
                         var keyToOverwrite: String? = null
                         for ((k, v) in p.presetManager.PRESET_SETUPS) if (v.getId(p) == sel) { keyToOverwrite = k; break }
@@ -190,16 +190,16 @@ object GearTabDSL {
                             p.presetManager.savePreset(keyToOverwrite)
                             p.packets.sendGameMessage("Preset \"$keyToOverwrite\" has been overwritten.")
                             open(p, null)
-                            p.temporaryAttributtes.remove("SELECTEDGEAR")
-                            p.temporaryAttributtes.remove("CONFIRM_OVERWRITE")
+                            p.temporaryAttributes().remove("SELECTEDGEAR")
+                            p.temporaryAttributes().remove("CONFIRM_OVERWRITE")
                         } else {
                             p.packets.sendGameMessage("Could not find the preset to overwrite.")
-                            p.temporaryAttributtes.remove("CONFIRM_OVERWRITE")
+                            p.temporaryAttributes().remove("CONFIRM_OVERWRITE")
                         }
                     } else {
                         p.packets.sendGameMessage("Are you sure you want to overwrite this preset? Click <img=14> to confirm.")
                         p.packets.sendIComponentSprite(IFACE, PURPLE, "sprite.green_checkmark_2")
-                        p.temporaryAttributtes["CONFIRM_OVERWRITE"] = true
+                        p.temporaryAttributes()["CONFIRM_OVERWRITE"] = true
                     }
                 } else {
                     p.temporaryAttribute().remove("OTHERPRESET")
@@ -211,25 +211,25 @@ object GearTabDSL {
             // Yellow (26): delete (own only)
             handle(YELLOW) { p ->
                 if (viewingOther) return@handle
-                val sel = p.temporaryAttributtes["SELECTEDGEAR"] as? Int
+                val sel = p.temporaryAttributes()["SELECTEDGEAR"] as? Int
                 if (sel == null) { p.packets.sendGameMessage("You don't have any gear setup selected."); return@handle }
-                val confirm = p.temporaryAttributtes["CONFIRM_DELETE"] as? Boolean ?: false
+                val confirm = p.temporaryAttributes()["CONFIRM_DELETE"] as? Boolean ?: false
                 if (confirm) {
                     val entry = p.presetManager.PRESET_SETUPS.entries.firstOrNull { it.value.getId(p) == sel }
                     if (entry != null) {
                         p.presetManager.removePreset(entry.key)
                         p.packets.sendGameMessage("Preset \"${entry.key}\" has been deleted.")
                         open(p, null)
-                        p.temporaryAttributtes.remove("SELECTEDGEAR")
-                        p.temporaryAttributtes.remove("CONFIRM_DELETE")
+                        p.temporaryAttributes().remove("SELECTEDGEAR")
+                        p.temporaryAttributes().remove("CONFIRM_DELETE")
                     } else {
                         p.packets.sendGameMessage("Could not find the preset to delete.")
-                        p.temporaryAttributtes.remove("CONFIRM_DELETE")
+                        p.temporaryAttributes().remove("CONFIRM_DELETE")
                     }
                 } else {
                     p.packets.sendGameMessage("Are you sure you want to delete this preset? Click <img=14> to confirm.")
                     p.packets.sendIComponentSprite(IFACE, YELLOW, "sprite.green_checkmark_2")
-                    p.temporaryAttributtes["CONFIRM_DELETE"] = true
+                    p.temporaryAttributes()["CONFIRM_DELETE"] = true
                 }
             }
         }
@@ -237,8 +237,8 @@ object GearTabDSL {
     }
 
     private fun removeTransientFlags(p: Player) {
-        p.temporaryAttributtes.remove("CONFIRM_OVERWRITE")
-        p.temporaryAttributtes.remove("CONFIRM_DELETE")
-        p.temporaryAttributtes.remove("RENAME_SETUP")
+        p.temporaryAttributes().remove("CONFIRM_OVERWRITE")
+        p.temporaryAttributes().remove("CONFIRM_DELETE")
+        p.temporaryAttributes().remove("RENAME_SETUP")
     }
 }

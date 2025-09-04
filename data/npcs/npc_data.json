@@ -2342,6 +2342,68 @@
       "duradel"
     ]
   },
+  "2027": {
+    "id": 2027,
+    "name": "Guthan the Infested",
+    "members": true,
+    "combatLevel": 115,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 75,
+    "magicBonus": 0,
+    "magicStrengthBonus": -50,
+    "rangedBonus": -19,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 259,
+      "slash": 257,
+      "crush": 241
+    },
+    "magicDefence": {
+      "magic": -11
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 250,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A vengeful spirit corrupted by dark magic.",
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 15.0,
+    "maxHit": {
+      "maxhit": 24
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 115,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "2028": {
     "id": 2028,
     "name": "Karil the Tainted",
@@ -2527,6 +2589,64 @@
       "nieve",
       "duradel",
       "kuradal"
+    ]
+  },
+  "2614": {
+    "id": 2614,
+    "name": "TzHaar-Ket",
+    "members": true,
+    "combatLevel": 149,
+    "attackLevel": 120,
+    "strengthLevel": 140,
+    "defenceLevel": 120,
+    "magicLevel": 40,
+    "rangedLevel": 1,
+    "constitutionLevel": 140,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 15
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 140,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "nieve",
+      "duradel"
     ]
   },
   "2783": {

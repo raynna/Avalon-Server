@@ -364,10 +364,10 @@ public class TaskManager implements Serializable {
 			}
 		}
 		if (player.getInterfaceManager().containsInterface(3002)) {
-			if (player.getTemporaryAttributtes().get("ACHIEVEMENTTAB") != null) {
-				if ((int) player.getTemporaryAttributtes().get("ACHIEVEMENTTAB") == 0) {
-					if ((String) player.getTemporaryAttributtes().get("ACHIEVEMENTCATEGORY") != null) {
-						AchievementsTab.openTasks(player, (String) player.getTemporaryAttributtes().get("ACHIEVEMENTCATEGORY"));
+			if (player.temporaryAttributes().get("ACHIEVEMENTTAB") != null) {
+				if ((int) player.temporaryAttributes().get("ACHIEVEMENTTAB") == 0) {
+					if ((String) player.temporaryAttributes().get("ACHIEVEMENTCATEGORY") != null) {
+						AchievementsTab.openTasks(player, (String) player.temporaryAttributes().get("ACHIEVEMENTCATEGORY"));
 					} else {
 						AchievementsTab.open(player);
 					}

@@ -93,6 +93,7 @@ import com.rs.java.utils.HexColours;
 import com.rs.java.utils.HexColours.Colour;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.world.activity.BarrowsAreaKt;
 
 public class InventoryOptionsHandler {
 
@@ -128,7 +129,7 @@ public class InventoryOptionsHandler {
             @Override
             public void run() {
                 player.unlock();
-                if (Barrows.digIntoGrave(player))
+                if (BarrowsAreaKt.digIntoHill(player))
                     return;
                 if (player.getTreasureTrailsManager().useDig())
                     return;

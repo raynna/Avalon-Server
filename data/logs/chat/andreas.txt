@@ -10274,3 +10274,27 @@
 [31 August 2025 at 07:04:50 CEST] - andreas: 3136, 3520 < southwest
 [31 August 2025 at 11:49:56 CEST] - andreas: 2944 3520 - 3327 3524
 [31 August 2025 at 11:49:57 CEST] - andreas: TEST
+[04 September 2025 at 02:30:39 CEST] - andreas:  ::item wolp
+[04 September 2025 at 03:09:12 CEST] - andreas:  ;;gear mbarrows
+[04 September 2025 at 03:09:19 CEST] - andreas:  ;;save newpreset
+[04 September 2025 at 03:09:43 CEST] - andreas:  _
+[04 September 2025 at 03:18:57 CEST] - andreas:     ;;killnpcs
+[04 September 2025 at 03:20:01 CEST] - andreas:  ;;item fighter hat
+[04 September 2025 at 03:33:06 CEST] - andreas: test
+[04 September 2025 at 03:33:35 CEST] - andreas:  ;;developer
+[04 September 2025 at 03:33:49 CEST] - andreas:  ::
+[04 September 2025 at 03:40:49 CEST] - andreas: te
+[04 September 2025 at 03:48:03 CEST] - andreas: user
+[04 September 2025 at 03:48:05 CEST] - andreas: user1
+[04 September 2025 at 03:48:06 CEST] - andreas: user2
+[04 September 2025 at 03:48:07 CEST] - andreas: user3
+[04 September 2025 at 03:50:21 CEST] - andreas:  user1
+[04 September 2025 at 03:50:22 CEST] - andreas: user2
+[04 September 2025 at 03:50:22 CEST] - andreas: user3
+[04 September 2025 at 04:11:57 CEST] - andreas: loc
+[04 September 2025 at 04:15:50 CEST] - andreas: ???
+[04 September 2025 at 04:15:56 CEST] - andreas: lmao
+[04 September 2025 at 04:16:42 CEST] - andreas: dh shouldnt boost accuracy tho
+[04 September 2025 at 04:17:00 CEST] - andreas: max
+[04 September 2025 at 04:17:01 CEST] - andreas: 980
+[04 September 2025 at 04:17:32 CEST] - andreas: damn

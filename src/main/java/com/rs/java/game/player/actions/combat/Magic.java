@@ -867,6 +867,7 @@ public class Magic {
 			player.getPackets().sendGameMessage("You cannot teleport out of here.");
 			return false;
 		}
+		if (player.isLocked()) return false;
 		player.getInventory().deleteItem(itemId, 1);
 		int lockTime = 5;
 		player.lock(lockTime);

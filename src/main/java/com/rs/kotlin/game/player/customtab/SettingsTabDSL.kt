@@ -142,7 +142,7 @@ object SettingsTabDSL {
                 "Valuable Drop: $msg"
             }
         ) { p ->
-            p.temporaryAttributtes["SET_DROPVALUE"] = true
+            p.temporaryAttributes()["SET_DROPVALUE"] = true
             p.packets.sendRunScript(108, arrayOf("Enter Amount:"))
         }
 

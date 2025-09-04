@@ -6,16 +6,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -29,8 +21,6 @@ import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.*;
 import com.rs.java.game.Hit.HitLook;
-import com.rs.java.game.area.Area;
-import com.rs.java.game.area.AreaManager;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
@@ -99,7 +89,6 @@ import com.rs.java.game.player.controlers.pestcontrol.PestControlGame;
 import com.rs.java.game.player.controlers.pestcontrol.PestControlLobby;
 import com.rs.java.game.player.cutscenes.Cutscene;
 import com.rs.java.game.player.dialogues.Dialogue;
-import com.rs.java.game.player.teleportation.Teleports;
 import com.rs.core.networking.Session;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.core.packets.packet.ButtonHandler;
@@ -121,6 +110,8 @@ import com.rs.kotlin.game.player.combat.special.SpecialAttack;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 import com.rs.kotlin.game.player.interfaces.TimerOverlay;
 import com.rs.kotlin.game.player.shop.ShopSystem;
+import com.rs.kotlin.game.world.area.Area;
+import com.rs.kotlin.game.world.area.AreaManager;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 import com.rs.kotlin.game.world.pvp.SafeZoneService;
 
@@ -143,6 +134,16 @@ public class Player extends Entity {
     public HealthOverlay healthOverlay = new HealthOverlay();
     public TimerOverlay timerOverlay = new TimerOverlay();
 
+    //Area
+    private transient Set<Area> lastAreas = Collections.emptySet();
+
+    public Set<Area> getLastAreas() {
+        return lastAreas;
+    }
+
+    public void setLastAreas(Set<Area> areas) {
+        this.lastAreas = areas;
+    }
 
     public transient CombatStyle combatStyle;
 
@@ -308,7 +309,7 @@ public class Player extends Entity {
     private transient CombatContext currentCombatContext;
 
     private Hit hitManager;
-    private int recoilHits;
+    private int recoilCharges;
 
     private transient int damage;
 
@@ -2975,6 +2976,10 @@ public class Player extends Entity {
         refreshSpawnedObjects();
         getTickManager().rebuildOverlay();
         PvpManager.onLogin(this);
+        Area area = AreaManager.get(getTile());
+        if (area != null) {
+            area.onMoved(this);
+        }
         Logger.log("Player", username + " has logged in.");
         List<String> playerNames = World.getPlayers().stream()
                 .filter(p -> p != null && p.hasStarted() && !p.hasFinished())
@@ -3816,6 +3821,8 @@ public class Player extends Entity {
             return;
         dead = true;
         getInterfaceManager().closeOverlay(false);
+        getTickManager().reset();
+        timerOverlay.clearAll(this);
         resetWalkSteps();
         stopAll();
         lock(6);
@@ -3986,6 +3993,9 @@ public class Player extends Entity {
         int randomCoins = Utils.randomise(25000, 100000);
         World.updateGroundItem(new Item(995, randomCoins), deathTile, killer, 60, 1);
         killer.message("You recieved an extra " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(randomCoins, ',')) + " coins for killing: " + getDisplayName() + ".");
+        int randomPvpTokens = Utils.randomise(250, 1000);
+        World.updateGroundItem(new Item(12852, randomPvpTokens), deathTile, killer, 60, 1);
+        killer.message("You recieved " + randomPvpTokens + " pvp tokens for killing " + getDisplayName() + ".");
         if (killer != this)
             killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
         if (killer.totalCurrentDrop > killer.getHighestValuedKill() && killer.hasWildstalker() && killer != this) {
@@ -4853,9 +4863,9 @@ public class Player extends Entity {
 
     public void resetBarrows() {
         hiddenBrother = -1;
-        killedBarrowBrothers = new boolean[7]; // includes new bro for future
-        // use
+        killedBarrowBrothers = new boolean[7];
         barrowsKillCount = 0;
+        hiddenBrother = Utils.random(6);
     }
 
     public boolean isToggleMessages() {
@@ -6179,12 +6189,12 @@ public class Player extends Entity {
         return lostCannon;
     }
 
-    public int getRecoilHits() {
-        return recoilHits;
+    public int getRecoilCharges() {
+        return recoilCharges;
     }
 
-    public void setRecoilHits(int recoilHits) {
-        this.recoilHits = recoilHits;
+    public void setRecoilCharges(int charges) {
+        this.recoilCharges = charges;
     }
 
     public PuzzleBox getPuzzleBox() {

@@ -16603,8 +16603,6 @@
 //Yak spawned by andreas
 5529 - 2328 3794 0
 //Banker spawned by andreas
-3418 - 3096 3493 0
-//Banker spawned by andreas
 3418 - 88 78 0
 //Overseer spawned by zed
 8904 - 3313 3491 0
@@ -16811,12 +16809,12 @@
 //Portal spawned by andreas
 8020 - 3096 3494 0
 //Wizard spawned by andreas
-5195 - 3097 3494 0
-//Edgeville clerk
-2241 - 3096 3490 0
+5195 - 3096 3492 0
 //Warrior spawned by andreas
 650 - 3096 3489 0
 //Make-over Mage spawned by andreas
 2676 - 3096 3490 0
 //Grand Exchange clerk spawned by andreas
-2593 - 3096 3492 0
+2593 - 3097 3494 0
+//Banker spawned by andreas
+45 - 3096 3493 0

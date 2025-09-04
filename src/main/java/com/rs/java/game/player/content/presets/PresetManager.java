@@ -13,6 +13,7 @@ import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.controlers.EdgevillePvPControler;
 import com.rs.java.utils.EconomyPrices;
@@ -92,9 +93,75 @@ public final class PresetManager implements Serializable {
 		}
 	}
 
+	private boolean requiresBankItem(Item item) {
+		int id = item.getId();
+
+		if (!item.getDefinitions().isTradeable() && Settings.ECONOMY_MODE < Settings.FULL_SPAWN) {
+			return true;
+		}
+
+		if (Settings.ECONOMY_MODE == Settings.HALF_ECONOMY &&
+				(EconomyPrices.getPrice(id) >= Settings.LOWPRICE_LIMIT || isSpecialNonSpawnable(item))) {
+			return true;
+		}
+
+		return Settings.ECONOMY_MODE == Settings.FULL_ECONOMY;
+	}
+
+	private boolean isSpecialNonSpawnable(Item item) {
+		int id = item.getId();
+		return id == 995 || id == 12852 || !item.getDefinitions().isTradeable();
+	}
+
+	private boolean takeFromBankOrFail(Player player, Item item) {
+		Item bankItem = player.getBank().getItem(item.getId());
+		if (bankItem != null && bankItem.getAmount() >= item.getAmount()) {
+			int[] slot = player.getBank().getItemSlot(item.getId());
+			player.getBank().removeItem2(slot, item.getAmount(), true, false);
+			return true;
+		} else {
+			player.message("Couldn't find item " + item.getAmount() + " x " + item.getName() + " in bank.");
+			return false;
+		}
+	}
+
+	private void handleForcedCharges(Item item) {
+		if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
+			return; // does not work in full eco
+		}
+
+		if (item.isAnyOf("item.dragonfire_shield_charged", "item.dragonfire_shield_uncharged")) {
+			if (item.getMetadata() == null) {
+				item.setMetadata(new DragonFireShieldMetaData(50));
+				if (item.isItem("item.dragonfire_shield_uncharged")) {
+					item.setId(Item.getId("item.dragonfire_shield_charged"));
+				}
+			} else {
+				item.getMetadata().setValue(50);
+			}
+		}
+
+		if (item.isAnyOf("item.greater_runic_staff_charged", "item.greater_runic_staff_uncharged")) {
+			if (item.isItem("item.greater_runic_staff_uncharged")) {
+				item.setId(Item.getId("item.greater_runic_staff_charged"));
+			}
+			GreaterRunicStaffMetaData staffData = (GreaterRunicStaffMetaData) item.getMetadata();
+			if (staffData == null) {
+				item.setMetadata(new GreaterRunicStaffMetaData(23, 250));
+			} else if (staffData.getCharges() == 0 || staffData.getSpellId() == -1) {
+				staffData.setSpellId(23);
+				staffData.setValue(250);
+			}
+		}
+	}
+
 	public void loadPreset(String name, Player p2) {
-		if (name == "")
-			return;
+		loadPreset(name, p2, false);
+	}
+
+	public void loadPreset(String name, Player p2, boolean force) {
+		if (name.isEmpty()) return;
+
 		if (player.inPkingArea()) {
 			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in player killing areas."));
 			return;
@@ -103,52 +170,37 @@ public final class PresetManager implements Serializable {
 			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in pvp area."));
 			return;
 		}
+
 		name = name.toLowerCase();
 		final Preset set = (p2 != null ? p2.getPresetManager().PRESET_SETUPS.get(name) : PRESET_SETUPS.get(name));
 		if (set == null) {
-			player.message("You were unable to load the set " + name + " as it does not exist.",
-					true);
+			player.message("You were unable to load the set " + name + " as it does not exist.", true);
 			return;
 		}
 
-		Item[] inventory = player.getInventory().getItems().getItemsCopy();
-		Item[] equipment = player.getEquipment().getItems().getItemsCopy();
-		Item[] runes = player.getRunePouch().getContainerItems();
-		for (Item item : inventory) {
-			if (item == null) continue;
-			if (Settings.ECONOMY_MODE == Settings.FULL_SPAWN) {
-				if (item.getMetadata() != null) continue;
+		for (Item item : player.getInventory().getItems().getItemsCopy()) {
+			if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
+				player.getBank().addItem(item, true);
 			}
-			player.getBank().addItem(item, true);
 		}
-		for (Item item : equipment) {
-			if (item == null) continue;
-			if (Settings.ECONOMY_MODE == Settings.FULL_SPAWN) {
-				if (item.getMetadata() != null) continue;
+		for (Item item : player.getEquipment().getItems().getItemsCopy()) {
+			if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
+				player.getBank().addItem(item, true);
 			}
-			player.getBank().addItem(item, true);
-		}
-		for (Item item : runes) {
-			if (item == null) continue;
-			if (Settings.ECONOMY_MODE == Settings.FULL_SPAWN) {
-				if (item.getMetadata() != null) continue;
-			}
-			player.getBank().addItem(item, true);
 		}
 
-		Iterator<Map.Entry<Integer, Item[]>> iterator = player.getStaffCharges().entrySet().iterator();
-		while (iterator.hasNext()) {
-			Map.Entry<Integer, Item[]> pair = iterator.next();
-			if (pair.getValue() != null) {
-				for (Item item : pair.getValue()) {
-					if (item == null)
-						continue;
-					player.message("Added " + item.getName() + " x " + item.getAmount() + " to your bank.");
-					player.getBank().addItem(item, true);
+		for (Map.Entry<Integer, Item[]> entry : player.getStaffCharges().entrySet()) {
+			if (entry.getValue() != null) {
+				for (Item item : entry.getValue()) {
+					if (item != null) {
+						player.message("Added " + item.getName() + " x " + item.getAmount() + " to your bank.");
+						player.getBank().addItem(item, true);
+					}
 				}
 			}
 		}
 
+		// Reset player state
 		player.getRunePouch().reset();
 		player.getInventory().reset();
 		player.getInventory().refresh();
@@ -157,6 +209,8 @@ public final class PresetManager implements Serializable {
 		player.getAppearence().generateAppearenceData();
 		player.refreshHitPoints();
 		player.getPrayer().reset();
+
+		// Skills
 		double[] presetXp = set.getLevels();
 		if (presetXp != null && presetXp.length >= 7) {
 			for (int i = 0; i < 7; i++) {
@@ -165,126 +219,60 @@ public final class PresetManager implements Serializable {
 				player.getSkills().refresh(i);
 			}
 		}
+
 		Item[] data = set.getEquipment();
-		if (data != null && data.length > 0) {
+		if (data != null) {
 			skip: for (int i = 0; i < data.length; i++) {
 				final Item item = data[i];
-				if (item == null)
-					continue;
-				final HashMap<Integer, Integer> requirements = item.getDefinitions().getWearingSkillRequiriments();
+				if (item == null) continue;
+
+				// Wearing requirements
+				Map<Integer, Integer> requirements = item.getDefinitions().getWearingSkillRequiriments();
 				if (requirements != null) {
-					for (final int skillId : requirements.keySet()) {
-						if (skillId > 24 || skillId < 0)
-							continue;
-						final int level = requirements.get(skillId);
-						if (level < 0 || level > 120)
-							continue;
-						if (player.getSkills().getLevelForXp(skillId) < level) {
-							player.message("You were unable to equip your " + item.getName().toLowerCase()
-											+ ", as you don't meet the requirements to wear them.", true);
-							continue skip;
+					for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
+						int skillId = req.getKey(), level = req.getValue();
+						if (skillId >= 0 && skillId <= 24 && level >= 0 && level <= 120) {
+							if (player.getSkills().getLevelForXp(skillId) < level) {
+								player.message("You were unable to equip your " + item.getName().toLowerCase()
+										+ ", as you don't meet the requirements to wear them.", true);
+								continue skip;
+							}
 						}
 					}
 				}
 
-				if ((Settings.ECONOMY_MODE == 1
-						&& EconomyPrices.getPrice(set.getEquipment()[i].getId()) >= Settings.LOWPRICE_LIMIT)
-						|| Settings.ECONOMY_MODE == 0
-						|| (!item.getDefinitions().isTradeable() && Settings.ECONOMY_MODE < 2)) {
-					if (player.getBank().getItem(set.getEquipment()[i].getId()) != null && player.getBank()
-							.getItem(set.getEquipment()[i].getId()).getAmount() >= item.getAmount()) {
-						int[] slot = player.getBank().getItemSlot(set.getEquipment()[i].getId());
-						player.getBank().removeItem2(slot, item.getAmount(), true, false);
-					} else {
-						player.message("Couldn't find item " + item.getAmount() + " x " + item.getName() + " in bank.");
-						continue;
-					}
+				if (!force && requiresBankItem(item) && !takeFromBankOrFail(player, item)) {
+					continue;
 				}
-				if (Settings.ECONOMY_MODE > Settings.FULL_ECONOMY) {//just to force charges on some items if spawnmode
-					if (item.isAnyOf("item.dragonfire_shield_charged", "item.dragonfire_shield_uncharged")) {
-						if (item.getMetadata() == null) {
-							item.setMetadata(new DragonFireShieldMetaData(50));
-							if (item.isItem("item.dragonfire_shield_uncharged")) {
-								item.setId(Item.getId("item.dragonfire_shield_charged"));
-							}
-						} else {
-							item.getMetadata().setValue(50);
-						}
-					}
-					if (item.isAnyOf("item.greater_runic_staff_charged", "item.greater_runic_staff_uncharged")) {
-						if (item.isItem("item.greater_runic_staff_uncharged")) {
-							item.setId(Item.getId("item.greater_runic_staff_charged"));
-						}
-						GreaterRunicStaffMetaData staffData = (GreaterRunicStaffMetaData) item.getMetadata();
-						if (staffData == null) {
-							item.setMetadata(new GreaterRunicStaffMetaData(23, 250));
-						} else {
-							if (staffData.getCharges() == 0 || staffData.getSpellId() == -1) {
-								staffData.setSpellId(23);
-								staffData.setValue(250);
-							}
-						}
-					}
-				}
+
+				handleForcedCharges(item);
+
 				player.getEquipment().getItems().set(i, item);
 				player.getEquipment().refresh(i);
 			}
 		}
 
 		data = set.getInventory();
-		if (data != null && data.length > 0) {
+		if (data != null) {
 			for (int i = 0; i < data.length; i++) {
 				final Item item = data[i];
 				if (item == null) {
 					player.getInventory().addItem(0, 1);
 					continue;
 				}
-				if ((Settings.ECONOMY_MODE == 1 && set.getInventory()[i] != null
-						&& set.getInventory()[i].getDefinitions().getValue() >= Settings.LOWPRICE_LIMIT)
-						|| Settings.ECONOMY_MODE == 0
-						|| (!item.getDefinitions().isTradeable() && Settings.ECONOMY_MODE < 2)) {
-					if (player.getBank().getItem(set.getInventory()[i].getId()) != null && player.getBank()
-							.getItem(set.getInventory()[i].getId()).getAmount() >= item.getAmount()) {
-						int[] slot = player.getBank().getItemSlot(set.getInventory()[i].getId());
-						player.getBank().removeItem2(slot, item.getAmount(), true, false);
-					} else {
-						player.getInventory().addItem(0, 1);
-						player.message("Couldn't find item " + item.getAmount() + " x " + item.getName() + " in bank.");
-						continue;
-					}
+
+				if (!force && requiresBankItem(item) && !takeFromBankOrFail(player, item)) {
+					player.getInventory().addItem(0, 1);
+					continue;
 				}
-				if (Settings.ECONOMY_MODE > Settings.FULL_ECONOMY) {//just to force charges on some items if spawnmode
-					if (item.isAnyOf("item.dragonfire_shield_charged", "item.dragonfire_shield_uncharged")) {
-						if (item.getMetadata() == null) {
-							item.setMetadata(new DragonFireShieldMetaData(50));
-							if (item.isItem("item.dragonfire_shield_uncharged")) {
-								item.setId(Item.getId("item.dragonfire_shield_charged"));
-							}
-						} else {
-							item.getMetadata().setValue(50);
-						}
-					}
-					if (item.isAnyOf("item.greater_runic_staff_charged", "item.greater_runic_staff_uncharged")) {
-						if (item.isItem("item.greater_runic_staff_uncharged")) {
-							item.setId(Item.getId("item.greater_runic_staff_charged"));
-						}
-						GreaterRunicStaffMetaData staffData = (GreaterRunicStaffMetaData) item.getMetadata();
-						if (staffData == null) {
-							item.setMetadata(new GreaterRunicStaffMetaData(23, 250));
-						} else {
-							if (staffData.getCharges() == 0 || staffData.getSpellId() == -1) {
-								staffData.setSpellId(23);
-								staffData.setValue(250);
-							}
-						}
-					}
-				}
+
+				handleForcedCharges(item);
 				player.getInventory().addItem(item);
 			}
 		}
 
 		data = set.getRunes();
-		if (data != null && data.length > 0) {
+		if (data != null) {
 			for (Item item : data) {
 				if (item != null) {
 					player.getRunePouch().add(item);
@@ -299,13 +287,12 @@ public final class PresetManager implements Serializable {
 			if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
 				if (!player.getBank().containsOneItem(pouch.getRealPouchId())) {
 					player.message("Couldn't find " + pouchItem.getName() + " in your bank.");
-				} else {
-					if (Summoning.spawnFamiliar(player, pouch, true))
-						player.getBank().removeItem(pouch.getRealPouchId());
+				} else if (Summoning.spawnFamiliar(player, pouch, true)) {
+					player.getBank().removeItem(pouch.getRealPouchId());
 				}
 			} else {
-                Summoning.spawnFamiliar(player, pouch, true);
-            }
+				Summoning.spawnFamiliar(player, pouch, true);
+			}
 		}
 		player.getInventory().deleteItem(0, 28);
 		player.getCombatDefinitions().setSpellBook(set.getSpellBook(), false);
@@ -315,7 +302,129 @@ public final class PresetManager implements Serializable {
 		player.getSkills().switchXPPopup(true);
 		CommandRegistry.execute(player, "heal");
 		player.message("Loaded setup: " + name + ".");
+	}
 
+	public void copyPreset(Player p2) {
+		if (player.inPkingArea()) {
+			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in player killing areas."));
+			return;
+		}
+		if (EdgevillePvPControler.isAtPvP(player) && !EdgevillePvPControler.isAtBank(player)) {
+			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in pvp area."));
+			return;
+		}
+
+		for (Item item : player.getInventory().getItems().getItemsCopy()) {
+			if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
+				player.getBank().addItem(item, true);
+			}
+		}
+		for (Item item : player.getEquipment().getItems().getItemsCopy()) {
+			if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
+				player.getBank().addItem(item, true);
+			}
+		}
+
+		for (Map.Entry<Integer, Item[]> entry : player.getStaffCharges().entrySet()) {
+			if (entry.getValue() != null) {
+				for (Item item : entry.getValue()) {
+					if (item != null) {
+						player.message("Added " + item.getName() + " x " + item.getAmount() + " to your bank.");
+						player.getBank().addItem(item, true);
+					}
+				}
+			}
+		}
+
+		// Reset player state
+		player.getRunePouch().reset();
+		player.getInventory().reset();
+		player.getInventory().refresh();
+		player.getEquipment().reset();
+		player.getEquipment().refresh();
+		player.getAppearence().generateAppearenceData();
+		player.refreshHitPoints();
+		player.getPrayer().reset();
+
+		for (int skillId = 0; skillId < 6; skillId++) {
+			double xp = p2.getSkills().getXp(skillId);
+			player.getSkills().setXp(skillId, xp);
+			player.getSkills().set(skillId, p2.getSkills().getLevel(skillId));
+			player.getSkills().refresh(skillId);
+		}
+
+		Item[] data = p2.getEquipment().getItems().getContainerItems();
+		if (data != null) {
+			skip: for (int i = 0; i < data.length; i++) {
+				final Item item = data[i];
+				if (item == null) continue;
+
+				// Wearing requirements
+				Map<Integer, Integer> requirements = item.getDefinitions().getWearingSkillRequiriments();
+				if (requirements != null) {
+					for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
+						int skillId = req.getKey(), level = req.getValue();
+						if (skillId >= 0 && skillId <= 24 && level >= 0 && level <= 120) {
+							if (player.getSkills().getLevelForXp(skillId) < level) {
+								player.message("You were unable to equip your " + item.getName().toLowerCase()
+										+ ", as you don't meet the requirements to wear them.", true);
+								continue skip;
+							}
+						}
+					}
+				}
+
+				if (requiresBankItem(item) && !takeFromBankOrFail(player, item)) {
+					continue;
+				}
+
+				handleForcedCharges(item);
+
+				player.getEquipment().getItems().set(i, item);
+				player.getEquipment().refresh(i);
+			}
+		}
+
+		data = p2.getInventory().getItems().getContainerItems();
+		if (data != null) {
+			for (int i = 0; i < data.length; i++) {
+				final Item item = data[i];
+				if (item == null) {
+					player.getInventory().addItem(0, 1);
+					continue;
+				}
+
+				if (requiresBankItem(item) && !takeFromBankOrFail(player, item)) {
+					player.getInventory().addItem(0, 1);
+					continue;
+				}
+
+				handleForcedCharges(item);
+				player.getInventory().addItem(item);
+			}
+		}
+
+		Summoning.Pouch pouch = p2.getFamiliar().getPouch();
+		if (pouch != null) {
+			Item pouchItem = new Item(pouch.getRealPouchId());
+			if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
+				if (!player.getBank().containsOneItem(pouch.getRealPouchId())) {
+					player.message("Couldn't find " + pouchItem.getName() + " in your bank.");
+				} else if (Summoning.spawnFamiliar(player, pouch, true)) {
+					player.getBank().removeItem(pouch.getRealPouchId());
+				}
+			} else {
+				Summoning.spawnFamiliar(player, pouch, true);
+			}
+		}
+		player.getInventory().deleteItem(0, 28);
+		player.getCombatDefinitions().setSpellBook(p2.combatDefinitions.getSpellId(), false);
+		player.getPrayer().setPrayerBook(p2.getPrayer().isAncientCurses());
+		player.getAppearence().generateAppearenceData();
+		player.getSkills().switchXPPopup(true);
+		player.getSkills().switchXPPopup(true);
+		CommandRegistry.execute(player, "heal");
+		player.message("You copied " + p2.getDisplayName() + " current preset.");
 	}
 
 }

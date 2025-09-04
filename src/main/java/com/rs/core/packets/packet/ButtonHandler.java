@@ -128,15 +128,15 @@ public class ButtonHandler {
                 player.getTemporaryAttributtes().remove("ACHIEVEMENTTAB");
                 Integer tab = (Integer) player.temporaryAttribute().get("CUSTOMTAB");
                 if (tab == null || tab == 0) {
-                    JournalTabDSL.INSTANCE.open(player);
+                    JournalTab.open(player);
                 } else if (tab == 1) {
-                    TeleportTabDSL.INSTANCE.open(player);
+                    TeleportTab.open(player);
                 } else if (tab == 2) {
-                    SettingsTabDSL.INSTANCE.open(player);
+                    SettingsTab.open(player);
                 } else if (tab == 3) {
-                    GearTabDSL.INSTANCE.open(player, null);
+                    GearTab.open(player, null);
                 } else if (tab == 4) {
-                    GearTabDSL.INSTANCE .open(player, null);
+                    QuestTab.open(player);
                 }
             }
             if ((interfaceId == 548 && componentId == 148) || (interfaceId == 746 && componentId == 199)) {
@@ -2220,6 +2220,11 @@ public class ButtonHandler {
 
             }
         } else if (interfaceId == 1266) {
+            if (player.getInterfaceManager().containsInterface(3010)) {
+                Item item = player.getInventory().getItem(slotId);
+                player.getShopSystem().handleSellOption(item, packetId);
+                return;
+            }
             player.temporaryAttribute().put("ShopSelectedSlot", slotId);
             if (componentId == 0) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET) player.getInventory().sendExamine(slotId);

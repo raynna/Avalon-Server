@@ -15,7 +15,86 @@ class ShopSystem(private val player: Player) {
         private val viewingPlayers = WeakHashMap<Player, Int>()
 
         // Component IDs for the shop interface
-        private val ITEM_CONTAINERS = intArrayOf(25, 31, 37, 43, 49, 55, 61, 67, 73, 79, 85, 91, 97, 103, 109, 115, 121, 127, 133, 139, 145, 151, 157, 163, 169, 175, 181, 187, 193, 199, 205, 211, 217, 223, 229, 235, 241, 247, 253, 259, 265, 271, 277, 283, 289, 295, 301, 307, 313, 319, 325, 331, 337, 343, 349, 355, 361, 367, 373, 379, 385, 391, 397, 403, 409, 415, 421, 427, 433, 439, 445, 451, 457, 463, 469, 475, 481, 487)
+        private val ITEM_CONTAINERS = intArrayOf(
+            25,
+            31,
+            37,
+            43,
+            49,
+            55,
+            61,
+            67,
+            73,
+            79,
+            85,
+            91,
+            97,
+            103,
+            109,
+            115,
+            121,
+            127,
+            133,
+            139,
+            145,
+            151,
+            157,
+            163,
+            169,
+            175,
+            181,
+            187,
+            193,
+            199,
+            205,
+            211,
+            217,
+            223,
+            229,
+            235,
+            241,
+            247,
+            253,
+            259,
+            265,
+            271,
+            277,
+            283,
+            289,
+            295,
+            301,
+            307,
+            313,
+            319,
+            325,
+            331,
+            337,
+            343,
+            349,
+            355,
+            361,
+            367,
+            373,
+            379,
+            385,
+            391,
+            397,
+            403,
+            409,
+            415,
+            421,
+            427,
+            433,
+            439,
+            445,
+            451,
+            457,
+            463,
+            469,
+            475,
+            481,
+            487
+        )
         private const val TITLE_COMPONENT = 16
         private const val CURRENCY_COMPONENT = 17
     }
@@ -108,7 +187,6 @@ class ShopSystem(private val player: Player) {
 
             player.packets.sendHideIComponent(INTERFACE_ID, componentId + 3, true)
 
-            // Set buy options for this item
             player.packets.sendInterSetItemsOptionsScript(
                 INTERFACE_ID,
                 componentId + 2,
@@ -121,178 +199,224 @@ class ShopSystem(private val player: Player) {
                 componentId + 2,
                 0, 27, 0, 1, 2, 3, 4, 5
             )
-        }
-
-        // Display shop title and player's currency amount
-        player.packets.sendTextOnComponent(INTERFACE_ID, TITLE_COMPONENT, shop.title)
-        player.packets.sendTextOnComponent(
-            INTERFACE_ID,
-            CURRENCY_COMPONENT,
-            "${shop.currency.displayName}: ${getPlayerCurrencyAmount(shop.currency).format()}"
-        )
-    }
-
-    fun handleItemOption(itemId: Int, option: Int) {
-        val shop = getCurrentShop() ?: return
-        when (option) {
-            WorldPacketsDecoder.ACTION_BUTTON1_PACKET -> showItemInfo(itemId, shop.currency)
-            WorldPacketsDecoder.ACTION_BUTTON2_PACKET -> buyItem(itemId, 1)
-            WorldPacketsDecoder.ACTION_BUTTON3_PACKET -> buyItem(itemId, 10)
-            WorldPacketsDecoder.ACTION_BUTTON4_PACKET -> buyItem(itemId, 50)
-            WorldPacketsDecoder.ACTION_BUTTON5_PACKET -> handleBuyXOption(itemId) // Buy X option
-            WorldPacketsDecoder.ACTION_BUTTON6_PACKET -> player.message(ItemExamines.getExamine(Item(itemId)))
-        }
-    }
-
-    private fun handleBuyXOption(itemId: Int) {
-        player.temporaryAttribute()["SHOP_BUY_X_ITEM"] = itemId
-
-        player.packets.sendRunScript(108, "How many would you like to buy?")
-    }
-
-    fun handleBuyXInput(value: Int) {
-        val itemId = player.temporaryAttribute().remove("SHOP_BUY_X_ITEM") as? Int ?: return
-
-        if (value <= 0) {
-            player.message("You must enter a positive amount.")
-            return
-        }
-
-        buyItem(itemId, value)
-    }
-
-    private fun showItemInfo(itemId: Int, currency: CurrencyType) {
-        val shop = getCurrentShop() ?: return
-
-        // Find the shop item that matches the itemId
-        val shopItem = shop.items.find { it.itemId == itemId }
-        if (shopItem == null) {
-            player.message("This item is not available in this shop.")
-            return
-        }
-
-        // Get the price (use custom price if set, otherwise economy price)
-        val price = shopItem.price ?: EconomyPrices.getPrice(shopItem.itemId)
-        val itemDef = ItemDefinitions.getItemDefinitions(itemId)
-
-        player.message("${itemDef.name} costs ${price.format()} ${currency.displayName}.")
-    }
-
-    fun buyItem(itemId: Int, amount: Int) {
-        val shop = getCurrentShop() ?: return
-        val shopItem = shop.items.find { it.itemId == itemId } ?: return
-
-        var buyAmount = amount
-        var buyItem = shopItem.itemId;
-        // --- Cap to stock ---
-        if (shopItem.maxStock != 1 && buyAmount > shopItem.currentStock) {
-            buyAmount = shopItem.currentStock
-        }
-        var def = ItemDefinitions.getItemDefinitions(itemId)
-        if (buyAmount > 1 && !def.isStackable && !def.isNoted) {
-            if (def.getCertId() != -1) {
-                buyItem = def.getCertId();
-            }
-
-        }
-        val price = shopItem.price ?: EconomyPrices.getPrice(buyItem)
-        val currency = shop.currency
-
-        // --- Cap to what player can afford ---
-        val effectivePrice = price ?: 0;
-        val playerCurrency = getPlayerCurrencyAmount(currency)
-        val maxAffordable = if (effectivePrice <= 0) {
-           buyAmount
-        } else {
-            playerCurrency/price
-        }
-        if (buyAmount > maxAffordable) {
-            buyAmount = maxAffordable
-        }
-        def = ItemDefinitions.getItemDefinitions(buyItem)
-        val freeSlots = player.inventory.freeSlots
-        val stackable = def.isStackable || def.isNoted
-        val alreadyHas = player.inventory.containsOneItem(buyItem)
-
-        // --- Cap to inventory space (unless stackable/noted and already owned) ---
-        if (!stackable || !alreadyHas) {
-            if (buyAmount > freeSlots) {
-                buyAmount = freeSlots
+            player.interfaceManager.sendInventoryInterface(1266)
+            player.packets.sendItems(93, player.getInventory().getItems())
+            player.packets.sendUnlockOptions(1266, 0, 0, 27, 0, 1, 2, 3, 4, 5)
+            player.packets.sendInterSetItemsOptionsScript(
+                1266, 0, 93, 4, 7, "Value", "Sell 1", "Sell 5", "Sell 10",
+                "Sell 50", "Sell All"
+            )
+            player.packets.sendTextOnComponent(INTERFACE_ID, TITLE_COMPONENT, shop.title)
+            player.packets.sendTextOnComponent(
+                INTERFACE_ID,
+                CURRENCY_COMPONENT,
+                "${shop.currency.displayName}: ${HexColours.getMessage(HexColours.Colour.WHITE, getPlayerCurrencyAmount(shop.currency).format())}"
+            )
             }
         }
 
-        // --- Final validation ---
-        if (buyAmount <= 0) {
-            when {
-                shopItem.maxStock == 0 -> player.message("The shop is out of stock.")
-                maxAffordable == 0 -> player.message("You don't have enough ${currency.displayName}.")
-                freeSlots == 0 -> player.message("You don't have enough inventory space.")
+        fun handleItemOption(itemId: Int, option: Int) {
+            val shop = getCurrentShop() ?: return
+            when (option) {
+                WorldPacketsDecoder.ACTION_BUTTON1_PACKET -> showItemInfo(itemId, shop.currency)
+                WorldPacketsDecoder.ACTION_BUTTON2_PACKET -> buyItem(itemId, 1)
+                WorldPacketsDecoder.ACTION_BUTTON3_PACKET -> buyItem(itemId, 10)
+                WorldPacketsDecoder.ACTION_BUTTON4_PACKET -> buyItem(itemId, 50)
+                WorldPacketsDecoder.ACTION_BUTTON5_PACKET -> handleBuyXOption(itemId)
+                WorldPacketsDecoder.ACTION_BUTTON6_PACKET -> player.message(ItemExamines.getExamine(Item(itemId)))
             }
-            return
         }
 
-        val totalPrice = buyAmount * price
-
-        // --- Process purchase ---
-        removeCurrency(currency, totalPrice)
-        player.inventory.addItem(buyItem, buyAmount)
-
-        // Reduce stock if not infinite
-        if (shopItem.maxStock != 1 && price > 0) {
-            shopItem.currentStock -= buyAmount
+        fun handleSellOption(item: Item, option: Int) {
+            val shop = getCurrentShop() ?: return
+            when (option) {
+                WorldPacketsDecoder.ACTION_BUTTON1_PACKET -> showSellInfo(item.id, shop.currency)
+                WorldPacketsDecoder.ACTION_BUTTON2_PACKET -> sellItem(item.id, 1)
+                WorldPacketsDecoder.ACTION_BUTTON3_PACKET -> sellItem(item.id, 5)
+                WorldPacketsDecoder.ACTION_BUTTON4_PACKET -> sellItem(item.id, 10)
+                WorldPacketsDecoder.ACTION_BUTTON5_PACKET -> sellItem(item.id, 50)
+                WorldPacketsDecoder.ACTION_BUTTON6_PACKET -> sellItem(item.id, item.amount)
+            }
         }
 
-        player.message("You bought $buyAmount x ${def.name} for ${totalPrice.format()} ${currency.displayName}.")
-        refreshShopInterface(shop)
+        private fun handleBuyXOption(itemId: Int) {
+            player.temporaryAttribute()["SHOP_BUY_X_ITEM"] = itemId
+
+            player.packets.sendRunScript(108, "How many would you like to buy?")
+        }
+
+        fun handleBuyXInput(value: Int) {
+            val itemId = player.temporaryAttribute().remove("SHOP_BUY_X_ITEM") as? Int ?: return
+
+            if (value <= 0) {
+                player.message("You must enter a positive amount.")
+                return
+            }
+
+            buyItem(itemId, value)
+        }
+
+        private fun showItemInfo(itemId: Int, currency: CurrencyType) {
+            val shop = getCurrentShop() ?: return
+
+            // Find the shop item that matches the itemId
+            val shopItem = shop.items.find { it.itemId == itemId }
+            if (shopItem == null) {
+                player.message("This item is not available in this shop.")
+                return
+            }
+
+            // Get the price (use custom price if set, otherwise economy price)
+            val price = shopItem.price ?: EconomyPrices.getPrice(shopItem.itemId)
+            val itemDef = ItemDefinitions.getItemDefinitions(itemId)
+
+            player.message("${itemDef.name} costs ${price.format()} ${currency.displayName}.")
+        }
+
+        private fun showSellInfo(itemId: Int, currency: CurrencyType) {
+            val shop = getCurrentShop() ?: return
+
+            val shopItem = shop.items.find { it.itemId == itemId }
+            if (shopItem == null) {
+                player.message("This item is not available in this shop.")
+                return
+            }
+
+            val basePrice = shopItem.price ?: EconomyPrices.getPrice(shopItem.itemId)
+            if (basePrice == 0) {
+                player.message("You cannot sell free items to the shop.")
+                return
+            }
+            val sellPrice = (basePrice * 0.66).toInt() // 66% of base price
+
+            val itemDef = ItemDefinitions.getItemDefinitions(itemId)
+
+            player.message("${itemDef.name} will sell back for ${sellPrice.format()} ${currency.displayName}.")
+        }
+
+
+        fun buyItem(itemId: Int, amount: Int) {
+            val shop = getCurrentShop() ?: return
+            val shopItem = shop.items.find { it.itemId == itemId } ?: return
+
+            var buyAmount = amount
+            var buyItem = shopItem.itemId;
+            // --- Cap to stock ---
+            if (shopItem.maxStock != 1 && shopItem.unlimitedStock == false && buyAmount > shopItem.currentStock) {
+                buyAmount = shopItem.currentStock
+            }
+            var def = ItemDefinitions.getItemDefinitions(itemId)
+            if (buyAmount > 1 && !def.isStackable && !def.isNoted) {
+                if (def.getCertId() != -1) {
+                    buyItem = def.getCertId();
+                }
+            }
+            val price = shopItem.price ?: EconomyPrices.getPrice(buyItem)
+            val currency = shop.currency
+
+            // --- Cap to what player can afford ---
+            val effectivePrice = price ?: 0;
+            val playerCurrency = getPlayerCurrencyAmount(currency)
+            val maxAffordable = if (effectivePrice <= 0) {
+                buyAmount
+            } else {
+                playerCurrency / price
+            }
+            if (buyAmount > maxAffordable) {
+                buyAmount = maxAffordable
+            }
+            def = ItemDefinitions.getItemDefinitions(buyItem)
+            val freeSlots = player.inventory.freeSlots
+            val stackableOrNoted = def.isStackable || def.isNoted
+
+            // --- Cap to inventory space (only for non-stackable items) ---
+            if (!stackableOrNoted) {
+                if (buyAmount > freeSlots) {
+                    buyAmount = freeSlots
+                }
+            }
+
+            // --- Final validation ---
+            if (buyAmount <= 0) {
+                when {
+                    shopItem.maxStock == 0 -> player.message("The shop is out of stock.")
+                    maxAffordable == 0 -> player.message("You don't have enough ${currency.displayName}.")
+                    freeSlots == 0 -> player.message("You don't have enough inventory space.")
+                }
+                return
+            }
+
+            val totalPrice = buyAmount * price
+
+            // --- Process purchase ---
+            removeCurrency(currency, totalPrice)
+            player.inventory.addItem(buyItem, buyAmount)
+
+            // Reduce stock if not infinite
+            if (shopItem.maxStock != 1 && shopItem.unlimitedStock == false && price > 0) {
+                shopItem.currentStock -= buyAmount
+            }
+
+            player.message("You bought $buyAmount x ${def.name} for ${totalPrice.format()} ${currency.displayName}.")
+            refreshShopInterface(shop)
+        }
+
+
+        fun sellItem(itemId: Int, amount: Int) {
+            val shop = getCurrentShop()
+            val currency = shop?.currency ?: CurrencyType.COINS
+            var sellAmount = amount
+            if (sellAmount > player.inventory.getNumberOf(itemId))
+                sellAmount = player.inventory.getAmountOf(itemId)
+
+            val price = (EconomyPrices.getPrice(itemId) * 0.66).toInt()
+            if (price <= 0) {
+                player.message("You can't sell this item.")
+                return
+            }
+            val sellPrice = price * sellAmount
+
+
+            when (currency) {
+                CurrencyType.COINS -> player.moneyPouch.addMoney(sellPrice, false)
+                CurrencyType.PVP_TOKENS -> {
+                    val tokenId = Item.getId("item.fist_of_guthix_token")
+                    if (!player.inventory.canHold(tokenId, 1)) {
+                        player.message("You don't have any inventory space.")
+                        return
+                    }
+                    player.addItem(tokenId, sellPrice)
+                }
+
+                CurrencyType.AVALON_POINTS -> player.avalonPoints += sellPrice
+            }
+            player.inventory.deleteItem(itemId, sellAmount)
+
+            val itemDef = ItemDefinitions.getItemDefinitions(itemId)
+            player.message("Sold $sellAmount x ${itemDef.name} for ${sellPrice.format()} ${currency.displayName}.")
+        }
+
+        private fun getPlayerCurrencyAmount(currency: CurrencyType): Int {
+            return when (currency) {
+                CurrencyType.COINS -> player.totalCoins
+                CurrencyType.PVP_TOKENS -> player.pvpTokens
+                CurrencyType.AVALON_POINTS -> player.avalonPoints
+            }
+        }
+
+        private fun removeCurrency(currency: CurrencyType, amount: Int) {
+            when (currency) {
+                CurrencyType.COINS -> player.canBuy(amount)
+                CurrencyType.PVP_TOKENS -> player.inventory.deleteItem("item.fist_of_guthix_token", amount);
+                CurrencyType.AVALON_POINTS -> player.avalonPoints -= amount
+            }
+        }
+
+        private fun Int.format(): String {
+            return when {
+                this >= 10_000_000 -> "${this / 1_000_000}m"
+                this >= 1_000 -> "${this / 1_000}k"
+                else -> toString()
+            }
+        }
     }
-
-
-    fun sellItem(itemId: Int, amount: Int) {
-        val shop = getCurrentShop()
-        val currency = shop?.currency ?: CurrencyType.COINS
-
-        if (!player.inventory.containsItem(itemId, amount)) return
-
-        val price = (EconomyPrices.getPrice(itemId) * 0.33).toInt()
-        if (price <= 0) {
-            player.message("You can't sell this item.")
-            return
-        }
-
-        player.inventory.deleteItem(itemId, amount)
-
-        // Add currency based on shop type
-        when (currency) {
-            CurrencyType.COINS -> player.moneyPouch.addMoney(price, false)
-            CurrencyType.PVP_TOKENS -> player.addItem("item.fist_of_guthix_token", price);
-            CurrencyType.AVALON_POINTS -> player.avalonPoints += price
-        }
-
-        val itemDef = ItemDefinitions.getItemDefinitions(itemId)
-        player.message("Sold $amount x ${itemDef.name} for ${price.format()} ${currency.displayName}.")
-    }
-
-    private fun getPlayerCurrencyAmount(currency: CurrencyType): Int {
-        return when (currency) {
-            CurrencyType.COINS -> player.totalCoins
-            CurrencyType.PVP_TOKENS -> player.pvpTokens
-            CurrencyType.AVALON_POINTS -> player.avalonPoints
-        }
-    }
-
-    private fun removeCurrency(currency: CurrencyType, amount: Int) {
-        when (currency) {
-            CurrencyType.COINS -> player.canBuy(amount)
-            CurrencyType.PVP_TOKENS -> player.inventory.deleteItem("item.fist_of_guthix_token", amount);
-            CurrencyType.AVALON_POINTS -> player.avalonPoints -= amount
-        }
-    }
-
-    private fun Int.format(): String {
-        return when {
-            this >= 10_000_000 -> "${this / 1_000_000}m"
-            this >= 1_000 -> "${this / 1_000}k"
-            else -> toString()
-        }
-    }
-}

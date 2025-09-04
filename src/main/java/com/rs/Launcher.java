@@ -14,14 +14,12 @@ import com.rs.discord.DiscordRoutes;
 import com.rs.discord.DiscordWebhook;
 import com.rs.java.game.Region;
 import com.rs.java.game.World;
-import com.rs.java.game.area.AreaManager;
 import com.rs.java.game.cityhandler.CityEventHandler;
 import com.rs.java.game.item.ItemPluginLoader;
 import com.rs.java.game.item.ground.AutomaticGroundItem;
 import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.npc.NpcPluginLoader;
 import com.rs.java.game.npc.combat.CombatScriptsHandler;
-import com.rs.java.tools.GenericClientScriptMapDumper;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.drops.DropTablesSetup;
 import com.rs.java.game.objects.GlobalObjectAddition;
@@ -65,6 +63,7 @@ import com.rs.java.utils.Weights;
 import com.rs.java.utils.huffman.Huffman;
 import com.rs.kotlin.game.player.command.CommandRegistry;
 import com.rs.kotlin.game.player.shop.ShopInitializer;
+import com.rs.kotlin.game.world.area.AreaManager;
 
 public final class Launcher {
 
@@ -85,7 +84,7 @@ public final class Launcher {
 		Rscm.loadAll();
 		//RscmGenerator.INSTANCE.generateGroupedNpcRscm();
 		DropTablesSetup.setup();
-		AreaManager.init();
+		AreaManager.INSTANCE.init();
 		ItemsEquipIds.init();
 		Huffman.init();
 		DisplayNames.init();

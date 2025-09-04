@@ -969,7 +969,7 @@ getRenderAnimId = clientScriptData.get(644); (1426 if getRenderAnimId = null)
         if (value != null && value instanceof Integer)
             return ((Integer) value).doubleValue() / 100;
         return 1;
-    }
+    }//52314
 
     public int getHighAlchPrice() {
         return (int) (price * 0.6);

@@ -26,7 +26,7 @@ object JournalTabDSL {
     )
 
     fun open(player: Player) {
-        player.temporaryAttributtes["CUSTOMTAB"] = 0
+        player.temporaryAttributes()["CUSTOMTAB"] = 0
         TabRuntime.open(player, buildPage())
     }
 
@@ -99,7 +99,7 @@ object JournalTabDSL {
             }
         }) { p ->
             p.setCustomTitle(null)
-            p.temporaryAttributtes["SET_TITLE"] = true
+            p.temporaryAttributes()["SET_TITLE"] = true
             p.packets.sendRunScript(108, arrayOf("Enter title id, 0-58, 0 = none:"))
         }
 

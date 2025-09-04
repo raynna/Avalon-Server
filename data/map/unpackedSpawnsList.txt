@@ -74,8 +74,6 @@
 //Barrel spawned by andreas
 42382 10 0 - 3089 3505 0 true
 //Portal spawned by andreas
-2468 10 0 - 3091 3493 0 true
-//Portal spawned by andreas
 2465 10 0 - 83 80 0 true
 //null spawned by andreas
 2562 10 2 - 3088 3483 0 true

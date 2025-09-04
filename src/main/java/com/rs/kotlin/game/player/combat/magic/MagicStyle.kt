@@ -157,7 +157,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         super.onHit(attacker, defender, hit)
-        var currentSpell = attacker.temporaryAttributtes["CASTED_SPELL"] as? Spell
+        var currentSpell = attacker.temporaryAttributes()["CASTED_SPELL"] as? Spell
 
         if (defender is Player && GreaterRunicStaffWeapon.hasWeapon(defender)) {
             val spellId = GreaterRunicStaffWeapon.getSpellId(attacker)
@@ -186,7 +186,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             attacker.message("spellName ${currentSpell.name}")
             if (currentSpell.name.contains("teleport block", ignoreCase = true)) {
                 attacker.message("spell was teleport block")
-                val blockTime = defender.temporaryAttributtes.remove("TELEBLOCK_QUEUE") as? Int
+                val blockTime = defender.temporaryAttributes().remove("TELEBLOCK_QUEUE") as? Int
                 if (blockTime != null && blockTime != -1) {
                     attacker.message("apply teleblock $blockTime")
                     defender.teleportBlock(blockTime)
@@ -250,11 +250,11 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 if (defender.prayer.hasProtectFromMagic()) {
                     seconds /= 2;
                 }
-                defender.temporaryAttributtes["TELEBLOCK_QUEUE"] = seconds
-                attacker.message("Time to tb in seconds ${defender.temporaryAttributtes["TELEBLOCK_QUEUE"]}")
+                defender.temporaryAttributes()["TELEBLOCK_QUEUE"] = seconds
+                attacker.message("Time to tb in seconds ${defender.temporaryAttributes()["TELEBLOCK_QUEUE"]}")
             }
         }
-        attacker.temporaryAttributtes["CASTED_SPELL"] = spell
+        attacker.temporaryAttributes()["CASTED_SPELL"] = spell
         delayHits(PendingHit(hit, defender, getHitDelay()))
         if (manual) {
             WorldTasksManager.schedule(object : WorldTask() {
@@ -290,6 +290,9 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                     endGraphic = Graphics(1677, 100)
                 }
             }
+        }
+        if (hit.damage > 0 && spell.element == ElementType.Blood) {
+            attacker.heal(hit.damage / 5)
         }
         if (spell.projectileId != -1) {
             if (spell.endGraphic.id != -1) {

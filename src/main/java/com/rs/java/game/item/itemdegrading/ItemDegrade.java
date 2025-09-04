@@ -142,10 +142,10 @@ public class ItemDegrade {
 		 */
 
 		AHRIMS_HOOD(new Item(4708), new Item(4856), DegradeType.AT_INCOMMING_HIT, new Item(4860), 1),
-		AHRIMS_HOOD_100(new Item(4856), new Item(4857), DegradeType.AT_INCOMMING_HIT, new Item(4860), 5),
-		AHRIMS_HOOD_75(new Item(4857), new Item(4858), DegradeType.AT_INCOMMING_HIT, new Item(4860), 5),
-		AHRIMS_HOOD_50(new Item(4858), new Item(4859), DegradeType.AT_INCOMMING_HIT, new Item(4860), 5),
-		AHRIMS_HOOD_25(new Item(4859), null, DegradeType.AT_INCOMMING_HIT, new Item(4860), 5),
+		AHRIMS_HOOD_100(new Item(4856), new Item(4857), DegradeType.AT_INCOMMING_HIT, new Item(4860), 1000),
+		AHRIMS_HOOD_75(new Item(4857), new Item(4858), DegradeType.AT_INCOMMING_HIT, new Item(4860), 1000),
+		AHRIMS_HOOD_50(new Item(4858), new Item(4859), DegradeType.AT_INCOMMING_HIT, new Item(4860), 1000),
+		AHRIMS_HOOD_25(new Item(4859), null, DegradeType.AT_INCOMMING_HIT, new Item(4860), 1000),
 
 		AHRIMS_TOP(new Item(4712), new Item(4868), DegradeType.AT_INCOMMING_HIT, new Item(4872), 1),
 		AHRIMS_TOP_100(new Item(4868), new Item(4869), DegradeType.AT_INCOMMING_HIT, new Item(4872), 1000),

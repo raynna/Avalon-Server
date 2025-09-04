@@ -190,6 +190,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             xp = 33.0,
             damage = 170,
             type = SpellType.Combat,
+            element = ElementType.Blood,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 2),
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 2),
@@ -279,6 +280,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 68,
             xp = 39.0,
             damage = 210,
+            element = ElementType.Blood,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 4),
@@ -373,6 +375,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             xp = 45.0,
             damage = 250,
             type = SpellType.Combat,
+            element = ElementType.Blood,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 2),
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 4)
@@ -463,6 +466,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             xp = 51.0,
             damage = 290,
             type = SpellType.Combat,
+            element = ElementType.Blood,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 4),
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 4),

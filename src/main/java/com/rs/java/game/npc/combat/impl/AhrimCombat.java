@@ -20,8 +20,8 @@ public class AhrimCombat extends CombatScript {
 	@Override
 	public int attack(NPC npc, Entity target) {
 		npc.animate(npc.getAttackAnimation());
-		npc.gfx(npc.getAttackGfx());
-		ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, npc.getProjectileId(), npc, target);
+		npc.gfx(2728);
+		ProjectileManager.sendWithGraphic(Projectile.ELEMENTAL_SPELL, 2735, npc, target, new Graphics(2740, 100));
 
 		Hit mageHit = npc.magicHit(target, npc.getMaxHit());
 		if (mageHit.getDamage() != 0 && target instanceof Player player && Utils.random(3) == 0) {

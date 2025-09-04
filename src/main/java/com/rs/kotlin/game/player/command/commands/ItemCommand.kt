@@ -55,15 +55,19 @@ class ItemCommand : Command {
         if (noted && finalItem.id == itemDef.id) {
             player.message("${itemDef.name} cannot be spawned as noted.")
         }
-        if (Settings.ECONOMY_MODE < Settings.FULL_SPAWN) {
+        if (Settings.ECONOMY_MODE < Settings.FULL_SPAWN && !player.username.equals("halfeco")) {
+            if (!finalItem.isTradeable) {
+                player.message("This item is untradeable, look for this item in shops.")
+                return true
+            }
             if (EconomyPrices.getPrice(finalItem.id) > 0 && !player.rank.isDeveloper) {
                 player.message("This item costs money, look for this item in shops.")
                 return true
             }
-        }
-        if (finalItem.id == 995) {
-            player.message("You can't spawn coins, You cheeky!")
-            return true
+            if (finalItem.id == 995 || finalItem.id == 12852) {
+                player.message("You can't spawn coins, You cheeky!")
+                return true
+            }
         }
         player.inventory.addItem(finalItem.id, amount)
         player.message("You spawn $amount x ${finalItem.name} (<col=ff0000>${finalItem.id}</col>).")

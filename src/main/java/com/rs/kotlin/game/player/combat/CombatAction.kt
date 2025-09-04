@@ -3,6 +3,7 @@ package com.rs.kotlin.game.player.combat
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
+import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.actions.combat.QueuedInstantCombat
@@ -198,6 +199,8 @@ class CombatAction(
                 if (validateAttack(player, target)) {
                     player.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
                     target.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACKED_TICK, 10)
+                    target.tickManager.addTicks(TickManager.TickKeys.PJ_TIMER, 12);
+                    target.attackedBy = player
                     if (target is Player) {
                         PvpManager.onPlayerDamagedByPlayer(target, player)
                     }
@@ -219,19 +222,23 @@ class CombatAction(
         if (!player.controlerManager.canHit(target) || !player.controlerManager.keepCombating(target) || !player.controlerManager.canAttack(target))
             return false
         if (!PvpManager.canPlayerAttack(player, target))
-            return false;
+            return false
         if (player.isAtMultiArea && !target.isAtMultiArea) {
-            if (target.attackedBy != player && target.attackedByDelay > Utils.currentTimeMillis()) {
+            if (target.attackedBy != player && target.tickManager.isActive(TickManager.TickKeys.PJ_TIMER)) {
                 player.message("That " + (if (player.getAttackedBy() is Player) "player" else "npc") + " is already in combat.")
                 return false
             }
         }
         if (!target.isAtMultiArea && !player.isAtMultiArea) {
-            if (player.getAttackedBy() !== target && player.attackedByDelay > Utils.currentTimeMillis()) {
+            if (player.getAttackedBy() !== target && player.tickManager.isActive(TickManager.TickKeys.PJ_TIMER)) {
                 player.message("You are already in combat.")
                 return false
             }
-            if (target.attackedBy !== player && target.attackedByDelay > Utils.currentTimeMillis()) {
+            if (target.attackedBy !== player && target.tickManager.isActive(TickManager.TickKeys.PJ_TIMER)) {
+                if (target is NPC) {
+                    if (target.id == 4474 || target.id == 7891)
+                        return true
+                }
                 player.message(
                     ("That " + (if (player.getAttackedBy() is Player) "player" else "npc") + " is already in combat.")
                 )

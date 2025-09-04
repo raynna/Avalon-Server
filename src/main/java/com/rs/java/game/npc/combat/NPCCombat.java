@@ -180,6 +180,10 @@ public final class NPCCombat {
                 && !target.hasWalkSteps()
                 && size == 1) {
             npc.resetWalkSteps();
+            if (npc.isFrozen()) {
+                combatDelay = 1;
+                return true;
+            }
             if (!npc.addWalkSteps(target.getX(), npc.getY(), 1))
                 npc.addWalkSteps(npc.getX(), target.getY(), 1);
             return true;

@@ -6,8 +6,6 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.ForceMovement;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
-import com.rs.java.game.area.Area;
-import com.rs.java.game.area.AreaManager;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
@@ -15,6 +13,8 @@ import com.rs.java.game.player.content.Pots;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.world.area.Area;
+import com.rs.kotlin.game.world.area.AreaManager;
 
 public class WildernessControler extends Controler {
 

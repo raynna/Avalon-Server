@@ -44,6 +44,25 @@ public final class Inventory implements Serializable {
 		this.player = player;
 	}
 
+	public boolean canHold(Item item, int amount) {
+		ItemDefinitions def = ItemDefinitions.getItemDefinitions(item.getId());
+		boolean stackableOrNoted = def.isStackable() || def.isNoted();
+
+		if (stackableOrNoted) {
+			if (containsOneItem(item.getId())) {
+				return true;
+			}
+			return getFreeSlots() > 0;
+		} else {
+			return getFreeSlots() >= amount;
+		}
+	}
+
+	public boolean canHold(int itemId, int amount) {
+		return canHold(new Item(itemId), amount);
+	}
+
+
 
 	public void init() {
 		int pouchCount = 0;

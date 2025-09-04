@@ -300,12 +300,30 @@ public class NPC extends Entity implements Serializable {
         if (getId() == 1282) {
             setName("Sell Items");
         }
+        if (getId() == 45) {
+            setName("Bank");
+            setRandomWalk(0);
+            faceWorldTile(this, "west");
+        }
+
+        if (getId() == 5195) {
+            setName("Teleport Wizard");
+            setRandomWalk(0);
+            faceWorldTile(this, "west");
+        }
+        if (getId() == 2593) {
+            setName("Grand Exchange");
+            setRandomWalk(0);
+            faceWorldTile(this, "south");
+        }
         if (getId() == 650) {
             setName("Combat Shops");
             setRandomWalk(0);
+            faceWorldTile(this, "west");
         }
         if (getId() == 2676) {
             setName("Customise character");
+            faceWorldTile(this, "west");
             setRandomWalk(0);
         }
         if (getId() == 1282) {

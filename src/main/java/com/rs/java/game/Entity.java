@@ -10,8 +10,6 @@ import com.rs.Settings;
 import com.rs.core.cache.defintions.AnimationDefinitions;
 import com.rs.core.cache.defintions.ObjectDefinitions;
 import com.rs.java.game.Hit.HitLook;
-import com.rs.java.game.area.AreaManager;
-import com.rs.java.game.minigames.lividfarm.LividFarmControler;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.npc.nomad.Nomad;
@@ -85,7 +83,7 @@ public abstract class Entity extends WorldTile {
     private transient boolean forceMultiArea;
     public transient long frozenBlocked;
     private transient long findTargetDelay;
-    private transient ConcurrentHashMap<Object, Object> temporaryAttributes;
+    private transient Map<Object, Object> temporaryAttributes = new ConcurrentHashMap<>();
     private transient int hashCode;
     public boolean isTeleporting;
 
@@ -122,7 +120,7 @@ public abstract class Entity extends WorldTile {
         walkSteps = new ConcurrentLinkedQueue<Object[]>();
         receivedHits = new ConcurrentLinkedQueue<Hit>();
         receivedDamage = new ConcurrentHashMap<Entity, Integer>();
-        temporaryAttributes = new ConcurrentHashMap<Object, Object>();
+        temporaryAttributes = new ConcurrentHashMap<>();
         nextHits = new ArrayList<>();
         hitOverflow = new LinkedList<>();
         nextWalkDirection = nextRunDirection - 1;
@@ -1156,6 +1154,8 @@ public abstract class Entity extends WorldTile {
     public void teleportBlock(int seconds) {
         tickManager.addSeconds(TickManager.TickKeys.TELEPORT_BLOCK, seconds);
         tickManager.addSeconds(TickManager.TickKeys.TELEPORT_BLOCK_IMMUNITY, seconds + 5);
+        if (this instanceof Player)
+            ((Player) this).message("You have been teleport blocked.");
     }
 
     public boolean isFreezeImmune() {
@@ -1673,14 +1673,17 @@ public abstract class Entity extends WorldTile {
         return lastAnimationEnd;
     }
 
-    public ConcurrentHashMap<Object, Object> temporaryAttribute() {
+    public Map<Object, Object> temporaryAttribute() {
         return temporaryAttributes;
     }
 
-    public ConcurrentHashMap<Object, Object> getTemporaryAttributtes() {
+    public Map<Object, Object> getTemporaryAttributtes() {
         return temporaryAttributes;
     }
 
+    public Map<Object, Object> temporaryAttributes() {
+        return temporaryAttributes;
+    }
     public boolean isForceMultiArea() {
         return forceMultiArea;
     }

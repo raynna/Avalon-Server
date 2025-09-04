@@ -1,5 +1,6 @@
 package com.rs.kotlin.game.player.command
 
+import com.rs.java.game.player.Bank
 import com.rs.java.game.player.Player
 import com.rs.kotlin.game.player.command.commands.*
 
@@ -11,7 +12,7 @@ object CommandRegistry {
     @JvmStatic
     fun registerCommands() {
         register("item", "spawn", command = ItemCommand())
-        register("commandlist", "command", command = CommandsCommand())
+        register("commandlist", "command", "commands", command = CommandsCommand())
         register("spellbook", "spells", "book", "switchbook", command = SpellBookCommand())
         register("prayers", "switchprayers", "switchpray", command = PrayerCommand())
         register("curses", "curse", "ancientcurses", command = AncientCursesCommand())
@@ -32,6 +33,11 @@ object CommandRegistry {
         register("droptest", "testdrop", command = DropTestCommand())
         register("customtitle", "title", command = CustomTitleCommand())
         register("teleto", "tpto", "teleportto", command = TeleportToCommand())
+        register("wolp", "wolpertinger", "wolperting", command = WolpertingerCommand())
+        register("gear", "preset", "load", command = GearCommand())
+        register("save", "savepreset", command = SaveCommand())
+        register("copy", "gearother", command = CopyCommand())
+        register("bank", "openbank", command = BankCommand())
         val teleportCommand = TeleportCommand()
         register(*teleportCommand.getAllTriggers().toTypedArray(), command = teleportCommand)
         register("location", "locations", "teleports", command = LocationsCommand(teleportCommand))

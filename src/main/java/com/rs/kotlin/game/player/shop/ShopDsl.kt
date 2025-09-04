@@ -8,7 +8,8 @@ class ShopDsl {
         var currentStock: Int,
         val maxStock: Int,
         val restockRate: Int = 1,
-        val price: Int? = null
+        val price: Int? = null,
+        val unlimitedStock: Boolean? = true
     )
 
     var id: Int = 0
@@ -46,6 +47,20 @@ class ShopDsl {
                 currentStock = currentStock,
                 maxStock = currentStock,
                 price = price
+            )
+        )
+    }
+
+    fun item(itemRef: Any, currentStock: Int = 1, maxStock: Int = -1, restockRate: Int = 1, price: Int? = null, unlimitedStock: Boolean? = true) {
+        val itemId = resolveItemId(itemRef)
+        items.add(
+            ShopItem(
+                itemId = itemId,
+                currentStock = currentStock,
+                maxStock = maxStock,
+                restockRate = restockRate,
+                price = price,
+                unlimitedStock = unlimitedStock
             )
         )
     }

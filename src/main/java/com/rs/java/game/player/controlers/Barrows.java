@@ -36,7 +36,7 @@ public final class Barrows extends Controler {
         private WorldTile outBound;
         private WorldTile inside;
 
-        private Hills(WorldTile outBound, WorldTile in) {
+        Hills(WorldTile outBound, WorldTile in) {
             this.outBound = outBound;
             inside = in;
         }
@@ -268,7 +268,6 @@ public final class Barrows extends Controler {
     public void sendTarget(int id, WorldTile tile) {
         if (target != null)
             target.disapear();
-        target = new BarrowsBrother(id, tile, this);
         target.setTarget(player);
         target.setNextForceTalk(new ForceTalk("You dare disturb my rest!"));
         player.getHintIconsManager().addHintIcon(target, 1, -1, false);

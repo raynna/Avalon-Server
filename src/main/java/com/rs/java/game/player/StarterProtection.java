@@ -109,9 +109,9 @@ public class StarterProtection {
 				player.getPresetManager().PRESET_SETUPS = p2.getPresetManager().PRESET_SETUPS;
 			}
 			player.getAppearence().generateAppearenceData();
-			player.getPresetManager().loadPreset("max hybrid", null);
+			player.getPresetManager().loadPreset("max hybrid", null, true);
 		}
-		if (Settings.ECONOMY_MODE  == Settings.FULL_SPAWN) {
+		if (Settings.ECONOMY_MODE == Settings.HALF_ECONOMY) {
 			String otherName = Utils.formatPlayerNameForDisplay("halfeco");
 			Player p2 = World.getPlayerByDisplayName(otherName);
 			if (p2 == null)
@@ -138,7 +138,7 @@ public class StarterProtection {
 				player.getPresetManager().PRESET_SETUPS = p2.getPresetManager().PRESET_SETUPS;
 			}
 			player.getAppearence().generateAppearenceData();
-			player.getPresetManager().loadPreset("max hybrid", null);
+			player.getPresetManager().loadPreset("hybrid", null, true);
 		}
 		if (Settings.ECONOMY_MODE == 0) {
 			String otherName = Utils.formatPlayerNameForDisplay("economy");
@@ -159,7 +159,7 @@ public class StarterProtection {
 			FriendChatsManager.joinChat(Settings.HELP_CC_NAME, player, true);
 			FriendChatsManager.refreshChat(player);
 		}
-		player.toggles.put("ONEXHITS", true);
+		player.toggles.put("ONEXHITS", false);
 		player.toggles.put("ONEXPPERHIT", false);
 		player.toggles.put("HEALTH_OVERLAY", true);
 		player.toggles.put("HITCHANCE_OVERLAY", true);
@@ -170,7 +170,6 @@ public class StarterProtection {
 		player.toggles.put("LOOTBEAMS", true);
 		player.switchShiftDrop();
 		player.switchZoom();
-		player.switchItemsLook();
 		player.heal(player.getMaxHitpoints());
 		player.getPrayer().restorePrayer(990);
 		player.combatDefinitions.switchAutoRelatie();

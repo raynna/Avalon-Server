@@ -48,15 +48,15 @@ object TeleportTabDSL {
     )
 
     fun open(player: Player) {
-        player.temporaryAttributtes.remove("ACHIEVEMENTTAB")
-        player.temporaryAttributtes.remove("DANGEROUSTELEPORT")
-        player.temporaryAttributtes.remove("TELEPORTTYPE")
-        player.temporaryAttributtes["CUSTOMTAB"] = 1
+        player.temporaryAttributes().remove("ACHIEVEMENTTAB")
+        player.temporaryAttributes().remove("DANGEROUSTELEPORT")
+        player.temporaryAttributes().remove("TELEPORTTYPE")
+        player.temporaryAttributes()["CUSTOMTAB"] = 1
         TabRuntime.open(player, buildMainPage())
     }
 
     fun handle(player: Player, compId: Int): Boolean {
-        val danger = player.temporaryAttributtes["DANGEROUSTELEPORT"] as? WorldTile
+        val danger = player.temporaryAttributes()["DANGEROUSTELEPORT"] as? WorldTile
         val type = player.temporaryAttribute()["TELEPORTTYPE"] as? Int
 
         val page = when {
@@ -94,7 +94,7 @@ object TeleportTabDSL {
 
         // Previous teleport (component 11 in your Java)
         action({ "<u>Previous Teleport" }) { p ->
-            val prev = p.temporaryAttributtes["PREVIOUSTELEPORT"] as? WorldTile
+            val prev = p.temporaryAttributes()["PREVIOUSTELEPORT"] as? WorldTile
             if (prev != null) sendTeleport(p, prev, -1) else p.packets.sendGameMessage("You don't have any previous teleport location.")
         }
     }
@@ -107,8 +107,8 @@ object TeleportTabDSL {
         onForward = { p -> SettingsTabDSL.open(p) }
 
         onBeforeOpen { p ->
-            p.temporaryAttributtes.remove("DANGEROUSTELEPORT")
-            p.temporaryAttributtes["TELEPORTTYPE"] = type
+            p.temporaryAttributes().remove("DANGEROUSTELEPORT")
+            p.temporaryAttributes()["TELEPORTTYPE"] = type
             p.packets.sendHideIComponent(IFACE, FWD, true)
             p.packets.sendSpriteOnIComponent(IFACE, GREEN, chrome.greenHighlighted)
         }
@@ -144,7 +144,7 @@ object TeleportTabDSL {
     private fun buildSkillingSubPage(type: Int): TabPage = tabPage("$KEY:sk:$type", chrome, skillingCategoryName(type)) {
         onBack = { p -> openCategory(p, SKILLING) }
         onBeforeOpen { p ->
-            p.temporaryAttributtes["TELEPORTTYPE"] = type
+            p.temporaryAttributes()["TELEPORTTYPE"] = type
             p.packets.sendHideIComponent(IFACE, FWD, true)
             p.packets.sendSpriteOnIComponent(IFACE, GREEN, chrome.greenHighlighted)
         }
@@ -181,12 +181,12 @@ object TeleportTabDSL {
             pk.sendTextOnComponent(IFACE, 9, "<col=BB0404>No</col>, I don't want to teleport.")
             pk.sendSpriteOnIComponent(IFACE, BLUE, 439)
             // stash state
-            p.temporaryAttributtes["DANGEROUSTELEPORT"] = tile
+            p.temporaryAttributes()["DANGEROUSTELEPORT"] = tile
         }
 
         // Yes (component 7)
         handle(7) { p ->
-            val t = p.temporaryAttributtes["DANGEROUSTELEPORT"] as? WorldTile ?: return@handle
+            val t = p.temporaryAttributes()["DANGEROUSTELEPORT"] as? WorldTile ?: return@handle
             sendTeleport(p, t, type ?: -1)
         }
         // No (component 9) and back button → return to list
@@ -243,7 +243,7 @@ object TeleportTabDSL {
     }
 
     private fun sendDangerous(p: Player, tile: WorldTile, type: Int) {
-        p.temporaryAttributtes["DANGEROUSTELEPORT"] = tile
+        p.temporaryAttributes()["DANGEROUSTELEPORT"] = tile
         TabRuntime.open(p, buildDangerPage(tile, type))
     }
 
@@ -257,9 +257,9 @@ object TeleportTabDSL {
             p.packets.sendGameMessage("You can't use this teleport in combat.")
             return
         }
-        p.temporaryAttributtes.remove("PREVIOUSTELEPORT")
+        p.temporaryAttributes().remove("PREVIOUSTELEPORT")
         ModernMagicks.sendNormalTeleportSpell(p, 0.0, tile)
         open(p)
-        p.temporaryAttributtes["PREVIOUSTELEPORT"] = tile
+        p.temporaryAttributes()["PREVIOUSTELEPORT"] = tile
     }
 }
