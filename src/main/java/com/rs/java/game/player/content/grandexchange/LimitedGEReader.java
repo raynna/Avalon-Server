@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.ItemDefinitions.FileUtilities;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.player.content.customshops.CustomStoreData;
 
 public class LimitedGEReader {
 
@@ -32,42 +31,27 @@ public class LimitedGEReader {
 		}
 		//System.out.println("[Launcher] Initiated " + items.size() + " Limited items.");
 		//System.out.println("[Launcher] Initiated items: " + names.replace(names.length() - 2, names.length(), "").toString());
-		items.add(getId("rocktail"));
-		items.add(getId("overload (4)"));
-		items.add(getId("super prayer (4)"));
-		items.add(getId("super combat potion (4)"));
-		items.add(getId("prayer renewal (4)"));
-		items.add(getId("super antifire (4)"));
-		items.add(10476);//purple sweets
-		items.add(getId("potion flask"));
-		items.add(getId("morrigan's throwing axe"));
-		items.add(getId("morrigan's javelin"));
+		items.add(Item.getId("item.rocktail"));
+		items.add(Item.getId("item.overload_4"));
+		items.add(Item.getId("item.super_prayer_4"));
+		items.add(Item.getId("item.super_combat_potion_4"));
+		items.add(Item.getId("item.prayer_renewal_4"));
+		items.add(Item.getId("item.super_antifire_4"));
+		items.add(Item.getId("item.purple_sweets_2"));
+		items.add(Item.getId("item.potion_flask"));
+		items.add(Item.getId("item.morrigan_s_throwing_axe"));
+		items.add(Item.getId("item.morrigan_s_javelin"));
 		items.add(8848);
 		items.add(8849);
 		items.add(8850);
-		items.add(getId("royal d'hide chaps"));
-		items.add(getId("dragon arrow"));
-		items.add(getId("dragon dart"));
-		items.add(getId("dragon bolts (e)"));
-		items.add(getId("zanik's crossbow"));
+		items.add(Item.getId("item.royal_d_hide_body"));
+		items.add(Item.getId("item.royal_d_hide_chaps"));
+		items.add(Item.getId("item.dragon_arrow"));
+		items.add(Item.getId("item.dragon_dart"));
+		items.add(Item.getId("item.dragon_bolts_e"));
+		items.add(Item.getId("item.zanik_s_crossbow"));
 		for (int i = 4695; i <= 4699; i++)
 			items.add(i);
-		for (Item item : CustomStoreData.summoning) {
-			if (item == null)
-				continue;
-			items.add(item.getId());
-		}
-		for (Item item : CustomStoreData.skilling2) {
-			if (item == null)
-				continue;
-			items.add(item.getId());
-		}
-		for (Item item : CustomStoreData.construction) {
-			if (item == null)
-				continue;
-			//System.out.println(item.getName() + " added to limited");
-			items.add(item.getId());
-		}
 		items.add(21773);
 		// System.out.println("[Launcher] Initiated " + items.size() + " limited
 		// items.");

@@ -48,7 +48,6 @@ import com.rs.java.game.player.content.*;
 import com.rs.java.game.player.content.GreaterRunicStaffManager.RunicStaffSpellStore;
 import com.rs.java.game.player.content.Pots.Pot;
 import com.rs.java.game.player.content.clans.ClansManager;
-import com.rs.java.game.player.content.customshops.TradeStore;
 import com.rs.java.game.player.content.customtab.AchievementsTab;
 import com.rs.java.game.player.content.customtab.GearTab;
 import com.rs.java.game.player.content.customtab.JournalTab;
@@ -547,40 +546,11 @@ public class ButtonHandler {
             if (componentId == 145) player.getInterfaceManager().closeInventoryInterface();
             else player.getRunicStaff().processSpell(player, componentId, packetId);
         } else if (interfaceId == 334) {
-            TradeStore tradeStore = (TradeStore) player.getTemporaryAttributtes().get("CUSTOM_TRADE");
             if (componentId == 22) player.closeInterfaces();
             else if (componentId == 21) {
-                if (tradeStore != null) player.getTradeStore().accept(false);
-                else player.getTrade().accept(false);
+                player.getTrade().accept(false);
             }
         } else if (interfaceId == 335) {
-            TradeStore tradeStore = (TradeStore) player.getTemporaryAttributtes().get("CUSTOM_TRADE");
-            if (tradeStore != null) {
-                if (componentId == 18) player.getTradeStore().accept(true);
-                else if (componentId == 20) player.closeInterfaces();
-                else if (componentId == 32) {
-                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                        player.getTradeStore().removeItem(slotId, 1);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                        player.getTradeStore().removeItem(slotId, 5);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                        player.getTradeStore().removeItem(slotId, 10);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                        player.getTradeStore().removeItem(slotId, Integer.MAX_VALUE);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
-
-                    } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
-                        player.getTradeStore().sendValue(slotId, false);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
-                        player.getTradeStore().sendExamine(slotId, false);
-                } else if (componentId == 35) {
-                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                        player.getTradeStore().sendValue(slotId, true);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
-                        player.getTradeStore().sendExamine(slotId, true);
-                }
-            } else {
-
                 if (componentId == 18) player.getTrade().accept(true);
                 else if (componentId == 53) {
                     player.temporaryAttribute().put("trade_moneypouch_X_Slot", slotId);
@@ -607,27 +577,7 @@ public class ButtonHandler {
                     else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
                         player.getTrade().sendExamine(slotId, true);
                 }
-            }
         } else if (interfaceId == 336) {
-            TradeStore tradeStore = (TradeStore) player.getTemporaryAttributtes().get("CUSTOM_TRADE");
-            if (tradeStore != null) {
-                if (componentId == 0) {
-                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                        player.getTradeStore().addItem(slotId, 1);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                        player.getTradeStore().addItem(slotId, 5);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                        player.getTradeStore().addItem(slotId, 10);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                        player.getTradeStore().addItem(slotId, Integer.MAX_VALUE);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
-
-                    } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
-                        player.getTradeStore().sendValue(slotId);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
-                        player.getInventory().sendExamine(slotId);
-                }
-            } else {
                 if (componentId == 0) {
                     if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getTrade().addItem(slotId, 1);
                     else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
@@ -644,7 +594,6 @@ public class ButtonHandler {
                     else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
                         player.getInventory().sendExamine(slotId);
                 }
-            }
         } else if (interfaceId == 300) {
             ForgingInterface.handleIComponents(player, componentId);
         } else if (interfaceId == 934) {

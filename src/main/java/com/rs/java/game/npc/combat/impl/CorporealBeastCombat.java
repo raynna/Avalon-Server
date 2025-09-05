@@ -11,6 +11,8 @@ import com.rs.java.game.player.Skills;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.worldboss.WorldBossNPC;
+import com.rs.kotlin.game.npc.worldboss.WorldCorporealBeast;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -57,8 +59,13 @@ public class CorporealBeastCombat extends CombatScript {
 	}
 
 	private void spawnDarkCoreIfNeeded(NPC npc) {
-		if (npc.getHitpoints() <= npc.getMaxHitpoints() / 2) {
-			((CorporealBeast) npc).spawnDarkEnergyCore();
+		if (npc instanceof CorporealBeast beast) {
+			beast.spawnDarkEnergyCore();
+		}
+		if (npc instanceof WorldBossNPC boss) {
+			if (boss instanceof WorldCorporealBeast corporealBeast) {
+				corporealBeast.spawnDarkEnergyCore();
+			}
 		}
 	}
 

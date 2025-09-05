@@ -21,6 +21,7 @@ import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.npc.NpcPluginLoader;
 import com.rs.java.game.npc.combat.CombatScriptsHandler;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.npc.worldboss.RandomWorldBossHandler;
 import com.rs.kotlin.game.npc.drops.DropTablesSetup;
 import com.rs.java.game.objects.GlobalObjectAddition;
 import com.rs.java.game.objects.GlobalObjectDeletion;
@@ -32,7 +33,6 @@ import com.rs.java.game.player.actions.skills.fishing.FishingSpotsHandler;
 import com.rs.java.game.player.content.EdgevillePvPInstance;
 import com.rs.java.game.player.content.KillScoreBoard;
 import com.rs.java.game.player.content.clans.ClansManager;
-import com.rs.java.game.player.content.customshops.CustomStoreData;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.game.player.content.grandexchange.LimitedGEReader;
@@ -124,7 +124,6 @@ public final class Launcher {
 		KillScoreBoard.init();
 		EdgevillePvPInstance.buildInstance();
 		CityEventHandler.registerCitys();
-		CustomStoreData.init();
 		DTRank.init();
 		CombatScriptsHandler.init();
 		ObjectPluginLoader.init();
@@ -133,6 +132,7 @@ public final class Launcher {
 		WeaponScriptsManager.init();
 		CommandRegistry.registerCommands();
 		ShopInitializer.initializeShops();
+		RandomWorldBossHandler.start();
 		try {
 			ServerChannelHandler.init();
 		} catch (Throwable e) {

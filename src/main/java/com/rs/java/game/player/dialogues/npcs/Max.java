@@ -123,7 +123,7 @@ public class Max extends Dialogue {
 		} else if (stage == 41) {
 			stage = 50;
 			player.stopAll();
-			player.getCustomStore().sendInterface(3);
+			player.getShopSystem().openShop(11);
 		} else if (stage == 50)
 			end();
 	}

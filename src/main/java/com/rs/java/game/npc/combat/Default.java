@@ -53,7 +53,7 @@ public class Default extends CombatScript {
 			npc.gfx(new Graphics(defs.getAttackGfx()));
 		}
 		npc.animate(new Animation(defs.getAttackEmote()));
-
+		System.out.println("Default attack for NPC id: " + npc.getId() + " using " + attackStyle + " for max hit: " + damage + ", Attack speed: " + data.attackSpeedTicks);
 		return data.attackSpeedTicks;
 	}
 }

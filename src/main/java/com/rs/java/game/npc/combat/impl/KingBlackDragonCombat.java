@@ -95,7 +95,7 @@ public class KingBlackDragonCombat extends CombatScript {
 				break;
 		}
 
-		return defs.getAttackDelay();
+		return npc.getCombatData().attackSpeedTicks;
 	}
 
 	private void applySpecialBreathEffect(Player player, int type) {

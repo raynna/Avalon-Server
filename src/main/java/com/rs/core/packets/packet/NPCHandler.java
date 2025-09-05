@@ -49,7 +49,6 @@ import com.rs.java.game.player.content.DungShop;
 import com.rs.java.game.player.content.FadingScreen;
 import com.rs.java.game.player.content.ItemSets;
 import com.rs.java.game.player.content.PlayerLook;
-import com.rs.java.game.player.content.customshops.CustomStoreData;
 import com.rs.java.game.player.content.customtab.TeleportTab;
 import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.SlidingTilesRoom;
 import com.rs.java.game.player.controlers.Falconry;
@@ -529,8 +528,6 @@ public class NPCHandler {
 					player.getDialogueManager().startDialogue("SuakD");
                 else if (npc.getName().contains("Dommik"))
                     ShopsHandler.openShop(player, 5);
-                else if (npc.getName().contains("Sigmund"))
-                    player.getTradeStore().openTrade();
                 else if (npc.getId() == 524 || npc.getId() == 525)
                     player.getDialogueManager().startDialogue("GeneralStore", npc.getId(), 6);
                 else if (npc.getName().contains("Aubury"))
@@ -1017,8 +1014,6 @@ public class NPCHandler {
                     player.getDialogueManager().startDialogue("ClaimClanItem", npc.getId(), 20708);
                 else if (npc.getId() == 9708)
                     FremennikShipmaster.sail(player, false);
-                else if (npc.getName().contains("Sigmund"))
-                    player.getTradeStore().openTrade();
                 else if (npc.getId() == 4250)
                     Sawmill.openPlanksConverter(player);
                 else if (npc.getId() == 13455 || npc.getId() == 2617 || npc.getId() == 2618 || npc.getId() == 15194)
@@ -1142,7 +1137,7 @@ public class NPCHandler {
                 else if (npc.getId() == 1301)
                     PlayerLook.openYrsaShop(player);
                 else if (npc.getId() == 6988)
-                    player.getCustomStore().sendInterface(player, 0, CustomStoreData.SUMMONING);
+                    player.getShopSystem().openShop(8);
                 else if (npc instanceof Pet) {
                     if (npc != player.getPet()) {
                         player.getPackets().sendGameMessage("This isn't your pet!");
@@ -1266,8 +1261,7 @@ public class NPCHandler {
                 else if (npc.getId() == 1301)
                     PlayerLook.openYrsaShop(player);
                 else if (npc.getId() == 3373) {
-                    player.getCustomStore().sendInterface(3);
-                    return;
+                    player.getShopSystem().openShop(7);
                 } else if (npc.getId() == 8929) {
                     player.getDialogueManager().startDialogue("Titles", npc.getId());
                     npc.faceEntity(player);
@@ -1275,7 +1269,7 @@ public class NPCHandler {
                 } else if (npc.getId() == 9085)
                     ShopsHandler.openShop(player, 29);
                 else if (npc.getId() == 4250)
-                    player.getCustomStore().sendInterface(player, 0, CustomStoreData.CONSTRUCTION);
+                    player.getShopSystem().openShop(9);
                 else if (npc.getId() == 5532) {
                     npc.setNextForceTalk(new ForceTalk("Senventior Disthinte Molesko!"));
                     player.getControlerManager().startControler("SorceressGarden");

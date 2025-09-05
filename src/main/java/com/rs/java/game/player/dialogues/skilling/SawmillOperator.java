@@ -1,7 +1,6 @@
 package com.rs.java.game.player.dialogues.skilling;
 
 import com.rs.java.game.player.actions.skills.construction.Sawmill;
-import com.rs.java.game.player.content.customshops.CustomStoreData;
 import com.rs.java.game.player.dialogues.Dialogue;
 
 public class SawmillOperator extends Dialogue {
@@ -29,7 +28,7 @@ public class SawmillOperator extends Dialogue {
 				stage = 4;
 				sendPlayerDialogue(NORMAL, "What kind of planks can you make?");
 			} else if (componentId == OPTION_3) {
-				player.getCustomStore().sendInterface(player, 0, CustomStoreData.CONSTRUCTION);
+				player.getShopSystem().openShop(7);
 				end();
 			} else {
 				stage = 1;

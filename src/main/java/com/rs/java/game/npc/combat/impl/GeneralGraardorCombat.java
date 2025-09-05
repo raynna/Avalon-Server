@@ -3,83 +3,94 @@ package com.rs.java.game.npc.combat.impl;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.ForceTalk;
-import com.rs.java.game.World;
+import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.world.projectile.Projectile;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 public class GeneralGraardorCombat extends CombatScript {
 
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { 6260 };
+		return new Object[]{6260}; // Graardor ID
 	}
 
 	@Override
-	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
-		if (Utils.getRandom(4) == 0) {
-			switch (Utils.getRandom(10)) {
-			case 0:
-				npc.setNextForceTalk(new ForceTalk("Death to our enemies!"));
-				npc.playSound(3219, 2);
-				break;
-			case 1:
-				npc.setNextForceTalk(new ForceTalk("Brargh!"));
-				npc.playSound(3209, 2);
-				break;
-			case 2:
-				npc.setNextForceTalk(new ForceTalk("Break their bones!"));
-				npc.playSound(3221, 2);
-				break;
-//			case 3:
-//				npc.setNextForceTalk(new ForceTalk("For the glory of Bandos!"));
-//				player.getPackets().sendSound(soundId, 0, 2);//TODO: Get sound id
-//				break;
-			case 4:
-				npc.setNextForceTalk(new ForceTalk("Split their skulls!"));
-				npc.playSound(3229, 2);
-				break;
-			case 5:
-				npc.setNextForceTalk(new ForceTalk("We feast on the bones of our enemies tonight!"));
-				npc.playSound(3206, 2);
-				break;
-			case 6:
-				npc.setNextForceTalk(new ForceTalk("CHAAARGE!"));
-				npc.playSound(3220, 2);
-				break;
-			case 7:
-				npc.setNextForceTalk(new ForceTalk("Crush them underfoot!"));
-				npc.playSound(3224, 2);
-				break;
-			case 8:
-				npc.setNextForceTalk(new ForceTalk("All glory to Bandos!"));
-				npc.playSound(3205, 2);
-				break;
-			case 9:
-				npc.setNextForceTalk(new ForceTalk("GRAAAAAAAAAR!"));
-				npc.playSound(3207, 2);
-				break;
-			case 10:
-				npc.setNextForceTalk(new ForceTalk("FOR THE GLORY OF THE BIG HIGH WAR GOD!"));
-				npc.playSound(3228, 2);
-				break;
-			}
+	public int attack(NPC npc, Entity target) {
+		maybeShout(npc);
+
+		// 50% chance ranged, 50% melee
+		if (Utils.random(2) == 0) {
+			performRangedAttack(npc);
+		} else {
+			performMeleeAttack(npc, target);
 		}
-		if (Utils.getRandom(2) == 0) { // range magical attack
-			npc.animate(new Animation(7063));
-			for (Entity t : npc.getPossibleTargets()) {
-				delayHit(npc, t, 1, getRangeHit(npc, getRandomMaxHit(npc, 335, NPCCombatDefinitions.RANGE, t)));
-				World.sendElementalProjectile(npc, t, 1200);
-			}
-		} else { // melee attack
-			if (Utils.isOnRange(npc.getX(), npc.getY(), npc.getSize(), target.getX(), target.getY(), target.getSize(),
-					0))
-				npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, target, 0,
-                    getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+		System.out.println("General Graardor attack for NPC id: " + npc.getId() + " Attack speed: " + npc.getCombatData().attackSpeedTicks);
+		return npc.getCombatData().attackSpeedTicks;
+	}
+
+	// --------------------------
+	// Shouts
+	// --------------------------
+	private void maybeShout(NPC npc) {
+		if (Utils.random(4) != 0) {
+			return;
 		}
-		return defs.getAttackDelay();
+
+		int roll = Utils.random(10);
+		switch (roll) {
+			case 0 -> shout(npc, "Death to our enemies!", 3219);
+			case 1 -> shout(npc, "Brargh!", 3209);
+			case 2 -> shout(npc, "Break their bones!", 3221);
+			case 3 -> shout(npc, "Split their skulls!", 3229);
+			case 4 -> shout(npc, "We feast on the bones of our enemies tonight!", 3206);
+			case 5 -> shout(npc, "CHAAARGE!", 3220);
+			case 6 -> shout(npc, "Crush them underfoot!", 3224);
+			case 7 -> shout(npc, "All glory to Bandos!", 3205);
+			case 8 -> shout(npc, "GRAAAAAAAAAR!", 3207);
+			case 9 -> shout(npc, "FOR THE GLORY OF THE BIG HIGH WAR GOD!", 3228);
+		}
+	}
+
+	private void shout(NPC npc, String text, int soundId) {
+		npc.setNextForceTalk(new ForceTalk(text));
+		npc.playSound(soundId, 2);
+	}
+
+	// --------------------------
+	// Ranged
+	// --------------------------
+	private void performRangedAttack(NPC npc) {
+		npc.animate(new Animation(7063));
+		for (Entity t : npc.getPossibleTargets()) {
+			Hit rangeHit = getRangeHit(npc,
+					NpcCombatCalculations.getRandomMaxHit(npc, 335, NpcAttackStyle.RANGED, t)
+			);
+			delayHit(npc, t, 1, rangeHit);
+			ProjectileManager.sendSimple(Projectile.ARROW, 1200, npc, t);
+		}
+	}
+
+	// --------------------------
+	// Melee
+	// --------------------------
+	private void performMeleeAttack(NPC npc, Entity target) {
+		NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		if (Utils.isOnRange(
+				npc.getX(), npc.getY(), npc.getSize(),
+				target.getX(), target.getY(), target.getSize(),
+				0)) {
+			npc.animate(new Animation(defs.getAttackEmote()));
+		}
+
+		Hit meleeHit = getMeleeHit(npc,
+				NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)
+		);
+		delayHit(npc, target, 0, meleeHit);
 	}
 }

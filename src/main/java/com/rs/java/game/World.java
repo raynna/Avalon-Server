@@ -375,6 +375,8 @@ public final class World {
         return npcs.get(index);
     }
 
+
+
     public static NPC spawnNPC(int id, WorldTile tile, int mapAreaNameHash, boolean canBeAttackFromOutOfArea,
                                boolean spawned) {
         NPC n = null;

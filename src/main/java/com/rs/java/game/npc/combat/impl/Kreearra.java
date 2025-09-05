@@ -1,13 +1,14 @@
 package com.rs.java.game.npc.combat.impl;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldTile;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.world.projectile.Projectile;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 public class Kreearra extends CombatScript {
 
@@ -18,19 +19,20 @@ public class Kreearra extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
 		if (!npc.isUnderCombat()) {
 			npc.animate(new Animation(6997));
-			delayHit(npc, target, 1, getMeleeHit(npc, getRandomMaxHit(npc, 260, NPCCombatDefinitions.MELEE, target)));
-			return defs.getAttackDelay();
+			Hit hit = getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 260, NpcAttackStyle.CRUSH, target));
+			delayHit(npc, target, 1, hit);
+			return npc.getCombatData().attackSpeedTicks;
 		}
 		npc.animate(new Animation(6976));
 		for (Entity t : npc.getPossibleTargets()) {
 			if (Utils.getRandom(2) == 0)
 				sendMagicAttack(npc, t);
 			else {
-				delayHit(npc, t, 1, getRangeHit(npc, getRandomMaxHit(npc, 720, NPCCombatDefinitions.RANGE, t)));
-				World.sendElementalProjectile(npc, t, 1197);
+				Hit rangeHit = getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 720, NpcAttackStyle.RANGED, target));
+				delayHit(npc, target, 1, rangeHit);
+				ProjectileManager.sendSimple(Projectile.STORM_OF_ARMADYL, 1197, npc, target);
 				for (int c = 0; c < 10; c++) {
 					int dir = Utils.random(Utils.DIRECTION_DELTA_X.length);
 					if (World.checkWalkStep(target.getPlane(), target.getX(), target.getY(), dir, 1)) {
@@ -41,13 +43,14 @@ public class Kreearra extends CombatScript {
 				}
 			}
 		}
-		return defs.getAttackDelay();
+		return npc.getCombatData().attackSpeedTicks;
 	}
 
 	private void sendMagicAttack(NPC npc, Entity target) {
 		for (Entity t : npc.getPossibleTargets()) {
-			delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, 210, NPCCombatDefinitions.MAGE, t)));
-			World.sendElementalProjectile(npc, t, 1198);
+			Hit magicHit = getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 210, NpcAttackStyle.MAGIC, target));
+			delayHit(npc, t, 1, magicHit);
+			ProjectileManager.sendSimple(Projectile.STORM_OF_ARMADYL, 1197, npc, t);
 		}
 	}
 }

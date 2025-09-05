@@ -89,6 +89,7 @@ public abstract class Entity extends WorldTile {
 
     // saving stuff
     private int hitpoints;
+    private int increasedMaxHitpoints;
     private long pid;
     private int mapSize; // default 0, can be setted other value usefull on
     // static maps
@@ -1355,7 +1356,14 @@ public abstract class Entity extends WorldTile {
 
     public void setHitpoints(int hitpoints) {
         this.hitpoints = hitpoints;
+    }
 
+    public void setIncreasedMaxHitpoints(int increasedMaxHitpoints) {
+        this.increasedMaxHitpoints = increasedMaxHitpoints;
+    }
+
+    public int getIncreasedMaxHitpoints() {
+        return increasedMaxHitpoints;
     }
 
     public long getPID() {

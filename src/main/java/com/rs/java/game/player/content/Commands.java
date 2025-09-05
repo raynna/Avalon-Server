@@ -35,7 +35,6 @@ import com.rs.java.game.player.actions.skills.construction.ConstructorsOutfit;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.actions.skills.summoning.Summoning.Pouch;
 import com.rs.java.game.player.content.WildernessArtefacts.Artefacts;
-import com.rs.java.game.player.content.customshops.CustomStoreData;
 import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.game.player.content.dungeoneering.DungeonPartyManager;
@@ -670,55 +669,6 @@ public final class Commands {
                 case "spins":
                     player.getSquealOfFortune().giveBoughtSpins(5000);
                     return true;
-                case "starterbank":
-                    amount = 1000;
-                    for (Item item : CustomStoreData.range) {
-                        if (item == null)
-                            continue;
-                        item.setAmount(amount);
-                        player.message(item.getName() + " - " + EconomyPrices.getPrice(item.getId()));
-                        if (EconomyPrices.getPrice(item.getId()) > 0)
-                            continue;
-                        player.getBank().addItem(item, true);
-                        player.message(item.getName() + " added to your bank.");
-                    }
-                    for (Item item : CustomStoreData.melee) {
-                        if (item == null)
-                            continue;
-                        item.setAmount(amount);
-                        if (EconomyPrices.getPrice(item.getId()) > 0)
-                            continue;
-                        player.getBank().addItem(item, true);
-                        player.message(item.getName() + " added to your bank.");
-                    }
-                    for (Item item : CustomStoreData.magic) {
-                        if (item == null)
-                            continue;
-                        item.setAmount(amount);
-                        if (EconomyPrices.getPrice(item.getId()) > 0)
-                            continue;
-                        player.getBank().addItem(item, true);
-                        player.message(item.getName() + " added to your bank.");
-                    }
-                    for (Item item : CustomStoreData.supplies) {
-                        if (item == null)
-                            continue;
-                        item.setAmount(amount);
-                        if (EconomyPrices.getPrice(item.getId()) > 0)
-                            continue;
-                        player.getBank().addItem(item, true);
-                        player.message(item.getName() + " added to your bank.");
-                    }
-                    for (Item item : CustomStoreData.accessories) {
-                        if (item == null)
-                            continue;
-                        item.setAmount(amount);
-                        if (EconomyPrices.getPrice(item.getId()) > 0)
-                            continue;
-                        player.getBank().addItem(item, true);
-                        player.message(item.getName() + " added to your bank.");
-                    }
-                    return true;
                 case "antibot":
                     AntiBot.getInstance().start(player);
                     return true;
@@ -1322,14 +1272,6 @@ public final class Commands {
                     return true;
                 case "wolp":
                     Summoning.spawnFamiliar(player, Pouch.WOLPERTINGER);
-                    return true;
-                case "cstore":
-                    int type = Integer.valueOf(cmd[1]);
-                    int shop = Integer.valueOf(cmd[2]);
-                    player.getCustomStore().sendInterface(player, type, shop);
-                    return true;
-                case "tradestore":
-                    player.getTradeStore().openTrade();
                     return true;
                 case "drop":
                     if (cmd.length < 1) {
@@ -2660,12 +2602,11 @@ public final class Commands {
                 case "adobject":
                     try {
                         int rotation = 0;
+                        int type = 0;
                         if (cmd.length < 3) {
                             type = 10;
-                            rotation = 0;
                         } else if (cmd.length == 3) {
                             type = Integer.parseInt(cmd[2]);
-                            rotation = 0;
                         } else {
                             type = Integer.parseInt(cmd[2]);
                             rotation = Integer.parseInt(cmd[3]);
@@ -2805,6 +2746,7 @@ public final class Commands {
                     return true;
                 case "object":
                     int rotation = 0;
+                    int type = 0;
                     try {
                         if (cmd.length < 3) {
                             type = 10;

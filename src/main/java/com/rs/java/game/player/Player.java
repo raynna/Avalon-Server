@@ -54,8 +54,6 @@ import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.content.WildernessArtefacts.Artefacts;
 import com.rs.java.game.player.content.clans.ClanMember;
 import com.rs.java.game.player.content.clans.ClansManager;
-import com.rs.java.game.player.content.customshops.CustomStore;
-import com.rs.java.game.player.content.customshops.TradeStore;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
@@ -711,7 +709,6 @@ public class Player extends Entity {
      * @Trading
      */
     private transient Trade trade;
-    private transient TradeStore tradestore;
     private transient boolean cantTrade;
 
     /**
@@ -907,11 +904,6 @@ public class Player extends Entity {
 
     public ShopSystem getShopSystem() {
         return shop;
-    }
-    private transient CustomStore cstore;
-
-    public CustomStore getCustomStore() {
-        return cstore;
     }
 
     /**
@@ -1262,7 +1254,6 @@ public class Player extends Entity {
         playerRank = new PlayerRank();
         clueScrollRewards = new ItemsContainer<Item>(10, true);
         varsManager = new VarsManager(this);
-        cstore = new CustomStore(this);
         shop = new ShopSystem(this);
         geManager = new GrandExchangeManager();
         slayerManager = new SlayerManager();
@@ -1406,8 +1397,6 @@ public class Player extends Entity {
             godwarsKillcount = new GodwarsKillcount();
         if (varsManager == null)
             varsManager = new VarsManager(this);
-        if (cstore == null)
-            cstore = new CustomStore(this);
         if (shop == null)
             shop = new ShopSystem(this);
         if (notes == null)
@@ -1484,7 +1473,6 @@ public class Player extends Entity {
         notes.setPlayer(this);
         pouch = new MoneyPouch(this);
         trade = new Trade(this);
-        tradestore = new TradeStore(this);
         assist = new AssistManager(this);
         appearence.setPlayer(this);
         inventory.setPlayer(this);
@@ -2757,7 +2745,7 @@ public class Player extends Entity {
                 message("You can now accept.");
             }
         }
-        if (!(getControlerManager().getControler() instanceof WildernessControler) && isAtWild() && !WildernessControler.isAtWildSafe(this) && !isAtPvP()) {
+        if (!(getControlerManager().getControler() instanceof WildernessControler) && isAtWild()) {
             getControlerManager().startControler("WildernessControler");
         }
         if (getFrozenBy() != null && this != null) {
@@ -3414,11 +3402,6 @@ public class Player extends Entity {
             refreshHitPoints();
     }
 
-    @Override
-    public int getMaxHitpoints() {
-        return (skills.getLevel(Skills.HITPOINTS) * 10) + equipment.getEquipmentHpIncrease();
-    }
-
     public String getUsername() {
         return username;
     }
@@ -3820,9 +3803,9 @@ public class Player extends Entity {
         if (!controlerManager.sendDeath())
             return;
         dead = true;
-        getInterfaceManager().closeOverlay(false);
         getTickManager().reset();
         timerOverlay.clearAll(this);
+        getInterfaceManager().closeOverlay(false);
         resetWalkSteps();
         stopAll();
         lock(6);
@@ -5072,10 +5055,6 @@ public class Player extends Entity {
 
     public Trade getTrade() {
         return trade;
-    }
-
-    public TradeStore getTradeStore() {
-        return tradestore;
     }
 
     public AssistManager getAssist() {
@@ -6421,6 +6400,11 @@ public class Player extends Entity {
 
     public int getPvpTokens() {
         return getInventory().getAmountOf("item.fist_of_guthix_token");
+    }
+
+    @Override
+    public int getMaxHitpoints() {
+        return (skills.getLevel(Skills.HITPOINTS) * 10) + equipment.getEquipmentHpIncrease();
     }
 
 }

@@ -1,6 +1,5 @@
 package com.rs.java.game.player.dialogues.npcs;
 
-import com.rs.java.game.player.content.customshops.CustomStoreData;
 import com.rs.java.game.player.dialogues.Dialogue;
 
 public class Pikkupstix extends Dialogue {
@@ -545,7 +544,7 @@ public class Pikkupstix extends Dialogue {
 			stage = 108;
 			break;
 		case 108:
-			player.getCustomStore().sendInterface(player, 0, CustomStoreData.SUMMONING);
+			player.getShopSystem().openShop(8);
 			end();
 			break;
 		case 109:

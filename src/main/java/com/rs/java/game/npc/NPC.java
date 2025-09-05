@@ -279,6 +279,8 @@ public class NPC extends Entity implements Serializable {
 
     @Override
     public int getMaxHitpoints() {
+        if (getIncreasedMaxHitpoints() > -1)
+            return getIncreasedMaxHitpoints();
         if (combatData == null)
             setBonuses();
         if (id == Rscm.lookup("npc.magic_dummy") || id == Rscm.lookup("npc.melee_dummy"))

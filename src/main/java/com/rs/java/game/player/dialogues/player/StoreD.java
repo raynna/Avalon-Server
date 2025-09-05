@@ -2,39 +2,44 @@ package com.rs.java.game.player.dialogues.player;
 
 import com.rs.java.game.player.content.SkillsDialogue;
 import com.rs.java.game.player.content.SkillsDialogue.ItemNameFilter;
-import com.rs.java.game.player.content.customshops.CombatStoreDialogue;
-import com.rs.java.game.player.content.customshops.CombatStoreDialogue.CombatStores;
 import com.rs.java.game.player.dialogues.Dialogue;
+import com.rs.kotlin.game.player.shop.OpenShopAction;
 
 public class StoreD extends Dialogue {
 
-	@Override
-	public void start() {
-		int[] ids = new int[CombatStores.values().length];
-		for (int i = 0; i < ids.length; i++)
-			ids[i] = CombatStores.values()[i].getShowItem().getId();
-		SkillsDialogue.sendStoreDialogue(player,
-				"Click on the alternative stores down below.", ids, new ItemNameFilter() {
-					int count = 0;
+    @Override
+    public void start() {
+        var displays = OpenShopAction.ShopDisplay.valuesInOrder()  ;
 
-					@Override
-					public String rename(String name) {
-						CombatStores shop = CombatStores.values()[count++];
-						return shop.name().replace("_", " ");
+        int[] ids = new int[displays.size()];
+        for (int i = 0; i < displays.size(); i++) {
+            ids[i] = displays.get(i).getIconItemId();
+        }
 
-					}
-				});
-	}
+        SkillsDialogue.sendStoreDialogue(player,
+                "Click on the alternative stores down below.", ids, new ItemNameFilter() {
+                    int count = 0;
 
+                    @Override
+                    public String rename(String name) {
+                        return displays.get(count++).name().replace("_", " ");
+                    }
+                });
+    }
 
-	@Override
-	public void run(int interfaceId, int componentId) {
-		player.getActionManager().setAction(
-				new CombatStoreDialogue(SkillsDialogue.getItemSlot(componentId), SkillsDialogue.getQuantity(player)));
-		end();
-	}
+    @Override
+    public void run(int interfaceId, int componentId) {
+        int index = SkillsDialogue.getItemSlot(componentId);
+        var displays = OpenShopAction.ShopDisplay.valuesInOrder();
+        if (index >= 0 && index < displays.size()) {
+            var display = displays.get(index);
+            player.getActionManager().setAction(
+                    new OpenShopAction(display.getShopId(), 0)); // ticks unused
+        }
+        end();
+    }
 
-	@Override
-	public void finish() {
-	}
+    @Override
+    public void finish() {
+    }
 }

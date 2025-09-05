@@ -11,7 +11,6 @@ import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
 
 public class Bank implements Serializable {
 
@@ -61,41 +60,6 @@ public class Bank implements Serializable {
 		}
 		return 0;
 	}
-
-	public int getAmountOfItem(String itemName) {
-		if (bankTabs == null)
-			return 0;
-		int itemId = Rscm.lookup(itemName);
-		for (int index = 0; index < bankTabs.length; index++) {
-			if (bankTabs[index] == null)
-				continue;
-			for (Item reference : bankTabs[index]) {
-				if (reference == null)
-					continue;
-				if (reference.getId() == itemId)
-					return reference.getAmount();
-			}
-		}
-		return 0;
-	}
-
-	public int getAmountOfItem(int itemId) {
-		if (bankTabs == null)
-			return 0;
-		for (int index = 0; index < bankTabs.length; index++) {
-			if (bankTabs[index] == null)
-				continue;
-			for (Item reference : bankTabs[index]) {
-				if (reference == null)
-					continue;
-				if (reference.getId() == itemId)
-					return reference.getAmount();
-			}
-		}
-		return 0;
-	}
-
-
 
 	@SuppressWarnings("unused")
 	private void checkPinStatus() {
@@ -315,23 +279,27 @@ public class Bank implements Serializable {
 
 	public void depositAllInventory(boolean banking) {
 		Inventory inventory = player.getInventory();
-		if (inventory.getFreeSlots() == 28) {
+		if (player.getInventory().getFreeSlots() == 28) {
 			player.getPackets().sendGameMessage("You have nothing in your inventory to bank.");
 			return;
 		}
-
-		for (int slot = 0; slot < 28; slot++) {
-			Item item = inventory.getItem(slot);
-			if (item == null) continue;
-
-			depositItem(slot, item.getAmount(), false); // use your fixed single-item deposit
+		for (Item items : inventory.getItems().toArray()) {
+			if (items == null)
+				continue;
+			if (items.getDefinitions().isNoted())
+				items.setId(items.getDefinitions().getCertId());
 		}
-
+		int space = addItems(inventory.getItems().getContainerItems(), banking);
+		if (space != 0) {
+			for (int i = 0; i < space; i++)
+				inventory.getItems().set(i, null);
+			inventory.refresh();
+		} else {
+			player.getPackets().sendGameMessage("You don't have enough bank space.");
+		}
 		refreshTab(currentTab);
 		refreshItems();
 	}
-
-
 
 	public void depositAllBob(boolean banking) {
 		Familiar familiar = player.getFamiliar();
@@ -848,17 +816,15 @@ public class Bank implements Serializable {
 			depositItem.setAmount(maxDepositAmount);
 			addItem(depositItem, refresh);
 		} else {
-			int originalId = invItem.getId();
-
+			// Full deposit
 			if (invItem.getAmount() > depositAmount) {
-				Item remaining = new Item(originalId, invItem.getAmount() - depositAmount, metadata);
+				Item remaining = new Item(invItem.getId(), invItem.getAmount() - depositAmount, metadata);
 				player.getInventory().getItems().set(invSlot, remaining);
 			} else {
+				player.getInventory().deleteItem(depositItem.getId(), depositAmount);
 				player.getInventory().getItems().set(invSlot, null);
 			}
-
 			player.getInventory().refresh(invSlot);
-
 			addItem(depositItem, refresh);
 		}
 	}
