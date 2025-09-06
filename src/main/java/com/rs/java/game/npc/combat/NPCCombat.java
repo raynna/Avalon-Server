@@ -114,10 +114,12 @@ public final class NPCCombat {
         Entity target = this.target;
         if (!isTargetValid(target)) return false;
         if (!canAttackTarget(target)) return false;
-
+        if (isWithinRespawnRange() && npc.isForceWalking())
+            npc.resetForcewalk();
         if (!isWithinRespawnRange()) {
             combatDelay = 1;
             npc.forceWalkRespawnTile();
+            npc.setNextFaceEntity(target);
             return true;
         }
 
@@ -138,23 +140,36 @@ public final class NPCCombat {
     }
 
     private boolean isWithinRespawnRange() {
-        int distanceX = npc.getX() - npc.getRespawnTile().getX();
-        int distanceY = npc.getY() - npc.getRespawnTile().getY();
         int size = npc.getSize();
         int maxDistance = npc.getForceTargetDistance() > 0 ? npc.getForceTargetDistance() : DEFAULT_AGRO_DISTANCE;
 
+        // Distance from respawn tile
+        int npcDistX = npc.getX() - npc.getRespawnTile().getX();
+        int npcDistY = npc.getY() - npc.getRespawnTile().getY();
+
+        int tgtDistX = target.getX() - npc.getRespawnTile().getX();
+        int tgtDistY = target.getY() - npc.getRespawnTile().getY();
+
+        // If NPC has a defined MapArea, enforce area rules
         if (npc.getMapAreaNameHash() != -1) {
-            if (!MapAreas.isAtArea(npc.getMapAreaNameHash(), npc) ||
-                    (!npc.canBeAttackFromOutOfArea() && !MapAreas.isAtArea(npc.getMapAreaNameHash(), target))) {
-                return false;
-            }
-        } else if (distanceX > size + maxDistance || distanceX < -1 - maxDistance
-                || distanceY > size + maxDistance || distanceY < -1 - maxDistance) {
-            return false;
+            boolean npcInside = MapAreas.isAtArea(npc.getMapAreaNameHash(), npc);
+            boolean tgtInside = MapAreas.isAtArea(npc.getMapAreaNameHash(), target);
+
+            if (!npcInside) return false; // NPC wandered outside
+            if (!npc.canBeAttackFromOutOfArea() && !tgtInside) return false; // Target outside and not allowed
+            return true;
         }
 
-        return true;
+        // Fallback: distance-based leash
+        boolean npcInRange = !(npcDistX > size + maxDistance || npcDistX < -1 - maxDistance
+                || npcDistY > size + maxDistance || npcDistY < -1 - maxDistance);
+
+        boolean targetInRange = !(tgtDistX > size + maxDistance || tgtDistX < -1 - maxDistance
+                || tgtDistY > size + maxDistance || tgtDistY < -1 - maxDistance);
+
+        return npcInRange && targetInRange;
     }
+
 
     private boolean handleCollisionMovement(Entity target) {
         int size = npc.getSize();

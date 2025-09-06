@@ -9,7 +9,7 @@ import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import kotlin.math.max
 
-open class WorldBossNPC : NPC {
+open class WorldMinionNPC : NPC {
 
     private val idleTimeoutMs: Long
     private val gracePeriodMs: Long
@@ -26,8 +26,6 @@ open class WorldBossNPC : NPC {
     private var ticksUntilRecheck = RECHECK_INTERVAL
     private val baseHp: Int
     private var firstProcess = true
-
-    private val damageMap = mutableMapOf<Player, Int>()
 
     constructor(
         id: Int,
@@ -56,13 +54,6 @@ open class WorldBossNPC : NPC {
             firstProcess = false
         }
 
-        val now = Utils.currentTimeMillis()
-        if (now - spawnTimeMs >= gracePeriodMs && now - lastInteractionMs >= idleTimeoutMs) {
-            handler.onBossIdleDespawn(this)
-            finish()
-            return
-        }
-
         ticksUntilRecheck--
         if (ticksUntilRecheck <= 0) {
             recalcHpScaling()
@@ -78,7 +69,7 @@ open class WorldBossNPC : NPC {
             it != null && !it.hasFinished() && it.withinDistance(this, SCALE_RADIUS)
         }
 
-        val scale = 1.0 + (nearbyPlayers * 0.2)
+        val scale = 1.0 + (nearbyPlayers * 0.05)
         val newMaxHp = max(1, (baseHp * scale).toInt())
 
         if (newMaxHp != maxHitpoints || force) {
@@ -90,7 +81,7 @@ open class WorldBossNPC : NPC {
 
             if (force) {
                println(
-                    "<col=ff8c00>[WorldBoss] $name adapts to $nearbyPlayers warriors nearby! (${newMaxHp} HP)"
+                    "<col=ff8c00>[WorldMinion] $name adapts to $nearbyPlayers warriors nearby! (${newMaxHp} HP)"
                 )
             }
         }
@@ -98,61 +89,18 @@ open class WorldBossNPC : NPC {
 
     override fun handleIncommingHit(hit: Hit) {
         super.handleIncommingHit(hit)
-        if (hit.source is Player) {
-            lastInteractionMs = Utils.currentTimeMillis()
-            damageMap.merge(hit.source as Player, hit.damage, Int::plus)
-        }
     }
 
     override fun getProtectionPrayerEffectiveness(): Double {
-        return 0.2
+        return 0.1
     }
 
     override fun sendDeath(source: Entity?) {
-        try {
-            World.sendWorldMessage(
-                "<img=7><col=ff0000>News: World boss: $name has been defeated!",
-                false
-            )
-
-            val threshold = (maxHitpoints * 0.10).toInt()
-            var topPlayer: Player? = null
-            var topDamage = 0
-
-            for ((player, damage) in damageMap) {
-                if (player.hasFinished()) continue
-
-                if (damage > topDamage) {
-                    topDamage = damage
-                    topPlayer = player
-                }
-
-                if (damage >= threshold) {
-                    handler.onBossReward(this, player, damage, maxHitpoints)
-                }
-            }
-
-            if (topPlayer != null) {
-                handler.onBossTopDamageReward(this, topPlayer, topDamage, maxHitpoints)
-            }
-
-        } finally {
-            super.sendDeath(source)
-            handler.onBossDeath()
-        }
+        super.sendDeath(source)
     }
-
 
     override fun finish() {
-        val wasFinished = hasFinished()
         super.finish()
-        if (!wasFinished) {
-            handler.onBossFinished(externallyDespawning ?: "Finished")
-        }
-    }
-
-    fun markExternallyDespawning(reason: String) {
-        externallyDespawning = reason
     }
 
     private fun selectNewTarget() {

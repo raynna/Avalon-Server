@@ -3,8 +3,12 @@ package com.rs.kotlin.game.npc.worldboss
 import com.rs.core.thread.CoresManager
 import com.rs.java.game.World
 import com.rs.java.game.WorldTile
+import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
+import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
+import com.rs.kotlin.Rscm
+import com.rs.kotlin.game.world.util.Msg
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -34,7 +38,7 @@ object RandomWorldBossHandler {
         BossEntry.Single(6247), // Zilyana
         BossEntry.Single(50),   // King Black Dragon
         BossEntry.Single(8133), // Corporeal Beast
-        BossEntry.WithMinions(1158, listOf(), 6), // Kalphite Queen + 6 workers
+        BossEntry.WithMinions(1158, listOf(NPC.getNpc("npc.kalphite_guardian_lv141")), 6), // Kalphite Queen + 6 workers
         BossEntry.Group(listOf(2881, 2882, 2883)),    // Dagannoth Kings
         BossEntry.Single(2030), // Barrows brother
         BossEntry.Single(3200)  // Chaos Elemental
@@ -62,7 +66,7 @@ object RandomWorldBossHandler {
     // ---------------------- STATE ----------------------
 
     @Volatile private var currentBoss: WorldBossNPC? = null
-    @Volatile private var currentMinions: MutableList<WorldBossNPC> = mutableListOf()
+    @Volatile private var currentMinions: MutableList<WorldMinionNPC> = mutableListOf()
     @Volatile private var nextSpawnTask: ScheduledFuture<*>? = null
     @Volatile private var lastSpawnLocIndex: Int = -1
 
@@ -157,7 +161,7 @@ object RandomWorldBossHandler {
                 repeat(entry.minionCount) {
                     val offsetX = Utils.random(-3, 3)
                     val offsetY = Utils.random(-3, 3)
-                    val minion = spawnWorldBoss(entry.minionIds.random(), spawnTile.transform(offsetX, offsetY, boss.plane), true)
+                    val minion = spawnMinion(entry.minionIds.random(), spawnTile.transform(offsetX, offsetY, boss.plane))
                     currentMinions.add(minion)
                 }
 
@@ -166,17 +170,26 @@ object RandomWorldBossHandler {
         }
     }
 
-    private fun spawnWorldBoss(npcId: Int, tile: WorldTile, isMinion: Boolean = false): WorldBossNPC {
-        val npc: WorldBossNPC = if (npcId == 8133) {
-            WorldCorporealBeast(tile, IDLE_TIMEOUT_MS, GRACE_PERIOD_MS, this)
-        } else {
-            GenericWorldBossNPC(npcId, tile, IDLE_TIMEOUT_MS, GRACE_PERIOD_MS, this, isMinion)
+    private fun spawnWorldBoss(npcId: Int, tile: WorldTile): WorldBossNPC {
+        return when {
+            npcId == 8133 -> {
+                WorldCorporealBeast(tile, IDLE_TIMEOUT_MS, GRACE_PERIOD_MS, this)
+            } else -> {
+                GenericWorldBossNPC(npcId, tile, IDLE_TIMEOUT_MS, GRACE_PERIOD_MS, this)
+            }
+        }.apply {
+            isForceAgressive = true
+            forceAgressiveDistance = 12
+            isForceMultiAttacked = true
         }
+    }
 
-        npc.isForceAgressive = true
-        npc.forceAgressiveDistance = 12
-        npc.isForceMultiAttacked = true
-        return npc
+    private fun spawnMinion(npcId: Int, tile: WorldTile): WorldMinionNPC {
+        return GenericWorldMinion(npcId, tile, IDLE_TIMEOUT_MS, GRACE_PERIOD_MS, this).apply {
+            isForceAgressive = true
+            forceAgressiveDistance = 12
+            isForceMultiAttacked = true
+        }
     }
 
     private fun announce(npc: NPC, locationName: String) {
@@ -230,11 +243,72 @@ object RandomWorldBossHandler {
     }
 
     private fun cleanupMinions() {
-        currentMinions.forEach { it.finish() }
+        val snapshot = currentMinions.toList() // copy first
+        snapshot.forEach { minion ->
+            try {
+                minion.finish()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
         currentMinions.clear()
     }
 
-    // ----- Callbacks -----
+    fun onBossReward(boss: WorldBossNPC, player: Player, damage: Int, maxHp: Int) {
+        val pct = (damage * 100 / maxHp)
+        player.message(Msg.info("You dealt $damage ($pct%) damage and earned loot!"))
+
+        val drops = WorldBossTable.regular.rollDrops(player)
+        for (drop in drops) {
+            val item = Item(drop.itemId, drop.amount)
+            World.updateGroundItem(item, boss.tile, player, 60, 1)
+
+            if (item.isItem("item.magic_chest")) {
+                player.message(Msg.rewardRare("You receive a mysterious Magic Chest!"))
+                World.sendWorldMessage(Msg.newsEpic("${player.displayName} has received a Magic Chest!"), false)
+            } else {
+                player.message(Msg.reward("You receive ${item.amount} × ${item.name}."))
+                if (item.definitions.tipitPrice >= 1_000_000) {
+                    World.sendWorldMessage(
+                        Msg.newsRare("${player.displayName} has received ${item.name} from killing the world boss!"),
+                        false
+                    )
+                }
+            }
+        }
+    }
+
+    fun onBossTopDamageReward(boss: WorldBossNPC, player: Player, damage: Int, maxHp: Int) {
+        player.message(Msg.topDamager("You were the top damager on ${boss.name} and received an extra reward!"))
+        World.sendWorldMessage(Msg.newsEpic("${player.displayName} has received a Magic Chest!"), false)
+        World.updateGroundItem(Item("item.magic_chest", 1), boss.tile, player, 60, 1)
+    }
+
+    @JvmStatic
+    fun openChest(chest: Item, slot: Int, player: Player) {
+        val drops = WorldBossTable.chest.rollDrops(player)
+        val neededSlots = drops.size
+        if (player.inventory.freeSlots < neededSlots) {
+            player.message(Msg.warn("You need at least $neededSlots free inventory slots to open the Magic Chest."))
+            return
+        }
+
+        player.inventory.deleteItem(chest.id, 1)
+        for (drop in drops) {
+            val item = Item(drop.itemId, drop.amount)
+            player.inventory.addItem(item)
+            player.message(Msg.chestOpen("Your Magic Chest rewards you with ${item.amount} × ${item.name}!"))
+
+            if (item.definitions.tipitPrice >= 1_000_000) {
+                World.sendWorldMessage(
+                    Msg.newsRare("${player.displayName} has received ${item.name} from a Magic Chest!"),
+                    false
+                )
+            }
+        }
+    }
+
+
 
     @Synchronized
     internal fun onBossDeath() {

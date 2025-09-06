@@ -22,7 +22,7 @@ public final class LocalNPCUpdate {
 
 	public LocalNPCUpdate(Player player) {
 		this.player = player;
-		localNPCs = new LinkedList<NPC>();
+		localNPCs = new LinkedList<>();
 	}
 
 	public OutputStream createPacketAndProcess() {
@@ -47,10 +47,9 @@ public final class LocalNPCUpdate {
 
 	private void processInScreenNPCs(OutputStream stream, OutputStream updateBlockData, boolean largeSceneView) {
 		stream.writeBits(8, localNPCs.size());
-		// for (NPC n : localNPCs.toArray(new NPC[localNPCs.size()])) {
 		for (Iterator<NPC> it = localNPCs.iterator(); it.hasNext();) {
 			NPC n = it.next();
-			if (n.hasFinished() || !n.withinDistance(player, largeSceneView ? 126 : 14) || n.hasTeleported()) {
+			if (n == null || n.hasFinished() || !n.withinDistance(player, largeSceneView ? 126 : 14) || n.hasTeleported()) {
 				stream.writeBits(1, 1);
 				stream.writeBits(2, 3);
 				it.remove();
@@ -67,8 +66,9 @@ public final class LocalNPCUpdate {
 				if (n.getNextRunDirection() != -1)
 					stream.writeBits(3, Utils.getNpcMoveDirection(n.getNextRunDirection()));
 				stream.writeBits(1, needUpdate ? 1 : 0);
-			} else if (needUpdate)
+			} else if (needUpdate) {
 				stream.writeBits(2, 0);
+			}
 			if (needUpdate)
 				appendUpdateBlock(n, updateBlockData, false);
 		}
@@ -91,15 +91,11 @@ public final class LocalNPCUpdate {
 				int x = n.getX() - player.getX();
 				int y = n.getY() - player.getY();
 				if (largeSceneView) {
-					if (x < 127)
-						x += 256;
-					if (y < 127)
-						y += 256;
+					if (x < 127) x += 256;
+					if (y < 127) y += 256;
 				} else {
-					if (x < 15)
-						x += 32;
-					if (y < 15)
-						y += 32;
+					if (x < 15) x += 32;
+					if (y < 15) y += 32;
 				}
 				stream.writeBits(3, getNpcDirection(n));
 				stream.writeBits(largeSceneView ? 8 : 5, y);
@@ -122,134 +118,82 @@ public final class LocalNPCUpdate {
 
 	private void appendUpdateBlock(NPC n, OutputStream data, boolean added) {
 		int maskData = 0;
-		if (n.getNextForceTalk() != null) {
-			maskData |= 0x20;
-		}
-		if (n.getNextFaceEntity() != -2 || (added && n.getLastFaceEntity() != -1)) {
-			maskData |= 0x10;
-		}
-		if (n.getNextFaceWorldTile() != null && n.getNextRunDirection() == -1 && n.getNextWalkDirection() == -1) {
+		if (n.getNextForceTalk() != null) maskData |= 0x20;
+		if (n.getNextFaceEntity() != -2 || (added && n.getLastFaceEntity() != -1)) maskData |= 0x10;
+		if (n.getNextFaceWorldTile() != null && n.getNextRunDirection() == -1 && n.getNextWalkDirection() == -1)
 			maskData |= 0x80;
-		}
-		if (n.getNextAnimation() != null) {
-			maskData |= 0x8;
-		}
-		// Change render animation id mask 0x200
-		if (!n.getNextHits().isEmpty()) {
-			maskData |= 0x4;
-		}
-		if (n.getNextGraphics4() != null) {
-			maskData |= 0x2000000;
-		}
-		if (n.getNextGraphics1() != null) {
-			maskData |= 0x40;
-		}
-		if (n.getNextGraphics2() != null) {
-			maskData |= 0x100;
-		}
-		if (n.getNextForceMovement() != null) {
-			maskData |= 0x800;
-		}
-		if (n.getNextGraphics3() != null) {
-			maskData |= 0x1000000;
-		}
-		if (n.hasChangedName() || (added && n.getCustomName() != null)) {
-			maskData |= 0x800000;
-		}
-		if (n.hasChangedCombatLevel() || (added && n.getCustomCombatLevel() >= 0)) {
-			maskData |= 0x40000;
-		}
-		if (n.getNextTransformation() != null) {
-			maskData |= 0x1;
-		}
-		if (maskData > 0xff)
-			maskData |= 0x2;
-		if (maskData > 0xffff)
-			maskData |= 0x8000;
-		if (maskData > 0xffffff)
-			maskData |= 0x10000;
+		if (n.getNextAnimation() != null) maskData |= 0x8;
+		if (!n.getNextHits().isEmpty()) maskData |= 0x4;
+		if (n.getNextGraphics4() != null) maskData |= 0x2000000;
+		if (n.getNextGraphics1() != null) maskData |= 0x40;
+		if (n.getNextGraphics2() != null) maskData |= 0x100;
+		if (n.getNextForceMovement() != null) maskData |= 0x800;
+		if (n.getNextGraphics3() != null) maskData |= 0x1000000;
+		if (n.hasChangedName() || (added && n.getCustomName() != null)) maskData |= 0x800000;
+		if (n.hasChangedCombatLevel() || (added && n.getCustomCombatLevel() >= 0)) maskData |= 0x40000;
+		if (n.getNextTransformation() != null) maskData |= 0x1;
+		if (maskData > 0xff) maskData |= 0x2;
+		if (maskData > 0xffff) maskData |= 0x8000;
+		if (maskData > 0xffffff) maskData |= 0x10000;
 
 		data.writeByte(maskData);
+		if (maskData > 0xff) data.writeByte(maskData >> 8);
+		if (maskData > 0xffff) data.writeByte(maskData >> 16);
+		if (maskData > 0xffffff) data.writeByte(maskData >> 24);
 
-		if (maskData > 0xff)
-			data.writeByte(maskData >> 8);
-		if (maskData > 0xffff)
-			data.writeByte(maskData >> 16);
-		if (maskData > 0xffffff)
-			data.writeByte(maskData >> 24);
-
-		if (n.getNextForceTalk() != null) {
-			applyForceTalkMask(n, data);
-		}
-		if (n.getNextFaceEntity() != -2 || (added && n.getLastFaceEntity() != -1)) {
-			applyFaceEntityMask(n, data);
-		}
-		if (n.getNextFaceWorldTile() != null && n.getNextRunDirection() == -1 && n.getNextWalkDirection() == -1) {
+		if (n.getNextForceTalk() != null) applyForceTalkMask(n, data);
+		if (n.getNextFaceEntity() != -2 || (added && n.getLastFaceEntity() != -1)) applyFaceEntityMask(n, data);
+		if (n.getNextFaceWorldTile() != null && n.getNextRunDirection() == -1 && n.getNextWalkDirection() == -1)
 			applyFaceWorldTileMask(n, data);
-		}
-		if (n.getNextAnimation() != null) {
-			applyAnimationMask(n, data);
-		}
-		// Change render animation id mask 0x200
-		if (!n.getNextHits().isEmpty()) {
-			applyHitMask(n, data);
-		}
-		if (n.getNextGraphics4() != null) {
-			applyGraphicsMask4(n, data);
-		}
-		if (n.getNextGraphics1() != null) {
-			applyGraphicsMask1(n, data);
-		}
-		if (n.getNextGraphics2() != null) {
-			applyGraphicsMask2(n, data);
-		}
-		if (n.getNextForceMovement() != null) {
-			applyForceMovementMask(n, data);
-		}
-		if (n.getNextGraphics3() != null) {
-			applyGraphicsMask3(n, data);
-		}
-		if (n.hasChangedName() || (added && n.getCustomName() != null)) {
-			applyNameChangeMask(n, data);
-		}
-		if (n.hasChangedCombatLevel() || (added && n.getCustomCombatLevel() >= 0)) {
-			applyChangeLevelMask(n, data);
-		}
-		if (n.getNextTransformation() != null) {
-			applyTransformationMask(n, data);
-		}
+		if (n.getNextAnimation() != null) applyAnimationMask(n, data);
+		if (!n.getNextHits().isEmpty()) applyHitMask(n, data);
+		if (n.getNextGraphics4() != null) applyGraphicsMask4(n, data);
+		if (n.getNextGraphics1() != null) applyGraphicsMask1(n, data);
+		if (n.getNextGraphics2() != null) applyGraphicsMask2(n, data);
+		if (n.getNextForceMovement() != null) applyForceMovementMask(n, data);
+		if (n.getNextGraphics3() != null) applyGraphicsMask3(n, data);
+		if (n.hasChangedName() || (added && n.getCustomName() != null)) applyNameChangeMask(n, data);
+		if (n.hasChangedCombatLevel() || (added && n.getCustomCombatLevel() >= 0)) applyChangeLevelMask(n, data);
+		if (n.getNextTransformation() != null) applyTransformationMask(n, data);
 	}
 
 	private void applyChangeLevelMask(NPC n, OutputStream data) {
-		data.writeShortLE(n.getCombatLevel());
+		data.writeShortLE(Math.max(0, n.getCombatLevel()));
 	}
 
 	private void applyNameChangeMask(NPC npc, OutputStream data) {
-		data.writeString(npc.getName());
+		String name = npc.getName();
+		if (name == null) name = "null";
+		data.writeString(name);
 	}
 
 	private void applyTransformationMask(NPC n, OutputStream data) {
-		data.writeBigSmart(n.getNextTransformation().getToNPCId());
+		if (n.getNextTransformation() != null)
+			data.writeBigSmart(n.getNextTransformation().getToNPCId());
 	}
 
 	private void applyForceTalkMask(NPC n, OutputStream data) {
-		data.writeString(n.getNextForceTalk().getText());
+		String text = n.getNextForceTalk().getText();
+		if (text == null) text = "";
+		data.writeString(text);
 	}
 
 	private void applyForceMovementMask(NPC n, OutputStream data) {
+		if (n.getNextForceMovement() == null) return;
 		data.write128Byte(n.getNextForceMovement().getToFirstTile().getX() - n.getX());
 		data.writeByte(n.getNextForceMovement().getToFirstTile().getY() - n.getY());
-		data.writeByteC(n.getNextForceMovement().getToSecondTile() == null ? 0
-				: n.getNextForceMovement().getToSecondTile().getX() - n.getX());
-		data.writeByteC(n.getNextForceMovement().getToSecondTile() == null ? 0
-				: n.getNextForceMovement().getToSecondTile().getY() - n.getY());
+		data.writeByteC(n.getNextForceMovement().getToSecondTile() == null ? 0 :
+				n.getNextForceMovement().getToSecondTile().getX() - n.getX());
+		data.writeByteC(n.getNextForceMovement().getToSecondTile() == null ? 0 :
+				n.getNextForceMovement().getToSecondTile().getY() - n.getY());
 		data.writeShortLE((n.getNextForceMovement().getFirstTileTicketDelay() * 600) / 20);
-		data.writeShortLE128(n.getNextForceMovement().getToSecondTile() == null ? 0
-				: ((n.getNextForceMovement().getSecondTileTicketDelay() * 600) / 20));
+		data.writeShortLE128(n.getNextForceMovement().getToSecondTile() == null ? 0 :
+				((n.getNextForceMovement().getSecondTileTicketDelay() * 600) / 20));
 		data.writeShort128(n.getNextForceMovement().getDirection());
 	}
 
 	private void applyFaceWorldTileMask(NPC n, OutputStream data) {
+		if (n.getNextFaceWorldTile() == null) return;
 		data.writeShort128((n.getNextFaceWorldTile().getX() << 1) + 1);
 		data.writeShortLE128((n.getNextFaceWorldTile().getY() << 1) + 1);
 	}
@@ -259,34 +203,31 @@ public final class LocalNPCUpdate {
 		data.writeByteC(count);
 		if (count > 0) {
 			int hp = n.getHitpoints();
-			int maxHp = n.getMaxHitpoints();
-			if (hp > maxHp)
-				hp = maxHp;
+			int maxHp = Math.max(1, n.getMaxHitpoints()); // avoid div by zero
+			if (hp > maxHp) hp = maxHp;
 			int hpBarPercentage = hp * 255 / maxHp;
 			for (Hit hit : n.getNextHits()) {
-				@SuppressWarnings("unused")
-				boolean interactingWith = hit.interactingWith(player, n);
-				if (hit.getDamage() < 0) {
-					hit.setDamage(0);
-				}
+				if (hit == null) continue;
+				boolean interactingWith = hit.interactingWith(player, n); // unused but may have side effects
+				if (hit.getDamage() < 0) hit.setDamage(0);
 				if (hit.missed()) {
 					data.writeSmart(hit.getMark(player, n));
 					data.writeSmart(0);
 				} else {
 					boolean oneXHits = player.getVarsManager().getBitValue(1485) == 1;
-                    int reduced = (int) Math.max(1, Math.ceil(hit.getDamage() / 10.0));
-                    double hitAmount = oneXHits ? reduced : hit.getDamage();
-                    if (hit.getSoaking() != null) {
-                        int reducedSoak = (int) Math.max(1, Math.ceil(hit.getSoaking().getDamage() / 10.0));
+					int reduced = (int) Math.max(1, Math.ceil(hit.getDamage() / 10.0));
+					double hitAmount = oneXHits ? reduced : hit.getDamage();
+					if (hit.getSoaking() != null) {
+						int reducedSoak = (int) Math.max(1, Math.ceil(hit.getSoaking().getDamage() / 10.0));
 						double soakAmount = oneXHits ? reducedSoak : hit.getSoaking().getDamage();
 						data.writeSmart(32767);
 						data.writeSmart(hit.getMark(player, n));
-						data.writeSmart((int)hitAmount);
+						data.writeSmart((int) hitAmount);
 						data.writeSmart(hit.getSoaking().getMark(player, n));
-						data.writeSmart((int)soakAmount);
+						data.writeSmart((int) soakAmount);
 					} else {
-                        data.writeSmart(hit.getMark(player, n));
-						data.writeSmart((int)hitAmount);
+						data.writeSmart(hit.getMark(player, n));
+						data.writeSmart((int) hitAmount);
 					}
 				}
 				data.writeSmart(hit.getDelay());
@@ -300,6 +241,7 @@ public final class LocalNPCUpdate {
 	}
 
 	private void applyAnimationMask(NPC n, OutputStream data) {
+		if (n.getNextAnimation() == null) return;
 		for (int id : n.getNextAnimation().getIds())
 			data.writeBigSmart(id);
 		data.writeByte(n.getNextAnimation().getSpeed());
@@ -328,5 +270,4 @@ public final class LocalNPCUpdate {
 		data.writeIntV1(n.getNextGraphics1().getSettingsHash());
 		data.write128Byte(n.getNextGraphics1().getSettings2Hash());
 	}
-
 }

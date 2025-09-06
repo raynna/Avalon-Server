@@ -2,12 +2,12 @@ package com.rs.kotlin.game.npc.worldboss
 
 import com.rs.java.game.WorldTile
 
-class GenericWorldBossNPC(
+class GenericWorldMinion(
     id: Int,
     tile: WorldTile,
     idleTimeoutMs: Long,
     gracePeriodMs: Long,
     handler: RandomWorldBossHandler,
-) : WorldBossNPC(id, tile, idleTimeoutMs, gracePeriodMs, handler) {
+) : WorldMinionNPC(id, tile, idleTimeoutMs, gracePeriodMs, handler) {
 
 }

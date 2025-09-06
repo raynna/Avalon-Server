@@ -1276,6 +1276,73 @@
       "krystilia"
     ]
   },
+  "1155": {
+    "id": 1155,
+    "name": "Kalphite Guardian",
+    "members": true,
+    "combatLevel": 141,
+    "attackLevel": 110,
+    "strengthLevel": 110,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 170,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 25,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 30,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "4",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 12
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 170,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "1157": {
     "id": 1157,
     "name": "Kalphite Guardian",
@@ -5906,6 +5973,70 @@
     "categories": [],
     "assignedBy": []
   },
+  "6203": {
+    "id": 6203,
+    "name": "K\u0027ril Tsutsaroth",
+    "members": true,
+    "combatLevel": 650,
+    "attackLevel": 340,
+    "strengthLevel": 300,
+    "defenceLevel": 270,
+    "magicLevel": 200,
+    "rangedLevel": 1,
+    "constitutionLevel": 255,
+    "attackBonus": 160,
+    "strengthBonus": 31,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 70,
+      "slash": 80,
+      "crush": 80
+    },
+    "magicDefence": {
+      "magic": 80
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 80,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "5",
+    "examine": "A servant of the god Zamorak.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 37.5,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 150,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "6222": {
     "id": 6222,
     "name": "Kree\u0027arra",
@@ -5966,6 +6097,67 @@
     "categories": [],
     "assignedBy": [
       "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6247": {
+    "id": 6247,
+    "name": "Commander Zilyana",
+    "members": true,
+    "combatLevel": 596,
+    "attackLevel": 280,
+    "strengthLevel": 196,
+    "defenceLevel": 300,
+    "magicLevel": 300,
+    "rangedLevel": 250,
+    "constitutionLevel": 255,
+    "attackBonus": 195,
+    "strengthBonus": 20,
+    "magicBonus": 0,
+    "magicStrengthBonus": 200,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 100,
+      "slash": 100,
+      "crush": 100
+    },
+    "magicDefence": {
+      "magic": 100
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 100,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "Commander of Saradomin\u0027s forces.",
+    "attributes": [],
+    "xpBonus": 37.5,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 2,
+    "respawnTicks": 150,
+    "slayerXp": 350,
+    "categories": [],
+    "assignedBy": [
       "konar",
       "nieve",
       "duradel"

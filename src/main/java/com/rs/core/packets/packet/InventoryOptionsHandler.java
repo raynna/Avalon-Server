@@ -93,6 +93,7 @@ import com.rs.java.utils.HexColours;
 import com.rs.java.utils.HexColours.Colour;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.worldboss.RandomWorldBossHandler;
 import com.rs.kotlin.game.world.activity.BarrowsAreaKt;
 
 public class InventoryOptionsHandler {
@@ -177,6 +178,10 @@ public class InventoryOptionsHandler {
             player.removeItem(itemId, amount);
             player.message(HexColours.getShortMessage(Colour.RED, amount + "") + " pk points were added to your account.");
             player.addPKP(amount);
+            return;
+        }
+        if (item.isItem("item.magic_chest")) {
+            RandomWorldBossHandler.openChest(item, slotId, player);
             return;
         }
         if (itemId == 15707)

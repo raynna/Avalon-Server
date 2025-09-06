@@ -12451,3 +12451,26 @@
 [05 September 2025 at 05:06:31 CEST] - ::tele 0,48,56,14,28
 [05 September 2025 at 05:06:32 CEST] - ::tele 0,48,56,17,32
 [05 September 2025 at 05:06:33 CEST] - ::tele 0,48,56,24,33
+[05 September 2025 at 05:11:14 CEST] - ::ecomode 2
+[05 September 2025 at 05:12:17 CEST] - ::tele 0,50,49,6,50
+[05 September 2025 at 05:12:20 CEST] - ::tele 0,50,49,2,39
+[06 September 2025 at 01:55:03 CEST] - ::empty 
+[06 September 2025 at 01:56:28 CEST] - ::ecomode 2
+[06 September 2025 at 01:56:51 CEST] - ::tele 0,42,53,48,0
+[06 September 2025 at 01:59:40 CEST] - ::tele 0,42,53,54,8
+[06 September 2025 at 02:14:04 CEST] - ::ecomode 2
+[06 September 2025 at 02:14:16 CEST] - ::tele 0,49,49,46,21
+[06 September 2025 at 02:14:21 CEST] - ::tele 0,49,49,44,11
+[06 September 2025 at 02:14:45 CEST] - ::tele 0,49,49,62,14
+[06 September 2025 at 02:20:07 CEST] - ::tele 0,50,49,1,14
+[06 September 2025 at 02:31:21 CEST] - ::ecomode 2
+[06 September 2025 at 02:35:47 CEST] - ::tele 0,50,49,0,12
+[06 September 2025 at 02:35:52 CEST] - ::tele 0,50,49,2,9
+[06 September 2025 at 02:35:53 CEST] - ::tele 0,49,49,62,7
+[06 September 2025 at 02:35:55 CEST] - ::tele 0,50,49,4,7
+[06 September 2025 at 02:36:11 CEST] - ::tele 0,50,49,8,5
+[06 September 2025 at 02:52:56 CEST] - ::tele 0,50,49,0,18
+[06 September 2025 at 02:53:41 CEST] - ::tele 0,49,49,59,21
+[06 September 2025 at 02:54:49 CEST] - ::tele 0,50,49,1,14
+[06 September 2025 at 02:55:18 CEST] - ::tele 0,50,49,3,9
+[06 September 2025 at 02:59:03 CEST] - ::tele 0,50,49,2,9

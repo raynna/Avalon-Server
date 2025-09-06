@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import com.alex.utils.Constants;
@@ -1035,18 +1036,25 @@ public final class Utils {
 		return newName.toString();
 	}
 
-	/**
-	 * Random.
-	 *
-	 * @param maxValue the max value
-	 * @return the int
-	 */
-	public static final int random(int maxValue) {
-		if (maxValue <= 0)
-			return 0;
-		return RANDOM.nextInt(maxValue);
+	public static int random(int bound) {
+		if (bound <= 0) return 0;
+		return ThreadLocalRandom.current().nextInt(bound);
 	}
 
+	// inclusive min..max
+	public static int random(int min, int max) {
+		if (max < min) {
+			int tmp = min;
+			min = max;
+			max = tmp;
+		}
+		return ThreadLocalRandom.current().nextInt((max - min) + 1) + min;
+	}
+
+	// random double in [min, max)
+	public static double random(double min, double max) {
+		return ThreadLocalRandom.current().nextDouble(min, max);
+	}
 	/**
 	 * Gets the random.
 	 *
@@ -1068,30 +1076,6 @@ public final class Utils {
 
 	public static double randomDouble() {
 		return new Random().nextDouble();
-	}
-
-	/**
-	 * Random.
-	 *
-	 * @param min the min
-	 * @param max the max
-	 * @return the int
-	 */
-	public static final int random(int min, int max) {
-		final int n = Math.abs(max + 1 - min);
-		return Math.min(min, max + 1) + (n == 0 ? 0 : random(n));
-	}
-
-	/**
-	 * Random.
-	 *
-	 * @param min the min
-	 * @param max the max
-	 * @return the double
-	 */
-	public static final double random(double min, double max) {
-		final double n = Math.abs(max - min);
-		return Math.min(min, max) + (n == 0 ? 0 : random((int) n));
 	}
 
 	/**

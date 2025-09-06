@@ -16,6 +16,7 @@ import com.rs.kotlin.game.player.combat.range.RangedStyle
 import com.rs.kotlin.game.player.equipment.BonusType
 import com.rs.kotlin.game.player.equipment.EquipmentSets
 import com.rs.kotlin.game.player.equipment.EquipmentSets.getDharokMultiplier
+import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
 
 object CombatCalculations {
@@ -369,13 +370,13 @@ object CombatCalculations {
     }
 
     fun calculateMeleeAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean =
-        Math.random() < MeleeCombat.getHitChance(player, target, accuracyMultiplier)
+        ThreadLocalRandom.current().nextDouble() < MeleeCombat.getHitChance(player, target, accuracyMultiplier)
 
     fun calculateRangedAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean =
-        Math.random() < RangedCombat.getHitChance(player, target, accuracyMultiplier)
+        ThreadLocalRandom.current().nextDouble() < RangedCombat.getHitChance(player, target, accuracyMultiplier)
 
     fun calculateMagicAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean =
-        Math.random() < MagicCombat.getHitChance(player, target, accuracyMultiplier)
+        ThreadLocalRandom.current().nextDouble() < MagicCombat.getHitChance(player, target, accuracyMultiplier)
 
     fun calculateMeleeMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): Hit =
         MeleeCombat.calculateMaxHit(player, target, specialMultiplier)

@@ -20,8 +20,13 @@ public class Kreearra extends CombatScript {
 	@Override
 	public int attack(NPC npc, Entity target) {
 		if (!npc.isUnderCombat()) {
+			if (!npc.withinDistance(target, 1)) {
+				npc.addWalkStepsInteract(target.getX(), target.getY(), 32, npc.getSize(), false);
+				return 0;
+			}
 			npc.animate(new Animation(6997));
-			Hit hit = getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 260, NpcAttackStyle.CRUSH, target));
+			Hit hit = getMeleeHit(npc,
+					NpcCombatCalculations.getRandomMaxHit(npc, 260, NpcAttackStyle.CRUSH, target));
 			delayHit(npc, target, 1, hit);
 			return npc.getCombatData().attackSpeedTicks;
 		}

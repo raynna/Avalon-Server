@@ -279,7 +279,7 @@ public class NPC extends Entity implements Serializable {
 
     @Override
     public int getMaxHitpoints() {
-        if (getIncreasedMaxHitpoints() > -1)
+        if (getIncreasedMaxHitpoints() > 0)
             return getIncreasedMaxHitpoints();
         if (combatData == null)
             setBonuses();
@@ -935,6 +935,10 @@ public class NPC extends Entity implements Serializable {
         return respawnTile;
     }
 
+    public void setRespawnTile(WorldTile tile) {
+        this.respawnTile = tile;
+    }
+
     public boolean isUnderCombat() {
         return combat.underCombat();
     }
@@ -952,6 +956,10 @@ public class NPC extends Entity implements Serializable {
 
     public boolean isForceWalking() {
         return forceWalk != null;
+    }
+
+    public void resetForcewalk() {
+    	this.forceWalk = null;
     }
 
     public void setTarget(Entity entity) {
