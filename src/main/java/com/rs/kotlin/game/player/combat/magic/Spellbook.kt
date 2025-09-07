@@ -1130,7 +1130,6 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             name = "Storm of Armadyl",
             level = 77,
             xp = 70.0,
-            damage = 0,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.ARMADYL, 1)

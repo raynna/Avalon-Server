@@ -88,12 +88,6 @@ open class WorldBossNPC : NPC {
 
             increasedMaxHitpoints = newMaxHp
             hitpoints = max(1, max(hitpoints, (newMaxHp * hpRatio).toInt()))
-
-            if (force) {
-               println(
-                    "<col=ff8c00>[WorldBoss] $name adapts to $nearbyPlayers warriors nearby! (${newMaxHp} HP)"
-                )
-            }
         }
     }
 

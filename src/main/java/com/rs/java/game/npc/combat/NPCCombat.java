@@ -36,6 +36,10 @@ public final class NPCCombat {
         return attackDelay;
     }
 
+    public void setAttackDelay(int attackDelay) {
+        this.attackDelay = attackDelay;
+    }
+
     public NPCCombat(NPC npc) {
         this.npc = npc;
     }

@@ -156,9 +156,9 @@ class ShopSystem(private val player: Player) {
 
             // Display price (red if out of stock or can't afford)
             val rawPriceText = when {
-                !inStock -> "Out of<br>stock<br><br>" + price.format() + "<br><br><br><br>"
+                !inStock -> "Out of<br>stock<br><br>" + price.shortFormat() + "<br><br><br><br>"
                 price == 0 -> "Free"
-                else -> price.format()
+                else -> price.shortFormat()
             }
 
             val priceColour = when {
@@ -213,7 +213,7 @@ class ShopSystem(private val player: Player) {
                 "${shop.currency.displayName}: ${
                     HexColours.getMessage(
                         HexColours.Colour.WHITE,
-                        getPlayerCurrencyAmount(shop.currency).format()
+                        getPlayerCurrencyAmount(shop.currency).shortFormat()
                     )
                 }"
             )
@@ -248,9 +248,9 @@ class ShopSystem(private val player: Player) {
 
             // Display price (red if out of stock or can't afford)
             val rawPriceText = when {
-                !inStock -> "Out of<br>stock<br><br>" + price.format() + "<br><br><br><br>"
+                !inStock -> "Out of<br>stock<br><br>" + price.shortFormat() + "<br><br><br><br>"
                 price == 0 -> "Free"
-                else -> price.format()
+                else -> price.shortFormat()
             }
 
             val priceColour = when {
@@ -288,7 +288,7 @@ class ShopSystem(private val player: Player) {
                 "${shop.currency.displayName}: ${
                     HexColours.getMessage(
                         HexColours.Colour.WHITE,
-                        getPlayerCurrencyAmount(shop.currency).format()
+                        getPlayerCurrencyAmount(shop.currency).shortFormat()
                     )
                 }"
             )
@@ -350,7 +350,7 @@ class ShopSystem(private val player: Player) {
         val price = shopItem.price ?: EconomyPrices.getPrice(shopItem.itemId)
         val itemDef = ItemDefinitions.getItemDefinitions(itemId)
 
-        player.message("${itemDef.name} costs ${price.format()} ${currency.displayName}.")
+        player.message("${itemDef.name} costs ${price.fullFormat()} ${currency.displayName}.")
     }
 
     private fun showSellInfo(itemId: Int, currency: CurrencyType) {
@@ -371,7 +371,7 @@ class ShopSystem(private val player: Player) {
 
         val itemDef = ItemDefinitions.getItemDefinitions(itemId)
 
-        player.message("${itemDef.name} will sell back for ${sellPrice.format()} ${currency.displayName}.")
+        player.message("${itemDef.name} will sell back for ${sellPrice.fullFormat()} ${currency.displayName}.")
     }
 
 
@@ -437,7 +437,7 @@ class ShopSystem(private val player: Player) {
             shopItem.currentStock -= buyAmount
         }
 
-        player.message("You bought $buyAmount x ${def.name} for ${totalPrice.format()} ${currency.displayName}.")
+        player.message("You bought $buyAmount x ${def.name} for ${totalPrice.fullFormat()} ${currency.displayName}.")
         refresh(shop)
     }
 
@@ -473,7 +473,7 @@ class ShopSystem(private val player: Player) {
         player.inventory.deleteItem(itemId, sellAmount)
 
         val itemDef = ItemDefinitions.getItemDefinitions(itemId)
-        player.message("Sold $sellAmount x ${itemDef.name} for ${sellPrice.format()} ${currency.displayName}.")
+        player.message("Sold $sellAmount x ${itemDef.name} for ${sellPrice.fullFormat()} ${currency.displayName}.")
         refresh(shop)
     }
 
@@ -493,11 +493,15 @@ class ShopSystem(private val player: Player) {
         }
     }
 
-    private fun Int.format(): String {
+    private fun Int.shortFormat(): String {
         return when {
             this >= 10_000_000 -> "${this / 1_000_000}m"
-            this >= 1_000 -> "${this / 1_000}k"
+            this >= 10_000 -> "${this / 1_000}k"
             else -> toString()
         }
+    }
+
+    private fun Int.fullFormat(): String {
+        return "%,d".format(this) // adds commas: 1,479 → "1,479"
     }
 }

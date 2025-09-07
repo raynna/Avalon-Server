@@ -39,6 +39,7 @@ curses_soulsplit_gfx=2264
 curses_berserker=2266
 staff_of_light_special=2320
 armadyl_godsword_special=2113
+darklight_special=483
 zamorak_godsword_start=1221
 zamorak_godsword_target=2104
 zamorak_godsword_end=2105

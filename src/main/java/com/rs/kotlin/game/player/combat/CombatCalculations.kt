@@ -251,7 +251,6 @@ object CombatCalculations {
             val isHexhunter = weapon.isAnyOf("item.hexhunter_bow", "item.hexhunter_bow_b")
 
             if (!isZaryte && !isHexhunter) return Triple(1.0, 1.0, 0)
-            target.setBonuses()
             val magicLevel = target.combatData.magicLevel
             val magicAttack = target.combatData.magicBonus
 
@@ -292,12 +291,19 @@ object CombatCalculations {
 
         fun calculateMaxHit(player: Player, target: Entity, spellId: Int, specialMultiplier: Double = 1.0): Hit {
             val spell = Spellbook.getSpellById(player, spellId);
-            val baseDamage = spell?.damage
-                ?: if (spellId == 1000) {
-                    (5 * player.skills.getLevel(Skills.MAGIC)) - 180
-                } else {
-                    10
+            val baseDamage: Int = when {
+                spell != null && spell.damage != -1 -> spell.damage
+
+                spellId == 1000 -> (5 * player.skills.getLevel(Skills.MAGIC)) - 180
+
+                spellId == 99 -> {
+                    val magicLevel = player.skills.getLevelForXp(Skills.MAGIC)
+                    val base = 160 + (magicLevel - 77) * 4
+                    val boost = (magicLevel - 77) * 4
+                    base + boost
                 }
+                else -> 10
+            }
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
             val equipmentSet = EquipmentSets.getSet(player)

@@ -306,6 +306,7 @@ public abstract class CombatScript {
         }
         incommingHit.setDamage((int) (incommingHit.getDamage() * DAMAGE_REDUCTION_MULTIPLIER));
         player.getPrayer().drainPrayer(prayerDrain);
+        player.gfx(93, 0);
     }
 
     public static void handleElysian(Entity target, Hit incommingHit) {
@@ -321,6 +322,7 @@ public abstract class CombatScript {
         }
         if (Utils.getRandom(CHANCE_DENOMINATOR) < CHANCE_NUMERATOR) {
             incommingHit.setDamage((int) (incommingHit.getDamage() * DAMAGE_REDUCTION_MULTIPLIER));
+            player.gfx(93, 0);
         }
     }
 

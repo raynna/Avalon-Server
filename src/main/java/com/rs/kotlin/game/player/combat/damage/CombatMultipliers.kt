@@ -11,7 +11,7 @@ class CombatMultipliers() {
     }
 
     enum class Type {
-        SLAYER, UNDEAD, REGULAR
+        SLAYER, UNDEAD, DEMON, DRAGON, REGULAR
     }
 
     enum class BoostEquipment(
@@ -26,7 +26,10 @@ class CombatMultipliers() {
         BLACK_MASK(8921, Style.MELEE, Type.SLAYER, 0.15),
         HEXCREST(15488, Style.MAGIC, Type.SLAYER, 0.15),
         FOCUSSIGHT(15490, Style.RANGE, Type.SLAYER, 0.15),
-        SALVE_AMULET(4081, Style.MELEE, Type.UNDEAD, 0.15);
+        SALVE_AMULET(4081, Style.MELEE, Type.UNDEAD, 0.15),
+        DARKLIGHT(6746, Style.MELEE, Type.DEMON, 0.60),
+        SILVERLIGHT(2402, Style.MELEE, Type.DEMON, 0.60),
+        ;
 
         companion object {
             fun fromItemId(id: Int) = entries.firstOrNull { it.itemId == id }
@@ -38,12 +41,24 @@ class CombatMultipliers() {
             "ghost", "zombie", "revenant", "skeleton", "abberant spectre", "banshee",
             "ghoul", "vampire", "skeletal"
         )
+        var DEMON_NPCS: Array<String> = arrayOf(
+            "demon"
+        )
+        var DRAGON_NPCS: Array<String> = arrayOf(
+            "dragon", "elvarg"
+        )
         fun getMultiplier(player: Player, target: Entity, style: Style): Double {
             var multiplier = 1.0
             if (target is NPC) {
                 val maxHitDummy = target.id == 4474
                 val isUndead = UNDEAD_NPCS.any { undeadName ->
                     target.definitions.name.contains(undeadName, ignoreCase = true)
+                }
+                val isDemon = DEMON_NPCS.any { demonName ->
+                    target.definitions.name.contains(demonName, ignoreCase = true)
+                }
+                val isDragon = DRAGON_NPCS.any { dragonName ->
+                    target.definitions.name.contains(dragonName, ignoreCase = true)
                 }
 
                 val equippedItem = player.equipment.items.itemsCopy
@@ -58,6 +73,16 @@ class CombatMultipliers() {
                                         player.slayerManager.isValidTask(target.name))
                             ) {
                                 multiplier += equippedItem.boost
+                            }
+                        }
+                        Type.DEMON -> {
+                            if (isDemon) {
+                                multiplier += equippedItem.boost;
+                            }
+                        }
+                        Type.DRAGON -> {
+                            if (isDragon) {
+                                multiplier += equippedItem.boost;
                             }
                         }
 

@@ -5,6 +5,7 @@ import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
+import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
@@ -93,10 +94,12 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     override fun getAttackSpeed(): Int {
-        val baseSpeed = when (attacker.combatDefinitions.getSpellBook()) {
-            192 -> 5
+        var baseSpeed = when (attacker.combatDefinitions.getSpellBook()) {
+            Spellbook.ANCIENT_ID -> 5
             else -> 5
         }
+        if (getCurrentWeaponId(attacker) == Item.getId("item.armadyl_battlestaff"))
+            baseSpeed = 4
         return baseSpeed
     }
 
@@ -202,12 +205,9 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             return
         }
         if (currentSpell != null) {
-            attacker.message("spellName ${currentSpell.name}")
             if (currentSpell.name.contains("teleport block", ignoreCase = true)) {
-                attacker.message("spell was teleport block")
                 val blockTime = defender.temporaryAttributes().remove("TELEBLOCK_QUEUE") as? Int
                 if (blockTime != null && blockTime != -1) {
-                    attacker.message("apply teleblock $blockTime")
                     defender.teleportBlock(blockTime)
                 }
             }
@@ -305,7 +305,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             attackStyle = AttackStyle.ACCURATE,//just fillers
             attackBonusType = AttackBonusType.CRUSH//just fillers
         )
-        attacker.message("spellMulti:" + spell.multi)
         val targets = if (spell.multi) {
             combatContext.getMultiAttackTargets(
                 maxDistance = 1,

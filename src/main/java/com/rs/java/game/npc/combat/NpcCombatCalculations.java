@@ -13,7 +13,6 @@ import com.rs.kotlin.game.player.equipment.BonusType;
 public class NpcCombatCalculations {
 
     public static int getRandomMaxHit(NPC npc, int maxHit, NpcAttackStyle attackStyle, Entity target) {
-        npc.setBonuses(); // Ensure NPC bonuses are loaded
         CombatData data = npc.getCombatData();
 
         // --- Attacker (NPC) Accuracy Roll ---

@@ -6,6 +6,7 @@ import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
@@ -749,6 +750,52 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
+                "item.darklight",
+            ),
+            name = "Longsword",
+            weaponStyle = WeaponStyle.SCIMITAR,
+            blockAnimationId = Animation.getId("animation.chaotic_rapier_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.chaotic_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.chaotic_slash"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 50,
+                accuracyMultiplier = 2.0,
+                damageMultiplier = 1.0,
+                execute = { context ->
+                    context.attacker.animate("animation.darklight_special")
+                    context.attacker.gfx("graphic.darklight_special")
+                    context.hits {
+                    val hit = melee()
+                        if (hit.damage > 0) {
+                            val defender = context.defender
+                            if (defender is NPC) {
+                                val isDemon = defender.name.contains("demon", ignoreCase = true)
+                                val drainPercent = if (isDemon) 0.10 else 0.05
+
+                                listOf("attack", "strength", "defence").forEach { skill ->
+                                    val baseLevel = defender.combatData.getBaseStat(skill)
+                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                    defender.combatData.drain(skill, drainAmount)
+                                }
+                            } else if (defender is Player) {
+                                val drainPercent = 0.05
+                                listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
+                                    val baseLevel = defender.skills.getLevelForXp(skill)
+                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                    defender.skills.drainLevel(skill, drainAmount)
+                                }
+                            }
+                        }
+                    }
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
                 "item.bronze_longsword",
                 "item.iron_longsword",
                 "item.steel_longsword",
@@ -773,7 +820,7 @@ object StandardMelee : MeleeData() {
                 "item.katagon_longsword", "item.katagon_longsword_b",
                 "item.gorgonite_longsword", "item.gorgonite_longsword_b",
                 "item.promethium_longsword", "item.promethium_longsword_b",
-                "item.primal_longsword", "item.primal_longsword_b",
+                "item.primal_longsword", "item.primal_longsword_b", "item.silverlight",
             ),
             name = "Longsword",
             weaponStyle = WeaponStyle.SCIMITAR,

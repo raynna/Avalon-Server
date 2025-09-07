@@ -23,7 +23,7 @@ object WikiApi {
         }
     }
 
-    val disabled = true
+    val disabled = false
 
     fun dumpData(npcId: Int, npcName: String, combatLevel: Int) {
         if (disabled)

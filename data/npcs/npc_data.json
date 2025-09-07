@@ -6472,6 +6472,60 @@
     "categories": [],
     "assignedBy": []
   },
+  "222": {
+    "id": 222,
+    "name": "Monk",
+    "members": false,
+    "combatLevel": 5,
+    "attackLevel": 2,
+    "strengthLevel": 2,
+    "defenceLevel": 3,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 15,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "237": {
     "id": 237,
     "name": "Renegade Knight",
@@ -9967,6 +10021,64 @@
     "attackSpeedTicks": 4,
     "respawnTicks": 25,
     "slayerXp": 3,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "1018": {
+    "id": 1018,
+    "name": "Rooster",
+    "members": true,
+    "combatLevel": 3,
+    "attackLevel": 2,
+    "strengthLevel": 2,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 7,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -42,
+      "slash": -42,
+      "crush": -42
+    },
+    "magicDefence": {
+      "magic": -42
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "He rules the, er, roost.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 7,
     "categories": [],
     "assignedBy": [
       "turael",
@@ -14660,6 +14772,684 @@
     ],
     "attackSpeedTicks": 4,
     "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1306": {
+    "id": 1306,
+    "name": "Freidir",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 40,
+    "strengthLevel": 40,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 20,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "One of Rellekka\u0027s many citizens.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 6
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1307": {
+    "id": 1307,
+    "name": "Borrokar",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 40,
+    "strengthLevel": 40,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 20,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "One of Rellekka\u0027s many citizens.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 6
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1308": {
+    "id": 1308,
+    "name": "Lanzig",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 40,
+    "strengthLevel": 40,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 20,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "One of Rellekka\u0027s many citizens.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 6
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1311": {
+    "id": 1311,
+    "name": "Lensa",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 40,
+    "strengthLevel": 40,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 20,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "One of Rellekka\u0027s many citizens.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 6
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1312": {
+    "id": 1312,
+    "name": "Jennella",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 40,
+    "strengthLevel": 40,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 20,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "One of Rellekka\u0027s many citizens.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 6
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1317": {
+    "id": 1317,
+    "name": "Market Guard",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 40,
+    "strengthLevel": 40,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 40,
+    "strengthBonus": 40,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 50
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Keeps the stalls secure.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "maxhit": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 3,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1319": {
+    "id": 1319,
+    "name": "Fox",
+    "members": true,
+    "combatLevel": 19,
+    "attackLevel": 1,
+    "strengthLevel": 20,
+    "defenceLevel": 20,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 30,
+    "attackBonus": 30,
+    "strengthBonus": 30,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 30,
+      "crush": 30
+    },
+    "magicDefence": {
+      "magic": 30
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Foxy.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 10,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1320": {
+    "id": 1320,
+    "name": "Bunny",
+    "members": true,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 5,
+    "attackBonus": -47,
+    "strengthBonus": -42,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -42,
+      "slash": -42,
+      "crush": -42
+    },
+    "magicDefence": {
+      "magic": -42
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Hoppity, hoppity.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1321": {
+    "id": 1321,
+    "name": "Bunny",
+    "members": true,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 5,
+    "attackBonus": -47,
+    "strengthBonus": -42,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -42,
+      "slash": -42,
+      "crush": -42
+    },
+    "magicDefence": {
+      "magic": -42
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Hoppity, hoppity.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1326": {
+    "id": 1326,
+    "name": "Bear Cub",
+    "members": true,
+    "combatLevel": 15,
+    "attackLevel": 10,
+    "strengthLevel": 15,
+    "defenceLevel": 10,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "examine": "Cute. But deadly.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 20,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1327": {
+    "id": 1327,
+    "name": "Bear Cub",
+    "members": true,
+    "combatLevel": 15,
+    "attackLevel": 10,
+    "strengthLevel": 15,
+    "defenceLevel": 10,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "examine": "Cute. But deadly.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 20,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1328": {
+    "id": 1328,
+    "name": "Unicorn Foal",
+    "members": true,
+    "combatLevel": 12,
+    "attackLevel": 10,
+    "strengthLevel": 10,
+    "defenceLevel": 10,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 15,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 November]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "Horned Horsey.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 90,
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []
@@ -29206,6 +29996,118 @@
     "categories": [],
     "assignedBy": []
   },
+  "4257": {
+    "id": 4257,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 19,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4258": {
+    "id": 4258,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 19,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "4261": {
     "id": 4261,
     "name": "Goblin",
@@ -39667,6 +40569,65 @@
       "mazchna"
     ]
   },
+  "6108": {
+    "id": 6108,
+    "name": "Entrana firebird",
+    "members": true,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 5,
+    "attackBonus": -31,
+    "strengthBonus": -26,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -26,
+      "slash": -26,
+      "crush": -26
+    },
+    "magicDefence": {
+      "magic": -26
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "Probably not a chicken.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 5,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
   "6113": {
     "id": 6113,
     "name": "Duck",
@@ -47840,6 +48801,234 @@
     "assignedBy": [
       ""
     ]
+  },
+  "8349": {
+    "id": 8349,
+    "name": "Tormented demon",
+    "members": true,
+    "combatLevel": 450,
+    "attackLevel": 255,
+    "strengthLevel": 255,
+    "defenceLevel": 150,
+    "magicLevel": 255,
+    "rangedLevel": 255,
+    "constitutionLevel": 600,
+    "attackBonus": 400,
+    "strengthBonus": 10,
+    "magicBonus": 300,
+    "magicStrengthBonus": 5,
+    "rangedBonus": 300,
+    "rangedStrengthBonus": 5,
+    "meleeDefence": {
+      "stab": 75,
+      "slash": 175,
+      "crush": 68
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 140,
+      "standard": 150,
+      "heavy": 90
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[10 July]] [[2024]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "Lucien must be incredibly powerful if he can bind such demons to his will.",
+    "attributes": [
+      "Demon"
+    ],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "maxhit": 13
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 21,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      ""
+    ]
+  },
+  "8350": {
+    "id": 8350,
+    "name": "Tormented demon",
+    "members": true,
+    "combatLevel": 450,
+    "attackLevel": 255,
+    "strengthLevel": 255,
+    "defenceLevel": 150,
+    "magicLevel": 255,
+    "rangedLevel": 255,
+    "constitutionLevel": 600,
+    "attackBonus": 400,
+    "strengthBonus": 10,
+    "magicBonus": 300,
+    "magicStrengthBonus": 5,
+    "rangedBonus": 300,
+    "rangedStrengthBonus": 5,
+    "meleeDefence": {
+      "stab": 75,
+      "slash": 175,
+      "crush": 68
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 140,
+      "standard": 150,
+      "heavy": 90
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[10 July]] [[2024]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "Lucien must be incredibly powerful if he can bind such demons to his will.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 77.5,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "8351": {
+    "id": 8351,
+    "name": "Tormented demon",
+    "members": true,
+    "combatLevel": 450,
+    "attackLevel": 255,
+    "strengthLevel": 255,
+    "defenceLevel": 150,
+    "magicLevel": 255,
+    "rangedLevel": 255,
+    "constitutionLevel": 600,
+    "attackBonus": 400,
+    "strengthBonus": 10,
+    "magicBonus": 300,
+    "magicStrengthBonus": 5,
+    "rangedBonus": 300,
+    "rangedStrengthBonus": 5,
+    "meleeDefence": {
+      "stab": 75,
+      "slash": 175,
+      "crush": 68
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 140,
+      "standard": 150,
+      "heavy": 90
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[10 July]] [[2024]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "Lucien must be incredibly powerful if he can bind such demons to his will.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 77.5,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "8352": {
+    "id": 8352,
+    "name": "Tormented demon",
+    "members": true,
+    "combatLevel": 450,
+    "attackLevel": 255,
+    "strengthLevel": 255,
+    "defenceLevel": 150,
+    "magicLevel": 255,
+    "rangedLevel": 255,
+    "constitutionLevel": 600,
+    "attackBonus": 400,
+    "strengthBonus": 10,
+    "magicBonus": 300,
+    "magicStrengthBonus": 5,
+    "rangedBonus": 300,
+    "rangedStrengthBonus": 5,
+    "meleeDefence": {
+      "stab": 75,
+      "slash": 175,
+      "crush": 68
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 140,
+      "standard": 150,
+      "heavy": 90
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[10 July]] [[2024]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "Lucien must be incredibly powerful if he can bind such demons to his will.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 77.5,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
   },
   "8637": {
     "id": 8637,

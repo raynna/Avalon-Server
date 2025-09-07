@@ -60,7 +60,7 @@ class CombatAction(
     private lateinit var style: CombatStyle
 
     override fun start(player: Player): Boolean {
-        if (target.isDead || target.hasFinished()) {
+        if (target.isDead || target.hasFinished() || player.isLocked) {
             stop(player, true)
             return false
         }
@@ -92,7 +92,7 @@ class CombatAction(
     }
 
     override fun process(player: Player): Boolean {
-        if (target.isDead || target.hasFinished()) {
+        if (target.isDead || target.hasFinished() || player.isLocked) {
             stop(player, true)
             return false
         }

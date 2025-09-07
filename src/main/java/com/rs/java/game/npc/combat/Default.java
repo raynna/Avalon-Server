@@ -20,7 +20,6 @@ public class Default extends CombatScript {
 	@Override
 	public int attack(NPC npc, Entity target) {
 		NpcCombatDefinition defs = npc.getCombatDefinitions();
-		npc.setBonuses();
 		CombatData data = npc.getCombatData();
 		NpcAttackStyle attackStyle = NpcAttackStyle.fromList(npc.getCombatData().attackStyles);
 

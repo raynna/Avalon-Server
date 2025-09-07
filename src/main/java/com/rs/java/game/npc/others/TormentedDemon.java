@@ -28,7 +28,7 @@ public final class TormentedDemon extends NPC {
 
 	// Damage & shield constants
 	private static final double SHIELD_DAMAGE_REDUCTION = 0.25;
-	private static final int SHIELD_COOLDOWN = 60;
+	private static final int SHIELD_COOLDOWN = 100;
 	private static final int DAMAGE_THRESHOLD = 310;
 	private static final int MIN_DAMAGE_ON_MISS = 20;
 
@@ -60,7 +60,6 @@ public final class TormentedDemon extends NPC {
 		demonPrayer = new boolean[MAX_PRAYERS];
 		cachedDamage = new int[MAX_PRAYERS];
 		setForceTargetDistance(64);
-		setForceAgressiveDistance(6);
 		shieldTimer = 0;
 		switchPrayers(Utils.random(1, 2));
 	}
@@ -100,7 +99,7 @@ public final class TormentedDemon extends NPC {
 		sendRandomProjectile();
 		setPreviousCombatType(getCurrentCombatType());
 		setCurrentCombatType(attackType);
-		getCombat().setCombatDelay(ATTACK_STYLE_CHANGE_DELAY);
+		getCombat().setAttackDelay(ATTACK_STYLE_CHANGE_DELAY);
 	}
 
 	private void decrementShieldTimer() {
@@ -118,10 +117,10 @@ public final class TormentedDemon extends NPC {
 	@Override
 	public void handleIncommingHit(final Hit hit) {
 		super.handleIncommingHit(hit);
-
+		if (shieldTimer <= 0)
+			gfx(SHIELD_GFX);
 		if (shieldTimer <= 0 && hit.getDamage() > 0) {
 			hit.setDamage((int) (hit.getDamage() * SHIELD_DAMAGE_REDUCTION));
-			gfx(SHIELD_GFX);
 		}
 
 		switch (hit.getLook()) {

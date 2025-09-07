@@ -94,6 +94,10 @@ object RandomWorldBossHandler {
             BossEntry.WithMinions.minion("npc.kalphite_soldier_lv85", 4),
             BossEntry.WithMinions.minion("npc.kalphite_worker_lv28", 6),
         ),
+        BossEntry.WithMinions.of(
+            bossKey = "npc.tormented_demon_lv450",
+            BossEntry.WithMinions.minion("npc.abyssal_demon_lv124", 10),
+        ),
         BossEntry.group("npc.dagannoth_rex_lv303", "npc.dagannoth_supreme_lv303", "npc.dagannoth_prime_lv303", displayName = "Dagannoth Kings"),
         BossEntry.single("npc.chaos_elemental_lv305")
     )
@@ -257,10 +261,14 @@ object RandomWorldBossHandler {
 
 
     private fun spawnWorldBoss(npcId: Int, tile: WorldTile): WorldBossNPC {
-        return when {
-            npcId == 8133 -> {
+        return when (npcId) {
+            8349 -> {
+                TormentedDemonWorldBoss(tile, IDLE_TIMEOUT_MS, GRACE_PERIOD_MS, this)
+            }
+            8133 -> {
                 WorldCorporealBeast(tile, IDLE_TIMEOUT_MS, GRACE_PERIOD_MS, this)
-            } else -> {
+            }
+            else -> {
                 GenericWorldBossNPC(npcId, tile, IDLE_TIMEOUT_MS, GRACE_PERIOD_MS, this)
             }
         }.apply {

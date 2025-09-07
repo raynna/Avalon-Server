@@ -465,10 +465,11 @@ public final class World {
             n = new Max(id, tile, canBeAttackFromOutOfArea);
         else
             n = new NPC(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
-        if (n != null)
+        if (n != null) {
+            if (!WikiApi.INSTANCE.hasData(id) && n.getCombatLevel() > 0) {
+                WikiApi.INSTANCE.dumpData(id, n.getName(), n.getCombatLevel());
+            }
             n.setBonuses();
-        if (!WikiApi.INSTANCE.hasData(id) && n.getCombatLevel() > 0) {
-            WikiApi.INSTANCE.dumpData(id, n.getName(), n.getCombatLevel());
         }
         return n;
     }
