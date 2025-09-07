@@ -109,8 +109,8 @@ public class NPCHandler {
             }
         }
 
-        if (!WikiApi.INSTANCE.hasData(npc.getId())) {
-            WikiApi.INSTANCE.dumpData(npc.getId(), npc.getName(), npc.getCombatLevel());
+        if (!WikiApi.hasData(npc.getId())) {
+            WikiApi.dumpData(npc.getId(), npc.getName(), npc.getCombatLevel());
         }
         if (npc.getCombatData() == null) {
             npc.setBonuses();

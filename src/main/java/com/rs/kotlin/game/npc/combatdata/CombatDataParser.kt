@@ -6,7 +6,7 @@ import java.io.File
 
 object CombatDataParser {
 
-    private val npcDataMap: Map<Int, JsonObject>
+    private var npcDataMap: Map<Int, JsonObject>
 
     init {
         val file = File("data/npcs/npc_data.json")
@@ -19,6 +19,16 @@ object CombatDataParser {
         val json = gson.fromJson(fileContent, JsonObject::class.java)
 
         npcDataMap = json.entrySet().associate { it.key.toInt() to it.value.asJsonObject }
+    }
+
+    @JvmStatic
+    fun reload() {
+        val file = File("data/npcs/npc_data.json")
+        if (file.exists()) {
+            val gson = Gson()
+            val json = gson.fromJson(file.readText(), JsonObject::class.java)
+            npcDataMap = json.entrySet().associate { it.key.toInt() to it.value.asJsonObject }
+        }
     }
 
     @JvmStatic
@@ -54,9 +64,9 @@ object CombatDataParser {
                 magic = magic["magic"].asInt
             ),
             rangedDefence = RangedDefence(
-                light = ranged["light"]?.asInt ?: 0,
+                light = ranged["light"]?.asInt ?: ranged["standard"].asInt,
                 standard = ranged["standard"].asInt,
-                heavy = ranged["heavy"]?.asInt ?: 0
+                heavy = ranged["heavy"]?.asInt ?: ranged["standard"].asInt
             ),
             immunities = Immunities(
                 poison = immunities["poison"].asBoolean,

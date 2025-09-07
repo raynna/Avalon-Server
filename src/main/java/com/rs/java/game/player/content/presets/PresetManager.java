@@ -3,29 +3,24 @@ package com.rs.java.game.player.content.presets;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.rs.Settings;
-import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.controlers.EdgevillePvPControler;
 import com.rs.java.utils.EconomyPrices;
-import com.rs.java.utils.HexColours;
-import com.rs.java.utils.HexColours.Colour;
 import com.rs.kotlin.game.player.command.CommandRegistry;
-import com.rs.kotlin.game.player.command.commands.HealCommand;
+import com.rs.kotlin.game.world.util.Msg;
 
 public final class PresetManager implements Serializable {
 
 	private static final long serialVersionUID = -2928476953478619103L;
-	/** Instantiated variables below **/
+
 	private transient Player player;
 	public HashMap<String, Preset> PRESET_SETUPS;
 
@@ -43,22 +38,25 @@ public final class PresetManager implements Serializable {
 
 	public void reset() {
 		PRESET_SETUPS.clear();
-		player.message("All of your sets have been cleared. You now have " + getMaxSize() + " available slots.");
+		Msg.info(player, "All of your sets have been cleared. You now have " + getMaxSize() + " available slots.");
 	}
 
 	public void removePreset(String name) {
 		if (name == "")
 			return;
 		name = name.toLowerCase();
-		player.message((PRESET_SETUPS.remove(name) == null ? "No set was found for the query: " + name
-						: "Successfully removed the set: " + name) + ".");
+		if (PRESET_SETUPS.remove(name) == null) {
+			Msg.warn(player, "No set was found for the query: " + name);
+		} else {
+			Msg.success(player, "Successfully removed the set: " + name);
+		}
 	}
 
 	public void savePreset(String name) {
 		final int size = PRESET_SETUPS.size(), max = getMaxSize();
 		if (size >= max) {
-			player.message("You were unable to store the set " + name
-					+ " as your maximum capacity (" + max + ") has been reached.", true);
+			Msg.warn(player, "You were unable to store the set " + name
+					+ " as your maximum capacity (" + max + ") has been reached.");
 			return;
 		}
 		if (name == "")
@@ -66,8 +64,7 @@ public final class PresetManager implements Serializable {
 		name = name.toLowerCase();
 		final Preset set = PRESET_SETUPS.get(name);
 		if (set != null) {
-			player.message("You were unable to store the set " + name + " as it already exists.",
-					true);
+			Msg.warn(player, "You were unable to store the set " + name + " as it already exists.");
 			return;
 		}
 		final Item[] inventory =
@@ -78,15 +75,15 @@ public final class PresetManager implements Serializable {
 		Summoning.Pouch pouch = (familiar != null && familiar.getPouch() != null) ? familiar.getPouch() : null;
 		PRESET_SETUPS.put(name,
 				new Preset(name, inventory, equipment, player.getPrayer().isAncientCurses(),
-                        player.getCombatDefinitions().spellBook, (Arrays.copyOf(player.getSkills().getXp(), 7)), runes, pouch));
-		player.message("You've successfully stored the set " + name + ".", true);
+						player.getCombatDefinitions().spellBook, (Arrays.copyOf(player.getSkills().getXp(), 7)), runes, pouch));
+		Msg.success(player, "You've successfully stored the set " + name + ".");
 	}
 
 	public void printPresets() {
 		final int size = PRESET_SETUPS.size();
-		player.message("You have used " + size + "/" + getMaxSize() + " available setups.", true);
+		Msg.info(player, "You have used " + size + "/" + getMaxSize() + " available setups.");
 		if (size > 0) {
-			player.message("<col=ff0000>Your available setups are:", true);
+			Msg.info(player, "<col=ff0000>Your available setups are:");
 			for (final String key : PRESET_SETUPS.keySet()) {
 				player.message(key, true);
 			}
@@ -101,7 +98,7 @@ public final class PresetManager implements Serializable {
 		}
 
 		if (Settings.ECONOMY_MODE == Settings.HALF_ECONOMY &&
-				(EconomyPrices.getPrice(id) >= Settings.LOWPRICE_LIMIT || isSpecialNonSpawnable(item))) {
+				(EconomyPrices.getPrice(id) >= 0 || isSpecialNonSpawnable(item))) {
 			return true;
 		}
 
@@ -113,16 +110,37 @@ public final class PresetManager implements Serializable {
 		return id == 995 || id == 12852 || !item.getDefinitions().isTradeable();
 	}
 
-	private boolean takeFromBankOrFail(Player player, Item item) {
-		Item bankItem = player.getBank().getItem(item.getId());
-		if (bankItem != null && bankItem.getAmount() >= item.getAmount()) {
-			int[] slot = player.getBank().getItemSlot(item.getId());
-			player.getBank().removeItem2(slot, item.getAmount(), true, false);
-			return true;
-		} else {
-			player.message("Couldn't find item " + item.getAmount() + " x " + item.getName() + " in bank.");
-			return false;
+	/**
+	 * Attempts to take item (or partial) from bank.
+	 * Returns a copy of the item with correct amount, or null if none could be withdrawn.
+	 */
+	private Item takeFromBankOrFail(Player player, Item original) {
+		Item bankItem = player.getBank().getItem(original.getId());
+
+		if (bankItem == null) {
+			Msg.warn(player, "Couldn't find any " + original.getName() + " in your bank.");
+			return null;
 		}
+
+		int available = bankItem.getAmount();
+		int requested = original.getAmount();
+		int toRemove = Math.min(available, requested);
+
+		if (toRemove <= 0) {
+			return null;
+		}
+
+		int[] slot = player.getBank().getItemSlot(original.getId());
+		player.getBank().removeItem2(slot, toRemove, true, false);
+
+		Item copy = new Item(original); // deep copy
+		copy.setAmount(toRemove);
+
+		if (available < requested) {
+			Msg.warn(player, "You only had " + available + " x " + original.getName() + " in your bank.");
+		}
+
+		return copy;
 	}
 
 	private void handleForcedCharges(Item item) {
@@ -155,6 +173,10 @@ public final class PresetManager implements Serializable {
 		}
 	}
 
+	// --------------------------------------------------------------------
+	// MAIN LOGIC
+	// --------------------------------------------------------------------
+
 	public void loadPreset(String name, Player p2) {
 		loadPreset(name, p2, false);
 	}
@@ -163,21 +185,22 @@ public final class PresetManager implements Serializable {
 		if (name.isEmpty()) return;
 
 		if (player.inPkingArea()) {
-			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in player killing areas."));
+			Msg.warn(player, "You can't load gear presets in player killing areas.");
 			return;
 		}
 		if (EdgevillePvPControler.isAtPvP(player) && !EdgevillePvPControler.isAtBank(player)) {
-			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in pvp area."));
+			Msg.warn(player, "You can't load gear presets in pvp area.");
 			return;
 		}
 
 		name = name.toLowerCase();
 		final Preset set = (p2 != null ? p2.getPresetManager().PRESET_SETUPS.get(name) : PRESET_SETUPS.get(name));
 		if (set == null) {
-			player.message("You were unable to load the set " + name + " as it does not exist.", true);
+			Msg.warn(player, "You were unable to load the set " + name + " as it does not exist.");
 			return;
 		}
 
+		// dump existing items to bank if not spawn
 		for (Item item : player.getInventory().getItems().getItemsCopy()) {
 			if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
 				player.getBank().addItem(item, true);
@@ -189,28 +212,17 @@ public final class PresetManager implements Serializable {
 			}
 		}
 
-		for (Map.Entry<Integer, Item[]> entry : player.getStaffCharges().entrySet()) {
-			if (entry.getValue() != null) {
-				for (Item item : entry.getValue()) {
-					if (item != null) {
-						player.message("Added " + item.getName() + " x " + item.getAmount() + " to your bank.");
-						player.getBank().addItem(item, true);
-					}
-				}
-			}
-		}
-
-		// Reset player state
+		// reset
 		player.getRunePouch().reset();
 		player.getInventory().reset();
-		player.getInventory().refresh();
 		player.getEquipment().reset();
+		player.getInventory().refresh();
 		player.getEquipment().refresh();
 		player.getAppearence().generateAppearenceData();
 		player.refreshHitPoints();
 		player.getPrayer().reset();
 
-		// Skills
+		// restore skills
 		double[] presetXp = set.getLevels();
 		if (presetXp != null && presetXp.length >= 7) {
 			for (int i = 0; i < 7; i++) {
@@ -220,57 +232,63 @@ public final class PresetManager implements Serializable {
 			}
 		}
 
+		// equipment
 		Item[] data = set.getEquipment();
 		if (data != null) {
 			skip: for (int i = 0; i < data.length; i++) {
-				final Item item = data[i];
+				Item item = data[i];
 				if (item == null) continue;
 
-				// Wearing requirements
+				// requirements
 				Map<Integer, Integer> requirements = item.getDefinitions().getWearingSkillRequiriments();
 				if (requirements != null) {
 					for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
 						int skillId = req.getKey(), level = req.getValue();
-						if (skillId >= 0 && skillId <= 24 && level >= 0 && level <= 120) {
-							if (player.getSkills().getLevelForXp(skillId) < level) {
-								player.message("You were unable to equip your " + item.getName().toLowerCase()
-										+ ", as you don't meet the requirements to wear them.", true);
-								continue skip;
-							}
+						if (player.getSkills().getLevelForXp(skillId) < level) {
+							Msg.warn(player, "You were unable to equip your " + item.getName().toLowerCase()
+									+ ", as you don't meet the requirements to wear them.");
+							continue skip;
 						}
 					}
 				}
 
-				if (!force && requiresBankItem(item) && !takeFromBankOrFail(player, item)) {
-					continue;
+				Item toUse = item;
+				if (!force && requiresBankItem(item)) {
+					toUse = takeFromBankOrFail(player, item);
+					if (toUse == null) continue;
 				}
 
-				handleForcedCharges(item);
-
-				player.getEquipment().getItems().set(i, item);
+				handleForcedCharges(toUse);
+				player.getEquipment().getItems().set(i, toUse);
 				player.getEquipment().refresh(i);
 			}
 		}
 
+		// inventory
 		data = set.getInventory();
 		if (data != null) {
 			for (int i = 0; i < data.length; i++) {
-				final Item item = data[i];
+				Item item = data[i];
 				if (item == null) {
 					player.getInventory().addItem(0, 1);
 					continue;
 				}
 
-				if (!force && requiresBankItem(item) && !takeFromBankOrFail(player, item)) {
-					player.getInventory().addItem(0, 1);
-					continue;
+				Item toUse = item;
+				if (!force && requiresBankItem(item)) {
+					toUse = takeFromBankOrFail(player, item);
+					if (toUse == null) {
+						player.getInventory().addItem(0, 1);
+						continue;
+					}
 				}
 
-				handleForcedCharges(item);
-				player.getInventory().addItem(item);
+				handleForcedCharges(toUse);
+				player.getInventory().addItem(toUse);
 			}
 		}
 
+		// runes
 		data = set.getRunes();
 		if (data != null) {
 			for (Item item : data) {
@@ -281,12 +299,13 @@ public final class PresetManager implements Serializable {
 			}
 		}
 
+		// familiar
 		Summoning.Pouch pouch = set.getFamiliar();
 		if (pouch != null) {
 			Item pouchItem = new Item(pouch.getRealPouchId());
 			if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
 				if (!player.getBank().containsOneItem(pouch.getRealPouchId())) {
-					player.message("Couldn't find " + pouchItem.getName() + " in your bank.");
+					Msg.warn(player, "Couldn't find " + pouchItem.getName() + " in your bank.");
 				} else if (Summoning.spawnFamiliar(player, pouch, true)) {
 					player.getBank().removeItem(pouch.getRealPouchId());
 				}
@@ -294,26 +313,27 @@ public final class PresetManager implements Serializable {
 				Summoning.spawnFamiliar(player, pouch, true);
 			}
 		}
+
 		player.getInventory().deleteItem(0, 28);
 		player.getCombatDefinitions().setSpellBook(set.getSpellBook(), false);
 		player.getPrayer().setPrayerBook(set.isAncientCurses());
 		player.getAppearence().generateAppearenceData();
 		player.getSkills().switchXPPopup(true);
-		player.getSkills().switchXPPopup(true);
 		CommandRegistry.execute(player, "heal");
-		player.message("Loaded setup: " + name + ".");
+		Msg.info(player, "Loaded setup: " + name + ".");
 	}
 
 	public void copyPreset(Player p2) {
 		if (player.inPkingArea()) {
-			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in player killing areas."));
+			Msg.warn(player, "You can't load gear presets in player killing areas.");
 			return;
 		}
 		if (EdgevillePvPControler.isAtPvP(player) && !EdgevillePvPControler.isAtBank(player)) {
-			player.message(HexColours.getMessage(Colour.RED, "You can't load gear presets in pvp area."));
+			Msg.warn(player, "You can't load gear presets in pvp area.");
 			return;
 		}
 
+		// dump current items to bank if not spawn
 		for (Item item : player.getInventory().getItems().getItemsCopy()) {
 			if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
 				player.getBank().addItem(item, true);
@@ -325,27 +345,29 @@ public final class PresetManager implements Serializable {
 			}
 		}
 
+		// dump charged items
 		for (Map.Entry<Integer, Item[]> entry : player.getStaffCharges().entrySet()) {
 			if (entry.getValue() != null) {
 				for (Item item : entry.getValue()) {
 					if (item != null) {
-						player.message("Added " + item.getName() + " x " + item.getAmount() + " to your bank.");
+						Msg.info(player, "Added " + item.getName() + " x " + item.getAmount() + " to your bank.");
 						player.getBank().addItem(item, true);
 					}
 				}
 			}
 		}
 
-		// Reset player state
+		// reset
 		player.getRunePouch().reset();
 		player.getInventory().reset();
-		player.getInventory().refresh();
 		player.getEquipment().reset();
+		player.getInventory().refresh();
 		player.getEquipment().refresh();
 		player.getAppearence().generateAppearenceData();
 		player.refreshHitPoints();
 		player.getPrayer().reset();
 
+		// copy combat-related skills
 		for (int skillId = 0; skillId < 6; skillId++) {
 			double xp = p2.getSkills().getXp(skillId);
 			player.getSkills().setXp(skillId, xp);
@@ -353,63 +375,70 @@ public final class PresetManager implements Serializable {
 			player.getSkills().refresh(skillId);
 		}
 
+		// equipment
 		Item[] data = p2.getEquipment().getItems().getContainerItems();
 		if (data != null) {
 			skip: for (int i = 0; i < data.length; i++) {
-				final Item item = data[i];
+				Item item = data[i];
 				if (item == null) continue;
 
-				// Wearing requirements
+				// requirements
 				Map<Integer, Integer> requirements = item.getDefinitions().getWearingSkillRequiriments();
 				if (requirements != null) {
 					for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
 						int skillId = req.getKey(), level = req.getValue();
-						if (skillId >= 0 && skillId <= 24 && level >= 0 && level <= 120) {
-							if (player.getSkills().getLevelForXp(skillId) < level) {
-								player.message("You were unable to equip your " + item.getName().toLowerCase()
-										+ ", as you don't meet the requirements to wear them.", true);
-								continue skip;
-							}
+						if (player.getSkills().getLevelForXp(skillId) < level) {
+							Msg.warn(player, "You were unable to equip your " + item.getName().toLowerCase()
+									+ ", as you don't meet the requirements to wear them.");
+							continue skip;
 						}
 					}
 				}
 
-				if (requiresBankItem(item) && !takeFromBankOrFail(player, item)) {
-					continue;
+				Item toUse = item;
+				if (requiresBankItem(item)) {
+					toUse = takeFromBankOrFail(player, item);
+					if (toUse == null) continue;
 				}
 
-				handleForcedCharges(item);
-
-				player.getEquipment().getItems().set(i, item);
+				handleForcedCharges(toUse);
+				player.getEquipment().getItems().set(i, toUse);
 				player.getEquipment().refresh(i);
 			}
 		}
 
+		// inventory
 		data = p2.getInventory().getItems().getContainerItems();
 		if (data != null) {
 			for (int i = 0; i < data.length; i++) {
-				final Item item = data[i];
+				Item item = data[i];
 				if (item == null) {
 					player.getInventory().addItem(0, 1);
 					continue;
 				}
 
-				if (requiresBankItem(item) && !takeFromBankOrFail(player, item)) {
-					player.getInventory().addItem(0, 1);
-					continue;
+				Item toUse = item;
+				if (requiresBankItem(item)) {
+					toUse = takeFromBankOrFail(player, item);
+					if (toUse == null) {
+						player.getInventory().addItem(0, 1);
+						continue;
+					}
 				}
 
-				handleForcedCharges(item);
-				player.getInventory().addItem(item);
+				handleForcedCharges(toUse);
+				player.getInventory().addItem(toUse);
 			}
 		}
 
-		Summoning.Pouch pouch = p2.getFamiliar().getPouch();
-		if (pouch != null) {
+		// familiar
+		Familiar familiar = p2.getFamiliar();
+		if (familiar != null && familiar.getPouch() != null) {
+			Summoning.Pouch pouch = familiar.getPouch();
 			Item pouchItem = new Item(pouch.getRealPouchId());
 			if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
 				if (!player.getBank().containsOneItem(pouch.getRealPouchId())) {
-					player.message("Couldn't find " + pouchItem.getName() + " in your bank.");
+					Msg.warn(player, "Couldn't find " + pouchItem.getName() + " in your bank.");
 				} else if (Summoning.spawnFamiliar(player, pouch, true)) {
 					player.getBank().removeItem(pouch.getRealPouchId());
 				}
@@ -417,14 +446,14 @@ public final class PresetManager implements Serializable {
 				Summoning.spawnFamiliar(player, pouch, true);
 			}
 		}
+
 		player.getInventory().deleteItem(0, 28);
 		player.getCombatDefinitions().setSpellBook(p2.combatDefinitions.getSpellId(), false);
 		player.getPrayer().setPrayerBook(p2.getPrayer().isAncientCurses());
 		player.getAppearence().generateAppearenceData();
 		player.getSkills().switchXPPopup(true);
-		player.getSkills().switchXPPopup(true);
 		CommandRegistry.execute(player, "heal");
-		player.message("You copied " + p2.getDisplayName() + " current preset.");
+		Msg.info(player, "You copied " + p2.getDisplayName() + " current preset.");
 	}
 
 }

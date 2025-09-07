@@ -4,6 +4,7 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
+import com.rs.kotlin.game.npc.combatdata.AttackStyle;
 import com.rs.kotlin.game.npc.combatdata.CombatData;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
@@ -21,30 +22,45 @@ public class Default extends CombatScript {
 	public int attack(NPC npc, Entity target) {
 		NpcCombatDefinition defs = npc.getCombatDefinitions();
 		CombatData data = npc.getCombatData();
-		NpcAttackStyle attackStyle = NpcAttackStyle.fromList(npc.getCombatData().attackStyles);
+		AttackStyle definitionAttackStyle = defs.getAttackStyle();
 
-		int damage = NpcCombatCalculations.getRandomMaxHit(
-				npc,
-				npc.getMaxHit(),
-				attackStyle,
-				target
-		);
+		switch (definitionAttackStyle) {
+			case AttackStyle.MELEE -> {
+				NpcAttackStyle attackStyle = NpcAttackStyle.fromList(npc.getCombatData().attackStyles);
+				switch (attackStyle) {
+					case STAB, SLASH, CRUSH -> {
+						int damage = NpcCombatCalculations.getRandomMaxHit(
+								npc,
+								npc.getMaxHit(),
+								attackStyle,
+								target
+						);
+						delayHit(npc, target, 0, getMeleeHit(npc, damage));
+					}
 
-		switch (attackStyle) {
-			case STAB, SLASH, CRUSH ->
-					delayHit(npc, target, 0, getMeleeHit(npc, damage));
-
-			case RANGED -> {
+				}
+			}
+			case AttackStyle.RANGE -> {
+				int damage = NpcCombatCalculations.getRandomMaxHit(
+						npc,
+						npc.getMaxHit(),
+						NpcAttackStyle.RANGED,
+						target
+				);
 				delayHit(npc, target, 2, getRangeHit(npc, damage));
-				System.out.println("npc: " + npc.getName() + " attackGfx: " + defs.getAttackGfx() + ", projectile: " + defs.getAttackProjectile());
 				if (defs.getAttackProjectile() != -1) {
 					ProjectileManager.sendSimple(Projectile.ARROW, defs.getAttackProjectile(), npc, target);
 				}
 			}
 
-			case MAGIC -> {
+			case AttackStyle.MAGIC -> {
+				int damage = NpcCombatCalculations.getRandomMaxHit(
+						npc,
+						npc.getMaxHit(),
+						NpcAttackStyle.MAGIC,
+						target
+				);
 				delayHit(npc, target, 2, getMagicHit(npc, damage));
-				System.out.println("npc: " + npc.getName() + " attackGfx: " + defs.getAttackGfx() + ", projectile: " + defs.getAttackProjectile());
 				if (defs.getAttackProjectile() != -1) {
 					ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, defs.getAttackProjectile(), npc, target);
 				}
@@ -57,7 +73,6 @@ public class Default extends CombatScript {
 		npc.animate(new Animation(defs.getAttackAnim()));
 		if (defs.getAttackSound() != -1)
 			npc.playSound(defs.getAttackSound(), 1);
-		System.out.println("Default attack for NPC id: " + npc.getId() + " using " + attackStyle + " for max hit: " + damage + ", Attack speed: " + data.attackSpeedTicks);
 		return npc.getAttackSpeed();
 	}
 }

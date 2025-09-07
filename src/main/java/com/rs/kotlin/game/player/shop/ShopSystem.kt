@@ -7,6 +7,7 @@ import com.rs.java.game.player.Player
 import com.rs.java.utils.EconomyPrices
 import com.rs.java.utils.HexColours
 import com.rs.java.utils.ItemExamines
+import com.rs.kotlin.game.world.util.Msg
 import java.util.*
 
 class ShopSystem(private val player: Player) {
@@ -329,7 +330,7 @@ class ShopSystem(private val player: Player) {
         val itemId = player.temporaryAttribute().remove("SHOP_BUY_X_ITEM") as? Int ?: return
 
         if (value <= 0) {
-            player.message("You must enter a positive amount.")
+            Msg.warn(player, "You must enter a positive amount.")
             return
         }
 
@@ -342,7 +343,7 @@ class ShopSystem(private val player: Player) {
         // Find the shop item that matches the itemId
         val shopItem = shop.items.find { it.itemId == itemId }
         if (shopItem == null) {
-            player.message("This item is not available in this shop.")
+            Msg.warn(player, "This item is not available in this shop.")
             return
         }
 
@@ -358,20 +359,20 @@ class ShopSystem(private val player: Player) {
 
         val shopItem = shop.items.find { it.itemId == itemId }
         if (shopItem == null) {
-            player.message("This item is not available in this shop.")
+            Msg.warn(player, "This item is not available in this shop.")
             return
         }
 
         val basePrice = shopItem.price ?: EconomyPrices.getPrice(shopItem.itemId)
         if (basePrice == 0) {
-            player.message("You cannot sell free items to the shop.")
+            Msg.warn(player, "You cannot sell free items to the shop.")
             return
         }
         val sellPrice = (basePrice * 0.66).toInt() // 66% of base price
 
         val itemDef = ItemDefinitions.getItemDefinitions(itemId)
 
-        player.message("${itemDef.name} will sell back for ${sellPrice.fullFormat()} ${currency.displayName}.")
+        Msg.info(player, "${itemDef.name} will sell back for ${sellPrice.fullFormat()} ${currency.displayName}.")
     }
 
 
@@ -437,10 +438,9 @@ class ShopSystem(private val player: Player) {
             shopItem.currentStock -= buyAmount
         }
 
-        player.message("You bought $buyAmount x ${def.name} for ${totalPrice.fullFormat()} ${currency.displayName}.")
+        Msg.success(player, "You bought $buyAmount x ${def.name} for ${totalPrice.fullFormat()} ${currency.displayName}.")
         refresh(shop)
     }
-
 
     fun sellItem(itemId: Int, amount: Int) {
         val shop = getCurrentShop()?: return
@@ -451,7 +451,7 @@ class ShopSystem(private val player: Player) {
 
         val price = (EconomyPrices.getPrice(itemId) * 0.66).toInt()
         if (price <= 0) {
-            player.message("You can't sell this item.")
+            Msg.warn(player, "You can't sell this item.")
             return
         }
         val sellPrice = price * sellAmount
@@ -462,7 +462,7 @@ class ShopSystem(private val player: Player) {
             CurrencyType.PVP_TOKENS -> {
                 val tokenId = Item.getId("item.fist_of_guthix_token")
                 if (!player.inventory.canHold(tokenId, 1)) {
-                    player.message("You don't have any inventory space.")
+                    Msg.warn(player, "You don't have any inventory space.")
                     return
                 }
                 player.addItem(tokenId, sellPrice)
@@ -473,7 +473,7 @@ class ShopSystem(private val player: Player) {
         player.inventory.deleteItem(itemId, sellAmount)
 
         val itemDef = ItemDefinitions.getItemDefinitions(itemId)
-        player.message("Sold $sellAmount x ${itemDef.name} for ${sellPrice.fullFormat()} ${currency.displayName}.")
+        Msg.success(player, "Sold $sellAmount x ${itemDef.name} for ${sellPrice.fullFormat()} ${currency.displayName}.")
         refresh(shop)
     }
 

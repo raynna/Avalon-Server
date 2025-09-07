@@ -368,7 +368,7 @@ object RandomWorldBossHandler {
                 player.message(Msg.rewardRare("You receive a mysterious Magic Chest!"))
                 World.sendWorldMessage(Msg.newsEpic("${player.displayName} has received a Magic Chest!"), false)
             } else {
-                player.message(Msg.reward("You receive ${item.amount} × ${item.name}."))
+                player.message(Msg.reward("You receive ${item.amount} x ${item.name}."))
                 if (item.definitions.tipitPrice >= 1_000_000) {
                     World.sendWorldMessage(
                         Msg.newsRare("${player.displayName} has received ${item.name} from killing the world boss!"),
@@ -420,11 +420,59 @@ object RandomWorldBossHandler {
     @Synchronized
     internal fun onBossDeath(boss: WorldBossNPC) {
         currentBosses.remove(boss)
+        val remaining = currentBosses.size
+        if (remaining > 0) {
+            val groupName = boss.name
+                .replace("prime", "Kings")
+                .replace("supreme", "Kings")
+                .replace("rex", "Kings")
+
+            World.sendWorldMessage(
+                "<img=7><col=ff0000>News: One of the $groupName has been slain! $remaining remaining...",
+                false
+            )
+            return
+        }
         if (currentBosses.isEmpty()) {
             cleanupMinions()
+
+            // collect all damage from all bosses in the group
+            val totalDamage: MutableMap<Player, Int> = mutableMapOf()
+            val allBosses = listOf(boss) // include this boss
+            allBosses.forEach { b ->
+                for ((p, dmg) in b.getDamageMap()) {
+                    if (p.hasFinished()) continue
+                    totalDamage.merge(p, dmg, Int::plus)
+                }
+            }
+
+            // reward logic ONCE
+            if (totalDamage.isNotEmpty()) {
+                val maxHpSum = allBosses.sumOf { it.maxHitpoints }
+                val threshold = (maxHpSum * 0.10).toInt()
+
+                var topPlayer: Player? = null
+                var topDamage = 0
+
+                for ((player, damage) in totalDamage) {
+                    if (damage > topDamage) {
+                        topDamage = damage
+                        topPlayer = player
+                    }
+                    if (damage >= threshold) {
+                        onBossReward(boss, player, damage, maxHpSum)
+                    }
+                }
+
+                topPlayer?.let {
+                    onBossTopDamageReward(boss, it, topDamage, maxHpSum)
+                }
+            }
+
             scheduleNextSpawn(randomRespawnDelay())
         }
     }
+
 
     @Synchronized
     fun onMinionDeath(minion: WorldMinionNPC) {

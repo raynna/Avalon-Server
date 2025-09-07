@@ -105,44 +105,22 @@ open class WorldBossNPC : NPC {
 
     override fun sendDeath(source: Entity?) {
         try {
-            World.sendWorldMessage(
-                "<img=7><col=ff0000>News: World boss: $name has been defeated!",
-                false
-            )
-
-            val threshold = (maxHitpoints * 0.10).toInt()
-            var topPlayer: Player? = null
-            var topDamage = 0
-
-            for ((player, damage) in damageMap) {
-                if (player.hasFinished()) continue
-
-                if (damage > topDamage) {
-                    topDamage = damage
-                    topPlayer = player
-                }
-
-                if (damage >= threshold) {
-                    handler.onBossReward(this, player, damage, maxHitpoints)
-                }
-            }
-
-            if (topPlayer != null) {
-                handler.onBossTopDamageReward(this, topPlayer, topDamage, maxHitpoints)
-            }
-
+            handler.onBossDeath(this) // only notify handler
         } finally {
             super.sendDeath(source)
-            handler.onBossDeath(this)
         }
     }
+
+    fun getDamageMap(): Map<Player, Int> = damageMap.toMap()
 
 
     override fun finish() {
         val wasFinished = hasFinished()
         super.finish()
         if (!wasFinished) {
-            handler.onBossFinished(externallyDespawning ?: "Finished")
+            externallyDespawning?.let {
+                handler.onBossDeath(this)
+            }
         }
     }
 

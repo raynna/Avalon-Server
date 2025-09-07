@@ -157,8 +157,8 @@ public class NPC extends Entity implements Serializable {
         loadMapRegions();
         loadNPCSettings();
         checkMultiArea();
-        if (!WikiApi.INSTANCE.hasData(id) && combatLevel > 0) {
-            WikiApi.INSTANCE.dumpData(id, name, combatLevel);
+        if (!WikiApi.hasData(id) && combatLevel > 0) {
+            WikiApi.dumpData(id, name, combatLevel);
         }
     }
 
@@ -185,8 +185,8 @@ public class NPC extends Entity implements Serializable {
         loadMapRegions();
         loadNPCSettings();
         checkMultiArea();
-        if (!WikiApi.INSTANCE.hasData(id) && combatLevel > 0) {
-            WikiApi.INSTANCE.dumpData(id, name, combatLevel);
+        if (!WikiApi.hasData(id) && combatLevel > 0) {
+            WikiApi.dumpData(id, name, combatLevel);
         }
     }
 
@@ -199,7 +199,6 @@ public class NPC extends Entity implements Serializable {
         if (combatLevel != 0) {
             combatData = CombatDataParser.getData(id);
             if (combatData != null) {
-                //System.out.println("Found data for " + id + ", CombatLevel: " + combatData.combatLevel);
                 return;
             }
         }
@@ -594,7 +593,7 @@ public class NPC extends Entity implements Serializable {
 
             @Override
             public void run() {
-                if (loop >= defs.getDeathDelay() - 3) {
+                if (loop >= defs.getDeathDelay() - 4) {
                     drop();
                     reset();
                     setLocation(respawnTile);

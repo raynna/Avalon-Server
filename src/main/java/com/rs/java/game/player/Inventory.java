@@ -361,13 +361,33 @@ public final class Inventory implements Serializable {
 	 * No refresh needed its client to who does it :p
 	 */
 	public void switchItem(int fromSlot, int toSlot) {
-		Item[] itemsBefore = items.getItemsCopy();
+		if (fromSlot < 0 || toSlot < 0 || fromSlot >= items.getSize() || toSlot >= items.getSize()) {
+			System.out.println("[Inventory] switchItem aborted: invalid slot(s) "
+					+ fromSlot + " -> " + toSlot + ", size=" + items.getSize());
+			return;
+		}
+
 		Item fromItem = items.get(fromSlot);
 		Item toItem = items.get(toSlot);
+
+		System.out.println("[Inventory] Before swap:");
+		System.out.println("  Slot " + fromSlot + ": " + (fromItem == null ? "null" : fromItem.toString()));
+		System.out.println("  Slot " + toSlot + ": " + (toItem == null ? "null" : toItem.toString()));
+
+		// Perform swap
 		items.set(fromSlot, toItem);
 		items.set(toSlot, fromItem);
-		refreshItems(itemsBefore);
+
+		System.out.println("[Inventory] After swap:");
+		System.out.println("  Slot " + fromSlot + ": " + (items.get(fromSlot) == null ? "null" : items.get(fromSlot).toString()));
+		System.out.println("  Slot " + toSlot + ": " + (items.get(toSlot) == null ? "null" : items.get(toSlot).toString()));
+
+		// Just refresh the two slots involved
+		refresh(fromSlot, toSlot);
+
+		System.out.println("[Inventory] Refreshed slots " + fromSlot + " and " + toSlot);
 	}
+
 
 	public void refreshItems(Item[] itemsBefore) {
 		int[] changedSlots = new int[itemsBefore.length];

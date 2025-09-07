@@ -52,6 +52,7 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.npc.combatdata.CombatDataParser;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 import com.rs.kotlin.game.world.pvp.PvpManager;
@@ -466,10 +467,14 @@ public final class World {
         else
             n = new NPC(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
         if (n != null) {
-            if (!WikiApi.INSTANCE.hasData(id) && n.getCombatLevel() > 0) {
-                WikiApi.INSTANCE.dumpData(id, n.getName(), n.getCombatLevel());
+            boolean ok = true;
+            if (!WikiApi.hasData(id) && n.getCombatLevel() > 0) {
+                ok = WikiApi.dumpData(id, n.getName(), n.getCombatLevel());
             }
-            n.setBonuses();
+            if (ok) {
+                CombatDataParser.reload();
+                n.setBonuses();
+            }
         }
         return n;
     }

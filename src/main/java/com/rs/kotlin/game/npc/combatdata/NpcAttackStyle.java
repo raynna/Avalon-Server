@@ -21,6 +21,6 @@ public enum NpcAttackStyle {
             if (lower.contains("magic")) return MAGIC;
             if (lower.contains("magical melee")) return MAGICAL_MELEE;
         }
-        return UNKNOWN;
+        return CRUSH;
     }
 }

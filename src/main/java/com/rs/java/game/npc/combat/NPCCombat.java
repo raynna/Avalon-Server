@@ -110,8 +110,9 @@ public final class NPCCombat {
     private int getMaxAttackDistance(Entity target) {
         NpcCombatDefinition defs = npc.getCombatDefinitions();
         AttackStyle attackStyle = defs.getAttackStyle();
-        if (attackStyle == AttackStyle.MELEE)
+        if (attackStyle == AttackStyle.MELEE) {
             return 0;
+        }
         if (npc instanceof HarAkenTentacle) return 12;
         if (npc instanceof FightCavesNPC) return 14;
         int distance = defs.getAttackRange() != -1 ? defs.getAttackRange() : 7;
@@ -160,14 +161,13 @@ public final class NPCCombat {
 
     private boolean isWithinRespawnRange() {
         int size = npc.getSize();
-        int maxDistance = npc.getForceTargetDistance() > 0 ? npc.getForceTargetDistance() : DEFAULT_AGRO_DISTANCE;
+        int maxDistance = npc.getForceTargetDistance() > 0
+                ? npc.getForceTargetDistance()
+                : npc.getCombatDefinitions().getMaxDistFromSpawn() == -1 ? 64 : npc.getCombatDefinitions().getMaxDistFromSpawn();
 
         // Distance from respawn tile
         int npcDistX = npc.getX() - npc.getRespawnTile().getX();
         int npcDistY = npc.getY() - npc.getRespawnTile().getY();
-
-        int tgtDistX = target.getX() - npc.getRespawnTile().getX();
-        int tgtDistY = target.getY() - npc.getRespawnTile().getY();
 
         // If NPC has a defined MapArea, enforce area rules
         if (npc.getMapAreaNameHash() != -1) {
@@ -183,9 +183,7 @@ public final class NPCCombat {
         boolean npcInRange = !(npcDistX > size + maxDistance || npcDistX < -1 - maxDistance
                 || npcDistY > size + maxDistance || npcDistY < -1 - maxDistance);
 
-        boolean targetInRange = !(tgtDistX > size + maxDistance || tgtDistX < -1 - maxDistance
-                || tgtDistY > size + maxDistance || tgtDistY < -1 - maxDistance);
-        return npcInRange && targetInRange;
+        return npcInRange;
     }
 
 
@@ -262,21 +260,46 @@ public final class NPCCombat {
         int size = npc.getSize();
         int targetSize = target.getSize();
 
-        int maxDistance = npc.isForceFollowClose() ? 0
-                : (attackStyle == AttackStyle.MELEE) ? 0 : defs.getAttackRange() != -1 ? defs.getAttackRange() : 7;
+        int attackRange = defs.getAttackRange() != -1 ? defs.getAttackRange() : 7;
+        int maxAttackDistance = npc.isForceFollowClose() ? 0 : (attackStyle == AttackStyle.MELEE ? 0 : attackRange);
 
-        boolean needsMove = !npc.clipedProjectile(target, maxDistance == 0 && !forceCheckClipAsRange(target))
-                || !Utils.isOnRange(npc.getX(), npc.getY(), size, target.getX(), target.getY(), targetSize, maxDistance);
+        // Allow following up to chase distance (forceTargetDistance or default agro leash)
+        int chaseDistance = npc.getForceTargetDistance() > 0
+                ? npc.getForceTargetDistance()
+                : npc.getCombatDefinitions().getMaxDistFromSpawn() == -1 ? 16 : npc.getCombatDefinitions().getMaxDistFromSpawn();
 
+        // Always attempt to follow target if inside chase distance
+        boolean inChaseRange = Utils.isOnRange(
+                npc.getX(), npc.getY(), size,
+                target.getX(), target.getY(), targetSize,
+                chaseDistance
+        );
+
+        if (!inChaseRange) {
+            // Too far, stop chasing
+            removeTarget();
+            return;
+        }
+
+        // Reset walk every tick before deciding next step
         npc.resetWalkSteps();
 
-        if (needsMove) {
-            if (npc.isIntelligentRouteFinder())
+        // If not in attack range, move closer
+        boolean inAttackRange = Utils.isOnRange(
+                npc.getX(), npc.getY(), size,
+                target.getX(), target.getY(), targetSize,
+                maxAttackDistance
+        );
+
+        if (!inAttackRange || !npc.clipedProjectile(target, maxAttackDistance == 0 && !forceCheckClipAsRange(target))) {
+            if (npc.isIntelligentRouteFinder()) {
                 npc.calcFollow(target, npc.getRun() ? 2 : 1, true, true);
-            else
+            } else {
                 npc.addWalkStepsInteract(target.getX(), target.getY(), npc.getRun() ? 2 : 1, size, true);
+            }
         }
     }
+
 
 
     void doDefenceEmote(Entity target) {

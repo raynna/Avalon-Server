@@ -4255,7 +4255,7 @@ public class Player extends Entity {
     }
 
     public void lock() {
-        lock(Integer.MAX_VALUE);
+        lock(5000);
     }
 
     public void lock(int time) {
