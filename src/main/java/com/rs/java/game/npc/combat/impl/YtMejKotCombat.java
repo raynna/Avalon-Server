@@ -8,7 +8,10 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+
+import static com.rs.java.game.npc.combat.NpcCombatCalculations.getRandomMaxHit;
 
 public class YtMejKotCombat extends CombatScript {
 
@@ -19,10 +22,10 @@ public class YtMejKotCombat extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
-		npc.animate(new Animation(defs.getAttackEmote()));
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
+		npc.animate(new Animation(defs.getAttackAnim()));
 		delayHit(npc, target, 0,
-                getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), defs.getAttackStyle(), target)));
+                getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)));
 		if (npc.getHitpoints() < npc.getMaxHitpoints() / 2) {
 			if (npc.temporaryAttribute().remove("Heal") != null) {
 				npc.gfx(new Graphics(2980, 0, 100));
@@ -38,6 +41,6 @@ public class YtMejKotCombat extends CombatScript {
 			} else
 				npc.temporaryAttribute().put("Heal", Boolean.TRUE);
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 }

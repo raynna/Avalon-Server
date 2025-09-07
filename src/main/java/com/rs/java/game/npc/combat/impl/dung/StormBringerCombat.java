@@ -6,11 +6,12 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 
 public class StormBringerCombat extends CombatScript {
 
@@ -28,11 +29,11 @@ public class StormBringerCombat extends CombatScript {
 
 		int damage = 0;
 		if (usingSpecial) {
-			damage = getRandomMaxHit(npc, (int) (npc.getMaxHit() * (1.05 * tier)), NPCCombatDefinitions.MAGE, target);
+			damage = NpcCombatCalculations.getRandomMaxHit(npc, (int) (npc.getMaxHit() * (1.05 * tier)), NpcAttackStyle.MAGIC, target);
 			if (Utils.random(11 - tier) == 0)
 				target.setFreezeDelay(8); // Five seconds cannot move.
 		} else
-			damage = getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target);
+			damage = NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.RANGED, target);
 		npc.gfx(new Graphics(2591));
 		npc.animate(new Animation(13620));
 		World.sendElementalProjectile(npc, target, 2592);//2593

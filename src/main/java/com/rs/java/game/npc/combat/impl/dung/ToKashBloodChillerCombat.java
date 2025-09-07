@@ -7,7 +7,7 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.dungeonnering.FrozenAdventurer;
 import com.rs.java.game.npc.dungeonnering.ToKashBloodChiller;
 import com.rs.java.game.player.Player;
@@ -15,6 +15,7 @@ import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 
 public class ToKashBloodChillerCombat extends CombatScript {
 
@@ -39,7 +40,7 @@ public class ToKashBloodChillerCombat extends CombatScript {
 
 		if (perfectDamage) {
 			((Player) target).getAppearence().transformIntoNPC(-1);
-			delayHit(npc, target, 0, getRangeHit(npc, getRandomMaxHit(npc, (int) Utils.random(boss.getMaxHit() * 0.90, boss.getMaxHit()), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 0, getRangeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, (int) Utils.random(boss.getMaxHit() * 0.90, boss.getMaxHit()), NpcAttackStyle.MAGIC, target)));
 		}
 
 		boolean special = boss.canSpecialAttack() && Utils.random(10) == 0;
@@ -65,11 +66,11 @@ public class ToKashBloodChillerCombat extends CombatScript {
 
 			if (meleeAttack) {
 				npc.animate(new Animation(14392));
-				delayHit(npc, target, 0, getRangeHit(npc, getRandomMaxHit(npc, 200, NPCCombatDefinitions.MELEE, target)));
+				delayHit(npc, target, 0, getRangeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 200, NpcAttackStyle.CRUSH, target)));
 			} else {
 				npc.animate(new Animation(14398));
 				World.sendElementalProjectile(npc, target, 2546);
-				delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, 200, NPCCombatDefinitions.MAGE, target)));
+				delayHit(npc, target, 1, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 200, NpcAttackStyle.MAGIC, target)));
 			}
 			return meleeAttack ? 4 : 5;
 		}

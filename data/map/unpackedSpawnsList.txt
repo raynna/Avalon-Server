@@ -12,7 +12,7 @@
 //Tin ore rocks spawned by andreas
 11934 10 0 - 3081 3417 0 true
 //Altar spawned by andreas
-18254 10 0 - 3091 3495 0 true
+18254 10 1 - 3095 3499 0 true
 //null spawned by andreas
 0 10 0 - 3082 3495 0 true
 //null spawned by andreas

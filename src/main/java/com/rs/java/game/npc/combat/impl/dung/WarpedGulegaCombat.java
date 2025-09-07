@@ -12,11 +12,12 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.dungeonnering.WarpedGulega;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 
 public class WarpedGulegaCombat extends CombatScript {
 
@@ -49,7 +50,7 @@ public class WarpedGulegaCombat extends CombatScript {
 					for (Entity t : boss.getPossibleTargets(true, true)) {
 						tileLoop: for (WorldTile tile : attackTiles) {
 							if (t.getX() == tile.getX() && t.getY() == tile.getY()) {
-								delayHit(npc, t, 0, getMeleeHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NPCCombatDefinitions.MELEE, t)));
+								delayHit(npc, t, 0, getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NpcAttackStyle.CRUSH, t)));
 								break tileLoop;
 							}
 						}
@@ -63,7 +64,7 @@ public class WarpedGulegaCombat extends CombatScript {
 			for (Entity t : npc.getPossibleTargets(true, true)) {
 				World.sendElementalProjectile(npc, t, 2883);
 				t.gfx(new Graphics(2884, 90, 0));
-				delayHit(npc, t, 2, getRangeHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NPCCombatDefinitions.RANGE, t)));
+				delayHit(npc, t, 2, getRangeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NpcAttackStyle.RANGED, t)));
 			}
 			break;
 		case 2://reg magic aeo
@@ -71,7 +72,7 @@ public class WarpedGulegaCombat extends CombatScript {
 			for (Entity t : npc.getPossibleTargets(true, true)) {
 				World.sendElementalProjectile(npc, t, 2880);
 				t.gfx(new Graphics(2881, 90, 0));
-				delayHit(npc, t, 2, getMagicHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NPCCombatDefinitions.MAGE, t)));
+				delayHit(npc, t, 2, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.75), NpcAttackStyle.MAGIC, t)));
 			}
 			break;
 		case 0:

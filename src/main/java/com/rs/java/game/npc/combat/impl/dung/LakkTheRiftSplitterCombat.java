@@ -3,15 +3,9 @@ package com.rs.java.game.npc.combat.impl.dung;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.ForceTalk;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldTile;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.LakkTheRiftSplitter;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
@@ -41,8 +35,8 @@ public class LakkTheRiftSplitterCombat extends CombatScript {
 			if (Utils.colides(player.getX(), player.getY(), player.getSize(), npc.getX(), npc.getY(), npc.getSize())) {
 				smash = true;
 				player.setPrayerDelay(1000);
-				delayHit(npc, player, 0, getRegularHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * .85), NPCCombatDefinitions.MELEE, player)));
-				delayHit(npc, player, 0, getRegularHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * .60), NPCCombatDefinitions.MELEE, player)));
+				delayHit(npc, player, 0, getRegularHit(npc, (int) (npc.getMaxHit() * .85)));
+				delayHit(npc, player, 0, getRegularHit(npc, (int) (npc.getMaxHit() * .60)));
 			}
 		}
 		if (smash) {
@@ -85,7 +79,7 @@ public class LakkTheRiftSplitterCombat extends CombatScript {
 		boolean melee = onRange && Utils.random(2) == 0;
 		if (melee) {
 			npc.animate(new Animation(14375));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, npc.meleeHit(npc, npc.getMaxHit()));
 		} else
 			regularMagicAttack(target, npc);
 		return 5;
@@ -96,12 +90,12 @@ public class LakkTheRiftSplitterCombat extends CombatScript {
 		World.sendElementalProjectile(npc, target, 2579);
 		if (target instanceof Player) {
 			Player player = (Player) target;
-			int damage = getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, player);
+			Hit hit = npc.magicHit(target, npc.getMaxHit());
 			if (player.getPrayer().getPrayerPoints() > 0 && player.getPrayer().isMageProtecting()) {
-				player.getPrayer().drainPrayer((int) (damage * .5));
+				player.getPrayer().drainPrayer((int) (hit.getDamage() * .5));
 				player.getPackets().sendGameMessage("Your prayer points feel drained.");
 			} else
-				delayHit(npc, player, 1, getMagicHit(npc, damage));
+				delayHit(npc, player, 1, hit);
 		}
 		target.gfx(new Graphics(2580, 75, 0));
 	}

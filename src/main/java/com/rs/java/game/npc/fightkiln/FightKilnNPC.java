@@ -9,11 +9,11 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.controlers.FightKiln;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 @SuppressWarnings("serial")
 public class FightKilnNPC extends NPC {
@@ -57,7 +57,7 @@ public class FightKilnNPC extends NPC {
 
 	@Override
 	public void sendDeath(Entity source) {
-		final NPCCombatDefinitions defs = getCombatDefinitions();
+		final NpcCombatDefinition defs = getCombatDefinitions();
 		resetWalkSteps();
 		getCombat().removeTarget();
 		animate(-1);
@@ -69,7 +69,7 @@ public class FightKilnNPC extends NPC {
 			@Override
 			public void run() {
 				if (loop == 0) {
-					animate(new Animation(defs.getDeathEmote()));
+					animate(new Animation(defs.getDeathAnim()));
 				} else if (loop >= defs.getDeathDelay()) {
 					reset();
 					finish();

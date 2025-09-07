@@ -5,10 +5,11 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 
 public class HybridRange extends CombatScript {
 
@@ -59,7 +60,7 @@ public class HybridRange extends CombatScript {
 			npc.animate(new Animation(4230));
 			World.sendCBOWProjectile(npc, target, 740);
 			delayHit(npc, target, getRangeDelay(npc, target),
-                    getRangeHit(npc, getRandomMaxHit(npc, 450, NPCCombatDefinitions.RANGE, target)));
+                    getRangeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 450, NpcAttackStyle.RANGED, target)));
 			if (HybridMelee.specialAttack <= 95)
 				HybridMelee.specialAttack += 5;
 			if (getRandom >= 3 && getRandom <= 5) {

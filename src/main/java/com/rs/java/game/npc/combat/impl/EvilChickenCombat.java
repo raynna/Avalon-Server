@@ -6,9 +6,11 @@ import com.rs.java.game.ForceTalk;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class EvilChickenCombat extends CombatScript {
 
@@ -19,8 +21,8 @@ public class EvilChickenCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
-		npc.animate(new Animation(defs.getAttackEmote()));
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
+		npc.animate(new Animation(defs.getAttackAnim()));
 		switch (Utils.getRandom(5)) {
 		case 0:
 			npc.setNextForceTalk(new ForceTalk("Bwuk"));
@@ -49,7 +51,7 @@ public class EvilChickenCombat extends CombatScript {
 		}
 		target.gfx(new Graphics(337));
 		delayHit(npc, target, 0,
-                getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
-		return defs.getAttackDelay();
+                getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, target)));
+		return npc.getAttackSpeed();
 	}
 }

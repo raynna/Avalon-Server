@@ -4,11 +4,12 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.Rammernaut;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class RammernautCombat extends CombatScript {
 
@@ -33,7 +34,7 @@ public class RammernautCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int chargeCount = getChargeCount(npc);
 
 		if (chargeCount > 1 && target instanceof Player) {
@@ -58,19 +59,18 @@ public class RammernautCombat extends CombatScript {
 			return npc.getAttackSpeed();
 		}
 
-		if (((Rammernaut) npc).isRequestSpecNormalAttack() && target instanceof Player) {
+		if (((Rammernaut) npc).isRequestSpecNormalAttack() && target instanceof Player player) {
 			((Rammernaut) npc).setRequestSpecNormalAttack(false);
-			Player player = (Player) target;
-			player.getPackets().sendGameMessage("Your prayers have been disabled.");
-			player.setPrayerDelay(8000);
+            player.getPackets().sendGameMessage("Your prayers have been disabled.");
+			player.getTickManager().addSeconds(TickManager.TickKeys.DISABLED_PROTECTION_PRAYER_TICK, 8);
 			player.getPackets().sendGameMessage("Your defence been reduced.");
 			player.getSkills().drainLevel(Skills.DEFENCE, Utils.random(3) + 1);
 
 		}
 
 		//default melee attack can be protected with prayer
-		npc.animate(new Animation(defs.getAttackEmote()));
-		delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+		npc.animate(new Animation(defs.getAttackAnim()));
+		delayHit(npc, target, 0, npc.meleeHit(npc, npc.getMaxHit()));
 		return npc.getAttackSpeed();
 	}
 }

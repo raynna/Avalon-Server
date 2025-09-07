@@ -14,9 +14,9 @@ import com.rs.java.game.player.Player;
 import com.rs.core.packets.InputStream;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.MapArchiveKeys;
-import com.rs.java.utils.NPCSpawns;
 import com.rs.java.utils.ObjectSpawns;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.data.npc.JsonNpcSpawns;
 
 public class Region {
 	public static final int[] OBJECT_SLOTS = new int[] { 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -78,7 +78,7 @@ public class Region {
 	}
 
 	private void loadNPCSpawns() {
-		NPCSpawns.loadNPCSpawns(regionId);
+		JsonNpcSpawns.INSTANCE.loadRegion(regionId);
 	}
 
 	private void loadObjectSpawns() {

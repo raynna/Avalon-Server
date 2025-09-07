@@ -55,7 +55,7 @@ class HealthOverlay {
         if (!player.temporaryTarget.withinDistance(player.temporaryTarget, 32)) {
             return true
         }
-        if (!player.tickManager.isActive(TickManager.TickKeys.LAST_ATTACK_TICK)) {
+        if (!player.tickManager.isActive(TickManager.TickKeys.LAST_INTERACTION_TARGET) && !player.tickManager.isActive(TickManager.TickKeys.LAST_ATTACK_TICK)) {
             return true
         }
         return false

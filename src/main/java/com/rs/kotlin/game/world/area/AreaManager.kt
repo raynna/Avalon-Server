@@ -48,12 +48,22 @@ object AreaManager {
     }
 
     @JvmStatic
+    fun isInEnvironment(player: Player, env: Area.Environment): Boolean {
+        return getAll(player.tile).any { it.environment() == env }
+    }
+
+    @JvmStatic
+    fun isInEnvironment(tile: WorldTile, env: Area.Environment): Boolean {
+        return AreaManager.getAll(tile).any { it.environment() == env }
+    }
+
+    @JvmStatic
     fun get(tile: WorldTile): Area? = getAll(tile).firstOrNull()
 
     fun onMoved(player: Player) {
         val last = player.lastAreas ?: emptySet()
         val current = getAll(player.tile).toSet() ?: emptySet()
-        get(player.tile)?.onMoved(player)
+        current.forEach { it.onMoved(player) }
         for (a in last - current) {
             a.onExit(player)
         }

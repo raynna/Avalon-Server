@@ -7,6 +7,7 @@ import com.rs.java.game.player.Player;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -43,7 +44,6 @@ public class ChaosElementalCombat extends CombatScript {
 		} else if (attackOption == SPECIAL_TELEPORT) {
 			performTeleportAttack(npc, target);
 		}
-
 		return npc.getAttackSpeed();
 	}
 

@@ -9,11 +9,14 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+
+import static com.rs.java.game.npc.combat.NpcCombatCalculations.getRandomMaxHit;
 
 public class StrykewyrmCombat extends CombatScript {
 
@@ -24,22 +27,22 @@ public class StrykewyrmCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int attackStyle = Utils.getRandom(4);
 		if (attackStyle == 0 || attackStyle == 1) { // melee
 			int size = npc.getSize();
 			if (!Utils.isOnRange(npc.getX(), npc.getY(), size, target.getX(), target.getY(), target.getSize(), 0))
 				attackStyle = 2 + Utils.random(2);
 			else {
-				npc.animate(new Animation(defs.getAttackEmote()));
+				npc.animate(new Animation(defs.getAttackAnim()));
 				delayHit(npc, target, 0,
-                        getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
-				return defs.getAttackDelay();
+                        getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)));
+				return npc.getAttackSpeed();
 			}
 		}
 		if (attackStyle == 2 || attackStyle == 3) { // mage
 			npc.animate(new Animation(12794));
-			final Hit hit = getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target));
+			final Hit hit = getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, target));
 			delayHit(npc, target, 1, hit);
 			World.sendSlowBowProjectile(npc, target, defs.getAttackProjectile());
 			if (npc.getId() == 9463) {
@@ -86,7 +89,7 @@ public class StrykewyrmCombat extends CombatScript {
 							delayHit(npc, target, 0, new Hit(npc, 300, HitLook.REGULAR_DAMAGE));
 						count++;
 					} else if (count == 2) {
-						npc.getCombat().setCombatDelay(defs.getAttackDelay());
+						npc.getCombat().setCombatDelay(npc.getAttackSpeed());
 						npc.setTarget(target);
 						npc.setCantInteract(false);
 						stop();
@@ -94,6 +97,6 @@ public class StrykewyrmCombat extends CombatScript {
 				}
 			}, 1, 1);
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 }

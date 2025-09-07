@@ -10,7 +10,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.dungeonnering.Sagittare;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
@@ -19,6 +19,10 @@ import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.AttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+import com.rs.kotlin.game.player.combat.CombatCalculations;
 
 public class SagittareCombat extends CombatScript {
 
@@ -47,9 +51,9 @@ public class SagittareCombat extends CombatScript {
 					continue;
 				World.sendElementalProjectile(npc, t, attack == 0 ? 2533 : 2535);
 				if (attack == 0)
-					delayHit(npc, t, 1, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
+					delayHit(npc, t, 1, npc.rangedHit(npc, npc.getMaxHit()));
 				else
-					delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
+					delayHit(npc, t, 1, npc.magicHit(npc, npc.getMaxHit()));
 			}
 			break;
 		case 3://Bind attacks
@@ -68,10 +72,10 @@ public class SagittareCombat extends CombatScript {
 				if (isMagicAttack) {
 					if (!player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC))
 						bindTarget = true;
-					delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
+					delayHit(npc, t, 1, npc.magicHit(npc, npc.getMaxHit()));
 				} else {
 					bindTarget = Utils.random(2) == 0;//50/50
-					delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
+					delayHit(npc, t, 1, npc.magicHit(npc, npc.getMaxHit()));
 				}
 				if (bindTarget) {
 					player.setFreezeDelay(8);
@@ -154,7 +158,7 @@ public class SagittareCombat extends CombatScript {
 						player.setRun(false);
 						player.setFreezeDelay(8);
 						player.getPackets().sendGameMessage("You have been injured and can't move.");
-						int hit = (int) (boss.getMaxHit() * .1 + getRandomMaxHit(boss, (int) (boss.getMaxHit() * .90), NPCCombatDefinitions.RANGE, player));
+						int hit = NpcCombatCalculations.getRandomMaxHit(boss, (int) (boss.getMaxHit() * .90), NpcAttackStyle.RANGED, player);
 						player.applyHit(new Hit(boss, hit, HitLook.REGULAR_DAMAGE));
 					}
 					boss.setUsingSpecial(false);

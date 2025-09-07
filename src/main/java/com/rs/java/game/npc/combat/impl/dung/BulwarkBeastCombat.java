@@ -1,6 +1,5 @@
 package com.rs.java.game.npc.combat.impl.dung;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.rs.java.game.Animation;
@@ -9,13 +8,11 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
-import com.rs.java.game.npc.combat.impl.KalphiteQueenCombat;
 import com.rs.java.game.npc.dungeonnering.BulwarkBeast;
-import com.rs.java.game.player.Player;
-import com.rs.core.tasks.WorldTask;
-import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+import com.rs.kotlin.game.world.projectile.Projectile;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 public class BulwarkBeastCombat extends CombatScript {
 
@@ -29,7 +26,7 @@ public class BulwarkBeastCombat extends CombatScript {
 	public int attack(final NPC npc, final Entity target) {
 		((BulwarkBeast) npc).refreshBar();
 
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 
 		if (Utils.random(15) == 0) {
 			List<Entity> targets = npc.getPossibleTargets();
@@ -49,14 +46,12 @@ public class BulwarkBeastCombat extends CombatScript {
 		case 0:
 			npc.animate(new Animation(13004));
 			npc.gfx(new Graphics(2397));
-			WorldTasksManager.schedule(new WorldTask() {
-
-				@Override
-				public void run() {
-					KalphiteQueenCombat.attackMageTarget(new ArrayList<Player>(), npc, npc, target, 2398, 2399);
-				}
-
-			});
+			ProjectileManager.sendWithGraphic(
+					Projectile.ELEMENTAL_SPELL, 280,
+					npc, target,
+					new Graphics(281)
+			);
+			delayHit(npc, target, 2, npc.magicHit(target, npc.getMaxHit()));
 			break;
 		case 1:
 			npc.animate(new Animation(13006));
@@ -65,12 +60,12 @@ public class BulwarkBeastCombat extends CombatScript {
 			for (Entity t : targets) {
 				World.sendProjectileToTile(npc, t, 2395);
 				t.gfx(new Graphics(2396, 75, 0));
-				delayHit(npc, t, 1, getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
+				delayHit(npc, t, 1, npc.rangedHit(npc, defs.getMaxHit()));
 			}
 			break;
 		case 2:
-			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			npc.animate(new Animation(defs.getAttackAnim()));
+			delayHit(npc, target, 0, npc.meleeHit(npc, defs.getMaxHit()));
 			break;
 		}
 		return npc.getAttackSpeed();

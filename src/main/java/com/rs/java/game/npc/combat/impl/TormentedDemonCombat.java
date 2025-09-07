@@ -5,11 +5,11 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.others.TormentedDemon;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -42,7 +42,7 @@ public class TormentedDemonCombat extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		TormentedDemon torm = (TormentedDemon) npc;
 
 		int attackStyle = torm.getCurrentCombatType();
@@ -62,7 +62,7 @@ public class TormentedDemonCombat extends CombatScript {
 			case 2 -> attackRanged(npc, target);
 		}
 
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 	private void attackMelee(NPC npc, Entity target) {

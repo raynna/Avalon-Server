@@ -7,11 +7,13 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class GiantMoleCombat extends CombatScript {
 
@@ -26,7 +28,7 @@ public class GiantMoleCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, Entity target) {
-		NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		NpcCombatDefinition defs = npc.getCombatDefinitions();
 		if (Utils.random(5) == 0) { // bury
 			npc.animate(new Animation(3314));
 			npc.setCantInteract(true);
@@ -68,11 +70,11 @@ public class GiantMoleCombat extends CombatScript {
 			}, 2);
 
 		} else {
-			npc.animate(new Animation(defs.getAttackEmote()));
+			npc.animate(new Animation(defs.getAttackAnim()));
 			delayHit(npc, target, 0,
-                    getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+                    getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)));
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 }

@@ -1,13 +1,8 @@
 package com.rs.java.game.npc.combat.impl.dung;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldTile;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.Dreadnaut;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
@@ -31,17 +26,16 @@ public class DreadnautCombat extends CombatScript {
 		if (Utils.random(5) == 0) {
 			npc.animate(new Animation(14982));
 			npc.gfx(new Graphics(2865));
-			int damage = getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target);
-			if (damage > 0) {
+			Hit hit = npc.meleeHit(target, boss.getMaxHit());
+			if (hit.getDamage() > 0) {
 				target.gfx(new Graphics(2866, 75, 0));
-				sendReductionEffect(boss, target, damage);
+				sendReductionEffect(boss, target, hit.getDamage());
 			}
-			if (target instanceof Player) {
-				Player player = (Player) target;
-				player.getPackets().sendGameMessage("You have been injured and are unable to use protection prayers.");
+			if (target instanceof Player player) {
+                player.getPackets().sendGameMessage("You have been injured and are unable to use protection prayers.");
 				player.setPrayerDelay(8000);
 			}
-			delayHit(npc, target, 1, getMeleeHit(npc, damage));
+			delayHit(npc, target, 1, hit);
 		} else {
 			npc.animate(new Animation(14973));
 			npc.gfx(new Graphics(2856));
@@ -49,14 +43,14 @@ public class DreadnautCombat extends CombatScript {
 			for (Entity t : boss.getPossibleTargets()) {
 				if (!t.withinDistance(target, 2))
 					continue;
-				int damage = getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.MELEE, t);
+				int damage = boss.getMaxHit();
 				World.sendProjectileToTile(boss, t, 2857);
 				if (damage > 0) {
 					sendReductionEffect(boss, t, damage);
 					boss.addSpot(new WorldTile(t));
 				} else
 					t.gfx(new Graphics(2858, 75, 0));
-				delayHit(npc, t, 1, getMeleeHit(npc, damage));
+				delayHit(npc, t, 1, npc.meleeHit(npc, damage));
 			}
 		}
 		return 5;

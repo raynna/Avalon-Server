@@ -6,7 +6,6 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.LuminscentIcefiend;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
@@ -37,11 +36,11 @@ public class LuminescentIcefiendCombat extends CombatScript {
 		if (magicAttack) {
 			npc.animate(new Animation(13352));
 			World.sendElementalProjectile(npc, target, 2529);
-			delayHit(icefiend, target, 2, getMagicHit(npc, getRandomMaxHit(npc, icefiend.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(icefiend, target, 2, npc.magicHit(npc, icefiend.getMaxHit()));
 		} else {
 			npc.animate(new Animation(13337));
 			World.sendElementalProjectile(npc, target, 2530);
-			delayHit(icefiend, target, 2, getRangeHit(npc, getRandomMaxHit(npc, (int) (icefiend.getMaxHit() * .90), NPCCombatDefinitions.RANGE, target)));
+			delayHit(icefiend, target, 2, npc.rangedHit(npc, (int) (icefiend.getMaxHit() * .90)));
 			WorldTasksManager.schedule(new WorldTask() {
 
 				@Override

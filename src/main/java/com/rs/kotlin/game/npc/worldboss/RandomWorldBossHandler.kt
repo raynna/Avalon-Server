@@ -1,5 +1,7 @@
 package com.rs.kotlin.game.npc.worldboss
 
+import com.rs.core.tasks.WorldTask
+import com.rs.core.tasks.WorldTasksManager
 import com.rs.core.thread.CoresManager
 import com.rs.java.game.World
 import com.rs.java.game.WorldTile
@@ -27,21 +29,73 @@ object RandomWorldBossHandler {
 
     private sealed class BossEntry {
         data class Single(val npcId: Int) : BossEntry()
-        data class Group(val npcIds: List<Int>) : BossEntry()
-        data class WithMinions(val bossId: Int, val minionIds: List<Int>, val minionCount: Int) : BossEntry()
+        data class Group(val npcIds: List<Int>, val displayName: String) : BossEntry()
+
+        data class WithMinions(
+            val bossId: Int,
+            val minions: List<Minion>
+        ) : BossEntry() {
+            data class Minion(val npcId: Int, val count: Int = 1)
+
+            // ---------- Convenience builders (keys) ----------
+            companion object {
+                // boss/minions by key(s)
+                fun of(bossKey: String, vararg minions: Minion): WithMinions =
+                    WithMinions(Rscm.lookup(bossKey), minions.toList())
+
+                // create a Minion from a key
+                fun minion(key: String, count: Int = 1): Minion =
+                    Minion(Rscm.lookup(key), count)
+            }
+        }
+
+        // ---------- Convenience builders (keys) ----------
+        companion object {
+            fun single(key: String): Single =
+                Single(Rscm.lookup(key))
+
+            fun group(vararg keys: String, displayName: String): Group =
+                Group(keys.map(Rscm::lookup), displayName)
+        }
     }
 
     private val BOSS_ENTRIES: List<BossEntry> = listOf(
-        BossEntry.Single(6260), // General Graardor
-        BossEntry.Single(6222), // Kree'arra
-        BossEntry.Single(6203), // K'ril
-        BossEntry.Single(6247), // Zilyana
-        BossEntry.Single(50),   // King Black Dragon
-        BossEntry.Single(8133), // Corporeal Beast
-        BossEntry.WithMinions(1158, listOf(NPC.getNpc("npc.kalphite_guardian_lv141")), 6), // Kalphite Queen + 6 workers
-        BossEntry.Group(listOf(2881, 2882, 2883)),    // Dagannoth Kings
-        BossEntry.Single(2030), // Barrows brother
-        BossEntry.Single(3200)  // Chaos Elemental
+        BossEntry.WithMinions.of(
+            bossKey = "npc.general_graardor_lv624",
+            BossEntry.WithMinions.minion("npc.sergeant_strongstack_lv141"),
+            BossEntry.WithMinions.minion("npc.sergeant_steelwill_lv142"),
+            BossEntry.WithMinions.minion("npc.sergeant_grimspike_lv142"),
+        ),
+        BossEntry.WithMinions.of(
+            bossKey = "npc.kree_arra_lv580",
+            BossEntry.WithMinions.minion("npc.wingman_skree_lv143"),
+            BossEntry.WithMinions.minion("npc.flockleader_geerin_lv149"),
+            BossEntry.WithMinions.minion("npc.flight_kilisa_lv159"),
+        ),
+        BossEntry.WithMinions.of(
+            bossKey = "npc.k_ril_tsutsaroth_lv650",
+            BossEntry.WithMinions.minion("npc.tstanon_karlak_lv145"),
+            BossEntry.WithMinions.minion("npc.zakl_n_gritch_lv142"),
+            BossEntry.WithMinions.minion("npc.balfrug_kreeyath_lv151"),
+        ),
+        BossEntry.WithMinions.of(
+            bossKey = "npc.commander_zilyana_lv596",
+            BossEntry.WithMinions.minion("npc.starlight_lv149"),
+            BossEntry.WithMinions.minion("npc.growler_lv139"),
+            BossEntry.WithMinions.minion("npc.bree_lv146"),
+        ),
+        BossEntry.WithMinions.of(
+            bossKey = "npc.king_black_dragon_lv276",
+            BossEntry.WithMinions.minion("npc.baby_black_dragon_lv83", 10),
+        ),
+        BossEntry.WithMinions.of(
+            bossKey = "npc.kalphite_queen_lv333",
+            BossEntry.WithMinions.minion("npc.kalphite_guardian_lv141", 2),
+            BossEntry.WithMinions.minion("npc.kalphite_soldier_lv85", 4),
+            BossEntry.WithMinions.minion("npc.kalphite_worker_lv28", 6),
+        ),
+        BossEntry.group("npc.dagannoth_rex_lv303", "npc.dagannoth_supreme_lv303", "npc.dagannoth_prime_lv303", displayName = "Dagannoth Kings"),
+        BossEntry.single("npc.chaos_elemental_lv305")
     )
 
     private data class SpawnLocation(val name: String, val tile: WorldTile)
@@ -54,7 +108,7 @@ object RandomWorldBossHandler {
         SpawnLocation("Lumbridge Swamp", WorldTile(3206, 3158, 0)),
         SpawnLocation("Rimmington Mine", WorldTile(2974, 3240, 0)),
         SpawnLocation("South of Relekka", WorldTile(2662, 3610, 0)),
-        SpawnLocation("Wilderness – Dark Warrior Hills", WorldTile(3100, 3619, 0)),
+        SpawnLocation("Wilderness - Dark Warrior Hills", WorldTile(3100, 3619, 0)),
     )
 
     private const val MIN_RESPAWN_DELAY_MS: Long = 6 * 60 * 1000L
@@ -65,7 +119,7 @@ object RandomWorldBossHandler {
 
     // ---------------------- STATE ----------------------
 
-    @Volatile private var currentBoss: WorldBossNPC? = null
+    @Volatile private var currentBosses: MutableList<WorldBossNPC> = mutableListOf()
     @Volatile private var currentMinions: MutableList<WorldMinionNPC> = mutableListOf()
     @Volatile private var nextSpawnTask: ScheduledFuture<*>? = null
     @Volatile private var lastSpawnLocIndex: Int = -1
@@ -75,7 +129,7 @@ object RandomWorldBossHandler {
     @JvmStatic
     @Synchronized
     fun start() {
-        if (currentBoss == null && nextSpawnTask == null) {
+        if (currentBosses.isEmpty() && nextSpawnTask == null) {
             scheduleNextSpawn(randomRespawnDelay())
         }
     }
@@ -88,11 +142,22 @@ object RandomWorldBossHandler {
 
     @Synchronized
     fun forceDespawn(reason: String = "Force-despawned") {
-        currentBoss?.let {
-            it.markExternallyDespawning(reason)
-            it.finish()
-        } ?: scheduleNextSpawn(2000L)
+        if (currentBosses.isNotEmpty()) {
+            val snapshot = currentBosses.toList() // safe copy
+            snapshot.forEach {
+                try {
+                    it.markExternallyDespawning(reason)
+                    it.finish()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            currentBosses.clear()
+        } else {
+            scheduleNextSpawn(2000L)
+        }
     }
+
 
     // ---------------------- INTERNALS ----------------------
 
@@ -124,13 +189,13 @@ object RandomWorldBossHandler {
 
     @Synchronized
     private fun spawnNewBoss(force: Boolean = false) {
-        if (currentBoss != null && !currentBoss!!.hasFinished() && !force) return
-        if (force && currentBoss != null) {
-            currentBoss!!.markExternallyDespawning("Force-respawned")
-            currentBoss!!.finish()
+        if (currentBosses.isNotEmpty() && currentBosses.any { !it.hasFinished() } && !force) return
+        if (force && currentBosses.isNotEmpty()) {
+            currentBosses.forEach { it.markExternallyDespawning("Force-respawned"); it.finish() }
             cleanupMinions()
-            currentBoss = null
+            currentBosses.clear()
         }
+
         val entry = BOSS_ENTRIES.random()
         val locIndex = pickLocIndex()
         val loc = SPAWN_LOCS[locIndex]
@@ -141,34 +206,55 @@ object RandomWorldBossHandler {
         when (entry) {
             is BossEntry.Single -> {
                 val npc = spawnWorldBoss(entry.npcId, spawnTile)
-                currentBoss = npc
+                currentBosses.clear()
+                currentBosses.add(npc)
                 announce(npc, loc.name)
             }
 
             is BossEntry.Group -> {
+                currentBosses.clear()
                 val npcs = entry.npcIds.mapIndexed { i, id ->
                     spawnWorldBoss(id, spawnTile.transform(i, 0, spawnTile.plane))
                 }
-                currentBoss = npcs.first()
-                announce(npcs.first(), "${loc.name} with allies!")
+                currentBosses.addAll(npcs)
+                if (entry.displayName.isNotEmpty())
+                    announceGroup(entry.displayName, loc.name)
+                else
+                    announce(npcs.first(), "${loc.name} with allies!")
             }
 
             is BossEntry.WithMinions -> {
                 val boss = spawnWorldBoss(entry.bossId, spawnTile)
-                currentBoss = boss
+                currentBosses.clear()
+                currentBosses.add(boss)
                 currentMinions.clear()
 
-                repeat(entry.minionCount) {
-                    val offsetX = Utils.random(-3, 3)
-                    val offsetY = Utils.random(-3, 3)
-                    val minion = spawnMinion(entry.minionIds.random(), spawnTile.transform(offsetX, offsetY, boss.plane))
-                    currentMinions.add(minion)
+                val usedOffsets = mutableSetOf<Pair<Int, Int>>() // track relative coords
+
+                for (minion in entry.minions) {
+                    repeat(minion.count) {
+                        var offset: Pair<Int, Int>
+                        var tries = 0
+                        do {
+                            offset = Utils.random(-3, 3) to Utils.random(-3, 3)
+                            tries++
+                        } while ((offset.first == 0 && offset.second == 0 || offset in usedOffsets) && tries < 20)
+
+                        usedOffsets.add(offset)
+
+                        val (dx, dy) = offset
+                        val tile = spawnTile.transform(dx, dy, boss.plane)
+                        val npc = spawnMinion(minion.npcId, tile)
+                        currentMinions.add(npc)
+                    }
                 }
 
                 announce(boss, "${loc.name} surrounded by minions!")
             }
         }
     }
+
+
 
     private fun spawnWorldBoss(npcId: Int, tile: WorldTile): WorldBossNPC {
         return when {
@@ -190,6 +276,13 @@ object RandomWorldBossHandler {
             forceAgressiveDistance = 12
             isForceMultiAttacked = true
         }
+    }
+
+    private fun announceGroup(displayName: String, locationName: String) {
+        World.sendWorldMessage(
+            "<img=7><col=36648b>News: $displayName have emerged at $locationName!",
+            false
+        )
     }
 
     private fun announce(npc: NPC, locationName: String) {
@@ -280,7 +373,7 @@ object RandomWorldBossHandler {
 
     fun onBossTopDamageReward(boss: WorldBossNPC, player: Player, damage: Int, maxHp: Int) {
         player.message(Msg.topDamager("You were the top damager on ${boss.name} and received an extra reward!"))
-        World.sendWorldMessage(Msg.newsEpic("${player.displayName} has received a Magic Chest!"), false)
+        World.sendWorldMessage(Msg.news("${player.displayName} has received a Magic Chest!"), false)
         World.updateGroundItem(Item("item.magic_chest", 1), boss.tile, player, 60, 1)
     }
 
@@ -297,11 +390,17 @@ object RandomWorldBossHandler {
         for (drop in drops) {
             val item = Item(drop.itemId, drop.amount)
             player.inventory.addItem(item)
-            player.message(Msg.chestOpen("Your Magic Chest rewards you with ${item.amount} × ${item.name}!"))
+            player.message(Msg.chestOpen("Your Magic Chest rewards you with ${item.amount} x ${item.name}!"))
 
             if (item.definitions.tipitPrice >= 1_000_000) {
                 World.sendWorldMessage(
                     Msg.newsRare("${player.displayName} has received ${item.name} from a Magic Chest!"),
+                    false
+                )
+            }
+            if (item.definitions.tipitPrice >= 10_000_000) {
+                World.sendWorldMessage(
+                    Msg.newsEpic("${player.displayName} has received ${item.name} from a Magic Chest!"),
                     false
                 )
             }
@@ -311,27 +410,59 @@ object RandomWorldBossHandler {
 
 
     @Synchronized
-    internal fun onBossDeath() {
-        cleanupMinions()
-        currentBoss = null
-        scheduleNextSpawn(randomRespawnDelay())
+    internal fun onBossDeath(boss: WorldBossNPC) {
+        currentBosses.remove(boss)
+        if (currentBosses.isEmpty()) {
+            cleanupMinions()
+            scheduleNextSpawn(randomRespawnDelay())
+        }
+    }
+
+    @Synchronized
+    fun onMinionDeath(minion: WorldMinionNPC) {
+        currentMinions.remove(minion)
+        if (isBossDead()) {
+            return // don’t respawn if boss is gone
+        }
+
+        // Schedule respawn in 30 seconds (30 * 600ms ticks = 50 ticks if RS tick system)
+        WorldTasksManager.schedule(object : WorldTask() {
+            override fun run() {
+                if (!isBossDead()) {
+                    val newMinion = spawnMinion(minion.id, minion.tile)
+                    currentMinions.add(newMinion)
+                }
+                stop() // always stop after execution
+            }
+        }, 50) // 50 ticks = 30 seconds
+    }
+
+    fun isBossDead(): Boolean {
+        return currentBosses.isEmpty() || currentBosses.all { it.hasFinished() }
     }
 
     @Synchronized
     internal fun onBossFinished(reason: String) {
+        val bossesToFinish = currentBosses.toList() // snapshot
+        bossesToFinish.forEach {
+            it.markExternallyDespawning(reason)
+            it.finish()
+        }
+        currentBosses.clear()
         cleanupMinions()
-        currentBoss = null
         scheduleNextSpawn(randomRespawnDelay())
     }
 
     @Synchronized
     internal fun onBossIdleDespawn(npc: WorldBossNPC) {
-        if (currentBoss == npc) currentBoss = null
-        cleanupMinions()
-        World.sendWorldMessage(
-            "<img=7><col=8a2be2>${npc.name} fades away due to neglect. Another presence stirs...",
-            false
-        )
-        scheduleNextSpawn(randomRespawnDelay())
+        currentBosses.remove(npc)
+        if (currentBosses.isEmpty()) {
+            cleanupMinions()
+            World.sendWorldMessage(
+                "<img=7><col=8a2be2>${npc.name} fades away due to neglect. Another presence stirs...",
+                false
+            )
+            scheduleNextSpawn(randomRespawnDelay())
+        }
     }
 }

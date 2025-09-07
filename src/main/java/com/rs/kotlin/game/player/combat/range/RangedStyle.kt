@@ -113,7 +113,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
 
         if (ammoLevelReq != null) {
-            if (ammoLevelReq > attacker.skills.getLevel(Skills.RANGE)) {
+            if (ammoLevelReq > attacker.skills.getLevelForXp(Skills.RANGE)) {
                 attacker.message("You need a Ranged level of $ammoLevelReq to use ${ammoName}.")
                 return false
             }
@@ -152,6 +152,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (executeEffect(combatContext.copy(usingSpecial = false)))
             return
         attacker.animate(CombatAnimations.getAnimation(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle))
+        attacker.playSound(CombatAnimations.getSound(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle), 1)
         if (!isThrowing(currentWeapon) && currentWeapon.ammoType != AmmoType.NONE) {
             if (currentAmmo != null) {
                 if (currentAmmo.startGfx != null) {

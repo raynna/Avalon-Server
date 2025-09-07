@@ -5,11 +5,12 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.dungeonnering.WorldGorgerShukarhazh;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 
 public class WorldGorgerShukarhazhCombat extends CombatScript {
 
@@ -29,7 +30,7 @@ public class WorldGorgerShukarhazhCombat extends CombatScript {
 			if (Utils.colides(player.getX(), player.getY(), player.getSize(), npc.getX(), npc.getY(), npc.getSize())) {
 				smash = true;
 				player.getPackets().sendGameMessage("The creature crushes you as you move underneath it.");
-				delayHit(npc, player, 0, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, player)));
+				delayHit(npc, player, 0, getRegularHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.CRUSH, player)));
 			}
 		}
 		if (smash) {
@@ -39,12 +40,12 @@ public class WorldGorgerShukarhazhCombat extends CombatScript {
 
 		if (Utils.random(manager.getParty().getTeam().size() > 1 ? 20 : 5) == 0 && Utils.isOnRange(npc.getX(), npc.getY(), npc.getSize(), target.getX(), target.getY(), target.getSize(), 0)) {
 			npc.animate(new Animation(14892));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.CRUSH, target)));
 		} else {
 			npc.animate(new Animation(14893));
 			npc.gfx(new Graphics(2846, 0, 100));
 			target.gfx(new Graphics(2848, 75, 100));
-			delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 2, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.MAGIC, target)));
 		}
 		return 6;
 	}

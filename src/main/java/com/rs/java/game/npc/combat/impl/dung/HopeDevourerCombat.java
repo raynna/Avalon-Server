@@ -9,7 +9,6 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.HopeDevourer;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
@@ -36,7 +35,7 @@ public class HopeDevourerCombat extends CombatScript {
 		for (Player player : manager.getParty().getTeam()) {
 			if (Utils.colides(player.getX(), player.getY(), player.getSize(), npc.getX(), npc.getY(), npc.getSize())) {
 				stomp = true;
-				delayHit(npc, player, 0, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, player)));
+				delayHit(npc, player, 0, getRegularHit(npc, npc.getMaxHit()));
 			}
 		}
 		if (stomp) {

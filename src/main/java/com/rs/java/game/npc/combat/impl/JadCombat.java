@@ -6,10 +6,12 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class JadCombat extends CombatScript {
 
@@ -21,7 +23,7 @@ public class JadCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int attackStyle = Utils.random(3);
 		if (attackStyle == 2) { // melee
 			int distanceX = target.getX() - npc.getX();
@@ -30,10 +32,10 @@ public class JadCombat extends CombatScript {
 			if (distanceX > size || distanceX < -1 || distanceY > size || distanceY < -1)
 				attackStyle = Utils.random(2); // set mage
 			else {
-				npc.animate(new Animation(defs.getAttackEmote()));
+				npc.animate(new Animation(defs.getAttackAnim()));
 				delayHit(npc, target, 1,
-                        getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
-				return defs.getAttackDelay();
+                        getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)));
+				return npc.getAttackSpeed();
 			}
 		}
 		if (attackStyle == 1) {
@@ -43,7 +45,7 @@ public class JadCombat extends CombatScript {
 				@Override
 				public void run() {
 					delayHit(npc, target, 2, getRangeHit(npc,
-							getRandomMaxHit(npc, defs.getMaxHit() - 2, NPCCombatDefinitions.RANGE, target)));
+							NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit() - 2,NpcAttackStyle.RANGED, target)));
 					WorldTasksManager.schedule(new WorldTask() {
 						@Override
 						public void run() {
@@ -59,13 +61,13 @@ public class JadCombat extends CombatScript {
 				@Override
 				public void run() {
 					delayHit(npc, target, 2, getMagicHit(npc,
-							getRandomMaxHit(npc, defs.getMaxHit() - 2, NPCCombatDefinitions.MAGE, target)));
+							NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit() - 2, NpcAttackStyle.MAGIC, target)));
 							World.sendJadProjectile(npc, target, 2996);
 				}
 			}, 3);
 		}
 
-		return defs.getAttackDelay() + 2;
+		return npc.getAttackSpeed() + 2;
 	}
 
 }

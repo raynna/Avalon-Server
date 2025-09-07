@@ -5,10 +5,11 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 
 public class HybridMelee extends CombatScript {
 
@@ -25,8 +26,8 @@ public class HybridMelee extends CombatScript {
 		specialAttack -= 25;
 		npc.animate(new Animation(1062));
 		npc.gfx(new Graphics(252, 0, 100));
-		delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, 340, NPCCombatDefinitions.MELEE, target)),
-				getMeleeHit(npc, getRandomMaxHit(npc, 340, NPCCombatDefinitions.MELEE, target)));
+		delayHit(npc, target, 0, getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 340, NpcAttackStyle.STAB, target)),
+				getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 340, NpcAttackStyle.STAB, target)));
 		WorldTasksManager.schedule(new WorldTask() {
 			@Override
 			public void run() {

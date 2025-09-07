@@ -12,11 +12,13 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class LucienCombat extends CombatScript {
 
@@ -27,7 +29,7 @@ public class LucienCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int attackStyle = Utils.getRandom(5);
 
 		if (Utils.getRandom(10) == 0) {
@@ -73,11 +75,11 @@ public class LucienCombat extends CombatScript {
 		}
 		if (attackStyle == 0) { // normal mage move
 			npc.animate(new Animation(11338));
-			delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, 400, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 2, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 400, NpcAttackStyle.MAGIC, target)));
 			World.sendElementalProjectile(npc, target, 2963);
 		} else if (attackStyle == 1) { // normal mage move
 			npc.animate(new Animation(11338));
-			delayHit(npc, target, 2, getRangeHit(npc, getRandomMaxHit(npc, 250, NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, 2, getRangeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 250, NpcAttackStyle.RANGED, target)));
 			World.sendElementalProjectile(npc, target, 1904);
 			WorldTasksManager.schedule(new WorldTask() {
 
@@ -92,7 +94,7 @@ public class LucienCombat extends CombatScript {
 			npc.animate(new Animation(11318));
 			npc.gfx(new Graphics(1901));
 			World.sendElementalProjectile(npc, target, 1899);
-			delayHit(npc, target, 4, getMagicHit(npc, getRandomMaxHit(npc, 400, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 4, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 400, NpcAttackStyle.MAGIC, target)));
 		} else if (attackStyle == 3) {
 			npc.animate(new Animation(11373));
 			npc.gfx(new Graphics(1898));
@@ -140,9 +142,9 @@ public class LucienCombat extends CombatScript {
 					}
 				}
 			}, 3);
-			return defs.getAttackDelay();
+			return npc.getAttackSpeed();
 		}
 
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 }

@@ -5,8 +5,8 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.familiar.Familiar;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class BloodragerCombat extends CombatScript {
 
@@ -18,7 +18,7 @@ public class BloodragerCombat extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		NPCCombatDefinitions def = npc.getCombatDefinitions();
+		NpcCombatDefinition def = npc.getCombatDefinitions();
 		Familiar familiar = (Familiar) npc;
 		boolean usingSpecial = familiar.hasSpecialOn();
 		int tier = (npc.getId() - 11106) / 2;
@@ -26,10 +26,10 @@ public class BloodragerCombat extends CombatScript {
 		int damage = 0;
 		if (usingSpecial) {
 			npc.gfx(new Graphics(2444));
-			damage = getRandomMaxHit(npc, (int) (npc.getMaxHit() * (1.05 * tier)), NPCCombatDefinitions.MELEE, target);
+			damage = (int) (npc.getMaxHit() * (1.05 * tier));
 		} else
-			damage = getRandomMaxHit(npc, def.getMaxHit(), NPCCombatDefinitions.MELEE, target);
-		delayHit(npc, target, usingSpecial ? 1 : 0, getMeleeHit(npc, damage));
+			damage = def.getMaxHit();
+		delayHit(npc, target, usingSpecial ? 1 : 0, npc.meleeHit(npc, damage));
 		npc.animate(new Animation(13617));
 		return npc.getAttackSpeed();
 	}

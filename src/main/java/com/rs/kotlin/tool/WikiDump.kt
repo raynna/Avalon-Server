@@ -23,7 +23,11 @@ object WikiApi {
         }
     }
 
+    val disabled = true
+
     fun dumpData(npcId: Int, npcName: String, combatLevel: Int) {
+        if (disabled)
+            return
         if (npcData.containsKey(npcId)) {
             println("⚠ Data already exists for $npcName (ID=$npcId)")
             return
@@ -54,7 +58,8 @@ object WikiApi {
 
     fun fetchNpcCombatData(name: String): List<NpcData>? {
         val encoded = URLEncoder.encode(name, StandardCharsets.UTF_8)
-        val url = "https://oldschool.runescape.wiki/api.php?action=parse&prop=wikitext&format=json&page=$encoded"
+        val url = "https://oldschool.runescape.wiki/api.php?action=parse&prop=wikitext&format=json&redirects=1&page=$encoded"
+
 
         println("🔹 Fetching URL: $url")
         val request = Request.Builder()

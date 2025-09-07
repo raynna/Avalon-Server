@@ -6,9 +6,11 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class GeyserTitanCombat extends CombatScript {
 
@@ -19,7 +21,7 @@ public class GeyserTitanCombat extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int distanceX = target.getX() - npc.getX();
 		int distanceY = target.getY() - npc.getY();
 		boolean distant = false;
@@ -35,28 +37,28 @@ public class GeyserTitanCombat extends CombatScript {
 			if (distant) {// range hit
 				if (Utils.getRandom(2) == 0)
 					delayHit(npc, target, 1,
-                            getRangeHit(npc, getRandomMaxHit(npc, 300, NPCCombatDefinitions.RANGE, target)));
+                            getRangeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 300, NpcAttackStyle.RANGED, target)));
 				else
 					delayHit(npc, target, 1,
-                            getMagicHit(npc, getRandomMaxHit(npc, 300, NPCCombatDefinitions.MAGE, target)));
+                            getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 300, NpcAttackStyle.MAGIC, target)));
 			} else {// melee hit
 				delayHit(npc, target, 1,
-                        getMeleeHit(npc, getRandomMaxHit(npc, 300, NPCCombatDefinitions.MELEE, target)));
+                        getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 300, NpcAttackStyle.CRUSH, target)));
 			}
 			World.sendElementalProjectile(npc, target, 1376);
 		} else {
 			if (distant) {// range
-				damage = getRandomMaxHit(npc, 244, NPCCombatDefinitions.RANGE, target);
+				damage = NpcCombatCalculations.getRandomMaxHit(npc, 244, NpcAttackStyle.RANGED, target);
 				npc.animate(new Animation(7883));
 				npc.gfx(new Graphics(1375));
 				World.sendElementalProjectile(npc, target, 1374);
 				delayHit(npc, target, 2, getRangeHit(npc, damage));
 			} else {// melee
-				damage = getRandomMaxHit(npc, 244, NPCCombatDefinitions.MELEE, target);
+				damage = NpcCombatCalculations.getRandomMaxHit(npc, 244, NpcAttackStyle.CRUSH, target);
 				npc.animate(new Animation(7879));
 				delayHit(npc, target, 1, getMeleeHit(npc, damage));
 			}
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 }

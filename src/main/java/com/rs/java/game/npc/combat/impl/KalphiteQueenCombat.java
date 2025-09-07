@@ -1,145 +1,114 @@
 package com.rs.java.game.npc.combat.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
-import com.rs.core.tasks.WorldTask;
-import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+import com.rs.kotlin.game.world.projectile.Projectile;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class KalphiteQueenCombat extends CombatScript {
 
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { "Kalphite Queen" };
-	}
-	
-	public static void attackMageTarget(final List<Player> arrayList, Entity fromEntity, final NPC startTile, Entity t,
-		    final int projectile, final int gfx) {
-		final Entity target = t == null ? getTarget(arrayList, fromEntity, startTile) : t;
-		if (target == null)
-		    return;
-		if (target instanceof Player)
-		    arrayList.add((Player) target);
-		World.sendFastBowProjectile(fromEntity, target, 70);
-		if (fromEntity instanceof NPC npc) {
-			Hit magicHit = npc.magicHit(t, npc.getMaxHit());
-			delayHit(npc, t, 2, magicHit);
-		}
-		WorldTasksManager.schedule(new WorldTask() {
-
-		    @Override
-		    public void run() {
-			target.gfx(new Graphics(gfx));
-			attackMageTarget(arrayList, target, startTile, null, projectile, gfx);
-		    }
-		});
-	    }
-
-	public void attackMageTarget(final List<Player> arrayList, Entity fromEntity, final NPC startTile, Entity t) {
-		final Entity target = t == null ? getTarget(arrayList, fromEntity, startTile) : t;
-		if (target == null)
-			return;
-		if (target instanceof Player)
-			arrayList.add((Player) target);
-		World.sendFastBowProjectile(fromEntity, target, 70);
-		//World.sendProjectile(fromEntity, target, 280, fromEntity == startTile ? 70 : 20, 20, 60, 30, 0, 0);
-		if (fromEntity instanceof NPC npc) {
-			Hit magicHit = npc.magicHit(t, npc.getMaxHit());
-			delayHit(npc, t, 2, magicHit);
-		}
-		WorldTasksManager.schedule(new WorldTask() {
-
-			@Override
-			public void run() {
-				target.gfx(new Graphics(281));
-				attackMageTarget(arrayList, target, startTile, null);
-			}
-		});
+		return new Object[]{"Kalphite Queen"};
 	}
 
-	private static Player getTarget(List<Player> list, final Entity fromEntity, WorldTile startTile) {
-		if (fromEntity == null) {
-			return null;
+	// -------------------- Attacks --------------------
+
+	private void attackRanged(NPC npc, Entity target) {
+		npc.animate(new Animation(npc.getId() == 1158 ? 6240 : 6234));
+		for (Entity t : npc.getPossibleTargets()) {
+			delayHit(npc, t, 0, npc.rangedHit(t, npc.getMaxHit()));
+			ProjectileManager.sendSimple(
+					Projectile.ELEMENTAL_SPELL, 289,
+					npc, t
+			);
 		}
-		ArrayList<Player> added = new ArrayList<Player>();
+	}
+
+	private void attackMagic(NPC npc, Entity target) {
+		npc.animate(new Animation(npc.getId() == 1158 ? 6240 : 6234));
+		npc.gfx(new Graphics(npc.getId() == 1158 ? 278 : 279));
+
+		Entity chosen = target != null ? target : getClosestTarget(npc, new ArrayList<>());
+		if (chosen == null) return;
+
+		if (chosen instanceof Player p) {
+			// mark target so we don’t retarget them in the same cycle
+			new ArrayList<Player>().add(p);
+		}
+
+		ProjectileManager.sendWithGraphic(
+				Projectile.ELEMENTAL_SPELL, 280,
+				npc, chosen,
+				new Graphics(281)
+		);
+		delayHit(npc, chosen, 2, npc.magicHit(chosen, npc.getMaxHit()));
+	}
+
+	private void attackMelee(NPC npc, Entity target, NpcCombatDefinition defs) {
+		npc.animate(new Animation(defs.getAttackAnim()));
+		delayHit(npc, target, 0, npc.meleeHit(target, npc.getMaxHit()));
+	}
+
+	// -------------------- Targeting --------------------
+
+	private Player getClosestTarget(Entity fromEntity, List<Player> excluded) {
+		if (fromEntity == null) return null;
+
+		List<Player> nearby = new ArrayList<>();
 		for (int regionId : fromEntity.getMapRegionsIds()) {
-			List<Integer> playersIndexes = World.getRegion(regionId).getPlayerIndexes();
-			if (playersIndexes == null)
-				continue;
-			for (Integer playerIndex : playersIndexes) {
-				Player player = World.getPlayers().get(playerIndex);
-				if (player == null || list.contains(player) || !player.withinDistance(fromEntity)
-						|| !player.withinDistance(startTile))
+			List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
+			if (playerIndexes == null) continue;
+
+			for (int idx : playerIndexes) {
+				Player player = World.getPlayers().get(idx);
+				if (player == null
+						|| excluded.contains(player)
+						|| !player.withinDistance(fromEntity)) {
 					continue;
-				added.add(player);
+				}
+				nearby.add(player);
 			}
 		}
-		if (added.isEmpty())
-			return null;
-		Collections.sort(added, new Comparator<Player>() {
 
-			@Override
-			public int compare(Player o1, Player o2) {
-				if (o1 == null)
-					return 1;
-				if (o2 == null)
-					return -1;
-				if (Utils.getDistance(o1, fromEntity) > Utils.getDistance(o2, fromEntity))
-					return 1;
-				else if (Utils.getDistance(o1, fromEntity) < Utils.getDistance(o2, fromEntity))
-					return -1;
-				else
-					return 0;
-			}
-		});
-		return added.get(0);
-
+		return nearby.stream()
+				.min(Comparator.comparingInt(p -> Utils.getDistance(p, fromEntity)))
+				.orElse(null);
 	}
+
+	// -------------------- Main attack entry --------------------
 
 	@Override
-	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
-		int attackStyle = Utils.random(3);
-		if (attackStyle == 0) {
-			int distanceX = target.getX() - npc.getX();
-			int distanceY = target.getY() - npc.getY();
+	public int attack(NPC npc, Entity target) {
+		NpcCombatDefinition defs = npc.getCombatDefinitions();
+
+		int style = Utils.random(3);
+		if (style == 0) { // melee attempt
+			int dx = target.getX() - npc.getX();
+			int dy = target.getY() - npc.getY();
 			int size = npc.getSize();
-			if (distanceX > size || distanceX < -1 || distanceY > size || distanceY < -1)
-				attackStyle = Utils.random(2); // set mage
-			else {
-				npc.animate(new Animation(defs.getAttackEmote()));
-				Hit meleeHit = npc.meleeHit(target, npc.getMaxHit());
-				delayHit(npc, target, 0, meleeHit);
-				return defs.getAttackDelay();
+			if (dx > size || dx < -1 || dy > size || dy < -1) {
+				style = Utils.random(2) + 1; // force ranged or magic
+			} else {
+				attackMelee(npc, target, defs);
+				return npc.getAttackSpeed();
 			}
 		}
-		npc.animate(new Animation(npc.getId() == 1158 ? 6240 : 6234));
-		if (attackStyle == 1) { // range easy one
-			for (final Entity t : npc.getPossibleTargets()) {
-				Hit rangeHit = npc.rangedHit(target, npc.getMaxHit());
-				delayHit(npc, t, 0, rangeHit);
-				World.sendDragonfireProjectile(npc, t, 288);
-				//World.sendProjectile(npc, t, 288, 46, 31, 50, 30, 16, 0);
-			}
+
+		if (style == 1) {
+			attackRanged(npc, target);
 		} else {
-			npc.gfx(new Graphics(npc.getId() == 1158 ? 278 : 279));
-			WorldTasksManager.schedule(new WorldTask() {
-
-				@Override
-				public void run() {
-					attackMageTarget(new ArrayList<Player>(), npc, npc, target);
-				}
-
-			});
+			attackMagic(npc, target);
 		}
-		return defs.getAttackDelay();
+
+		return npc.getAttackSpeed();
 	}
 }

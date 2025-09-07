@@ -15,7 +15,6 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.DungeonNPC;
 import com.rs.java.game.npc.dungeonnering.LexicusRunewright;
 import com.rs.java.game.npc.familiar.Familiar;
@@ -62,14 +61,14 @@ public class LexicusRunewrightCombat extends CombatScript {
 			boss.gfx(new Graphics(range_style ? 2408 : 2424));
 			World.sendElementalProjectile(npc, target, range_style ? 2409 : 2425);
 			if (range_style)
-				delayHit(npc, target, 1, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+				delayHit(npc, target, 1, npc.rangedHit(npc, npc.getMaxHit()));
 			else
-				delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+				delayHit(npc, target, 1, npc.magicHit(npc, npc.getMaxHit()));
 			target.gfx(new Graphics(range_style ? 2410 : 2426, 75, 0));
 			break;
 		case 4://MELEE
 			boss.animate(new Animation(13469));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, npc.meleeHit(npc, npc.getMaxHit()));
 			break;
 		}
 		return 5;

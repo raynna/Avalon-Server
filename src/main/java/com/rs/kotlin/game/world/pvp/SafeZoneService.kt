@@ -7,7 +7,6 @@ import com.rs.kotlin.game.world.area.AreaManager
 object SafeZoneService {
     @JvmStatic
     fun isAtSafezone(player: Player): Boolean {
-        val area = AreaManager.get(player.tile)
-        return area != null && area.environment() == Area.Environment.SAFEZONE;
+        return AreaManager.isInEnvironment(player, Area.Environment.SAFEZONE)
     }
 }

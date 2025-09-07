@@ -9,11 +9,13 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.dungeonnering.Stomp;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class StompCombat extends CombatScript {
 
@@ -25,7 +27,7 @@ public class StompCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 
 		Stomp stomp = (Stomp) npc;
 
@@ -59,8 +61,8 @@ public class StompCombat extends CombatScript {
 
 		switch (attackStyle) {
 		case 0:
-			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			npc.animate(new Animation(defs.getAttackAnim()));
+			delayHit(npc, target, 0, getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.CRUSH, target)));
 			break;
 		case 1:
 			npc.animate(new Animation(13449));
@@ -68,7 +70,7 @@ public class StompCombat extends CombatScript {
 			for (Entity t : npc.getPossibleTargets()) {
 				World.sendElementalProjectile(npc, t, 2402);
 				t.gfx(new Graphics(2403, 70, 0));
-				delayHit(npc, t, 1, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+				delayHit(npc, t, 1, getRangeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.RANGED, target)));
 			}
 			break;
 		case 2:
@@ -76,7 +78,7 @@ public class StompCombat extends CombatScript {
 			npc.gfx(new Graphics(2404));
 			World.sendElementalProjectile(npc, target, 2405);
 			target.gfx(new Graphics(2406, 120, 0));
-			delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 2, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.MAGIC, target)));
 			break;
 
 		}

@@ -13,7 +13,6 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.RuneboundBehemoth;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
@@ -38,7 +37,7 @@ public class RuneboundBehemothCombat extends CombatScript {
 		for (Entity t : npc.getPossibleTargets()) {
 			if (Utils.colides(t.getX(), t.getY(), t.getSize(), npc.getX(), npc.getY(), npc.getSize())) {
 				trample = true;
-				delayHit(npc, t, 0, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, t)));
+				delayHit(npc, t, 0, getRegularHit(npc, npc.getMaxHit()));
 				if (t instanceof Player)
 					((Player) t).getPackets().sendGameMessage("The beast tramples you.");
 			}
@@ -112,20 +111,20 @@ public class RuneboundBehemothCombat extends CombatScript {
 		switch (attack) {
 		case 0://melee
 			boss.animate(new Animation(14423));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, npc.meleeHit(npc, npc.getMaxHit()));
 			break;
 		case 1://green exploding blob attack (magic)
 			boss.animate(new Animation(14427));
 			//boss.setNextGraphics(new Graphics(2413));
 			World.sendElementalProjectile(npc, target, 2414);
-			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1, npc.magicHit(npc, npc.getMaxHit()));
 			target.gfx(new Graphics(2417, 80, 0));
 			break;
 		case 2://green blob attack (range)
 			boss.animate(new Animation(14424));
 			boss.gfx(new Graphics(2394));
 			World.sendElementalProjectile(npc, target, 2395);
-			delayHit(npc, target, 1, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, 1, npc.rangedHit(npc, npc.getMaxHit()));
 			target.gfx(new Graphics(2396, 80, 0));
 			break;
 		}

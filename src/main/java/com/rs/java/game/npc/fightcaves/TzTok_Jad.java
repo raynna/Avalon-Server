@@ -4,10 +4,10 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.WorldTile;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.controlers.FightCaves;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 @SuppressWarnings("serial")
 public class TzTok_Jad extends FightCavesNPC {
@@ -36,7 +36,7 @@ public class TzTok_Jad extends FightCavesNPC {
 
 	@Override
 	public void sendDeath(Entity source) {
-		final NPCCombatDefinitions defs = getCombatDefinitions();
+		final NpcCombatDefinition defs = getCombatDefinitions();
 		resetWalkSteps();
 		getCombat().removeTarget();
 		animate(-1);
@@ -46,7 +46,7 @@ public class TzTok_Jad extends FightCavesNPC {
 			@Override
 			public void run() {
 				if (loop == 0) {
-					animate(new Animation(defs.getDeathEmote()));
+					animate(new Animation(defs.getDeathAnim()));
 					gfx(new Graphics(2924 + getSize()));
 				} else if (loop >= defs.getDeathDelay()) {
 					reset();

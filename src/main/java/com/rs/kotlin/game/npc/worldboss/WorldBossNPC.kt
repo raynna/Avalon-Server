@@ -39,11 +39,12 @@ open class WorldBossNPC : NPC {
         this.idleTimeoutMs = idleTimeoutMs
         this.gracePeriodMs = gracePeriodMs
         this.handler = handler
-        this.baseHp = maxHitpoints
-        this.respawnTile = tile
+        this.baseHp = maxHitpoints * 2
         this.forceTargetDistance = 64
         this.forceAgressiveDistance = 16
         this.isForceMultiAttacked = true
+        this.isForceMultiArea = true
+        this.isIntelligentRouteFinder = true
         this.setBonuses()
     }
 
@@ -68,7 +69,7 @@ open class WorldBossNPC : NPC {
             recalcHpScaling()
             ticksUntilRecheck = RECHECK_INTERVAL
         }
-        if (!hasFinished() && combat != null && combat.process()) {
+        if (!hasFinished() && combat != null && combat.attackDelay == 0) {
             selectNewTarget()
         }
     }
@@ -138,7 +139,7 @@ open class WorldBossNPC : NPC {
 
         } finally {
             super.sendDeath(source)
-            handler.onBossDeath()
+            handler.onBossDeath(this)
         }
     }
 

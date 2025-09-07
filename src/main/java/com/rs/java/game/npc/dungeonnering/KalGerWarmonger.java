@@ -13,7 +13,6 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.game.player.content.dungeoneering.RoomReference;
@@ -22,6 +21,7 @@ import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.AttackStyle;
 
 @SuppressWarnings("serial")
 public class KalGerWarmonger extends DungeonBoss {
@@ -124,7 +124,7 @@ public class KalGerWarmonger extends DungeonBoss {
 	}
 
 	public boolean isUsingMelee() {
-		return getCombatDefinitions().getAttackStyle() == NPCCombatDefinitions.MELEE;
+		return getCombatDefinitions().getAttackStyle() == AttackStyle.MELEE;
 	}
 
 	@Override

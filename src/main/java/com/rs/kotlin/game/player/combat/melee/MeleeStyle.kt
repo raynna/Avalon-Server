@@ -117,6 +117,7 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (executeEffect(combatContext))
             return
         attacker.animate(CombatAnimations.getAnimation(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle))
+        attacker.playSound(CombatAnimations.getSound(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle), 1)
         val hit = combatContext.meleeHit(delay = getHitDelay())
         if (attacker.developerMode) {
             attacker.message("[Melee Attack] -> " +

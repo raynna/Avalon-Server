@@ -70,7 +70,7 @@ class CombatAction(
         val spellId = player.getCombatDefinitions().spellId
         style = getCombatStyle(player, target)
         player.combatStyle = style
-        player.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
+        player.tickManager.addTicks(TickManager.TickKeys.LAST_INTERACTION_TARGET, 10)
         player.temporaryTarget = target;
         player.healthOverlay.sendOverlay(player, target)
         val requiredDistance = getAdjustedFollowDistance(target);
@@ -197,8 +197,8 @@ class CombatAction(
                 if (!check(player, target))
                     return -1
                 if (validateAttack(player, target)) {
-                    player.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
-                    target.tickManager.addSeconds(TickManager.TickKeys.LAST_ATTACKED_TICK, 10)
+                    player.tickManager.addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
+                    target.tickManager.addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10)
                     target.tickManager.addTicks(TickManager.TickKeys.PJ_TIMER, 12);
                     target.attackedBy = player
                     if (target is Player) {

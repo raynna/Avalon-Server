@@ -4,7 +4,6 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.utils.Utils;
 
 public class FleshSpoilerSpawnCombat extends CombatScript {
@@ -18,7 +17,7 @@ public class FleshSpoilerSpawnCombat extends CombatScript {
 	@Override
 	public int attack(NPC npc, Entity target) {
 		npc.animate(new Animation(Utils.random(3) == 0 ? 14474 : 14475));
-		delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+		delayHit(npc, target, 0, npc.meleeHit(npc, npc.getMaxHit()));
 		return 3;
 	}
 }

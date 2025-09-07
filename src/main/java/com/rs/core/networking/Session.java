@@ -36,7 +36,7 @@ public class Session {
 			return;
 		}
 		setDecoder(0);
-		logIp(this);
+		//logIp(this);
 	}
 
 	private static final String PATH = System.getProperty("user.dir") + "/data/iplog/log.txt";

@@ -7,8 +7,8 @@ import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.SecondaryBar;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.AggressivenessType;
 
 @SuppressWarnings("serial")
 public class Glacyte extends NPC {
@@ -25,7 +25,7 @@ public class Glacyte extends NPC {
 		isGlacior = id == 14301;
 		if (!isGlacior) {
 			effect = (byte) (id - 14302);
-			if (getCombatDefinitions().getAgressivenessType() == NPCCombatDefinitions.AGRESSIVE)
+			if (getCombatDefinitions().getAggressivenessType() == AggressivenessType.AGGRESSIVE)
 				getCombat().setTarget(glacor.getCombat().getTarget());
 		}
 		explosionTicks = 25;

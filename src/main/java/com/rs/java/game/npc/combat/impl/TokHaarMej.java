@@ -5,8 +5,11 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+
+import static com.rs.java.game.npc.combat.NpcCombatCalculations.getRandomMaxHit;
 
 public class TokHaarMej extends CombatScript {
 
@@ -17,7 +20,7 @@ public class TokHaarMej extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int distanceX = target.getX() - npc.getX();
 		int distanceY = target.getY() - npc.getY();
 		int size = npc.getSize();
@@ -28,17 +31,17 @@ public class TokHaarMej extends CombatScript {
 		}
 		switch (attackStyle) {
 		case 0:
-			hit = getRandomMaxHit(npc, defs.getMaxHit() - 36, NPCCombatDefinitions.MELEE, target);
-			npc.animate(new Animation(defs.getAttackEmote()));
+			hit = getRandomMaxHit(npc, defs.getMaxHit() - 36, NpcAttackStyle.CRUSH, target);
+			npc.animate(new Animation(defs.getAttackAnim()));
 			delayHit(npc, target, 0, getMeleeHit(npc, hit));
 			break;
 		case 1:
-			hit = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target);
+			hit = getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, target);
 			npc.animate(new Animation(16122));
 			World.sendElementalProjectile(npc, target, 2991);
 			delayHit(npc, target, 2, getMagicHit(npc, hit));
 			break;
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 }

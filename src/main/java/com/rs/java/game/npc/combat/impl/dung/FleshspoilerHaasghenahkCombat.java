@@ -4,7 +4,6 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.FleshspoilerHaasghenahk;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
@@ -23,7 +22,7 @@ public class FleshspoilerHaasghenahkCombat extends CombatScript {
 
 		for (Entity t : npc.getPossibleTargets()) {
 			if (Utils.colides(t.getX(), t.getY(), t.getSize(), npc.getX(), npc.getY(), npc.getSize()))
-				delayHit(npc, t, 0, getRegularHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, t)));
+				delayHit(npc, t, 0, getRegularHit(npc, boss.getMaxHit()));
 		}
 		if (boss.isSecondStage())
 			return 0;
@@ -37,10 +36,10 @@ public class FleshspoilerHaasghenahkCombat extends CombatScript {
 				}
 			}
 			npc.animate(new Animation(14463));
-			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1, npc.meleeHit(npc, boss.getMaxHit()));
 		} else {
 			npc.animate(new Animation(13320));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, npc.meleeHit(npc, boss.getMaxHit()));
 		}
 		return 6;
 	}

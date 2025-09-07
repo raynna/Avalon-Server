@@ -13,7 +13,6 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.Blink;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
@@ -91,7 +90,7 @@ public class BlinkCombat extends CombatScript {
 									entityLoop: for (Entity t : boss.getPossibleTargets()) {
 										if (!t.matches(tile))
 											continue entityLoop;
-										delayHit(boss, t, delay, getRangeHit(boss, getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
+										delayHit(boss, t, delay, npc.rangedHit(boss, boss.getMaxHit()));
 									}
 								}
 								stop();
@@ -102,7 +101,7 @@ public class BlinkCombat extends CombatScript {
 				} else {
 					boss.animate(new Animation(14949));
 					World.sendProjectileToTile(boss, target, 2853);
-					delayHit(boss, target, 1, getRangeHit(boss, getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+					delayHit(boss, target, 1, npc.rangedHit(boss, boss.getMaxHit()));
 				}
 			} else {
 				if (Utils.random(7) == 0) {
@@ -112,17 +111,17 @@ public class BlinkCombat extends CombatScript {
 				boss.animate(new Animation(14956));
 				boss.gfx(new Graphics(2854));
 				target.gfx(new Graphics(2854, 5, 0));
-				int damage = getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.MAGE, target);
+				int damage = boss.getMaxHit();
 				if (target instanceof Player) {
 					if (((Player) target).getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC))
 						damage *= .5D;
 				}
-				delayHit(boss, target, 1, getMagicHit(boss, damage));
+				delayHit(boss, target, 1, npc.magicHit(boss, damage));
 			}
 			return 5;
 		} else {
 			boss.animate(new Animation(12310));
-			delayHit(boss, target, 0, getMeleeHit(boss, getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(boss, target, 0, npc.meleeHit(boss, boss.getMaxHit()));
 			return 4;
 		}
 	}

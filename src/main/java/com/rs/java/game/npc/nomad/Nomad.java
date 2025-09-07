@@ -87,7 +87,7 @@ public class Nomad extends NPC {
                         target.unlock();
                     });
 				}
-			}, getCombatDefinitions().getAttackDelay() + 1);
+			}, getAttackSpeed() + 1);
 		}
 		super.sendDeath(source);
 	}

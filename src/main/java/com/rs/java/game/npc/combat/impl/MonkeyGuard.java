@@ -4,7 +4,9 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class MonkeyGuard extends CombatScript {
 
@@ -15,7 +17,7 @@ public class MonkeyGuard extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int timesHealed = 0;
 		int attackStyle = 0;
 		switch (attackStyle) {
@@ -24,13 +26,13 @@ public class MonkeyGuard extends CombatScript {
 				timesHealed++;
 				npc.heal(250);
 				npc.animate(new Animation(1405));
-				return defs.getAttackDelay();
+				return npc.getAttackSpeed();
 			}
 			delayHit(npc, target, 0,
-                    getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
-			npc.animate(new Animation(defs.getAttackEmote()));
+                    getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)));
+			npc.animate(new Animation(defs.getAttackAnim()));
 			break;
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 }

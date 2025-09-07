@@ -40,7 +40,7 @@ public final class NightGazerKhighorahk extends DungeonBoss {
 	public void sendDeath(final Entity source) {
 		if (!secondStage) {
 			secondStage = true;
-			animate(new Animation(getCombatDefinitions().getDeathEmote()));
+			animate(new Animation(getCombatDefinitions().getDeathAnim()));
 			setNextNPCTransformation(9739);
 			setCombatLevel((int) (getCombatLevel() * 0.85)); //15% nerf
 			setHitpoints(getMaxHitpoints());

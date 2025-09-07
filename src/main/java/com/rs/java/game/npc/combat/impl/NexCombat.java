@@ -16,12 +16,14 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.minigames.godwars.zaros.Nex;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.cutscenes.NexCutScene;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class NexCombat extends CombatScript {
 
@@ -37,7 +39,7 @@ public class NexCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		final Nex nex = (Nex) npc;
 		if (nex.isFollowTarget()) {
 			nex.setForceFollowClose(true);
@@ -49,7 +51,7 @@ public class NexCombat extends CombatScript {
 					nex.playSound(3296, 2);
 					npc.animate(new Animation(6987));
 					nex.sendVirusAttack(new ArrayList<Entity>(), npc.getPossibleTargets(), target);
-					return defs.getAttackDelay();
+					return npc.getAttackSpeed();
 				}
 			}
 			if (Utils.getRandom(nex.getStage() == 4 ? 5 : 10) == 0) {
@@ -95,12 +97,12 @@ public class NexCombat extends CombatScript {
 						count++;
 					}
 				}, 0, 1);
-				return defs.getAttackDelay();
+				return npc.getAttackSpeed();
 			}
-			int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target);
+			int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target);
 			delayHit(npc, target, 0, getMeleeHit(npc, damage));
-			npc.animate(new Animation(defs.getAttackEmote()));
-			return defs.getAttackDelay();
+			npc.animate(new Animation(defs.getAttackAnim()));
+			return npc.getAttackSpeed();
 		} else {
 			nex.setForceFollowClose(false);
 			nex.setFollowTarget(Utils.getRandom(1) == 0);
@@ -135,19 +137,19 @@ public class NexCombat extends CombatScript {
 							player.getPackets().sendGameMessage("You're stunned.");
 						}
 					});
-					return defs.getAttackDelay();
+					return npc.getAttackSpeed();
 				}
 			}
 			if (nex.getAttacksStage() == 0) {
 				npc.animate(new Animation(6987));
 				for (Entity t : npc.getPossibleTargets()) {
 					World.sendElementalProjectile(npc, t, 471);
-					int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, t);
+					int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, t);
 					delayHit(npc, t, 1, getMagicHit(npc, damage));
 					if (damage > 0 && Utils.getRandom(5) == 0)
 						t.getPoison().makePoisoned(80);
 				}
-				return defs.getAttackDelay();
+				return npc.getAttackSpeed();
 			} else if (nex.getAttacksStage() == 1) {
 				if (!nex.isEmbracedShadow()) {
 					nex.setEmbracedShadow(true);
@@ -182,7 +184,7 @@ public class NexCombat extends CombatScript {
 							}
 						}
 					}, 0, 0);
-					return defs.getAttackDelay();
+					return npc.getAttackSpeed();
 				}
 				if (!nex.isTrapsSettedUp() && Utils.getRandom(2) == 0) {
 					nex.setTrapsSettedUp(true);
@@ -220,7 +222,7 @@ public class NexCombat extends CombatScript {
 						}
 
 					}, 3, 3);
-					return defs.getAttackDelay();
+					return npc.getAttackSpeed();
 				}
 				npc.animate(new Animation(6987));
 				for (final Entity t : npc.getPossibleTargets()) {
@@ -229,7 +231,7 @@ public class NexCombat extends CombatScript {
 						int damage = 800 - (distance * 800 / 11);
 						World.sendElementalProjectile(npc, t, 380);
 						delayHit(npc, t, 1,
-                                getRangeHit(npc, getRandomMaxHit(npc, damage, NPCCombatDefinitions.RANGE, t)));
+                                getRangeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, damage, NpcAttackStyle.RANGED, t)));
 						WorldTasksManager.schedule(new WorldTask() {
 							@Override
 							public void run() {
@@ -238,7 +240,7 @@ public class NexCombat extends CombatScript {
 						}, 1);
 					}
 				}
-				return defs.getAttackDelay();
+				return npc.getAttackSpeed();
 			} else if (nex.getAttacksStage() == 2) {
 				if (Utils.getRandom(4) == 0 && target instanceof Player) {
 					npc.setNextForceTalk(new ForceTalk("I demand a blood sacrifice!"));
@@ -258,7 +260,7 @@ public class NexCombat extends CombatScript {
 								npc.animate(new Animation(6987));
 								for (final Entity t : npc.getPossibleTargets()) {
 									World.sendElementalProjectile(npc, t, 374);
-									final int damage = getRandomMaxHit(npc, 290, NPCCombatDefinitions.MAGE, t);
+									final int damage = NpcCombatCalculations.getRandomMaxHit(npc, 290, NpcAttackStyle.MAGIC, t);
 									delayHit(npc, t, 1, getMagicHit(npc, damage));
 									WorldTasksManager.schedule(new WorldTask() {
 										@Override
@@ -274,8 +276,8 @@ public class NexCombat extends CombatScript {
 								}
 							}
 						}
-					}, defs.getAttackDelay());
-					return defs.getAttackDelay() * 2;
+					},npc.getAttackSpeed());
+					return npc.getAttackSpeed() * 2;
 				}
 				if (nex.getLastSiphon() < Utils.currentTimeMillis() && npc.getHitpoints() <= 18000
 						&& Utils.getRandom(2) == 0) {
@@ -308,18 +310,18 @@ public class NexCombat extends CombatScript {
 							nex.setDoingSiphon(false);
 						}
 					}, 8);
-					return defs.getAttackDelay();
+					return npc.getAttackSpeed();
 				}
 				npc.animate(new Animation(6986));
 				World.sendElementalProjectile(npc, target, 374);
 				delayHit(npc, target, 1,
-                        getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
-				return defs.getAttackDelay();
+                        getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, target)));
+				return npc.getAttackSpeed();
 			} else if (nex.getAttacksStage() == 3) {
 				npc.animate(new Animation(6986));
 				for (final Entity t : npc.getPossibleTargets()) {
 					World.sendElementalProjectile(npc, t, 362);
-					int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, t);
+					int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, t);
 					delayHit(npc, t, 1, getMagicHit(npc, damage));
 					if (damage > 0 && Utils.getRandom(5) == 0) {// 1/6
 																// probability
@@ -334,17 +336,17 @@ public class NexCombat extends CombatScript {
 
 					}
 				}
-				return defs.getAttackDelay();
+				return npc.getAttackSpeed();
 			} else if (nex.getAttacksStage() == 4) {
 				npc.animate(new Animation(6987));
 				for (Entity t : npc.getPossibleTargets()) {
 					World.sendElementalProjectile(npc, t, 471);
-					int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, t);
+					int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, t);
 					delayHit(npc, t, 1, getMagicHit(npc, damage));
 				}
-				return defs.getAttackDelay();
+				return npc.getAttackSpeed();
 			}
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 }

@@ -10,7 +10,6 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.glacior.Glacyte;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
@@ -18,6 +17,7 @@ import com.rs.java.game.player.actions.skills.summoning.Summoning.Pouch;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public abstract class Familiar extends NPC implements Serializable {
 
@@ -442,14 +442,14 @@ public abstract class Familiar extends NPC implements Serializable {
 		if (dead)
 			return;
 		dead = true;
-		final NPCCombatDefinitions defs = getCombatDefinitions();
+		final NpcCombatDefinition defs = getCombatDefinitions();
 		resetWalkSteps();
 		setCantInteract(true);
 		getCombat().removeTarget();
 		owner.setFamiliarPouch(null);
 		owner.setFamiliarBoB(null);
 		owner.addFamiliarDelay(5000);
-		setNextAnimationNoPriority(new Animation(defs.getDeathEmote()), this);
+		setNextAnimationNoPriority(new Animation(defs.getDeathAnim()), this);
 		owner.getPackets().sendGameMessage("Your familiar slowly begins to fade away..");
 		WorldTasksManager.schedule(new WorldTask() {
 			int loop;

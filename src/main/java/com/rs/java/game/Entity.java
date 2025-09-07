@@ -333,11 +333,11 @@ public abstract class Entity extends WorldTile {
         Entity attacker = hit.getSource();
         if (attacker instanceof Player player && attacker != this) {
             if (player.toggles("HEALTH_OVERLAY", false)) {
-                Entity target = this;
-                HealthOverlay overlay = player.healthOverlay;
-                player.setTemporaryTarget(this);
-                //overlay.checkCombatLevel(player, target);
-                overlay.updateHealthOverlay(player, target, true);
+                // Only update if THIS is the primary target
+                if (player.getTemporaryTarget() == null || player.getTemporaryTarget() == this) {
+                    player.setTemporaryTarget(this);
+                    player.healthOverlay.updateHealthOverlay(player, this, true);
+                }
             }
         }
         if (hitpoints <= 0) {
@@ -1607,7 +1607,7 @@ public abstract class Entity extends WorldTile {
     }
 
     public void checkMultiArea() {
-        multiArea = forceMultiArea ? true : World.isMultiArea(this);
+        multiArea = forceMultiArea || World.isMultiArea(this);
     }
 
     public boolean isAtMultiArea() {

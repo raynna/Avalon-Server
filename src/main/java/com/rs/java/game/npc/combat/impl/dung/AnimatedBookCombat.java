@@ -6,7 +6,6 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
@@ -38,13 +37,13 @@ public class AnimatedBookCombat extends CombatScript {
 
 	private void meleeAttack(NPC npc, Entity target) {
 		npc.animate(new Animation(13479));
-		delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MELEE, target)));
+		delayHit(npc, target, 0, npc.meleeHit(npc, 100));
 	}
 
 	private void magicAttack(NPC npc, final Entity target) {
 		npc.animate(new Animation(13480));
 		npc.gfx(new Graphics(2728));
-		delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MAGE, target)));
+		delayHit(npc, target, 1, npc.magicHit(npc, 100));
 		World.sendProjectileToTile(npc, target, 2731);
 		WorldTasksManager.schedule(new WorldTask() {
 

@@ -7,7 +7,6 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.Gravecreeper;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
@@ -58,11 +57,11 @@ public class GravecreeperCombat extends CombatScript {
 		case 0://range
 			npc.animate(new Animation(14504));
 			World.sendElementalProjectile(npc, target, 2753);
-			delayHit(npc, target, 1, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+			delayHit(npc, target, 1, npc.rangedHit(npc, npc.getMaxHit()));
 			break;
 		case 1://melee
 			npc.animate(new Animation(14503));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, npc.meleeHit(npc, npc.getMaxHit()));
 			break;
 		}
 		return 4;

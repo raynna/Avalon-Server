@@ -13,13 +13,14 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.dungeonnering.YkLagorMage;
 import com.rs.java.game.npc.dungeonnering.YkLagorThunderous;
 import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 
 public class YkLagorThunderousCombat extends CombatScript {
 
@@ -131,7 +132,7 @@ public class YkLagorThunderousCombat extends CombatScript {
 				if (player.getPrayer().getPrayerPoints() > 0 && damage > 0)
 					player.getPrayer().drainPrayer((int) (damage * .5));
 			}
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.CRUSH, target)));
 			break;
 		case 1:
 			sendMagicalAttack(boss, false);
@@ -176,7 +177,7 @@ public class YkLagorThunderousCombat extends CombatScript {
 				if (player.isDead() || !npc.getManager().isAtBossRoom(player))
 					continue;
 				World.sendElementalProjectile(npc, player, 2733);
-				delayHit(npc, player, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, player)));
+				delayHit(npc, player, 1, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.MAGIC, player)));
 				player.gfx(new Graphics(2755, 85, 0));
 			}
 		}

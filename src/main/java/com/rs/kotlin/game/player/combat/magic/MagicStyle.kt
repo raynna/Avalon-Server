@@ -15,6 +15,11 @@ import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.magic.special.GreaterRunicStaffWeapon
 import com.rs.kotlin.game.player.combat.magic.special.PolyporeStaff
+import com.rs.kotlin.game.player.combat.range.RangeData
+import com.rs.kotlin.game.player.combat.range.RangedWeapon
+import com.rs.kotlin.game.player.combat.range.StandardRanged
+import com.rs.kotlin.game.player.combat.special.CombatContext
+import com.rs.kotlin.game.player.combat.special.getMultiAttackTargets
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 import kotlin.math.ceil
 import kotlin.math.max
@@ -71,6 +76,20 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 return false
         }
         return true
+    }
+
+    private fun getCurrentWeapon(): RangedWeapon {
+        val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
+        return RangeData.getWeaponByItemId(weaponId)?: StandardRanged.getDefaultWeapon()
+    }
+
+
+    private fun getCurrentWeaponId(attacker: Player): Int {
+        val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
+        return when {
+            weaponId != -1 -> weaponId
+            else -> -1
+        }
     }
 
     override fun getAttackSpeed(): Int {
@@ -277,52 +296,58 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun handleAncientMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
-        val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
+        val combatContext = CombatContext(
+            combat = this,
+            attacker = attacker,
+            defender = defender,
+            weapon = getCurrentWeapon(),
+            weaponId = getCurrentWeaponId(attacker),
+            attackStyle = AttackStyle.ACCURATE,//just fillers
+            attackBonusType = AttackBonusType.CRUSH//just fillers
+        )
+        attacker.message("spellMulti:" + spell.multi)
+        val targets = if (spell.multi) {
+            combatContext.getMultiAttackTargets(
+                maxDistance = 1,
+                maxTargets = 9
+            )
+        } else {
+            listOf(defender)
+        }
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
-        val splash = hit.damage == 0
-        var endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
-        if (hit.damage > 0 && spell.bind != -1) {
-            if (!defender.isFreezeImmune) {
-                defender.addFreezeDelay(spell.bind, false)
-            } else {
-                if (spell.name.contains("ice barrage", ignoreCase = true)) {
-                    endGraphic = Graphics(1677, 100)
+        for (t in targets) {
+            val hit = registerHit(attacker, t, combatType = CombatType.MAGIC, spellId = spell.id)
+            val splash = hit.damage == 0
+            val endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
+
+            if (hit.damage > 0) {
+                if (spell.bind != -1 && !t.isFreezeImmune) {
+                    t.addFreezeDelay(spell.bind, false)
+                }
+                if (spell.element == ElementType.Blood) {
+                    attacker.heal(hit.damage / 5)
                 }
             }
-        }
-        if (hit.damage > 0 && spell.element == ElementType.Blood) {
-            attacker.heal(hit.damage / 5)
-        }
-        if (spell.projectileId != -1) {
-            if (spell.endGraphic.id != -1) {
+
+            if (spell.projectileId != -1) {
                 ProjectileManager.send(
                     spell.projectileType,
                     spell.projectileId,
                     attacker = attacker,
-                    defender = defender,
-                    hitGraphic = endGraphic,
+                    defender = t,
+                    hitGraphic = endGraphic
                 )
-            } else {
-                ProjectileManager.send(spell.projectileType, spell.projectileId, attacker, defender)
             }
+
+            delayHits(PendingHit(hit, t, getHitDelay()))
         }
-        delayHits(PendingHit(hit, defender, getHitDelay()))
         if (manual) {
             attacker.combatDefinitions.resetSpells(false)
             attacker.newActionManager.forceStop()
             attacker.resetWalkSteps()
             attacker.setNextFaceEntity(null)
         }
-        if (attacker.isDeveloperMode)
-        attacker.message(
-            "Magic Attack -> " +
-                    "Spell: ${spell.name.toString()}, " +
-                    "SpellType: ${spell.type}, " +
-                    "BaseDamage: ${spell.damage}, " +
-                    "MaxHit: ${hit.maxHit}, " +
-                    "Hit: ${hit.damage}"
-        )
     }
 
     private fun addMagicExperience(totalDamage: Int) {

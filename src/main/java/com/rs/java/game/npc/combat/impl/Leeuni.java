@@ -7,10 +7,12 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.Player;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class Leeuni extends CombatScript {
 
@@ -28,7 +30,7 @@ public class Leeuni extends CombatScript {
 		npc.setCombatLevel(512);
 		npc.setCapDamage(700);
 
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		if (Utils.getRandom(2) == 0) { // magical attack
 			npc.animate(new Animation(15042));
 			for (Entity t : npc.getPossibleTargets()) {
@@ -37,8 +39,8 @@ public class Leeuni extends CombatScript {
                         t, 1,
                         getMagicHit(
 								npc,
-								getRandomMaxHit(npc, 540,
-										NPCCombatDefinitions.MAGE, t)));
+								NpcCombatCalculations.getRandomMaxHit(npc, 540,
+										NpcAttackStyle.MAGIC, t)));
 				World.sendElementalProjectile(npc, t, 1002);
 				target.gfx(new Graphics(3000));
 			}
@@ -65,8 +67,8 @@ public class Leeuni extends CombatScript {
                     target, 0,
                     getMeleeHit(
 							npc,
-							getRandomMaxHit(npc, 330,
-									NPCCombatDefinitions.MELEE, target)));
+							NpcCombatCalculations.getRandomMaxHit(npc, 330,
+									NpcAttackStyle.CRUSH, target)));
 		} else { // melee attack
 			npc.animate(new Animation(15046));
 			delayHit(
@@ -74,10 +76,10 @@ public class Leeuni extends CombatScript {
                     target, 0,
                     getMeleeHit(
 							npc,
-							getRandomMaxHit(npc, 440,
-									NPCCombatDefinitions.MELEE, target)));
+							NpcCombatCalculations.getRandomMaxHit(npc, 440,
+									NpcAttackStyle.CRUSH, target)));
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 }

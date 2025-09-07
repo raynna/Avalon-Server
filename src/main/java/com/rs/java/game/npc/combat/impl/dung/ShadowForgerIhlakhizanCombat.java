@@ -10,7 +10,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.dungeonnering.ShadowForgerIhlakhizan;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
@@ -18,6 +18,8 @@ import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class ShadowForgerIhlakhizanCombat extends CombatScript {
 
@@ -30,7 +32,7 @@ public class ShadowForgerIhlakhizanCombat extends CombatScript {
 	@Override
 	public int attack(final NPC npc, final Entity target) {
 
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		final ShadowForgerIhlakhizan forger = (ShadowForgerIhlakhizan) npc;
 		final DungeonManager manager = forger.getManager();
 
@@ -135,14 +137,14 @@ public class ShadowForgerIhlakhizanCombat extends CombatScript {
 			npc.gfx(new Graphics(2375));
 			World.sendElementalProjectile(npc, target, 2376);
 			target.gfx(new Graphics(2377, 120, 0));
-			delayHit(npc, target, 3, getRegularHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 3, getRegularHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.MAGIC, target)));
 			break;
 		case 1:
-			npc.animate(new Animation(defs.getAttackEmote()));
+			npc.animate(new Animation(defs.getAttackAnim()));
 			for (Entity t : npc.getPossibleTargets()) {
 				if (!Utils.isOnRange(npc.getX(), npc.getY(), npc.getSize(), t.getX(), t.getY(), t.getSize(), 0))
 					continue;
-				delayHit(npc, t, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, t)));
+				delayHit(npc, t, 0, getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.CRUSH, t)));
 			}
 			break;
 		}

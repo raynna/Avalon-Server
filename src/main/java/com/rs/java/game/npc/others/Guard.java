@@ -8,12 +8,12 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.actions.skills.construction.House;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 @SuppressWarnings("serial")
 public class Guard extends NPC {
@@ -44,7 +44,7 @@ public class Guard extends NPC {
 
 	@Override
 	public void sendDeath(final Entity source) {
-		final NPCCombatDefinitions defs = getCombatDefinitions();
+		final NpcCombatDefinition defs = getCombatDefinitions();
 		resetWalkSteps();
 		getCombat().removeTarget();
 		animate(-1);
@@ -54,7 +54,7 @@ public class Guard extends NPC {
 			@Override
 			public void run() {
 				if (loop == 0) {
-					animate(new Animation(defs.getDeathEmote()));
+					animate(new Animation(defs.getDeathAnim()));
 				} else if (loop >= defs.getDeathDelay()) {
 					reset();
 					setLocation(getRespawnTile());

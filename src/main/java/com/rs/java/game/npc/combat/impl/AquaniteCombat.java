@@ -3,7 +3,6 @@ package com.rs.java.game.npc.combat.impl;
 import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.prayer.AncientPrayer;
 import com.rs.java.game.player.prayer.NormalPrayer;

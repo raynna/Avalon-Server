@@ -12,7 +12,6 @@ import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.core.thread.CoresManager;
-import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.Hit;
@@ -22,9 +21,9 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.combat.NPCCombat;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
+import com.rs.json.JsonNpcCombatDefinitions;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.combatdata.*;
 import com.rs.kotlin.game.npc.drops.DropTable;
@@ -45,6 +44,8 @@ import com.rs.java.game.route.strategy.FixedTileStrategy;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.*;
+import com.rs.kotlin.game.npc.worldboss.WorldBossNPC;
+import com.rs.kotlin.tool.WikiApi;
 
 /**
  * @Improved Andreas - AvalonPK
@@ -57,6 +58,7 @@ public class NPC extends Entity implements Serializable {
     public static int NORMAL_WALK = 0x2, WATER_WALK = 0x4, FLY_WALK = 0x8;
 
     private int id;
+    private NpcCombatDefinition definition;
     private WorldTile respawnTile;
     private int mapAreaNameHash;
     private boolean canBeAttackFromOutOfArea;
@@ -155,6 +157,9 @@ public class NPC extends Entity implements Serializable {
         loadMapRegions();
         loadNPCSettings();
         checkMultiArea();
+        if (!WikiApi.INSTANCE.hasData(id) && combatLevel > 0) {
+            WikiApi.INSTANCE.dumpData(id, name, combatLevel);
+        }
     }
 
     public NPC(int id, WorldTile tile, int mapAreaNameHash, boolean canBeAttackFromOutOfArea, boolean spawned,
@@ -180,6 +185,9 @@ public class NPC extends Entity implements Serializable {
         loadMapRegions();
         loadNPCSettings();
         checkMultiArea();
+        if (!WikiApi.INSTANCE.hasData(id) && combatLevel > 0) {
+            WikiApi.INSTANCE.dumpData(id, name, combatLevel);
+        }
     }
 
     public double increasedDropRate(Player player) {
@@ -245,7 +253,6 @@ public class NPC extends Entity implements Serializable {
 
     public void setNPC(int id) {
         this.id = id;
-        bonuses = NPCBonuses.getBonuses(id);
     }
 
     @Override
@@ -273,9 +280,48 @@ public class NPC extends Entity implements Serializable {
         return NPCDefinitions.getNPCDefinitions(id);
     }
 
-    public NPCCombatDefinitions getCombatDefinitions() {
-        return NPCCombatDefinitionsL.getNPCCombatDefinitions(id);
+    public NpcCombatDefinition getCombatDefinitions() {
+        if (definition != null)
+            return definition;
+        NpcCombatDefinition def = JsonNpcCombatDefinitions.INSTANCE.getById(getId());
+
+        if (def == null) {
+            String n = getName();
+            if (n == null) {
+                try {
+                    n = getDefinitions() != null ? getDefinitions().name : null;
+                } catch (Throwable ignored) { /* keep null */ }
+            }
+            def = JsonNpcCombatDefinitions.INSTANCE.getByName(n);
+        }
+
+        if (def == null) {
+            //Logger.log("CombatDef", "Missing combat def for id=" + getId() + " name=" + getName());
+            def = new NpcCombatDefinition(
+                    Collections.singletonList(getId()),
+                    nListSafe(getName()),
+                    -1, -1, -1, -1,  // attackAnim, attackSound, defenceAnim, defendSound
+                    -1, 0, -1,       // deathAnim, deathDelay, deathSound
+                    5,               // respawnDelay (ticks)
+                    10,              // hitpoints
+                    1,               // maxHit
+                    AttackStyle.MELEE,
+                    AttackMethod.MELEE,
+                    java.util.Collections.emptyMap(),
+                    -1, -1, -1,      // attackRange, attackGfx, attackProjectile
+                    AggressivenessType.PASSIVE,
+                    -1, -1, -1       // aggroDistance, deAggroDistance, maxDistFromSpawn
+            );
+        }
+        if (definition == null)
+            definition = def;
+        return def;
     }
+
+    private static List<String> nListSafe(String name) {
+        return name == null ? java.util.Collections.emptyList() : java.util.Collections.singletonList(name);
+    }
+
 
     @Override
     public int getMaxHitpoints() {
@@ -340,8 +386,10 @@ public class NPC extends Entity implements Serializable {
         }
         if (getId() == 7891) {
             setName("Dummy");
-
-
+            setRandomWalk(0);
+        }
+        if (getId() == 960) {
+            setName("Healer");
             setRandomWalk(0);
         }
         if (getId() == 4474) {
@@ -532,20 +580,21 @@ public class NPC extends Entity implements Serializable {
         return combat;
     }
 
+
     @Override
     public void sendDeath(final Entity source) {
-        final NPCCombatDefinitions defs = getCombatDefinitions();
+        final NpcCombatDefinition defs = getCombatDefinitions();
         resetWalkSteps();
         combat.removeTarget();
         source.setAttackedByDelay(0);
-        setBonuses();
-        animate(defs.getDeathEmote());
+        animate(defs.getDeathAnim());
+        playSound(defs.getDeathSound(), 1);
         WorldTasksManager.schedule(new WorldTask() {
             int loop;
 
             @Override
             public void run() {
-                if (loop >= defs.getDeathDelay()) {
+                if (loop >= defs.getDeathDelay() - 3) {
                     drop();
                     reset();
                     setLocation(respawnTile);
@@ -989,7 +1038,7 @@ public class NPC extends Entity implements Serializable {
     public ArrayList<Entity> getPossibleTargets(boolean checkNPCs, boolean checkPlayers) {
         int size = getSize();
         ArrayList<Entity> possibleTarget = new ArrayList<Entity>();
-        int attackStyle = getCombatDefinitions().getAttackStyle();
+        AttackStyle attackStyle = getCombatDefinitions().getAttackStyle();
         for (int regionId : getMapRegionsIds()) {
             if (checkPlayers) {
                 List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
@@ -1002,19 +1051,17 @@ public class NPC extends Entity implements Serializable {
                                 player.getSize(),
                                 forceAgressiveDistance != 0 ? forceAgressiveDistance
                                         : isNoDistanceCheck() ? 64
+                                        : this instanceof WorldBossNPC ? 16
                                         : player.getControlerManager()
                                         .getControler() instanceof DungeonControler
                                         ? 12
-                                        : (attackStyle == NPCCombatDefinitions.MELEE
-                                        || attackStyle == NPCCombatDefinitions.SPECIAL2)
-                                        ? getSize()
-                                        : 8)
+                                        : getCombatDefinitions().getAggroDistance())
                                 || (!forceMultiAttacked && (!isAtMultiArea() || !player.isAtMultiArea())
                                 && (player.getAttackedBy() != this
                                 && (player.getAttackedByDelay() > Utils.currentTimeMillis())))
                                 || !clipedProjectile(player,
-                                (attackStyle == NPCCombatDefinitions.RANGE
-                                        || attackStyle == NPCCombatDefinitions.MAGE ? false : true))
+                                (attackStyle != AttackStyle.RANGE
+                                        && attackStyle != AttackStyle.MAGIC))
                                 || !getDefinitions().hasAttackOption()
                                 || (!forceAgressive && !WildernessControler.isAtWild(this)
                                 && player.getSkills().getCombatLevelWithSummoning() >= getCombatLevel() * 2)) {
@@ -1059,8 +1106,8 @@ public class NPC extends Entity implements Serializable {
         if (!possibleTarget.isEmpty()) {
             Entity target = possibleTarget.get(Utils.random(possibleTarget.size()));
             if (!forceAgressive) {
-                NPCCombatDefinitions defs = getCombatDefinitions();
-                if (defs.getAgressivenessType() == NPCCombatDefinitions.PASSIVE
+                NpcCombatDefinition defs = getCombatDefinitions();
+                if (defs.getAggressivenessType() == AggressivenessType.PASSIVE
                         && !WildernessControler.isAtWild(target))
                     return false;
             }
@@ -1120,6 +1167,7 @@ public class NPC extends Entity implements Serializable {
     public void setForceAgressive(boolean forceAgressive) {
         this.forceAgressive = forceAgressive;
     }
+
 
     public int getForceTargetDistance() {
         return forceTargetDistance;
@@ -1276,11 +1324,14 @@ public class NPC extends Entity implements Serializable {
         return combatData.attackSpeedTicks;
     }
     public int getMaxHit() {
+        if (combatData == null) {
+            getCombatDefinitions().getMaxHit();
+        }
         return combatData.maxHit.getMaxhit() * 10;
     }
 
     public int getAttackAnimation() {
-        return getCombatDefinitions().getAttackEmote();
+        return getCombatDefinitions().getAttackAnim();
     }
 
     public int getProjectileId() {

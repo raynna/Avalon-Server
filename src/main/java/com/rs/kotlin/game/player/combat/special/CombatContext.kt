@@ -9,6 +9,7 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.range.RangedAmmo
+import kotlin.math.max
 
 data class CombatContext(
     val attacker: Player,
@@ -277,6 +278,24 @@ fun CombatContext.getDragonClawsHits(swings: Int = 4): List<Hit> {
     return hits
 }
 
+fun Entity.withinDistanceOf(other: Entity, distance: Int): Boolean {
+    val thisCenterX = this.x + this.size / 2.0
+    val thisCenterY = this.y + this.size / 2.0
+    val otherCenterX = other.x + other.size / 2.0
+    val otherCenterY = other.y + other.size / 2.0
+
+    val dx = thisCenterX - otherCenterX
+    val dy = thisCenterY - otherCenterY
+
+    val effectiveDist = max(
+        kotlin.math.abs(dx) - (this.size + other.size) / 2.0,
+        kotlin.math.abs(dy) - (this.size + other.size) / 2.0
+    )
+
+    val result = effectiveDist <= distance
+    return result
+}
+
 fun CombatContext.getMultiAttackTargets(
     maxDistance: Int,
     maxTargets: Int
@@ -284,12 +303,19 @@ fun CombatContext.getMultiAttackTargets(
     val possibleTargets = mutableListOf<Entity>()
     val attacker = this.attacker
     val target = this.defender
+    if (target is NPC)
+        println("[DEBUG] MultiAttack: attacker=${attacker.displayName}, target=${target.id}, maxDist=$maxDistance, maxTargets=$maxTargets")
 
     possibleTargets.add(target)
-
-    if (!target.isAtMultiArea) return possibleTargets
+    target.checkMultiArea()
+    if (!target.isAtMultiArea && !target.isForceMultiArea) {
+        println("[DEBUG] Target is not in multi area, returning single target.")
+        return possibleTargets
+    }
 
     val regions = target.mapRegionsIds
+    if (target is NPC)
+        println("[DEBUG] Regions around target=${target.id} -> $regions")
 
     regionLoop@ for (regionId in regions) {
         val region = World.getRegion(regionId) ?: continue
@@ -299,20 +325,24 @@ fun CombatContext.getMultiAttackTargets(
                 val playerIndexes = region.playerIndexes ?: continue
                 for (playerIndex in playerIndexes) {
                     val p2 = World.getPlayers().get(playerIndex) ?: continue
-                    if (
-                        p2 == attacker ||
-                        p2 == target ||
-                        p2.isDead ||
-                        !p2.hasStarted() ||
-                        p2.hasFinished() ||
-                        !p2.canPvp ||
-                        !p2.isAtMultiArea ||
-                        !p2.withinDistance(target, maxDistance) ||
-                        !attacker.controlerManager.canHit(p2) ||
-                        possibleTargets.size >= maxTargets
-                    ) continue
-                    possibleTargets.add(p2)
-                    if (possibleTargets.size >= maxTargets) break@regionLoop
+                    when {
+                        p2 == attacker -> println("[DEBUG] Reject: same as attacker")
+                        p2 == target -> println("[DEBUG] Reject: same as main target")
+                        p2.isDead -> println("[DEBUG] Reject: player dead")
+                        !p2.hasStarted() -> println("[DEBUG] Reject: player not started")
+                        p2.hasFinished() -> println("[DEBUG] Reject: player finished")
+                        !p2.canPvp -> println("[DEBUG] Reject: cannot pvp")
+                        !p2.isAtMultiArea -> println("[DEBUG] Reject: not in multi area")
+                        !p2.withinDistanceOf(target, maxDistance) -> println("[DEBUG] Reject: too far from target")
+                        !attacker.controlerManager.canHit(p2) -> println("[DEBUG] Reject: cannot hit")
+                        possibleTargets.size >= maxTargets -> {
+                            println("[DEBUG] Reject: already at maxTargets")
+                            break@regionLoop
+                        }
+                        else -> {
+                            possibleTargets.add(p2)
+                        }
+                    }
                 }
             }
 
@@ -320,45 +350,38 @@ fun CombatContext.getMultiAttackTargets(
                 val npcIndexes = region.npCsIndexes ?: continue
                 for (npcIndex in npcIndexes) {
                     val n = World.getNPCByIndex(npcIndex) ?: continue
-                    if (n == target) {
-                        continue
+                    println("[DEBUG] Checking candidate npc=${n.id} near target=${target.id}")
+                    when {
+                        n == target -> println("[DEBUG] Reject: same as main target")
+                        n == attacker.familiar -> println("[DEBUG] Reject: is familiar")
+                        n.isDead -> println("[DEBUG] Reject: npc dead")
+                        n.hasFinished() -> println("[DEBUG] Reject: npc finished")
+                        !n.isAtMultiArea && !n.isForceMultiAttacked -> println("[DEBUG] Reject: not in multi area")
+                        !n.withinDistanceOf(target, maxDistance) -> println("[DEBUG] Reject: too far from target")
+                        !n.definitions.hasAttackOption() -> println("[DEBUG] Reject: no attack option")
+                        !attacker.controlerManager.canHit(n) -> println("[DEBUG] Reject: cannot hit")
+                        possibleTargets.size >= maxTargets -> {
+                            println("[DEBUG] Reject: already at maxTargets")
+                            break@regionLoop
+                        }
+                        else -> {
+                            println("[DEBUG] ACCEPT npc=${n.id}")
+                            possibleTargets.add(n)
+                        }
                     }
-                    if (n == attacker.familiar) {
-                        continue
-                    }
-                    if (n.isDead) {
-                        continue
-                    }
-                    if (n.hasFinished()) {
-                        continue
-                    }
-                    if (!n.isAtMultiArea) {
-                        continue
-                    }
-                    if (!n.withinDistance(target, maxDistance)) {
-                        continue
-                    }
-                    if (!n.definitions.hasAttackOption()) {
-                        continue
-                    }
-                    if (!attacker.controlerManager.canHit(n)) {
-                        continue
-                    }
-                    if (possibleTargets.size >= maxTargets) {
-                        break@regionLoop
-                    }
-                    possibleTargets.add(n)
-                    if (possibleTargets.size >= maxTargets) break@regionLoop
                 }
             }
 
             else -> {
+                println("[DEBUG] Target type not handled: ${target::class.simpleName}")
                 break@regionLoop
             }
         }
     }
+
     return possibleTargets
 }
+
 
 
 class SpecialHitBuilder(private val context: CombatContext) {

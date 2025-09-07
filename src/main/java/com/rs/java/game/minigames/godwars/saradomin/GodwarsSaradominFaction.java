@@ -7,13 +7,13 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.controlers.Controler;
 import com.rs.java.game.player.controlers.GodWars;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 @SuppressWarnings("serial")
 public class GodwarsSaradominFaction extends NPC {
@@ -73,7 +73,7 @@ public class GodwarsSaradominFaction extends NPC {
 	}
 
 	public void sendDeath(final Entity source) {
-		final NPCCombatDefinitions defs = getCombatDefinitions();
+		final NpcCombatDefinition defs = getCombatDefinitions();
 		resetWalkSteps();
 		getCombat().removeTarget();
 		animate(-1);
@@ -83,7 +83,7 @@ public class GodwarsSaradominFaction extends NPC {
 			@Override
 			public void run() {
 				if (loop == 0) {
-					animate(new Animation(defs.getDeathEmote()));
+					animate(new Animation(defs.getDeathAnim()));
 				} else if (loop >= defs.getDeathDelay()) {
 					if (source instanceof Player) {
 						Player player = (Player) source;

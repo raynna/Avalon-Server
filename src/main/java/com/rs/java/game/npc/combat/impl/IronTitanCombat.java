@@ -6,11 +6,13 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class IronTitanCombat extends CombatScript {
 
@@ -21,7 +23,7 @@ public class IronTitanCombat extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int distanceX = target.getX() - npc.getX();
 		int distanceY = target.getY() - npc.getY();
 		boolean distant = false;
@@ -38,11 +40,11 @@ public class IronTitanCombat extends CombatScript {
 			if (distant) {// Mage Hit & Magic Xp
 				for (Integer appliedDamage : damages) {
 					if (target instanceof Player) {
-						appliedDamage = getRandomMaxHit(npc,
+						appliedDamage = NpcCombatCalculations.getRandomMaxHit(npc,
 								230,
-								NPCCombatDefinitions.MAGE, target);
+								NpcAttackStyle.MAGIC, target);
 					} else {
-						appliedDamage = getRandomMaxHit(npc, 230, NPCCombatDefinitions.MAGE, target);
+						appliedDamage = NpcCombatCalculations.getRandomMaxHit(npc, 230, NpcAttackStyle.MAGIC, target);
 					}
 					delayHit(npc, target, 2, getMagicHit(npc, appliedDamage));
 					long familiarDelay = 3000;
@@ -52,11 +54,11 @@ public class IronTitanCombat extends CombatScript {
 			} else {// Melee Hit & Defence Xp
 				for (Integer appliedDamage : damages) {
 					if (target instanceof Player) {
-						appliedDamage = getRandomMaxHit(npc,
+						appliedDamage = NpcCombatCalculations.getRandomMaxHit(npc,
 								230,
-								NPCCombatDefinitions.MELEE, target);
+								NpcAttackStyle.CRUSH, target);
 					} else {
-						appliedDamage = getRandomMaxHit(npc, 230, NPCCombatDefinitions.MELEE, target);
+						appliedDamage = NpcCombatCalculations.getRandomMaxHit(npc, 230, NpcAttackStyle.CRUSH, target);
 					}
 					delayHit(npc, target, 2, getMeleeHit(npc, appliedDamage));
 					long familiarDelay = 3000;
@@ -66,20 +68,20 @@ public class IronTitanCombat extends CombatScript {
 			}
 		} else {
 			if (distant) {
-				damage = getRandomMaxHit(npc, 255, NPCCombatDefinitions.MAGE, target);
+				damage = NpcCombatCalculations.getRandomMaxHit(npc, 255, NpcAttackStyle.MAGIC, target);
 				npc.animate(new Animation(7694));
 				World.sendSlowBowProjectile(npc, target, 1452);
 				delayHit(npc, target, Utils.getDistance(npc, target) > 3 ? 3 : 2, getMagicHit(npc, damage));
 				familiar.getOwner().getSkills().addXp(Skills.MAGIC, damage / 3);
 			} else {// melee
-				damage = getRandomMaxHit(npc, 244, NPCCombatDefinitions.MELEE, target);
+				damage = NpcCombatCalculations.getRandomMaxHit(npc, 244, NpcAttackStyle.CRUSH, target);
 				npc.animate(new Animation(7946));
 				npc.gfx(new Graphics(1447));
 				delayHit(npc, target, 1, getMeleeHit(npc, damage));
 				familiar.getOwner().getSkills().addXp(Skills.DEFENCE, damage / 3);
 			}
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 }

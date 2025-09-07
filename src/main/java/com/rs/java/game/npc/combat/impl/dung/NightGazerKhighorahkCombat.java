@@ -13,7 +13,6 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.NightGazerKhighorahk;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
@@ -35,7 +34,7 @@ public class NightGazerKhighorahkCombat extends CombatScript {
 		gazer.animate(new Animation(13425));
 		for (Entity target : gazer.getPossibleTargets()) {
 			World.sendElementalProjectile(gazer, target, 2385);
-			delayHit(gazer, target, 1, getRangeHit(gazer, getRandomMaxHit(gazer, (int) (gazer.getMaxHit() * 0.6), NPCCombatDefinitions.RANGE, target)));
+			delayHit(gazer, target, 1, gazer.rangedHit(gazer, (int) (gazer.getMaxHit() * 0.6)));
 		}
 
 		if (!gazer.isSecondStage()) {
@@ -143,13 +142,13 @@ public class NightGazerKhighorahkCombat extends CombatScript {
 			if (Utils.random(3) == 0) { //range single target
 				npc.animate(new Animation(gazer.isSecondStage() ? 13433 : 13434));
 				World.sendElementalProjectile(npc, target, 2385);
-				delayHit(npc, target, 3, getRangeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
+				delayHit(npc, target, 3, npc.rangedHit(npc, npc.getMaxHit()));
 				return npc.getAttackSpeed() + 1;
 			} else { //magic
 				npc.animate(new Animation(gazer.isSecondStage() ? 13430 : 13431));
 				World.sendElementalProjectile(npc, target, 2385);
 				target.gfx(new Graphics(2386, 70, 100));
-				delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+				delayHit(npc, target, 1, npc.magicHit(npc, npc.getMaxHit()));
 				return npc.getAttackSpeed();
 			}
 		}

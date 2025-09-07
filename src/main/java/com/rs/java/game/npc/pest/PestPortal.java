@@ -5,10 +5,10 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.minigames.pest.PestControl;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 @SuppressWarnings("serial")
 public class PestPortal extends NPC {
@@ -90,7 +90,7 @@ public class PestPortal extends NPC {
 
 	@Override
 	public void sendDeath(Entity source) {
-		final NPCCombatDefinitions defs = getCombatDefinitions();
+		final NpcCombatDefinition defs = getCombatDefinitions();
 		resetWalkSteps();
 		animate(-1);
 		WorldTasksManager.schedule(new WorldTask() {
@@ -99,7 +99,7 @@ public class PestPortal extends NPC {
 			@Override
 			public void run() {
 				if (loop == 0) {
-					animate(new Animation(defs.getDeathEmote()));
+					animate(new Animation(defs.getDeathAnim()));
 				} else if (loop >= defs.getDeathDelay()) {
 					if (getIndexForId() != 4) {
 						control.unlockPortal();

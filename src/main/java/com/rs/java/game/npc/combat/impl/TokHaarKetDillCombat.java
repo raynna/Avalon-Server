@@ -5,9 +5,12 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+
+import static com.rs.java.game.npc.combat.NpcCombatCalculations.getRandomMaxHit;
 
 public class TokHaarKetDillCombat extends CombatScript {
 
@@ -18,7 +21,7 @@ public class TokHaarKetDillCombat extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		NpcCombatDefinition defs = npc.getCombatDefinitions();
 		if (Utils.random(6) == 0) {
 			delayHit(npc, target, 0, getRegularHit(npc, Utils.random(defs.getMaxHit() + 1)));
 			target.gfx(new Graphics(2999));
@@ -28,9 +31,9 @@ public class TokHaarKetDillCombat extends CombatScript {
 			}
 		} else {
 			delayHit(npc, target, 0,
-                    getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), defs.getAttackStyle(), target)));
+                    getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)));
 		}
-		npc.animate(new Animation(defs.getAttackEmote()));
-		return defs.getAttackDelay();
+		npc.animate(new Animation(defs.getAttackAnim()));
+		return npc.getAttackSpeed();
 	}
 }

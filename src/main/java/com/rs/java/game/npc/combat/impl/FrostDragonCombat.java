@@ -5,11 +5,11 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -29,7 +29,7 @@ public class FrostDragonCombat extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		final Player player = target instanceof Player ? (Player) target : null;
 
 		int attackType = Utils.getRandom(3);
@@ -42,13 +42,13 @@ public class FrostDragonCombat extends CombatScript {
 					);
 					npc.animate(new Animation(Utils.roll(1, 2) ? DRAGON_SLAM_ANIMATION : DRAGON_HEADBUTT_ANIMATION));
 					delayHit(npc, target, 0, getMeleeHit(npc, damage));
-					return defs.getAttackDelay();
+					return npc.getAttackSpeed();
 				}
 			case 1: // Dragon breath / frost breath
 				if (!(target instanceof Player p)) break;
 
 				int rawDamage = Utils.getRandom(650);
-				int mitigated = DragonFire.applyDragonfireMitigation(p, rawDamage);
+				int mitigated = DragonFire.applyDragonfireMitigation(p, rawDamage, true);
 				npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION)); // dragon breath animation
 				ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, DRAGONFIRE_NORMAL_PROJECTILE, npc, target);
 				delayHit(npc, target, Utils.getDistance(npc, target) > 2 ? 2 : 1, getRegularHit(npc, mitigated));
@@ -68,6 +68,6 @@ public class FrostDragonCombat extends CombatScript {
 				break;
 		}
 
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 }

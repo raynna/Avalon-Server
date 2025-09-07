@@ -7,7 +7,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.nomad.FlameVortex;
 import com.rs.java.game.npc.nomad.Nomad;
 import com.rs.java.game.player.Player;
@@ -15,6 +15,8 @@ import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class NomadCombat extends CombatScript {
 
@@ -32,7 +34,7 @@ public class NomadCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		final Nomad nomad = (Nomad) npc;
 		if (target instanceof Player) {
 			if (!nomad.isMeleeMode() && nomad.getHitpoints() < nomad.getMaxHitpoints() * 0.25) {
@@ -50,7 +52,7 @@ public class NomadCombat extends CombatScript {
 							Dialogue.closeNoContinueDialogue(player);
 						}
 					}, 9);
-					return defs.getAttackDelay();
+					return npc.getAttackSpeed();
 				} else {
 					nomad.setMeleeMode();
 					final Player player = (Player) target;
@@ -72,7 +74,7 @@ public class NomadCombat extends CombatScript {
 			if (distanceX > size || distanceX < -1 || distanceY > size || distanceY < -1)
 				return 0;
 			npc.animate(new Animation(12696));
-			delayHit(npc, target, 0, getRegularHit(npc, getRandomMaxHit(npc, 322, NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, getRegularHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 322, NpcAttackStyle.CRUSH, target)));
 			return 2;
 		} else {
 			if (target instanceof Player && nomad.useSpecialSpecialMove()) {
@@ -225,7 +227,7 @@ public class NomadCombat extends CombatScript {
 				}
 			} else {
 				npc.animate(new Animation(12697));
-				int damage = getRandomMaxHit(npc, 322, NPCCombatDefinitions.MAGE, target);
+				int damage = NpcCombatCalculations.getRandomMaxHit(npc, 322, NpcAttackStyle.MAGIC, target);
 				delayHit(npc, target, 2, getRegularHit(npc, damage));
 				if (damage == 0) {
 					WorldTasksManager.schedule(new WorldTask() {
@@ -239,7 +241,7 @@ public class NomadCombat extends CombatScript {
 			}
 		}
 
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 }

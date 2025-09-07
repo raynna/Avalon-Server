@@ -5,8 +5,11 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+
+import static com.rs.java.game.npc.combat.NpcCombatCalculations.getRandomMaxHit;
 
 public class Waterfiend extends CombatScript {
 
@@ -18,20 +21,20 @@ public class Waterfiend extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int attackStyle = Utils.random(2);
 		if (attackStyle == 0) { // Range
-			npc.animate(new Animation(defs.getAttackEmote()));
+			npc.animate(new Animation(defs.getAttackAnim()));
 			World.sendFastBowProjectile(npc, target, 12);
 			delayHit(npc, target, 1,
-                    getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
-			return defs.getAttackDelay();
+                    getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.RANGED, target)));
+			return npc.getAttackSpeed();
 		} else {//Magic
-			npc.animate(new Animation(defs.getAttackEmote()));
+			npc.animate(new Animation(defs.getAttackAnim()));
 			World.sendFastBowProjectile(npc, target, 2706);
 			delayHit(npc, target, 1,
-                    getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
-			return defs.getAttackDelay();
+                    getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, target)));
+			return npc.getAttackSpeed();
 		}
 	}
 }

@@ -20,7 +20,9 @@ import com.rs.java.game.item.ground.AutomaticGroundItem;
 import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.npc.NpcPluginLoader;
 import com.rs.java.game.npc.combat.CombatScriptsHandler;
+import com.rs.json.JsonNpcCombatDefinitions;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.data.npc.JsonNpcSpawns;
 import com.rs.kotlin.game.npc.worldboss.RandomWorldBossHandler;
 import com.rs.kotlin.game.npc.drops.DropTablesSetup;
 import com.rs.java.game.objects.GlobalObjectAddition;
@@ -52,10 +54,7 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.MapArchiveKeys;
 import com.rs.java.utils.MapAreas;
 import com.rs.java.utils.MusicHints;
-import com.rs.java.utils.NPCBonuses;
-import com.rs.java.utils.NPCCombatDefinitionsL;
 import com.rs.java.utils.NPCExamines;
-import com.rs.java.utils.NPCSpawns;
 import com.rs.java.utils.ObjectSpawns;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.WeaponTypesLoader;
@@ -92,9 +91,6 @@ public final class Launcher {
 		MapAreas.init();
 		IPBanL.init();
 		ObjectSpawns.init();
-		NPCSpawns.init();
-		NPCCombatDefinitionsL.init();
-		NPCBonuses.init();
 		ItemExamines.init();
 		ItemBonuses.init();
 		MusicHints.init();
@@ -133,6 +129,8 @@ public final class Launcher {
 		CommandRegistry.registerCommands();
 		ShopInitializer.initializeShops();
 		RandomWorldBossHandler.start();
+		JsonNpcCombatDefinitions.INSTANCE.init();
+		JsonNpcSpawns.INSTANCE.init();
 		try {
 			ServerChannelHandler.init();
 		} catch (Throwable e) {

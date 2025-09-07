@@ -5,11 +5,11 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -35,7 +35,7 @@ public class MetalDragonCombat extends CombatScript {
 				performDragonfireAttack(npc, target);
 			}
 		}
-		return npc.getCombatDefinitions().getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 	private boolean isWithinMeleeRange(NPC npc, Entity target) {
@@ -46,7 +46,7 @@ public class MetalDragonCombat extends CombatScript {
 	}
 
 	private void performMeleeAttack(NPC npc, Entity target) {
-		NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		NpcCombatDefinition defs = npc.getCombatDefinitions();
 		npc.animate(new Animation(Utils.roll(1, 2) ? DRAGON_SLAM_ANIMATION : DRAGON_HEADBUTT_ANIMATION));
 		int damage = NpcCombatCalculations.getRandomMaxHit(
 				npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target
@@ -63,7 +63,7 @@ public class MetalDragonCombat extends CombatScript {
 		npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
 		ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, DRAGONFIRE_NORMAL_PROJECTILE, npc, target);
 
-		int mitigated = DragonFire.applyDragonfireMitigation(player, rawDamage);
+		int mitigated = DragonFire.applyDragonfireMitigation(player, rawDamage, false);
 		delayHit(npc, player, Utils.getDistance(player, npc) > 2 ? 2 : 1, getRegularHit(npc, mitigated));
 
 		DragonFire.handleDragonfireShield(player);

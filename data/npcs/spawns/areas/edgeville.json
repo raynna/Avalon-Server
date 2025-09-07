@@ -1,0 +1,62 @@
+[
+  {
+    "dir": "NORTH",
+    "tile": {
+      "plane": 0,
+      "x": 3097,
+      "y": 3494
+    },
+    "comment": "Grand Exchange clerk",
+    "npcId": 2241
+  },
+  {
+    "dir": "EAST",
+    "tile": {
+      "plane": 0,
+      "x": 3091,
+      "y": 3493
+    },
+    "comment": "Combat Shops",
+    "npcId": 650
+  },
+  {
+    "dir": "SOUTH",
+    "tile": {
+      "plane": 0,
+      "x": 3094,
+      "y": 3499
+    },
+    "comment": "Healer",
+    "npcId": 960
+  },
+  {
+    "dir": "NORTH",
+    "tile": {
+      "plane": 0,
+      "x": 3098,
+      "y": 3495
+    },
+    "comment": "Customise Character",
+    "npcId": 2676
+  },
+  {
+    "dir": "NORTH",
+    "tile": {
+      "plane": 0,
+      "x": 3094,
+      "y": 3488
+    },
+    "comment": "Maxhit Dummy",
+    "npcId": 4474
+  },
+  {
+    "dir": "NORTH",
+    "tile": {
+      "plane": 0,
+      "x": 3092,
+      "y": 3488
+    },
+    "comment": "Dummy",
+    "npcId": 7891
+  }
+]

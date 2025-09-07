@@ -12,9 +12,7 @@ import java.util.concurrent.TimeUnit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.rs.Settings;
-import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.NPCDefinitions;
-import com.rs.core.cache.defintions.ObjectDefinitions;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.Animation;
 import com.rs.java.game.ForceTalk;
@@ -26,13 +24,13 @@ import com.rs.java.game.minigames.pest.CommendationExchange;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.NpcPlugin;
 import com.rs.java.game.npc.NpcPluginLoader;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.npc.others.LivingRock;
 import com.rs.java.game.npc.pet.Pet;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.RouteEvent;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.actions.PlayerFollow;
 import com.rs.java.game.player.actions.Rest;
 import com.rs.java.game.player.actions.combat.Magic;
@@ -58,9 +56,9 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.InputStream;
 import com.rs.java.utils.Logger;
-import com.rs.java.utils.NPCSpawns;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.player.command.CommandRegistry;
 import com.rs.kotlin.tool.WikiApi;
 
@@ -85,17 +83,6 @@ public class NPCHandler {
                 player.getPackets().sendGameMessage("%s is dead.", npc.getName());
         } else {
             player.getPackets().sendGameMessage("It's " + player.grammar(npc) + " " + npc.getName() + ".");
-        }
-        if (player.dropTesting) {
-            try {
-                if (NPCSpawns.removeSpawn(npc)) {
-                    player.getPackets().sendGameMessage("Removed spawn!");
-                    return;
-                }
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-            player.getPackets().sendGameMessage("Failed removing spawn!");
         }
         if (player.isDeveloperMode()) {
             NPCDefinitions.loadAll();
@@ -310,7 +297,6 @@ public class NPCHandler {
     }
 
 
-
     private static void dumpScripts(int npcId) throws IOException {
         NPCDefinitions def = NPCDefinitions.getNPCDefinitions(npcId);
         Map<Integer, Object> dumpMap = new HashMap<>();
@@ -389,10 +375,10 @@ public class NPCHandler {
             return;
         }
         if (npc.getId() == 8091) {
-			player.getDialogueManager().startDialogue("StarSprite");
+            player.getDialogueManager().startDialogue("StarSprite");
         }
         if (npc.getId() == 11460) {
-			player.getDialogueManager().startDialogue("RichardManeyMembershipD");
+            player.getDialogueManager().startDialogue("RichardManeyMembershipD");
         }
         if (npc.getId() == 733) {
             npc.resetWalkSteps();
@@ -426,7 +412,7 @@ public class NPCHandler {
         }
         if (player.getControlerManager().getControler() instanceof Falconry) {
             player.getControlerManager().getControler().processNPCClick1(npc);
-        	return;   
+            return;
         }
         if (SiphonActionCreatures.siphon(player, npc))
             return;
@@ -525,7 +511,7 @@ public class NPCHandler {
                 else if (npc.getName().contains("Gem trader"))
                     ShopsHandler.openShop(player, 4);
                 else if (npc.getId() == 6654)
-					player.getDialogueManager().startDialogue("SuakD");
+                    player.getDialogueManager().startDialogue("SuakD");
                 else if (npc.getName().contains("Dommik"))
                     ShopsHandler.openShop(player, 5);
                 else if (npc.getId() == 524 || npc.getId() == 525)
@@ -597,10 +583,9 @@ public class NPCHandler {
                 else if (npc.getId() == 11547)
                     ShopsHandler.openShop(player, 40);
                 if (npc.getId() == 15231) {
-                	player.getDialogueManager().startDialogue("ArtisanWorskshopEnterD");
-                	return;
-                }
-                else if (npc.getId() == 747) {
+                    player.getDialogueManager().startDialogue("ArtisanWorskshopEnterD");
+                    return;
+                } else if (npc.getId() == 747) {
                     player.getDialogueManager().startDialogue("Oziach", npc.getId());
                     npc.faceEntity(player);
                     return;
@@ -682,13 +667,13 @@ public class NPCHandler {
                     npc.faceEntity(player);
                     return;
                 } else if (npc.getId() == 9462 && player.getAttackedByDelay() < Utils.currentTimeMillis()) {
-                    NPCCombatDefinitions defs = npc.getCombatDefinitions();
+                    NpcCombatDefinition defs = npc.getCombatDefinitions();
                     player.animate(new Animation(4278));
                     WorldTasksManager.schedule(new WorldTask() {
                         @Override
                         public void run() {
                             npc.transformIntoNPC(npc.getId() + 1);
-                            npc.getCombat().addCombatDelay(defs.getAttackEmote());
+                            npc.getCombat().addCombatDelay(defs.getAttackAnim());
                             npc.getCombat().setTarget(player);
                             npc.setAttackedByDelay(4000);
                             npc.animate(new Animation(12795));
@@ -696,13 +681,13 @@ public class NPCHandler {
                     }, 1);
                     return;
                 } else if (npc.getId() == 9464 && player.getAttackedByDelay() < Utils.currentTimeMillis()) {
-                    NPCCombatDefinitions defs = npc.getCombatDefinitions();
+                    NpcCombatDefinition defs = npc.getCombatDefinitions();
                     player.animate(new Animation(4278));
                     WorldTasksManager.schedule(new WorldTask() {
                         @Override
                         public void run() {
                             npc.transformIntoNPC(npc.getId() + 1);
-                            npc.getCombat().addCombatDelay(defs.getAttackEmote());
+                            npc.getCombat().addCombatDelay(defs.getAttackAnim());
                             npc.getCombat().setTarget(player);
                             npc.setAttackedByDelay(4000);
                             npc.animate(new Animation(12795));
@@ -710,13 +695,13 @@ public class NPCHandler {
                     }, 1);
                     return;
                 } else if (npc.getId() == 9466 && player.getAttackedByDelay() < Utils.currentTimeMillis()) {
-                    NPCCombatDefinitions defs = npc.getCombatDefinitions();
+                    NpcCombatDefinition defs = npc.getCombatDefinitions();
                     player.animate(new Animation(4278));
                     WorldTasksManager.schedule(new WorldTask() {
                         @Override
                         public void run() {
                             npc.transformIntoNPC(npc.getId() + 1);
-                            npc.getCombat().addCombatDelay(defs.getAttackEmote());
+                            npc.getCombat().addCombatDelay(defs.getAttackAnim());
                             npc.getCombat().setTarget(player);
                             npc.setAttackedByDelay(4000);
                             npc.animate(new Animation(12795));
@@ -729,6 +714,10 @@ public class NPCHandler {
                 else if (npc.getId() == 2824) {
                     player.getDialogueManager().startDialogue("LeatherTanning", npc.getId());
                 } else if (npc.getId() == 961 || npc.getId() == 960) {
+                    if (player.getTickManager().isActive(TickManager.TickKeys.LAST_ATTACKED_TICK)) {
+                        player.message("The nurse cannot heal you in combat.");
+                        return;
+                    }
                     player.getPrayer().restorePrayer(player.getSkills().getLevelForXp(Skills.PRAYER) * 10);
                     if (player.getPoison().isPoisoned())
                         player.getPoison().reset();
@@ -987,6 +976,10 @@ public class NPCHandler {
                 else if (SlayerMaster.startInteractionForId(player, npc.getId(), 2))
                     return;
                 else if (npc.getId() == 961 || npc.getId() == 960) {
+                    if (player.getTickManager().isActive(TickManager.TickKeys.LAST_ATTACKED_TICK)) {
+                        player.message("The nurse cannot heal you in combat.");
+                        return;
+                    }
                     player.getPrayer().restorePrayer(player.getSkills().getLevelForXp(Skills.PRAYER) * 10);
                     if (player.getPoison().isPoisoned())
                         player.getPoison().reset();

@@ -7,11 +7,13 @@ import com.rs.java.game.World;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.prayer.AncientPrayer;
 import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class MithrilDragonCombat extends CombatScript {
 
@@ -28,7 +30,7 @@ public class MithrilDragonCombat extends CombatScript {
 	 */
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int damage = 0;
 		boolean withinMeleeDist = npc.withinDistance(target, 2);
 
@@ -40,7 +42,7 @@ public class MithrilDragonCombat extends CombatScript {
 			case 2:// Melee
 				npc.animate(new Animation(14247));
 				delayHit(npc, target, 0,
-                        getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+                        getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)));
 				break;
 			case 3:// Close range dragonfire ratio is about 1:5
 				damage = Utils.getRandom(650);
@@ -104,7 +106,7 @@ public class MithrilDragonCombat extends CombatScript {
 				delayHit(npc, target, 1, getMagicHit(npc, damage));
 				break;
 			}
-			return defs.getAttackDelay();
+			return npc.getAttackSpeed();
 
 		} else {
 
@@ -182,7 +184,7 @@ public class MithrilDragonCombat extends CombatScript {
 				delayHit(npc, target, 1, getRangeHit(npc, damage));
 				break;
 			}
-			return defs.getAttackDelay();
+			return npc.getAttackSpeed();
 		}
 
 	}

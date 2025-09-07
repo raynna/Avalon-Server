@@ -7,10 +7,11 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+import com.rs.kotlin.game.npc.worldboss.WorldBossNPC;
 
 public class CommanderZilyanaCombat extends CombatScript {
 
@@ -21,7 +22,7 @@ public class CommanderZilyanaCombat extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		NpcCombatDefinition defs = npc.getCombatDefinitions();
 
 		maybeShout(npc);
 
@@ -66,14 +67,10 @@ public class CommanderZilyanaCombat extends CombatScript {
 		npc.animate(new Animation(6967));
 
 		for (Entity t : npc.getPossibleTargets()) {
-			if (!t.withinDistance(npc, 3)) {
+			if (!t.withinDistance(npc, npc instanceof WorldBossNPC ? 16 : 3)) {
 				continue;
 			}
-
-			Hit magicHit = getMagicHit(npc,
-					NpcCombatCalculations.getRandomMaxHit(npc, 300, NpcAttackStyle.MAGIC, t)
-			);
-
+			Hit magicHit = npc.magicHit(npc, 300);
 			if (magicHit.getDamage() > 0) {
 				delayHit(npc, t, 1, magicHit);
 				t.gfx(new Graphics(1194));
@@ -84,13 +81,10 @@ public class CommanderZilyanaCombat extends CombatScript {
 	// --------------------------
 	// Melee attack
 	// --------------------------
-	private void performMeleeAttack(NPC npc, Entity target, NPCCombatDefinitions defs) {
-		npc.animate(new Animation(defs.getAttackEmote()));
+	private void performMeleeAttack(NPC npc, Entity target, NpcCombatDefinition defs) {
+		npc.animate(new Animation(defs.getAttackAnim()));
 
-		Hit meleeHit = getMeleeHit(npc,
-				NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.SLASH, target)
-		);
-
+		Hit meleeHit = npc.meleeHit(npc, defs.getMaxHit(), NpcAttackStyle.SLASH);
 		delayHit(npc, target, 0, meleeHit);
 	}
 }

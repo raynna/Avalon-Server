@@ -7,13 +7,13 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.prayer.AncientPrayer;
 import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -26,7 +26,7 @@ public class KrilTsutsaroth extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		NpcCombatDefinition defs = npc.getCombatDefinitions();
 
 		maybeShout(npc);
 
@@ -90,7 +90,7 @@ public class KrilTsutsaroth extends CombatScript {
 	// --------------------------
 	// Melee attacks
 	// --------------------------
-	private void performMeleeAttack(NPC npc, Entity target, NPCCombatDefinitions defs, boolean smiteStyle) {
+	private void performMeleeAttack(NPC npc, Entity target, NpcCombatDefinition defs, boolean smiteStyle) {
 		int damage = 463;
 		int anim = 14963;
 

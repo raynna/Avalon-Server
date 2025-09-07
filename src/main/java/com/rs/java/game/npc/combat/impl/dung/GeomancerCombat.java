@@ -1,13 +1,8 @@
 package com.rs.java.game.npc.combat.impl.dung;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldTile;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.HobgoblinGeomancer;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
@@ -52,7 +47,7 @@ public class GeomancerCombat extends CombatScript {
 				sendEarthBlast(npc, target, true);
 			else {
 				npc.animate(new Animation(12989));
-				delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+				delayHit(npc, target, 0, getMeleeHit(npc, npc.getMaxHit()));
 			}
 			break;
 		case 1://EARTH BLAST
@@ -82,7 +77,7 @@ public class GeomancerCombat extends CombatScript {
 				continue;
 			t.gfx(new Graphics(2726, 75, 100));
 			World.sendElementalProjectile(npc, t, 2720);
-			delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * .7), NPCCombatDefinitions.MAGE, t)));
+			delayHit(npc, t, 1, getMagicHit(npc, (int) (npc.getMaxHit() * .7)));
 		}
 	}
 
@@ -92,14 +87,11 @@ public class GeomancerCombat extends CombatScript {
 		npc.removeTarget();
 		World.sendElementalProjectile(npc, target, 178);
 
-		int damage = getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.95), NPCCombatDefinitions.MAGE, target);
+		int damage = (int) (npc.getMaxHit() * 0.95);
 
 		if (damage > 0) {
 			target.gfx(new Graphics(180, 75, 100));
-			//if (!target.isBoundImmune()) {
-				//target.setBoundDelay(20, false, 7);
-				target.setFreezeDelay(20);
-			//}
+			target.setFreezeDelay(20);
 			if (target instanceof Player)
 				((Player) target).getActionManager().setActionDelay(4);
 		}
@@ -110,7 +102,7 @@ public class GeomancerCombat extends CombatScript {
 		npc.animate(new Animation(12992));
 		World.sendElementalProjectile(npc, target, 106);
 
-		int damage = getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target);
+		int damage = npc.getMaxHit();
 
 		if (damage > 0) {
 			target.gfx(new Graphics(107, 75, 150));
@@ -135,9 +127,9 @@ public class GeomancerCombat extends CombatScript {
 		boolean hasDrained = false;
 
 		for (Entity t : npc.getPossibleTargets()) {
-			int damage = getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, t);
+			Hit hit = npc.magicHit(t, npc.getMaxHit());
 
-			if (damage > 0) {
+			if (hit.getDamage() > 0) {
 				if (t instanceof Player) {
 					Player player = (Player) t;
 					if (player.getPrayer().hasActivePrayers()) {
@@ -156,7 +148,7 @@ public class GeomancerCombat extends CombatScript {
 					}
 				}
 			}
-			delayHit(npc, t, 1, getMagicHit(npc, (int) (damage * .50)));
+			delayHit(npc, t, 1, hit);
 			t.gfx(new Graphics(2147));
 			World.sendElementalProjectile(npc, t, 2368);
 		}

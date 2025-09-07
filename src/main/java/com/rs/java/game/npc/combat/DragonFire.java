@@ -9,6 +9,7 @@ import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
+import com.rs.java.utils.Utils;
 
 public class DragonFire {
 
@@ -33,46 +34,50 @@ public class DragonFire {
     /**
      * Applies dragonfire mitigation to a damage value and sends the appropriate messages.
      */
-    public static int applyDragonfireMitigation(Player player, int damage) {
+    public static int applyDragonfireMitigation(Player player, int baseMaxHit, boolean allowPrayer) {
+        // 1. Super antifire always wins
         if (player.getSuperAntifire() > 0) {
-            player.getPackets().sendGameMessage(
-                    "Your potion fully protects you from the heat of the dragon's breath."
-            );
+            player.message("Your potion fully protects you from the dragon's breath.");
             return 0;
         }
 
         boolean shield = hasDragonShield(player);
         boolean antifire = player.getAntifire() > 0;
-        boolean prayer = player.getPrayer().isMageProtecting();
+        boolean prayer = allowPrayer && player.getPrayer().isMageProtecting();
 
-        if (shield || antifire) {
-            damage *= 0.1;
-            String source = shield ? "shield" : "potion";
-
-            if (prayer) {
-                player.getPackets().sendGameMessage(
-                        "Your " + source + " and prayer fully protect you from the heat of the dragon's breath."
-                );
-                return 0;
-            } else {
-                player.getPackets().sendGameMessage(
-                        "Your " + source + " protects you from most of the dragon's breath."
-                );
-                return damage;
-            }
+        // 2. Shield + antifire OR prayer + antifire = full immunity
+        if (antifire && (shield || prayer)) {
+            player.message("Your protection fully shields you from the dragon's breath.");
+            return 0;
         }
 
-        if (prayer) {
-            player.getPackets().sendGameMessage(
-                    "Your prayer protects you from some of the heat of the dragon's breath!"
-            );
-            damage *= 0.1;
+        // 3. Shield alone caps at ~5–10 damage
+        if (shield) {
+            int damage = Utils.random(0, 10);
+            player.message("Your shield protects you from most of the dragon's breath.");
             return damage;
         }
 
-        player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
+        // 4. Antifire potion alone caps at ~35
+        if (antifire) {
+            int damage = Utils.random(0, 35);
+            player.message("Your potion protects you from some of the dragon's breath.");
+            return damage;
+        }
+
+        // 5. Prayer alone (if valid for this dragon) cuts damage a lot
+        if (prayer) {
+            int damage = Utils.random(0, baseMaxHit / 2);
+            player.message("Your prayer protects you from some of the dragon's breath!");
+            return damage;
+        }
+
+        // 6. No protection = full damage roll
+        int damage = Utils.random(0, baseMaxHit);
+        player.message("You're horribly burnt by the dragon fire!");
         return damage;
     }
+
 
     /**
      * Handles absorbing a dragonfire attack with a Dragonfire shield, incrementing charges.

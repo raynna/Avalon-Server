@@ -10299,3 +10299,7 @@
 [04 September 2025 at 04:17:01 CEST] - andreas: 980
 [04 September 2025 at 04:17:32 CEST] - andreas: damn
 [06 September 2025 at 02:54:37 CEST] - andreas: ���
+[06 September 2025 at 05:17:24 CEST] - andreas: åäö
+[06 September 2025 at 05:17:27 CEST] - andreas: åäö
+[06 September 2025 at 05:17:28 CEST] - andreas: åäö
+[06 September 2025 at 05:17:29 CEST] - andreas: åäö

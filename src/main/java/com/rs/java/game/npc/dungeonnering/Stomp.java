@@ -15,7 +15,6 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.combat.Combat;
@@ -26,6 +25,7 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.WeaponTypesLoader.WeaponType;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 @SuppressWarnings("serial")
 public final class Stomp extends DungeonBoss {
@@ -206,7 +206,7 @@ public final class Stomp extends DungeonBoss {
 			setHitpoints(1);
 			return;
 		}
-		final NPCCombatDefinitions defs = getCombatDefinitions();
+		final NpcCombatDefinition defs = getCombatDefinitions();
 		resetWalkSteps();
 		getCombat().removeTarget();
 		animate(-1);
@@ -216,7 +216,7 @@ public final class Stomp extends DungeonBoss {
 			@Override
 			public void run() {
 				if (loop == 0) {
-					animate(new Animation(defs.getDeathEmote()));
+					animate(new Animation(defs.getDeathAnim()));
 				} else if (loop >= defs.getDeathDelay()) {
 					/*if (source instanceof Player)
 						((Player) source).getControlerManager().processNPCDeath(Stomp.this);*///TODO

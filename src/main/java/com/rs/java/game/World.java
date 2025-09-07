@@ -55,6 +55,7 @@ import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 import com.rs.kotlin.game.world.pvp.PvpManager;
+import com.rs.kotlin.tool.WikiApi;
 
 /**
  * @Improved Andreas - AvalonPK
@@ -466,6 +467,9 @@ public final class World {
             n = new NPC(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
         if (n != null)
             n.setBonuses();
+        if (!WikiApi.INSTANCE.hasData(id) && n.getCombatLevel() > 0) {
+            WikiApi.INSTANCE.dumpData(id, n.getName(), n.getCombatLevel());
+        }
         return n;
     }
 
@@ -2109,13 +2113,15 @@ public final class World {
     }
 
     public static boolean isMultiArea(WorldTile tile) {
-        Area area = AreaManager.get(tile);
-        return (area != null && area.environment() == Area.Environment.MULTI);
+        return AreaManager.isInEnvironment(tile, Area.Environment.MULTI);
     }
 
     public static boolean atMultiArea(Player player) {
-        Area area = AreaManager.get(player);
-        return (area != null && area.environment() == Area.Environment.MULTI);
+        return AreaManager.isInEnvironment(player, Area.Environment.MULTI);
+    }
+
+    public static boolean isAtSafezone(Player player) {
+        return AreaManager.isInEnvironment(player, Area.Environment.SAFEZONE);
     }
 
 

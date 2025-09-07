@@ -8,9 +8,9 @@ import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.minigames.fightpits.FightPits;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 @SuppressWarnings("serial")
 public class TzKekPits extends FightPitsNPC {
@@ -21,7 +21,7 @@ public class TzKekPits extends FightPitsNPC {
 
 	@Override
 	public void sendDeath(Entity source) {
-		final NPCCombatDefinitions defs = getCombatDefinitions();
+		final NpcCombatDefinition defs = getCombatDefinitions();
 		resetWalkSteps();
 		getCombat().removeTarget();
 		animate(-1);
@@ -32,7 +32,7 @@ public class TzKekPits extends FightPitsNPC {
 			@Override
 			public void run() {
 				if (loop == 0) {
-					animate(new Animation(defs.getDeathEmote()));
+					animate(new Animation(defs.getDeathAnim()));
 					gfx(new Graphics(2924 + getSize()));
 				} else if (loop >= defs.getDeathDelay()) {
 					reset();

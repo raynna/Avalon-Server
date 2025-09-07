@@ -180,12 +180,18 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.CONTROLLED, 1) to Animation.getId("animation.abyssal_whip_attack2"),
                 StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.abyssal_whip_attack3"),
             ),
+            sounds = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Rscm.lookup("sound.whip_attack"),
+                StyleKey(AttackStyle.CONTROLLED, 1) to Rscm.lookup("sound.whip_attack"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Rscm.lookup("sound.whip_attack"),
+            ),
             special = SpecialAttack.Combat(
                 energyCost = 50,
                 accuracyMultiplier = 1.25,
                 execute = { context ->  //TODO USING WHIP AS A TEST WEAPON ATM
                     context.attacker.animate("animation.abyssal_whip_special")
                     context.defender.gfx("graphic.abyssal_whip_special", 100)
+                    context.attacker.playSound("sound.whip_special", 1)
                     //TODO GET SOUND
                     val hit = context.meleeHit()
                     if (hit[0].damage > 0) {

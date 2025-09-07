@@ -6,10 +6,12 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class KetZekCombat extends CombatScript {
 
@@ -21,31 +23,31 @@ public class KetZekCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int distanceX = target.getX() - npc.getX();
 		int distanceY = target.getY() - npc.getY();
 		int size = npc.getSize();
 		int hit = 0;
 		if (distanceX > size || distanceX < -1 || distanceY > size || distanceY < -1) {
 			commenceMagicAttack(npc, target, hit);
-			return defs.getAttackDelay();
+			return npc.getAttackSpeed();
 		}
 		int attackStyle = Utils.getRandom(1);
 		switch (attackStyle) {
 		case 0:
-			hit = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MELEE, target);
-			npc.animate(new Animation(defs.getAttackEmote()));
+			hit = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target);
+			npc.animate(new Animation(defs.getAttackAnim()));
 			delayHit(npc, target, 0, getMeleeHit(npc, hit));
 			break;
 		case 1:
 			commenceMagicAttack(npc, target, hit);
 			break;
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 	private void commenceMagicAttack(final NPC npc, final Entity target, int hit) {
-		hit = getRandomMaxHit(npc, npc.getCombatDefinitions().getMaxHit() - 50, NPCCombatDefinitions.MAGE, target);
+		hit = NpcCombatCalculations.getRandomMaxHit(npc, npc.getCombatDefinitions().getMaxHit() - 50, NpcAttackStyle.MAGIC, target);
 		npc.animate(new Animation(16136));
 		// npc.setNextGraphics(new Graphics(1622, 0, 96 << 16));
 		World.sendElementalProjectile(npc, target, 2984);

@@ -7,11 +7,13 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class Karamel extends CombatScript {
 
@@ -23,13 +25,13 @@ public class Karamel extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int attackStyle = Utils.getRandom(2);
 		if (attackStyle == 0) { // range
-			npc.animate(new Animation(defs.getAttackEmote()));
+			npc.animate(new Animation(defs.getAttackAnim()));
 			delayHit(npc, target, 1,
-                    getRangeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.RANGE, target)));
-			return defs.getAttackDelay();
+                    getRangeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.RANGED, target)));
+			return npc.getAttackSpeed();
 		}
 		if (attackStyle == 2 || attackStyle == 1) {
 			World.sendCBOWProjectile(npc, target, 362);
@@ -37,15 +39,15 @@ public class Karamel extends CombatScript {
 			npc.setNextForceTalk(new ForceTalk("Semolina-Go!"));
 			Player p2 = (Player) target;
 			p2.addFreezeDelay(5000, false);
-			delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MAGE, target)));
-			delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 2, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 100, NpcAttackStyle.MAGIC, target)));
+			delayHit(npc, target, 2, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 100, NpcAttackStyle.MAGIC, target)));
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
 					target.gfx(new Graphics(369, 0, 0));
 				}
 			}, 1);
-			return defs.getAttackDelay() + 2;
+			return npc.getAttackSpeed() + 2;
 		}
 		return attackStyle;
 	}

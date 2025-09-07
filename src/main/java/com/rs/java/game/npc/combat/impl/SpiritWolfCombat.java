@@ -6,9 +6,13 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
+import com.rs.kotlin.game.npc.combatdata.AttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+
+import static com.rs.java.game.npc.combat.NpcCombatCalculations.getRandomMaxHit;
 
 public class SpiritWolfCombat extends CombatScript {
 
@@ -19,7 +23,7 @@ public class SpiritWolfCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		Familiar familiar = (Familiar) npc;
 		boolean usingSpecial = familiar.hasSpecialOn();
 		if (usingSpecial) {// priority over regular attack
@@ -28,7 +32,7 @@ public class SpiritWolfCombat extends CombatScript {
 			npc.gfx(new Graphics(1334));
 			World.sendElementalProjectile(npc, target, 1333);
 			if (target instanceof NPC) {
-				if (!(((NPC) target).getCombatDefinitions().getAttackStyle() == NPCCombatDefinitions.MELEE))
+				if (!(((NPC) target).getCombatDefinitions().getAttackStyle() == AttackStyle.MELEE))
 					target.setAttackedByDelay(3000);// three seconds
 				else
 					familiar.getOwner().getPackets().sendGameMessage("Your familiar cannot scare that monster.");
@@ -38,9 +42,9 @@ public class SpiritWolfCombat extends CombatScript {
 				familiar.getOwner().getPackets().sendGameMessage("Your familiar cannot scare other familiars.");
 		} else {
 			npc.animate(new Animation(6829));
-			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, 40, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, 40, NpcAttackStyle.MAGIC, target)));
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 }

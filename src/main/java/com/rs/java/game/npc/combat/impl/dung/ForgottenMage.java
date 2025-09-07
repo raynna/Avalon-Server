@@ -6,7 +6,6 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.SkeletalAdventurer;
 import com.rs.java.game.npc.dungeonnering.YkLagorMage;
 import com.rs.java.game.player.Player;
@@ -76,7 +75,7 @@ public class ForgottenMage extends CombatScript {
 			World.sendElementalProjectile(npc, target, 2736);
 		} else
 			World.sendElementalProjectile(npc, target, projectileId);
-		delayHit(npc, target, 2, getMagicHit(npc, getRandomMaxHit(npc, NPCCombatDefinitions.MAGE, projectileId, target)));
+		delayHit(npc, target, 2, npc.magicHit(target, hit));
 		if (hit == -1)
 			return;
 		WorldTasksManager.schedule(new WorldTask() {

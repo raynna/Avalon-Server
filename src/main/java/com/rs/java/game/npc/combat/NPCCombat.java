@@ -7,10 +7,15 @@ import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.npc.fightcaves.FightCavesNPC;
 import com.rs.java.game.npc.fightkiln.HarAkenTentacle;
 import com.rs.java.game.npc.pest.PestPortal;
+import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.actions.combat.Combat;
 import com.rs.java.utils.MapAreas;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.AttackMethod;
+import com.rs.kotlin.game.npc.combatdata.AttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,7 +29,12 @@ public final class NPCCombat {
 
     private NPC npc;
     private int combatDelay;
+    private int attackDelay;
     private Entity target;
+
+    public int getAttackDelay() {
+        return attackDelay;
+    }
 
     public NPCCombat(NPC npc) {
         this.npc = npc;
@@ -34,23 +44,23 @@ public final class NPCCombat {
     private static final int MAX_FAR_ATTACK_DISTANCE = 16;
     private static final int NEX_FORCE_MOVEMENT_ANIMATION = 17408;
 
-    public int getCombatDelay() {
-        return combatDelay;
-    }
-
     /*
      * returns if under combat
      */
     public boolean process() {
-        if (combatDelay > 0)
-            combatDelay--;
+        if (attackDelay > 0) {
+            attackDelay--;
+            //System.out.println("NPCCombat.process: decreased: " + attackDelay);
+        }
         if (target != null) {
             if (!checkAll()) {
                 removeTarget();
                 return false;
             }
-            if (combatDelay <= 0)
-                combatDelay = combatAttack();
+            if (attackDelay <= 0) {
+                attackDelay = combatAttack();
+                return true;
+            }
             return true;
         }
         return false;
@@ -61,8 +71,13 @@ public final class NPCCombat {
         if (target == null) return 0;
 
         int maxDistance = getMaxAttackDistance(target);
-        if (!canReachTarget(target, maxDistance)) return 0;
-
+        if (!canReachTarget(target, maxDistance)) {
+            return 0;
+        }
+        if (npc.getTickManager().getTicksLeft(TickManager.TickKeys.LAST_ATTACKED_TICK) == 0 && npc.getTickManager().getTicksLeft(TickManager.TickKeys.LAST_ATTACK_TICK) == 0 && npc.getTickManager().getTicksLeft(TickManager.TickKeys.FLINCH_TICKS) == 0) {
+            npc.getTickManager().addTicks(TickManager.TickKeys.FLINCH_TICKS, 10);
+            return npc.getAttackSpeed() / 2;
+        }
         return CombatScriptsHandler.specialAttack(npc, target);
     }
 
@@ -89,12 +104,13 @@ public final class NPCCombat {
     }
 
     private int getMaxAttackDistance(Entity target) {
-        int attackStyle = npc.getCombatDefinitions().getAttackStyle();
-        if (attackStyle == NPCCombatDefinitions.MELEE || attackStyle == NPCCombatDefinitions.SPECIAL2)
+        NpcCombatDefinition defs = npc.getCombatDefinitions();
+        AttackStyle attackStyle = defs.getAttackStyle();
+        if (attackStyle == AttackStyle.MELEE)
             return 0;
         if (npc instanceof HarAkenTentacle) return 12;
-        if (npc instanceof FightCavesNPC && attackStyle == NPCCombatDefinitions.SPECIAL) return 14;
-        int distance = 7;
+        if (npc instanceof FightCavesNPC) return 14;
+        int distance = defs.getAttackRange() != -1 ? defs.getAttackRange() : 7;
         if (target.hasWalkSteps()) distance += 1;
         return distance;
     }
@@ -122,10 +138,9 @@ public final class NPCCombat {
             npc.setNextFaceEntity(target);
             return true;
         }
-
         if (handleCollisionMovement(target)) return true;
 
-        handleFollowAndFlinch(target);
+        handleFollow(target);
         return true;
     }
 
@@ -166,7 +181,6 @@ public final class NPCCombat {
 
         boolean targetInRange = !(tgtDistX > size + maxDistance || tgtDistX < -1 - maxDistance
                 || tgtDistY > size + maxDistance || tgtDistY < -1 - maxDistance);
-
         return npcInRange && targetInRange;
     }
 
@@ -179,16 +193,16 @@ public final class NPCCombat {
                 && !target.hasWalkSteps()) {
 
             if (npc.isFrozen()) {
-                combatDelay = 1;
+                attackDelay = 1;
                 return true;
             }
-            combatDelay = 1;
+            attackDelay = 1;
 
             npc.resetWalkSteps();
             return attemptWalkAroundTarget(target, size);
         }
 
-        if (npc.getCombatDefinitions().getAttackStyle() == NPCCombatDefinitions.MELEE
+        if (npc.getCombatDefinitions().getAttackMethod() == AttackMethod.MELEE
                 && targetSize == 1
                 && Math.abs(npc.getX() - target.getX()) == 1
                 && Math.abs(npc.getY() - target.getY()) == 1
@@ -196,7 +210,7 @@ public final class NPCCombat {
                 && size == 1) {
             npc.resetWalkSteps();
             if (npc.isFrozen()) {
-                combatDelay = 1;
+                attackDelay = 1;
                 return true;
             }
             if (!npc.addWalkSteps(target.getX(), npc.getY(), 1))
@@ -238,13 +252,14 @@ public final class NPCCombat {
 
 
 
-    private void handleFollowAndFlinch(Entity target) {
-        int attackStyle = npc.getCombatDefinitions().getAttackStyle();
+    private void handleFollow(Entity target) {
+        NpcCombatDefinition defs  = npc.getCombatDefinitions();
+        AttackStyle attackStyle = defs.getAttackStyle();
         int size = npc.getSize();
         int targetSize = target.getSize();
 
         int maxDistance = npc.isForceFollowClose() ? 0
-                : (attackStyle == NPCCombatDefinitions.MELEE || attackStyle == NPCCombatDefinitions.SPECIAL2) ? 0 : 7;
+                : (attackStyle == AttackStyle.MELEE) ? 0 : defs.getAttackRange() != -1 ? defs.getAttackRange() : 7;
 
         boolean needsMove = !npc.clipedProjectile(target, maxDistance == 0 && !forceCheckClipAsRange(target))
                 || !Utils.isOnRange(npc.getX(), npc.getY(), size, target.getX(), target.getY(), targetSize, maxDistance);
@@ -256,11 +271,6 @@ public final class NPCCombat {
                 npc.calcFollow(target, npc.getRun() ? 2 : 1, true, true);
             else
                 npc.addWalkStepsInteract(target.getX(), target.getY(), npc.getRun() ? 2 : 1, size, true);
-        } else {
-            if (npc.getAttackDelay() < Utils.currentTimeMillis() || npc.getAttackDelay() == 0)
-                flinch();
-            if (npc.getFlinchDelay() > Utils.currentTimeMillis())
-                combatDelay = 1;
         }
     }
 
@@ -282,14 +292,6 @@ public final class NPCCombat {
             removeTarget();
             return;
         }
-    }
-
-    public void flinch() {
-        if (npc.getFlinchDelay() > Utils.currentTimeMillis())
-            return;
-        int attackSpeed = npc.getAttackSpeed() * 600;
-        npc.setFlinch((attackSpeed / 2) - 1000);
-        npc.setAttackDelay((attackSpeed / 2) + 4800);
     }
 
     private boolean forceCheckClipAsRange(Entity target) {

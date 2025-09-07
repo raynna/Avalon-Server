@@ -172,6 +172,8 @@ public class TickManager {
         POISON_TICKS(5, 0),
         POISON_SEVERITY(6, 0),
         PJ_TIMER(7, 0),
+        FLINCH_TICKS(8, 0),
+        LAST_INTERACTION_TARGET(9, 0),
         VENGEANCE_TICKS(10, 0),
         LAST_ATTACK_TICK(11, 0),
         LAST_ATTACKED_TICK(12, 0),

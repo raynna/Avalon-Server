@@ -81,6 +81,12 @@ interface CombatStyle {
             if (!defender.isUnderCombat || defender.canBeAttackedByAutoRelatie()) {
                 defender.setTarget(attacker)
             }
+            val combatDefinitions = defender.combatDefinitions
+            if (combatDefinitions != null) {
+                if (combatDefinitions.defendSound != -1) {
+                    defender.playSound(combatDefinitions.defendSound, 1)
+                }
+            }
             if (defender.id == Rscm.lookup("npc.magic_dummy") || defender.id == Rscm.lookup("npc.melee_dummy")) {
                 if (attacker.prayer.prayerPoints < attacker.skills.getLevelForXp(Skills.PRAYER) * 10) {
                     attacker.prayer.restorePrayer(attacker.skills.getLevelForXp(Skills.PRAYER) * 10)

@@ -9,22 +9,24 @@ object Msg {
     // Palette (WCAG-ish contrast against most RS backdrops)
     const val GOLD     = "ffd166"
     const val ORANGE   = "ff9f1c"
-    const val GREEN    = "4cd137"
+    const val DARK_ORANGE   = "ff6600"
+    const val GREEN    = "38761d"
+    const val DARK_GREEN    = "274e13"
     const val TEAL     = "2ed1c8"
     const val BLUE     = "63c5ff"
     const val PURPLE   = "b388ff"
     const val PINK     = "ff6ea8"
-    const val RED      = "ff4d4d"
+    const val RED      = "dc0000"
     const val GRAY     = "c7c7c7"
 
     // Builders
-    fun player(col: String, msg: String) = "$SHAD_DARK<col=$col>$msg$END"
+    fun player(col: String, msg: String) = "<col=$col>$msg$END"
     fun world(col: String, msg: String)  = "<img=7>$SHAD_DARK<col=$col>$msg$END"
 
     // Specific styles
     fun reward(msg: String)        = player(GREEN, msg)
     fun rewardRare(msg: String)    = player(PURPLE, msg)
-    fun chestOpen(msg: String)     = player(TEAL, msg)
+    fun chestOpen(msg: String)     = player(GREEN, msg)
     fun topDamager(msg: String)    = player(ORANGE, msg)
     fun info(msg: String)          = player(BLUE, msg)
     fun warn(msg: String)          = player(RED, msg)

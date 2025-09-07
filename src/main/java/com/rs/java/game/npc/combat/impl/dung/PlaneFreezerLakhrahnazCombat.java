@@ -6,8 +6,8 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class PlaneFreezerLakhrahnazCombat extends CombatScript {
 
@@ -19,7 +19,7 @@ public class PlaneFreezerLakhrahnazCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		if (Utils.random(8) == 0) {
 			npc.resetWalkSteps();
 			npc.addWalkSteps(npc.getX() + Utils.random(3) - 2, npc.getY() + Utils.random(3) - 2);
@@ -34,14 +34,14 @@ public class PlaneFreezerLakhrahnazCombat extends CombatScript {
 				for (Entity t : npc.getPossibleTargets()) {
 					World.sendElementalProjectile(npc, t, 2577);
 					t.gfx(new Graphics(2578, 70, 0));
-					delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MAGE, target)));
+					delayHit(npc, t, 1, npc.magicHit(npc, 100));
 				}
 				break;
 			case 1:
-				npc.animate(new Animation(defs.getAttackEmote()));
+				npc.animate(new Animation(defs.getAttackAnim()));
 				int dir = Utils.random(Utils.DIRECTION_DELTA_X.length);
 				target.addWalkSteps(target.getX() + Utils.DIRECTION_DELTA_X[dir], target.getY() + Utils.DIRECTION_DELTA_Y[dir], 1);
-				delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.MELEE, target)));
+				delayHit(npc, target, 0, npc.meleeHit(npc, 100));
 				break;
 			}
 			return npc.getAttackSpeed();
@@ -50,7 +50,7 @@ public class PlaneFreezerLakhrahnazCombat extends CombatScript {
 		npc.gfx(new Graphics(2574));
 		World.sendElementalProjectile(npc, target, 2595);
 		target.gfx(new Graphics(2576, 70, 0));
-		delayHit(npc, target, 1, getRangeHit(npc, getRandomMaxHit(npc, 100, NPCCombatDefinitions.RANGE, target)));
+		delayHit(npc, target, 1, npc.rangedHit(npc, 100));
 		return npc.getAttackSpeed();
 	}
 }

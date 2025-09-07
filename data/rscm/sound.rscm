@@ -1,12 +1,20 @@
 saradomin_sword_special=3853
+godsword_slash=3846
 armadyl_godsword_special=3865
 dragon_halberd_special=2533
 dragon_scimitar_special=2540
-#very unsure if this one is correct
-granite_maul_attack=1714
-granite_maul_special=1715
-#very unsure if this one is correct
+granite_maul_attack=2714
+granite_maul_special=2715
 dragon_mace_special=2541
 dragon_dagger_special=2537
 claw_attack=7464
 whip_special=2713
+whip_attack=2720
+hammer=2508
+battleaxe=2509
+dagger_stab=2517
+dragon_longsword_special=2529
+sword_slash=2548
+punch=2564
+kick=2567
+potion_boost_end=2607

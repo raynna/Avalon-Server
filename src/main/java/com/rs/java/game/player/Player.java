@@ -2964,8 +2964,8 @@ public class Player extends Entity {
         refreshSpawnedObjects();
         getTickManager().rebuildOverlay();
         PvpManager.onLogin(this);
-        Area area = AreaManager.get(getTile());
-        if (area != null) {
+        List<Area> areas = AreaManager.getAll(getTile());
+        for (Area area : areas) {
             area.onMoved(this);
         }
         Logger.log("Player", username + " has logged in.");
@@ -3153,21 +3153,18 @@ public class Player extends Entity {
             return;
 
         WorldTile tile = getTile();
-        Area area = AreaManager.get(tile);
-        if (area != null && area.environment() == Area.Environment.MULTI) {
-            getPackets().sendGlobalVar(616, 1);
-            setAtMultiArea(true);
-            return;
-        }
 
-        if (isForceMultiArea()) {
+        boolean inMulti = AreaManager.isInEnvironment(this, Area.Environment.MULTI);
+
+        if (inMulti || isForceMultiArea()) {
             getPackets().sendGlobalVar(616, 1);
             setAtMultiArea(true);
-            return;
+        } else {
+            getPackets().sendGlobalVar(616, 0);
+            setAtMultiArea(false);
         }
-        getPackets().sendGlobalVar(616, 0);
-        setAtMultiArea(false);
     }
+
 
 
 

@@ -6,10 +6,10 @@ import com.rs.java.game.ForceTalk;
 import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -30,8 +30,7 @@ public class GeneralGraardorCombat extends CombatScript {
 		} else {
 			performMeleeAttack(npc, target);
 		}
-		System.out.println("General Graardor attack for NPC id: " + npc.getId() + " Attack speed: " + npc.getCombatData().attackSpeedTicks);
-		return npc.getCombatData().attackSpeedTicks;
+		return npc.getAttackSpeed();
 	}
 
 	// --------------------------
@@ -68,9 +67,7 @@ public class GeneralGraardorCombat extends CombatScript {
 	private void performRangedAttack(NPC npc) {
 		npc.animate(new Animation(7063));
 		for (Entity t : npc.getPossibleTargets()) {
-			Hit rangeHit = getRangeHit(npc,
-					NpcCombatCalculations.getRandomMaxHit(npc, 335, NpcAttackStyle.RANGED, t)
-			);
+			Hit rangeHit = npc.rangedHit(npc,335);
 			delayHit(npc, t, 1, rangeHit);
 			ProjectileManager.sendSimple(Projectile.ARROW, 1200, npc, t);
 		}
@@ -80,12 +77,12 @@ public class GeneralGraardorCombat extends CombatScript {
 	// Melee
 	// --------------------------
 	private void performMeleeAttack(NPC npc, Entity target) {
-		NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		NpcCombatDefinition defs = npc.getCombatDefinitions();
 		if (Utils.isOnRange(
 				npc.getX(), npc.getY(), npc.getSize(),
 				target.getX(), target.getY(), target.getSize(),
 				0)) {
-			npc.animate(new Animation(defs.getAttackEmote()));
+			npc.animate(new Animation(defs.getAttackAnim()));
 		}
 
 		Hit meleeHit = getMeleeHit(npc,

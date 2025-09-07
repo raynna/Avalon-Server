@@ -9,11 +9,11 @@ import com.rs.java.game.Hit;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.AsteaFrostweb;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class AsteaFrostwebCombat extends CombatScript {
 
@@ -25,35 +25,34 @@ public class AsteaFrostwebCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		if (Utils.getRandom(10) == 0) {
 			AsteaFrostweb boss = (AsteaFrostweb) npc;
 			boss.spawnSpider();
 		}
 		if (Utils.getRandom(10) == 0) { // spikes
 			ArrayList<Entity> possibleTargets = npc.getPossibleTargets();
-			npc.animate(new Animation(defs.getAttackEmote()));
+			npc.animate(new Animation(defs.getAttackAnim()));
 			for (Entity t : possibleTargets)
 				delayHit(npc, t, 1, new Hit(npc, Utils.random((int) (npc.getMaxHit() * 0.5) + 1), HitLook.REGULAR_DAMAGE));
-			return defs.getAttackDelay();
+			return npc.getAttackSpeed();
 		} else {
 			int attackStyle = Utils.random(2);
 			if (attackStyle == 1) { // check melee
 				if (Utils.getDistance(npc.getX(), npc.getY(), target.getX(), target.getY()) > 1)
 					attackStyle = 0; // set mage
 				else { // melee
-					npc.animate(new Animation(defs.getAttackEmote()));
-					delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(),  NPCCombatDefinitions.MELEE, target)));
-					return defs.getAttackDelay();
+					npc.animate(new Animation(defs.getAttackAnim()));
+					delayHit(npc, target, 0, npc.meleeHit(npc, defs.getMaxHit()));
+					return npc.getAttackSpeed();
 				}
 			}
 			if (attackStyle == 0) { // mage
-				npc.animate(new Animation(defs.getAttackEmote()));
+				npc.animate(new Animation(defs.getAttackAnim()));
 				ArrayList<Entity> possibleTargets = npc.getPossibleTargets();
-
-				int d = getMaxHit(npc, NPCCombatDefinitions.MAGE, target);
-				delayHit(npc, target, 1, getMagicHit(npc, d));
-				if (d != 0) {
+				Hit hit = npc.magicHit(npc, defs.getMaxHit());
+				delayHit(npc, target, 1, hit);
+				if (hit.getDamage() != 0) {
 					WorldTasksManager.schedule(new WorldTask() {
 						@Override
 						public void run() {
@@ -67,9 +66,9 @@ public class AsteaFrostwebCombat extends CombatScript {
 					}, 1);
 					for (final Entity t : possibleTargets) {
 						if (t != target && t.withinDistance(target, 2)) {
-							int damage = getRandomMaxHit(npc, defs.getMaxHit(), NPCCombatDefinitions.MAGE, t);
-							delayHit(npc, t, 1, getMagicHit(npc, damage));
-							if (damage != 0) {
+							hit = npc.magicHit(npc, defs.getMaxHit());
+							delayHit(npc, t, 1, hit);
+							if (hit.getDamage() != 0) {
 								WorldTasksManager.schedule(new WorldTask() {
 									@Override
 									public void run() {
@@ -94,11 +93,7 @@ public class AsteaFrostwebCombat extends CombatScript {
 				}
 			}
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
-	private int getMaxHit(NPC npc, int mage, Entity target) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

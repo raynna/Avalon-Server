@@ -6,9 +6,12 @@ import com.rs.java.game.ForceTalk;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+
+import static com.rs.java.game.npc.combat.NpcCombatCalculations.getRandomMaxHit;
 
 public class ThunderCombat extends CombatScript {
 
@@ -19,7 +22,7 @@ public class ThunderCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		if (Utils.getRandom(4) == 0) {
 			switch (Utils.getRandom(3)) {
 			case 0:
@@ -52,7 +55,7 @@ public class ThunderCombat extends CombatScript {
 				if (!t.withinDistance(npc, 18))
 					continue;
 				int damage = getRandomMaxHit(npc, defs.getMaxHit(),
-						NPCCombatDefinitions.MAGE, t);
+						NpcAttackStyle.MAGIC, t);
 				if (damage > 0) {
 					delayHit(npc, t, 1, getMagicHit(npc, damage));
 					t.gfx(new Graphics(3428));
@@ -60,7 +63,7 @@ public class ThunderCombat extends CombatScript {
 			}
 
 		} else { // melee attack
-			npc.animate(new Animation(defs.getAttackEmote()));
+			npc.animate(new Animation(defs.getAttackAnim()));
 			npc.setCapDamage(800);
 			delayHit(
 					npc,
@@ -68,8 +71,8 @@ public class ThunderCombat extends CombatScript {
                     getMeleeHit(
 							npc,
 							getRandomMaxHit(npc, defs.getMaxHit(),
-									NPCCombatDefinitions.MELEE, target)));
+									NpcAttackStyle.CRUSH, target)));
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 }

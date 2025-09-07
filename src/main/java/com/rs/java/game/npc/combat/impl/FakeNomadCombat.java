@@ -6,9 +6,11 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class FakeNomadCombat extends CombatScript {
 
@@ -20,9 +22,9 @@ public class FakeNomadCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		NpcCombatDefinition defs = npc.getCombatDefinitions();
 		npc.animate(new Animation(12697));
-		boolean hit = getRandomMaxHit(npc, 50, NPCCombatDefinitions.MAGE, target) != 0;
+		boolean hit = NpcCombatCalculations.getRandomMaxHit(npc, 50, NpcAttackStyle.MAGIC, target) != 0;
 		delayHit(npc, target, 2, getRegularHit(npc, hit ? 50 : 0));
 		World.sendElementalProjectile(npc, target, 1657);
 		if (hit) {
@@ -33,7 +35,7 @@ public class FakeNomadCombat extends CombatScript {
 				}
 			}, 1);
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 }

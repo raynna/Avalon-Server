@@ -7,10 +7,10 @@ import com.rs.java.game.Hit;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.minigames.pest.PestControl;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 @SuppressWarnings("serial")
 public class Splatter extends PestMonsters {
@@ -50,7 +50,7 @@ public class Splatter extends PestMonsters {
 
 	@Override
 	public void sendDeath(Entity source) {
-		final NPCCombatDefinitions defs = getCombatDefinitions();
+		final NpcCombatDefinition defs = getCombatDefinitions();
 		resetWalkSteps();
 		getCombat().removeTarget();
 		animate(-1);

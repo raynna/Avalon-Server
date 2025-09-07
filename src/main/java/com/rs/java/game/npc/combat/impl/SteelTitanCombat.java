@@ -5,13 +5,13 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -42,7 +42,7 @@ public class SteelTitanCombat extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		Familiar familiar = (Familiar) npc;
 
 		boolean usingSpecial = familiar.hasSpecialOn();
@@ -54,7 +54,7 @@ public class SteelTitanCombat extends CombatScript {
 			performRegularAttack(familiar, npc, target, distant);
 		}
 
-		return defs.getAttackDelay() + 1;
+		return npc.getAttackSpeed() + 1;
 	}
 
 	private boolean isDistant(NPC npc, Entity target) {

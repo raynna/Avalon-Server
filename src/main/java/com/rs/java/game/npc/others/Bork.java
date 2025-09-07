@@ -40,7 +40,7 @@ public class Bork extends NPC {
 			}
 		}
 		getCombat().removeTarget();
-		animate(new Animation(getCombatDefinitions().getDeathEmote()));
+		animate(new Animation(getCombatDefinitions().getDeathAnim()));
 		WorldTasksManager.schedule(new WorldTask() {
 
 			@Override

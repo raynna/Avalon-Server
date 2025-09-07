@@ -54,7 +54,7 @@ public final class Combat {
 	public static int getDefenceEmote(Entity target) {
 		if (target instanceof NPC) {
 			NPC n = (NPC) target;
-			return n.getCombatDefinitions().getDefenceEmote();
+			return n.getCombatDefinitions().getDefenceAnim();
 		} else {
 			Player p = (Player) target;
 			int shieldId = p.getEquipment().getShieldId();

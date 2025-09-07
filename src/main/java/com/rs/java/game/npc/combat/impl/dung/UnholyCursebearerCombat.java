@@ -8,13 +8,15 @@ import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.dungeonnering.DungeonBoss;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class UnholyCursebearerCombat extends CombatScript {
 
@@ -26,7 +28,7 @@ public class UnholyCursebearerCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		int attackStyle = Utils.isOnRange(target.getX(), target.getY(), target.getSize(), npc.getX(), npc.getY(), npc.getSize(), 0) ? Utils.random(2) : 0;
 		if (target instanceof Player && target.getTemporaryAttributtes().get("UNHOLY_CURSEBEARER_ROT") == null) {
 			target.getTemporaryAttributtes().put("UNHOLY_CURSEBEARER_ROT", 1);
@@ -71,16 +73,16 @@ public class UnholyCursebearerCombat extends CombatScript {
 				npc.gfx(new Graphics(2441));
 				for (Entity t : npc.getPossibleTargets()) {
 					World.sendElementalProjectile(npc, t, 88);
-					delayHit(npc, t, 1, getMagicHit(npc, getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.6), NPCCombatDefinitions.MAGE, t)));
+					delayHit(npc, t, 1, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, (int) (npc.getMaxHit() * 0.6), NpcAttackStyle.MAGIC, t)));
 				}
 			} else {
 				World.sendElementalProjectile(npc, target, 88);
-				delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+				delayHit(npc, target, 1, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.MAGIC, target)));
 			}
 			break;
 		case 1:
-			npc.animate(new Animation(defs.getAttackEmote()));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			npc.animate(new Animation(defs.getAttackAnim()));
+			delayHit(npc, target, 0, getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, npc.getMaxHit(), NpcAttackStyle.CRUSH, target)));
 			break;
 		}
 		return npc.getAttackSpeed();

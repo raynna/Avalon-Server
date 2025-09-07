@@ -11,14 +11,13 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.item.itemdegrading.ItemDegrade;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.familiar.Familiar;
-import com.rs.java.game.player.CombatDefinitions;
-import com.rs.java.game.player.Equipment;
-import com.rs.java.game.player.Player;
-import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.*;
 import com.rs.java.game.player.prayer.PrayerEffectHandler;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.AttackMethod;
+import com.rs.kotlin.game.npc.combatdata.AttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.player.combat.CombatAction;
 
@@ -56,10 +55,10 @@ public abstract class CombatScript {
 
     public static void delayHit(NPC npc, final Entity target, int delay, final Hit... hits) {
         for (Hit hit : hits) {
+            npc.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 10);
+            target.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10);
             if (target instanceof Player p2)
                 p2.handleIncommingHit(hit);
-            int attackSpeed = npc.getAttackSpeed() * 600;
-            npc.setAttackDelay((attackSpeed / 2) + 4800);
             if (target instanceof Player playerTarget) {
                 PrayerEffectHandler.handleProtectionEffects(npc, playerTarget, hit);
             }
@@ -117,7 +116,7 @@ public abstract class CombatScript {
                     npc.getCombat().doDefenceEmote(target);
                     if (target instanceof Player player) {
                         player.closeInterfaces();
-                        if (player.getCombatDefinitions().isAutoRelatie() && !player.getActionManager().hasSkillWorking() && !player.hasWalkSteps())
+                        if (player.getCombatDefinitions().isAutoRelatie() && !player.getNewActionManager().hasActionWorking() && !player.hasWalkSteps())
                             player.getNewActionManager().setAction(new CombatAction(npc));
                         if (player.familiarAutoAttack) {
                             if (player.getFamiliar() != null && !player.getFamiliar().getCombat().hasTarget() && player.isAtMultiArea()) {
@@ -362,122 +361,6 @@ public abstract class CombatScript {
 
     public static Hit getMeleeHit(NPC npc, int damage) {
         return new Hit(npc, damage, HitLook.MELEE_DAMAGE);
-    }
-
-    public static int getRandomMaxHit(NPC npc, int maxHit, int attackStyle, Entity target) {
-        int[] bonuses = npc.getBonuses();
-        double mage = 0;
-        double M = 0;
-        double mageBonus = 0;
-        double attack = 0;
-        double A = 0;
-        double attackBonus = 0;
-        double range = 0;
-        double R = 0;
-        double rangeBonus = 0;
-        npc.setBonuses();
-        if (attackStyle == NPCCombatDefinitions.MAGE) {
-            mageBonus = bonuses != null ? bonuses[CombatDefinitions.NPC_MAGIC_BONUS] : 0;
-            mage = bonuses != null ? bonuses[CombatDefinitions.NPC_MAGIC_LEVEL] * 1.5 : npc.getCombatLevel();
-            mage = Math.round(mage);
-            mage += 8;
-            M = Math.round(mage);
-            mage = mage * (1 + mageBonus / 64);
-            M = Math.round(mage);
-        } else if (attackStyle == NPCCombatDefinitions.RANGE) {
-            rangeBonus = (bonuses != null ? bonuses[CombatDefinitions.NPC_RANGE_BONUS] : 0);
-            range = bonuses != null ? bonuses[CombatDefinitions.NPC_RANGE_LEVEL] * 1.5 : npc.getCombatLevel();
-            range = Math.round(range);
-            range += 8;
-            R = Math.round(range);
-            range = range * (1 + rangeBonus / 64);
-            R = Math.round(range);
-        } else {
-            attackBonus = npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.STAB ? bonuses != null ? bonuses[CombatDefinitions.NPC_STAB_BONUS] : 0 : npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.SLASH ? bonuses != null ? bonuses[CombatDefinitions.NPC_SLASH_BONUS] : 0 : bonuses != null ? bonuses[CombatDefinitions.NPC_CRUSH_BONUS] : 0;
-            attack += bonuses != null ? bonuses[CombatDefinitions.NPC_ATTACK_LEVEL] * 1.5 : npc.getCombatLevel();
-            attack = Math.round(attack);
-            attack += 8;
-            attack = attack * (1 + attackBonus / 64);
-            A = Math.round(attack);
-        }
-        double defence = 0;
-        double D = 0;
-        double rangedefence = 0;
-        double RD = 0;
-        double magedefence = 0;
-        double MD = 0;
-        if (target instanceof Player) {
-            Player p2 = (Player) target;
-            double defenceBonus = (p2.getCombatDefinitions().getBonuses()[attackStyle == NPCCombatDefinitions.RANGE ? CombatDefinitions.RANGE_DEF : CombatDefinitions.MAGIC_DEF]);
-            double meleeBonus = (p2.getCombatDefinitions().getBonuses()[npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.STAB ? CombatDefinitions.STAB_DEF : npc.getCombatDefinitions().getAttackType() == NPCCombatDefinitions.SLASH ? CombatDefinitions.SLASH_DEF : CombatDefinitions.CRUSH_DEF]);
-            if (attackStyle == NPCCombatDefinitions.MAGE) {
-                magedefence = (p2.getSkills().getLevel(Skills.DEFENCE) * 0.3) + (p2.getSkills().getLevel(Skills.MAGIC) * 0.7);
-                magedefence = Math.round(magedefence);
-                magedefence += 8;
-                magedefence = magedefence * (1 + defenceBonus / 64);
-                MD = Math.round(magedefence);
-            } else if (attackStyle == NPCCombatDefinitions.RANGE) {
-                rangedefence = p2.getSkills().getLevel(Skills.DEFENCE);
-                rangedefence *= p2.getPrayer().getDefenceMultiplier();
-                rangedefence = Math.round(rangedefence);
-                rangedefence += 8;
-                rangedefence = rangedefence * (1 + defenceBonus / 64);
-                RD = Math.round(rangedefence);
-            } else {
-                defence = p2.getSkills().getLevel(Skills.DEFENCE);
-                defence *= p2.getPrayer().getDefenceMultiplier();
-                defence = Math.round(defence);
-                defence += 8;
-                defence = defence * (1 + meleeBonus / 64);
-                D = Math.round(defence);
-            }
-        } else if (target instanceof NPC || target instanceof Familiar) {
-            NPC n = (NPC) target;
-            defence = n.getBonuses()[attackStyle == NPCCombatDefinitions.RANGE ? CombatDefinitions.RANGE_DEF : attackStyle == NPCCombatDefinitions.MAGE ? CombatDefinitions.MAGIC_DEF : CombatDefinitions.STAB_DEF];
-            double defenceBonus = (attackStyle == NPCCombatDefinitions.RANGE ? n.getBonuses()[CombatDefinitions.NPC_RANGE_BONUS] : attackStyle == NPCCombatDefinitions.MAGE ? n.getBonuses()[CombatDefinitions.NPC_MAGIC_BONUS] : n.getBonuses()[CombatDefinitions.NPC_STAB_BONUS]);
-            if (attackStyle == NPCCombatDefinitions.MAGE) {
-                magedefence = n.getBonuses()[CombatDefinitions.NPC_DEFENCE_LEVEL];
-                magedefence = Math.round(magedefence);
-                magedefence += 8;
-                magedefence = magedefence * (1 + defenceBonus);
-                MD = Math.round(magedefence);
-            } else if (attackStyle == NPCCombatDefinitions.RANGE) {
-                rangedefence = n.getBonuses()[CombatDefinitions.NPC_DEFENCE_LEVEL];
-                rangedefence = Math.round(rangedefence);
-                rangedefence += 8;
-                rangedefence = rangedefence * (1 + defenceBonus);
-                RD = Math.round(rangedefence);
-            } else {
-                defence = n.getBonuses()[CombatDefinitions.NPC_DEFENCE_LEVEL];
-                defence = Math.round(defence);
-                defence += 8;
-                defence = defence * (1 + defenceBonus);
-                D = Math.round(defence);
-            }
-        }
-        if (attackStyle == NPCCombatDefinitions.MAGE) {
-            double prob = M / MD;
-            double random = Utils.getRandomDouble(100);
-            if (M <= MD) prob = (M - 1) / (MD * 2);
-            else if (M > MD) prob = 1 - (MD + 1) / (M * 2);
-            if (npc.getId() == 1158 || npc.getId() == 1160) prob = 100;
-            if (prob < random / 100) return 0;
-        } else if (attackStyle == NPCCombatDefinitions.RANGE) {
-            double prob = R / RD;
-            double random = Utils.getRandomDouble(100);
-            if (R <= RD) prob = (R - 1) / (RD * 2);
-            else if (R > RD) prob = 1 - (RD + 1) / (R * 2);
-            ;
-            if (npc.getId() == 1158 || npc.getId() == 1160) prob = 100;
-            if (prob < random / 100) return 0;
-        } else {
-            double prob = A / D;
-            double random = Utils.getRandomDouble(100);
-            if (A <= D) prob = (A - 1) / (D * 2);
-            else if (A > D) prob = 1 - (D + 1) / (A * 2);
-            if (prob < random / 100) return 0;
-        }
-        return Utils.getRandom(maxHit);
     }
 
 }

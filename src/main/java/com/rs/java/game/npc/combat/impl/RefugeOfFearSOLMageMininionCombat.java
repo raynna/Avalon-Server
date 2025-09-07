@@ -8,10 +8,10 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class RefugeOfFearSOLMageMininionCombat extends CombatScript {
 
@@ -22,11 +22,10 @@ public class RefugeOfFearSOLMageMininionCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
 		boolean player = target instanceof Player; // shouldn't have player as
 													// target unless bind spell.
 		startAttack(npc, target, player, player ? 4 : new Random().nextInt(4));
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 	private void startAttack(final NPC npc, final Entity entity, boolean player, int attack) {

@@ -9,13 +9,13 @@ import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.KalGerWarmonger;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 
 public class KalGerWarmongerCombat extends CombatScript {
 
@@ -72,31 +72,31 @@ public class KalGerWarmongerCombat extends CombatScript {
 		}
 		if (boss.getType() == 1) {//NO WEAPONS HUR
 			npc.animate(new Animation(14392));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, npc.meleeHit(npc, boss.getMaxHit()));
 		} else if (boss.getType() == 2) {//LONG
 			npc.animate(new Animation(14416));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, npc.meleeHit(npc, boss.getMaxHit(), NpcAttackStyle.STAB));
 		} else if (boss.getType() == 3) {//STAFF
 			npc.animate(new Animation(14996));
 			npc.gfx(new Graphics(2874));
 			for (Entity t : boss.getPossibleTargets()) {
 				World.sendElementalProjectile(boss, t, 2875);
 				t.gfx(new Graphics(2873));
-				delayHit(npc, t, 0, getMagicHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MAGE, t)));
+				delayHit(npc, t, 0, npc.magicHit(npc, boss.getMaxHit()));
 			}
 		} else if (boss.getType() == 4) {//2H
 			npc.animate(new Animation(14450));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, npc.meleeHit(npc, boss.getMaxHit(), NpcAttackStyle.SLASH));
 		} else if (boss.getType() == 5) {//BOW
 			npc.animate(new Animation(14537));
 			npc.gfx(new Graphics(2885));
 			for (Entity t : boss.getPossibleTargets()) {
 				World.sendElementalProjectile(boss, t, 2886);
-				delayHit(npc, t, 2, getRangeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.RANGE, t)));
+				delayHit(npc, t, 2, npc.rangedHit(npc, boss.getMaxHit()));
 			}
 		} else if (boss.getType() == 6) {//MAUL
 			npc.animate(new Animation(14963));
-			delayHit(npc, target, 0, getMeleeHit(npc, getRandomMaxHit(npc, boss.getMaxHit(), NPCCombatDefinitions.MELEE, target)));
+			delayHit(npc, target, 0, npc.meleeHit(npc, boss.getMaxHit(), NpcAttackStyle.CRUSH));
 			return 3;//SUPER OP MODE!
 		}
 		return 4;

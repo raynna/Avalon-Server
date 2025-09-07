@@ -6,9 +6,9 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class DeathslingerCombat extends CombatScript {
 
@@ -23,18 +23,17 @@ public class DeathslingerCombat extends CombatScript {
 		Familiar familiar = (Familiar) npc;
 		boolean usingSpecial = familiar.hasSpecialOn();
 		int tier = (npc.getId() - 11208) / 2;
-
-		int damage = 0;
+		NpcCombatDefinition definitions = npc.getCombatDefinitions();
+		int damage = definitions.getMaxHit();
 		if (usingSpecial) {
 			npc.gfx(new Graphics(2447));
-			damage = getRandomMaxHit(npc, (int) (npc.getMaxHit() * (1.05 * tier)), NPCCombatDefinitions.RANGE, target);
+			damage = (int) (npc.getMaxHit() * (1.05 * tier));
 			if (Utils.random(11 - tier) == 0)
 				target.getPoison().makePoisoned(100);
-		} else
-			damage = getRandomMaxHit(npc, NPCCombatDefinitions.RANGE, damage, target);
+		}
 		npc.animate(new Animation(13615));
 		World.sendProjectileToTile(npc, target, 2448);
-		delayHit(npc, target, 2, getRangeHit(npc, damage));
-		return npc.getCombatDefinitions().getAttackDelay();
+		delayHit(npc, target, 2, npc.rangedHit(npc, damage));
+		return npc.getAttackSpeed();
 	}
 }

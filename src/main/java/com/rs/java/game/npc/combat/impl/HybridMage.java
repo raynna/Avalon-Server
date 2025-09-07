@@ -5,10 +5,11 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 
 public class HybridMage extends CombatScript {
 
@@ -59,7 +60,7 @@ public class HybridMage extends CombatScript {
 			npc.animate(new Animation(1979));
 			World.sendProjectile(npc, target, 368, 60, 32, 50, 50, 0);
 			delayHit(npc, target, getMageDelay(npc, target),
-                    getMagicHit(npc, getRandomMaxHit(npc, 340, NPCCombatDefinitions.MAGE, target)));
+                    getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 340, NpcAttackStyle.MAGIC, target)));
 			if (HybridMelee.specialAttack <= 95)
 				HybridMelee.specialAttack += 5;
 			if (getRandom >= 3 && getRandom <= 5) {

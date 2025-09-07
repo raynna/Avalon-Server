@@ -6,8 +6,10 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class MinotaurCombat extends CombatScript {
 
@@ -19,7 +21,7 @@ public class MinotaurCombat extends CombatScript {
 
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		Familiar familiar = (Familiar) npc;
 		boolean usingSpecial = familiar.hasSpecialOn();
 		if (usingSpecial) {// priority over regular attack
@@ -29,8 +31,8 @@ public class MinotaurCombat extends CombatScript {
 			World.sendElementalProjectile(npc, target, 1333);
 		} else {
 			npc.animate(new Animation(6829));
-			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, 40, NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 40, NpcAttackStyle.MAGIC, target)));
 		}
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 }

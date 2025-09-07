@@ -10,11 +10,12 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
+import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 
 public class MercenaryMageCombat extends CombatScript {
 
@@ -121,7 +122,7 @@ public class MercenaryMageCombat extends CombatScript {
 			World.sendProjectileToTile(npc, center, 2196);
 		} else if (attackStyle == 3) {
 			delayHit(npc, target, 2,
-                    getMagicHit(npc, getRandomMaxHit(npc, Utils.random(3000), NPCCombatDefinitions.MAGE, target)));
+                    getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, Utils.random(3000), NpcAttackStyle.MAGIC, target)));
 			World.sendElementalProjectile(npc, target, 2873);
 			npc.animate(new Animation(14221));
 			npc.setNextForceTalk(new ForceTalk(ATTACKS[Utils.random(ATTACKS.length)]));

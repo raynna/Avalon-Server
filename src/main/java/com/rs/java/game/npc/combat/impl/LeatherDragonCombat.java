@@ -5,11 +5,11 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class LeatherDragonCombat extends CombatScript {
 
@@ -33,7 +33,7 @@ public class LeatherDragonCombat extends CombatScript {
 			return 0;
 		}
 
-		final NPCCombatDefinitions defs = npc.getCombatDefinitions();
+		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 
 		// 75% chance melee, 25% chance dragonfire
 		if (Utils.roll(3, 4)) {
@@ -42,7 +42,7 @@ public class LeatherDragonCombat extends CombatScript {
 			performDragonfireAttack(npc, target, defs);
 		}
 
-		return defs.getAttackDelay();
+		return npc.getAttackSpeed();
 	}
 
 	private boolean isWithinMeleeRange(NPC npc, Entity target) {
@@ -52,7 +52,7 @@ public class LeatherDragonCombat extends CombatScript {
 		return distanceX <= size && distanceX >= -1 && distanceY <= size && distanceY >= -1;
 	}
 
-	private void performMeleeAttack(NPC npc, Entity target, NPCCombatDefinitions defs) {
+	private void performMeleeAttack(NPC npc, Entity target, NpcCombatDefinition defs) {
 	npc.animate(new Animation(NEW_DRAGON_MELEE_ANIMATION));
 
 		int damage = NpcCombatCalculations.getRandomMaxHit(
@@ -62,7 +62,7 @@ public class LeatherDragonCombat extends CombatScript {
 		delayHit(npc, target, 0, getMeleeHit(npc, damage));
 	}
 
-	private void performDragonfireAttack(NPC npc, Entity target, NPCCombatDefinitions defs) {
+	private void performDragonfireAttack(NPC npc, Entity target, NpcCombatDefinition defs) {
 		if (!(target instanceof Player player)) {
 			return;
 		}
@@ -72,7 +72,7 @@ public class LeatherDragonCombat extends CombatScript {
 		npc.gfx(DRAGONFIRE_GFX, 100);
 
 		int rawDamage = Utils.getRandom(650);
-		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, rawDamage);
+		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, rawDamage, true);
 
 		delayHit(npc, player, 1, getRegularHit(npc, mitigatedDamage));
 

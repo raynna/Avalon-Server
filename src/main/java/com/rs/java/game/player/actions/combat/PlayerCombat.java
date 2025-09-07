@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.*;
@@ -14,7 +13,6 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.minigames.duel.DuelArena;
 import com.rs.java.game.minigames.godwars.zaros.NexMinion;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.DungeonBoss;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.npc.fightkiln.HarAken;
@@ -37,6 +35,7 @@ import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.MapAreas;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.AttackMethod;
 
 /**
  * @Improved Andreas - AvalonPK
@@ -2016,8 +2015,8 @@ public class PlayerCombat extends Action {
 
     public static boolean performHexbow(int weaponId, Entity target) {
         if ((weaponId == 17295 || weaponId == 15836) && target instanceof NPC) {
-            int type = ((NPC) target).getCombatDefinitions().getAttackStyle();
-            if (type == NPCCombatDefinitions.MAGE || type == NPCCombatDefinitions.SPECIAL2
+            AttackMethod type = ((NPC) target).getCombatDefinitions().getAttackMethod();
+            if (type == AttackMethod.MAGE || type == AttackMethod.SPECIAL2
                     || ((NPC) target).getId() == 10024 || ((NPC) target).getId() == 10128
                     || ((NPC) target).getId() == 11925 || ((NPC) target).getId() == 10744
                     || ((NPC) target) instanceof DungeonBoss) {

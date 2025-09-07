@@ -345,9 +345,10 @@ object CombatCalculations {
                 }
 
                 is NPC -> {
-                    val defenceBonus = target.combatData.magicDefence.magic ?: (target.combatLevel / 3)
-                    val defenceLevel = target.combatData.defenceLevel ?: target.combatLevel
-                    Pair(defenceBonus, defenceLevel + 9)
+                    val magicLevel = target.combatData.magicLevel ?: (target.combatLevel / 3)
+                    val defenceBonus = target.combatData.magicDefence.magic ?: target.combatLevel
+                    val effectiveDefence = magicLevel + 9
+                    Pair(defenceBonus, effectiveDefence)
                 }
 
                 else -> Pair(0, 0)

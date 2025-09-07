@@ -12,7 +12,6 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.combat.NPCCombatDefinitions;
 import com.rs.java.game.npc.dungeonnering.NecroLord;
 import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
@@ -64,7 +63,7 @@ public class NecroLordCombat extends CombatScript {
 			npc.animate(new Animation(14209));
 			npc.gfx(new Graphics(2716));
 			World.sendElementalProjectile(npc, target, 2721);
-			delayHit(npc, target, 1, getMagicHit(npc, getRandomMaxHit(npc, npc.getMaxHit(), NPCCombatDefinitions.MAGE, target)));
+			delayHit(npc, target, 1, npc.magicHit(npc, npc.getMaxHit()));
 			target.gfx(new Graphics(2726, 75, 80));
 			break;
 		case 2:
@@ -77,10 +76,10 @@ public class NecroLordCombat extends CombatScript {
 				@Override
 				public void run() {
 					for (Entity t : boss.getPossibleTargets()) {
-						int damage = getRandomMaxHit(boss, boss.getMaxHit(), NPCCombatDefinitions.MAGE, t);
+						Hit hit = npc.magicHit(t, boss.getMaxHit());
 						if (!t.withinDistance(tile, 1))
 							continue;
-						if (damage > 0) {
+						if (hit.getDamage() > 0) {
 							if (attack == 2)
 								t.setFreezeDelay(8);
 							else {
@@ -89,7 +88,7 @@ public class NecroLordCombat extends CombatScript {
 									p2.getPackets().sendGameMessage("You feel weary.");
 									p2.setRunEnergy((int) (p2.getRunEnergy() * .5));
 								}
-								t.applyHit(new Hit(boss, Utils.random(boss.getMaxHit()) + 1, HitLook.MAGIC_DAMAGE));
+								t.applyHit(hit);
 							}
 							t.gfx(new Graphics(attack == 2 ? 179 : 169, 60, 65));
 						}
