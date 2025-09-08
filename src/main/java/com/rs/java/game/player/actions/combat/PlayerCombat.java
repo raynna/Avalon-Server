@@ -3226,9 +3226,7 @@ public class PlayerCombat extends Action {
     public void doDefenceEmote(Entity target) {
         if (target instanceof Player) {
             Player p2 = (Player) target;
-            if (p2.getLockDelay() > Utils.currentTimeMillis())
-                return;
-            if (p2.getLockDelay() > Utils.currentTimeMillis())
+            if (p2.isLocked())
                 return;
             p2.animate(new Animation(Combat.getDefenceEmote(p2)));
         }
@@ -3255,7 +3253,7 @@ public class PlayerCombat extends Action {
 
     private boolean checkAll(Player player) {
         if (player.isDead() || player.hasFinished() || target.isDead() || target.hasFinished()
-                || player.getLockDelay() > Utils.currentTimeMillis()) {
+                || player.isLocked()) {
             return false;
         }
         int distanceX = player.getX() - target.getX();

@@ -163,7 +163,7 @@ public class SquealOfFortune implements Serializable {
 				player.getPackets().sendRunScript(5906);
 				return;
 			} // damx
-			if (player.getLockDelay() >= currentTime) {
+			if (player.isLocked()) {
 				return;
 			}
 			player.lock(11);

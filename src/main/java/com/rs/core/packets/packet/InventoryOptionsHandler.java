@@ -148,7 +148,7 @@ public class InventoryOptionsHandler {
     public static void handleItemOption1(Player player, final int slotId, Item item, int option) {
         long time = Utils.currentTimeMillis();
         int itemId = item.getId();
-        if (player.getLockDelay() >= time || player.getEmotesManager().getNextEmoteEnd() >= time)
+        if (player.isLocked() || player.getEmotesManager().getNextEmoteEnd() >= time)
             return;
         /**item click option 1*/
         ItemPlugin plugin = ItemPluginLoader.getPlugin(item);
@@ -297,14 +297,14 @@ public class InventoryOptionsHandler {
             return;
         }
         if (itemId >= 15086 && itemId <= 15100) {
-            if (player.getLockDelay() > Utils.currentTimeMillis())
+            if (player.isLocked())
                 return;
             Dicing.handleRoll(player, itemId, false);
             return;
         } else if (Lamps.isSelectable(itemId) || Lamps.isSkillLamp(itemId) || Lamps.isOtherLamp(itemId))
             Lamps.processLampClick(player, slotId, itemId);
         if (itemId == 299) {
-            if (player.getLockDelay() > Utils.currentTimeMillis())
+            if (player.isLocked())
                 return;
             if (!World.isTileFree(player.getPlane(), player.getX(), player.getY(), 1) || World.getObjectWithSlot(player, Region.OBJECT_SLOT_FLOOR) != null || player.getControlerManager().getControler() != null) {
                 player.message("You can't plant flowers here.");
@@ -666,7 +666,7 @@ public class InventoryOptionsHandler {
         } else if (interfaceId == 747 || interfaceId == 662 && (interfaceId2 == Inventory.INVENTORY_INTERFACE)) {
             if (!player.hasStarted() || !player.clientHasLoadedMapRegion() || player.isDead())
                 return;
-            if (player.getLockDelay() > Utils.currentTimeMillis())
+            if (player.isLocked())
                 return;
             if (player.getFamiliar() == null)
                 return;
@@ -997,7 +997,7 @@ public class InventoryOptionsHandler {
     public static void handleItemOption3(Player player, int slotId, Item item, int option) {
         long time = Utils.currentTimeMillis();
         int itemId = item.getId();
-        if (player.getLockDelay() >= time || player.getEmotesManager().getNextEmoteEnd() >= time)
+        if (player.isLocked() || player.getEmotesManager().getNextEmoteEnd() >= time)
             return;
         player.stopAll(false);
         ItemPlugin plugin = ItemPluginLoader.getPlugin(item);
@@ -1193,7 +1193,7 @@ public class InventoryOptionsHandler {
     public static void handleItemOption6(Player player, int slotId, Item item, int option) {
         long time = Utils.currentTimeMillis();
         int itemId = item.getId();
-        if (player.getLockDelay() >= time || player.getEmotesManager().getNextEmoteEnd() >= time)
+        if (player.isLocked() || player.getEmotesManager().getNextEmoteEnd() >= time)
             return;
         player.stopAll(false);
         ItemPlugin plugin = ItemPluginLoader.getPlugin(item);
@@ -1394,7 +1394,7 @@ public class InventoryOptionsHandler {
         String name = ItemDefinitions.getItemDefinitions(itemId).getName().toLowerCase();
         long time = Utils.currentTimeMillis();
         int amount = player.getInventory().getNumberOf(item.getId());
-        if (player.getLockDelay() >= time || player.getEmotesManager().getNextEmoteEnd() >= time)
+        if (player.isLocked() || player.getEmotesManager().getNextEmoteEnd() >= time)
             return;
         if (!player.getControlerManager().canDropItem(item))
             return;

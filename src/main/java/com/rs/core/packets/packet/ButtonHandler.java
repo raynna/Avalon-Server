@@ -181,8 +181,7 @@ public class ButtonHandler {
                         player.getPackets().sendGameMessage("Please finish with what you're doing before opening the price checker.");
                         return;
                     }
-                    long currentTime = Utils.currentTimeMillis();
-                    if (player.getLockDelay() >= currentTime) {
+                    if (player.isLocked()) {
                         player.getPackets().sendGameMessage("You can't open this while perfoming an action.");
                         return;
                     }
@@ -1889,7 +1888,7 @@ public class ButtonHandler {
         } else if (interfaceId == 750) {
             if (componentId == 4) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-                    if (player.getLockDelay() >= Utils.currentTimeMillis()) {
+                    if (player.isLocked()) {
                         player.getPackets().sendGameMessage("You can't toggle run while perfoming an action.");
                         player.sendRunButtonConfig();
                         return;
@@ -1906,7 +1905,7 @@ public class ButtonHandler {
                         player.getPackets().sendGameMessage("You can't rest while perfoming an emote.");
                         return;
                     }
-                    if (player.getLockDelay() >= currentTime) {
+                    if (player.isLocked()) {
                         player.getPackets().sendGameMessage("You can't rest while perfoming an action.");
                         return;
                     }
@@ -2192,15 +2191,13 @@ public class ButtonHandler {
             }
         } else if (interfaceId == 1028) CharacterDesign.handleButtons(player, componentId, slotId, packetId);
         else if (interfaceId == 1108 || interfaceId == 1109) {
-            long currentTime = Utils.currentTimeMillis();
-            if (player.getLockDelay() >= currentTime) {
+            if (player.isLocked()) {
                 player.getPackets().sendGameMessage("You can't open this while perfoming an action.");
                 return;
             }
             player.getFriendsIgnores().handleFriendChatButtons(interfaceId, componentId, packetId);
         } else if (interfaceId == 1089) {
-            long currentTime = Utils.currentTimeMillis();
-            if (player.getLockDelay() >= currentTime) {
+            if (player.isLocked()) {
                 player.getPackets().sendGameMessage("You can't open this while perfoming an action.");
                 return;
             }

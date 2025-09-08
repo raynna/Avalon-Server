@@ -350,7 +350,7 @@ public class LunarMagicks {
 							Utils.formatPlayerNameForDisplay(s.name().replace("_", " ")) + " is an unhandled spell.");
 					return false;
 				}
-				if (player.getLockDelay() > Utils.currentTimeMillis()) {
+				if (player.isLocked()) {
 					return false;
 				}
 				if (player.getSkills().getLevel(Skills.MAGIC) < s.getLevel()) {
@@ -377,7 +377,7 @@ public class LunarMagicks {
 							Utils.formatPlayerNameForDisplay(s.name().replace("_", " ")) + " is an unhandled spell.");
 					return false;
 				}
-				if (player.getLockDelay() > Utils.currentTimeMillis()) {
+				if (player.isLocked()) {
 					return false;
 				}
 				if (player.getSkills().getLevel(Skills.MAGIC) < s.getLevel()) {

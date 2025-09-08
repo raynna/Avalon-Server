@@ -165,7 +165,7 @@ public class TickManager {
          * Entity timers
          */
 
-        ENTITY_LOCK_TICK(0, 0),
+        ENTITY_LOCK_TICK(1, 0),
         FREEZE_TICKS(2, 0),
         FREEZE_IMMUNE_TICKS(3, 0),
         VENGEANCE_COOLDOWN(4, 0),

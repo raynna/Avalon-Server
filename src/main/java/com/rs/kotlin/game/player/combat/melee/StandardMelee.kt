@@ -1,7 +1,6 @@
 package com.rs.kotlin.game.player.combat.melee
 
 import com.rs.java.game.Animation
-import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
@@ -58,6 +57,7 @@ object StandardMelee : MeleeData() {
             name = "Dragon claws",
             weaponStyle = WeaponStyle.CLAWS,
             blockAnimationId = Animation.getId("animation.claws_block"),
+            soundId = Rscm.lookup("sound.claw_attack"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.claws_slash"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.claws_slash"),
@@ -89,6 +89,12 @@ object StandardMelee : MeleeData() {
             itemId = Weapon.itemIds("item.vesta_s_longsword", "item.vesta_s_longsword_deg"),
             name = "Vesta's longsword",
             weaponStyle = WeaponStyle.SCIMITAR,
+            sounds = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Rscm.lookup("sound.sword_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Rscm.lookup("sound.sword_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Rscm.lookup("sound.sword_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Rscm.lookup("sound.sword_slash"),
+            ),
             blockAnimationId = Animation.getId("animation.scimitar_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.longsword_slash"),
@@ -101,9 +107,10 @@ object StandardMelee : MeleeData() {
                 accuracyMultiplier = 1.75,
                 execute = { context ->
                     context.attacker.animate("animation.vestas_longsword_special")
+                    context.attacker.playSound("sound.dragon_longsword_special", 1)
                     val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
                     val roll = context.rollMelee();
-                    val damage = ((0.2 * maxHit).toInt() .. (1.2 * maxHit).toInt()).random()
+                    val damage = ((0.2 * maxHit).toInt()..(1.2 * maxHit).toInt()).random()
                     context.hits {
                         val hit = Hit(context.attacker, damage, Hit.HitLook.MELEE_DAMAGE);
                         if (roll.damage > 0) {
@@ -119,6 +126,12 @@ object StandardMelee : MeleeData() {
             itemId = Weapon.itemIds("item.korasi_sword"),
             name = "Korasi's sword",
             weaponStyle = WeaponStyle.SCIMITAR,
+            sounds = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Rscm.lookup("sound.sword_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Rscm.lookup("sound.sword_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Rscm.lookup("sound.sword_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Rscm.lookup("sound.sword_slash"),
+            ),
             blockAnimationId = Animation.getId("animation.scimitar_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.scimitar_slash"),
@@ -181,11 +194,7 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.CONTROLLED, 1) to Animation.getId("animation.abyssal_whip_attack2"),
                 StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.abyssal_whip_attack3"),
             ),
-            sounds = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to Rscm.lookup("sound.whip_attack"),
-                StyleKey(AttackStyle.CONTROLLED, 1) to Rscm.lookup("sound.whip_attack"),
-                StyleKey(AttackStyle.DEFENSIVE, 2) to Rscm.lookup("sound.whip_attack"),
-            ),
+            soundId = Rscm.lookup("sound.whip_attack"),
             special = SpecialAttack.Combat(
                 energyCost = 50,
                 accuracyMultiplier = 1.25,
@@ -208,6 +217,12 @@ object StandardMelee : MeleeData() {
             itemId = Weapon.itemIds("item.dragon_scimitar"),
             name = "Dragon scimitar",
             weaponStyle = WeaponStyle.SCIMITAR,
+            sounds = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Rscm.lookup("sound.scimitar_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Rscm.lookup("sound.scimitar_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Rscm.lookup("sound.scimitar_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Rscm.lookup("sound.scimitar_slash"),
+            ),
             blockAnimationId = Animation.getId("animation.scimitar_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.scimitar_slash"),
@@ -244,6 +259,13 @@ object StandardMelee : MeleeData() {
             weaponStyle = WeaponStyle.DAGGER,
             attackSpeed = 4,
             blockAnimationId = Animation.getId("animation.dragon_dagger_block"),
+            soundId = Rscm.lookup("sound.dagger_stab"),
+            sounds = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Rscm.lookup("sound.dagger_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Rscm.lookup("sound.dagger_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Rscm.lookup("sound.sword_slash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Rscm.lookup("sound.dagger_stab"),
+            ),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.dragon_dagger_stab"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.dragon_dagger_stab"),
@@ -266,11 +288,40 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
-                "item.dragon_mace", "item.dragon_mace"
+                "item.bronze_mace", "item.iron_mace",
+                "item.steel_mace", "item.black_mace",
+                "item.mithril_mace", "item.adamant_mace",
+                "item.rune_mace", "item.void_knight_mace",
+            ),
+            name = "Maces",
+            weaponStyle = WeaponStyle.MACE,
+            blockAnimationId = Animation.getId("animation.mace_block"),
+            sounds = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Rscm.lookup("sound.mace_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Rscm.lookup("sound.mace_crush"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Rscm.lookup("sound.mace_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Rscm.lookup("sound.mace_crush"),
+            ),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.mace_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.mace_crush"),
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.dragon_mace"
             ),
             name = "Dragon mace",
             weaponStyle = WeaponStyle.MACE,
             blockAnimationId = Animation.getId("animation.mace_block"),
+            sounds = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Rscm.lookup("sound.mace_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Rscm.lookup("sound.mace_crush"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Rscm.lookup("sound.mace_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Rscm.lookup("sound.mace_crush"),
+            ),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
@@ -296,6 +347,12 @@ object StandardMelee : MeleeData() {
             attackSpeed = 5,
             name = "Annihilation",
             weaponStyle = WeaponStyle.MACE,
+            sounds = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Rscm.lookup("sound.mace_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Rscm.lookup("sound.mace_crush"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Rscm.lookup("sound.mace_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Rscm.lookup("sound.mace_crush"),
+            ),
             blockAnimationId = Animation.getId("animation.mace_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
@@ -322,6 +379,7 @@ object StandardMelee : MeleeData() {
             name = "Granite maul",
             weaponStyle = WeaponStyle.HAMMER,
             blockAnimationId = Animation.getId("animation.granite_maul_block"),
+            soundId = Rscm.lookup("sound.granite_maul_attack"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.granite_maul_attack"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.granite_maul_attack"),
@@ -348,6 +406,8 @@ object StandardMelee : MeleeData() {
             effect = SpecialEffect(
                 execute = { context ->
                     context.attacker.animate(Animation("animation.torag_hammer_attack"))
+                    context.attacker.playSound("sound.hammer", 1)
+                    context.attacker.playSound("sound.hammer", 10, 1)
 
                     val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
                     val maxHit1 = (maxHit + 1) / 2
@@ -367,6 +427,7 @@ object StandardMelee : MeleeData() {
             name = "Chaotic staff",
             weaponStyle = WeaponStyle.STAFF,
             blockAnimationId = Animation.getId("animation.staff_of_light_block"),
+            soundId = Rscm.lookup("sound.hammer"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
@@ -378,6 +439,7 @@ object StandardMelee : MeleeData() {
             name = "Obliteration",
             weaponStyle = WeaponStyle.STAFF,
             blockAnimationId = Animation.getId("animation.staff_of_light_block"),
+            soundId = Rscm.lookup("sound.hammer"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
@@ -389,7 +451,12 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate(10518)
                     context.attacker.gfx(1853)
                     context.hits {
-                        val magicHit = magic(spellId = 39, delay = context.combat.getHitDelay(), damageMultiplier = 1.5, accuracyMultiplier = 1.5)
+                        val magicHit = magic(
+                            spellId = 39,
+                            delay = context.combat.getHitDelay(),
+                            damageMultiplier = 1.5,
+                            accuracyMultiplier = 1.5
+                        )
 
                     }
 
@@ -398,33 +465,80 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
-                "item.ancient_staff", "item.ancient_staff_2", "item.ancient_staff_3",
-                "item.ancient_staff_4", "item.ancient_staff_5", "item.ancient_staff_6",
-                "item.ancient_staff_7", "item.ancient_staff_8", "item.ancient_staff_9",
-                "item.ancient_staff_10", "item.staff", "item.staff_of_air",
-                "item.staff_of_water", "item.staff_of_earth", "item.staff_of_fire",
-                "item.battlestaff", "item.air_battlestaff", "item.water_battlestaff",
-                "item.earth_battlestaff", "item.fire_battlestaff", "item.lava_battlestaff",
-                "item.mud_battlestaff", "item.mystic_air_staff", "item.mystic_water_staff",
-                "item.mystic_earth_staff", "item.mystic_fire_staff", "item.mystic_lava_staff",
-                "item.mystic_mud_staff", "item.staff_of_armadyl", "item.ahrim_s_staff",
-                "item.ahrim_s_staff_100", "item.ahrim_s_staff_75", "item.ahrim_s_staff_50",
-                "item.ahrim_s_staff_25", "item.ahrim_s_staff_0", "item.gravite_staff",
-                "item.zuriel_s_staff", "item.zuriel_s_staff_deg", "item.corrupt_zuriel_s_staff",
-                "item.corrupt_zuriel_s_staff_deg", "item.staff_of_armadyl", "item.armadyl_battlestaff",
-                "item.beginner_wand", "item.apprentice_wand", "item.master_wand",
-                "item.iban_s_staff", "item.slayer_s_staff", "item.guthix_staff",
-                "item.zamorak_staff", "item.saradomin_staff", "item.necromancer_s_air_staff",
-                "item.necromancer_s_water_staff", "item.necromancer_s_earth_staff", "item.necromancer_s_fire_staff",
-                "item.necromancer_s_mud_staff", "item.necromancer_s_lava_staff", "item.necromancer_s_steam_staff",
-                "item.skeletal_staff_of_air", "item.skeletal_staff_of_water", "item.skeletal_staff_of_earth",
-                "item.skeletal_staff_of_fire", "item.skeletal_battlestaff_of_air", "item.skeletal_battlestaff_of_water",
-                "item.skeletal_battlestaff_of_earth", "item.skeletal_battlestaff_of_fire", "item.skeletal_lava_battlestaff",
-                "item.skeletal_mud_battlestaff", "item.skeletal_steam_battlestaff", "item.lunar_staff"
+                "item.ancient_staff",
+                "item.ancient_staff_2",
+                "item.ancient_staff_3",
+                "item.ancient_staff_4",
+                "item.ancient_staff_5",
+                "item.ancient_staff_6",
+                "item.ancient_staff_7",
+                "item.ancient_staff_8",
+                "item.ancient_staff_9",
+                "item.ancient_staff_10",
+                "item.staff",
+                "item.staff_of_air",
+                "item.staff_of_water",
+                "item.staff_of_earth",
+                "item.staff_of_fire",
+                "item.battlestaff",
+                "item.air_battlestaff",
+                "item.water_battlestaff",
+                "item.earth_battlestaff",
+                "item.fire_battlestaff",
+                "item.lava_battlestaff",
+                "item.mud_battlestaff",
+                "item.mystic_air_staff",
+                "item.mystic_water_staff",
+                "item.mystic_earth_staff",
+                "item.mystic_fire_staff",
+                "item.mystic_lava_staff",
+                "item.mystic_mud_staff",
+                "item.staff_of_armadyl",
+                "item.ahrim_s_staff",
+                "item.ahrim_s_staff_100",
+                "item.ahrim_s_staff_75",
+                "item.ahrim_s_staff_50",
+                "item.ahrim_s_staff_25",
+                "item.ahrim_s_staff_0",
+                "item.gravite_staff",
+                "item.zuriel_s_staff",
+                "item.zuriel_s_staff_deg",
+                "item.corrupt_zuriel_s_staff",
+                "item.corrupt_zuriel_s_staff_deg",
+                "item.staff_of_armadyl",
+                "item.armadyl_battlestaff",
+                "item.beginner_wand",
+                "item.apprentice_wand",
+                "item.master_wand",
+                "item.iban_s_staff",
+                "item.slayer_s_staff",
+                "item.guthix_staff",
+                "item.zamorak_staff",
+                "item.saradomin_staff",
+                "item.necromancer_s_air_staff",
+                "item.necromancer_s_water_staff",
+                "item.necromancer_s_earth_staff",
+                "item.necromancer_s_fire_staff",
+                "item.necromancer_s_mud_staff",
+                "item.necromancer_s_lava_staff",
+                "item.necromancer_s_steam_staff",
+                "item.skeletal_staff_of_air",
+                "item.skeletal_staff_of_water",
+                "item.skeletal_staff_of_earth",
+                "item.skeletal_staff_of_fire",
+                "item.skeletal_battlestaff_of_air",
+                "item.skeletal_battlestaff_of_water",
+                "item.skeletal_battlestaff_of_earth",
+                "item.skeletal_battlestaff_of_fire",
+                "item.skeletal_lava_battlestaff",
+                "item.skeletal_mud_battlestaff",
+                "item.skeletal_steam_battlestaff",
+                "item.lunar_staff"
             ),
             name = "Staff & Wand",
             weaponStyle = WeaponStyle.STAFF,
             blockAnimationId = Animation.getId("animation.staff_block"),
+            soundId = Rscm.lookup("sound.staff_bash"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.staff_bash"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.staff_bash"),
@@ -440,6 +554,11 @@ object StandardMelee : MeleeData() {
             name = "Staff of light",
             weaponStyle = WeaponStyle.STAFF_OF_LIGHT,
             blockAnimationId = Animation.getId("animation.staff_of_light_block"),
+            sounds = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Rscm.lookup("sound.sword_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Rscm.lookup("sound.sword_slash"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Rscm.lookup("sound.staff_bash"),
+            ),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.staff_of_light_stab"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.staff_of_light_slash"),
@@ -549,6 +668,114 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = listOf(
+                Rscm.lookup("item.saradomin_godsword"),
+                Rscm.lookup("item.saradomin_godsword_2"),
+                Rscm.lookup("item.lucky_saradomin_godsword")
+            ),
+            name = "Saradomin godsword",
+            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            blockAnimationId = Animation.getId("animation.godsword_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.godsword_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.godsword_smash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.godsword_slash"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 50,
+                accuracyMultiplier = 2.0,
+                damageMultiplier = 1.10,
+                execute = { context ->
+                    context.attacker.animate("animation.saradomin_godsword_special")
+                    context.attacker.gfx("graphic.saradomin_godsword_special")
+                    context.hits {
+                        val hit = melee()
+
+                        if (hit.damage > 0) {
+                            val potentialDmg = hit.damage
+
+                            val hpRestore: Int
+                            val prayerRestore: Int
+
+                            if (potentialDmg < 22) {
+                                hpRestore = 10
+                                prayerRestore = 5
+                            } else {
+                                hpRestore = ((potentialDmg * 0.5).toInt() + 1) and -2
+                                prayerRestore = ((potentialDmg * 0.25).toInt() + 1) and -2
+                            }
+
+                            val player = context.attacker
+                            player.heal(hpRestore)
+                            player.prayer.restorePrayer(prayerRestore)
+                        }
+                    }
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.bandos_godsword", "item.bandos_godsword_2", "item.lucky_bandos_godsword",
+            ),
+            name = "Bandos godsword",
+            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            blockAnimationId = Animation.getId("animation.godsword_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.godsword_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.godsword_smash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.godsword_slash"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 50,
+                accuracyMultiplier = 2.0,
+                damageMultiplier = 1.21,
+                execute = { context ->
+                    context.attacker.animate("animation.bandos_godsword_special")
+                    context.attacker.gfx("graphic.bandos_godsword_special")
+                    context.hits {
+                        val hit = melee()
+                        val defender = context.defender
+                        if (hit.damage > 0) {
+                            val drainOrderPlayers = listOf(
+                                Skills.DEFENCE, Skills.STRENGTH,
+                                Skills.ATTACK, Skills.MAGIC, Skills.RANGE
+                            )
+                            val drainOrderNpcs = listOf(
+                                "defence", "strength", "prayer",
+                                "attack", "magic", "ranged"
+                            )
+
+                            var remainingDrain = hit.damage / 10
+
+                            if (defender is Player) {
+                                for (skill in drainOrderPlayers) {
+                                    if (remainingDrain <= 0) break
+                                    val current = defender.skills.getLevel(skill)
+                                    if (current <= 0) continue
+
+                                    val drainAmount = minOf(current, remainingDrain)
+                                    defender.skills.drainLevel(skill, drainAmount)
+                                    remainingDrain -= drainAmount
+                                }
+                            } else if (defender is NPC) {
+                                for (skill in drainOrderNpcs) {
+                                    if (remainingDrain <= 0) break
+                                    val current = defender.combatData.getCurrentStat(skill)
+                                    if (current <= 0) continue
+
+                                    val drainAmount = minOf(current, remainingDrain)
+                                    defender.combatData.drain(skill, drainAmount)
+                                    remainingDrain -= drainAmount
+                                }
+                            }
+                        }
+                    }
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = listOf(
                 Rscm.lookup("item.zamorak_godsword"),
                 Rscm.lookup("item.zamorak_godsword_2"),
                 Rscm.lookup("item.lucky_zamorak_godsword")
@@ -593,6 +820,7 @@ object StandardMelee : MeleeData() {
             name = "Dharok's greataxe",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
             blockAnimationId = Animation.getId("animation.dharok_greataxe_block"),
+
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.dharok_greataxe_slash"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.dharok_greataxe_slash"),
@@ -649,8 +877,7 @@ object StandardMelee : MeleeData() {
                 "item.katagon_spear", "item.katagon_spear_b",
                 "item.gorgonite_spear", "item.gorgonite_spear_b",
                 "item.promethium_spear", "item.promethium_spear_b",
-                "item.primal_spear", "item.primal_spear_b",
-                "item.zamorakian_spear", "item.dragon_spear"//TODO THESE 2 WILL BE THEIR OWN WEAPON LATER ON FOR SPECIAL ATTACK
+                "item.primal_spear", "item.primal_spear_b"
             ),
             name = "Spear",
             weaponStyle = WeaponStyle.SPEAR,
@@ -660,6 +887,71 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.CONTROLLED, 1) to Animation.getId("animation.new_spear_slash"),
                 StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.new_spear_crush"),
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.new_spear_stab"),
+            ),
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.zamorakian_spear", "item.dragon_spear"
+            ),
+            name = "Dragon & zamorakian spear",
+            weaponStyle = WeaponStyle.SPEAR,
+            blockAnimationId = Animation.getId("animation.new_spear_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.CONTROLLED, 0) to Animation.getId("animation.new_spear_stab"),
+                StyleKey(AttackStyle.CONTROLLED, 1) to Animation.getId("animation.new_spear_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.new_spear_crush"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.new_spear_stab"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 25,
+                execute = { context ->
+                    val defender = context.defender
+                    val attacker = context.attacker
+                    attacker.animate("animation.dragon_spear_special")
+                    defender.gfx("graphic.stun")
+                    defender.resetWalkSteps();
+                    val dx = defender.x - attacker.x
+                    val dy = defender.y - attacker.y
+
+                    val pushX = dx.coerceIn(-1, 1)
+                    val pushY = dy.coerceIn(-1, 1)
+
+                    val destX = defender.x + pushX
+                    val destY = defender.y + pushY
+
+                    if (defender is Player) {
+                        defender.stopAll()
+                    }
+                    var moved = defender.addWalkSteps(destX, destY, 1)
+                    if (!moved) {
+                        val swapX = attacker.x
+                        val swapY = attacker.y
+                        moved = defender.addWalkSteps(swapX, swapY, 1)
+                    }
+                    defender.lock(5)
+                    attacker.setNextFaceEntity(defender)
+                    defender.setNextFaceEntity(null)
+                    defender.direction = attacker.direction
+
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.bronze_sword", "item.iron_sword",
+                "item.steel_sword", "item.black_sword",
+                "item.mithril_sword", "item.adamant_sword",
+                "item.rune_sword",
+            ),
+            name = "Dagger",
+            weaponStyle = WeaponStyle.DAGGER,
+            blockAnimationId = Animation.getId("animation.sword_block"),
+            soundId = Rscm.lookup("sound.sword_slash"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.dagger_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.dagger_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.dagger_slash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.dagger_stab"),
             ),
         ),
         MeleeWeapon(
@@ -685,6 +977,7 @@ object StandardMelee : MeleeData() {
             name = "Dagger",
             weaponStyle = WeaponStyle.DAGGER,
             blockAnimationId = Animation.getId("animation.dagger_block"),
+            soundId = Rscm.lookup("sound.dagger_stab"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.dagger_stab"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.dagger_stab"),
@@ -714,6 +1007,7 @@ object StandardMelee : MeleeData() {
             name = "Battleaxe",
             weaponStyle = WeaponStyle.BATTLEAXE,
             blockAnimationId = Animation.getId("animation.battleaxe_block"),
+            soundId = Rscm.lookup("sound.battleaxe"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.battleaxe_slash"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.battleaxe_slash"),
@@ -742,6 +1036,7 @@ object StandardMelee : MeleeData() {
             name = "Warhammer",
             weaponStyle = WeaponStyle.HAMMER,
             blockAnimationId = Animation.getId("animation.warhammer_block"),
+            soundId = Rscm.lookup("sound.hammer"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.warhammer_crush"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.warhammer_crush"),
@@ -755,6 +1050,7 @@ object StandardMelee : MeleeData() {
             name = "Longsword",
             weaponStyle = WeaponStyle.SCIMITAR,
             blockAnimationId = Animation.getId("animation.chaotic_rapier_block"),
+            soundId = Rscm.lookup("sound.sword_slash"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_slash"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_slash"),
@@ -768,8 +1064,9 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.darklight_special")
                     context.attacker.gfx("graphic.darklight_special")
+                    context.attacker.playSound("sound.sword_slash", 1)
                     context.hits {
-                    val hit = melee()
+                        val hit = melee()
                         if (hit.damage > 0) {
                             val defender = context.defender
                             if (defender is NPC) {
@@ -789,6 +1086,58 @@ object StandardMelee : MeleeData() {
                                     defender.skills.drainLevel(skill, drainAmount)
                                 }
                             }
+                        }
+                    }
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.statius_s_warhammer", "item.statius_warhammer_deg",
+            ),
+            name = "Statius' Warhammer",
+            weaponStyle = WeaponStyle.HAMMER,
+            blockAnimationId = Animation.getId("animation.mace_block"),
+            soundId = Rscm.lookup("sound.hammer"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.mace_crush"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 50,
+                accuracyMultiplier = 1.0,
+                damageMultiplier = 1.0,
+                execute = { context ->
+                    context.attacker.animate("animation.statius_warhammer_special")
+                    context.attacker.gfx("graphic.statius_warhammer_special")
+                    context.attacker.playSound("sound.hammer", 1)
+                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
+                    val roll = context.rollMelee();
+                    val damage = ((0.25 * maxHit).toInt()..(1.25 * maxHit).toInt()).random()
+                    context.hits {
+                        val hit = Hit(context.attacker, damage, Hit.HitLook.MELEE_DAMAGE);
+                        if (roll.damage > 0) {
+                            val defender = context.defender
+                            addHit(context.defender, hit)
+                            if (defender is NPC) {
+                                val drainPercent = 0.30
+
+                                listOf("defence").forEach { skill ->
+                                    val baseLevel = defender.combatData.getBaseStat(skill)
+                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                    defender.combatData.drain(skill, drainAmount)
+                                }
+                            } else if (defender is Player) {
+                                val drainPercent = 0.30
+                                listOf(Skills.DEFENCE).forEach { skill ->
+                                    val baseLevel = defender.skills.getLevelForXp(skill)
+                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                    defender.skills.drainLevel(skill, drainAmount)
+                                }
+                            }
+                        } else {
+                            addHit(context.defender, Hit(context.attacker, 0, Hit.HitLook.MELEE_DAMAGE));
                         }
                     }
                 }
@@ -825,12 +1174,39 @@ object StandardMelee : MeleeData() {
             name = "Longsword",
             weaponStyle = WeaponStyle.SCIMITAR,
             blockAnimationId = Animation.getId("animation.chaotic_rapier_block"),
+            soundId = Rscm.lookup("sound.sword_slash"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_slash"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_slash"),
                 StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.chaotic_stab"),
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.chaotic_slash"),
             ),
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.dragon_longsword", "item.dragon_longsword_2",
+            ),
+            name = "Longsword",
+            weaponStyle = WeaponStyle.SCIMITAR,
+            blockAnimationId = Animation.getId("animation.chaotic_rapier_block"),
+            soundId = Rscm.lookup("sound.sword_slash"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.chaotic_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.chaotic_slash"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 25,
+                accuracyMultiplier = 1.25,
+                damageMultiplier = 1.25,
+                execute = { context ->
+                    context.attacker.animate("animation.dragon_longsword_special")
+                    context.attacker.gfx("graphic.dragon_longsword_special", 100)
+                    //context.attacker.playSound("sound.dragon_longsword_special", 1)
+                    context.meleeHit()
+                }
+            )
         ),
         MeleeWeapon(
             itemId = Item.getIds(
@@ -851,6 +1227,7 @@ object StandardMelee : MeleeData() {
             name = "Rapier",
             weaponStyle = WeaponStyle.RAPIER,
             blockAnimationId = Animation.getId("animation.chaotic_rapier_block"),
+            soundId = Rscm.lookup("sound.sword_slash"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_stab"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_stab"),

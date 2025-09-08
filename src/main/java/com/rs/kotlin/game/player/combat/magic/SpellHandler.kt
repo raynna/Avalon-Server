@@ -127,7 +127,7 @@ object SpellHandler {
             }
         }
 
-        if (player.lockDelay > Utils.currentTimeMillis()) {
+        if (player.isLocked) {
             return false
         }
 
@@ -422,9 +422,7 @@ object SpellHandler {
                 }
 
                 var teleTile = tile
-                player.message("spellName: " + spell.name)
                 if (spell.name.contains("home", ignoreCase = true) && (EdgevillePvPControler.isAtPvP(player) || EdgevillePvPControler.isAtBank(player))) {
-                    player.message("in pvp & name contains home");
                     teleTile = WorldTile(85, 80, 0)
                 }
                 for (trycount in 0 until 10) {

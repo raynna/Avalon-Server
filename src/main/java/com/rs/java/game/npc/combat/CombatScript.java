@@ -20,6 +20,7 @@ import com.rs.kotlin.game.npc.combatdata.AttackMethod;
 import com.rs.kotlin.game.npc.combatdata.AttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.player.combat.CombatAction;
+import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public abstract class CombatScript {
 
@@ -61,6 +62,7 @@ public abstract class CombatScript {
                 p2.handleIncommingHit(hit);
             if (target instanceof Player playerTarget) {
                 PrayerEffectHandler.handleProtectionEffects(npc, playerTarget, hit);
+                PvpManager.onPlayerDamagedByNpc(playerTarget);
             }
             handleAbsorb(target, hit);
             handleStaffOfLightReduction(target, hit);

@@ -5,7 +5,6 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -41,7 +40,6 @@ public class KalphiteQueenCombat extends CombatScript {
 		if (chosen == null) return;
 
 		if (chosen instanceof Player p) {
-			// mark target so we don’t retarget them in the same cycle
 			new ArrayList<Player>().add(p);
 		}
 
@@ -53,12 +51,11 @@ public class KalphiteQueenCombat extends CombatScript {
 		delayHit(npc, chosen, 2, npc.magicHit(chosen, npc.getMaxHit()));
 	}
 
-	private void attackMelee(NPC npc, Entity target, NpcCombatDefinition defs) {
-		npc.animate(new Animation(defs.getAttackAnim()));
+	private void attackMelee(NPC npc, Entity target) {
+		npc.animate(new Animation(npc.getId() == 1158 ? 6241 : 6235));
 		delayHit(npc, target, 0, npc.meleeHit(target, npc.getMaxHit()));
 	}
 
-	// -------------------- Targeting --------------------
 
 	private Player getClosestTarget(Entity fromEntity, List<Player> excluded) {
 		if (fromEntity == null) return null;
@@ -84,11 +81,8 @@ public class KalphiteQueenCombat extends CombatScript {
 				.orElse(null);
 	}
 
-	// -------------------- Main attack entry --------------------
-
 	@Override
 	public int attack(NPC npc, Entity target) {
-		NpcCombatDefinition defs = npc.getCombatDefinitions();
 
 		int style = Utils.random(3);
 		if (style == 0) { // melee attempt
@@ -96,9 +90,9 @@ public class KalphiteQueenCombat extends CombatScript {
 			int dy = target.getY() - npc.getY();
 			int size = npc.getSize();
 			if (dx > size || dx < -1 || dy > size || dy < -1) {
-				style = Utils.random(2) + 1; // force ranged or magic
+				style = Utils.random(2) + 1;
 			} else {
-				attackMelee(npc, target, defs);
+				attackMelee(npc, target);
 				return npc.getAttackSpeed();
 			}
 		}

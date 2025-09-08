@@ -39,6 +39,7 @@ object CommandRegistry {
         register("copy", "gearother", command = CopyCommand())
         register("bank", "openbank", command = BankCommand())
         register("worldboss", "spawnboss", command = WorldBossCommand())
+        register("barrows", "barrowstele", "barrowsteleport", command = BarrowsTeleportCommand())
         val teleportCommand = TeleportCommand()
         register(*teleportCommand.getAllTriggers().toTypedArray(), command = teleportCommand)
         register("location", "locations", "teleports", command = LocationsCommand(teleportCommand))

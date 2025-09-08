@@ -488,6 +488,8 @@ public class NPC extends Entity implements Serializable {
             setOwner(null);
             finish();
         }
+        if (gameTick % 96 == 0)
+            combatData.regenerate(1);
         processNPC();
     }
 
@@ -1285,23 +1287,6 @@ public class NPC extends Entity implements Serializable {
         return super.withinDistance(tile, distance);
     }
 
-    /**
-     * Gets the locked.
-     *
-     * @return The locked.
-     */
-    public boolean isLocked() {
-        return locked;
-    }
-
-    /**
-     * Sets the locked.
-     *
-     * @param locked The locked to set.
-     */
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
 
     public SecondaryBar getNextSecondaryBar() {
         return nextSecondaryBar;

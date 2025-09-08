@@ -46,6 +46,7 @@ public abstract class Entity extends WorldTile {
     // 1thread
     // so
     // concurent
+    private transient WorldTile previousTile;
     private transient int direction;
     private transient WorldTile lastWorldTile;
     private transient WorldTile nextWorldTile;
@@ -235,7 +236,7 @@ public abstract class Entity extends WorldTile {
             }
             if (player.getEmotesManager().getNextEmoteEnd() >= Utils.currentTimeMillis())
                 return;
-            if (player.getLockDelay() > Utils.currentTimeMillis())
+            if (player.isLocked())
                 return;
         }
         int processedCount = 0;
@@ -489,6 +490,7 @@ public abstract class Entity extends WorldTile {
                 resetWalkSteps();
                 break;
             }
+            previousTile = new WorldTile(getX(), getY(), getPlane());
             if (stepCount == 0)
                 nextWalkDirection = dir;
             else
@@ -1112,14 +1114,50 @@ public abstract class Entity extends WorldTile {
         nextHits.clear();
     }
 
+    public long getLockDelay() {
+        return tickManager.getTicksLeft(TickManager.TickKeys.ENTITY_LOCK_TICK);
+    }
+
+    public void unlock() {
+        tickManager.remove(TickManager.TickKeys.ENTITY_LOCK_TICK);
+    }
+
+    public void lock() {
+        lock(5000);
+    }
+
+    public void setLocked(boolean locked) {
+        if (locked) {
+            unlock();
+        } else {
+            lock(5000);
+        }
+    }
+
+    public void lock(int time) {
+        tickManager.addTicks(TickManager.TickKeys.ENTITY_LOCK_TICK, time);
+    }
+
+    public boolean isLocked() {
+        return tickManager.isActive(TickManager.TickKeys.ENTITY_LOCK_TICK);
+    }
+
+
     public abstract void finish();
 
     public abstract int getMaxHitpoints();
+
+    public transient int gameTick;
+
+    public int getGameTicks() {
+        return gameTick;
+    }
 
     public void processEntity() {
         poison.processPoison();
         newPoison.processPoison();
         tickManager.tick();
+        gameTick++;
         processMovement();
         processReceivedHits();
         processReceivedDamage();
@@ -1703,6 +1741,9 @@ public abstract class Entity extends WorldTile {
 
     public WorldTile getLastWorldTile() {
         return lastWorldTile;
+    }
+    public WorldTile getPreviousTile() {
+        return previousTile;
     }
 
     public ArrayList<Hit> getNextHits() {

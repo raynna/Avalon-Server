@@ -7,6 +7,7 @@ object WorldBossTable {
     val regular = dropTable(rolls = 3) {
         alwaysDrops {
             drop("item.coins", amount = 250000..500000)
+            drop("item.pvp_token", amount = 500..1_500)
         }
 
         mainDrops(512) {
@@ -70,6 +71,10 @@ object WorldBossTable {
     .apply { name = "World Boss Regular" }
 
     val chest = dropTable(rolls = 1) {
+        alwaysDrops {
+            drop("item.coins", amount = 500_000..1_500_000)
+            drop("item.pvp_token", amount = 1_000..3_000)
+        }
         mainDrops(512) {
             drop("item.broken_statue_headdress", weight = 40)
             drop("item.seren_statuette", weight = 20)
@@ -139,7 +144,7 @@ object WorldBossTable {
             drop("item.virtus_mask", weight = 1)
             drop("item.virtus_robe_top", weight = 1)
             drop("item.virtus_robe_legs", weight = 1)
-            drop("item.ancient_statuette_noted", weight = 19)
+            drop("item.ancient_statuette", weight = 19)
         }
     }.apply { name = "World Boss Chest"}
     }

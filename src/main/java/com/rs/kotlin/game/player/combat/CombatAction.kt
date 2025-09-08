@@ -259,7 +259,7 @@ class CombatAction(
 
         followTask = object : WorldTask() {
             override fun run() {
-                if (player.isDead || target.isDead || target.hasFinished() || !player.isActive) {
+                if (player.isDead || player.isLocked || target.isDead || target.hasFinished() || !player.isActive) {
                     stop()
                     return
                 }

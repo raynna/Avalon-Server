@@ -366,7 +366,7 @@ public class TeleportTab extends CustomTab {
 	}
 
 	public static void handleButtons(Player player, int componentId) {
-		if (player.getLockDelay() > Utils.currentTimeMillis()) {
+		if (player.isLocked()) {
 			return;
 		}
 

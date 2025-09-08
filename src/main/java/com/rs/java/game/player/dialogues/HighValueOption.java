@@ -33,13 +33,10 @@ public class HighValueOption extends Dialogue {
 				World.updateGroundItem(item, new WorldTile(player), player, 60, 0);
 			player.getPackets().sendSound(4500, 0, 1);
 		} else if (player.inPkingArea()) {
-			sendItemDialogue(item.getDefinitions().isNoted() ? item.getId() - 1 : item.getId(),
-					item.getDefinitions().isStackable() ? 900 : 1,
-					"The item you are trying to drop is considered <col=ff0000>valuable.<br>You are standing in a PvP zone. Your item will appear instantly to everyone.");
+			sendItemDialogue(item.getDefinitions().isNoted() ? item.getId() - 1 : item.getId(), "The item you are trying to drop is considered <col=ff0000>valuable.<br>You are standing in a PvP zone. Your item will appear instantly to everyone.");
 			stage = 1;
 		} else {
 			sendItemDialogue(item.getDefinitions().isNoted() ? item.getId() - 1 : item.getId(),
-					item.getDefinitions().isStackable() ? 900 : 1,
 					"The item you are trying to drop is considered <col=ff0000>valuable.<br>Are you absolutely sure that you want to drop it?");
 			stage = 1;
 		}
@@ -49,7 +46,7 @@ public class HighValueOption extends Dialogue {
 	public void run(int interfaceId, int componentId) {
 		switch (stage) {
 		case 1:
-			sendOptions(item.getName() + "; Really want to drop it?", "Yes", "Yes and don't ask me again", "No");
+			sendOptionsDialogue(item.getName() + "; Really want to drop it?", "Yes", "Yes and don't ask me again", "No");
 			stage = 2;
 			break;
 		case 2:

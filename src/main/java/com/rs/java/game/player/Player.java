@@ -649,6 +649,7 @@ public class Player extends Entity {
     private transient DialogueManager dialogueManager;
     private transient Dialogue dialogue;
 
+
     /**
      * @HintIcons
      */
@@ -831,10 +832,6 @@ public class Player extends Entity {
      */
     private transient boolean resting;
 
-    /**
-     * @PlayerLock
-     */
-    private transient long lockDelay;
 
     /**
      * @Specials
@@ -2055,8 +2052,6 @@ public class Player extends Entity {
         if (getSlayerManager().getCurrentTask() != null) {
             int ct = getSlayerManager().getCount();
             String name = getSlayerManager().getCurrentTask().getName().replace("$", "'");
-            // String location =
-            // getSlayerManager().getCurrentTask().getTips()[0];
             writeTask(ct + " " + name + (ct > 1 ? "'s left" : " left"));
             String[] tipDialouges = getSlayerManager().getCurrentTask().getTips();
             if (tipDialouges != null && tipDialouges.length != 0) {
@@ -2275,60 +2270,6 @@ public class Player extends Entity {
         }
     }
 
-    public double getSpecialMaxHit() {
-        int weaponId = getEquipment().getWeaponId();
-        switch (weaponId) {
-            case 11061:
-            case 11730:
-            case 23690:
-            case 11698:
-            case 24514:
-            case 23681:
-            case 11700:
-            case 3204:
-            case 24516:
-                return 1.1;
-            case 11696:
-            case 24512:
-            case 23680:
-            case 1215:
-            case 5698:
-                return 1.15;
-            case 11694:
-            case 24510:
-            case 23679:
-                return 1.375;
-            case 13899:
-            case 13901:
-            case 13905:
-            case 13907:
-            case 1305:
-                return 1.25;
-            case 13902:
-            case 13904:
-            case 13883:
-            case 13957:
-                return 1.20;
-            case 1434:
-                return 1.45;
-            case 11235:
-            case 15701:
-            case 15702:
-            case 15703:
-            case 15704:
-                return 1.270;
-        }
-        return 1;
-    }
-
-    public int getAttackMode() {
-        if (getCombatDefinitions().getAutoCastSpell() > 0 || getCombatDefinitions().getSpellId() > 0)
-            return 2;
-        else if (PlayerCombat.isRanging(this) > 0)
-            return 1;
-        return 0;
-    }
-
     public void restoreSkills() {
         for (int skill = 0; skill < 25; skill++) {
             if (skill == Skills.HITPOINTS || skill == Skills.SUMMONING || skill == Skills.PRAYER)
@@ -2354,90 +2295,6 @@ public class Player extends Entity {
             }
         }
     }
-
-    private void checkTimers() {
-        if (!isFrozen() && getTeleBlockDelay() < Utils.currentTimeMillis() && getTickManager().isActive(TickManager.TickKeys.VENGEANCE_COOLDOWN) && getOverloadTicksLeft() <= 0 && getDisruptionDelay() < Utils.currentTimeMillis() && getPrayerRenewalTicksLeft() <= 0 && !OwnedObjectManager.containsObjectValue(this, 6)) {
-            if (getInterfaceManager().containsInterface(3039))
-                getInterfaceManager().removeInterface(getInterfaceManager().isResizableScreen() ? 26 : 31, 3039);
-        } else {
-            if (!getInterfaceManager().containsInterface(3039))
-                getInterfaceManager().sendTimerInterface();
-        }
-        if (OwnedObjectManager.containsObjectValue(this, 6)) {
-            getPackets().sendHideIComponent(3039, 16, false);
-            getPackets().sendHideIComponent(3039, 17, false);
-            getPackets().sendTextOnComponent(3039, 17, (getCannonBalls() == 0 ? "<col=ff5331>" : "") + getCannonBalls() + "");
-        } else {
-            if (getCannonBalls() != 0) {
-                return;
-            }
-            getPackets().sendHideIComponent(3039, 16, true);
-            getPackets().sendHideIComponent(3039, 17, true);
-        }
-        if (getTeleBlockDelay() >= Utils.currentTimeMillis()) {
-            getPackets().sendHideIComponent(3039, 2, false);
-            getPackets().sendHideIComponent(3039, 3, false);
-            getPackets().sendTextOnComponent(3039, 3, getTimeLeft(getTeleBlockDelay()) + "");
-        } else {
-            getPackets().sendHideIComponent(3039, 2, true);
-            getPackets().sendHideIComponent(3039, 3, true);
-        }
-        if (getTickManager().isActive(TickManager.TickKeys.VENGEANCE_COOLDOWN)) {
-            getPackets().sendHideIComponent(3039, 4, false);
-            getPackets().sendHideIComponent(3039, 5, false);
-            getPackets().sendTextOnComponent(3039, 5, getTimeLeft(getTickManager().getTicksLeft(TickManager.TickKeys.VENGEANCE_COOLDOWN)) + "");
-        } else {
-            getPackets().sendHideIComponent(3039, 4, true);
-            getPackets().sendHideIComponent(3039, 5, true);
-        }
-        if (isFrozen()) {
-            getPackets().sendHideIComponent(3039, 6, false);
-            getPackets().sendHideIComponent(3039, 7, false);
-            getPackets().sendTextOnComponent(3039, 7, getTimeLeft(getFreezeDelay()) + "");
-        } else {
-            getPackets().sendHideIComponent(3039, 6, true);
-            getPackets().sendHideIComponent(3039, 7, true);
-        }
-        if (getDisruptionDelay() >= Utils.currentTimeMillis()) {
-            getPackets().sendHideIComponent(3039, 9, false);
-            getPackets().sendHideIComponent(3039, 10, false);
-            getPackets().sendTextOnComponent(3039, 10, getTimeLeft(getDisruptionDelay()) + "");
-        } else {
-            getPackets().sendHideIComponent(3039, 9, true);
-            getPackets().sendHideIComponent(3039, 10, true);
-        }
-        if (getPrayerRenewalTicksLeft() > 0) {
-            getPackets().sendHideIComponent(3039, 11, false);
-            getPackets().sendHideIComponent(3039, 12, false);
-            getPackets().sendTextOnComponent(3039, 12, getTimeLeft(getPrayerRenewalTicksLeft()) + "");
-        } else {
-            getPackets().sendHideIComponent(3039, 11, true);
-            getPackets().sendHideIComponent(3039, 12, true);
-        }
-        if (getOverloadTicksLeft() > 0) {
-            getPackets().sendHideIComponent(3039, 13, false);
-            getPackets().sendHideIComponent(3039, 14, false);
-            getPackets().sendTextOnComponent(3039, 14, getTimeLeft(getOverloadTicksLeft()) + "");
-        } else {
-            getPackets().sendHideIComponent(3039, 13, true);
-            getPackets().sendHideIComponent(3039, 14, true);
-        }
-    }
-
-    private String getLeechName(int value) {
-        switch (value) {
-            case 3:
-                return "Ranging";
-            case 4:
-                return "Magic";
-            case 2:
-                return "Defence";
-            case 1:
-                return "Strength";
-        }
-        return "Attack";
-    }
-
 
     public String getTitle() {
         return getPlayerRank().getRankName(getPlayerRank().isStaff() ? 0 : 1);
@@ -2471,8 +2328,6 @@ public class Player extends Entity {
     public transient double drainTick = 0;
     public transient int miscTick = 0;
     public transient int prayerTick = 0;
-
-    private transient int gameTick = 0;
 
     public void processActiveInstantSpecial() {
         QueuedInstantCombat<? extends SpecialAttack> activeSpecial = getActiveInstantSpecial();
@@ -2538,14 +2393,6 @@ public class Player extends Entity {
         }
     }
 
-
-    public int getGameTicks() {
-        return gameTick;
-    }
-
-
-
-
     @Override
     public void processEntity() {
         processLogicPackets();
@@ -2575,7 +2422,6 @@ public class Player extends Entity {
         }
         //checkTimers();
         prayer.processPrayerDrain(gameTick);
-        gameTick++;
         if (miscTick % 10 == 0)
             drainHitPoints();
         //if (miscTick % 32 == 0)//TODO
@@ -2756,6 +2602,7 @@ public class Player extends Entity {
                     setFrozenBy(null);
             }
         }
+        PvpManager.onEpTick(this);
         charges.process();
         auraManager.process();
         actionManager.process();
@@ -3191,7 +3038,7 @@ public class Player extends Entity {
             message("You can't log out while performing an emote.");
             return;
         }
-        if (lockDelay >= currentTime) {
+        if (isLocked()) {
             message("Please finish with what you are doing.");
             return;
         }
@@ -3808,9 +3655,6 @@ public class Player extends Entity {
         lock(6);
         Player killer = getMostDamageReceivedSourcePlayer();
         WrathEffect.handleWrathEffect(this, killer);
-        if (killer != null) {
-            PvpManager.onDeath(this, killer);
-        }
         animate(new Animation(836));
         if (familiar != null)
             familiar.sendDeath(this);
@@ -3982,18 +3826,8 @@ public class Player extends Entity {
             killer.setHighestValuedKill(killer.totalCurrentDrop);
             killer.message("New highest value Wilderness kill: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.getHighestValuedKill())) + " coins!");
         }
-        if (killer != this) {
-            double ep = killer.get(Keys.IntKey.EP) * 0.30;
-            if (ep < 0)
-                ep = 0;
-            double rollChance = 100 - ep;
-            double c = Utils.getRandomDouble2(rollChance);
-            Artefacts rolledItem = Artefacts.values()[Utils.getRandom(Artefacts.values().length - 1)];
-            if (c <= rolledItem.getChance()) {
-                killer.set(Keys.IntKey.EP, 0);
-                World.addGroundItem(new Item(rolledItem.getId(), 1), deathTile, killer, true, 60);
-                killer.message("You recieved a " + rolledItem.getName() + " as a pvp drop.");
-            }
+        if (killer != null) {
+            PvpManager.onDeath(this, killer);
         }
     }
 
@@ -4230,16 +4064,8 @@ public class Player extends Entity {
         return prayer;
     }
 
-    public long getLockDelay() {
-        return lockDelay;
-    }
-
     public long getSpecDelay() {
         return specDelay;
-    }
-
-    public boolean isLocked() {
-        return getTickManager().isActive(TickManager.TickKeys.ENTITY_LOCK_TICK);
     }
 
     public long getThievingDelay() {
@@ -4254,13 +4080,6 @@ public class Player extends Entity {
         return spellDelay > Utils.currentTimeMillis();
     }
 
-    public void lock() {
-        lock(5000);
-    }
-
-    public void lock(int time) {
-        getTickManager().addTicks(TickManager.TickKeys.ENTITY_LOCK_TICK, time);
-    }
 
     public boolean isTeleporting() {
         return getTickManager().isActive(TickManager.TickKeys.TELEPORTING_TICK);
@@ -4278,9 +4097,7 @@ public class Player extends Entity {
         teleportDelay = Utils.currentTimeMillis() + (time * 600);
     }
 
-    public void unlock() {
-        getTickManager().remove(TickManager.TickKeys.ENTITY_LOCK_TICK);
-    }
+
 
     public void startteleporting() {
         teleportDelay = Long.MAX_VALUE;
@@ -6396,7 +6213,7 @@ public class Player extends Entity {
 
 
     public int getPvpTokens() {
-        return getInventory().getAmountOf("item.fist_of_guthix_token");
+        return getInventory().getAmountOf("item.pvp_token");
     }
 
     @Override

@@ -420,9 +420,9 @@ class ShopSystem(private val player: Player) {
         // --- Final validation ---
         if (buyAmount <= 0) {
             when {
-                shopItem.maxStock == 0 -> player.message("The shop is out of stock.")
-                maxAffordable == 0 -> player.message("You don't have enough ${currency.displayName}.")
-                freeSlots == 0 -> player.message("You don't have enough inventory space.")
+                shopItem.maxStock == 0 ->  Msg.warn(player,"The shop is out of stock.")
+                maxAffordable == 0 -> Msg.warn(player,"You don't have enough ${currency.displayName}.")
+                freeSlots == 0 ->  Msg.warn(player,"You don't have enough inventory space.")
             }
             return
         }
@@ -460,7 +460,7 @@ class ShopSystem(private val player: Player) {
         when (currency) {
             CurrencyType.COINS -> player.moneyPouch.addMoney(sellPrice, false)
             CurrencyType.PVP_TOKENS -> {
-                val tokenId = Item.getId("item.fist_of_guthix_token")
+                val tokenId = Item.getId("item.pvp_token")
                 if (!player.inventory.canHold(tokenId, 1)) {
                     Msg.warn(player, "You don't have any inventory space.")
                     return
@@ -488,7 +488,7 @@ class ShopSystem(private val player: Player) {
     private fun removeCurrency(currency: CurrencyType, amount: Int) {
         when (currency) {
             CurrencyType.COINS -> player.canBuy(amount)
-            CurrencyType.PVP_TOKENS -> player.inventory.deleteItem("item.fist_of_guthix_token", amount);
+            CurrencyType.PVP_TOKENS -> player.inventory.deleteItem("item.pvp_token", amount);
             CurrencyType.AVALON_POINTS -> player.avalonPoints -= amount
         }
     }

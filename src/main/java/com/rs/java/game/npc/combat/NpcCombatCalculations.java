@@ -14,23 +14,18 @@ public class NpcCombatCalculations {
 
     public static int getRandomMaxHit(NPC npc, int maxHit, NpcAttackStyle attackStyle, Entity target) {
         CombatData data = npc.getCombatData();
-
-        // --- Attacker (NPC) Accuracy Roll ---
+        if (npc.getName().toLowerCase().contains("kalphite queen")) {//kq quaranteed hit with range&magic
+            if (attackStyle == NpcAttackStyle.MAGIC || attackStyle == NpcAttackStyle.RANGED)
+                return Utils.getRandom(maxHit);
+        }
         double attackRoll = calculateAttackRoll(npc, attackStyle, data);
-        //System.out.println(npc.getName() + " attack roll: " + attackRoll);
-        // --- Defender (Target) Defence Roll ---
         double defenceRoll = calculateDefenceRoll(npc, attackStyle, target);
-        //if (target instanceof Player player)
-            //System.out.println(player.getUsername() + " defence roll: " + defenceRoll);
-        // --- Hit chance ---
         boolean hitChance = calculateHitProbability(attackRoll, defenceRoll);
-        //System.out.println("HitChance: " + hitChance);
-        // --- Roll damage ---
         if (!hitChance) {
-            return 0; // Missed
+            return 0;
         }
 
-        return Utils.getRandom(maxHit); // Random damage up to max
+        return Utils.getRandom(maxHit);
     }
 
     private static double calculateAttackRoll(NPC npc, NpcAttackStyle style, CombatData data) {
@@ -40,19 +35,16 @@ public class NpcCombatCalculations {
             case MAGIC -> {
                 int mageLevel = data.magicLevel;
                 int mageBonus = data.magicBonus;
-                //System.out.println(npc.getName() + " used magic attack, MagicLevel: " + mageLevel + ", MageAttack: " + mageBonus);
                 return effectiveRoll(mageLevel, mageBonus);
             }
             case RANGED -> {
                 int rangeLevel = data.rangedLevel;
                 int rangeBonus = data.rangedBonus;
-                //System.out.println(npc.getName() + " used ranged attack, RangeLevel: " + rangeLevel + ", RangeAttack: " + rangeBonus);
                 return effectiveRoll(rangeLevel, rangeBonus);
             }
             default -> {
                 int atkLevel = data.attackLevel;
                 int atkBonus = data.attackBonus;
-                //System.out.println(npc.getName() + " used melee attack, AttackLevel: " + atkLevel + ", AttackBonus: " + atkBonus);
                 return effectiveRoll(atkLevel, atkBonus);
             }
         }

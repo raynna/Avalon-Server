@@ -371,6 +371,17 @@ public class Magic {
 		}
 	}
 
+	public static void teleport(Player player, WorldTile tile) {
+		player.stopAll();
+		if (player.getCombatDefinitions().spellBook == 2) {// lunar
+			sendLunarTeleportSpell(player, 0, 0, tile);
+		} else if (player.getCombatDefinitions().spellBook == 0) {// normal
+			sendNormalTeleportSpell(player, 0, 0, tile);
+		} else if (player.getCombatDefinitions().spellBook == 1) {// ancient
+			sendAncientTeleportSpell(player, 0, 0, tile);
+		}
+	}
+
 	private static void useHomeTele(Player player) {
 		if (player.inPkingArea() || player.isCanPvp()) {
 			player.stopAll();
@@ -665,7 +676,7 @@ public class Magic {
 			int upGraphicId, final int downGraphicId, int level, final double xp, final WorldTile tile, int delay,
 			final boolean randomize, final int teleType, boolean checkRunes, int... runes) {
 		long currentTime = Utils.currentTimeMillis();
-		if (player.getLockDelay() > currentTime)
+		if (player.isLocked())
 			return false;
 		if (player.getSkills().getLevel(Skills.MAGIC) < level) {
 			player.getPackets().sendGameMessage("Your Magic level is not high enough for this spell.");
@@ -1336,6 +1347,14 @@ public class Magic {
 				return true;
 		}
 		return false;
+	}
+
+	public static boolean canTeleport(Player player) {
+		if (player.isTeleportBlocked()) {
+			player.message("You are been teleport blocked!");
+			return false;
+		}
+		return true;
 	}
 
 	public static final boolean sendTeleportSpell(final Player player, int upEmoteId, final int downEmoteId,

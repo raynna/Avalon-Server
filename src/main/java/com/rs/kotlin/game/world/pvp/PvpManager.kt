@@ -1,10 +1,15 @@
 package com.rs.kotlin.game.world.pvp
 
 import com.rs.java.game.Entity
+import com.rs.java.game.World
+import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.controlers.WildernessControler
 import com.rs.java.utils.HexColours
+import com.rs.kotlin.game.npc.combatdata.Npc
+import com.rs.kotlin.game.world.util.Msg
 import java.util.*
 import kotlin.math.abs
 
@@ -23,7 +28,7 @@ object PvpManager {
 
     private const val GRACE_MS = 10_000L
     private const val RECENT_HIT_WINDOW_MS = 10_000L
-    private val lastPvpHitAt = WeakHashMap<Player, Long>()
+    private val lastPvpHitAt = WeakHashMap<Entity, Long>()
     private val safeGraceUntil = WeakHashMap<Player, Long>()
     private val wasInRawSafe = WeakHashMap<Player, Boolean>()
 
@@ -41,15 +46,42 @@ object PvpManager {
     fun onPlayerDamagedByPlayer(victim: Player, attacker: Player) { // NEW
         val t = now()
         lastPvpHitAt[victim] = t
-        lastPvpHitAt[attacker] = t
         if (!attacker.attackedBy.containsKey(victim))
             attacker.setWildernessSkull()
     }
 
     @JvmStatic
+    fun onPlayerDamagedByNpc(victim: Player) { // NEW
+        val t = now()
+        lastPvpHitAt[victim] = t
+    }
+
+    @JvmStatic
     fun onDeath(deadPlayer: Player, killer: Player) {
-        lastPvpHitAt[deadPlayer] = null
-        lastPvpHitAt[killer] = null
+        lastPvpHitAt.remove(deadPlayer)
+        lastPvpHitAt.remove(killer)
+
+        val ep = killer.ep
+        val chance = ep / 100.0
+        if (Math.random() > chance) return
+        val drops = EpTable.main.rollDrops(killer)
+        for (drop in drops) {
+            val item = Item(drop.itemId, drop.amount)
+            World.addGroundItem(item, killer, killer, true, 60)
+            killer.message("You received ${item.amount} x ${item.name} as a PvP drop!")
+
+            val price = item.definitions.tipitPrice
+            when {
+                price in 1_000_000..9_999_999 -> World.sendWorldMessage(
+                    Msg.newsRare("${killer.displayName} has received ${item.name} from a PvP kill!"), false
+                )
+                price >= 10_000_000 -> World.sendWorldMessage(
+                    Msg.newsEpic("${killer.displayName} has received ${item.name} from a PvP kill!"), false
+                )
+            }
+        }
+        killer.ep = 0
+        refreshAll(killer)
     }
 
     private fun onEnterRawSafezone(player: Player) { // NEW
@@ -76,7 +108,6 @@ object PvpManager {
         closeInterface(player)
     }
 
-    /** Call after each completed movement step, region change, and after teleports. */
     @JvmStatic
     fun onMoved(player: Player) {
         if (!enabled) return
@@ -122,6 +153,46 @@ object PvpManager {
         return true
     }
 
+    private const val EP_IDLE_TICK_CHANCE = 0.003   // 1% chance per tick just for being in danger
+    private const val EP_COMBAT_TICK_CHANCE = 0.02 // 5% chance per combat tick
+    private const val EP_GAIN_MIN = 1
+    private const val EP_GAIN_MAX = 3
+    private const val EP_MAX = 100
+
+    @JvmStatic
+    fun onEpTick(player: Player) {
+        if (!enabled) return
+        if (player.isDead || !player.isCanPvp) return
+        if (!isInDangerous(player)) return
+
+        val baseChance = EP_IDLE_TICK_CHANCE
+        val combatBonus = if (isInCombat(player) && isAttacking(player)) EP_COMBAT_TICK_CHANCE else 0.0
+        val chance = baseChance + combatBonus
+
+        if (Math.random() < chance) {
+            val gain = (EP_GAIN_MIN..EP_GAIN_MAX).random()
+            increaseEp(player, gain)
+        }
+    }
+
+    private fun isAttacking(player: Player): Boolean {
+        return player.tickManager.isActive(TickManager.TickKeys.LAST_ATTACK_TICK)
+    }
+
+    private fun isInCombat(player: Player): Boolean {
+        val lastHit = lastPvpHitAt[player] ?: return false
+        return now() - lastHit <= RECENT_HIT_WINDOW_MS
+    }
+
+    private fun increaseEp(player: Player, amount: Int) {
+        val oldEp = player.ep
+        val newEp = (oldEp + amount).coerceAtMost(EP_MAX)
+        if (newEp > oldEp) {
+            player.ep = newEp
+            sendPvpInterface(player, isEffectivelySafeForSelf(player)) // refresh UI
+        }
+    }
+
     private fun canFightAcrossSafezones(a: Player, b: Player): Boolean { // NEW
         val aInSafe = isRawSafe(a)
         val bInSafe = isRawSafe(b)
@@ -163,7 +234,7 @@ object PvpManager {
             val ep = player.ep
             val colour = when {
                 ep >= 70 -> HexColours.Colour.GREEN.hex
-                ep in 35..69 -> HexColours.Colour.YELLOW.hex
+                ep in 25..69 -> HexColours.Colour.YELLOW.hex
                 else -> HexColours.Colour.RED.hex
             }
             player.packets.sendTextOnComponent(INTERFACE_ID, COMP_EP, "EP: $colour${ep}%")

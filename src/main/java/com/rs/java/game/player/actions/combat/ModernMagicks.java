@@ -348,7 +348,7 @@ public class ModernMagicks {
 			RSSpellStore s = RSSpellStore.getSpell(spellId);
 			if (s == null)
 				return false;
-				if (s.getSpellType() != COMBAT && player.getLockDelay() > Utils.currentTimeMillis()) {
+				if (s.getSpellType() != COMBAT && player.isLocked()) {
 					return false;
 				}
 				if (s.getSpellType() == COMBAT) {

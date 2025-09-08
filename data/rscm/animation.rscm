@@ -310,6 +310,11 @@ godsword_slash=13052
 godsword_smash=13053
 armadyl_godsword_special=11989
 saradomin_sword_special=11993
+zamorak_godsword_special=7070
+bandos_godsword_special=11991
+saradomin_godsword_special=12019
+dragon_spear_special=12017
+dragon_longsword_special=12033
 abyssal_whip_attack=11968
 abyssal_whip_attack2=11969
 abyssal_whip_attack3=11970
@@ -318,7 +323,6 @@ abyssal_whip_block=11974
 dharok_greataxe_slash=12002
 dharok_greataxe_smash=12003
 dharok_greataxe_block=12004
-zamorak_godsword_special=7070
 darklight_special=2890
 scimitar_slash=15071
 scimitar_stab=15072
@@ -349,6 +353,7 @@ morrigans_javelin_attack=10501
 longsword_slash=12311
 longsword_stab=12310
 vestas_longsword_special=10502
+statius_warhammer_special=10505
 #animGFX 11991 2114 - Bandos Godsword Spec
 #animGFX 12019 2109 - Saradomin Godsword Spec
 #animGfx 12006 stab zamorakian spear

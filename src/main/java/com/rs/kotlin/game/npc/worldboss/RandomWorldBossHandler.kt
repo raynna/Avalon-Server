@@ -3,6 +3,7 @@ package com.rs.kotlin.game.npc.worldboss
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.core.thread.CoresManager
+import com.rs.discord.DiscordAnnouncer.announceGlobalEvent
 import com.rs.java.game.World
 import com.rs.java.game.WorldTile
 import com.rs.java.game.item.Item
@@ -10,6 +11,7 @@ import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
+import com.rs.kotlin.game.npc.worldboss.RandomWorldBossHandler.IDLE_TIMEOUT_MS
 import com.rs.kotlin.game.world.util.Msg
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -25,8 +27,6 @@ import kotlin.math.max
  */
 object RandomWorldBossHandler {
 
-    // ---------------------- CONFIG ----------------------
-
     private sealed class BossEntry {
         data class Single(val npcId: Int) : BossEntry()
         data class Group(val npcIds: List<Int>, val displayName: String) : BossEntry()
@@ -37,19 +37,15 @@ object RandomWorldBossHandler {
         ) : BossEntry() {
             data class Minion(val npcId: Int, val count: Int = 1)
 
-            // ---------- Convenience builders (keys) ----------
             companion object {
-                // boss/minions by key(s)
                 fun of(bossKey: String, vararg minions: Minion): WithMinions =
                     WithMinions(Rscm.lookup(bossKey), minions.toList())
 
-                // create a Minion from a key
                 fun minion(key: String, count: Int = 1): Minion =
                     Minion(Rscm.lookup(key), count)
             }
         }
 
-        // ---------- Convenience builders (keys) ----------
         companion object {
             fun single(key: String): Single =
                 Single(Rscm.lookup(key))
@@ -121,20 +117,26 @@ object RandomWorldBossHandler {
     private const val GRACE_PERIOD_MS: Long = 30 * 1000L
     private const val AVOID_SAME_LOCATION_TWICE = true
 
-    // ---------------------- STATE ----------------------
-
     @Volatile private var currentBosses: MutableList<WorldBossNPC> = mutableListOf()
     @Volatile private var currentMinions: MutableList<WorldMinionNPC> = mutableListOf()
     @Volatile private var nextSpawnTask: ScheduledFuture<*>? = null
     @Volatile private var lastSpawnLocIndex: Int = -1
 
-    // ---------------------- PUBLIC API ----------------------
-
     @JvmStatic
     @Synchronized
     fun start() {
         if (currentBosses.isEmpty() && nextSpawnTask == null) {
-            scheduleNextSpawn(randomRespawnDelay())
+            val delay = randomRespawnDelay()
+            World.sendWorldMessage(
+                "<img=7><col=36648b>News: The first world boss will spawn in ${formatTime(delay)}!",
+                false
+            )
+            announceGlobalEvent(
+                "World boss",
+                "The first world boss will spawn in ${formatTime(delay)}!",
+                null
+            )
+            scheduleNextSpawn(delay)
         }
     }
 
@@ -142,6 +144,17 @@ object RandomWorldBossHandler {
     fun forceRespawnNow() {
         cancelPending()
         spawnNewBoss(force = true)
+    }
+
+    private fun formatTime(ms: Long): String {
+        val totalSeconds = ms / 1000
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return buildString {
+            if (minutes > 0) append("$minutes minute${if (minutes > 1) "s" else ""}")
+            if (minutes > 0 && seconds > 0) append(" and ")
+            if (seconds > 0) append("$seconds second${if (seconds > 1) "s" else ""}")
+        }
     }
 
     @Synchronized
@@ -162,9 +175,6 @@ object RandomWorldBossHandler {
         }
     }
 
-
-    // ---------------------- INTERNALS ----------------------
-
     @Synchronized
     private fun cancelPending() {
         nextSpawnTask?.cancel(false)
@@ -175,6 +185,33 @@ object RandomWorldBossHandler {
     private fun scheduleNextSpawn(delayMs: Long) {
         cancelPending()
         val safeDelay = max(1000L, delayMs)
+
+        World.sendWorldMessage(
+            "<img=7><col=36648b>News: Another world boss will spawn in ${formatTime(safeDelay)}!",
+            false
+        )
+        announceGlobalEvent("World boss", "Another world boss will spawn in ${formatTime(safeDelay)}!", null)
+
+        if (safeDelay > 5 * 60 * 1000L) {
+            CoresManager.getSlowExecutor().schedule({
+                World.sendWorldMessage(
+                    "<img=7><col=36648b>News: A world boss will spawn in 5 minutes!",
+                    false
+                )
+                announceGlobalEvent("World boss", "A world boss will spawn in 5 minutes!", null)
+            }, safeDelay - 5 * 60 * 1000L, TimeUnit.MILLISECONDS)
+        }
+
+        if (safeDelay > 60 * 1000L) {
+            CoresManager.getSlowExecutor().schedule({
+                World.sendWorldMessage(
+                    "<img=7><col=36648b>News: A world boss will spawn in 1 minute!",
+                    false
+                )
+                announceGlobalEvent("World boss", "A world boss will spawn in 1 minute!", null)
+            }, safeDelay - 60 * 1000L, TimeUnit.MILLISECONDS)
+        }
+
         nextSpawnTask = CoresManager.getSlowExecutor().schedule({
             try {
                 spawnNewBoss()
@@ -184,6 +221,7 @@ object RandomWorldBossHandler {
             }
         }, safeDelay, TimeUnit.MILLISECONDS)
     }
+
 
     private fun randomRespawnDelay(): Long {
         val span = MAX_RESPAWN_DELAY_MS - MIN_RESPAWN_DELAY_MS
@@ -233,7 +271,7 @@ object RandomWorldBossHandler {
                 currentBosses.add(boss)
                 currentMinions.clear()
 
-                val usedOffsets = mutableSetOf<Pair<Int, Int>>() // track relative coords
+                val usedOffsets = mutableSetOf<Pair<Int, Int>>()
 
                 for (minion in entry.minions) {
                     repeat(minion.count) {
@@ -268,6 +306,9 @@ object RandomWorldBossHandler {
             8133 -> {
                 WorldCorporealBeast(tile, IDLE_TIMEOUT_MS, GRACE_PERIOD_MS, this)
             }
+            1158 -> {
+                KalphiteQueenWorldBoss(tile, IDLE_TIMEOUT_MS, GRACE_PERIOD_MS, this)
+            }
             else -> {
                 GenericWorldBossNPC(npcId, tile, IDLE_TIMEOUT_MS, GRACE_PERIOD_MS, this)
             }
@@ -291,12 +332,22 @@ object RandomWorldBossHandler {
             "<img=7><col=36648b>News: $displayName have emerged at $locationName!",
             false
         )
+        announceGlobalEvent(
+            "World boss",
+            "$displayName have emerged at $locationName!",
+            null
+        )
     }
 
     private fun announce(npc: NPC, locationName: String) {
         World.sendWorldMessage(
             "<img=7><col=36648b>News: A ${npc.name} has emerged at $locationName!",
             false
+        )
+        announceGlobalEvent(
+            "World boss",
+            "A ${npc.name} has emerged at $locationName!",
+            null
         )
     }
 
@@ -344,7 +395,7 @@ object RandomWorldBossHandler {
     }
 
     private fun cleanupMinions() {
-        val snapshot = currentMinions.toList() // copy first
+        val snapshot = currentMinions.toList()
         snapshot.forEach { minion ->
             try {
                 minion.finish()
@@ -388,10 +439,12 @@ object RandomWorldBossHandler {
     @JvmStatic
     fun openChest(chest: Item, slot: Int, player: Player) {
         val drops = WorldBossTable.chest.rollDrops(player)
-        val neededSlots = drops.size
-        if (player.inventory.freeSlots < neededSlots) {
-            player.message(Msg.warn("You need at least $neededSlots free inventory slots to open the Magic Chest."))
-            return
+        for (drop in drops) {
+            val item = Item(drop.itemId, drop.amount)
+            if (!player.inventory.canHold(item, item.amount)) {
+                player.message(Msg.warn("You don’t have enough inventory space to open the Magic Chest."))
+                return
+            }
         }
 
         player.inventory.deleteItem(chest.id, 1)
@@ -399,8 +452,8 @@ object RandomWorldBossHandler {
             val item = Item(drop.itemId, drop.amount)
             player.inventory.addItem(item)
             player.message(Msg.chestOpen("Your Magic Chest rewards you with ${item.amount} x ${item.name}!"))
-
-            if (item.definitions.tipitPrice >= 1_000_000) {
+            val price = item.definitions.tipitPrice
+            if (price in 1_000_000..9_999_999) {
                 World.sendWorldMessage(
                     Msg.newsRare("${player.displayName} has received ${item.name} from a Magic Chest!"),
                     false
@@ -431,12 +484,24 @@ object RandomWorldBossHandler {
                 "<img=7><col=ff0000>News: One of the $groupName has been slain! $remaining remaining...",
                 false
             )
+            announceGlobalEvent(
+                "World boss",
+                "One of the $groupName has been slain! $remaining remaining...",
+                null
+            )
             return
         }
         if (currentBosses.isEmpty()) {
             cleanupMinions()
-
-            // collect all damage from all bosses in the group
+            World.sendWorldMessage(
+                "<img=7><col=ff0000>News: World boss has been slain!",
+                false
+            )
+            announceGlobalEvent(
+                "World boss",
+                "World boss has been slain!",
+                null
+            )
             val totalDamage: MutableMap<Player, Int> = mutableMapOf()
             val allBosses = listOf(boss) // include this boss
             allBosses.forEach { b ->
@@ -446,7 +511,6 @@ object RandomWorldBossHandler {
                 }
             }
 
-            // reward logic ONCE
             if (totalDamage.isNotEmpty()) {
                 val maxHpSum = allBosses.sumOf { it.maxHitpoints }
                 val threshold = (maxHpSum * 0.10).toInt()
@@ -478,19 +542,18 @@ object RandomWorldBossHandler {
     fun onMinionDeath(minion: WorldMinionNPC) {
         currentMinions.remove(minion)
         if (isBossDead()) {
-            return // don’t respawn if boss is gone
+            return
         }
 
-        // Schedule respawn in 30 seconds (30 * 600ms ticks = 50 ticks if RS tick system)
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
                 if (!isBossDead()) {
                     val newMinion = spawnMinion(minion.id, minion.tile)
                     currentMinions.add(newMinion)
                 }
-                stop() // always stop after execution
+                stop()
             }
-        }, 50) // 50 ticks = 30 seconds
+        }, 50)
     }
 
     fun isBossDead(): Boolean {
@@ -517,6 +580,11 @@ object RandomWorldBossHandler {
             World.sendWorldMessage(
                 "<img=7><col=8a2be2>${npc.name} fades away due to neglect. Another presence stirs...",
                 false
+            )
+            announceGlobalEvent(
+                "World boss",
+                "${npc.name} fades away due to neglect. Another presence stirs...",
+                null
             )
             scheduleNextSpawn(randomRespawnDelay())
         }

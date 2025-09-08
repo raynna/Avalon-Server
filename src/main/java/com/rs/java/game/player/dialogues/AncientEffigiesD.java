@@ -15,7 +15,7 @@ public class AncientEffigiesD extends Dialogue {
 	@Override
 	public void start() {
 		itemId = (Integer) parameters[0];
-		sendItemDialogue(AncientEffigies.STARVED_ANCIENT_EFFIGY, 1,
+		sendItemDialogue(AncientEffigies.STARVED_ANCIENT_EFFIGY,
 				"As you inspect the ancient effigy, you begin to feel a "
 						+ "strange sensation of relic searching your mind, drawing on your knowledge.");
 		int random = Utils.getRandom(7);

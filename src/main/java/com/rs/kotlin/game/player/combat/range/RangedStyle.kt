@@ -95,8 +95,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val allowedAmmos = currentWeapon.allowedAmmoIds
         val maxTier = currentWeapon.maxAmmoTier
         val weaponName = currentWeapon.name
-
-        if (currentAmmo == null && weaponAmmoType != AmmoType.THROWING && weaponAmmoType != AmmoType.DART && weaponAmmoType != AmmoType.NONE) {
+        if (currentAmmo == null && weaponAmmoType != AmmoType.THROWING && weaponAmmoType != AmmoType.DART && weaponAmmoType != AmmoType.JAVELIN && weaponAmmoType != AmmoType.NONE) {
             attacker.message("You don't have any ammunition equipped.")
             return false
         }
@@ -188,9 +187,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             if (currentAmmo.endGfx != null) {
                 defender.gfx(currentAmmo.endGfx);
             }
-            if (currentAmmo.dropOnGround) {
-                dropAmmoOnGround()
-            }
             //mainhand poison
             if (currentWeapon.poisonSeverity != -1) {
                 currentWeapon.poisonSeverity.let {
@@ -250,20 +246,39 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             }
         }
 
-        if (ammoType == AmmoType.THROWING || ammoType == AmmoType.DART) {
+        if (ammoType == AmmoType.THROWING || ammoType == AmmoType.DART || ammoType == AmmoType.JAVELIN || ammoType == AmmoType.THROWNAXE) {
             if (weapon != null) {
                 attacker.equipment.deleteItem(weapon.id, 1)
+                attacker.appearence.generateAppearenceData()
                 return true
             }
         }
 
-        if (ammoItem != null) {
+        if (currentWeapon.ammoType == AmmoType.NONE) {
+            return true
+        }
+
+        if (ammoItem != null && currentAmmo != null) {
+            if (currentWeapon.allowedAmmoIds != null && !currentWeapon.allowedAmmoIds.contains(ammoItem.id)) {
+                return true
+            }
+            if (currentWeapon.maxAmmoTier != null && (currentAmmo.ammoTier == null || !currentWeapon.maxAmmoTier.canUse(currentAmmo.ammoTier))) {
+                return true
+            }
+            if (currentWeapon.ammoType != null && currentWeapon.ammoType != currentAmmo.ammoType) {
+                return true
+            }
             attacker.equipment.deleteItem(ammoItem.id, 1)
+            attacker.appearence.generateAppearenceData()
+            if (currentAmmo.dropOnGround) {
+                dropAmmoOnGround()
+            }
             return true
         }
 
         return false
     }
+
 
 
     private fun sendProjectile() {

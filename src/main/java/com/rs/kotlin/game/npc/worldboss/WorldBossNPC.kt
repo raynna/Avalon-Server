@@ -13,7 +13,7 @@ open class WorldBossNPC : NPC {
 
     private val idleTimeoutMs: Long
     private val gracePeriodMs: Long
-    private val handler: RandomWorldBossHandler
+    protected val handler: RandomWorldBossHandler
 
     companion object {
         private const val SCALE_RADIUS = 32
@@ -105,7 +105,7 @@ open class WorldBossNPC : NPC {
 
     override fun sendDeath(source: Entity?) {
         try {
-            handler.onBossDeath(this) // only notify handler
+            handler.onBossDeath(this)
         } finally {
             super.sendDeath(source)
         }

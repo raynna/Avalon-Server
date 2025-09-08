@@ -103,7 +103,7 @@ public class RouteEvent {
 			player.getPackets().sendResetMinimapFlag();
 			return true;
 		}
-		if (player.getLockDelay() > Utils.currentTimeMillis())
+		if (player.isLocked())
 			return true;
 		RouteStrategy[] strategies = generateStrategies();
 		if (strategies == null)

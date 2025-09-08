@@ -151,37 +151,102 @@ object WikiApi {
         }
     }
 
-
     private fun parseCombatDataFromInfobox(wikitext: String, name: String): List<NpcData> {
         val npcList = mutableListOf<NpcData>()
 
-        val regex = "\\{\\{Infobox Monster(.*?)\\}\\}".toRegex(RegexOption.DOT_MATCHES_ALL)
+        // FIX: Better regex to capture the entire Infobox Monster template including nested templates
+        val regex = "\\{\\{Infobox Monster\\s*(.*?)(?=\\}\\}\\}$|\\n\\}\\}\\}$|\\n\\{\\{)".toRegex(RegexOption.DOT_MATCHES_ALL)
         val matches = regex.findAll(wikitext)
 
         for (match in matches) {
             val block = match.groupValues[1]
             val map = mutableMapOf<String, String>()
+
+            // Parse the block line by line
+            var currentLine = StringBuilder()
             block.lines().forEach { line ->
                 val trimmed = line.trim()
                 if (trimmed.startsWith("|")) {
-                    val parts = trimmed.substring(1).split("=", limit = 2)
-                    if (parts.size == 2) map[parts[0].trim().lowercase()] = parts[1].trim()
+                    // Process the previous line if it exists
+                    if (currentLine.isNotEmpty()) {
+                        processInfoboxLine(currentLine.toString(), map)
+                        currentLine = StringBuilder()
+                    }
+                    currentLine.append(trimmed.substring(1)) // Remove the leading |
+                } else if (currentLine.isNotEmpty()) {
+                    // Continue the current line (for multi-line values)
+                    currentLine.append(" ").append(trimmed)
                 }
+            }
+            // Process the last line
+            if (currentLine.isNotEmpty()) {
+                processInfoboxLine(currentLine.toString(), map)
             }
 
             fun yesNo(key: String) = map[key.lowercase()]?.equals("yes", true) ?: false
+
+            fun extractNumberFromValue(value: String): Int {
+                // Handle template values like {{plainlist|...}}
+                if (value.startsWith("{{") && value.contains("plainlist")) {
+                    // Extract the first numeric value from plainlist templates
+                    val numbers = Regex("\\d+").findAll(value).map { it.value.toInt() }.toList()
+                    if (numbers.isNotEmpty()) return numbers.first()
+                }
+                // Handle regular numeric values
+                return value.toIntOrNull() ?: 0
+            }
+
             fun intVal(vararg keys: String, default: Int = 0): Int {
-                for (key in keys) map[key.lowercase()]?.toIntOrNull()?.let { return it }
+                for (key in keys) {
+                    val lowerKey = key.lowercase()
+                    map[lowerKey]?.let { value ->
+                        return extractNumberFromValue(value)
+                    }
+                }
                 return default
             }
+
             fun doubleVal(key: String) = map[key.lowercase()]?.toDoubleOrNull()
 
             val versionKeys = map.keys.filter { it.startsWith("version") }.toMutableList()
             if (versionKeys.isEmpty()) versionKeys.add("1")
 
+            // For monsters like Tormented Demon that have versions but no versioned stats,
+            // we need to handle them differently
+            val hasVersionedStats = versionKeys.any { versionKey ->
+                val versionNum = versionKey.removePrefix("version").toIntOrNull() ?: 1
+                map.containsKey("combat$versionNum") || map.containsKey("att$versionNum") || map.containsKey("str$versionNum")
+            }
+
             versionKeys.forEach { versionKey ->
                 val versionNum = versionKey.removePrefix("version").toIntOrNull() ?: 1
+
+                fun getStatValue(baseKey: String, vararg altKeys: String, default: Int = 0): Int {
+                    // If this monster has versioned stats, try versioned key first
+                    if (hasVersionedStats) {
+                        val versionedKey = "$baseKey$versionNum"
+                        map[versionedKey]?.let { value ->
+                            return extractNumberFromValue(value)
+                        }
+                    }
+
+                    // Always try base key (e.g., "combat", "att", "str")
+                    map[baseKey]?.let { value ->
+                        return extractNumberFromValue(value)
+                    }
+
+                    // Then try alternative keys
+                    for (altKey in altKeys) {
+                        map[altKey]?.let { value ->
+                            return extractNumberFromValue(value)
+                        }
+                    }
+
+                    return default
+                }
+
                 val ids = map["id$versionNum"]?.split(",")?.mapNotNull { it.trim().toIntOrNull() } ?: listOf(-1)
+
                 ids.forEach { wikiNpcId ->
                     val drange = intVal("drange")
 
@@ -200,52 +265,66 @@ object WikiApi {
                     val magicDefence = mapOf(
                         "magic" to intVal("dmagic")
                     )
-                    npcList.add(
-                        NpcData(
-                            id = wikiNpcId,
-                            name = name,
-                            members = yesNo("members"),
-                            combatLevel = intVal("combat$versionNum", "combat"),
-                            attackLevel = intVal("att$versionNum", "att", "attack"),
-                            strengthLevel = intVal("str$versionNum", "str", "strength"),
-                            defenceLevel = intVal("def$versionNum", "def", "defence"),
-                            magicLevel = intVal("mage$versionNum", "mage", "magic$versionNum", "magic"),
-                            rangedLevel = intVal("range$versionNum", "range", "ranged"),
-                            constitutionLevel = intVal("hitpoints$versionNum", "hitpoints", "hp"),
-                            attackBonus = intVal("attbns", "attbonus"),
-                            strengthBonus = intVal("strbns", "strbonus"),
-                            magicBonus = intVal("mbns", "magicbns"),
-                            magicStrengthBonus = intVal("amagic", "amagicbns"),
-                            rangedBonus = intVal("arange", "rangebns"),
-                            rangedStrengthBonus = intVal("rngbns", "rangedstrbns"),
-                            meleeDefence = meleeDefence,
-                            magicDefence = magicDefence,
-                            rangedDefence = rangedDefence,
-                            immunities = mapOf(
-                                "poison" to yesNo("immunepoison"),
-                                "venom" to yesNo("immunevenom"),
-                                "cannons" to yesNo("immunecannon"),
-                                "thralls" to yesNo("immunethrall"),
-                                "burn" to false
-                            ),
-                            releaseDate = map["release"],
-                            aliases = emptyList(),
-                            size = map["size"],
-                            examine = map["examine"],
-                            attributes = map["attributes"]?.split(",")?.map { it.trim() } ?: emptyList(),
-                            xpBonus = doubleVal("xpbonus"),
-                            maxHit = mapOf("maxhit" to intVal("max hit$versionNum", "max hit")),
-                            aggressive = yesNo("aggressive"),
-                            poisonous = null,
-                            attackStyles = map["attack style"]?.split(",")?.map { it.trim() } ?: emptyList(),
-                            attackSpeedTicks = intVal("attack speed").takeIf { it > 0 } ?: 4,
-                            respawnTicks = intVal("respawn$versionNum", "respawn").takeIf { it > 0 } ?: 25,
-                            slayerLevel = null,
-                            slayerXp = intVal("slayxp$versionNum", "slayxp"),
-                            categories = emptyList(),
-                            assignedBy = map["assignedby"]?.split(",")?.map { it.trim() } ?: emptyList()
-                        )
+
+                    val npcData = NpcData(
+                        id = wikiNpcId,
+                        name = name,
+                        members = yesNo("members"),
+                        combatLevel = getStatValue("combat"),
+                        attackLevel = getStatValue("att", "attack"),
+                        strengthLevel = getStatValue("str", "strength"),
+                        defenceLevel = getStatValue("def", "defence"),
+                        magicLevel = getStatValue("mage", "magic"),
+                        rangedLevel = getStatValue("range", "ranged"),
+                        constitutionLevel = getStatValue("hitpoints", "hp"),
+                        attackBonus = intVal("attbns", "attbonus"),
+                        strengthBonus = intVal("strbns", "strbonus"),
+                        magicBonus = intVal("mbns", "magicbns"),
+                        magicStrengthBonus = intVal("amagic", "amagicbns"),
+                        rangedBonus = intVal("arange", "rangebns"),
+                        rangedStrengthBonus = intVal("rngbns", "rangedstrbns"),
+                        meleeDefence = meleeDefence,
+                        magicDefence = magicDefence,
+                        rangedDefence = rangedDefence,
+                        immunities = mapOf(
+                            "poison" to yesNo("immunepoison"),
+                            "venom" to yesNo("immunevenom"),
+                            "cannons" to yesNo("immunecannon"),
+                            "thralls" to yesNo("immunethrall"),
+                            "burn" to false
+                        ),
+                        releaseDate = map["release"],
+                        aliases = emptyList(),
+                        size = map["size"],
+                        examine = map["examine"],
+                        attributes = map["attributes"]?.split(",")?.map { it.trim() } ?: emptyList(),
+                        xpBonus = doubleVal("xpbonus"),
+                        maxHit = mapOf("maxhit" to getStatValue("max hit")),
+                        aggressive = yesNo("aggressive"),
+                        poisonous = null,
+                        attackStyles = map["attack style"]?.split(",")?.map { it.trim() } ?: emptyList(),
+                        attackSpeedTicks = intVal("attack speed").takeIf { it > 0 } ?: 4,
+                        respawnTicks = getStatValue("respawn").takeIf { it > 0 } ?: 25,
+                        slayerLevel = null,
+                        slayerXp = getStatValue("slayxp"),
+                        categories = emptyList(),
+                        assignedBy = map["assignedby"]?.split(",")?.map { it.trim() } ?: emptyList()
                     )
+
+                    println("Parsed $name: " +
+                            "combat=${npcData.combatLevel}, att=${npcData.attackLevel}, str=${npcData.strengthLevel}, def=${npcData.defenceLevel}, " +
+                            "mage=${npcData.magicLevel}, range=${npcData.rangedLevel}, hp=${npcData.constitutionLevel}, " +
+                            "attBonus=${npcData.attackBonus}, strBonus=${npcData.strengthBonus}, " +
+                            "mageBonus=${npcData.magicBonus}, mageStrBonus=${npcData.magicStrengthBonus}, " +
+                            "rangeBonus=${npcData.rangedBonus}, rangeStrBonus=${npcData.rangedStrengthBonus}, " +
+                            "maxHit=${npcData.maxHit["maxhit"]}, " +
+                            "meleeDef=[stab=${npcData.meleeDefence["stab"]}, slash=${npcData.meleeDefence["slash"]}, crush=${npcData.meleeDefence["crush"]}], " +
+                            "mageDef=${npcData.magicDefence["magic"]}, " +
+                            "rangeDef=[light=${npcData.rangedDefence["light"]}, standard=${npcData.rangedDefence["standard"]}, heavy=${npcData.rangedDefence["heavy"]}], " +
+                            "attackSpeed=${npcData.attackSpeedTicks}, respawn=${npcData.respawnTicks}, " +
+                            "slayerXp=${npcData.slayerXp}, aggressive=${npcData.aggressive}")
+
+                    npcList.add(npcData)
                 }
             }
         }
@@ -253,6 +332,14 @@ object WikiApi {
         return npcList
     }
 
+    private fun processInfoboxLine(line: String, map: MutableMap<String, String>) {
+        val parts = line.split("=", limit = 2)
+        if (parts.size == 2) {
+            val key = parts[0].trim().lowercase()
+            val value = parts[1].trim()
+            map[key] = value
+        }
+    }
     private fun markFailure(
         npcId: Int,
         npcName: String,

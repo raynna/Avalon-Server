@@ -78,34 +78,71 @@ public class WildernessArtefacts {
 	}
 
 	public static boolean useOnMandrith(Player player) {
-		for (Artefacts artefacts : Artefacts.values()) {
-			final int amount = player.getInventory().getNumberOf(artefacts.getId());
+		int totalCoins = 0;
+		StringBuilder soldItems = new StringBuilder();
+
+		for (Artefacts artefact : Artefacts.values()) {
+			int amount = player.getInventory().getNumberOf(artefact.getId());
 			if (amount > 0) {
-				String formatAmount = Utils.getFormattedNumber(artefacts.getPrice() * amount, ',') + " Coins";
-				player.getDialogueManager().startDialogue("SimpleMessage", "You sold " + amount
-						+ (amount > 0 ? " artefacts " : "artefact ") + " for a total of " + formatAmount);
-				player.getInventory().deleteItem(artefacts.getId(), amount);
-				player.getMoneyPouch().addMoney(artefacts.getPrice() * amount, false);
-				return true;
+				int value = artefact.getPrice() * amount;
+				if (totalCoins + value < 0)
+					break;
+				totalCoins += value;
+
+				player.getInventory().deleteItem(artefact.getId(), amount);
+
+				if (soldItems.length() > 0) {
+					soldItems.append(", ");
+				}
+				soldItems.append(amount).append(" ").append(artefact.getName());
 			}
+		}
+
+		if (totalCoins > 0) {
+			player.getMoneyPouch().addMoney(totalCoins, false);
+			player.getDialogueManager().startDialogue(
+					"SimpleMessage",
+					"You sold " + soldItems + " for a total of " +
+							Utils.getFormattedNumber(totalCoins, ',') + " Coins."
+			);
+			return true;
 		}
 		return false;
 	}
 
 	public static boolean trade(Player player) {
-		for (Artefacts artefacts : Artefacts.values()) {
-			final int amount = player.getInventory().getNumberOf(artefacts.getId());
+		int totalCoins = 0;
+		StringBuilder soldItems = new StringBuilder();
+
+		for (Artefacts artefact : Artefacts.values()) {
+			int amount = player.getInventory().getNumberOf(artefact.getId());
 			if (amount > 0) {
-				String formatAmount = Utils.getFormattedNumber(artefacts.getPrice() * amount,',') + " Coins";
-				player.getDialogueManager().startDialogue("SimpleMessage",
-						"You sold " + amount + " " + (amount > 0 ? artefacts.getName() + "s" : artefacts.getName())
-								+ " for a total of " + formatAmount);
-				player.getInventory().deleteItem(artefacts.getId(), amount);
-				player.getMoneyPouch().addMoney(artefacts.getPrice() * amount, false);
-				return true;
+				int value = artefact.getPrice() * amount;
+				if (totalCoins + value < 0)
+					break;
+				totalCoins += value;
+
+				player.getInventory().deleteItem(artefact.getId(), amount);
+
+				if (soldItems.length() > 0) {
+					soldItems.append(", ");
+				}
+				soldItems.append(amount).append(" ").append(artefact.getName());
 			}
 		}
-		return false;
+
+		if (totalCoins > 0) {
+			player.getMoneyPouch().addMoney(totalCoins, false);
+			player.getDialogueManager().startDialogue(
+					"SimpleMessage",
+					"You sold " + soldItems + " for a total of " +
+							Utils.getFormattedNumber(totalCoins, ',') + " Coins."
+			);
+			return true;
+		}
+
+		return false; // no artefacts
 	}
+
 
 }

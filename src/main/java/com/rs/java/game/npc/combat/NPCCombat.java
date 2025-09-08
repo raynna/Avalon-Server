@@ -52,11 +52,15 @@ public final class NPCCombat {
      * returns if under combat
      */
     public boolean process() {
+        if (npc.isLocked()) {
+            return true;
+        }
         if (attackDelay > 0) {
             attackDelay--;
             //System.out.println("NPCCombat.process: decreased: " + attackDelay);
         }
         if (target != null) {
+            npc.setNextFaceEntity(target);
             if (!checkAll()) {
                 removeTarget();
                 return false;
@@ -194,7 +198,7 @@ public final class NPCCombat {
         if (Utils.colides(npc.getX(), npc.getY(), size, target.getX(), target.getY(), targetSize)
                 && !target.hasWalkSteps()) {
 
-            if (npc.isFrozen()) {
+            if (npc.isFrozen() || npc.isLocked()) {
                 attackDelay = 1;
                 return true;
             }
@@ -204,14 +208,14 @@ public final class NPCCombat {
             return attemptWalkAroundTarget(target, size);
         }
 
-        if (npc.getCombatDefinitions().getAttackMethod() == AttackMethod.MELEE
+        if (npc.getCombatDefinitions().getAttackStyle() == AttackStyle.MELEE
                 && targetSize == 1
                 && Math.abs(npc.getX() - target.getX()) == 1
                 && Math.abs(npc.getY() - target.getY()) == 1
                 && !target.hasWalkSteps()
                 && size == 1) {
             npc.resetWalkSteps();
-            if (npc.isFrozen()) {
+            if (npc.isFrozen() || npc.isLocked()) {
                 attackDelay = 1;
                 return true;
             }
@@ -244,6 +248,9 @@ public final class NPCCombat {
 
         for (WorldTile tile : candidates) {
             if (World.isTileFree(tile.getPlane(), tile.getX(), tile.getY(), size)) {
+                if (npc.isFrozen() || npc.isLocked()) {
+                    return true;
+                }
                 if (npc.addWalkStepsInteract(tile.getX(), tile.getY(), 1, size, true))
                     return true;
             }
@@ -278,6 +285,9 @@ public final class NPCCombat {
         if (!inChaseRange) {
             // Too far, stop chasing
             removeTarget();
+            return;
+        }
+        if (npc.isFrozen() || npc.isLocked()) {
             return;
         }
 

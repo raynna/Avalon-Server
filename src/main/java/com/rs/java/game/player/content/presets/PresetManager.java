@@ -319,6 +319,7 @@ public final class PresetManager implements Serializable {
 		player.getPrayer().setPrayerBook(set.isAncientCurses());
 		player.getAppearence().generateAppearenceData();
 		player.getSkills().switchXPPopup(true);
+		player.getSkills().switchXPPopup(true);
 		CommandRegistry.execute(player, "heal");
 		Msg.info(player, "Loaded setup: " + name + ".");
 	}
@@ -451,6 +452,7 @@ public final class PresetManager implements Serializable {
 		player.getCombatDefinitions().setSpellBook(p2.combatDefinitions.getSpellId(), false);
 		player.getPrayer().setPrayerBook(p2.getPrayer().isAncientCurses());
 		player.getAppearence().generateAppearenceData();
+		player.getSkills().switchXPPopup(true);
 		player.getSkills().switchXPPopup(true);
 		CommandRegistry.execute(player, "heal");
 		Msg.info(player, "You copied " + p2.getDisplayName() + " current preset.");

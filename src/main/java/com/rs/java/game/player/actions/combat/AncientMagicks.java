@@ -271,7 +271,7 @@ public class AncientMagicks {
 			if (s == null)
 				return false;
 			if (s != null) {
-				if (!s.isCombat() && player.getLockDelay() > Utils.currentTimeMillis()) {
+				if (!s.isCombat() && player.isLocked()) {
 					return false;
 				}
 				if (s.isCombat()) {

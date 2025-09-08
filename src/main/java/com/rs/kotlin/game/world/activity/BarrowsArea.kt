@@ -45,15 +45,14 @@ class BarrowsArea : Area(14231, 14131) {//regions
         player.packets.sendBlackOut(0)
         player.interfaceManager.closeOverlay(player.interfaceManager.hasRezizableScreen())
         player.packets.sendStopCameraShake()
-        // cleanup brothers
         player.barrowsTarget?.finish()
         player.barrowsTarget = null
     }
 
     override fun onMoved(player: Player) {
-    if (!player.interfaceManager.containsInterface(24)) {
-        player.interfaceManager.sendOverlay(24, player.interfaceManager.hasRezizableScreen())
-        player.refreshBarrowsBrothers()
+        if (!player.interfaceManager.containsInterface(24)) {
+            player.interfaceManager.sendOverlay(24, player.interfaceManager.hasRezizableScreen())
+            player.refreshBarrowsBrothers()
         }
     }
 
@@ -68,7 +67,7 @@ class BarrowsArea : Area(14231, 14131) {//regions
         }
 
         if (player.hiddenBrother == -1) {
-            player.applyHit(com.rs.java.game.Hit(player, Utils.random(50) + 1, com.rs.java.game.Hit.HitLook.REGULAR_DAMAGE))
+            player.applyHit(Hit(player, Utils.random(50) + 1, com.rs.java.game.Hit.HitLook.REGULAR_DAMAGE))
             resetHeadTimer(player)
             return
         }
@@ -100,6 +99,7 @@ class BarrowsArea : Area(14231, 14131) {//regions
                 onLeaveCrypt(player)
                 true
             }
+
             in 66115..66116 -> {
                 for (hill in Hills.entries) {
                     if (Utils.inCircle(player.tile, hill.outBound.tile, 5)) {
@@ -113,6 +113,7 @@ class BarrowsArea : Area(14231, 14131) {//regions
                 }
                 true
             }
+
             10284 -> { // reward chest
                 if (player.hiddenBrother != -1 && !player.killedBarrowBrothers[player.hiddenBrother]) {
                     spawnBrother(player, 2025 + player.hiddenBrother, obj.tile)
@@ -136,6 +137,7 @@ class BarrowsArea : Area(14231, 14131) {//regions
                 }
                 true
             }
+
             in 6716..6749 -> { // tunnels
                 val walkTo = when (obj.rotation) { // FIX: use WorldObject.rotation
                     0 -> WorldTile(obj.x + 5, obj.y, 0)
@@ -152,6 +154,7 @@ class BarrowsArea : Area(14231, 14131) {//regions
                 }
                 true
             }
+
             else -> {
                 val sarco = getSarcophagusId(obj.id)
                 if (sarco != -1) {
@@ -255,6 +258,7 @@ class BarrowsArea : Area(14231, 14131) {//regions
         else
             World.updateGroundItem(Item(995, randomCoins), player, player, 60, 1)
         player.teleportBlock(60)
+        player.packets.sendBlackOut(0)
     }
 
 
@@ -313,11 +317,15 @@ fun Player.getAndIncreaseHeadIndex(): Int {
 
 var Player.headComponentId: Int
     get() = (temporaryAttribute()?.get("headComponentId") as? Int) ?: 0
-    set(value) { temporaryAttribute()?.set("headComponentId", value) }
+    set(value) {
+        temporaryAttribute()?.set("headComponentId", value)
+    }
 
 var Player.tunnelIndex: Int
     get() = (temporaryAttribute()?.get("tunnelIndex") as? Int) ?: 0
-    set(value) { temporaryAttribute()?.set("tunnelIndex", value) }
+    set(value) {
+        temporaryAttribute()?.set("tunnelIndex", value)
+    }
 
 // Track the active spawned Barrows Brother
 var Player.barrowsTarget: BarrowsBrother?
@@ -330,7 +338,9 @@ var Player.barrowsTarget: BarrowsBrother?
 
 var Player.barrowsTimer: Int
     get() = (temporaryAttribute()?.get("barrowsTimer") as? Int) ?: 0
-    set(value) { temporaryAttribute()?.set("barrowsTimer", value) }
+    set(value) {
+        temporaryAttribute()?.set("barrowsTimer", value)
+    }
 
 fun Player.clearBarrowsTarget(brother: BarrowsBrother) {
     if (barrowsTarget == brother) {

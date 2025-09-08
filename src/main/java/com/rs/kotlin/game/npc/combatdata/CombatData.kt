@@ -37,6 +37,18 @@ data class CombatData(
 
     fun getBaseStat(stat: String): Int = baseStats[stat.lowercase()] ?: 1
 
+    fun getCurrentStat(stat: String): Int {
+        return when (stat.lowercase()) {
+            "attack" -> attackLevel
+            "strength" -> strengthLevel
+            "defence" -> defenceLevel
+            "magic" -> magicLevel
+            "ranged" -> rangedLevel
+            "constitution" -> constitutionLevel
+            else -> 1
+        }
+    }
+
     /**
      * Drains a specific stat by [amount].
      * Will never drop below 1.
