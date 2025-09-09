@@ -1758,20 +1758,6 @@ public abstract class Entity extends WorldTile {
         }
     }
 
-    public void playSound(int soundId, int type) {
-        for (int regionId : getMapRegionsIds()) {
-            List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
-            if (playerIndexes != null) {
-                for (int playerIndex : playerIndexes) {
-                    Player player = World.getPlayers().get(playerIndex);
-                    if (player == null || !player.isActive() || !withinDistance(player))
-                        continue;
-                    player.getPackets().sendSound(soundId, 0, type);
-                }
-            }
-        }
-    }
-
     public void playSound(int soundId, int delay, int type) {
         for (int regionId : getMapRegionsIds()) {
             List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
@@ -1780,41 +1766,34 @@ public abstract class Entity extends WorldTile {
                     Player player = World.getPlayers().get(playerIndex);
                     if (player == null || !player.isActive() || !withinDistance(player))
                         continue;
-                    player.getPackets().sendSound(soundId, delay, type);
+
+                    int distance = Utils.getDistance(player, this);
+                    System.out.println("Distance from " + player.getDisplayName() + " and" + ((this instanceof NPC) ? ((NPC) this).getName() : (this instanceof Player) ? ((Player) this).getDisplayName() : ""));
+                    int maxDistance = 16;
+                    double factor = 1.0 - (Math.min(distance, maxDistance) / (double) maxDistance);
+                    int volume = (int)(255 * factor * factor);
+                    System.out.println("Volume: " + volume);
+
+                    player.getPackets().sendSoundWithVolume(soundId, delay, type, volume);
                 }
             }
         }
+    }
+
+
+    public void playSound(int soundId, int type) {
+        playSound(soundId, 0, type);
     }
 
 
     public void playSound(String sound, int type) {
         int soundId = Rscm.lookup(sound);
-        for (int regionId : getMapRegionsIds()) {
-            List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
-            if (playerIndexes != null) {
-                for (int playerIndex : playerIndexes) {
-                    Player player = World.getPlayers().get(playerIndex);
-                    if (player == null || !player.isActive() || !withinDistance(player))
-                        continue;
-                    player.getPackets().sendSound(soundId, 0, type);
-                }
-            }
-        }
+        playSound(soundId, 0, type);
     }
 
     public void playSound(String sound, int delay, int type) {
         int soundId = Rscm.lookup(sound);
-        for (int regionId : getMapRegionsIds()) {
-            List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
-            if (playerIndexes != null) {
-                for (int playerIndex : playerIndexes) {
-                    Player player = World.getPlayers().get(playerIndex);
-                    if (player == null || !player.isActive() || !withinDistance(player))
-                        continue;
-                    player.getPackets().sendSound(soundId, delay, type);
-                }
-            }
-        }
+        playSound(soundId, delay, type);
     }
 
     public UpdateMask getUpdatedMask() {

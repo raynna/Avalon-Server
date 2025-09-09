@@ -312,6 +312,7 @@ object CombatCalculations {
             if (target is NPC) {//just to make sure magic is a bit stronger for monsters so magic is a viable style in pvm
                 levelMultiplier *= player.prayer.magicMultiplier
             }
+            println("void: $voidDamage, multipliers $multipliers, specialMultipliers $specialMultiplier")
             val maxHit = baseDamage * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage * specialMultiplier
             var damage = Utils.random(maxHit.toInt())
             if (target is NPC) {
@@ -329,9 +330,14 @@ object CombatCalculations {
         private fun getMagicLevelMultiplier(player: Player): Double {
             val currentLevel = player.skills.getLevel(Skills.MAGIC).toDouble()
             val baseLevel = player.skills.getLevelForXp(Skills.MAGIC).toDouble()
-            //custom scaling, to make magic more relyant on magic level for all levels, max hit is still same 490 as previous
-            val normalScaling = 1.0 + ((baseLevel - 1) * 0.00205)
-            val boostedScaling = 1.0 + ((currentLevel - baseLevel).coerceAtLeast(0.0) * 0.0015)
+
+            // Base scaling: 0.20% per level → +9.9% at level 99
+            val normalScaling = 1.0 + (baseLevel * 0.0020)
+
+            // Boost scaling: 0.25% per level above base, capped at +5%
+            val boostedLevels = (currentLevel - baseLevel).coerceAtLeast(0.0)
+            val boostedScaling = 1.0 + (boostedLevels * 0.0025).coerceAtMost(0.05)
+
             return normalScaling * boostedScaling
         }
 

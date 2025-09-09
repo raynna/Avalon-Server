@@ -1555,6 +1555,27 @@ public class WorldPacketsEncoder extends Encoder {
 		session.write(stream);
 	}
 
+	public void sendSoundWithVolume(int id, int delay, int effectType, int volume) {
+		if (effectType == 1) {
+			OutputStream stream = new OutputStream(9);
+			stream.writePacket(player, 26);
+			stream.writeShort(id);
+			stream.writeByte(1); // repeat count
+			stream.writeShort(delay);
+			stream.writeByte(Math.min(volume, 255)); // scaled volume
+			stream.writeShort(256);
+			session.write(stream);
+		} else if (effectType == 2) {
+			OutputStream stream = new OutputStream(7);
+			stream.writePacket(player, 70);
+			stream.writeShort(id);
+			stream.writeByte(1); // repeat count
+			stream.writeShort(delay);
+			stream.writeByte(Math.min(volume, 255)); // scaled volume
+			session.write(stream);
+		}
+	}
+
 	// effect type 1 or 2(index4 or index14 format, index15 format unusused by
 	// jagex for now)
 	public void sendSound(int id, int delay, int effectType) {

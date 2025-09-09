@@ -215,7 +215,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             if (currentSpell.endGraphic.id != -1 && currentSpell.projectileId == -1 && currentSpell.projectileIds.isEmpty()) {
                 defender.gfx(currentSpell.endGraphic)
             }
-            currentSpell.hitSound.takeIf { it != -1 }?.let { defender.playSound(it, 1) }
+                currentSpell.hitSound.takeIf { it != -1 }?.let { defender.playSound(it, 1) }
         }
     }
 
@@ -342,7 +342,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                     hitGraphic = endGraphic
                 )
             }
-
+            attacker.temporaryAttributes()["CASTED_SPELL"] = spell
             delayHits(PendingHit(hit, t, getHitDelay()))
         }
         if (manual) {
