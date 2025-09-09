@@ -207,35 +207,51 @@ public class NPC extends Entity implements Serializable {
 
         // Clamp level to reasonable max
         if (level > 750) level = 750;
-        if (id == 7891) level = 70; // special case
+        if (id == 7891 || id == 4474) {
+            combatData = new CombatData(
+                    level,
+                    255,
+                    255,
+                    255,
+                    255,
+                    255,
+                    10000,
+                    255, 255, 255, 255, 255, 255,
+                    new MeleeDefence(0, 0, 0),
+                    new MagicDefence(255 / 2),
+                    new RangedDefence(0, 0, 0),
+                    new Immunities(false, false, false, false, false),
+                    new MaxHit(0), true, List.of("Crush"), 4, 0, level
+            );
+            return;
+        }
 
-        // Generate standard CombatData
-        int defenceLevel = level / 2; // simple formula, can adjust
-        int meleeAttack = level - (level / 4);
+        int defenceLevel = level / 2;
+        int meleeAttack = level - (level / 2);
         int magicAttack = level / 2;
         int rangedAttack = level / 2;
         int constitution = level / 2 + 1;
-        int maxHit = (int) Math.ceil(level * 0.05); // can adjust
+        int maxHit = (int) Math.ceil(level * 0.05);
 
         combatData = new CombatData(
-                level, // combatLevel
-                meleeAttack, // attackLevel
-                meleeAttack, // strengthLevel
-                defenceLevel, // defenceLevel
-                magicAttack, // magicLevel
-                rangedAttack, // rangedLevel
-                constitution, // constitutionLevel
-                0, 0, 0, 0, 0, 0, // bonuses (unused)
-                new MeleeDefence(defenceLevel, defenceLevel, defenceLevel),
-                new MagicDefence(magicAttack / 2),
-                new RangedDefence(rangedAttack / 2, rangedAttack / 2, rangedAttack / 2),
+                level,
+                meleeAttack,
+                meleeAttack,
+                defenceLevel,
+                magicAttack,
+                rangedAttack,
+                constitution,
+                0, 0, 0, 0, 0, 0,
+                new MeleeDefence(defenceLevel / 3, defenceLevel / 3, defenceLevel / 3),
+                new MagicDefence(defenceLevel / 3),
+                new RangedDefence(defenceLevel / 3, defenceLevel / 3, defenceLevel / 3),
                 new Immunities(false, false, false, false, false),
                 new MaxHit(maxHit),
-                true, // aggressive
-                List.of("Crush"), // default attack style
-                4, // attackSpeedTicks
-                0, // respawnTicks
-                level // slayerXp
+                true,
+                List.of("Crush"),
+                4,
+                25,
+                level
         );
     }
 
