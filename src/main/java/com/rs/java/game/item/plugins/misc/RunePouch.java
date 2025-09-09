@@ -259,7 +259,6 @@ public class RunePouch extends ItemPlugin {
         player.getPackets().sendUnlockOptions(INVENTORY_INTERFACE, 0, 0, 27, 0, 1, 2, 3);
         //runes on interface
         player.getPackets().sendInterSetItemsOptionsScript(INTERFACEID, RUNE_CONTAINER, 100, 3, 1, "Withdraw 1", "Withdraw 10", "Withdraw 100", "Withdraw-All");
-        player.getPackets().sendInterSetItemsOptionsScript(INTERFACEID, RUNE_CONTAINER, 101, 3, 1, "Withdraw 1", "Withdraw 10", "Withdraw 100", "Withdraw-All");
         player.getPackets().sendUnlockOptions(INTERFACEID, RUNE_CONTAINER, 0, 3, 0, 1, 2, 3);
         player.getPackets().sendItems(100, items);
         player.getPackets().sendUpdateItems(100, items, 3);
@@ -268,8 +267,6 @@ public class RunePouch extends ItemPlugin {
         player.getPackets().sendUnlockOptions(INTERFACEID, INVENTORY_CONTAINER, 0, 27, 0, 1, 2, 3);
         player.getPackets().sendItems(93, player.getInventory().items.getItemsCopy());
         player.getPackets().sendUpdateItems(93, player.getInventory().items.getItemsCopy(), 27);
-        player.getPackets().sendIComponentSprite(INTERFACEID, RUNE_1_COMPONENT, 8007);
-        player.getPackets().sendIComponentSprite(INTERFACEID, RUNE_2_COMPONENT, 8013);
     }
 
 

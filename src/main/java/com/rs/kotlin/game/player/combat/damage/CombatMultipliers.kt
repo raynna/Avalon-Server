@@ -1,10 +1,11 @@
 package com.rs.kotlin.game.player.combat.damage
 
 import com.rs.java.game.Entity
+import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 
-class CombatMultipliers() {
+class CombatMultipliers {
 
     enum class Style {
         MELEE, RANGE, MAGIC, HYBRID
@@ -18,90 +19,84 @@ class CombatMultipliers() {
         val itemId: Int,
         val style: Style,
         val type: Type,
-        val boost: Double
+        val accuracyBoost: Double = 0.0,
+        val damageBoost: Double = 0.0,
+        val stack: Boolean = false
     ) {
-        FULL_SLAYER_HELMET(15492, Style.HYBRID, Type.SLAYER, 0.20),
-        SLAYER_HELMET(13263, Style.MELEE, Type.SLAYER, 0.20),
-        SALVE_AMULET_E(10588, Style.HYBRID, Type.UNDEAD, 0.20),
-        BLACK_MASK(8921, Style.MELEE, Type.SLAYER, 0.15),
-        HEXCREST(15488, Style.MAGIC, Type.SLAYER, 0.15),
-        FOCUSSIGHT(15490, Style.RANGE, Type.SLAYER, 0.15),
-        SALVE_AMULET(4081, Style.MELEE, Type.UNDEAD, 0.15),
-        DARKLIGHT(6746, Style.MELEE, Type.DEMON, 0.60),
-        SILVERLIGHT(2402, Style.MELEE, Type.DEMON, 0.60),
-        ;
+        FULL_SLAYER_HELMET(15492, Style.HYBRID, Type.SLAYER, 0.15, 0.15),
+        SLAYER_HELMET(13263, Style.MELEE, Type.SLAYER, 0.15, 0.15),
+        SALVE_AMULET_E(10588, Style.HYBRID, Type.UNDEAD, 0.15, 0.20),
+        BLACK_MASK(8921, Style.MELEE, Type.SLAYER, 0.15, 0.15),
+        HEXCREST(15488, Style.MAGIC, Type.SLAYER, 0.15, 0.15),
+        FOCUSSIGHT(15490, Style.RANGE, Type.SLAYER, 0.15, 0.15),
+        SALVE_AMULET(4081, Style.MELEE, Type.UNDEAD, 0.15, 0.15),
+        DARKLIGHT(6746, Style.MELEE, Type.DEMON, 0.60, 0.60),
+        SILVERLIGHT(2402, Style.MELEE, Type.DEMON, 0.60, 0.60),
+        DRAGONHUNTER_CROSSBOW(
+            Item.getId("item.dragon_hunter_crossbow"),
+            Style.RANGE, Type.DRAGON,
+            0.25, 0.25, stack = true
+        ),
+        DRAGONHUNTER_LANCE(
+            Item.getId("item.dragon_hunter_lance"),
+            Style.MELEE, Type.DRAGON,
+            0.25, 0.25, stack = true
+        );
 
         companion object {
             fun fromItemId(id: Int) = entries.firstOrNull { it.itemId == id }
         }
     }
 
+    data class Multipliers(
+        val accuracy: Double = 1.0,
+        val damage: Double = 1.0
+    )
+
     companion object {
-        var UNDEAD_NPCS: Array<String> = arrayOf(
+        private val UNDEAD_NPCS = arrayOf(
             "ghost", "zombie", "revenant", "skeleton", "abberant spectre", "banshee",
             "ghoul", "vampire", "skeletal"
         )
-        var DEMON_NPCS: Array<String> = arrayOf(
-            "demon"
-        )
-        var DRAGON_NPCS: Array<String> = arrayOf(
-            "dragon", "elvarg"
-        )
-        fun getMultiplier(player: Player, target: Entity, style: Style): Double {
-            var multiplier = 1.0
+        private val DEMON_NPCS = arrayOf("demon")
+        private val DRAGON_NPCS = arrayOf("dragon", "elvarg")
+
+        fun getMultipliers(player: Player, target: Entity, style: Style): Multipliers {
+            var accuracy = 1.0
+            var damage = 1.0
+
             if (target is NPC) {
                 val maxHitDummy = target.id == 4474
-                val isUndead = UNDEAD_NPCS.any { undeadName ->
-                    target.definitions.name.contains(undeadName, ignoreCase = true)
-                }
-                val isDemon = DEMON_NPCS.any { demonName ->
-                    target.definitions.name.contains(demonName, ignoreCase = true)
-                }
-                val isDragon = DRAGON_NPCS.any { dragonName ->
-                    target.definitions.name.contains(dragonName, ignoreCase = true)
-                }
+                val isUndead = UNDEAD_NPCS.any { target.definitions.name.contains(it, ignoreCase = true) }
+                val isDemon = DEMON_NPCS.any { target.definitions.name.contains(it, ignoreCase = true) }
+                val isDragon = DRAGON_NPCS.any { target.definitions.name.contains(it, ignoreCase = true) }
 
-                val equippedItem = player.equipment.items.itemsCopy
-                    .mapNotNull { it?.id }.firstNotNullOfOrNull { BoostEquipment.fromItemId(it) }
+                val equippedBoosts = player.equipment.items.itemsCopy
+                    .mapNotNull { it?.id }
+                    .mapNotNull { BoostEquipment.fromItemId(it) }
+                    .filter { style == it.style || it.style == Style.HYBRID }
 
-                if (equippedItem != null &&
-                    (style == equippedItem.style || equippedItem.style == Style.HYBRID)
-                ) {
-                    when (equippedItem.type) {
-                        Type.SLAYER -> {
-                            if (maxHitDummy || (player.slayerTask != null &&
-                                        player.slayerManager.isValidTask(target.name))
-                            ) {
-                                multiplier += equippedItem.boost
-                            }
-                        }
-                        Type.DEMON -> {
-                            if (isDemon) {
-                                multiplier += equippedItem.boost;
-                            }
-                        }
-                        Type.DRAGON -> {
-                            if (isDragon) {
-                                multiplier += equippedItem.boost;
-                            }
-                        }
-
-                        Type.UNDEAD -> {
-                            if (maxHitDummy || isUndead) {
-                                multiplier += equippedItem.boost
-                            }
-                        }
-
-                        Type.REGULAR -> {
-                            if (maxHitDummy) {
-                                multiplier += equippedItem.boost
-                            }
+                equippedBoosts.forEach { boost ->
+                    val applies = when (boost.type) {
+                        Type.SLAYER -> maxHitDummy || (player.slayerTask != null &&
+                                player.slayerManager.isValidTask(target.name))
+                        Type.UNDEAD -> maxHitDummy || isUndead
+                        Type.DEMON -> maxHitDummy || isDemon
+                        Type.DRAGON -> maxHitDummy || isDragon
+                        Type.REGULAR -> maxHitDummy
+                    }
+                    if (applies) {
+                        if (boost.stack) {
+                            accuracy += boost.accuracyBoost
+                            damage += boost.damageBoost
+                        } else {
+                            accuracy = maxOf(accuracy, 1.0 + boost.accuracyBoost)
+                            damage = maxOf(damage, 1.0 + boost.damageBoost)
                         }
                     }
                 }
-                return multiplier
             }
-            return multiplier
+            return Multipliers(accuracy, damage)
         }
     }
 }

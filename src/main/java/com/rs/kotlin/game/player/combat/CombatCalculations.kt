@@ -50,17 +50,14 @@ object CombatCalculations {
             val styleBonus = getAttackStyleBonus(player)
             val equipmentSet = EquipmentSets.getSet(player)
             val voidBonus = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.MELEE)
-            val specialBonus = CombatMultipliers.getMultiplier(
-                player,
-                target,
-                CombatMultipliers.Style.MELEE
-            )//TODO THINGS LIKE SLAYER HELMET, SALVE AMMY ETC
+            val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MELEE)
+
 
             var effectiveAttack = player.skills.getLevel(Skills.ATTACK) * player.prayer.attackMultiplier
             effectiveAttack += styleBonus + 8
             effectiveAttack *= voidBonus
 
-            val attackRoll = effectiveAttack * (attackBonus + 64) * specialBonus * accuracyMultiplier
+            val attackRoll = effectiveAttack * (attackBonus + 64) * multipliers.accuracy * accuracyMultiplier
 
 
             /*
@@ -110,14 +107,14 @@ object CombatCalculations {
 
             val equipmentSet = EquipmentSets.getSet(player)
             val dharokMultiplier = getDharokMultiplier(player)
-            val voidBonus = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.MELEE)
-            val specialBonus = CombatMultipliers.getMultiplier(player, target, CombatMultipliers.Style.MELEE)
+            val void = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.MELEE)
+            val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MELEE)
 
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.StregthBonus.index].toDouble()
 
             val baseStrengthLevel = getBaseStrengthLevel(player)//correct
-            val effectiveStrength = floor((baseStrengthLevel + styleBonus + 8 * voidBonus) * dharokMultiplier)
-            val baseDamage = 0.5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * specialBonus
+            val effectiveStrength = floor((baseStrengthLevel + styleBonus + 8 * void) * dharokMultiplier)
+            val baseDamage = 0.5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * multipliers.damage
             val hit = Hit(player, 0, 0, Hit.HitLook.MELEE_DAMAGE)
             val maxHit = (baseDamage * specialMultiplier).toInt()
             var damage = Utils.random(maxHit)
@@ -154,14 +151,14 @@ object CombatCalculations {
             val rangeBonus = player.combatDefinitions.bonuses[bonusType]
             val styleBonus = getAttackStyleBonus(player)
             val equipmentSet = EquipmentSets.getSet(player)
-            val voidBonus = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.RANGE)
-            val specialBonus = CombatMultipliers.getMultiplier(player, target, CombatMultipliers.Style.RANGE)
+            val void = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.RANGE)
+            val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.RANGE)
             val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getZaryteBowBoost(player, target)
 
             var effectiveAttack = player.skills.getLevel(Skills.RANGE) * player.prayer.rangedMultiplier
             effectiveAttack += styleBonus + 8
-            effectiveAttack *= voidBonus * zaryteAccuracy
-            val attackRoll = effectiveAttack * (rangeBonus + 64) * specialBonus * accuracyMultiplier
+            effectiveAttack *= void * zaryteAccuracy
+            val attackRoll = effectiveAttack * (rangeBonus + 64) * multipliers.accuracy * accuracyMultiplier
             /*
             * Range Defence Calculation
             */
@@ -204,14 +201,14 @@ object CombatCalculations {
             val prayerBonus = player.prayer.rangedMultiplier
             val styleBonus = getStrengthStyleBonus(player)
             val equipmentSet = EquipmentSets.getSet(player)
-            val voidBonus = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.RANGE)
-            val specialBonus = CombatMultipliers.getMultiplier(player, target, CombatMultipliers.Style.MELEE)
+            val void = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.RANGE)
+            val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.RANGE)
             val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getZaryteBowBoost(player, target)
 
             val baseStrength = floor(rangedLvl * prayerBonus)
-            val effectiveStrength = floor((baseStrength + styleBonus + 8) * voidBonus * zaryteDamage)
+            val effectiveStrength = floor((baseStrength + styleBonus + 8) * void * zaryteDamage)
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.RangedStrBonus.index].toDouble()
-            val baseDamage = 0.5 + (effectiveStrength * (strengthBonus + 640) / 640) * specialBonus
+            val baseDamage = 0.5 + (effectiveStrength * (strengthBonus + 640) / 640) * multipliers.damage
             var maxHit = floor(baseDamage * specialMultiplier).toInt()
             var damage = Utils.random(maxHit)
             if (target is NPC) {
@@ -276,18 +273,18 @@ object CombatCalculations {
 
        override fun getHitChance(player: Player, target: Entity, accuracyMultiplier: Double): Double {
            val magicBonus = player.combatDefinitions.bonuses[BonusType.MagicAttack.index]
-           val specialBonus = CombatMultipliers.getMultiplier(player, target, CombatMultipliers.Style.MAGIC)
            val equipmentSet = EquipmentSets.getSet(player)
-           val voidAccuracy = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.MAGIC)
+           val void = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.MAGIC)
+           val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MAGIC)
 
            var effectiveMagic = player.skills.getLevel(Skills.MAGIC) * player.prayer.magicMultiplier
            effectiveMagic += 9//TODO STYLE ACCURACY FOR POLYPORE
-           effectiveMagic *= voidAccuracy
-           val attackRoll = effectiveMagic * (magicBonus + 64) * specialBonus * accuracyMultiplier
+           effectiveMagic *= void
+           val attackRoll = effectiveMagic * (magicBonus + 64) * multipliers.accuracy * accuracyMultiplier
 
            val (defenceBonus, effectiveDefenceLevel) = getEffectiveMagicDefence(target)
            val defenceRoll = effectiveDefenceLevel * (defenceBonus + 64)
-            return computeHitChance(attackRoll.toInt(), defenceRoll.toInt())
+            return computeHitChance(attackRoll.toInt(), defenceRoll)
         }
 
         fun calculateMaxHit(player: Player, target: Entity, spellId: Int, specialMultiplier: Double = 1.0): Hit {
@@ -309,12 +306,13 @@ object CombatCalculations {
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
             val equipmentSet = EquipmentSets.getSet(player)
             val voidDamage = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.MAGIC)
+            val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MAGIC)
 
             var levelMultiplier = getMagicLevelMultiplier(player)
             if (target is NPC) {//just to make sure magic is a bit stronger for monsters so magic is a viable style in pvm
                 levelMultiplier *= player.prayer.magicMultiplier
             }
-            val maxHit = baseDamage * magicStrengthMultiplier * levelMultiplier * voidDamage * specialMultiplier
+            val maxHit = baseDamage * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage * specialMultiplier
             var damage = Utils.random(maxHit.toInt())
             if (target is NPC) {
                 if (target.id == 4474) {
