@@ -49,10 +49,12 @@ class BarrowsArea : Area(14231, 14131) {//regions
         player.barrowsTarget = null
     }
 
-    override fun onMoved(player: Player) {
-        if (!player.interfaceManager.containsInterface(24)) {
-            player.interfaceManager.sendOverlay(24, player.interfaceManager.hasRezizableScreen())
-            player.refreshBarrowsBrothers()
+    override fun onMoved(player: Entity) {
+        if (player is Player) {
+            if (!player.interfaceManager.containsInterface(24)) {
+                player.interfaceManager.sendOverlay(24, player.interfaceManager.hasRezizableScreen())
+                player.refreshBarrowsBrothers()
+            }
         }
     }
 

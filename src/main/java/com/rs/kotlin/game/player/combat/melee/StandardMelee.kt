@@ -956,6 +956,21 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
+                "item.dragon_hunter_lance",
+            ),
+            name = "Lance",
+            weaponStyle = WeaponStyle.SPEAR,
+            blockAnimationId = Animation.getId("animation.battleaxe_block"),
+            soundId = Rscm.lookup("sound.sword_stab"),
+            animations = mapOf(
+                StyleKey(AttackStyle.CONTROLLED, 0) to Animation.getId("animation.chaotic_stab"),
+                StyleKey(AttackStyle.CONTROLLED, 1) to Animation.getId("animation.chaotic_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.staff_bash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.chaotic_stab"),
+            ),
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
                 "item.bronze_dagger", "item.iron_dagger",
                 "item.steel_dagger", "item.black_dagger",
                 "item.mithril_dagger", "item.adamant_dagger",
@@ -1248,7 +1263,7 @@ object StandardMelee : MeleeData() {
                 "item.katagon_maul", "item.katagon_maul_b",
                 "item.gorgonite_maul", "item.gorgonite_maul_b",
                 "item.promethium_maul", "item.promethium_maul_b",
-                "item.primal_maul", "item.primal_maul_b",
+                "item.primal_maul", "item.primal_maul_b", "item.elder_maul",
             ),
             name = "Maul",
             weaponStyle = WeaponStyle.MAUL,
@@ -1259,6 +1274,38 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_crush"),
                 StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.chaotic_crush"),
             ),
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.scythe_of_vitur",
+            ),
+            name = "Maul",
+            weaponStyle = WeaponStyle.SCYTHE,
+            attackDelay = 1,
+            blockAnimationId = Animation.getId("animation.scythe_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.scythe_reap"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.scythe_chop"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.scythe_jab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.scythe_reap"),
+            ),
+            effect = SpecialEffect(
+                execute = { context ->
+                    val attacker = context.attacker
+                    val defender = context.defender
+                    attacker.animate(CombatAnimations.getAnimation(context.weaponId, context.attackStyle, attacker.combatDefinitions.attackStyle))
+
+                    val targets = context.getScytheTargets()
+                    if (defender.size == 1 && (defender is NPC && !defender.name.contains("dummy", ignoreCase = true))) {
+                        for (victim in targets) {
+                            context.meleeHit(target = victim)
+                        }
+                    } else {
+                        context.applyScytheHits(defender)
+                    }
+                    true
+                }
+            )
         ),
         MeleeWeapon(
             itemId = Item.getIds(

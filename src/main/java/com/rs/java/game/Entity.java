@@ -31,6 +31,8 @@ import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.NewPoison;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
+import com.rs.kotlin.game.world.area.Area;
+import com.rs.kotlin.game.world.area.AreaManager;
 
 public abstract class Entity extends WorldTile {
 

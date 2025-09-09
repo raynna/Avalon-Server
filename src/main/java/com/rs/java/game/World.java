@@ -91,6 +91,37 @@ public final class World {
         return localPlayers;
     }
 
+    public static List<Entity> getEntitiesAt(WorldTile tile) {
+        List<Entity> entities = new ArrayList<>();
+        int regionId = tile.getRegionId();
+        Region region = getRegion(regionId);
+        if (region == null) return entities;
+
+        // Players in region
+        List<Integer> playerIndexes = region.getPlayerIndexes();
+        if (playerIndexes != null) {
+            for (int index : playerIndexes) {
+                Player player = players.get(index);
+                if (player != null && !player.hasFinished() && player.getTile().matches(tile)) {
+                    entities.add(player);
+                }
+            }
+        }
+
+        // NPCs in region
+        List<Integer> npcIndexes = region.getNPCsIndexes();
+        if (npcIndexes != null) {
+            for (int index : npcIndexes) {
+                NPC npc = npcs.get(index);
+                if (npc != null && !npc.hasFinished() && npc.getTile().matches(tile)) {
+                    entities.add(npc);
+                }
+            }
+        }
+
+        return entities;
+    }
+
     public static int getPlayersInWilderness() {
         int result = 0;
         for (Player players : World.getPlayers())

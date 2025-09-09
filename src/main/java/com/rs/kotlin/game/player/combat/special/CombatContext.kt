@@ -296,6 +296,147 @@ fun Entity.withinDistanceOf(other: Entity, distance: Int): Boolean {
     return result
 }
 
+fun CombatContext.applyScytheHits(victim: Entity) {
+    val attacker = this.attacker
+
+    // Collect the hits so we can inspect them after rolling
+    val scytheHits = mutableListOf<Hit>()
+
+    hits {
+        var hit = rollMelee()
+        hit = nextHit(baseHit = hit)
+        scytheHits += hit
+
+        if (victim.size > 1 || (victim is NPC && victim.name.contains("dummy", ignoreCase = true))) {
+            hit = nextHit(baseHit = hit, scale = 0.5)
+            scytheHits += hit
+        }
+
+        if (victim.size > 2 || (victim is NPC && victim.name.contains("dummy", ignoreCase = true))) {
+            hit = nextHit(baseHit = hit, scale = 0.5, delay = 1)
+            scytheHits += hit
+        }
+    }
+
+    // === Critical propagation like Dragon Claws ===
+    if (scytheHits.isNotEmpty()) {
+        val firstNonZero = scytheHits.firstOrNull { it.damage > 0 }
+        if (firstNonZero != null) {
+            val maxCheck = CombatCalculations.calculateMeleeMaxHit(attacker, victim)
+            if (firstNonZero.checkCritical(firstNonZero.damage, maxCheck.baseMaxHit)) {
+                for (i in scytheHits.indexOf(firstNonZero) until scytheHits.size) {
+                    scytheHits[i].critical = true
+                }
+            }
+        }
+    }
+}
+
+
+
+
+fun CombatContext.getScytheTargets(
+    maxTargets: Int = 3
+): List<Entity> {
+    val attacker = this.attacker
+    val target = this.defender
+    val possibleTargets = mutableListOf<Entity>()
+    possibleTargets.add(target)
+
+    val baseTile = attacker.tile
+    val rawDir = attacker.direction
+    val dir = (rawDir / 2048) and 0x7 // normalize 0–7
+    println("[DEBUG] Attacker=${attacker.displayName} rawDir=$rawDir normalizedDir=$dir tile=$baseTile")
+
+    val arcTiles = when (dir) {
+        0 -> listOf( // South
+            baseTile.transform(0, -1, 0),
+            baseTile.transform(-1, -1, 0),
+            baseTile.transform(1, -1, 0)
+        )
+        1 -> listOf( // South-West
+            baseTile.transform(-1, -1, 0),
+            baseTile.transform(-1, 0, 0),
+            baseTile.transform(0, -1, 0)
+        )
+        2 -> listOf( // West
+            baseTile.transform(-1, 0, 0),
+            baseTile.transform(-1, -1, 0),
+            baseTile.transform(-1, 1, 0)
+        )
+        3 -> listOf( // North-West
+            baseTile.transform(-1, 1, 0),
+            baseTile.transform(-1, 0, 0),
+            baseTile.transform(0, 1, 0)
+        )
+        4 -> listOf( // North
+            baseTile.transform(0, 1, 0),
+            baseTile.transform(-1, 1, 0),
+            baseTile.transform(1, 1, 0)
+        )
+        5 -> listOf( // North-East
+            baseTile.transform(1, 1, 0),
+            baseTile.transform(1, 0, 0),
+            baseTile.transform(0, 1, 0)
+        )
+        6 -> listOf( // East
+            baseTile.transform(1, 0, 0),
+            baseTile.transform(1, -1, 0),
+            baseTile.transform(1, 1, 0)
+        )
+        7 -> listOf( // South-East
+            baseTile.transform(1, -1, 0),
+            baseTile.transform(0, -1, 0),
+            baseTile.transform(1, 0, 0)
+        )
+        else -> emptyList()
+    }
+
+
+    println("[DEBUG] ArcTiles=$arcTiles")
+
+    for (tile in arcTiles) {
+        if (possibleTargets.size >= maxTargets) break
+
+        val entitiesHere = World.getEntitiesAt(tile)
+        println("[DEBUG] Checking tile=$tile entities=${entitiesHere.size}")
+
+        for (entity in entitiesHere) {
+            println("[DEBUG] Candidate entity=${entity} at $tile")
+
+            if (entity == attacker) {
+                println("[DEBUG] Reject: is attacker")
+                continue
+            }
+            if (entity == target) {
+                println("[DEBUG] Reject: is main target")
+                continue
+            }
+            if (entity.isDead || entity.hasFinished()) {
+                println("[DEBUG] Reject: dead/finished")
+                continue
+            }
+            if (!attacker.controlerManager.canHit(entity)) {
+                println("[DEBUG] Reject: cannot hit")
+                continue
+            }
+            if (!entity.isAtMultiArea && !entity.isForceMultiArea) {
+                println("[DEBUG] Reject: not in multi area")
+                continue
+            }
+
+            println("[DEBUG] ACCEPT entity=${entity}")
+            possibleTargets.add(entity)
+            if (possibleTargets.size >= maxTargets) break
+        }
+    }
+
+    println("[DEBUG] Final targets=${possibleTargets.map { it.toString() }}")
+    return possibleTargets
+}
+
+
+
 fun CombatContext.getMultiAttackTargets(
     maxDistance: Int,
     maxTargets: Int

@@ -51,6 +51,8 @@ data class Spell(
     val staff: StaffRequirement? = null,
     val teleportLocation: WorldTile? = null,
     val animationId: Int = -1,
+    val attackSound: Int = -1,
+    val hitSound: Int = -1,
     val graphicId: Graphics = Graphics(-1),
     val endGraphic: Graphics = Graphics(-1),
     val projectileType: Projectile = Projectile.ELEMENTAL_SPELL,

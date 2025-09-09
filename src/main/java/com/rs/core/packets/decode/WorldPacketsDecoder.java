@@ -393,6 +393,9 @@ public final class WorldPacketsDecoder extends Decoder {
 			handlePlayerOption1_Attack(player, stream);
 			return;
 		}
+		if (packetId == ITEM_ON_ITEM_PACKET) {
+			InventoryOptionsHandler.handleItemOnItem(player, stream);
+		}
 
 		if (packetId == PLAYER_OPTION_9_PACKET) {
 			handlePlayerOption9(player, stream);

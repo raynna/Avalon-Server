@@ -10,6 +10,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.player.actions.combat.PlayerCombat;
+import com.rs.java.tools.CustomItemBonuses;
 import com.rs.kotlin.game.player.equipment.BonusType;
 
 public final class CombatDefinitions implements Serializable {
@@ -661,6 +662,12 @@ public final class CombatDefinitions implements Serializable {
             if (definitions == null) return;
             for (BonusType bonus : BonusType.getEntries()) {
                 int value = definitions.getDataFromClientScript(bonus.getClientScriptId(), 0);
+                if (value == 0) {
+                    int[] customBonuses = CustomItemBonuses.getBonuses(item.getId());
+                    if (customBonuses != null && bonus.getIndex() < customBonuses.length) {
+                        value = customBonuses[bonus.getIndex()];
+                    }
+                }
                 if (bonus == BonusType.RangedStrBonus)//special handling for this due to arrows+bows
                     continue;
                 bonuses[bonus.getIndex()] += value;
@@ -696,27 +703,51 @@ public final class CombatDefinitions implements Serializable {
         int rangedStrength = 0;
 
         Item weapon = player.equipment.getItem(Equipment.SLOT_WEAPON);
+        Item ammo   = player.equipment.getItem(Equipment.SLOT_ARROWS);
+
         if (weapon != null) {
             int weaponRS = weapon.getDefinitions().getRangedStrengthBonus();
-            if (weaponRS > 0) {
-                rangedStrength += weaponRS;
-            }
-        }
 
-        if (rangedStrength == 0) {
-            Item ammo = player.equipment.getItem(Equipment.SLOT_ARROWS);
-            if (ammo != null) {
-                rangedStrength += ammo.getDefinitions().getRangedStrengthBonus();
-                if (isGodArrow(ammo)) {
-                    int rangedLevel = player.getSkills().getLevel(Skills.RANGE);
-                    int scaling = Math.min((int) Math.floor((rangedLevel / 70.0) * 49), 49);
-                    rangedStrength += scaling * 10;
+            // ✅ Twisted bow stacks with ammo
+            if (weapon.isItem("item.twisted_bow")) {
+                rangedStrength += weaponRS;
+
+                if (ammo != null) {
+                    rangedStrength += ammo.getDefinitions().getRangedStrengthBonus();
+
+                    if (isGodArrow(ammo)) {
+                        int rangedLevel = player.getSkills().getLevel(Skills.RANGE);
+                        int scaling = Math.min((int) Math.floor((rangedLevel / 70.0) * 49), 49);
+                        rangedStrength += scaling * 10;
+                    }
+                }
+            } else {
+                if (weaponRS > 0) {
+                    rangedStrength = weaponRS;
+                } else if (ammo != null) {
+                    rangedStrength = ammo.getDefinitions().getRangedStrengthBonus();
+
+                    if (isGodArrow(ammo)) {
+                        int rangedLevel = player.getSkills().getLevel(Skills.RANGE);
+                        int scaling = Math.min((int) Math.floor((rangedLevel / 70.0) * 49), 49);
+                        rangedStrength += scaling * 10;
+                    }
                 }
             }
+        } else if (ammo != null) {
+            // No weapon equipped, just ammo RS
+            rangedStrength = ammo.getDefinitions().getRangedStrengthBonus();
 
+            if (isGodArrow(ammo)) {
+                int rangedLevel = player.getSkills().getLevel(Skills.RANGE);
+                int scaling = Math.min((int) Math.floor((rangedLevel / 70.0) * 49), 49);
+                rangedStrength += scaling * 10;
+            }
         }
+
         bonuses[BonusType.RangedStrBonus.getIndex()] = rangedStrength;
     }
+
 
     public boolean hasGoliath(Item gloves) {
         if (gloves == null)

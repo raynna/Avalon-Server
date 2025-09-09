@@ -249,8 +249,9 @@ object CombatCalculations {
             val weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON.toInt())
             val isZaryte = weapon.isAnyOf("item.zaryte_bow", "item.zaryte_bow_degraded")
             val isHexhunter = weapon.isAnyOf("item.hexhunter_bow", "item.hexhunter_bow_b")
+            val isTwistedBow = weapon.isAnyOf("item.twisted_bow")
 
-            if (!isZaryte && !isHexhunter) return Triple(1.0, 1.0, 0)
+            if (!isZaryte && !isHexhunter && !isTwistedBow) return Triple(1.0, 1.0, 0)
             val magicLevel = target.combatData.magicLevel
             val magicAttack = target.combatData.magicBonus
 

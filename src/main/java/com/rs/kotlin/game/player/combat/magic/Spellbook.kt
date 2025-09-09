@@ -152,6 +152,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 50,
             xp = 30.0,
             damage = 150,
+            attackSound = 183,
+            hitSound = 185,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 2),
@@ -170,6 +172,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 52,
             xp = 31.0,
             damage = 160,
+            attackSound = 178,
+            hitSound = 179,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 2),
@@ -189,6 +193,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 56,
             xp = 33.0,
             damage = 170,
+            attackSound = 106,
+            hitSound = 110,
             type = SpellType.Combat,
             element = ElementType.Blood,
             runes = listOf(
@@ -208,6 +214,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 58,
             xp = 34.0,
             damage = 180,
+            attackSound = 171,
+            hitSound = 173,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 2),
@@ -244,6 +252,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 62,
             xp = 36.0,
             damage = 190,
+            attackSound = 183,
+            hitSound = 182,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 4),
@@ -262,6 +272,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 64,
             xp = 37.0,
             damage = 200,
+            attackSound = 178,
+            hitSound = 177,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 4),
@@ -280,6 +292,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 68,
             xp = 39.0,
             damage = 210,
+            attackSound = 106,
+            hitSound = 105,
             element = ElementType.Blood,
             type = SpellType.Combat,
             runes = listOf(
@@ -298,6 +312,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 70,
             xp = 46.0,
             damage = 220,
+            attackSound = 171,
+            hitSound = 170,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 4),
@@ -336,6 +352,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 74,
             xp = 42.0,
             damage = 230,
+            attackSound = 183,
+            hitSound = 181,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 2),
@@ -355,6 +373,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 76,
             xp = 43.0,
             damage = 240,
+            attackSound = 178,
+            hitSound = 176,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 2),
@@ -374,6 +394,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 80,
             xp = 45.0,
             damage = 250,
+            attackSound = 103,
+            hitSound = 104,
             type = SpellType.Combat,
             element = ElementType.Blood,
             runes = listOf(
@@ -392,6 +414,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 82,
             xp = 46.0,
             damage = 260,
+            attackSound = 171,
+            hitSound = 169,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 2),
@@ -429,6 +453,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 86,
             xp = 48.0,
             damage = 270,
+            attackSound = 183,
+            hitSound = 180,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 4),
@@ -447,6 +473,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 88,
             xp = 49.0,
             damage = 280,
+            attackSound = 178,
+            hitSound = 175,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 4),
@@ -467,6 +495,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             damage = 290,
             type = SpellType.Combat,
             element = ElementType.Blood,
+            attackSound = 106,
+            hitSound = 102,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 4),
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 4),
@@ -483,6 +513,8 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             level = 94,
             xp = 52.0,
             damage = 300,
+            attackSound = 171,
+            hitSound = 168,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 4),
@@ -676,6 +708,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 1,
             xp = 5.5,
             damage = 20,
+            attackSound = 220,
+            hitSound = 221,
             type = SpellType.Combat,
             element = ElementType.Air,
             runes = listOf(
@@ -693,6 +727,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 5,
             xp = 7.5,
             damage = 40,
+            attackSound = 211,
+            hitSound = 212,
             type = SpellType.Combat,
             element = ElementType.Water,
             runes = listOf(
@@ -711,6 +747,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 9,
             xp = 9.5,
             damage = 60,
+            attackSound = 132,
+            hitSound = 133,
             type = SpellType.Combat,
             element = ElementType.Earth,
             runes = listOf(
@@ -729,6 +767,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 13,
             xp = 11.5,
             damage = 80,
+            attackSound = 160,
+            hitSound = 161,
             type = SpellType.Combat,
             element = ElementType.Fire,
             runes = listOf(
@@ -747,6 +787,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 17,
             xp = 13.5,
             damage = 90,
+            attackSound = 218,
+            hitSound = 219,
             type = SpellType.Combat,
             element = ElementType.Air,
             runes = listOf(
@@ -764,6 +806,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 23,
             xp = 16.5,
             damage = 100,
+            attackSound = 209,
+            hitSound = 210,
             type = SpellType.Combat,
             element = ElementType.Water,
             runes = listOf(
@@ -782,6 +826,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 29,
             xp = 19.5,
             damage = 110,
+            attackSound = 130,
+            hitSound = 131,
             type = SpellType.Combat,
             element = ElementType.Earth,
             runes = listOf(
@@ -800,6 +846,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 35,
             xp = 22.5,
             damage = 120,
+            attackSound = 157,
+            hitSound = 158,
             type = SpellType.Combat,
             element = ElementType.Fire,
             runes = listOf(
@@ -819,6 +867,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             xp = 24.5,
             damage = 160,
             type = SpellType.Combat,
+            attackSound = 122,
+            hitSound = 124,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 2),
                 RuneRequirement(RuneDefinitions.Runes.AIR, 2),
@@ -835,6 +885,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 41,
             xp = 25.5,
             damage = 130,
+            attackSound = 216,
+            hitSound = 217,
             type = SpellType.Combat,
             element = ElementType.Air,
             runes = listOf(
@@ -852,6 +904,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 47,
             xp = 28.5,
             damage = 140,
+            attackSound = 207,
+            hitSound = 208,
             type = SpellType.Combat,
             element = ElementType.Water,
             runes = listOf(
@@ -904,6 +958,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 53,
             xp = 31.5,
             damage = 150,
+            attackSound = 128,
+            hitSound = 129,
             type = SpellType.Combat,
             element = ElementType.Earth,
             runes = listOf(
@@ -922,6 +978,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 59,
             xp = 34.5,
             damage = 160,
+            attackSound = 155,
+            hitSound = 156,
             type = SpellType.Combat,
             element = ElementType.Fire,
             runes = listOf(
@@ -1002,6 +1060,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 65,
             xp = 37.5,
             damage = 180,
+            attackSound = 213,
+            hitSound = 214,
             type = SpellType.Combat,
             element = ElementType.Water,
             runes = listOf(
@@ -1020,6 +1080,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 70,
             xp = 40.0,
             damage = 190,
+            attackSound = 134,
+            hitSound = 135,
             type = SpellType.Combat,
             element = ElementType.Earth,
             runes = listOf(
@@ -1038,6 +1100,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 75,
             xp = 42.5,
             damage = 200,
+            attackSound = 162,
+            hitSound = 163,
             type = SpellType.Combat,
             element = ElementType.Fire,
             runes = listOf(
@@ -1146,6 +1210,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             name = "Confuse",
             level = 3,
             xp = 13.0,
+            attackSound = 119,
+            hitSound = 121,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.WATER, 3),
@@ -1178,6 +1244,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             name = "Curse",
             level = 19,
             xp = 29.0,
+            attackSound = 127,
+            hitSound = 126,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.WATER, 2),
@@ -1210,6 +1278,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             name = "Enfeeble",
             level = 73,
             xp = 83.0,
+            attackSound = 148,
+            hitSound = 150,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 8),
@@ -1243,6 +1313,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 20,
             xp = 30.0,
             damage = 10,
+            attackSound = 151,
+            hitSound = 153,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 3),
@@ -1261,6 +1333,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 50,
             xp = 60.0,
             damage = 20,
+            attackSound = 151,
+            hitSound = 153,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 4),
@@ -1279,6 +1353,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 79,
             xp = 90.0,
             damage = 30,
+            attackSound = 151,
+            hitSound = 153,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 5),
@@ -1297,6 +1373,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             damage = 20,
             level = 85,
             xp = 80.0,
+            attackSound = 202,
+            hitSound = 203,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 1),

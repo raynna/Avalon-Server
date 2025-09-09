@@ -126,6 +126,16 @@ object StandardRanged : RangeData() {
     )
     override val weapons = listOf(
         RangedWeapon(
+            itemId = Item.getIds("item.twisted_bow"),
+            name = "Twisted bow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackSpeed = 5,
+            attackRange = 10,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.DRAGON_ARROW
+        ),
+        RangedWeapon(
             itemId = listOf(841),
             name = "Shortbow",
             weaponStyle = WeaponStyle.SHORTBOW,
@@ -214,6 +224,15 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.RUNE_BOLT
         ),
         RangedWeapon(
+            itemId = Item.getIds("item.dragon_crossbow", "item.dragon_hunter_crossbow"),
+            name = "Dragon crossbows",
+            weaponStyle = WeaponStyle.CROSSBOW,
+            attackRange = 7,
+            animationId = 4230,
+            ammoType = AmmoType.BOLT,
+            maxAmmoTier = AmmoTier.RUNE_BOLT
+        ),
+        RangedWeapon(
             itemId = Item.getIds("item.dorgeshuun_c_bow"),
             name = "Dorgeshuun c'bow",
             weaponStyle = WeaponStyle.CROSSBOW,
@@ -222,6 +241,34 @@ object StandardRanged : RangeData() {
             animationId = 4230,
             ammoType = AmmoType.BOLT,
             allowedAmmoIds = setOf(Item.getId("item.bone_bolts"))
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.sagaie"),
+            name = "Sagaie",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = -1,
+            ammoType = AmmoType.THROWING,
+            effect = SpecialEffect(
+                execute = { context ->
+                    val attacker = context.attacker
+                    val defender = context.defender
+                    attacker.animate("animation.sagaie_attack")
+                    ProjectileManager.send(Projectile.SAGAIE, "graphic.sagaie_projectile", attacker, defender)
+                    val rangedHit = context.rollRanged()
+                    context.hits {
+                        if (rangedHit.damage > 0) {
+                            val distance = Utils.getDistance(attacker, defender)
+                            val boost = 20 * (min(5, distance))
+                            val boostedHit = rangedHit.copyWithDamage(rangedHit.damage + boost)
+                            nextHit(boostedHit)
+                        } else {
+                            nextHit(Hit(attacker, 0, rangedHit.look))
+                        }
+                    }
+                    true
+                }
+            )
         ),
         RangedWeapon(
             itemId = Item.getIds("item.zaryte_bow", "item.zaryte_bow_degraded"),

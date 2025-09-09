@@ -85,6 +85,14 @@ enum class WeaponStyle(
             AttackStyle.DEFENSIVE to AttackBonusType.STAB
         ),
     ),
+    SCYTHE(
+        styles(
+            AttackStyle.ACCURATE to AttackBonusType.SLASH,
+            AttackStyle.AGGRESSIVE to AttackBonusType.STAB,
+            AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
+            AttackStyle.DEFENSIVE to AttackBonusType.STAB
+        ),
+    ),
     CLAWS(
         styles(
             AttackStyle.ACCURATE to AttackBonusType.SLASH,

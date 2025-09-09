@@ -14,9 +14,17 @@ import java.util.Map;
 
 public class RunePouch extends ItemPlugin {
 
+    public static final int INTERFACEID = 3049;
+    public static final int INVENTORY_INTERFACE = 670;
+    public static final int TAKE_ALL_COMPONENT = 37;
+    public static final int RUNE_CONTAINER = 18;
+    public static final int INVENTORY_CONTAINER = 29;
+    public static final int RUNE_1_COMPONENT = 30;
+    public static final int RUNE_2_COMPONENT = 31;
+
     @Override
     public Object[] getKeys() {
-        return new Object[]{24497};
+        return new Object[]{24510};
     }
 
     private RunePouchMetaData getRunePouchMetaData(Item runePouch) {
@@ -182,7 +190,6 @@ public class RunePouch extends ItemPlugin {
         player.getInventory().deleteItem(item.getId(), amount);
         runePouchMeta.addRune(item.getId(), amount);
         refreshRunePouch(player, runePouchMeta.getRunesToArray());
-        //runePouchMeta.shift(); // if your RunePouchMetaData supports shifting
         player.getInventory().refresh();
 
         player.getPackets().sendGameMessage("You store " + amount + " x " + item.getName() + "s in the rune pouch.");
@@ -203,17 +210,12 @@ public class RunePouch extends ItemPlugin {
             player.message("Your rune pouch is empty.");
             return;
         }
-        player.message("SlotId clicked" + slotId);
 
-        // Get rune entries as a list or array to get the rune at slotId
-        // Assuming RunePouchMetaData has method getRunesAsList() returning List<Item> or similar
-        // Or a method getRuneAtSlot(int)
         Item runeAtSlot = runePouchMeta.getRuneAtSlot(slotId);
         if (runeAtSlot == null) {
             player.message("Invalid rune slot.");
             return;
         }
-        player.message("Rune at slot" + runeAtSlot.getDisplayName() + " x " + runeAtSlot.getAmount());
         if (player.getInventory().getFreeSlots() == 0
                 && !player.getInventory().containsItem(runeAtSlot.getId(), 1)) {
             player.getPackets().sendGameMessage("You don't have enough inventory spaces.");
@@ -249,19 +251,25 @@ public class RunePouch extends ItemPlugin {
             }
         }
 
-        if (!player.getInterfaceManager().containsInterface(1284))
-            player.getInterfaceManager().sendInterface(1284);
-        player.getInterfaceManager().sendInventoryInterface(670);
-        player.getPackets().sendInterSetItemsOptionsScript(670, 0, 93, 4, 7, "Store 1", "Store 10", "Store 100", "Store-All");
-        player.getPackets().sendUnlockOptions(670, 0, 0, 27, 0, 1, 2, 3);
-        player.getPackets().sendTextOnComponent(1284, 28, "Rune Pouch");
-        player.getPackets().sendHideIComponent(1284, 8, true);
-        player.getPackets().sendHideIComponent(1284, 9, true);
-        player.getPackets().sendTextOnComponent(1284, 46, "Take-All");
-        player.getPackets().sendInterSetItemsOptionsScript(1284, 7, 100, 8, 4, "Withdraw 1", "Withdraw 10", "Withdraw 100", "Withdraw-All");
-        player.getPackets().sendUnlockOptions(1284, 7, 0, 3, 0, 1, 2, 3);
+        if (!player.getInterfaceManager().containsInterface(INTERFACEID))
+            player.getInterfaceManager().sendInterface(INTERFACEID);
+        player.getInterfaceManager().sendInventoryInterface(INVENTORY_INTERFACE);
+        //inventory
+        player.getPackets().sendInterSetItemsOptionsScript(INVENTORY_INTERFACE, 0, 93, 4, 7, "Store 1", "Store 10", "Store 100", "Store-All");
+        player.getPackets().sendUnlockOptions(INVENTORY_INTERFACE, 0, 0, 27, 0, 1, 2, 3);
+        //runes on interface
+        player.getPackets().sendInterSetItemsOptionsScript(INTERFACEID, RUNE_CONTAINER, 100, 3, 1, "Withdraw 1", "Withdraw 10", "Withdraw 100", "Withdraw-All");
+        player.getPackets().sendInterSetItemsOptionsScript(INTERFACEID, RUNE_CONTAINER, 101, 3, 1, "Withdraw 1", "Withdraw 10", "Withdraw 100", "Withdraw-All");
+        player.getPackets().sendUnlockOptions(INTERFACEID, RUNE_CONTAINER, 0, 3, 0, 1, 2, 3);
         player.getPackets().sendItems(100, items);
         player.getPackets().sendUpdateItems(100, items, 3);
+        //inventory in interface
+        player.getPackets().sendInterSetItemsOptionsScript(INTERFACEID, INVENTORY_CONTAINER, 93, 7, 4, "Store 1", "Store 10", "Store 100", "Store-All");
+        player.getPackets().sendUnlockOptions(INTERFACEID, INVENTORY_CONTAINER, 0, 27, 0, 1, 2, 3);
+        player.getPackets().sendItems(93, player.getInventory().items.getItemsCopy());
+        player.getPackets().sendUpdateItems(93, player.getInventory().items.getItemsCopy(), 27);
+        player.getPackets().sendIComponentSprite(INTERFACEID, RUNE_1_COMPONENT, 8007);
+        player.getPackets().sendIComponentSprite(INTERFACEID, RUNE_2_COMPONENT, 8013);
     }
 
 
@@ -271,10 +279,11 @@ public class RunePouch extends ItemPlugin {
             player.message("You don't have a rune pouch.");
             return;
         }
-
-        sendRunePouchInterface(player, runePouch);
         player.temporaryAttribute().put("rune_pouch_slot", slotId);
-        player.setCloseInterfacesEvent(() -> player.temporaryAttribute().remove("rune_pouch_slot"));
+        sendRunePouchInterface(player, runePouch);
+        player.setCloseInterfacesEvent(() -> {
+            player.temporaryAttribute().remove("rune_pouch_slot");
+        });
     }
 
     public static void refreshRunePouch(Player player, Item[] items) {
@@ -286,8 +295,9 @@ public class RunePouch extends ItemPlugin {
         if (runePouch == null)
             return;
 
-        //sendRunePouchInterface(player, runePouch);
         player.getPackets().sendItems(100, items);
         player.getPackets().sendUpdateItems(100, items, 3);
+        player.getPackets().sendItems(93, player.inventory.items.getItemsCopy());
+        player.getPackets().sendUpdateItems(93, player.inventory.items.getItemsCopy(), 27);
     }
 }

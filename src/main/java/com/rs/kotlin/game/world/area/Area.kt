@@ -35,7 +35,7 @@ abstract class Area {
     abstract fun name(): String
     abstract fun member(): Boolean
     abstract fun environment(): Environment
-    open fun onMoved(player: Player) {}
+    open fun onMoved(entity: Entity) {}
     open fun onEnter(player: Player) {}
     open fun onExit(player: Player) {}
     open fun onObjectClick(player: Player, obj: WorldObject): Boolean = false

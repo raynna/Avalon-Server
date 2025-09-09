@@ -202,6 +202,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
         if (hit.damage == 0) {
             defender.gfx(SPLASH_GRAPHIC)
+            defender.playSound(227, 1)
             return
         }
         if (currentSpell != null) {
@@ -214,6 +215,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             if (currentSpell.endGraphic.id != -1 && currentSpell.projectileId == -1 && currentSpell.projectileIds.isEmpty()) {
                 defender.gfx(currentSpell.endGraphic)
             }
+            currentSpell.hitSound.takeIf { it != -1 }?.let { defender.playSound(it, 1) }
         }
     }
 
@@ -234,6 +236,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
+        spell.attackSound.takeIf { it != -1 }?.let { attacker.playSound(it, 1) }
         if (spell.projectileIds.isNotEmpty()) {
             val heightDifferences = listOf(10, 0, -10)
             spell.projectileIds.zip(heightDifferences).forEach { (projectileId, heightDiff) ->
@@ -315,6 +318,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
+        spell.attackSound.takeIf { it != -1 }?.let { attacker.playSound(it, 1) }
         for (t in targets) {
             val hit = registerHit(attacker, t, combatType = CombatType.MAGIC, spellId = spell.id)
             val splash = hit.damage == 0
@@ -354,7 +358,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val manual = isManualCast(spellId);
         if (manual) {
             attacker.combatDefinitions.resetSpells(false)
-            spellId -= MIN_SPELL_ID;
+            spellId -= MIN_SPELL_ID
         }
         var currentSpell = when (attacker.combatDefinitions.getSpellBook()) {
             AncientMagicks.id -> AncientMagicks.getSpell(spellId)
@@ -375,19 +379,19 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val isOneXHits = attacker.varsManager.getBitValue(1485) == 1
         if (isOneXpPerHit) {
             val xp = if (isOneXHits) ceil(totalDamage / 10.0) else totalDamage
-            attacker.skills.addXpDelayed(Skills.HITPOINTS, xp.toDouble())
+            attacker.skills.addXp(Skills.HITPOINTS, xp.toDouble())
             return
         }
         val spellXp = currentSpell?.xp?:0.0
         val baseXp = (totalDamage * 0.2)
         val combined = spellXp+baseXp
         if (attacker.getCombatDefinitions().isDefensiveCasting) {
-            attacker.skills.addXpDelayed(Skills.DEFENCE, (totalDamage * 0.1))
-            attacker.skills.addXpDelayed(Skills.MAGIC, (totalDamage * 0.133))
+            attacker.skills.addXp(Skills.DEFENCE, (totalDamage * 0.1))
+            attacker.skills.addXp(Skills.MAGIC, (totalDamage * 0.133))
         } else {
-            attacker.skills.addXpDelayed(Skills.MAGIC, combined)
+            attacker.skills.addXp(Skills.MAGIC, combined)
         }
-        attacker.skills.addXpDelayed(Skills.HITPOINTS, (totalDamage * 0.133))
+        attacker.skills.addXp(Skills.HITPOINTS, (totalDamage * 0.133))
     }
 
     private fun isManualCast(spellId: Int): Boolean {
