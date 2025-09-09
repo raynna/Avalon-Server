@@ -502,7 +502,7 @@ public class ItemConstants {
 		case 18361: // eagleeyekite
 		case 18363: // farseerkite
 		case 11283:
-		case 24497:
+		case 24510:
 			return false;
 		default:
 			return true;
@@ -521,7 +521,7 @@ public class ItemConstants {
 			return true;
 		if (item.getId() == 18839)
 			return true;
-		if (item.getId() == 24497)
+		if (item.getId() == 24510)
 			return true;
 		if (item.getDefinitions().getName().toLowerCase().contains("sneak"))
 			return true;

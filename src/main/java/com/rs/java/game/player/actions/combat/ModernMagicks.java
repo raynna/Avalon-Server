@@ -42,7 +42,7 @@ public class ModernMagicks {
 
 	public static final int INVENTORY = 0, NPC = 1, ON_PLAYER = 2, OBJECT = 3, ONE_CLICK = 4, COMBAT = 5, FLOOR = 6;
 
-	public static final int RUNE_POUCH = 24497;
+	public static final int RUNE_POUCH = 24510;
 
 	public static final int MUD = 4698, MIST = 4695, DUST = 4696, LAVA = 4699, STEAM = 4694, SMOKE = 4697;
 

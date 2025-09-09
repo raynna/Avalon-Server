@@ -59,7 +59,7 @@ public class AncientMagicks {
 				|| player.getEquipment().getWeaponId() == 21777;
 	}
 
-	public static final int RUNE_POUCH = 24497;
+	public static final int RUNE_POUCH = 24510;
 
 	public enum RSAncientSpellStore {
 

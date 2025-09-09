@@ -34,7 +34,7 @@ public final class Inventory implements Serializable {
 
 	public static final int INVENTORY_INTERFACE = 679;
 
-	public static final int RUNE_POUCH = 24497;
+	public static final int RUNE_POUCH = 24510;
 
 	public Inventory() {
 		items = new ItemsContainer<Item>(28, false);
@@ -61,8 +61,6 @@ public final class Inventory implements Serializable {
 	public boolean canHold(int itemId, int amount) {
 		return canHold(new Item(itemId), amount);
 	}
-
-
 
 	public void init() {
 		int pouchCount = 0;

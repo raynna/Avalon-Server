@@ -3756,7 +3756,7 @@ public class Player extends Entity {
         for (int i = 0; i < items[0].length; i++) {
             Item item = items[0][i];
             if (ItemConstants.keptOnDeath(item)) {
-                if (item.getId() == 24497 && inPkingArea()) {
+                if (item.getId() == 24510 && inPkingArea()) {
                     for (Item runes : getRunePouch().getContainerItems()) {
                         if (runes == null)
                             continue;

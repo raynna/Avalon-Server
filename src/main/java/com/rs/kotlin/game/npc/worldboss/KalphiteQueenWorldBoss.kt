@@ -48,7 +48,6 @@ class KalphiteQueenWorldBoss(
             }, 0, 1)
 
         } else {
-            // Phase 2 -> true death (with animation)
             resetWalkSteps()
             combat?.removeTarget()
             animate(-1)

@@ -1,7 +1,7 @@
 package com.rs.kotlin.game.player.combat.magic
 
 object RuneDefinitions {
-    const val RUNE_POUCH = 24497
+    const val RUNE_POUCH = 24510
     const val RUNIC_STAFF = 24203
 
     object Runes {

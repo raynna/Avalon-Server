@@ -82,7 +82,7 @@ public class LunarMagicks {
 
 	public static final int INVENTORY = 0, NPC = 1, PLAYER = 2, OBJECT = 3, ONE_CLICK = 4;
 
-	public final static int RUNE_POUCH = 24497;
+	public final static int RUNE_POUCH = 24510;
 
 	public enum RSLunarSpellStore {
 
