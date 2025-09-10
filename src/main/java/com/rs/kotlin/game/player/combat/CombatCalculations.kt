@@ -52,13 +52,11 @@ object CombatCalculations {
             val voidBonus = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.MELEE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MELEE)
 
-
             var effectiveAttack = player.skills.getLevel(Skills.ATTACK) * player.prayer.attackMultiplier
             effectiveAttack += styleBonus + 8
             effectiveAttack *= voidBonus
 
             val attackRoll = effectiveAttack * (attackBonus + 64) * multipliers.accuracy * accuracyMultiplier
-
 
             /*
             * Defence Calculation
@@ -303,9 +301,6 @@ object CombatCalculations {
                 }
                 else -> 10
             }
-            player.message("SpellId: $spellId")
-            player.message("baseDamage: $baseDamage")
-            player.message("base: $base")
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
             val equipmentSet = EquipmentSets.getSet(player)
@@ -418,7 +413,6 @@ object CombatCalculations {
         return random < prob
     }
 
-
     private fun getBaseStrengthLevel(player: Player): Int {
         val strength = floor(player.skills.getLevel(Skills.STRENGTH) * player.prayer.strengthMultiplier)
         return strength.toInt()
@@ -476,7 +470,6 @@ object CombatCalculations {
         }
         return bonus
     }
-
 
     private fun getDefenceStyleBonus(target: Player): Int {
         val targetWeapon = Weapon.getWeapon(target.equipment.weaponId)
