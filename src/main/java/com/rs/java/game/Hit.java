@@ -29,6 +29,7 @@ public class Hit {
 	public boolean landed;
 	private Hit soaking;
 	private int delay;
+	private Graphics graphic;
 
 	public void setCriticalMark() {
 		critical = true;
@@ -38,9 +39,25 @@ public class Hit {
         return baseDamage >= Math.floor(maxHit * 0.95);
     }
 
+	public void setGraphic(Graphics graphic) {
+		this.graphic = graphic;
+	}
+
+	public Graphics getGraphic() {
+		return this.graphic;
+	}
+
 	public void setHealHit() {
 		look = HitLook.HEALED_DAMAGE;
 		critical = false;
+	}
+
+	public void min(int min) {
+		this.damage = Math.max(min, this.damage);
+	}
+
+	public void max(int max) {
+		this.damage = Math.min(max, this.damage);
 	}
 
 	public void setMissedHit() {

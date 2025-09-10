@@ -44,6 +44,7 @@ fun CombatContext.rollHit(
     accuracyMultiplier: Double = 1.0,
     damageMultiplier: Double = 1.0,
     hitLook: Hit.HitLook? = null,
+    baseDamage: Int = -1,
     spellId: Int = -1,
     target: Entity = defender
 ): Hit {
@@ -53,6 +54,7 @@ fun CombatContext.rollHit(
         accuracyMultiplier = accMul,
         damageMultiplier = dmgMul,
         hitLook = hitLook,
+        baseDamage = baseDamage,
         spellId = spellId,
         target = target
     )
@@ -95,8 +97,9 @@ fun CombatContext.rollMagic(
     acc: Double = 1.0,
     dmg: Double = 1.0,
     look: Hit.HitLook? = null,
+    baseDamage: Int = -1,
     spellId: Int = -1
-) = rollHit(CombatType.MAGIC, acc, dmg, look, spellId)
+) = rollHit(CombatType.MAGIC, acc, dmg, look, baseDamage, spellId)
 
 fun CombatContext.createHit(
     damage: Int,
@@ -116,6 +119,7 @@ fun CombatContext.registerHit(
     accuracyMultiplier: Double = 1.0,
     damageMultiplier: Double = 1.0,
     hitLook: Hit.HitLook? = null,
+    baseDamage: Int = -1,
     spellId: Int = -1,
     target: Entity = defender
 ): Hit = combat.registerHit(
@@ -124,6 +128,7 @@ fun CombatContext.registerHit(
     combatType = combatType,
     attackStyle = attackStyle,
     weapon = weapon,
+    baseDamage = baseDamage,
     spellId = spellId,
     accuracyMultiplier = accuracyMultiplier,
     damageMultiplier = damageMultiplier,
@@ -544,7 +549,7 @@ class SpecialHitBuilder(private val context: CombatContext) {
             CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
         }
         val hit = Hit(context.attacker, damage, resolvedHitLook)
-        hits += PendingHit(hit, defender, delay);
+        hits += PendingHit(hit, defender, delay)
         return hit
     }
 
@@ -556,7 +561,7 @@ class SpecialHitBuilder(private val context: CombatContext) {
     ): Hit {
         val resolvedHitLook = look ?: hit.look
         hit.look = resolvedHitLook
-        hits += PendingHit(hit, defender, delay);
+        hits += PendingHit(hit, defender, delay)
         return hit
     }
 
@@ -565,6 +570,7 @@ class SpecialHitBuilder(private val context: CombatContext) {
         damageMultiplier: Double = 1.0,
         accuracyMultiplier: Double = 1.0,
         delay: Int = 0,
+        baseDamage: Int = -1,
         spellId: Int = -1
     ): Hit {
         val accMultiplier = special?.takeIf { context.usingSpecial && it.accuracyMultiplier > 1.0 }?.accuracyMultiplier
@@ -574,7 +580,7 @@ class SpecialHitBuilder(private val context: CombatContext) {
             ?: damageMultiplier
 
         val h = context.registerHit(
-            combatType = type, spellId = spellId, accuracyMultiplier = accMultiplier, damageMultiplier = dmgMultiplier
+            combatType = type, baseDamage = baseDamage, spellId = spellId, accuracyMultiplier = accMultiplier, damageMultiplier = dmgMultiplier
         )
         hits += PendingHit(h, context.defender, delay)
         return h
@@ -596,8 +602,11 @@ class SpecialHitBuilder(private val context: CombatContext) {
         damageMultiplier: Double = 1.0,
         accuracyMultiplier: Double = 1.0,
         delay: Int = 0,
-        spellId: Int
-    ) = createHit(CombatType.MAGIC, spellId = spellId, damageMultiplier = damageMultiplier, accuracyMultiplier =  accuracyMultiplier, delay = delay)
+        spellId: Int = -1,
+        baseDamage: Int = -1
+    ) = createHit(CombatType.MAGIC, spellId = spellId, baseDamage = baseDamage, damageMultiplier = damageMultiplier, accuracyMultiplier =  accuracyMultiplier, delay = delay)
+
+
 
     fun CombatContext.applyBleed(
         baseHit: Hit,

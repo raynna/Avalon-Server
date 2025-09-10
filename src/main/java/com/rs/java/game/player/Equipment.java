@@ -197,6 +197,10 @@ public final class Equipment implements Serializable {
 
 	public boolean hideHair(Item item) {
 		String name = item.getName().toLowerCase();
+		if (item.isItem("item.ancestral_hat"))
+			return false;
+		if (item.isItem("item.neitiznot_faceguard"))
+			return true;
 		if (player.isOldItemsLook() && name.contains("void"))
 			return true;
 		if (name.contains("mime m"))

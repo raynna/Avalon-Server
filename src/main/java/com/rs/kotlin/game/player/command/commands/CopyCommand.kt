@@ -25,7 +25,7 @@ class CopyCommand : Command {
         }
         val cmdArgs = CommandArguments(args)
 
-        val name = cmdArgs.getString(0)
+        val name = cmdArgs.getJoinedString(0)
         val target = World.getPlayer(name) ?: null
         if (target == null) {
             Msg.warn(player,"Couldn't find any player named $name.");

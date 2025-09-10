@@ -1035,7 +1035,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.AIR, 1)
             ),
             animationId = 811,
-            endGraphic = Graphics(78, 100)
+            endGraphic = Graphics(78, 0)
         ),
         Spell(
             id = 70,

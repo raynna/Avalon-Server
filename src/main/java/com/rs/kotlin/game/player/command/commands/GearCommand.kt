@@ -23,7 +23,7 @@ class GearCommand : Command {
         }
         val cmdArgs = CommandArguments(args)
 
-        val name = cmdArgs.getString(0)
+        val name = cmdArgs.getJoinedString(0)
         player.presetManager.loadPreset(name, null)
         return true
     }

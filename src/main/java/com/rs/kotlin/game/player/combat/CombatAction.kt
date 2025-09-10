@@ -11,6 +11,7 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.action.NewAction
 import com.rs.kotlin.game.player.combat.magic.MagicStyle
 import com.rs.kotlin.game.player.combat.magic.special.GreaterRunicStaffWeapon
+import com.rs.kotlin.game.player.combat.magic.special.NightmareStaff
 import com.rs.kotlin.game.player.combat.magic.special.ObliterationWeapon
 import com.rs.kotlin.game.player.combat.magic.special.PolyporeStaff
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
@@ -31,6 +32,7 @@ class CombatAction(
             val spellId = player.getCombatDefinitions().spellId
             return when {
                 spellId != 0 -> MagicStyle(player, target)
+                NightmareStaff.hasWeapon(player) && player.combatDefinitions.isUsingSpecialAttack -> MagicStyle(player, target)
                 GreaterRunicStaffWeapon.hasWeapon(player) && GreaterRunicStaffWeapon.getSpellId(player) != -1 -> MagicStyle(player, target)
                 PolyporeStaff.hasWeapon(player) -> MagicStyle(player, target)
                 ObliterationWeapon.hasWeapon(player) && player.combatDefinitions.isUsingSpecialAttack -> MagicStyle(player, target);

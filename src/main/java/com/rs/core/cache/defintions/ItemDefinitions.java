@@ -43,6 +43,67 @@ ItemDefinitions {
         }
     }
 
+    //0 - stab attack
+    //1 - slash attack
+    //2 - crush attack
+    //3 - magic attack
+    //4 - range attack
+    //5 - stab defence
+    //6 - slash defence
+    //7 - crush defence
+    //8 - magic defence
+    //9 - range defence
+    //11 - prayer bonus
+    //14 - attackspeed
+    //23 - unknown - rune thrownaxe&&runejavelin has set to 40
+    //417 - summonning defence
+    //528 - extra option
+    //641 - strength bonus
+    //643 - range strength
+    //644 - render anim
+    //685 - magic strength
+    //686 - weapontype:
+    // staff=1
+    // battleaxe/dhaxe/hatchet=2
+    // mjolnir/sceptre=3
+    // unknown=4
+    // dagger/rapier/sword=5
+    // longsword=6
+    // 2hsword/godsword=7
+    // anchor/mace=8
+    // claws=9
+    // maul=10
+    // whip=11
+    // spear=14
+    // halberd=15
+    // bow=16
+    // crossbow=17
+    // thrown=18
+    // chinchompa=19
+    // unkown=20
+    // salamander=21
+    // unkown=22
+    // unkown=23
+    // unkown=24
+    // unkown=25
+    // staff of light=26
+    // unkown=27
+    // polypore=28
+    //687 - special
+    //749 - skillreq1
+    //750 - levelreq1
+    //751 - skillreq2
+    //752 - levelreq2
+    //967 - absorb melee
+    //968 - absorb range
+    //969 - absorb magic
+    //972 - infinite air
+    //973 - infinite water
+    //974 - infinite earth
+    //975 - infinte fire
+    //1397 - elementalrune //maybe not since ancient staff has value 0
+    //2195 - unknown - mudrune:value=32,airrune:value=32, staffoflight:value=18
+
     public static ItemDefinitions[] getItemDefinitions() {
         return itemsDefinitions;
     }

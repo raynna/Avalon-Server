@@ -550,49 +550,49 @@ public class ButtonHandler {
                 player.getTrade().accept(false);
             }
         } else if (interfaceId == 335) {
-                if (componentId == 18) player.getTrade().accept(true);
-                else if (componentId == 53) {
-                    player.temporaryAttribute().put("trade_moneypouch_X_Slot", slotId);
+            if (componentId == 18) player.getTrade().accept(true);
+            else if (componentId == 53) {
+                player.temporaryAttribute().put("trade_moneypouch_X_Slot", slotId);
+                player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
+            } else if (componentId == 20) player.closeInterfaces();
+            else if (componentId == 32) {
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getTrade().removeItem(slotId, 1);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
+                    player.getTrade().removeItem(slotId, 5);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
+                    player.getTrade().removeItem(slotId, 10);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
+                    player.getTrade().removeItem(slotId, Integer.MAX_VALUE);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
+                    player.temporaryAttribute().put("trade_removeitem_X_Slot", slotId);
                     player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
-                } else if (componentId == 20) player.closeInterfaces();
-                else if (componentId == 32) {
-                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getTrade().removeItem(slotId, 1);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                        player.getTrade().removeItem(slotId, 5);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                        player.getTrade().removeItem(slotId, 10);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                        player.getTrade().removeItem(slotId, Integer.MAX_VALUE);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
-                        player.temporaryAttribute().put("trade_removeitem_X_Slot", slotId);
-                        player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
-                    } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
-                        player.getTrade().sendValue(slotId, false);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
-                        player.getTrade().sendExamine(slotId, false);
-                } else if (componentId == 35) {
-                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                        player.getTrade().sendValue(slotId, true);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
-                        player.getTrade().sendExamine(slotId, true);
-                }
+                } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
+                    player.getTrade().sendValue(slotId, false);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
+                    player.getTrade().sendExamine(slotId, false);
+            } else if (componentId == 35) {
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
+                    player.getTrade().sendValue(slotId, true);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
+                    player.getTrade().sendExamine(slotId, true);
+            }
         } else if (interfaceId == 336) {
-                if (componentId == 0) {
-                    if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getTrade().addItem(slotId, 1);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                        player.getTrade().addItem(slotId, 5);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                        player.getTrade().addItem(slotId, 10);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                        player.getTrade().addItem(slotId, Integer.MAX_VALUE);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
-                        player.temporaryAttribute().put("trade_item_X_Slot", slotId);
-                        player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
-                    } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
-                        player.getTrade().sendValue(slotId);
-                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
-                        player.getInventory().sendExamine(slotId);
-                }
+            if (componentId == 0) {
+                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getTrade().addItem(slotId, 1);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
+                    player.getTrade().addItem(slotId, 5);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
+                    player.getTrade().addItem(slotId, 10);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
+                    player.getTrade().addItem(slotId, Integer.MAX_VALUE);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
+                    player.temporaryAttribute().put("trade_item_X_Slot", slotId);
+                    player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
+                } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
+                    player.getTrade().sendValue(slotId);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
+                    player.getInventory().sendExamine(slotId);
+            }
         } else if (interfaceId == 300) {
             ForgingInterface.handleIComponents(player, componentId);
         } else if (interfaceId == 934) {
@@ -2368,18 +2368,16 @@ public class ButtonHandler {
             }
 
             // Handle ranged strength separately
-            if (item.getEquipSlot() == Equipment.SLOT_WEAPON || item.getEquipSlot() == Equipment.SLOT_ARROWS) {
-                int rangedStrength = definitions.getRangedStrengthBonus();
-                if (rangedStrength > 0) {
-                    bonuses[BonusType.RangedStrBonus.getIndex()] += rangedStrength;
-                }
+            int rangedStrength = definitions.getRangedStrengthBonus();
+            if (rangedStrength > 0) {
+                bonuses[BonusType.RangedStrBonus.getIndex()] += rangedStrength;
+            }
 
-                // Handle god arrows special scaling
-                if (item.getEquipSlot() == Equipment.SLOT_ARROWS && isGodArrow(item)) {
-                    int rangedLevel = player.getSkills().getLevel(Skills.RANGE);
-                    int scaling = Math.min((int) Math.floor((rangedLevel / 70.0) * 49), 49);
-                    bonuses[BonusType.RangedStrBonus.getIndex()] += scaling * 10;
-                }
+            // Handle god arrows special scaling
+            if (item.getEquipSlot() == Equipment.SLOT_ARROWS && isGodArrow(item)) {
+                int rangedLevel = player.getSkills().getLevel(Skills.RANGE);
+                int scaling = Math.min((int) Math.floor((rangedLevel / 70.0) * 49), 49);
+                bonuses[BonusType.RangedStrBonus.getIndex()] += scaling * 10;
             }
 
             // Handle goliath gloves if it's gloves

@@ -464,6 +464,35 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
+            itemId = Item.getIds("item.volatile_nightmare_staff"),
+            name = "Volatile",
+            weaponStyle = WeaponStyle.STAFF,
+            blockAnimationId = Animation.getId("animation.staff_block"),
+            soundId = Rscm.lookup("sound.staff_bash"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.staff_bash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.staff_bash"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.staff_bash"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 100,
+                execute = { context ->
+                    context.attacker.animate(10518)
+                    context.attacker.gfx(1853)
+                    context.hits {
+                        val magicHit = magic(
+                            baseDamage = 39,
+                            delay = context.combat.getHitDelay(),
+                            damageMultiplier = 1.5,
+                            accuracyMultiplier = 1.5
+                        )
+
+                    }
+
+                }
+            )
+        ),
+        MeleeWeapon(
             itemId = Item.getIds(
                 "item.ancient_staff",
                 "item.ancient_staff_2",
@@ -1353,7 +1382,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_2h_special")
                     context.attacker.gfx("graphic.dragon_2h_special")
-                    context.meleeHit()//we want to also process hit on main target
+                    context.meleeHit()
                     val targets = context.getMultiAttackTargets(1, 8)
                     for (target in targets) {
                         context.meleeHit(target = target, delay = 1)
@@ -1361,6 +1390,5 @@ object StandardMelee : MeleeData() {
                 }
             ),
         )
-
     )
 }

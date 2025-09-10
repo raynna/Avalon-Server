@@ -668,7 +668,7 @@ public final class CombatDefinitions implements Serializable {
                         value = customBonuses[bonus.getIndex()];
                     }
                 }
-                if (bonus == BonusType.RangedStrBonus)//special handling for this due to arrows+bows
+                if (bonus == BonusType.RangedStrBonus && (item.getEquipSlot() == Equipment.SLOT_WEAPON || item.getEquipSlot() == Equipment.SLOT_ARROWS))
                     continue;
                 bonuses[bonus.getIndex()] += value;
             }
@@ -683,7 +683,6 @@ public final class CombatDefinitions implements Serializable {
         }
         recalculateRangedStrength(player);
         calculateGoliath(player);
-
     }
 
     private void calculateGoliath(Player player) {
@@ -700,15 +699,12 @@ public final class CombatDefinitions implements Serializable {
     }
 
     private void recalculateRangedStrength(Player player) {
-        int rangedStrength = 0;
+        int rangedStrength = bonuses[BonusType.RangedStrBonus.getIndex()];
 
         Item weapon = player.equipment.getItem(Equipment.SLOT_WEAPON);
         Item ammo   = player.equipment.getItem(Equipment.SLOT_ARROWS);
-
         if (weapon != null) {
             int weaponRS = weapon.getDefinitions().getRangedStrengthBonus();
-
-            // ✅ Twisted bow stacks with ammo
             if (weapon.isItem("item.twisted_bow")) {
                 rangedStrength += weaponRS;
 
@@ -723,9 +719,9 @@ public final class CombatDefinitions implements Serializable {
                 }
             } else {
                 if (weaponRS > 0) {
-                    rangedStrength = weaponRS;
+                    rangedStrength += weaponRS;
                 } else if (ammo != null) {
-                    rangedStrength = ammo.getDefinitions().getRangedStrengthBonus();
+                    rangedStrength += ammo.getDefinitions().getRangedStrengthBonus();
 
                     if (isGodArrow(ammo)) {
                         int rangedLevel = player.getSkills().getLevel(Skills.RANGE);

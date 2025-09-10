@@ -476,16 +476,6 @@ public class PrayerBook implements Serializable {
             }
         }
 
-        if (turmoilActive && boostGetter.apply(AncientPrayer.TURMOIL) != null) {
-            if (boostGetter.apply(AncientPrayer.LEECH_ATTACK) != null) {
-                bonus += turmoilBonuses[0] / 100.0;
-            } else if (boostGetter.apply(AncientPrayer.LEECH_STRENGTH) != null) {
-                bonus += turmoilBonuses[1] / 100.0;
-            } else if (boostGetter.apply(AncientPrayer.LEECH_DEFENCE) != null) {
-                bonus += turmoilBonuses[2] / 100.0;
-            }
-        }
-
         for (Prayer prayer : getActivePrayers()) {
             Double boost = boostGetter.apply(prayer);
             if (boost != null) {
@@ -496,24 +486,30 @@ public class PrayerBook implements Serializable {
         return Math.max(0.15, bonus);
     }
 
-    public double getMagicMultiplier() {
-        return calculateBoost(Prayer::getMagicBoost);
-    }
-
-    public double getRangedMultiplier() {
-        return calculateBoost(Prayer::getRangedBoost);
-    }
-
     public double getAttackMultiplier() {
-        return calculateBoost(Prayer::getAttackBoost);
+        double base = calculateBoost(Prayer::getAttackBoost);
+        if (turmoilActive) base += turmoilBonuses[0] / 100.0;
+        return base;
     }
 
     public double getStrengthMultiplier() {
-        return calculateBoost(Prayer::getStrengthBoost);
+        double base = calculateBoost(Prayer::getStrengthBoost);
+        if (turmoilActive) base += turmoilBonuses[1] / 100.0;
+        return base;
     }
 
     public double getDefenceMultiplier() {
-        return calculateBoost(Prayer::getDefenceBoost);
+        double base = calculateBoost(Prayer::getDefenceBoost);
+        if (turmoilActive) base += turmoilBonuses[2] / 100.0;
+        return base;
+    }
+
+    public double getMagicMultiplier() {
+        return calculateBoost(Prayer::getMagicBoost); // no turmoil
+    }
+
+    public double getRangedMultiplier() {
+        return calculateBoost(Prayer::getRangedBoost); // no turmoil
     }
 
     public void processLeechDecay(int ticks) {

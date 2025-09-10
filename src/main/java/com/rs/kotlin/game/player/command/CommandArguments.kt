@@ -15,6 +15,9 @@ class CommandArguments(private val args: List<String>) {
             if (it.startsWith("+")) it.drop(1).toIntOrNull() else it.toIntOrNull()
         } ?: default
 
+    fun getJoinedString(fromIndex: Int = 0, separator: String = " "): String =
+        if (fromIndex in args.indices) args.drop(fromIndex).joinToString(separator) else ""
+
     fun getString(index: Int, default: String = ""): String =
         args.getOrNull(index) ?: default
 

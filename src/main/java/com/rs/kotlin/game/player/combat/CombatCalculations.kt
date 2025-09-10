@@ -287,9 +287,10 @@ object CombatCalculations {
             return computeHitChance(attackRoll.toInt(), defenceRoll)
         }
 
-        fun calculateMaxHit(player: Player, target: Entity, spellId: Int, specialMultiplier: Double = 1.0): Hit {
+        fun calculateMaxHit(player: Player, target: Entity, baseDamage: Int = -1, spellId: Int = -1, specialMultiplier: Double = 1.0): Hit {
             val spell = Spellbook.getSpellById(player, spellId);
-            val baseDamage: Int = when {
+            val base: Int = when {
+                baseDamage != -1 -> baseDamage
                 spell != null && spell.damage != -1 -> spell.damage
 
                 spellId == 1000 -> (5 * player.skills.getLevel(Skills.MAGIC)) - 180
@@ -302,6 +303,9 @@ object CombatCalculations {
                 }
                 else -> 10
             }
+            player.message("SpellId: $spellId")
+            player.message("baseDamage: $baseDamage")
+            player.message("base: $base")
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
             val equipmentSet = EquipmentSets.getSet(player)
@@ -313,7 +317,7 @@ object CombatCalculations {
                 levelMultiplier *= player.prayer.magicMultiplier
             }
             println("void: $voidDamage, multipliers $multipliers, specialMultipliers $specialMultiplier")
-            val maxHit = baseDamage * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage * specialMultiplier
+            val maxHit = base * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage * specialMultiplier
             var damage = Utils.random(maxHit.toInt())
             if (target is NPC) {
                 if (target.id == 4474) {
@@ -396,8 +400,8 @@ object CombatCalculations {
     fun calculateRangedMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): Hit =
         RangedCombat.calculateMaxHit(player, target, specialMultiplier)
 
-    fun calculateMagicMaxHit(player: Player, target: Entity, spellId: Int, specialMultiplier: Double = 1.0): Hit =
-        MagicCombat.calculateMaxHit(player, target, spellId, specialMultiplier)
+    fun calculateMagicMaxHit(player: Player, target: Entity, baseDamage: Int = -1, spellId: Int = -1, specialMultiplier: Double = 1.0): Hit =
+        MagicCombat.calculateMaxHit(player, target, baseDamage = baseDamage, spellId = spellId, specialMultiplier)
 
 
     private fun calculateHitProbability(attack: Int, defence: Int): Boolean {

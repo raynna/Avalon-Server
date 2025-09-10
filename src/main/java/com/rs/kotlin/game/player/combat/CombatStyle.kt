@@ -16,6 +16,7 @@ import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.damage.SoakDamage
 import com.rs.kotlin.game.player.combat.effects.EquipmentEffects
 import com.rs.kotlin.game.player.combat.magic.MagicStyle
+import com.rs.kotlin.game.player.combat.magic.special.NightmareStaff
 import com.rs.kotlin.game.player.combat.magic.special.ObliterationWeapon
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.RangeData
@@ -57,6 +58,9 @@ interface CombatStyle {
     }
 
     fun onHit(attacker: Player, defender: Entity, hit: Hit) {
+        if (hit.graphic != null) {
+            defender.gfx(hit.graphic)
+        }
         if (defender is Player) {
             if (this is RangedStyle || this is MagicStyle) {
                 defender.animate(CombatAnimations.getBlockAnimation(defender))
@@ -219,6 +223,7 @@ interface CombatStyle {
         attackStyle: AttackStyle = AttackStyle.ACCURATE,
         weapon: Weapon? = null,
         spellId: Int = -1,
+        baseDamage: Int = -1,
         accuracyMultiplier: Double = 1.0,
         damageMultiplier: Double = 1.0,
         hitLook: Hit.HitLook? = null
@@ -248,7 +253,7 @@ interface CombatStyle {
                 CombatType.MELEE -> CombatCalculations.calculateMeleeMaxHit(attacker, defender, damageMultiplier)
                 CombatType.RANGED -> CombatCalculations.calculateRangedMaxHit(attacker, defender, damageMultiplier)
                 CombatType.MAGIC -> {
-                    CombatCalculations.calculateMagicMaxHit(attacker, defender, spellId, damageMultiplier)
+                    CombatCalculations.calculateMagicMaxHit(attacker, defender, baseDamage, spellId, damageMultiplier)
                 }
             }
         } else {
@@ -297,12 +302,13 @@ interface CombatStyle {
         if (!player.combatDefinitions.isUsingSpecialAttack)
             return false
 
-        // Deduct energy, apply Ring of Vigour, etc.
-        var specialCost = special.energyCost
+        var specialCost = when {
+            NightmareStaff.hasWeapon(player) -> 55
+            else -> special.energyCost
+        }
         if (player.getEquipment().containsOneItem(Item.getId("item.ring_of_vigour"))) {
             specialCost = (specialCost * 0.9).toInt()
         }
-
         if (player.combatDefinitions.specialAttackPercentage < specialCost) {
             player.message("You don't have enough special attack energy.")
             player.combatDefinitions.switchUsingSpecialAttack()
@@ -334,7 +340,10 @@ interface CombatStyle {
             is SpecialAttack.Combat -> {
                 if (target == null) return false
                 val style = when {
-                    ObliterationWeapon.hasWeapon(player) -> MagicStyle(player, target);
+                    NightmareStaff.hasWeapon(player) -> {
+                        MagicStyle(player, target)
+                    }
+                    ObliterationWeapon.hasWeapon(player) -> MagicStyle(player, target)
                     isRangedWeapon(player) -> RangedStyle(player, target)
                     else -> MeleeStyle(player, target)
                 }
@@ -350,7 +359,11 @@ interface CombatStyle {
                     attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
                     usingSpecial = true,
                 )
-
+                if (NightmareStaff.hasWeapon(player)) {
+                    NightmareStaff.special(combatContext)
+                    player.combatDefinitions.decreaseSpecialAttack(specialCost)
+                    return true
+                }
                 special.execute(combatContext)
             }
 
