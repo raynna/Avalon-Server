@@ -417,6 +417,13 @@ public class ItemConstants {
 			if (item.getDefinitions().getId() == items.getBabyItemId())
 				return false;
 		}
+		if (item.isAnyOf(
+				"item.rune_pouch",
+				"item.avernic_defender",
+				"item.imbued_saradomin_cape",
+				"item.imbued_guthix_cape",
+				"item.imbued_zamorak_cape")
+		)
 		for (Artefacts artefacts : Artefacts.values()) {
 			if (item.getDefinitions().getId() == artefacts.getId())
 				return false;

@@ -98,6 +98,7 @@ class ShopSystem(private val player: Player) {
         )
         private const val TITLE_COMPONENT = 16
         private const val CURRENCY_COMPONENT = 17
+        private const val CURRENCY2_COMPONENT = 495
     }
 
     fun openShop(shopId: Int) {
@@ -186,7 +187,7 @@ class ShopSystem(private val player: Player) {
                 componentId + 5,
                 shop.currency.spriteId
             )
-
+            player.packets.sendHideIComponent(INTERFACE_ID, CURRENCY2_COMPONENT, true)
             player.packets.sendHideIComponent(INTERFACE_ID, componentId + 3, true)
 
             player.packets.sendInterSetItemsOptionsScript(

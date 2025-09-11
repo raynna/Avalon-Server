@@ -363,6 +363,8 @@ longsword_slash=12311
 longsword_stab=12310
 vestas_longsword_special=10502
 statius_warhammer_special=10505
+dragonfire_shield_empty=6700
+zanik_crossbow_special=11359
 #animGFX 11991 2114 - Bandos Godsword Spec
 #animGFX 12019 2109 - Saradomin Godsword Spec
 #animGfx 12006 stab zamorakian spear

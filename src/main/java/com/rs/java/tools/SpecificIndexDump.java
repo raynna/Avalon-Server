@@ -7,7 +7,9 @@ import java.io.*;
 
 public class SpecificIndexDump {
 
-    public static void dumpIndex(int index) throws IOException {
+    public static void main(String[] args) throws IOException {
+        int index = 7;
+        Cache.init();
         if (Cache.STORE == null) {
             System.err.println("Cache not initialized! Call Cache.init() first.");
             return;
