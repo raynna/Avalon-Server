@@ -294,6 +294,49 @@ public class ButtonHandler {
                     player.getActionManager().setAction(new EnchantingBolts(enchant, quantity));
                 }
             }
+        } else if (interfaceId == 3049) {
+            switch (componentId) {
+                case RunePouch.INVENTORY_CONTAINER:
+                    Item item = player.getInventory().getItem(slotId);
+                    if (item == null) return;
+                    switch (packetId) {
+                        case 55:
+                            RunePouch.storeRunePouch(player, item, 16000);
+                            break;
+                        case 5:
+                            RunePouch.storeRunePouch(player, item, 100);
+                            break;
+                        case 67:
+                            RunePouch.storeRunePouch(player, item, 10);
+                            break;
+                        case 14:
+                            RunePouch.storeRunePouch(player, item, 1);
+                            break;
+                    }
+                    break;
+                case RunePouch.RUNE_CONTAINER:
+                    switch (packetId) {
+                        case 55:
+                            RunePouch.withdrawRunePouch(player, slotId, 16000);
+                            break;
+                        case 5:
+                            RunePouch.withdrawRunePouch(player, slotId, 100);
+                            break;
+                        case 67:
+                            RunePouch.withdrawRunePouch(player, slotId, 10);
+                            break;
+                        case 14:
+                            RunePouch.withdrawRunePouch(player, slotId, 1);
+                            break;
+                    }
+                    break;
+                case RunePouch.TAKE_ALL_COMPONENT:
+                    if (packetId == 14) {
+                        int runePouchSlot = (int) player.getTemporaryAttributtes().get("rune_pouch_slot");
+                        RunePouch.withdrawAll(player, runePouchSlot);
+                    }
+                    break;
+            }
         } else if (interfaceId == 1284) {
             if (player.getTemporaryAttributtes().get("untradeables") != null) {
                 Item item = player.getUntradeables().get(slotId);
@@ -314,31 +357,6 @@ public class ButtonHandler {
                             case 5:
                                 player.getInventory().sendExamine(slotId);
                                 break;
-                        }
-                        break;
-                }
-            } else if (player.getTemporaryAttributtes().get("rune_pouch_slot") != null) {
-                switch (componentId) {
-                    case 7:
-                        switch (packetId) {
-                            case 55:
-                                RunePouch.withdrawRunePouch(player, slotId, 16000);
-                                break;
-                            case 5:
-                                RunePouch.withdrawRunePouch(player, slotId, 100);
-                                break;
-                            case 67:
-                                RunePouch.withdrawRunePouch(player, slotId, 10);
-                                break;
-                            case 14:
-                                RunePouch.withdrawRunePouch(player, slotId, 1);
-                                break;
-                        }
-                        break;
-                    case 10:
-                        if (packetId == 14) {
-                            int runePouchSlot = (int) player.getTemporaryAttributtes().get("rune_pouch_slot");
-                            RunePouch.withdrawAll(player, runePouchSlot);
                         }
                         break;
                 }
@@ -1788,7 +1806,7 @@ public class ButtonHandler {
                 sendItemStats(player, item);
                 return;
             }
-            if (player.getTemporaryAttributtes().get("rune_pouch_slot") != null) {
+            if (player.getInterfaceManager().containsInterface(RunePouch.INTERFACEID)) {
                 if (componentId == 0) {
                     if (slotId >= player.getInventory().getItemsContainerSize()) return;
                     Item item = player.getInventory().getItem(slotId);
