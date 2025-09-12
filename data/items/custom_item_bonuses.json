@@ -1,0 +1,22 @@
+{
+  "24511": {
+    "stab": 30,
+    "slash": 29,
+    "crush": 28,
+    "magic": -5,
+    "ranged": -4,
+    "stabDefence": 30,
+    "slashDefence": 29,
+    "crushDefence": 28,
+    "magicDefence": -5,
+    "rangeDefence": -4,
+    "summoningDefence": 15,
+    "absorbMelee": 0,
+    "absorbMagic": 0,
+    "absorbRange": 0,
+    "strength": 80,
+    "rangedStrength": 0,
+    "prayer": 0,
+    "magicDamagePercent": 0
+  }
+}

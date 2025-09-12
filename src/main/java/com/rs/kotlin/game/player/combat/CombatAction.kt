@@ -281,11 +281,11 @@ class CombatAction(
                 if (player.isCollidingWithTarget(target)) {
                     if (player.isFrozen) {
                         player.packets.sendGameMessage("A magical force prevents you from moving.")
-                        stop();
+                        stopFollowTask(player)
                         return
                     }
                     if (handleCollisionMovement(player, target, size)) {
-                        stop();
+                        stop()
                     }
                     return
                 }
@@ -299,7 +299,7 @@ class CombatAction(
                     }
                     if (player.isFrozen) {
                         player.packets.sendGameMessage("A magical force prevents you from moving.")
-                        stopFollowTask()
+                        stopFollowTask(player)
                         return
                     }
                     player.calcFollow(target, if (player.run) 2 else 1, true, true)
@@ -321,7 +321,8 @@ class CombatAction(
         WorldTasksManager.schedule(followTask, 0, 0)
     }
 
-    private fun stopFollowTask() {
+    private fun stopFollowTask(player: Player) {
+        player.resetWalkSteps()
         followTask?.stop()
         followTask = null
     }
@@ -336,7 +337,7 @@ class CombatAction(
     }
 
     override fun stop(player: Player, interrupted: Boolean) {
-        stopFollowTask()
+        stopFollowTask(player)
         //player.resetWalkSteps();
         player.setNextFaceEntity(null);
         style.onStop(interrupted)
