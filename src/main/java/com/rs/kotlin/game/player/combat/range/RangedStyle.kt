@@ -8,26 +8,21 @@ import com.rs.java.game.item.Item
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
-import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.damage.SoakDamage
-import com.rs.kotlin.game.player.combat.melee.StandardMelee
 import com.rs.kotlin.game.player.combat.special.CombatContext
-import com.rs.kotlin.game.player.combat.special.meleeHit
 import com.rs.kotlin.game.player.combat.special.rangedHit
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
-import kotlin.math.floor
 import kotlin.math.min
 
 class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     private fun getCurrentWeapon(): RangedWeapon {
         val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
-        return RangeData.getWeaponByItemId(weaponId)?:StandardRanged.getDefaultWeapon()
+        return RangeData.getWeaponByItemId(weaponId) ?: StandardRanged.getDefaultWeapon()
     }
 
 
@@ -150,8 +145,20 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         if (executeEffect(combatContext.copy(usingSpecial = false)))
             return
-        attacker.animate(CombatAnimations.getAnimation(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle))
-        attacker.playSound(CombatAnimations.getSound(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle), 1)
+        attacker.animate(
+            CombatAnimations.getAnimation(
+                currentWeaponId,
+                attackStyle,
+                attacker.combatDefinitions.attackStyle
+            )
+        )
+        attacker.playSound(
+            CombatAnimations.getSound(
+                currentWeaponId,
+                attackStyle,
+                attacker.combatDefinitions.attackStyle
+            ), 1
+        )
         if (!isThrowing(currentWeapon) && currentWeapon.ammoType != AmmoType.NONE) {
             if (currentAmmo != null) {
                 if (currentAmmo.startGfx != null) {
@@ -165,44 +172,37 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         val hit = combatContext.rangedHit(delay = getHitDelay())
         if (attacker.isDeveloperMode)
-        attacker.message(
-            "Ranged Attack -> " +
-                    "Weapon: ${currentWeapon.name}, " +
-                    "WeaponType: ${currentWeapon.weaponStyle.name}, " +
-                    "AmmoType: ${currentAmmo?.ammoType?.name}, " +
-                    "Ammo: ${currentAmmo?.name}, " +
-                    "Style: ${attackStyle}, " +
-                    "StyleBonus: ${attackBonusType}, " +
-                    "MaxHit: ${hit[0].damage}, " +
-                    "Hit: ${hit[0].damage}"
-        )
+            attacker.message(
+                "Ranged Attack -> " +
+                        "Weapon: ${currentWeapon.name}, " +
+                        "WeaponType: ${currentWeapon.weaponStyle.name}, " +
+                        "AmmoType: ${currentAmmo?.ammoType?.name}, " +
+                        "Ammo: ${currentAmmo?.name}, " +
+                        "Style: ${attackStyle}, " +
+                        "StyleBonus: ${attackBonusType}, " +
+                        "MaxHit: ${hit[0].damage}, " +
+                        "Hit: ${hit[0].damage}"
+            )
 
     }
 
     override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         super.onHit(attacker, defender, hit)
-        val currentWeapon = getCurrentWeapon()
         val currentAmmo = getCurrentAmmo()
         if (currentAmmo != null) {
             if (currentAmmo.endGfx != null) {
                 defender.gfx(currentAmmo.endGfx);
             }
-            //mainhand poison
-            if (currentWeapon.poisonSeverity != -1) {
-                currentWeapon.poisonSeverity.let {
-                    defender.newPoison.roll(attacker, NewPoison.WeaponType.RANGED, it)
-                }
-            }
-            //ammopoison
-            if (currentAmmo.ammoType == currentWeapon.ammoType) {
-                if (currentAmmo.poisonSeverity != -1) {
-                    currentAmmo.poisonSeverity.let {
-                        defender.newPoison.roll(
-                            attacker, NewPoison.WeaponType.RANGED, it
-                        )
-                    };
-                }
-            }
+        }
+        val weaponName = ItemDefinitions.getItemDefinitions(attacker.getEquipment().weaponId).getName()
+        val ammoName = ItemDefinitions.getItemDefinitions(attacker.getEquipment().ammoId).getName()
+        val poisonSeverity = maxOf(
+            NewPoison.getPoisonSeverity(weaponName),
+            NewPoison.getPoisonSeverity(ammoName)
+        )
+
+        if (poisonSeverity != -1) {
+            defender.newPoison.roll(attacker, NewPoison.WeaponType.RANGED, poisonSeverity)
         }
     }
 
@@ -262,7 +262,10 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             if (currentWeapon.allowedAmmoIds != null && !currentWeapon.allowedAmmoIds.contains(ammoItem.id)) {
                 return true
             }
-            if (currentWeapon.maxAmmoTier != null && (currentAmmo.ammoTier == null || !currentWeapon.maxAmmoTier.canUse(currentAmmo.ammoTier))) {
+            if (currentWeapon.maxAmmoTier != null && (currentAmmo.ammoTier == null || !currentWeapon.maxAmmoTier.canUse(
+                    currentAmmo.ammoTier
+                ))
+            ) {
                 return true
             }
             if (currentWeapon.ammoType != null && currentWeapon.ammoType != currentAmmo.ammoType) {
@@ -278,7 +281,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
         return false
     }
-
 
 
     private fun sendProjectile() {
@@ -306,7 +308,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
     }
 
-    private fun isThrowing(weapon: RangedWeapon):Boolean {
+    private fun isThrowing(weapon: RangedWeapon): Boolean {
         return weapon.ammoType == AmmoType.DART || weapon.ammoType == AmmoType.THROWING || weapon.ammoType == AmmoType.JAVELIN || weapon.ammoType == AmmoType.THROWNAXE
     }
 

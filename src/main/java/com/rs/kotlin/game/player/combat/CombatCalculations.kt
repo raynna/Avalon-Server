@@ -49,7 +49,7 @@ object CombatCalculations {
             val attackBonus = player.combatDefinitions.bonuses[bonusType].toDouble()
             val styleBonus = getAttackStyleBonus(player)
             val equipmentSet = EquipmentSets.getSet(player)
-            val voidBonus = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.MELEE)
+            val voidBonus = EquipmentSets.getAccuracyMultiplier(player, equipmentSet, CombatMultipliers.Style.MELEE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MELEE)
 
             var effectiveAttack = player.skills.getLevel(Skills.ATTACK) * player.prayer.attackMultiplier
@@ -105,7 +105,7 @@ object CombatCalculations {
 
             val equipmentSet = EquipmentSets.getSet(player)
             val dharokMultiplier = getDharokMultiplier(player)
-            val void = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.MELEE)
+            val void = EquipmentSets.getDamageMultiplier(player, equipmentSet, CombatMultipliers.Style.MELEE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MELEE)
 
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.StregthBonus.index].toDouble()
@@ -149,7 +149,7 @@ object CombatCalculations {
             val rangeBonus = player.combatDefinitions.bonuses[bonusType]
             val styleBonus = getAttackStyleBonus(player)
             val equipmentSet = EquipmentSets.getSet(player)
-            val void = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.RANGE)
+            val void = EquipmentSets.getAccuracyMultiplier(player, equipmentSet, CombatMultipliers.Style.RANGE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.RANGE)
             val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getZaryteBowBoost(player, target)
 
@@ -199,7 +199,7 @@ object CombatCalculations {
             val prayerBonus = player.prayer.rangedMultiplier
             val styleBonus = getStrengthStyleBonus(player)
             val equipmentSet = EquipmentSets.getSet(player)
-            val void = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.RANGE)
+            val void = EquipmentSets.getDamageMultiplier(player, equipmentSet, CombatMultipliers.Style.RANGE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.RANGE)
             val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getZaryteBowBoost(player, target)
 
@@ -272,7 +272,7 @@ object CombatCalculations {
        override fun getHitChance(player: Player, target: Entity, accuracyMultiplier: Double): Double {
            val magicBonus = player.combatDefinitions.bonuses[BonusType.MagicAttack.index]
            val equipmentSet = EquipmentSets.getSet(player)
-           val void = EquipmentSets.getAccuracyMultiplier(equipmentSet, CombatMultipliers.Style.MAGIC)
+           val void = EquipmentSets.getAccuracyMultiplier(player, equipmentSet, CombatMultipliers.Style.MAGIC)
            val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MAGIC)
 
            var effectiveMagic = player.skills.getLevel(Skills.MAGIC) * player.prayer.magicMultiplier
@@ -304,7 +304,7 @@ object CombatCalculations {
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
             val equipmentSet = EquipmentSets.getSet(player)
-            val voidDamage = EquipmentSets.getDamageMultiplier(equipmentSet, CombatMultipliers.Style.MAGIC)
+            val voidDamage = EquipmentSets.getDamageMultiplier(player, equipmentSet, CombatMultipliers.Style.MAGIC)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MAGIC)
 
             var levelMultiplier = getMagicLevelMultiplier(player)

@@ -2,6 +2,7 @@ package com.rs.kotlin.game.world.projectile
 
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
+import com.rs.core.thread.WorldThread
 import com.rs.java.game.Entity
 import com.rs.java.game.Graphics
 import com.rs.java.game.World
@@ -33,7 +34,7 @@ object ProjectileManager {
             println("Unknown projectile type: $projectile")
             return
         }
-        sendProjectile(defender = null, startTile = startTile, endTile = endTile, gfx = gfxId, type = type, creatorSize = 1);
+        sendProjectile(defender = null, startTile = startTile, endTile = endTile, gfx = gfxId, type = type, creatorSize = 1)
     }
 
     @JvmStatic
@@ -108,8 +109,8 @@ object ProjectileManager {
             defender.getCoordFaceY(defender.size),
             defender.plane
         )
-        val gfxId = Rscm.lookup(gfx);
-        val duration = sendProjectile(defender, startTile, endTile, gfxId, type = adjustedType, attacker.size)
+        val gfxId = Rscm.lookup(gfx)
+        val duration = sendProjectile(attacker, defender, startTile, endTile, gfxId, type = adjustedType, attacker.size)
         val delayTicks = max(0, (duration / 30.0).toInt() - 1)
 
         if (hitGraphic != null) {
@@ -124,7 +125,6 @@ object ProjectileManager {
             onLanded?.invoke()
         }
     }
-
 
     fun send(
         projectile: Projectile,
@@ -146,7 +146,7 @@ object ProjectileManager {
             startHeight = (type.startHeight + heightOffset).coerceIn(0, 255),
             endHeight = (type.endHeight).coerceIn(0, 255),
             angle = (type.angle + angleOffset).coerceIn(0, 255),
-            delay = ((1 + type.delay) * 30 + delayOffset).coerceIn(0, 255),
+            delay = (type.delay + delayOffset / 30.0).coerceIn(0.0, 5.0),
             speed = type.speed + speedAdjustment,
         )
 
@@ -161,7 +161,7 @@ object ProjectileManager {
             defender.plane
         )
 
-        val duration = sendProjectile(defender, startTile, endTile, gfxId, type = adjustedType, attacker.size)
+        val duration = sendProjectile(attacker, defender, null, endTile, gfxId, type = adjustedType, attacker.size)
         val delayTicks = max(0, (duration / 30.0).toInt() - 1)
 
         if (hitGraphic != null) {
@@ -178,48 +178,89 @@ object ProjectileManager {
     }
 
     private fun sendProjectile(
+        attacker: Entity? = null,
         defender: Entity? = null,
-        startTile: WorldTile,
-        endTile: WorldTile,
+        startTile: WorldTile? = null,
+        endTile: WorldTile? = null,
         gfx: Int,
         type: ProjectileType,
-        creatorSize: Int
+        creatorSize: Int,
+        delayTicks: Int = 0
     ): Int {
-        val distance = Utils.getDistance(startTile.x, startTile.y, endTile.x, endTile.y)
-        val travelDuration = type.speed + 20 + (distance * 4) + (distance * distance / 8)
+        val queued = QueuedProjectile(
+            attacker = attacker,
+            defender = defender,
+            startTile = startTile,
+            endTile = endTile,
+            gfx = gfx,
+            type = type,
+            creatorSize = creatorSize,
+            sendCycle = WorldThread.getLastCycleTime().toInt() + delayTicks
+        )
 
-        val players = World.getPlayers().stream().filter { player ->
-            player.hasStarted() && !player.hasFinished() &&
-                    (player.withinDistance(startTile) || player.withinDistance(endTile))
+        for (player in World.getPlayers()) {
+            if (player == null || !player.hasStarted() || player.hasFinished())
+                continue
+            player.queueProjectile(queued)
         }
 
-        for (player in players) {
-            val stream = player.packets.createWorldTileStream(startTile)
-            stream.writePacket(player, 20)
-            val flags: Int = ((startTile.xInChunk shl 3) or startTile.yInChunk)
-            stream.writeByte(flags)
-            stream.writeByte(endTile.x - startTile.x)
-            stream.writeByte(endTile.y - startTile.y)
-            val index = when (defender) {
-                null -> 0
-                is Player -> -(defender.index + 1)
-                else -> defender.index + 1
-            }
-            stream.writeShort(index)//lock or not
+        val distance = Utils.getDistance(startTile?.x ?: attacker!!.x, startTile?.y ?: attacker!!.y,
+            endTile?.x ?: defender!!.x, endTile?.y ?: defender!!.y)
+        val (_, duration) = type.toClientValues(distance)
+        return duration
+    }
 
-            stream.writeShort(gfx)
-            stream.writeByte(type.startHeight)
-            stream.writeByte(type.endHeight)
-            val delay = if (type.delay > 30) type.delay else (1 + type.delay) * 30
-            stream.writeShort(delay)
-            stream.writeShort(travelDuration)
-            stream.writeByte(type.angle)
-            val slope = creatorSize * 64 + type.displacement * 64
-            stream.writeShort(slope)
-            player.session.write(stream)
+    @JvmStatic
+    fun flushProjectile(player: Player, proj: QueuedProjectile) {
+        val start: WorldTile = if (proj.attacker != null) {
+            WorldTile(
+                proj.attacker.getCoordFaceX(proj.attacker.size),
+                proj.attacker.getCoordFaceY(proj.attacker.size),
+                proj.attacker.plane
+            )
+        } else {
+            proj.startTile!!
         }
 
-        return travelDuration
+        val end: WorldTile = if (proj.defender != null) {
+            WorldTile(
+                proj.defender.getCoordFaceX(proj.defender.size),
+                proj.defender.getCoordFaceY(proj.defender.size),
+                proj.defender.plane
+            )
+        } else {
+            proj.endTile!!
+        }
+
+        val stream = player.packets.createWorldTileStream(start)
+        stream.writePacket(player, 20)
+
+        val flags: Int = ((start.xInChunk shl 3) or start.yInChunk)
+        stream.writeByte(flags)
+        stream.writeByte(end.x - start.x)
+        stream.writeByte(end.y - start.y)
+
+        val index = when (proj.defender) {
+            null -> 0
+            is Player -> -(proj.defender.index + 1)
+            else -> proj.defender.index + 1
+        }
+        stream.writeShort(index)
+
+        stream.writeShort(proj.gfx)
+        stream.writeByte(proj.type.startHeight)
+        stream.writeByte(proj.type.endHeight)
+
+        val distance = Utils.getDistance(start.x, start.y, end.x, end.y)
+        val (delay, duration) = proj.type.toClientValues(distance)
+
+        stream.writeShort(delay)
+        stream.writeShort(duration)
+        stream.writeByte(proj.type.angle)
+        val slope = proj.creatorSize * 64 + proj.type.displacement * 64
+        stream.writeShort(slope)
+
+        player.session.write(stream)
     }
 
 

@@ -16,6 +16,15 @@ class NewPoison(@Transient private var entity: Entity) {
     }
 
     companion object {
+        fun getPoisonSeverity(name: String): Int {
+            return when {
+                name.contains("(p++)", ignoreCase = true) -> 30
+                name.contains("(p+)", ignoreCase = true)  -> 25
+                name.contains("(p)", ignoreCase = true)   -> 20
+                else -> -1
+            }
+        }
+
         val POISON_TICKS = Keys.IntKey.POISON_TICKS
         val POISON_SEVERITY = Keys.IntKey.POISON_SEVERITY
         val POISON_IMMUNE = Keys.IntKey.POISON_IMMUNE_TICKS
@@ -24,6 +33,7 @@ class NewPoison(@Transient private var entity: Entity) {
     enum class WeaponType {
         MELEE, RANGED, SMOKE_SPELL, EMERALD_BOLT
     }
+
 
     /**
      * Attempt to apply poison based on weapon type and base severity.

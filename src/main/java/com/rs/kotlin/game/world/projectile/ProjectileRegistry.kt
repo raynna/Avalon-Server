@@ -1,30 +1,33 @@
 package com.rs.kotlin.game.world.projectile
 
+import kotlinx.coroutines.delay
+
 object ProjectileRegistry {
     private val projectileTypes = mutableMapOf<Projectile, ProjectileType>()
 
     init {
-        register(Projectile.ARROW, ProjectileType(speed = 42, angle = 15))
-        register(Projectile.DRAGON_ARROW, ProjectileType(speed = 60, angle = 15))
-        register(Projectile.BOLT, ProjectileType(speed = 42, angle = 15))
-        register(Projectile.THROWING_KNIFE, ProjectileType(speed = 22, delay = 0, angle = 15, displacement = 100))
-        register(Projectile.SAP, ProjectileType(speed = 42, displacement = 100))
-        register(Projectile.LEECH, ProjectileType(speed = 42, delay = 0, displacement = 100, angle = 15))
-        register(Projectile.SOULSPLIT, ProjectileType(startHeight = 4, endHeight = 4, speed = 60, angle = 0))
-        register(Projectile.CANNON, ProjectileType(speed = 42, angle = 5))
-        register(Projectile.ELEMENTAL_SPELL, ProjectileType(speed = 60, angle = 10))
-        register(Projectile.STANDARD_MAGIC, ProjectileType(speed = 60, angle = 10))
-        register(Projectile.STANDARD_MAGIC_INSTANT, ProjectileType(delay = 0, speed = 60, angle = 10))
-        register(Projectile.ANCIENT_SPELL, ProjectileType(startHeight = 8, endHeight = 0, speed = 60, angle = 15))
-        register(Projectile.SLAYER_DART, ProjectileType(speed = 60, angle = 10))
-        register(Projectile.IBAN_BLAST, ProjectileType(startHeight = 51, speed = 60, angle = 10))
-        register(Projectile.STORM_OF_ARMADYL, ProjectileType(startHeight = 0, endHeight = 0, speed = 60, angle = 0))
-        register(Projectile.TELEPORT_BLOCK, ProjectileType(startHeight = 21, endHeight = 28, speed = 60, angle = 10))
-        register(Projectile.POLYPORE_STAFF, ProjectileType(startHeight = 51, endHeight = 28, speed = 52, angle = 10))
-        register(Projectile.SAGAIE, ProjectileType(delay = 0, speed = 42, angle = 15))
+        register(Projectile.ARROW, ProjectileType(delay = 1.5, speed = 7, angle = 12))
+        register(Projectile.DRAGON_ARROW, ProjectileType(delay = 1.5, speed = 5, angle = 15))
+        register(Projectile.BOLT, ProjectileType(delay = 1.5, speed = 8, angle = 12))
+        register(Projectile.THROWING_KNIFE, ProjectileType(delay = 1.5, speed = 7, angle = 12))
+        register(Projectile.DART, ProjectileType(delay = 1.0, speed = 7, angle = 12))
+        register(Projectile.SAP, ProjectileType(delay = 1.5, speed = 3, angle = 12))
+        register(Projectile.LEECH, ProjectileType(delay = 1.5, speed = 3, angle = 12))
+        register(Projectile.SOULSPLIT, ProjectileType(startHeight = 4, endHeight = 4, delay = 1.5, speed = 3, angle = 0))
+        register(Projectile.CANNON, ProjectileType(startHeight = 42, endHeight = 42, delay = 1.5, speed = 7, angle = 12))
+        register(Projectile.ELEMENTAL_SPELL, ProjectileType(delay = 1.5, speed = 3, angle = 12))
+        register(Projectile.STANDARD_MAGIC, ProjectileType(delay = 1.5, speed = 3, angle = 12))
+        register(Projectile.STANDARD_MAGIC_INSTANT, ProjectileType(delay = 1.5, speed = 3, angle = 12))
+        register(Projectile.ANCIENT_SPELL, ProjectileType(delay = 1.5, speed = 3, angle = 12))
+        register(Projectile.SLAYER_DART, ProjectileType(delay = 1.5, speed = 3, angle = 12))
+        register(Projectile.IBAN_BLAST, ProjectileType(startHeight = 51, delay = 1.5, speed = 3, angle = 12))
+        register(Projectile.STORM_OF_ARMADYL, ProjectileType(startHeight = 0, endHeight = 0, delay = 1.5, speed = 2, angle = 12))
+        register(Projectile.TELEPORT_BLOCK, ProjectileType(startHeight = 21, delay = 1.5, speed = 3, angle = 12))
+        register(Projectile.POLYPORE_STAFF, ProjectileType(startHeight = 51, delay = 1.5, speed = 3, angle = 12))
+        register(Projectile.SAGAIE, ProjectileType(delay = 1.5, speed = 7, angle = 12))
     }
 
-    fun register(projectile: Projectile, type: ProjectileType) {
+    private fun register(projectile: Projectile, type: ProjectileType) {
         projectileTypes[projectile] = type
     }
 

@@ -11,12 +11,13 @@ enum class AmmoTier(val priority: Int) {
 
     BRONZE_BOLT(8),
     BLURITE_BOLT(9),
-    IRON_BOLT(9),
-    STEEL_BOLT(9),
-    BLACK_BOLT(9),
-    MITHRIL_BOLT(9),
-    ADAMANT_BOLT(9),
-    RUNE_BOLT(9),
+    IRON_BOLT(10),
+    STEEL_BOLT(11),
+    BLACK_BOLT(12),
+    MITHRIL_BOLT(13),
+    ADAMANT_BOLT(14),
+    RUNE_BOLT(15),
+    DRAGON_BOLT(16),
 
     /** Dungeoneering Arrowrs*/
     NOVITE_ARROW(priority = 1),

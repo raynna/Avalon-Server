@@ -45,7 +45,6 @@ public final class WorldThread extends Thread {
 							&& player.getSession().getChannel().isOpen()) {
 						toCloseChannels.add(player);
 					}
-
 					player.processEntity();
 				}
 
@@ -65,6 +64,12 @@ public final class WorldThread extends Thread {
 
 			} catch (Throwable e) {
 				Logger.handle(e);
+			}
+
+			for (Player player : World.getPlayers()) {
+				if (player == null || !player.hasStarted() || player.hasFinished())
+					continue;
+				player.processProjectiles();
 			}
 
 			try {

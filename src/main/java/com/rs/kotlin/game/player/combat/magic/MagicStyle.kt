@@ -322,9 +322,12 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         for (t in targets) {
             val hit = registerHit(attacker, t, combatType = CombatType.MAGIC, spellId = spell.id)
             val splash = hit.damage == 0
-            val endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
+            var endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
 
             if (hit.damage > 0) {
+                if (spell.id == 23 && (t.isFreezeImmune || t.isFrozen || t.size >= 2)) {
+                    endGraphic = Graphics(1677, 100)
+                }
                 if (spell.bind != -1 && !t.isFreezeImmune) {
                     t.addFreezeDelay(spell.bind, false)
                 }

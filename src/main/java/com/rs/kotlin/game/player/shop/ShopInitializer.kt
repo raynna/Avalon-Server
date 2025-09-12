@@ -182,7 +182,7 @@ object ShopInitializer {
                 item("item.dragon_arrow", 10)
                 item("item.ruby_bolts_e", 10)
                 item("item.diamond_bolts_e", 10)
-                item("item.dragon_bolts_e", 10)
+                item("item.dragonstone_bolts_e", 10)
                 item("item.dark_bow")
                 item("item.hunters_crossbow")
                 item("item.long_kebbit_bolts", 10)
@@ -399,6 +399,10 @@ object ShopInitializer {
                 item("item.amulet_of_torture", 10, 10, 1, 20000)
                 item("item.necklace_of_anguish", 10, 10, 1, 20000)
                 item("item.tormented_bracelet", 10, 10, 1, 20000)
+                item("item.crystal_helm", 10, 10, 1, 10000)
+                item("item.crystal_body", 10, 10, 1, 20000)
+                item("item.crystal_legs", 10, 10, 1, 15000)
+                item("item.bow_of_faerdhinen", 10, 10, 1, 30000)
             }
         )
     }

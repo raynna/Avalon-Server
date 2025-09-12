@@ -48,7 +48,7 @@ public class LimitedGEReader {
 		items.add(Item.getId("item.royal_d_hide_chaps"));
 		items.add(Item.getId("item.dragon_arrow"));
 		items.add(Item.getId("item.dragon_dart"));
-		items.add(Item.getId("item.dragon_bolts_e"));
+		items.add(Item.getId("item.dragonstone_bolts_e"));
 		items.add(Item.getId("item.zanik_s_crossbow"));
 		for (int i = 4695; i <= 4699; i++)
 			items.add(i);

@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.core.thread.WorldThread;
 import com.rs.discord.DiscordAnnouncer;
 import com.rs.java.CreationKiln;
 import com.rs.Settings;
@@ -110,6 +111,9 @@ import com.rs.kotlin.game.player.interfaces.TimerOverlay;
 import com.rs.kotlin.game.player.shop.ShopSystem;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
+import com.rs.kotlin.game.world.projectile.ProjectileType;
+import com.rs.kotlin.game.world.projectile.QueuedProjectile;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 import com.rs.kotlin.game.world.pvp.SafeZoneService;
 
@@ -1355,6 +1359,8 @@ public class Player extends Entity {
         }
         if (queuedInstantCombats == null)
             queuedInstantCombats = new ArrayList<>();
+        if (projectileQueue == null)
+            projectileQueue = new ConcurrentLinkedQueue<>();
         if (taskManager == null)
             taskManager = new TaskManager();
         if (runicStaff == null)
@@ -2392,6 +2398,26 @@ public class Player extends Entity {
             stopAll(false, true, true);
         }
     }
+
+    private transient ConcurrentLinkedQueue<QueuedProjectile> projectileQueue = new ConcurrentLinkedQueue<>();
+
+    public void queueProjectile(QueuedProjectile proj) {
+        projectileQueue.add(proj);
+    }
+
+    public void processProjectiles() {
+        QueuedProjectile proj;
+        while ((proj = projectileQueue.poll()) != null) {
+            if (proj.getSendCycle() <= WorldThread.getLastCycleTime()) {
+                ProjectileManager.flushProjectile(this, proj);
+            } else {
+                projectileQueue.add(proj);
+            }
+        }
+    }
+
+
+
 
     @Override
     public void processEntity() {

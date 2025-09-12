@@ -8,5 +8,6 @@ enum class EquipmentSet(val displayName: String) {
     ELITE_VOID_RANGE("Elite Void Range"),
     ELITE_VOID_MAGIC("Elite Void Magic"),
     DHAROK("Dharok"),
+    CRYSTAL("Crystal"),
     NONE("None")
 }

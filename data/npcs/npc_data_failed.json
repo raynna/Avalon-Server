@@ -303,6 +303,14 @@
     "lastSeen": "2025-09-07T20:55:40.364631600Z",
     "attempts": 1
   },
+  "3705": {
+    "npcId": 3705,
+    "npcName": "Max",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2025-09-12T17:00:32.153627600Z",
+    "lastSeen": "2025-09-12T17:00:32.153627600Z",
+    "attempts": 1
+  },
   "4474": {
     "npcId": 4474,
     "npcName": "Max Hit Dummy",
