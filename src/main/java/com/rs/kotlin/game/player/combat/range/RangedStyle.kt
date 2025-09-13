@@ -166,6 +166,9 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 }
             }
         }
+        if (currentWeapon.startGfx != null) {
+            attacker.gfx(currentWeapon.startGfx)
+        }
         sendProjectile()
         if (executeAmmoEffect(combatContext)) {
             return

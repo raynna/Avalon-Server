@@ -1,7 +1,6 @@
 package com.rs.java.tools;
 
 import com.displee.cache.CacheLibrary;
-import com.displee.cache.index.Index;
 import com.displee.cache.index.archive.Archive;
 import com.displee.cache.index.archive.file.File;
 
@@ -9,59 +8,46 @@ import java.io.IOException;
 
 public class TexturePacker {
 
-	private static int TEXTURE_INDEX = 9;
+	// 6525, 6526, 6527 specbar green
+	// 6531, 6532, 6533 specbar gray
+	// 5600, 5601, 5602 specbar background
+
+	// 4134 login screen
+
+	private static final int INDEX = 9;
 
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
-		int textureId = 318; // spriteId
-		int loop = -1;
+		int archive = 3028;// spriteId
+		int secondArchive = 3028;
+		boolean LOOP = false;
 		CacheLibrary toCache = new CacheLibrary("data/cache/", false, null);
-		CacheLibrary fromCache = new CacheLibrary("data/onyxcache/cache/", false, null);
-
-		Index toIndex = toCache.index(TEXTURE_INDEX);
-		Index fromIndex = fromCache.index(TEXTURE_INDEX);
-
-		// Show archive count in both caches
-		int toCount = toIndex.archives().length;
-		int fromCount = fromIndex.archives().length;
-		System.out.println("Texture index " + TEXTURE_INDEX + " contains:");
-		System.out.println(" - To cache:   " + toCount + " archives");
-		System.out.println(" - From cache: " + fromCount + " archives");
-
-		if (loop != -1) {
-			for (int i = textureId; i <= loop; i++) {
-				copyArchive(fromIndex, toIndex, i, toCache);
+		CacheLibrary fromCache = new CacheLibrary("data/cache639/", false, null);
+		if (LOOP) {
+			for (int i = archive; i <= secondArchive; i++) {
+				toCache.index(INDEX).update();
+				System.out.println("Updated index " + INDEX);
+				Archive fromArchive = fromCache.index(INDEX).archive(i);
+				Archive toArchive = toCache.index(INDEX).archive(i);
+				for (File a : fromArchive.files()) {
+					System.out.println(a);
+					toArchive.add(a);
+				}
+				toCache.index(INDEX).update();
+				System.out.println("Finished packing sprite: " + i + " from cache: " + fromArchive.getId()
+						+ " to cache:" + toArchive.getId());
 			}
 		} else {
-			copyArchive(fromIndex, toIndex, textureId, toCache);
+			toCache.index(INDEX).update();
+			System.out.println("Updated index " + INDEX);
+			Archive fromArchive = fromCache.index(INDEX).archive(archive);
+			Archive toArchive = toCache.index(INDEX).archive(secondArchive);
+			for (File a : fromArchive.files()) {
+				System.out.println(a);
+				toArchive.add(a);
+			}
+			toCache.index(INDEX).update();
+			System.out.println("Finished packing sprite: " + archive + " to " + fromArchive.getId()
+					+ " to 718 cache:" + toArchive.getId());
 		}
-	}
-
-	private static void copyArchive(Index fromIndex, Index toIndex, int archiveId, CacheLibrary toCache) throws IOException {
-		toIndex.update();
-		System.out.println("Updated index " + TEXTURE_INDEX);
-
-		Archive fromArchive = fromIndex.archive(archiveId);
-		Archive toArchive = toIndex.archive(archiveId);
-
-		if (fromArchive == null) {
-			System.out.println("Archive " + archiveId + " not found in fromCache.");
-			return;
-		}
-
-		for (File a : fromArchive.files()) {
-			System.out.println("Copying file: " + a + " (size=" + a.getData().length + ")");
-			toArchive.add(a);
-		}
-
-		toIndex.update();
-
-		System.out.println("Finished packing texture: " + archiveId
-				+ " from cache: " + fromArchive.getId()
-				+ " to cache: " + toArchive.getId());
-
-		// Show progress info
-		int current = archiveId;
-		int total = fromIndex.archives().length;
-		System.out.println("Progress: " + (current + 1) + " / " + total + " archives processed.");
 	}
 }

@@ -51,33 +51,6 @@ object ProjectileManager {
         )
     }
 
-    fun sendDelayed(
-        projectile: Projectile,
-        gfxId: Int,
-        attacker: Entity,
-        defender: Entity,
-        delayTicks: Int = 0,
-        heightOffset: Int = 0,
-        hitGraphic: Graphics? = null,
-        speedAdjustment: Int = 0,
-        onLanded: (() -> Unit)? = null
-    ) {
-        WorldTasksManager.schedule(object : WorldTask() {
-            override fun run() {
-                send(
-                    projectile = projectile,
-                    gfxId = gfxId,
-                    attacker = attacker,
-                    defender = defender,
-                    heightOffset = heightOffset,
-                    hitGraphic = hitGraphic,
-                    speedAdjustment = speedAdjustment,
-                    onLanded = onLanded
-                )
-            }
-        }, max(0, delayTicks - 1))
-    }
-
     fun send(
         projectile: Projectile,
         gfx: String,
@@ -124,6 +97,22 @@ object ProjectileManager {
         } else {
             onLanded?.invoke()
         }
+    }
+
+    fun send(
+        projectile: Projectile,
+        gfx: String,
+        attacker: Entity,
+        defender: Entity,
+        angleOffset: Int = 0,
+        heightOffset: Int = 0,
+        delayOffset: Int = 0,
+        hitGraphic: Graphics? = null,
+        speedAdjustment: Int = 0,
+        onLanded: (() -> Unit)? = null
+    ) {
+        val gfxId = Rscm.graphic(gfx)
+        send(projectile, gfxId, attacker, defender, angleOffset, heightOffset, delayOffset, hitGraphic, speedAdjustment, onLanded)
     }
 
     fun send(
@@ -257,8 +246,9 @@ object ProjectileManager {
         stream.writeShort(delay)
         stream.writeShort(duration)
         stream.writeByte(proj.type.angle)
-        val slope = proj.creatorSize * 64 + proj.type.displacement * 64
-        stream.writeShort(slope)
+        val displacement = if (distance == 1 && proj.type.displacement == 0) 64 else proj.type.displacement
+        val startDistanceOffset = proj.creatorSize * 64 + displacement * 64
+        stream.writeShort(startDistanceOffset)
 
         player.session.write(stream)
     }

@@ -281,6 +281,7 @@ surok_spell_casting=1084
 druidicspirit_bloom=1100
 stomp_floor=1745
 torag_hammer_attack=2068
+knife_throw=9057
 curses_turmoil=12565
 curses_protect_item=12567
 curses_sap=12569
@@ -365,9 +366,3 @@ vestas_longsword_special=10502
 statius_warhammer_special=10505
 dragonfire_shield_empty=6700
 zanik_crossbow_special=11359
-#animGFX 11991 2114 - Bandos Godsword Spec
-#animGFX 12019 2109 - Saradomin Godsword Spec
-#animGfx 12006 stab zamorakian spear
-#animGfx 12008 block zamorakian spear
-#animGfx 11993 special saradomin sword
-#animGFX 24010 1950 - Dragon Claws Special Attack “Slice And Dice” (Legacy)

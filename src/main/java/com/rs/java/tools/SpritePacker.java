@@ -14,37 +14,39 @@ public class SpritePacker {
 
 	// 4134 login screen
 
+	private static final int INDEX = 8;
+
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		int archive = 3028;// spriteId
 		int secondArchive = 3028;
 		boolean LOOP = false;
-		CacheLibrary cache718 = new CacheLibrary("data/cache/", false, null);
-		CacheLibrary cache667 = new CacheLibrary("data/cache639/", false, null);
+		CacheLibrary toCache = new CacheLibrary("data/cache/", false, null);
+		CacheLibrary fromCache = new CacheLibrary("data/cache639/", false, null);
 		if (LOOP) {
 			for (int i = archive; i <= secondArchive; i++) {
-				cache718.index(8).update();
-				System.out.println("Updated index 8");
-				Archive fromArchive = cache667.index(8).archive(i);
-				Archive toArchive = cache718.index(8).archive(i);
+				toCache.index(INDEX).update();
+				System.out.println("Updated index " + INDEX);
+				Archive fromArchive = fromCache.index(INDEX).archive(i);
+				Archive toArchive = toCache.index(INDEX).archive(i);
 				for (File a : fromArchive.files()) {
 					System.out.println(a);
 					toArchive.add(a);
 				}
-				cache718.index(8).update();
-				System.out.println("Finished packing sprite: " + i + " from 667 cache: " + fromArchive.getId()
-						+ " to 718 cache:" + toArchive.getId());
+				toCache.index(INDEX).update();
+				System.out.println("Finished packing sprite: " + i + " from cache: " + fromArchive.getId()
+						+ " to cache:" + toArchive.getId());
 			}
 		} else {
-			cache718.index(8).update();
-			System.out.println("Updated index 8");
-			Archive fromArchive = cache667.index(8).archive(archive);
-			Archive toArchive = cache718.index(8).archive(secondArchive);
+			toCache.index(INDEX).update();
+			System.out.println("Updated index " + INDEX);
+			Archive fromArchive = fromCache.index(INDEX).archive(archive);
+			Archive toArchive = toCache.index(INDEX).archive(secondArchive);
 			for (File a : fromArchive.files()) {
 				System.out.println(a);
 				toArchive.add(a);
 			}
-			cache718.index(8).update();
-			System.out.println("Finished packing sprite: " + archive + " from 667 cache: " + fromArchive.getId()
+			toCache.index(INDEX).update();
+			System.out.println("Finished packing sprite: " + archive + " to " + fromArchive.getId()
 					+ " to 718 cache:" + toArchive.getId());
 		}
 	}

@@ -309,8 +309,8 @@ object StandardRanged : RangeData() {
             effect = SpecialEffect(
                 execute = { context ->
                     context.attacker.animate("animation.bow_attack")
-                    context.attacker.gfx(96, 100)
-                    ProjectileManager.send(Projectile.ARROW, 99, context.attacker, context.defender)
+                    context.attacker.gfx("graphic.ice_arrow_start", 100)
+                    ProjectileManager.send(Projectile.ARROW, "graphic.ice_arrow_projectile", context.attacker, context.defender)
                     context.hits {
                         ranged(delay = context.combat.getHitDelay())
                     }
@@ -436,12 +436,11 @@ object StandardRanged : RangeData() {
                     context.attacker.animate(Animation(1074))
                     context.attacker.playSound(2545,  1)
                     ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
-                    ProjectileManager.sendDelayed(
+                    ProjectileManager.send(
                         Projectile.ARROW,
                         249,
                         context.attacker,
-                        context.defender,
-                        delayTicks = 1
+                        context.defender
                     )
                     context.hits {
                         val distance = Utils.getDistance(context.attacker, context.defender)
@@ -478,7 +477,6 @@ object StandardRanged : RangeData() {
                         arrowProjectile,
                         context.attacker,
                         context.defender,
-                        heightOffset = 0,
                         hitGraphic = Graphics(endGraphic, 100)
                     ) {
                         context.attacker.playSound(hitSoundId,  1)
@@ -488,11 +486,12 @@ object StandardRanged : RangeData() {
                         arrowProjectile,
                         context.attacker,
                         context.defender,
-                        angleOffset = 15,
+                        heightOffset = 20,
+                        angleOffset = 10,
                         delayOffset = 10,
                         hitGraphic = Graphics(endGraphic, 100)
                     ) {
-                        context.attacker.playSound(hitSoundId,  10,1)
+                        context.attacker.playSound(hitSoundId,  10, 1)
                     }
                     context.attacker.playSound(soundId,  1)
                     context.attacker.playSound(soundId,  30,1)
@@ -527,18 +526,10 @@ object StandardRanged : RangeData() {
                         projectile,
                         context.attacker,
                         context.defender,
+                        heightOffset = 20,
                         angleOffset = 10,
                         delayOffset = 10,
                     )
-                   /* ProjectileManager.sendDelayed(
-                        projectile = Projectile.DRAGON_ARROW,
-                        gfxId = projectile,
-                        attacker = context.attacker,
-                        defender = context.defender,
-                        delayTicks = 1,
-                        heightOffset = 10
-                    ) {
-                    }*/
                     context.hits {
                         val distance = Utils.getDistance(context.attacker, context.defender)
                         val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
@@ -560,39 +551,179 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.NONE
         ),
 
-        //knifes
+        /**
+         * Knives
+         */
         RangedWeapon(
             itemId = Item.getIds(
                 "item.bronze_knife", "item.bronze_knife_p",
-                "item.bronze_knife_p+", "item.bronze_knife_p++"),
+                "item.bronze_knife_p+", "item.bronze_knife_p++"
+            ),
             name = "Bronze knife",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 4,
-            projectileId = 212,
-            animationId = 9057,
+            animationId = Rscm.animation("animation.knife_throw"),
+            projectileId = Rscm.graphic("graphic.bronze_knife_projectile"),
             ammoType = AmmoType.THROWING
         ),
         RangedWeapon(
-            itemId = listOf(870),
-            name = "Bronze knife (p)",
+            itemId = Item.getIds(
+                "item.iron_knife", "item.iron_knife_p",
+                "item.iron_knife_p_2", "item.iron_knife_p_3"
+            ),
+            name = "Iron knife",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 4,
-            projectileId = 212,
-            poisonSeverity = 20,
-            animationId = 9057,
+            animationId = Rscm.animation("animation.knife_throw"),
+            projectileId = Rscm.graphic("graphic.iron_knife_projectile"),
+            ammoType = AmmoType.THROWING
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.steel_knife", "item.steel_knife_p",
+                "item.steel_knife_p_2", "item.steel_knife_p_3"
+            ),
+            name = "Steel knife",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 4,
+            animationId = Rscm.animation("animation.knife_throw"),
+            projectileId = Rscm.graphic("graphic.steel_knife_projectile"),
+            ammoType = AmmoType.THROWING
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.black_knife", "item.black_knife_p",
+                "item.black_knife_p_2", "item.black_knife_p_3"
+            ),
+            name = "Black knife",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 4,
+            animationId = Rscm.animation("animation.knife_throw"),
+            projectileId = Rscm.graphic("graphic.black_knife_projectile"),
+            ammoType = AmmoType.THROWING
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.mithril_knife", "item.mithril_knife_p",
+                "item.mithril_knife_p_2", "item.mithril_knife_p_3"
+            ),
+            name = "Mithril knife",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 4,
+            animationId = Rscm.animation("animation.knife_throw"),
+            projectileId = Rscm.graphic("graphic.mithril_knife_projectile"),
+            ammoType = AmmoType.THROWING
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.adamant_knife", "item.adamant_knife_p",
+                "item.adamant_knife_p_2", "item.adamant_knife_p_3"
+            ),
+            name = "Adamant knife",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 4,
+            animationId = Rscm.animation("animation.knife_throw"),
+            projectileId = Rscm.graphic("graphic.adamant_knife_projectile"),
+            ammoType = AmmoType.THROWING
+        ),
+        RangedWeapon(
+            itemId = Item.getIds(
+                "item.rune_knife", "item.rune_knife_p",
+                "item.rune_knife_p_2", "item.rune_knife_p_3"
+            ),
+            name = "Rune knife",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 4,
+            animationId = Rscm.animation("animation.knife_throw"),
+            projectileId = Rscm.graphic("graphic.rune_knife_projectile"),
             ammoType = AmmoType.THROWING
         ),
 
-        //darts
+
+        /**
+         * Darts
+         */
         RangedWeapon(
-            itemId = listOf(806),
+            itemId = Item.getIds("item.bronze_dart", "item.bronze_dart_p", "item.bronze_dart_p_2", "item.bronze_dart_p_3"),
             name = "Bronze dart",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 3,
-            projectileId = 226,
-            animationId = 582,
+            animationId = Rscm.animation("animation.dart_throw"),
+            projectileId = Rscm.graphic("graphic.bronze_dart_projectile"),
+            startGfx = Graphics("graphic.bronze_dart_start", 100),
             ammoType = AmmoType.DART
         ),
+        RangedWeapon(
+            itemId = Item.getIds("item.iron_dart", "item.iron_dart_p", "item.iron_dart_p_2", "item.iron_dart_p_3"),
+            name = "Iron dart",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 3,
+            animationId = Rscm.animation("animation.dart_throw"),
+            projectileId = Rscm.graphic("graphic.iron_dart_projectile"),
+            startGfx = Graphics("graphic.iron_dart_start", 100),
+            ammoType = AmmoType.DART
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.steel_dart", "item.steel_dart_p", "item.steel_dart_p_2", "item.steel_dart_p_3"),
+            name = "Steel dart",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 3,
+            animationId = Rscm.animation("animation.dart_throw"),
+            projectileId = Rscm.graphic("graphic.steel_dart_projectile"),
+            startGfx = Graphics("graphic.steel_dart_start", 100),
+            ammoType = AmmoType.DART
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.black_dart", "item.black_dart_p", "item.black_dart_p_2", "item.black_dart_p_3"),
+            name = "Black dart",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 3,
+            animationId = Rscm.animation("animation.dart_throw"),
+            projectileId = Rscm.graphic("graphic.black_dart_projectile"),
+            startGfx = Graphics("graphic.mithril_dart_start", 100),//TODO FIND BLACK START ID
+            ammoType = AmmoType.DART
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.mithril_dart", "item.mithril_dart_p", "item.mithril_dart_p_2", "item.mithril_dart_p_3"),
+            name = "Mithril dart",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 3,
+            animationId = Rscm.animation("animation.dart_throw"),
+            projectileId = Rscm.graphic("graphic.mithril_dart_projectile"),
+            startGfx = Graphics("graphic.mithril_dart_start", 100),
+            ammoType = AmmoType.DART
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.adamant_dart", "item.adamant_dart_p", "item.adamant_dart_p_2", "item.adamant_dart_p_3"),
+            name = "Adamant dart",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 3,
+            animationId = Rscm.animation("animation.dart_throw"),
+            projectileId = Rscm.graphic("graphic.adamant_dart_projectile"),
+            startGfx = Graphics("graphic.adamant_dart_start", 100),
+            ammoType = AmmoType.DART
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.rune_dart", "item.rune_dart_p", "item.rune_dart_p_2", "item.rune_dart_p_3"),
+            name = "Rune dart",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 3,
+            animationId = Rscm.animation("animation.dart_throw"),
+            projectileId = Rscm.graphic("graphic.rune_dart_projectile"),
+            startGfx = Graphics("graphic.rune_dart_start", 100),
+            ammoType = AmmoType.DART
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.dragon_dart", "item.dragon_dart_p", "item.dragon_dart_p_2", "item.dragon_dart_p_3"),
+            name = "Dragon dart",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 3,
+            animationId = Rscm.animation("animation.dart_throw"),
+            projectileId = Rscm.graphic("graphic.dragon_dart_projectile"),
+            startGfx = Graphics("graphic.dragon_dart_start", 100),
+            ammoType = AmmoType.DART
+        ),
+
 
         RangedWeapon(
             itemId = Item.getIds("item.morrigan_s_throwing_axe"),
@@ -934,54 +1065,63 @@ object StandardRanged : RangeData() {
             name = "Bronze arrow",
             ammoTier = AmmoTier.BRONZE_ARROW,
             levelRequired = 1,
-            projectileId = 10,
-            startGfx = Graphics(19, 100),
-            doubleGfx = Graphics(1104, 100)
+            projectileId = Rscm.lookup("graphic.bronze_arrow_projectile"),
+            startGfx = Graphics("graphic.bronze_arrow_start", 100),
+            doubleGfx = Graphics("graphic.double_bronze_arrow_start", 100)
         ),
         RangedAmmo(
             itemId = Item.getIds("item.iron_arrow"),
             name = "Iron arrow",
             ammoTier = AmmoTier.IRON_ARROW,
             levelRequired = 1,
-            projectileId = 9,
-            startGfx = Graphics(18, 100),
-            doubleGfx = Graphics(1105, 100)
+            projectileId = Rscm.lookup("graphic.iron_arrow_projectile"),
+            startGfx = Graphics("graphic.iron_arrow_start", 100),
+            doubleGfx = Graphics("graphic.double_iron_arrow_start", 100)
         ),
         RangedAmmo(
             itemId = Item.getIds("item.steel_arrow"),
             name = "Steel arrow",
             ammoTier = AmmoTier.STEEL_ARROW,
             levelRequired = 1,
-            projectileId = 11,
-            startGfx = Graphics(20, 100),
-            doubleGfx = Graphics(1106, 100)
+            projectileId = Rscm.lookup("graphic.steel_arrow_projectile"),
+            startGfx = Graphics("graphic.steel_arrow_start", 100),
+            doubleGfx = Graphics("graphic.double_steel_arrow_start", 100)
         ),
         RangedAmmo(
             itemId = Item.getIds("item.mithril_arrow"),
             name = "Mithril arrow",
             ammoTier = AmmoTier.MITHRIL_ARROW,
             levelRequired = 1,
-            projectileId = 12,
-            startGfx = Graphics(21, 100),
-            doubleGfx = Graphics(1107, 100)
+            projectileId = Rscm.lookup("graphic.mithril_arrow_projectile"),
+            startGfx = Graphics("graphic.mithril_arrow_start", 100),
+            doubleGfx = Graphics("graphic.double_mithril_arrow_start", 100)
         ),
         RangedAmmo(
             itemId = Item.getIds("item.adamant_arrow"),
             name = "Adamant arrow",
             ammoTier = AmmoTier.ADAMANT_ARROW,
             levelRequired = 1,
-            projectileId = 13,
-            startGfx = Graphics(22, 100),
-            doubleGfx = Graphics(1108, 100)
+            projectileId = Rscm.lookup("graphic.adamant_arrow_projectile"),
+            startGfx = Graphics("graphic.adamant_arrow_start", 100),
+            doubleGfx = Graphics("graphic.double_adamant_arrow_start", 100)
         ),
         RangedAmmo(
             itemId = Item.getIds("item.rune_arrow"),
             name = "Rune arrow",
             ammoTier = AmmoTier.RUNE_ARROW,
             levelRequired = 1,
-            projectileId = 15,
-            startGfx = Graphics(24, 100),
-            doubleGfx = Graphics(1109, 100)
+            projectileId = Rscm.lookup("graphic.rune_arrow_projectile"),
+            startGfx = Graphics("graphic.rune_arrow_start", 100),
+            doubleGfx = Graphics("graphic.double_rune_arrow_start", 100)
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.amethyst_arrow"),
+            name = "Amethyst arrow",
+            ammoTier = AmmoTier.RUNE_ARROW,
+            levelRequired = 1,
+            projectileId = Rscm.lookup("graphic.steel_arrow_projectile"),
+            startGfx = Graphics("graphic.steel_arrow_start", 100),
+            doubleGfx = Graphics("graphic.double_steel_arrow_start", 100)
         ),
         RangedAmmo(
             itemId = Item.getIds("item.dragon_arrow"),

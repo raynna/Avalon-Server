@@ -6,6 +6,11 @@ import kotlin.io.path.*
 
 object Rscm {
 
+    fun item(name: String) = lookup("item.$name")
+    fun graphic(name: String) = lookup("graphic.$name")
+    fun animation(name: String) = lookup("animation.$name")
+    fun sound(name: String) = lookup("sound.$name")
+
     sealed class RscmEntry {
         data class Id(val value: Int) : RscmEntry()
         data class Location(val x: Int, val y: Int, val plane: Int) : RscmEntry()

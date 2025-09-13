@@ -1,4 +1,5 @@
 package com.rs.kotlin.game.player.combat
+import com.rs.java.game.Graphics
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.melee.StandardMelee
@@ -14,6 +15,7 @@ interface Weapon {
     val attackRange: Int? get() = null
     val attackDelay: Int? get() = null
     val animationId: Int? get() = null
+    val startGfx: Graphics? get() = null
     val soundId: Int? get() = null
     val blockAnimationId: Int? get() = null
     val special: SpecialAttack? get() = null

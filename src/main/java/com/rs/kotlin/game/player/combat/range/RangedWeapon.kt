@@ -14,6 +14,7 @@ data class RangedWeapon(
     override val attackRange: Int? = null,
     override val attackDelay: Int? = null,
     override val animationId: Int? = null,
+    override val startGfx: Graphics? = null,
     override val blockAnimationId: Int? = null,
     override val special: SpecialAttack? = null,
     override val effect: SpecialEffect? = null,
