@@ -48,7 +48,7 @@ public class TextureDumper {
                 Buffer buf = new Buffer(data);
 
                 if (buf.remaining() < 1) {
-                    System.err.println("⚠️ Archive " + archiveId + " has no opCount byte");
+                    System.err.println("Archive " + archiveId + " has no opCount byte");
                     continue;
                 }
 
@@ -60,7 +60,7 @@ public class TextureDumper {
 
                 for (int i = 0; i < opCount; i++) {
                     if (buf.remaining() < 2) {
-                        System.err.println("⚠️ Archive " + archiveId + " ran out of bytes at op#" + i);
+                        System.err.println("Archive " + archiveId + " ran out of bytes at op#" + i);
                         break;
                     }
 
@@ -86,7 +86,7 @@ public class TextureDumper {
 
                     // Bail if len > remaining
                     if (len > buf.remaining()) {
-                        System.err.println("⚠️ Archive " + archiveId +
+                        System.err.println("Archive " + archiveId +
                                 " op#" + i + " claims len=" + len +
                                 " but only " + buf.remaining() + " bytes left. Stopping parse.");
                         break;
@@ -117,7 +117,7 @@ public class TextureDumper {
                 }
 
             } catch (Exception e) {
-                System.err.println("⚠️ Failed to parse texture " + archiveId + ": " + e.getMessage());
+                System.err.println("Failed to parse texture " + archiveId + ": " + e.getMessage());
                 e.printStackTrace();
             }
         }

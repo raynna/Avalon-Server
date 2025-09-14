@@ -34,6 +34,17 @@ public class DynamicRegion extends Region {
 		recheckReload = false;
 	}
 
+	public boolean isEmpty() {
+		for (int p = 0; p < 4; p++) {
+			for (int x = 0; x < 8; x++) {
+				for (int y = 0; y < 8; y++) {
+					if (regionCoords[p][x][y][0] != 0) return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public void checkLoadMap() {
 		if (recheckReload) {

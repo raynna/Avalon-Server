@@ -9,6 +9,8 @@ import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.controlers.WildernessControler
 import com.rs.java.utils.HexColours
 import com.rs.kotlin.game.npc.combatdata.Npc
+import com.rs.kotlin.game.world.activity.pvpgame.activeLobby
+import com.rs.kotlin.game.world.activity.pvpgame.activePvPGame
 import com.rs.kotlin.game.world.util.Msg
 import java.util.*
 import kotlin.math.abs
@@ -72,12 +74,8 @@ object PvpManager {
 
             val price = item.definitions.tipitPrice
             when {
-                price in 1_000_000..9_999_999 -> World.sendWorldMessage(
-                    Msg.newsRare("${killer.displayName} has received ${item.name} from a PvP kill!"), false
-                )
-                price >= 10_000_000 -> World.sendWorldMessage(
-                    Msg.newsEpic("${killer.displayName} has received ${item.name} from a PvP kill!"), false
-                )
+                price in 1_000_000 .. 9_999_999 -> Msg.world(Msg.RED, "${killer.displayName} has received ${item.name} from a PvP kill!")
+                price >= 10_000_000 -> Msg.world(Msg.PURPLE, "${killer.displayName} has received ${item.name} from a PvP kill!")
             }
         }
         killer.ep = 0
@@ -95,9 +93,17 @@ object PvpManager {
         }
     }
 
+    private fun inPvpGame(player: Player): Boolean {
+        return player.activePvPGame != null || player.activeLobby != null
+    }
+
     @JvmStatic
     fun onLogin(player: Player) {
         if (!enabled) return
+        if (inPvpGame(player)) {
+            closeInterface(player)
+            return
+        }
         ensureInterfaceOpen(player)
         refreshAll(player)
         onMoved(player)
@@ -111,7 +117,10 @@ object PvpManager {
     @JvmStatic
     fun onMoved(player: Player) {
         if (!enabled) return
-
+        if (inPvpGame(player)) {
+            closeInterface(player)
+            return
+        }
         val inRaw = isRawSafe(player)
         val was = wasInRawSafe[player] ?: false
         if (!was && inRaw) onEnterRawSafezone(player)
@@ -268,6 +277,11 @@ object PvpManager {
 
     @JvmStatic
     fun refreshAll(player: Player) {
+        if (inPvpGame(player)) {
+            closeInterface(player)
+            return
+        }
+
         val safeForSelf = isEffectivelySafeForSelf(player)
         sendPvpInterface(player, safeForSelf)
         refreshAttackOption(player, canAttackHere = !safeForSelf)
