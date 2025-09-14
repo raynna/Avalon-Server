@@ -3,15 +3,20 @@ package com.rs.kotlin.game.world.activity.pvpgame.tournament
 import TournamentLobby
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
+import com.rs.core.thread.CoresManager
 import com.rs.java.game.ForceTalk
 import com.rs.java.game.World
 import com.rs.java.game.player.AccountCreation
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.actions.combat.Magic
+import com.rs.java.utils.Logger
+import com.rs.java.utils.Utils
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGame
 import com.rs.kotlin.game.world.activity.pvpgame.activePvPGame
 import com.rs.kotlin.game.world.activity.pvpgame.openPvPOverlay
 import com.rs.kotlin.game.world.activity.pvpgame.showResult
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class TournamentGame(
     private val p1: Player,
@@ -79,23 +84,11 @@ class TournamentGame(
         players.remove(player)
         val winner = players.firstOrNull()
         if (winner != null) {
-            // loser → lobby2
-            p1.canPvp = false
-            p2.canPvp = false
-            p1.packets.sendPlayerOption("null", 1, false)
-            p2.packets.sendPlayerOption("null", 1, false)
-            player.nextWorldTile = lobby.getLobby2Tile()
-            player.message("You have been eliminated from this round.")
-
-            // winner → lobby1
-            winner.nextWorldTile = lobby.getLobby1Tile()
-            winner.message("You won this match! Returning to lobby...")
-            player.showResult(null)
-            winner.showResult(winner)
-            // inform lobby
+            p1.setCanPvp(false)
+            p2.setCanPvp(false)
             lobby.recordResult(winner, player)
         } else {
-            cleanup(null) // shouldn't really happen
+            cleanup(null)
         }
     }
 }

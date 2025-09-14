@@ -1,11 +1,13 @@
 import com.rs.Settings
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
+import com.rs.core.thread.CoresManager
 import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Player
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGameManager
 import com.rs.kotlin.game.world.activity.pvpgame.activeLobby
 import com.rs.kotlin.game.world.activity.pvpgame.activePvPGame
+import com.rs.kotlin.game.world.activity.pvpgame.showResult
 import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentGame
 import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentInstance
 import com.rs.kotlin.game.world.util.Msg
@@ -16,19 +18,21 @@ class TournamentLobby(private val instance: TournamentInstance) {
     private val losers = mutableListOf<Player>()
 
     private var joinPhase = true
-    private var ticksRemaining = 50 // 5 minutes in seconds (ticks)
+    private var ticksRemaining = 50
+
+    private var bestOfThree: Boolean = false
+    private val finalScores = mutableMapOf<Player, Int>()
 
     init {
-        // Schedule end of join phase in 5 minutes
 
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
                 ticksRemaining--
 
                 when (ticksRemaining) {//180, 120, 60
-                    180 -> Msg.world(Msg.GREEN, icon = 14,"<col=ff6600>News: Tournament starts in 3 minutes!")
-                    120 -> Msg.world(Msg.GREEN, icon = 14,"<col=ff6600>News: Tournament starts in 2 minutes!")
-                    60  -> Msg.world(Msg.GREEN, icon = 14,"<col=ff6600>News: Tournament starts in 1 minutes!")
+                    180 -> Msg.world(Msg.GREEN, icon = 22,"<col=ff6600>News: Tournament starts in 3 minutes!")
+                    120 -> Msg.world(Msg.GREEN, icon = 22,"<col=ff6600>News: Tournament starts in 2 minutes!")
+                    60  -> Msg.world(Msg.GREEN, icon = 22,"<col=ff6600>News: Tournament starts in 1 minutes!")
                 }
                 println("Ticks remaining: $ticksRemaining")
                 if (ticksRemaining <= 0) {
@@ -82,13 +86,13 @@ class TournamentLobby(private val instance: TournamentInstance) {
         val allPlayers = waitingPlayers + winners + losers
         for (p in allPlayers) {
             if (p.hasFinished() || !p.hasStarted()) continue
+            if (!p.interfaceManager.containsInterface(265))
             p.interfaceManager.sendOverlay(265, false)
 
             p.packets.sendTextOnComponent(265, 1, "Waiting:")
             p.packets.sendTextOnComponent(265, 2, "Waiting:")
             p.packets.sendTextOnComponent(265, 3, "Waiting:")
             p.packets.sendTextOnComponent(265, 9, "Winners:")
-
             p.packets.sendGlobalVar(
                 261, waitingPlayers.size
             )
@@ -96,7 +100,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
                 262,
                 winners.size
             )
-
+            p.packets.sendGlobalVar(260, 0)
             if (nextFight > 0) {
                 p.packets.sendGlobalVar(270, nextFight) // ticks
             } else {
@@ -125,6 +129,13 @@ class TournamentLobby(private val instance: TournamentInstance) {
     private fun startMatch() {
         if (waitingPlayers.size < 2) return
         val (p1, p2) = waitingPlayers.shuffled().take(2)
+        if (waitingPlayers.size == 2 && !bestOfThree) {
+            bestOfThree = true
+            finalScores[p1] = 0
+            finalScores[p2] = 0
+            Msg.warn(p1,"Final match is best of 3!")
+            Msg.warn(p2, "Final match is best of 3!")
+        }
         waitingPlayers.removeAll(listOf(p1, p2))
 
         val game = TournamentGame(p1, p2, this)
@@ -133,8 +144,34 @@ class TournamentLobby(private val instance: TournamentInstance) {
     }
 
     fun recordResult(winner: Player, loser: Player) {
+        if (bestOfThree) {
+            finalScores[winner] = (finalScores[winner] ?: 0) + 1
+
+            val scoreW = finalScores[winner] ?: 0
+            val scoreL = finalScores[loser] ?: 0
+            winner.message("You won this round! Next fught starting soon")
+            winner.message("You have $scoreW wins in the final (best of 3).")
+            loser.message("You have lost this round! Next fight starting soon.")
+            loser.message("You have $scoreL wins in the final (best of 3).")
+
+            if (scoreW >= 2) {
+                finishTournament(winner)
+                winner.showResult(winner)
+            } else {
+                // schedule another fight immediately
+                waitingPlayers.addAll(listOf(winner, loser))
+                scheduleNextMatch(false)
+            }
+            return
+        }
         winners.add(winner)
         losers.add(loser)
+        loser.nextWorldTile = getLobby2Tile()
+        loser.message("You have been eliminated from this tournament.")
+        loser.showResult(null)
+
+        winner.nextWorldTile = getLobby1Tile()
+        winner.message("You won this round! Returning to lobby...")
 
         if (waitingPlayers.size >= 2) {
             scheduleNextMatch(false)
@@ -155,11 +192,18 @@ class TournamentLobby(private val instance: TournamentInstance) {
         champion.message("Congratulations! You are the Tournament Champion!")
 
         val allPlayers = waitingPlayers + winners + losers
-        for (p in allPlayers) {
-            p.activeLobby = null
-            p.activePvPGame = null
-            p.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION) // send them home
-            p.message("The tournament has ended. You’ve been sent back home.")
+        CoresManager.getSlowExecutor().execute {
+            try {
+                for (p in allPlayers) {
+                    p.interfaceManager.closeOverlay(false)
+                    p.activeLobby = null
+                    p.activePvPGame = null
+                    p.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
+                    p.message("The tournament has ended. You’ve been sent back home.")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         instance.end(champion)

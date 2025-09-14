@@ -32,7 +32,7 @@ object TournamentScheduler {
     private fun scheduleNext(delayMs: Long) {
         cancelPending()
         val safeDelay = max(1000L, delayMs)
-        Msg.world(Msg.ORANGE, icon = 15,"News: A tournament will start in ${formatTime(safeDelay)}!")
+        Msg.world(Msg.ORANGE, icon = 22,"News: A tournament will start in ${formatTime(safeDelay)}!")
 
         nextTask = CoresManager.getSlowExecutor().schedule({
             startNewTournament()
@@ -40,13 +40,14 @@ object TournamentScheduler {
     }
 
     fun startNewTournament(): TournamentLobby {
+        cancelPending()
         val instance = TournamentInstance()
         instance.create()
 
         val lobby = instance.getLobby()
         currentInstance = instance
         currentLobby = lobby
-        Msg.world(Msg.GREEN, icon = 13,"News: A new Tournament has begun! Type ::tournament to join.")
+        Msg.world(Msg.GREEN, icon = 22,"News: A new Tournament has begun! Type ::tournament to join.")
 
         return lobby
     }
