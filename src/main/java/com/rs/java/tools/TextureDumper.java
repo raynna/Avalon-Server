@@ -5,15 +5,11 @@ import com.displee.cache.index.archive.Archive;
 import com.displee.cache.index.archive.file.File;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TextureDumper {
 
@@ -22,7 +18,7 @@ public class TextureDumper {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static void main(String[] args) throws IOException {
-        CacheLibrary cache = new CacheLibrary("data/onyxcache/cache/", false, null);
+        CacheLibrary cache = new CacheLibrary("data/cache/", false, null);
 
         Files.createDirectories(OUTPUT_DIR);
 
@@ -47,73 +43,23 @@ public class TextureDumper {
             try {
                 Buffer buf = new Buffer(data);
 
-                if (buf.remaining() < 1) {
-                    System.err.println("⚠️ Archive " + archiveId + " has no opCount byte");
-                    continue;
-                }
-
-                int opCount = buf.readUnsignedByte();
-
-                List<Map<String, Object>> ops = new ArrayList<>();
-                List<Integer> spriteIds = new ArrayList<>();
-                List<Integer> textureRefs = new ArrayList<>();
-
-                for (int i = 0; i < opCount; i++) {
-                    if (buf.remaining() < 2) {
-                        System.err.println("⚠️ Archive " + archiveId + " ran out of bytes at op#" + i);
-                        break;
-                    }
-
-                    int type = buf.readUnsignedByte();
-                    int len = buf.readUnsignedByte();
-
-                    Map<String, Object> op = new LinkedHashMap<>();
-                    op.put("opIndex", i);
-                    op.put("type", type);
-                    op.put("len", len);
-
-                    if (type == 0 && len >= 2 && buf.remaining() >= 2) {
-                        int spriteId = buf.readUnsignedShort();
-                        spriteIds.add(spriteId);
-                        op.put("spriteId", spriteId);
-                        len -= 2;
-                    } else if (type == 2 && len >= 2 && buf.remaining() >= 2) {
-                        int textureId = buf.readUnsignedShort();
-                        textureRefs.add(textureId);
-                        op.put("textureRef", textureId);
-                        len -= 2;
-                    }
-
-                    // Bail if len > remaining
-                    if (len > buf.remaining()) {
-                        System.err.println("⚠️ Archive " + archiveId +
-                                " op#" + i + " claims len=" + len +
-                                " but only " + buf.remaining() + " bytes left. Stopping parse.");
-                        break;
-                    }
-
-                    // Read remaining bytes (raw)
-                    List<Integer> skipped = new ArrayList<>();
-                    for (int j = 0; j < len; j++) {
-                        skipped.add(buf.readUnsignedByte());
-                    }
-                    if (!skipped.isEmpty()) {
-                        op.put("skipped", skipped);
-                    }
-
-                    ops.add(op);
-                }
+                // Decode full Texture (like client does)
+                TextureDefinition tex = new TextureDefinition(buf);
 
                 Map<String, Object> json = new LinkedHashMap<>();
                 json.put("archiveId", archiveId);
-                json.put("fileLength", data.length);
-                json.put("opCount", opCount);
-                json.put("ops", ops);
-                json.put("spritesUsed", spriteIds);
-                json.put("texturesReferenced", textureRefs);
+                json.put("spriteIds", tex.spriteIds);
+                json.put("textureIds", tex.textureIds);
 
                 try (FileWriter writer = new FileWriter(OUTPUT_DIR.resolve(archiveId + ".json").toFile())) {
                     GSON.toJson(json, writer);
+                }
+
+                // Extra: find specific sprite
+                for (int spriteId : tex.spriteIds) {
+                    if (spriteId == 485) {
+                        System.out.println("✅ Texture " + archiveId + " uses spriteId 318");
+                    }
                 }
 
             } catch (Exception e) {
@@ -127,31 +73,68 @@ public class TextureDumper {
         System.out.println("  Files processed:    " + fileCount);
     }
 
-    // Minimal Buffer for reading
+    // Stub: you’d port the client’s Buffer here
     static class Buffer {
         private final byte[] data;
         int pos = 0;
-
-        Buffer(byte[] data) {
-            this.data = data;
-        }
-
-        int readUnsignedByte() {
-            if (pos >= data.length) {
-                throw new IndexOutOfBoundsException("readUnsignedByte: pos=" + pos + " length=" + data.length);
-            }
-            return data[pos++] & 0xFF;
-        }
-
+        Buffer(byte[] data) { this.data = data; }
+        int readUnsignedByte() { return data[pos++] & 0xFF; }
         int readUnsignedShort() {
-            if (pos + 1 >= data.length) {
-                throw new IndexOutOfBoundsException("readUnsignedShort: pos=" + pos + " length=" + data.length);
-            }
             return ((data[pos++] & 0xFF) << 8) | (data[pos++] & 0xFF);
         }
+    }
 
-        int remaining() {
-            return data.length - pos;
+    // Minimal TextureDefinition wrapper
+    static class TextureDefinition {
+        public final int[] spriteIds;
+        public final int[] textureIds;
+
+        TextureDefinition(Buffer buf) {
+            // Here you should port the constructor logic from the client’s Texture class
+            // For now, just demonstrate sprite collection:
+            int opCount = buf.readUnsignedByte();
+            List<Integer> sprites = new ArrayList<>();
+            List<Integer> textures = new ArrayList<>();
+            for (int i = 0; i < opCount; i++) {
+                TextureOp op = TextureOp.decode(buf);
+                if (op.getSpriteId() >= 0) sprites.add(op.getSpriteId());
+                if (op.getTextureId() >= 0) textures.add(op.getTextureId());
+                // skip child ops linking for now
+            }
+            this.spriteIds = sprites.stream().mapToInt(Integer::intValue).toArray();
+            this.textureIds = textures.stream().mapToInt(Integer::intValue).toArray();
         }
+    }
+
+    // Minimal TextureOp stub
+    static abstract class TextureOp {
+        int getSpriteId() { return -1; }
+        int getTextureId() { return -1; }
+
+        static TextureOp decode(Buffer buf) {
+            int opcode = buf.readUnsignedByte();
+            if (opcode == 0) {
+                int spriteId = buf.readUnsignedShort();
+                return new TextureOpSprite(spriteId);
+            } else if (opcode == 2) {
+                int texId = buf.readUnsignedShort();
+                return new TextureOpRef(texId);
+            } else {
+                // TODO: port all other opcodes from client
+                return new TextureOp() {};
+            }
+        }
+    }
+
+    static class TextureOpSprite extends TextureOp {
+        private final int spriteId;
+        TextureOpSprite(int spriteId) { this.spriteId = spriteId; }
+        @Override int getSpriteId() { return spriteId; }
+    }
+
+    static class TextureOpRef extends TextureOp {
+        private final int texId;
+        TextureOpRef(int texId) { this.texId = texId; }
+        @Override int getTextureId() { return texId; }
     }
 }

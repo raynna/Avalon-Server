@@ -15,7 +15,7 @@ public class SpriteDumper {
     private static final int INDEX = 8;
 
     public static void main(String[] args) throws IOException {
-        CacheLibrary cache = new CacheLibrary("data/onyxcache/cache/", false, null);
+        CacheLibrary cache = new CacheLibrary("data/cache/", false, null);
 
         java.io.File outDir = new java.io.File("dump/sprites/");
         if (!outDir.exists()) {

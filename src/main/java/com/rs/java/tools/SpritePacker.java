@@ -8,46 +8,40 @@ import java.io.IOException;
 
 public class SpritePacker {
 
-	// 6525, 6526, 6527 specbar green
-	// 6531, 6532, 6533 specbar gray
-	// 5600, 5601, 5602 specbar background
+	private static final int INDEX = 8; // sprites index
 
-	// 4134 login screen
+	public static void main(String[] args) throws IOException {
+		int fromArchive = 20318; // spriteId in donor cache
+		int toArchive = 318;     // new spriteId in destination cache
 
-	private static final int INDEX = 8;
-
-	public static void main(String[] args) throws ClassNotFoundException, IOException {
-		int archive = 3028;// spriteId
-		int secondArchive = 3028;
-		boolean LOOP = false;
 		CacheLibrary toCache = new CacheLibrary("data/cache/", false, null);
-		CacheLibrary fromCache = new CacheLibrary("data/cache639/", false, null);
-		if (LOOP) {
-			for (int i = archive; i <= secondArchive; i++) {
-				toCache.index(INDEX).update();
-				System.out.println("Updated index " + INDEX);
-				Archive fromArchive = fromCache.index(INDEX).archive(i);
-				Archive toArchive = toCache.index(INDEX).archive(i);
-				for (File a : fromArchive.files()) {
-					System.out.println(a);
-					toArchive.add(a);
-				}
-				toCache.index(INDEX).update();
-				System.out.println("Finished packing sprite: " + i + " from cache: " + fromArchive.getId()
-						+ " to cache:" + toArchive.getId());
-			}
-		} else {
-			toCache.index(INDEX).update();
-			System.out.println("Updated index " + INDEX);
-			Archive fromArchive = fromCache.index(INDEX).archive(archive);
-			Archive toArchive = toCache.index(INDEX).archive(secondArchive);
-			for (File a : fromArchive.files()) {
-				System.out.println(a);
-				toArchive.add(a);
-			}
-			toCache.index(INDEX).update();
-			System.out.println("Finished packing sprite: " + archive + " to " + fromArchive.getId()
-					+ " to 718 cache:" + toArchive.getId());
+		CacheLibrary fromCache = new CacheLibrary("data/onyxcache/cache/", false, null);
+
+		copySprite(fromCache, toCache, fromArchive, toArchive);
+
+		// Save changes
+		toCache.index(INDEX).update();
+		System.out.println("✅ Finished packing sprite " + fromArchive + " → " + toArchive);
+	}
+
+	private static void copySprite(CacheLibrary fromCache, CacheLibrary toCache, int fromId, int toId) {
+		Archive fromArchive = fromCache.index(INDEX).archive(fromId);
+		if (fromArchive == null) {
+			System.err.println("❌ Missing source sprite archive " + fromId);
+			return;
 		}
+
+		// Remove existing destination and re-add
+		toCache.index(INDEX).remove(toId);
+		Archive destArchive = toCache.index(INDEX).add(toId);
+
+		for (File file : fromArchive.files()) {
+			if (file == null) continue;
+			byte[] data = file.getData();
+			if (data == null) continue;
+			destArchive.add(file.getId(), data);
+		}
+
+		System.out.println("✅ Copied sprite " + fromId + " into destination archive " + toId);
 	}
 }
