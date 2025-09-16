@@ -68,7 +68,7 @@ public class SpriteDumper {
 
                 SpriteLoader.clear();
             } catch (Exception e) {
-                System.err.println("⚠️ Failed to decode sprite archive "
+                System.err.println("Failed to decode sprite archive "
                         + archive.getId() + ": " + e.getMessage());
                 e.printStackTrace();
             }

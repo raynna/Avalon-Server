@@ -3,6 +3,7 @@ package com.rs.java.game.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rs.Settings;
 import com.rs.core.cache.Cache;
 import com.rs.java.game.DynamicRegion;
 import com.rs.java.game.Region;
@@ -41,6 +42,14 @@ public final class MapBuilder {
 		int regionHash = findEmptyRegionHash(widthChunks, heightChunks);
 		return new int[] { (regionHash >> 8), regionHash & 0xff };
 	}
+
+	public static void onLoginSafeTileCheck(Player player) {
+		if (!regionExists(player.getRegionHash())) {
+			player.setNextWorldTile(Settings.HOME_PLAYER_LOCATION);
+			player.message("Your previous location no longer exists. You've been sent home.");
+		}
+	}
+
 
 	public static int[] findEmptyChunkBound(int widthChunks, int heightChunks) {
 		int[] map = findEmptyRegionBound(widthChunks, heightChunks);

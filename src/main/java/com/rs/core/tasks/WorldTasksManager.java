@@ -24,35 +24,8 @@ public class WorldTasksManager {
 	}
 
 	public static void main(String[] args) {
-		for (int i = 0; i < 100000; i++)
-			schedule(new WorldTask() {
-
-				@Override
-				public void run() {
-
-				}
-
-			});
 		processTasks();
-		for (int i = 0; i < 100000; i++)
-			schedule(new WorldTask() {
-
-				@Override
-				public void run() {
-
-				}
-
-			});
 		processTasks();
-		for (int i = 0; i < 100000; i++)
-			schedule(new WorldTask() {
-
-				@Override
-				public void run() {
-
-				}
-
-			});
 		processTasks();
 
 	}

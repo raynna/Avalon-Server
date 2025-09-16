@@ -26,6 +26,7 @@ import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.item.itemdegrading.ChargesManager;
+import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.minigames.clanwars.RequestController;
 import com.rs.java.game.minigames.clanwars.WarControler;
@@ -109,6 +110,7 @@ import com.rs.kotlin.game.player.combat.special.SpecialAttack;
 import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 import com.rs.kotlin.game.player.interfaces.TimerOverlay;
 import com.rs.kotlin.game.player.shop.ShopSystem;
+import com.rs.kotlin.game.world.activity.pvpgame.PvPGame;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
@@ -2841,6 +2843,7 @@ public class Player extends Entity {
         for (Area area : areas) {
             area.onMoved(this);
         }
+        MapBuilder.onLoginSafeTileCheck(this);
         Logger.log("Player", username + " has logged in.");
         List<String> playerNames = World.getPlayers().stream()
                 .filter(p -> p != null && p.hasStarted() && !p.hasFinished())
@@ -3714,6 +3717,15 @@ public class Player extends Entity {
                     }
                 } else if (loop == 2) {
                     Player killer = getMostDamageReceivedSourcePlayer();
+                    PvPGame activeGame = (PvPGame) getTemporaryAttributtes().get("active_pvp_game");
+                    if (activeGame != null) {
+                        activeGame.onPlayerDeath(instance);
+                        reset();
+                        animate(new Animation(-1));
+                        dead = false;
+                        stop(); // cancel death task here — PvPGame handles cleanup/respawn
+                        return;
+                    }
                     sendItemsOnDeath(killer != null ? killer : instance, true);
                     getEquipment().init();
                     getInventory().init();

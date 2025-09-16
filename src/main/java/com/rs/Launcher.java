@@ -62,6 +62,7 @@ import com.rs.java.utils.Weights;
 import com.rs.java.utils.huffman.Huffman;
 import com.rs.kotlin.game.player.command.CommandRegistry;
 import com.rs.kotlin.game.player.shop.ShopInitializer;
+import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentScheduler;
 import com.rs.kotlin.game.world.area.AreaManager;
 
 public final class Launcher {
@@ -129,6 +130,7 @@ public final class Launcher {
 		CommandRegistry.registerCommands();
 		ShopInitializer.initializeShops();
 		RandomWorldBossHandler.start();
+		TournamentScheduler.INSTANCE.start();
 		JsonNpcCombatDefinitions.INSTANCE.init();
 		JsonNpcSpawns.INSTANCE.init();
 		try {

@@ -417,14 +417,11 @@ object RandomWorldBossHandler {
 
             if (item.isItem("item.magic_chest")) {
                 player.message(Msg.rewardRare("You receive a mysterious Magic Chest!"))
-                World.sendWorldMessage(Msg.newsEpic("${player.displayName} has received a Magic Chest!"), false)
+                Msg.world(Msg.PURPLE, "${player.displayName} has received a Magic Chest!")
             } else {
                 player.message(Msg.reward("You receive ${item.amount} x ${item.name}."))
                 if (item.definitions.tipitPrice >= 1_000_000) {
-                    World.sendWorldMessage(
-                        Msg.newsRare("${player.displayName} has received ${item.name} from killing the world boss!"),
-                        false
-                    )
+                    Msg.world(Msg.RED, "${player.displayName} has received ${item.name} from killing the world boss!")
                 }
             }
         }
@@ -432,7 +429,7 @@ object RandomWorldBossHandler {
 
     fun onBossTopDamageReward(boss: WorldBossNPC, player: Player, damage: Int, maxHp: Int) {
         player.message(Msg.topDamager("You were the top damager on ${boss.name} and received an extra reward!"))
-        World.sendWorldMessage(Msg.news("${player.displayName} has received a Magic Chest!"), false)
+        Msg.world(Msg.ORANGE, "${player.displayName} has received a Magic Chest!")
         World.updateGroundItem(Item("item.magic_chest", 1), boss.tile, player, 60, 1)
     }
 
@@ -454,16 +451,10 @@ object RandomWorldBossHandler {
             player.message(Msg.chestOpen("Your Magic Chest rewards you with ${item.amount} x ${item.name}!"))
             val price = item.definitions.tipitPrice
             if (price in 1_000_000..9_999_999) {
-                World.sendWorldMessage(
-                    Msg.newsRare("${player.displayName} has received ${item.name} from a Magic Chest!"),
-                    false
-                )
+                Msg.world(Msg.RED, "${player.displayName} has received ${item.name} from a Magic Chest!")
             }
             if (item.definitions.tipitPrice >= 10_000_000) {
-                World.sendWorldMessage(
-                    Msg.newsEpic("${player.displayName} has received ${item.name} from a Magic Chest!"),
-                    false
-                )
+                Msg.world(Msg.PURPLE, "${player.displayName} has received ${item.name} from a Magic Chest!")
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.rs.kotlin.game.world.util
 
+import com.rs.java.game.World
 import com.rs.java.game.player.Player
 
 object Msg {
@@ -23,7 +24,6 @@ object Msg {
 
     // Builders
     fun player(col: String, msg: String) = "<col=$col>$msg$END"
-    fun world(col: String, msg: String)  = "<img=7>$SHAD_DARK<col=$col>$msg$END"
 
     // Return formatted string only
     fun reward(msg: String)     = player(GREEN, msg)
@@ -35,14 +35,18 @@ object Msg {
     @JvmStatic fun info(msg: String)    = player(BLUE, msg)
     @JvmStatic fun warn(msg: String)    = player(RED, msg)
 
-    fun news(msg: String)      = world(ORANGE, "News: $msg")
-    fun newsRare(msg: String)  = world(RED,    "News: $msg")
-    fun newsEpic(msg: String)  = world(PURPLE, "News: $msg")
+    fun news(msg: String)      = world(ORANGE, icon = 7, msg = "News: $msg")
+    fun newsRare(msg: String)  = world(RED,    icon = 7, msg = "News: $msg")
+    fun newsEpic(msg: String)  = world(PURPLE, icon = 7, msg = "News: $msg")
 
     // --- New convenience senders ---
     @JvmStatic fun success(player: Player, msg: String) = player.message(success(msg))
     @JvmStatic fun info(player: Player, msg: String)    = player.message(info(msg))
     @JvmStatic fun warn(player: Player, msg: String)    = player.message(warn(msg))
+
+    @JvmStatic fun world(col: String, msg: String)    = World.sendWorldMessage("<img=7>$SHAD_DARK<col=$col>$msg$END", false)
+
+    @JvmStatic fun world(col: String, icon: Int? = 7, msg: String)    = World.sendWorldMessage("<img=$icon>$SHAD_DARK<col=$col>$msg$END", false)
 
     @JvmStatic fun reward(player: Player, msg: String)     = player.message(reward(msg))
     @JvmStatic fun rewardRare(player: Player, msg: String) = player.message(rewardRare(msg))
