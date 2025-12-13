@@ -260,7 +260,6 @@ object CombatCalculations {
                 damageMultiplier *= 2
                 accuracyMultiplier *= 2
             }
-            println("damageMultiplier from bow: $damageMultiplier, accuracy: $accuracyMultiplier")
             val damageCap = 810
             return Triple(accuracyMultiplier, damageMultiplier, damageCap)
         }
@@ -286,7 +285,13 @@ object CombatCalculations {
         }
 
         fun calculateMaxHit(player: Player, target: Entity, baseDamage: Int = -1, spellId: Int = -1, specialMultiplier: Double = 1.0): Hit {
-            val spell = Spellbook.getSpellById(player, spellId);
+            val spell = Spellbook.getSpellById(player, spellId)
+            val min: Int = when {
+                spellId == 99 -> {
+                    160
+                }
+                else -> 0
+            }
             val base: Int = when {
                 baseDamage != -1 -> baseDamage
                 spell != null && spell.damage != -1 -> spell.damage
@@ -299,7 +304,7 @@ object CombatCalculations {
                     val boost = (magicLevel - 77) * 4
                     base + boost
                 }
-                else -> 10
+                else -> 0
             }
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
@@ -311,9 +316,8 @@ object CombatCalculations {
             if (target is NPC) {//just to make sure magic is a bit stronger for monsters so magic is a viable style in pvm
                 levelMultiplier *= player.prayer.magicMultiplier
             }
-            println("void: $voidDamage, multipliers $multipliers, specialMultipliers $specialMultiplier")
             val maxHit = base * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage * specialMultiplier
-            var damage = Utils.random(maxHit.toInt())
+            var damage = Utils.random(min, maxHit.toInt())
             if (target is NPC) {
                 if (target.id == 4474) {
                     damage = maxHit.toInt();

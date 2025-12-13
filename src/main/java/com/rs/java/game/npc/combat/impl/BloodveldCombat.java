@@ -15,8 +15,8 @@ public class BloodveldCombat extends CombatScript {
 	@Override
 	public int attack(NPC npc, Entity target) {
 		npc.animate(npc.getAttackAnimation());
-		Hit mageHit = npc.magicHit(target, npc.getMaxHit());//roll magic accuracy but hit with melee
-		delayHit(npc, target, 0, mageHit);
+		Hit magicalMelee = npc.magicalMelee(target, npc.getMaxHit());//roll magic accuracy but hit with melee
+		delayHit(npc, target, 0, magicalMelee);
 		return npc.getAttackSpeed();
 	}
 }

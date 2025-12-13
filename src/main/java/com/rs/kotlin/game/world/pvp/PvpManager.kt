@@ -8,9 +8,6 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.controlers.WildernessControler
 import com.rs.java.utils.HexColours
-import com.rs.kotlin.game.npc.combatdata.Npc
-import com.rs.kotlin.game.world.activity.pvpgame.activeLobby
-import com.rs.kotlin.game.world.activity.pvpgame.activePvPGame
 import com.rs.kotlin.game.world.util.Msg
 import java.util.*
 import kotlin.math.abs
@@ -94,7 +91,7 @@ object PvpManager {
     }
 
     private fun inPvpGame(player: Player): Boolean {
-        return player.activePvPGame != null || player.activeLobby != null
+        return player.inTournament()
     }
 
     @JvmStatic

@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.24"
     application
     java
+    id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
 group = "com.rs"
@@ -40,15 +41,11 @@ dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("org.jsoup:jsoup:1.21.1")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
+}
 
-    implementation("org.openjfx:javafx-graphics:$javafxVersion")
-    implementation("org.openjfx:javafx-controls:$javafxVersion")
-    implementation("org.openjfx:javafx-fxml:$javafxVersion")
-
-    // Platform-specific natives (pick your OS, or keep all)
-    runtimeOnly("org.openjfx:javafx-graphics:$javafxVersion:win")
-    runtimeOnly("org.openjfx:javafx-controls:$javafxVersion:win")
-    runtimeOnly("org.openjfx:javafx-fxml:$javafxVersion:win")
+javafx {
+    version = "17.0.16"
+    modules = listOf("javafx.controls", "javafx.fxml", "javafx.web")
 }
 
 application {

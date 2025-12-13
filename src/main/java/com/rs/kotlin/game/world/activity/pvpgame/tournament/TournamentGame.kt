@@ -47,7 +47,6 @@ class TournamentGame(
             var ticksLeft = countdownTicks
             override fun run() {
                 ticksLeft--
-                println("Ticks left: $ticksLeft")
 
                 if (ticksLeft in 1..3) {
                     players.forEach { it.nextForceTalk = ForceTalk("$ticksLeft!") }
@@ -64,6 +63,29 @@ class TournamentGame(
                 }
             }
         }, 0, 0)
+        //Safety: check if players are still present every tick
+        WorldTasksManager.schedule(object : WorldTask() {
+            override fun run() {
+                val stillHere = players.filter { it.isActive && !it.hasFinished() }
+
+                if (stillHere.size < 2) {
+                    // One player missing -> auto win for the other
+                    val winner = stillHere.firstOrNull()
+                    val loser = if (winner == p1) p2 else p1
+
+                    p1.setCanPvp(false)
+                    p2.setCanPvp(false)
+
+                    if (winner != null && loser != null) {
+                        lobby.recordResult(winner, loser)
+                    } else {
+                        cleanup(null)
+                    }
+                    stop()
+                }
+            }
+        }, 0, 1) // check every tick
+
     }
 
 

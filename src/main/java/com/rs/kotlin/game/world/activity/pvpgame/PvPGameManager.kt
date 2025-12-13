@@ -34,16 +34,6 @@ var Player.activePvPGame: PvPGame?
         }
     }
 
-var Player.activeLobby: TournamentLobby?
-    get() = temporaryAttribute()["active_pvp_lobby"] as? TournamentLobby
-    set(value) {
-        if (value == null) {
-            temporaryAttribute().remove("active_pvp_lobby")
-        } else {
-            temporaryAttribute()["active_pvp_lobby"] = value
-        }
-    }
-
 
 fun Player.openPvPOverlay(player: Player, target: Player) {
     interfaceManager.sendTab(if (interfaceManager.hasRezizableScreen())  11 else 29, 265)

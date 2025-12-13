@@ -60,6 +60,7 @@ public class Default extends CombatScript {
 						NpcAttackStyle.MAGIC,
 						target
 				);
+				System.out.println("MaxHit: " + npc.getMaxHit());
 				delayHit(npc, target, 2, getMagicHit(npc, damage));
 				if (defs.getAttackProjectile() != -1) {
 					ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, defs.getAttackProjectile(), npc, target);

@@ -374,7 +374,6 @@ public class WildernessControler extends Controler {
 	public void moved() {
 		boolean isAtWild = isAtWild(player);
 		boolean isAtWildSafe = isAtWildSafe(player);
-		player.message("Wild: " + isAtWild + ", Safe: " + isAtWildSafe);
 		if (isAtWildSafe) {
 			removeIcon();
 			removeControler();

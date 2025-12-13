@@ -395,29 +395,57 @@ public class Bank implements Serializable {
 
 
 	public void insertItem(int fromSlot, int tab, int index) {
-		if (index == fromSlot)
+		if (tab < 0 || tab >= bankTabs.length) {
 			return;
-		Item[] bankTab = new Item[bankTabs[tab].length];
-		for (int i = 0; i < bankTabs[tab].length; i++) {
-			if ((i < index || (i > index && i > fromSlot)) && index < fromSlot)
-				bankTab[i] = bankTabs[tab][i];
-			else if ((i >= index || i < fromSlot) && fromSlot < index)
-				bankTab[i] = bankTabs[tab][i];
-			else if (i == (fromSlot < index ? index - 1 : index))
-				bankTab[i] = bankTabs[tab][fromSlot];
-			else
-				bankTab[i] = bankTabs[tab][fromSlot < index ? i + 1 : i - 1];
 		}
-		bankTabs[tab] = bankTab;
+
+		Item[] tabItems = bankTabs[tab];
+		if (fromSlot < 0 || fromSlot >= tabItems.length) {
+			return;
+		}
+		if (index < 0 || index >= tabItems.length) {
+			return;
+		}
+
+		Item moving = tabItems[fromSlot];
+		if (moving == null) {
+			return;
+		}
+
+
+		// Create new tab
+		Item[] newTab = new Item[tabItems.length];
+		int pos = 0;
+		for (int i = 0; i < tabItems.length; i++) {
+			if (i == fromSlot) {
+				continue;
+			}
+			if (pos == index) {
+				newTab[pos++] = moving; // insert moving item here
+			}
+			newTab[pos++] = tabItems[i];
+		}
+
+		if (pos < newTab.length) {
+			newTab[pos] = moving;
+		}
+
+		bankTabs[tab] = newTab;
+
 		refreshItems();
 		refreshTabs();
 		refreshViewingTab();
+
 	}
+
+
 
 	public void switchItem(int fromSlot, int toSlot, int fromComponentId, int toComponentId) {
 		if (toSlot == 65535) {
 			int toTab = toComponentId >= 76 ? 8 - (84 - toComponentId) : 9 - ((toComponentId - 46) / 2);
-
+			if (fromSlot == toSlot) {
+				return;
+			}
 			if (toTab < 0 || toTab > 9) {
 				return;
 			}
@@ -485,9 +513,13 @@ public class Bank implements Serializable {
 		}
 
 		if (insertItems) {
-			insertItem(fromSlot, fromRealSlot[0], toSlot);
+			if (toRealSlot == null || toRealSlot[0] != fromRealSlot[0]) {
+				return;
+			}
+			insertItem(fromRealSlot[1], fromRealSlot[0], toRealSlot[1]);
 			return;
 		}
+
 
 		boolean isLastItemInFromTab = bankTabs[fromRealSlot[0]].length == 1;
 

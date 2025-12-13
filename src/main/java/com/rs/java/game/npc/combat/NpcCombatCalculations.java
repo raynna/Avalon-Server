@@ -69,7 +69,7 @@ public class NpcCombatCalculations {
         int[] playerBonuses = player.getCombatDefinitions().getBonuses();
 
         switch (style) {
-            case MAGIC -> {
+            case MAGIC, MAGICAL_MELEE -> {
                 int magicDef = (int) (player.getSkills().getLevel(Skills.DEFENCE) * 0.3
                                         + player.getSkills().getLevel(Skills.MAGIC) * 0.7 * player.getPrayer().getMagicMultiplier());
                 return effectiveDefRoll(magicDef, playerBonuses[BonusType.MagicDefence.getIndex()]);
@@ -125,7 +125,9 @@ public class NpcCombatCalculations {
         } else {
             probability = attackRoll / (2.0 * (defenceRoll + 1.0));
         }
-        //System.out.println("random: " + random + " vs probability: " + probability);
+
+        //System.out.println("Hitchance: " + String.format("%.1f", probability * 100) + "%");
+
         return random < probability;
     }
 

@@ -21,7 +21,8 @@ data class CombatContext(
     val attackStyle: AttackStyle,
     val attackBonusType: AttackBonusType,
     val hit: Hit? = null,
-    val usingSpecial: Boolean = false
+    val usingSpecial: Boolean = false,
+    val guaranteedBoltEffect: Boolean = false
 )
 
 private fun CombatContext.resolveMultipliers(

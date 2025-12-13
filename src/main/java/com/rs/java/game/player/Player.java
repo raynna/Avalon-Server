@@ -111,6 +111,7 @@ import com.rs.kotlin.game.player.interfaces.HealthOverlay;
 import com.rs.kotlin.game.player.interfaces.TimerOverlay;
 import com.rs.kotlin.game.player.shop.ShopSystem;
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGame;
+import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentInstance;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
@@ -137,6 +138,48 @@ public class Player extends Entity {
 
     public HealthOverlay healthOverlay = new HealthOverlay();
     public TimerOverlay timerOverlay = new TimerOverlay();
+
+
+    private Item[] tempInventory;
+    private Item[] tempEquipment;
+
+
+    public Item[] getTempInventory() {
+        return tempInventory;
+    }
+
+    public void setTempInventory(Item[] tempInventory) {
+        this.tempInventory = tempInventory;
+    }
+
+    public Item[] getTempEquipment() {
+        return tempEquipment;
+    }
+
+    public void setTempEquipment(Item[] tempEquipment) {
+        this.tempEquipment = tempEquipment;
+    }
+
+    private transient TournamentInstance activeTournament;
+
+    public TournamentInstance getActiveTournament() {
+        return activeTournament;
+    }
+
+    public void setActiveTournament(TournamentInstance instance) {
+        this.activeTournament = instance;
+    }
+
+    public boolean inTournament() {
+        return activeTournament != null;
+    }
+
+    public void leaveTournament() {
+        if (activeTournament != null) {
+            activeTournament.getLobby().onLeave(this, true);
+            activeTournament = null;
+        }
+    }
 
     //Area
     private transient Set<Area> lastAreas = Collections.emptySet();
@@ -2844,6 +2887,8 @@ public class Player extends Entity {
             area.onMoved(this);
         }
         MapBuilder.onLoginSafeTileCheck(this);
+        if (getActiveTournament() != null)
+            getActiveTournament().getLobby().onLogin(this);
         Logger.log("Player", username + " has logged in.");
         List<String> playerNames = World.getPlayers().stream()
                 .filter(p -> p != null && p.hasStarted() && !p.hasFinished())
@@ -3063,6 +3108,10 @@ public class Player extends Entity {
             message("You can't log out during combat which is for another " + getTickToSeconds(getTickManager().getTicksLeft(TickManager.TickKeys.LAST_ATTACKED_TICK)) + " seconds.");
             return;
         }
+        if (inTournament()) {
+            message("Please, finish tournament or leave before logging out.");
+            return;
+        }
         if (getEmotesManager().getNextEmoteEnd() >= currentTime) {
             message("You can't log out while performing an emote.");
             return;
@@ -3096,8 +3145,8 @@ public class Player extends Entity {
         timerOverlay.clearAll(this);
         TicketSystem.destroyChatOnLogOut(this);
         AntiBot.getInstance().destroy(this);
+        realFinish();
         getPackets().sendLogout(lobby);
-        active = false;
     }
 
     private ItemsContainer<Item> bobItems;

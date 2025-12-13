@@ -183,15 +183,15 @@ object RandomWorldBossHandler {
 
     @Synchronized
     private fun scheduleNextSpawn(delayMs: Long) {
-        cancelPending()
         val safeDelay = max(1000L, delayMs)
-
-        World.sendWorldMessage(
-            "<img=7><col=36648b>News: Another world boss will spawn in ${formatTime(safeDelay)}!",
-            false
-        )
-        announceGlobalEvent("World boss", "Another world boss will spawn in ${formatTime(safeDelay)}!", null)
-
+        if (currentBosses.isNotEmpty() || nextSpawnTask != null) {
+            World.sendWorldMessage(
+                "<img=7><col=36648b>News: Another world boss will spawn in ${formatTime(safeDelay)}!",
+                false
+            )
+            announceGlobalEvent("World boss", "Another world boss will spawn in ${formatTime(safeDelay)}!", null)
+        }
+        cancelPending()
         if (safeDelay > 5 * 60 * 1000L) {
             CoresManager.getSlowExecutor().schedule({
                 World.sendWorldMessage(

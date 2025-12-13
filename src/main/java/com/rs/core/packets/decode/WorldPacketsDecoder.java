@@ -474,6 +474,9 @@ public final class WorldPacketsDecoder extends Decoder {
 				int updateType = stream.readInt();
 				player.getPackets().sendWorldList(updateType == 0);
 				return;
+			case ITEM_ON_ITEM_PACKET:
+				InventoryOptionsHandler.handleItemOnItem(player, stream);
+				return;
 
 			case AFK_PACKET:
 				return;

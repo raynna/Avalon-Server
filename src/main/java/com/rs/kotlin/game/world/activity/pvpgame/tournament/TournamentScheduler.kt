@@ -2,6 +2,7 @@ package com.rs.kotlin.game.world.activity.pvpgame.tournament
 
 import TournamentLobby
 import com.rs.core.thread.CoresManager
+import com.rs.discord.DiscordAnnouncer
 import com.rs.java.game.World
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.world.util.Msg
@@ -32,11 +33,13 @@ object TournamentScheduler {
     private fun scheduleNext(delayMs: Long) {
         cancelPending()
         val safeDelay = max(1000L, delayMs)
-        Msg.world(Msg.ORANGE, icon = 22,"News: A tournament will start in ${formatTime(safeDelay)}!")
+        announceWorldAndDiscord("A tournament will start in ${formatTime(safeDelay)}!")
 
         nextTask = CoresManager.getSlowExecutor().schedule({
             startNewTournament()
         }, safeDelay, TimeUnit.MILLISECONDS)
+        scheduleWarning(safeDelay, 15 * 60 * 1000L) // 15 minutes before
+        scheduleWarning(safeDelay, 5 * 60 * 1000L)  // 5 minutes before
     }
 
     fun startNewTournament(): TournamentLobby {
@@ -47,8 +50,7 @@ object TournamentScheduler {
         val lobby = instance.getLobby()
         currentInstance = instance
         currentLobby = lobby
-        Msg.world(Msg.GREEN, icon = 22,"News: A new Tournament has begun! Type ::tournament to join.")
-
+        announceWorldAndDiscord(colour = Msg.GREEN, message = "News: A new Tournament has begun! Type ::tournament to join.")
         return lobby
     }
 
@@ -75,5 +77,19 @@ object TournamentScheduler {
             if (minutes > 0 && seconds > 0) append(" and ")
             if (seconds > 0) append("$seconds second${if (seconds > 1) "s" else ""}")
         }
+    }
+
+    private fun scheduleWarning(totalDelay: Long, beforeMs: Long) {
+        val triggerAt = totalDelay - beforeMs
+        if (triggerAt <= 0) return // too soon, skip
+
+        CoresManager.getSlowExecutor().schedule({
+            announceWorldAndDiscord("A tournament will start in ${formatTime(beforeMs)}!")
+        }, triggerAt, TimeUnit.MILLISECONDS)
+    }
+
+    private fun announceWorldAndDiscord(message: String, colour: String = Msg.ORANGE) {
+        Msg.world(colour, icon = 22, "News: $message")
+        DiscordAnnouncer.announce("Tournament", "News: $message")
     }
 }

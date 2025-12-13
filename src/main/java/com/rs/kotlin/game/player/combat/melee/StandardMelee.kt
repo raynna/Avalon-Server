@@ -70,7 +70,7 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.dragon_claws_special")
                     context.attacker.gfx("graphic.dragon_claws_special")
 
-                    listOf(15, 25, 35, 45).forEach { delay ->
+                    listOf(15, 30, 35, 45).forEach { delay ->
                         context.attacker.playSound("sound.claw_attack", delay, 1)
                     }
 
@@ -606,6 +606,21 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
+            itemId = Item.getIds("item.bronze_halberd", "item.iron_halberd",
+                "item.steel_halberd", "item.black_halberd",
+                "item.mithril_halberd", "item.adamant_halberd",
+                "item.rune_halberd", "item.noxious_halberd"),
+            name = "Halberd",
+            weaponStyle = WeaponStyle.HALBERD,
+            attackRange = 1,
+            blockAnimationId = Animation.getId("animation.halberd_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.CONTROLLED, 0) to Animation.getId("animation.halberd_jab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.halberd_swipe"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.halberd_fend"),
+            )
+        ),
+        MeleeWeapon(
             itemId = Item.getIds("item.dragon_halberd"),
             name = "Dragon halberd",
             weaponStyle = WeaponStyle.HALBERD,
@@ -622,7 +637,6 @@ object StandardMelee : MeleeData() {
                 damageMultiplier = 1.1,
                 execute = { context ->
                     context.attacker.animate("animation.dragon_halberd_special")
-                    context.attacker.gfx("graphic.dragon_halberd_special", 100)
                     context.attacker.playSound("sound.dragon_halberd_special", 1)
                     context.meleeHit()
                     if (context.defender.size > 1)
@@ -639,6 +653,7 @@ object StandardMelee : MeleeData() {
             name = "Saradomin sword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
             blockAnimationId = Animation.getId("animation.two_handed_defend"),
+            soundId = Rscm.lookup("sound.godsword_slash"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.two_handed_slash"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.two_handed_slash"),
@@ -676,6 +691,7 @@ object StandardMelee : MeleeData() {
             ),
             name = "Armadyl godsword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            soundId = Rscm.lookup("sound.godsword_slash"),
             blockAnimationId = Animation.getId("animation.godsword_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
@@ -703,6 +719,7 @@ object StandardMelee : MeleeData() {
             ),
             name = "Saradomin godsword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            soundId = Rscm.lookup("sound.godsword_slash"),
             blockAnimationId = Animation.getId("animation.godsword_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
@@ -748,6 +765,7 @@ object StandardMelee : MeleeData() {
             ),
             name = "Bandos godsword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            soundId = Rscm.lookup("sound.godsword_slash"),
             blockAnimationId = Animation.getId("animation.godsword_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
@@ -811,6 +829,7 @@ object StandardMelee : MeleeData() {
             ),
             name = "Zamorak godsword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            soundId = Rscm.lookup("sound.godsword_slash"),
             blockAnimationId = Animation.getId("animation.godsword_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
@@ -1137,6 +1156,54 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
+                "item.arclight", "item.emberlight",
+            ),
+            name = "Longsword",
+            weaponStyle = WeaponStyle.SCIMITAR,
+            blockAnimationId = Animation.getId("animation.chaotic_rapier_block"),
+            soundId = Rscm.lookup("sound.sword_slash"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.chaotic_stab"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.chaotic_slash"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 50,
+                accuracyMultiplier = 2.0,
+                damageMultiplier = 1.0,
+                execute = { context ->
+                    context.attacker.animate("animation.darklight_special")
+                    context.attacker.gfx("graphic.darklight_special")
+                    context.attacker.playSound("sound.sword_slash", 1)
+                    context.hits {
+                        val hit = melee()
+                        if (hit.damage > 0) {
+                            val defender = context.defender
+                            if (defender is NPC) {
+                                val isDemon = defender.name.contains("demon", ignoreCase = true)
+                                val drainPercent = if (isDemon) 0.15 else 0.05
+
+                                listOf("attack", "strength", "defence").forEach { skill ->
+                                    val baseLevel = defender.combatData.getBaseStat(skill)
+                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                    defender.combatData.drain(skill, drainAmount)
+                                }
+                            } else if (defender is Player) {
+                                val drainPercent = 0.05
+                                listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
+                                    val baseLevel = defender.skills.getLevelForXp(skill)
+                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                    defender.skills.drainLevel(skill, drainAmount)
+                                }
+                            }
+                        }
+                    }
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
                 "item.statius_s_warhammer", "item.statius_warhammer_deg",
             ),
             name = "Statius' Warhammer",
@@ -1323,7 +1390,6 @@ object StandardMelee : MeleeData() {
                     val attacker = context.attacker
                     val defender = context.defender
                     attacker.animate(CombatAnimations.getAnimation(context.weaponId, context.attackStyle, attacker.combatDefinitions.attackStyle))
-
                     val targets = context.getScytheTargets()
                     if (defender.size == 1 && (defender is NPC && !defender.name.contains("dummy", ignoreCase = true))) {
                         for (victim in targets) {

@@ -19,7 +19,7 @@ object InfernalMageDropTable {
             blue(amount = 1, percent = 0.479)
         }
 
-        preRollDrops {
+        tertiaryDrops {
             drop(
                 "item.mystic_boots_dark",
                 numerator = 1,

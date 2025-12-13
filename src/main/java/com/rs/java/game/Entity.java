@@ -1768,11 +1768,9 @@ public abstract class Entity extends WorldTile {
                         continue;
 
                     int distance = Utils.getDistance(player, this);
-                    System.out.println("Distance from " + player.getDisplayName() + " and" + ((this instanceof NPC) ? ((NPC) this).getName() : (this instanceof Player) ? ((Player) this).getDisplayName() : ""));
                     int maxDistance = 16;
                     double factor = 1.0 - (Math.min(distance, maxDistance) / (double) maxDistance);
                     int volume = (int)(255 * factor * factor);
-                    System.out.println("Volume: " + volume);
 
                     player.getPackets().sendSoundWithVolume(soundId, delay, type, volume);
                 }

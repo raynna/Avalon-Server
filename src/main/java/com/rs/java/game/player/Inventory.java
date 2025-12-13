@@ -58,6 +58,33 @@ public final class Inventory implements Serializable {
 		}
 	}
 
+
+	public Item[] createSnapshot() {
+		// Returns a deep copy of the inventory items
+		Item[] copy = new Item[items.getSize()];
+		for (int i = 0; i < items.getSize(); i++) {
+			Item item = items.get(i);
+			if (item != null) {
+				copy[i] = new Item(item.getId(), item.getAmount(),
+						item.getMetadata() == null ? null : item.getMetadata().deepCopy());
+			}
+		}
+		return copy;
+	}
+
+	public void restoreSnapshot(Item[] snapshot) {
+		if (snapshot == null) return;
+		reset();
+		for (int i = 0; i < snapshot.length; i++) {
+			Item item = snapshot[i];
+			if (item != null) {
+				items.set(i, item);
+			}
+		}
+		refresh();
+	}
+
+
 	public boolean canHold(int itemId, int amount) {
 		return canHold(new Item(itemId), amount);
 	}
@@ -360,30 +387,13 @@ public final class Inventory implements Serializable {
 	 */
 	public void switchItem(int fromSlot, int toSlot) {
 		if (fromSlot < 0 || toSlot < 0 || fromSlot >= items.getSize() || toSlot >= items.getSize()) {
-			System.out.println("[Inventory] switchItem aborted: invalid slot(s) "
-					+ fromSlot + " -> " + toSlot + ", size=" + items.getSize());
 			return;
 		}
-
 		Item fromItem = items.get(fromSlot);
 		Item toItem = items.get(toSlot);
-
-		System.out.println("[Inventory] Before swap:");
-		System.out.println("  Slot " + fromSlot + ": " + (fromItem == null ? "null" : fromItem.toString()));
-		System.out.println("  Slot " + toSlot + ": " + (toItem == null ? "null" : toItem.toString()));
-
-		// Perform swap
 		items.set(fromSlot, toItem);
 		items.set(toSlot, fromItem);
-
-		System.out.println("[Inventory] After swap:");
-		System.out.println("  Slot " + fromSlot + ": " + (items.get(fromSlot) == null ? "null" : items.get(fromSlot).toString()));
-		System.out.println("  Slot " + toSlot + ": " + (items.get(toSlot) == null ? "null" : items.get(toSlot).toString()));
-
-		// Just refresh the two slots involved
 		refresh(fromSlot, toSlot);
-
-		System.out.println("[Inventory] Refreshed slots " + fromSlot + " and " + toSlot);
 	}
 
 

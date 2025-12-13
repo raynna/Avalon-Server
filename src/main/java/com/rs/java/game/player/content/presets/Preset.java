@@ -19,9 +19,9 @@ public final class Preset implements Serializable {
 	private final Item[] runes;
 	private final Summoning.Pouch familiarPouch;
 
-	public Preset(String id, final Item[] inventory, final Item[] equipment, boolean curses, byte spellBook,
+	public Preset(String name, final Item[] inventory, final Item[] equipment, boolean curses, byte spellBook,
 			double[] xp, Item[] runes, Summoning.Pouch pouch) {
-		this.name = id;
+		this.name = name;
 		this.inventory = inventory;
 		this.equipment = equipment;
 		this.curses = curses;

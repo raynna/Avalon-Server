@@ -2,11 +2,10 @@ import com.rs.Settings
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.core.thread.CoresManager
+import com.rs.discord.DiscordAnnouncer
 import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Player
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGameManager
-import com.rs.kotlin.game.world.activity.pvpgame.activeLobby
-import com.rs.kotlin.game.world.activity.pvpgame.activePvPGame
 import com.rs.kotlin.game.world.activity.pvpgame.showResult
 import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentGame
 import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentInstance
@@ -18,23 +17,36 @@ class TournamentLobby(private val instance: TournamentInstance) {
     private val losers = mutableListOf<Player>()
 
     private var joinPhase = true
-    private var ticksRemaining = 50
+    private var ticksRemaining = 500
 
     private var bestOfThree: Boolean = false
     private val finalScores = mutableMapOf<Player, Int>()
 
     init {
-
+        var lastAnnounced = -1
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
                 ticksRemaining--
+                val secondsRemaining = (ticksRemaining * 600) / 1000
+                if (secondsRemaining != lastAnnounced) {
+                    when (secondsRemaining) {
+                        180 -> {
+                            Msg.world(Msg.GREEN, icon = 22, "News: Tournament starts in 3 minutes!")
+                            DiscordAnnouncer.announce("Tournament", "News: Tournament starts in 3 minutes!")
+                        }
 
-                when (ticksRemaining) {//180, 120, 60
-                    180 -> Msg.world(Msg.GREEN, icon = 22,"<col=ff6600>News: Tournament starts in 3 minutes!")
-                    120 -> Msg.world(Msg.GREEN, icon = 22,"<col=ff6600>News: Tournament starts in 2 minutes!")
-                    60  -> Msg.world(Msg.GREEN, icon = 22,"<col=ff6600>News: Tournament starts in 1 minutes!")
+                        120 -> {
+                            Msg.world(Msg.GREEN, icon = 22, "News: Tournament starts in 2 minutes!")
+                            DiscordAnnouncer.announce("Tournament", "News: Tournament starts in 2 minutes!")
+                        }
+
+                        60 -> {
+                            Msg.world(Msg.GREEN, icon = 22, "News: Tournament starts in 1 minutes!")
+                            DiscordAnnouncer.announce("Tournament", "News: Tournament starts in 1 minutes!")
+                        }
+                    }
+                    lastAnnounced = secondsRemaining
                 }
-                println("Ticks remaining: $ticksRemaining")
                 if (ticksRemaining <= 0) {
                     joinPhase = false
                     if (waitingPlayers.size >= 2) {
@@ -44,12 +56,11 @@ class TournamentLobby(private val instance: TournamentInstance) {
                         val allPlayers = waitingPlayers + winners + losers
                         for (p in allPlayers) {
                             p.interfaceManager.closeOverlay(false)
-                            p.activeLobby = null
-                            p.activePvPGame = null
-                            p.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION) // send them home
+                            p.activeTournament = null
+                            p.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
                             p.message("The tournament didn't have enough players to start, you've been sent back home.")
                         }
-                        instance.end(null) // not enough players, cancel tournament
+                        instance.end(null)
                         stop()
                     }
                 }
@@ -63,8 +74,12 @@ class TournamentLobby(private val instance: TournamentInstance) {
             return
         }
         waitingPlayers.add(player)
-        player.activeLobby = this
-
+        player.activeTournament = this.instance
+        player.tempInventory = player.inventory.createSnapshot()
+        player.tempEquipment = player.equipment.createSnapshot()
+        player.inventory.reset()
+        player.equipment.reset()
+        player.appearence.generateAppearenceData()
         // convert ticks → seconds
         val secondsRemaining = (ticksRemaining * 600) / 1000
         val minutes = secondsRemaining / 60
@@ -80,6 +95,28 @@ class TournamentLobby(private val instance: TournamentInstance) {
         refreshInterface(ticksRemaining)
     }
 
+    fun onLeave(player: Player, restore: Boolean = true) {
+        waitingPlayers.remove(player)
+        winners.remove(player)
+        losers.remove(player)
+
+        if (restore) {
+            restoreItems(player)
+        }
+
+        player.interfaceManager.closeOverlay(false)
+        player.activeTournament = null
+
+        player.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
+        player.message("You have left the tournament and been returned home.")
+    }
+
+
+    fun restoreItems(player: Player) {
+        player.inventory.restoreSnapshot(player.tempInventory)
+        player.equipment.restoreSnapshot(player.tempEquipment)
+        player.appearence.generateAppearenceData()
+    }
 
 
     private fun refreshInterface(nextFight: Int) {
@@ -158,7 +195,6 @@ class TournamentLobby(private val instance: TournamentInstance) {
                 finishTournament(winner)
                 winner.showResult(winner)
             } else {
-                // schedule another fight immediately
                 waitingPlayers.addAll(listOf(winner, loser))
                 scheduleNextMatch(false)
             }
@@ -176,11 +212,9 @@ class TournamentLobby(private val instance: TournamentInstance) {
         if (waitingPlayers.size >= 2) {
             scheduleNextMatch(false)
         } else if (waitingPlayers.isEmpty()) {
-            // round finished
             if (winners.size == 1) {
                 finishTournament(winners.first())
             } else {
-                // next round
                 waitingPlayers.addAll(winners)
                 winners.clear()
                 scheduleNextMatch(false)
@@ -196,8 +230,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
             try {
                 for (p in allPlayers) {
                     p.interfaceManager.closeOverlay(false)
-                    p.activeLobby = null
-                    p.activePvPGame = null
+                    p.activeTournament = null
                     p.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
                     p.message("The tournament has ended. You’ve been sent back home.")
                 }
@@ -215,18 +248,18 @@ class TournamentLobby(private val instance: TournamentInstance) {
 
     fun onLogin(player: Player) {
         if (!joinPhase && waitingPlayers.isEmpty() && winners.isEmpty() && losers.isEmpty()) {
-            player.activeLobby = null
-            player.activePvPGame = null
+            player.activeTournament = null
             player.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
+            restoreItems(player)
             return
         }
 
         if (waitingPlayers.contains(player) || winners.contains(player) || losers.contains(player)) {
-            player.activeLobby = this
+            player.activeTournament = null
         } else {
-            player.activeLobby = null
-            player.activePvPGame = null
+            player.activeTournament = null
             player.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
+            restoreItems(player)
         }
     }
 
@@ -235,9 +268,8 @@ class TournamentLobby(private val instance: TournamentInstance) {
         winners.remove(player)
         losers.remove(player)
 
-        player.activeLobby = null
-        player.activePvPGame = null
-        player.setLocation(Settings.HOME_PLAYER_LOCATION) // force-save safe coords
+        player.activeTournament = null
+        player.location = Settings.HOME_PLAYER_LOCATION // force-save safe coords
     }
 
 

@@ -58,6 +58,7 @@ public abstract class CombatScript {
         for (Hit hit : hits) {
             npc.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 10);
             target.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10);
+            target.getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 10);
             if (target instanceof Player p2)
                 p2.handleIncommingHit(hit);
             if (target instanceof Player playerTarget) {

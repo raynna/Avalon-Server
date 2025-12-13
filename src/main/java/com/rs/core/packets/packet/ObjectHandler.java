@@ -309,6 +309,10 @@ public final class ObjectHandler {
                 player.message("This furnace is seriously hot.");
                 return;
             }
+            if (id == 28140 || id == 38695) {
+                player.leaveTournament();
+                return;
+            }
             if (id >= 15477 && id <= 15482 && House.enterHousePortal(player))
                 return;
             if (id == 29405 || id == 29404 || id == 29403) {

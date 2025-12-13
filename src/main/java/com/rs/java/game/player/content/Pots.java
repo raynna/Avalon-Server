@@ -903,7 +903,9 @@ public final class Pots {
 					player.getSkills().getLevel(skillId), player.getSkills().getLevelForXp(skillId)));
 		player.animate(829);
 		player.playLocalSound(4580,  1);
-		if (player.toggles("BREAK_VIALS", false) && dosesLeft == 0) {
+		if (player.toggles("BREAK_VIALS", false) && dosesLeft == 0 && pot.isPotion()) {
+			player.getPackets().sendGameMessage("You have finished your " + item.getName().toLowerCase().replace(" (1)", "").replace(" (2)", "")
+					.replace(" (3)", "").replace(" (4)", "").replace(" (5)", "").replace(" (6)", "") + ".");
 			player.getPackets().sendGameMessage("You smash your vials like the barbarian taught you.");
 		} else if (pot.isFlask() || pot.isPotion()) {
 			player.getPackets().sendGameMessage(pot.effect.drinkMessage != null ? pot.effect.drinkMessage

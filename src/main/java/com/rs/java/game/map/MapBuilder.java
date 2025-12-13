@@ -44,7 +44,7 @@ public final class MapBuilder {
 	}
 
 	public static void onLoginSafeTileCheck(Player player) {
-		if (!regionExists(player.getRegionHash())) {
+		if (!regionExists(player.getRegionId())) {
 			player.setNextWorldTile(Settings.HOME_PLAYER_LOCATION);
 			player.message("Your previous location no longer exists. You've been sent home.");
 		}
@@ -112,7 +112,7 @@ public final class MapBuilder {
 						for (int checkRegionY = regionY - 1; checkRegionY <= regionY
 								+ regionsDistanceY; checkRegionY++) {
 							int hash = getRegionId(checkRegionX, checkRegionY);
-							if (regionExists(hash))
+							if (regionExistsByHash(hash))
 								continue skip;
 
 						}
@@ -137,9 +137,12 @@ public final class MapBuilder {
 		}
 	}
 
-	public static boolean regionExists(int mapHash) {
+	public static boolean regionExistsByHash(int mapHash) {
 		return EXISTING_MAPS.contains(mapHash);
+	}
 
+	public static boolean regionExists(int regionId) {
+		return EXISTING_MAPS.contains(regionId);
 	}
 
 	public static void cutChunk(int chunkX, int chunkY, int plane) {

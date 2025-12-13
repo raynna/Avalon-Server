@@ -23,6 +23,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.combat.NPCCombat;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
+import com.rs.java.game.player.TickManager;
 import com.rs.json.JsonNpcCombatDefinitions;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.combatdata.*;
@@ -603,7 +604,7 @@ public class NPC extends Entity implements Serializable {
         final NpcCombatDefinition defs = getCombatDefinitions();
         resetWalkSteps();
         combat.removeTarget();
-        source.setAttackedByDelay(0);
+        source.getTickManager().remove(TickManager.TickKeys.PJ_TIMER);
         animate(defs.getDeathAnim());
         playSound(defs.getDeathSound(), 1);
         WorldTasksManager.schedule(new WorldTask() {
@@ -729,7 +730,8 @@ public class NPC extends Entity implements Serializable {
             System.out.println("[rollDrops] Using drop table: " + table);
             return table.rollDrops(player);
         }
-        System.out.println("[rollDrops] No drop table found for NPC ID " + this.id);
+        player.message("Missing droptable for npc: " + this.getName() + "("+this.getId()+")");
+        System.out.println("[rollDrops] No drop table found for NPC " + this.getName() + "("+this.getId()+")");
         return Collections.emptyList();
     }
 
@@ -750,7 +752,6 @@ public class NPC extends Entity implements Serializable {
             addAvalonPoints(killer, this, true);
         List<Drop> drops = rollDrops(killer);
         if (drops.isEmpty()) {
-            killer.message("Missing drops for " + getName() + ", id: " + getId());
             return;
         }
 
@@ -1075,7 +1076,7 @@ public class NPC extends Entity implements Serializable {
                                         : getCombatDefinitions().getAggroDistance())
                                 || (!forceMultiAttacked && (!isAtMultiArea() || !player.isAtMultiArea())
                                 && (player.getAttackedBy() != this
-                                && (player.getAttackedByDelay() > Utils.currentTimeMillis())))
+                                && (player.getTickManager().isActive(TickManager.TickKeys.PJ_TIMER))))
                                 || !clipedProjectile(player,
                                 (attackStyle != AttackStyle.RANGE
                                         && attackStyle != AttackStyle.MAGIC))
@@ -1324,8 +1325,11 @@ public class NPC extends Entity implements Serializable {
         return combatData.attackSpeedTicks;
     }
     public int getMaxHit() {
+        if (definition != null) {
+            return definition.getMaxHit();
+        }
         if (combatData == null) {
-            getCombatDefinitions().getMaxHit();
+            return getCombatDefinitions().getMaxHit();
         }
         return combatData.maxHit.getMaxhit() * 10;
     }
@@ -1355,6 +1359,12 @@ public class NPC extends Entity implements Serializable {
     public Hit meleeHit(Entity target, int maxHit, NpcAttackStyle style) {
         int damage = NpcCombatCalculations.getRandomMaxHit(
                 this, maxHit, style, target);
+        return new Hit(this, damage, HitLook.MELEE_DAMAGE);
+    }
+
+    public Hit magicalMelee(Entity target, int maxHit) {
+        int damage = NpcCombatCalculations.getRandomMaxHit(
+                this, maxHit, NpcAttackStyle.MAGICAL_MELEE, target);
         return new Hit(this, damage, HitLook.MELEE_DAMAGE);
     }
 

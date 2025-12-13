@@ -4,4 +4,11 @@
     <option name="BUILD_PROCESS_HEAP_SIZE" value="2048" />
     <bytecodeTargetLevel target="21" />
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="727-source" options="-Xlint:deprecation" />
+      <module name="727-source.main" options="-Xlint:deprecation" />
+      <module name="727-source.test" options="-Xlint:deprecation" />
+    </option>
+  </component>
 </project>

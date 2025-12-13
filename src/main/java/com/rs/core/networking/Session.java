@@ -146,7 +146,11 @@ public class Session {
 	}
 
 	public WorldPacketsEncoder getWorldPackets() {
-		return (WorldPacketsEncoder) encoder;
+		if (encoder instanceof WorldPacketsEncoder worldEncoder)
+			return worldEncoder;
+
+		System.err.println("Warning: getWorldPackets() called while encoder=" + encoder.getClass().getSimpleName());
+		return null;
 	}
 
 	public String getIP() {

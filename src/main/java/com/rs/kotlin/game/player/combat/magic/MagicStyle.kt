@@ -94,14 +94,21 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     override fun getAttackSpeed(): Int {
-        var baseSpeed = when (attacker.combatDefinitions.getSpellBook()) {
-            Spellbook.ANCIENT_ID -> 5
+        return when (attacker.combatDefinitions.getSpellBook()) {
+            Spellbook.MODERN_ID -> {
+                val currentSpell = attacker.temporaryAttributes()["CASTED_SPELL"] as? Spell
+                val weaponId = getCurrentWeaponId(attacker)
+
+                when {
+                    weaponId == Item.getId("item.armadyl_battlestaff") && currentSpell?.id == 99 -> 4
+                    weaponId == Item.getId("item.harmonised_nightmare_staff") -> 4
+                    else -> 5
+                }
+            }
             else -> 5
         }
-        if (getCurrentWeaponId(attacker) == Item.getId("item.armadyl_battlestaff"))
-            baseSpeed = 4
-        return baseSpeed
     }
+
 
     override fun getHitDelay(): Int {
         val distance = Utils.getDistance(attacker, defender)

@@ -871,6 +871,30 @@
     "lastSeen": "2025-09-07T21:00:16.237447400Z",
     "attempts": 1
   },
+  "13820": {
+    "npcId": 13820,
+    "npcName": "Mutated jadinko baby",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2025-12-12T04:25:33.455225300Z",
+    "lastSeen": "2025-12-12T04:25:33.455225300Z",
+    "attempts": 1
+  },
+  "13821": {
+    "npcId": 13821,
+    "npcName": "Mutated jadinko guard",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2025-12-12T04:25:33.524188500Z",
+    "lastSeen": "2025-12-12T04:25:33.524188500Z",
+    "attempts": 1
+  },
+  "13822": {
+    "npcId": 13822,
+    "npcName": "Mutated jadinko male",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2025-12-12T04:25:33.599159600Z",
+    "lastSeen": "2025-12-12T04:25:33.599159600Z",
+    "attempts": 1
+  },
   "14100": {
     "npcId": 14100,
     "npcName": "Vyrewatch guard",

@@ -81,7 +81,7 @@ public class GSONParser {
 			e.printStackTrace();
 			Logger.log("Save", e);
 
-			// cleanup temp file
+			//cleanup temp file
 			try { Files.deleteIfExists(Paths.get(tmpFile)); } catch (IOException ignored) {}
 		}
 	}

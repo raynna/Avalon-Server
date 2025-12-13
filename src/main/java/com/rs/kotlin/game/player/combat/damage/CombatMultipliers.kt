@@ -33,8 +33,10 @@ class CombatMultipliers {
         HEXCREST(Item.getId("item.hexcrest"), Style.MAGIC, Type.SLAYER, 0.15, 0.15),
         FOCUSSIGHT(Item.getId("item.focus_sight"), Style.RANGE, Type.SLAYER, 0.15, 0.15),
         SALVE_AMULET(Item.getId("item.salve_amulet"), Style.MELEE, Type.UNDEAD, 0.15, 0.15),
-        DARKLIGHT(Item.getId("item.darklight"), Style.MELEE, Type.DEMON, 0.60, 0.60),
-        SILVERLIGHT(Item.getId("item.silverlight"), Style.MELEE, Type.DEMON, 0.60, 0.60),
+        EMBERLIGHT(Item.getId("item.emberlight"), Style.MELEE, Type.DEMON, 0.70, 0.70, stack = true),
+        ARCLIGHT(Item.getId("item.arclight"), Style.MELEE, Type.DEMON, 0.70, 0.70, stack = true),
+        DARKLIGHT(Item.getId("item.darklight"), Style.MELEE, Type.DEMON, 0.60, 0.60, stack = true),
+        SILVERLIGHT(Item.getId("item.silverlight"), Style.MELEE, Type.DEMON, 0.60, 0.60, stack = true),
         DRAGONHUNTER_CROSSBOW(
             Item.getId("item.dragon_hunter_crossbow"),
             Style.RANGE, Type.DRAGON,

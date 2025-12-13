@@ -43,7 +43,8 @@ object DropTablesSetup {
             Rscm.lookupList("npc_group.crawling_hand_lv8"),
             Rscm.lookupList("npc_group.crawling_hand_lv11"),
             Rscm.lookupList("npc_group.crawling_hand_lv12"))
-        registerDropTable(BansheeTable.table, Rscm.lookup("npc.banshee_lv23"))
+        registerDropTable(BansheeTable.table,
+            Rscm.lookupList("npc_group.banshee_lv23"),)
         registerDropTable(AbyssalDemonTable.table,
             Rscm.lookupList("npc_group.abyssal_demon"),
             Rscm.lookupList("npc_group.abyssal_demon_lv124"))

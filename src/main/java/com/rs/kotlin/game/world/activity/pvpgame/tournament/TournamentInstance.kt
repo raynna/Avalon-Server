@@ -1,6 +1,10 @@
 package com.rs.kotlin.game.world.activity.pvpgame.tournament
 
 import TournamentLobby
+import com.rs.core.tasks.WorldTask
+import com.rs.core.tasks.WorldTasksManager
+import com.rs.java.game.World
+import com.rs.java.game.WorldObject
 import com.rs.java.game.WorldTile
 import com.rs.java.game.map.MapBuilder
 import com.rs.java.game.player.Player
@@ -26,6 +30,12 @@ class TournamentInstance {
         val tile = getLobby1()
         player.nextWorldTile = tile
         lobby.addPlayer(player)
+        WorldTasksManager.schedule(object : WorldTask() {
+            override fun run() {
+                clearClutter()
+                stop()
+            }
+        }, 1)
     }
 
     fun end(winner: Player?) {
@@ -54,7 +64,57 @@ class TournamentInstance {
         )
     }
 
+    private fun shouldRemove(obj: WorldObject): Boolean {
+        return when (obj.id) {
+            // Rock piles, rubble, bushes
+            83, 14384, 14385, 14386, 14388, 14389, 28195, 28177, 38806, 38807 -> true
 
+            else -> false // keep everything else
+        }
+    }
+
+    private fun debugTile(tile: WorldTile) {
+        for (type in 0..22) {
+            World.getObjectWithType(tile, type)?.let { obj ->
+                println(
+                    "Object @ $tile -> id=${obj.id}, type=${obj.type}, rotation=${obj.rotation}, " +
+                            "x=${obj.x}, y=${obj.y}, plane=${obj.plane}"
+                )
+            }
+        }
+    }
+
+    fun clearClutter() {
+        val area = PvPAreaType.FORSAKEN_QUARRY
+
+        val instSouthWest = getTranslatedTile(area.southWestTile)
+        val instNorthEast = getTranslatedTile(area.northEastTile)
+
+        for (x in instSouthWest.x..instNorthEast.x) {
+            for (y in instSouthWest.y..instNorthEast.y) {
+                for (z in 0..3) {
+                    val tile = WorldTile(x, y, z)
+                    debugTile(tile)
+
+                    World.getStandardFloorObject(tile)?.let { obj ->
+                        if (shouldRemove(obj)) {
+                            World.removeObject(obj)
+                        }
+                    }
+                    World.getObjectWithType(tile, 10)?.let { obj ->
+                        if (shouldRemove(obj)) {
+                            World.removeObject(obj)
+                        }
+                    }
+                    World.getStandardFloorDecoration(tile)?.let { obj ->
+                        if (shouldRemove(obj)) {
+                            World.removeObject(obj)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private fun destroyArea() {
         val area = PvPAreaType.FORSAKEN_QUARRY

@@ -33,6 +33,31 @@ public final class Equipment implements Serializable {
 		this.player = player;
 	}
 
+	public Item[] createSnapshot() {
+		Item[] copy = new Item[items.getSize()];
+		for (int i = 0; i < items.getSize(); i++) {
+			Item item = items.get(i);
+			if (item != null) {
+				copy[i] = new Item(item.getId(), item.getAmount(),
+						item.getMetadata() == null ? null : item.getMetadata().deepCopy());
+			}
+		}
+		return copy;
+	}
+
+	public void restoreSnapshot(Item[] snapshot) {
+		if (snapshot == null) return;
+		reset();
+		for (int i = 0; i < snapshot.length; i++) {
+			Item item = snapshot[i];
+			if (item != null) {
+				items.set(i, item);
+			}
+		}
+		refresh();
+	}
+
+
 	public void init() {
 		player.getPackets().sendItems(94, items);
 		refresh(null);

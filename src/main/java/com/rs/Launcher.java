@@ -129,8 +129,6 @@ public final class Launcher {
 		WeaponScriptsManager.init();
 		CommandRegistry.registerCommands();
 		ShopInitializer.initializeShops();
-		RandomWorldBossHandler.start();
-		TournamentScheduler.INSTANCE.start();
 		JsonNpcCombatDefinitions.INSTANCE.init();
 		JsonNpcSpawns.INSTANCE.init();
 		try {
@@ -155,6 +153,8 @@ public final class Launcher {
                 "World is up and running!",
                 null
         );
+		RandomWorldBossHandler.start();
+		TournamentScheduler.INSTANCE.start();
     }
 
 	private static void addCleanMemoryTask() {

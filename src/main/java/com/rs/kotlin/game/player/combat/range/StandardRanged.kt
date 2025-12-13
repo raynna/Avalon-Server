@@ -234,6 +234,23 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.DRAGON_BOLT
         ),
         RangedWeapon(
+            itemId = Item.getIds("item.zaryte_crossbow"),
+            name = "Zaryte crossbows",
+            weaponStyle = WeaponStyle.CROSSBOW,
+            attackRange = 7,
+            animationId = 4230,
+            ammoType = AmmoType.BOLT,
+            maxAmmoTier = AmmoTier.DRAGON_BOLT,
+            special = SpecialAttack.Combat(
+                energyCost = 75,
+                accuracyMultiplier = 2.0,
+                execute = { context ->
+                    context.attacker.animate(Animation(4230))
+                    context.combat.executeAmmoEffect(context.copy(guaranteedBoltEffect = true))
+                }
+            )
+        ),
+        RangedWeapon(
             itemId = Item.getIds("item.dorgeshuun_c_bow"),
             name = "Dorgeshuun c'bow",
             weaponStyle = WeaponStyle.CROSSBOW,
@@ -1322,15 +1339,17 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
             specialEffect = SpecialEffect(
                 execute = { context ->
+                    val zaryteCbowSpec = context.guaranteedBoltEffect
                     val rawChance = if (context.defender is NPC) 6 else 11
                     val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
-                    if (!Utils.roll(rawChance + extraChance, 100))
+                    if (!Utils.roll(rawChance + extraChance, 100) && !zaryteCbowSpec)
                         return@SpecialEffect false
                     context.defender.gfx(754, 0)
                     context.defender.playSound(2912, 1)
                     context.hits {
-                        val cap = 1000
-                        val damage = (context.defender.hitpoints * 0.2).toInt().coerceAtMost(cap)
+                        val cap = if (zaryteCbowSpec) 1100 else 1000
+                        val boost = if (zaryteCbowSpec) 0.22 else 0.2
+                        val damage = (context.defender.hitpoints * boost).toInt().coerceAtMost(cap)
                         val hit = Hit(context.attacker, damage, HitLook.REGULAR_DAMAGE)
                         addHit(context.defender, hit = hit, delay = context.combat.getHitDelay())
                     }
@@ -1349,12 +1368,13 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
             specialEffect = SpecialEffect(
                 execute = { context ->
+                    val zaryteCbowSpec = context.guaranteedBoltEffect
                     val rawChance = if (context.defender is NPC) 10 else 5
                     val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
-                    if (!Utils.roll(rawChance + extraChance, 100))
+                    if (!Utils.roll(rawChance + extraChance, 100) && !zaryteCbowSpec)
                         return@SpecialEffect false
-
-                    val hit = context.registerDamage(combatType = CombatType.RANGED, damageMultiplier = 1.15)
+                    val boost = if (zaryteCbowSpec) 1.26 else 1.15
+                    val hit = context.registerDamage(combatType = CombatType.RANGED, damageMultiplier = boost)
                     context.defender.gfx(758, 0)
                     context.defender.playSound(2913, 1)
                     context.combat.delayHits(
@@ -1383,18 +1403,20 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
             specialEffect = SpecialEffect(
                 execute = { context ->
+                    val zaryteCbowSpec = context.guaranteedBoltEffect
                     val chance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 12 else 6
                     if (DragonFire.hasFireProtection(context.defender))
                         return@SpecialEffect false
-                    if (!Utils.roll(chance, 100))
+                    if (!Utils.roll(chance, 100) && !zaryteCbowSpec)
                         return@SpecialEffect false
 
-                    val hit = context.rollRanged()
+                    val hit = context.rollRanged(acc = if (zaryteCbowSpec) 2.0 else 1.0)
                     if (hit.damage == 0)
                         return@SpecialEffect false
                     context.defender.gfx(756, 0)
                     context.defender.playSound(2915, 1)
-                    val extraDamage = floor(context.attacker.skills.getLevel(Skills.RANGE) * 0.20).toInt() * 10
+                    val boost = if (zaryteCbowSpec) 0.22 else 0.20
+                    val extraDamage = floor(context.attacker.skills.getLevel(Skills.RANGE) * boost).toInt() * 10
                     hit.damage = min(hit.damage + extraDamage, context.defender.hitpoints);
                     context.combat.delayHits(
                         PendingHit(hit, context.defender, context.combat.getHitDelay())
@@ -1413,12 +1435,13 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
             specialEffect = SpecialEffect(
                 execute = { context ->
+                    val zaryteCbowSpec = context.guaranteedBoltEffect
                     val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
                     val chance = if (context.defender is NPC) 11 else 10
-                    if (!Utils.roll(chance + extraChance, 100))
+                    if (!Utils.roll(chance + extraChance, 100) && !zaryteCbowSpec)
                         return@SpecialEffect false
                     context.hits {
-                        val hit = ranged(damageMultiplier = 1.20, delay = context.combat.getHitDelay())
+                        val hit = ranged(accuracyMultiplier = if (zaryteCbowSpec) 2.0 else 1.0, damageMultiplier = if (zaryteCbowSpec) 1.32 else 1.20, delay = context.combat.getHitDelay())
                         if (hit.damage == 0)
                             return@hits
                         context.defender.gfx(753, 0)
@@ -1449,18 +1472,19 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
             specialEffect = SpecialEffect(
                 execute = { context ->
+                    val zaryteCbowSpec = context.guaranteedBoltEffect
                     val chance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 12 else 6
                     if (DragonFire.hasFireProtection(context.defender))
                         return@SpecialEffect false
-                    if (!Utils.roll(chance, 100))
+                    if (!Utils.roll(chance, 100) && !context.guaranteedBoltEffect)
                         return@SpecialEffect false
-
-                    val hit = context.rollRanged()
+                    val hit = context.rollRanged(acc = if (zaryteCbowSpec) 2.0 else 1.0)
                     if (hit.damage == 0)
                         return@SpecialEffect false
                     context.defender.gfx(756, 0)
                     context.defender.playSound(2915, 1)
-                    val extraDamage = floor(context.attacker.skills.getLevel(Skills.RANGE) * 0.20).toInt() * 10
+                    val boost = if (zaryteCbowSpec) 0.22 else 0.20
+                    val extraDamage = floor(context.attacker.skills.getLevel(Skills.RANGE) * boost).toInt() * 10
                     hit.damage = min(hit.damage + extraDamage, context.defender.hitpoints);
                     context.combat.delayHits(
                         PendingHit(hit, context.defender, context.combat.getHitDelay())
@@ -1479,12 +1503,13 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
             specialEffect = SpecialEffect(
                 execute = { context ->
+                    val zaryteCbowSpec = context.guaranteedBoltEffect
                     val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
                     val chance = if (context.defender is NPC) 11 else 10
-                    if (!Utils.roll(chance + extraChance, 100))
+                    if (!Utils.roll(chance + extraChance, 100) && !zaryteCbowSpec)
                         return@SpecialEffect false
                     context.hits {
-                        val hit = ranged(damageMultiplier = 1.20, delay = context.combat.getHitDelay())
+                        val hit = ranged(damageMultiplier = if (zaryteCbowSpec) 1.32 else 1.20, accuracyMultiplier = if (zaryteCbowSpec) 2.0 else 1.0, delay = context.combat.getHitDelay())
                         if (hit.damage == 0)
                             return@hits
                         context.defender.gfx(753, 0)
@@ -1492,6 +1517,61 @@ object StandardRanged : RangeData() {
                         val heal = hit.damage * 0.25
                         context.attacker.applyHeal(Hit(context.attacker, heal.toInt(), HitLook.HEALED_DAMAGE));
                     }
+                    true
+                }
+            )
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.diamond_dragon_bolts_e"),
+            name = "Diamond dragon bolts (e)",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.DRAGON_BOLT,
+            levelRequired = 64,
+            startGfx = Graphics("graphic.bolt_start", 96),
+            projectileId = Rscm.lookup("graphic.bolt_projectile"),
+            specialEffect = SpecialEffect(
+                execute = { context ->
+                    val zaryteCbowSpec = context.guaranteedBoltEffect
+                    val rawChance = if (context.defender is NPC) 10 else 5
+                    val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
+                    if (!Utils.roll(rawChance + extraChance, 100) && !zaryteCbowSpec)
+                        return@SpecialEffect false
+                    val boost = if (zaryteCbowSpec) 1.26 else 1.15
+                    val hit = context.registerDamage(combatType = CombatType.RANGED, damageMultiplier = boost)
+                    context.defender.gfx(758, 0)
+                    context.defender.playSound(2913, 1)
+                    context.combat.delayHits(
+                        PendingHit(hit, context.defender, context.combat.getHitDelay())
+                    )
+                    true
+                }
+            )
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.ruby_dragon_bolts_e"),
+            name = "Ruby dragon bolts (e)",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.DRAGON_BOLT,
+            levelRequired = 64,
+            startGfx = Graphics("graphic.bolt_start", 96),
+            projectileId = Rscm.lookup("graphic.bolt_projectile"),
+            specialEffect = SpecialEffect(
+                execute = { context ->
+                    val zaryteCbowSpec = context.guaranteedBoltEffect
+                    val rawChance = if (context.defender is NPC) 6 else 11
+                    val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
+                    if (!Utils.roll(rawChance + extraChance, 100) && !zaryteCbowSpec)
+                        return@SpecialEffect false
+                    context.defender.gfx(754, 0)
+                    context.defender.playSound(2912, 1)
+                    context.hits {
+                        val cap = if (zaryteCbowSpec) 1100 else 1000
+                        val boost = if (zaryteCbowSpec) 0.22 else 0.2
+                        val damage = (context.defender.hitpoints * boost).toInt().coerceAtMost(cap)
+                        val hit = Hit(context.attacker, damage, HitLook.REGULAR_DAMAGE)
+                        addHit(context.defender, hit = hit, delay = context.combat.getHitDelay())
+                    }
+                    context.attacker.applyHit(Hit(context.attacker, (context.attacker.hitpoints * 0.1).toInt(), HitLook.REGULAR_DAMAGE))
                     true
                 }
             )

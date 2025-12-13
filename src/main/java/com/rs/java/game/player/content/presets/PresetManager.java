@@ -19,443 +19,445 @@ import com.rs.kotlin.game.world.util.Msg;
 
 public final class PresetManager implements Serializable {
 
-	private static final long serialVersionUID = -2928476953478619103L;
+    private static final long serialVersionUID = -2928476953478619103L;
 
-	private transient Player player;
-	public HashMap<String, Preset> PRESET_SETUPS;
+    private transient Player player;
+    public HashMap<String, Preset> PRESET_SETUPS;
 
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
-	public PresetManager() {
-		PRESET_SETUPS = new HashMap<>();
-	}
+    public PresetManager() {
+        PRESET_SETUPS = new HashMap<>();
+    }
 
-	private int getMaxSize() {
-		return 28;
-	}
+    private int getMaxSize() {
+        return 28;
+    }
 
-	public void reset() {
-		PRESET_SETUPS.clear();
-		Msg.info(player, "All of your sets have been cleared. You now have " + getMaxSize() + " available slots.");
-	}
+    public void reset() {
+        PRESET_SETUPS.clear();
+        Msg.info(player, "All of your sets have been cleared. You now have " + getMaxSize() + " available slots.");
+    }
 
-	public void removePreset(String name) {
-		if (name == "")
-			return;
-		name = name.toLowerCase();
-		if (PRESET_SETUPS.remove(name) == null) {
-			Msg.warn(player, "No set was found for the query: " + name);
-		} else {
-			Msg.success(player, "Successfully removed the set: " + name);
-		}
-	}
+    public void removePreset(String name) {
+        if (name == "")
+            return;
+        name = name.toLowerCase();
+        if (PRESET_SETUPS.remove(name) == null) {
+            Msg.warn(player, "No set was found for the query: " + name);
+        } else {
+            Msg.success(player, "Successfully removed the set: " + name);
+        }
+    }
 
-	public void savePreset(String name) {
-		final int size = PRESET_SETUPS.size(), max = getMaxSize();
-		if (size >= max) {
-			Msg.warn(player, "You were unable to store the set " + name
-					+ " as your maximum capacity (" + max + ") has been reached.");
-			return;
-		}
-		if (name == "")
-			return;
-		name = name.toLowerCase();
-		final Preset set = PRESET_SETUPS.get(name);
-		if (set != null) {
-			Msg.warn(player, "You were unable to store the set " + name + " as it already exists.");
-			return;
-		}
-		final Item[] inventory =
-				player.getInventory().getItems().getItemsCopy(),
-				equipment = player.getEquipment().getItems().getItemsCopy(),
-				runes = player.getRunePouch().getContainerItems();
-		Familiar familiar = player.getFamiliar();
-		Summoning.Pouch pouch = (familiar != null && familiar.getPouch() != null) ? familiar.getPouch() : null;
-		PRESET_SETUPS.put(name,
-				new Preset(name, inventory, equipment, player.getPrayer().isAncientCurses(),
-						player.getCombatDefinitions().spellBook, (Arrays.copyOf(player.getSkills().getXp(), 7)), runes, pouch));
-		Msg.success(player, "You've successfully stored the set " + name + ".");
-	}
+    public void savePreset(String name) {
+        final int size = PRESET_SETUPS.size(), max = getMaxSize();
+        if (size >= max) {
+            Msg.warn(player, "You were unable to store the set " + name
+                    + " as your maximum capacity (" + max + ") has been reached.");
+            return;
+        }
+        if (name == "")
+            return;
+        name = name.toLowerCase();
+        final Preset set = PRESET_SETUPS.get(name);
+        if (set != null) {
+            Msg.warn(player, "You were unable to store the set " + name + " as it already exists.");
+            return;
+        }
+        final Item[] inventory =
+                player.getInventory().getItems().getItemsCopy(),
+                equipment = player.getEquipment().getItems().getItemsCopy(),
+                runes = player.getRunePouch().getContainerItems();
+        Familiar familiar = player.getFamiliar();
+        Summoning.Pouch pouch = (familiar != null && familiar.getPouch() != null) ? familiar.getPouch() : null;
+        PRESET_SETUPS.put(name,
+                new Preset(name, inventory, equipment, player.getPrayer().isAncientCurses(),
+                        player.getCombatDefinitions().spellBook, (Arrays.copyOf(player.getSkills().getXp(), 7)), runes, pouch));
+        Msg.success(player, "You've successfully stored the set " + name + ".");
+    }
 
-	public void printPresets() {
-		final int size = PRESET_SETUPS.size();
-		Msg.info(player, "You have used " + size + "/" + getMaxSize() + " available setups.");
-		if (size > 0) {
-			Msg.info(player, "<col=ff0000>Your available setups are:");
-			for (final String key : PRESET_SETUPS.keySet()) {
-				player.message(key, true);
-			}
-		}
-	}
+    public void printPresets() {
+        final int size = PRESET_SETUPS.size();
+        Msg.info(player, "You have used " + size + "/" + getMaxSize() + " available setups.");
+        if (size > 0) {
+            Msg.info(player, "<col=ff0000>Your available setups are:");
+            for (final String key : PRESET_SETUPS.keySet()) {
+                player.message(key, true);
+            }
+        }
+    }
 
-	private boolean requiresBankItem(Item item) {
-		int id = item.getId();
+    private boolean requiresBankItem(Item item) {
+        int id = item.getId();
 
-		if (!item.getDefinitions().isTradeable() && Settings.ECONOMY_MODE < Settings.FULL_SPAWN) {
-			return true;
-		}
+        if (!item.getDefinitions().isTradeable() && Settings.ECONOMY_MODE < Settings.FULL_SPAWN) {
+            return true;
+        }
 
-		if (Settings.ECONOMY_MODE == Settings.HALF_ECONOMY &&
-				(EconomyPrices.getPrice(id) >= 0 || isSpecialNonSpawnable(item))) {
-			return true;
-		}
+        if (Settings.ECONOMY_MODE == Settings.HALF_ECONOMY &&
+                (EconomyPrices.getPrice(id) >= 0 || isSpecialNonSpawnable(item))) {
+            return true;
+        }
 
-		return Settings.ECONOMY_MODE == Settings.FULL_ECONOMY;
-	}
+        return Settings.ECONOMY_MODE == Settings.FULL_ECONOMY;
+    }
 
-	private boolean isSpecialNonSpawnable(Item item) {
-		int id = item.getId();
-		return id == 995 || id == 12852 || !item.getDefinitions().isTradeable();
-	}
+    private boolean isSpecialNonSpawnable(Item item) {
+        int id = item.getId();
+        return id == 995 || id == 12852 || !item.getDefinitions().isTradeable();
+    }
 
-	/**
-	 * Attempts to take item (or partial) from bank.
-	 * Returns a copy of the item with correct amount, or null if none could be withdrawn.
-	 */
-	private Item takeFromBankOrFail(Player player, Item original) {
-		Item bankItem = player.getBank().getItem(original.getId());
+    /**
+     * Attempts to take item (or partial) from bank.
+     * Returns a copy of the item with correct amount, or null if none could be withdrawn.
+     */
+    private Item takeFromBankOrFail(Player player, Item original) {
+        Item bankItem = player.getBank().getItem(original.getId());
 
-		if (bankItem == null) {
-			Msg.warn(player, "Couldn't find any " + original.getName() + " in your bank.");
-			return null;
-		}
+        if (bankItem == null) {
+            Msg.warn(player, "Couldn't find any " + original.getName() + " in your bank.");
+            return null;
+        }
 
-		int available = bankItem.getAmount();
-		int requested = original.getAmount();
-		int toRemove = Math.min(available, requested);
+        int available = bankItem.getAmount();
+        int requested = original.getAmount();
+        int toRemove = Math.min(available, requested);
 
-		if (toRemove <= 0) {
-			return null;
-		}
+        if (toRemove <= 0) {
+            return null;
+        }
 
-		int[] slot = player.getBank().getItemSlot(original.getId());
-		player.getBank().removeItem2(slot, toRemove, true, false);
+        int[] slot = player.getBank().getItemSlot(original.getId());
+        player.getBank().removeItem2(slot, toRemove, true, false);
 
-		Item copy = new Item(original); // deep copy
-		copy.setAmount(toRemove);
+        Item copy = new Item(original); // deep copy
+        copy.setAmount(toRemove);
 
-		if (available < requested) {
-			Msg.warn(player, "You only had " + available + " x " + original.getName() + " in your bank.");
-		}
+        if (available < requested) {
+            Msg.warn(player, "You only had " + available + " x " + original.getName() + " in your bank.");
+        }
 
-		return copy;
-	}
+        return copy;
+    }
 
-	private void handleForcedCharges(Item item) {
-		if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
-			return; // does not work in full eco
-		}
+    private void handleForcedCharges(Item item) {
+        if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
+            return; // does not work in full eco
+        }
 
-		if (item.isAnyOf("item.dragonfire_shield_charged", "item.dragonfire_shield_uncharged")) {
-			if (item.getMetadata() == null) {
-				item.setMetadata(new DragonFireShieldMetaData(50));
-				if (item.isItem("item.dragonfire_shield_uncharged")) {
-					item.setId(Item.getId("item.dragonfire_shield_charged"));
-				}
-			} else {
-				item.getMetadata().setValue(50);
-			}
-		}
+        if (item.isAnyOf("item.dragonfire_shield_charged", "item.dragonfire_shield_uncharged")) {
+            if (item.getMetadata() == null) {
+                item.setMetadata(new DragonFireShieldMetaData(50));
+                if (item.isItem("item.dragonfire_shield_uncharged")) {
+                    item.setId(Item.getId("item.dragonfire_shield_charged"));
+                }
+            } else {
+                item.getMetadata().setValue(50);
+            }
+        }
 
-		if (item.isAnyOf("item.greater_runic_staff_charged", "item.greater_runic_staff_uncharged")) {
-			if (item.isItem("item.greater_runic_staff_uncharged")) {
-				item.setId(Item.getId("item.greater_runic_staff_charged"));
-			}
-			GreaterRunicStaffMetaData staffData = (GreaterRunicStaffMetaData) item.getMetadata();
-			if (staffData == null) {
-				item.setMetadata(new GreaterRunicStaffMetaData(23, 250));
-			} else if (staffData.getCharges() == 0 || staffData.getSpellId() == -1) {
-				staffData.setSpellId(23);
-				staffData.setValue(250);
-			}
-		}
-	}
+        if (item.isAnyOf("item.greater_runic_staff_charged", "item.greater_runic_staff_uncharged")) {
+            if (item.isItem("item.greater_runic_staff_uncharged")) {
+                item.setId(Item.getId("item.greater_runic_staff_charged"));
+            }
+            GreaterRunicStaffMetaData staffData = (GreaterRunicStaffMetaData) item.getMetadata();
+            if (staffData == null) {
+                item.setMetadata(new GreaterRunicStaffMetaData(23, 250));
+            } else if (staffData.getCharges() == 0 || staffData.getSpellId() == -1) {
+                staffData.setSpellId(23);
+                staffData.setValue(250);
+            }
+        }
+    }
 
-	// --------------------------------------------------------------------
-	// MAIN LOGIC
-	// --------------------------------------------------------------------
+    // --------------------------------------------------------------------
+    // MAIN LOGIC
+    // --------------------------------------------------------------------
 
-	public void loadPreset(String name, Player p2) {
-		loadPreset(name, p2, false);
-	}
+    public void loadPreset(String name, Player p2) {
+        loadPreset(name, p2, false);
+    }
 
-	public void loadPreset(String name, Player p2, boolean force) {
-		if (name.isEmpty()) return;
+    public void loadPreset(String name, Player p2, boolean force) {
+        if (name.isEmpty()) return;
 
-		if (player.inPkingArea()) {
-			Msg.warn(player, "You can't load gear presets in player killing areas.");
-			return;
-		}
-		if (EdgevillePvPControler.isAtPvP(player) && !EdgevillePvPControler.isAtBank(player)) {
-			Msg.warn(player, "You can't load gear presets in pvp area.");
-			return;
-		}
+        if (player.inPkingArea()) {
+            Msg.warn(player, "You can't load gear presets in player killing areas.");
+            return;
+        }
+        if (EdgevillePvPControler.isAtPvP(player) && !EdgevillePvPControler.isAtBank(player)) {
+            Msg.warn(player, "You can't load gear presets in pvp area.");
+            return;
+        }
 
-		name = name.toLowerCase();
-		final Preset set = (p2 != null ? p2.getPresetManager().PRESET_SETUPS.get(name) : PRESET_SETUPS.get(name));
-		if (set == null) {
-			Msg.warn(player, "You were unable to load the set " + name + " as it does not exist.");
-			return;
-		}
+        name = name.toLowerCase();
+        final Preset set = (p2 != null ? p2.getPresetManager().PRESET_SETUPS.get(name) : PRESET_SETUPS.get(name));
+        if (set == null) {
+            Msg.warn(player, "You were unable to load the set " + name + " as it does not exist.");
+            return;
+        }
 
-		// dump existing items to bank if not spawn
-		for (Item item : player.getInventory().getItems().getItemsCopy()) {
-			if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
-				player.getBank().addItem(item, true);
-			}
-		}
-		for (Item item : player.getEquipment().getItems().getItemsCopy()) {
-			if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
-				player.getBank().addItem(item, true);
-			}
-		}
+        // dump existing items to bank if not spawn
+        for (Item item : player.getInventory().getItems().getItemsCopy()) {
+            if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
+                player.getBank().addItem(item, true);
+            }
+        }
+        for (Item item : player.getEquipment().getItems().getItemsCopy()) {
+            if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
+                player.getBank().addItem(item, true);
+            }
+        }
 
-		// reset
-		player.getRunePouch().reset();
-		player.getInventory().reset();
-		player.getEquipment().reset();
-		player.getInventory().refresh();
-		player.getEquipment().refresh();
-		player.getAppearence().generateAppearenceData();
-		player.refreshHitPoints();
-		player.getPrayer().reset();
+        // reset
+        player.getRunePouch().reset();
+        player.getInventory().reset();
+        player.getEquipment().reset();
+        player.getInventory().refresh();
+        player.getEquipment().refresh();
+        player.getAppearence().generateAppearenceData();
+        player.refreshHitPoints();
+        player.getPrayer().reset();
 
-		// restore skills
-		double[] presetXp = set.getLevels();
-		if (presetXp != null && presetXp.length >= 7) {
-			for (int i = 0; i < 7; i++) {
-				player.getSkills().setXp(i, presetXp[i]);
-				player.getSkills().set(i, player.getSkills().getLevelForXp(i));
-				player.getSkills().refresh(i);
-			}
-		}
+        // restore skills
+        double[] presetXp = set.getLevels();
+        if (presetXp != null && presetXp.length >= 7) {
+            for (int i = 0; i < 7; i++) {
+                player.getSkills().setXp(i, presetXp[i]);
+                player.getSkills().set(i, player.getSkills().getLevelForXp(i));
+                player.getSkills().refresh(i);
+            }
+        }
 
-		// equipment
-		Item[] data = set.getEquipment();
-		if (data != null) {
-			skip: for (int i = 0; i < data.length; i++) {
-				Item item = data[i];
-				if (item == null) continue;
+        // equipment
+        Item[] data = set.getEquipment();
+        if (data != null) {
+            skip:
+            for (int i = 0; i < data.length; i++) {
+                Item item = data[i];
+                if (item == null) continue;
 
-				// requirements
-				Map<Integer, Integer> requirements = item.getDefinitions().getWearingSkillRequiriments();
-				if (requirements != null) {
-					for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
-						int skillId = req.getKey(), level = req.getValue();
-						if (player.getSkills().getLevelForXp(skillId) < level) {
-							Msg.warn(player, "You were unable to equip your " + item.getName().toLowerCase()
-									+ ", as you don't meet the requirements to wear them.");
-							continue skip;
-						}
-					}
-				}
+                // requirements
+                Map<Integer, Integer> requirements = item.getDefinitions().getWearingSkillRequiriments();
+                if (requirements != null) {
+                    for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
+                        int skillId = req.getKey(), level = req.getValue();
+                        if (player.getSkills().getLevelForXp(skillId) < level) {
+                            Msg.warn(player, "You were unable to equip your " + item.getName().toLowerCase()
+                                    + ", as you don't meet the requirements to wear them.");
+                            continue skip;
+                        }
+                    }
+                }
 
-				Item toUse = item;
-				if (!force && requiresBankItem(item)) {
-					toUse = takeFromBankOrFail(player, item);
-					if (toUse == null) continue;
-				}
+                Item toUse = item;
+                if (!force && requiresBankItem(item)) {
+                    toUse = takeFromBankOrFail(player, item);
+                    if (toUse == null) continue;
+                }
 
-				handleForcedCharges(toUse);
-				player.getEquipment().getItems().set(i, toUse);
-				player.getEquipment().refresh(i);
-			}
-		}
+                handleForcedCharges(toUse);
+                player.getEquipment().getItems().set(i, toUse);
+                player.getEquipment().refresh(i);
+            }
+        }
 
-		// inventory
-		data = set.getInventory();
-		if (data != null) {
-			for (int i = 0; i < data.length; i++) {
-				Item item = data[i];
-				if (item == null) {
-					player.getInventory().addItem(0, 1);
-					continue;
-				}
+        // inventory
+        data = set.getInventory();
+        if (data != null) {
+            for (int i = 0; i < data.length; i++) {
+                Item item = data[i];
+                if (item == null) {
+                    player.getInventory().addItem(0, 1);
+                    continue;
+                }
 
-				Item toUse = item;
-				if (!force && requiresBankItem(item)) {
-					toUse = takeFromBankOrFail(player, item);
-					if (toUse == null) {
-						player.getInventory().addItem(0, 1);
-						continue;
-					}
-				}
+                Item toUse = item;
+                if (!force && requiresBankItem(item)) {
+                    toUse = takeFromBankOrFail(player, item);
+                    if (toUse == null) {
+                        player.getInventory().addItem(0, 1);
+                        continue;
+                    }
+                }
 
-				handleForcedCharges(toUse);
-				player.getInventory().addItem(toUse);
-			}
-		}
+                handleForcedCharges(toUse);
+                player.getInventory().addItem(toUse);
+            }
+        }
 
-		// runes
-		data = set.getRunes();
-		if (data != null) {
-			for (Item item : data) {
-				if (item != null) {
-					player.getRunePouch().add(item);
-					player.getRunePouch().shift();
-				}
-			}
-		}
+        // runes
+        data = set.getRunes();
+        if (data != null) {
+            for (Item item : data) {
+                if (item != null) {
+                    player.getRunePouch().add(item);
+                    player.getRunePouch().shift();
+                }
+            }
+        }
 
-		// familiar
-		Summoning.Pouch pouch = set.getFamiliar();
-		if (pouch != null) {
-			Item pouchItem = new Item(pouch.getRealPouchId());
-			if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
-				if (!player.getBank().containsOneItem(pouch.getRealPouchId())) {
-					Msg.warn(player, "Couldn't find " + pouchItem.getName() + " in your bank.");
-				} else if (Summoning.spawnFamiliar(player, pouch, true)) {
-					player.getBank().removeItem(pouch.getRealPouchId());
-				}
-			} else {
-				Summoning.spawnFamiliar(player, pouch, true);
-			}
-		}
+        // familiar
+        Summoning.Pouch pouch = set.getFamiliar();
+        if (pouch != null) {
+            Item pouchItem = new Item(pouch.getRealPouchId());
+            if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
+                if (!player.getBank().containsOneItem(pouch.getRealPouchId())) {
+                    Msg.warn(player, "Couldn't find " + pouchItem.getName() + " in your bank.");
+                } else if (Summoning.spawnFamiliar(player, pouch, true)) {
+                    player.getBank().removeItem(pouch.getRealPouchId());
+                }
+            } else {
+                Summoning.spawnFamiliar(player, pouch, true);
+            }
+        }
 
-		player.getInventory().deleteItem(0, 28);
-		player.getCombatDefinitions().setSpellBook(set.getSpellBook(), false);
-		player.getPrayer().setPrayerBook(set.isAncientCurses());
-		player.getAppearence().generateAppearenceData();
-		player.getSkills().switchXPPopup(true);
-		player.getSkills().switchXPPopup(true);
-		CommandRegistry.execute(player, "heal");
-		Msg.info(player, "Loaded setup: " + name + ".");
-	}
+        player.getInventory().deleteItem(0, 28);
+        player.getCombatDefinitions().setSpellBook(set.getSpellBook(), false);
+        player.getPrayer().setPrayerBook(set.isAncientCurses());
+        player.getAppearence().generateAppearenceData();
+        player.getSkills().switchXPPopup(true);
+        player.getSkills().switchXPPopup(true);
+        CommandRegistry.execute(player, "heal");
+        Msg.info(player, "Loaded setup: " + name + ".");
+    }
 
-	public void copyPreset(Player p2) {
-		if (player.inPkingArea()) {
-			Msg.warn(player, "You can't load gear presets in player killing areas.");
-			return;
-		}
-		if (EdgevillePvPControler.isAtPvP(player) && !EdgevillePvPControler.isAtBank(player)) {
-			Msg.warn(player, "You can't load gear presets in pvp area.");
-			return;
-		}
+    public void copyPreset(Player p2) {
+        if (player.inPkingArea()) {
+            Msg.warn(player, "You can't load gear presets in player killing areas.");
+            return;
+        }
+        if (EdgevillePvPControler.isAtPvP(player) && !EdgevillePvPControler.isAtBank(player)) {
+            Msg.warn(player, "You can't load gear presets in pvp area.");
+            return;
+        }
 
-		// dump current items to bank if not spawn
-		for (Item item : player.getInventory().getItems().getItemsCopy()) {
-			if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
-				player.getBank().addItem(item, true);
-			}
-		}
-		for (Item item : player.getEquipment().getItems().getItemsCopy()) {
-			if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
-				player.getBank().addItem(item, true);
-			}
-		}
+        // dump current items to bank if not spawn
+        for (Item item : player.getInventory().getItems().getItemsCopy()) {
+            if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
+                player.getBank().addItem(item, true);
+            }
+        }
+        for (Item item : player.getEquipment().getItems().getItemsCopy()) {
+            if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
+                player.getBank().addItem(item, true);
+            }
+        }
 
-		// dump charged items
-		for (Map.Entry<Integer, Item[]> entry : player.getStaffCharges().entrySet()) {
-			if (entry.getValue() != null) {
-				for (Item item : entry.getValue()) {
-					if (item != null) {
-						Msg.info(player, "Added " + item.getName() + " x " + item.getAmount() + " to your bank.");
-						player.getBank().addItem(item, true);
-					}
-				}
-			}
-		}
+        // dump charged items
+        for (Map.Entry<Integer, Item[]> entry : player.getStaffCharges().entrySet()) {
+            if (entry.getValue() != null) {
+                for (Item item : entry.getValue()) {
+                    if (item != null) {
+                        Msg.info(player, "Added " + item.getName() + " x " + item.getAmount() + " to your bank.");
+                        player.getBank().addItem(item, true);
+                    }
+                }
+            }
+        }
 
-		// reset
-		player.getRunePouch().reset();
-		player.getInventory().reset();
-		player.getEquipment().reset();
-		player.getInventory().refresh();
-		player.getEquipment().refresh();
-		player.getAppearence().generateAppearenceData();
-		player.refreshHitPoints();
-		player.getPrayer().reset();
+        // reset
+        player.getRunePouch().reset();
+        player.getInventory().reset();
+        player.getEquipment().reset();
+        player.getInventory().refresh();
+        player.getEquipment().refresh();
+        player.getAppearence().generateAppearenceData();
+        player.refreshHitPoints();
+        player.getPrayer().reset();
 
-		// copy combat-related skills
-		for (int skillId = 0; skillId < 6; skillId++) {
-			double xp = p2.getSkills().getXp(skillId);
-			player.getSkills().setXp(skillId, xp);
-			player.getSkills().set(skillId, p2.getSkills().getLevel(skillId));
-			player.getSkills().refresh(skillId);
-		}
+        // copy combat-related skills
+        for (int skillId = 0; skillId < 6; skillId++) {
+            double xp = p2.getSkills().getXp(skillId);
+            player.getSkills().setXp(skillId, xp);
+            player.getSkills().set(skillId, p2.getSkills().getLevel(skillId));
+            player.getSkills().refresh(skillId);
+        }
 
-		// equipment
-		Item[] data = p2.getEquipment().getItems().getContainerItems();
-		if (data != null) {
-			skip: for (int i = 0; i < data.length; i++) {
-				Item item = data[i];
-				if (item == null) continue;
+        // equipment
+        Item[] data = p2.getEquipment().getItems().getContainerItems();
+        if (data != null) {
+            skip:
+            for (int i = 0; i < data.length; i++) {
+                Item item = data[i];
+                if (item == null) continue;
 
-				// requirements
-				Map<Integer, Integer> requirements = item.getDefinitions().getWearingSkillRequiriments();
-				if (requirements != null) {
-					for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
-						int skillId = req.getKey(), level = req.getValue();
-						if (player.getSkills().getLevelForXp(skillId) < level) {
-							Msg.warn(player, "You were unable to equip your " + item.getName().toLowerCase()
-									+ ", as you don't meet the requirements to wear them.");
-							continue skip;
-						}
-					}
-				}
+                // requirements
+                Map<Integer, Integer> requirements = item.getDefinitions().getWearingSkillRequiriments();
+                if (requirements != null) {
+                    for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
+                        int skillId = req.getKey(), level = req.getValue();
+                        if (player.getSkills().getLevelForXp(skillId) < level) {
+                            Msg.warn(player, "You were unable to equip your " + item.getName().toLowerCase()
+                                    + ", as you don't meet the requirements to wear them.");
+                            continue skip;
+                        }
+                    }
+                }
 
-				Item toUse = item;
-				if (requiresBankItem(item)) {
-					toUse = takeFromBankOrFail(player, item);
-					if (toUse == null) continue;
-				}
+                Item toUse = item;
+                if (requiresBankItem(item)) {
+                    toUse = takeFromBankOrFail(player, item);
+                    if (toUse == null) continue;
+                }
 
-				handleForcedCharges(toUse);
-				player.getEquipment().getItems().set(i, toUse);
-				player.getEquipment().refresh(i);
-			}
-		}
+                handleForcedCharges(toUse);
+                player.getEquipment().getItems().set(i, toUse);
+                player.getEquipment().refresh(i);
+            }
+        }
 
-		// inventory
-		data = p2.getInventory().getItems().getContainerItems();
-		if (data != null) {
-			for (int i = 0; i < data.length; i++) {
-				Item item = data[i];
-				if (item == null) {
-					player.getInventory().addItem(0, 1);
-					continue;
-				}
+        // inventory
+        data = p2.getInventory().getItems().getContainerItems();
+        if (data != null) {
+            for (int i = 0; i < data.length; i++) {
+                Item item = data[i];
+                if (item == null) {
+                    player.getInventory().addItem(0, 1);
+                    continue;
+                }
 
-				Item toUse = item;
-				if (requiresBankItem(item)) {
-					toUse = takeFromBankOrFail(player, item);
-					if (toUse == null) {
-						player.getInventory().addItem(0, 1);
-						continue;
-					}
-				}
+                Item toUse = item;
+                if (requiresBankItem(item)) {
+                    toUse = takeFromBankOrFail(player, item);
+                    if (toUse == null) {
+                        player.getInventory().addItem(0, 1);
+                        continue;
+                    }
+                }
 
-				handleForcedCharges(toUse);
-				player.getInventory().addItem(toUse);
-			}
-		}
+                handleForcedCharges(toUse);
+                player.getInventory().addItem(toUse);
+            }
+        }
 
-		// familiar
-		Familiar familiar = p2.getFamiliar();
-		if (familiar != null && familiar.getPouch() != null) {
-			Summoning.Pouch pouch = familiar.getPouch();
-			Item pouchItem = new Item(pouch.getRealPouchId());
-			if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
-				if (!player.getBank().containsOneItem(pouch.getRealPouchId())) {
-					Msg.warn(player, "Couldn't find " + pouchItem.getName() + " in your bank.");
-				} else if (Summoning.spawnFamiliar(player, pouch, true)) {
-					player.getBank().removeItem(pouch.getRealPouchId());
-				}
-			} else {
-				Summoning.spawnFamiliar(player, pouch, true);
-			}
-		}
-		player.getInventory().deleteItem(0, 28);
-		player.inventory.refresh();
-		player.equipment.refresh();
-		player.getCombatDefinitions().setSpellBook(p2.combatDefinitions.getSpellId(), false);
-		player.getPrayer().setPrayerBook(p2.getPrayer().isAncientCurses());
-		player.getAppearence().generateAppearenceData();
-		player.getSkills().switchXPPopup(true);
-		player.getSkills().switchXPPopup(true);
-		CommandRegistry.execute(player, "heal");
-		Msg.info(player, "You copied " + p2.getDisplayName() + " current preset.");
-	}
+        // familiar
+        Familiar familiar = p2.getFamiliar();
+        if (familiar != null && familiar.getPouch() != null) {
+            Summoning.Pouch pouch = familiar.getPouch();
+            Item pouchItem = new Item(pouch.getRealPouchId());
+            if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
+                if (!player.getBank().containsOneItem(pouch.getRealPouchId())) {
+                    Msg.warn(player, "Couldn't find " + pouchItem.getName() + " in your bank.");
+                } else if (Summoning.spawnFamiliar(player, pouch, true)) {
+                    player.getBank().removeItem(pouch.getRealPouchId());
+                }
+            } else {
+                Summoning.spawnFamiliar(player, pouch, true);
+            }
+        }
+        player.getInventory().deleteItem(0, 28);
+        player.inventory.refresh();
+        player.equipment.refresh();
+        player.getCombatDefinitions().setSpellBook(p2.combatDefinitions.getSpellId(), false);
+        player.getPrayer().setPrayerBook(p2.getPrayer().isAncientCurses());
+        player.getAppearence().generateAppearenceData();
+        player.getSkills().switchXPPopup(true);
+        player.getSkills().switchXPPopup(true);
+        CommandRegistry.execute(player, "heal");
+        Msg.info(player, "You copied " + p2.getDisplayName() + " current preset.");
+    }
 }
