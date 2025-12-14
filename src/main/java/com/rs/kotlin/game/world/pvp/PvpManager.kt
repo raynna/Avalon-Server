@@ -285,13 +285,13 @@ object PvpManager {
     }
 
     private fun ensureInterfaceOpen(player: Player) {
-        val tabId = if (player.interfaceManager.isResizableScreen) 42 else 11
+        val tabId = if (player.interfaceManager.isResizableScreen) 42 else 25
         if (!player.interfaceManager.containsInterface(INTERFACE_ID))
             player.interfaceManager.sendTab(tabId, INTERFACE_ID)
     }
 
     private fun closeInterface(player: Player) {
-        val tabId = if (player.interfaceManager.isResizableScreen) 42 else 11
+        val tabId = if (player.interfaceManager.isResizableScreen) 42 else 25
         player.interfaceManager.closeTab(tabId)
     }
 
