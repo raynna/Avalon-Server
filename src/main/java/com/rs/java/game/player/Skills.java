@@ -1104,7 +1104,7 @@ public final class Skills implements Serializable {
             exp *= 1;
         } else {
             if ((skill >= Skills.ATTACK && skill <= Skills.RANGE) || skill == Skills.MAGIC) {
-                if (player.getTemporaryTarget() instanceof NPC npc && (npc.getId() == Rscm.lookup("npc.dummy") || npc.getId() == Rscm.lookup("npc.magic_dummy"))) {
+                if (player.getTemporaryTarget() instanceof NPC npc && (npc.getId() == Rscm.lookup("npc.melee_dummy") || npc.getId() == Rscm.lookup("npc.magic_dummy"))) {
                     exp *= 1;
                 } else if (player.getTemporaryTarget() != null && player.inPkingArea()
                         && !(player.getTemporaryTarget() instanceof NPC))
