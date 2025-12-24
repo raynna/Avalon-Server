@@ -29,6 +29,8 @@ import com.rs.java.game.item.itemdegrading.ChargesManager;
 import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.minigames.clanwars.RequestController;
+import com.rs.java.game.minigames.clanwars.WarControler;
+import com.rs.java.game.minigames.duel.DuelArena;
 import com.rs.java.game.minigames.duel.DuelRules;
 import com.rs.java.game.minigames.lividfarm.LividFarm;
 import com.rs.java.game.minigames.warriorguild.WarriorsGuild;
@@ -52,6 +54,7 @@ import com.rs.java.game.player.actions.skills.farming.FarmingManager;
 import com.rs.java.game.player.actions.skills.hunter.HunterImplings;
 import com.rs.java.game.player.actions.skills.slayer.SlayerManager;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
+import com.rs.java.game.player.content.WildernessArtefacts.Artefacts;
 import com.rs.java.game.player.content.clans.ClanMember;
 import com.rs.java.game.player.content.clans.ClansManager;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
@@ -69,8 +72,22 @@ import com.rs.java.game.player.content.tasksystem.TaskManager;
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager;
 import com.rs.java.game.player.content.unlockables.UnlockableItems;
 import com.rs.java.game.player.controlers.Controler;
+import com.rs.java.game.player.controlers.CorpBeastControler;
+import com.rs.java.game.player.controlers.CrucibleControler;
+import com.rs.java.game.player.controlers.DTControler;
 import com.rs.java.game.player.controlers.EdgevillePvPControler;
+import com.rs.java.game.player.controlers.FightCaves;
+import com.rs.java.game.player.controlers.FightKiln;
+import com.rs.java.game.player.controlers.GodWars;
+import com.rs.java.game.player.controlers.NomadsRequiem;
+import com.rs.java.game.player.controlers.QueenBlackDragonController;
 import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controlers.ZGDControler;
+import com.rs.java.game.player.controlers.castlewars.CastleWarsPlaying;
+import com.rs.java.game.player.controlers.castlewars.CastleWarsWaiting;
+import com.rs.java.game.player.controlers.fightpits.FightPitsArena;
+import com.rs.java.game.player.controlers.pestcontrol.PestControlGame;
+import com.rs.java.game.player.controlers.pestcontrol.PestControlLobby;
 import com.rs.java.game.player.cutscenes.Cutscene;
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.core.networking.Session;
@@ -99,6 +116,7 @@ import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentInstance;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
+import com.rs.kotlin.game.world.projectile.ProjectileType;
 import com.rs.kotlin.game.world.projectile.QueuedProjectile;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 import com.rs.kotlin.game.world.pvp.SafeZoneService;
@@ -5065,7 +5083,6 @@ public class Player extends Entity {
     }
 
     public boolean canUseCommand() {
-        /*
         if (inPkingArea() || getControlerManager().getControler() instanceof FightPitsArena || getControlerManager().getControler() instanceof CorpBeastControler || getControlerManager().getControler() instanceof PestControlLobby || getControlerManager().getControler() instanceof PestControlGame || getControlerManager().getControler() instanceof ZGDControler || getControlerManager().getControler() instanceof GodWars || getControlerManager().getControler() instanceof DTControler || getControlerManager().getControler() instanceof DuelArena || getControlerManager().getControler() instanceof CastleWarsPlaying || getControlerManager().getControler() instanceof CastleWarsWaiting || getControlerManager().getControler() instanceof FightCaves || getControlerManager().getControler() instanceof FightKiln || FfaZone.inPvpArea(this) || getControlerManager().getControler() instanceof NomadsRequiem || getControlerManager().getControler() instanceof QueenBlackDragonController || getControlerManager().getControler() instanceof WarControler) {
             return false;
         }
@@ -5073,7 +5090,6 @@ public class Player extends Entity {
             CrucibleControler controler = (CrucibleControler) getControlerManager().getControler();
             return !controler.isInside();
         }
-        */
         return true;
     }
 
