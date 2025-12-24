@@ -10,6 +10,7 @@ import com.rs.java.game.player.Ranks.Rank;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.AccountCreation;
 
 public class FriendsIgnores implements Serializable {
 

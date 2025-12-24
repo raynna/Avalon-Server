@@ -5,7 +5,7 @@ import com.rs.core.cache.defintions.ClientScriptMap;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
-import com.rs.java.game.player.AccountCreation;
+import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.Utils;

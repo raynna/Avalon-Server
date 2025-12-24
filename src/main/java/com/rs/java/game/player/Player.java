@@ -47,6 +47,7 @@ import com.rs.java.game.player.content.*;
 import com.rs.java.game.player.prayer.*;
 import com.rs.java.game.player.Ranks.Rank;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.kotlin.game.player.action.NewActionManager;
 import com.rs.java.game.player.actions.skills.construction.House;
 import com.rs.java.game.player.actions.skills.farming.FarmingManager;

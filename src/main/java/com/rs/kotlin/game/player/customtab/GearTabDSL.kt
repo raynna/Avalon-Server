@@ -2,7 +2,7 @@
 package com.rs.kotlin.game.player.customtab
 
 import com.rs.java.game.World
-import com.rs.java.game.player.AccountCreation
+import com.rs.kotlin.game.player.AccountCreation
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.content.presets.Preset
 import com.rs.java.utils.Utils

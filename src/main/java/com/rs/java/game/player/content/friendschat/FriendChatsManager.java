@@ -11,7 +11,7 @@ import com.rs.Settings;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.World;
 import com.rs.java.game.minigames.clanwars.ClanWars;
-import com.rs.java.game.player.AccountCreation;
+import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.FriendsIgnores;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.QuickChatMessage;
