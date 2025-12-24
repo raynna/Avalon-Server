@@ -19,7 +19,7 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
-import com.rs.java.game.player.AccountCreation;
+import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.combat.PlayerCombat;

@@ -26,7 +26,7 @@ import com.rs.java.game.minigames.duel.DuelArena;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.npc.familiar.Familiar.SpecialAttack;
-import com.rs.java.game.player.AccountCreation;
+import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Inventory;
 import com.rs.java.game.player.LogicPacket;
 import com.rs.java.game.player.Player;
@@ -77,7 +77,6 @@ import com.rs.java.utils.huffman.Huffman;
 import com.rs.kotlin.game.player.combat.CombatAction;
 import com.rs.kotlin.game.player.combat.magic.*;
 import com.rs.kotlin.game.player.command.CommandRegistry;
-import com.rs.kotlin.game.player.shop.ShopSystem;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
 /**

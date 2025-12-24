@@ -3,7 +3,7 @@ package com.rs.core.packets.decode;
 import com.rs.Settings;
 import com.rs.core.cache.Cache;
 import com.rs.java.game.World;
-import com.rs.java.game.player.AccountCreation;
+import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Player;
 import com.rs.core.packets.InputStream;
 import com.rs.core.networking.Session;
@@ -86,6 +86,7 @@ public final class LoginPacketsDecoder extends Decoder {
 					}
 				}
 
+				// Todo(Mujtaba): change the encryption algorithm, its not very secure.
 				String password = securePayload.readString();
 				password = Encrypt.encryptSHA1(password);
 				

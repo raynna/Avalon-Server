@@ -28,7 +28,7 @@ import com.rs.kotlin.game.npc.drops.DropTablesSetup;
 import com.rs.java.game.objects.GlobalObjectAddition;
 import com.rs.java.game.objects.GlobalObjectDeletion;
 import com.rs.java.game.objects.ObjectPluginLoader;
-import com.rs.java.game.player.AccountCreation;
+import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.combat.weaponscript.WeaponScriptsManager;
 import com.rs.java.game.player.actions.skills.fishing.FishingSpotsHandler;
@@ -131,6 +131,7 @@ public final class Launcher {
 		ShopInitializer.initializeShops();
 		JsonNpcCombatDefinitions.INSTANCE.init();
 		JsonNpcSpawns.INSTANCE.init();
+		AccountCreation.init();
 		try {
 			ServerChannelHandler.init();
 		} catch (Throwable e) {
