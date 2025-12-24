@@ -3,7 +3,7 @@ package com.rs.java.utils;
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.rs.java.game.player.AccountCreation;
+import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Player;
 
 public final class IPBanL {

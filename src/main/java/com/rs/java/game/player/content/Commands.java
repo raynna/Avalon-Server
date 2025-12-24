@@ -51,6 +51,7 @@ import com.rs.java.utils.Encrypt;
 import com.rs.java.utils.IPBanL;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.AccountCreation;
 
 public final class Commands {
 

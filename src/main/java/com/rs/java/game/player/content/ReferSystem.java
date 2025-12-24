@@ -1,7 +1,7 @@
 package com.rs.java.game.player.content;
 
 import com.rs.java.game.World;
-import com.rs.java.game.player.AccountCreation;
+import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.randomevent.AntiBot;
 import com.rs.java.utils.Utils;
@@ -82,11 +82,11 @@ public class ReferSystem {
 	}
 
 	private static void Reset(Player p2, Player player, boolean Successful) {
-		p2 = (Player) AccountCreation.loadPlayer(player.getReferrer());
+		p2 = AccountCreation.loadPlayer(player.getReferrer());
 		if (player.isActive()) {
 			player.getInterfaceManager().sendTaskSystem();
 		} else {
-			player = (Player) AccountCreation.loadPlayer(p2.getReferred());
+			player = AccountCreation.loadPlayer(p2.getReferred());
 			player.getInterfaceManager().sendTaskSystem();
 		}
 		p2.putReferred(null);
