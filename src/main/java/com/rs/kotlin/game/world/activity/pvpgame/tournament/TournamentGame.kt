@@ -6,7 +6,7 @@ import com.rs.core.tasks.WorldTasksManager
 import com.rs.core.thread.CoresManager
 import com.rs.java.game.ForceTalk
 import com.rs.java.game.World
-import com.rs.java.game.player.AccountCreation
+import com.rs.kotlin.game.player.AccountCreation
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.actions.combat.Magic
 import com.rs.java.utils.Logger

@@ -2,7 +2,7 @@ package com.rs.kotlin.game.world.activity.pvpgame.lms
 
 import com.rs.java.game.World
 import com.rs.java.game.WorldTile
-import com.rs.java.game.player.AccountCreation
+import com.rs.kotlin.game.player.AccountCreation
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.actions.combat.Magic
 import com.rs.java.utils.Utils

@@ -13,8 +13,8 @@ import com.rs.discord.DiscordAnnouncer;
 import com.rs.java.game.World;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.kotlin.game.player.command.CommandRegistry;
-import com.rs.kotlin.game.player.command.commands.CommandsCommand;
 
 /**
  * 
