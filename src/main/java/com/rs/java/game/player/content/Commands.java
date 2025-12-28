@@ -439,7 +439,7 @@ public final class Commands {
                     return true;
                 case "skull":
                     player.skullDelay = 2000; // 20minutes
-                    player.skullId = 0;
+                    player.skullId = Integer.valueOf(cmd[1]);
                     player.getAppearence().generateAppearenceData();
                     return true;
                 case "score":
@@ -1520,7 +1520,7 @@ public final class Commands {
                     return true;
                 case "skull":
                     player.skullDelay = 2000; // 20minutes
-                    player.skullId = 0;
+                    player.skullId = Integer.valueOf(cmd[1]);
                     player.getAppearence().generateAppearenceData();
                     return true;
                 case "direction":

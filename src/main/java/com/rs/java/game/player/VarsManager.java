@@ -68,6 +68,11 @@ public class VarsManager {
 		setVarBit(id, value, 0x1 | 0x2, false);
 	}
 
+
+	public void sendVarBit(String varbit, int value) {
+		int id = Rscm.lookup(varbit);
+		setVarBit(id, value, 0x1, false);
+	}
 	public void sendVarBit(int id, int value) {
 		setVarBit(id, value, 0x1, false);
 	}

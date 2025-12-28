@@ -4,12 +4,16 @@ import com.rs.kotlin.Rscm;
 
 public final class Graphics {
 
-	public static int getGraphics(String name) {
-		String key = name.startsWith("graphic.") ? name : "graphic." + name;
-		return Rscm.lookup(key);
+	private int id, height, speed, rotation;
+
+
+	private static String normalizeGraphicKey(String graphic) {
+		return graphic.startsWith("graphic.") ? graphic : "graphic." + graphic;
 	}
 
-	private int id, height, speed, rotation;
+	public static int getGraphics(String name) {
+		return Rscm.lookup(normalizeGraphicKey(name));
+	}
 
 	public Graphics(int id) {
 		this(id, 0, 0, 0);
@@ -24,19 +28,15 @@ public final class Graphics {
 	}
 
 	public Graphics(String graphic) {
-		this(graphic, 0, 0, 0);
+		this(getGraphics(graphic), 0, 0, 0);
 	}
 
 	public Graphics(String graphic, int height) {
-		this(graphic, 0, height, 0);
+		this(getGraphics(graphic), 0, height, 0);
 	}
 
 	public Graphics(String graphic, int speed, int height, int rotation) {
-		String key = graphic.startsWith("graphic.") ? graphic : "graphic." + graphic;
-		this.id = Rscm.lookup(key);
-		this.speed = speed;
-		this.height = height;
-		this.rotation = rotation;
+		this(getGraphics(graphic), speed, height, rotation);
 	}
 
 	public Graphics(int id, int speed, int height, int rotation) {

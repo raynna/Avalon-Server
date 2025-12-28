@@ -132,6 +132,8 @@ public class WorldPacketsEncoder extends Encoder {
 			flag |= 0x2;
 		if (player.isZoom())
 			flag |= 0x4;
+		if (player.isForceLeftClick())
+			flag |= 0x8;
 		stream.writeByte(flag);
 		session.write(stream);
 	}

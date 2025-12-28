@@ -5715,6 +5715,11 @@ public class Player extends Entity {
         getPackets().sendCustomPacket161();
     }
 
+    public void switchLeftClickAttack() {
+        forceLeftClick = !forceLeftClick;
+        getPackets().sendCustomPacket161();
+    }
+
     private boolean slowDrag;
 
     public boolean isSlowDrag() {
@@ -5734,6 +5739,12 @@ public class Player extends Entity {
     public void setGameType(String name) {
         gameType = name;
         getPackets().sendDeveloperPacket();
+    }
+
+    private boolean forceLeftClick;
+
+    public boolean isForceLeftClick() {
+        return forceLeftClick;
     }
 
     private boolean zoom;

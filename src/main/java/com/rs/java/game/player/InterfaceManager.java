@@ -443,6 +443,11 @@ public class InterfaceManager {
 		return openedinterfaces.remove(tabId) != null;
 	}
 
+	public void sendFadingInterface(String inter) {
+		int id = Rscm.lookup(inter);
+		sendFadingInterface(inter);
+	}
+
 	public void sendFadingInterface(int backgroundInterface) {
 		if (hasRezizableScreen())
 			player.getPackets().sendInterface(true, RESIZABLE_WINDOW_ID, 12, backgroundInterface);

@@ -11,13 +11,16 @@ public final class Animation {
 		this(id, 0);
 	}
 
+	private static String normalizeAnimationKey(String animation) {
+		return animation.startsWith("animation.") ? animation : "animation." + animation;
+	}
+
 	public static int getId(String name) {
-		String key = name.startsWith("animation.") ? name : "animation." + name;
-		return Rscm.lookup(key);
+		return Rscm.lookup(normalizeAnimationKey(name));
 	}
 
 	public Animation(String animation) {
-		this(Rscm.lookup(animation), 0);
+		this(Rscm.lookup(normalizeAnimationKey(animation)), 0);
 	}
 
 	public Animation(int id, int speed) {

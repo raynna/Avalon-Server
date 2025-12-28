@@ -170,6 +170,7 @@ public class StarterProtection {
 		player.toggles.put("LOOTBEAMS", true);
 		player.switchShiftDrop();
 		player.switchZoom();
+		player.switchLeftClickAttack();
 		player.heal(player.getMaxHitpoints());
 		player.getPrayer().restorePrayer(990);
 		player.combatDefinitions.switchAutoRelatie();

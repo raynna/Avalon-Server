@@ -842,7 +842,7 @@ public class PlayerCombat extends Action {
     private int handleCrossbowAttack(Player player, Item weapon, int attackStyle, int combatDelay, int soundId) {
         int damage = 0;
         Item ammo = player.getEquipment().getItem(Equipment.SLOT_ARROWS);
-        boolean chaotic = weapon.isName("item.chaotic_crossbow");
+        boolean chaotic = weapon.isItem("item.chaotic_crossbow");
         boolean roll = Utils.roll(1, chaotic ? 7 : 8);
 
         if (ammo != null && roll) {

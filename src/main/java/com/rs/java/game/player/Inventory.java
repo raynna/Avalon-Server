@@ -241,7 +241,7 @@ public final class Inventory implements Serializable {
 	}
 
 	public boolean addItem(final String name, final int amount) {
-		int itemId = Rscm.lookup(name);
+		int itemId = Item.getId(name);
 		if (itemId < 0 || amount < 1 || !Utils.itemExists(itemId)
 				|| !player.getControlerManager().canAddInventoryItem(itemId, amount))
 			return false;
@@ -345,7 +345,7 @@ public final class Inventory implements Serializable {
 	}
 
 	public void deleteItem(String name, int amount) {
-		int itemId = Rscm.lookup(name);
+		int itemId = Item.getId(name);
 		if (!player.getControlerManager().canDeleteInventoryItem(itemId, amount))
 			return;
 		Item[] itemsBefore = items.getItemsCopy();
@@ -480,6 +480,10 @@ public final class Inventory implements Serializable {
 			if (!items.contains(new Item(itemIds[i], ammounts[i])))
 				return false;
 		return true;
+	}
+
+	public boolean containsItem(String name, int amount) {
+		return items.contains(new Item(Item.getId(name), amount));
 	}
 
 	public boolean containsItem(int itemId, int ammount) {

@@ -70,7 +70,19 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        SHIFTDROP(7) {
+        FORCE_LEFTCLICK_ATTACK(7) {
+            @Override
+            public void usage(Player p) {
+                p.switchLeftClickAttack();
+            }
+
+            @Override
+            public String text(Player p) {
+                return "Left-click Attack: " + (p.isForceLeftClick() ? "<col=04BB3B>On" : "<col=BB0404>Off");
+            }
+        },
+
+        SHIFTDROP(8) {
             @Override
             public void usage(Player p) {
                 p.switchShiftDrop();
@@ -82,7 +94,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        DRAGSETTING(8) {
+        DRAGSETTING(9) {
             @Override
             public void usage(Player p) {
                 p.switchSlowDrag();
@@ -95,7 +107,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        ZOOMSETTING(9) {
+        ZOOMSETTING(10) {
             @Override
             public void usage(Player p) {
                 p.switchZoom();
@@ -107,7 +119,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        HEALTH_OVERLAY(10) {
+        HEALTH_OVERLAY(11) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("HEALTH_OVERLAY", !p.toggles("HEALTH_OVERLAY", false));
@@ -119,7 +131,7 @@ public class SettingsTab extends CustomTab {
                 return "Health Overlay: " + (p.toggles("HEALTH_OVERLAY", false) ? "<col=04BB3B>On" : "<col=BB0404>Off");
             }
         },
-        HITCHANCE(11) {
+        HITCHANCE(12) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("HITCHANCE_OVERLAY", !p.toggles("HITCHANCE_OVERLAY", false));
@@ -131,7 +143,7 @@ public class SettingsTab extends CustomTab {
                 return "Hitchance Overlay: " + (p.toggles("HITCHANCE_OVERLAY", false) ? "<col=04BB3B>On" : "<col=BB0404>Off");
             }
         },
-        LEVEL_BOOST(12) {
+        LEVEL_BOOST(13) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("LEVELSTATUS_OVERLAY", !p.toggles("LEVELSTATUS_OVERLAY", false));
@@ -144,12 +156,12 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        KDRINTER(13) {
+        KDRINTER(14) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("KDRINTER", !p.toggles("KDRINTER", false));
-                if (p.getInterfaceManager().containsTab(31) && !p.toggles("KDRINTER", false)) {
-                    p.getInterfaceManager().closeTab(p.getInterfaceManager().isResizableScreen(), 31);
+                if (p.getInterfaceManager().containsTab("tab.kdr_tab") && !p.toggles("KDRINTER", false)) {
+                    p.getInterfaceManager().closeTab("tab.kdr_tab");
                 } else {
                     if (WildernessControler.isAtWild(p) || EdgevillePvPControler.isAtBank(p) || EdgevillePvPControler.isAtPvP(p)) {
                         WildernessControler.showKDRInter(p);
@@ -163,7 +175,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        COMBATSETTINGS(15) {
+        COMBATSETTINGS(16) {
             @Override
             public void usage(Player p) {
             }
@@ -174,7 +186,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        ONEXPPERHIT(16) {
+        ONEXPPERHIT(17) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("ONEXPPERHIT", !p.toggles("ONEXPPERHIT", false));
@@ -188,7 +200,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        ONEXHITS(17) {
+        ONEXHITS(18) {
             @Override
             public void usage(Player p) {
                 boolean active = p.getVarsManager().getBitValue(1485) == 1;
@@ -206,7 +218,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        DROPS(19) {
+        DROPS(20) {
             @Override
             public void usage(Player p) {
             }
@@ -217,7 +229,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        LOOTBEAMS(20) {
+        LOOTBEAMS(21) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("LOOTBEAMS", !p.toggles("LOOTBEAMS", false));
@@ -229,7 +241,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        UNTRADEABLEMESSAGE(21) {
+        UNTRADEABLEMESSAGE(22) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("UNTRADEABLEMESSAGE", !p.toggles("UNTRADEABLEMESSAGE", false));
@@ -242,7 +254,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        DROPVALUE(22) {
+        DROPVALUE(23) {
             @Override
             public void usage(Player p) {
                 p.getTemporaryAttributtes().put("SET_DROPVALUE", Boolean.TRUE);
@@ -256,7 +268,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        DEVELOPER_SETTINGS(29) {
+        DEVELOPER_SETTINGS(30) {
             @Override
             public void usage(Player p) {
             }
@@ -266,7 +278,7 @@ public class SettingsTab extends CustomTab {
                 return "<u>Developer Settings";
             }
         },
-        INTERACTIVE(30) {
+        INTERACTIVE(31) {
             @Override
             public void usage(Player p) {
                 p.switchDeveloperMode();

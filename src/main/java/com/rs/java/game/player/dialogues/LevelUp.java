@@ -5,9 +5,11 @@ import java.util.Map;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.Graphics;
+import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.kotlin.game.player.equipment.DecorativeUpgrader;
 
 public final class LevelUp extends Dialogue {
 
@@ -104,83 +106,11 @@ public final class LevelUp extends Dialogue {
         player.lastSkill.clear();
         player.lastlevelUp.add(Integer.valueOf(level).toString());
         player.lastSkill.add(name);
-        if (skill == Skills.ATTACK) {
-            ItemDefinitions weapon = ItemDefinitions.getItemDefinitions(player.getEquipment().getWeaponId());
-            if (level >= 20 && level < 30 && weapon.getId() == 4068) {
-                player.getEquipment().updateItem(Equipment.SLOT_WEAPON, 4503);
-                player.message("Your decorative weapon has been upgraded.");
-            }
-            if (level >= 30 && level < 40 && weapon.getId() == 4503) {
-                player.getEquipment().updateItem(Equipment.SLOT_WEAPON, 4508);
-                player.message("Your decorative weapon has been upgraded.");
-            }
-            if (level >= 40 && weapon.getId() == 4508) {
-                player.getEquipment().updateItem(Equipment.SLOT_WEAPON, 18705);
-                player.message("Your decorative weapon has been upgraded.");
-            }
-        }
-        if (skill == Skills.DEFENCE) {
-            ItemDefinitions helm = ItemDefinitions.getItemDefinitions(player.getEquipment().getHatId());
-            ItemDefinitions body = ItemDefinitions.getItemDefinitions(player.getEquipment().getChestId());
-            ItemDefinitions legs = ItemDefinitions.getItemDefinitions(player.getEquipment().getLegsId());
-            ItemDefinitions shield = ItemDefinitions.getItemDefinitions(player.getEquipment().getShieldId());
-            if (level >= 20 && helm.getId() == 4071) {
-                player.getEquipment().updateItem(Equipment.SLOT_HEAD, 4506);
-                player.message("Your decorative helm has been upgraded.");
-            }
-            if (level >= 30 && helm.getId() == 4506) {
-                player.getEquipment().updateItem(Equipment.SLOT_HEAD, 4511);
-                player.message("Your decorative helm has been upgraded.");
-            }
-            if (level >= 40 && helm.getId() == 4511) {
-                player.getEquipment().updateItem(Equipment.SLOT_HEAD, 18708);
-                player.message("Your decorative helm has been upgraded.");
-            }
-
-            if (level >= 20 && body.getId() == 4069) {
-                player.getEquipment().updateItem(Equipment.SLOT_CHEST, 4504);
-                player.message("Your decorative platebody has been upgraded.");
-            }
-            if (level >= 30 && body.getId() == 4504) {
-                player.getEquipment().updateItem(Equipment.SLOT_CHEST, 4509);
-                player.message("Your decorative platebody has been upgraded.");
-            }
-            if (level >= 40 && body.getId() == 4509) {
-                player.getEquipment().updateItem(Equipment.SLOT_CHEST, 18706);
-                player.message("Your decorative platebody has been upgraded.");
-            }
-
-            if (level >= 20 && legs.getId() == 4070) {
-                player.getEquipment().updateItem(Equipment.SLOT_LEGS, 4505);
-                player.message("Your decorative platelegs has been upgraded.");
-            }
-            if (level >= 30 && legs.getId() == 4505) {
-                player.getEquipment().updateItem(Equipment.SLOT_LEGS, 4510);
-                player.message("Your decorative platelegs has been upgraded.");
-            }
-            if (level >= 40 && legs.getId() == 4510) {
-                player.getEquipment().updateItem(Equipment.SLOT_LEGS, 18707);
-                player.message("Your decorative platelegs has been upgraded.");
-            }
-
-            if (level >= 20 && shield.getId() == 4072) {
-                player.getEquipment().updateItem(Equipment.SLOT_SHIELD, 4507);
-                player.message("Your decorative shield has been upgraded.");
-            }
-            if (level >= 30 && shield.getId() == 4507) {
-                player.getEquipment().updateItem(Equipment.SLOT_SHIELD, 4512);
-                player.message("Your decorative shield has been upgraded.");
-            }
-            if (level >= 40 && shield.getId() == 4512) {
-                player.getEquipment().updateItem(Equipment.SLOT_SHIELD, 18709);
-                player.message("Your decorative shield has been upgraded.");
-            }
-        }
-
-        player.getInterfaceManager().sendFadingInterface(1216);
-        player.getVarsManager().sendVarBit(4757, getIconValue(skill));
+        DecorativeUpgrader.INSTANCE.onLevelUp(player, skill, level);
+        player.getInterfaceManager().sendFadingInterface("interface.levelup_orb");
+        player.getVarsManager().sendVarBit("varbit.levelup_skill_icon", getIconValue(skill));
         Configs levelup = Configs.levelup(skill);
-        player.getPackets().sendGlobalVar(1756, levelup.getId());
+        player.getPackets().sendGlobalVar("globalvar.levelup_orb_skill", levelup.getId());
         switchFlash(player, skill, true);
     }
 

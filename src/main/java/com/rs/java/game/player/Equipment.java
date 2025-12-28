@@ -8,6 +8,7 @@ import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.item.meta.MetaDataType;
 import com.rs.java.game.player.actions.skills.firemaking.Bonfire;
 import com.rs.java.utils.ItemExamines;
+import com.rs.kotlin.Rscm;
 
 public final class Equipment implements Serializable {
 
@@ -359,6 +360,17 @@ public final class Equipment implements Serializable {
 	}
 
 	public void updateItem(int slot, int itemId) {
+		Item oldItem = getItem(slot);
+		if (oldItem == null) {
+			return;
+		}
+		oldItem.setId(itemId);
+		refresh(slot);
+		player.getAppearence().generateAppearenceData();
+	}
+
+	public void updateItem(int slot, String item) {
+		int itemId = Rscm.INSTANCE.item(item);
 		Item oldItem = getItem(slot);
 		if (oldItem == null) {
 			return;
