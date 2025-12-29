@@ -532,6 +532,11 @@ public class WorldPacketsEncoder extends Encoder {
 		sendRunScript(110, new Object[] { message });
 	}
 
+	public void sendRunScript(String script, Object... params) {
+		sendRunScript(Rscm.lookup(script), params);
+	}
+
+
 	public void sendRunScript(int scriptId, Object... params) {
 		OutputStream stream = new OutputStream();
 		stream.writePacketVarShort(player, 119);
@@ -1307,6 +1312,11 @@ public class WorldPacketsEncoder extends Encoder {
 			stream.endPacketVarByte();
 		}
 		session.write(stream);
+	}
+
+	public void sendItems(String key, ItemsContainer<Item> items) {
+		int containerKey=Rscm.lookup(key);
+		sendItems(containerKey, containerKey < 0, items);
 	}
 
 	public void sendItems(int key, ItemsContainer<Item> items) {

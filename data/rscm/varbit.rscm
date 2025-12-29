@@ -1,6 +1,15 @@
 levelup_skill_icon=4757
+equipment_bonuses_from_bank=4894
 prayerbook_attack_stat=6857
 prayerbook_strength_stat=6858
 prayerbook_defence_stat=6859
 prayerbook_range_stat=6860
 prayerbook_magic_stat=6861
+equipment_bonuses_open=8348
+death_kept_item_slot_1=9222
+death_kept_item_slot_2=9223
+death_kept_item_slot_3=9224
+death_kept_item_slot_4=9225
+death_kept_item_count=9227
+death_in_unsafe_area=9226
+death_player_skulled=9229

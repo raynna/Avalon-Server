@@ -91,7 +91,6 @@ object DecorativeUpgrader {
                 ),
                 message = "Your decorative platebody has been upgraded."
             ),
-            // If you only have IDs for legs/shield, just use Tier.Id:
             UpgradeRule(
                 skill = Skills.DEFENCE,
                 slot = Equipment.SLOT_LEGS,

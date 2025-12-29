@@ -2868,18 +2868,18 @@ public class ButtonHandler {
                 slotIndex = rawSlot;
             }
             if (sentSlots.add(slotIndex)) {
-                player.getVarsManager().sendVarBit(9222 + keptSlotCount, slotIndex);
+                player.getVarsManager().sendVarBit("varbit.death_kept_item_slot_1" + keptSlotCount, slotIndex);
                 keptSlotCount++;
             }
         }
 
-        // Clear unused slots
+        //clear the unused slots
         for (int i = keptSlotCount; i < 4; i++)
-            player.getVarsManager().sendVarBit(9222 + i, -1);
+            player.getVarsManager().sendVarBit("varbit.death_kept_item_slot_1" + i, -1);
 
-        player.getVarsManager().sendVarBit(9227, Math.max(keptSlotCount, 1));
-        player.getVarsManager().sendVarBit(9226, (wilderness || inFfa) ? 1 : 0);
-        if (!inFfa) player.getVarsManager().sendVarBit(9229, player.hasSkull() ? 1 : 0);
+        player.getVarsManager().sendVarBit("varbit.death_kept_item_count", Math.max(keptSlotCount, 1));
+        player.getVarsManager().sendVarBit("varbit.death_in_unsafe_area", (wilderness || inFfa) ? 1 : 0);
+        if (!inFfa) player.getVarsManager().sendVarBit("varbit.death_player_skulled", player.hasSkull() ? 1 : 0);
         StringBuffer text = new StringBuffer();
         text.append("Items kept on death:").append("<br><br>");
         for (Item item : items[0]) {
@@ -2897,19 +2897,24 @@ public class ButtonHandler {
      *
      */
     public static void openEquipmentBonuses(final Player player, boolean banking) {
+        int EQUIPMENT_BONUS_INTERFACE = Rscm.lookup("interface.equipment_bonuses");
+        int EQUIPMENT_INVENTORY = Rscm.lookup("interface.equipment_bonuses_inventory");
+
         player.stopAll();
-        player.getInterfaceManager().sendInventoryInterface(670);
-        player.getInterfaceManager().sendInterface(667);
-        player.getPackets().sendHideIComponent(667, 1, false);
-        player.getVarsManager().sendVarBit(4894, banking ? 1 : 0);
-        player.getVarsManager().sendVarBit(8348, 1);
-        player.getPackets().sendGlobalVar(779, player.getEquipment().getWeaponRenderEmote());
-        player.getPackets().sendRunScript(787, 1);
-        player.getPackets().sendItems(93, player.getInventory().getItems());
-        player.getPackets().sendInterSetItemsOptionsScript(670, 0, 93, 4, 7, "Equip", "Compare", "Stats", "Examine");
-        player.getPackets().sendUnlockOptions(670, 0, 0, 27, 0, 1, 2, 3);
-        player.getPackets().sendUnlockOptions(667, 9, 0, 24, 0, 8, 9);
-        player.getPackets().sendComponentSettings(667, 14, 0, 13, 1030);
+        player.getInterfaceManager().sendInventoryInterface(EQUIPMENT_BONUS_INTERFACE);
+        player.getInterfaceManager().sendInterface(EQUIPMENT_INVENTORY);
+        player.getPackets().sendHideIComponent(EQUIPMENT_INVENTORY, 1, false);
+        player.getVarsManager().sendVarBit("varbit.equipment_bonuses_from_bank", banking ? 1 : 0);
+        player.getVarsManager().sendVarBit("varbit.equipment_bonuses_open", 1);
+        player.getPackets().sendGlobalVar("globalvar.weapon_render_emote", player.getEquipment().getWeaponRenderEmote());
+        player.getPackets().sendRunScript("clientscript.setup_equipment_bonuses", 1);
+
+        int container = Rscm.lookup("container.inventory_container");
+        player.getPackets().sendItems(container, player.getInventory().getItems());
+        player.getPackets().sendInterSetItemsOptionsScript(EQUIPMENT_BONUS_INTERFACE, 0, container, 4, 7, "Equip", "Compare", "Stats", "Examine");
+        player.getPackets().sendUnlockOptions(EQUIPMENT_BONUS_INTERFACE, 0, 0, 27, 0, 1, 2, 3);
+        player.getPackets().sendUnlockOptions(EQUIPMENT_INVENTORY, 9, 0, 24, 0, 8, 9);
+        player.getPackets().sendComponentSettings(EQUIPMENT_INVENTORY, 14, 0, 13, 1030);
         refreshEquipBonuses(player);
         if (banking) {
             player.getTemporaryAttributtes().put("Banking", Boolean.TRUE);
@@ -2917,7 +2922,7 @@ public class ButtonHandler {
                 @Override
                 public void run() {
                     player.getTemporaryAttributtes().remove("Banking");
-                    player.getVarsManager().sendVarBit(4894, 0);
+                    player.getVarsManager().sendVarBit("varbit.equipment_bonuses_from_bank", 0);
                 }
             });
         }
