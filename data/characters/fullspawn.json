@@ -2,6 +2,43 @@
   "chatType": 0,
   "username": "fullspawn",
   "password": "99efc50a9206bde3d7a8e694aad8e138ca7dc3f7",
+  "healthOverlay": {},
+  "timerOverlay": {
+    "ROW_DEFS": [
+      {
+        "textId": 3,
+        "iconId": 2
+      },
+      {
+        "textId": 5,
+        "iconId": 4
+      },
+      {
+        "textId": 7,
+        "iconId": 6
+      },
+      {
+        "textId": 9,
+        "iconId": 8
+      },
+      {
+        "textId": 11,
+        "iconId": 10
+      },
+      {
+        "textId": 13,
+        "iconId": 12
+      },
+      {
+        "textId": 15,
+        "iconId": 14
+      },
+      {
+        "textId": 17,
+        "iconId": 16
+      }
+    ]
+  },
   "varBitList": {
     "9188": 19,
     "9191": 4,
@@ -53,7 +90,7 @@
           "amount": 1
         },
         {
-          "id": 4587,
+          "id": 4151,
           "amount": 1
         },
         {
@@ -61,15 +98,15 @@
           "amount": 1
         },
         {
-          "id": 10386,
+          "id": 4736,
           "amount": 1
         },
         {
-          "id": 1093,
+          "id": 11726,
           "amount": 1
         },
         {
-          "id": 8850,
+          "id": 20072,
           "amount": 1
         },
         {
@@ -77,7 +114,7 @@
           "amount": 1
         },
         {
-          "id": 10388,
+          "id": 11694,
           "amount": 1
         },
         {
@@ -85,7 +122,7 @@
           "amount": 1
         },
         {
-          "id": 5698,
+          "id": 3024,
           "amount": 1
         },
         {
@@ -97,7 +134,11 @@
           "amount": 1
         },
         {
-          "id": 15272,
+          "id": 3144,
+          "amount": 1
+        },
+        {
+          "id": 3144,
           "amount": 1
         },
         {
@@ -106,10 +147,6 @@
         },
         {
           "id": 6685,
-          "amount": 1
-        },
-        {
-          "id": 3024,
           "amount": 1
         },
         {
@@ -154,7 +191,7 @@
         },
         {
           "id": 12437,
-          "amount": 25
+          "amount": 50
         },
         {
           "id": 24510,
@@ -176,7 +213,7 @@
     "items": {
       "data": [
         {
-          "id": 3751,
+          "id": 10828,
           "amount": 1
         },
         {
@@ -188,25 +225,20 @@
           "amount": 1
         },
         {
-          "id": 24202,
-          "amount": 1,
-          "metadata": {
-            "spellId": 0,
-            "charges": 0,
-            "type": 5
-          }
-        },
-        {
-          "id": 4091,
+          "id": 15486,
           "amount": 1
         },
         {
-          "id": 13734,
+          "id": 4712,
+          "amount": 1
+        },
+        {
+          "id": 6889,
           "amount": 1
         },
         null,
         {
-          "id": 4093,
+          "id": 4714,
           "amount": 1
         },
         null,
@@ -215,7 +247,7 @@
           "amount": 1
         },
         {
-          "id": 3105,
+          "id": 11732,
           "amount": 1
         },
         null,
@@ -250,11 +282,11 @@
         },
         {
           "id": 3751,
-          "amount": 136
+          "amount": 137
         },
         {
           "id": 10828,
-          "amount": 119
+          "amount": 118
         },
         {
           "id": 3122,
@@ -294,7 +326,7 @@
         },
         {
           "id": 4587,
-          "amount": 110
+          "amount": 111
         },
         {
           "id": 1305,
@@ -306,7 +338,7 @@
         },
         {
           "id": 5698,
-          "amount": 138
+          "amount": 139
         },
         {
           "id": 1377,
@@ -354,7 +386,7 @@
         },
         {
           "id": 1093,
-          "amount": 121
+          "amount": 122
         },
         {
           "id": 9678,
@@ -366,11 +398,11 @@
         },
         {
           "id": 10386,
-          "amount": 36
+          "amount": 37
         },
         {
           "id": 4151,
-          "amount": 46
+          "amount": 45
         },
         {
           "id": 6570,
@@ -382,15 +414,15 @@
         },
         {
           "id": 10388,
-          "amount": 36
+          "amount": 37
         },
         {
           "id": 8850,
-          "amount": 36
+          "amount": 37
         },
         {
           "id": 11694,
-          "amount": 27
+          "amount": 26
         },
         {
           "id": 2440,
@@ -414,7 +446,7 @@
         },
         {
           "id": 12437,
-          "amount": 3546
+          "amount": 3521
         },
         {
           "id": 2412,
@@ -422,7 +454,7 @@
         },
         {
           "id": 13734,
-          "amount": 37
+          "amount": 38
         },
         {
           "id": 7462,
@@ -430,7 +462,7 @@
         },
         {
           "id": 3105,
-          "amount": 37
+          "amount": 38
         },
         {
           "id": 15220,
@@ -458,7 +490,7 @@
         },
         {
           "id": 15486,
-          "amount": 47
+          "amount": 46
         },
         {
           "id": 6914,
@@ -474,39 +506,39 @@
         },
         {
           "id": 15272,
-          "amount": 712
+          "amount": 713
         },
         {
           "id": 4736,
-          "amount": 13
+          "amount": 12
         },
         {
           "id": 11726,
-          "amount": 13
+          "amount": 12
         },
         {
           "id": 20072,
-          "amount": 47
+          "amount": 46
         },
         {
           "id": 3144,
-          "amount": 91
+          "amount": 89
         },
         {
           "id": 4712,
-          "amount": 23
+          "amount": 22
         },
         {
           "id": 6889,
-          "amount": 13
+          "amount": 12
         },
         {
           "id": 4714,
-          "amount": 23
+          "amount": 22
         },
         {
           "id": 11732,
-          "amount": 23
+          "amount": 22
         },
         {
           "id": 4718,
@@ -707,6 +739,15 @@
         {
           "id": 19335,
           "amount": 11
+        },
+        {
+          "id": 24202,
+          "amount": 1,
+          "metadata": {
+            "spellId": 0,
+            "charges": 0,
+            "type": 5
+          }
         }
       ],
       [
@@ -838,7 +879,7 @@
         },
         {
           "id": 4091,
-          "amount": 122
+          "amount": 123
         },
         {
           "id": 14497,
@@ -878,7 +919,7 @@
         },
         {
           "id": 4093,
-          "amount": 122
+          "amount": 123
         },
         {
           "id": 14501,
@@ -925,8 +966,8 @@
   },
   "skills": {
     "level": [
-      60,
-      45,
+      99,
+      99,
       99,
       99,
       99,
@@ -952,8 +993,8 @@
       99
     ],
     "xp": [
-      273742.0,
-      61512.0,
+      1.3034431E7,
+      1.3034431E7,
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
@@ -3612,7 +3653,7 @@
     }
   },
   "dfsCharges": 0,
-  "recoilHits": 0,
+  "recoilCharges": 0,
   "lodestone": [
     false,
     false,
@@ -3631,15 +3672,16 @@
     false
   ],
   "toggles": {
-    "HEALTH_OVERLAY": true,
-    "HITCHANCE_OVERLAY": true,
-    "LEVELSTATUS_OVERLAY": true,
     "ONEXPPERHIT": false,
+    "HEALTH_OVERLAY": true,
     "KDRINTER": true,
     "ONEXHITS": true,
     "DROPVALUE": 10000.0,
+    "LEVELSTATUS_OVERLAY": true,
     "BREAK_VIALS": true,
     "UNTRADEABLEMESSAGE": false,
+    "IGNORE_LOW_VALUE": false,
+    "HITCHANCE_OVERLAY": true,
     "LOOTBEAMS": true
   },
   "KBDEntrance": false,
@@ -3989,7 +4031,7 @@
   "strongHoldSecurityFloor3": false,
   "strongHoldSecurityFloor4": false,
   "connectedClanChannel": false,
-  "lastLoggedIn": 1756380217821,
+  "lastLoggedIn": 1767035131207,
   "petManager": {
     "petDetails": {},
     "npcId": 0,
@@ -4110,10 +4152,7 @@
       false
     ]
   },
-  "controlerManager": {
-    "lastControlerArguments": [],
-    "lastControler": "EdgevillePvPControler"
-  },
+  "controlerManager": {},
   "musicsManager": {
     "unlockedMusics": [
       0,
@@ -5542,6 +5581,7 @@
   "memberTill": 0,
   "shiftDrop": true,
   "slowDrag": false,
+  "forceLeftClick": true,
   "zoom": true,
   "godwarsKillcount": {
     "godwarsKillcount": [
@@ -5559,8 +5599,8 @@
   },
   "squealOfFortune": {
     "version": 1,
-    "lastDailySpinsGiveaway": 1756315292417,
-    "dailySpins": 4,
+    "lastDailySpinsGiveaway": 1767035081340,
+    "dailySpins": 5,
     "earnedSpins": 3,
     "boughtSpins": 0,
     "rewardSlot": -1,
@@ -5638,7 +5678,8 @@
   "lavaflowCrustsMined": 0,
   "hitOverflow": [],
   "isTeleporting": false,
-  "hitpoints": 1080,
+  "hitpoints": 990,
+  "increasedMaxHitpoints": 0,
   "pid": 0,
   "mapSize": 0,
   "run": true,
@@ -5654,9 +5695,10 @@
   "stringKey": {},
   "tickTimers": {},
   "tickManager": {
-    "tickTimers": {}
+    "tickTimers": {},
+    "entityName": "fullspawn"
   },
-  "x": 83,
-  "y": 75,
+  "x": 3093,
+  "y": 3494,
   "plane": 0
 }

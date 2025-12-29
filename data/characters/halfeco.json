@@ -82,11 +82,11 @@
     "items": {
       "data": [
         {
-          "id": 4101,
+          "id": 1127,
           "amount": 1
         },
         {
-          "id": 3842,
+          "id": 4587,
           "amount": 1
         },
         {
@@ -98,11 +98,11 @@
           "amount": 1
         },
         {
-          "id": 4103,
+          "id": 1093,
           "amount": 1
         },
         {
-          "id": 4587,
+          "id": 8850,
           "amount": 1
         },
         {
@@ -219,16 +219,16 @@
           }
         },
         {
-          "id": 1127,
+          "id": 4101,
           "amount": 1
         },
         {
-          "id": 8850,
+          "id": 3842,
           "amount": 1
         },
         null,
         {
-          "id": 1093,
+          "id": 4103,
           "amount": 1
         },
         null,
@@ -470,7 +470,7 @@
       99,
       99,
       99,
-      99,
+      89,
       99
     ],
     "xp": [
@@ -497,11 +497,11 @@
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
-      1.3034431E7,
+      1.3034531E7,
       1.3034431E7
     ],
     "xpTracks": [
-      0.0,
+      100.0,
       0.0,
       0.0
     ],
@@ -860,9 +860,9 @@
   "toggles": {
     "ONEXPPERHIT": false,
     "HEALTH_OVERLAY": true,
-    "KDRINTER": false,
+    "KDRINTER": true,
     "ONEXHITS": true,
-    "DROPVALUE": 100000,
+    "DROPVALUE": 100000.0,
     "LEVELSTATUS_OVERLAY": true,
     "BREAK_VIALS": true,
     "UNTRADEABLEMESSAGE": true,
@@ -1169,7 +1169,7 @@
   "strongHoldSecurityFloor3": false,
   "strongHoldSecurityFloor4": false,
   "connectedClanChannel": false,
-  "lastLoggedIn": 1757826665878,
+  "lastLoggedIn": 1767035055467,
   "petManager": {
     "petDetails": {},
     "npcId": 0,
@@ -2681,7 +2681,7 @@
   "voteDelay": 0,
   "afkDelay": 0,
   "afkTimer": 0,
-  "summoningLeftClickOption": 0,
+  "summoningLeftClickOption": 1,
   "ownedObjectsManagerKeys": [],
   "hasDominion": false,
   "hasRigour": false,
@@ -2718,11 +2718,13 @@
     "y": 3497,
     "plane": 0
   },
+  "familiarPouch": "WOLPERTINGER",
   "frozenKeyCharges": 0,
   "member": false,
   "memberTill": 0,
   "shiftDrop": true,
   "slowDrag": false,
+  "forceLeftClick": true,
   "zoom": true,
   "godwarsKillcount": {
     "godwarsKillcount": [
@@ -2740,8 +2742,8 @@
   },
   "squealOfFortune": {
     "version": 1,
-    "lastDailySpinsGiveaway": 1757826512208,
-    "dailySpins": 4,
+    "lastDailySpinsGiveaway": 1767035013244,
+    "dailySpins": 5,
     "earnedSpins": 0,
     "boughtSpins": 0,
     "rewardSlot": -1,
@@ -2840,6 +2842,6 @@
     "entityName": "halfeco"
   },
   "x": 3093,
-  "y": 3492,
+  "y": 3491,
   "plane": 0
 }
