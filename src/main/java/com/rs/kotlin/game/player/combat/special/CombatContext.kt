@@ -352,7 +352,7 @@ fun CombatContext.getScytheTargets(
     val baseTile = attacker.tile
     val rawDir = attacker.direction
     val dir = (rawDir / 2048) and 0x7 // normalize 0–7
-    println("[DEBUG] Attacker=${attacker.displayName} rawDir=$rawDir normalizedDir=$dir tile=$baseTile")
+    //println("[DEBUG] Attacker=${attacker.displayName} rawDir=$rawDir normalizedDir=$dir tile=$baseTile")
 
     val arcTiles = when (dir) {
         0 -> listOf( // South
@@ -399,45 +399,45 @@ fun CombatContext.getScytheTargets(
     }
 
 
-    println("[DEBUG] ArcTiles=$arcTiles")
+    //println("[DEBUG] ArcTiles=$arcTiles")
 
     for (tile in arcTiles) {
         if (possibleTargets.size >= maxTargets) break
 
         val entitiesHere = World.getEntitiesAt(tile)
-        println("[DEBUG] Checking tile=$tile entities=${entitiesHere.size}")
+        //println("[DEBUG] Checking tile=$tile entities=${entitiesHere.size}")
 
         for (entity in entitiesHere) {
-            println("[DEBUG] Candidate entity=${entity} at $tile")
+            //println("[DEBUG] Candidate entity=${entity} at $tile")
 
             if (entity == attacker) {
-                println("[DEBUG] Reject: is attacker")
+                //println("[DEBUG] Reject: is attacker")
                 continue
             }
             if (entity == target) {
-                println("[DEBUG] Reject: is main target")
+                //println("[DEBUG] Reject: is main target")
                 continue
             }
             if (entity.isDead || entity.hasFinished()) {
-                println("[DEBUG] Reject: dead/finished")
+                //println("[DEBUG] Reject: dead/finished")
                 continue
             }
             if (!attacker.controlerManager.canHit(entity)) {
-                println("[DEBUG] Reject: cannot hit")
+                //println("[DEBUG] Reject: cannot hit")
                 continue
             }
             if (!entity.isAtMultiArea && !entity.isForceMultiArea) {
-                println("[DEBUG] Reject: not in multi area")
+                //println("[DEBUG] Reject: not in multi area")
                 continue
             }
 
-            println("[DEBUG] ACCEPT entity=${entity}")
+            //println("[DEBUG] ACCEPT entity=${entity}")
             possibleTargets.add(entity)
             if (possibleTargets.size >= maxTargets) break
         }
     }
 
-    println("[DEBUG] Final targets=${possibleTargets.map { it.toString() }}")
+    //println("[DEBUG] Final targets=${possibleTargets.map { it.toString() }}")
     return possibleTargets
 }
 
@@ -450,19 +450,19 @@ fun CombatContext.getMultiAttackTargets(
     val possibleTargets = mutableListOf<Entity>()
     val attacker = this.attacker
     val target = this.defender
-    if (target is NPC)
-        println("[DEBUG] MultiAttack: attacker=${attacker.displayName}, target=${target.id}, maxDist=$maxDistance, maxTargets=$maxTargets")
+    //if (target is NPC)
+    //    println("[DEBUG] MultiAttack: attacker=${attacker.displayName}, target=${target.id}, maxDist=$maxDistance, maxTargets=$maxTargets")
 
     possibleTargets.add(target)
     target.checkMultiArea()
     if (!target.isAtMultiArea && !target.isForceMultiArea) {
-        println("[DEBUG] Target is not in multi area, returning single target.")
+        //  println("[DEBUG] Target is not in multi area, returning single target.")
         return possibleTargets
     }
 
     val regions = target.mapRegionsIds
-    if (target is NPC)
-        println("[DEBUG] Regions around target=${target.id} -> $regions")
+    //if (target is NPC)
+    //    println("[DEBUG] Regions around target=${target.id} -> $regions")
 
     regionLoop@ for (regionId in regions) {
         val region = World.getRegion(regionId) ?: continue
@@ -473,17 +473,17 @@ fun CombatContext.getMultiAttackTargets(
                 for (playerIndex in playerIndexes) {
                     val p2 = World.getPlayers().get(playerIndex) ?: continue
                     when {
-                        p2 == attacker -> println("[DEBUG] Reject: same as attacker")
-                        p2 == target -> println("[DEBUG] Reject: same as main target")
-                        p2.isDead -> println("[DEBUG] Reject: player dead")
-                        !p2.hasStarted() -> println("[DEBUG] Reject: player not started")
-                        p2.hasFinished() -> println("[DEBUG] Reject: player finished")
-                        !p2.canPvp -> println("[DEBUG] Reject: cannot pvp")
-                        !p2.isAtMultiArea -> println("[DEBUG] Reject: not in multi area")
-                        !p2.withinDistanceOf(target, maxDistance) -> println("[DEBUG] Reject: too far from target")
-                        !attacker.controlerManager.canHit(p2) -> println("[DEBUG] Reject: cannot hit")
+                        //p2 == attacker -> println("[DEBUG] Reject: same as attacker")
+                        //p2 == target -> println("[DEBUG] Reject: same as main target")
+                        //p2.isDead -> println("[DEBUG] Reject: player dead")
+                        //!p2.hasStarted() -> println("[DEBUG] Reject: player not started")
+                        //p2.hasFinished() -> println("[DEBUG] Reject: player finished")
+                        //!p2.canPvp -> println("[DEBUG] Reject: cannot pvp")
+                        //!p2.isAtMultiArea -> println("[DEBUG] Reject: not in multi area")
+                        //!p2.withinDistanceOf(target, maxDistance) -> println("[DEBUG] Reject: too far from target")
+                        //!attacker.controlerManager.canHit(p2) -> println("[DEBUG] Reject: cannot hit")
                         possibleTargets.size >= maxTargets -> {
-                            println("[DEBUG] Reject: already at maxTargets")
+                            //println("[DEBUG] Reject: already at maxTargets")
                             break@regionLoop
                         }
                         else -> {
@@ -497,22 +497,22 @@ fun CombatContext.getMultiAttackTargets(
                 val npcIndexes = region.npCsIndexes ?: continue
                 for (npcIndex in npcIndexes) {
                     val n = World.getNPCByIndex(npcIndex) ?: continue
-                    println("[DEBUG] Checking candidate npc=${n.id} near target=${target.id}")
+                    //println("[DEBUG] Checking candidate npc=${n.id} near target=${target.id}")
                     when {
-                        n == target -> println("[DEBUG] Reject: same as main target")
-                        n == attacker.familiar -> println("[DEBUG] Reject: is familiar")
-                        n.isDead -> println("[DEBUG] Reject: npc dead")
-                        n.hasFinished() -> println("[DEBUG] Reject: npc finished")
-                        !n.isAtMultiArea && !n.isForceMultiAttacked -> println("[DEBUG] Reject: not in multi area")
-                        !n.withinDistanceOf(target, maxDistance) -> println("[DEBUG] Reject: too far from target")
-                        !n.definitions.hasAttackOption() -> println("[DEBUG] Reject: no attack option")
-                        !attacker.controlerManager.canHit(n) -> println("[DEBUG] Reject: cannot hit")
+                        // n == target -> println("[DEBUG] Reject: same as main target")
+                        // n == attacker.familiar -> println("[DEBUG] Reject: is familiar")
+                        // n.isDead -> println("[DEBUG] Reject: npc dead")
+                        // n.hasFinished() -> println("[DEBUG] Reject: npc finished")
+                        //!n.isAtMultiArea && !n.isForceMultiAttacked -> println("[DEBUG] Reject: not in multi area")
+                        //!n.withinDistanceOf(target, maxDistance) -> println("[DEBUG] Reject: too far from target")
+                        //!n.definitions.hasAttackOption() -> println("[DEBUG] Reject: no attack option")
+                        // !attacker.controlerManager.canHit(n) -> println("[DEBUG] Reject: cannot hit")
                         possibleTargets.size >= maxTargets -> {
-                            println("[DEBUG] Reject: already at maxTargets")
+                            //  println("[DEBUG] Reject: already at maxTargets")
                             break@regionLoop
                         }
                         else -> {
-                            println("[DEBUG] ACCEPT npc=${n.id}")
+                            // println("[DEBUG] ACCEPT npc=${n.id}")
                             possibleTargets.add(n)
                         }
                     }
@@ -520,7 +520,7 @@ fun CombatContext.getMultiAttackTargets(
             }
 
             else -> {
-                println("[DEBUG] Target type not handled: ${target::class.simpleName}")
+                //println("[DEBUG] Target type not handled: ${target::class.simpleName}")
                 break@regionLoop
             }
         }
