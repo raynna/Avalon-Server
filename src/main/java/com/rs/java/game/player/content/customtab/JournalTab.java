@@ -116,8 +116,6 @@ public class JournalTab extends CustomTab {
 		PLAYERRANK(11) {
 			@Override
 			public void usage(Player p) {
-				p.getPackets().sendGameMessage(
-						"My ranks is: <img=" + p.getMessageIcon() + ">" + p.getPlayerRank().getRankNames());
 				p.setNextForceTalk(new ForceTalk(
 						"My ranks is: <img=" + p.getMessageIcon() + ">" + p.getPlayerRank().getRankNames()));
 			}
@@ -137,10 +135,6 @@ public class JournalTab extends CustomTab {
 			@Override
 			public void usage(Player p) {
 				boolean donator = p.getPlayerRank().isDonator();
-				p.getPackets()
-						.sendGameMessage("My Donator rank is: "
-								+ (donator ? "<img=" + p.getDonatorIcon() + ">" + p.getPlayerRank().getRankName(1)
-										: "I'm not a donator"));
 				p.setNextForceTalk(new ForceTalk("My Donator rank is: "
 						+ (donator ? "<img=" + p.getDonatorIcon() + ">" + p.getPlayerRank().getRankName(1)
 								: "I'm not a donator")));
@@ -157,16 +151,18 @@ public class JournalTab extends CustomTab {
 		PLAYERTITLE(13) {
 			@Override
 			public void usage(Player p) {
-				p.setCustomTitle(null);
 				p.getTemporaryAttributtes().put("SET_TITLE", Boolean.TRUE);
 				p.getPackets().sendRunScript(108, new Object[] { "Enter title id, 0-58, 0 = none:" });
 			}
 
 			@Override
 			public String text(Player p) {
-				return "Title: " + (p.getAppearence().getTitle() != -1 && p.getCustomTitle() == null
-						? p.getAppearence().getTitleString()
-						: "<col=BB0404>None - click to set");
+				p.setCustomTitle(p.getAppearence().getTitleString());
+				if(p.getAppearence().getTitle() != -1){
+					return "Title: " + p.getAppearence().getTitleString();
+				} else {
+					return "Title: <col=BB0404>None - click to set";
+				}
 			}
 		},
 		KILLS(14) {
@@ -297,8 +293,9 @@ public class JournalTab extends CustomTab {
 		for (JournalStore store : JournalStore.values()) {
 			if (store != null) {
 				player.getPackets().sendHideIComponent(3002, store.compId, false);
-				if (store.text(player) != null) {
-					player.getPackets().sendTextOnComponent(3002, store.compId, store.text(player));
+				String text = store.text(player);
+				if (text != null) {
+					player.getPackets().sendTextOnComponent(3002, store.compId, text);
 				}
 			}
 		}

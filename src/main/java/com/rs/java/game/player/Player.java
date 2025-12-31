@@ -250,7 +250,6 @@ public class Player extends Entity {
     /**
      * @PlayerRank
      */
-
     private PlayerRank playerRank;
 
     public PlayerRank getRank() {
@@ -2349,7 +2348,8 @@ public class Player extends Entity {
     }
 
     public String getTitle() {
-        return getPlayerRank().getRankName(getPlayerRank().isStaff() ? 0 : 1);
+        PlayerRank rank = getPlayerRank();
+        return rank.getRankName(rank.isStaff() ? 0 : 1);
     }
 
     public void sendPlayersList() {
@@ -2358,15 +2358,16 @@ public class Player extends Entity {
         for (int i = 0; i < 300; i++) {
             getPackets().sendTextOnComponent(275, i, "");
         }
-        for (Player p5 : World.getPlayers()) {
-            if (p5 == null)
+        for (Player p : World.getPlayers()) {
+            if (p == null)
                 continue;
             number1++;
-            PlayerRank rank = p5.getPlayerRank();
+            PlayerRank rank = p.getPlayerRank();
             StringBuilder builder = new StringBuilder();
-            builder.append("<img=" + getPlayerRank().getIconId() + ">");
-            builder.append(HexColours.getShortMessage(Colour.RED, getTitle()));
-            getPackets().sendTextOnComponent(275, (13 + number1), builder.toString() + " " + p5.getDisplayName());
+            builder.append("<img=" + rank.getIconId() + ">");
+            builder.append(HexColours.getShortMessage(Colour.RED, p.getCustomTitle()));
+
+            getPackets().sendTextOnComponent(275, (13 + number1), builder.toString() + " " + p.getDisplayName());
         }
         getPackets().sendTextOnComponent(275, 1, Settings.SERVER_NAME);
         getPackets().sendTextOnComponent(275, 10, " ");
