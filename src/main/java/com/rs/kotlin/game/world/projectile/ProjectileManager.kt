@@ -34,8 +34,64 @@ object ProjectileManager {
             println("Unknown projectile type: $projectile")
             return
         }
-        sendProjectile(defender = null, startTile = startTile, endTile = endTile, gfx = gfxId, type = type, creatorSize = 1)
+        sendProjectile(defender = null, startTile = startTile, endTile = endTile, gfx = gfxId, type = type, creatorSize = 0)
     }
+
+    @JvmStatic
+    fun sendToTile(
+        projectile: Projectile,
+        gfxId: Int,
+        startTile: WorldTile,
+        endTile: WorldTile,
+        onLanded: Runnable? = null
+    ) {
+        val type = ProjectileRegistry.get(projectile) ?: return
+
+        val duration = sendProjectile(
+            attacker = null,
+            defender = null,
+            startTile = startTile,
+            endTile = endTile,
+            gfx = gfxId,
+            type = type,
+            creatorSize = 0
+        )
+
+        onLanded ?: return
+
+        val delayTicks = max(0, (duration / 30.0).toInt())
+        WorldTasksManager.schedule(object : WorldTask() {
+            override fun run() {
+                onLanded.run()
+            }
+        }, delayTicks)
+    }
+
+
+
+    @JvmStatic
+    fun send(
+        projectile: Projectile,
+        gfxId: Int,
+        attacker: Entity,
+        defender: Entity,
+        onLanded: Runnable? = null
+    ) {
+        send(
+            projectile = projectile,
+            gfxId = gfxId,
+            attacker = attacker,
+            defender = defender,
+            angleOffset = 0,
+            heightOffset = 0,
+            delayOffset = 0,
+            hitGraphic = null,
+            speedAdjustment = 0,
+            onLanded = { onLanded?.run() }
+        )
+    }
+
+
 
     @JvmStatic
     fun sendWithGraphic(projectile: Projectile, gfxId: Int, attacker: Entity, defender: Entity, hitGraphic: Graphics) {
@@ -59,44 +115,8 @@ object ProjectileManager {
         heightOffset: Int = 0,
         hitGraphic: Graphics? = null,
         speedAdjustment: Int = 0,
-        onLanded: (() -> Unit)? = null
-    ) {
-        val type = ProjectileRegistry.get(projectile) ?: run {
-            println("Unknown projectile type: $projectile")
-            return
-        }
-
-        val adjustedType = type.copy(
-            startHeight = (type.startHeight + heightOffset).coerceIn(0, 255),
-            endHeight = (type.endHeight + heightOffset).coerceIn(0, 255),
-            speed = type.speed + speedAdjustment,
-        )
-
-        val startTile = WorldTile(
-            attacker.getCoordFaceX(attacker.size),
-            attacker.getCoordFaceY(attacker.size),
-            attacker.plane
-        )
-        val endTile = WorldTile(
-            defender.getCoordFaceX(defender.size),
-            defender.getCoordFaceY(defender.size),
-            defender.plane
-        )
-        val gfxId = Rscm.lookup(gfx)
-        val duration = sendProjectile(attacker, defender, startTile, endTile, gfxId, type = adjustedType, attacker.size)
-        val delayTicks = max(0, (duration / 30.0).toInt() - 1)
-
-        if (hitGraphic != null) {
-            WorldTasksManager.schedule(object : WorldTask() {
-                override fun run() {
-                    val rotation = calculateRotation(startTile, endTile)
-                    defender.gfx(hitGraphic.id, hitGraphic.height, rotation)
-                    onLanded?.invoke()
-                }
-            }, delayTicks)
-        } else {
-            onLanded?.invoke()
-        }
+        onLanded: (() -> Unit)? = null) {
+        this.send(projectile, gfxId = Rscm.graphic(gfx), attacker = attacker, defender = defender, heightOffset = heightOffset, hitGraphic = hitGraphic, speedAdjustment = speedAdjustment);
     }
 
     fun send(
@@ -153,17 +173,18 @@ object ProjectileManager {
         val duration = sendProjectile(attacker, defender, null, endTile, gfxId, type = adjustedType, attacker.size)
         val delayTicks = max(0, (duration / 30.0).toInt() - 1)
 
-        if (hitGraphic != null) {
+        if (hitGraphic != null || onLanded != null) {
             WorldTasksManager.schedule(object : WorldTask() {
                 override fun run() {
-                    val rotation = calculateRotation(startTile, endTile)
-                    defender.gfx(hitGraphic.id, hitGraphic.height, rotation)
+                    if (hitGraphic != null) {
+                        val rotation = calculateRotation(startTile, endTile)
+                        defender.gfx(hitGraphic.id, hitGraphic.height, rotation)
+                    }
                     onLanded?.invoke()
                 }
-            }, delayTicks + 1)
-        } else {
-            onLanded?.invoke()
+            }, delayTicks + if (hitGraphic != null) 1 else 0)
         }
+
     }
 
     private fun sendProjectile(
@@ -228,6 +249,7 @@ object ProjectileManager {
         stream.writeByte(flags)
         stream.writeByte(end.x - start.x)
         stream.writeByte(end.y - start.y)
+        println("startX: ${start.x} startY: ${start.y}, endX: ${end.x}, endY: ${end.y}, (finalX: ${end.x - start.x}, finalY: ${end.y - start.y})")
 
         val index = when (proj.defender) {
             null -> 0
@@ -247,7 +269,12 @@ object ProjectileManager {
         stream.writeShort(duration)
         stream.writeByte(proj.type.angle)
         val displacement = if (distance == 1 && proj.type.displacement == 0) 64 else proj.type.displacement
-        val startDistanceOffset = proj.creatorSize * 64 + displacement * 64
+        val effectiveSize =
+            if (proj.attacker != null) proj.creatorSize else 0
+
+        var startDistanceOffset = effectiveSize * 64 + displacement * 64
+        println("displament: " + displacement)
+        println("startDistanceOffset: " + startDistanceOffset)
         stream.writeShort(startDistanceOffset)
 
         player.session.write(stream)

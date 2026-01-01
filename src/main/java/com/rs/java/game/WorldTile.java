@@ -175,6 +175,27 @@ public class WorldTile implements Serializable {
 		return Math.abs(tile.x - x) <= 14 && Math.abs(tile.y - y) <= 14;
 	}
 
+	public int getFaceTileX(int size, int rotation) {
+		int cx = x + (size - 1) / 2;
+
+		return switch (rotation & 3) {
+			case 1 -> x;
+			case 3 -> x + size - 1;
+			default -> cx;
+		};
+	}
+
+	public int getFaceTileY(int size, int rotation) {
+		int cy = y + (size - 1) / 2;
+
+		return switch (rotation & 3) {
+			case 0 -> y;
+			case 2 -> y + size - 1;
+			default -> cy;
+		};
+	}
+
+
 	public int getCoordFaceX(int sizeX) {
 		return getCoordFaceX(sizeX, -1, -1);
 	}

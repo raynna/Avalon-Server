@@ -15,7 +15,7 @@ object ProjectileRegistry {
         register(Projectile.LEECH, ProjectileType(delay = 1.5, speed = 3, angle = 0, displacement = 64))
         register(Projectile.SOULSPLIT, ProjectileType(startHeight = 4, endHeight = 4, delay = 1.5, speed = 3, angle = 0))
         register(Projectile.CANNON, ProjectileType(startHeight = 42, endHeight = 42, delay = 1.5, speed = 7, angle = 12))
-        register(Projectile.ELEMENTAL_SPELL, ProjectileType(delay = 1.5, speed = 3, angle = 12))
+        register(Projectile.ELEMENTAL_SPELL, ProjectileType(startHeight = 28, delay = 1.5, speed = 3, angle = 12))
         register(Projectile.STANDARD_MAGIC, ProjectileType(delay = 1.5, speed = 3, angle = 12))
         register(Projectile.STANDARD_MAGIC_INSTANT, ProjectileType(delay = 1.5, speed = 3, angle = 12))
         register(Projectile.ANCIENT_SPELL, ProjectileType(delay = 1.5, speed = 3, angle = 12))

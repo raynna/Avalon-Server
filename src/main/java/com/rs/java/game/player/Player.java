@@ -121,6 +121,8 @@ import com.rs.kotlin.game.world.projectile.QueuedProjectile;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 import com.rs.kotlin.game.world.pvp.SafeZoneService;
 
+import static java.lang.Integer.max;
+
 public class Player extends Entity {
 
     public static final int TELE_MOVE_TYPE = 127, WALK_MOVE_TYPE = 1, RUN_MOVE_TYPE = 2;
@@ -3681,6 +3683,12 @@ public class Player extends Entity {
         Entity source = hit.getSource();
         if (source == null)
             return;
+    }
+
+    @Override
+    public int getHitDelay(Entity attacker, Entity defender) {
+        int distance = Utils.getDistance(attacker, defender);
+        return max(1, 1 + (1 + distance) / 3);
     }
 
     @Override

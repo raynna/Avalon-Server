@@ -30,13 +30,6 @@ public class CorporealBeastCombat extends CombatScript {
 		if (handleStompAttack(npc)) {
 			return npc.getAttackSpeed();
 		}
-		final WorldTile randomStart = new WorldTile(npc, 3); // random offset
-		final WorldTile randomEnd = new WorldTile(randomStart, 3); // random offset
-		ProjectileManager.sendSimpleToTile(Projectile.STANDARD_MAGIC_INSTANT, 1824, randomStart, randomEnd);
-		/*if (target instanceof Player player) {
-			player.getPackets().sendTileMessage("Starting here", randomStart, 2000, 0, 0x00FF00);
-			player.getPackets().sendTileMessage("Ending here", randomEnd, 2000, 0, 0xFF0000);
-		}*/
 		int attackStyle = decideAttackStyle(npc, target);
 
 		switch (attackStyle) {
@@ -125,33 +118,35 @@ public class CorporealBeastCombat extends CombatScript {
 	private void handleMagicSpikyBall(NPC npc, Entity target) {
 		npc.animate(10410);
 		Hit magicHit = npc.magicHit(target, 650);
-		delayHit(npc, target, 1, magicHit);
-		ProjectileManager.sendSimple(Projectile.STANDARD_MAGIC_INSTANT, 1825, npc, target);
+		ProjectileManager.send(Projectile.STANDARD_MAGIC_INSTANT, 1825, npc, target, () -> {
+			delayHit(npc, target, 0, magicHit);
+		});
 	}
 
 	private void handleMagicDrainBall(NPC npc, Entity target) {
 		npc.animate(10410);
 		Hit magicHit = npc.magicHit(target, 550);
-		delayHit(npc, target, 1, magicHit);
-		ProjectileManager.sendSimple(Projectile.STANDARD_MAGIC_INSTANT, 1823, npc, target);
-
-		if (target instanceof Player p2) {
-			drainRandomSkill(p2);
-		}
+		ProjectileManager.send(Projectile.STANDARD_MAGIC_INSTANT, 1823, npc, target, () -> {
+			delayHit(npc, target, 0, magicHit);
+			if (target instanceof Player p2) {
+				drainRandomSkill(p2);
+			}
+		});
 	}
 
 	private void handleAoEExplosion(NPC npc, Entity target) {
 		npc.animate(10410);
-		final WorldTile initialTile = new WorldTile(target);
-		ProjectileManager.sendSimple(Projectile.STANDARD_MAGIC_INSTANT, 1824, npc, target);
+		final WorldTile impactTile = new WorldTile(target);
 
-		WorldTasksManager.schedule(new WorldTask() {
-			@Override
-			public void run() {
-				performAoEProjectiles(npc, initialTile);
-			}
-		}, 1);
+		ProjectileManager.send(
+				Projectile.STANDARD_MAGIC_INSTANT,
+				1824,
+				npc,
+				target,
+				() -> performAoEProjectiles(npc, impactTile)
+		);
 	}
+
 
 
 	private void drainRandomSkill(Player player) {
@@ -175,30 +170,28 @@ public class CorporealBeastCombat extends CombatScript {
 
 	private void performAoEProjectiles(NPC npc, WorldTile baseTile) {
 		List<Entity> targets = npc.getPossibleTargets();
-		WorldTile originTile = baseTile;
-		for (int i = 0; i < 6; i++) {
-			final WorldTile aoeTile = new WorldTile(baseTile, 3); // random offset
 
-			if (!World.canMoveNPC(aoeTile.getPlane(), aoeTile.getX(), aoeTile.getY(), 1)) {
+		for (int i = 0; i < 3; i++) {
+			final WorldTile aoeTile = new WorldTile(baseTile, 3);
+
+			if (!World.canMoveNPC(aoeTile.getPlane(), aoeTile.getX(), aoeTile.getY(), 1))
 				continue;
-			}
 
-			// Send projectile from previous tile to this AoE tile
-			ProjectileManager.sendSimpleToTile(Projectile.STANDARD_MAGIC_INSTANT, 1824, baseTile, aoeTile);
-
-			// Schedule hit graphics
-			WorldTasksManager.schedule(new WorldTask() {
-				@Override
-				public void run() {
-					for (Entity t : targets) {
-						if (Utils.getDistance(aoeTile, t) <= 1 && t.clipedProjectile(aoeTile, false)) {
-							Hit magicHit = npc.magicHit(t, 350);
-							delayHit(npc, t, 0, magicHit);
+			ProjectileManager.sendToTile(
+					Projectile.STANDARD_MAGIC_INSTANT,
+					1824,
+					baseTile,
+					aoeTile,
+					() -> {
+						for (Entity t : npc.getPossibleTargets()) {
+							if (Utils.getDistance(t, aoeTile) <= 1 &&
+									t.clipedProjectile(aoeTile, false)) {
+								delayHit(npc, t, 0, npc.magicHit(t, 350));
+							}
 						}
+						World.sendGraphics(npc, new Graphics(1806), aoeTile);
 					}
-					World.sendGraphics(npc, new Graphics(1806), aoeTile);
-				}
-			});
+			);
+			}
 		}
-	}
 }

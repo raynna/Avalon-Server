@@ -208,7 +208,8 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
 
         if (hit.damage == 0) {
-            defender.gfx(SPLASH_GRAPHIC, 100)
+            if (currentSpell?.endGraphic == null)
+                defender.gfx(SPLASH_GRAPHIC, 100)
             defender.playSound(227, 1)
             return
         }

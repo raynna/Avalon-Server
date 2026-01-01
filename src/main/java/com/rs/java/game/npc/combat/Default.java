@@ -47,9 +47,12 @@ public class Default extends CombatScript {
 						NpcAttackStyle.RANGED,
 						target
 				);
-				delayHit(npc, target, 2, getRangeHit(npc, damage));
 				if (defs.getAttackProjectile() != -1) {
-					ProjectileManager.sendSimple(Projectile.ARROW, defs.getAttackProjectile(), npc, target);
+					ProjectileManager.send(Projectile.ARROW, defs.getAttackProjectile(), npc, target, () -> {
+						delayHit(npc, target, 0, getRangeHit(npc, damage));
+					});
+				} else {
+					delayHit(npc, target, npc.getHitDelay(npc, target), getRangeHit(npc, damage));
 				}
 			}
 
@@ -60,10 +63,12 @@ public class Default extends CombatScript {
 						NpcAttackStyle.MAGIC,
 						target
 				);
-				System.out.println("MaxHit: " + npc.getMaxHit());
-				delayHit(npc, target, 2, getMagicHit(npc, damage));
 				if (defs.getAttackProjectile() != -1) {
-					ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, defs.getAttackProjectile(), npc, target);
+					ProjectileManager.send(Projectile.ELEMENTAL_SPELL, defs.getAttackProjectile(), npc, target, () -> {
+						delayHit(npc, target, 0, getMagicHit(npc, damage));
+					});
+				} else {
+					delayHit(npc, target, npc.getHitDelay(npc, target), getMagicHit(npc, damage));
 				}
 			}
 		}

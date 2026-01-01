@@ -161,6 +161,8 @@ public abstract class Entity extends WorldTile {
 
     public abstract void handleHit(Hit hit);
 
+    public abstract int getHitDelay(Entity attacker, Entity defender);
+
     public abstract void handleIncommingHit(Hit hit);
 
     public void reset(boolean attributes) {

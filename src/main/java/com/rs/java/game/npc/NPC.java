@@ -48,6 +48,8 @@ import com.rs.java.utils.*;
 import com.rs.kotlin.game.npc.worldboss.WorldBossNPC;
 import com.rs.kotlin.tool.WikiApi;
 
+import static java.lang.Integer.max;
+
 /**
  * @Improved Andreas - AvalonPK
  */
@@ -525,6 +527,12 @@ public class NPC extends Entity implements Serializable {
         Entity source = hit.getSource();
         if (source == null)
             return;
+    }
+
+    @Override
+    public int getHitDelay(Entity attacker, Entity defender) {
+        int distance = Utils.getDistance(attacker, defender);
+        return max(1, 1 + (1 + distance) / 3);
     }
 
     @Override
