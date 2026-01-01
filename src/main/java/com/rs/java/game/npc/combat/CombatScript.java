@@ -35,7 +35,7 @@ public abstract class CombatScript {
     public abstract int attack(NPC npc, Entity target);
 
     public static void hit(int delay, NPC attacker, Entity defender, NpcAttackStyle style) {
-        Hit damage = attacker.meleeHit(defender, attacker.getMaxHit());
+        Hit hit = attacker.meleeHit(defender, attacker.getMaxHit());
         HitLook look;
         switch (style) {
             case STAB: case SLASH: case CRUSH:
@@ -50,90 +50,120 @@ public abstract class CombatScript {
             default:
                 look = HitLook.REGULAR_DAMAGE;
         }
-        Hit hit = new Hit(attacker, damage.getDamage(), look);
         delayHit(attacker, defender, delay, hit);
     }
 
-    public static void delayHit(NPC npc, final Entity target, int delay, final Hit... hits) {
-        for (Hit hit : hits) {
-            npc.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 10);
-            target.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10);
-            target.getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 10);
-            if (target instanceof Player p2)
-                p2.handleIncommingHit(hit);
-            if (target instanceof Player playerTarget) {
-                PrayerEffectHandler.handleProtectionEffects(npc, playerTarget, hit);
-                PvpManager.onPlayerDamagedByNpc(playerTarget);
-            }
-            handleAbsorb(target, hit);
-            handleStaffOfLightReduction(target, hit);
-            handleDivine(target, hit);
-            handleElysian(target, hit);
-            if (npc.getId() == 13448) sendSoulSplit(hit, npc, target);
-            if (npc.getId() == 2027) {
-                if (hit.getDamage() != 0 && Utils.random(3) == 0) {
-                    target.gfx(new Graphics(398));
-                    npc.heal(hit.getDamage());
-                }
-            }
-            if (npc.getId() == 6367) {
-                if (hit.getLook() == HitLook.MAGIC_DAMAGE && hit.getDamage() > 0) target.addFreezeDelay(20000, false);
-            }
-        }
-        WorldTasksManager.schedule(new WorldTask() {
+    public static Hit registerHit(NPC npc, Entity target, Hit hit) {
+        npc.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 10);
+        target.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10);
+        target.getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 10);
 
+        if (target instanceof Player player)
+            player.handleIncommingHit(hit);
+
+        if (target instanceof Player playerTarget) {
+            PrayerEffectHandler.handleProtectionEffects(npc, playerTarget, hit);
+            PvpManager.onPlayerDamagedByNpc(playerTarget);
+        }
+
+        handleAbsorb(target, hit);
+        handleStaffOfLightReduction(target, hit);
+        handleDivine(target, hit);
+        handleElysian(target, hit);
+
+        if (npc.getId() == 13448)
+            sendSoulSplit(hit, npc, target);
+
+        if (npc.getId() == 2027 && hit.getDamage() > 0 && Utils.random(3) == 0) {
+            target.gfx(new Graphics(398));
+            npc.heal(hit.getDamage());
+        }
+
+        if (npc.getId() == 6367 &&
+                hit.getLook() == HitLook.MAGIC_DAMAGE &&
+                hit.getDamage() > 0) {
+            target.addFreezeDelay(20000, false);
+        }
+
+        return hit;
+    }
+
+
+    public static void applyRegisteredHit(NPC npc, Entity target, Hit hit) {
+        if (npc.isDead() || npc.hasFinished() || target.isDead() || target.hasFinished())
+            return;
+
+        target.applyHit(hit);
+
+        if (target instanceof Player defender) {
+            defender.getChargeManager().processHit(hit);
+        }
+
+        handleRingOfRecoil(npc, target, hit);
+        handleVengHit(target, hit);
+
+        // --- graphics ---
+        if (npc.getId() >= 912 && npc.getId() <= 914) {
+            target.gfx(hit.getDamage() == 0
+                    ? new Graphics(85, 0, 96)
+                    : new Graphics(npc.getCombatDefinitions().getAttackProjectile(), 0, 0));
+        }
+
+        if (npc.getId() == 6367) {
+            if (hit.getDamage() == 0)
+                target.gfx(new Graphics(85, 0, 96));
+            else
+                target.gfx(new Graphics(target.isFrozen() ? 1677 : 369));
+        }
+
+        if (npc.getId() == 1007 && hit.getLook() == HitLook.MAGIC_DAMAGE) {
+            target.gfx(hit.getDamage() == 0
+                    ? new Graphics(85, 0, 96)
+                    : new Graphics(78, 0, 0));
+        }
+
+        if (npc.getId() == 1264 && hit.getLook() == HitLook.MAGIC_DAMAGE) {
+            target.gfx(hit.getDamage() == 0
+                    ? new Graphics(85, 0, 96)
+                    : new Graphics(76, 0, 0));
+        }
+
+        if (hit.getDamage() == 0 && npc.getId() == 9172) {
+            target.gfx(new Graphics(2122));
+        }
+
+        npc.getCombat().doDefenceEmote(target);
+
+        if (target instanceof Player player) {
+            player.closeInterfaces();
+            if (player.getCombatDefinitions().isAutoRelatie()
+                    && !player.getNewActionManager().hasActionWorking()
+                    && !player.hasWalkSteps()) {
+                player.getNewActionManager().setAction(new CombatAction(npc));
+            }
+
+            if (player.familiarAutoAttack && player.getFamiliar() != null
+                    && !player.getFamiliar().getCombat().hasTarget()
+                    && player.isAtMultiArea()) {
+                player.getFamiliar().setTarget(npc);
+            }
+        } else {
+            NPC n = (NPC) target;
+            if (!n.isUnderCombat() || n.canBeAttackedByAutoRelatie())
+                n.setTarget(npc);
+        }
+    }
+
+
+
+    public static void delayHit(NPC npc, Entity target, int delay, Hit... hits) {
+        WorldTasksManager.schedule(new WorldTask() {
             @Override
             public void run() {
                 for (Hit hit : hits) {
-                    NPC npc = (NPC) hit.getSource();
-                    if (npc.isDead() || npc.hasFinished() || target.isDead() || target.hasFinished()) return;
-                    target.applyHit(hit);
-                    if (target instanceof Player defender) {
-                        defender.getChargeManager().processHit(hit);
-                    }
-                    handleRingOfRecoil(npc, target, hit);
-                    handleVengHit(target, hit);
-                    if (npc.getId() >= 912 && npc.getId() <= 914) {
-                        if (hit.getDamage() == 0) target.gfx(new Graphics(85, 0, 96));
-                        else target.gfx(new Graphics(npc.getCombatDefinitions().getAttackProjectile(), 0, 0));
-                    }
-                    if (npc.getId() == 6367) {
-                        if (hit.getDamage() == 0) target.gfx(new Graphics(85, 0, 96));
-                        if (hit.getDamage() > 0 && target.isFrozen())
-                            target.gfx(new Graphics(1677));
-                        if (hit.getDamage() > 0 && !target.isFrozen())
-                            target.gfx(new Graphics(369));
-                    }
-                    if (npc.getId() == 1007 && hit.getLook() == HitLook.MAGIC_DAMAGE) {
-                        if (hit.getDamage() == 0) target.gfx(new Graphics(85, 0, 96));
-                        if (hit.getDamage() > 0) target.gfx(new Graphics(78, 0, 0));
-                    }
-                    if (npc.getId() == 1264 && hit.getLook() == HitLook.MAGIC_DAMAGE) {
-                        if (hit.getDamage() == 0) target.gfx(new Graphics(85, 0, 96));
-                        if (hit.getDamage() > 0) target.gfx(new Graphics(76, 0, 0));
-                    }
-                    if (hit.getDamage() == 0) {
-                        if (npc.getId() == 9172)// aquanite splash
-                            target.gfx(new Graphics(2122));
-                    }
-                    npc.getCombat().doDefenceEmote(target);
-                    if (target instanceof Player player) {
-                        player.closeInterfaces();
-                        if (player.getCombatDefinitions().isAutoRelatie() && !player.getNewActionManager().hasActionWorking() && !player.hasWalkSteps())
-                            player.getNewActionManager().setAction(new CombatAction(npc));
-                        if (player.familiarAutoAttack) {
-                            if (player.getFamiliar() != null && !player.getFamiliar().getCombat().hasTarget() && player.isAtMultiArea()) {
-                                player.getFamiliar().setTarget(npc);
-                            }
-                        }
-                    } else {
-                        NPC n = (NPC) target;
-                        if (!n.isUnderCombat() || n.canBeAttackedByAutoRelatie()) n.setTarget(npc);
-                    }
-
+                    applyRegisteredHit(npc, target, hit);
                 }
             }
-
         }, delay);
     }
 

@@ -119,7 +119,7 @@ public class CorporealBeastCombat extends CombatScript {
 		npc.animate(10410);
 		Hit magicHit = npc.magicHit(target, 650);
 		ProjectileManager.send(Projectile.STANDARD_MAGIC_INSTANT, 1825, npc, target, () -> {
-			delayHit(npc, target, 0, magicHit);
+			applyRegisteredHit(npc, target, magicHit);
 		});
 	}
 
@@ -127,7 +127,7 @@ public class CorporealBeastCombat extends CombatScript {
 		npc.animate(10410);
 		Hit magicHit = npc.magicHit(target, 550);
 		ProjectileManager.send(Projectile.STANDARD_MAGIC_INSTANT, 1823, npc, target, () -> {
-			delayHit(npc, target, 0, magicHit);
+			applyRegisteredHit(npc, target, magicHit);
 			if (target instanceof Player p2) {
 				drainRandomSkill(p2);
 			}
@@ -176,7 +176,6 @@ public class CorporealBeastCombat extends CombatScript {
 
 			if (!World.canMoveNPC(aoeTile.getPlane(), aoeTile.getX(), aoeTile.getY(), 1))
 				continue;
-
 			ProjectileManager.sendToTile(
 					Projectile.STANDARD_MAGIC_INSTANT,
 					1824,

@@ -32,7 +32,7 @@ public class AquaniteCombat extends CombatScript {
 				}
 			}
 		}
-		delayHit(npc, target, 2, mageHit);
+		delayHit(npc, target, npc.getHitDelay(npc, target), mageHit);
 		return npc.getAttackSpeed();
 	}
 

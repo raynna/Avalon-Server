@@ -3,6 +3,7 @@ package com.rs.java.game.npc.combat;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
+import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.kotlin.game.npc.combatdata.AttackStyle;
 import com.rs.kotlin.game.npc.combatdata.CombatData;
@@ -29,46 +30,31 @@ public class Default extends CombatScript {
 				NpcAttackStyle attackStyle = NpcAttackStyle.fromList(npc.getCombatData().attackStyles);
 				switch (attackStyle) {
 					case STAB, SLASH, CRUSH -> {
-						int damage = NpcCombatCalculations.getRandomMaxHit(
-								npc,
-								npc.getMaxHit(),
-								attackStyle,
-								target
-						);
-						delayHit(npc, target, 0, getMeleeHit(npc, damage));
+						Hit meleeHit = npc.meleeHit(target, npc.getMaxHit(), attackStyle);
+						delayHit(npc, target, 0, meleeHit);
 					}
 
 				}
 			}
 			case AttackStyle.RANGE -> {
-				int damage = NpcCombatCalculations.getRandomMaxHit(
-						npc,
-						npc.getMaxHit(),
-						NpcAttackStyle.RANGED,
-						target
-				);
+				Hit rangeHit = npc.rangedHit(target, npc.getMaxHit());
 				if (defs.getAttackProjectile() != -1) {
 					ProjectileManager.send(Projectile.ARROW, defs.getAttackProjectile(), npc, target, () -> {
-						delayHit(npc, target, 0, getRangeHit(npc, damage));
+						applyRegisteredHit(npc, target, rangeHit);
 					});
 				} else {
-					delayHit(npc, target, npc.getHitDelay(npc, target), getRangeHit(npc, damage));
+					delayHit(npc, target, npc.getHitDelay(npc, target), rangeHit);
 				}
 			}
 
 			case AttackStyle.MAGIC -> {
-				int damage = NpcCombatCalculations.getRandomMaxHit(
-						npc,
-						npc.getMaxHit(),
-						NpcAttackStyle.MAGIC,
-						target
-				);
+				Hit mageHit = npc.magicHit(target, npc.getMaxHit());
 				if (defs.getAttackProjectile() != -1) {
 					ProjectileManager.send(Projectile.ELEMENTAL_SPELL, defs.getAttackProjectile(), npc, target, () -> {
-						delayHit(npc, target, 0, getMagicHit(npc, damage));
+						applyRegisteredHit(npc, target, mageHit);
 					});
 				} else {
-					delayHit(npc, target, npc.getHitDelay(npc, target), getMagicHit(npc, damage));
+					delayHit(npc, target, npc.getHitDelay(npc, target), mageHit);
 				}
 			}
 		}

@@ -20,6 +20,7 @@ import com.rs.java.game.SecondaryBar;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombat;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
@@ -1356,6 +1357,12 @@ public class NPC extends Entity implements Serializable {
         return getCombatDefinitions().getAttackProjectile();
     }
 
+    public Hit createAndRegisterHit(Entity target, int damage, HitLook look) {
+        Hit hit = new Hit(this, damage, look);
+        CombatScript.registerHit(this, target, hit);
+        return hit;
+    }
+
     public Hit meleeHit(Entity target, int maxHit) {
         return meleeHit(target, maxHit, HitLook.MELEE_DAMAGE);
     }
@@ -1363,19 +1370,19 @@ public class NPC extends Entity implements Serializable {
     public Hit meleeHit(Entity target, int maxHit, HitLook look) {
         int damage = NpcCombatCalculations.getRandomMaxHit(
                 this, maxHit, NpcAttackStyle.CRUSH, target);
-        return new Hit(this, damage, look);
+        return createAndRegisterHit(target, damage, look);
     }
 
     public Hit meleeHit(Entity target, int maxHit, NpcAttackStyle style) {
         int damage = NpcCombatCalculations.getRandomMaxHit(
                 this, maxHit, style, target);
-        return new Hit(this, damage, HitLook.MELEE_DAMAGE);
+        return createAndRegisterHit(target, damage, HitLook.MELEE_DAMAGE);
     }
 
     public Hit magicalMelee(Entity target, int maxHit) {
         int damage = NpcCombatCalculations.getRandomMaxHit(
                 this, maxHit, NpcAttackStyle.MAGICAL_MELEE, target);
-        return new Hit(this, damage, HitLook.MELEE_DAMAGE);
+        return createAndRegisterHit(target, damage, HitLook.MELEE_DAMAGE);
     }
 
     public Hit magicHit(Entity target, int maxHit) {
@@ -1388,7 +1395,7 @@ public class NPC extends Entity implements Serializable {
     public Hit magicHit(Entity target, int maxHit, HitLook look) {
         int damage = NpcCombatCalculations.getRandomMaxHit(
                 this, maxHit, NpcAttackStyle.MAGIC, target);
-        return new Hit(this, damage, look);
+        return createAndRegisterHit(target, damage, look);
     }
 
     public Hit rangedHit(Entity target, int maxHit) {
@@ -1398,7 +1405,7 @@ public class NPC extends Entity implements Serializable {
     public Hit rangedHit(Entity target, int maxHit, HitLook look) {
         int damage = NpcCombatCalculations.getRandomMaxHit(
                 this, maxHit, NpcAttackStyle.RANGED, target);
-        return new Hit(this, damage, look);
+        return createAndRegisterHit(target, damage, look);
     }
 
     public NpcAttackStyle getAttackStyle() {
