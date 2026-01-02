@@ -245,7 +245,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 anyOf = listOf(
                     Rscm.item("item.zuriel_s_staff"),
                     Rscm.item("item.zuriel_s_staff_deg"),
-                    Rscm.item("item.c_zuriel_s_staff"),
+                    Rscm.item("item.corrupt_zuriel_s_staff"),
                     Rscm.item("item.corrupt_zuriel_s_staff_deg"),
                 )
             ),
@@ -352,7 +352,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 anyOf = listOf(
                     Rscm.item("item.zuriel_s_staff"),
                     Rscm.item("item.zuriel_s_staff_deg"),
-                    Rscm.item("item.c_zuriel_s_staff"),
+                    Rscm.item("item.corrupt_zuriel_s_staff"),
                     Rscm.item("item.corrupt_zuriel_s_staff_deg"),
                 )
             ),
@@ -461,7 +461,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 anyOf = listOf(
                     Rscm.item("item.zuriel_s_staff"),
                     Rscm.item("item.zuriel_s_staff_deg"),
-                    Rscm.item("item.c_zuriel_s_staff"),
+                    Rscm.item("item.corrupt_zuriel_s_staff"),
                     Rscm.item("item.corrupt_zuriel_s_staff_deg"),
                 )
             ),
@@ -569,7 +569,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 anyOf = listOf(
                     Rscm.item("item.zuriel_s_staff"),
                     Rscm.item("item.zuriel_s_staff_deg"),
-                    Rscm.item("item.c_zuriel_s_staff"),
+                    Rscm.item("item.corrupt_zuriel_s_staff"),
                     Rscm.item("item.corrupt_zuriel_s_staff_deg"),
                 )
             ),
