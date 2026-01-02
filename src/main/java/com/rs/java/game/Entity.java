@@ -197,6 +197,11 @@ public abstract class Entity extends WorldTile {
     public void applyHit(Hit hit) {
         if (isDead())
             hit.setDamage(0);
+        Entity source = hit.getSource();
+        if (source instanceof Player && source.dead) {
+            resetReceivedHits();
+            return;
+        }
         if (this instanceof Player player) {
             if (player.invulnerable)
                 return;
@@ -247,7 +252,11 @@ public abstract class Entity extends WorldTile {
         Iterator<Hit> iterator = receivedHits.iterator();
         while (iterator.hasNext() && processedCount < totalHitsProcess) {
             Hit hit = iterator.next();
-
+            Entity source = hit.getSource();
+            if (source instanceof Player && source.dead) {
+                resetReceivedHits();
+                return;
+            }
             if (hit instanceof BleedHit bleed) {
                 if (!bleed.tick()) {
                     continue;
@@ -262,8 +271,13 @@ public abstract class Entity extends WorldTile {
     }
 
     public void processHit(Hit hit) {
-        /*if (isDead())
-            return;*/
+        if (isDead())
+            return;
+        Entity source = hit.getSource();
+        if (source instanceof Player && source.dead) {
+            resetReceivedHits();
+            return;
+        }
         if (this instanceof Player) {
             Player p = (Player) this;
             if (hit.getDamage() < 0)
@@ -294,6 +308,9 @@ public abstract class Entity extends WorldTile {
 
     public void removeHitpoints(Hit hit) {
         if (isDead() || hit.getLook() == HitLook.ABSORB_DAMAGE)
+            return;
+        Entity source = hit.getSource();
+        if (source instanceof Player && source.dead)
             return;
         if (hit.getLook() == HitLook.HEALED_DAMAGE) {
             heal(hit.getDamage());

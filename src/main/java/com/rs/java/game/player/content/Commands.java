@@ -52,6 +52,7 @@ import com.rs.java.utils.IPBanL;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.AccountCreation;
+import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public final class Commands {
 
@@ -2628,6 +2629,10 @@ public final class Commands {
                     } catch (Throwable t) {
                         t.printStackTrace();
                     }
+                    return true;
+                case "testpvpdrop":
+                    player.setEP(100);
+                    PvpManager.INSTANCE.onDeath(player, player);
                     return true;
                 case "npc":
                     try {

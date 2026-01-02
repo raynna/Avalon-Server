@@ -309,10 +309,6 @@ public final class WorldPacketsDecoder extends Decoder {
 		this.player = player;
 	}
 
-	// -------------------------------------------------------------------------------------
-	// Core decode loop
-	// -------------------------------------------------------------------------------------
-
 	@Override
 	public void decode(InputStream stream) {
 		while (stream.getRemaining() > 0 && session.getChannel().isConnected() && !player.hasFinished()) {
@@ -2381,8 +2377,6 @@ public final class WorldPacketsDecoder extends Decoder {
 		if (player.getInterfaceManager().containsInterface(1103))
 			ClansManager.setClanMottoInterface(player, value);
 	}
-
-	// --- World map / dialogue / assist / click ---
 
 	private static void handleWorldMapClick(Player player, InputStream stream) {
 		int coordinateHash = stream.readInt();

@@ -9,7 +9,6 @@ import com.rs.java.game.player.teleportation.Teleports.TeleportLocations;
 import com.rs.java.utils.Utils;
 
 public class TeleportTab extends CustomTab {
-	// Constants for teleport categories
 	private static final int CITY_TELEPORTS = 0;
 	private static final int SKILLING = 1;
 	private static final int MONSTERS = 2;
@@ -18,7 +17,6 @@ public class TeleportTab extends CustomTab {
 	private static final int MINIGAMES = 5;
 	private static final int WILDERNESS = 6;
 
-	// Constants for skilling subcategories
 	private static final int SKILLING_MINING = 13;
 	private static final int SKILLING_SMITHING = 14;
 	private static final int SKILLING_FISHING = 15;
@@ -59,7 +57,6 @@ public class TeleportTab extends CustomTab {
 	}
 
 	public enum TeleportTabData {
-		// City Teleports
 		ALKHARID("A", 3, CITY_TELEPORTS, "Al Kharid"),
 		ARDOUGNE("A", 4, CITY_TELEPORTS, "Ardougne"),
 		BURTHORPE("B", 5, CITY_TELEPORTS, "Burthorpe"),
@@ -80,7 +77,6 @@ public class TeleportTab extends CustomTab {
 		VARROCK("V", 20, CITY_TELEPORTS, "Varrock"),
 		YANILLE("Y", 21, CITY_TELEPORTS, "Yanille"),
 
-		// Skilling Teleports
 		MINING(3, SKILLING, "Mining", true),
 		SMITHING(4, SKILLING, "Smithing", true),
 		FISHING(5, SKILLING, "Fishing", true),
@@ -92,7 +88,6 @@ public class TeleportTab extends CustomTab {
 		RUNECRAFTING(11, SKILLING, "Runecrafting", true),
 		HUNTER(12, SKILLING, "Hunter", true),
 
-		// Mining Locations
 		ALKHARID_MINING(3, SKILLING_MINING, "Al-kharid Mining"),
 		FALADOR_MINING(4, SKILLING_MINING, "Falador Mining"),
 		TZHAAR_MINING(5, SKILLING_MINING, "Tzhaar Mining"),
@@ -102,26 +97,21 @@ public class TeleportTab extends CustomTab {
 		CRANDOR_MINING(9, SKILLING_MINING, "Crandor Mining"),
 		GEM_ROCK_MINING(10, SKILLING_MINING, "Gem Rock Mining"),
 
-		// Smithing Locations
 		ALKHARID_FURNACE(3, SKILLING_SMITHING, "Al-kharid Furnace"),
 		WILDY_FURNACE(4, SKILLING_SMITHING, true, "Wilderness Furnace"),
 		NEIT_FURNACE(5, SKILLING_SMITHING, "Neitiznot Furnace"),
 
-		// Fishing Locations
 		CATHERBY_FISHING(3, SKILLING_FISHING, "Catherby Fishing"),
 		FISHING_GUILD_FISHING(4, SKILLING_FISHING, "Fishing Guild Fishing"),
 
-		// Cooking Locations
 		CATHERBY_RANGE(3, SKILLING_COOKING, "Catherby Range"),
 		COOKS_GUILD_RANGE(4, SKILLING_COOKING, "Cook's Guild Range"),
 
-		// Woodcutting Locations
 		CAMELOT_WOODCUTTING(3, SKILLING_WOODCUTTING, "Camelot Woodcutting"),
 		GE_WOODCUTTING(4, SKILLING_WOODCUTTING, "Grand Exchange Woodcutting"),
 		ETCETERIA_WOODCUTTING(5, SKILLING_WOODCUTTING, "Etceteria Woodcutting"),
 		PORT_SARIM_WOODCUTTING(6, SKILLING_WOODCUTTING, "Port Sarim Woodcutting"),
 
-		// Farming Locations
 		CATHERBY_PATCHES(3, SKILLING_FARMING, "Catherby Patches"),
 		PORT_PHATASS_PATCHES(4, SKILLING_FARMING, "Port Phasmatys Patches"),
 		ARDY_PATCHES(5, SKILLING_FARMING, "Ardougne Patches"),
@@ -129,18 +119,15 @@ public class TeleportTab extends CustomTab {
 		LLETYA_PATCHES(7, SKILLING_FARMING, "Letya Patches"),
 		FALADOR_SOUTH_PATCHES(8, SKILLING_FARMING, "Falador South Patches"),
 
-		// Agility Locations
 		GNOME_COURSE(3, SKILLING_AGILITY, "Gnome Agility Course"),
 		BARB_COURSE(4, SKILLING_AGILITY, "Barbarian Agility Course"),
 		WILDY_COURSE(5, SKILLING_AGILITY, "Wilderness Agility Course"),
 		PYRAMID_COURSE(6, SKILLING_AGILITY, "Pyramid Agility Course"),
 		APE_COURSE(7, SKILLING_AGILITY, "Ape Atoll Agility Course"),
 
-		// Thieving Locations
 		ARDOUGNE_STALLS(3, SKILLING_THIEVING, "Ardougne Stalls"),
 		DRAYNOR_STALLS(4, SKILLING_THIEVING, "Draynor Stalls"),
 
-		// Runecrafting Locations
 		AIR_ALTAR(3, SKILLING_RUNECRAFTING, "Air Altar", 1),
 		MIND_ALTAR(4, SKILLING_RUNECRAFTING, "Mind Altar", 2),
 		WATER_ALTAR(5, SKILLING_RUNECRAFTING, "Water Altar", 5),
@@ -157,12 +144,10 @@ public class TeleportTab extends CustomTab {
 		OURANIA_ALTAR(16, SKILLING_RUNECRAFTING, "Ourania Altar", 1),
 		ABYSS(17, SKILLING_RUNECRAFTING, "Abyss Alters", 1),
 
-		// Hunter Locations
 		HUNTER_ISLAND(3, SKILLING_HUNTER, "Hunter Island", 1),
 		FALCONRY(4, SKILLING_HUNTER, "Falconry Training", 43),
 		GRENWALL(5, SKILLING_HUNTER, "Grenwall Hunter", 77),
 
-		// Monster Teleports
 		ROCK_CRABS(3, MONSTERS, "Rock Crabs"),
 		GOBLINS(4, MONSTERS, "Goblins"),
 		MINOTAURS(5, MONSTERS, "Minotaurs"),
@@ -175,7 +160,6 @@ public class TeleportTab extends CustomTab {
 		DESERT_WYRM(12, MONSTERS, "Desert Strykewyrm"),
 		ICE_WYRM(13, MONSTERS, "Ice Strykewyrm"),
 
-		// Dungeon/Slayer Teleports
 		SLAYER_TOWER(3, DUNGEONS, "Slayer Tower"),
 		TAVERLY(4, DUNGEONS, "Taverly Dungeon"),
 		BRIMHAVEN(5, DUNGEONS, "Brimhaven Dungeon"),
@@ -193,7 +177,6 @@ public class TeleportTab extends CustomTab {
 		DUNGEONEERING(17, DUNGEONS, "Dungeoneering"),
 		IKOV_TEMPLE(18, DUNGEONS, "Temple of Ikov Dungeon"),
 
-		// Boss Teleports
 		GODWARS(3, BOSSES, "Godwars"),
 		CORP(4, BOSSES, "Corpreal Beast"),
 		KQ(5, BOSSES, "Kalphite Queen"),
@@ -205,7 +188,6 @@ public class TeleportTab extends CustomTab {
 		KBD(11, BOSSES, "King Black Dragon"),
 		CHAOS_ELEMENTAL(12, BOSSES, true, "Chaos Elemental"),
 
-		// Minigame Teleports
 		FIGHTCAVES(3, MINIGAMES, "Fight Caves"),
 		FIGHTKILN(4, MINIGAMES, "Fight Kiln"),
 		PESTCONTROL(5, MINIGAMES, "Pest Control"),
@@ -217,7 +199,6 @@ public class TeleportTab extends CustomTab {
 		CASTLE_WARS(11, MINIGAMES, "Castle Wars"),
 		OURANIA_ALTAR$(12, MINIGAMES, "Ourania Altar"),
 
-		// Wilderness Teleports
 		WEST_DRAGONS(3, WILDERNESS, true, "West Dragons"),
 		EAST_DRAGONS(4, WILDERNESS, true, "East Dragons"),
 		CHAOS_WILDY_ALTAR(5, WILDERNESS, true, "Chaos Altar"),

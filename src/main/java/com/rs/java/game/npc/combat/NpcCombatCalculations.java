@@ -35,6 +35,7 @@ public class NpcCombatCalculations {
             case MAGIC -> {
                 int mageLevel = data.magicLevel;
                 int mageBonus = data.magicBonus;
+                System.out.println("mageLevel: " + mageLevel + ", mageBonus: " + mageBonus);
                 return effectiveRoll(mageLevel, mageBonus);
             }
             case RANGED -> {
@@ -62,7 +63,7 @@ public class NpcCombatCalculations {
         if (target instanceof NPC targetNpc) {
             return calculateNpcDefenceRoll(targetNpc, style);
         }
-        return 1; // fallback
+        return 1;
     }
 
     private static double calculatePlayerDefenceRoll(Player player, NpcAttackStyle style, NPC npc) {
@@ -126,7 +127,7 @@ public class NpcCombatCalculations {
             probability = attackRoll / (2.0 * (defenceRoll + 1.0));
         }
 
-        //System.out.println("Hitchance: " + String.format("%.1f", probability * 100) + "%");
+        System.out.println("Hitchance: " + String.format("%.1f", probability * 100) + "%");
 
         return random < probability;
     }

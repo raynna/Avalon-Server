@@ -2868,14 +2868,17 @@ public class ButtonHandler {
                 slotIndex = rawSlot;
             }
             if (sentSlots.add(slotIndex)) {
-                player.getVarsManager().sendVarBit("varbit.death_kept_item_slot_1" + keptSlotCount, slotIndex);
+                int slotConfig = Rscm.lookup("varbit.death_kept_item_count") + keptSlotCount;
+                player.getVarsManager().sendVarBit(slotConfig, slotIndex);
                 keptSlotCount++;
             }
         }
 
         //clear the unused slots
-        for (int i = keptSlotCount; i < 4; i++)
-            player.getVarsManager().sendVarBit("varbit.death_kept_item_slot_1" + i, -1);
+        for (int i = keptSlotCount; i < 4; i++) {
+            int slotConfig = Rscm.lookup("varbit.death_kept_item_count") + i;
+            player.getVarsManager().sendVarBit(slotConfig, -1);
+        }
 
         player.getVarsManager().sendVarBit("varbit.death_kept_item_count", Math.max(keptSlotCount, 1));
         player.getVarsManager().sendVarBit("varbit.death_in_unsafe_area", (wilderness || inFfa) ? 1 : 0);

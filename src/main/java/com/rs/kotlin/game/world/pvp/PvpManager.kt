@@ -58,6 +58,8 @@ object PvpManager {
 
     @JvmStatic
     fun onDeath(deadPlayer: Player, killer: Player) {
+        if (deadPlayer == killer)
+            return;
         lastPvpHitAt.remove(deadPlayer)
         lastPvpHitAt.remove(killer)
 
@@ -67,7 +69,7 @@ object PvpManager {
         val drops = EpTable.main.rollDrops(killer)
         for (drop in drops) {
             val item = Item(drop.itemId, drop.amount)
-            World.addGroundItem(item, killer, killer, true, 60)
+            World.updateGroundItem(item, deadPlayer.tile, killer, 60, 1)
             killer.message("You received ${item.amount} x ${item.name} as a PvP drop!")
 
             val price = item.definitions.tipitPrice

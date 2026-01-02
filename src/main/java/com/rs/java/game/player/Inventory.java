@@ -60,7 +60,6 @@ public final class Inventory implements Serializable {
 
 
 	public Item[] createSnapshot() {
-		// Returns a deep copy of the inventory items
 		Item[] copy = new Item[items.getSize()];
 		for (int i = 0; i < items.getSize(); i++) {
 			Item item = items.get(i);

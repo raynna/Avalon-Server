@@ -92,7 +92,8 @@ public abstract class CombatScript {
     public static void applyRegisteredHit(NPC npc, Entity target, Hit hit) {
         if (npc.isDead() || npc.hasFinished() || target.isDead() || target.hasFinished())
             return;
-
+        if (hit.getLook() == HitLook.MAGIC_DAMAGE && hit.getDamage() == 0)//splash for npc magic
+            return;
         target.applyHit(hit);
 
         if (target instanceof Player defender) {
@@ -102,7 +103,6 @@ public abstract class CombatScript {
         handleRingOfRecoil(npc, target, hit);
         handleVengHit(target, hit);
 
-        // --- graphics ---
         if (npc.getId() >= 912 && npc.getId() <= 914) {
             target.gfx(hit.getDamage() == 0
                     ? new Graphics(85, 0, 96)
@@ -127,7 +127,6 @@ public abstract class CombatScript {
                     ? new Graphics(85, 0, 96)
                     : new Graphics(76, 0, 0));
         }
-
         if (hit.getDamage() == 0 && npc.getId() == 9172) {
             target.gfx(new Graphics(2122));
         }

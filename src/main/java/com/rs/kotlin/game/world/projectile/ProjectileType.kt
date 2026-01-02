@@ -3,7 +3,7 @@ package com.rs.kotlin.game.world.projectile
 data class ProjectileType(
     val startHeight: Int = 42,
     val endHeight: Int = 28,
-    val delay: Double = 1.5,   // fractional ticks
+    val delay: Double = 1.5,
     val speed: Int = 5,        // 1 = slowest, 10 = fastest
     val angle: Int = 12,
     val displacement: Int = 0

@@ -3884,7 +3884,7 @@ public class Player extends Entity {
                 inventory.addItem(item.getId(), item.getAmount());
             }
         }
-        World.addGroundItem(new Item(526, 1), deathTile, killer, true, 60);
+        World.updateGroundItem(new Item(526), deathTile, killer, 60, 1);
         for (int i = 0; i < items[1].length; i++) {
             Item item = items[1][i];
             if (Settings.ECONOMY_MODE == 1 && !LimitedGEReader.itemIsLimited(item.getId()) && ItemConstants.isTradeable(item) && EconomyPrices.getPrice(item.getId()) == 0)// skip to drop free
@@ -3911,21 +3911,22 @@ public class Player extends Entity {
             World.updateGroundItem(item, deathTile, killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
         }
         message("You have lost approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
-        int randomCoins = Utils.randomise(25000, 100000);
-        World.updateGroundItem(new Item(995, randomCoins), deathTile, killer, 60, 1);
-        killer.message("You recieved an extra " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(randomCoins, ',')) + " coins for killing: " + getDisplayName() + ".");
-        int randomPvpTokens = Utils.randomise(250, 1000);
-        World.updateGroundItem(new Item(12852, randomPvpTokens), deathTile, killer, 60, 1);
-        killer.message("You recieved " + randomPvpTokens + " pvp tokens for killing " + getDisplayName() + ".");
-        if (killer != this)
-            killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
-        if (killer.totalCurrentDrop > killer.getHighestValuedKill() && killer.hasWildstalker() && killer != this) {
-            killer.setHighestValuedKill(killer.totalCurrentDrop);
-            killer.message("New highest value Wilderness kill: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.getHighestValuedKill())) + " coins!");
-        }
-        if (killer != null) {
-            PvpManager.onDeath(this, killer);
-        }
+       if (killer != null && killer != this) {
+           int randomCoins = Utils.randomise(25000, 100000);
+           World.updateGroundItem(new Item(995, randomCoins), deathTile, killer, 60, 1);
+           killer.message("You recieved an extra " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(randomCoins, ',')) + " coins for killing: " + getDisplayName() + ".");
+
+           int randomPvpTokens = Utils.randomise(250, 1000);
+           World.updateGroundItem(new Item(12852, randomPvpTokens), deathTile, killer, 60, 1);
+           killer.message("You recieved " + randomPvpTokens + " pvp tokens for killing " + getDisplayName() + ".");
+
+           killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
+           if (killer.totalCurrentDrop > killer.getHighestValuedKill() && killer.hasWildstalker() && killer != this) {
+               killer.setHighestValuedKill(killer.totalCurrentDrop);
+               killer.message("New highest value Wilderness kill: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.getHighestValuedKill())) + " coins!");
+           }
+           PvpManager.onDeath(this, killer);
+       }
     }
 
     public final boolean isAtWild() {
