@@ -306,7 +306,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             }
         }
         attacker.temporaryAttributes()["CASTED_SPELL"] = spell
-        delayHits(PendingHit(hit, defender, getHitDelay()))
+        delayHits(PendingHit(hit, defender, if (spell.chargeBoost) 1 else getHitDelay()))//instant attack for godspells, TODO better handling
         if (manual) {
             WorldTasksManager.schedule(object : WorldTask() {
                 override fun run() {
@@ -375,7 +375,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 )
             }
             attacker.temporaryAttributes()["CASTED_SPELL"] = spell
-            delayHits(PendingHit(hit, t, getHitDelay()))
+            delayHits(PendingHit(hit, t, getHitDelay()))//instant attack for godspells, TODO better handling
         }
         if (manual) {
             attacker.combatDefinitions.resetSpells(false)

@@ -1467,22 +1467,18 @@ public final class World {
         if (shouldTrack) {
             region.getGroundItemsSafe().add(floorItem);
         }
-        System.out.println("shouldTrack: " + shouldTrack);
 
         // Send to owner if invisible
         if (invisible && owner != null) {
-            System.out.println("invinsible item: " + floorItem.getDisplayName());
             if (type != 2 || ItemConstants.isTradeable(item) || ItemConstants.turnCoins(item))
                 owner.getPackets().sendGroundItem(floorItem);
         }
 
         // Public broadcast
         if (shouldBroadcast) {
-            System.out.println("should broadcast: " + floorItem.getDisplayName());
             boolean checkTradeable = (type != 2);
             broadcastGroundItem(floorItem, checkTradeable);
             if (publicTime != -1) {
-                System.out.println("publicTime != -1: " + floorItem.getDisplayName());
                 removeGroundItem(floorItem, publicTime);
             }
         } else if (hiddenTime != -1) {
