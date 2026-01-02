@@ -229,14 +229,12 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 defender.message("You absorb ${attacker.displayName}'s ${currentSpell?.name} into your greater runic staff.")
             }
         }
-
-        if (hit.damage == 0) {
-            if (currentSpell?.endGraphic == null)
-                defender.gfx(SPLASH_GRAPHIC, 100)
-            defender.playSound(227, 1)
-            return
-        }
         if (currentSpell != null) {
+            if (hit.damage == 0) {
+                defender.gfx(SPLASH_GRAPHIC, 100)
+                defender.playSound(227, 1)
+                return;
+            }
             if (currentSpell.name.contains("teleport block", ignoreCase = true)) {
                 val blockTime = defender.temporaryAttributes().remove("TELEBLOCK_QUEUE") as? Int
                 if (blockTime != null && blockTime != -1) {
@@ -256,7 +254,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     private fun handleModernMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
         val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
         val splash = hit.damage == 0
-        val endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
+        val endGraphic = if (!splash) spell.endGraphic else Graphics(-1)
         if (hit.damage > 0 && spell.bind != -1) {
             if (!defender.isFreezeImmune) {
                 defender.freeze(spell.bind)
@@ -353,7 +351,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         for (t in targets) {
             val hit = registerHit(attacker, t, combatType = CombatType.MAGIC, spellId = spell.id)
             val splash = hit.damage == 0
-            var endGraphic = if (!splash) spell.endGraphic else Graphics(SPLASH_GRAPHIC, 100)
+            var endGraphic = if (!splash) spell.endGraphic else Graphics(-1)
 
             if (hit.damage > 0) {
                 if (spell.id == 23 && (t.isFreezeImmune || t.isFrozen || t.size >= 2)) {
