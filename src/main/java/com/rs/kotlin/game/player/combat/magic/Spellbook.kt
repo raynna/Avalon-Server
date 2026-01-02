@@ -241,6 +241,14 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 1),
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 1)
             ),
+            staff = StaffRequirement(
+                anyOf = listOf(
+                    Rscm.item("item.zuriel_s_staff"),
+                    Rscm.item("item.zuriel_s_staff_deg"),
+                    Rscm.item("item.c_zuriel_s_staff"),
+                    Rscm.item("item.corrupt_zuriel_s_staff_deg"),
+                )
+            ),
             animationId = 10513,
             graphicId = Graphics(1845),
             projectileId = 1846,
@@ -339,6 +347,14 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.CHAOS, 4),
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 2),
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 2)
+            ),
+            staff = StaffRequirement(
+                anyOf = listOf(
+                    Rscm.item("item.zuriel_s_staff"),
+                    Rscm.item("item.zuriel_s_staff_deg"),
+                    Rscm.item("item.c_zuriel_s_staff"),
+                    Rscm.item("item.corrupt_zuriel_s_staff_deg"),
+                )
             ),
             animationId = 10516,
             graphicId = Graphics(1848),
@@ -441,6 +457,14 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 3),
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 3)
             ),
+            staff = StaffRequirement(
+                anyOf = listOf(
+                    Rscm.item("item.zuriel_s_staff"),
+                    Rscm.item("item.zuriel_s_staff_deg"),
+                    Rscm.item("item.c_zuriel_s_staff"),
+                    Rscm.item("item.corrupt_zuriel_s_staff_deg"),
+                )
+            ),
             animationId = 10524,
             graphicId = Graphics(1850),
             projectileId = 1852,
@@ -540,6 +564,14 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 4),
                 RuneRequirement(RuneDefinitions.Runes.EARTH, 4),
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 4)
+            ),
+            staff = StaffRequirement(
+                anyOf = listOf(
+                    Rscm.item("item.zuriel_s_staff"),
+                    Rscm.item("item.zuriel_s_staff_deg"),
+                    Rscm.item("item.c_zuriel_s_staff"),
+                    Rscm.item("item.corrupt_zuriel_s_staff_deg"),
+                )
             ),
             animationId = 10518,
             projectileType = Projectile.ANCIENT_SPELL,
