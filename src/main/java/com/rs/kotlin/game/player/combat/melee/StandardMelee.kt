@@ -1,6 +1,7 @@
 package com.rs.kotlin.game.player.combat.melee
 
 import com.rs.java.game.Animation
+import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
@@ -161,7 +162,7 @@ object StandardMelee : MeleeData() {
                         firstHit.critical = true
                     context.hits {
                         addHit(context.defender, firstHit)
-                        context.defender.gfx("graphic.korasi_special_attack_end")
+                        context.defender.delayGfx(Graphics("graphic.korasi_special_attack_end"), 1)
                         if (isMultiCombat) {
                             val extraTargets = context.getMultiAttackTargets(maxDistance = 1, maxTargets = 2)
                             val damages = listOf(firstHitDamage / 2, firstHitDamage / 4)

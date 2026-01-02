@@ -81,6 +81,8 @@ object SpellHandler {
     private fun castInstant(player: Player, spell: Spell) {
         if (spell.name.equals("charge", ignoreCase = true)) {
             player.animate(811)
+            player.tickManager.addMinutes(TickManager.TickKeys.CHARGE_SPELL, 2)
+            player.message("You are now feeling the power of the charge spell.")
         }
     }
 
@@ -126,23 +128,45 @@ object SpellHandler {
                 return false
             }
         }
+        if (spell.type is SpellType.Instant) {
+            if (spell.id == 83 && player.tickManager.isActive(TickManager.TickKeys.CHARGE_SPELL)) {
+                player.message("Your charge is still active for another ${player.tickManager.getTimeLeft(TickManager.TickKeys.CHARGE_SPELL)}s.");
+                return false;
+            }
+        }
 
         if (player.isLocked) {
             return false
         }
 
         spell.staff?.let { staffReq ->
-            if (staffReq.ids.isNotEmpty() && staffReq.ids.none { id ->
-                    player.equipment.weaponId == id
-                }) {
-                player.packets.sendGameMessage("You don't have the required staff equipped to cast this spell.")
+            if (staffReq.anyOf.isNotEmpty() &&
+                staffReq.anyOf.none { id -> player.equipment.weaponId == id }
+            ) {
+                player.packets.sendGameMessage(
+                    "You don't have the required staff equipped to cast this spell."
+                )
                 return false
             }
         }
 
-        spell.requiredItem?.let { itemId ->
-            if (!player.inventory.containsOneItem(itemId)) {
-                player.packets.sendGameMessage("You don't have the required item to cast this spell.")
+        spell.itemRequirement?.let { req ->
+
+            if (req.anyOf.isNotEmpty() &&
+                req.anyOf.none { player.equipment.containsOneItem(it) }
+            ) {
+                player.packets.sendGameMessage(
+                    "You don't have the required item to cast this spell."
+                )
+                return false
+            }
+
+            if (req.allOf.isNotEmpty() &&
+                !req.allOf.all { player.equipment.containsOneItem(it) }
+            ) {
+                player.packets.sendGameMessage(
+                    "You don't have all required items to cast this spell."
+                )
                 return false
             }
         }
@@ -425,10 +449,20 @@ object SpellHandler {
                 if (spell.name.contains("home", ignoreCase = true) && (EdgevillePvPControler.isAtPvP(player) || EdgevillePvPControler.isAtBank(player))) {
                     teleTile = WorldTile(85, 80, 0)
                 }
-                for (trycount in 0 until 10) {
-                    teleTile = WorldTile(teleTile, 2)
-                    if (World.canMoveNPC(teleTile.plane, teleTile.x, teleTile.y, player.size)) {
-                        break
+                val baseTile = tile
+
+                repeat(10) {
+                    val dx = Utils.random(-1, 1)
+                    val dy = Utils.random(-1, 1)
+                    val testTile = WorldTile(
+                        baseTile.x + dx,
+                        baseTile.y + dy,
+                        baseTile.plane
+                    )
+
+                    if (World.canMoveNPC(testTile.plane, testTile.x, testTile.y, player.size)) {
+                        teleTile = testTile
+                        return@repeat
                     }
                 }
 

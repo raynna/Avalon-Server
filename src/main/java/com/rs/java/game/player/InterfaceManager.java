@@ -445,7 +445,7 @@ public class InterfaceManager {
 
 	public void sendFadingInterface(String inter) {
 		int id = Rscm.lookup(inter);
-		sendFadingInterface(inter);
+		sendFadingInterface(id);
 	}
 
 	public void sendFadingInterface(int backgroundInterface) {

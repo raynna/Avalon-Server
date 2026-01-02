@@ -6,6 +6,7 @@ import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
+import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.damage.CombatMultipliers
 import com.rs.kotlin.game.player.combat.magic.MagicStyle
@@ -293,17 +294,27 @@ object CombatCalculations {
                 else -> 0
             }
             val base: Int = when {
-                baseDamage != -1 -> baseDamage
-                spell != null && spell.damage != -1 -> spell.damage
-
+                spell != null && spell.chargeBoost -> {
+                    val base = spell.damage
+                    if (player.tickManager.isActive(TickManager.TickKeys.CHARGE_SPELL)) {
+                        base + 100
+                    } else {
+                        base
+                    }
+                }
                 spellId == 1000 -> (5 * player.skills.getLevel(Skills.MAGIC)) - 180
-
+                spellId == 56 -> {
+                    val magicLevel = player.skills.getLevelForXp(Skills.MAGIC)
+                    (floor(magicLevel * 0.10).toInt() + 10) * 10
+                }
                 spellId == 99 -> {
                     val magicLevel = player.skills.getLevelForXp(Skills.MAGIC)
                     val base = 160 + (magicLevel - 77) * 4
                     val boost = (magicLevel - 77) * 4
                     base + boost
                 }
+                baseDamage > 0 -> baseDamage
+                spell != null && spell.damage > 0 -> spell.damage
                 else -> 0
             }
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()

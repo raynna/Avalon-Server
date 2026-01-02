@@ -50,10 +50,33 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
         if (currentSpell != null) {
             val weaponId = attacker.equipment.weaponId
-            val requiredStaffIds = currentSpell.staff?.ids ?: emptyList()
-            if (requiredStaffIds.isNotEmpty() && weaponId !in requiredStaffIds) {
-                attacker.message("You don't have the correct staff to cast ${currentSpell.name}.")
-                return false
+            currentSpell.staff?.let { staffReq ->
+                if (staffReq.anyOf.isNotEmpty() &&
+                    attacker.equipment.weaponId !in staffReq.anyOf
+                ) {
+                    attacker.message(
+                        "You don't have the correct staff to cast ${currentSpell.name}."
+                    )
+                    return false
+                }
+            }
+            currentSpell.itemRequirement?.let { req ->
+                if (req.anyOf.isNotEmpty() &&
+                    req.anyOf.none { attacker.equipment.containsOneItem(it) }
+                ) {
+                    attacker.message(
+                        "You don't have the required item to cast ${currentSpell.name}."
+                    )
+                    return false
+                }
+                if (req.allOf.isNotEmpty() &&
+                    !req.allOf.all { attacker.equipment.containsOneItem(it) }
+                ) {
+                    attacker.message(
+                        "You don't have all required items to cast ${currentSpell.name}."
+                    )
+                    return false
+                }
             }
             if (spellBookId == ModernMagicks.id && currentSpell.id == 86) {
                 if (defender is NPC) {

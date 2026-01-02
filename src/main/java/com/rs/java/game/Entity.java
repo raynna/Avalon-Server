@@ -886,6 +886,7 @@ public abstract class Entity extends WorldTile {
     }
 
     public long getAttackedByDelay() {
+
         Long attackedByDelay = (Long) temporaryAttribute().get("attackedByDelay");
         if (attackedByDelay == null)
             return 0;
@@ -896,11 +897,8 @@ public abstract class Entity extends WorldTile {
         temporaryAttribute().put("attackDelay", attackDelay + Utils.currentTimeMillis());
     }
 
-    public long getAttackDelay() {
-        Long attackDelay = (Long) temporaryAttribute().get("attackDelay");
-        if (attackDelay == null)
-            return 0;
-        return attackDelay;
+    public boolean isInCombat() {
+        return getTickManager().isActive(TickManager.TickKeys.LAST_ATTACKED_TICK);
     }
 
     public void setFlinch(long flinchDelay) {
@@ -1523,7 +1521,7 @@ public abstract class Entity extends WorldTile {
             public void run() {
                 gfx(nextGraphics);
             }
-        }, delay);
+        }, delay - 1);
     }
 
     public void gfx(Graphics nextGraphics) {

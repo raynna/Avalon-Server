@@ -34,7 +34,13 @@ data class RuneRequirement(
     val compositeRunes: List<Int> = emptyList()
 )
 
-data class StaffRequirement(val ids: List<Int> = emptyList())
+data class StaffRequirement(
+    val anyOf: List<Int> = emptyList()
+)
+data class ItemRequirement(
+    val anyOf: List<Int> = emptyList(),
+    val allOf: List<Int> = emptyList()
+)
 
 data class Spell(
     val id: Int,
@@ -58,8 +64,8 @@ data class Spell(
     val projectileType: Projectile = Projectile.ELEMENTAL_SPELL,
     val projectileId: Int = -1,
     val projectileIds: List<Int> = emptyList(),
-    val requiredItem: Int? = null,
-
+    val itemRequirement: ItemRequirement? = null,
+    val chargeBoost: Boolean = false,
     val builtInWeapon: Boolean = false,
     val chargeCost: Int = 0,
     val canCastWithWeapon: ((Player) -> Boolean)? = null,

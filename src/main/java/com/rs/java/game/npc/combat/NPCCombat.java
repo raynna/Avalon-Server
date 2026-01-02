@@ -157,8 +157,8 @@ public final class NPCCombat {
         if (npc instanceof Familiar) return ((Familiar) npc).canAttack(target);
 
         if (!npc.isForceMultiAttacked() && (!target.isAtMultiArea() || !npc.isAtMultiArea())) {
-            if (npc.getAttackedBy() != target && npc.getAttackedByDelay() > Utils.currentTimeMillis()) return false;
-            if (target.getAttackedBy() != npc && target.getAttackedByDelay() > Utils.currentTimeMillis()) return false;
+            if (npc.getAttackedBy() != target && npc.isInCombat()) return false;
+            if (target.getAttackedBy() != npc && target.isInCombat()) return false;
         }
         return true;
     }
@@ -283,7 +283,6 @@ public final class NPCCombat {
         );
 
         if (!inChaseRange) {
-            // Too far, stop chasing
             removeTarget();
             return;
         }

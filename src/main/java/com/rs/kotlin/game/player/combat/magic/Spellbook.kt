@@ -3,6 +3,7 @@ package com.rs.kotlin.game.player.combat.magic
 import com.rs.java.game.Graphics
 import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Player
+import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.world.projectile.Projectile
 
 abstract class Spellbook(val id: Int) {
@@ -692,6 +693,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 1,
             xp = 2.5,
             damage = 10,
+            attackSound = 220,
+            hitSound = 221,
             type = SpellType.Combat,
             element = ElementType.Air,
             runes = listOf(
@@ -947,6 +950,16 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 RuneRequirement(RuneDefinitions.Runes.DEATH, 1),
                 RuneRequirement(RuneDefinitions.Runes.MIND, 4)
             ),
+            staff = StaffRequirement(
+                anyOf = listOf(
+                    Rscm.item("item.slayer_s_staff"),
+                    Rscm.item("item.staff_of_light"),
+                    Rscm.item("item.staff_of_light_blue"),
+                    Rscm.item("item.staff_of_light_gold"),
+                    Rscm.item("item.staff_of_light_green"),
+                    Rscm.item("item.staff_of_light_red")
+                )
+            ),
             animationId = 1575,
             projectileType = Projectile.SLAYER_DART,
             projectileId = 328,
@@ -998,11 +1011,23 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 60,
             xp = 35.0,
             damage = 200,
+            chargeBoost = true,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.FIRE, 2),
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 2),
                 RuneRequirement(RuneDefinitions.Runes.AIR, 4)
+            ),
+            staff = StaffRequirement(
+                anyOf = listOf(
+                    Rscm.item("item.saradomin_staff")
+                )
+            ),
+            itemRequirement = ItemRequirement(
+                anyOf = listOf(
+                    Rscm.item("item.saradomin_cape"),
+                    Rscm.item("item.imbued_saradomin_cape")
+                )
             ),
             animationId = 811,
             endGraphic = Graphics(76, 100)
@@ -1013,11 +1038,24 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 60,
             xp = 35.0,
             damage = 200,
+            chargeBoost = true,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.FIRE, 1),
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 2),
                 RuneRequirement(RuneDefinitions.Runes.AIR, 4)
+            ),
+            staff = StaffRequirement(
+                anyOf = listOf(
+                    Rscm.item("item.guthix_staff"),
+                    Rscm.item("item.void_knight_mace")
+                )
+            ),
+            itemRequirement = ItemRequirement(
+                anyOf = listOf(
+                    Rscm.item("item.guthix_cape"),
+                    Rscm.item("item.imbued_guthix_cape")
+                )
             ),
             animationId = 811,
             endGraphic = Graphics(77, 100)
@@ -1028,11 +1066,23 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 60,
             xp = 35.0,
             damage = 200,
+            chargeBoost = true,
             type = SpellType.Combat,
             runes = listOf(
                 RuneRequirement(RuneDefinitions.Runes.FIRE, 4),
                 RuneRequirement(RuneDefinitions.Runes.BLOOD, 2),
                 RuneRequirement(RuneDefinitions.Runes.AIR, 1)
+            ),
+            staff = StaffRequirement(
+                anyOf = listOf(
+                    Rscm.item("item.zamorak_staff")
+                )
+            ),
+            itemRequirement = ItemRequirement(
+                anyOf = listOf(
+                    Rscm.item("item.zamorak_cape"),
+                    Rscm.item("item.imbued_zamorak_cape")
+                )
             ),
             animationId = 811,
             endGraphic = Graphics(78, 0)
@@ -1043,6 +1093,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 62,
             xp = 36.0,
             damage = 170,
+            attackSound = 220,
+            hitSound = 221,
             type = SpellType.Combat,
             element = ElementType.Air,
             runes = listOf(
@@ -1061,7 +1113,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             xp = 37.5,
             damage = 180,
             attackSound = 213,
-            hitSound = 214,
+            hitSound = 212,
             type = SpellType.Combat,
             element = ElementType.Water,
             runes = listOf(
@@ -1120,6 +1172,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 81,
             xp = 44.5,
             damage = 220,
+            attackSound = 222,
+            hitSound = 223,
             type = SpellType.Combat,
             element = ElementType.Air,
             runes = listOf(
@@ -1138,6 +1192,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 85,
             xp = 46.5,
             damage = 240,
+            attackSound = 213,
+            hitSound = 212,
             type = SpellType.Combat,
             element = ElementType.Water,
             runes = listOf(
@@ -1157,6 +1213,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 90,
             xp = 48.5,
             damage = 260,
+            attackSound = 134,
+            hitSound = 135,
             type = SpellType.Combat,
             element = ElementType.Earth,
             runes = listOf(
@@ -1176,6 +1234,8 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             level = 95,
             xp = 50.5,
             damage = 280,
+            attackSound = 162,
+            hitSound = 163,
             type = SpellType.Combat,
             element = ElementType.Fire,
             runes = listOf(

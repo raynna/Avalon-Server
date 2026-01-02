@@ -306,7 +306,7 @@ object ProjectileManager {
         stream.writeByte(proj.type.angle)
         val displacement = if (distance == 1 && proj.type.displacement == 0) 64 else proj.type.displacement
         val effectiveSize =
-            if (proj.attacker != null) proj.creatorSize else 0
+            if (proj.attacker != null) 1 else 0
 
         var startDistanceOffset = effectiveSize * 64 + displacement * 64
         //println("displament: " + displacement)

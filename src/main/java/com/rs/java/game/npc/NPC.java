@@ -615,6 +615,7 @@ public class NPC extends Entity implements Serializable {
         resetWalkSteps();
         combat.removeTarget();
         source.getTickManager().remove(TickManager.TickKeys.PJ_TIMER);
+        source.getTickManager().remove(TickManager.TickKeys.LAST_ATTACKED_TICK);
         animate(defs.getDeathAnim());
         playSound(defs.getDeathSound(), 1);
         WorldTasksManager.schedule(new WorldTask() {

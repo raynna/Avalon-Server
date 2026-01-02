@@ -77,10 +77,10 @@ class TimerOverlay {
         val newEnd = now + durationTicks
 
         if (existing == null) {
-            println("[TimerOverlay] ${player.displayName}: starting new timer ${type.display} for $durationTicks ticks (ends at $newEnd, now=$now)")
+            //println("[TimerOverlay] ${player.displayName}: starting new timer ${type.display} for $durationTicks ticks (ends at $newEnd, now=$now)")
             st.timers[type] = LiveTimer(type, newEnd)
         } else {
-            println("[TimerOverlay] ${player.displayName}: refreshing timer ${type.display}. Old end=${existing.endTick}, newEnd=$newEnd")
+            //println("[TimerOverlay] ${player.displayName}: refreshing timer ${type.display}. Old end=${existing.endTick}, newEnd=$newEnd")
             existing.endTick = if (extendIfLonger) {
                 max(existing.endTick, newEnd)
             } else {
@@ -96,14 +96,14 @@ class TimerOverlay {
     fun stopTimer(player: Player, type: TimerType) {
         val st = state(player)
         if (st.timers.remove(type) != null) {
-            println("[TimerOverlay] ${player.displayName}: manually stopped timer ${type.display}")
+            //println("[TimerOverlay] ${player.displayName}: manually stopped timer ${type.display}")
         }
         render(player)
         closeIfEmpty(player)
     }
 
     fun clearAll(player: Player) {
-        println("[TimerOverlay] ${player.displayName}: clearing all timers")
+        //println("[TimerOverlay] ${player.displayName}: clearing all timers")
         val st = state(player)
         st.timers.clear()
         render(player)
@@ -113,7 +113,7 @@ class TimerOverlay {
     private fun openIfNeeded(player: Player) {
         val tab = getTimerOverlayTab(player)
         if (!player.interfaceManager.containsInterface(3047)) {
-            println("[TimerOverlay] ${player.displayName}: opening 3047 on tab $tab")
+            //println("[TimerOverlay] ${player.displayName}: opening 3047 on tab $tab")
             player.interfaceManager.sendTab(tab, 3047);
         }
     }
@@ -165,13 +165,13 @@ class TimerOverlay {
                 }
                 val after = st.timers.size
                 if (before != after) {
-                    println("[TimerOverlay] ${player.displayName}: removed ${before - after} expired timers at tick=$now")
+                    //println("[TimerOverlay] ${player.displayName}: removed ${before - after} expired timers at tick=$now")
                 }
 
                 render(player)
 
                 if (st.timers.isEmpty()) {
-                    println("[TimerOverlay] ${player.displayName}: all timers expired, stopping task")
+                    //println("[TimerOverlay] ${player.displayName}: all timers expired, stopping task")
                     st.ticking = false
                     closeIfEmpty(player)
                     stop()
@@ -186,7 +186,7 @@ class TimerOverlay {
         val live = st.timers.values.sortedBy { it.type.ordinal }.take(ROW_DEFS.size)
 
         live.forEach { t ->
-            println("[TimerOverlay] ${player.displayName}: render ${t.type.display} -> ${t.remainingTicks(now)} ticks remaining")
+            //println("[TimerOverlay] ${player.displayName}: render ${t.type.display} -> ${t.remainingTicks(now)} ticks remaining")
         }
 
         ROW_DEFS.forEachIndexed { idx, row ->

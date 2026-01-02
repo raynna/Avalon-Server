@@ -159,6 +159,20 @@ public class TickManager {
         return tickTimers.getOrDefault(key, 0);
     }
 
+    public int getSecondsLeft(TickKeys key) {
+        int ticks = getTicksLeft(key);
+        return (int) Math.ceil(ticks * 0.6);
+    }
+
+    public String getTimeLeft(TickKeys key) {
+        int totalSeconds = getSecondsLeft(key);
+
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
     public enum TickKeys {
 
         /**
@@ -183,6 +197,7 @@ public class TickManager {
         POT_LOCK_TICK(16, 0),
         DISABLED_PROTECTION_PRAYER_TICK(17, 0),
         TELEPORTING_TICK(18, 0),
+        CHARGE_SPELL(19, 0),
 
 
         /**
