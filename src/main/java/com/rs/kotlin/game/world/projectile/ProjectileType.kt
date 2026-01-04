@@ -3,15 +3,13 @@ package com.rs.kotlin.game.world.projectile
 data class ProjectileType(
     val startHeight: Int = 42,
     val endHeight: Int = 28,
-    val delay: Double = 1.5,
-    val speed: Int = 5,        // 1 = slowest, 10 = fastest
-    val angle: Int = 12,
-    val displacement: Int = 0
+    val startTime: Int = 51,
+    val arc: Int = 12,
+    val displacement: Int = 0,
+    val multiplier: Int = 5,
 ) {
-    fun toClientValues(distance: Int): Pair<Int, Int> {
-        val delayTicks = (delay * 30).toInt().coerceAtLeast(0)
-        val duration = delayTicks + (distance * 30 / speed.coerceAtLeast(1))
-        return delayTicks to duration
-    }
+
+    fun endTime(distance: Int): Int =
+        startTime + (distance * multiplier)
 }
 

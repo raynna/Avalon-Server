@@ -48,6 +48,8 @@ public class TickManager {
             Map.entry(TickKeys.FREEZE_TICKS, TimerOverlay.TimerType.FREEZE),
             Map.entry(TickKeys.VENGEANCE_COOLDOWN, TimerOverlay.TimerType.VENGEANCE),
             Map.entry(TickKeys.POISON_IMMUNE_TICKS, TimerOverlay.TimerType.ANTIPOISON),
+            Map.entry(TickKeys.CHARGE_SPELL, TimerOverlay.TimerType.CHARGE),
+            Map.entry(TickKeys.MIASMIC_EFFECT, TimerOverlay.TimerType.MIASMIC),
             Map.entry(TickKeys.ENTITY_LOCK_TICK, TimerOverlay.TimerType.LOCKED)
     );
 
@@ -198,6 +200,7 @@ public class TickManager {
         DISABLED_PROTECTION_PRAYER_TICK(17, 0),
         TELEPORTING_TICK(18, 0),
         CHARGE_SPELL(19, 0),
+        MIASMIC_EFFECT(20, 0),
 
 
         /**

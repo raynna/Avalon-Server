@@ -206,7 +206,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             animationId = 1978,
             graphicId = Graphics(373),
             projectileId = 374,
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.BLOOD_SPELL,
             endGraphic = Graphics(375)
         ),
         Spell(
@@ -225,7 +225,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             ),
             animationId = 1978,
             projectileId = 360,
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.ICE_SPELL,
             endGraphic = Graphics(361),
             bind = 8
         ),
@@ -254,7 +254,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             animationId = 10513,
             graphicId = Graphics(1845),
             projectileId = 1846,
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.MIASMIC_SPELL,
             endGraphic = Graphics(1847)
         ),
         Spell(
@@ -314,7 +314,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             ),
             animationId = 1979,
             endGraphic = Graphics(377),
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.BLOOD_SPELL,
             multi = true
         ),
         Spell(
@@ -334,7 +334,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             animationId = 1979,
             projectileId = 362,
             endGraphic = Graphics(363),
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.ICE_SPELL,
             multi = true,
             bind = 16
         ),
@@ -363,7 +363,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             animationId = 10516,
             graphicId = Graphics(1848),
             endGraphic = Graphics(1849),
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.MIASMIC_SPELL,
             multi = true
         ),
 
@@ -426,7 +426,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             animationId = 1978,
             graphicId = Graphics(373),
             projectileId = 374,
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.BLOOD_SPELL,
             endGraphic = Graphics(375)
         ),
         Spell(
@@ -446,7 +446,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             animationId = 1978,
             graphicId = Graphics(366),
             endGraphic = Graphics(367),
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.ICE_SPELL,
             bind = 24
         ),
         Spell(
@@ -474,7 +474,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             animationId = 10524,
             graphicId = Graphics(1850),
             projectileId = 1852,
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.MIASMIC_SPELL,
             endGraphic = Graphics(1851)
         ),
 
@@ -534,7 +534,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.SOUL, 1)
             ),
             animationId = 1979,
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.BLOOD_SPELL,
             endGraphic = Graphics(377),
             multi = true
         ),
@@ -554,7 +554,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
             ),
             animationId = 1979,
             projectileId = 368,
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.ICE_SPELL,
             endGraphic = Graphics(369),
             multi = true,
             bind = 32
@@ -582,7 +582,7 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 )
             ),
             animationId = 10518,
-            projectileType = Projectile.ANCIENT_SPELL,
+            projectileType = Projectile.MIASMIC_SPELL,
             graphicId = Graphics(1853),
             endGraphic = Graphics(1854),
             multi = true

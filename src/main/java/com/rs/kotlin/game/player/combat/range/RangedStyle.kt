@@ -8,6 +8,7 @@ import com.rs.java.game.item.Item
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
+import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.*
@@ -56,14 +57,20 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     override fun getAttackSpeed(): Int {
         val currentWeapon = getCurrentWeapon()
         val style = getAttackStyle(currentWeapon)
-        var baseSpeed = 4
-        if (currentWeapon.attackSpeed != -1) {
-            baseSpeed = currentWeapon.attackSpeed!!
+
+        var baseSpeed = if (currentWeapon.attackSpeed != -1) {
+            currentWeapon.attackSpeed!!
         } else {
-            val definitions = ItemDefinitions.getItemDefinitions(attacker.equipment.weaponId);
-            baseSpeed = definitions.attackSpeed
+            val definitions = ItemDefinitions.getItemDefinitions(attacker.equipment.weaponId)
+            definitions.attackSpeed
         }
-        return baseSpeed + style.attackSpeedModifier
+
+        var finalSpeed = baseSpeed + style.attackSpeedModifier
+
+        if (attacker.tickManager.isActive(TickManager.TickKeys.MIASMIC_EFFECT)) {
+            finalSpeed = (finalSpeed * 2).coerceAtLeast(1)
+        }
+        return finalSpeed
     }
 
     override fun getAttackDistance(): Int {
@@ -323,7 +330,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun getHitDelay(): Int {
         val distance = Utils.getDistance(attacker, defender)
-        return 1 + (3 + distance) / 6
+        return (3 + distance) / 6
     }
 
 }

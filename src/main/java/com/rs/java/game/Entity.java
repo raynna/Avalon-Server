@@ -1515,6 +1515,11 @@ public abstract class Entity extends WorldTile {
         gfx(new Graphics(gfxId, rotation, height));
     }
 
+    public void gfxAnchoredSouthWest(int gfxId, int height) {
+        var tile = new WorldTile(this.getX() - 1, this.getY() - 1, this.getPlane());
+        World.sendGraphics(this, new Graphics(gfxId), tile);
+    }
+
     public void delayGfx(Graphics nextGraphics, int delay) {
         WorldTasksManager.schedule(new WorldTask() {
             @Override

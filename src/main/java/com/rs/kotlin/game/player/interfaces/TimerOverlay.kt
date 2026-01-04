@@ -23,6 +23,8 @@ class TimerOverlay {
         FREEZE("Frozen",               Rscm.lookup("sprite.ice_barrage")),
         TELEBLOCK("TeleportBlock",     Rscm.lookup("sprite.teleport_block")),
         ANTIPOISON("Antipoison",       Rscm.lookup("sprite.green_plusheart")),
+        CHARGE("Charge",       322),
+        MIASMIC("Miasmic effect",       1565),
         LOCKED("Player Lock",       940),//940 //1436 //1767
     }
 

@@ -53,6 +53,7 @@ data class Spell(
     val drain: Boolean = false,
     val element: ElementType = ElementType.None,
     val multi: Boolean = false,
+    val miasmic: Boolean = false,
     val runes: List<RuneRequirement>,
     val staff: StaffRequirement? = null,
     val teleportLocation: WorldTile? = null,

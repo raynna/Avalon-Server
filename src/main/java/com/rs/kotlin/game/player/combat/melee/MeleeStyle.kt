@@ -6,6 +6,7 @@ import com.rs.java.game.Hit
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
@@ -89,7 +90,12 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             val definitions = ItemDefinitions.getItemDefinitions(attacker.equipment.weaponId);
             baseSpeed = definitions.attackSpeed
         }
-        return baseSpeed + style.attackSpeedModifier
+        var finalSpeed = baseSpeed + style.attackSpeedModifier
+
+        if (attacker.tickManager.isActive(TickManager.TickKeys.MIASMIC_EFFECT)) {
+            finalSpeed = (finalSpeed * 2).coerceAtLeast(1)
+        }
+        return finalSpeed
     }
 
     override fun getHitDelay(): Int {

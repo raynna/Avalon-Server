@@ -5,11 +5,13 @@ import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
+import com.rs.java.game.WorldTile
 import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
+import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.actions.combat.PlayerCombat
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
@@ -137,7 +139,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val distance = Utils.getDistance(attacker, defender)
         return max(1, 1 + (1 + distance) / 3)
     }
-
     override fun getAttackDistance(): Int {
         return 8
     }
@@ -251,62 +252,91 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     override fun onStop(interrupted: Boolean) {
     }
 
-    private fun handleModernMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
+    private fun handleModernMagic(
+        attacker: Player,
+        defender: Entity,
+        spell: Spell,
+        manual: Boolean
+    ) {
         val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
         val splash = hit.damage == 0
         val endGraphic = if (!splash) spell.endGraphic else Graphics(-1)
+
         if (hit.damage > 0 && spell.bind != -1) {
             if (!defender.isFreezeImmune) {
                 defender.freeze(spell.bind)
             } else {
-                attacker.message("That ${if (defender is NPC) "npc" else "player"} is already affected by this spell.")
+                attacker.message(
+                    "That ${if (defender is NPC) "npc" else "player"} is already affected by this spell."
+                )
                 return
             }
         }
+
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
         spell.attackSound.takeIf { it != -1 }?.let { attacker.playSound(it, 1) }
+
+        var impactTicks = 1
+
         if (spell.projectileIds.isNotEmpty()) {
             val heightDifferences = listOf(10, 0, -10)
             spell.projectileIds.zip(heightDifferences).forEach { (projectileId, heightDiff) ->
-                ProjectileManager.send(
-                    spell.projectileType,
-                    projectileId,
+                impactTicks = ProjectileManager.send(
+                    projectile = spell.projectileType,
+                    gfxId = projectileId,
+                    attacker = attacker,
+                    defender = defender,
                     heightOffset = heightDiff,
-                    attacker = attacker,
-                    defender = defender,
                     hitGraphic = endGraphic
                 )
             }
         }
-        if (spell.projectileId != -1) {
-            if (endGraphic.id != -1) {
-                ProjectileManager.send(
-                    spell.projectileType,
-                    spell.projectileId,
-                    attacker = attacker,
-                    defender = defender,
-                    hitGraphic = endGraphic
-                )
-            } else {
-                ProjectileManager.send(spell.projectileType, spell.projectileId, attacker, defender)
-            }
+        else if (spell.projectileId != -1) {
+            impactTicks =
+                if (endGraphic.id != -1) {
+                    ProjectileManager.send(
+                        projectile = spell.projectileType,
+                        gfxId = spell.projectileId,
+                        attacker = attacker,
+                        defender = defender,
+                        hitGraphic = endGraphic
+                    )
+                } else {
+                    ProjectileManager.send(
+                        projectile = spell.projectileType,
+                        gfxId = spell.projectileId,
+                        attacker = attacker,
+                        defender = defender
+                    )
+                }
         }
+
         if (hit.damage > 0 && spell.bind != -1) {
             defender.addFreezeDelay(spell.bind, true)
         }
+
         if (spell.id == 86 && hit.damage > 0) {
             var seconds = 300
             if (defender is Player) {
                 if (defender.prayer.hasProtectFromMagic()) {
-                    seconds /= 2;
+                    seconds /= 2
                 }
                 defender.temporaryAttributes()["TELEBLOCK_QUEUE"] = seconds
-                attacker.message("Time to tb in seconds ${defender.temporaryAttributes()["TELEBLOCK_QUEUE"]}")
+                attacker.message("Time to tb in seconds $seconds")
             }
         }
+
         attacker.temporaryAttributes()["CASTED_SPELL"] = spell
-        delayHits(PendingHit(hit, defender, if (spell.chargeBoost) 1 else getHitDelay()))//instant attack for godspells, TODO better handling
+
+        delayHits(
+            PendingHit(
+                hit,
+                defender,
+                if (spell.chargeBoost) 1 else impactTicks + 1
+            )
+        )
+
         if (manual) {
             WorldTasksManager.schedule(object : WorldTask() {
                 override fun run() {
@@ -316,16 +346,19 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 }
             })
         }
-        if (attacker.isDeveloperMode)
-        attacker.message(
-            "Magic Attack -> " +
-                    "Spell: ${spell.name}, " +
-                    "SpellType: ${spell.type}, " +
-                    "BaseDamage: ${spell.damage}, " +
-                    "MaxHit: ${hit.maxHit}, " +
-                    "Hit: ${hit.damage}"
-        )
+
+        if (attacker.isDeveloperMode) {
+            attacker.message(
+                "Magic Attack -> " +
+                        "Spell: ${spell.name}, " +
+                        "SpellType: ${spell.type}, " +
+                        "BaseDamage: ${spell.damage}, " +
+                        "MaxHit: ${hit.maxHit}, " +
+                        "Hit: ${hit.damage}"
+            )
+        }
     }
+
 
     private fun handleAncientMagic(attacker: Player, defender: Entity, spell: Spell, manual: Boolean) {
         val combatContext = CombatContext(
@@ -357,6 +390,10 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 if (spell.id == 23 && (t.isFreezeImmune || t.isFrozen || t.size >= 2)) {
                     endGraphic = Graphics(1677, 100)
                 }
+                if (spell.miasmic) {
+                    if (!t.tickManager.isActive(TickManager.TickKeys.MIASMIC_EFFECT))
+                        t.tickManager.addSeconds(TickManager.TickKeys.MIASMIC_EFFECT, 12)//just to make sure all of them give 12 seconds, 48 is way to op
+                }
                 if (spell.bind != -1 && !t.isFreezeImmune) {
                     t.addFreezeDelay(spell.bind, false)
                 }
@@ -366,16 +403,20 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             }
 
             if (spell.projectileId != -1) {
-                ProjectileManager.send(
-                    spell.projectileType,
-                    spell.projectileId,
-                    attacker = attacker,
-                    defender = t,
-                    hitGraphic = endGraphic
-                )
+                if (spell.id == 23) {
+                    t.gfxAnchoredSouthWest(spell.projectileId, 100);
+                } else {
+                    ProjectileManager.send(
+                        spell.projectileType,
+                        spell.projectileId,
+                        attacker = attacker,
+                        defender = t,
+                        hitGraphic = endGraphic
+                    )
+                }
             }
             attacker.temporaryAttributes()["CASTED_SPELL"] = spell
-            delayHits(PendingHit(hit, t, getHitDelay()))//instant attack for godspells, TODO better handling
+            delayHits(PendingHit(hit, t, getHitDelay()))
         }
         if (manual) {
             attacker.combatDefinitions.resetSpells(false)

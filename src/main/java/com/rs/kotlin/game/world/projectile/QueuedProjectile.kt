@@ -8,8 +8,9 @@ data class QueuedProjectile(
     val defender: Entity?,
     val startTile: WorldTile?,
     val endTile: WorldTile?,
-    val gfx: Int,
+    val spotanim: Int,
     val type: ProjectileType,
     val creatorSize: Int,
-    val sendCycle: Int
+    val sendCycle: Int,
+    val endTime: Int,
 )
