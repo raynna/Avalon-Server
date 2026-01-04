@@ -42,6 +42,8 @@ object CombatCalculations {
 
     private object MeleeCombat : AccuracyCalculator, MaxHitCalculator {
         override fun getHitChance(player: Player, target: Entity, accuracyMultiplier: Double): Double {
+            if (target is NPC && target.name.contains("dummy", ignoreCase = true))
+                return 1.0
             /*
              * Attack Calculation DONE
              */
@@ -143,6 +145,8 @@ object CombatCalculations {
 
     private object RangedCombat : AccuracyCalculator, MaxHitCalculator {
         override fun getHitChance(player: Player, target: Entity, accuracyMultiplier: Double): Double {
+            if (target is NPC && target.name.contains("dummy", ignoreCase = true))
+                return 1.0
             /*
             * Range attack Calculation DONE
             */
@@ -270,6 +274,8 @@ object CombatCalculations {
     private object MagicCombat : AccuracyCalculator {
 
        override fun getHitChance(player: Player, target: Entity, accuracyMultiplier: Double): Double {
+           if (target is NPC && target.name.contains("dummy", ignoreCase = true))
+               return 1.0
            val magicBonus = player.combatDefinitions.bonuses[BonusType.MagicAttack.index]
            val equipmentSet = EquipmentSets.getSet(player)
            val void = EquipmentSets.getAccuracyMultiplier(player, equipmentSet, CombatMultipliers.Style.MAGIC)
@@ -282,7 +288,7 @@ object CombatCalculations {
 
            val (defenceBonus, effectiveDefenceLevel) = getEffectiveMagicDefence(target)
            val defenceRoll = effectiveDefenceLevel * (defenceBonus + 64)
-            return computeHitChance(attackRoll.toInt(), defenceRoll)
+           return computeHitChance(attackRoll.toInt(), defenceRoll)
         }
 
         fun calculateMaxHit(player: Player, target: Entity, baseDamage: Int = -1, spellId: Int = -1, specialMultiplier: Double = 1.0): Hit {
@@ -387,6 +393,8 @@ object CombatCalculations {
         combatStyle: CombatStyle,
         accuracyMultiplier: Double = 1.0
     ): Double {
+        if (target is NPC && target.name.contains("dummy", ignoreCase = true))
+            return 1.0
         return when (combatStyle) {
             is MeleeStyle -> MeleeCombat.getHitChance(player, target, accuracyMultiplier)
             is RangedStyle -> RangedCombat.getHitChance(player, target, accuracyMultiplier)
@@ -413,21 +421,6 @@ object CombatCalculations {
     fun calculateMagicMaxHit(player: Player, target: Entity, baseDamage: Int = -1, spellId: Int = -1, specialMultiplier: Double = 1.0): Hit =
         MagicCombat.calculateMaxHit(player, target, baseDamage = baseDamage, spellId = spellId, specialMultiplier)
 
-
-    private fun calculateHitProbability(attack: Int, defence: Int): Boolean {
-        val random = Math.random()
-
-        val prob: Double = if (attack > defence) {
-            1.0 - (defence + 2.0) / (2.0 * (attack + 1.0))
-        } else {
-            attack.toDouble() / (2.0 * (defence + 1.0))
-        }
-        val probPercent = prob * 100
-        val randomPercent = random * 100
-
-        return random < prob
-    }
-
     private fun getBaseStrengthLevel(player: Player): Int {
         val strength = floor(player.skills.getLevel(Skills.STRENGTH) * player.prayer.strengthMultiplier)
         return strength.toInt()
@@ -436,16 +429,6 @@ object CombatCalculations {
     private fun getBaseAttackLevel(player: Player): Int {
         val attack = floor(player.skills.getLevel(Skills.ATTACK) * player.prayer.attackMultiplier)
         return attack.toInt()
-    }
-
-    private fun getBaseRangedLevel(player: Player): Int {
-        val range = floorToInt(player.skills.getLevel(Skills.RANGE) * player.prayer.rangedMultiplier)
-        return range
-    }
-
-    private fun getEffectiveMagicLevel(player: Player): Int {
-        val magic = floor(player.skills.getLevel(Skills.MAGIC) * player.prayer.magicMultiplier) + 8
-        return magic.toInt()
     }
 
     private fun getDefenceLevel(target: Entity): Int {

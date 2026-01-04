@@ -182,6 +182,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 attacker.message("Invalid spell ID: $spellId")
                 return
             }
+            GreaterRunicStaffWeapon.consumeCharge(attacker, 1)
         }
 
         when (attacker.combatDefinitions.getSpellBook()) {
@@ -210,7 +211,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         super.onHit(attacker, defender, hit)
-        var currentSpell = attacker.temporaryAttributes()["CASTED_SPELL"] as? Spell
+        var currentSpell = attacker.temporaryAttributes().remove("CASTED_SPELL") as? Spell
 
         if (defender is Player && GreaterRunicStaffWeapon.hasWeapon(defender)) {
             val spellId = GreaterRunicStaffWeapon.getSpellId(attacker)
@@ -243,6 +244,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 }
             }
             if (currentSpell.endGraphic.id != -1 && currentSpell.projectileId == -1 && currentSpell.projectileIds.isEmpty()) {
+                println("send endgfx " + currentSpell.endGraphic.id)
                 defender.gfx(currentSpell.endGraphic)
             }
                 currentSpell.hitSound.takeIf { it != -1 }?.let { defender.playSound(it, 1) }
@@ -385,10 +387,9 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             val hit = registerHit(attacker, t, combatType = CombatType.MAGIC, spellId = spell.id)
             val splash = hit.damage == 0
             var endGraphic = if (!splash) spell.endGraphic else Graphics(-1)
-
             if (hit.damage > 0) {
-                if (spell.id == 23 && (t.isFreezeImmune || t.isFrozen || t.size >= 2)) {
-                    endGraphic = Graphics(1677, 100)
+                if (defender.isFreezeImmune || defender.isFrozen || defender.size >= 2) {
+                    endGraphic = Graphics(1677, 100);
                 }
                 if (spell.miasmic) {
                     if (!t.tickManager.isActive(TickManager.TickKeys.MIASMIC_EFFECT))
@@ -401,11 +402,10 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                     attacker.heal(hit.damage / 5)
                 }
             }
-
+            if (spell.id == 23) {
+                t.gfxAnchoredSouthWest(368, 100);
+            }
             if (spell.projectileId != -1) {
-                if (spell.id == 23) {
-                    t.gfxAnchoredSouthWest(spell.projectileId, 100);
-                } else {
                     ProjectileManager.send(
                         spell.projectileType,
                         spell.projectileId,
@@ -413,9 +413,8 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                         defender = t,
                         hitGraphic = endGraphic
                     )
-                }
             }
-            attacker.temporaryAttributes()["CASTED_SPELL"] = spell
+            attacker.temporaryAttributes()["CASTED_SPELL"] = spell.copy(endGraphic = endGraphic)
             delayHits(PendingHit(hit, t, getHitDelay()))
         }
         if (manual) {

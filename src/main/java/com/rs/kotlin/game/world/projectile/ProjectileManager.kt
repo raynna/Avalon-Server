@@ -43,7 +43,8 @@ object ProjectileManager {
 
         onLanded ?: return
 
-        val impactTicks = max(0, cyclesToTicksFloor(impactCycles) - 1)
+        val endCycle = type.endTime(distance)
+        val impactTicks = max(0, (endCycle + 29) / 30)
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
                 onLanded.run()
@@ -163,10 +164,8 @@ object ProjectileManager {
             endTime = endTime
         )
 
-        // Convert cycles -> ticks; -1 to align tick-start scheduler with mid-tick client landing
-        val impactTicks = max(0, cyclesToTicksFloor(impactCycles) - 1)
-
-        // End graphic/callback should happen at the same time as impact
+        val endCycle = type.endTime(distance)
+        val impactTicks = max(0, (endCycle + 29) / 30) - 2
         if (hitGraphic != null || onLanded != null) {
             val resolveDefender = resolveEntity(defender)
             val startSnap = startTile
@@ -322,9 +321,7 @@ object ProjectileManager {
         stream.writeByte(proj.type.startHeight)
         stream.writeByte(proj.type.endHeight)
         stream.writeShort(proj.type.startTime)
-        println("startTime: " + proj.type.startTime)
         stream.writeShort(proj.endTime)
-        println("endTime: " + proj.endTime)
         stream.writeByte(proj.type.arc)
         stream.writeShort(proj.type.displacement)
         player.session.write(stream)

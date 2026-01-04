@@ -26,8 +26,11 @@ object ProjectileRegistry {
         register(Projectile.IBAN_BLAST, ProjectileType(startHeight = 36, endHeight = 31, startTime = 60, arc = 15, displacement = 64))
         register(Projectile.STORM_OF_ARMADYL, ProjectileType(startHeight = 11, endHeight = 11, startTime = 41, multiplier = 8, arc = 0))
         register(Projectile.TELEPORT_BLOCK, ProjectileType(startHeight = 11, endHeight = 36, startTime = 41, arc = 15))
-        register(Projectile.POLYPORE_STAFF, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15))
+        register(Projectile.POLYPORE_STAFF, ProjectileType(startHeight = 40, endHeight = 36, startTime = 51, arc = 15, displacement = 96))
         register(Projectile.SAGAIE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15))
+
+        //NPCS
+        register(Projectile.DRAGONFIRE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15, displacement = 64))
     }
 
     private fun register(projectile: Projectile, type: ProjectileType) {

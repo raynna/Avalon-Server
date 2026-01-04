@@ -207,6 +207,14 @@
     "lastSeen": "2026-01-02T00:19:37.610572700Z",
     "attempts": 1
   },
+  "7891": {
+    "npcId": 7891,
+    "npcName": "Dummy",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-04T12:42:48.727018500Z",
+    "lastSeen": "2026-01-04T12:42:48.727018500Z",
+    "attempts": 1
+  },
   "9720": {
     "npcId": 9720,
     "npcName": "Lobster",

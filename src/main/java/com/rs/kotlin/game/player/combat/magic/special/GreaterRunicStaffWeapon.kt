@@ -19,7 +19,7 @@ object GreaterRunicStaffWeapon : WeaponSpellRegistry.Provider {
         }
         val data = weapon.metadata
         if (data is GreaterRunicStaffMetaData && data.charges < 1) {
-            player.message("Your greater runic staff has no charges.")
+            //player.message("Your greater runic staff has no charges.")
             return false
         }
         return true
@@ -38,4 +38,15 @@ object GreaterRunicStaffWeapon : WeaponSpellRegistry.Provider {
         }
         return data.spellId
     }
+
+    fun consumeCharge(player: Player, amount: Int = 1) {
+        val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return
+        val data = weapon.metadata as? GreaterRunicStaffMetaData ?: return
+
+        data.removeCharges(amount)
+        if (data.charges == 0) {
+            player.message("Your greater runic staff has run out of charges.")
+        }
+    }
+
 }

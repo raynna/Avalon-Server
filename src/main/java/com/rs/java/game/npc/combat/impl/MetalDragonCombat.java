@@ -78,7 +78,7 @@ public class MetalDragonCombat extends CombatScript {
 		int rawDamage = Utils.getRandom(650);
 
 		npc.animate(new Animation(DRAGONFIRE_ANIMATION));
-		ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, DRAGONFIRE_NORMAL_PROJECTILE, npc, target);
+		ProjectileManager.sendSimple(Projectile.DRAGONFIRE, DRAGONFIRE_NORMAL_PROJECTILE, npc, target);
 
 		int mitigated = DragonFire.applyDragonfireMitigation(player, rawDamage, false);
 		delayHit(npc, player, Utils.getDistance(player, npc) > 2 ? 2 : 1, getRegularHit(npc, mitigated));

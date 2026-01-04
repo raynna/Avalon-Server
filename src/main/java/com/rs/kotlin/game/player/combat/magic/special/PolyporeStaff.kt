@@ -27,7 +27,6 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
         }
         val data = weapon.metadata
         if (data is PolyporeStaffMetaData && data.value < 1) {
-            player.message("Your polypore staff has no charges.")
             return false
         }
         return true
@@ -41,7 +40,16 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
             return
         }
         if (weapon.isItem("item.polypore_staff")) {
-            weapon.id = Item.getId("item.polypore_staff_degraded")
+            val newItem = Item(
+                Item.getId("item.polypore_staff_degraded"),
+                weapon.amount
+            )
+            newItem.metadata = weapon.metadata?.deepCopy()
+            attacker.equipment.updateItemWithMeta(
+                Equipment.SLOT_WEAPON.toInt(),
+                newItem
+            )
+
             attacker.equipment.refresh()
             attacker.appearence.generateAppearenceData()
         }
@@ -54,12 +62,11 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
 
         attacker.animate(15448)
         attacker.gfx(Graphics(2034))
-
         val hit = style.registerHit(attacker, defender, CombatType.MAGIC, spellId = 1000)
         val splash = hit.damage == 0
         val endGfx = if (!splash) Graphics(2036, 100) else Graphics(85, 100)
 
-        ProjectileManager.send(
+        val impactTicks = ProjectileManager.send(
             projectile = Projectile.POLYPORE_STAFF,
             gfxId = 2035,
             attacker = attacker,
@@ -67,6 +74,6 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
             hitGraphic = endGfx
         )
 
-        style.delayHits(PendingHit(hit, defender, style.getHitDelay()))
+        style.delayHits(PendingHit(hit, defender, impactTicks + 1))
     }
 }

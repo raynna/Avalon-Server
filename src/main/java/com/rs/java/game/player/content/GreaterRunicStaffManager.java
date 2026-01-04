@@ -2,6 +2,8 @@ package com.rs.java.game.player.content;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import com.rs.java.game.item.Item;
@@ -499,7 +501,7 @@ public class GreaterRunicStaffManager implements Serializable {
 
     public void openChooseSpell(Player player, Item item) {
         if (player.getCombatDefinitions().getSpellBook() == 430) {
-            player.getPackets().sendGameMessage("You can't currently set lunar spells to your runic staff.");
+            player.getPackets().sendGameMessage("You can't set lunar spells to your runic staff.");
             return;
         }
         player.temporaryAttribute().put("CHOOSE_STAFF_SPELL", item);
@@ -544,47 +546,101 @@ public class GreaterRunicStaffManager implements Serializable {
         if (s == null) return;
 
         if (meta.getSpellId() != -1 && meta.getSpellId() != spellId) {
-            player.getPackets().sendGameMessage("Your staff already contains a different spell. Clear it first.");
+            player.getPackets().sendGameMessage(
+                    "Your staff already contains a different spell. Clear it first."
+            );
             return;
         }
 
         int current = meta.getCharges();
-        int toAdd = Math.min(amount, meta.getMaxValue() - current);
-        if (toAdd <= 0) {
+        int capacity = meta.getMaxValue() - current;
+        if (capacity <= 0) {
             player.getPackets().sendGameMessage("You can't have more than 1,000 charges.");
             return;
         }
 
+        int requested = Math.min(amount, capacity);
+
+        int affordable = requested;
+
+        Map<Integer, Integer> runeOwned = new HashMap<>();
         for (Item rune : s.getRune()) {
-            if (!player.getInventory().containsItem(rune.getId(), rune.getAmount() * toAdd)) {
-                player.getPackets().sendGameMessage("You need at least " + rune.getAmount() * toAdd + " " + rune.getName() + "s.");
-                return;
-            }
+            runeOwned.put(rune.getId(), player.getInventory().getAmountOf(rune.getId()));
+        }
+        for (Item rune : s.getRune()) {
+            int owned = runeOwned.get(rune.getId());
+            int perCharge = rune.getAmount();
+            int possible = owned / perCharge;
+            affordable = Math.min(affordable, possible);
+        }
+
+
+        if (affordable <= 0) {
+            player.getPackets().sendGameMessage(
+                    "You don't have enough runes to charge your staff."
+            );
+            return;
         }
 
         for (Item rune : s.getRune()) {
-            player.getInventory().deleteItem(rune.getId(), rune.getAmount() * toAdd);
+            player.getInventory().deleteItem(
+                    rune.getId(),
+                    rune.getAmount() * affordable
+            );
         }
 
-        meta.addCharges(toAdd);
+        meta.addCharges(affordable);
+
         if (meta.getSpellId() == -1) {
             meta = new GreaterRunicStaffMetaData(spellId, meta.getCharges());
             player.getEquipment().getItem(Equipment.SLOT_WEAPON).setMetadata(meta);
         }
+
         if (inventory) {
             staff.setId(Item.getId("item.greater_runic_staff_charged"));
             player.getInventory().refresh();
         } else {
-        Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
-        if (weapon.isItem("item.greater_runic_staff_uncharged")) {
-            weapon.setId(Item.getId("item.greater_runic_staff_charged"));
-            player.getEquipment().refresh(Equipment.SLOT_WEAPON);
-            player.getAppearence().generateAppearenceData();
+            Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
+            if (weapon.isItem("item.greater_runic_staff_uncharged")) {
+                weapon.setId(Item.getId("item.greater_runic_staff_charged"));
+                player.getEquipment().refresh(Equipment.SLOT_WEAPON);
+                player.getAppearence().generateAppearenceData();
             }
         }
 
-        player.getPackets().sendGameMessage("You charge your staff with " + toAdd + " " + s.name().toLowerCase().replace('_', ' ') + " spells.");
+        player.getPackets().sendGameMessage(
+                "You charge your staff with " + affordable + " "
+                        + s.name().toLowerCase().replace('_', ' ') + " spells."
+        );
+
+        if (affordable < requested) {
+            StringBuilder missing = new StringBuilder("You were missing ");
+
+            boolean first = true;
+            for (Item rune : s.getRune()) {
+                int owned = runeOwned.get(rune.getId());
+                int neededForRequested = rune.getAmount() * requested;
+                int shortfall = neededForRequested - owned;
+
+                if (shortfall > 0) {
+                    if (!first) {
+                        missing.append(", ");
+                    }
+                    missing.append(shortfall)
+                            .append(" ")
+                            .append(rune.getName());
+                    first = false;
+                }
+            }
+
+            missing.append(" to fully charge ")
+                    .append(requested)
+                    .append(" spells.");
+
+            player.getPackets().sendGameMessage(missing.toString());
+        }
     }
+
 
     private Item[] scaleRunes(Item[] runes, int amount) {
         return Arrays.stream(runes)
@@ -604,9 +660,7 @@ public class GreaterRunicStaffManager implements Serializable {
         RunicStaffSpellStore s = RunicStaffSpellStore.getSpellStore(spellId, component);
         if (s == null)
             return false;
-        if (!hasRequirements(player, component, spellId))
-            return false;
-        return true;
+        return hasRequirements(player, component, spellId);
     }
 
 }

@@ -25,5 +25,8 @@ enum class Projectile(val typeName: String) {
     TELEPORT_BLOCK("teleport_block"),
     CRUMBLE_UNDEAD("crumble_undead"),
     SAGAIE("sagaie"),
-    POLYPORE_STAFF("polypore_staff")
+    POLYPORE_STAFF("polypore_staff"),
+
+    //NPCS
+    DRAGONFIRE("dragonfire"),
 }

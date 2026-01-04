@@ -169,6 +169,11 @@ public class Item implements Serializable {
 
 	@Override
 	public Item clone() {
-		return new Item(this);
+		Item copy = new Item(id, amount);
+		if (metadata != null) {
+			copy.setMetadata(metadata.deepCopy());
+		}
+		return copy;
 	}
+
 }

@@ -553,7 +553,6 @@ object AncientMagicks : Spellbook(ANCIENT_ID) {
                 RuneRequirement(RuneDefinitions.Runes.WATER, 6)
             ),
             animationId = 1979,
-            projectileId = 368,
             projectileType = Projectile.ICE_SPELL,
             endGraphic = Graphics(369),
             multi = true,
@@ -920,6 +919,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             animationId = 724,
             graphicId = Graphics(145, 100),
             projectileId = 146,
+            projectileType = Projectile.CRUMBLE_UNDEAD,
             endGraphic = Graphics(147, 100)
         ),
         Spell(

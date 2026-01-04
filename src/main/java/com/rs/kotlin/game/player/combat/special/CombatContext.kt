@@ -251,7 +251,7 @@ fun CombatContext.getDragonClawsHits(swings: Int = 4): List<Hit> {
     } else {//not a full miss
         when (firstHitIndex) {
             0 -> {
-                val first = ((maxHit / 2).. maxHit - 1).random()
+                val first = if (defender is NPC && defender.id == 4474) maxHit - 1 else ((maxHit / 2).. maxHit - 1).random()
                 hits[0].damage = first//if maxHit 400 = 200-400
                 hits[1].damage = (hits[0].damage + 1) / 2//half of above
                 hits[2].damage = (hits[1].damage + 1) / 2//halv of above

@@ -153,6 +153,8 @@ object StandardMelee : MeleeData() {
 
                     val firstHitDamage = if (isMultiCombat) {
                         (0..((1.5 * maxHit).toInt())).random()
+                    } else if (context.defender is NPC && context.defender.id == 4474) {
+                        (1.5 * maxHit).toInt()
                     } else {
                         ((0.5 * maxHit).toInt()..(1.5 * maxHit).toInt()).random()
                     }
@@ -564,7 +566,10 @@ object StandardMelee : MeleeData() {
                 "item.skeletal_lava_battlestaff",
                 "item.skeletal_mud_battlestaff",
                 "item.skeletal_steam_battlestaff",
-                "item.lunar_staff"
+                "item.lunar_staff",
+                "item.greater_runic_staff_inactive",
+                "item.greater_runic_staff_uncharged",
+                "item.greater_runic_staff_charged",
             ),
             name = "Staff & Wand",
             weaponStyle = WeaponStyle.STAFF,
@@ -672,7 +677,12 @@ object StandardMelee : MeleeData() {
                     context.hits {
                         val meleeHit = melee(delay = 0)
                         context.defender.gfx("graphic.saradomin_sword_special_end")
-                        var randomHit = if (meleeHit.damage > 0) (50..150).random() else 0
+                        var randomHit =
+                            if (context.defender is NPC && context.defender.id == 4474) {
+                                (150)
+                            } else if (meleeHit.damage > 0) {
+                                    (50..150).random()
+                            } else 0
                         if (context.defender is Player) {
                             if (context.defender.prayer.isMageProtecting) {
                                 randomHit = 0
