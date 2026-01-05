@@ -137,7 +137,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun getHitDelay(): Int {
         val distance = Utils.getDistance(attacker, defender)
-        return max(1, 1 + (1 + distance) / 3)
+        return max(1, (1 + distance) / 3)
     }
     override fun getAttackDistance(): Int {
         return when (attacker.combatDefinitions.spellId) {

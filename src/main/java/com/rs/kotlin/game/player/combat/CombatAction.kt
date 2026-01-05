@@ -31,11 +31,11 @@ class CombatAction(
         fun getCombatStyle(player: Player, target: Entity): CombatStyle {
             val spellId = player.getCombatDefinitions().spellId
             return when {
-                spellId != 0 -> MagicStyle(player, target)
                 NightmareStaff.hasWeapon(player) && player.combatDefinitions.isUsingSpecialAttack -> MagicStyle(player, target)
+                ObliterationWeapon.hasWeapon(player) && player.combatDefinitions.isUsingSpecialAttack -> MagicStyle(player, target);
+                spellId != 0 -> MagicStyle(player, target)
                 GreaterRunicStaffWeapon.hasWeapon(player) && GreaterRunicStaffWeapon.getSpellId(player) != -1 -> MagicStyle(player, target)
                 PolyporeStaff.hasWeapon(player) -> MagicStyle(player, target)
-                ObliterationWeapon.hasWeapon(player) && player.combatDefinitions.isUsingSpecialAttack -> MagicStyle(player, target);
                 isRangedWeapon(player) -> RangedStyle(player, target)
                 else -> MeleeStyle(player, target)
             }
@@ -116,7 +116,9 @@ class CombatAction(
 
         for (queued in player.queuedInstantCombats.toList()) {
             val queuedStyle = queued.context.combat
-
+            if (player.combatDefinitions.spellId > 0 && queuedStyle !is MagicStyle) {
+                continue
+            }
             if (!player.isOutOfRange(target, queuedStyle.getAttackDistance()) &&
                 !shouldAdjustDiagonal(player, target)
             ) {

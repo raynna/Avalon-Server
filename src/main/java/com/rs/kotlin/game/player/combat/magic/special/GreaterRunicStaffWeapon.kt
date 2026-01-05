@@ -18,11 +18,7 @@ object GreaterRunicStaffWeapon : WeaponSpellRegistry.Provider {
             weapon.metadata = GreaterRunicStaffMetaData(0, 0)
         }
         val data = weapon.metadata
-        if (data is GreaterRunicStaffMetaData && data.charges < 1) {
-            //player.message("Your greater runic staff has no charges.")
-            return false
-        }
-        return true
+        return !(data is GreaterRunicStaffMetaData && data.charges < 1)
     }
 
     fun getSpellId(attacker: Player): Int {

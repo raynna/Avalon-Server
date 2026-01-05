@@ -299,6 +299,9 @@ interface CombatStyle {
         val weapon = Weapon.getWeapon(player.equipment.weaponId) ?: return false
         val ammo = RangeData.getAmmoByItemId(player.equipment.ammoId)
         val special = weapon.special ?: return false
+        if (player.combatDefinitions.spellId > 0) {
+            return false
+        }
         if (!player.combatDefinitions.isUsingSpecialAttack)
             return false
 
