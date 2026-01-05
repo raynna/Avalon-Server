@@ -54,7 +54,6 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
             attacker.appearence.generateAppearenceData()
         }
 
-        // consume a charge
         data.value -= 1
         if (data.value == 0) {
             attacker.message("Your polypore staff has run out of charges.")

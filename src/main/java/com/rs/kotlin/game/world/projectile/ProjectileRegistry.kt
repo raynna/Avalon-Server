@@ -22,7 +22,7 @@ object ProjectileRegistry {
         register(Projectile.ANCIENT_SPELL, ProjectileType(startHeight = 43, endHeight = 31, startTime = 51, arc = 11))
         register(Projectile.BLOOD_SPELL, ProjectileType(startHeight = 28, endHeight = 0, startTime = 51, arc = 11))
         register(Projectile.ICE_SPELL, ProjectileType(startHeight = 28, endHeight = 0, startTime = 51, arc = 11))
-        register(Projectile.SLAYER_DART, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15))
+        register(Projectile.SLAYER_DART, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15, displacement = 64))
         register(Projectile.IBAN_BLAST, ProjectileType(startHeight = 36, endHeight = 31, startTime = 60, arc = 15, displacement = 64))
         register(Projectile.STORM_OF_ARMADYL, ProjectileType(startHeight = 11, endHeight = 11, startTime = 41, multiplier = 8, arc = 0))
         register(Projectile.TELEPORT_BLOCK, ProjectileType(startHeight = 11, endHeight = 36, startTime = 41, arc = 15))

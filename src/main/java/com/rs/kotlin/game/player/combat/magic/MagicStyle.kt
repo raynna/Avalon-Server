@@ -140,7 +140,10 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         return max(1, 1 + (1 + distance) / 3)
     }
     override fun getAttackDistance(): Int {
-        return 8
+        return when (attacker.combatDefinitions.spellId) {
+            1000 -> 8
+            else -> 10
+        }
     }
 
     override fun attack() {

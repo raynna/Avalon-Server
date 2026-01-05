@@ -1585,7 +1585,6 @@ public class ButtonHandler {
                     }
                     if (weaponId == 24201) {
                         player.getRunicStaff().openChooseSpell(player, weapon);
-                        player.getRunicStaff().wearing = true;
                         return;
                     }
                     if (weaponId >= 18349 && weaponId <= 18357) {

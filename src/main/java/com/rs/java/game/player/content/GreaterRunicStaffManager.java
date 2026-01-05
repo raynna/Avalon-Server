@@ -349,7 +349,8 @@ public class GreaterRunicStaffManager implements Serializable {
             data.setSpellId(s.spellId);
             player.message("Runic staff can now charge " + s.name().toLowerCase().replace('_', ' ') + ".");
         }
-        if (wearing) {
+        boolean wearingStaff = player.getEquipment().getItem(Equipment.SLOT_WEAPON).isItem("item.greater_runic_staff_inactive");
+        if (wearingStaff) {
             player.getEquipment().getItem(Equipment.SLOT_WEAPON).setId(Item.getId("item.greater_runic_staff_uncharged"));
             player.getEquipment().refresh(Equipment.SLOT_WEAPON);
             player.getAppearence().generateAppearenceData();
@@ -438,12 +439,12 @@ public class GreaterRunicStaffManager implements Serializable {
     }
 
 
-    public boolean wearing;
+    public boolean wearing = false;
 
     public void clearSpell(boolean wearing, boolean bank) {
         Item item = (Item) player.getTemporaryAttributtes().get("GREATER_RUNIC_STAFF");
         GreaterRunicStaffMetaData meta = (GreaterRunicStaffMetaData) item.getMetadata();
-        if (meta == null || meta.getSpellId() == -1 || meta.getCharges() <= 0) {
+        if (meta == null || meta.getSpellId() == -1) {
             player.getPackets().sendGameMessage("Your runic staff has no stored spells.");
             return;
         }
@@ -480,7 +481,7 @@ public class GreaterRunicStaffManager implements Serializable {
 
         Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
         if (weapon != null) {
-            if (wearing) {
+            if (player.getEquipment().getItem(Equipment.SLOT_WEAPON).isItem("item.greater_runic_staff_uncharged")) {
                 weapon.setId(Item.getId("item.greater_runic_staff_inactive"));
                 player.getEquipment().refresh(Equipment.SLOT_WEAPON);
                 player.getAppearence().generateAppearenceData();
