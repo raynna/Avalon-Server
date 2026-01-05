@@ -7,8 +7,11 @@ import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
+import com.rs.kotlin.game.player.combat.EntityUtils.distanceSquared
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.range.RangedAmmo
+import com.rs.kotlin.game.world.projectile.Projectile
+import com.rs.kotlin.game.world.projectile.ProjectileManager
 import kotlin.math.max
 
 data class CombatContext(
@@ -305,7 +308,6 @@ fun Entity.withinDistanceOf(other: Entity, distance: Int): Boolean {
 fun CombatContext.applyScytheHits(victim: Entity) {
     val attacker = this.attacker
 
-    // Collect the hits so we can inspect them after rolling
     val scytheHits = mutableListOf<Hit>()
 
     hits {
@@ -324,7 +326,6 @@ fun CombatContext.applyScytheHits(victim: Entity) {
         }
     }
 
-    // === Critical propagation like Dragon Claws ===
     if (scytheHits.isNotEmpty()) {
         val firstNonZero = scytheHits.firstOrNull { it.damage > 0 }
         if (firstNonZero != null) {
@@ -338,7 +339,147 @@ fun CombatContext.applyScytheHits(victim: Entity) {
     }
 }
 
+fun CombatContext.startRangedChain(
+    maxBounces: Int,
+    bounceRange: Int
+) {
+    val hitTargets = mutableSetOf<Int>()
+    hitTargets += defender.index
 
+    attacker.animate("animation.bow_attack")
+    attacker.gfx(2962, 100)
+
+    fireRangedChain(
+        context = this,
+        source = attacker,
+        target = defender,
+        hitTargets = hitTargets,
+        bouncesLeft = maxBounces,
+        bounceRange = bounceRange
+    )
+}
+
+
+fun fireRangedChain(
+    context: CombatContext,
+    source: Entity,
+    target: Entity,
+    hitTargets: MutableSet<Int>,
+    bouncesLeft: Int,
+    bounceRange: Int
+) {
+    if (bouncesLeft <= 0) return
+
+    val hit = context.registerHit(
+        combatType = CombatType.RANGED,
+        target = target
+    )
+
+    val impactTicks = ProjectileManager.send(
+        projectile = Projectile.ARROW,
+        gfxId = 1066,
+        attacker = source,
+        defender = target
+    )
+
+    context.combat.delayHits(
+        PendingHit(
+            hit = hit,
+            target = target,
+            delay = impactTicks
+        ) {
+
+            if (hit.damage <= 0) return@PendingHit
+
+            val nextTarget = context.findNextChainTarget(
+                source = target,
+                hitTargets = hitTargets,
+                bounceRange = bounceRange
+            ) ?: return@PendingHit
+
+            hitTargets += nextTarget.index
+
+            fireRangedChain(
+                context = context,
+                source = target,
+                target = nextTarget,
+                hitTargets = hitTargets,
+                bouncesLeft = bouncesLeft - 1,
+                bounceRange = bounceRange
+            )
+        }
+    )
+}
+
+
+
+private const val DEBUG_CHAIN = true
+
+
+
+fun CombatContext.findNextChainTarget(
+    source: Entity,
+    hitTargets: MutableSet<Int>,
+    bounceRange: Int
+): Entity? {
+
+    val attacker = this.attacker
+    val candidates = mutableListOf<Pair<Entity, Int>>() // (entity, distSq)
+
+    val sourceIsDummy = source is NPC && source.name.contains("dummy", true)
+
+    source.checkMultiArea()
+    if (!sourceIsDummy && !source.isAtMultiArea && !source.isForceMultiArea)
+        return null
+
+    val regions = source.mapRegionsIds
+
+    for (regionId in regions) {
+        val region = World.getRegion(regionId) ?: continue
+
+        // ---- NPCs ----
+        region.npCsIndexes?.forEach { npcIndex ->
+            val n = World.getNPCByIndex(npcIndex) ?: return@forEach
+
+            if (
+                n == attacker.familiar ||
+                n.index in hitTargets ||
+                n.isDead ||
+                n.hasFinished()
+            ) return@forEach
+
+            val isDummy = n.name.contains("dummy", true)
+            if (!isDummy && !n.isAtMultiArea && !n.isForceMultiAttacked)
+                return@forEach
+
+            if (!attacker.controlerManager.canHit(n))
+                return@forEach
+
+            val dx = n.tile.x - source.tile.x
+            val dy = n.tile.y - source.tile.y
+            val distSq = dx * dx + dy * dy
+
+            if (distSq > bounceRange * bounceRange)
+                return@forEach
+
+            candidates += n to distSq
+        }
+    }
+
+    if (candidates.isEmpty())
+        return null
+
+    // ---- RANDOMISATION LOGIC ----
+
+    // 1️⃣ Sort by distance
+    candidates.sortBy { it.second }
+
+    // 2️⃣ Take only the closest few (prevents wild jumps)
+    val nearby = candidates.take(minOf(4, candidates.size))
+
+    // 3️⃣ Pick one at random
+    return nearby.random().first
+}
 
 
 fun CombatContext.getScytheTargets(

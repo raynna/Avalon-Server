@@ -1,10 +1,15 @@
 package com.rs.kotlin.game.player.combat
 
 import com.rs.java.game.Entity
+import com.rs.java.game.WorldTile
 
 object EntityUtils {
 
-
+    fun WorldTile.distanceSquared(other: WorldTile): Int {
+        val dx = x - other.x
+        val dy = y - other.y
+        return dx * dx + dy * dy
+    }
     fun collides(entity: Entity, target: Entity): Boolean {
         return entity.plane == target.plane && 
                colides(entity.x, entity.y, entity.size,
