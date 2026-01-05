@@ -299,12 +299,11 @@ interface CombatStyle {
         val weapon = Weapon.getWeapon(player.equipment.weaponId) ?: return false
         val ammo = RangeData.getAmmoByItemId(player.equipment.ammoId)
         val special = weapon.special ?: return false
-        if (player.combatDefinitions.spellId > 0) {
-            return false
-        }
         if (!player.combatDefinitions.isUsingSpecialAttack)
             return false
-
+        if (special !is SpecialAttack.Combat && player.combatDefinitions.spellId > 0) {
+            return false
+        }
         var specialCost = when {
             NightmareStaff.hasWeapon(player) -> 55
             else -> special.energyCost
@@ -317,6 +316,7 @@ interface CombatStyle {
             player.combatDefinitions.switchUsingSpecialAttack()
             return false
         }
+
 
         when (special) {
             is SpecialAttack.Instant -> {
@@ -342,12 +342,22 @@ interface CombatStyle {
 
             is SpecialAttack.Combat -> {
                 if (target == null) return false
+
+                val spellActive = player.combatDefinitions.spellId > 0
+
+                if (spellActive &&
+                    !NightmareStaff.hasWeapon(player) &&
+                    !ObliterationWeapon.hasWeapon(player)
+                ) {
+                    return false
+                }
+
                 val style = when {
-                    NightmareStaff.hasWeapon(player) -> {
-                        MagicStyle(player, target)
-                    }
-                    ObliterationWeapon.hasWeapon(player) -> MagicStyle(player, target)
+                    NightmareStaff.hasWeapon(player) ||
+                            ObliterationWeapon.hasWeapon(player) -> MagicStyle(player, target)
+
                     isRangedWeapon(player) -> RangedStyle(player, target)
+
                     else -> MeleeStyle(player, target)
                 }
 
@@ -362,11 +372,13 @@ interface CombatStyle {
                     attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
                     usingSpecial = true,
                 )
+
                 if (NightmareStaff.hasWeapon(player)) {
                     NightmareStaff.special(combatContext)
                     player.combatDefinitions.decreaseSpecialAttack(specialCost)
                     return true
                 }
+
                 special.execute(combatContext)
             }
 

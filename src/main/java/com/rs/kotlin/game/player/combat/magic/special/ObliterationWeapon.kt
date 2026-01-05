@@ -13,18 +13,4 @@ object ObliterationWeapon : WeaponSpellRegistry.Provider {
         val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return false
         return weapon.isAnyOf("item.obliteration")
     }
-
-    fun getSpellId(attacker: Player): Int {
-        val weapon = attacker.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return -1
-        val data = weapon.metadata as? GreaterRunicStaffMetaData ?: return -1
-        if (data.spellId == -1) {
-            attacker.message("Your greater runic staff has no spell selected");
-            return -1;
-        }
-        if (data.charges <= 0) {
-            attacker.message("Your greater runic staff has no charges.")
-            return -1
-        }
-        return data.spellId
-    }
 }
