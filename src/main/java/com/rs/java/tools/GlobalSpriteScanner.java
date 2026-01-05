@@ -27,7 +27,6 @@ public class GlobalSpriteScanner {
                 archiveCount++;
                 int archiveId = archiveStub.getId();
 
-                // ⚠️ Load the full archive (not just the stub)
                 Archive archive = cache.index(indexId).archive(archiveId);
                 if (archive == null) continue;
 

@@ -6,5 +6,6 @@ import com.rs.java.game.Hit
 data class PendingHit(
     val hit: Hit,
     val target: Entity,
-    val delay: Int
+    val delay: Int,
+    val onApply: (() -> Unit)? = null
 )

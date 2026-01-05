@@ -296,14 +296,15 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.NONE,
             effect = SpecialEffect(
                 execute = { context ->
-                    context.attacker.animate("animation.bow_attack")
+                    context.startRangedChain(6, 5);
+                    /*context.attacker.animate("animation.bow_attack")
                     context.attacker.gfx("graphic.zaryte_bow_start", 100)
                     ProjectileManager.send(Projectile.ARROW, "graphic.zaryte_bow_projectile", context.attacker, context.defender)
                     context.hits {
                         ranged(
                             delay = context.combat.getHitDelay()
                         )
-                    }
+                    }*/
                     true
                 }
             )

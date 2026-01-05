@@ -15,10 +15,6 @@ import kotlin.math.max
 
 object ProjectileManager {
 
-    /* ============================== */
-    /* ========= PUBLIC API ========= */
-    /* ============================== */
-
     @JvmStatic
     fun sendToTile(
         projectile: Projectile,
@@ -42,14 +38,11 @@ object ProjectileManager {
         )
 
         onLanded ?: return
-
-        val endCycle = type.endTime(distance)
-        val impactTicks = max(0, (endCycle + 29) / 30)
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
                 onLanded.run()
             }
-        }, impactTicks)
+        }, impactCycles)
     }
 
     @JvmStatic
