@@ -9,7 +9,7 @@ A RuneScape private server framework, based on client build 718, loading a 727 c
 
 Place the contents of the cache zip into the /data/cache/ directory.
 
-[Cache](https://mega.nz/file/8cwFCZqD#fK2d_l84JRm_wOWbBrNmq985h4Wc4bCu71tFRCRdWrw)
+[Cache](https://mega.nz/file/FF5BDZjQ#s8E7yZ1lGy_2mtCwnKOTQPg1kUVtBGsF8zzyGJNeScE)
 
 [Client](https://mega.nz/file/UdpyEDQD#uGZ96ZIj7TNiUAfvw81TX0zOv8a5428ack-zFAlOfAw)
 
