@@ -137,7 +137,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun getHitDelay(): Int {
         val distance = Utils.getDistance(attacker, defender)
-        return max(1, (1 + distance) / 3)
+        return min(4, max(1, 1 + (1 + distance) / 3))
     }
     override fun getAttackDistance(): Int {
         return when (attacker.combatDefinitions.spellId) {
@@ -372,8 +372,8 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             defender = defender,
             weapon = getCurrentWeapon(),
             weaponId = getCurrentWeaponId(attacker),
-            attackStyle = AttackStyle.ACCURATE,//just fillers
-            attackBonusType = AttackBonusType.CRUSH//just fillers
+            attackStyle = AttackStyle.ACCURATE,
+            attackBonusType = AttackBonusType.CRUSH
         )
         val targets = if (spell.multi) {
             combatContext.getMultiAttackTargets(
@@ -391,8 +391,8 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             val splash = hit.damage == 0
             var endGraphic = if (!splash) spell.endGraphic else Graphics(-1)
             if (hit.damage > 0) {
-                if (defender.isFreezeImmune || defender.isFrozen || defender.size >= 2) {
-                    endGraphic = Graphics(1677, 100);
+                if (spell.id == 23 && (defender.isFreezeImmune || defender.isFrozen || defender.size >= 2)) {
+                    endGraphic = Graphics(1677, 100)
                 }
                 if (spell.miasmic) {
                     if (!t.tickManager.isActive(TickManager.TickKeys.MIASMIC_EFFECT))
@@ -430,7 +430,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     private fun addMagicExperience(totalDamage: Int) {
         var spellId = attacker.combatDefinitions.spellId
-        val manual = isManualCast(spellId);
+        val manual = isManualCast(spellId)
         if (manual) {
             attacker.combatDefinitions.resetSpells(false)
             spellId -= MIN_SPELL_ID
