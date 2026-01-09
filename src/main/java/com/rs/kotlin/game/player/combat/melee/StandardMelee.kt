@@ -11,6 +11,8 @@ import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
+import com.rs.kotlin.game.player.combat.magic.special.ChainMode
+import com.rs.kotlin.game.player.combat.magic.special.ChainSettings
 import com.rs.kotlin.game.player.combat.special.*
 
 object StandardMelee : MeleeData() {
@@ -920,6 +922,24 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.katana_stab"),
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.katana_slash"),
             ),
+            effect = SpecialEffect(
+                execute = { context ->
+                    context.startRangedChain(
+                        settings = ChainSettings(
+                            firstCombatType = CombatType.MELEE,
+                            spreadCombatType = CombatType.MAGIC,
+                            damageMultiplierPerBounce = 0.5
+                        ),
+                        animationId = Animation.getId("animation.katana_slash"),
+                        projectileId = 280,
+                        endGraphicsId = 281,
+                        maxTargets = 8,
+                        bounceRange = 20,
+                        chainMode = ChainMode.SPREAD_ALL
+                    )
+                    true
+                }
+            )
         ),
         MeleeWeapon(
             itemId = Item.getIds(
@@ -1387,7 +1407,7 @@ object StandardMelee : MeleeData() {
             itemId = Item.getIds(
                 "item.scythe_of_vitur",
             ),
-            name = "Maul",
+            name = "Scythe of vitur",
             weaponStyle = WeaponStyle.SCYTHE,
             attackDelay = 1,
             blockAnimationId = Animation.getId("animation.scythe_block"),

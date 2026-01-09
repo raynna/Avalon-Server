@@ -154,6 +154,7 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             scheduleHit(pending.delay) {
                 target.applyHit(hit)
                 onHit(attacker, target, hit)
+                pending.onApply?.invoke()
             }
         }
         attackStyle.xpMode.distributeXp(attacker, attackStyle, totalDamage);

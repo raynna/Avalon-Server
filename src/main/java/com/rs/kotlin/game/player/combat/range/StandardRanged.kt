@@ -12,6 +12,8 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.magic.special.ChainMode
+import com.rs.kotlin.game.player.combat.magic.special.ChainSettings
 import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
@@ -296,7 +298,19 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.NONE,
             effect = SpecialEffect(
                 execute = { context ->
-                    context.startRangedChain(6, 5);
+                    context.startRangedChain(
+                        settings = ChainSettings(
+                            firstCombatType = CombatType.RANGED,
+                            spreadCombatType = CombatType.RANGED,
+                            damageMultiplierPerBounce = 0.8
+                        ),
+                        animationId = Animation.getId("animation.bow_attack"),
+                        graphicsId = Graphics.getGraphics("graphic.zaryte_bow_start"),
+                        projectileId = Graphics.getGraphics("graphic.zaryte_bow_projectile"),
+                        maxTargets = 5,
+                        bounceRange = 10,
+                        chainMode = ChainMode.RANDOM_NEARBY
+                    )
                     /*context.attacker.animate("animation.bow_attack")
                     context.attacker.gfx("graphic.zaryte_bow_start", 100)
                     ProjectileManager.send(Projectile.ARROW, "graphic.zaryte_bow_projectile", context.attacker, context.defender)

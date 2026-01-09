@@ -7869,6 +7869,180 @@
     "categories": [],
     "assignedBy": []
   },
+  "749": {
+    "id": 749,
+    "name": "Angry barbarian spirit",
+    "members": true,
+    "combatLevel": 166,
+    "attackLevel": 150,
+    "strengthLevel": 140,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 190,
+    "attackBonus": 9,
+    "strengthBonus": 15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 3,
+      "crush": 2
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 2,
+      "standard": 2,
+      "heavy": 2
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[3 July]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He looks a tad upset.",
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 18
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "750": {
+    "id": 750,
+    "name": "Enraged barbarian spirit",
+    "members": true,
+    "combatLevel": 166,
+    "attackLevel": 150,
+    "strengthLevel": 140,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 190,
+    "attackBonus": 9,
+    "strengthBonus": 15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 3,
+      "crush": 2
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 2,
+      "standard": 2,
+      "heavy": 2
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[3 July]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He looks a tad upset.",
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 18
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "751": {
+    "id": 751,
+    "name": "Berserk barbarian spirit",
+    "members": true,
+    "combatLevel": 166,
+    "attackLevel": 150,
+    "strengthLevel": 140,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 190,
+    "attackBonus": 9,
+    "strengthBonus": 15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 3,
+      "crush": 2
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 2,
+      "standard": 2,
+      "heavy": 2
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[3 July]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He looks a tad upset.",
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 18
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "753": {
     "id": 753,
     "name": "Melzar the Mad",
@@ -10404,6 +10578,341 @@
     "slayerXp": 90,
     "categories": [],
     "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1153": {
+    "id": 1153,
+    "name": "Kalphite Worker",
+    "members": true,
+    "combatLevel": 28,
+    "attackLevel": 20,
+    "strengthLevel": 20,
+    "defenceLevel": 20,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 40,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 5,
+      "slash": 5,
+      "crush": 1
+    },
+    "magicDefence": {
+      "magic": 10
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 40,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1154": {
+    "id": 1154,
+    "name": "Kalphite Soldier",
+    "members": true,
+    "combatLevel": 85,
+    "attackLevel": 70,
+    "strengthLevel": 70,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 90,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 25,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "3",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 8
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 90,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1155": {
+    "id": 1155,
+    "name": "Kalphite Guardian",
+    "members": true,
+    "combatLevel": 141,
+    "attackLevel": 110,
+    "strengthLevel": 110,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 170,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 25,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "4",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 12
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 20,
+    "slayerXp": 170,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1157": {
+    "id": 1157,
+    "name": "Kalphite Guardian",
+    "members": true,
+    "combatLevel": 141,
+    "attackLevel": 110,
+    "strengthLevel": 110,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 170,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 25,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "4",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 12
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 20,
+    "slayerXp": 170,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1158": {
+    "id": 1158,
+    "name": "Kalphite Queen",
+    "members": true,
+    "combatLevel": 333,
+    "attackLevel": 300,
+    "strengthLevel": 300,
+    "defenceLevel": 300,
+    "magicLevel": 150,
+    "rangedLevel": 1,
+    "constitutionLevel": 255,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "5",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "maxHit": {
+      "maxhit": 31
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
       "vannaka",
       "chaeldar",
       "konar",
@@ -16081,6 +16590,230 @@
       "mazchna"
     ]
   },
+  "4257": {
+    "id": 4257,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 19,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4258": {
+    "id": 4258,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 19,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4259": {
+    "id": 4259,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 19,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4260": {
+    "id": 4260,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 19,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "4261": {
     "id": 4261,
     "name": "Goblin",
@@ -21263,6 +21996,189 @@
       "duradel"
     ]
   },
+  "5362": {
+    "id": 5362,
+    "name": "Brutal green dragon",
+    "members": true,
+    "combatLevel": 227,
+    "attackLevel": 268,
+    "strengthLevel": 168,
+    "defenceLevel": 168,
+    "magicLevel": 168,
+    "rangedLevel": 0,
+    "constitutionLevel": 175,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 70,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": 60
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 50,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[3 July]] [[2007]]",
+    "aliases": [],
+    "size": "4",
+    "examine": "It appears intelligent and savage.",
+    "attributes": [
+      "dragon",
+      "fiery"
+    ],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]",
+      "[[Dragonfire]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "5363": {
+    "id": 5363,
+    "name": "Mithril dragon",
+    "members": true,
+    "combatLevel": 304,
+    "attackLevel": 268,
+    "strengthLevel": 268,
+    "defenceLevel": 268,
+    "magicLevel": 168,
+    "rangedLevel": 168,
+    "constitutionLevel": 254,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 100,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": 30
+    },
+    "rangedDefence": {
+      "light": 90,
+      "standard": 90,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[3 July]] [[2007]]",
+    "aliases": [],
+    "size": "4",
+    "examine": "Experimenting with mithril gone bad!",
+    "attributes": [
+      "dragon",
+      "fiery"
+    ],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]",
+      "[[Ranged]]",
+      "[[Dragonfire]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 273,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "5364": {
+    "id": 5364,
+    "name": "Confused barbarian",
+    "members": true,
+    "combatLevel": 132,
+    "attackLevel": 115,
+    "strengthLevel": 114,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 124,
+    "attackBonus": 9,
+    "strengthBonus": 15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 3,
+      "crush": 2
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 2,
+      "standard": 2,
+      "heavy": 2
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[3 July]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He looks about, blankly.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 15
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "5378": {
     "id": 5378,
     "name": "Zombie",
@@ -24218,6 +25134,251 @@
     "slayerXp": 100,
     "categories": [],
     "assignedBy": [
+      "mazchna",
+      "vannaka"
+    ]
+  },
+  "6102": {
+    "id": 6102,
+    "name": "Lost barbarian",
+    "members": true,
+    "combatLevel": 132,
+    "attackLevel": 115,
+    "strengthLevel": 114,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 124,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[3 July]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "His face is expressionless.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 12
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6104": {
+    "id": 6104,
+    "name": "Skeleton brute",
+    "members": true,
+    "combatLevel": 132,
+    "attackLevel": 115,
+    "strengthLevel": 114,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 124,
+    "attackBonus": 9,
+    "strengthBonus": 15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 3,
+      "crush": 2
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 2,
+      "standard": 2,
+      "heavy": 2
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[3 July]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An ex-barbarian, willing to make you ex too.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 15
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 124,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka"
+    ]
+  },
+  "6105": {
+    "id": 6105,
+    "name": "Skeleton warlord",
+    "members": true,
+    "combatLevel": 132,
+    "attackLevel": 115,
+    "strengthLevel": 114,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 124,
+    "attackBonus": 9,
+    "strengthBonus": 15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 3,
+      "crush": 2
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 2,
+      "standard": 2,
+      "heavy": 2
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[3 July]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He\u0027s heartless.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 15
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 124,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka"
+    ]
+  },
+  "6107": {
+    "id": 6107,
+    "name": "Skeleton thug",
+    "members": true,
+    "combatLevel": 130,
+    "attackLevel": 115,
+    "strengthLevel": 114,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 114,
+    "attackBonus": 9,
+    "strengthBonus": 15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 3,
+      "crush": 2
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 2,
+      "standard": 2,
+      "heavy": 2
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[3 July]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Floats like an anvil, hits like a hammer.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "maxhit": 15
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 124,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
       "mazchna",
       "vannaka"
     ]

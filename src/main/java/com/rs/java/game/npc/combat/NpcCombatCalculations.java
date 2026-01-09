@@ -127,7 +127,7 @@ public class NpcCombatCalculations {
             probability = attackRoll / (2.0 * (defenceRoll + 1.0));
         }
 
-        System.out.println("Hitchance: " + String.format("%.1f", probability * 100) + "%");
+        //System.out.println("Hitchance: " + String.format("%.1f", probability * 100) + "%");
 
         return random < probability;
     }
