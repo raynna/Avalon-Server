@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.player.combat.magic.special
+package com.rs.kotlin.game.player.combat.special
 
 import com.rs.kotlin.game.player.combat.CombatType
 

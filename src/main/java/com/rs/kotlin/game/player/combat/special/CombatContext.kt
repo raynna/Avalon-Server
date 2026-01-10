@@ -1,19 +1,14 @@
 package com.rs.kotlin.game.player.combat.special
 
-import com.rs.java.game.Animation
 import com.rs.java.game.Entity
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
-import com.rs.java.game.Hit.HitLook
 import com.rs.java.game.World
-import com.rs.java.game.WorldTile
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.magic.special.ChainMode
-import com.rs.kotlin.game.player.combat.magic.special.ChainSettings
 import com.rs.kotlin.game.player.combat.range.RangedAmmo
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
@@ -344,7 +339,7 @@ fun CombatContext.applyScytheHits(victim: Entity) {
     }
 }
 
-fun CombatContext.startRangedChain(
+fun CombatContext.startChainAttack(
     settings: ChainSettings,
     animationId: Int = -1,
     graphicsId: Int = -1,
@@ -360,7 +355,7 @@ fun CombatContext.startRangedChain(
     attacker.animate(animationId)
     attacker.gfx(graphicsId, 100)
 
-    fireRangedChain(
+    fireChain(
         context = this,
         settings = settings,
         source = attacker,
@@ -376,10 +371,7 @@ fun CombatContext.startRangedChain(
     )
 }
 
-
-
-
-fun fireRangedChain(
+fun fireChain(
     context: CombatContext,
     settings: ChainSettings,
     source: Entity,
@@ -442,7 +434,7 @@ fun fireRangedChain(
             nextTargets.forEach { next ->
                 hitTargets += next
 
-                fireRangedChain(
+                fireChain(
                     context = context,
                     settings = settings,
                     source = target,
@@ -460,9 +452,6 @@ fun fireRangedChain(
         }
     )
 }
-
-
-
 
 fun CombatContext.findChainTargets(
     source: Entity,
@@ -541,11 +530,6 @@ fun canChainReach(source: Entity, target: Entity, maxDistance: Int): Boolean {
             dy <= size + maxDistance &&
             dy >= -1 - maxDistance
 }
-
-
-
-
-
 
 fun CombatContext.getScytheTargets(
     maxTargets: Int = 3
@@ -646,8 +630,6 @@ fun CombatContext.getScytheTargets(
     //println("[DEBUG] Final targets=${possibleTargets.map { it.toString() }}")
     return possibleTargets
 }
-
-
 
 fun CombatContext.getMultiAttackTargets(
     maxDistance: Int,

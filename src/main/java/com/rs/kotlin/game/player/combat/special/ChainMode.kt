@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.player.combat.magic.special
+package com.rs.kotlin.game.player.combat.special
 
 enum class ChainMode {
     RANDOM_NEARBY,

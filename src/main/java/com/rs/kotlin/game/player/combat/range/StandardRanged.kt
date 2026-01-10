@@ -12,8 +12,8 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.magic.special.ChainMode
-import com.rs.kotlin.game.player.combat.magic.special.ChainSettings
+import com.rs.kotlin.game.player.combat.special.ChainMode
+import com.rs.kotlin.game.player.combat.special.ChainSettings
 import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
@@ -298,7 +298,7 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.NONE,
             effect = SpecialEffect(
                 execute = { context ->
-                    context.startRangedChain(
+                    context.startChainAttack(
                         settings = ChainSettings(
                             firstCombatType = CombatType.RANGED,
                             spreadCombatType = CombatType.RANGED,

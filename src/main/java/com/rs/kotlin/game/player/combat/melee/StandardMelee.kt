@@ -11,8 +11,8 @@ import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
-import com.rs.kotlin.game.player.combat.magic.special.ChainMode
-import com.rs.kotlin.game.player.combat.magic.special.ChainSettings
+import com.rs.kotlin.game.player.combat.special.ChainMode
+import com.rs.kotlin.game.player.combat.special.ChainSettings
 import com.rs.kotlin.game.player.combat.special.*
 
 object StandardMelee : MeleeData() {
@@ -924,7 +924,7 @@ object StandardMelee : MeleeData() {
             ),
             effect = SpecialEffect(
                 execute = { context ->
-                    context.startRangedChain(
+                    context.startChainAttack(
                         settings = ChainSettings(
                             firstCombatType = CombatType.MELEE,
                             spreadCombatType = CombatType.MAGIC,
