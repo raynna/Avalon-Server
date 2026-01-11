@@ -68,12 +68,17 @@ class HealthOverlay {
             if (checkForClose(player) &&
                 player.interfaceManager.containsTab(getHealthOverlayId(player))
             ) {
-                player.temporaryAttribute().remove("overlay_state")
-                player.removeTemporaryTarget()
-                player.interfaceManager.closeTab(
-                    player.interfaceManager.isResizableScreen,
-                    getHealthOverlayId(player)
-                )
+                WorldTasksManager.schedule(object : WorldTask() {
+                    override fun run() {
+                        player.temporaryAttribute().remove("overlay_state")
+                        player.removeTemporaryTarget()
+                        player.interfaceManager.closeTab(
+                            player.interfaceManager.isResizableScreen,
+                            getHealthOverlayId(player)
+                        )
+                        stop()
+                    }
+                }, 0, 1)
             }
         }
     }
