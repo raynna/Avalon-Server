@@ -253,9 +253,15 @@ public abstract class Entity extends WorldTile {
         while (iterator.hasNext() && processedCount < totalHitsProcess) {
             Hit hit = iterator.next();
             Entity source = hit.getSource();
-            if (source instanceof Player && source.dead) {
-                resetReceivedHits();
-                return;
+            if (source instanceof Player player) {
+                if (player.dead) {
+                    resetReceivedHits();
+                    return;
+                }
+                if (player.getEmotesManager().getNextEmoteEnd() >= Utils.currentTimeMillis())
+                    return;
+                if (player.isLocked())
+                    return;
             }
             if (hit instanceof BleedHit bleed) {
                 if (!bleed.tick()) {

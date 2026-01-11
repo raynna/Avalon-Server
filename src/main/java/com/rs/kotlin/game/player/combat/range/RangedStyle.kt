@@ -175,16 +175,14 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             ), 1
         )
 
-        currentAmmo?.startGfx?.let { attacker.gfx(it) }
-        currentWeapon.startGfx?.let { attacker.gfx(it) }
+        when {
+            currentWeapon.startGfx != null -> attacker.gfx(currentWeapon.startGfx)
+            currentAmmo?.startGfx != null -> attacker.gfx(currentAmmo.startGfx)
+        }
 
         val impactTicks = sendProjectile()
-
         if (executeAmmoEffect(combatContext)) return
-
-        val hits = combatContext.rangedHit(delay = (impactTicks - 1).coerceAtLeast(0))
-
-
+        combatContext.rangedHit(delay = (impactTicks - 1).coerceAtLeast(0))
     }
 
     private fun applySwiftGlovesToPendingHits(hits: MutableList<PendingHit>) {
@@ -224,8 +222,12 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             defender.gfx(Graphics(181, 0, 96))
         }
 
+        val weapon = getCurrentWeapon()
         val ammo = getCurrentAmmo()
-        val message = when (ammo?.ammoType) {
+
+        val type = weapon.ammoType ?: ammo?.ammoType
+
+        val message = when (type) {
             AmmoType.BOLT -> "You fired an extra bolt!"
             AmmoType.ARROW -> "You fired an extra arrow!"
             AmmoType.DART -> "You threw an extra dart!"
@@ -233,8 +235,8 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             AmmoType.THROWING -> "You threw an extra knife!"
             else -> "You took an extra shot!"
         }
-        attacker.packets.sendGameMessage(message)
 
+        attacker.packets.sendGameMessage(message)
     }
 
 

@@ -262,7 +262,6 @@ object ProjectileManager {
             endTime = endCycle
         )
 
-        // --- schedule hit graphic & callback ---
         if (hitGraphic != null || onLanded != null) {
             val resolveDefender = resolveEntity(defender)
             val startSnap = startTile

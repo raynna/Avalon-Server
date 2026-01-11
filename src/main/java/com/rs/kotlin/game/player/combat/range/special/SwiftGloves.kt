@@ -28,6 +28,7 @@ object SwiftGloves {
         "zaryte bow",
         "karil",
         "morrigan",
+        " knife",
         " dart",
         " crossbow",
         " javelin",

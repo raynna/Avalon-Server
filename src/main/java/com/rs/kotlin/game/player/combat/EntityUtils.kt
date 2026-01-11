@@ -2,8 +2,16 @@ package com.rs.kotlin.game.player.combat
 
 import com.rs.java.game.Entity
 import com.rs.java.game.WorldTile
+import com.rs.java.game.player.Player
 
 object EntityUtils {
+
+    @JvmStatic
+    fun getAutoRetaliateDelay(player: Player, target: Entity): Int {
+        val style = CombatAction.getCombatStyle(player, target)
+        val speed = style.getAttackSpeed()
+        return (speed + 1) / 2 // ceil(speed/2)
+    }
 
     fun WorldTile.distanceSquared(other: WorldTile): Int {
         val dx = x - other.x

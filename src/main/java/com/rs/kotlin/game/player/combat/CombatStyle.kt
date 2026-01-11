@@ -19,10 +19,13 @@ import com.rs.kotlin.game.player.combat.magic.MagicStyle
 import com.rs.kotlin.game.player.combat.magic.special.NightmareStaff
 import com.rs.kotlin.game.player.combat.magic.special.ObliterationWeapon
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
+import com.rs.kotlin.game.player.combat.range.AmmoType
 import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.range.RangedStyle
+import com.rs.kotlin.game.player.combat.range.RangedWeapon
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.SpecialAttack
+import kotlin.math.max
 
 interface CombatStyle {
     fun canAttack(attacker: Player, defender: Entity): Boolean
@@ -53,6 +56,24 @@ interface CombatStyle {
                 defender.animate(CombatAnimations.getBlockAnimation(defender))
             }
             defender.chargeManager.processIncommingHit()
+            if (defender.combatDefinitions.isAutoRelatie) {
+                if (defender.newActionManager.hasActionWorking()) return
+                WorldTasksManager.schedule(object : WorldTask() {
+                    override fun run() {
+                        if (defender.isDead || attacker.isDead || defender.isLocked) return
+                        val style = CombatAction.getCombatStyle(defender, attacker)
+                        val retaliateDelay = (style.getAttackSpeed() + 1) / 2
+
+                        val currentDelay = defender.newActionManager.getActionDelay()
+                        val finalDelay = max(currentDelay, retaliateDelay)
+
+                        defender.newActionManager.setAction(CombatAction(attacker))
+                        if (defender.newActionManager.getActionDelay() > 0)
+                            defender.newActionManager.setActionDelay(finalDelay)
+                    }
+                })
+            }
+
         }
         defender.handleIncommingHit(hit);
     }
@@ -66,9 +87,7 @@ interface CombatStyle {
                 defender.animate(CombatAnimations.getBlockAnimation(defender))
             }
             defender.chargeManager.processHit(hit)
-            if (defender.combatDefinitions.isAutoRelatie && !defender.newActionManager.hasActionWorking()) {
-                defender.newActionManager.setAction(CombatAction(attacker));
-            }
+
             handleRingOfRecoil(attacker, defender, hit)
             if (defender.hasVengeance() && hit.damage > 0) {
                 val hitType = hit.look
@@ -283,15 +302,24 @@ interface CombatStyle {
     }
 
     fun executeAmmoEffect(combatContext: CombatContext): Boolean {
-        val ammo = combatContext.ammo ?: return run {
-            false
+        val ammo = combatContext.ammo ?: return false
+
+        val weapon = combatContext.weapon
+
+        if (weapon is RangedWeapon) {
+            if (weapon.ammoType in listOf(
+                    AmmoType.THROWING,
+                    AmmoType.DART,
+                    AmmoType.JAVELIN,
+                    AmmoType.THROWNAXE
+                )) return false
+            if (weapon.ammoType != ammo.ammoType) return false
+            if (weapon.allowedAmmoIds != null && !weapon.allowedAmmoIds.contains(ammo.itemId.first())) return false
         }
-        val effect = ammo.specialEffect ?: return run {
-            false
-        }
-        val result = effect.execute(combatContext)
-        return result
+        val effect = ammo.specialEffect ?: return false
+        return effect.execute(combatContext)
     }
+
 
 
 
@@ -421,6 +449,12 @@ interface CombatStyle {
         val firstDelay = 1 + (3 + distance) / 6
         val secondDelay = 1 + (2 + distance) / 3
         return firstDelay to secondDelay
+    }
+
+    fun getAutoRetaliateDelay(defender: Player, attacker: Entity): Int {
+        val style = CombatAction.getCombatStyle(defender, attacker)
+        val speed = style.getAttackSpeed()
+        return (speed + 1) / 2
     }
 
 

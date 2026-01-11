@@ -9,7 +9,7 @@ object ProjectileRegistry {
         register(Projectile.DRAGON_ARROW, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15, displacement = 11))
         register(Projectile.BOLT, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15))
         register(Projectile.THROWING_KNIFE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 32, arc = 15, displacement = 11))
-        register(Projectile.DART, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15))
+        register(Projectile.DART, ProjectileType(startHeight = 40, endHeight = 36, startTime = 32, arc = 15, displacement = 11))
         register(Projectile.SAP, ProjectileType(startHeight = 40, endHeight = 36, startTime = 31, multiplier = 8, arc = 11))
         register(Projectile.LEECH, ProjectileType(startHeight = 40, endHeight = 36, startTime = 31, multiplier = 8, arc = 11))
         register(Projectile.SOULSPLIT, ProjectileType(startHeight = 10, endHeight = 10, startTime = 31, multiplier = 10, arc = 15))

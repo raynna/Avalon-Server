@@ -809,7 +809,7 @@ object StandardRanged : RangeData() {
             effect = SpecialEffect(
                 execute = { context ->
                     context.attacker.animate("animation.morrigans_throwing_axe_attack")
-                    ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
+                    ProjectileManager.send(Projectile.THROWING_KNIFE, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
                     context.hits {
                         ranged(
                             delay = context.combat.getHitDelay()
@@ -823,7 +823,7 @@ object StandardRanged : RangeData() {
                 execute = { context ->
                     context.attacker.animate("animation.morrigans_throwing_axe_attack")
                     context.attacker.gfx("graphic.morrigans_throwing_axe_start")
-                    ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
+                    ProjectileManager.send(Projectile.THROWING_KNIFE, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
                     context.hits {
                         val rangedHit = ranged(delay = context.combat.getHitDelay())
                         rangedHit.damage = (rangedHit.damage * 0.6).toInt()

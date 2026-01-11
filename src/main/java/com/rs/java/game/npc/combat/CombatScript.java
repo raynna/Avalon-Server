@@ -20,6 +20,7 @@ import com.rs.kotlin.game.npc.combatdata.AttackMethod;
 import com.rs.kotlin.game.npc.combatdata.AttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.player.combat.CombatAction;
+import com.rs.kotlin.game.player.combat.EntityUtils;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public abstract class CombatScript {
@@ -81,7 +82,6 @@ public abstract class CombatScript {
                 hit.getDamage() > 0) {
             target.addFreezeDelay(20000, false);
         }
-
         return hit;
     }
 
@@ -129,26 +129,9 @@ public abstract class CombatScript {
         }
 
         npc.getCombat().doDefenceEmote(target);
-
-        if (target instanceof Player player) {
-            player.closeInterfaces();
-            if (player.getCombatDefinitions().isAutoRelatie()
-                    && !player.getNewActionManager().hasActionWorking()
-                    && !player.hasWalkSteps()) {
-                player.getNewActionManager().setAction(new CombatAction(npc));
-            }
-
-            if (player.familiarAutoAttack && player.getFamiliar() != null
-                    && !player.getFamiliar().getCombat().hasTarget()
-                    && player.isAtMultiArea()) {
-                player.getFamiliar().setTarget(npc);
-            }
-        } else {
-            NPC n = (NPC) target;
-            if (!n.isUnderCombat() || n.canBeAttackedByAutoRelatie())
-                n.setTarget(npc);
-        }
     }
+
+
 
 
 
@@ -157,9 +140,51 @@ public abstract class CombatScript {
         target.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10);
         target.setAttackedBy(npc);
         target.getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 10);
+        if (target instanceof Player player) {
+            if (player.getCombatDefinitions().isAutoRelatie()
+                    && !player.hasWalkSteps()) {
+
+                WorldTasksManager.schedule(new WorldTask() {
+                    @Override
+                    public void run() {
+                        if (player.isDead() || npc.isDead() || player.isLocked())
+                            return;
+
+                        if (player.getNewActionManager().hasActionWorking())
+                            return;
+
+                        player.closeInterfaces();
+
+                        int retaliateDelay =
+                                EntityUtils.getAutoRetaliateDelay(player, npc);
+
+                        int currentDelay =
+                                player.getNewActionManager().getActionDelay();
+
+                        int finalDelay = Math.max(currentDelay, retaliateDelay);
+
+                        player.getNewActionManager().setAction(new CombatAction(npc));
+                        player.getNewActionManager().setActionDelay(finalDelay);
+                    }
+                }, 1);
+            }
+        }
+
+
         WorldTasksManager.schedule(new WorldTask() {
             @Override
             public void run() {
+                if (target instanceof Player player) {
+                    if (player.familiarAutoAttack && player.getFamiliar() != null
+                            && !player.getFamiliar().getCombat().hasTarget()
+                            && player.isAtMultiArea()) {
+                        player.getFamiliar().setTarget(npc);
+                    }
+                } else {
+                    NPC n = (NPC) target;
+                    if (!n.isUnderCombat() || n.canBeAttackedByAutoRelatie())
+                        n.setTarget(npc);
+                }
                 for (Hit hit : hits) {
                     applyRegisteredHit(npc, target, hit);
                 }

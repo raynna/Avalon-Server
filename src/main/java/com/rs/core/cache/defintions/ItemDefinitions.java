@@ -782,9 +782,15 @@ getRenderAnimId = clientScriptData.get(644); (1426 if getRenderAnimId = null)
                 itemRequiriments.put(Skills.DEFENCE, 40);
             if (getId() == 12681)
                 itemRequiriments.put(Skills.DEFENCE, 55);
-            if (getId() >= 22358 && getId() <= 22369) {
+            if (getId() >= 22358 && getId() <= 22361) {
                 itemRequiriments.put(Skills.DEFENCE, 70);
                 itemRequiriments.put(Skills.ATTACK, 80);
+            } else if (getId() >= 22362 && getId() <= 22365) {
+                itemRequiriments.put(Skills.DEFENCE, 70);
+                itemRequiriments.put(Skills.RANGE, 80);
+            } else if (getId() >= 22366 && getId() <= 22369) {
+                itemRequiriments.put(Skills.DEFENCE, 70);
+                itemRequiriments.put(Skills.MAGIC, 80);
             } else if (name.equals("Dragon defender")) {
                 itemRequiriments.put(Skills.ATTACK, 60);
                 itemRequiriments.put(Skills.DEFENCE, 60);
