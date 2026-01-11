@@ -33,7 +33,8 @@ class HealthOverlay {
             player.interfaceManager.sendTab(getHealthOverlayId(player), 3037)
             val pixels: Int =
                 (target.hitpoints.toDouble() / target.getMaxHitpoints() * 126.0).roundToInt()
-            player.packets.sendRunScript(6252, pixels)
+            player.packets.sendRunScript(6252, pixels.coerceIn(0, 126))
+
             player.packets.sendRunScript(6253, 0)
             target.temporaryAttribute()["last_hp_${player.index}"] = target.hitpoints
         }
@@ -86,7 +87,10 @@ class HealthOverlay {
         val hpText: String
         var showLevel = false
         var levelText = ""
-
+        if (player.temporaryTarget != target) {
+            player.temporaryTarget = target
+            target.temporaryAttribute()["last_hp_${player.index}"] = target.hitpoints
+        }
         when (target) {
             is Player -> {
                 name = buildTargetName(target)
@@ -182,14 +186,14 @@ class HealthOverlay {
                 (oldPixels - pixelLoss).coerceAtLeast(newPixels).coerceAtLeast(0)
             } else newPixels
 
-            player.packets.sendRunScript(6252, adjustedPixels)
+            player.packets.sendRunScript(6252, adjustedPixels.coerceIn(0, 126))
             WorldTasksManager.schedule(object : WorldTask() {
                 override fun run() {
-                    player.packets.sendRunScript(6253, adjustedPixels)
+                    player.packets.sendRunScript(6253, adjustedPixels.coerceIn(0, 126))
+
                     stop()
                 }
             }, 0, 1)
-
             target.temporaryAttribute()["last_hp_${player.index}"] = currentHp
         }
     }

@@ -98,9 +98,11 @@ class CombatAction(
             stop(player, true)
             return false
         }
-        player.healthOverlay.updateHealthOverlay(player, target, true)
+        if (player.temporaryTarget == null || player.temporaryTarget == target) {
+            player.healthOverlay.updateHealthOverlay(player, target, true)
+            player.temporaryTarget = target;
+        }
         style = getCombatStyle(player, target)
-        player.temporaryTarget = target;
 
         if (player.isCollidingWithTarget(target)) {
             if (player.isFrozen) {

@@ -928,14 +928,15 @@ object StandardMelee : MeleeData() {
                         settings = ChainSettings(
                             firstCombatType = CombatType.MELEE,
                             spreadCombatType = CombatType.MAGIC,
-                            damageMultiplierPerBounce = 0.5
+                            damageMultiplierPerBounce = 0.5,
+                            deathSpread = true
                         ),
                         animationId = Animation.getId("animation.katana_slash"),
                         projectileId = 280,
                         endGraphicsId = 281,
-                        maxTargets = 8,
-                        bounceRange = 20,
-                        chainMode = ChainMode.SPREAD_ALL
+                        maxTargets = 3,
+                        bounceRange = 6,
+                        chainMode = ChainMode.SPREAD_ALL,
                     )
                     true
                 }

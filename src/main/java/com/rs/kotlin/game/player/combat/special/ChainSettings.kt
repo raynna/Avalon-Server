@@ -7,5 +7,6 @@ data class ChainSettings(
     val spreadCombatType: CombatType = firstCombatType,
     val damageMultiplierPerBounce: Double = 1.0,
     val flatDamageMultiplier: Double = 1.0,
-    val minDamageMultiplier: Double = 0.25
+    val minDamageMultiplier: Double = 0.25,
+    val deathSpread: Boolean = false
 )

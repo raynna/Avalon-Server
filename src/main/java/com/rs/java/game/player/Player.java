@@ -4598,6 +4598,10 @@ public class Player extends Entity {
     }
 
     public void setTemporaryTarget(Entity target) {
+        if (target == null) {
+            temporaryAttribute().remove("temporaryTarget");
+            return;
+        }
         temporaryAttribute().put("temporaryTarget", target);
     }
 

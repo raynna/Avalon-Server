@@ -355,9 +355,7 @@ public abstract class Entity extends WorldTile {
         Entity attacker = hit.getSource();
         if (attacker instanceof Player player && attacker != this) {
             if (player.toggles("HEALTH_OVERLAY", false)) {
-                // Only update if THIS is the primary target
-                if (player.getTemporaryTarget() == null || player.getTemporaryTarget() == this) {
-                    player.setTemporaryTarget(this);
+                if (player.getTemporaryTarget() == this) {
                     player.healthOverlay.updateHealthOverlay(player, this, true);
                 }
             }

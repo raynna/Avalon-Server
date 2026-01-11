@@ -12,7 +12,6 @@ import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.range.RangedAmmo
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
-import kotlin.math.max
 
 data class CombatContext(
     val attacker: Player,
@@ -287,24 +286,6 @@ fun CombatContext.getDragonClawsHits(swings: Int = 4): List<Hit> {
     return hits
 }
 
-fun Entity.withinDistanceOf(other: Entity, distance: Int): Boolean {
-    val thisCenterX = this.x + this.size / 2.0
-    val thisCenterY = this.y + this.size / 2.0
-    val otherCenterX = other.x + other.size / 2.0
-    val otherCenterY = other.y + other.size / 2.0
-
-    val dx = thisCenterX - otherCenterX
-    val dy = thisCenterY - otherCenterY
-
-    val effectiveDist = max(
-        kotlin.math.abs(dx) - (this.size + other.size) / 2.0,
-        kotlin.math.abs(dy) - (this.size + other.size) / 2.0
-    )
-
-    val result = effectiveDist <= distance
-    return result
-}
-
 fun CombatContext.applyScytheHits(victim: Entity) {
     val attacker = this.attacker
 
@@ -349,8 +330,7 @@ fun CombatContext.startChainAttack(
     bounceRange: Int,
     chainMode: ChainMode = ChainMode.RANDOM_NEARBY
 ) {
-    val hitTargets = mutableSetOf<Entity>()
-    hitTargets += defender
+    val deathSpreadUsed = mutableSetOf<Entity>()
 
     attacker.animate(animationId)
     attacker.gfx(graphicsId, 100)
@@ -360,10 +340,12 @@ fun CombatContext.startChainAttack(
         settings = settings,
         source = attacker,
         target = defender,
+        rootTarget = defender,
         projectileId = projectileId,
         endGraphicsId = endGraphicsId,
-        hitTargets = hitTargets,
+        deathSpreadUsed = deathSpreadUsed,
         bouncesLeft = maxTargets,
+        deathCapacity = maxTargets * 2,
         bounceRange = bounceRange,
         chainMode = chainMode,
         isFirstHit = true,
@@ -371,29 +353,35 @@ fun CombatContext.startChainAttack(
     )
 }
 
+
+
+
 fun fireChain(
     context: CombatContext,
     settings: ChainSettings,
     source: Entity,
     target: Entity,
+    rootTarget: Entity,
     projectileId: Int,
     endGraphicsId: Int,
-    hitTargets: MutableSet<Entity>,
+    deathSpreadUsed: MutableSet<Entity>,
     bouncesLeft: Int,
+    deathCapacity: Int,
     bounceRange: Int,
     chainMode: ChainMode,
     isFirstHit: Boolean,
     bounceIndex: Int
 ) {
+
+    if (deathSpreadUsed.size > 500) return
+
     val calcType = settings.firstCombatType
     val displayType =
         if (isFirstHit) settings.firstCombatType
         else settings.spreadCombatType
 
-    val hit = context.registerHit(
-        combatType = calcType,
-        target = target
-    )
+    val hit = context.registerHit(calcType, target = target)
+
     hit.look = when (displayType) {
         CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
         CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
@@ -420,29 +408,80 @@ fun fireChain(
 
     context.combat.delayHits(
         PendingHit(hit, target, impactTicks) {
+
             if (hit.damage <= 0) return@PendingHit
+
+            val died = hit.damage >= target.hitpoints
+
+            if (
+                !isFirstHit &&
+                died &&
+                settings.deathSpread &&
+                target !in deathSpreadUsed
+            ) {
+
+                deathSpreadUsed += target
+
+                val pickedThisDeathSpread = mutableSetOf<Entity>()
+
+                val deathTargets = context.findChainTargets(
+                    source = target,
+                    rootTarget = rootTarget,
+                    pickedThisSpread = pickedThisDeathSpread,
+                    bounceRange = bounceRange,
+                    chainMode = chainMode,
+                    maxPicks = deathCapacity,
+                    excludeRoot = false
+                )
+
+                deathTargets.forEach { next ->
+                    fireChain(
+                        context = context,
+                        settings = settings,
+                        source = target,
+                        target = next,
+                        rootTarget = rootTarget,
+                        projectileId = projectileId,
+                        endGraphicsId = endGraphicsId,
+                        deathSpreadUsed = deathSpreadUsed,
+                        bouncesLeft = if (chainMode == ChainMode.SPREAD_ALL) 0 else deathCapacity - 1,
+                        deathCapacity = deathCapacity,
+                        bounceRange = bounceRange,
+                        chainMode = chainMode,
+                        isFirstHit = false,
+                        bounceIndex = bounceIndex + 1
+                    )
+                }
+
+                return@PendingHit
+            }
+
             if (bouncesLeft <= 0) return@PendingHit
+
+            val pickedThisSpread = mutableSetOf<Entity>()
 
             val nextTargets = context.findChainTargets(
                 source = target,
-                hitTargets = hitTargets,
+                rootTarget = rootTarget,
+                pickedThisSpread = pickedThisSpread,
                 bounceRange = bounceRange,
                 chainMode = chainMode,
-                bouncesLeft = bouncesLeft
+                maxPicks = bouncesLeft,
+                excludeRoot = isFirstHit
             )
 
             nextTargets.forEach { next ->
-                hitTargets += next
-
                 fireChain(
                     context = context,
                     settings = settings,
                     source = target,
                     target = next,
+                    rootTarget = rootTarget,
                     projectileId = projectileId,
                     endGraphicsId = endGraphicsId,
-                    hitTargets = hitTargets,
+                    deathSpreadUsed = deathSpreadUsed,
                     bouncesLeft = if (chainMode == ChainMode.SPREAD_ALL) 0 else bouncesLeft - 1,
+                    deathCapacity = deathCapacity,
                     bounceRange = bounceRange,
                     chainMode = chainMode,
                     isFirstHit = false,
@@ -453,34 +492,32 @@ fun fireChain(
     )
 }
 
+
 fun CombatContext.findChainTargets(
     source: Entity,
-    hitTargets: MutableSet<Entity>,
+    rootTarget: Entity,
+    pickedThisSpread: MutableSet<Entity>,
     bounceRange: Int,
     chainMode: ChainMode,
-    bouncesLeft: Int
+    maxPicks: Int,
+    excludeRoot: Boolean
 ): List<Entity> {
 
     val attacker = this.attacker
     val candidates = mutableListOf<Pair<Entity, Int>>()
 
-    val sx = source.tile.x
-    val sy = source.tile.y
-
     for (dx in -bounceRange..bounceRange) {
         for (dy in -bounceRange..bounceRange) {
 
-            val tile = source.tile.transform(dx, dy, 0)
             val distSq = dx * dx + dy * dy
+            if (distSq > bounceRange * bounceRange) continue
 
-            if (distSq > bounceRange * bounceRange)
-                continue
+            val tile = source.tile.transform(dx, dy, 0)
 
-            val entities = World.getEntitiesAt(tile)
-
-            for (e in entities) {
+            for (e in World.getEntitiesAt(tile)) {
                 if (e == attacker) continue
-                if (e in hitTargets) continue
+                if (excludeRoot && e == rootTarget) continue
+                if (e in pickedThisSpread) continue
                 if (e.isDead || e.hasFinished()) continue
                 if (!attacker.controlerManager.canHit(e)) continue
                 if (!canChainReach(source, e, bounceRange)) continue
@@ -491,31 +528,47 @@ fun CombatContext.findChainTargets(
         }
     }
 
-    if (candidates.isEmpty())
-        return emptyList()
+    if (candidates.isEmpty()) return emptyList()
 
     return when (chainMode) {
 
-        ChainMode.NEAREST ->
-            listOf(candidates.minBy { it.second }.first)
+        ChainMode.NEAREST -> {
+            val chosen = candidates.minBy { it.second }.first
+            pickedThisSpread += chosen
+            listOf(chosen)
+        }
 
-        ChainMode.FARTHEST ->
-            listOf(candidates.maxBy { it.second }.first)
+        ChainMode.FARTHEST -> {
+            val chosen = candidates.maxBy { it.second }.first
+            pickedThisSpread += chosen
+            listOf(chosen)
+        }
 
-        ChainMode.ORDERED ->
-            candidates.sortedBy { it.second }.map { it.first }
+        ChainMode.ORDERED -> {
+            candidates.sortedBy { it.second }
+                .map { it.first }
+                .filter { pickedThisSpread.add(it) }
+                .take(maxPicks)
+        }
 
         ChainMode.RANDOM_NEARBY -> {
             val nearby = candidates.sortedBy { it.second }.take(4)
-            listOf(nearby.random().first)
+            val chosen = nearby.random().first
+            pickedThisSpread += chosen
+            listOf(chosen)
         }
 
-        ChainMode.SPREAD_ALL ->
-            candidates.sortedBy { it.second }
-                .take(bouncesLeft)
+        ChainMode.SPREAD_ALL -> {
+            candidates
+                .shuffled()
                 .map { it.first }
+                .filter { pickedThisSpread.add(it) }
+                .take(maxPicks)
+        }
     }
 }
+
+
 
 fun canChainReach(source: Entity, target: Entity, maxDistance: Int): Boolean {
     if (!source.clipedProjectile(target, false))
