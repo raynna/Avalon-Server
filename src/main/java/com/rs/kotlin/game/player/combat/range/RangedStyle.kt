@@ -176,11 +176,14 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (currentWeapon.startGfx != null) {
             attacker.gfx(currentWeapon.startGfx)
         }
-        sendProjectile()
+        var impactTicks = sendProjectile()
+        if (impactTicks < 0) {
+            impactTicks = getHitDelay()
+        }
         if (executeAmmoEffect(combatContext)) {
             return
         }
-        val hit = combatContext.rangedHit(delay = getHitDelay())
+        val hit = combatContext.rangedHit(delay = (impactTicks - 1).coerceAtLeast(0))
         if (attacker.isDeveloperMode)
             attacker.message(
                 "Ranged Attack -> " +
@@ -294,7 +297,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
 
-    private fun sendProjectile() {
+    private fun sendProjectile(): Int {
         val currentWeapon = getCurrentWeapon()
         val currentAmmo = getCurrentAmmo()
         val projectileId = currentWeapon.projectileId ?: currentAmmo?.projectileId ?: 27//prioritize weapon first
@@ -311,12 +314,13 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             null -> Projectile.BOLT
         }
         if (projectileId != -1) {
-            ProjectileManager.send(
+            return ProjectileManager.send(
                 projectileType,
                 projectileId,
                 attacker, defender
             )
         }
+        return -1
     }
 
     private fun isThrowing(weapon: RangedWeapon): Boolean {

@@ -3,6 +3,7 @@ package com.rs.kotlin.game.player.combat.melee
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.Entity
 import com.rs.java.game.Hit
+import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
@@ -90,6 +91,8 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             val definitions = ItemDefinitions.getItemDefinitions(attacker.equipment.weaponId);
             baseSpeed = definitions.attackSpeed
         }
+        if (attacker.equipment.weaponId == Item.getId("item.auspicious_katana"))
+            baseSpeed = 4;
         var finalSpeed = baseSpeed + style.attackSpeedModifier
 
         if (attacker.tickManager.isActive(TickManager.TickKeys.MIASMIC_EFFECT)) {

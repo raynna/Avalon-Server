@@ -324,11 +324,11 @@ fun CombatContext.startChainAttack(
     settings: ChainSettings,
     animationId: Int = -1,
     graphicsId: Int = -1,
+    projectile: Projectile = Projectile.ARROW,
     projectileId: Int = -1,
     endGraphicsId: Int = -1,
     maxTargets: Int,
-    bounceRange: Int,
-    chainMode: ChainMode = ChainMode.RANDOM_NEARBY
+    bounceRange: Int
 ) {
     val deathSpreadUsed = mutableSetOf<Entity>()
 
@@ -342,13 +342,14 @@ fun CombatContext.startChainAttack(
         target = defender,
         previousTarget = null,
         rootTarget = defender,
+        projectile = projectile,
         projectileId = projectileId,
         endGraphicsId = endGraphicsId,
         deathSpreadUsed = deathSpreadUsed,
         bouncesLeft = maxTargets,
-        deathCapacity = maxTargets * 2,
+        deathSpreadAmount = settings.deathSpreadAmount,
         bounceRange = bounceRange,
-        chainMode = chainMode,
+        chainMode = settings.chainMode,
         isFirstHit = true,
         bounceIndex = 0
     )
@@ -364,15 +365,17 @@ fun fireChain(
     target: Entity,
     previousTarget: Entity?,
     rootTarget: Entity,
+    projectile: Projectile,
     projectileId: Int,
     endGraphicsId: Int,
     deathSpreadUsed: MutableSet<Entity>,
     bouncesLeft: Int,
-    deathCapacity: Int,
+    deathSpreadAmount: Int,
     bounceRange: Int,
     chainMode: ChainMode,
     isFirstHit: Boolean,
-    bounceIndex: Int
+    bounceIndex: Int,
+    startDelay: Int = 0
 ) {
 
     if (deathSpreadUsed.size > 500) return
@@ -383,10 +386,8 @@ fun fireChain(
         else settings.spreadCombatType
 
     val damageMultiplier = when (settings.damageScaleMode) {
-
         DamageScaleMode.ABSOLUTE ->
             if (isFirstHit) 1.0 else settings.damageMultiplier
-
         DamageScaleMode.PER_BOUNCE ->
             Math.pow(settings.damageMultiplier, bounceIndex.toDouble())
     }
@@ -403,18 +404,72 @@ fun fireChain(
         CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
     }
 
-    val impactTicks =
-        if (isFirstHit && calcType == CombatType.MELEE) 0
-        else ProjectileManager.send(
-            projectile = Projectile.ARROW,
-            gfxId = projectileId,
-            hitGraphic = if (endGraphicsId != -1) Graphics(endGraphicsId) else null,
-            attacker = source,
-            defender = target
+    val useProjectile = if (isFirstHit) projectile else settings.projectile
+    val useProjectileId = if (isFirstHit) projectileId else settings.projectileId
+
+    // ---- helper to continue chain ----
+    fun continueChain(remainder: Int) {
+        if (bouncesLeft <= 0) return
+
+        val pickedThisSpread = mutableSetOf<Entity>()
+
+        val nextTargets = context.findChainTargets(
+            source = target,
+            rootTarget = rootTarget,
+            previousTarget = previousTarget,
+            pickedThisSpread = pickedThisSpread,
+            bounceRange = bounceRange,
+            chainMode = chainMode,
+            maxPicks = bouncesLeft,
+            excludeRoot = isFirstHit
         )
 
+        nextTargets.forEach { next ->
+            fireChain(
+                context,
+                settings,
+                target,
+                next,
+                target,
+                rootTarget,
+                settings.projectile,
+                settings.projectileId,
+                endGraphicsId,
+                deathSpreadUsed,
+                if (chainMode == ChainMode.SPREAD_ALL) 0 else bouncesLeft - 1,
+                deathSpreadAmount,
+                bounceRange,
+                chainMode,
+                false,
+                bounceIndex + 1,
+                remainder
+            )
+        }
+    }
+
+    val result =
+        if (isFirstHit && calcType == CombatType.MELEE) {
+            continueChain(0)
+            ProjectileManager.ProjectileResult(0, 0)
+        } else ProjectileManager.sendResult(
+            projectile = useProjectile,
+            gfxId = useProjectileId,
+            attacker = source,
+            defender = target,
+            delayOffset = startDelay,
+            hitGraphic = if (settings.projectileEnd != -1) Graphics(settings.projectileEnd) else null
+        ) { remainder ->
+            continueChain(remainder)
+        }
+
+    val impactTicks = result.impactTicks
+
     context.combat.delayHits(
-        PendingHit(hit, target, impactTicks) {
+        PendingHit(
+            hit,
+            target,
+            impactTicks
+        ) {
 
             if (hit.damage <= 0) return@PendingHit
 
@@ -438,70 +493,36 @@ fun fireChain(
                     pickedThisSpread = pickedThisDeathSpread,
                     bounceRange = bounceRange,
                     chainMode = chainMode,
-                    maxPicks = deathCapacity,
+                    maxPicks = deathSpreadAmount,
                     excludeRoot = false
                 )
 
                 deathTargets.forEach { next ->
                     fireChain(
-                        context = context,
-                        settings = settings,
-                        source = target,
-                        target = next,
-                        previousTarget = target,
-                        rootTarget = rootTarget,
-                        projectileId = projectileId,
-                        endGraphicsId = endGraphicsId,
-                        deathSpreadUsed = deathSpreadUsed,
-                        bouncesLeft = if (chainMode == ChainMode.SPREAD_ALL) 0 else deathCapacity - 1,
-                        deathCapacity = deathCapacity,
-                        bounceRange = bounceRange,
-                        chainMode = chainMode,
-                        isFirstHit = false,
-                        bounceIndex = bounceIndex + 1
+                        context,
+                        settings,
+                        target,
+                        next,
+                        target,
+                        rootTarget,
+                        useProjectile,
+                        useProjectileId,
+                        settings.projectileEnd,
+                        deathSpreadUsed,
+                        if (chainMode == ChainMode.SPREAD_ALL) 0 else deathSpreadAmount - 1,
+                        deathSpreadAmount,
+                        bounceRange,
+                        chainMode,
+                        false,
+                        bounceIndex + 1,
+                        0
                     )
                 }
-
-                return@PendingHit
-            }
-
-            if (bouncesLeft <= 0) return@PendingHit
-
-            val pickedThisSpread = mutableSetOf<Entity>()
-
-            val nextTargets = context.findChainTargets(
-                source = target,
-                rootTarget = rootTarget,
-                previousTarget = previousTarget,
-                pickedThisSpread = pickedThisSpread,
-                bounceRange = bounceRange,
-                chainMode = chainMode,
-                maxPicks = bouncesLeft,
-                excludeRoot = isFirstHit
-            )
-
-            nextTargets.forEach { next ->
-                fireChain(
-                    context = context,
-                    settings = settings,
-                    source = target,
-                    target = next,
-                    previousTarget = target,
-                    rootTarget = rootTarget,
-                    projectileId = projectileId,
-                    endGraphicsId = endGraphicsId,
-                    deathSpreadUsed = deathSpreadUsed,
-                    bouncesLeft = if (chainMode == ChainMode.SPREAD_ALL) 0 else bouncesLeft - 1,
-                    deathCapacity = deathCapacity,
-                    bounceRange = bounceRange,
-                    chainMode = chainMode,
-                    isFirstHit = false,
-                    bounceIndex = bounceIndex + 1
-                )
             }
         }
     )
 }
+
 
 
 

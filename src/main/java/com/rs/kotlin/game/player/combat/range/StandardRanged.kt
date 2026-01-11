@@ -300,17 +300,20 @@ object StandardRanged : RangeData() {
                 execute = { context ->
                     context.startChainAttack(
                         settings = ChainSettings(
+                            projectile = Projectile.CHAIN_ARROW,
+                            projectileId = Graphics.getGraphics("graphic.zaryte_bow_projectile"),
+                            chainMode = ChainMode.RANDOM_NEARBY,
                             firstCombatType = CombatType.RANGED,
                             spreadCombatType = CombatType.RANGED,
                             damageMultiplier = 0.66,
                             damageScaleMode = DamageScaleMode.ABSOLUTE,
                         ),
+                        projectile = Projectile.ARROW,
+                        projectileId = Graphics.getGraphics("graphic.zaryte_bow_projectile"),
                         animationId = Animation.getId("animation.bow_attack"),
                         graphicsId = Graphics.getGraphics("graphic.zaryte_bow_start"),
-                        projectileId = Graphics.getGraphics("graphic.zaryte_bow_projectile"),
                         maxTargets = 2,
-                        bounceRange = 10,
-                        chainMode = ChainMode.RANDOM_NEARBY
+                        bounceRange = 10
                     )
                     /*context.attacker.animate("animation.bow_attack")
                     context.attacker.gfx("graphic.zaryte_bow_start", 100)
@@ -467,17 +470,31 @@ object StandardRanged : RangeData() {
                 damageMultiplier = 1.0,
                 execute = { context ->
                     context.attacker.animate(Animation(1074))
+                    context.attacker.gfx(Graphics(256, 100))
                     context.attacker.playSound(2545,  1)
-                    ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
                     ProjectileManager.send(
                         Projectile.ARROW,
                         249,
                         context.attacker,
-                        context.defender
+                        context.defender,
+                        startHeightOffset = 0,
+                        arcOffset = 5,
+                        speedAdjustment = -2,
+                        startTimeOffset = 0,
+                    )
+                    ProjectileManager.send(
+                        Projectile.ARROW,
+                        249,
+                        context.attacker,
+                        context.defender,
+                        startHeightOffset = 0,
+                        arcOffset = 5,
+                        speedAdjustment = -2,
+                        startTimeOffset = 15,
                     )
                     context.hits {
                         val distance = Utils.getDistance(context.attacker, context.defender)
-                        val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
+                        val (firstDelay, secondDelay) = context.combat.getDoubleHitDelays(distance)
                         ranged(delay = firstDelay)
                         ranged(delay = secondDelay)
                     }
@@ -512,19 +529,19 @@ object StandardRanged : RangeData() {
                         context.defender,
                         hitGraphic = Graphics(endGraphic, 100)
                     ) {
-                        context.attacker.playSound(hitSoundId,  1)
+                        context.defender.playSound(hitSoundId,  1)
                     }
                     ProjectileManager.send(
                         Projectile.DRAGON_ARROW,
                         arrowProjectile,
                         context.attacker,
                         context.defender,
-                        heightOffset = 20,
-                        angleOffset = 10,
-                        delayOffset = 10,
-                        hitGraphic = Graphics(endGraphic, 100)
+                        arcOffset = 15,
+                        startTimeOffset = 5,
+                        speedAdjustment = 5,
+                        hitGraphic = Graphics(endGraphic, 100),
                     ) {
-                        context.attacker.playSound(hitSoundId,  10, 1)
+                        context.defender.playSound(hitSoundId,  10, 1)
                     }
                     context.attacker.playSound(soundId,  1)
                     context.attacker.playSound(soundId,  30,1)
@@ -559,9 +576,9 @@ object StandardRanged : RangeData() {
                         projectile,
                         context.attacker,
                         context.defender,
-                        heightOffset = 20,
-                        angleOffset = 10,
-                        delayOffset = 10,
+                        arcOffset = 10,
+                        startTimeOffset = 5,
+                        speedAdjustment = 5,
                     )
                     context.hits {
                         val distance = Utils.getDistance(context.attacker, context.defender)

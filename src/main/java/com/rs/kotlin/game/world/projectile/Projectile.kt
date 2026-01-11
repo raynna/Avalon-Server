@@ -26,6 +26,8 @@ enum class Projectile(val typeName: String) {
     CRUMBLE_UNDEAD("crumble_undead"),
     SAGAIE("sagaie"),
     POLYPORE_STAFF("polypore_staff"),
+    SPREAD_ALL_SLOW("spread_all"),
+    CHAIN_ARROW("chain_arrow"),
 
     //NPCS
     DRAGONFIRE("dragonfire"),

@@ -120,17 +120,19 @@ object ProjectileManager {
             gfxId = Rscm.graphic(gfx),
             attacker = attacker,
             defender = defender,
-            heightOffset = heightOffset,
+            startHeightOffset = heightOffset,
             hitGraphic = hitGraphic,
             speedAdjustment = speedAdjustment,
             onLanded = onLanded
         )
     }
 
-    /**
-     * Main send: queues projectile visuals and returns IMPACT TICKS (what combat should use).
-     */
-    fun send(
+    data class ProjectileResult(
+        val impactTicks: Int,
+        val remainderCycles: Int
+    )
+
+    fun sendResult(
         projectile: Projectile,
         gfxId: Int,
         attacker: Entity,
@@ -139,22 +141,23 @@ object ProjectileManager {
         heightOffset: Int = 0,
         delayOffset: Int = 0,
         hitGraphic: Graphics? = null,
-        speedAdjustment: Int = 0,
-        onLanded: (() -> Unit)? = null
-    ): Int {
-        val baseType = ProjectileRegistry.get(projectile) ?: run {
-            println("Unknown projectile type: $projectile")
-            return 1
-        }
+        onLanded: ((Int) -> Unit)? = null // remainderCycles
+    ): ProjectileResult {
+
+        val baseType = ProjectileRegistry.get(projectile) ?: return ProjectileResult(0, 0)
 
         val type = baseType.copy(
             startHeight = (baseType.startHeight + heightOffset).coerceIn(0, 255),
             endHeight = baseType.endHeight.coerceIn(0, 255),
             arc = (baseType.arc + angleOffset).coerceIn(0, 255),
-            startTime = (baseType.startTime + delayOffset),
+            startTime = baseType.startTime + delayOffset
         )
-        val distance = Utils.getDistance(attacker.x, attacker.y, defender.x, defender.y)
-        val endTime = type.endTime(distance)
+
+        val distance = Utils.getDistance(attacker, defender)
+
+        val endCycle = type.endTime(distance)
+        val impactTicks = max(0, ((endCycle + 29) / 30) - 1)
+        val remainderCycles = endCycle % 30
 
         val startTile = WorldTile(
             attacker.getCoordFaceX(attacker.size),
@@ -167,7 +170,7 @@ object ProjectileManager {
             defender.plane
         )
 
-        val impactCycles = queueProjectileAndGetImpactCycles(
+        queueProjectileAndGetImpactCycles(
             attacker = attacker,
             defender = defender,
             startTile = null,
@@ -175,11 +178,91 @@ object ProjectileManager {
             gfx = gfxId,
             type = type,
             creatorSize = attacker.size,
-            endTime = endTime
+            endTime = endCycle
         )
 
+        val resolveDefender = resolveEntity(defender)
+
+        WorldTasksManager.schedule(object : WorldTask() {
+            override fun run() {
+                val def = resolveDefender() ?: return
+                if (def.hasFinished()) return
+                if (def.plane != endTile.plane) return
+
+                hitGraphic?.let {
+                    val rotation = calculateRotation(startTile, endTile)
+                    def.gfx(it.id, it.height, rotation)
+                }
+
+                onLanded?.invoke(remainderCycles)
+            }
+        }, max(0, impactTicks - 1))
+
+        return ProjectileResult(impactTicks, remainderCycles)
+    }
+
+
+
+
+    /**
+     * Main send: queues projectile visuals and returns IMPACT TICKS (what combat should use).
+     */
+    fun send(
+        projectile: Projectile,
+        gfxId: Int,
+        attacker: Entity,
+        defender: Entity,
+        arcOffset: Int = 0,
+        startHeightOffset: Int = 0,
+        startTimeOffset: Int = 0,
+        hitGraphic: Graphics? = null,
+        hitSound: Int = -1,
+        speedAdjustment: Int = 0,
+        onLanded: (() -> Unit)? = null
+    ): Int {
+
+        val baseType = ProjectileRegistry.get(projectile) ?: return 1
+
+        val type = baseType.copy(
+            startHeight = (baseType.startHeight + startHeightOffset).coerceIn(0, 255),
+            endHeight = baseType.endHeight.coerceIn(0, 255),
+            arc = (baseType.arc + arcOffset).coerceIn(0, 255),
+            startTime = baseType.startTime + startTimeOffset,
+            multiplier =  baseType.multiplier + speedAdjustment,
+        )
+
+        val distance = Utils.getDistance(attacker, defender)
+
+        // --- client cycles ---
         val endCycle = type.endTime(distance)
-        val impactTicks = max(0, (endCycle + 29) / 30) - 2
+
+        // --- server ticks ---
+        val impactTicks = endCycle / 30
+        val remainderCycles = endCycle % 30
+
+        val startTile = WorldTile(
+            attacker.getCoordFaceX(attacker.size),
+            attacker.getCoordFaceY(attacker.size),
+            attacker.plane
+        )
+        val endTile = WorldTile(
+            defender.getCoordFaceX(defender.size),
+            defender.getCoordFaceY(defender.size),
+            defender.plane
+        )
+
+        queueProjectileAndGetImpactCycles(
+            attacker = attacker,
+            defender = defender,
+            startTile = null,
+            endTile = endTile,
+            gfx = gfxId,
+            type = type,
+            creatorSize = attacker.size,
+            endTime = endCycle
+        )
+
+        // --- schedule hit graphic & callback ---
         if (hitGraphic != null || onLanded != null) {
             val resolveDefender = resolveEntity(defender)
             val startSnap = startTile
@@ -195,13 +278,20 @@ object ProjectileManager {
                         val rotation = calculateRotation(startSnap, endSnap)
                         def.gfx(it.id, it.height, rotation)
                     }
+                    if (hitSound != -1)
+                        def.playSound(hitSound, 1)
                     onLanded?.invoke()
                 }
-            }, impactTicks)
+            }, max(0, impactTicks - 1))
         }
+
+        //if (attacker is Player) {
+        //    attacker.tempProjectileRemainder = remainderCycles
+        //}
 
         return impactTicks
     }
+
 
     /* ============================== */
     /* ======= MAGIC HELPERS ======== */

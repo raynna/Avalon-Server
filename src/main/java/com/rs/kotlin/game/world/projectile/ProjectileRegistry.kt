@@ -6,7 +6,7 @@ object ProjectileRegistry {
     init {
         register(Projectile.ARROW, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15, displacement = 11))
         register(Projectile.BOLT, ProjectileType(startHeight = 38, endHeight = 36, startTime = 41, arc = 5, displacement = 11))
-        register(Projectile.DRAGON_ARROW, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 5, displacement = 11))
+        register(Projectile.DRAGON_ARROW, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15, displacement = 11))
         register(Projectile.BOLT, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15))
         register(Projectile.THROWING_KNIFE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 32, arc = 15, displacement = 11))
         register(Projectile.DART, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15))
@@ -28,6 +28,8 @@ object ProjectileRegistry {
         register(Projectile.TELEPORT_BLOCK, ProjectileType(startHeight = 11, endHeight = 36, startTime = 41, arc = 15))
         register(Projectile.POLYPORE_STAFF, ProjectileType(startHeight = 40, endHeight = 36, startTime = 51, arc = 15, displacement = 96))
         register(Projectile.SAGAIE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15))
+        register(Projectile.SPREAD_ALL_SLOW, ProjectileType(startHeight = 36, endHeight = 36, startTime = 21, arc = 0, multiplier = 15))
+        register(Projectile.CHAIN_ARROW, ProjectileType(startHeight = 40, endHeight = 36, startTime = 0, arc = 15, displacement = 11))
 
         //NPCS
         register(Projectile.DRAGONFIRE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15, displacement = 64))

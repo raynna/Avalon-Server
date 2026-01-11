@@ -14,6 +14,7 @@ import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.special.ChainMode
 import com.rs.kotlin.game.player.combat.special.ChainSettings
 import com.rs.kotlin.game.player.combat.special.*
+import com.rs.kotlin.game.world.projectile.Projectile
 
 object StandardMelee : MeleeData() {
 
@@ -926,18 +927,22 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.startChainAttack(
                         settings = ChainSettings(
+                            projectile = Projectile.SPREAD_ALL_SLOW,
+                            projectileId = 280,
+                            projectileEnd = 281,
+                            chainMode = ChainMode.SPREAD_ALL,
                             firstCombatType = CombatType.MELEE,
                             spreadCombatType = CombatType.MAGIC,
                             damageMultiplier = 0.75,
                             damageScaleMode = DamageScaleMode.PER_BOUNCE,
-                            deathSpread = true
+                            deathSpread = true,
+                            deathSpreadAmount = 4
                         ),
+                        projectile = Projectile.SPREAD_ALL_SLOW,
                         animationId = Animation.getId("animation.katana_slash"),
                         projectileId = 280,
-                        endGraphicsId = 281,
-                        maxTargets = 3,
-                        bounceRange = 6,
-                        chainMode = ChainMode.SPREAD_ALL,
+                        maxTargets = 2,
+                        bounceRange = 6
                     )
                     true
                 }

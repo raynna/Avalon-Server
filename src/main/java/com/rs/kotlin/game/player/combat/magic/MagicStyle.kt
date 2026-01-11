@@ -5,14 +5,12 @@ import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
-import com.rs.java.game.WorldTile
 import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
-import com.rs.java.game.player.actions.combat.PlayerCombat
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
@@ -293,7 +291,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                     gfxId = projectileId,
                     attacker = attacker,
                     defender = defender,
-                    heightOffset = heightDiff,
+                    startHeightOffset = heightDiff,
                     hitGraphic = endGraphic
                 )
             }
@@ -339,7 +337,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             PendingHit(
                 hit,
                 defender,
-                if (spell.chargeBoost) 1 else impactTicks + 1
+                if (spell.chargeBoost) 1 else impactTicks
             )
         )
 
