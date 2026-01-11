@@ -247,8 +247,32 @@ object StandardRanged : RangeData() {
                 energyCost = 75,
                 accuracyMultiplier = 2.0,
                 execute = { context ->
+
                     context.attacker.animate(Animation(4230))
-                    context.combat.executeAmmoEffect(context.copy(guaranteedBoltEffect = true))
+
+                    ProjectileManager.send(
+                        Projectile.BOLT, 328,
+                        context.attacker,
+                        context.defender
+                    )
+
+                    val ammoHasEffect = context.ammo?.specialEffect != null
+
+                    val boltApplied = if (ammoHasEffect) {
+                        context.combat.executeAmmoEffect(
+                            context.copy(guaranteedBoltEffect = true)
+                        )
+                    } else false
+
+                    if (!boltApplied) {
+                        context.hits {
+                            ranged(
+                                accuracyMultiplier = 2.0,
+                                damageMultiplier = 1.1,
+                                delay = context.combat.getHitDelay()
+                            )
+                        }
+                    }
                 }
             )
         ),
@@ -1194,29 +1218,35 @@ object StandardRanged : RangeData() {
                 chance = 10,
                 execute = { context ->
                     val chance = if (context.weaponId == 19146) 5 else 10
-                    context.ammo?.endGfx = null // TODO: ideally handle this elsewhere
+                    context.ammo?.endGfx = null
 
                     if (!Utils.roll(1, chance)) return@SpecialEffect false
 
-                    val hit = context.combat.registerHit(
+                    val rangedHit = context.combat.registerHit(attacker = context.attacker,
+                        defender = context.defender,
+                        attackStyle = context.attackStyle,
+                        weapon = context.weapon,
+                        combatType = CombatType.RANGED)
+                    val magicHit = context.combat.registerHit(
                         attacker = context.attacker,
                         defender = context.defender,
                         attackStyle = context.attackStyle,
                         weapon = context.weapon,
                         combatType = CombatType.RANGED,
-                        hitLook = Hit.HitLook.MAGIC_DAMAGE,
+                        hitLook = HitLook.MAGIC_DAMAGE,
                         damageMultiplier = 0.2
                     )
 
-                    if (hit.damage == 0) {
+                    if (magicHit.damage == 0) {
                         context.ammo?.endGfx = Graphics(85, 100)
                     } else {
                         context.ammo?.endGfx = Graphics(127)
-                        hit.setCriticalMark()
+                        magicHit.setCriticalMark()
                     }
 
                     context.combat.delayHits(
-                        PendingHit(hit, context.defender, context.combat.getHitDelay() + 1)
+                        PendingHit(rangedHit, context.defender, context.combat.getHitDelay()),
+                        PendingHit(magicHit, context.defender, context.combat.getHitDelay() + 1)
                     )
                     true
                 }
@@ -1238,25 +1268,31 @@ object StandardRanged : RangeData() {
 
                     if (!Utils.roll(1, chance)) return@SpecialEffect false
 
-                    val hit = context.combat.registerHit(
+                    val rangedHit = context.combat.registerHit(attacker = context.attacker,
+                        defender = context.defender,
+                        attackStyle = context.attackStyle,
+                        weapon = context.weapon,
+                        combatType = CombatType.RANGED)
+                    val magicHit = context.combat.registerHit(
                         attacker = context.attacker,
                         defender = context.defender,
                         attackStyle = context.attackStyle,
                         weapon = context.weapon,
                         combatType = CombatType.RANGED,
-                        hitLook = Hit.HitLook.MAGIC_DAMAGE,
+                        hitLook = HitLook.MAGIC_DAMAGE,
                         damageMultiplier = 0.2
                     )
 
-                    if (hit.damage == 0) {
+                    if (magicHit.damage == 0) {
                         context.ammo?.endGfx = Graphics(85, 100)
                     } else {
                         context.ammo?.endGfx = Graphics(128)
-                        hit.setCriticalMark()
+                        magicHit.setCriticalMark()
                     }
 
                     context.combat.delayHits(
-                        PendingHit(hit, context.defender, context.combat.getHitDelay() + 1)
+                        PendingHit(rangedHit, context.defender, context.combat.getHitDelay()),
+                        PendingHit(magicHit, context.defender, context.combat.getHitDelay() + 1)
                     )
 
                     true
@@ -1276,32 +1312,36 @@ object StandardRanged : RangeData() {
                 chance = 10,
                 execute = { context ->
                     val chance = if (context.weaponId == 19149) 5 else 10
-                    context.ammo?.endGfx = null // TODO: ideally handle this elsewhere
+                    context.ammo?.endGfx = null
 
                     if (!Utils.roll(1, chance)) return@SpecialEffect false
-
-                    val hit = context.combat.registerHit(
+                    val rangedHit = context.combat.registerHit(attacker = context.attacker,
+                        defender = context.defender,
+                        attackStyle = context.attackStyle,
+                        weapon = context.weapon,
+                        combatType = CombatType.RANGED)
+                    val magicHit = context.combat.registerHit(
                         attacker = context.attacker,
                         defender = context.defender,
                         attackStyle = context.attackStyle,
                         weapon = context.weapon,
                         combatType = CombatType.RANGED,
-                        hitLook = Hit.HitLook.MAGIC_DAMAGE,
+                        hitLook = HitLook.MAGIC_DAMAGE,
                         damageMultiplier = 0.2
                     )
 
-                    if (hit.damage == 0) {
+                    if (magicHit.damage == 0) {
                         context.ammo?.endGfx = Graphics(85, 100)
                     } else {
                         context.ammo?.endGfx = Graphics(129)
-                        hit.setCriticalMark()
+                        magicHit.setCriticalMark()
                     }
-
                     context.combat.delayHits(
-                        PendingHit(hit, context.defender, context.combat.getHitDelay() + 1)
+                        PendingHit(rangedHit, context.defender, context.combat.getHitDelay()),
+                        PendingHit(magicHit, context.defender, context.combat.getHitDelay() + 1)
                     )
 
-                    true // Effect actually triggered
+                    true
                 }
 
             )
@@ -1505,6 +1545,7 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
             specialEffect = SpecialEffect(
                 execute = { context ->
+
                     val zaryteCbowSpec = context.guaranteedBoltEffect
                     val chance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 12 else 6
                     if (DragonFire.hasFireProtection(context.defender))

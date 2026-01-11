@@ -160,7 +160,7 @@ object CombatCalculations {
             val equipmentSet = EquipmentSets.getSet(player)
             val void = EquipmentSets.getAccuracyMultiplier(player, equipmentSet, CombatMultipliers.Style.RANGE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.RANGE)
-            val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getZaryteBowBoost(player, target)
+            val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getTwistedBowBoost(player, target)
 
             var effectiveAttack = player.skills.getLevel(Skills.RANGE) * player.prayer.rangedMultiplier
             effectiveAttack += styleBonus + 8
@@ -210,7 +210,7 @@ object CombatCalculations {
             val equipmentSet = EquipmentSets.getSet(player)
             val void = EquipmentSets.getDamageMultiplier(player, equipmentSet, CombatMultipliers.Style.RANGE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.RANGE)
-            val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getZaryteBowBoost(player, target)
+            val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getTwistedBowBoost(player, target)
 
             val baseStrength = floor(rangedLvl * prayerBonus)
             val effectiveStrength = floor((baseStrength + styleBonus + 8) * void * zaryteDamage)
@@ -250,15 +250,14 @@ object CombatCalculations {
             return hit
         }
 
-        fun getZaryteBowBoost(player: Player, target: Entity): Triple<Double, Double, Int> {
+        fun getTwistedBowBoost(player: Player, target: Entity): Triple<Double, Double, Int> {
             if (target !is NPC) return Triple(1.0, 1.0, 0)
 
             val weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON.toInt())
-            val isZaryte = weapon.isAnyOf("item.zaryte_bow", "item.zaryte_bow_degraded")
             val isHexhunter = weapon.isAnyOf("item.hexhunter_bow", "item.hexhunter_bow_b")
             val isTwistedBow = weapon.isAnyOf("item.twisted_bow")
 
-            if (!isZaryte && !isHexhunter && !isTwistedBow) return Triple(1.0, 1.0, 0)
+            if (!isHexhunter && !isTwistedBow) return Triple(1.0, 1.0, 0)
             val magicLevel = target.combatData.magicLevel
             val magicAttack = target.combatData.magicBonus
 

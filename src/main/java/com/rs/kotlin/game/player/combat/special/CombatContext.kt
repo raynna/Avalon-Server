@@ -9,7 +9,10 @@ import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.range.AmmoType
 import com.rs.kotlin.game.player.combat.range.RangedAmmo
+import com.rs.kotlin.game.player.combat.range.RangedStyle
+import com.rs.kotlin.game.player.combat.range.special.SwiftGloves
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 

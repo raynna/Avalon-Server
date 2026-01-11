@@ -283,10 +283,17 @@ interface CombatStyle {
     }
 
     fun executeAmmoEffect(combatContext: CombatContext): Boolean {
-        val ammo = combatContext.ammo ?: return false
-        val effect = ammo.specialEffect ?: return false
-        return effect.execute(combatContext)
+        val ammo = combatContext.ammo ?: return run {
+            false
+        }
+        val effect = ammo.specialEffect ?: return run {
+            false
+        }
+        val result = effect.execute(combatContext)
+        return result
     }
+
+
 
     fun isRangedWeapon(player: Player): Boolean {
         val weaponId = player.equipment.getWeaponId()

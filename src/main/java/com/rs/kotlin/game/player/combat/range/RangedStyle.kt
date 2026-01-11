@@ -2,6 +2,7 @@ package com.rs.kotlin.game.player.combat.range
 
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.Entity
+import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.java.game.World
 import com.rs.java.game.item.Item
@@ -13,19 +14,20 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.range.special.SwiftGloves
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.rangedHit
+import com.rs.kotlin.game.player.combat.special.rollRanged
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 import kotlin.math.min
 
 class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
-    private fun getCurrentWeapon(): RangedWeapon {
+    fun getCurrentWeapon(): RangedWeapon {
         val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
         return RangeData.getWeaponByItemId(weaponId) ?: StandardRanged.getDefaultWeapon()
     }
-
 
     private fun getCurrentWeaponId(attacker: Player): Int {
         val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
@@ -35,14 +37,13 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
     }
 
-    private fun getCurrentAmmo(): RangedAmmo? {
+    fun getCurrentAmmo(): RangedAmmo? {
         val ammoItem = attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]
         if (ammoItem != null) {
             return RangeData.getAmmoByItemId(ammoItem.id);
         }
         return null
     }
-
 
     private fun getAttackStyle(currentWeapon: RangedWeapon): AttackStyle {
         val styleId = attacker.combatDefinitions.attackStyle
@@ -129,13 +130,18 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         return true
     }
 
-
     override fun attack() {
-        val currentWeapon = getCurrentWeapon();
-        val currentWeaponId = getCurrentWeaponId(attacker);
+        performRangedAttack()
+    }
+
+
+    private fun performRangedAttack() {
+        val currentWeapon = getCurrentWeapon()
+        val currentWeaponId = getCurrentWeaponId(attacker)
         val attackStyle = getAttackStyle(currentWeapon)
         val attackBonusType = getAttackBonusType(currentWeapon)
         val currentAmmo = getCurrentAmmo()
+
         val combatContext = CombatContext(
             combat = this,
             attacker = attacker,
@@ -147,11 +153,12 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             ammo = currentAmmo,
             usingSpecial = false
         )
-        if (executeSpecialAttack(attacker, defender)) {
+
+        if (executeSpecialAttack(attacker, defender)) return
+        if (executeEffect(combatContext.copy(usingSpecial = false))) {
             return
         }
-        if (executeEffect(combatContext.copy(usingSpecial = false)))
-            return
+
         attacker.animate(
             CombatAnimations.getAnimation(
                 currentWeaponId,
@@ -159,6 +166,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 attacker.combatDefinitions.attackStyle
             )
         )
+
         attacker.playSound(
             CombatAnimations.getSound(
                 currentWeaponId,
@@ -166,38 +174,71 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 attacker.combatDefinitions.attackStyle
             ), 1
         )
-        if (!isThrowing(currentWeapon) && currentWeapon.ammoType != AmmoType.NONE) {
-            if (currentAmmo != null) {
-                if (currentAmmo.startGfx != null) {
-                    attacker.gfx(currentAmmo.startGfx)
-                }
-            }
-        }
-        if (currentWeapon.startGfx != null) {
-            attacker.gfx(currentWeapon.startGfx)
-        }
-        var impactTicks = sendProjectile()
-        if (impactTicks < 0) {
-            impactTicks = getHitDelay()
-        }
-        if (executeAmmoEffect(combatContext)) {
-            return
-        }
-        val hit = combatContext.rangedHit(delay = (impactTicks - 1).coerceAtLeast(0))
-        if (attacker.isDeveloperMode)
-            attacker.message(
-                "Ranged Attack -> " +
-                        "Weapon: ${currentWeapon.name}, " +
-                        "WeaponType: ${currentWeapon.weaponStyle.name}, " +
-                        "AmmoType: ${currentAmmo?.ammoType?.name}, " +
-                        "Ammo: ${currentAmmo?.name}, " +
-                        "Style: ${attackStyle}, " +
-                        "StyleBonus: ${attackBonusType}, " +
-                        "MaxHit: ${hit[0].damage}, " +
-                        "Hit: ${hit[0].damage}"
-            )
+
+        currentAmmo?.startGfx?.let { attacker.gfx(it) }
+        currentWeapon.startGfx?.let { attacker.gfx(it) }
+
+        val impactTicks = sendProjectile()
+
+        if (executeAmmoEffect(combatContext)) return
+
+        val hits = combatContext.rangedHit(delay = (impactTicks - 1).coerceAtLeast(0))
+
 
     }
+
+    private fun applySwiftGlovesToPendingHits(hits: MutableList<PendingHit>) {
+        if (!SwiftGloves.swiftGlovesProc(attacker)) return
+        if (hits.isEmpty()) return
+
+        val first = hits.first()
+        val firstHit = first.hit
+
+        val maxHit = CombatCalculations.calculateRangedMaxHit(attacker, defender).maxHit
+
+        val qualifies = firstHit.damage >= (maxHit * 0.66).toInt() || firstHit.damage == 0
+        if (!qualifies) return
+
+        sendSwiftProjectile()
+
+        val swiftHit = CombatContext(
+            combat = this,
+            attacker = attacker,
+            defender = defender,
+            attackStyle = getAttackStyle(getCurrentWeapon()),
+            attackBonusType = getAttackBonusType(getCurrentWeapon()),
+            weapon = getCurrentWeapon(),
+            weaponId = attacker.equipment.weaponId,
+            ammo = getCurrentAmmo(),
+            usingSpecial = false
+        ).rollRanged()
+
+        hits += PendingHit(
+            hit = swiftHit,
+            target = first.target,
+            delay = first.delay
+        )
+
+        if (firstHit.damage >= maxHit) {
+            defender.lock(3)
+            defender.gfx(Graphics(181, 0, 96))
+        }
+
+        val ammo = getCurrentAmmo()
+        val message = when (ammo?.ammoType) {
+            AmmoType.BOLT -> "You fired an extra bolt!"
+            AmmoType.ARROW -> "You fired an extra arrow!"
+            AmmoType.DART -> "You threw an extra dart!"
+            AmmoType.JAVELIN -> "You hurled an extra javelin!"
+            AmmoType.THROWING -> "You threw an extra knife!"
+            else -> "You took an extra shot!"
+        }
+        attacker.packets.sendGameMessage(message)
+
+    }
+
+
+
 
     override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         super.onHit(attacker, defender, hit)
@@ -220,24 +261,35 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     override fun delayHits(vararg hits: PendingHit) {
+        val modified = hits.toMutableList()
+
+        applySwiftGlovesToPendingHits(modified)
+
         val currentWeapon = getCurrentWeapon()
         val attackStyle = getAttackStyle(currentWeapon)
+
         var totalDamage = 0
-        for (pending in hits) {
+
+        for (pending in modified) {
             val hit = pending.hit
             val target = pending.target
+
             super.outgoingHit(attacker, target, pending)
             consumeAmmo()
             attacker.packets.sendSound(2702, 0, 1)
+
             totalDamage += min(hit.damage, target.hitpoints)
+
             scheduleHit(pending.delay) {
                 target.applyHit(hit)
                 onHit(attacker, target, hit)
                 pending.onApply?.invoke()
             }
         }
-        attackStyle.xpMode.distributeXp(attacker, attackStyle, totalDamage);
+
+        attackStyle.xpMode.distributeXp(attacker, attackStyle, totalDamage)
     }
+
 
     override fun onStop(interrupted: Boolean) {
     }
@@ -296,12 +348,16 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         return false
     }
 
+    fun sendSwiftProjectile() {
+        sendProjectile(heightOffset = 5)
+    }
 
-    private fun sendProjectile(): Int {
+    private fun sendProjectile(heightOffset: Int = 0): Int {
         val currentWeapon = getCurrentWeapon()
         val currentAmmo = getCurrentAmmo()
-        val projectileId = currentWeapon.projectileId ?: currentAmmo?.projectileId ?: 27//prioritize weapon first
-        val type = currentWeapon.ammoType ?: currentAmmo?.ammoType//prioritize weapon first
+        val projectileId = currentWeapon.projectileId ?: currentAmmo?.projectileId ?: 27
+        val type = currentWeapon.ammoType ?: currentAmmo?.ammoType
+
         val projectileType = when (type) {
             AmmoType.ARROW -> Projectile.ARROW
             AmmoType.BOLT -> Projectile.BOLT
@@ -310,18 +366,19 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             AmmoType.JAVELIN -> Projectile.JAVELIN
             AmmoType.CHINCHOMPA -> Projectile.CHINCHOMPA
             AmmoType.THROWNAXE -> Projectile.THROWING_KNIFE
-            AmmoType.NONE -> Projectile.ARROW
-            null -> Projectile.BOLT
+            else -> Projectile.ARROW
         }
-        if (projectileId != -1) {
-            return ProjectileManager.send(
-                projectileType,
-                projectileId,
-                attacker, defender
-            )
-        }
-        return -1
+
+        return ProjectileManager.send(
+            projectileType,
+            projectileId,
+            attacker,
+            defender,
+            startHeightOffset = heightOffset
+        )
     }
+
+
 
     private fun isThrowing(weapon: RangedWeapon): Boolean {
         return weapon.ammoType == AmmoType.DART || weapon.ammoType == AmmoType.THROWING || weapon.ammoType == AmmoType.JAVELIN || weapon.ammoType == AmmoType.THROWNAXE
