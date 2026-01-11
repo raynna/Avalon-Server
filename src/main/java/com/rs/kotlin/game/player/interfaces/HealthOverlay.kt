@@ -76,9 +76,8 @@ class HealthOverlay {
                             player.interfaceManager.isResizableScreen,
                             getHealthOverlayId(player)
                         )
-                        stop()
                     }
-                }, 0, 1)
+                })
             }
         }
     }
