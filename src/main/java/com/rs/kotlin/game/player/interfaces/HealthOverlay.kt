@@ -194,10 +194,8 @@ class HealthOverlay {
             WorldTasksManager.schedule(object : WorldTask() {
                 override fun run() {
                     player.packets.sendRunScript(6253, adjustedPixels.coerceIn(0, 126))
-
-                    stop()
                 }
-            }, 0, 1)
+            })
             target.temporaryAttribute()["last_hp_${player.index}"] = currentHp
         }
     }
