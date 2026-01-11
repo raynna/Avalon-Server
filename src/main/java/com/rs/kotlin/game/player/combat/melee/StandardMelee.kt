@@ -928,7 +928,8 @@ object StandardMelee : MeleeData() {
                         settings = ChainSettings(
                             firstCombatType = CombatType.MELEE,
                             spreadCombatType = CombatType.MAGIC,
-                            damageMultiplierPerBounce = 0.5,
+                            damageMultiplier = 0.75,
+                            damageScaleMode = DamageScaleMode.PER_BOUNCE,
                             deathSpread = true
                         ),
                         animationId = Animation.getId("animation.katana_slash"),

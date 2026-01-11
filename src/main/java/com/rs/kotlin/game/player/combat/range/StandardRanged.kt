@@ -302,12 +302,13 @@ object StandardRanged : RangeData() {
                         settings = ChainSettings(
                             firstCombatType = CombatType.RANGED,
                             spreadCombatType = CombatType.RANGED,
-                            damageMultiplierPerBounce = 0.8
+                            damageMultiplier = 0.66,
+                            damageScaleMode = DamageScaleMode.ABSOLUTE,
                         ),
                         animationId = Animation.getId("animation.bow_attack"),
                         graphicsId = Graphics.getGraphics("graphic.zaryte_bow_start"),
                         projectileId = Graphics.getGraphics("graphic.zaryte_bow_projectile"),
-                        maxTargets = 5,
+                        maxTargets = 2,
                         bounceRange = 10,
                         chainMode = ChainMode.RANDOM_NEARBY
                     )

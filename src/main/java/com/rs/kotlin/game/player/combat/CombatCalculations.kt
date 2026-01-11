@@ -19,6 +19,7 @@ import com.rs.kotlin.game.player.equipment.EquipmentSets
 import com.rs.kotlin.game.player.equipment.EquipmentSets.getDharokMultiplier
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
+import kotlin.math.min
 
 object CombatCalculations {
 
@@ -116,6 +117,9 @@ object CombatCalculations {
             val baseStrengthLevel = getBaseStrengthLevel(player)//correct
             val effectiveStrength = floor((baseStrengthLevel + styleBonus + 8 * void) * dharokMultiplier)
             val baseDamage = 0.5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * multipliers.damage
+            val effectiveMultiplier = min(specialMultiplier, 1.0)
+
+            val downscaledBaseDamage = baseDamage * effectiveMultiplier
             val hit = Hit(player, 0, 0, Hit.HitLook.MELEE_DAMAGE)
             val maxHit = (baseDamage * specialMultiplier).toInt()
             var damage = Utils.random(maxHit)
@@ -127,7 +131,7 @@ object CombatCalculations {
             hit.baseMaxHit = baseDamage.toInt()
             hit.maxHit = maxHit
             hit.damage = damage
-            if (damage >= floor(baseDamage * 0.95)) {
+            if (damage >= floor(downscaledBaseDamage * 0.95)) {
                 hit.setCriticalMark()
             }
             if (player.developerMode) {
@@ -212,6 +216,9 @@ object CombatCalculations {
             val effectiveStrength = floor((baseStrength + styleBonus + 8) * void * zaryteDamage)
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.RangedStrBonus.index].toDouble()
             val baseDamage = 0.5 + (effectiveStrength * (strengthBonus + 640) / 640) * multipliers.damage
+            val effectiveMultiplier = min(specialMultiplier, 1.0)
+
+            val downscaledBaseDamage = baseDamage * effectiveMultiplier
             var maxHit = floor(baseDamage * specialMultiplier).toInt()
             var damage = Utils.random(maxHit)
             if (target is NPC) {
@@ -227,7 +234,7 @@ object CombatCalculations {
                 if (hit.damage >= floor(zaryteMaxHit * 0.95))
                     hit.setCriticalMark()
             }
-            if (damage >= floor(baseDamage * 0.95)) {
+            if (damage >= floor(downscaledBaseDamage * 0.95)) {
                 hit.setCriticalMark()
             }
             if (player.developerMode) {
@@ -334,6 +341,7 @@ object CombatCalculations {
                 levelMultiplier *= player.prayer.magicMultiplier
             }
             val maxHit = base * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage * specialMultiplier
+
             var damage = Utils.random(min, maxHit.toInt())
             if (target is NPC) {
                 if (target.id == 4474) {

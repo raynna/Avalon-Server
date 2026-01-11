@@ -340,6 +340,7 @@ fun CombatContext.startChainAttack(
         settings = settings,
         source = attacker,
         target = defender,
+        previousTarget = null,
         rootTarget = defender,
         projectileId = projectileId,
         endGraphicsId = endGraphicsId,
@@ -361,6 +362,7 @@ fun fireChain(
     settings: ChainSettings,
     source: Entity,
     target: Entity,
+    previousTarget: Entity?,
     rootTarget: Entity,
     projectileId: Int,
     endGraphicsId: Int,
@@ -380,21 +382,26 @@ fun fireChain(
         if (isFirstHit) settings.firstCombatType
         else settings.spreadCombatType
 
-    val hit = context.registerHit(calcType, target = target)
+    val damageMultiplier = when (settings.damageScaleMode) {
+
+        DamageScaleMode.ABSOLUTE ->
+            if (isFirstHit) 1.0 else settings.damageMultiplier
+
+        DamageScaleMode.PER_BOUNCE ->
+            Math.pow(settings.damageMultiplier, bounceIndex.toDouble())
+    }
+
+    val hit = context.registerHit(
+        combatType = calcType,
+        target = target,
+        damageMultiplier = damageMultiplier
+    )
 
     hit.look = when (displayType) {
         CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
         CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
         CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
     }
-
-    val scale = maxOf(
-        settings.minDamageMultiplier,
-        settings.flatDamageMultiplier *
-                Math.pow(settings.damageMultiplierPerBounce, bounceIndex.toDouble())
-    )
-
-    hit.damage = (hit.damage * scale).toInt()
 
     val impactTicks =
         if (isFirstHit && calcType == CombatType.MELEE) 0
@@ -427,6 +434,7 @@ fun fireChain(
                 val deathTargets = context.findChainTargets(
                     source = target,
                     rootTarget = rootTarget,
+                    previousTarget = previousTarget,
                     pickedThisSpread = pickedThisDeathSpread,
                     bounceRange = bounceRange,
                     chainMode = chainMode,
@@ -440,6 +448,7 @@ fun fireChain(
                         settings = settings,
                         source = target,
                         target = next,
+                        previousTarget = target,
                         rootTarget = rootTarget,
                         projectileId = projectileId,
                         endGraphicsId = endGraphicsId,
@@ -463,6 +472,7 @@ fun fireChain(
             val nextTargets = context.findChainTargets(
                 source = target,
                 rootTarget = rootTarget,
+                previousTarget = previousTarget,
                 pickedThisSpread = pickedThisSpread,
                 bounceRange = bounceRange,
                 chainMode = chainMode,
@@ -476,6 +486,7 @@ fun fireChain(
                     settings = settings,
                     source = target,
                     target = next,
+                    previousTarget = target,
                     rootTarget = rootTarget,
                     projectileId = projectileId,
                     endGraphicsId = endGraphicsId,
@@ -493,9 +504,11 @@ fun fireChain(
 }
 
 
+
 fun CombatContext.findChainTargets(
     source: Entity,
     rootTarget: Entity,
+    previousTarget: Entity?,
     pickedThisSpread: MutableSet<Entity>,
     bounceRange: Int,
     chainMode: ChainMode,
@@ -517,6 +530,7 @@ fun CombatContext.findChainTargets(
             for (e in World.getEntitiesAt(tile)) {
                 if (e == attacker) continue
                 if (excludeRoot && e == rootTarget) continue
+                if (e == source) continue
                 if (e in pickedThisSpread) continue
                 if (e.isDead || e.hasFinished()) continue
                 if (!attacker.controlerManager.canHit(e)) continue
