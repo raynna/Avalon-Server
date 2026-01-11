@@ -616,6 +616,17 @@ object StandardRanged : RangeData() {
         ),
 
         RangedWeapon(
+            itemId = Item.getIds("item.hand_cannon"),
+            name = "Hand cannon",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackSpeed = 8,
+            attackRange = 7,
+            projectileId = 2143,
+            animationId = 12174,
+            ammoType = AmmoType.CANNON
+        ),
+
+        RangedWeapon(
             itemId = Item.getIds("item.sling", "item.kayle_s_sling"),
             name = "Sling",
             weaponStyle = WeaponStyle.SHORTBOW,
@@ -1657,6 +1668,15 @@ object StandardRanged : RangeData() {
             levelRequired = 28,
             projectileId = 696,
             startGfx = Graphics(697, 96),
+        ),
+
+        RangedAmmo(
+            itemId = Item.getIds("item.hand_cannon_shot"),
+            name = "Hand cannon shots",
+            levelRequired = 1,
+            ammoType = AmmoType.CANNON,
+            projectileId = Rscm.lookup("graphic.hand_cannon_projectile"),
+            startGfx = Graphics("graphic.hand_cannon_fire", 0),
         ),
 
         /**Dungeoneering arrows*/

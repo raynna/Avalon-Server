@@ -65,7 +65,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             val definitions = ItemDefinitions.getItemDefinitions(attacker.equipment.weaponId)
             definitions.attackSpeed
         }
-
         var finalSpeed = baseSpeed + style.attackSpeedModifier
 
         if (attacker.tickManager.isActive(TickManager.TickKeys.MIASMIC_EFFECT)) {
@@ -368,6 +367,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             AmmoType.JAVELIN -> Projectile.JAVELIN
             AmmoType.CHINCHOMPA -> Projectile.CHINCHOMPA
             AmmoType.THROWNAXE -> Projectile.THROWING_KNIFE
+            AmmoType.CANNON -> Projectile.HAND_CANNON
             else -> Projectile.ARROW
         }
 

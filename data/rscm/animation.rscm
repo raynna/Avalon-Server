@@ -366,3 +366,6 @@ vestas_longsword_special=10502
 statius_warhammer_special=10505
 dragonfire_shield_empty=6700
 zanik_crossbow_special=11359
+hand_cannon_shot=12174
+hand_cannon_special_start=12175
+hand_cannon_special_end=12152

@@ -27,9 +27,10 @@ object ProjectileRegistry {
         register(Projectile.STORM_OF_ARMADYL, ProjectileType(startHeight = 11, endHeight = 11, startTime = 41, multiplier = 8, arc = 0))
         register(Projectile.TELEPORT_BLOCK, ProjectileType(startHeight = 11, endHeight = 36, startTime = 41, arc = 15))
         register(Projectile.POLYPORE_STAFF, ProjectileType(startHeight = 40, endHeight = 36, startTime = 51, arc = 15, displacement = 96))
-        register(Projectile.SAGAIE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15))
+        register(Projectile.SAGAIE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 32, arc = 15, displacement = 11))
         register(Projectile.SPREAD_ALL_SLOW, ProjectileType(startHeight = 36, endHeight = 36, startTime = 21, arc = 0, multiplier = 15))
         register(Projectile.CHAIN_ARROW, ProjectileType(startHeight = 40, endHeight = 36, startTime = 0, arc = 15, displacement = 11))
+        register(Projectile.HAND_CANNON, ProjectileType(startHeight = 25, endHeight = 25, startTime = 30, arc = 0, displacement = 11))
 
         //NPCS
         register(Projectile.DRAGONFIRE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15, displacement = 64))

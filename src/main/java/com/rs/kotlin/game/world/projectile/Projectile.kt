@@ -19,6 +19,7 @@ enum class Projectile(val typeName: String) {
     LEECH("leech"),
     SOULSPLIT("soulsplit"),
     CANNON("cannon"),
+    HAND_CANNON("hand_cannon"),
     SLAYER_DART("slayer_dart"),
     IBAN_BLAST("iban_blast"),
     STORM_OF_ARMADYL("storm_of_armadyl"),

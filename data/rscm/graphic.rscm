@@ -23,6 +23,8 @@ black_dart_projectile=34
 mithril_dart_projectile=229
 adamant_dart_projectile=230
 rune_dart_projectile=231
+hand_cannon_fire=2138
+hand_cannon_projectile=2143
 
 iron_arrow_projectile=9
 bronze_arrow_projectile=10

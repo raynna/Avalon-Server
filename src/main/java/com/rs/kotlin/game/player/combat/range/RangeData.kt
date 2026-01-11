@@ -45,6 +45,7 @@ enum class AmmoType {
     JAVELIN,
     CHINCHOMPA,
     THROWNAXE,
+    CANNON,
     NONE
 }
 
