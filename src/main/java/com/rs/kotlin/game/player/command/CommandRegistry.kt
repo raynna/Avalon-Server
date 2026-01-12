@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.player.command
 
-import com.rs.java.game.player.Bank
 import com.rs.java.game.player.Player
 import com.rs.kotlin.game.player.command.commands.*
 
@@ -44,6 +43,9 @@ object CommandRegistry {
         val teleportCommand = TeleportCommand()
         register(*teleportCommand.getAllTriggers().toTypedArray(), command = teleportCommand)
         register("location", "locations", "teleports", command = LocationsCommand(teleportCommand))
+        register("anim", "animation", command = AnimationCommand())
+        register("gfx", "graphic", command = GraphicCommand())
+        register("npc", "spawnnpc", command = SpawnNpcCommand())
     }
 
     @JvmStatic

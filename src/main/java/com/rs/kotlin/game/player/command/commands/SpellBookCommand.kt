@@ -15,11 +15,6 @@ class SpellBookCommand : Command {
             player.message("You can't use ::spellbook in this mode.")
             return true
         }
-
-        if (args.isEmpty()) {
-            player.message("Usage: $usage")
-            return true
-        }
         val spellBook = player.getCombatDefinitions().spellBook.toInt()
         player.getCombatDefinitions().setSpellBook(if (spellBook == 0) 1 else if (spellBook == 1) 2 else 0)
         player.packets.sendGameMessage("You switch your spellbook to ${(if (spellBook == 0) "Ancients" else if (spellBook == 1) "Lunars" else "Modern")}.")
