@@ -11,7 +11,7 @@ Place the contents of the cache zip into the /data/cache/ directory.
 
 [Cache](https://mega.nz/file/FF5BDZjQ#s8E7yZ1lGy_2mtCwnKOTQPg1kUVtBGsF8zzyGJNeScE)
 
-[Client](https://mega.nz/file/UdpyEDQD#uGZ96ZIj7TNiUAfvw81TX0zOv8a5428ack-zFAlOfAw)
+[Client](https://github.com/raynna/Avalon-Runelite)
 
 [Discord](https://discord.gg/7q2n6jXKcW)
 
