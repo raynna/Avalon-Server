@@ -207,7 +207,8 @@ object SpellHandler {
         }
         if (spell.type == SpellType.Combat) {
             if (staffOfLightEffect(player)) {
-                player.packets.sendGameMessage("Your spell draws its power completely from your staff.")
+                val isKodai = weapon.isAnyOf("item.kodai_wand")
+                player.packets.sendGameMessage("Your spell draws its power completely from your " + if (isKodai) "staff." else "wand.")
                 return true
             }
         }
@@ -299,10 +300,25 @@ object SpellHandler {
     }
 
     private fun staffOfLightEffect(player: Player): Boolean {
-        val weaponId = player.equipment.weaponId
-        return (weaponId == 15486 || weaponId in listOf(22207, 22209, 22211, 22213)) &&
-                Utils.getRandom(5) == 0
+        val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt())
+
+        return when {
+            weapon.isAnyOf("item.kodai_wand") ->
+                Utils.roll(3, 20)
+
+            weapon.isAnyOf(
+                "item.staff_of_light",
+                "item.staff_of_light_red",
+                "item.staff_of_light_blue",
+                "item.staff_of_light_green",
+                "item.staff_of_light_gold"
+            ) ->
+                Utils.roll(1, 8)
+
+            else -> false
+        }
     }
+
 
     private fun handleCombatSpell(player: Player, spell: Spell, autocast: Boolean) {
         if (!autocast) {

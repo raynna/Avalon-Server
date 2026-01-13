@@ -23,6 +23,7 @@ object DropTablesSetup {
         superRareTable = SuperRareTableEntry()
         herbDropTable = HerbTableEntry()
         registerDropTable(BlackDragonDropTable.blackDragonTable, Rscm.lookupList("npc_group.black_dragon_lv227"))
+        registerDropTable(KingBlackDragonDropTable.kingBlackDragonTable, Rscm.lookup("npc.king_black_dragon_lv227"))
         registerDropTable(GoblinDropTable.table, Rscm.lookupList("npc_group.goblin_lv1"), Rscm.lookupList("npc_group.goblin_lv2"))
         registerDropTable(GoblinLvl5DropTable.table,
             Rscm.lookupList("npc_group.goblin_lv5"),
@@ -56,7 +57,6 @@ object DropTablesSetup {
             Rscm.lookupList("npc_group.bloodveld_lv81"))
         registerDropTable(InfernalMageDropTable.table, Rscm.lookupList("npc_group.infernal_mage_lv66"))
         registerDropTable(AberrantSpectreDropTable.table, Rscm.lookupList("npc_group.aberrant_spectre_lv96"))
-
 
         DropTableRegistry.logDropTableSizes();
     }

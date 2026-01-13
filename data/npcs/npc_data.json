@@ -1238,6 +1238,70 @@
       "duradel"
     ]
   },
+  "50": {
+    "id": 50,
+    "name": "King Black Dragon",
+    "members": true,
+    "combatLevel": 276,
+    "attackLevel": 240,
+    "strengthLevel": 240,
+    "defenceLevel": 240,
+    "magicLevel": 240,
+    "rangedLevel": 1,
+    "constitutionLevel": 240,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 40,
+      "slash": 90,
+      "crush": 90
+    },
+    "magicDefence": {
+      "magic": 80
+    },
+    "rangedDefence": {
+      "light": 70,
+      "standard": 70,
+      "heavy": 40
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[24 September]] [[2002]]",
+    "aliases": [],
+    "size": "5",
+    "examine": "One of the biggest, meanest dragons around.",
+    "attributes": [
+      "dragon",
+      "fiery"
+    ],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "maxhit": 0
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Dragonfire]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 16,
+    "slayerXp": 258,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "52": {
     "id": 52,
     "name": "Baby blue dragon",

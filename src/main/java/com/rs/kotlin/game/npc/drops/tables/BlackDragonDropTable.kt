@@ -12,7 +12,7 @@ object BlackDragonDropTable {
             drop("item.black_dragonhide");
         }
         mainDrops(128) {
-//            drop("item.mithril_2h_sword", weight = 4)
+            drop("item.mithril_2h_sword", weight = 4)
             drop("item.mithril_hatchet", weight = 3)
             drop("item.mithril_battleaxe", weight = 3)
             drop("item.rune_knife", amount = 2, weight = 3)
