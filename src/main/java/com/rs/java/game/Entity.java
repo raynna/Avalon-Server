@@ -195,8 +195,8 @@ public abstract class Entity extends WorldTile {
     }
 
     public void applyHit(Hit hit) {
-        if (isDead())
-            hit.setDamage(0);
+        //if (isDead())
+          //  hit.setDamage(0);
         Entity source = hit.getSource();
         if (source instanceof Player && source.dead) {
             resetReceivedHits();
@@ -277,8 +277,6 @@ public abstract class Entity extends WorldTile {
     }
 
     public void processHit(Hit hit) {
-        if (isDead())
-            return;
         Entity source = hit.getSource();
         if (source instanceof Player && source.dead) {
             resetReceivedHits();
