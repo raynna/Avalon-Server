@@ -279,26 +279,39 @@ public class Bank implements Serializable {
 
 	public void depositAllInventory(boolean banking) {
 		Inventory inventory = player.getInventory();
-		if (player.getInventory().getFreeSlots() == 28) {
+
+		if (inventory.getFreeSlots() == 28) {
 			player.getPackets().sendGameMessage("You have nothing in your inventory to bank.");
 			return;
 		}
-		for (Item items : inventory.getItems().toArray()) {
-			if (items == null)
+
+		boolean depositedAnything = false;
+
+		// Process in reverse to avoid issues
+		for (int slot = 27; slot >= 0; slot--) {
+			Item item = inventory.getItem(slot);
+			if (item == null) {
 				continue;
-			if (items.getDefinitions().isNoted())
-				items.setId(items.getDefinitions().getCertId());
+			}
+
+			int initialAmount = item.getAmount();
+			depositItem(slot, Integer.MAX_VALUE, false);
+
+			Item afterItem = inventory.getItem(slot);
+			if (afterItem == null || afterItem.getAmount() < initialAmount) {
+				depositedAnything = true;
+			}
+
+			if (!hasBankSpace() && getBankSize() >= getMaxBankSpace()) {
+				player.getPackets().sendGameMessage("Your bank is full.");
+				break;
+			}
 		}
-		int space = addItems(inventory.getItems().getContainerItems(), banking);
-		if (space != 0) {
-			for (int i = 0; i < space; i++)
-				inventory.getItems().set(i, null);
-			inventory.refresh();
-		} else {
-			player.getPackets().sendGameMessage("You don't have enough bank space.");
+
+		if (depositedAnything) {
+			refreshItems();
+			player.getPackets().sendGameMessage("You deposit all your inventory items into the bank.");
 		}
-		refreshTab(currentTab);
-		refreshItems();
 	}
 
 	public void depositAllBob(boolean banking) {
@@ -795,18 +808,32 @@ public class Bank implements Serializable {
 			return;
 		}
 
-		int amountInThisSlot = invItem.getAmount();
-		int depositAmount = Math.min(quantity, amountInThisSlot);
-
-		ItemMetadata metadata = invItem.getMetadata() != null ? invItem.getMetadata().deepCopy() : null;
-		Item depositItem = new Item(invItem.getId(), depositAmount, metadata);
-
-		ItemDefinitions defs = depositItem.getDefinitions();
+		int bankId = invItem.getId();
+		ItemDefinitions defs = ItemDefinitions.getItemDefinitions(bankId);
 		if (defs.isNoted() && defs.getCertId() != -1) {
-			depositItem.setId(defs.getCertId());
+			bankId = defs.getCertId();
 		}
 
-		Item bankedItem = getItem(depositItem);
+		ItemMetadata metadata = invItem.getMetadata() != null ? invItem.getMetadata().deepCopy() : null;
+
+		int totalInInventory = 0;
+		for (int i = 0; i < 28; i++) {
+			Item item = player.getInventory().getItem(i);
+			if (item != null) {
+				int itemId = item.getId();
+				ItemDefinitions itemDefs = ItemDefinitions.getItemDefinitions(itemId);
+				if (itemDefs.isNoted() && itemDefs.getCertId() != -1) {
+					itemId = itemDefs.getCertId();
+				}
+				if (itemId == bankId) {
+					totalInInventory += item.getAmount();
+				}
+			}
+		}
+
+		int depositAmount = Math.min(quantity, totalInInventory);
+
+		Item bankedItem = getItem(bankId);
 		int maxDepositAmount = depositAmount;
 
 		if (bankedItem != null) {
@@ -815,7 +842,7 @@ public class Bank implements Serializable {
 				return;
 			}
 			int total = bankedItem.getAmount() + depositAmount;
-			if (total < 0) { // overflow detected
+			if (total < 0) {
 				maxDepositAmount = Integer.MAX_VALUE - bankedItem.getAmount();
 				if (maxDepositAmount <= 0) {
 					player.getPackets().sendGameMessage("Not enough space in your bank.");
@@ -830,32 +857,73 @@ public class Bank implements Serializable {
 			}
 		}
 
-		if (depositAmount > maxDepositAmount) {
-			depositItem.setAmount(maxDepositAmount);
+		depositAmount = Math.min(depositAmount, maxDepositAmount);
 
-			if (amountInThisSlot > maxDepositAmount) {
-				Item remaining = new Item(invItem.getId(), amountInThisSlot - maxDepositAmount, metadata);
-				player.getInventory().getItems().set(invSlot, remaining);
-			} else {
-				player.getInventory().getItems().set(invSlot, null);
-			}
-
-			addItem(depositItem, refresh);
-			player.getInventory().refresh(invSlot);
-		} else {
-			if (amountInThisSlot > depositAmount) {
-				Item remaining = new Item(invItem.getId(), amountInThisSlot - depositAmount, metadata);
-				player.getInventory().getItems().set(invSlot, remaining);
-			} else {
-				player.getInventory().getItems().set(invSlot, null);
-			}
-
-			player.getInventory().refresh(invSlot);
-			addItem(depositItem, refresh);
+		if (depositAmount <= 0) {
+			player.getPackets().sendGameMessage("You cannot deposit any of that item.");
+			return;
 		}
+
+		int amountToRemove = depositAmount;
+
+		// First, try to remove from the clicked slot
+		Item clickedItem = player.getInventory().getItem(invSlot);
+		if (clickedItem != null) {
+			int clickedId = clickedItem.getId();
+			ItemDefinitions clickedDefs = ItemDefinitions.getItemDefinitions(clickedId);
+			if (clickedDefs.isNoted() && clickedDefs.getCertId() != -1) {
+				clickedId = clickedDefs.getCertId();
+			}
+
+			if (clickedId == bankId) {
+				int toRemoveFromThisSlot = Math.min(amountToRemove, clickedItem.getAmount());
+				amountToRemove -= toRemoveFromThisSlot;
+
+				if (toRemoveFromThisSlot == clickedItem.getAmount()) {
+					player.getInventory().getItems().set(invSlot, null);
+				} else {
+					Item remaining = new Item(clickedItem.getId(), clickedItem.getAmount() - toRemoveFromThisSlot,
+							clickedItem.getMetadata() != null ? clickedItem.getMetadata().deepCopy() : null);
+					player.getInventory().getItems().set(invSlot, remaining);
+				}
+				player.getInventory().refresh(invSlot);
+			}
+		}
+
+		// If we still need to remove more, remove from other slots
+		if (amountToRemove > 0) {
+			for (int i = 0; i < 28 && amountToRemove > 0; i++) {
+				if (i == invSlot) continue; // Already handled the clicked slot
+
+				Item item = player.getInventory().getItem(i);
+				if (item != null) {
+					int itemId = item.getId();
+					ItemDefinitions itemDefs = ItemDefinitions.getItemDefinitions(itemId);
+					if (itemDefs.isNoted() && itemDefs.getCertId() != -1) {
+						itemId = itemDefs.getCertId();
+					}
+
+					if (itemId == bankId) {
+						int toRemoveFromThisSlot = Math.min(amountToRemove, item.getAmount());
+						amountToRemove -= toRemoveFromThisSlot;
+
+						if (toRemoveFromThisSlot == item.getAmount()) {
+							player.getInventory().getItems().set(i, null);
+						} else {
+							Item remaining = new Item(item.getId(), item.getAmount() - toRemoveFromThisSlot,
+									item.getMetadata() != null ? item.getMetadata().deepCopy() : null);
+							player.getInventory().getItems().set(i, remaining);
+						}
+						player.getInventory().refresh(i);
+					}
+				}
+			}
+		}
+
+		// Finally, add to bank
+		Item depositItem = new Item(bankId, depositAmount, metadata);
+		addItem(depositItem, refresh);
 	}
-
-
 
 
 
