@@ -232,7 +232,7 @@ public abstract class Entity extends WorldTile {
     }
 
 
-    private transient final int totalHitsProcess = 4;
+    private transient final int totalHitsProcess = 8;
 
     public void processReceivedHits() {
         /*if (isDead())
