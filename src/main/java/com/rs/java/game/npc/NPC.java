@@ -346,6 +346,8 @@ public class NPC extends Entity implements Serializable {
     public int getMaxHitpoints() {
         if (getIncreasedMaxHitpoints() > 0)
             return getIncreasedMaxHitpoints();
+        if (id == Rscm.lookup("npc.magic_dummy") || id == Rscm.lookup("npc.melee_dummy"))
+            return 10000;
         if (definition != null && definition.getHitpoints() > 0) {
             return definition.getHitpoints();
         }
@@ -354,8 +356,6 @@ public class NPC extends Entity implements Serializable {
             return combatDefinitionHp;
         if (combatData == null)
             setBonuses();
-        if (id == Rscm.lookup("npc.magic_dummy") || id == Rscm.lookup("npc.melee_dummy"))
-            return 10000;
         return combatData.constitutionLevel * 10;
     }
 

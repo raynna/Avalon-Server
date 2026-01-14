@@ -232,12 +232,9 @@ public abstract class Entity extends WorldTile {
     }
 
 
-    private transient final int totalHitsProcess = 8;
+    private transient final int totalHitsProcess = 8;//this should in reality be 255
 
     public void processReceivedHits() {
-        /*if (isDead())
-            return;*/
-
         if (this instanceof Player player) {
             if (player.isTeleporting()) {
                 resetReceivedHits();
@@ -283,12 +280,8 @@ public abstract class Entity extends WorldTile {
             return;
         }
         if (this instanceof Player) {
-            Player p = (Player) this;
             if (hit.getDamage() < 0)
                 return;
-            if (p.isDead()) {
-                //hit.setDamage(0);
-            }
         }
         removeHitpoints(hit);
         if (nextHits.size() < totalHitsProcess) {

@@ -222,6 +222,61 @@
     "categories": [],
     "assignedBy": []
   },
+  "15": {
+    "id": 15,
+    "name": "Warrior woman",
+    "members": false,
+    "combatLevel": 24,
+    "attackLevel": 22,
+    "strengthLevel": 22,
+    "defenceLevel": 22,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 6,
+    "strengthBonus": 7,
+    "magicBonus": 6,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 6,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 40,
+      "slash": 41,
+      "crush": 37
+    },
+    "magicDefence": {
+      "magic": -10
+    },
+    "rangedDefence": {
+      "light": 38,
+      "standard": 38,
+      "heavy": 38
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "Not very fashion conscious.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "41": {
     "id": 41,
     "name": "Chicken",
@@ -334,6 +389,129 @@
     "attackSpeedTicks": 4,
     "respawnTicks": 25,
     "slayerXp": 2,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "75": {
+    "id": 75,
+    "name": "Zombie",
+    "members": false,
+    "combatLevel": 24,
+    "attackLevel": 19,
+    "strengthLevel": 21,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 30,
+    "attackBonus": 5,
+    "strengthBonus": 7,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 9,
+      "slash": 8,
+      "crush": 12
+    },
+    "magicDefence": {
+      "magic": 10
+    },
+    "rangedDefence": {
+      "light": 11,
+      "standard": 11,
+      "heavy": 11
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 January]] [[2001]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "The walking dead.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 35,
+    "slayerXp": 30,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "87": {
+    "id": 87,
+    "name": "Giant rat",
+    "members": false,
+    "combatLevel": 6,
+    "attackLevel": 6,
+    "strengthLevel": 5,
+    "defenceLevel": 2,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 10,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "Overgrown vermin.",
+    "attributes": [
+      "rat"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 10,
     "categories": [],
     "assignedBy": [
       "turael",
@@ -6217,6 +6395,126 @@
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []
+  },
+  "4926": {
+    "id": 4926,
+    "name": "Giant rat",
+    "members": false,
+    "combatLevel": 6,
+    "attackLevel": 6,
+    "strengthLevel": 5,
+    "defenceLevel": 2,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 10,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "Overgrown vermin.",
+    "attributes": [
+      "rat"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 10,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "4927": {
+    "id": 4927,
+    "name": "Giant rat",
+    "members": false,
+    "combatLevel": 6,
+    "attackLevel": 6,
+    "strengthLevel": 5,
+    "defenceLevel": 2,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 10,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "Overgrown vermin.",
+    "attributes": [
+      "rat"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 10,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
   },
   "5332": {
     "id": 5332,

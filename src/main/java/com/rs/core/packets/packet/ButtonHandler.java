@@ -1554,7 +1554,11 @@ public class ButtonHandler {
             } else if (componentId == 15) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
-                    if (weapon.isAnyOf("item.polypore_staff", "item.polypore_staff_degraded")) {
+                    if (weapon.isItem("item.polypore_staff")) {
+                        player.message("Your polypore staff is fully charged.");
+                        return;
+                    }
+                    if (weapon.isItem("item.polypore_staff_degraded")) {
                         if (weapon.getMetadata() == null) {
                             weapon.setMetadata(new PolyporeStaffMetaData(3000));
                         }

@@ -24,10 +24,10 @@ class MasterCommand : Command {
         val MAX_SKILL = if (player.isDeveloper) Skills.DUNGEONEERING else Skills.MAGIC
         for (i in Skills.ATTACK..MAX_SKILL) {
             player.skills[i] = 99
-            player.skills.setXp(i, Skills.getXPForLevel(99).toDouble())
+            player.skills.setXp(i, if (player.isDeveloper) Skills.MAXIMUM_EXP else Skills.getXPForLevel(99).toDouble())
         }
         player.skills[Skills.SUMMONING] = 99
-        player.skills.setXp(Skills.SUMMONING, Skills.getXPForLevel(99).toDouble())
+        player.skills.setXp(Skills.SUMMONING, if (player.isDeveloper) Skills.MAXIMUM_EXP else Skills.getXPForLevel(99).toDouble())
         for (i in Skills.ATTACK..MAX_SKILL)
             player.dialogueManager.startDialogue("LevelUp", i)
         player.dialogueManager.startDialogue("LevelUp", Skills.SUMMONING)

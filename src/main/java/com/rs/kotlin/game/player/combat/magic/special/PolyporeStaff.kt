@@ -39,6 +39,7 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
             attacker.message("Your polypore staff has no charges.")
             return
         }
+        data.decrement(1)
         if (weapon.isItem("item.polypore_staff")) {
             val newItem = Item(
                 Item.getId("item.polypore_staff_degraded"),
@@ -49,15 +50,10 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
                 Equipment.SLOT_WEAPON.toInt(),
                 newItem
             )
-
             attacker.equipment.refresh()
             attacker.appearence.generateAppearenceData()
         }
 
-        data.value -= 1
-        if (data.value == 0) {
-            attacker.message("Your polypore staff has run out of charges.")
-        }
 
         attacker.animate(15448)
         attacker.gfx(Graphics(2034))
@@ -73,6 +69,12 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
             hitGraphic = endGfx
         )
 
-        style.delayHits(PendingHit(hit, defender, impactTicks + 1))
+        style.delayHits(PendingHit(hit, defender, impactTicks))
+        if (data.value == 0) {
+            attacker.message("Your polypore staff has run out of charges.")
+            attacker.equipment.updateItem(Equipment.SLOT_WEAPON.toInt(), Item.getId("item.polypore_stick"))
+            attacker.equipment.refresh()
+            attacker.appearence.generateAppearenceData()
+        }
     }
 }

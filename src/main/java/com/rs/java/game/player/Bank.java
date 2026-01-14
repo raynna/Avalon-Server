@@ -795,14 +795,12 @@ public class Bank implements Serializable {
 			return;
 		}
 
-		int numberOf = player.getInventory().getNumberOf(invItem.getId());
-		int depositAmount = Math.min(quantity, numberOf);
+		int amountInThisSlot = invItem.getAmount();
+		int depositAmount = Math.min(quantity, amountInThisSlot);
 
-		// Preserve metadata if any
 		ItemMetadata metadata = invItem.getMetadata() != null ? invItem.getMetadata().deepCopy() : null;
 		Item depositItem = new Item(invItem.getId(), depositAmount, metadata);
 
-		// Handle noted to unnoted conversion
 		ItemDefinitions defs = depositItem.getDefinitions();
 		if (defs.isNoted() && defs.getCertId() != -1) {
 			depositItem.setId(defs.getCertId());
@@ -833,29 +831,25 @@ public class Bank implements Serializable {
 		}
 
 		if (depositAmount > maxDepositAmount) {
-			// Partial deposit
-
-			int leftover = depositAmount - maxDepositAmount;
-			if (invItem.getAmount() == depositAmount) {
-				Item leftoverItem = new Item(invItem.getId(), leftover, metadata);
-				player.getInventory().getItems().set(invSlot, leftoverItem);
-			} else {
-				Item remaining = new Item(invItem.getId(), invItem.getAmount() - maxDepositAmount, metadata);
-				player.getInventory().getItems().set(invSlot, remaining);
-			}
-
-			player.getInventory().refresh(invSlot);
 			depositItem.setAmount(maxDepositAmount);
-			addItem(depositItem, refresh);
-		} else {
-			// Full deposit
-			if (invItem.getAmount() > depositAmount) {
-				Item remaining = new Item(invItem.getId(), invItem.getAmount() - depositAmount, metadata);
+
+			if (amountInThisSlot > maxDepositAmount) {
+				Item remaining = new Item(invItem.getId(), amountInThisSlot - maxDepositAmount, metadata);
 				player.getInventory().getItems().set(invSlot, remaining);
 			} else {
-				player.getInventory().deleteItem(depositItem.getId(), depositAmount);
 				player.getInventory().getItems().set(invSlot, null);
 			}
+
+			addItem(depositItem, refresh);
+			player.getInventory().refresh(invSlot);
+		} else {
+			if (amountInThisSlot > depositAmount) {
+				Item remaining = new Item(invItem.getId(), amountInThisSlot - depositAmount, metadata);
+				player.getInventory().getItems().set(invSlot, remaining);
+			} else {
+				player.getInventory().getItems().set(invSlot, null);
+			}
+
 			player.getInventory().refresh(invSlot);
 			addItem(depositItem, refresh);
 		}

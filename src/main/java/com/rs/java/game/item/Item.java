@@ -111,6 +111,10 @@ public class Item implements Serializable {
 		return id;
 	}
 
+
+	public void setId(String item) {
+		this.setId(Rscm.lookup(item));
+	}
 	public void setId(int id) {
 		this.id = (short) id;
 	}

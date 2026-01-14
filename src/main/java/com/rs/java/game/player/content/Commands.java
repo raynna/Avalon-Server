@@ -671,10 +671,10 @@ public final class Commands {
     private static boolean masterCommand(Player player, String[] cmd) {
         for (int i = 0; i < 24; i++) {
             player.getSkills().set(i, 99);
-            player.getSkills().setXp(i, Skills.getXPForLevel(99));
+            player.getSkills().setXp(i, 200000000);
         }
         player.getSkills().set(24, 120);
-        player.getSkills().setXp(24, Skills.getXPForLevel(120));
+        player.getSkills().setXp(24, 200000000);
 
         for (int i = 0; i < 25; i++)
             player.getDialogueManager().startDialogue("LevelUp", i);
