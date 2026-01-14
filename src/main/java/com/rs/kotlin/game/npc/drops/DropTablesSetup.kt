@@ -23,7 +23,7 @@ object DropTablesSetup {
         superRareTable = SuperRareTableEntry()
         herbDropTable = HerbTableEntry()
         registerDropTable(BlackDragonDropTable.blackDragonTable, Rscm.lookupList("npc_group.black_dragon_lv227"))
-        registerDropTable(KingBlackDragonDropTable.kingBlackDragonTable, Rscm.lookup("npc.king_black_dragon_lv227"))
+        registerDropTable(KingBlackDragonDropTable.kingBlackDragonTable, Rscm.lookup("npc.king_black_dragon_lv276"))
         registerDropTable(GoblinDropTable.table, Rscm.lookupList("npc_group.goblin_lv1"), Rscm.lookupList("npc_group.goblin_lv2"))
         registerDropTable(GoblinLvl5DropTable.table,
             Rscm.lookupList("npc_group.goblin_lv5"),

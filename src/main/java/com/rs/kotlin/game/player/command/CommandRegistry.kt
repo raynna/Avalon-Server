@@ -65,12 +65,12 @@ object CommandRegistry {
         val parts = input.trim().split("\\s+".toRegex())
         if (parts.isEmpty()) return false
 
-        val name = parts[0].lowercase()        // the trigger used
-        val args = parts.drop(1)                // everything after the trigger
+        val name = parts[0].lowercase()
+        val args = parts.drop(1)
 
         val command = commands[name]
         if (command == null) {
-            player.message("Unknown command: $name")
+            //player.message("Unknown command: $name")
             return false
         }
 

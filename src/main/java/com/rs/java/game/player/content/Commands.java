@@ -82,6 +82,7 @@ public final class Commands {
         }
 
         public boolean execute(Player player, String[] args) {
+            System.out.println("command executed with args: " + Arrays.toString(args));
             return command.execute(player, args);
         }
 
@@ -133,7 +134,6 @@ public final class Commands {
                 "Show kill/death ratio");
         registerCommand("score", Commands::kdrCommand, CommandCategory.NORMAL,
                 "Show kill/death ratio");
-
         registerCommand("testdrop", Commands::testDropCommand, CommandCategory.DEVELOPER,
                 "Test drop tables. Usage: ::testdrop [npcId] [times]");
         registerCommand("droptest", Commands::dropTestToggleCommand, CommandCategory.DEVELOPER,
@@ -211,7 +211,7 @@ public final class Commands {
         if (command == null || command.trim().isEmpty()) {
             return false;
         }
-
+        System.out.println("clientCommand: " + clientCommand + ", command: " + command);
         String[] cmd = command.toLowerCase().split(" ");
         if (cmd.length == 0) {
             return false;
@@ -222,8 +222,8 @@ public final class Commands {
         boolean processed = processCommandByCategory(player, cmd, console, clientCommand);
         if (processed && player.isStaff()) {
             archiveLogs(player, cmd);
+            System.out.println("processed: " + clientCommand + ", command: " + command);
         }
-
         return processed;
     }
 
@@ -241,6 +241,7 @@ public final class Commands {
         }
 
         try {
+            System.out.println("Trying to execute the command " + commandName);
             return handler.execute(player, cmd);
         } catch (Exception e) {
             player.getPackets().sendGameMessage("Error executing command: " + e.getMessage());
@@ -496,7 +497,6 @@ public final class Commands {
             }
         }
 
-        // Add all collected items to bank
         for (Map.Entry<Integer, Integer> entry : dropCounts.entrySet()) {
             int itemId = entry.getKey();
             int totalAmount = entry.getValue();
@@ -698,21 +698,26 @@ public final class Commands {
     }
 
     private static boolean teleportCommand(Player player, String[] cmd) {
-        if (cmd.length < 3) {
-            player.getPackets().sendPanelBoxMessage("Use: ::tele coordX coordY [plane]");
-            return true;
-        }
+            try {
+                String[] parts = cmd[1].split(",");
 
-        try {
-            int x = Integer.parseInt(cmd[1]);
-            int y = Integer.parseInt(cmd[2]);
-            int plane = cmd.length >= 4 ? Integer.parseInt(cmd[3]) : player.getPlane();
+                if (parts.length < 5) {
+                    player.message("Use: ::tele plane,x,y,chunkX,chunkY");
+                    return true;
+                }
 
-            player.resetWalkSteps();
-            player.setNextWorldTile(new WorldTile(x, y, plane));
-        } catch (NumberFormatException e) {
-            player.getPackets().sendPanelBoxMessage("Use: ::tele coordX coordY [plane]");
-        }
+                int plane = Integer.parseInt(parts[0]);
+                int x = Integer.parseInt(parts[1]) << 6 | Integer.parseInt(parts[3]);
+                int y = Integer.parseInt(parts[2]) << 6 | Integer.parseInt(parts[4]);
+
+                player.resetWalkSteps();
+                player.setNextWorldTile(new WorldTile(x, y, plane));
+
+                player.message("Teleported to " + plane + "," + parts[1] + "," + parts[2] + "," + parts[3] + "," + parts[4]);
+            } catch (Exception e) {
+                player.message("Use: ::tele plane,x,y,chunkX,chunkY");
+                e.printStackTrace();
+            }
         return true;
     }
 

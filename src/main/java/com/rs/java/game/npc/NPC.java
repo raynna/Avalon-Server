@@ -230,11 +230,11 @@ public class NPC extends Entity implements Serializable {
             return;
         }
 
-        int defenceLevel = level / 2;
-        int meleeAttack = level - (level / 2);
-        int magicAttack = level / 2;
-        int rangedAttack = level / 2;
-        int constitution = level / 2 + 1;
+        int defenceLevel = level / 3;
+        int meleeAttack = level - (level / 3);
+        int magicAttack = level / 3;
+        int rangedAttack = level / 3;
+        int constitution = level / 3 + 1;
         int maxHit = (int) Math.ceil(level * 0.05);
 
         combatData = new CombatData(
@@ -245,10 +245,10 @@ public class NPC extends Entity implements Serializable {
                 magicAttack,
                 rangedAttack,
                 constitution,
-                0, 0, 0, 0, 0, 0,
-                new MeleeDefence(defenceLevel / 3, defenceLevel / 3, defenceLevel / 3),
-                new MagicDefence(defenceLevel / 3),
-                new RangedDefence(defenceLevel / 3, defenceLevel / 3, defenceLevel / 3),
+                0, 0, (int) Math.ceil(magicAttack * 0.75), 0, 0, 0,
+                new MeleeDefence(defenceLevel * 2, defenceLevel * 2, defenceLevel * 2),
+                new MagicDefence((int) (defenceLevel * 1.5)),
+                new RangedDefence(defenceLevel * 2, defenceLevel * 2, defenceLevel * 2),
                 new Immunities(false, false, false, false, false),
                 new MaxHit(maxHit),
                 true,
@@ -996,6 +996,7 @@ public class NPC extends Entity implements Serializable {
             changedCombatLevel = true;
         if (getCustomName() != null)
             changedName = true;
+        setBonuses();
     }
 
     @Override

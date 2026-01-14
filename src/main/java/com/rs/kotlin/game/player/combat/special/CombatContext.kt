@@ -550,7 +550,7 @@ fun CombatContext.findChainTargets(
             if (distSq > bounceRange * bounceRange) continue
 
             val tile = source.tile.transform(dx, dy, 0)
-
+            val player: Entity = source
             for (e in World.getEntitiesAt(tile)) {
                 if (e == attacker) continue
                 if (excludeRoot && e == rootTarget) continue
@@ -560,6 +560,9 @@ fun CombatContext.findChainTargets(
                 if (!attacker.controlerManager.canHit(e)) continue
                 if (!canChainReach(source, e, bounceRange)) continue
                 if (!e.isAtMultiArea && !e.isForceMultiArea) continue
+                if (e is NPC) {
+                    if (e.owner != null && e.owner.familiar == e) continue
+                }
 
                 candidates += e to distSq
             }
@@ -632,8 +635,7 @@ fun CombatContext.getScytheTargets(
 
     val baseTile = attacker.tile
     val rawDir = attacker.direction
-    val dir = (rawDir / 2048) and 0x7 // normalize 0–7
-    //println("[DEBUG] Attacker=${attacker.displayName} rawDir=$rawDir normalizedDir=$dir tile=$baseTile")
+    val dir = (rawDir / 2048) and 0x7
 
     val arcTiles = when (dir) {
         0 -> listOf( // South

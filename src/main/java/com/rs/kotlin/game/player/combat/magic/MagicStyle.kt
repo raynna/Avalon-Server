@@ -246,7 +246,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 }
             }
             if (currentSpell.endGraphic.id != -1 && currentSpell.projectileId == -1 && currentSpell.projectileIds.isEmpty()) {
-                println("send endgfx " + currentSpell.endGraphic.id)
                 defender.gfx(currentSpell.endGraphic)
             }
                 currentSpell.hitSound.takeIf { it != -1 }?.let { defender.playSound(it, 1) }

@@ -175,6 +175,22 @@
     "lastSeen": "2026-01-02T00:23:49.261021600Z",
     "attempts": 1
   },
+  "6869": {
+    "npcId": 6869,
+    "npcName": "Wolpertinger",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-14T10:58:29.115886300Z",
+    "lastSeen": "2026-01-14T10:58:29.115886300Z",
+    "attempts": 1
+  },
+  "6870": {
+    "npcId": 6870,
+    "npcName": "Wolpertinger",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-14T10:24:51.635935400Z",
+    "lastSeen": "2026-01-14T10:24:51.635935400Z",
+    "attempts": 1
+  },
   "7078": {
     "npcId": 7078,
     "npcName": "Ogress champion",
