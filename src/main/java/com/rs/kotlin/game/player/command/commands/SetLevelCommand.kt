@@ -29,7 +29,7 @@ class SetLevelCommand : Command {
 
         val skill = cmdArgs.getInt(0)
         var level = cmdArgs.getInt(1)
-        if (skill < Skills.ATTACK || (skill > Skills.MAGIC && skill != Skills.SUMMONING)) {
+        if (skill < Skills.ATTACK || (skill > Skills.MAGIC && skill != Skills.SUMMONING) && !player.isDeveloper) {
             player.message("You are only able to change skills between 1-6 and 23.")
             return true
         }
