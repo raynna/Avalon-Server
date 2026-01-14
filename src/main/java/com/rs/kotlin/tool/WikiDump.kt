@@ -265,6 +265,23 @@ object WikiApi {
                     val magicDefence = mapOf(
                         "magic" to intVal("dmagic")
                     )
+                    val maxHitRaw = if (hasVersionedStats) {
+                        val current = map["max hit$versionNum"]
+                        val currentVal = current?.let { Regex("\\d+").find(it)?.value?.toIntOrNull() ?: 0 } ?: 0
+
+                        if (currentVal > 0) {
+                            current
+                        } else {
+                            versionKeys
+                                .mapNotNull { map["max hit${it.removePrefix("version")}"] }
+                                .firstOrNull {
+                                    (Regex("\\d+").find(it)?.value?.toIntOrNull() ?: 0) > 0
+                                }
+                        }
+                    } else {
+                        map["max hit"]
+                    }
+
 
                     val npcData = NpcData(
                         id = wikiNpcId,
@@ -299,7 +316,7 @@ object WikiApi {
                         examine = map["examine"],
                         attributes = map["attributes"]?.split(",")?.map { it.trim() } ?: emptyList(),
                         xpBonus = doubleVal("xpbonus"),
-                        maxHit = mapOf("maxhit" to getStatValue("max hit")),
+                        maxHit = parseMaxHit(maxHitRaw),
                         aggressive = yesNo("aggressive"),
                         poisonous = null,
                         attackStyles = map["attack style"]?.split(",")?.map { it.trim() } ?: emptyList(),
@@ -331,6 +348,31 @@ object WikiApi {
 
         return npcList
     }
+
+    fun parseMaxHit(value: String?): Map<String, Int> {
+        if (value == null) return emptyMap()
+
+        val result = mutableMapOf<String, Int>()
+
+        // Matches: 17 (melee), 8 (magic)
+        val regex = Regex("(\\d+)\\s*\\(([^)]+)\\)")
+        val matches = regex.findAll(value)
+
+        for (m in matches) {
+            val hit = m.groupValues[1].toIntOrNull() ?: continue
+            val style = m.groupValues[2].trim().lowercase()
+            result[style] = hit
+        }
+
+        // Fallback: single number like "21"
+        if (result.isEmpty()) {
+            val single = Regex("\\d+").find(value)?.value?.toIntOrNull()
+            if (single != null) result["default"] = single
+        }
+
+        return result
+    }
+
 
     private fun processInfoboxLine(line: String, map: MutableMap<String, String>) {
         val parts = line.split("=", limit = 2)

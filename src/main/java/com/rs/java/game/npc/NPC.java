@@ -148,10 +148,10 @@ public class NPC extends Entity implements Serializable {
         this.canBeAttackFromOutOfArea = canBeAttackFromOutOfArea;
         this.spawned = spawned;
         combatLevel = -1;
-        setHitpoints(getMaxHitpoints());
         setDirection(getRespawnDirection());
         setRandomWalk(getDefinitions().walkMask);
         setBonuses();
+        setHitpoints(getMaxHitpoints());
         combat = new NPCCombat(this);
         capDamage = -1;
         lureDelay = 12000;
@@ -176,10 +176,10 @@ public class NPC extends Entity implements Serializable {
         this.spawned = spawned;
         this.setOwner(owner);
         combatLevel = -1;
-        setHitpoints(getMaxHitpoints());
         setDirection(getRespawnDirection());
         setRandomWalk(getDefinitions().walkMask);
         setBonuses();
+        setHitpoints(getMaxHitpoints());
         combat = new NPCCombat(this);
         capDamage = -1;
         lureDelay = 12000;
@@ -225,7 +225,7 @@ public class NPC extends Entity implements Serializable {
                     new MagicDefence(0),
                     new RangedDefence(0, 0, 0),
                     new Immunities(false, false, false, false, false),
-                    new MaxHit(0), true, List.of("Crush"), 4, 0, level
+                    new MaxHit(0, 0, 0, 0), true, List.of("Crush"), 4, 0, level
             );
             return;
         }
@@ -234,7 +234,7 @@ public class NPC extends Entity implements Serializable {
         int meleeAttack = level - (level / 3);
         int magicAttack = level / 3;
         int rangedAttack = level / 3;
-        int constitution = level / 3 + 1;
+        int constitution = level / 2 + 1;
         int maxHit = (int) Math.ceil(level * 0.05);
 
         combatData = new CombatData(
@@ -250,7 +250,7 @@ public class NPC extends Entity implements Serializable {
                 new MagicDefence((int) (defenceLevel * 1.5)),
                 new RangedDefence(defenceLevel * 2, defenceLevel * 2, defenceLevel * 2),
                 new Immunities(false, false, false, false, false),
-                new MaxHit(maxHit),
+                new MaxHit(maxHit, maxHit, maxHit, maxHit),
                 true,
                 List.of("Crush"),
                 4,
@@ -346,6 +346,12 @@ public class NPC extends Entity implements Serializable {
     public int getMaxHitpoints() {
         if (getIncreasedMaxHitpoints() > 0)
             return getIncreasedMaxHitpoints();
+        if (definition != null && definition.getHitpoints() > 0) {
+            return definition.getHitpoints();
+        }
+        int combatDefinitionHp = getCombatDefinitions().getHitpoints();
+        if (combatDefinitionHp > 0)
+            return combatDefinitionHp;
         if (combatData == null)
             setBonuses();
         if (id == Rscm.lookup("npc.magic_dummy") || id == Rscm.lookup("npc.melee_dummy"))
@@ -1338,13 +1344,15 @@ public class NPC extends Entity implements Serializable {
     }
 
     public int getMaxHit() {
-        if (definition != null) {
+        if (definition != null && definition.getMaxHit() != 0) {
             return definition.getMaxHit();
         }
-        if (combatData == null) {
+        if (combatData == null && getCombatDefinitions().getMaxHit() != 0) {
             return getCombatDefinitions().getMaxHit();
         }
-        return combatData.maxHit.getMaxhit() * 10;
+        String style = getAttackStyle().name();
+        int max = combatData.maxHit.forStyle(style);
+        return max * 10;
     }
 
     public int getAttackAnimation() {

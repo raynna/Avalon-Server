@@ -39,7 +39,13 @@ object CombatDataParser {
         val ranged = json["rangedDefence"].asJsonObject
         val magic = json["magicDefence"].asJsonObject
         val immunities = json["immunities"].asJsonObject
-        val maxHit = json["maxHit"].asJsonObject
+        val maxHitObj = json["maxHit"].asJsonObject
+        val maxHit = MaxHit(
+            melee = maxHitObj["melee"]?.asInt ?: 0,
+            magic = maxHitObj["magic"]?.asInt ?: 0,
+            ranged = maxHitObj["ranged"]?.asInt ?: 0,
+            default = maxHitObj["default"]?.asInt ?: 0
+        )
 
         return CombatData(
             combatLevel = json["combatLevel"].asInt,
@@ -75,7 +81,7 @@ object CombatDataParser {
                 thralls = immunities["thralls"].asBoolean,
                 burn = immunities["burn"].asBoolean
             ),
-            maxHit = MaxHit(maxHit["maxhit"].asInt),
+            maxHit = maxHit,
             aggressive = json["aggressive"].asBoolean,
             attackStyles = json["attackStyles"].asJsonArray.map { it.asString },
             attackSpeedTicks = json["attackSpeedTicks"].asInt,

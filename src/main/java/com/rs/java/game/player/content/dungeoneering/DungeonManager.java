@@ -1057,7 +1057,7 @@ public class DungeonManager {
 				new MagicDefence((int) (defenceLevel * 0.5)),
 				new RangedDefence((int) (defenceLevel * 0.5), (int) (defenceLevel * 0.5), (int) (defenceLevel * 0.5)),
 				new Immunities(false, false, false, false, false),
-				new MaxHit(maxHit),
+				new MaxHit(maxHit, maxHit, maxHit, maxHit),
 				true, // aggressive
 				List.of("Stab"), // attackStyles, could randomize for multi-style NPCs
 				4, // attackSpeedTicks

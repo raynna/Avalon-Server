@@ -82,7 +82,6 @@ public final class Commands {
         }
 
         public boolean execute(Player player, String[] args) {
-            System.out.println("command executed with args: " + Arrays.toString(args));
             return command.execute(player, args);
         }
 
@@ -211,7 +210,6 @@ public final class Commands {
         if (command == null || command.trim().isEmpty()) {
             return false;
         }
-        System.out.println("clientCommand: " + clientCommand + ", command: " + command);
         String[] cmd = command.toLowerCase().split(" ");
         if (cmd.length == 0) {
             return false;
@@ -222,7 +220,6 @@ public final class Commands {
         boolean processed = processCommandByCategory(player, cmd, console, clientCommand);
         if (processed && player.isStaff()) {
             archiveLogs(player, cmd);
-            System.out.println("processed: " + clientCommand + ", command: " + command);
         }
         return processed;
     }
@@ -241,7 +238,6 @@ public final class Commands {
         }
 
         try {
-            System.out.println("Trying to execute the command " + commandName);
             return handler.execute(player, cmd);
         } catch (Exception e) {
             player.getPackets().sendGameMessage("Error executing command: " + e.getMessage());

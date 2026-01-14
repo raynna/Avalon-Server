@@ -64,7 +64,7 @@ class LookupStatsCommand : Command {
         sendLine("Defence Level", combatData.defenceLevel)
         sendLine("Magic Level", combatData.magicLevel)
         sendLine("Ranged Level", combatData.rangedLevel)
-        sendLine("Constitution", combatData.constitutionLevel)
+        sendLine("Hitpoints", combatData.constitutionLevel * 10)
 
         // Bonuses
         sendLine("Attack Bonus", combatData.attackBonus)
@@ -81,7 +81,7 @@ class LookupStatsCommand : Command {
 
         // Other
         sendLine("Aggressive", combatData.aggressive)
-        sendLine("Max Hit", combatData.maxHit.maxhit)
+        sendLine("Max Hit", combatData.maxHit.highest() * 10)
         sendLine("Attack Speed Ticks", combatData.attackSpeedTicks)
         sendLine("Respawn Ticks", combatData.respawnTicks)
         sendLine("Slayer XP", combatData.slayerXp)

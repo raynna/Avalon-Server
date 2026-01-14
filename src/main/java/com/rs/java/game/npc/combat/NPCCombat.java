@@ -7,15 +7,14 @@ import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.npc.fightcaves.FightCavesNPC;
 import com.rs.java.game.npc.fightkiln.HarAkenTentacle;
 import com.rs.java.game.npc.pest.PestPortal;
-import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.actions.combat.Combat;
 import com.rs.java.utils.MapAreas;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.game.npc.combatdata.AttackMethod;
 import com.rs.kotlin.game.npc.combatdata.AttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+import com.rs.kotlin.game.player.combat.CombatAnimations;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -311,9 +310,20 @@ public final class NPCCombat {
 
 
 
-    void doDefenceEmote(Entity target) {
-        target.setNextAnimationNoPriority(new Animation(Combat.getDefenceEmote(target)), target);
+    void performBlockAnimation(Entity target) {
+        int anim;
+
+        if (target instanceof Player player) {
+            anim = CombatAnimations.INSTANCE
+                    .getBlockAnimation(player);
+        } else {
+            anim = Combat.getDefenceEmote(target);
+        }
+
+        if (anim > 0)
+            target.setNextAnimation(anim);
     }
+
 
     public Entity getTarget() {
         return target;

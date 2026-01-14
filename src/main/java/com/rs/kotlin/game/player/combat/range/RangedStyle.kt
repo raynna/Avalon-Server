@@ -174,11 +174,11 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             ), 1
         )
 
-        when {
-            currentWeapon.startGfx != null -> attacker.gfx(currentWeapon.startGfx)
-            currentAmmo?.startGfx != null -> attacker.gfx(currentAmmo.startGfx)
+        if (currentWeapon.projectileId != null) {
+            attacker.gfx(currentWeapon.startGfx)
+        } else if ((currentAmmo != null) && (currentAmmo.startGfx != null)) {
+           attacker.gfx(currentAmmo.startGfx)
         }
-
         val impactTicks = sendProjectile()
         if (executeAmmoEffect(combatContext)) return
         combatContext.rangedHit(delay = (impactTicks - 1).coerceAtLeast(0))
@@ -302,11 +302,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val ammoItem = attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]
         val ammoType = currentWeapon.ammoType ?: currentAmmo?.ammoType
 
-        if (weapon?.id == 11959) {
-            attacker.equipment.deleteItem(weapon.id, 1)
-            return true
-        }
-
         if (attacker.equipment.items[Equipment.SLOT_CAPE.toInt()]?.id in listOf(10498, 10499, 20068)) {
             if (Utils.roll(3, 4)) {
                 return true
@@ -315,7 +310,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
         if (ammoType == AmmoType.THROWING || ammoType == AmmoType.DART || ammoType == AmmoType.JAVELIN || ammoType == AmmoType.THROWNAXE) {
             if (weapon != null) {
-                attacker.equipment.deleteItem(weapon.id, 1)
+                attacker.equipment.decreaseItem(Equipment.SLOT_WEAPON.toInt(), 1)
                 attacker.appearence.generateAppearenceData()
                 return true
             }
@@ -338,7 +333,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             if (currentWeapon.ammoType != null && currentWeapon.ammoType != currentAmmo.ammoType) {
                 return true
             }
-            attacker.equipment.deleteItem(ammoItem.id, 1)
+            attacker.equipment.decreaseItem(Equipment.SLOT_ARROWS.toInt(), 1)
             attacker.appearence.generateAppearenceData()
             if (currentAmmo.dropOnGround) {
                 dropAmmoOnGround()

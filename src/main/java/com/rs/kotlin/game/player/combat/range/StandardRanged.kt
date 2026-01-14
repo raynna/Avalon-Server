@@ -139,7 +139,7 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.DRAGON_ARROW
         ),
         RangedWeapon(
-            itemId = listOf(841),
+            itemId = Item.getIds("item.shortbow"),
             name = "Shortbow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -149,7 +149,7 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.IRON_ARROW
         ),
         RangedWeapon(
-            itemId = listOf(843),
+            itemId = Item.getIds("item.oak_shortbow"),
             name = "Oak shortbow",
             weaponStyle = WeaponStyle.SHORTBOW,
             attackSpeed = 4,
@@ -159,7 +159,37 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.STEEL_ARROW
         ),
         RangedWeapon(
-            itemId = listOf(839),
+            itemId = Item.getIds("item.willow_shortbow"),
+            name = "Willow shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackSpeed = 4,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.MITHRIL_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.maple_shortbow"),
+            name = "Maple shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackSpeed = 4,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.ADAMANT_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.yew_shortbow"),
+            name = "Oak shortbow",
+            weaponStyle = WeaponStyle.SHORTBOW,
+            attackSpeed = 4,
+            attackRange = 7,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.RUNE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.longbow"),
             name = "Longbow",
             weaponStyle = WeaponStyle.LONGBOW,
             attackSpeed = 6,
@@ -169,7 +199,7 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.IRON_ARROW
         ),
         RangedWeapon(
-            itemId = listOf(845),
+            itemId = Item.getIds("item.oak_longbow"),
             name = "Oak longbow",
             weaponStyle = WeaponStyle.LONGBOW,
             attackSpeed = 6,
@@ -179,7 +209,47 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.STEEL_ARROW
         ),
         RangedWeapon(
-            itemId = listOf(9174),
+            itemId = Item.getIds("item.willow_longbow"),
+            name = "Willow longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackSpeed = 6,
+            attackRange = 10,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.MITHRIL_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.maple_longbow"),
+            name = "Maple longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackSpeed = 6,
+            attackRange = 10,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.ADAMANT_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.yew_longbow"),
+            name = "Yew longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackSpeed = 6,
+            attackRange = 10,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.RUNE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.magic_longbow"),
+            name = "Magic longbow",
+            weaponStyle = WeaponStyle.LONGBOW,
+            attackSpeed = 6,
+            attackRange = 10,
+            animationId = 426,
+            ammoType = AmmoType.ARROW,
+            maxAmmoTier = AmmoTier.RUNE_ARROW
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.bronze_crossbow"),
             name = "Bronze crossbow",
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
@@ -189,7 +259,7 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.BRONZE_BOLT
         ),
         RangedWeapon(
-            itemId = listOf(9177),
+            itemId = Item.getIds("item.iron_crossbow"),
             name = "Iron crossbow",
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
@@ -199,14 +269,44 @@ object StandardRanged : RangeData() {
             maxAmmoTier = AmmoTier.IRON_BOLT
         ),
         RangedWeapon(
-            itemId = listOf(9177),
-            name = "Iron crossbow",
+            itemId = Item.getIds("item.steel_crossbow"),
+            name = "Steel crossbow",
             weaponStyle = WeaponStyle.CROSSBOW,
             attackSpeed = 6,
             attackRange = 7,
             animationId = 4230,
             ammoType = AmmoType.BOLT,
-            maxAmmoTier = AmmoTier.IRON_BOLT
+            maxAmmoTier = AmmoTier.STEEL_BOLT
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.black_crossbow"),
+            name = "Black crossbow",
+            weaponStyle = WeaponStyle.CROSSBOW,
+            attackSpeed = 6,
+            attackRange = 7,
+            animationId = 4230,
+            ammoType = AmmoType.BOLT,
+            maxAmmoTier = AmmoTier.BLACK_BOLT
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.mith_crossbow"),
+            name = "Mithril crossbow",
+            weaponStyle = WeaponStyle.CROSSBOW,
+            attackSpeed = 6,
+            attackRange = 7,
+            animationId = 4230,
+            ammoType = AmmoType.BOLT,
+            maxAmmoTier = AmmoTier.MITHRIL_BOLT
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.adamant_crossbow"),
+            name = "Adamant crossbow",
+            weaponStyle = WeaponStyle.CROSSBOW,
+            attackSpeed = 6,
+            attackRange = 7,
+            animationId = 4230,
+            ammoType = AmmoType.BOLT,
+            maxAmmoTier = AmmoTier.ADAMANT_BOLT
         ),
         RangedWeapon(
             itemId = Item.getIds("item.rune_crossbow"),

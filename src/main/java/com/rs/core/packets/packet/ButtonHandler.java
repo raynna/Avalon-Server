@@ -1685,8 +1685,13 @@ public class ButtonHandler {
                 }
             } else if (componentId == 33) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
-                    if (player.getEquipment().getRingId() == 2550)
-                        player.getPackets().sendGameMessage("Your " + ItemDefinitions.getItemDefinitions(2550).getName() + " has " + player.getChargeManager().getCharges(2550) + " left.");
+                    if (player.getEquipment().getRingId() == 2550) {
+                        if (player.getRecoilCharges() <= 0 || player.getRecoilCharges() == 500) {
+                            player.message("Your ring of recoil is fully charged.");
+                            return;
+                        }
+                        player.message("Your " + ItemDefinitions.getItemDefinitions(2550).getName() + " has " + player.getRecoilCharges() + " left.");
+                    }
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                     registerUnEquip(player, Equipment.SLOT_RING);
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) {

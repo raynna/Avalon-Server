@@ -2,6 +2,7 @@
 bolt_projectile=27
 bone_bolt_projectile=696
 sling_shot_projectile=32
+sling_shot_moving_projectile=2063
 iron_axe_projectile=35
 bronze_axe_projectile=36
 steel_axe_projectile=37
@@ -45,6 +46,16 @@ morrigans_throwing_axe_projectile=1839
 morrigans_javelin_projectile=1837
 crystal_bow_projectile=249
 zaryte_bow_projectile=1066
+
+blue_fire_projectile=500
+blue_fire_hit=502
+lightning_ball_projectile=528
+lightning_ball_hit=529
+lava_ball_projectile=541
+lava_ball_hit=540
+katana_swing=553
+void_ranger_projectile=656
+
 
 #prayer-graphics
 curses_protect_item=2213
@@ -218,3 +229,8 @@ miasmic_burst_hit=1849
 miasmic_blitz_start=1850
 miasmic_blitz_hit=1851
 miasmic_blitz_projectile=1852
+skeletal_projectile=2132
+skeletal_ground_hit=2133
+double_lightning_projectile=2398
+double_lightning_hit=2399
+start_of_dungeoneering_arrows=2466

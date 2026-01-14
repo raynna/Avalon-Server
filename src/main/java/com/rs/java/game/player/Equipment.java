@@ -354,6 +354,27 @@ public final class Equipment implements Serializable {
 		refreshItems(itemsBefore);
 	}
 
+	public void refreshSlotOnly(int slot) {
+		player.getPackets().sendUpdateItems(94, items, new int[]{slot});
+	}
+
+
+	public void decreaseItem(int slot, int amount) {
+		Item item = items.get(slot);
+		if (item == null)
+			return;
+
+		if (item.getAmount() <= amount) {
+			items.set(slot, null);
+		} else {
+			item.setAmount(item.getAmount() - amount);
+		}
+
+		refreshSlotOnly(slot);
+	}
+
+
+
 	public void updateItemWithMeta(int slot, Item itemWithMeta) {
 		getItems().set(slot, itemWithMeta.clone()); // preserve metadata
 		refresh(slot);

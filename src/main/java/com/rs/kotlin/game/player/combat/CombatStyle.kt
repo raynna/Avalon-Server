@@ -25,6 +25,7 @@ import com.rs.kotlin.game.player.combat.range.RangedStyle
 import com.rs.kotlin.game.player.combat.range.RangedWeapon
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.SpecialAttack
+import kotlin.math.ceil
 import kotlin.math.max
 
 interface CombatStyle {
@@ -122,36 +123,47 @@ interface CombatStyle {
     }
 
 
-    fun handleRingOfRecoil(attacker: Player, defender: Player, hit: Hit) {
-        val RING_OF_RECOIL_ID = 2550
-        val MIN_DAMAGE_FOR_RECOIL = 10
-        val MAX_RECOIL_DAMAGE = 60
-        val RECOIL_DAMAGE_PERCENT = 0.1
+    companion object {
 
-        val hitType = hit.look
-        if (hitType != Hit.HitLook.MELEE_DAMAGE &&
-            hitType != Hit.HitLook.RANGE_DAMAGE &&
-            hitType != Hit.HitLook.MAGIC_DAMAGE
-        ) return
-        if (hit.damage < MIN_DAMAGE_FOR_RECOIL) return
-        val ring = defender.equipment.getItem(Equipment.SLOT_RING.toInt())
-        if (ring == null || !ring.isItem("item.ring_of_recoil")) return
-        var remainingCharges = defender.recoilCharges
-        if (remainingCharges <= 0) {
-            defender.equipment.deleteItem(RING_OF_RECOIL_ID, 1)
-            defender.recoilCharges = 500
-            return
-        }
-        var recoilDamage = (hit.damage * RECOIL_DAMAGE_PERCENT).toInt()
-        recoilDamage = recoilDamage.coerceAtMost(MAX_RECOIL_DAMAGE)
-        recoilDamage = recoilDamage.coerceAtMost(remainingCharges)
-        if (recoilDamage > 0) {
-            attacker.applyHit(Hit(defender, recoilDamage, Hit.HitLook.REGULAR_DAMAGE))
-            remainingCharges -= recoilDamage
-            defender.recoilCharges = remainingCharges
-            if (remainingCharges <= 0) {
+        @JvmStatic
+        fun handleRingOfRecoil(attacker: Entity, defender: Player, hit: Hit) {
+            val RING_OF_RECOIL_ID = 2550
+            val MAX_RECOIL_CHARGES = 500
+            val MAX_RECOIL_DAMAGE = 40
+
+            if (hit.damage <= 0) return
+
+            if (hit.look !in listOf(
+                    Hit.HitLook.MELEE_DAMAGE,
+                    Hit.HitLook.RANGE_DAMAGE,
+                    Hit.HitLook.MAGIC_DAMAGE
+                )) return
+
+            val ring = defender.equipment.getItem(Equipment.SLOT_RING.toInt())
+            if (ring == null || ring.id != RING_OF_RECOIL_ID) return
+
+            var remaining = defender.recoilCharges
+            if (remaining !in 1..MAX_RECOIL_CHARGES) {
+                defender.recoilCharges = MAX_RECOIL_CHARGES
+                defender.message("Your ring of recoil has started degrading.")
+                remaining = MAX_RECOIL_CHARGES
+            }
+
+            var recoil = ceil(hit.damage / 100.0).toInt() * 10
+            recoil = recoil.coerceAtMost(MAX_RECOIL_DAMAGE)
+            recoil = recoil.coerceAtMost(remaining)
+
+            if (recoil <= 0) return
+
+            attacker.applyHit(Hit(defender, recoil, Hit.HitLook.REFLECTED_DAMAGE))
+
+            remaining -= recoil
+            defender.recoilCharges = remaining
+
+            if (remaining <= 0) {
                 defender.equipment.deleteItem(RING_OF_RECOIL_ID, 1)
-                defender.recoilCharges = 500
+                defender.message("Your ring of recoil turned into dust.")
+                defender.recoilCharges = MAX_RECOIL_CHARGES
             }
         }
     }

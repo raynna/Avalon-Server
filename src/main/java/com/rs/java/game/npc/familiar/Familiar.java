@@ -291,6 +291,8 @@ public abstract class Familiar extends NPC implements Serializable {
 	}
 
 	public void unlockOrb() {
+		if (owner == null)
+			return;
 		owner.getPackets().sendHideIComponent(747, 9, false);
 		sendLeftClickOption(owner);
 		unlock();

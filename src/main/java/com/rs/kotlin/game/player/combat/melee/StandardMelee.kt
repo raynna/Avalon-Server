@@ -925,11 +925,12 @@ object StandardMelee : MeleeData() {
             ),
             effect = SpecialEffect(
                 execute = { context ->
+                    context.attacker.gfx("graphic.katana_swing", 0)
                     context.startChainAttack(
                         settings = ChainSettings(
                             projectile = Projectile.SPREAD_ALL_SLOW,
-                            projectileId = 280,
-                            projectileEnd = 281,
+                            projectileId = Rscm.graphic("graphic.double_lightning_projectile"),
+                            projectileEnd = Rscm.graphic("graphic.double_lightning_hit"),
                             chainMode = ChainMode.SPREAD_ALL,
                             firstCombatType = CombatType.MELEE,
                             spreadCombatType = CombatType.MAGIC,
@@ -940,7 +941,7 @@ object StandardMelee : MeleeData() {
                         ),
                         projectile = Projectile.SPREAD_ALL_SLOW,
                         animationId = Animation.getId("animation.katana_slash"),
-                        projectileId = 280,
+                        projectileId = Rscm.graphic("graphic.double_lightning_projectile"),
                         maxTargets = 2,
                         bounceRange = 6
                     )
@@ -1030,15 +1031,15 @@ object StandardMelee : MeleeData() {
                 "item.mithril_sword", "item.adamant_sword",
                 "item.rune_sword",
             ),
-            name = "Dagger",
+            name = "Sword",
             weaponStyle = WeaponStyle.DAGGER,
             blockAnimationId = Animation.getId("animation.sword_block"),
             soundId = Rscm.lookup("sound.sword_slash"),
             animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.dagger_stab"),
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.dagger_stab"),
-                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.dagger_slash"),
-                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.dagger_stab"),
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.sword_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.sword_stab"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.sword_slash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.sword_stab"),
             ),
         ),
         MeleeWeapon(

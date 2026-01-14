@@ -745,7 +745,7 @@ getRenderAnimId = clientScriptData.get(644); (1426 if getRenderAnimId = null)
             if (maxedSkill != null)
                 skills.put(maxedSkill, getId() == 19709 ? 120 : 99);
             itemRequiriments = skills;
-            if (getId() == 19784) {
+            if (getId() == Item.getId("item.korasi_sword")) {
                 itemRequiriments.put(Skills.ATTACK, 78);
                 itemRequiriments.put(Skills.DEFENCE, 10);
             }
@@ -753,35 +753,41 @@ getRenderAnimId = clientScriptData.get(644); (1426 if getRenderAnimId = null)
                 itemRequiriments.put(Skills.ATTACK, 85);
                 itemRequiriments.put(Skills.SLAYER, 80);
             }
-            if (name.contains("Inferno adze")) {
+            if (getId() == Item.getId("item.inferno_adze")) {
                 itemRequiriments.put(Skills.FIREMAKING, 92);
             }
-            if (getId() == 7462)
+            if (getId() == Item.getId("item.barrows_gloves"))
                 itemRequiriments.put(Skills.DEFENCE, 40);
-            if (getId() == 7461)
+            if (getId() == Item.getId("item.dragon_gloves"))
                 itemRequiriments.put(Skills.DEFENCE, 40);
-            if (getId() == 7460)
+            if (getId() == Item.getId("item.rune_gloves"))
                 itemRequiriments.put(Skills.DEFENCE, 13);
-            if (getId() == 12673)
+            if (getId() == Item.getId("item.archer_helm_charged"))
                 itemRequiriments.put(Skills.DEFENCE, 40);
-            if (getId() == 12675)
+            if (getId() == Item.getId("item.berserker_helm_charged"))
                 itemRequiriments.put(Skills.DEFENCE, 40);
-            if (getId() == 8850)
+            if (getId() == Item.getId("item.rune_defender"))
                 itemRequiriments.put(Skills.DEFENCE, 40);
-            if (getId() == 8849)
+            if (getId() == Item.getId("item.adamant_defender"))
                 itemRequiriments.put(Skills.DEFENCE, 30);
-            if (getId() == 8848)
+            if (getId() == Item.getId("item.mithril_defender"))
                 itemRequiriments.put(Skills.DEFENCE, 20);
-            if (getId() == 8847)
+            if (getId() == Item.getId("item.black_defender"))
                 itemRequiriments.put(Skills.DEFENCE, 10);
-            if (getId() == 8846)
+            if (getId() == Item.getId("item.steel_defender"))
                 itemRequiriments.put(Skills.DEFENCE, 5);
-            if (getId() == 12677)
+            if (getId() == Item.getId("item.warrior_helm_charged"))
                 itemRequiriments.put(Skills.DEFENCE, 40);
-            if (getId() == 12679)
+            if (getId() == Item.getId("item.farseer_helm_charged"))
                 itemRequiriments.put(Skills.DEFENCE, 40);
-            if (getId() == 12681)
+            if (getId() == Item.getId("item.helm_of_neitiznot_charged"))
                 itemRequiriments.put(Skills.DEFENCE, 55);
+            if (getId() == Item.getId("item.ava_s_attractor"))
+                itemRequiriments.put(Skills.RANGE, 30);
+            if (getId() == Item.getId("item.ava_s_accumulator"))
+                itemRequiriments.put(Skills.RANGE, 50);
+            if (getId() == Item.getId("item.ava_s_alerter"))
+                itemRequiriments.put(Skills.RANGE, 70);
             if (getId() >= 22358 && getId() <= 22361) {
                 itemRequiriments.put(Skills.DEFENCE, 70);
                 itemRequiriments.put(Skills.ATTACK, 80);

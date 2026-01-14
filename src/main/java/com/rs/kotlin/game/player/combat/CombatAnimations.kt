@@ -12,13 +12,19 @@ object CombatAnimations {
 
     fun getBlockAnimation(player: Player): Int {
         val shieldId = player.equipment.getShieldId()
-        ShieldBlockAnimations.getBlockAnimationFor(shieldId)?.let { return it }
+
+        ShieldBlockAnimations.getBlockAnimationFor(shieldId)?.let { shieldAnim ->
+            if (shieldAnim > 0) return shieldAnim
+        }
 
         val weaponId = player.equipment.getWeaponId()
-        StandardMelee.getWeaponByItemId(weaponId)?.blockAnimationId?.let { return it }
+        StandardMelee.getWeaponByItemId(weaponId)?.blockAnimationId?.let { weaponAnim ->
+            if (weaponAnim > 0) return weaponAnim
+        }
 
         return ShieldBlockAnimations.DEFAULT_BLOCK_ANIM
     }
+
 
     fun getSound(itemId: Int, attackStyle: AttackStyle, styleIndex: Int): Int {
         StandardMelee.getWeaponByItemId(itemId)?.let { meleeWeapon ->

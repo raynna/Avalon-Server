@@ -24,7 +24,13 @@ public class NpcCombatCalculations {
         if (!hitChance) {
             return 0;
         }
-
+        if (maxHit == 0) {
+            if (npc.getCombat().getTarget() instanceof Player player) {
+                if (!player.hasFinished() && player.isActive()) {
+                    player.message("Npc " + npc.getName() + " has no max hit.");
+                }
+            }
+        }
         return Utils.getRandom(maxHit);
     }
 
@@ -35,7 +41,6 @@ public class NpcCombatCalculations {
             case MAGIC -> {
                 int mageLevel = data.magicLevel;
                 int mageBonus = data.magicBonus;
-                System.out.println("mageLevel: " + mageLevel + ", mageBonus: " + mageBonus);
                 return effectiveRoll(mageLevel, mageBonus);
             }
             case RANGED -> {
@@ -126,9 +131,6 @@ public class NpcCombatCalculations {
         } else {
             probability = attackRoll / (2.0 * (defenceRoll + 1.0));
         }
-
-        //System.out.println("Hitchance: " + String.format("%.1f", probability * 100) + "%");
-
         return random < probability;
     }
 
