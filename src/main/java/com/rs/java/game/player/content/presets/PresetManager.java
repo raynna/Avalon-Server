@@ -450,13 +450,13 @@ public final class PresetManager implements Serializable {
             }
         }
         player.getInventory().deleteItem(0, 28);
-        player.inventory.refresh();
-        player.equipment.refresh();
         player.getCombatDefinitions().setSpellBook(p2.combatDefinitions.getSpellId(), false);
         player.getPrayer().setPrayerBook(p2.getPrayer().isAncientCurses());
         player.getAppearence().generateAppearenceData();
         player.getSkills().switchXPPopup(true);
         player.getSkills().switchXPPopup(true);
+        player.inventory.refresh();
+        player.equipment.refresh();
         CommandRegistry.execute(player, "heal");
         Msg.info(player, "You copied " + p2.getDisplayName() + " current preset.");
     }
