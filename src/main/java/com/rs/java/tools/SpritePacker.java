@@ -12,7 +12,7 @@ public class SpritePacker {
 
 	public static void main(String[] args) throws IOException {
 
-		int fromSprite = 10247;
+		int fromSprite = 675;
 		int toSprite = 10247;
 		//fixed equipment tab icon = 1822
 		//old ugly equipment tab icon = 8669

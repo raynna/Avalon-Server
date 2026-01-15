@@ -92,7 +92,7 @@ public class QuestTab extends CustomTab {
 			player.getPackets().sendHideIComponent("interface.quest_tab", i, true);
 		player.getTemporaryAttributtes().put("CUSTOMTAB", 4);
 		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:back", false);
-		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:forward", false);
+		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:forward", true);
 		player.getPackets().sendSpriteOnIComponent("interface.quest_tab", "component.quest_tab:purple_star", "sprite.quest_tab_purple_star_highlight");
 		for (QuestStore store : QuestStore.values()) {
 			if (store != null) {
@@ -113,9 +113,6 @@ public class QuestTab extends CustomTab {
 			}
 		}
 		switch (compId) {
-		case FORWARD_BUTTON:
-			GearTab.open(player, null);
-			break;
 		case BACK_BUTTON:
 			SettingsTab.open(player);
 			break;

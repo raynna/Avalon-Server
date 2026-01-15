@@ -59,6 +59,7 @@ public class AchievementsTab extends CustomTab {
 			player.getPackets().sendHideIComponent(3002, i, true);
 		player.getTemporaryAttributtes().put("ACHIEVEMENTTAB", 0);
 		player.getTemporaryAttributtes().remove("ACHIEVEMENTCATEGORY");
+		player.getTemporaryAttributtes().remove("GEARTAB");
 		completedTasks = 0;
 		totalTasks = 0;
 		totalActions = 0;

@@ -34,7 +34,7 @@ public class CustomTab {
 		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:green_star", false);
 		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:red_star", false);
 		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:purple_star", false);
-		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:yellow_star", false);
+		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:yellow_star", true);
 		player.getPackets().sendSpriteOnIComponent("interface.quest_tab", "component.quest_tab:blue_star", "sprite.quest_tab_blue_star");
 		player.getPackets().sendSpriteOnIComponent("interface.quest_tab", "component.quest_tab:green_star", "sprite.quest_tab_green_star");
 		player.getPackets().sendSpriteOnIComponent("interface.quest_tab", "component.quest_tab:red_star", "sprite.quest_tab_red_star");

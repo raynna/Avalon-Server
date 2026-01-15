@@ -97,7 +97,7 @@ public class InterfaceManager {
 	}
 
 	public void sendSummoningTab() {
-		sendTab(resizableScreen ? "tab.summoning_resizeable" : "tab.summoning", "interface.summoning_tab");
+		sendTab(resizableScreen ? "tab.summoning_resizeable" : "tab.summoning", "interface.custom_quest");
 	}
 	
 	public void sendDungTab() {
@@ -180,8 +180,8 @@ public class InterfaceManager {
 		sendTab("tab.run_orb_resizeable", "interface.run_orb");
 		sendTab("tab.summoning_orb_resizeable", "interface.summoning_orb");
 		player.getPackets().sendInterface(true, 752, 9, Rscm.lookup("interface.chatbox"));
-		sendTab("tab.summoning_resizeable", "interface.summoning_tab");
-		player.getPackets().sendGlobalVar(823, 0);
+		sendTab("tab.summoning_resizeable", "interface.custom_quest");
+		player.getPackets().sendGlobalVar(823, 1);
 		sendCombatStyles();
 		sendTaskSystem();
 		sendSkills();
@@ -214,6 +214,8 @@ public class InterfaceManager {
 		player.getPackets().sendInterface(true, 548, 9, 167);
 		//sendTab(player.getInterfaceManager().hasRezizableScreen() ? 11 : 0, 1252);
 		//sendTab(119, "interface.sof");
+		player.getPackets().sendGlobalVar(823, 1);
+		sendTab("tab.squeel_of_fortune", "interface.custom_quest");
 		sendMagicBook();
 		sendPrayerBook();
 		sendEquipment();

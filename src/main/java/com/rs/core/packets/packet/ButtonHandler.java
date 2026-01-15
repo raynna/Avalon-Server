@@ -114,8 +114,10 @@ public class ButtonHandler {
             System.out.println("slotId2: " + slotId2 + ", packet: " + packetId + ", slot: " + slotId);
             player.getShopSystem().handleItemOption(slotId2, packetId);
         } else if (interfaceId == 548 || interfaceId == 746) {
+            System.out.println("componentId: " + componentId);
             if (componentId == 75 || componentId == 99) {
                 player.getTemporaryAttributtes().put("ACHIEVEMENTTAB", 0);
+                player.getTemporaryAttributtes().remove("GEARTAB");
                 Integer achievement = (Integer) player.getTemporaryAttributtes().get("ACHIEVEMENTTAB");
                 if (achievement == 0) {
                     String category = (String) player.getTemporaryAttributtes().get("ACHIEVEMENTCATEGORY");
@@ -123,7 +125,12 @@ public class ButtonHandler {
                     else AchievementsTab.open(player);
                 }
             }
+            if (componentId == 68) {
+                player.getTemporaryAttributtes().put("GEARTAB", 0);
+                GearTab.open(player, null);
+            }
             if (componentId == 77 || componentId == 101) {
+                player.getTemporaryAttributtes().remove("GEARTAB");
                 player.getTemporaryAttributtes().remove("ACHIEVEMENTTAB");
                 Integer tab = (Integer) player.temporaryAttribute().get("CUSTOMTAB");
                 if (tab == null || tab == 0) {
@@ -194,10 +201,11 @@ public class ButtonHandler {
         } else if (interfaceId == 3002) {
             Integer tab = (Integer) player.temporaryAttribute().get("CUSTOMTAB");
             Integer achievement = (Integer) player.getTemporaryAttributtes().get("ACHIEVEMENTTAB");
+            Integer gear = (Integer) player.getTemporaryAttributtes().get("GEARTAB");
             if (achievement != null) {
                 AchievementsTab.handleButtons(player, componentId);
                 return;
-            } else if (tab != null && tab == 3) {
+            } else if (gear != null) {
                 String otherPreset = (String) player.getTemporaryAttributtes().get("OTHERPRESET_NAME");
                 GearTab.handleButtons(player, otherPreset, componentId);
                 return;

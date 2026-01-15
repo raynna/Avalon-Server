@@ -15,7 +15,7 @@ public class GearTab extends CustomTab {
 
 	public static void refresh(Player player) {
 		int i = 3;
-		player.getTemporaryAttributtes().put("CUSTOMTAB", 3);
+		player.getTemporaryAttributtes().put("GEARTAB", 0);
 		player.getTemporaryAttributtes().remove("ACHIEVEMENTTAB");
 		player.getTemporaryAttributtes().remove("SELECTEDGEAR");
 		player.getPackets().sendTextOnComponent(3002, 25, "Gear Setups");
@@ -49,12 +49,12 @@ public class GearTab extends CustomTab {
 			player.getTemporaryAttributtes().remove("OTHERPRESET_NAME");
 		}
 		player.getPackets().sendHideIComponent(3002, 24, true);
-		player.getTemporaryAttributtes().put("CUSTOMTAB", 3);
+		//player.getTemporaryAttributtes().put("CUSTOMTAB", 3);
 		player.getTemporaryAttributtes().remove("ACHIEVEMENTTAB");
 		player.getTemporaryAttributtes().remove("SELECTEDGEAR");
-		player.getPackets().sendHideIComponent(3002, BACK_BUTTON, false);
+		player.getPackets().sendHideIComponent(3002, BACK_BUTTON, true);
 		player.getPackets().sendHideIComponent(3002, FORWARD_BUTTON, true);
-		player.getPackets().sendHideIComponent(3002, BLUE_STAR_COMP, false);
+		player.getPackets().sendHideIComponent(3002, BLUE_STAR_COMP, true);
 		player.getPackets().sendIComponentSprite(3002, BLUE_STAR_COMP, "sprite.leave_door");// 9747
 		player.getPackets().sendHideIComponent(3002, GREEN_STAR_COMP, false);
 		//player.getPackets().sendIComponentSprite(3002, RED_STAR_COMP, EQUIPMENT_SPRITE);
