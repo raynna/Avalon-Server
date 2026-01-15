@@ -23,6 +23,7 @@ import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.getMultiAttackTargets
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 
@@ -455,16 +456,35 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             attacker.skills.addXp(Skills.HITPOINTS, xp.toDouble())
             return
         }
-        val spellXp = currentSpell?.xp?:0.0
-        val baseXp = (totalDamage * 0.2)
-        val combined = spellXp+baseXp
+        val spellXp = currentSpell?.xp?.toInt() ?: 0
+        val dmg = totalDamage
+
+        var magicDmgXp: Int
+        var defXp = 0
+        var hpXp = (dmg * 4) / 30
+
         if (attacker.getCombatDefinitions().isDefensiveCasting) {
-            attacker.skills.addXp(Skills.DEFENCE, (totalDamage * 0.1))
-            attacker.skills.addXp(Skills.MAGIC, (totalDamage * 0.133))
+            magicDmgXp = (dmg * 4) / 30
+            defXp = (dmg * 3) / 30
         } else {
-            attacker.skills.addXp(Skills.MAGIC, combined)
+            magicDmgXp = (dmg * 6) / 30
         }
-        attacker.skills.addXp(Skills.HITPOINTS, (totalDamage * 0.133))
+
+        if (defender is Player) {
+            val multiplier = XpMode.pvpXpMultiplier(defender.skills.combatLevel)
+            magicDmgXp = XpMode.applyMultiplierFloor(magicDmgXp, multiplier)
+            defXp = XpMode.applyMultiplierFloor(defXp, multiplier)
+            hpXp = XpMode.applyMultiplierFloor(hpXp, multiplier)
+        }
+
+        attacker.skills.addXp(Skills.MAGIC, (spellXp + magicDmgXp).toDouble())
+
+        if (defXp > 0) {
+            attacker.skills.addXp(Skills.DEFENCE, defXp.toDouble())
+        }
+
+        attacker.skills.addXp(Skills.HITPOINTS, hpXp.toDouble())
+
     }
 
     private fun isManualCast(spellId: Int): Boolean {

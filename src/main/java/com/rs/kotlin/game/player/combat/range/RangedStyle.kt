@@ -288,7 +288,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             }
         }
 
-        attackStyle.xpMode.distributeXp(attacker, attackStyle, totalDamage)
+        attackStyle.xpMode.distributeXp(attacker, defender, attackStyle, totalDamage)
     }
 
 

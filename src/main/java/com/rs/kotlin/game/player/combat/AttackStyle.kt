@@ -1,8 +1,8 @@
 package com.rs.kotlin.game.player.combat
 
+import com.rs.java.game.Entity
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
-import java.util.*
 import kotlin.math.ceil
 
 enum class AttackStyle(
@@ -24,45 +24,76 @@ enum class AttackStyle(
 enum class XpMode {
     ATTACK, STRENGTH, DEFENCE, SHARED, RANGED;
 
-    fun distributeXp(player: Player, attackStyle: AttackStyle, damage: Int, hitpoints: Boolean = true) {
-        val xpToAdd = mutableMapOf<Int, Double>()
 
-        val baseXp = damage * 0.4
-        val hpXp = damage * 0.133
-        val type = attackStyle.combatType
-        val isOneXpPerHit = player.toggles("ONEXPPERHIT", false)
-        val isOneXHits = player.varsManager.getBitValue(1485) == 1
-        if (isOneXpPerHit && damage > 0) {
-            val xp = if (isOneXHits) ceil(damage / 10.0) else damage
-            player.skills.addXpDelayed(Skills.HITPOINTS, xp.toDouble())
-            return
-        }
-        if (hitpoints) {
-            xpToAdd[Skills.HITPOINTS] = hpXp
+    data class Fraction(val num: Int, val den: Int)
+
+    companion object {
+
+        @JvmStatic
+        fun pvpXpMultiplier(opponentCombatLevel: Int): Fraction {
+            val n = opponentCombatLevel / 20
+
+            val candNum = 40 + n
+            val candDen = 40
+
+            return if (candNum * 8 > candDen * 9)
+                Fraction(9, 8)
+            else
+                Fraction(candNum, candDen)
         }
 
-        when (this) {
-            ATTACK -> xpToAdd[Skills.ATTACK] = (xpToAdd[Skills.ATTACK] ?: 0.0) + baseXp
-            STRENGTH -> xpToAdd[Skills.STRENGTH] = (xpToAdd[Skills.STRENGTH] ?: 0.0) + baseXp
-            DEFENCE -> xpToAdd[Skills.DEFENCE] = (xpToAdd[Skills.DEFENCE] ?: 0.0) + baseXp
-            RANGED -> xpToAdd[Skills.RANGE] = (xpToAdd[Skills.RANGE] ?: 0.0) + baseXp
-            SHARED -> {
-                if (type == CombatType.RANGED) {
-                    val split = baseXp / 2
-                    xpToAdd[Skills.RANGE] = (xpToAdd[Skills.RANGE] ?: 0.0) + split
-                    xpToAdd[Skills.DEFENCE] = (xpToAdd[Skills.DEFENCE] ?: 0.0) + split
-                }
-                val split = baseXp / 3
-                xpToAdd[Skills.ATTACK] = (xpToAdd[Skills.ATTACK] ?: 0.0) + split
-                xpToAdd[Skills.STRENGTH] = (xpToAdd[Skills.STRENGTH] ?: 0.0) + split
-                xpToAdd[Skills.DEFENCE] = (xpToAdd[Skills.DEFENCE] ?: 0.0) + split
-            }
-        }
-        for ((skill, xp) in xpToAdd) {
-            player.skills.addXpDelayed(skill, xp)
+        @JvmStatic
+        fun applyMultiplierFloor(xp: Int, mult: Fraction): Int {
+            return (xp * mult.num) / mult.den
         }
     }
 
+    fun distributeXp(attacker: Player, defender: Entity, attackStyle: AttackStyle, damage: Int, hitpoints: Boolean = true) {
+
+        var baseXp = (damage * 12) / 30   // 0.4
+        var hpXp   = (damage * 4) / 30    // 0.1333
+
+        val type = attackStyle.combatType
+
+        val isOneXpPerHit = attacker.toggles("ONEXPPERHIT", false)
+        val isOneXHits = attacker.varsManager.getBitValue(1485) == 1
+
+        if (isOneXpPerHit && damage > 0) {
+            val xp = if (isOneXHits) ceil(damage / 10.0).toInt() else damage
+            attacker.skills.addXpDelayed(Skills.HITPOINTS, xp.toDouble())
+            return
+        }
+
+        if (defender is Player) {
+            val mult = pvpXpMultiplier(defender.skills.combatLevel)
+
+            baseXp = applyMultiplierFloor(baseXp, mult)
+            hpXp   = applyMultiplierFloor(hpXp, mult)
+        }
+        if (hitpoints) {
+            attacker.skills.addXpDelayed(Skills.HITPOINTS, hpXp.toDouble())
+        }
+
+        when (this) {
+            ATTACK   -> attacker.skills.addXpDelayed(Skills.ATTACK, baseXp.toDouble())
+            STRENGTH -> attacker.skills.addXpDelayed(Skills.STRENGTH, baseXp.toDouble())
+            DEFENCE  -> attacker.skills.addXpDelayed(Skills.DEFENCE, baseXp.toDouble())
+            RANGED   -> attacker.skills.addXpDelayed(Skills.RANGE, baseXp.toDouble())
+
+            SHARED -> {
+                if (type == CombatType.RANGED) {
+                    val split = baseXp / 2
+                    attacker.skills.addXpDelayed(Skills.RANGE, split.toDouble())
+                    attacker.skills.addXpDelayed(Skills.DEFENCE, split.toDouble())
+                } else {
+                    val split = baseXp / 3
+                    attacker.skills.addXpDelayed(Skills.ATTACK, split.toDouble())
+                    attacker.skills.addXpDelayed(Skills.STRENGTH, split.toDouble())
+                    attacker.skills.addXpDelayed(Skills.DEFENCE, split.toDouble())
+                }
+            }
+        }
+    }
 }
 
 

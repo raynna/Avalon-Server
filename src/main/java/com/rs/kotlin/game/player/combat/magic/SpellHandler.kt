@@ -300,8 +300,7 @@ object SpellHandler {
     }
 
     private fun staffOfLightEffect(player: Player): Boolean {
-        val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt())
-
+        val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return false
         return when {
             weapon.isAnyOf("item.kodai_wand") ->
                 Utils.roll(3, 20)

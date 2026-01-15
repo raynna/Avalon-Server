@@ -160,7 +160,7 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 pending.onApply?.invoke()
             }
         }
-        attackStyle.xpMode.distributeXp(attacker, attackStyle, totalDamage);
+        attackStyle.xpMode.distributeXp(attacker, defender, attackStyle, totalDamage);
     }
 
     override fun onStop(interrupted: Boolean) {
