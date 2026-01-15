@@ -21,32 +21,36 @@ public final class LoginPacketsDecoder extends Decoder {
 		super(session);
 	}
 
+
 	@Override
 	public void decode(InputStream stream) {
-		session.setDecoder(-1);
+		Logger.log("LOGIN", "Login decode start, remaining=" + stream.getRemaining());
 		int packetId = stream.readUnsignedByte();
+		Logger.log("LOGIN", "PacketId=" + packetId);
 		if (World.exiting_start != 0) {
 			session.getLoginPackets().sendClientPacket(14);
 			return;
 		}
+
 		int packetSize = stream.readUnsignedShort();
 		if (packetSize != stream.getRemaining()) {
 			session.getChannel().close();
 			return;
 		}
+
 		int revision = stream.readInt();
 		int sub = stream.readInt();
+
 		if (revision != Settings.CLIENT_BUILD || sub != Settings.CUSTOM_CLIENT_BUILD) {
 			session.getLoginPackets().sendClientPacket(6);
 			return;
 		}
-		if (packetId == 16 || packetId == 18) { // 16 world login
+
+		if (packetId == 16 || packetId == 18) {
 			decodeWorldLogin(stream);
 		} else if (packetId == 19) {
 			decodeLobbyLogin(stream);
 		} else {
-			if (Settings.DEBUG)
-				Logger.log(this, "PacketId " + packetId);
 			session.getChannel().close();
 		}
 	}

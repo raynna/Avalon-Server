@@ -67,14 +67,14 @@ class CombatAction(
             return false
         }
         player.faceEntity(target)
-        player.setNextFaceEntity(target);
-        player.resetWalkSteps()
+        player.setNextFaceEntity(target)
         val spellId = player.getCombatDefinitions().spellId
-        style = getCombatStyle(player, target)
-        player.combatStyle = style
+        updateStyle(player)
+        player.resetWalkSteps()
         player.tickManager.addTicks(TickManager.TickKeys.LAST_INTERACTION_TARGET, 10)
         player.temporaryTarget = target;
         player.healthOverlay.sendOverlay(player, target)
+
         val requiredDistance = getAdjustedFollowDistance(target);
         if (player.isOutOfRange(target, requiredDistance)) {
             player.calcFollow(target, if (player.run) 2 else 1, true, true)
@@ -102,8 +102,7 @@ class CombatAction(
             player.healthOverlay.updateHealthOverlay(player, target, true)
             player.temporaryTarget = target;
         }
-        style = getCombatStyle(player, target)
-
+        updateStyle(player)
         if (player.isCollidingWithTarget(target)) {
             if (player.isFrozen) {
                 player.packets.sendGameMessage("A magical force prevents you from moving.")
@@ -182,6 +181,7 @@ class CombatAction(
         if (!process(player)) {
             return -1
         }
+        updateStyle(player)
         val requiredDistance = getAdjustedAttackRange(player, target)
         if (player.isOutOfRange(target, requiredDistance)) {
             return 0
@@ -281,7 +281,8 @@ class CombatAction(
                     stop()
                     return
                 }
-
+                updateStyle(player)
+                val requiredDistance = getAdjustedFollowDistance(target)
                 if (player.isCollidingWithTarget(target)) {
                     if (player.isFrozen) {
                         player.packets.sendGameMessage("A magical force prevents you from moving.")
@@ -363,14 +364,17 @@ class CombatAction(
     }
 
     private fun getAdjustedAttackRange(player: Player, target: Entity): Int {
-        var baseDistance = style.getAttackDistance()
-        if (style is MeleeStyle && target.hasWalkSteps() && player.hasWalkSteps()) {
-            if (!Utils.isOnRange(player.x, player.y, player.size, target.x, target.y, target.size, baseDistance)) {
-                baseDistance += 1
+        var base = style.getAttackDistance()
+
+        if (target.hasWalkSteps() && target is Player) {
+            val playerHasPid = player.index < target.index
+            if (!playerHasPid) {
+                base += if (player.run) 2 else 1
             }
         }
-        return baseDistance
+        return base
     }
+
 
     private fun isRangedWeapon(player: Player): Boolean {
         val weaponId = player.equipment.getWeaponId()
@@ -431,5 +435,16 @@ class CombatAction(
     private fun hasMovementPriority(player: Player, target: Entity): Boolean {
         if (target !is Player) return true // NPCs always yield to players
         return player.index < target.index
+    }
+
+    private fun updateStyle(player: Player) {
+        val newStyle = getCombatStyle(player, target)
+        if (!::style.isInitialized || newStyle::class != style::class) {
+            player.resetWalkSteps()
+            followTask?.stop()
+            followTask = null
+            style = newStyle
+            player.combatStyle = style
+        }
     }
 }

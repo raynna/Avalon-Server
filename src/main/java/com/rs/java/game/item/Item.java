@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.ItemsEquipIds;
@@ -21,6 +22,8 @@ public class Item implements Serializable {
 	private short id;
 	private int amount;
 	private ItemMetadata metadata;
+
+	// -------------------- Static helpers (unchanged) --------------------
 
 	private static String normalizeItemKey(String name) {
 		return name.startsWith("item.") ? name : "item." + name;
@@ -77,6 +80,8 @@ public class Item implements Serializable {
 		return Rscm.reverseLookup(id);
 	}
 
+	// -------------------- Constructors (mostly unchanged) --------------------
+
 	public Item(int id) {
 		this(id, 1, null);
 	}
@@ -103,20 +108,30 @@ public class Item implements Serializable {
 		this.metadata = metadata;
 	}
 
+	/**
+	 * Copy ctor (deep copies metadata).
+	 */
 	public Item(Item item) {
 		this(item.id, item.amount, item.metadata != null ? item.metadata.deepCopy() : null);
 	}
+
+	// -------------------- Getters / setters --------------------
 
 	public int getId() {
 		return id;
 	}
 
-
 	public void setId(String item) {
 		this.setId(Rscm.lookup(item));
 	}
+
+	/**
+	 * IMPORTANT: changing the item id invalidates metadata.
+	 * This prevents "wrong metadata attached to new id" corruption.
+	 */
 	public void setId(int id) {
 		this.id = (short) id;
+		this.metadata = null;
 	}
 
 	public int getAmount() {
@@ -134,6 +149,19 @@ public class Item implements Serializable {
 	public void setMetadata(ItemMetadata metadata) {
 		this.metadata = metadata;
 	}
+
+	public boolean hasMetadata() {
+		return metadata != null;
+	}
+
+	/**
+	 * Convenience: safe deep copy of the Item, including metadata.
+	 */
+	public Item copy() {
+		return new Item(this);
+	}
+
+	// -------------------- Definitions / display --------------------
 
 	public ItemDefinitions getDefinitions() {
 		return ItemDefinitions.getItemDefinitions(id);
@@ -159,6 +187,23 @@ public class Item implements Serializable {
 		return name;
 	}
 
+	// -------------------- Metadata-aware identity / stacking --------------------
+
+	/**
+	 * True if these are the same item identity (ID + metadata compatibility).
+	 * Use this when deciding whether to stack/merge or treat as different items.
+	 */
+	public boolean sameItemIdentity(Item other) {
+		if (other == null) return false;
+		if (this.id != other.id) return false;
+
+		if (this.metadata == null && other.metadata == null) return true;
+		if (this.metadata == null || other.metadata == null) return false;
+
+		// metadata types must match and be stack-compatible
+		return this.metadata.isStackableWith(other.metadata);
+	}
+
 	public boolean isStackableWith(Item other) {
 		if (this.id != other.id) return false;
 		if (this.metadata == null && other.metadata == null) return true;
@@ -171,13 +216,24 @@ public class Item implements Serializable {
 		return id * 234111L + amount * 23911L + metaHash;
 	}
 
+	// -------------------- Object methods --------------------
+
 	@Override
 	public Item clone() {
-		Item copy = new Item(id, amount);
-		if (metadata != null) {
-			copy.setMetadata(metadata.deepCopy());
-		}
-		return copy;
+		// Safer: always use copy ctor so metadata is deep copied
+		return new Item(this);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Item other)) return false;
+		return this.id == other.id
+				&& this.amount == other.amount
+				&& Objects.equals(this.metadata, other.metadata);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, amount, metadata);
+	}
 }

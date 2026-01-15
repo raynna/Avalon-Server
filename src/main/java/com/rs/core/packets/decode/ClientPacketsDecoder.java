@@ -12,19 +12,14 @@ public final class ClientPacketsDecoder extends Decoder {
 
 	@Override
 	public void decode(InputStream stream) {
-		session.setDecoder(-1);
 		int packetId = stream.readUnsignedByte();
+
 		switch (packetId) {
-		case 14:
-			decodeLogin(stream);
-			break;
-		case 15:
-			decodeGrab(stream);
-			break;
-		default:
-			// Logger.log(this, "PacketId " + packetId);
-			session.getChannel().close();
-			break;
+			case 14 -> decodeLogin(stream);
+			case 15 -> decodeGrab(stream);
+			default -> {
+				session.getChannel().close();
+			}
 		}
 	}
 
@@ -33,6 +28,7 @@ public final class ClientPacketsDecoder extends Decoder {
 			session.getChannel().close();
 			return;
 		}
+
 		session.setDecoder(2);
 		session.setEncoder(1);
 		session.getLoginPackets().sendStartUpPacket();
@@ -44,16 +40,15 @@ public final class ClientPacketsDecoder extends Decoder {
 			session.getChannel().close();
 			return;
 		}
+
 		session.setEncoder(0);
-		if (stream.readInt() != Settings.CLIENT_BUILD || stream.readInt() != Settings.CUSTOM_CLIENT_BUILD) {
-			session.setDecoder(-1);
+
+		if (stream.readInt() != Settings.CLIENT_BUILD ||
+				stream.readInt() != Settings.CUSTOM_CLIENT_BUILD) {
 			session.getGrabPackets().sendOutdatedClientPacket();
 			return;
 		}
-		/*if (!stream.readString().equals(Settings.GRAB_SERVER_TOKEN)) {
-			session.getChannel().close();
-			return;
-		}*/
+
 		session.setDecoder(1);
 		session.getGrabPackets().sendStartUpPacket();
 	}

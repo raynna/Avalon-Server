@@ -382,13 +382,15 @@ public final class Equipment implements Serializable {
 
 	public void updateItem(int slot, int itemId) {
 		Item oldItem = getItem(slot);
-		if (oldItem == null) {
-			return;
-		}
-		oldItem.setId(itemId);
+		if (oldItem == null) return;
+
+		Item newItem = new Item(itemId, oldItem.getAmount());
+		items.set(slot, newItem);
+
 		refresh(slot);
 		player.getAppearence().generateAppearenceData();
 	}
+
 
 	public void updateItem(int slot, String item) {
 		int itemId = Rscm.INSTANCE.item(item);

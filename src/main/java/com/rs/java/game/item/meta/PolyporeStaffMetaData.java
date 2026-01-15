@@ -2,6 +2,8 @@ package com.rs.java.game.item.meta;
 
 
 public class PolyporeStaffMetaData implements ItemMetadata {
+    public static final int MAX_CHARGES = 3000;
+
     private int charges;
 
     public PolyporeStaffMetaData(int charges) {
@@ -35,7 +37,7 @@ public class PolyporeStaffMetaData implements ItemMetadata {
 
     @Override
     public int getMaxValue() {
-        return 3000;
+        return MAX_CHARGES;
     }
 
     @Override

@@ -346,10 +346,6 @@ public final class WorldPacketsDecoder extends Decoder {
 		return length;
 	}
 
-	// -------------------------------------------------------------------------------------
-	// Logic packet entry (kept static API). Now delegates to helpers per packet.
-	// -------------------------------------------------------------------------------------
-
 	public static void decodeLogicPacket(final Player player, LogicPacket packet) {
 		final int packetId = packet.getId();
 		final InputStream stream = new InputStream(packet.getData());
@@ -441,10 +437,6 @@ public final class WorldPacketsDecoder extends Decoder {
 			FloorItem.handleExamine(player, stream);
 		}
 	}
-
-	// -------------------------------------------------------------------------------------
-	// Main processPackets: routing to logic/handlers and IO packets
-	// -------------------------------------------------------------------------------------
 
 	public void processPackets(final int packetId, InputStream stream, int length) {
 		player.setPacketsDecoderPing(Utils.currentTimeMillis());
@@ -674,7 +666,6 @@ public final class WorldPacketsDecoder extends Decoder {
 				return;
 
 			default:
-				// pass-through routing to logic queue for heavy packets
 				if (packetId == PING_PACKET || packetId == WALKING_PACKET || packetId == MINI_WALKING_PACKET
 						|| packetId == ITEM_TAKE_PACKET || packetId == EXAMINE_FLOORITEM_PACKET
 						|| packetId == PLAYER_OPTION_2_PACKET || packetId == PLAYER_OPTION_4_PACKET
@@ -687,7 +678,7 @@ public final class WorldPacketsDecoder extends Decoder {
 						|| packetId == OBJECT_CLICK4_PACKET || packetId == OBJECT_CLICK5_PACKET
 						|| packetId == INTERFACE_ON_OBJECT || packetId == TELEKINETIC_GRAB_SPELL_PACKET
 						|| packetId == DEVELOPER_PACKET || packetId == EQUIPMENT_REMOVE_PACKET) {
-					player.addLogicPacketToQueue(new LogicPacket(packetId, length, stream));
+					player.addLogicPacketToQueue(new LogicPacket(packetId, length, stream, true));
 				}
 		}
 	}

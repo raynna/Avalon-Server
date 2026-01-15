@@ -4,12 +4,14 @@ import com.rs.core.packets.InputStream;
 
 public class LogicPacket {
 
-	private int id;
-	byte[] data;
+	private final int id;
+	private final byte[] data;
+	private final boolean network; // source flag
 
-	public LogicPacket(int id, int size, InputStream stream) {
+	public LogicPacket(int id, int size, InputStream stream, boolean network) {
 		this.id = id;
-		data = new byte[size];
+		this.network = network;
+		this.data = new byte[size];
 		stream.getBytes(data, 0, size);
 	}
 
@@ -21,4 +23,7 @@ public class LogicPacket {
 		return data;
 	}
 
+	public boolean isNetwork() {
+		return network;
+	}
 }

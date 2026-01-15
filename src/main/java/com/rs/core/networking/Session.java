@@ -3,58 +3,180 @@ package com.rs.core.networking;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 
+import com.rs.core.packets.InputStream;
+import com.rs.core.packets.OutputStream;
+import com.rs.core.packets.decode.*;
+import com.rs.core.packets.encode.*;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.Commands;
-import com.rs.core.packets.OutputStream;
-import com.rs.core.packets.decode.ClientPacketsDecoder;
-import com.rs.core.packets.decode.Decoder;
-import com.rs.core.packets.decode.GrabPacketsDecoder;
-import com.rs.core.packets.decode.LoginPacketsDecoder;
-import com.rs.core.packets.decode.WorldPacketsDecoder;
-import com.rs.core.packets.encode.Encoder;
-import com.rs.core.packets.encode.GrabPacketsEncoder;
-import com.rs.core.packets.encode.LoginPacketsEncoder;
-import com.rs.core.packets.encode.WorldPacketsEncoder;
 import com.rs.java.utils.IPBanL;
+import com.rs.java.utils.Logger;
+import com.rs.java.utils.Utils;
 
 public class Session {
 
-	private Channel channel;
-	private Decoder decoder;
-	private Encoder encoder;
+	public static final Set<Session> ACTIVE_SESSIONS = ConcurrentHashMap.newKeySet();
 
-	public Session(Channel channel) {
-		this.channel = channel;
-		if (IPBanL.isBanned(getIP())) {
-			channel.disconnect();
-			return;
-		}
-		setDecoder(0);
-		//logIp(this);
-	}
+	private Channel channel;
+	private volatile Decoder decoder;
+	private volatile Encoder encoder;
+
+	private final ConcurrentLinkedQueue<byte[]> incomingQueue = new ConcurrentLinkedQueue<>();
+	private final AtomicInteger queuedPackets = new AtomicInteger(0);
+
+	private static final int MAX_PACKETS_QUEUED = 2000;
+	private static final int MAX_PACKETS_PER_TICK = 500;
+	private static final int MAX_BYTES_PER_TICK = 64 * 1024;
 
 	private static final String PATH = System.getProperty("user.dir") + "/data/iplog/log.txt";
 
+	public Session(Channel channel) {
+		this.channel = channel;
+		ACTIVE_SESSIONS.add(this);
+
+		if (IPBanL.isBanned(getIP())) {
+			try {
+				channel.disconnect();
+			} finally {
+				close();
+			}
+			return;
+		}
+
+		setDecoder(0);
+		// logIp(this);
+	}
+
+	public void close() {
+		ACTIVE_SESSIONS.remove(this);
+		incomingQueue.clear();
+	}
+
 	public void logIp(Session session) {
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(PATH, true));
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(PATH, true))) {
 			writer.write("[" + Commands.currentTime("dd MMMMM yyyy 'at' hh:mm:ss z") + "] - " + session.getIP());
 			writer.newLine();
 			writer.flush();
-			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public final ChannelFuture write(OutputStream outStream) {
-		if (channel.isConnected()) {
+	public void enqueueIncoming(byte[] data) {
+		if (data == null || data.length == 0) return;
+		if (channel == null || !channel.isConnected()) return;
+
+		int count = queuedPackets.incrementAndGet();
+		if (count > MAX_PACKETS_QUEUED) {
+			queuedPackets.decrementAndGet();
+			return;
+		}
+
+		incomingQueue.add(data);
+	}
+
+	public void processQueuedPacketsTick() {
+		if (channel == null || !channel.isConnected()) return;
+
+		int processed = 0;
+		int bytes = 0;
+
+		while (processed < MAX_PACKETS_PER_TICK) {
+			byte[] data = incomingQueue.poll();
+			if (data == null) break;
+
+			queuedPackets.decrementAndGet();
+			bytes += data.length;
+
+			if (bytes > MAX_BYTES_PER_TICK)
+				break;
+
+			Decoder d = this.decoder;
+			if (d == null) {
+				Logger.log("SESSION", "Decoder NULL mid-tick, dropping remaining queued data for IP=" + getIP());
+				break;
+			}
+
+			try {
+				d.decode(new InputStream(data));
+			} catch (Throwable t) {
+				Logger.log("SESSION", "Decoder exception in " + d.getClass().getSimpleName() + " -> closing channel for IP=" + getIP());
+				Logger.handle(t);
+				try { channel.close(); } catch (Throwable ignored) {}
+				break;
+			}
+
+			processed++;
+		}
+	}
+
+	public void setDecoder(int stage) {
+		setDecoder(stage, null);
+	}
+
+	public void setDecoder(int stage, Object attachment) {
+		switch (stage) {
+			case 0 -> this.decoder = new ClientPacketsDecoder(this);
+			case 1 -> this.decoder = new GrabPacketsDecoder(this);
+			case 2 -> this.decoder = new LoginPacketsDecoder(this);
+			case 3 -> {
+				Player p = (Player) attachment;
+				this.decoder = new WorldPacketsDecoder(this, p);
+				if (p != null) {
+					p.setPacketsDecoderPing(Utils.currentTimeMillis());
+				}
+			}
+			default -> this.decoder = null;
+		}
+	}
+
+	public void setEncoder(int stage) {
+		setEncoder(stage, null);
+	}
+
+	public void setEncoder(int stage, Object attachment) {
+		switch (stage) {
+			case 0 -> this.encoder = new GrabPacketsEncoder(this);
+			case 1 -> this.encoder = new LoginPacketsEncoder(this);
+			case 2 -> this.encoder = new WorldPacketsEncoder(this, (Player) attachment);
+			default -> this.encoder = null;
+		}
+	}
+
+	public LoginPacketsEncoder getLoginPackets() {
+		if (encoder instanceof LoginPacketsEncoder l)
+			return l;
+		throw new IllegalStateException("getLoginPackets() called but encoder=" +
+				(encoder == null ? "null" : encoder.getClass().getSimpleName()));
+	}
+
+	public GrabPacketsEncoder getGrabPackets() {
+		if (encoder instanceof GrabPacketsEncoder g)
+			return g;
+		throw new IllegalStateException("getGrabPackets() called but encoder=" +
+				(encoder == null ? "null" : encoder.getClass().getSimpleName()));
+	}
+
+	public WorldPacketsEncoder getWorldPacketsEncoder() {
+		return encoder instanceof WorldPacketsEncoder w ? w : null;
+	}
+
+	public WorldPacketsDecoder getWorldPackets() {
+		return decoder instanceof WorldPacketsDecoder w ? w : null;
+	}
+
+	public ChannelFuture write(OutputStream outStream) {
+		if (channel != null && channel.isConnected()) {
 			ChannelBuffer buffer = ChannelBuffers.copiedBuffer(outStream.getBuffer(), 0, outStream.getOffset());
 			synchronized (channel) {
 				return channel.write(buffer);
@@ -63,10 +185,9 @@ public class Session {
 		return null;
 	}
 
-	public final ChannelFuture write(ChannelBuffer outStream) {
-		if (outStream == null)
-			return null;
-		if (channel.isConnected()) {
+	public ChannelFuture write(ChannelBuffer outStream) {
+		if (outStream == null) return null;
+		if (channel != null && channel.isConnected()) {
 			synchronized (channel) {
 				return channel.write(outStream);
 			}
@@ -74,91 +195,24 @@ public class Session {
 		return null;
 	}
 
-	public final Channel getChannel() {
+	public Channel getChannel() {
 		return channel;
 	}
 
-	public final Decoder getDecoder() {
+	public Decoder getDecoder() {
 		return decoder;
 	}
 
-	public GrabPacketsDecoder getGrabPacketsDecoder() {
-		return (GrabPacketsDecoder) decoder;
-	}
-
-	public final Encoder getEncoder() {
+	public Encoder getEncoder() {
 		return encoder;
 	}
 
-	public final void setDecoder(int stage) {
-		setDecoder(stage, null);
-	}
-
-	public final void setDecoder(int stage, Object attachement) {
-		switch (stage) {
-		case 0:
-			decoder = new ClientPacketsDecoder(this);
-			break;
-		case 1:
-			decoder = new GrabPacketsDecoder(this);
-			break;
-		case 2:
-			decoder = new LoginPacketsDecoder(this);
-			break;
-		case 3:
-			decoder = new WorldPacketsDecoder(this, (Player) attachement);
-			break;
-		case -1:
-		default:
-			decoder = null;
-			break;
-		}
-	}
-
-	public final void setEncoder(int stage) {
-		setEncoder(stage, null);
-	}
-
-	public final void setEncoder(int stage, Object attachement) {
-		switch (stage) {
-		case 0:
-			encoder = new GrabPacketsEncoder(this);
-			break;
-		case 1:
-			encoder = new LoginPacketsEncoder(this);
-			break;
-		case 2:
-			encoder = new WorldPacketsEncoder(this, (Player) attachement);
-			break;
-		case -1:
-		default:
-			encoder = null;
-			break;
-		}
-	}
-
-	public LoginPacketsEncoder getLoginPackets() {
-		return (LoginPacketsEncoder) encoder;
-	}
-
-	public GrabPacketsEncoder getGrabPackets() {
-		return (GrabPacketsEncoder) encoder;
-	}
-
-	public WorldPacketsEncoder getWorldPackets() {
-		if (encoder instanceof WorldPacketsEncoder worldEncoder)
-			return worldEncoder;
-
-		System.err.println("Warning: getWorldPackets() called while encoder=" + encoder.getClass().getSimpleName());
-		return null;
-	}
-
 	public String getIP() {
-		return channel == null ? "" : channel.getRemoteAddress().toString().split(":")[0].replace("/", "");
-
+		return channel == null ? "" :
+				channel.getRemoteAddress().toString().split(":")[0].replace("/", "");
 	}
 
 	public String getLocalAddress() {
-		return channel.getLocalAddress().toString();
+		return channel == null ? "" : channel.getLocalAddress().toString();
 	}
 }

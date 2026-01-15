@@ -827,7 +827,7 @@ public class Player extends Entity {
     /**
      * @Packets
      */
-    private transient ConcurrentLinkedQueue<LogicPacket> logicPackets;
+    Queue<LogicPacket> logicPackets = new ConcurrentLinkedQueue<>();
     private transient long packetsDecoderPing;
 
     /**
@@ -2292,10 +2292,25 @@ public class Player extends Entity {
     }
 
     public void processLogicPackets() {
-        LogicPacket packet;
-        while ((packet = logicPackets.poll()) != null)
+        int processed = 0;
+        final int MAX_INTERNAL_PER_TICK = 50;
+
+        while (!logicPackets.isEmpty()) {
+            LogicPacket packet = logicPackets.peek();
+            if (packet == null)
+                break;
+
+            if (!packet.isNetwork() && processed >= MAX_INTERNAL_PER_TICK)
+                break;
+
+            logicPackets.poll();
+
             WorldPacketsDecoder.decodeLogicPacket(this, packet);
+
+            processed++;
+        }
     }
+
 
     public void processEquip() {
         final Player instance = this;
@@ -3186,16 +3201,13 @@ public class Player extends Entity {
         }
         long currentTime = Utils.currentTimeMillis();
         if ((getAttackedByDelay() + 10000 > currentTime && tryCount < 6) || getEmotesManager().getNextEmoteEnd() >= currentTime || isDead()) {
-            CoresManager.slowExecutor.schedule(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        packetsDecoderPing = Utils.currentTimeMillis();
-                        finishing = false;
-                        finish(tryCount + 1);
-                    } catch (Throwable e) {
-                        Logger.handle(e);
-                    }
+            CoresManager.slowExecutor.schedule(() -> {
+                try {
+                    packetsDecoderPing = Utils.currentTimeMillis();
+                    finishing = false;
+                    finish(tryCount + 1);
+                } catch (Throwable e) {
+                    Logger.handle(e);
                 }
             }, 10, TimeUnit.SECONDS);
             return;
@@ -3409,7 +3421,7 @@ public class Player extends Entity {
     }
 
     public WorldPacketsEncoder getPackets() {
-        return session.getWorldPackets();
+        return session.getWorldPacketsEncoder();
     }
 
     public boolean hasStarted() {
@@ -4940,14 +4952,11 @@ public class Player extends Entity {
     }
 
     public void addLogicPacketToQueue(LogicPacket packet) {
-        for (LogicPacket p : logicPackets) {
-            if (p.getId() == packet.getId()) {
-                logicPackets.remove(p);
-                break;
-            }
-        }
+        if (packet == null)
+            return;
         logicPackets.add(packet);
     }
+
 
     public DominionTower getDominionTower() {
         return dominionTower;

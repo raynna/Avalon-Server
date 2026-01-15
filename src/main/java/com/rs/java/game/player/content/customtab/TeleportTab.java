@@ -360,7 +360,7 @@ public class TeleportTab extends CustomTab {
 			return;
 		}
 
-		if (componentId == BACK_BUTTON) {
+		if (componentId == BACK_BUTTON && type != null) {
 			handleBackButton(player, type);
 			return;
 		}
@@ -421,7 +421,6 @@ public class TeleportTab extends CustomTab {
 
 	private static void handleMainMenuButtons(Player player, int componentId, WorldTile previousTile) {
 		player.temporaryAttribute().remove("TELEPORTTYPE");
-
 		if (componentId >= 3 && componentId <= 15) {
 			if (componentId == 11) {
 				handlePreviousTeleport(player, previousTile);

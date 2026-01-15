@@ -578,15 +578,16 @@ public class Bank implements Serializable {
 
 	public void openBank() {
 		lastContainerCopy = null;
-		player.getInterfaceManager().sendInterface(762);
-		player.getInterfaceManager().sendInventoryInterface(763);
-		player.getVarsManager().sendVarBit(8348, 0);
 		refreshViewingTab();
 		refreshTabs();
-		unlockButtons();
+
 		sendItems();
 		refreshLastX();
 		refreshBankSize();
+		player.getVarsManager().sendVarBit(8348, 0);
+		player.getInterfaceManager().sendInterface(762);
+		player.getInterfaceManager().sendInventoryInterface(763);
+		unlockButtons();
 	}
 
 	public void refreshLastX() {

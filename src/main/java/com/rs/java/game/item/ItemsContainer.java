@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 /**
  * Container class.
- * 
+ *
  * @author Graham / edited by Dragonkk(Alex)
- * @param <T>
+ * (metadata-safe patched)
  */
 public final class ItemsContainer<T extends Item> implements Serializable {
 
@@ -53,17 +53,20 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 		data[slot] = item;
 	}
 
+	/**
+	 * Force add into first free slot.
+	 * NOTE: keep behavior, but ensure stored item is not an externally-mutable reference.
+	 */
 	public boolean forceAdd(T item) {
 		for (int i = 0; i < data.length; i++) {
 			if (data[i] == null) {
-				Item oldItem = new Item(item);
-				data[i] = item;
+				data[i] = item == null ? null : new Item(item); // deep copy metadata
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	public int getThisItemSlot(int itemId) {
 		for (int i = 0; i < data.length; i++) {
 			if (data[i] != null) {
@@ -75,19 +78,28 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 		return -1;
 	}
 
+	/**
+	 * ADD:
+	 * Critical fix: stack ONLY if isStackableWith() (id + metadata compatibility),
+	 * NOT just same id.
+	 */
 	public boolean add(T item) {
+		if (item == null)
+			return false;
+
 		// Handle stackable items
 		if (alwaysStackable || item.getDefinitions().isStackable() || item.getDefinitions().isNoted()) {
 			for (int i = 0; i < data.length; i++) {
-				if (data[i] != null && data[i].getId() == item.getId()) {
+				if (data[i] != null && data[i].isStackableWith(item)) {
 					Item oldItem = data[i];
+
 					long total = (long) oldItem.getAmount() + item.getAmount();
 					// Overflow check
 					if (total > Integer.MAX_VALUE || total < 0) {
 						total = Integer.MAX_VALUE;
 					}
 
-					Item newItem = new Item(oldItem);
+					Item newItem = new Item(oldItem); // preserves metadata
 					newItem.setAmount((int) total);
 					data[i] = newItem;
 					return true;
@@ -104,7 +116,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 			int remaining = item.getAmount();
 			for (int i = 0; i < data.length && remaining > 0; i++) {
 				if (data[i] == null) {
-					Item singleItem = new Item(item);
+					Item singleItem = new Item(item); // keeps metadata
 					singleItem.setAmount(1);
 					data[i] = singleItem;
 					remaining--;
@@ -118,11 +130,9 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 		if (index == -1) {
 			return false;
 		}
-		data[index] = item;
+		data[index] = new Item(item); // store a copy to preserve metadata + avoid aliasing
 		return true;
 	}
-
-
 
 	public int freeSlots() {
 		int j = 0;
@@ -134,7 +144,14 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 		return j;
 	}
 
+	/**
+	 * REMOVE by id (legacy behavior preserved).
+	 * This keeps compatibility with code that does new Item(id, amt) without metadata.
+	 * If you want "strict metadata remove", use remove(preferredSlot, item) with slot item.
+	 */
 	public int remove(T item) {
+		if (item == null) return 0;
+
 		int removed = 0, toRemove = item.getAmount();
 		for (int i = 0; i < data.length; i++) {
 			if (data[i] != null) {
@@ -161,6 +178,8 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	}
 
 	public void removeAll(T item) {
+		if (item == null) return;
+
 		for (int i = 0; i < data.length; i++) {
 			if (data[i] != null) {
 				if (data[i].getId() == item.getId()) {
@@ -171,6 +190,8 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	}
 
 	public boolean containsOne(T item) {
+		if (item == null) return false;
+
 		for (Item aData : data) {
 			if (aData != null) {
 				if (aData.getId() == item.getId()) {
@@ -182,6 +203,8 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	}
 
 	public boolean contains(T item) {
+		if (item == null) return false;
+
 		int amtOf = 0;
 		for (Item aData : data) {
 			if (aData != null) {
@@ -233,6 +256,8 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	}
 
 	public int getNumberOf(Item item) {
+		if (item == null) return 0;
+
 		int count = 0;
 		for (Item aData : data) {
 			if (aData != null) {
@@ -260,6 +285,10 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 		return data;
 	}
 
+	/**
+	 * IMPORTANT: Keep shallow copy behavior because your refresh code often relies on reference comparison.
+	 * (Inventory.refreshItems compares references to detect changed slots.)
+	 */
 	public Item[] getItemsCopy() {
 		Item[] newData = new Item[data.length];
 		System.arraycopy(data, 0, newData, 0, newData.length);
@@ -282,6 +311,9 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	}
 
 	public int getThisItemSlot(T item) {
+		if (item == null) return getFreeSlot();
+
+		// preserve legacy behavior: slot by id
 		for (int i = 0; i < data.length; i++) {
 			if (data[i] != null) {
 				if (data[i].getId() == item.getId()) {
@@ -320,14 +352,20 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 		data = new Item[data.length];
 	}
 
+	/**
+	 * Slot-aware remove. This is already your "best" method for metadata items.
+	 * We keep behavior but make sure metadata doesn’t get lost when shrinking stacks.
+	 */
 	public int remove(int preferredSlot, Item item) {
+		if (item == null) return 0;
+
 		int removed = 0;
 		int toRemove = item.getAmount();
 
 		Item slotItem = data[preferredSlot];
 		if (slotItem != null) {
 			if (slotItem == item || !item.getDefinitions().isStackable()) {
-				// Exact object match or unstackable: just match by reference
+				// Exact object match or unstackable: match by reference
 				int amt = slotItem.getAmount();
 				if (amt > toRemove) {
 					removed += toRemove;
@@ -399,9 +437,6 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 		return removed;
 	}
 
-
-
-
 	public void addAll(ItemsContainer<T> container) {
 		for (int i = 0; i < container.getSize(); i++) {
 			T item = container.get(i);
@@ -437,7 +472,8 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 		if (alwaysStackable || item.getDefinitions().isStackable() || item.getDefinitions().isNoted()) {
 			for (Item aData : data) {
 				if (aData != null) {
-					if (aData.getId() == item.getId()) {
+					// IMPORTANT: space exists only if it can stack with existing item (metadata-safe)
+					if (aData.isStackableWith(item)) {
 						return true;
 					}
 				}
@@ -454,5 +490,4 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	public Item[] toArray() {
 		return data;
 	}
-
 }

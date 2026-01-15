@@ -781,13 +781,16 @@ public final class Inventory implements Serializable {
 
 
 	public void replaceItem(int id, int amount, int slot) {
-		Item item = items.get(slot);
-		if (item == null)
-			return;
-		item.setId(id);
-		item.setAmount(amount);
+		Item old = items.get(slot);
+		if (old == null) return;
+
+		Item newItem = new Item(id, amount,
+				old.getMetadata() == null ? null : old.getMetadata().deepCopy());
+
+		items.set(slot, newItem);
 		refresh(slot);
 	}
+
 	
 	public boolean containsItem(Item... items) {
 		for (Item item : items) {

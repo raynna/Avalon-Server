@@ -41,7 +41,7 @@ public class PolyporeStaff extends ItemPlugin {
             return false;
         }
 
-        PolyporeStaffMetaData data = getOrCreateMetadata(staff);
+        PolyporeStaffMetaData data = getMetadataIfDegraded(staff);
         if (data == null) {
             return false;
         }
@@ -70,21 +70,23 @@ public class PolyporeStaff extends ItemPlugin {
         return null;
     }
 
-    private PolyporeStaffMetaData getOrCreateMetadata(Item staff) {
-        ItemMetadata meta = staff.getMetadata();
-        if (meta == null) {
-            meta = new PolyporeStaffMetaData(MAX_CHARGES);
-            staff.setMetadata(meta);
-        }
+    private PolyporeStaffMetaData getMetadataIfDegraded(Item staff) {
+        if (staff.getId() != POLYPORE_STAFF_DEGRADED_ID)
+            return null;
 
-        if (meta instanceof PolyporeStaffMetaData) {
+        ItemMetadata meta = staff.getMetadata();
+        if (meta instanceof PolyporeStaffMetaData)
             return (PolyporeStaffMetaData) meta;
-        }
+
         return null;
     }
 
     private void checkCharges(Player player, Item item) {
-        PolyporeStaffMetaData data = getOrCreateMetadata(item);
+        PolyporeStaffMetaData data = getMetadataIfDegraded(item);
+        if (item.isItem("item.polypore_staff")) {
+            player.message("Your polypore staff is fully charged.");
+            return;
+        }
         if (data != null) {
             if (data.getValue() == data.getMaxValue()) {
                 player.message("Your polypore staff is fully charged.");

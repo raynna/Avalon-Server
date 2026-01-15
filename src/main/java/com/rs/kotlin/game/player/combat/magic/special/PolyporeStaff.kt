@@ -19,39 +19,55 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
 
     override fun hasWeapon(player: Player): Boolean {
         val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return false
-        if (!weapon.isAnyOf("item.polypore_staff", "item.polypore_staff_degraded")) {
-            return false;
+
+        if (weapon.isItem("item.polypore_staff")) {
+            return true
         }
-        if (weapon.metadata == null) {
-            weapon.metadata = PolyporeStaffMetaData(3000)
+
+        if (weapon.isItem("item.polypore_staff_degraded")) {
+            val data = weapon.metadata as? PolyporeStaffMetaData ?: return false
+            return data.value > 0
         }
-        val data = weapon.metadata
-        if (data is PolyporeStaffMetaData && data.value < 1) {
-            return false
-        }
-        return true
+        return false
     }
 
+
     fun cast(style: MagicStyle, attacker: Player, defender: Entity) {
-        val weapon = attacker.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return
+        var weapon = attacker.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return
+
+        // Fresh staff first use
+        if (weapon.isItem("item.polypore_staff")) {
+            val degraded = Item(
+                Item.getId("item.polypore_staff_degraded"),
+                weapon.amount,
+                PolyporeStaffMetaData(PolyporeStaffMetaData.MAX_CHARGES)
+            )
+            attacker.equipment.updateItemWithMeta(
+                Equipment.SLOT_WEAPON.toInt(),
+                degraded
+            )
+            attacker.equipment.refresh()
+            attacker.appearence.generateAppearenceData()
+            weapon = attacker.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return
+
+        }
+
         val data = weapon.metadata as? PolyporeStaffMetaData ?: return
+
         if (data.value <= 0) {
             attacker.message("Your polypore staff has no charges.")
             return
         }
+
         data.decrement(1)
-        if (weapon.isItem("item.polypore_staff")) {
-            val newItem = Item(
-                Item.getId("item.polypore_staff_degraded"),
-                weapon.amount
-            )
-            newItem.metadata = weapon.metadata?.deepCopy()
-            attacker.equipment.updateItemWithMeta(
+
+        if (data.value == 0) {
+            attacker.message("Your polypore staff has run out of charges.")
+            attacker.equipment.updateItem(
                 Equipment.SLOT_WEAPON.toInt(),
-                newItem
+                Item.getId("item.polypore_stick")
             )
-            attacker.equipment.refresh()
-            attacker.appearence.generateAppearenceData()
+            return
         }
 
 
