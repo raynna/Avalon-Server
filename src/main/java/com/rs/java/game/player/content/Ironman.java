@@ -24,57 +24,30 @@ import com.rs.java.utils.Utils;
 
 public class Ironman implements Serializable {
 
-	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 7849063233657093838L;
 
-	/** The player. */
 	private transient Player player;
 
-	/** The HC death check. */
 	public boolean hardcoreDeath;
 
-	/** The meaning of life. @Kappa */
 	public int lifes;
 
-	/**
-	 * Instantiates a new ironman.
-	 */
 	public Ironman() {
 
 	}
 
-	/**
-	 * Sets the player.
-	 *
-	 * @param ironman the new player
-	 */
 	public void setPlayer(Player ironman) {
 		player = ironman;
 	}
 
-	/**
-	 * Adds the life.
-	 *
-	 * @param  //life the l
-	 * @return the int
-	 */
-	public int addLife(int l) {
-		return lifes += l;
+	public int addLife(int amount) {
+		return lifes += amount;
 	}
 
-	/**
-	 * The price handler for each life.
-	 */
 	public int getLifePrices(double multiplier) {
 		return (int) ((lifes * 2500000) * multiplier);
 	}
 
-	/**
-	 * Exchange items used on bank.
-	 *
-	 * @param player the player
-	 * @param item   the item
-	 */
 	public static void ExchangeItems(Player player, Item item) {
 		int amount = player.getInventory().getAmountOf(item.getId());
 		int freeSlots = player.getInventory().getFreeSlots();
@@ -93,12 +66,6 @@ public class Ironman implements Serializable {
 		}
 	}
 
-	/**
-	 * Handles deaths in wilderness.
-	 *
-	 * @param player the player
-	 * @param killer the killer
-	 */
 	public void WildernessDeath(Player player, Player killer) {
 		if (player.getPlayerRank().isHardcore()) {
 			if (player.getControlerManager().getControler() instanceof WildernessControler
@@ -108,11 +75,6 @@ public class Ironman implements Serializable {
 		}
 	}
 
-	/**
-	 * Take life life from HC ironman.
-	 *
-	 * @param killer the killer
-	 */
 	public void takeLife(Player player, Player killer) {
 		final int PlayerTotal = player.getSkills().getTotalLevel(player),
 				PlayerTotalXP = player.getSkills().getTotalXP(player);
@@ -155,11 +117,6 @@ public class Ironman implements Serializable {
 		}
 	}
 
-	/**
-	 * Takes life from HC ironman.
-	 *
-	 * @param npc the npc
-	 */
 	public void takeLife(NPC npc) {
 		final int PlayerTotal = player.getSkills().getTotalLevel(player),
 				PlayerTotalXP = player.getSkills().getTotalXP(player);
@@ -183,18 +140,12 @@ public class Ironman implements Serializable {
 		}
 	}
 
-	/**
-	 * Finishes the life of the HC ironman.
-	 */
 	private void finish() {
 		hardcoreDeath = true;
 		lifes = 0;
 		player.getSession().getChannel().disconnect();
 	}
 
-	/**
-	 * Spawns death and portal.
-	 */
 	public void SpawnDeath() {
 		NPC death = new NPC(8977, new WorldTile(1888, 5130, 0), -1, false);
 		WorldObject portal = new WorldObject(11369, 10, 0, 3077, 3484, 0);

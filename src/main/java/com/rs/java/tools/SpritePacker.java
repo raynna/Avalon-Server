@@ -8,40 +8,43 @@ import java.io.IOException;
 
 public class SpritePacker {
 
-	private static final int INDEX = 8; // sprites index
+	private static final int INDEX = 8; // sprite index
 
 	public static void main(String[] args) throws IOException {
-		int fromArchive = 20318; // spriteId in donor cache
-		int toArchive = 318;     // new spriteId in destination cache
 
-		CacheLibrary toCache = new CacheLibrary("data/cache/", false, null);
+		int fromSprite = 10247;
+		int toSprite = 10247;
+		//fixed equipment tab icon = 1822
+		//old ugly equipment tab icon = 8669
+		CacheLibrary currentCache = new CacheLibrary("data/cache/", false, null);
 		CacheLibrary fromCache = new CacheLibrary("data/onyxcache/cache/", false, null);
 
-		copySprite(fromCache, toCache, fromArchive, toArchive);
+		currentCache.index(INDEX).update();
+		fromCache.index(INDEX).update();
 
-		// Save changes
-		toCache.index(INDEX).update();
-		System.out.println("✅ Finished packing sprite " + fromArchive + " → " + toArchive);
-	}
+		if (currentCache.index(INDEX).archive(toSprite) != null) {
+			currentCache.index(INDEX).remove(toSprite);
+			System.out.println("Removed sprite " + toSprite + " from cache100");
+		}
 
-	private static void copySprite(CacheLibrary fromCache, CacheLibrary toCache, int fromId, int toId) {
-		Archive fromArchive = fromCache.index(INDEX).archive(fromId);
+		Archive fromArchive = fromCache.index(INDEX).archive(fromSprite);
 		if (fromArchive == null) {
-			System.err.println("❌ Missing source sprite archive " + fromId);
-			return;
+			throw new RuntimeException("Sprite " + fromSprite + " not found in cache200");
 		}
 
-		// Remove existing destination and re-add
-		toCache.index(INDEX).remove(toId);
-		Archive destArchive = toCache.index(INDEX).add(toId);
+		Archive toArchive = currentCache.index(INDEX).add(toSprite);
 
-		for (File file : fromArchive.files()) {
-			if (file == null) continue;
-			byte[] data = file.getData();
-			if (data == null) continue;
-			destArchive.add(file.getId(), data);
+		// Copy files
+		for (File f : fromArchive.files()) {
+			if (f == null) continue;
+
+			byte[] data = f.getData().clone(); // clone for safety
+			toArchive.add(new File(f.getId(), data));
 		}
 
-		System.out.println("✅ Copied sprite " + fromId + " into destination archive " + toId);
+		currentCache.index(INDEX).update();
+
+		System.out.println("✅ Copied sprite " + fromSprite + " (onyxCache) → " + toSprite + " (currentCache)");
 	}
+
 }

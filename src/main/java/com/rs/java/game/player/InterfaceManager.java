@@ -181,7 +181,7 @@ public class InterfaceManager {
 		sendTab("tab.summoning_orb_resizeable", "interface.summoning_orb");
 		player.getPackets().sendInterface(true, 752, 9, Rscm.lookup("interface.chatbox"));
 		sendTab("tab.summoning_resizeable", "interface.summoning_tab");
-		player.getPackets().sendGlobalVar(823, 1);
+		player.getPackets().sendGlobalVar(823, 0);
 		sendCombatStyles();
 		sendTaskSystem();
 		sendSkills();

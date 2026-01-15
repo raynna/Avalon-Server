@@ -133,6 +133,7 @@ public class Player extends Entity {
     /**
      * @Player
      */
+
     private String username;
     private transient boolean started;
     private transient boolean active;
@@ -258,7 +259,7 @@ public class Player extends Entity {
         return playerRank;
     }
 
-    /*
+    /**
      * @Ironman
      */
     private Ironman ironman;
