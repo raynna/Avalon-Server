@@ -73,16 +73,16 @@ public class HarAken extends NPC {
 
     public void spawnTentacle() {
         WorldTile tile = controler.getTentacleTile();
-		System.out.println("set tile to " + tile.getX()+ " - " + tile.getY());
+        //System.out.println("set tile to " + tile.getX()+ " - " + tile.getY());
         if (tentacleSpawns != null) {
             while (tentacleSpawns.contains(tile)) {
-            	System.out.println("tentacle already spawned in " + tile.getX()+ " - " + tile.getY());
+                //System.out.println("tentacle already spawned in " + tile.getX()+ " - " + tile.getY());
                 tile = controler.getTentacleTile();
             }
         }
         tentacles.add(new HarAkenTentacle(Utils.random(1) == 0 ? 15209 : 15210, tile, this));
         tentacleSpawns.add(tile);
-		System.out.println("spawned tentacle at " + tile.getX()+ " - " + tile.getY());
+        //System.out.println("spawned tentacle at " + tile.getX()+ " - " + tile.getY());
         spawnTentacleTime = Utils.currentTimeMillis() + Utils.random(15000, 25000);
     }
 

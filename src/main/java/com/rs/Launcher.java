@@ -73,7 +73,7 @@ public final class Launcher {
 			Settings.VPS_HOSTED = false;
 			Settings.PORT_ID = 43594;
 			Settings.HOSTED = true;
-			Settings.DEBUG = true;
+			Settings.DEBUG = false;
 		} else {
 			Settings.VPS_HOSTED = Boolean.parseBoolean(args[3]);
 			Settings.PORT_ID = Integer.parseInt(args[2]);

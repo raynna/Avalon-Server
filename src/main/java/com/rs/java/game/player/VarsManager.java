@@ -101,7 +101,7 @@ public class VarsManager {
 				sendClientVarp(defs.baseVar, save);
 			player.getTemporaryVarBits().put(id, value);
 			if (save) {
-				System.out.println("Save varbit: " + id + " - " + value);
+				//System.out.println("Save varbit: " + id + " - " + value);
 				player.getVarBitList().put(id, value);
 			}
 		}

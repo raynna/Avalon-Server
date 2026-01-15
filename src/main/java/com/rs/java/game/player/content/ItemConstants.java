@@ -335,7 +335,6 @@ public class ItemConstants {
 		if (item.getDefinitions().isDestroyItem() && item.getId() != 13663 || item.getDefinitions().isLended())
 			return false;
 		if (item.getMetadata() != null) {
-			System.out.println("item"+ item.getName() + " has data: " + item.getMetadata().getDisplaySuffix());
 			return false;
 		}
 		if (defs.contains("training"))

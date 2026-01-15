@@ -1303,7 +1303,7 @@ public abstract class Entity extends WorldTile {
     public long get(Keys.LongKey key) {
         Long map = longMap.getOrDefault(key, key.getDefaultValue());
         if (map == null) {
-            System.out.println("LongMap: " + map + " is null");
+            //System.out.println("LongMap: " + map + " is null");
             return -1;
         }
         return map.longValue();

@@ -253,7 +253,7 @@ public final class PresetManager implements Serializable {
                     }
                 }
 
-                Item toUse = item;
+                Item toUse = item.copy();
                 if (!force && requiresBankItem(item)) {
                     toUse = takeFromBankOrFail(player, item);
                     if (toUse == null) continue;
@@ -275,7 +275,7 @@ public final class PresetManager implements Serializable {
                     continue;
                 }
 
-                Item toUse = item;
+                Item toUse = item.copy();
                 if (!force && requiresBankItem(item)) {
                     toUse = takeFromBankOrFail(player, item);
                     if (toUse == null) {

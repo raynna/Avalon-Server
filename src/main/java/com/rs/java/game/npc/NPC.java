@@ -740,11 +740,11 @@ public class NPC extends Entity implements Serializable {
 
     public List<Drop> rollDrops(Player player) {
         String key = DropTableRegistry.npcKeyFromId(this.id);
-        System.out.println("[rollDrops] NPC ID " + this.id + " key = " + key);
+        //System.out.println("[rollDrops] NPC ID " + this.id + " key = " + key);
 
         DropTable table = DropTableRegistry.getDropTableForNpc(this.id);
         if (table != null) {
-            System.out.println("[rollDrops] Using drop table: " + table);
+            // System.out.println("[rollDrops] Using drop table: " + table);
             return table.rollDrops(player);
         }
         player.message("Missing droptable for npc: " + this.getName() + "("+this.getId()+")");

@@ -17,7 +17,7 @@ public class NpcPluginLoader {
 	public static NpcPlugin getPlugin(NPC npc) {
 		NpcPlugin plugin = cachedNpcPlugins.getOrDefault(npc.getId(), cachedNpcPlugins.get(npc.getName()));
 		if (plugin != null) {
-			System.out.println("[NpcPluginManager] "+npc.getName()+"("+npc.getId()+"): plugin was found by Id.");
+			//System.out.println("[NpcPluginManager] "+npc.getName()+"("+npc.getId()+"): plugin was found by Id.");
 			return plugin;
 		}
         for (Map.Entry<Object, NpcPlugin> entry : cachedNpcPlugins.entrySet()) {
@@ -25,12 +25,12 @@ public class NpcPluginLoader {
             for (Object key : keys) {
                 if (key instanceof String && npc.getName().toLowerCase().contains(((String) key).toLowerCase())) {
                     plugin = entry.getValue();
-                    System.out.println("[NpcPluginManager] " + npc.getName() + "(" + npc.getId() + "): Found plugin by name");
+					//System.out.println("[NpcPluginManager] " + npc.getName() + "(" + npc.getId() + "): Found plugin by name");
                     return plugin;
                 }
             }
         }
-        System.out.println("[NpcPluginManager] "+npc.getName()+"("+npc.getId()+"): Found no plugin for this npc.");
+		//System.out.println("[NpcPluginManager] "+npc.getName()+"("+npc.getId()+"): Found no plugin for this npc.");
 		return null;
 	}
 

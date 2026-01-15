@@ -28,7 +28,7 @@ public class Timer {
 	public void tick() {
 		if (ticks > 0)
 			ticks--;
-		System.out.println(key.name() + " is ticking: " + ticks + " ticks left");
+		//System.out.println(key.name() + " is ticking: " + ticks + " ticks left");
 	}
 	
 }

@@ -111,10 +111,8 @@ public class ButtonHandler {
         if (interfaceId == 1163 || interfaceId == 1164 || interfaceId == 1168 || interfaceId == 1170 || interfaceId == 1171 || interfaceId == 1173)
             player.getDominionTower().handleButtons(interfaceId, componentId, slotId, packetId);
         if (interfaceId == 3010) {
-            System.out.println("slotId2: " + slotId2 + ", packet: " + packetId + ", slot: " + slotId);
             player.getShopSystem().handleItemOption(slotId2, packetId);
         } else if (interfaceId == 548 || interfaceId == 746) {
-            System.out.println("componentId: " + componentId);
             if (componentId == 75 || componentId == 99) {
                 player.getTemporaryAttributtes().put("ACHIEVEMENTTAB", 0);
                 player.getTemporaryAttributtes().remove("GEARTAB");
