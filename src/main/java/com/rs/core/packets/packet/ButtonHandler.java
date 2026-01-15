@@ -2503,7 +2503,6 @@ public class ButtonHandler {
     }
 
     public static boolean sendTakeOff(final Player player, final int slotId, int itemId) {
-        player.stopAll(false, false, true);
         Item item = player.getEquipment().getItem(slotId);
         if (player.hasStaffOfLight() && player.hasStaffOfLightActive()) {
             player.resetStaffOfLightEffect();
@@ -2531,12 +2530,14 @@ public class ButtonHandler {
         if (player.getTakeOffSwitchItemCache().contains(slotId)) {
             return;
         }
+        player.stopAll(false, false, true);
         player.getTakeOffSwitchItemCache().add(slotId);
     }
 
     public static void registerEquip(Player player, int slotId) {
         if (player.getSwitchItemCache().contains(slotId)) return;
         player.getSwitchItemCache().add(slotId);
+        player.stopAll(false, false, true);
         if (player.getInventory().getItem(slotId).getEquipSlot() == Equipment.SLOT_WEAPON) {
             player.itemSwitch = true;
             if (player.combatDefinitions.usingSpecialAttack)
@@ -2548,7 +2549,6 @@ public class ButtonHandler {
         if (player.hasFinished() || player.isDead()) {
             return false;
         }
-        player.stopAll(false, false, true);
         Item inventoryItem = player.getInventory().getItem(slotId);
         if (inventoryItem == null || inventoryItem.getId() != itemId) {
             return false;

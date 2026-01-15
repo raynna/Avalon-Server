@@ -71,7 +71,7 @@ public final class Launcher {
 		System.out.println("Current working directory: " + System.getProperty("user.dir"));
 		if (args.length < 4) {
 			Settings.VPS_HOSTED = false;
-			Settings.PORT_ID = 3324;
+			Settings.PORT_ID = 43594;
 			Settings.HOSTED = true;
 			Settings.DEBUG = true;
 		} else {

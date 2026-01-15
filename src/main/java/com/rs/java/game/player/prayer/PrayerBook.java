@@ -530,10 +530,11 @@ public class PrayerBook implements Serializable {
             return;
         }
 
-        if (prayerActivatedTick == ticks) {
+        if (player.getGameTicks() <= prayerActivatedTick + 1) {
             return;
         }
-        if (!hasPrayerPoints()) {//i believe it should check for runout next tick like this
+
+        if (!hasPrayerPoints() && !player.isDead()) {//i believe it should check for runout next tick like this
             closeAllPrayers();
             player.message("You have run out of Prayer points!");
         }

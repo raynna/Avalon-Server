@@ -3747,11 +3747,11 @@ public class Player extends Entity {
         if (!controlerManager.sendDeath())
             return;
         dead = true;
-        getTickManager().reset();
-        timerOverlay.clearAll(this);
         getInterfaceManager().closeOverlay(false);
         resetWalkSteps();
         stopAll();
+        getTickManager().reset();
+        timerOverlay.clearAll(this);
         lock(6);
         Player killer = getMostDamageReceivedSourcePlayer();
         WrathEffect.handleWrathEffect(this, killer);
