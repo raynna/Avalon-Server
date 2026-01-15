@@ -181,7 +181,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         val impactTicks = sendProjectile()
         if (executeAmmoEffect(combatContext)) return
-        combatContext.rangedHit(delay = (impactTicks - 1).coerceAtLeast(0))
+        combatContext.rangedHit(delay = (impactTicks).coerceAtLeast(0))
     }
 
     private fun applySwiftGlovesToPendingHits(hits: MutableList<PendingHit>) {
