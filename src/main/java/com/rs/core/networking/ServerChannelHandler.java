@@ -99,7 +99,8 @@ public final class ServerChannelHandler extends SimpleChannelHandler {
 		byte[] data = new byte[avail];
 		buf.readBytes(data);
 
-		session.enqueueIncoming(data);
+		// Process immediately instead of queuing
+		session.processIncomingData(data);
 	}
 
 	@Override

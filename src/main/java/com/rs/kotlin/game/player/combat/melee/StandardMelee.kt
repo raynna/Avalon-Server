@@ -573,6 +573,7 @@ object StandardMelee : MeleeData() {
                 "item.greater_runic_staff_inactive",
                 "item.greater_runic_staff_uncharged",
                 "item.greater_runic_staff_charged",
+                "item.nightmare_staff"
             ),
             name = "Staff & Wand",
             weaponStyle = WeaponStyle.STAFF,

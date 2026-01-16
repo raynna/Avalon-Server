@@ -67,7 +67,39 @@ object ProjectileManager {
         )
     }
 
-
+    @JvmStatic
+    fun sendMagic(
+        projectile: Projectile,
+        projectileGfx: Int,
+        attacker: Entity,
+        defender: Entity,
+        hit: Hit,
+        successGraphic: Graphics,
+        splashGraphic: Graphics? = Graphics(85)
+    ) {
+        send(
+            projectile = projectile,
+            gfxId = projectileGfx,
+            attacker = attacker,
+            defender = defender,
+            onLanded = {
+                val gfx = if (hit.damage > 0) successGraphic else splashGraphic
+                if (gfx != null) {
+                    val startTile = WorldTile(
+                        attacker.getCoordFaceX(attacker.size),
+                        attacker.getCoordFaceY(attacker.size),
+                        attacker.plane
+                    )
+                    val endTile = WorldTile(
+                        defender.getCoordFaceX(defender.size),
+                        defender.getCoordFaceY(defender.size),
+                        defender.plane
+                    )
+                    defender.gfx(gfx.id, gfx.height, calculateRotation(startTile, endTile))
+                }
+            }
+        )
+    }
 
     @JvmStatic
     fun send(
@@ -141,7 +173,7 @@ object ProjectileManager {
         heightOffset: Int = 0,
         delayOffset: Int = 0,
         hitGraphic: Graphics? = null,
-        onLanded: ((Int) -> Unit)? = null // remainderCycles
+        onLanded: ((Int) -> Unit)? = null
     ): ProjectileResult {
 
         val baseType = ProjectileRegistry.get(projectile) ?: return ProjectileResult(0, 0)
@@ -202,11 +234,18 @@ object ProjectileManager {
     }
 
 
+    @JvmStatic
+    fun sendMagic(
+        projectile: Projectile,
+        projectileGfx: Int,
+        attacker: Entity,
+        defender: Entity,
+        hit: Hit,
+        successGraphic: Graphics
+    ) {
+        sendMagic(projectile, projectileGfx, attacker, defender, hit, successGraphic, Graphics(85, 100))
+    }
 
-
-    /**
-     * Main send: queues projectile visuals and returns IMPACT TICKS (what combat should use).
-     */
     fun send(
         projectile: Projectile,
         gfxId: Int,
@@ -233,28 +272,19 @@ object ProjectileManager {
 
         val distance = Utils.getDistance(attacker, defender)
 
-        // --- client cycles ---
         val endCycle = type.endTime(distance)
 
-        // --- server ticks ---
         val impactTicks = endCycle / 30
         val remainderCycles = endCycle % 30
 
-        val startTile = WorldTile(
-            attacker.getCoordFaceX(attacker.size),
-            attacker.getCoordFaceY(attacker.size),
-            attacker.plane
-        )
-        val endTile = WorldTile(
-            defender.getCoordFaceX(defender.size),
-            defender.getCoordFaceY(defender.size),
-            defender.plane
-        )
+
+        val startTile = attacker.faceWorldTile
+        val endTile = defender.faceWorldTile
 
         queueProjectileAndGetImpactCycles(
             attacker = attacker,
             defender = defender,
-            startTile = null,
+            startTile = startTile,
             endTile = endTile,
             gfx = gfxId,
             type = type,
@@ -284,75 +314,9 @@ object ProjectileManager {
             }, max(0, impactTicks - 1))
         }
 
-        //if (attacker is Player) {
-        //    attacker.tempProjectileRemainder = remainderCycles
-        //}
-
         return impactTicks
     }
 
-
-    /* ============================== */
-    /* ======= MAGIC HELPERS ======== */
-    /* ============================== */
-
-    @JvmStatic
-    fun sendMagic(
-        projectile: Projectile,
-        projectileGfx: Int,
-        attacker: Entity,
-        defender: Entity,
-        hit: Hit,
-        successGraphic: Graphics
-    ) {
-        sendMagic(projectile, projectileGfx, attacker, defender, hit, successGraphic, Graphics(85, 100))
-    }
-
-    @JvmStatic
-    fun sendMagic(
-        projectile: Projectile,
-        projectileGfx: Int,
-        attacker: Entity,
-        defender: Entity,
-        hit: Hit,
-        successGraphic: Graphics,
-        splashGraphic: Graphics? = Graphics(85)
-    ) {
-        send(
-            projectile = projectile,
-            gfxId = projectileGfx,
-            attacker = attacker,
-            defender = defender,
-            onLanded = {
-                val gfx = if (hit.damage > 0) successGraphic else splashGraphic
-                if (gfx != null) {
-                    val startTile = WorldTile(
-                        attacker.getCoordFaceX(attacker.size),
-                        attacker.getCoordFaceY(attacker.size),
-                        attacker.plane
-                    )
-                    val endTile = WorldTile(
-                        defender.getCoordFaceX(defender.size),
-                        defender.getCoordFaceY(defender.size),
-                        defender.plane
-                    )
-                    // NOTE: keep using defender entity here, but this runs after resolveEntity safety in send()
-                    defender.gfx(gfx.id, gfx.height, calculateRotation(startTile, endTile))
-                }
-            }
-        )
-    }
-
-    /* ============================== */
-    /* ======= INTERNAL CORE ======== */
-    /* ============================== */
-
-    /**
-     * Queues the projectile to players and returns IMPACT CYCLES (client cycles).
-     * This is the ONLY place that computes impact cycles.
-     *
-     * delayCycles is in CLIENT CYCLES (20ms units).
-     */
     private fun queueProjectileAndGetImpactCycles(
         attacker: Entity?,
         defender: Entity?,
@@ -363,11 +327,7 @@ object ProjectileManager {
         creatorSize: Int,
         endTime: Int
     ): Int {
-        val sx = startTile?.x ?: attacker!!.x
-        val sy = startTile?.y ?: attacker!!.y
-        val ex = endTile?.x ?: defender!!.x
-        val ey = endTile?.y ?: defender!!.y
-        val distance = Utils.getDistance(sx, sy, ex, ey)
+        val distance = Utils.getDistance(startTile, endTile)
         val queued = QueuedProjectile(
             attacker = attacker,
             defender = defender,
@@ -379,8 +339,9 @@ object ProjectileManager {
             sendCycle = WorldThread.getLastCycleTime().toInt(),
             endTime = endTime
         )
+
         for (player in World.getPlayers()) {
-            if (player == null || !player.hasStarted() || player.hasFinished()) continue
+            if (player == null || !player.hasStarted() || player.hasFinished() || player.isOutOfRegion(attacker)) continue
             player.queueProjectile(queued)
         }
 
@@ -389,25 +350,8 @@ object ProjectileManager {
 
     @JvmStatic
     fun flushProjectile(player: Player, proj: QueuedProjectile) {
-        val start: WorldTile = if (proj.attacker != null) {
-            WorldTile(
-                proj.attacker.getCoordFaceX(proj.attacker.size),
-                proj.attacker.getCoordFaceY(proj.attacker.size),
-                proj.attacker.plane
-            )
-        } else {
-            proj.startTile!!
-        }
-
-        val end: WorldTile = if (proj.defender != null) {
-            WorldTile(
-                proj.defender.getCoordFaceX(proj.defender.size),
-                proj.defender.getCoordFaceY(proj.defender.size),
-                proj.defender.plane
-            )
-        } else {
-            proj.endTile!!
-        }
+        val start = proj.attacker?.faceWorldTile ?: proj.startTile!!
+        val end = proj.defender?.faceWorldTile ?: proj.endTile!!
 
         val stream = player.packets.createWorldTileStream(start)
         stream.writePacket(player, 20)

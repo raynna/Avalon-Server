@@ -2481,13 +2481,8 @@ public class Player extends Entity {
         }
     }
 
-
-
-
     @Override
     public void processEntity() {
-        processLogicPackets();
-        cutscenesManager.process();
         if (coordsEvent != null && coordsEvent.processEvent(this))
             coordsEvent = null;
         if (routeEvent != null && routeEvent.processEvent(this))
@@ -2497,22 +2492,28 @@ public class Player extends Entity {
             addItemEvent = null;
         }
         super.processEntity();
+        PvpManager.onEpTick(this);
         PvpManager.refreshAll(this);
+        cutscenesManager.process();
+        charges.process();
+        auraManager.process();
+        actionManager.process();
+        newActionManager.process();
+        controlerManager.process();
+        farmingManager.process();
+        prayer.processPrayerDrain(gameTick);
+        processEquip();
+        processUnequip();
+        processQueuedInstantSpecials();
+        processActiveInstantSpecial();
         if (memberTill < Utils.currentTimeMillis() && isMember()) {
             message("Your membership has expired.");
             memberTill = 0;
             member = false;
         }
-        farmingManager.process();
-        processEquip();
-        processUnequip();
-        processQueuedInstantSpecials();
-        processActiveInstantSpecial();
         if (getAssist().isAssisting()) {
             getAssist().Check();
         }
-        //checkTimers();
-        prayer.processPrayerDrain(gameTick);
         if (miscTick % 10 == 0)
             drainHitPoints();
         //if (miscTick % 32 == 0)//TODO
@@ -2685,7 +2686,7 @@ public class Player extends Entity {
         if (!(getControlerManager().getControler() instanceof WildernessControler) && isAtWild()) {
             getControlerManager().startControler("WildernessControler");
         }
-        if (getFrozenBy() != null && this != null) {
+        if (getFrozenBy() != null) {
             if (!Utils.inCircle(getFrozenBy(), this, 12) && isFrozen()) {
                 setFreezeDelay(0);
                 getFrozenBy().setFreezeDelay(0);
@@ -2693,14 +2694,6 @@ public class Player extends Entity {
                     setFrozenBy(null);
             }
         }
-        PvpManager.onEpTick(this);
-        charges.process();
-        auraManager.process();
-        actionManager.process();
-        newActionManager.process();
-        // newActionManager.process()
-        controlerManager.process();
-
     }
 
     @Override

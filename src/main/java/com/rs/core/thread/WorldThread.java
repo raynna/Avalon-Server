@@ -32,21 +32,17 @@ public final class WorldThread extends Thread {
             long cycleStart = Utils.currentTimeMillis();
 
             try {
-                for (Session s : Session.ACTIVE_SESSIONS) {
-                    if (s != null)
-                        s.processQueuedPacketsTick();
-                }
                 WorldTasksManager.processTasks();
                 AutomaticGroundItem.processGameTick();
 
                 List<Player> toCloseChannels = new ArrayList<>();
-
                 for (Player player : World.getPlayers()) {
                     if (player == null || !player.hasStarted() || player.hasFinished())
                         continue;
 
-                    long lastPing = player.getPacketsDecoderPing();
+                    player.processLogicPackets();
 
+                    long lastPing = player.getPacketsDecoderPing();
                     if (lastPing != 0) {
                         long pingDelay = cycleStart - lastPing;
                         if (pingDelay > Settings.MAX_PACKETS_DECODER_PING_DELAY
@@ -56,10 +52,12 @@ public final class WorldThread extends Thread {
                             toCloseChannels.add(player);
                         }
                     }
-
+                }
+                for (Player player : World.getPlayers()) {
+                    if (player == null || !player.hasStarted() || player.hasFinished())
+                        continue;
                     player.processEntity();
                 }
-
                 for (NPC npc : World.getNPCs()) {
                     if (npc == null || npc.hasFinished())
                         continue;
@@ -79,12 +77,6 @@ public final class WorldThread extends Thread {
                 Logger.handle(e);
             }
 
-            for (Player player : World.getPlayers()) {
-                if (player == null || !player.hasStarted() || player.hasFinished())
-                    continue;
-                player.processProjectiles();
-            }
-
             try {
                 for (Player player : World.getPlayers()) {
                     if (player == null || !player.hasStarted() || player.hasFinished())
@@ -92,6 +84,11 @@ public final class WorldThread extends Thread {
 
                     player.getPackets().sendLocalPlayersUpdate();
                     player.getPackets().sendLocalNPCsUpdate();
+                }
+                for (Player player : World.getPlayers()) {
+                    if (player == null || !player.hasStarted() || player.hasFinished())
+                        continue;
+                    player.processProjectiles();
                 }
 
                 for (Player player : World.getPlayers()) {

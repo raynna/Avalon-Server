@@ -195,6 +195,15 @@ public class WorldTile implements Serializable {
 		};
 	}
 
+	public static int getCoordFaceXFromTile(int tileX, int sizeX, int sizeY, int rotation) {
+		return tileX + ((rotation == 1 || rotation == 3 ? sizeY : sizeX) - 1) / 2;
+	}
+
+	public static int getCoordFaceYFromTile(int tileY, int sizeX, int sizeY, int rotation) {
+		return tileY + ((rotation == 1 || rotation == 3 ? sizeX : sizeY) - 1) / 2;
+	}
+
+
 
 	public int getCoordFaceX(int sizeX) {
 		return getCoordFaceX(sizeX, -1, -1);

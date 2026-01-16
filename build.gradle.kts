@@ -40,14 +40,6 @@ dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("org.jsoup:jsoup:1.21.1")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
-
-    implementation("org.openjfx:javafx-graphics:$javafxVersion")
-    implementation("org.openjfx:javafx-controls:$javafxVersion")
-    implementation("org.openjfx:javafx-fxml:$javafxVersion")
-
-    runtimeOnly("org.openjfx:javafx-graphics:$javafxVersion:win")
-    runtimeOnly("org.openjfx:javafx-controls:$javafxVersion:win")
-    runtimeOnly("org.openjfx:javafx-fxml:$javafxVersion:win")
 }
 
 application {

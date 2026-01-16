@@ -5,16 +5,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 
+import com.rs.core.packets.OutputStream;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 
 import com.rs.core.packets.InputStream;
-import com.rs.core.packets.OutputStream;
 import com.rs.core.packets.decode.*;
 import com.rs.core.packets.encode.*;
 import com.rs.java.game.player.Player;
@@ -30,13 +28,6 @@ public class Session {
 	private Channel channel;
 	private volatile Decoder decoder;
 	private volatile Encoder encoder;
-
-	private final ConcurrentLinkedQueue<byte[]> incomingQueue = new ConcurrentLinkedQueue<>();
-	private final AtomicInteger queuedPackets = new AtomicInteger(0);
-
-	private static final int MAX_PACKETS_QUEUED = 2000;
-	private static final int MAX_PACKETS_PER_TICK = 500;
-	private static final int MAX_BYTES_PER_TICK = 64 * 1024;
 
 	private static final String PATH = System.getProperty("user.dir") + "/data/iplog/log.txt";
 
@@ -59,7 +50,6 @@ public class Session {
 
 	public void close() {
 		ACTIVE_SESSIONS.remove(this);
-		incomingQueue.clear();
 	}
 
 	public void logIp(Session session) {
@@ -72,51 +62,22 @@ public class Session {
 		}
 	}
 
-	public void enqueueIncoming(byte[] data) {
+	public void processIncomingData(byte[] data) {
 		if (data == null || data.length == 0) return;
 		if (channel == null || !channel.isConnected()) return;
 
-		int count = queuedPackets.incrementAndGet();
-		if (count > MAX_PACKETS_QUEUED) {
-			queuedPackets.decrementAndGet();
+		Decoder d = this.decoder;
+		if (d == null) {
+			Logger.log("SESSION", "Decoder NULL, dropping data for IP=" + getIP());
 			return;
 		}
 
-		incomingQueue.add(data);
-	}
-
-	public void processQueuedPacketsTick() {
-		if (channel == null || !channel.isConnected()) return;
-
-		int processed = 0;
-		int bytes = 0;
-
-		while (processed < MAX_PACKETS_PER_TICK) {
-			byte[] data = incomingQueue.poll();
-			if (data == null) break;
-
-			queuedPackets.decrementAndGet();
-			bytes += data.length;
-
-			if (bytes > MAX_BYTES_PER_TICK)
-				break;
-
-			Decoder d = this.decoder;
-			if (d == null) {
-				Logger.log("SESSION", "Decoder NULL mid-tick, dropping remaining queued data for IP=" + getIP());
-				break;
-			}
-
-			try {
-				d.decode(new InputStream(data));
-			} catch (Throwable t) {
-				Logger.log("SESSION", "Decoder exception in " + d.getClass().getSimpleName() + " -> closing channel for IP=" + getIP());
-				Logger.handle(t);
-				try { channel.close(); } catch (Throwable ignored) {}
-				break;
-			}
-
-			processed++;
+		try {
+			d.decode(new InputStream(data));
+		} catch (Throwable t) {
+			Logger.log("SESSION", "Decoder exception in " + d.getClass().getSimpleName() + " -> closing channel for IP=" + getIP());
+			Logger.handle(t);
+			try { channel.close(); } catch (Throwable ignored) {}
 		}
 	}
 
