@@ -2494,6 +2494,10 @@ public class Player extends Entity {
         super.processEntity();
         PvpManager.onEpTick(this);
         PvpManager.refreshAll(this);
+        processEquip();
+        processUnequip();
+        processQueuedInstantSpecials();
+        processActiveInstantSpecial();
         cutscenesManager.process();
         charges.process();
         auraManager.process();
@@ -2502,10 +2506,6 @@ public class Player extends Entity {
         controlerManager.process();
         farmingManager.process();
         prayer.processPrayerDrain(gameTick);
-        processEquip();
-        processUnequip();
-        processQueuedInstantSpecials();
-        processActiveInstantSpecial();
         if (memberTill < Utils.currentTimeMillis() && isMember()) {
             message("Your membership has expired.");
             memberTill = 0;
@@ -5590,6 +5590,8 @@ public class Player extends Entity {
     }
 
     public transient boolean itemSwitch;
+    public transient long lastSpecClickTick = -1;
+    public transient long lastItemSwitchTick = -1;
 
     public boolean isProcessingVote() {
         return this.processingVote;

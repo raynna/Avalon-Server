@@ -20,10 +20,16 @@ public final class WorldThread extends Thread {
         setName("World Thread");
     }
 
+    public static int WORLD_TICK = 0;
+
     public static long LAST_CYCLE_CTM;
 
     public static long getLastCycleTime() {
         return LAST_CYCLE_CTM;
+    }
+
+    public static long getCycleIndex() {
+        return LAST_CYCLE_CTM / Settings.WORLD_CYCLE_TIME;
     }
 
     @Override
@@ -107,7 +113,7 @@ public final class WorldThread extends Thread {
             }
 
             LAST_CYCLE_CTM = Utils.currentTimeMillis();
-
+            WORLD_TICK++;
             long elapsed = LAST_CYCLE_CTM - cycleStart;
             long sleepTime = Settings.WORLD_CYCLE_TIME - elapsed;
             if (sleepTime > 0) {

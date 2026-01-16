@@ -2081,7 +2081,9 @@ public class ButtonHandler {
         } else if (interfaceId == 767) {
             if (componentId == 10) player.getBank().openBank();
         } else if (interfaceId == 884) {
-            if (componentId == 4) SpecialAttack.submitSpecialRequest(player);
+            if (componentId == 4) {
+                SpecialAttack.submitSpecialRequest(player);
+            }
             else if (componentId >= 7 && componentId <= 10) {
                 player.getCombatDefinitions().setAttackStyle(componentId - 7);
             } else if (componentId == 11) {
@@ -2542,13 +2544,21 @@ public class ButtonHandler {
 
     public static void registerEquip(Player player, int slotId) {
         if (player.getSwitchItemCache().contains(slotId)) return;
-        player.getSwitchItemCache().add(slotId);
+        player.lastItemSwitchTick = WorldThread.getCycleIndex();
+        player.message("Set lastItemSwitchTick to: " + player.lastItemSwitchTick);
+        player.message("lastSpecClick is: " + player.lastSpecClickTick);
         player.stopAll(false, false, true);
         if (player.getInventory().getItem(slotId).getEquipSlot() == Equipment.SLOT_WEAPON) {
-            player.itemSwitch = true;
-            if (player.combatDefinitions.usingSpecialAttack)
+            player.message("equipslot is weapon");
+            player.message("player using special?: " + player.getCombatDefinitions().isUsingSpecialAttack());
+            if (player.lastSpecClickTick != player.lastItemSwitchTick && player.getCombatDefinitions().isUsingSpecialAttack()) {
                 player.combatDefinitions.switchUsingSpecialAttack();
+                player.message("reset spec bar cus active");
+                //player.getQueuedInstantCombats().clear();
+            }
+            player.itemSwitch = true;
         }
+        player.getSwitchItemCache().add(slotId);
     }
 
     public static boolean sendWear(Player player, int slotId, int itemId) {
@@ -2602,9 +2612,9 @@ public class ButtonHandler {
             player.refreshHitPoints();
         }
         Item currentlyEquipped = player.getEquipment().getItem(equipmentSlot);
-        if (equipmentSlot == Equipment.SLOT_WEAPON) {
+        if (currentlyEquipped.getEquipSlot() == Equipment.SLOT_WEAPON) {
             player.itemSwitch = false;
-            player.getQueuedInstantCombats().clear();
+            //player.getQueuedInstantCombats().clear();
         }
         refreshEquipBonuses(player);
         return true;
