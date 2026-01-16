@@ -1,15 +1,10 @@
 package com.rs.kotlin.game.player.combat.special
 
-import com.rs.core.thread.CoresManager
-import com.rs.java.game.Entity
-import com.rs.java.game.player.Equipment
+import com.rs.core.thread.WorldThread
 import com.rs.java.game.player.Player
-import com.rs.java.game.player.actions.combat.PlayerCombat
-import com.rs.java.utils.Logger
 import com.rs.kotlin.game.player.combat.Weapon
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.RangedStyle
-import java.util.*
 
 sealed class SpecialAttack(
     val energyCost: Int,
@@ -50,7 +45,6 @@ sealed class SpecialAttack(
         fun submitSpecialRequest(player: Player) {
             val weapon = Weapon.getWeapon(player.equipment.weaponId)
             val special = weapon.special ?: return
-
             when (special) {
                 is Combat -> {}
                 is Instant -> {
@@ -94,8 +88,8 @@ sealed class SpecialAttack(
                 }
                 is InstantCombat -> {
                     if (player.newActionManager.getActionDelay() == 0) {
-                        player.message(
-                            "Warning: Since the maul's special is an instant attack, it will be wasted when used on a first strike.")
+                        if (!player.combatDefinitions.usingSpecialAttack)
+                            player.message("Warning: Since the maul's special is an instant attack, it will be wasted when used on a first strike.")
                         player.combatDefinitions.switchUsingSpecialAttack()
                         return
                     }
@@ -116,6 +110,7 @@ sealed class SpecialAttack(
                 }
             }
             player.combatDefinitions.switchUsingSpecialAttack()
+            player.lastSpecClickTick = WorldThread.getCycleIndex()
         }
     }
 }
