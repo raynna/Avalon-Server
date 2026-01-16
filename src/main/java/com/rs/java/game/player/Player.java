@@ -198,13 +198,13 @@ public class Player extends Entity {
 
     public transient CombatStyle combatStyle;
 
-    private transient QueuedInstantCombat<SpecialAttack.InstantRangeCombat> activeInstantSpecial = null;
+    private transient QueuedInstantCombat<SpecialAttack> activeInstantSpecial = null;
 
-    public void setActiveInstantSpecial(CombatContext context, SpecialAttack.InstantRangeCombat special) {
+    public void setActiveInstantSpecial(CombatContext context, SpecialAttack special) {
         activeInstantSpecial = new QueuedInstantCombat<>(context, special);
     }
 
-    public QueuedInstantCombat<SpecialAttack.InstantRangeCombat> getActiveInstantSpecial() {
+    public QueuedInstantCombat<SpecialAttack> getActiveInstantSpecial() {
         return activeInstantSpecial;
     }
 
@@ -2401,20 +2401,65 @@ public class Player extends Entity {
     public transient int prayerTick = 0;
 
     public void processActiveInstantSpecial() {
-        QueuedInstantCombat<? extends SpecialAttack> activeSpecial = getActiveInstantSpecial();
-        if (activeSpecial == null) {
-            return;
-        }
-        if (getCombatDefinitions().usingSpecialAttack) {
-            if (activeSpecial.special instanceof SpecialAttack.InstantRangeCombat) {
-                faceEntity(activeInstantSpecial.context.getDefender());
-                activeSpecial.execute();
-                combatDefinitions.decreaseSpecialAttack(activeSpecial.special.getEnergyCost());
-                stopAll(false, true, true);
+
+        if (combatDefinitions.usingSpecialAttack && getActiveInstantSpecial() == null) {
+
+            Weapon weapon = Weapon.Companion.getWeapon(equipment.getWeaponId());
+
+            if (weapon != null && weapon.getSpecial() instanceof SpecialAttack.InstantCombat) {
+
+                Entity target = getTemporaryTarget();
+                if (target != null) {
+
+                    CombatStyle style = Weapon.isRangedWeapon(this)
+                            ? new RangedStyle(this, target)
+                            : new MeleeStyle(this, target);
+
+                    CombatContext ctx = new CombatContext(
+                            this,
+                            target,
+                            weapon,
+                            equipment.getWeaponId(),
+                            null,
+                            style,
+                            weapon.getWeaponStyle().getStyleSet().styleAt(combatDefinitions.getAttackStyle()),
+                            weapon.getWeaponStyle().getStyleSet().bonusAt(combatDefinitions.getAttackStyle()),
+                            null,
+                            true,
+                            false
+                    );
+                    setActiveInstantSpecial(ctx, weapon.getSpecial());
+                }
             }
         }
+
+        QueuedInstantCombat<? extends SpecialAttack> activeSpecial = getActiveInstantSpecial();
+        if (activeSpecial == null)
+            return;
+
+        if (!combatDefinitions.usingSpecialAttack)
+            return;
+
+        SpecialAttack special = activeSpecial.special;
+
+        if (!(special instanceof SpecialAttack.InstantCombat
+                || special instanceof SpecialAttack.InstantRangeCombat))
+            return;
+
+        if (isOutOfRange(activeInstantSpecial.context.getDefender(),
+                activeInstantSpecial.context.getCombat().getAttackDistance()))
+            return;
+
+        faceEntity(activeInstantSpecial.context.getDefender());
+        activeSpecial.execute();
+        combatDefinitions.decreaseSpecialAttack(special.getEnergyCost());
+
+        //combatDefinitions.switchUsingSpecialAttack(); // consume toggle
+        //stopAll(false, true, true);
         clearActiveInstantSpecial();
     }
+
+
 
     public void processQueuedInstantSpecials() {
         if (getTemporaryTarget() == null || queuedInstantCombats.isEmpty())
@@ -2460,7 +2505,7 @@ public class Player extends Entity {
                 queued.execute();
                 queuedInstantCombats.remove(queued);
             }
-            stopAll(false, true, true);
+            //stopAll(false, true, true);
         }
     }
 
