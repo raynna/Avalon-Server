@@ -140,8 +140,8 @@ public class Player extends Entity {
     private String password;
     private String displayName;
 
-    public HealthOverlay healthOverlay = new HealthOverlay();
-    public TimerOverlay timerOverlay = new TimerOverlay();
+    public transient HealthOverlay healthOverlay = new HealthOverlay();
+    public transient TimerOverlay timerOverlay = new TimerOverlay();
 
 
     private Item[] tempInventory;

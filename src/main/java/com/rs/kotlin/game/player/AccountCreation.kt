@@ -38,6 +38,7 @@ class AccountCreation {
         fun savePlayer(player: Player) {
             // todo(Mujtaba): forbid namespace in user names.
             val filename = player.username.replace(" ", "_")
+            GSONParser.debugSave(player, Player::class.java);
             GSONParser.save(
                 player,
                 "$userDir$filename.json",

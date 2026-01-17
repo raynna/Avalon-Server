@@ -82,16 +82,25 @@ import com.rs.kotlin.game.player.equipment.BonusType;
 public class ButtonHandler {
 
     public static void handleButtons(final Player player, InputStream stream, final int packetId) {
+
         int interfaceHash = stream.readIntV2();
-        int interfaceId = interfaceHash >> 16;
-        if (Utils.getInterfaceDefinitionsSize() <= interfaceId) {
+
+        int interfaceId = interfaceHash >>> 16;
+        int componentId = interfaceHash & 0xFFFF;
+
+        if (componentId == 65535)
+            componentId = -1;
+
+        if (interfaceId < 0 || interfaceId >= Utils.getInterfaceDefinitionsSize())
             return;
-        }
-        if (player.isDead()) ;
-        final int componentId = interfaceHash - (interfaceId << 16);
-        if (componentId != 65535 && Utils.getInterfaceDefinitionsComponentsSize(interfaceId) <= componentId) {
+
+        if (componentId != -1 &&
+                (componentId < 0 || componentId >= Utils.getInterfaceDefinitionsComponentsSize(interfaceId)))
             return;
-        }
+
+        if (player.isDead())
+            return;
+
         final int slotId2 = stream.readUnsignedShort128();
         final int slotId = stream.readUnsignedShortLE128();
         if (!player.getControlerManager().processButtonClick(interfaceId, componentId, slotId, slotId2, packetId))
@@ -2545,15 +2554,10 @@ public class ButtonHandler {
     public static void registerEquip(Player player, int slotId) {
         if (player.getSwitchItemCache().contains(slotId)) return;
         player.lastItemSwitchTick = WorldThread.getCycleIndex();
-        player.message("Set lastItemSwitchTick to: " + player.lastItemSwitchTick);
-        player.message("lastSpecClick is: " + player.lastSpecClickTick);
         player.stopAll(false, false, true);
         if (player.getInventory().getItem(slotId).getEquipSlot() == Equipment.SLOT_WEAPON) {
-            player.message("equipslot is weapon");
-            player.message("player using special?: " + player.getCombatDefinitions().isUsingSpecialAttack());
             if (player.lastSpecClickTick != player.lastItemSwitchTick && player.getCombatDefinitions().isUsingSpecialAttack()) {
                 player.combatDefinitions.switchUsingSpecialAttack();
-                player.message("reset spec bar cus active");
                 //player.getQueuedInstantCombats().clear();
             }
             player.itemSwitch = true;

@@ -301,7 +301,7 @@ public final class EmotesManager implements Serializable {
 	}
 
 	public void useBookEmote(int id) {
-		if (player.getAttackedByDelay() + 10000 > Utils.currentTimeMillis()) {
+		if (player.isInCombat()) {
 			player.getPackets().sendGameMessage("You can't perform while you're under combat.");
 			return;
 		} else if (isDoingEmote()) {

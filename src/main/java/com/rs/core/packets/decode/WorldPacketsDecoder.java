@@ -783,7 +783,7 @@ public final class WorldPacketsDecoder extends Decoder {
 		final WorldObject object = !player.isAtDynamicRegion() ? mapObject
 				: new WorldObject(objectId, mapObject.getType(), mapObject.getRotation(), x, y, player.getPlane());
 		final Item item = player.getInventory().getItem(slot);
-		if (player.isDead() || Utils.getInterfaceDefinitionsSize() <= interfaceId)
+		if (player.isDead() || componentId < 0 || Utils.getInterfaceDefinitionsSize() <= interfaceId)
 			return;
 		if (player.isLocked())
 			return;
@@ -1111,7 +1111,7 @@ public final class WorldPacketsDecoder extends Decoder {
 		int interfaceId = interfaceHash >> 16;
 		int componentId = interfaceHash - (interfaceId << 16);
 
-		if (Utils.getInterfaceDefinitionsSize() <= interfaceId)
+		if (componentId < 0 || Utils.getInterfaceDefinitionsSize() <= interfaceId)
 			return;
 		if (!player.getInterfaceManager().containsInterface(interfaceId))
 			return;

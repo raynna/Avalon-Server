@@ -63,9 +63,14 @@ public class WrathEffect {
                 processNPCsInRegion(source, killer, regionId, radius, maxDamage);
             }
         } else {
+            source.message("apply hit to target");
+            if (killer instanceof Player p2) {
+                p2.message("damage attacker");
+            }
             if (killer != null && killer != source && !killer.isDead() && !killer.hasFinished() &&
                 killer.withinDistance(source, radius) && source.getControlerManager().canHit(killer)) {
                 killer.applyHit(new Hit(source, Utils.getRandom(maxDamage), Hit.HitLook.REGULAR_DAMAGE));
+                killer.setNextForceTalk(new ForceTalk("wrath hit me!"));
             }
         }
     }
