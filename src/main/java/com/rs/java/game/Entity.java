@@ -460,97 +460,73 @@ public abstract class Entity extends WorldTile {
     public abstract void sendDeath(Entity source);
 
     public void processMovement() {
-        WorldTile preMovementPosition = new WorldTile(this);
-        predictedWorldTile = null;
         lastWorldTile = new WorldTile(this);
         if (lastFaceEntity >= 0) {
-            Entity target = lastFaceEntity >= 32768
-                    ? World.getPlayers().get(lastFaceEntity - 32768)
-                    : World.getNPCs().get(lastFaceEntity);
+            Entity target = lastFaceEntity >= 32768 ? World.getPlayers().get(lastFaceEntity - 32768) : World.getNPCs().get(lastFaceEntity);
             if (target != null) {
                 int size = target.getSize();
                 updateAngle(target, size, size);
             }
+            /*
+             * direction = Utils.getFaceDirection(target.getCoordFaceX(target.getSize()) -
+             * getCoordFaceX(getSize()), target.getCoordFaceY(target.getSize()) -
+             * getCoordFaceY(getSize()));
+             */
         }
-
         nextWalkDirection = nextRunDirection = -1;
-
         if (nextWorldTile != null) {
+            // int lastPlane = getPlane();
             setLocation(nextWorldTile);
             nextWorldTile = null;
             teleported = true;
-
-            if (this instanceof Player p && p.getTemporaryMoveType() == -1)
-                p.setTemporaryMoveType(Player.TELE_MOVE_TYPE);
-
+            // not required anymore due to new gpi change
+            if (this instanceof Player && ((Player) this).getTemporaryMoveType() == -1)
+                ((Player) this).setTemporaryMoveType(Player.TELE_MOVE_TYPE);
             World.updateEntityRegion(this);
             if (needMapUpdate())
                 loadMapRegions();
-
+            /*
+             * else if (this instanceof Player && lastPlane != getPlane()) ((Player)
+             * this).setClientHasntLoadedMapRegion();
+             */
             resetWalkSteps();
-            predictedWorldTile = null;
             return;
         }
-
         teleported = false;
-
-        if (walkSteps == null || walkSteps.isEmpty()) {
-            predictedWorldTile = null;
+        if (walkSteps.isEmpty())
             return;
+        if (this instanceof Player) { // emotes are special on rs, when using one u will walk once emote done
+            if (((Player) this).getEmotesManager().getNextEmoteEnd() >= Utils.currentTimeMillis())
+                return;
         }
-
-        predictedWorldTile = calculatePostMovementPosition();
-
-        if (this instanceof Player p) {
-            if (p.getEmotesManager().getNextEmoteEnd() >= Utils.currentTimeMillis()) {
-                predictedWorldTile = null;
+        if (this instanceof TorturedSoul) { // waste of process power personaly but meh.
+            if (((TorturedSoul) this).switchWalkStep()) {
                 return;
             }
         }
-
-        if (this instanceof TorturedSoul ts) {
-            if (ts.switchWalkStep()) {
-                predictedWorldTile = null;
-                return;
-            }
-        }
-
-        if (this instanceof Player p && p.getRunEnergy() <= 0)
+        if (this instanceof Player && ((Player) this).getRunEnergy() <= 0)
             setRun(false);
-
         for (int stepCount = 0; stepCount < (run ? 2 : 1); stepCount++) {
             Object[] nextStep = getNextWalkStep();
             if (nextStep == null)
                 break;
-
             int dir = (int) nextStep[0];
-
-            boolean checkClip = (boolean) nextStep[3];
-            if ((checkClip && !World.checkWalkStep(getPlane(), getX(), getY(), dir, getSize()))
-                    || (this instanceof NPC && !canWalkNPC(getX() + Utils.DIRECTION_DELTA_X[dir],
-                    getY() + Utils.DIRECTION_DELTA_Y[dir]))) {
+            if (((boolean) nextStep[3] && !World.checkWalkStep(getPlane(), getX(), getY(), dir, getSize())) || (this instanceof NPC && !canWalkNPC(getX() + Utils.DIRECTION_DELTA_X[dir], getY() + Utils.DIRECTION_DELTA_Y[dir]))) {
                 resetWalkSteps();
                 break;
             }
-
             previousTile = new WorldTile(getX(), getY(), getPlane());
-
             if (stepCount == 0)
                 nextWalkDirection = dir;
             else
                 nextRunDirection = dir;
-
             moveLocation(Utils.DIRECTION_DELTA_X[dir], Utils.DIRECTION_DELTA_Y[dir], 0);
-
             if (run && stepCount == 0) {
                 Object[] previewStep = previewNextWalkStep();
                 if (previewStep == null)
                     break;
-
                 int previewDir = (int) previewStep[0];
-                if (Utils.getPlayerRunningDirection(
-                        Utils.DIRECTION_DELTA_X[dir] + Utils.DIRECTION_DELTA_X[previewDir],
-                        Utils.DIRECTION_DELTA_Y[dir] + Utils.DIRECTION_DELTA_Y[previewDir]) == -1)
+                if (Utils.getPlayerRunningDirection(Utils.DIRECTION_DELTA_X[dir] + Utils.DIRECTION_DELTA_X[previewDir], Utils.DIRECTION_DELTA_Y[dir] + Utils.DIRECTION_DELTA_Y[previewDir]) == -1)
                     break;
             }
         }
@@ -564,57 +540,16 @@ public abstract class Entity extends WorldTile {
         World.updateEntityRegion(this);
         if (needMapUpdate())
             loadMapRegions();
-    }
-
-
-    private WorldTile calculatePostMovementPosition() {
-        if (walkSteps == null || walkSteps.isEmpty())
-            return new WorldTile(this);
-
-        int simulatedX = getX();
-        int simulatedY = getY();
-        int simulatedPlane = getPlane();
-
-        int maxSteps = run ? 2 : 1;
-
-        for (int stepCount = 0; stepCount < maxSteps; stepCount++) {
-            Object[] step = previewWalkStep(stepCount);
-            if (step == null)
-                break;
-
-            int dir = (int) step[0];
-            boolean checkClip = (boolean) step[3];
-
-            if (checkClip && !World.checkWalkStep(simulatedPlane, simulatedX, simulatedY, dir, getSize()))
-                break;
-
-            if (this instanceof NPC) {
-                int nextX = simulatedX + Utils.DIRECTION_DELTA_X[dir];
-                int nextY = simulatedY + Utils.DIRECTION_DELTA_Y[dir];
-                if (!canWalkNPC(nextX, nextY))
-                    break;
-            }
-
-            simulatedX += Utils.DIRECTION_DELTA_X[dir];
-            simulatedY += Utils.DIRECTION_DELTA_Y[dir];
-
-            if (run && stepCount == 0) {
-                Object[] preview = previewWalkStep(stepCount + 1);
-                if (preview == null)
-                    break;
-
-                int previewDir = (int) preview[0];
-                if (Utils.getPlayerRunningDirection(
-                        Utils.DIRECTION_DELTA_X[dir] + Utils.DIRECTION_DELTA_X[previewDir],
-                        Utils.DIRECTION_DELTA_Y[dir] + Utils.DIRECTION_DELTA_Y[previewDir]) == -1) {
-                    break;
-                }
-            }
+        if (this instanceof Player) {
+            Player player = (Player) this;
+            //todo check players location
         }
-
-        return new WorldTile(simulatedX, simulatedY, simulatedPlane);
     }
 
+
+    public WorldTile getWorldTile() {
+        return new WorldTile(this.getX(), this.getY(), getPlane());
+    }
 
     public WorldTile getFaceWorldTile() {
         return new WorldTile(getCoordFaceX(getSize()), getCoordFaceY(getSize()), getPlane());
@@ -1610,10 +1545,11 @@ public abstract class Entity extends WorldTile {
 
     public WorldTile getSouthwestTile() {
         int size = this.getSize();
-        int offset = Math.max(0, size - 1);
+        int half = (size - 1) / 2;
+
         return new WorldTile(
-                this.getX() - offset,
-                this.getY() - offset,
+                this.getX() + half,
+                this.getY() + half,
                 this.getPlane()
         );
     }
@@ -1691,16 +1627,9 @@ public abstract class Entity extends WorldTile {
     public void setNextWorldTile(WorldTile nextWorldTile) {
         this.nextWorldTile = nextWorldTile;
     }
-    public void setPredictedWorldTile(WorldTile predictedWorldTile) {
-        this.predictedWorldTile = predictedWorldTile;
-    }
 
     public WorldTile getNextWorldTile() {
         return nextWorldTile;
-    }
-
-    public WorldTile getPredictedWorldTile() {
-        return predictedWorldTile;
     }
 
     public boolean hasTeleported() {

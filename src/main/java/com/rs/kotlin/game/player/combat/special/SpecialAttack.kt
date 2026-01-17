@@ -48,8 +48,10 @@ sealed class SpecialAttack(
             when (special) {
                 is Combat -> {}
                 is Instant -> {
-                    if (player.itemSwitch)
+                    if (player.itemSwitch) {
+                        player.combatDefinitions.switchUsingSpecialAttack()
                         return
+                    }
                     if (player.combatDefinitions.specialAttackPercentage < special.energyCost) {
                         player.message("You don't have enough special attack energy.")
                         return

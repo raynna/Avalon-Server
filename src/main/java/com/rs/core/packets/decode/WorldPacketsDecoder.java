@@ -302,6 +302,11 @@ public final class WorldPacketsDecoder extends Decoder {
 	}
 
 	private final transient Player player;
+
+	public Player getPlayer() {
+		return player;
+	}
+
     private int chatType;
 
 	public WorldPacketsDecoder(Session session, Player player) {

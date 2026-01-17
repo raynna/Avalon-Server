@@ -2185,6 +2185,73 @@
       "duradel"
     ]
   },
+  "1155": {
+    "id": 1155,
+    "name": "Kalphite Guardian",
+    "members": true,
+    "combatLevel": 141,
+    "attackLevel": 110,
+    "strengthLevel": 110,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 170,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 25,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "4",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 20,
+    "slayerXp": 170,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "1267": {
     "id": 1267,
     "name": "Rock Crab",

@@ -23,6 +23,10 @@ import com.rs.java.utils.Utils;
 
 public class Session {
 
+	private volatile Player player;
+
+	public Player getPlayer() { return player; }
+	public void setPlayer(Player player) { this.player = player; }
 	public static final Set<Session> ACTIVE_SESSIONS = ConcurrentHashMap.newKeySet();
 
 	private Channel channel;
@@ -50,6 +54,7 @@ public class Session {
 
 	public void close() {
 		ACTIVE_SESSIONS.remove(this);
+		player = null;
 	}
 
 	public void logIp(Session session) {
@@ -92,6 +97,7 @@ public class Session {
 			case 2 -> this.decoder = new LoginPacketsDecoder(this);
 			case 3 -> {
 				Player p = (Player) attachment;
+				this.player = p;
 				this.decoder = new WorldPacketsDecoder(this, p);
 				if (p != null) {
 					p.setPacketsDecoderPing(Utils.currentTimeMillis());
@@ -109,7 +115,11 @@ public class Session {
 		switch (stage) {
 			case 0 -> this.encoder = new GrabPacketsEncoder(this);
 			case 1 -> this.encoder = new LoginPacketsEncoder(this);
-			case 2 -> this.encoder = new WorldPacketsEncoder(this, (Player) attachment);
+			case 2 -> {
+				Player p = (Player) attachment;
+				this.player = p;
+				this.encoder = new WorldPacketsEncoder(this, p);
+			}
 			default -> this.encoder = null;
 		}
 	}

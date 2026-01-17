@@ -97,7 +97,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val allowedAmmos = currentWeapon.allowedAmmoIds
         val maxTier = currentWeapon.maxAmmoTier
         val weaponName = currentWeapon.name
-        if (currentAmmo == null && weaponAmmoType != AmmoType.THROWING && weaponAmmoType != AmmoType.DART && weaponAmmoType != AmmoType.JAVELIN && weaponAmmoType != AmmoType.NONE) {
+        if (currentAmmo == null && weaponAmmoType != AmmoType.THROWING && weaponAmmoType != AmmoType.DART && weaponAmmoType != AmmoType.JAVELIN && weaponAmmoType != AmmoType.MORRIGAN_THROWING && weaponAmmoType != AmmoType.NONE) {
             attacker.message("You don't have any ammunition equipped.")
             return false
         }
@@ -308,7 +308,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             }
         }
 
-        if (ammoType == AmmoType.THROWING || ammoType == AmmoType.DART || ammoType == AmmoType.JAVELIN || ammoType == AmmoType.THROWNAXE) {
+        if (ammoType == AmmoType.THROWING || ammoType == AmmoType.DART|| ammoType == AmmoType.MORRIGAN_THROWING || ammoType == AmmoType.JAVELIN || ammoType == AmmoType.THROWNAXE) {
             if (weapon != null) {
                 attacker.equipment.decreaseItem(Equipment.SLOT_WEAPON.toInt(), 1)
                 attacker.appearence.generateAppearenceData()
@@ -358,6 +358,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             AmmoType.ARROW -> Projectile.ARROW
             AmmoType.BOLT -> Projectile.BOLT
             AmmoType.DART -> Projectile.DART
+            AmmoType.MORRIGAN_THROWING -> Projectile.MORRIGAN_THROWING_AXE
             AmmoType.THROWING -> Projectile.THROWING_KNIFE
             AmmoType.JAVELIN -> Projectile.JAVELIN
             AmmoType.CHINCHOMPA -> Projectile.CHINCHOMPA
@@ -378,7 +379,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
 
     private fun isThrowing(weapon: RangedWeapon): Boolean {
-        return weapon.ammoType == AmmoType.DART || weapon.ammoType == AmmoType.THROWING || weapon.ammoType == AmmoType.JAVELIN || weapon.ammoType == AmmoType.THROWNAXE
+        return weapon.ammoType == AmmoType.DART || weapon.ammoType == AmmoType.THROWING || weapon.ammoType == AmmoType.MORRIGAN_THROWING || weapon.ammoType == AmmoType.JAVELIN || weapon.ammoType == AmmoType.THROWNAXE
     }
 
     private fun dropAmmoOnGround() {

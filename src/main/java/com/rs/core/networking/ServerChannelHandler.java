@@ -2,6 +2,7 @@ package com.rs.core.networking;
 
 import java.net.InetSocketAddress;
 
+import com.rs.java.game.player.Player;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.*;
@@ -66,21 +67,35 @@ public final class ServerChannelHandler extends SimpleChannelHandler {
 		Logger.log("NET", "Channel disconnected: " + e.getChannel());
 
 		Object attachment = ctx.getAttachment();
-		if (attachment instanceof Session session) {
-			Logger.log("NET", "Session closed for IP=" + session.getIP());
-			try {
-				if (session.getWorldPacketsEncoder() != null &&
-						session.getWorldPacketsEncoder().getPlayer() != null) {
-					Logger.log("NET", "Finishing player: " +
-							session.getWorldPacketsEncoder().getPlayer().getUsername());
-					session.getWorldPacketsEncoder().getPlayer().finish();
-				}
-			} catch (Throwable t) {
-				Logger.handle(t);
+		if (!(attachment instanceof Session session))
+			return;
+
+		Logger.log("NET", "Session closed for IP=" + session.getIP());
+
+		try {
+			Player p = null;
+
+			// Prefer decoder (usually survives longer than encoder)
+			if (session.getWorldPackets() != null)
+				p = session.getWorldPackets().getPlayer();
+
+			// Fallback to encoder
+			if (p == null && session.getWorldPacketsEncoder() != null)
+				p = session.getWorldPacketsEncoder().getPlayer();
+
+			if (p != null) {
+				Logger.log("NET", "Finishing player: " + p.getUsername());
+				p.finish();
+			} else {
+				Logger.log("NET", "No player found for session IP=" + session.getIP());
 			}
+		} catch (Throwable t) {
+			Logger.handle(t);
+		} finally {
 			session.close();
 		}
 	}
+
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {

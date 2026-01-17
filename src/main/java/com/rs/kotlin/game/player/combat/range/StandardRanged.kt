@@ -916,27 +916,17 @@ object StandardRanged : RangeData() {
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 4,
             animationId = 10504,
-            ammoType = AmmoType.THROWING,
-            effect = SpecialEffect(
-                execute = { context ->
-                    context.attacker.animate("animation.morrigans_throwing_axe_attack")
-                    ProjectileManager.send(Projectile.THROWING_KNIFE, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
-                    context.hits {
-                        ranged(
-                            delay = context.combat.getHitDelay()
-                        )
-                    }
-                    true
-                }
-            ),
+            ammoType = AmmoType.MORRIGAN_THROWING,
+            startGfx = Graphics("graphic.morrigans_throwing_axe_start", 0),
+            projectileId = Rscm.graphic("graphic.morrigans_throwing_axe_projectile"),
             special = SpecialAttack.InstantRangeCombat(
                 energyCost = 25,
                 execute = { context ->
                     context.attacker.animate("animation.morrigans_throwing_axe_attack")
                     context.attacker.gfx("graphic.morrigans_throwing_axe_start")
-                    ProjectileManager.send(Projectile.THROWING_KNIFE, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
+                    val impact = ProjectileManager.send(Projectile.MORRIGAN_THROWING_AXE, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
                     context.hits {
-                        val rangedHit = ranged(delay = context.combat.getHitDelay())
+                        val rangedHit = ranged(delay = impact - 1)
                         rangedHit.damage = (rangedHit.damage * 0.6).toInt()
                     }
                 }
@@ -949,29 +939,18 @@ object StandardRanged : RangeData() {
             attackRange = 5,
             animationId = 10501,
             ammoType = AmmoType.JAVELIN,
-            effect = SpecialEffect(
-                execute = { context ->
-                    context.attacker.animate("animation.morrigans_javelin_attack")
-                    ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_javelin_projectile", context.attacker, context.defender)
-                    context.hits {
-                        ranged(
-                            delay = context.combat.getHitDelay()
-                        )
-                    }
-                    true
-                }
-            ),
+            startGfx = Graphics("graphic.morrigans_javelin_start", 0),
+            projectileId = Rscm.graphic("graphic.morrigans_javelin_projectile"),
             special = SpecialAttack.Combat(
                 energyCost = 50,
                 execute = { context ->
                     context.attacker.animate("animation.morrigans_javelin_attack")
                     context.attacker.gfx("graphic.morrigans_javelin_start")
-                    ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_javelin_projectile", context.attacker, context.defender)
+                    val impact = ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_javelin_projectile", context.attacker, context.defender)
                     context.hits {
-                        val delay = context.combat.getHitDelay()
-                        val rangedHit = ranged(accuracyMultiplier = 1.5, delay = delay)
+                        val rangedHit = ranged(accuracyMultiplier = 1.5, delay = impact - 1)
                         if (rangedHit.damage > 0) {
-                            context.applyBleed(baseHit = rangedHit, bleedPercent = .75, maxTickDamage =50, initialDelay = delay, tickInterval = 2)
+                            context.applyBleed(baseHit = rangedHit, bleedPercent = .75, maxTickDamage =50, initialDelay = impact, tickInterval = 2)
                         }
                     }
                 }

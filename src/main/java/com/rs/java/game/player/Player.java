@@ -3239,7 +3239,7 @@ public class Player extends Entity {
             stopAll(false, true, !(actionManager.getAction() instanceof PlayerCombat));
         }
         long currentTime = Utils.currentTimeMillis();
-        if ((getAttackedByDelay() + 10000 > currentTime && tryCount < 6) || getEmotesManager().getNextEmoteEnd() >= currentTime || isDead()) {
+        if ((isInCombat() && tryCount < 6) || getEmotesManager().getNextEmoteEnd() >= currentTime || isDead()) {
             CoresManager.slowExecutor.schedule(() -> {
                 try {
                     packetsDecoderPing = Utils.currentTimeMillis();

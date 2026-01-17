@@ -755,7 +755,7 @@ public final class Utils {
 	 * @param t2 the t2
 	 * @return the distance
 	 */
-	public static final int getDistance(WorldTile t1, WorldTile t2) {
+	public static int getDistance(WorldTile t1, WorldTile t2) {
 		return getDistance(t1.getX(), t1.getY(), t2.getX(), t2.getY());
 	}
 

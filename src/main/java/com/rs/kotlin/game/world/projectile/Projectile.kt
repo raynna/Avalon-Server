@@ -8,6 +8,7 @@ enum class Projectile(val typeName: String) {
     BOLT("bolt"),
     DART("dart"),
     THROWING_KNIFE("throwing_knife"),
+    MORRIGAN_THROWING_AXE("throwing_knife"),
     JAVELIN("javelin"),
     CHINCHOMPA("chinchompa"),
     ELEMENTAL_SPELL("elemental_spell"),

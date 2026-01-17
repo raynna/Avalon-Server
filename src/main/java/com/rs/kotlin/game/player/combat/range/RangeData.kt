@@ -42,6 +42,7 @@ enum class AmmoType {
     BOLT,
     DART,
     THROWING,
+    MORRIGAN_THROWING,
     JAVELIN,
     CHINCHOMPA,
     THROWNAXE,
