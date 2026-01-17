@@ -309,7 +309,8 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             if (weapon != null) {
                 attacker.equipment.decreaseItem(Equipment.SLOT_WEAPON.toInt(), 1)
                 attacker.appearence.generateAppearenceData()
-                dropAmmoOnGround()
+                if (!Utils.roll(1, 3))
+                    World.updateGroundItem(Item(weapon.id, 1), defender.tile, attacker);
                 return true
             }
         }
