@@ -2402,7 +2402,7 @@ public class Player extends Entity {
 
     public void processActiveInstantSpecial() {
 
-        if (combatDefinitions.usingSpecialAttack && getActiveInstantSpecial() == null) {
+        if (combatDefinitions.usingSpecialAttack && getActiveInstantSpecial() == null && newActionManager.getActionDelay() > 0) {
 
             Weapon weapon = Weapon.Companion.getWeapon(equipment.getWeaponId());
 
