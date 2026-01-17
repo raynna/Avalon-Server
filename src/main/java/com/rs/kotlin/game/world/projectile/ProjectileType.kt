@@ -7,9 +7,10 @@ data class ProjectileType(
     val arc: Int,
     val displacement: Int = 0,
     val multiplier: Int = 5,
+    val lengthAdjustment: Int = 0,
 ) {
 
     fun endTime(distance: Int): Int =
-        startTime + (distance * multiplier)
+        startTime + lengthAdjustment + (distance * multiplier)
 }
 

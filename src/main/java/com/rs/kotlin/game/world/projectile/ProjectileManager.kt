@@ -278,8 +278,8 @@ object ProjectileManager {
         val remainderCycles = endCycle % 30
 
 
-        val startTile = if (gfxId == 368) {
-            WorldTile(defender.faceWorldTile.x - 1, defender.faceWorldTile.y - 1, defender.faceWorldTile.plane)
+        val startTile = if (projectile == Projectile.ICE_BARRAGE) {
+            WorldTile(defender.faceWorldTile.x, defender.faceWorldTile.y, defender.faceWorldTile.plane)
         } else {
             attacker.faceWorldTile
         }
