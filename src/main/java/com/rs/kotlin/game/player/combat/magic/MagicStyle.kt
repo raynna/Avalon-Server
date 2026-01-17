@@ -21,6 +21,7 @@ import com.rs.kotlin.game.player.combat.range.RangedWeapon
 import com.rs.kotlin.game.player.combat.range.StandardRanged
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.getMultiAttackTargets
+import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -405,7 +406,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 }
             }
             if (spell.id == 23) {
-                t.gfxAnchoredSouthWest(368, 100);
+                ProjectileManager.send(Projectile.ICE_BARRAGE, 368, attacker, defender);
             }
             if (spell.projectileId != -1) {
                     ProjectileManager.send(

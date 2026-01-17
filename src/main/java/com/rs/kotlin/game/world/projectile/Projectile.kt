@@ -15,6 +15,7 @@ enum class Projectile(val typeName: String) {
     MIASMIC_SPELL("miasmic_spell"),
     BLOOD_SPELL("blood_spell"),
     ICE_SPELL("ice_spell"),
+    ICE_BARRAGE("ice_barrage"),
     SAP("sap"),
     LEECH("leech"),
     SOULSPLIT("soulsplit"),

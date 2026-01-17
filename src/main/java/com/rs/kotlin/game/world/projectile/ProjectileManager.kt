@@ -278,7 +278,11 @@ object ProjectileManager {
         val remainderCycles = endCycle % 30
 
 
-        val startTile = attacker.faceWorldTile
+        val startTile = if (gfxId == 368) {
+            WorldTile(defender.faceWorldTile.x - 1, defender.faceWorldTile.y - 1, defender.faceWorldTile.plane)
+        } else {
+            attacker.faceWorldTile
+        }
         val endTile = defender.faceWorldTile
 
         queueProjectileAndGetImpactCycles(
@@ -350,8 +354,8 @@ object ProjectileManager {
 
     @JvmStatic
     fun flushProjectile(player: Player, proj: QueuedProjectile) {
-        val start = proj.attacker?.faceWorldTile ?: proj.startTile!!
-        val end = proj.defender?.faceWorldTile ?: proj.endTile!!
+        val start = proj.startTile!!
+        val end = proj.endTile!!
 
         val stream = player.packets.createWorldTileStream(start)
         stream.writePacket(player, 20)
