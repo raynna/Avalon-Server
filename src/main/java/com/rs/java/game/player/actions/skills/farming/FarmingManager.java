@@ -26,26 +26,39 @@ public class FarmingManager implements Serializable {
 
     private static final long serialVersionUID = -6487741852718632170L;
 
-    private double growthMultiplier = 200.0;
+    // Growth cycles in ticks (1 tick = 0.6 seconds)
+    private static final int TICKS_PER_MINUTE = 100; // 100 ticks = 60 seconds
+    private static final int[] GROWTH_CYCLE_TICKS = {
+            5 * TICKS_PER_MINUTE,    // 5 min: Flowers, Saplings, Weeds
+            10 * TICKS_PER_MINUTE,   // 10 min: Allotments, Hops
+            20 * TICKS_PER_MINUTE,   // 20 min: Herbs, Bushes
+            40 * TICKS_PER_MINUTE,   // 40 min: Trees*, Mushrooms
+            80 * TICKS_PER_MINUTE,   // 80 min: Cactus, Belladonna
+            160 * TICKS_PER_MINUTE,  // 160 min: Fruit trees, Calquat
+            320 * TICKS_PER_MINUTE,  // 320 min: Spirit tree
+            640 * TICKS_PER_MINUTE   // 640 min: Hardwoods, Redwood
+    };
 
-    private static final int REGENERATION_CONSTANT = 20 * 60 * 1000;//20 minutes
+    public double growthMultiplier = 1.0;
+
+    private static final int REGENERATION_TICKS = 20 * TICKS_PER_MINUTE; // 20 minutes
     private static final int ALLOTMENT = 0, TREES = 1, HOPS = 2, FLOWERS = 3, FRUIT_TREES = 4, BUSHES = 5, HERBS = 6, COMPOST = 7, MUSHROOMS = 8, BELLADONNA = 9, CACTUS = 10, CALQUAT = 11;
     private static final int RAKE = 5341, EMPTY_BUCKET = 1925, SPADE = 952, DIBBER = 5343, SECATEURS = 5329, MAGIC_SECATEURS = 7409, TROWEL = 5325, COMPOST_BUCKET = 6032, SUPERCOMPOST_BUCKET = 6034;
     private static final String[] PATCH_NAMES = { "allotment", "tree", "hops", "flower", "fruit tree", "bush", "herb", "compost", "mushroom", "belladonna", "cactus", "calquat" };
     private static final int[][] HARVEST_AMOUNTS =
             {
-                    { 3, 3 }, //alot 3, 53
-                    { 1, 1 }, //tree
-                    { 3, 3 },//hops  3, 41
-                    { 1, 3 },//flower
-                    { 3, 5 },//fruit tree
-                    { 3, 5 },//bush
-                    { 3, 3 },//herb 3, 18
-                    { 0, 0 },//compost
-                    { 6, 9 },//mushroom
-                    { 1, 1 }, //belladona
-                    { 6, 9 }, //cactus
-                    { 6, 9 } //calquat
+                    { 3, 3 }, // allotment 3, 53
+                    { 1, 1 }, // tree
+                    { 3, 3 }, // hops 3, 41
+                    { 1, 3 }, // flower
+                    { 3, 5 }, // fruit tree
+                    { 3, 5 }, // bush
+                    { 3, 3 }, // herb 3, 18
+                    { 0, 0 }, // compost
+                    { 6, 9 }, // mushroom
+                    { 1, 1 }, // belladona
+                    { 6, 9 }, // cactus
+                    { 6, 9 }  // calquat
             };
     public static final int[] COMPOST_ORGANIC =
             { 6055, 1942, 1957, 1965, 5986, 5504, 5982, 249, 251, 253, 255, 257, 2998, 259, 261, 263, 3000, 265, 2481, 267, 269, 1951, 753, 2126, 247, 239, 6018 };
@@ -58,9 +71,13 @@ public class FarmingManager implements Serializable {
 
     private List<FarmingSpot> spots = new CopyOnWriteArrayList<>();
     private transient Player player;
+    private int globalTickCounter = 0;
+    private int playerGrowthOffset = 0; // Player-specific offset in ticks (0-300 ticks = 0-30 minutes)
 
     public FarmingManager() {
         spots = new CopyOnWriteArrayList<FarmingSpot>();
+        // Generate random offset for this player (0-300 ticks = 0-30 minutes)
+        playerGrowthOffset = Utils.random(300);
     }
 
     public void setPlayer(Player player) {
@@ -75,8 +92,12 @@ public class FarmingManager implements Serializable {
     }
 
     public void process() {
-        for (FarmingSpot spot : spots)
-            spot.process();
+        globalTickCounter++;
+
+        // Process all farming spots
+        for (FarmingSpot spot : spots) {
+            spot.process(globalTickCounter);
+        }
     }
 
     public void setGrowthMultiplier(double multiplier) {
@@ -87,100 +108,124 @@ public class FarmingManager implements Serializable {
         return growthMultiplier;
     }
 
+    public int getPlayerGrowthOffset() {
+        return playerGrowthOffset;
+    }
+
+    public int getGlobalTickCounter() {
+        return globalTickCounter;
+    }
+
+    // Check if current tick is a growth tick for a specific cycle
+    public boolean isGrowthTick(int cycleIndex) {
+        if (cycleIndex < 0 || cycleIndex >= GROWTH_CYCLE_TICKS.length) {
+            return false;
+        }
+
+        int cycleTicks = GROWTH_CYCLE_TICKS[cycleIndex];
+        if (cycleTicks <= 0) {
+            return false;
+        }
+
+        // Apply player offset and check if current tick aligns with cycle
+        int adjustedTick = (globalTickCounter + playerGrowthOffset) % cycleTicks;
+        return adjustedTick == 0;
+    }
+
     public enum ProductInfo {
 
         /**
-         * Allotments
+         * Allotments - 10 min cycle (index 1)
          */
-        Potato(5318, 1, 1942, 0, 8, 9, 10, ALLOTMENT),
-        Onion(5319, 5, 1957, 1, 9.5, 10.5, 10, ALLOTMENT),
-        Cabbage(5324, 7, 1965, 2, 10, 11.5, 10, ALLOTMENT),
-        Tomato(5322, 12, 1982, 3, 12.5, 14, 10, ALLOTMENT),
-        Sweetcorn(5320, 20, 5986, 4, 17, 19, 10, 6, ALLOTMENT),
-        Strawberry(5323, 31, 5504, 5, 26, 29, 10, 6, 2, ALLOTMENT),
-        Watermelon(5321, 47, 5982, 6, 48.5, 54.5, 10, 8, 4, ALLOTMENT),
+        Potato(5318, 1, 1942, 0, 8, 9, 10, ALLOTMENT, 1, 4),
+        Onion(5319, 5, 1957, 1, 9.5, 10.5, 10, ALLOTMENT, 1, 4),
+        Cabbage(5324, 7, 1965, 2, 10, 11.5, 10, ALLOTMENT, 1, 4),
+        Tomato(5322, 12, 1982, 3, 12.5, 14, 10, ALLOTMENT, 1, 4),
+        Sweetcorn(5320, 20, 5986, 4, 17, 19, 10, 6, ALLOTMENT, 1, 4),
+        Strawberry(5323, 31, 5504, 5, 26, 29, 10, 6, 2, ALLOTMENT, 1, 4),
+        Watermelon(5321, 47, 5982, 6, 48.5, 54.5, 10, 8, 4, ALLOTMENT, 1, 4),
 
         /**
-         * Herbs
+         * Herbs - 20 min cycle (index 2)
          */
-        Guam(5291, 9, 199, 0, 11, 12.5, 20, HERBS),
-        Marrentill(5292, 14, 201, 1, 13.5, 15, 20, HERBS),
-        Tarromin(5293, 19, 203, 2, 16, 18, 20, HERBS),
-        Harralander(5294, 26, 205, 3, 21.5, 24, 20, HERBS),
-        Rannar(5295, 32, 207, 4, 27, 30.5, 20, HERBS),
-        Toadflax(5296, 38, 3049, 5, 34, 38.5, 20, HERBS),
-        Irit(5297, 44, 209, 6, 43, 48.5, 20, HERBS),
-        Avantoe(5298, 50, 211, 7, 54.4, 61.5, 20, HERBS),
-        Kwuarm(5299, 56, 213, 6, 69, 78, 20, HERBS),
-        Snapdragon(5300, 62, 3051, 6, 87.5, 98.5, 20, HERBS),
-        Cadantine(5301, 67, 215, 6, 106.5, 120, 20, HERBS),
-        Lantadyme(5302, 73, 2485, 6, 134.5, 151.5, 20, HERBS),
-        Dwarf(5303, 79, 217, 6, 170.5, 192, 20, HERBS),
-        Torstol(5304, 85, 219, 6, 199.5, 224.5, 20, HERBS),
-        Fellstalk(21621, 91, 21626, 6, 225, 315.6, 20, HERBS),
-        Wergali(14870, 46, 213, 8, 52.8, 52.8, 20, HERBS),
-        Gout(6311, 65, 3261, 27, 105, 45, 20, HERBS),
+        Guam(5291, 9, 199, 0, 11, 12.5, 20, HERBS, 2, 4),
+        Marrentill(5292, 14, 201, 1, 13.5, 15, 20, HERBS, 2, 4),
+        Tarromin(5293, 19, 203, 2, 16, 18, 20, HERBS, 2, 4),
+        Harralander(5294, 26, 205, 3, 21.5, 24, 20, HERBS, 2, 4),
+        Rannar(5295, 32, 207, 4, 27, 30.5, 20, HERBS, 2, 4),
+        Toadflax(5296, 38, 3049, 5, 34, 38.5, 20, HERBS, 2, 4),
+        Irit(5297, 44, 209, 6, 43, 48.5, 20, HERBS, 2, 4),
+        Avantoe(5298, 50, 211, 7, 54.4, 61.5, 20, HERBS, 2, 4),
+        Kwuarm(5299, 56, 213, 6, 69, 78, 20, HERBS, 2, 4),
+        Snapdragon(5300, 62, 3051, 6, 87.5, 98.5, 20, HERBS, 2, 4),
+        Cadantine(5301, 67, 215, 6, 106.5, 120, 20, HERBS, 2, 4),
+        Lantadyme(5302, 73, 2485, 6, 134.5, 151.5, 20, HERBS, 2, 4),
+        Dwarf(5303, 79, 217, 6, 170.5, 192, 20, HERBS, 2, 4),
+        Torstol(5304, 85, 219, 6, 199.5, 224.5, 20, HERBS, 2, 4),
+        Fellstalk(21621, 91, 21626, 6, 225, 315.6, 20, HERBS, 2, 4),
+        Wergali(14870, 46, 213, 8, 52.8, 52.8, 20, HERBS, 2, 4),
+        Gout(6311, 65, 3261, 27, 105, 45, 20, HERBS, 2, 4),
 
         /**
-         * Flowers
+         * Flowers - 5 min cycle (index 0)
          */
-        Marigold(5096, 2, 6010, 0, 8.5, 47, 5, FLOWERS),
-        Rosemary(5097, 11, 6014, 1, 12, 66.5, 5, FLOWERS),
-        Nasturtium(5098, 24, 6012, 2, 19.5, 111, 5, FLOWERS),
-        Woad(5099, 25, 1793, 3, 20.5, 115.5, 5, FLOWERS),
-        Limpwurt(5100, 26, 225, 4, 21.5, 120, 5, FLOWERS),
-        White_lily(14589, 52, 14583, 6, 70, 250, 20, 4, -1, FLOWERS),
+        Marigold(5096, 2, 6010, 0, 8.5, 47, 5, FLOWERS, 0, 4),
+        Rosemary(5097, 11, 6014, 1, 12, 66.5, 5, FLOWERS, 0, 4),
+        Nasturtium(5098, 24, 6012, 2, 19.5, 111, 5, FLOWERS, 0, 4),
+        Woad(5099, 25, 1793, 3, 20.5, 115.5, 5, FLOWERS, 0, 4),
+        Limpwurt(5100, 26, 225, 4, 21.5, 120, 5, FLOWERS, 0, 4),
+        White_lily(14589, 52, 14583, 6, 70, 250, 20, 4, -1, FLOWERS, 0, 4),
 
         /**
-         * Hops
+         * Hops - 10 min cycle (index 1)
          */
-        Barley(5305, 3, 6006, 9, 8.5, 9.5, 10, 4, 1, HOPS),
-        Hammerstone(5307, 4, 5994, 0, 9, 10, 10, 4, 1, HOPS),
-        Asgarnian(5308, 8, 5996, 1, 10.9, 12, 10, 5, 3, HOPS),
-        Jute(5306, 13, 5931, 10, 13, 14.5, 10, 5, 3, HOPS),
-        Yanillian(5309, 16, 5998, 3, 14.5, 16, 10, 6, 1, HOPS),
-        Krandorian(5310, 21, 6000, 5, 17.5, 19.5, 10, 7, HOPS),
-        Wildbood(5311, 28, 6002, 7, 23, 26, 10, 7, 1, HOPS),
+        Barley(5305, 3, 6006, 9, 8.5, 9.5, 10, 4, 1, HOPS, 1, 4),
+        Hammerstone(5307, 4, 5994, 0, 9, 10, 10, 4, 1, HOPS, 1, 4),
+        Asgarnian(5308, 8, 5996, 1, 10.9, 12, 10, 5, 3, HOPS, 1, 4),
+        Jute(5306, 13, 5931, 10, 13, 14.5, 10, 5, 3, HOPS, 1, 4),
+        Yanillian(5309, 16, 5998, 3, 14.5, 16, 10, 6, 1, HOPS, 1, 4),
+        Krandorian(5310, 21, 6000, 5, 17.5, 19.5, 10, 7, HOPS, 1, 4),
+        Wildbood(5311, 28, 6002, 7, 23, 26, 10, 7, 1, HOPS, 1, 4),
 
         /**
-         * Trees
+         * Trees - 40 min cycle (index 3)
          */
-        Oak(5370, 15, 6043, 1, 467.3, 14, 40, TREES),
-        Willow(5371, 30, 6045, 6, 1456.5, 25, 40, 6, TREES),
-        Maple(5372, 45, 6047, 17, 3403.4, 45, 40, 8, TREES),
-        Yew(5373, 60, 6049, 26, 7069.9, 81, 40, 10, TREES),
-        Magic(5374, 75, 6051, 41, 13768.3, 145.5, 40, 12, TREES),
+        Oak(5370, 15, 6043, 1, 467.3, 14, 40, TREES, 3, 7),
+        Willow(5371, 30, 6045, 6, 1456.5, 25, 40, 6, TREES, 3, 7),
+        Maple(5372, 45, 6047, 17, 3403.4, 45, 40, 8, TREES, 3, 7),
+        Yew(5373, 60, 6049, 26, 7069.9, 81, 40, 10, TREES, 3, 7),
+        Magic(5374, 75, 6051, 41, 13768.3, 145.5, 40, 12, TREES, 3, 7),
 
         /**
-         * Fruit trees
+         * Fruit trees - 160 min cycle (index 5)
          */
-        Apple(5496, 27, 1955, 1, 1199.5, 22, 160, 6, FRUIT_TREES),
-        Banana(5497, 33, 1963, 26, 1841.5, 28, 160, 6, FRUIT_TREES),
-        Orange(5498, 39, 2108, 65, 2470.2, 35.5, 160, 6, FRUIT_TREES),
-        Curry(5499, 42, 5970, 90, 2906.9, 40, 160, 6, FRUIT_TREES),
-        Pineapple(5500, 51, 2114, 129, 4605.7, 57, 160, 6, FRUIT_TREES),
-        Papaya(5501, 57, 5972, 154, 6146.4, 72, 160, 6, FRUIT_TREES),
-        Palm(5502, 68, 5974, 193, 10150.1, 110.5, 160, 6, FRUIT_TREES),
+        Apple(5496, 27, 1955, 1, 1199.5, 22, 160, 6, FRUIT_TREES, 5, 6),
+        Banana(5497, 33, 1963, 26, 1841.5, 28, 160, 6, FRUIT_TREES, 5, 6),
+        Orange(5498, 39, 2108, 65, 2470.2, 35.5, 160, 6, FRUIT_TREES, 5, 6),
+        Curry(5499, 42, 5970, 90, 2906.9, 40, 160, 6, FRUIT_TREES, 5, 6),
+        Pineapple(5500, 51, 2114, 129, 4605.7, 57, 160, 6, FRUIT_TREES, 5, 6),
+        Papaya(5501, 57, 5972, 154, 6146.4, 72, 160, 6, FRUIT_TREES, 5, 6),
+        Palm(5502, 68, 5974, 193, 10150.1, 110.5, 160, 6, FRUIT_TREES, 5, 6),
 
         /**
-         * Bushes
+         * Bushes - 20 min cycle (index 2)
          */
-        Redberry(5101, 10, 1951, -4, 64, 11.5, 20, 5, BUSHES),
-        Cadavaberry(5102, 22, 753, 6, 102.5, 18, 20, 6, BUSHES),
-        Dwellberry(5103, 36, 2126, 19, 177.5, 31.5, 20, 7, BUSHES),
-        Jangerberry(5104, 48, 247, 31, 284.5, 50.5, 20, 8, BUSHES),
-        Whiteberry(5105, 59, 239, 42, 437.5, 78, 20, 8, BUSHES),
-        Poison_ivy(5106, 70, 6018, 188, 675, 120, 20, 8, BUSHES),
+        Redberry(5101, 10, 1951, -4, 64, 11.5, 20, 5, BUSHES, 2, 4),
+        Cadavaberry(5102, 22, 753, 6, 102.5, 18, 20, 6, BUSHES, 2, 4),
+        Dwellberry(5103, 36, 2126, 19, 177.5, 31.5, 20, 7, BUSHES, 2, 4),
+        Jangerberry(5104, 48, 247, 31, 284.5, 50.5, 20, 8, BUSHES, 2, 4),
+        Whiteberry(5105, 59, 239, 42, 437.5, 78, 20, 8, BUSHES, 2, 4),
+        Poison_ivy(5106, 70, 6018, 188, 675, 120, 20, 8, BUSHES, 2, 4),
 
-        Compost_Bin(7836, 1, -1, 0, 8, 14, 2, 15, COMPOST),
+        Compost_Bin(7836, 1, -1, 0, 8, 14, 2, 15, COMPOST, -1, 1),
 
-        Bittercap(17825, 53, 17821, 0, 61.5, 57.7, 40, 6, 0, MUSHROOMS),
-        Morchella(21620, 74, 21622, 1, 22, 77.7, 25, 6, 0, MUSHROOMS),
+        Bittercap(17825, 53, 17821, 0, 61.5, 57.7, 40, 6, 0, MUSHROOMS, 3, 4),
+        Morchella(21620, 74, 21622, 1, 22, 77.7, 25, 6, 0, MUSHROOMS, 3, 4),
 
-        Belladonna(5281, 63, 2398, 0, 91, 512, 80, BELLADONNA),
+        Belladonna(5281, 63, 2398, 0, 91, 512, 80, BELLADONNA, 4, 4),
 
-        Cactus(5280, 55, 6016, 0, 66.5, 374, 25, 8, 0, CACTUS),
-        Calquat(5503, 72, 5980, 0, 129.5, 12096, 160, 8, CALQUAT)
+        Cactus(5280, 55, 6016, 0, 66.5, 374, 25, 8, 0, CACTUS, 4, 5),
+        Calquat(5503, 72, 5980, 0, 129.5, 12096, 160, 8, CALQUAT, 5, 8)
         ;
 
         private static Map<Short, ProductInfo> products = new HashMap<Short, ProductInfo>();
@@ -204,8 +249,10 @@ public class FarmingManager implements Serializable {
         private int stageSkip;
         private double experience, plantingExperience;
         private int cycleTime;
+        private int growthCycleIndex;
+        private int totalStages;
 
-        private ProductInfo(int seedId, int level, int productId, int configIndex, double plantingExperience, double experience, int cycleTime, int maxStage, int stageSkip, int type) {
+        private ProductInfo(int seedId, int level, int productId, int configIndex, double plantingExperience, double experience, int cycleTime, int maxStage, int stageSkip, int type, int growthCycleIndex, int totalStages) {
             this.seedId = seedId;
             this.level = level;
             this.productId = productId;
@@ -216,14 +263,16 @@ public class FarmingManager implements Serializable {
             this.maxStage = maxStage;
             this.stageSkip = stageSkip;
             this.type = type;
+            this.growthCycleIndex = growthCycleIndex;
+            this.totalStages = totalStages;
         }
 
-        private ProductInfo(int seedId, int level, int productId, int configIndex, double plantingExperience, double experience, int cycleTime, int maxStage, int type) {
-            this(seedId, level, productId, configIndex, plantingExperience, experience, cycleTime, maxStage, 0, type);
+        private ProductInfo(int seedId, int level, int productId, int configIndex, double plantingExperience, double experience, int cycleTime, int maxStage, int type, int growthCycleIndex, int totalStages) {
+            this(seedId, level, productId, configIndex, plantingExperience, experience, cycleTime, maxStage, 0, type, growthCycleIndex, totalStages);
         }
 
-        private ProductInfo(int seedId, int level, int productId, int configIndex, double plantingExperience, double experience, int cycleTime, int type) {
-            this(seedId, level, productId, configIndex, plantingExperience, experience, cycleTime, 4, 0, type);
+        private ProductInfo(int seedId, int level, int productId, int configIndex, double plantingExperience, double experience, int cycleTime, int type, int growthCycleIndex, int totalStages) {
+            this(seedId, level, productId, configIndex, plantingExperience, experience, cycleTime, 4, 0, type, growthCycleIndex, totalStages);
         }
 
         public boolean isProduct(Item item) {
@@ -233,6 +282,14 @@ public class FarmingManager implements Serializable {
                 }
             }
             return false;
+        }
+
+        public int getGrowthCycleIndex() {
+            return growthCycleIndex;
+        }
+
+        public int getTotalStages() {
+            return totalStages;
         }
     }
 
@@ -508,7 +565,8 @@ public class FarmingManager implements Serializable {
             public int processWithDelay(Player player) {
                 player.animate(RAKING_ANIMATION);
                 if (Utils.random(2) == 0) {
-                    spot.increaseStage();
+                    spot.stage++;
+                    spot.refresh();
                     if (spot.stage == 3)
                         spot.setCleared(true);
                     player.getInventory().addItemDrop(6055, 1);
@@ -521,6 +579,7 @@ public class FarmingManager implements Serializable {
             public void stop(Player player) {
                 player.setNextAnimation(-1);
                 setActionDelay(player, 3);
+                spot.refresh();
             }
         });
     }
@@ -627,8 +686,10 @@ public class FarmingManager implements Serializable {
                 player.getInventory().addItemDrop(spot.productInfo.productId, 1);
                 spot.harvestAmount--;
                 spot.refresh();
-                if (spot.cycleTime < Utils.currentTimeMillis())
-                    spot.setCycleTime(spot.scale(REGENERATION_CONSTANT));
+                // Set regeneration tick for next growth
+                if (spot.productInfo.type == FRUIT_TREES || spot.productInfo.type == BUSHES) {
+                    spot.setRegenerationTick(REGENERATION_TICKS);
+                }
                 return 2;
             }
 
@@ -731,8 +792,7 @@ public class FarmingManager implements Serializable {
         });
     }
 
-    public boolean startFarmingCycle(FarmingSpot spot, Item item) { // check if
-        // weeded
+    public boolean startFarmingCycle(FarmingSpot spot, Item item) {
         ProductInfo productInfo = ProductInfo.getProduct(item.getId());
         if (spot == null || productInfo == null || spot.spotInfo.type != productInfo.type || !spot.isCleared() || spot.productInfo != null || spot.spotInfo.type == COMPOST)
             return false;
@@ -926,7 +986,10 @@ public class FarmingManager implements Serializable {
                     int time = definitions.getRespawnDelay();
                     spot.setEmpty(true);
                     spot.refresh();
-                    spot.setCycleTime(true, spot.scale(time * 1000)); // time in seconds
+                    // Convert seconds to ticks for regeneration
+                    int respawnTicks = (time * 100) / 60;
+                    // Trees should use multiplier
+                    spot.setRegenerationTick(spot.scale(respawnTicks, true));
                     player.animate(new Animation(-1));
                     return -1;
                 }
@@ -939,7 +1002,7 @@ public class FarmingManager implements Serializable {
             }
 
             private boolean checkTree(Player player) {
-                return spot != null && !spot.isEmpty();
+                return spot != null && !spot.isEmpty() && !spot.isRegenerating();
             }
 
             @Override
@@ -1056,6 +1119,7 @@ public class FarmingManager implements Serializable {
             if (spot.spotInfo.type == TREES || spot.spotInfo.type == FRUIT_TREES) {
                 if (spot.isEmpty()) {
                     spot.setEmpty(false);
+                    spot.clearRegenerationTick();
                     spot.refresh();
                 }
             }
@@ -1070,7 +1134,8 @@ public class FarmingManager implements Serializable {
         private SpotInfo spotInfo;
         private ProductInfo productInfo;
         private int stage;
-        private long cycleTime;
+        private int lastGrowthTick; // Last tick when growth occurred
+        private int regenerationTick; // Tick when regeneration should happen (0 = no regeneration pending)
         private int harvestAmount;
         private boolean[] attributes;
         private int lifeChance;
@@ -1079,30 +1144,57 @@ public class FarmingManager implements Serializable {
         public FarmingSpot(FarmingManager manager, SpotInfo spotInfo) {
             this.manager = manager;
             this.spotInfo = spotInfo;
-            cycleTime = Utils.currentTimeMillis();
-            stage = 0; // stage 0 is default null
+            this.lastGrowthTick = manager.getGlobalTickCounter();
+            this.regenerationTick = 0;
+            stage = 0;
             harvestAmount = 0;
             lifeChance = 100;
-            attributes = new boolean[10]; // diseased, watered, dead,
-            // firstCycle, usingCompost,
-            // usingSuperCompost;
-            renewCycle();
+            attributes = new boolean[10];
             manager.spots.add(this);
         }
 
-        private long scale(long time) {
+        private int scale(int ticks, boolean applyMultiplier) {
+            if (!applyMultiplier) {
+                return ticks; // Don't apply multiplier for weeds
+            }
             double mult = manager.getGrowthMultiplier();
-            return mult <= 0 ? time : (long)(time / mult);
+            return mult <= 0 ? ticks : (int)(ticks / mult);
+        }
+
+        // Keep the original scale method for backward compatibility
+        private int scale(int ticks) {
+            return scale(ticks, true); // Default to applying multiplier
         }
 
         public void setActive(ProductInfo productInfo) {
             setProductInfo(productInfo);
-            stage = -1;
-            resetCycle();
+            stage = 0; // Start at stage 0
+            lastGrowthTick = manager.getGlobalTickCounter();
+            regenerationTick = 0;
+            harvestAmount = 0;
+            for (int index = 0; index < attributes.length; index++) {
+                if (index == 4 || index == 7 || index == 8)
+                    continue;
+                attributes[index] = false;
+            }
+            refresh();
+        }
+
+        public void setIdle() {
+            stage = 3; // Weeds stage
+            setProductInfo(null);
+            lastGrowthTick = manager.getGlobalTickCounter();
+            regenerationTick = 0;
+            refresh();
+            setCompost(false);
+            setSuperCompost(false);
+            harvestAmount = 0;
+            justCleared = true;
         }
 
         private void resetCycle() {
-            cycleTime = Utils.currentTimeMillis();
+            lastGrowthTick = manager.getGlobalTickCounter();
+            regenerationTick = 0;
             harvestAmount = 0;
             for (int index = 0; index < attributes.length; index++) {
                 if (index == 4 || index == 7 || index == 8)
@@ -1111,97 +1203,98 @@ public class FarmingManager implements Serializable {
             }
         }
 
-        public void setCycleTime(long cycleTime) {
-            setCycleTime(false, cycleTime);
+        // Replacement for setCycleTime methods
+        public void setRegenerationTick(int ticksFromNow) {
+            // Apply multiplier for crop regeneration, but not for weed regeneration
+            boolean applyMultiplier = productInfo != null;
+            this.regenerationTick = manager.getGlobalTickCounter() + scale(ticksFromNow, applyMultiplier);
         }
 
-        public void setCycleTime(boolean reset, long cycleTime) {
+
+        public void setRegenerationTick(boolean reset, int ticksFromNow) {
             if (reset)
-                this.cycleTime = 0;
-            if (this.cycleTime == 0)
-                this.cycleTime = Utils.currentTimeMillis();
-            this.cycleTime += cycleTime;
+                this.regenerationTick = 0;
+            if (this.regenerationTick == 0)
+                this.regenerationTick = manager.getGlobalTickCounter();
+            // Apply multiplier for crop regeneration, but not for weed regeneration
+            boolean applyMultiplier = productInfo != null;
+            this.regenerationTick += scale(ticksFromNow, applyMultiplier);
         }
 
-        public void setIdle() {
-            stage = 3;
-            setProductInfo(null);
-            refresh();
-            setCompost(false);
-            setSuperCompost(false);
-            resetCycle();
-            justCleared = true;
+        public void clearRegenerationTick() {
+            this.regenerationTick = 0;
         }
 
-        public void process() {
-            if (cycleTime == 0)
-                return;
+        public boolean isRegenerating() {
+            return regenerationTick > 0 && manager.getGlobalTickCounter() < regenerationTick;
+        }
 
-            long now = Utils.currentTimeMillis();
+        public void process(int currentTick) {
+            // Check for regeneration first
+            if (regenerationTick > 0 && currentTick >= regenerationTick) {
+                handleRegeneration();
+                regenerationTick = 0;
+            }
 
-            if (cycleTime > now)
-                return;
+            if (productInfo != null && productInfo.getGrowthCycleIndex() >= 0) {
+                // Handle crop growth with multiplier
+                if (stage < productInfo.maxStage && !isDead()) {
+                    // Calculate ticks needed for next growth stage
+                    int growthCycleIndex = productInfo.getGrowthCycleIndex();
+                    int baseTicksNeeded = GROWTH_CYCLE_TICKS[growthCycleIndex];
+                    int scaledTicksNeeded = scale(baseTicksNeeded, true); // Apply multiplier
 
-            if (productInfo != null) {
-
-                // Handle regeneration for fruit trees & bushes AFTER full growth
-                if (hasChecked() && (isEmpty() || !hasMaximumRegeneration())) {
-
-                    if (isEmpty()) {
-                        setEmpty(false);
-                        if (productInfo.type == FRUIT_TREES)
-                            setCycleTime(scale(REGENERATION_CONSTANT));
-                        else
-                            cycleTime = 0;
-                    } else if (!hasMaximumRegeneration()) {
-                        harvestAmount++;
-                        if (!hasMaximumRegeneration())
-                            setCycleTime(scale(REGENERATION_CONSTANT));
-                        else
-                            cycleTime = 0;
-                    } else {
-                        cycleTime = 0;
+                    // Check if enough time has passed
+                    int ticksSinceLastGrowth = currentTick - lastGrowthTick;
+                    if (ticksSinceLastGrowth >= scaledTicksNeeded) {
+                        increaseStage();
+                        lastGrowthTick = currentTick;
                     }
-
-                    refresh();
-                    return;
                 }
-
-                // Normal growth
-                increaseStage();
-
-                if (reachedMaxStage() || isDead()) {
-                    cycleTime = 0;
-                    return;
-                }
-
-                // Schedule NEXT stage ONCE
-                renewCycle();
-
-            } else {
-
-                // Weed regression
+            } else if (productInfo == null) {
+                // Weed regression - without multiplier
                 if (spotInfo.type != COMPOST) {
-
                     if (justCleared) {
                         justCleared = false;
-                        renewCycle();
+                        lastGrowthTick = currentTick;
                         return;
                     }
 
-                    desecreaseStage();
-
-                    if (stage <= 0) {
-                        remove();
-                        return;
+                    // Weeds grow at fixed 5-minute intervals (no multiplier)
+                    int weedTicksNeeded = GROWTH_CYCLE_TICKS[0]; // 5 minutes in ticks
+                    int ticksSinceLastGrowth = currentTick - lastGrowthTick;
+                    if (ticksSinceLastGrowth >= weedTicksNeeded) {
+                        if (stage > 0) {
+                            stage--;
+                            refresh();
+                        } else {
+                            remove();
+                        }
+                        lastGrowthTick = currentTick;
                     }
-
-                    renewCycle();
                 }
-
             }
         }
 
+        private void handleRegeneration() {
+            if (productInfo != null) {
+                if (productInfo.type == FRUIT_TREES || productInfo.type == BUSHES) {
+                    if (!hasMaximumRegeneration()) {
+                        harvestAmount++;
+                        refresh();
+                        // Set next regeneration if not at max
+                        if (!hasMaximumRegeneration()) {
+                            setRegenerationTick(REGENERATION_TICKS);
+                        }
+                    }
+                } else if (productInfo.type == TREES || productInfo.type == FRUIT_TREES) {
+                    if (isEmpty()) {
+                        setEmpty(false);
+                        refresh();
+                    }
+                }
+            }
+        }
 
         public int getConfigBaseValue() {
             if (productInfo != null) {
@@ -1335,20 +1428,6 @@ public class FarmingManager implements Serializable {
             return true;
         }
 
-        public void renewCycle() {
-            long constant = 30000L;
-
-            if (productInfo != null) {
-                cycleTime += (stage == 0)
-                        ? scale(5000)
-                        : scale(constant * productInfo.cycleTime);
-            } else {
-                cycleTime += constant * 3;
-            }
-        }
-
-
-
         public boolean canBeDiseased() {
             if (spotInfo == SpotInfo.Trollhiem_Herb_patch)
                 return false;
@@ -1374,10 +1453,17 @@ public class FarmingManager implements Serializable {
         }
 
         public void increaseStage() {
-            stage++;
-            if (productInfo != null)
-                checkFactors();
-            refresh();
+            if (productInfo != null) {
+                if (stage < productInfo.maxStage) {
+                    stage++;
+                    checkFactors();
+                    refresh();
+                }
+            } else {
+                // For weeds or spots without productInfo
+                stage++;
+                refresh();
+            }
         }
 
         public void desecreaseStage() {

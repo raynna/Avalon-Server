@@ -1502,6 +1502,7 @@ public class Player extends Entity {
         if (farmingManager == null)
             farmingManager = new FarmingManager();
         farmingManager.setPlayer(this);
+        farmingManager.setGrowthMultiplier(1000.0);
         if (this.tickManager == null) {
             this.tickManager = new TickManager(this);
         }
