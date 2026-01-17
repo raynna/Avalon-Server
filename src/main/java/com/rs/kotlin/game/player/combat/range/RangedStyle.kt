@@ -152,7 +152,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             ammo = currentAmmo,
             usingSpecial = false
         )
-
+        consumeAmmo()
         if (executeSpecialAttack(attacker, defender)) return
         if (executeEffect(combatContext.copy(usingSpecial = false))) {
             return
@@ -173,7 +173,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 attacker.combatDefinitions.attackStyle
             ), 1
         )
-
         if (currentWeapon.projectileId != null) {
             attacker.gfx(currentWeapon.startGfx)
         } else if ((currentAmmo != null) && (currentAmmo.startGfx != null)) {
@@ -195,7 +194,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
         val qualifies = firstHit.damage >= (maxHit * 0.66).toInt() || firstHit.damage == 0
         if (!qualifies) return
-
+        consumeAmmo()
         sendSwiftProjectile()
 
         val swiftHit = CombatContext(
@@ -263,7 +262,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun delayHits(vararg hits: PendingHit) {
         val modified = hits.toMutableList()
-
         applySwiftGlovesToPendingHits(modified)
 
         val currentWeapon = getCurrentWeapon()
@@ -276,7 +274,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             val target = pending.target
 
             super.outgoingHit(attacker, target, pending)
-            consumeAmmo()
             attacker.packets.sendSound(2702, 0, 1)
 
             totalDamage += min(hit.damage, target.hitpoints)
@@ -312,6 +309,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             if (weapon != null) {
                 attacker.equipment.decreaseItem(Equipment.SLOT_WEAPON.toInt(), 1)
                 attacker.appearence.generateAppearenceData()
+                dropAmmoOnGround()
                 return true
             }
         }

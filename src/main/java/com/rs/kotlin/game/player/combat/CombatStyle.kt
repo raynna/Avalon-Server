@@ -11,6 +11,7 @@ import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
+import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.NewPoison
@@ -371,7 +372,6 @@ interface CombatStyle {
             player.combatDefinitions.switchUsingSpecialAttack()
             return false
         }
-
 
         when (special) {
             is SpecialAttack.Instant -> {

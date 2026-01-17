@@ -2453,9 +2453,12 @@ public class Player extends Entity {
         faceEntity(activeInstantSpecial.context.getDefender());
         activeSpecial.execute();
         combatDefinitions.decreaseSpecialAttack(special.getEnergyCost());
-
+        tickManager.addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 10);
+        activeInstantSpecial.context.getDefender().getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10);
+        activeInstantSpecial.context.getDefender().getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 12);
         //combatDefinitions.switchUsingSpecialAttack(); // consume toggle
-        //stopAll(false, true, true);
+        if (special instanceof SpecialAttack.InstantRangeCombat)
+            stopAll(false, true, true);
         clearActiveInstantSpecial();
     }
 
