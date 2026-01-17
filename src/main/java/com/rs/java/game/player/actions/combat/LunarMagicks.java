@@ -86,7 +86,7 @@ public class LunarMagicks {
 
 	public enum RSLunarSpellStore {
 
-		HOME_TELEPORT(39, 0, 0, new WorldTile(3087, 3496, 0), null, ONE_CLICK),
+		HOME_TELEPORT(39, 0, 0, new WorldTile(3093, 3495, 0), null, ONE_CLICK),
 
 		BAKE_PIE(38, 65, 60, new Item[] { new Item(ASTRAL, 1), new Item(FIRE, 5), new Item(WATER, 4) }, ONE_CLICK),
 

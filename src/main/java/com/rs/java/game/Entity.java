@@ -169,6 +169,7 @@ public abstract class Entity extends WorldTile {
         resetCombat();
         walkSteps.clear();
         poison.reset();
+        newPoison.reset();
         resetReceivedDamage();
         if (attributes)
             temporaryAttributes.clear();

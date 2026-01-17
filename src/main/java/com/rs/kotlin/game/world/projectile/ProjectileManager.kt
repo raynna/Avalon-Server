@@ -191,21 +191,13 @@ object ProjectileManager {
         val impactTicks = max(0, ((endCycle + 29) / 30) - 1)
         val remainderCycles = endCycle % 30
 
-        val startTile = WorldTile(
-            attacker.getCoordFaceX(attacker.size),
-            attacker.getCoordFaceY(attacker.size),
-            attacker.plane
-        )
-        val endTile = WorldTile(
-            defender.getCoordFaceX(defender.size),
-            defender.getCoordFaceY(defender.size),
-            defender.plane
-        )
+        val startTile = attacker.faceWorldTile
+        val endTile = defender.faceWorldTile
 
         queueProjectileAndGetImpactCycles(
             attacker = attacker,
             defender = defender,
-            startTile = null,
+            startTile = startTile,
             endTile = endTile,
             gfx = gfxId,
             type = type,
