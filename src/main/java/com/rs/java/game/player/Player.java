@@ -1501,6 +1501,7 @@ public class Player extends Entity {
         newActionManager = new NewActionManager(this);
         if (farmingManager == null)
             farmingManager = new FarmingManager();
+        farmingManager.setPlayer(this);
         if (this.tickManager == null) {
             this.tickManager = new TickManager(this);
         }
@@ -2809,7 +2810,6 @@ public class Player extends Entity {
         }
         interfaceManager.sendInterfaces();
         bank.init();
-        farmingManager.setPlayer(this);
         farmingManager.init();
         friendsIgnores.init();
         getPackets().sendRunEnergy();

@@ -26,7 +26,9 @@ public class FarmingManager implements Serializable {
 
     private static final long serialVersionUID = -6487741852718632170L;
 
-    private static final int REGENERATION_CONSTANT = Settings.DEBUG ? 120000 : 120000; // Twelve minutes
+    private double growthMultiplier = 200.0;
+
+    private static final int REGENERATION_CONSTANT = 20 * 60 * 1000;//20 minutes
     private static final int ALLOTMENT = 0, TREES = 1, HOPS = 2, FLOWERS = 3, FRUIT_TREES = 4, BUSHES = 5, HERBS = 6, COMPOST = 7, MUSHROOMS = 8, BELLADONNA = 9, CACTUS = 10, CALQUAT = 11;
     private static final int RAKE = 5341, EMPTY_BUCKET = 1925, SPADE = 952, DIBBER = 5343, SECATEURS = 5329, MAGIC_SECATEURS = 7409, TROWEL = 5325, COMPOST_BUCKET = 6032, SUPERCOMPOST_BUCKET = 6034;
     private static final String[] PATCH_NAMES = { "allotment", "tree", "hops", "flower", "fruit tree", "bush", "herb", "compost", "mushroom", "belladonna", "cactus", "calquat" };
@@ -54,7 +56,7 @@ public class FarmingManager implements Serializable {
             CHECK_TREE_ANIMATION = new Animation(832), PRUNING_ANIMATION = new Animation(2275), FLOWER_PICKING_ANIMATION = new Animation(2292), FRUIT_PICKING_ANIMATION = new Animation(2280),
             COMPOST_ANIMATION = new Animation(2283), BUSH_PICKING_ANIMATION = new Animation(2281), FILL_COMPOST_ANIMATION = new Animation(832);
 
-    private List<FarmingSpot> spots;
+    private List<FarmingSpot> spots = new CopyOnWriteArrayList<>();
     private transient Player player;
 
     public FarmingManager() {
@@ -66,13 +68,23 @@ public class FarmingManager implements Serializable {
     }
 
     public void init() {
-        for (FarmingSpot spot : spots)
+        for (FarmingSpot spot : spots) {
+            spot.manager = this;
             spot.refresh();
+        }
     }
 
     public void process() {
         for (FarmingSpot spot : spots)
             spot.process();
+    }
+
+    public void setGrowthMultiplier(double multiplier) {
+        this.growthMultiplier = multiplier <= 0 ? 1.0 : multiplier;
+    }
+
+    public double getGrowthMultiplier() {
+        return growthMultiplier;
     }
 
     public enum ProductInfo {
@@ -340,7 +352,7 @@ public class FarmingManager implements Serializable {
     public void handleFarming(SpotInfo info, Item item, int optionId) {
         FarmingSpot spot = getSpot(info);
         if (spot == null)
-            spot = new FarmingSpot(info);
+            spot = new FarmingSpot(this, info);
         if (!spot.isCleared()) {
             if (item != null) {
                 if (info.type == COMPOST)
@@ -616,7 +628,7 @@ public class FarmingManager implements Serializable {
                 spot.harvestAmount--;
                 spot.refresh();
                 if (spot.cycleTime < Utils.currentTimeMillis())
-                    spot.setCycleTime(REGENERATION_CONSTANT);
+                    spot.setCycleTime(spot.scale(REGENERATION_CONSTANT));
                 return 2;
             }
 
@@ -914,7 +926,7 @@ public class FarmingManager implements Serializable {
                     int time = definitions.getRespawnDelay();
                     spot.setEmpty(true);
                     spot.refresh();
-                    spot.setCycleTime(true, time * 1000); // time in seconds
+                    spot.setCycleTime(true, spot.scale(time * 1000)); // time in seconds
                     player.animate(new Animation(-1));
                     return -1;
                 }
@@ -1050,10 +1062,11 @@ public class FarmingManager implements Serializable {
         }
     }
 
-    public class FarmingSpot implements Serializable {
+    public static class FarmingSpot implements Serializable {
 
         private static final long serialVersionUID = -732322970478931771L;
 
+        private transient FarmingManager manager;
         private SpotInfo spotInfo;
         private ProductInfo productInfo;
         private int stage;
@@ -1061,8 +1074,10 @@ public class FarmingManager implements Serializable {
         private int harvestAmount;
         private boolean[] attributes;
         private int lifeChance;
+        private boolean justCleared;
 
-        public FarmingSpot(SpotInfo spotInfo) {
+        public FarmingSpot(FarmingManager manager, SpotInfo spotInfo) {
+            this.manager = manager;
             this.spotInfo = spotInfo;
             cycleTime = Utils.currentTimeMillis();
             stage = 0; // stage 0 is default null
@@ -1072,7 +1087,12 @@ public class FarmingManager implements Serializable {
             // firstCycle, usingCompost,
             // usingSuperCompost;
             renewCycle();
-            spots.add(this);
+            manager.spots.add(this);
+        }
+
+        private long scale(long time) {
+            double mult = manager.getGrowthMultiplier();
+            return mult <= 0 ? time : (long)(time / mult);
         }
 
         public void setActive(ProductInfo productInfo) {
@@ -1110,49 +1130,78 @@ public class FarmingManager implements Serializable {
             setCompost(false);
             setSuperCompost(false);
             resetCycle();
+            justCleared = true;
         }
 
         public void process() {
             if (cycleTime == 0)
                 return;
-            while (cycleTime < Utils.currentTimeMillis()) {
-                if (productInfo != null) {
-                    if (hasChecked() && (isEmpty() || !hasMaximumRegeneration())) {
-                        if (isEmpty()) {
-                            setEmpty(false);
-                            if (productInfo.type == FRUIT_TREES)
-                                setCycleTime(REGENERATION_CONSTANT);
-                            else
-                                cycleTime = 0;
-                        } else if (!hasMaximumRegeneration()) {
-                            if (harvestAmount == 5)
-                                cycleTime = 0;
-                            else
-                                cycleTime += REGENERATION_CONSTANT;
-                            harvestAmount++;
-                        } else
+
+            long now = Utils.currentTimeMillis();
+
+            if (cycleTime > now)
+                return;
+
+            if (productInfo != null) {
+
+                // Handle regeneration for fruit trees & bushes AFTER full growth
+                if (hasChecked() && (isEmpty() || !hasMaximumRegeneration())) {
+
+                    if (isEmpty()) {
+                        setEmpty(false);
+                        if (productInfo.type == FRUIT_TREES)
+                            setCycleTime(scale(REGENERATION_CONSTANT));
+                        else
                             cycleTime = 0;
-                        refresh();
-                        return;
+                    } else if (!hasMaximumRegeneration()) {
+                        harvestAmount++;
+                        if (!hasMaximumRegeneration())
+                            setCycleTime(scale(REGENERATION_CONSTANT));
+                        else
+                            cycleTime = 0;
                     } else {
-                        increaseStage();
-                        if (reachedMaxStage() || isDead()) {
-                            cycleTime = 0;
-                            break;
-                        }
+                        cycleTime = 0;
                     }
-                } else {
-                    if (spotInfo.type != COMPOST) {
-                        desecreaseStage();
-                        if (stage <= 0) {
-                            remove();
-                            break;
-                        }
-                    }
+
+                    refresh();
+                    return;
                 }
+
+                // Normal growth
+                increaseStage();
+
+                if (reachedMaxStage() || isDead()) {
+                    cycleTime = 0;
+                    return;
+                }
+
+                // Schedule NEXT stage ONCE
                 renewCycle();
+
+            } else {
+
+                // Weed regression
+                if (spotInfo.type != COMPOST) {
+
+                    if (justCleared) {
+                        justCleared = false;
+                        renewCycle();
+                        return;
+                    }
+
+                    desecreaseStage();
+
+                    if (stage <= 0) {
+                        remove();
+                        return;
+                    }
+
+                    renewCycle();
+                }
+
             }
         }
+
 
         public int getConfigBaseValue() {
             if (productInfo != null) {
@@ -1288,11 +1337,17 @@ public class FarmingManager implements Serializable {
 
         public void renewCycle() {
             long constant = 30000L;
-            if (productInfo != null)
-                cycleTime += (stage == 0 || Settings.DEBUG) ? 5000 : constant * productInfo.cycleTime;
-            else
+
+            if (productInfo != null) {
+                cycleTime += (stage == 0)
+                        ? scale(5000)
+                        : scale(constant * productInfo.cycleTime);
+            } else {
                 cycleTime += constant * 3;
+            }
         }
+
+
 
         public boolean canBeDiseased() {
             if (spotInfo == SpotInfo.Trollhiem_Herb_patch)
@@ -1332,12 +1387,12 @@ public class FarmingManager implements Serializable {
         }
 
         private void remove() {
-            spots.remove(this);
+            manager.spots.remove(this);
         }
 
         public void refresh() {
             int value = spotInfo.type == COMPOST ? getConfigValue(spotInfo.type) : productInfo != null ? (getConfigValue(spotInfo.type) + productInfo.stageSkip) : stage;
-            player.getVarsManager().sendVarBit(spotInfo.configFileId, value);
+            manager.player.getVarsManager().sendVarBit(spotInfo.configFileId, value);
             if (Settings.DEBUG)
                 System.out.println("Refresh Value: " + value+", "+spotInfo.configFileId);
         }
@@ -1346,9 +1401,7 @@ public class FarmingManager implements Serializable {
             this.productInfo = productInfo;
         }
 
-        public boolean isDiseased() {
-            return false; //attributes[0];
-        }
+        public boolean isDiseased() { return attributes[0]; }
 
         public void setDiseased(boolean diseased) {
             this.attributes[0] = diseased;
@@ -1362,9 +1415,7 @@ public class FarmingManager implements Serializable {
             this.attributes[1] = watered;
         }
 
-        public boolean isDead() {
-            return false; //attributes[2];
-        }
+        public boolean isDead() { return attributes[2]; }
 
         public void setDead(boolean dead) {
             this.attributes[2] = dead;
@@ -1445,7 +1496,7 @@ public class FarmingManager implements Serializable {
         }
 
         public int getLifeChance() {
-            if (player.getEquipment().getWeaponId() == MAGIC_SECATEURS)
+            if (manager.player.getEquipment().getWeaponId() == MAGIC_SECATEURS)
                 return (int) (lifeChance * 0.90);
             return lifeChance;
         }
