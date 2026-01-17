@@ -601,11 +601,7 @@ public class FarmingManager implements Serializable {
                 }
                 if (spot.hasEmptyHarvestAmount() && !spot.hasGivenAmount()) {
                     spot.setHarvestAmount(getRandomHarvestAmount(spot.productInfo.type) + (spot.getCompost() ? 1 : spot.getSuperCompost() ? 2 : 0));
-                    if (Settings.DEBUG)
-                        System.out.println("[FARMINGMANAGER]Harvest amount: " + spot.getHarvestAmount() + ", compost: " + (spot.getCompost() ? "Regular" : spot.getSuperCompost() ? "Super" : "None") + ", Total: " + spot.getHarvestAmount());
                     spot.setLifeChange(spot.spotInfo.getLifeChance());
-                    if (Settings.DEBUG)
-                        System.out.println("[FARMINGMANAGER]Lifechance: " + spot.getLifeChance() + "%");
                     spot.setHasGivenAmount(true);
                 } else if (spot.harvestAmount <= 0) {
                     player.getPackets().sendGameMessage("You have successfully harvested this patch for new crops.");
@@ -638,12 +634,8 @@ public class FarmingManager implements Serializable {
             @Override
             public int processWithDelay(Player player) {
                 int random = Utils.random(100);
-                if (Settings.DEBUG)
-                    System.out.println("[FARMINGMANAGER]" +random + "/" + spot.getLifeChance() + "% " + (random <= spot.getLifeChance() ? "Removed life from patch" : "Didn't remove life from patch"));
                 if (random <= spot.getLifeChance()) {
                     spot.harvestAmount--;
-                    if (Settings.DEBUG)
-                        System.out.println("[FARMINGMANAGER]Havest amount left: " + spot.getHarvestAmount());
                 }
                 player.animate(getHarvestAnimation(spot.productInfo.type));
                 player.getSkills().addXp(Skills.FARMING, spot.productInfo.experience);
@@ -794,17 +786,35 @@ public class FarmingManager implements Serializable {
 
     public boolean startFarmingCycle(FarmingSpot spot, Item item) {
         ProductInfo productInfo = ProductInfo.getProduct(item.getId());
-        if (spot == null || productInfo == null || spot.spotInfo.type != productInfo.type || !spot.isCleared() || spot.productInfo != null || spot.spotInfo.type == COMPOST)
+        if (spot == null) {
             return false;
-        if (spot.isDead())
+        }
+        if (productInfo == null) {
             return false;
+        }
+        if (spot.spotInfo.type != productInfo.type) {
+            return false;
+        }
+        if (!spot.isCleared()) {
+            return false;
+        }
+        if (spot.productInfo != null) {
+            return false;
+        }
+        if (spot.spotInfo.type == COMPOST) {
+            return false;
+        }
+        if (spot.isDead()) {
+            return false;
+        }
+
         String patchName = getPatchName(productInfo.type);
         String itemName = item.getDefinitions().getName().toLowerCase();
         int requiredAmount = (productInfo.type == ALLOTMENT || productInfo.type == HOPS) ? 3 : 1;
         boolean isTree = productInfo.type == TREES || productInfo.type == FRUIT_TREES;
         int level = productInfo.level;
         if (!player.getInventory().containsItemToolBelt(isTree ? SPADE : DIBBER) && !player.getToolbelt().contains(isTree ? SPADE : DIBBER)) {
-            player.getPackets().sendGameMessage(isTree ? "You need a spade to plant the sappling into the dirt." : "You need a seed dipper to plant the seed in the dirt.");
+            player.getPackets().sendGameMessage(isTree ? "You need a spade to plant the sappling into the dirt." : "You need a seed dibber to plant the seed in the dirt.");
             return true;
         } else if (!player.getInventory().containsItem(item.getId(), requiredAmount)) {
             player.getPackets().sendGameMessage("You don't have enough " + item.getDefinitions().getName().toLowerCase() + " to plant " + (patchName.startsWith("(?i)[^aeiou]") ? "an" : "a") + " " + patchName + " patch.");
@@ -1181,8 +1191,11 @@ public class FarmingManager implements Serializable {
         }
 
         public void setIdle() {
-            stage = 3; // Weeds stage
             setProductInfo(null);
+            stage = 3; // Weeds stage
+            setCleared(true);
+            setDead(false);
+            setDiseased(false);
             lastGrowthTick = manager.getGlobalTickCounter();
             regenerationTick = 0;
             refresh();
@@ -1190,17 +1203,6 @@ public class FarmingManager implements Serializable {
             setSuperCompost(false);
             harvestAmount = 0;
             justCleared = true;
-        }
-
-        private void resetCycle() {
-            lastGrowthTick = manager.getGlobalTickCounter();
-            regenerationTick = 0;
-            harvestAmount = 0;
-            for (int index = 0; index < attributes.length; index++) {
-                if (index == 4 || index == 7 || index == 8)
-                    continue;
-                attributes[index] = false;
-            }
         }
 
         // Replacement for setCycleTime methods
@@ -1477,10 +1479,18 @@ public class FarmingManager implements Serializable {
         }
 
         public void refresh() {
-            int value = spotInfo.type == COMPOST ? getConfigValue(spotInfo.type) : productInfo != null ? (getConfigValue(spotInfo.type) + productInfo.stageSkip) : stage;
-            manager.player.getVarsManager().sendVarBit(spotInfo.configFileId, value);
-            if (Settings.DEBUG)
-                System.out.println("Refresh Value: " + value+", "+spotInfo.configFileId);
+            int value;
+            if (spotInfo.type == COMPOST) {
+                value = getConfigValue(spotInfo.type);
+            } else if (productInfo != null) {
+                value = getConfigValue(spotInfo.type) + productInfo.stageSkip;
+            } else {
+                value = stage;
+            }
+
+            if (manager != null && manager.player != null) {
+                manager.player.getVarsManager().sendVarBit(spotInfo.configFileId, value);
+            }
         }
 
         public void setProductInfo(ProductInfo productInfo) {
