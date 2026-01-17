@@ -30,9 +30,6 @@ import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.NewPoison;
-import com.rs.kotlin.game.player.interfaces.HealthOverlay;
-import com.rs.kotlin.game.world.area.Area;
-import com.rs.kotlin.game.world.area.AreaManager;
 
 public abstract class Entity extends WorldTile {
 
@@ -1611,10 +1608,16 @@ public abstract class Entity extends WorldTile {
         gfx(new Graphics(gfxId, rotation, height));
     }
 
-    public void gfxAnchoredSouthWest(int gfxId, int height) {
-        var tile = new WorldTile(this.getX() - 1, this.getY() - 1, this.getPlane());
-        World.sendGraphics(this, new Graphics(gfxId), tile);
+    public WorldTile getSouthwestTile() {
+        int size = this.getSize();
+        int offset = Math.max(0, size - 1);
+        return new WorldTile(
+                this.getX() - offset,
+                this.getY() - offset,
+                this.getPlane()
+        );
     }
+
 
     public void delayGfx(Graphics nextGraphics, int delay) {
         WorldTasksManager.schedule(new WorldTask() {

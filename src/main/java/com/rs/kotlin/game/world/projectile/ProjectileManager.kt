@@ -279,7 +279,7 @@ object ProjectileManager {
 
 
         val startTile = if (projectile == Projectile.ICE_BARRAGE) {
-            WorldTile(defender.faceWorldTile.x, defender.faceWorldTile.y, defender.faceWorldTile.plane)
+            defender.southwestTile
         } else {
             attacker.faceWorldTile
         }

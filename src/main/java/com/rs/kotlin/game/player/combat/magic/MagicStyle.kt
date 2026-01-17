@@ -406,7 +406,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 }
             }
             if (spell.id == 23) {
-                ProjectileManager.send(Projectile.ICE_BARRAGE, 368, attacker, defender);
+                ProjectileManager.send(Projectile.ICE_BARRAGE, 368, attacker, t);
             }
             if (spell.projectileId != -1) {
                     ProjectileManager.send(
