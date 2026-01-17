@@ -9,6 +9,7 @@ import kotlin.math.floor
 
 class NewPoison(@Transient private var entity: Entity) {
 
+    @Transient
     private var poisonedBy: Entity? = null
 
     fun setEntity(entity: Entity) {

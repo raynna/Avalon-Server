@@ -1,4 +1,12 @@
 {
+  "96": {
+    "npcId": 96,
+    "npcName": "Adolescent White wolf",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-17T20:17:41.963904200Z",
+    "lastSeen": "2026-01-17T20:17:41.963904200Z",
+    "attempts": 1
+  },
   "1309": {
     "npcId": 1309,
     "npcName": "Pontak",
@@ -77,6 +85,14 @@
     "reason": "\u0027wikitext\u0027 not found in JSON",
     "firstSeen": "2026-01-14T22:04:15.401711700Z",
     "lastSeen": "2026-01-14T22:04:15.401711700Z",
+    "attempts": 1
+  },
+  "6870": {
+    "npcId": 6870,
+    "npcName": "Wolpertinger",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-17T19:51:04.347236600Z",
+    "lastSeen": "2026-01-17T19:51:04.347236600Z",
     "attempts": 1
   },
   "7158": {

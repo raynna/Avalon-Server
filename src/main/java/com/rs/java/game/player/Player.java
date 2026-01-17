@@ -986,7 +986,7 @@ public class Player extends Entity {
     /**
      * @Farming
      */
-    private transient FarmingManager farmingManager;
+    private FarmingManager farmingManager;
 
     /**
      * @Controler
@@ -1509,7 +1509,6 @@ public class Player extends Entity {
             healthOverlay = new HealthOverlay();
         if (timerOverlay == null)
             timerOverlay = new TimerOverlay();
-        farmingManager.setPlayer(this);
         treasureTrailsManager.setPlayer(this);
         lividFarm.setPlayer(this);
         playerRank.setPlayer(this);
@@ -2810,6 +2809,7 @@ public class Player extends Entity {
         }
         interfaceManager.sendInterfaces();
         bank.init();
+        farmingManager.setPlayer(this);
         farmingManager.init();
         friendsIgnores.init();
         getPackets().sendRunEnergy();

@@ -23,7 +23,7 @@ import com.rs.java.utils.Utils;
 
 public class Session {
 
-	private volatile Player player;
+	private transient volatile Player player;
 
 	public Player getPlayer() { return player; }
 	public void setPlayer(Player player) { this.player = player; }
