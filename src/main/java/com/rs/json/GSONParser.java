@@ -32,8 +32,7 @@ public class GSONParser {
 	private static Gson GSON;
 
 	static {
-		GSON = new GsonBuilder()
-				.setPrettyPrinting()
+		GSON = new GsonBuilder().setPrettyPrinting()
 				.disableInnerClassSerialization()
 				.enableComplexMapKeySerialization()
 				.setDateFormat(DateFormat.LONG)

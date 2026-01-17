@@ -358,7 +358,7 @@ public class Player extends Entity {
 
     private transient CombatContext currentCombatContext;
 
-    private Hit hitManager;
+    private transient Hit hitManager;
     private int recoilCharges;
 
     private transient int damage;

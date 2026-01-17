@@ -9,8 +9,13 @@ public class ItemMetadataSerializer implements JsonSerializer<ItemMetadata> {
 
     @Override
     public JsonElement serialize(ItemMetadata src, Type typeOfSrc, JsonSerializationContext context) {
-        JsonObject obj = context.serialize(src).getAsJsonObject();
+        JsonObject obj = new JsonObject();
         obj.addProperty("type", src.getType());
+
+        JsonElement data = context.serialize(src, src.getClass());
+        obj.add("data", data);
+
         return obj;
     }
+
 }

@@ -1,9 +1,11 @@
 package com.rs.json;
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import com.rs.java.game.item.meta.*;
 
 import java.lang.reflect.Type;
+import java.util.Map;
 
 public class ItemMetadataDeserializer implements JsonDeserializer<ItemMetadata> {
 
@@ -21,20 +23,84 @@ public class ItemMetadataDeserializer implements JsonDeserializer<ItemMetadata> 
     @Override
     public ItemMetadata deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
+
         JsonObject obj = json.getAsJsonObject();
 
-        JsonElement typeElement = obj.get("type");
-        if (typeElement == null) {
-            throw new JsonParseException("Missing 'type' field in ItemMetadata: " + obj.toString());
+        Integer typeId = obj.has("type") ? obj.get("type").getAsInt() : null;
+
+        JsonObject data;
+
+        if (obj.has("data")) {
+            data = obj.getAsJsonObject("data");
+        } else {
+            data = obj;
         }
 
-        int type = typeElement.getAsInt();
-
-        Class<? extends ItemMetadata> clazz = TYPE_MAP.get(type);
-        if (clazz == null) {
-            throw new JsonParseException("Unknown ItemMetadata type: " + type);
+        if (typeId == null) {
+            typeId = inferTypeFromData(data);
+            if (typeId == null) {
+                throw new JsonParseException("Missing 'type' field in ItemMetadata: " + obj);
+            }
         }
 
-        return context.deserialize(json, clazz);
+        MetaDataType type = MetaDataType.fromId(typeId);
+        if (type == null) {
+            throw new JsonParseException("Unknown ItemMetadata type: " + typeId);
+        }
+
+        switch (type) {
+
+            case DRAGONFIRE_SHIELD:
+                return new DragonFireShieldMetaData(
+                        data.get("charges").getAsInt()
+                );
+
+            case RUNE_POUCH:
+                RunePouchMetaData rune = new RunePouchMetaData();
+                Type mapType = new TypeToken<Map<Integer, Integer>>(){}.getType();
+
+                rune.setValue(context.deserialize(data.get("runes"), mapType));
+
+                return rune;
+
+            case DEGRADE_TICKS:
+                return new DegradeTicksMetaData(
+                        data.get("charges").getAsInt(),
+                        data.get("lastDisplayedPercentage").getAsInt()
+                );
+
+            case DEGRADE_HITS:
+                return new DegradeHitsMetaData(
+                        data.get("charges").getAsInt(),
+                        data.get("lastDisplayedPercentage").getAsInt()
+                );
+
+            case POLYPORE:
+                return new PolyporeStaffMetaData(
+                        data.get("charges").getAsInt()
+                );
+
+            case GREATER_RUNIC:
+                return new GreaterRunicStaffMetaData(
+                        data.get("spellId").getAsInt(),
+                        data.get("charges").getAsInt()
+                );
+
+            default:
+                throw new JsonParseException("Unhandled ItemMetadata type: " + type);
+        }
     }
+
+
+
+    private Integer inferTypeFromData(JsonObject obj) {
+        if (obj.has("runes")) return MetaDataType.RUNE_POUCH.getId();
+        if (obj.has("spellId")) return MetaDataType.GREATER_RUNIC.getId();
+        if (obj.has("charges") && !obj.has("spellId")) return MetaDataType.POLYPORE.getId();
+        return null;
+    }
+
+
+
+
 }
