@@ -280,6 +280,7 @@ public class RunePouch extends ItemPlugin {
         sendRunePouchInterface(player, runePouch);
         player.setCloseInterfacesEvent(() -> {
             player.temporaryAttribute().remove("rune_pouch_slot");
+            player.inventory.refresh();
         });
     }
 

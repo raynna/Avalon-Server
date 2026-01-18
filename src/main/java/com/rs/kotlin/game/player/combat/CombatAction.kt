@@ -205,8 +205,10 @@ class CombatAction(
                 if (validateAttack(player, target)) {
                     player.tickManager.addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
                     target.tickManager.addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10)
-                    target.tickManager.addTicks(TickManager.TickKeys.PJ_TIMER, 12);
-                    target.attackedBy = player
+                    target.tickManager.addTicks(TickManager.TickKeys.PJ_TIMER, 12)
+                    if (target is Player) {
+                        target.attackedBy[player] = 1440;
+                    }
                     if (target is Player) {
                         PvpManager.onPlayerDamagedByPlayer(target, player)
                     }

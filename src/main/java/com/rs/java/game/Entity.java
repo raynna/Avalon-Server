@@ -197,13 +197,7 @@ public abstract class Entity extends WorldTile {
         //if (isDead())
           //  hit.setDamage(0);
         Entity source = hit.getSource();
-        if (source instanceof Player p2) {
-            if (hit.getLook() == HitLook.REGULAR_DAMAGE) {
-                System.out.println("applyHit: source is: " + p2.getUsername());
-            }
-        }
         if (source instanceof Player && source.dead && hit.isCombatLook()) {
-            System.out.println("reset damage because source was dead & hit is " + hit.getLook().name());
             resetReceivedHits();
             return;
         }
@@ -214,9 +208,6 @@ public abstract class Entity extends WorldTile {
                 if (hit.getDamage() >= 1)
                     hit.setHealHit();
             }
-        }
-        if (hit.getLook() == HitLook.REGULAR_DAMAGE) {
-            System.out.println("added receivedHits");
         }
         receivedHits.add(hit);
     }
@@ -279,17 +270,11 @@ public abstract class Entity extends WorldTile {
         Entity source = hit.getSource();
         if (source instanceof Player && source.dead && hit.isCombatLook()) {
             resetReceivedHits();
-            System.out.println("reset2 damage because source was dead & hit is " + hit.getLook().name());
             return;
         }
         if (this instanceof Player) {
             if (hit.getDamage() < 0)
                 return;
-        }
-        if (source instanceof Player p2) {
-            if (hit.getLook() == HitLook.REGULAR_DAMAGE) {
-                System.out.println("processHit: removeHitpoints " + p2.getUsername());
-            }
         }
         removeHitpoints(hit);
         if (nextHits.size() < totalHitsProcess) {

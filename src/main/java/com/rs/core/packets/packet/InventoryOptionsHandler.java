@@ -46,7 +46,7 @@ import com.rs.java.game.player.actions.skills.cooking.DoughCooking.Cook;
 import com.rs.java.game.player.actions.skills.crafting.GemCutting;
 import com.rs.java.game.player.actions.skills.crafting.GemCutting.Gem;
 import com.rs.java.game.player.actions.skills.crafting.LeatherCrafting;
-import com.rs.java.game.player.actions.skills.crafting.LeatherCrafting.Craft;
+import com.rs.java.game.player.actions.skills.crafting.LeatherData;
 import com.rs.java.game.player.actions.skills.farming.FarmingManager.ProductInfo;
 import com.rs.java.game.player.actions.skills.farming.TreeSaplings;
 import com.rs.java.game.player.actions.skills.firemaking.FireLighter;
@@ -708,9 +708,9 @@ public class InventoryOptionsHandler {
                 return;
             if (Firemaking.isFiremaking(player, itemUsed, usedWith))
                 return;
-            Craft craft = LeatherCrafting.isCrafting(usedWith, itemUsed);
-            if (craft != null) {
-                player.getDialogueManager().startDialogue("LeatherCraftingD", craft);
+            LeatherData data = LeatherCrafting.getLeatherData(usedWith, itemUsed);
+            if (data != null) {
+                player.getDialogueManager().startDialogue("LeatherCraftingD", data);
                 return;
             }
             Cook cook = DoughCooking.isCooking(usedWith, itemUsed);

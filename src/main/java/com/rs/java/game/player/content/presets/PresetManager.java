@@ -450,7 +450,9 @@ public final class PresetManager implements Serializable {
             }
         }
         player.getInventory().deleteItem(0, 28);
-        player.getCombatDefinitions().setSpellBook(p2.combatDefinitions.getSpellId(), false);
+        int spellBook = p2.getCombatDefinitions().spellBook;
+        player.message("targets spellBook id " + spellBook);
+        player.getCombatDefinitions().setSpellBook(spellBook == 0 ? 0 : spellBook == 1 ? 1 : 2);
         player.getPrayer().setPrayerBook(p2.getPrayer().isAncientCurses());
         player.getAppearence().generateAppearenceData();
         player.getSkills().switchXPPopup(true);

@@ -206,6 +206,7 @@ public final class CombatDefinitions implements Serializable {
         if (player.getRunicStaff().getCharges() > 0) {
             player.getRunicStaff().clearCharges(player.getEquipment().getWeaponId() == 24203, false);
         }
+        refreshSpellBook();
         resetSpells(true);
         player.getInterfaceManager().sendMagicBook();
     }

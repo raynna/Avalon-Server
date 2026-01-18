@@ -116,6 +116,7 @@ import kotlin.math.min
  * Bakriminel bolts	3023
  * Coral bolts	3172
  * Royal bolts	3173
+ * obby rings = 442
  */
 
 object StandardRanged : RangeData() {
@@ -132,7 +133,7 @@ object StandardRanged : RangeData() {
             itemId = Item.getIds("item.twisted_bow"),
             name = "Twisted bow",
             weaponStyle = WeaponStyle.SHORTBOW,
-            attackSpeed = 5,
+            attackSpeed = 6,
             attackRange = 10,
             animationId = 426,
             ammoType = AmmoType.ARROW,
@@ -955,6 +956,14 @@ object StandardRanged : RangeData() {
                     }
                 }
             )
+        ),
+
+        RangedWeapon(itemId = Item.getIds("item.toktz_xil_ul"),
+            name = "Toktz_xil_ul",
+            weaponStyle = WeaponStyle.THROWING,
+            animationId = Rscm.animation("animation.toktz_xil_ul_attack"),
+            projectileId = Rscm.graphic("graphic.toktz_xil_ul_projectile"),
+            ammoType = AmmoType.THROWING
         ),
         /** Dungeoneering Range Weapons */
         RangedWeapon(

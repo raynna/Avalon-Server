@@ -274,6 +274,7 @@ object SpellHandler {
         }
     }
 
+    @JvmStatic
     private fun hasRune(player: Player, runeId: Int, amount: Int): Boolean {
         if (hasRunePouch(player)) {
             for (item in player.inventory.items.toArray()) {

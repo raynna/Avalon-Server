@@ -1,10 +1,42 @@
 {
+  "27": {
+    "npcId": 27,
+    "npcName": "Archer",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-17T22:40:36.327853600Z",
+    "lastSeen": "2026-01-17T22:40:36.327853600Z",
+    "attempts": 1
+  },
   "96": {
     "npcId": 96,
     "npcName": "Adolescent White wolf",
     "reason": "\u0027wikitext\u0027 not found in JSON",
     "firstSeen": "2026-01-17T20:17:41.963904200Z",
     "lastSeen": "2026-01-17T20:17:41.963904200Z",
+    "attempts": 1
+  },
+  "131": {
+    "npcId": 131,
+    "npcName": "Penguin",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-17T22:40:36.964687700Z",
+    "lastSeen": "2026-01-17T22:40:36.964687700Z",
+    "attempts": 1
+  },
+  "132": {
+    "npcId": 132,
+    "npcName": "Monkey",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-17T22:40:36.710225200Z",
+    "lastSeen": "2026-01-17T22:40:36.710225200Z",
+    "attempts": 1
+  },
+  "152": {
+    "npcId": 152,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-17T22:44:27.835842900Z",
+    "lastSeen": "2026-01-17T22:44:27.835842900Z",
     "attempts": 1
   },
   "1309": {
@@ -55,12 +87,28 @@
     "lastSeen": "2026-01-14T15:53:39.311750Z",
     "attempts": 1
   },
+  "1463": {
+    "npcId": 1463,
+    "npcName": "Monkey",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-17T22:40:36.775447200Z",
+    "lastSeen": "2026-01-17T22:40:36.775447200Z",
+    "attempts": 1
+  },
   "3090": {
     "npcId": 3090,
     "npcName": "Haakon the Champion",
     "reason": "No Infobox Monster found",
     "firstSeen": "2026-01-14T15:28:40.404902700Z",
     "lastSeen": "2026-01-14T15:28:40.404902700Z",
+    "attempts": 1
+  },
+  "3705": {
+    "npcId": 3705,
+    "npcName": "Max",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-17T22:44:24.036691600Z",
+    "lastSeen": "2026-01-17T22:44:24.036691600Z",
     "attempts": 1
   },
   "4474": {

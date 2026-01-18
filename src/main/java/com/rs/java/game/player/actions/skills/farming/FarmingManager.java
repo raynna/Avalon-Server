@@ -543,10 +543,10 @@ public class FarmingManager implements Serializable {
                     player.getPackets().sendGameMessage("You'll need a rake to get rid of the weeds.");
                     return false;
                 }
-                if (!player.getInventory().hasFreeSlots()) {
+                /*if (!player.getInventory().hasFreeSlots()) {
                     player.getPackets().sendGameMessage("You don't have any inventory space left.");
                     return false;
-                }
+                }*/
                 player.getPackets().sendGameMessage("You start raking the patch.");
                 player.animate(RAKING_ANIMATION);
                 return true;
@@ -554,10 +554,10 @@ public class FarmingManager implements Serializable {
 
             @Override
             public boolean process(Player player) {
-                if (player.getInventory().getFreeSlots() == 0) {
+                /*if (player.getInventory().getFreeSlots() == 0) {
                     player.getPackets().sendGameMessage("You don't have any inventory space left.");
                     return false;
-                }
+                }*/
                 return spot.stage != 3;
             }
 

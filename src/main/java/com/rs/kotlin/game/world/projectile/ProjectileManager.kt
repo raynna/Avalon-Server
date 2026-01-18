@@ -354,7 +354,6 @@ object ProjectileManager {
         stream.writeByte((start.xInChunk shl 3) or start.yInChunk)
         stream.writeByte(end.x - start.x)
         stream.writeByte(end.y - start.y)
-        println("startX: ${start.x}, startY: ${start.y}, endX: ${end.x}, endY: ${end.y}")
         val targetEntity = when (proj.defender) {
             null -> 0
             is Player -> -(proj.defender.index + 1)

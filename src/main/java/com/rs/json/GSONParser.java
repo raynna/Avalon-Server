@@ -69,14 +69,6 @@ public class GSONParser {
 		try {
 			String json = GSON.toJson(src, type);
 
-			// DEBUG: Simple JSON logging
-			Logger.log("GSONDebug", "Generated JSON length: " + json.length());
-			if (json.length() > 200) {
-				Logger.log("GSONDebug", "First 200 chars: " + json.substring(0, 200));
-			} else {
-				Logger.log("GSONDebug", "Full JSON: " + json);
-			}
-
 			try (Writer writer = Files.newBufferedWriter(Paths.get(tmpFile))) {
 				writer.write(json);
 			}

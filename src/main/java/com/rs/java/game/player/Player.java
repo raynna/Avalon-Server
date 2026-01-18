@@ -2736,9 +2736,9 @@ public class Player extends Entity {
             getControlerManager().startControler("WildernessControler");
         }
         if (getFrozenBy() != null) {
-            if (!Utils.inCircle(getFrozenBy(), this, 12) && isFrozen()) {
-                setFreezeDelay(0);
-                getFrozenBy().setFreezeDelay(0);
+            if (Utils.getDistance(this, getFrozenBy()) >= 12 && isFrozen()) {
+                unfreeze();
+                setFreezeImmune(5);
                 if (!(getFrozenBy() instanceof NPC))
                     setFrozenBy(null);
             }
@@ -3797,6 +3797,9 @@ public class Player extends Entity {
         timerOverlay.clearAll(this);
         lock(6);
         Player killer = getMostDamageReceivedSourcePlayer();
+        if (killer.getFrozenBy() == this)
+            killer.unfreeze();
+        setFrozenBy(null);
         WrathEffect.handleWrathEffect(this, killer);
         animate(new Animation(836));
         if (familiar != null)
@@ -6070,7 +6073,7 @@ public class Player extends Entity {
     }
 
     public Entity setFrozenBy(Entity target) {
-        return frozenBy = (Entity) target;
+        return frozenBy = target;
     }
 
     public Entity getFrozenBy() {

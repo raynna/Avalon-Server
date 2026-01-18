@@ -269,7 +269,10 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
         if (hit.damage > 0 && spell.bind != -1) {
             if (!defender.isFreezeImmune) {
-                defender.freeze(spell.bind)
+                defender.addFreezeDelay(spell.bind, true)
+                if (defender is Player) {
+                    defender.setFrozenBy(attacker)
+                }
             } else {
                 attacker.message(
                     "That ${if (defender is NPC) "npc" else "player"} is already affected by this spell."
@@ -315,10 +318,6 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                         defender = defender
                     )
                 }
-        }
-
-        if (hit.damage > 0 && spell.bind != -1) {
-            defender.addFreezeDelay(spell.bind, true)
         }
 
         if (spell.id == 86 && hit.damage > 0) {
@@ -400,6 +399,9 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 }
                 if (spell.bind != -1 && !t.isFreezeImmune) {
                     t.addFreezeDelay(spell.bind, false)
+                    if (t is Player) {
+                        t.setFrozenBy(attacker)
+                    }
                 }
                 if (spell.element == ElementType.Blood) {
                     attacker.heal(hit.damage / 5)

@@ -33,6 +33,8 @@ import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.HomeTeleport;
 import com.rs.java.game.player.actions.WaterFilling;
 import com.rs.java.game.player.actions.combat.Magic;
+import com.rs.java.game.player.actions.skills.crafting.LeatherCrafting;
+import com.rs.java.game.player.actions.skills.crafting.LeatherData;
 import com.rs.java.game.player.actions.skills.mining.DungeoneeringMining;
 import com.rs.java.game.player.actions.skills.mining.DungeoneeringMining.DungeoneeringRocks;
 import com.rs.java.game.player.actions.skills.mining.Mining;
@@ -1031,21 +1033,24 @@ public class DungeonControler extends Controler {
 
 	@Override
 	public boolean canUseItemOnItem(Item itemUsed, Item usedWith) {
+
 		if (dungeon == null || !dungeon.hasStarted() || dungeon.isAtRewardsScreen())
 			return false;
-		if (itemUsed.getId() == LeatherCraftingD.DUNG_NEEDLE || usedWith.getId() == LeatherCraftingD.DUNG_NEEDLE) {
-			int leatherIndex = LeatherCraftingD.getIndex(itemUsed.getId());
-			if (leatherIndex == -1)
-				leatherIndex = LeatherCraftingD.getIndex(usedWith.getId());
-			if (leatherIndex != -1) {
-				player.getDialogueManager().startDialogue("LeatherCraftingD", leatherIndex, true);
+
+		// needle check
+		if (itemUsed.getId() == LeatherCrafting.DUNG_NEEDLE || usedWith.getId() == LeatherCrafting.DUNG_NEEDLE) {
+
+			LeatherData data = LeatherCrafting.getLeatherData(itemUsed, usedWith);
+
+			if (data != null) {
+				player.getDialogueManager().startDialogue("LeatherCraftingD", data);
 				return true;
 			}
-			// } else if (WeaponPoison.poison(player, itemUsed, usedWith, true))
-			// return false;
 		}
+
 		return true;
 	}
+
 
 	public void openDoor(WorldObject object) {
 		RoomReference roomReference = dungeon.getCurrentRoomReference(player);
@@ -1130,9 +1135,9 @@ public class DungeonControler extends Controler {
 				if (item == null || item.getId() != slotId2)
 					return false;
 				if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-					int leatherIndex = LeatherCraftingD.getIndex(item.getId());
-					if (leatherIndex != -1) {
-						player.getDialogueManager().startDialogue("LeatherCraftingD", leatherIndex, true);
+					LeatherData data = LeatherCrafting.getLeatherData(item, item);
+					if (data != null) {
+						player.getDialogueManager().startDialogue("LeatherCraftingD", data);
 						return false;
 					}
 
