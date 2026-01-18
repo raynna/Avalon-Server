@@ -2509,7 +2509,7 @@ public class Player extends Entity {
                 queued.execute();
                 queuedInstantCombats.remove(queued);
             }
-            //stopAll(false, true, true);
+            stopAll(false, true, true);
         }
     }
 
