@@ -532,6 +532,10 @@ public abstract class Entity extends WorldTile {
         }
     }
 
+    public static int getRelativeGfxRotation(int src, int dst) {
+        return (dst - src) & 0x3FFF;
+    }
+
 
     public WorldTile getWorldTile() {
         return new WorldTile(this.getX(), this.getY(), getPlane());

@@ -17,6 +17,10 @@ class RunePouchCommand : Command {
             player.message("You can't use ::runepouch in this mode.")
             return true
         }
+        if (!player.canUseCommand()) {
+            player.message("You can't spawn a rune pouch here.")
+            return true
+        }
         if (!player.getInventory().hasFreeSlots()) {
             player.message("You don't have any space for a rune pouch in your inventory.");
             return true

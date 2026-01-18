@@ -19,10 +19,6 @@ class AhrimsCommand : Command {
         if (!player.canUseCommand()) {
             player.message("You can't use ::ahrims here.")
             return true
-        }//Summoning.spawnFamiliar(player, Pouch.WOLPERTINGER);
-        if (!player.getInventory().hasFreeSlots()) {
-            player.message("You don't have any inventory space for any ahrims pieces.")
-            return true;
         }
         val ahrimItems = Item.getIds(
             "item.ahrim_s_staff", "item.ahrim_s_hood",
@@ -32,7 +28,7 @@ class AhrimsCommand : Command {
             if (!player.getInventory().hasFreeSlots()) {
                 player.bank.addItem(item, true)
                 player.message("No space in inventory, ${item.name} has been added to your bank.")
-                continue;
+                continue
             }
             player.inventory.addItem(item)
         }

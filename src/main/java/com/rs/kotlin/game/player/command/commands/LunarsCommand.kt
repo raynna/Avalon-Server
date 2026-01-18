@@ -16,6 +16,10 @@ class LunarsCommand : Command {
             player.message("You can't use ::lunars in this mode.")
             return true
         }
+        if (!player.canUseCommand()) {
+            player.message("You can't switch spellbook here.")
+            return true
+        }
         val isLunar = player.combatDefinitions.getSpellBook() == 2
         if (isLunar) {
             player.message("Your spellbook is already set to lunar.");

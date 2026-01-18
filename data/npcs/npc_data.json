@@ -1008,6 +1008,65 @@
       "spria"
     ]
   },
+  "62": {
+    "id": 62,
+    "name": "Jungle spider",
+    "members": true,
+    "combatLevel": 44,
+    "attackLevel": 35,
+    "strengthLevel": 37,
+    "defenceLevel": 35,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 20,
+      "slash": 20,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 17
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 October]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A barely visible deadly jungle spider.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 50,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
   "75": {
     "id": 75,
     "name": "Zombie",
@@ -1905,6 +1964,66 @@
       "turael",
       "spria",
       "krystilia",
+      "mazchna"
+    ]
+  },
+  "108": {
+    "id": 108,
+    "name": "Poison Scorpion",
+    "members": true,
+    "combatLevel": 20,
+    "attackLevel": 16,
+    "strengthLevel": 17,
+    "defenceLevel": 15,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 23,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 5,
+      "slash": 15,
+      "crush": 15
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 5,
+      "standard": 5,
+      "heavy": 5
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "It has a very vicious looking tail.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 23,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
       "mazchna"
     ]
   },
@@ -2871,6 +2990,61 @@
       "krystilia"
     ]
   },
+  "183": {
+    "id": 183,
+    "name": "Pirate",
+    "members": false,
+    "combatLevel": 23,
+    "attackLevel": 21,
+    "strengthLevel": 21,
+    "defenceLevel": 21,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 20,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
   "186": {
     "id": 186,
     "name": "Thug",
@@ -3033,6 +3207,61 @@
     "attackStyles": [
       "[[Crush]]",
       "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "191": {
+    "id": 191,
+    "name": "Tribesman",
+    "members": true,
+    "combatLevel": 32,
+    "attackLevel": 23,
+    "strengthLevel": 27,
+    "defenceLevel": 26,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 39,
+    "attackBonus": 8,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 4,
+      "slash": 6,
+      "crush": 6
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "A vicious warrior.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
     ],
     "attackSpeedTicks": 4,
     "respawnTicks": 50,
@@ -4418,6 +4647,118 @@
     "categories": [],
     "assignedBy": []
   },
+  "792": {
+    "id": 792,
+    "name": "Grip",
+    "members": true,
+    "combatLevel": 22,
+    "attackLevel": 18,
+    "strengthLevel": 17,
+    "defenceLevel": 18,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 25,
+    "attackBonus": 5,
+    "strengthBonus": 7,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 16,
+      "slash": 27,
+      "crush": 22
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Looks like he\u0027s been in the wars...",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "799": {
+    "id": 799,
+    "name": "Pirate Guard",
+    "members": true,
+    "combatLevel": 19,
+    "attackLevel": 18,
+    "strengthLevel": 16,
+    "defenceLevel": 10,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 25,
+    "attackBonus": 20,
+    "strengthBonus": 16,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 39,
+      "crush": 30
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A morally ambiguous guard.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "1017": {
     "id": 1017,
     "name": "Chicken",
@@ -5623,6 +5964,68 @@
       "vannaka"
     ]
   },
+  "2025": {
+    "id": 2025,
+    "name": "Ahrim the Blighted",
+    "members": true,
+    "combatLevel": 98,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 100,
+    "magicLevel": 100,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 68,
+    "magicBonus": 73,
+    "magicStrengthBonus": 0,
+    "rangedBonus": -19,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 103,
+      "slash": 85,
+      "crush": 117
+    },
+    "magicDefence": {
+      "magic": 73
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 July]] [[2023]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A vengeful spirit corrupted by dark magic.",
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 20
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "2091": {
     "id": 2091,
     "name": "Giant rat",
@@ -5848,6 +6251,64 @@
     "attackSpeedTicks": 6,
     "respawnTicks": 50,
     "slayerXp": 60,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
+  "3153": {
+    "id": 3153,
+    "name": "Harpie Bug Swarm",
+    "members": true,
+    "combatLevel": 46,
+    "attackLevel": 54,
+    "strengthLevel": 46,
+    "defenceLevel": 32,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 25,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 10,
+      "slash": 5,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[30 January]] [[2006]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A swarm of bugs.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 25,
     "categories": [],
     "assignedBy": [
       "vannaka"
@@ -13903,6 +14364,65 @@
       "vannaka"
     ]
   },
+  "6108": {
+    "id": 6108,
+    "name": "Entrana firebird",
+    "members": true,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 5,
+    "attackBonus": -31,
+    "strengthBonus": -26,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -26,
+      "slash": -26,
+      "crush": -26
+    },
+    "magicDefence": {
+      "magic": -26
+    },
+    "rangedDefence": {
+      "light": -26,
+      "standard": -26,
+      "heavy": -26
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "Probably not a chicken.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 5,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
   "6189": {
     "id": 6189,
     "name": "Black Knight",
@@ -13955,6 +14475,343 @@
     "attackSpeedTicks": 5,
     "respawnTicks": 25,
     "slayerXp": 42,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
+  "6208": {
+    "id": 6208,
+    "name": "Balfrug Kreeyath",
+    "members": true,
+    "combatLevel": 151,
+    "attackLevel": 115,
+    "strengthLevel": 60,
+    "defenceLevel": 153,
+    "magicLevel": 150,
+    "rangedLevel": 1,
+    "constitutionLevel": 161,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 10
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "Despoiler of Ullek.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 161,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6346": {
+    "id": 6346,
+    "name": "Pirate",
+    "members": false,
+    "combatLevel": 23,
+    "attackLevel": 21,
+    "strengthLevel": 21,
+    "defenceLevel": 21,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 20,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
+  "6347": {
+    "id": 6347,
+    "name": "Pirate",
+    "members": false,
+    "combatLevel": 23,
+    "attackLevel": 21,
+    "strengthLevel": 21,
+    "defenceLevel": 21,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 20,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
+  "6348": {
+    "id": 6348,
+    "name": "Pirate",
+    "members": false,
+    "combatLevel": 23,
+    "attackLevel": 21,
+    "strengthLevel": 21,
+    "defenceLevel": 21,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 20,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
+  "6349": {
+    "id": 6349,
+    "name": "Pirate",
+    "members": false,
+    "combatLevel": 23,
+    "attackLevel": 21,
+    "strengthLevel": 21,
+    "defenceLevel": 21,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 20,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
+  "6350": {
+    "id": 6350,
+    "name": "Pirate",
+    "members": false,
+    "combatLevel": 23,
+    "attackLevel": 21,
+    "strengthLevel": 21,
+    "defenceLevel": 21,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 20,
     "categories": [],
     "assignedBy": [
       "krystilia"
@@ -14859,6 +15716,63 @@
     "assignedBy": [
       "turael",
       "spria"
+    ]
+  },
+  "13100": {
+    "id": 13100,
+    "name": "Hobgoblin",
+    "members": false,
+    "combatLevel": 28,
+    "attackLevel": 22,
+    "strengthLevel": 24,
+    "defenceLevel": 24,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 29,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 29,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka"
     ]
   },
   "13246": {

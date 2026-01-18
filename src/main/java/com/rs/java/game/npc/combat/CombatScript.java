@@ -19,9 +19,11 @@ import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.AttackMethod;
 import com.rs.kotlin.game.npc.combatdata.AttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
+import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.player.combat.CombatAction;
 import com.rs.kotlin.game.player.combat.CombatStyle;
 import com.rs.kotlin.game.player.combat.EntityUtils;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public abstract class CombatScript {
@@ -90,8 +92,28 @@ public abstract class CombatScript {
     public static void applyRegisteredHit(NPC npc, Entity target, Hit hit) {
         if (npc.isDead() || npc.hasFinished() || target.isDead() || target.hasFinished())
             return;
-        if (hit.getLook() == HitLook.MAGIC_DAMAGE && hit.getDamage() == 0)//splash for npc magic
+        npc.getCombat().performBlockAnimation(target);
+        if (hit.getLook() == HitLook.MAGIC_DAMAGE && hit.getDamage() == 0) {
+            target.gfx(85, 100);//splash for npc magic
             return;
+        }
+        NpcCombatDefinition combatDefinitions = npc.getCombatDefinitions();
+        if (combatDefinitions != null) {
+            if (combatDefinitions.getAttackGfx() != -1) {
+                int srcAngle = target.getDirection();
+
+                int dstAngle = Utils.getAngle(
+                        npc.getX() - target.getX(),
+                        npc.getY() - target.getY()
+                );
+                //TODO get angle a better way
+                int rel = (dstAngle - srcAngle) & 0x3FFF;
+                rel = (rel + 8192) & 0x3FFF;
+                int gfxRot = ((rel + 1024) / 2048) & 7;
+
+                target.gfx(combatDefinitions.getAttackGfx(), 100, gfxRot);
+            }
+        }
         target.applyHit(hit);
 
         if (target instanceof Player defender) {
@@ -128,7 +150,6 @@ public abstract class CombatScript {
         if (hit.getDamage() == 0 && npc.getId() == 9172) {
             target.gfx(new Graphics(2122));
         }
-        npc.getCombat().performBlockAnimation(target);
     }
 
     public static void delayHit(NPC npc, Entity target, int delay, Hit... hits) {

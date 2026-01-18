@@ -20,10 +20,6 @@ class DharoksCommand : Command {
             player.message("You can't use ::dharoks here.")
             return true
         }
-        if (!player.getInventory().hasFreeSlots()) {
-            player.message("You don't have any inventory space for any dharoks pieces.")
-            return true;
-        }
         val dharokItems = Item.getIds(
             "item.dharok_s_greataxe", "item.dharok_s_helm",
             "item.dharok_s_platebody", "item.dharok_s_platelegs")

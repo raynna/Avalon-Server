@@ -16,6 +16,10 @@ class AncientsCommand : Command {
             player.message("You can't use ::ancients in this mode.")
             return true
         }
+        if (!player.canUseCommand()) {
+            player.message("You can't switch spellbook here.")
+            return true
+        }
         val isAncients = player.combatDefinitions.getSpellBook() == 1
         if (isAncients) {
             player.message("Your spellbook is already set to ancients.");

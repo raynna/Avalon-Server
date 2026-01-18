@@ -63,6 +63,7 @@ public class Default extends CombatScript {
 			npc.gfx(new Graphics(defs.getAttackGfx()));
 		}
 		npc.animate(new Animation(defs.getAttackAnim()));
+		System.out.println("npc: " + npc.getName() + " attack sound: " + defs.getAttackSound());
 		if (defs.getAttackSound() != -1)
 			npc.playSound(defs.getAttackSound(), 1);
 		return npc.getAttackSpeed();

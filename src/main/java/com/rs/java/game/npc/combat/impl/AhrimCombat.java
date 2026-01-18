@@ -21,12 +21,13 @@ public class AhrimCombat extends CombatScript {
 		npc.animate(npc.getAttackAnimation());
 		npc.gfx(2728);
 		Hit mageHit = npc.magicHit(target, npc.getMaxHit());
-		ProjectileManager.sendMagic(Projectile.ELEMENTAL_SPELL, 2735, npc, target, mageHit, new Graphics(2740, 100));
-		if (mageHit.getDamage() != 0 && target instanceof Player player && Utils.random(3) == 0) {
+		ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, 2735, npc, target);
+		if (mageHit.getDamage() != 0 && target instanceof Player player && Utils.roll(1, 3)) {
 			target.gfx(400, 100);
             int currentLevel = player.getSkills().getLevel(Skills.STRENGTH);
 			player.getSkills().set(Skills.STRENGTH, currentLevel < 5 ? 0 : currentLevel - 5);
 		}
+		npc.playSound(npc.getCombatDefinitions().getAttackSound(), 1);
 		delayHit(npc, target, npc.getHitDelay(npc, target), mageHit);
 		return npc.getAttackSpeed();
 	}

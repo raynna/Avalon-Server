@@ -49,39 +49,31 @@
     "items": {
       "data": [
         {
-          "id": 10551,
+          "id": 10887,
           "amount": 1
         },
         {
-          "id": 4151,
+          "id": 9244,
+          "amount": 50
+        },
+        {
+          "id": 2440,
           "amount": 1
         },
         {
-          "id": 6585,
+          "id": 2436,
           "amount": 1
         },
         {
-          "id": 4736,
+          "id": 15272,
           "amount": 1
         },
         {
-          "id": 11726,
+          "id": 9185,
           "amount": 1
         },
         {
-          "id": 20072,
-          "amount": 1
-        },
-        {
-          "id": 6570,
-          "amount": 1
-        },
-        {
-          "id": 11694,
-          "amount": 1
-        },
-        {
-          "id": 9739,
+          "id": 2444,
           "amount": 1
         },
         {
@@ -93,15 +85,23 @@
           "amount": 1
         },
         {
+          "id": 15272,
+          "amount": 1
+        },
+        {
+          "id": 2550,
+          "amount": 1
+        },
+        {
           "id": 3024,
           "amount": 1
         },
         {
-          "id": 3144,
+          "id": 15272,
           "amount": 1
         },
         {
-          "id": 3144,
+          "id": 15272,
           "amount": 1
         },
         {
@@ -126,6 +126,14 @@
         },
         {
           "id": 15272,
+          "amount": 1
+        },
+        {
+          "id": 15272,
+          "amount": 1
+        },
+        {
+          "id": 4153,
           "amount": 1
         },
         {
@@ -151,24 +159,6 @@
         {
           "id": 8013,
           "amount": 25
-        },
-        {
-          "id": 12437,
-          "amount": 50
-        },
-        {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
-            }
-          }
         }
       ],
       "alwaysStackable": false
@@ -178,49 +168,49 @@
     "items": {
       "data": [
         {
-          "id": 10828,
+          "id": 1169,
           "amount": 1
         },
         {
-          "id": 2412,
+          "id": 10499,
           "amount": 1
         },
         {
-          "id": 18335,
+          "id": 1712,
           "amount": 1
         },
         {
-          "id": 15486,
+          "id": 861,
           "amount": 1
         },
         {
-          "id": 4712,
+          "id": 544,
           "amount": 1
         },
+        null,
+        null,
         {
-          "id": 6889,
+          "id": 2497,
           "amount": 1
         },
         null,
         {
-          "id": 4714,
+          "id": 7459,
+          "amount": 1
+        },
+        {
+          "id": 3105,
           "amount": 1
         },
         null,
         {
-          "id": 7462,
+          "id": 2550,
           "amount": 1
         },
         {
-          "id": 11732,
-          "amount": 1
+          "id": 19162,
+          "amount": 100
         },
-        null,
-        {
-          "id": 15220,
-          "amount": 1
-        },
-        null,
         null
       ],
       "alwaysStackable": false
@@ -251,7 +241,7 @@
         },
         {
           "id": 10828,
-          "amount": 118
+          "amount": 119
         },
         {
           "id": 3122,
@@ -367,15 +357,15 @@
         },
         {
           "id": 4151,
-          "amount": 45
+          "amount": 46
         },
         {
           "id": 6570,
-          "amount": 44
+          "amount": 45
         },
         {
           "id": 10551,
-          "amount": 34
+          "amount": 35
         },
         {
           "id": 10388,
@@ -387,7 +377,7 @@
         },
         {
           "id": 11694,
-          "amount": 26
+          "amount": 27
         },
         {
           "id": 2440,
@@ -399,7 +389,7 @@
         },
         {
           "id": 3024,
-          "amount": 144
+          "amount": 146
         },
         {
           "id": 391,
@@ -407,15 +397,15 @@
         },
         {
           "id": 6685,
-          "amount": 147
+          "amount": 149
         },
         {
           "id": 12437,
-          "amount": 3521
+          "amount": 3571
         },
         {
           "id": 2412,
-          "amount": 76
+          "amount": 77
         },
         {
           "id": 13734,
@@ -423,7 +413,7 @@
         },
         {
           "id": 7462,
-          "amount": 75
+          "amount": 76
         },
         {
           "id": 3105,
@@ -431,15 +421,15 @@
         },
         {
           "id": 15220,
-          "amount": 88
+          "amount": 89
         },
         {
           "id": 6585,
-          "amount": 51
+          "amount": 52
         },
         {
           "id": 18335,
-          "amount": 64
+          "amount": 65
         },
         {
           "id": 23659,
@@ -455,7 +445,7 @@
         },
         {
           "id": 15486,
-          "amount": 46
+          "amount": 47
         },
         {
           "id": 6914,
@@ -471,39 +461,39 @@
         },
         {
           "id": 15272,
-          "amount": 713
+          "amount": 723
         },
         {
           "id": 4736,
-          "amount": 12
+          "amount": 13
         },
         {
           "id": 11726,
-          "amount": 12
+          "amount": 13
         },
         {
           "id": 20072,
-          "amount": 46
+          "amount": 47
         },
         {
           "id": 3144,
-          "amount": 89
+          "amount": 91
         },
         {
           "id": 4712,
-          "amount": 22
+          "amount": 23
         },
         {
           "id": 6889,
-          "amount": 12
+          "amount": 13
         },
         {
           "id": 4714,
-          "amount": 22
+          "amount": 23
         },
         {
           "id": 11732,
-          "amount": 22
+          "amount": 23
         },
         {
           "id": 4718,
@@ -523,11 +513,11 @@
         },
         {
           "id": 8013,
-          "amount": 1500
+          "amount": 1525
         },
         {
           "id": 9739,
-          "amount": 39
+          "amount": 40
         },
         {
           "id": 21371,
@@ -713,6 +703,20 @@
             "data": {
               "spellId": 0,
               "charges": 0
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
             }
           }
         }
@@ -933,12 +937,12 @@
   },
   "skills": {
     "level": [
+      60,
+      1,
       99,
       99,
       99,
-      99,
-      99,
-      99,
+      52,
       99,
       99,
       99,
@@ -960,6 +964,12 @@
       99
     ],
     "xp": [
+      273742.0,
+      0.0,
+      1.3034431E7,
+      1.3034431E7,
+      1.3034431E7,
+      123660.0,
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
@@ -977,17 +987,11 @@
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
+      1.3034631E7,
       1.3034431E7
     ],
     "xpTracks": [
-      1.307784917200002E7,
+      1.307804917200002E7,
       0.0,
       0.0
     ],
@@ -1095,6 +1099,183 @@
   "permBanned": false,
   "presetManager": {
     "PRESET_SETUPS": {
+      "f2p": {
+        "inventory": [
+          {
+            "id": 1319,
+            "amount": 1
+          },
+          {
+            "id": 1333,
+            "amount": 1
+          },
+          {
+            "id": 2667,
+            "amount": 1
+          },
+          {
+            "id": 2661,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 113,
+            "amount": 1
+          },
+          {
+            "id": 2665,
+            "amount": 1
+          },
+          {
+            "id": 2663,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 2301,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 2301,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 373,
+            "amount": 1
+          },
+          {
+            "id": 8013,
+            "amount": 25
+          }
+        ],
+        "equipment": [
+          {
+            "id": 1169,
+            "amount": 1
+          },
+          {
+            "id": 9756,
+            "amount": 1
+          },
+          {
+            "id": 1725,
+            "amount": 1
+          },
+          {
+            "id": 853,
+            "amount": 1
+          },
+          {
+            "id": 544,
+            "amount": 1
+          },
+          null,
+          null,
+          {
+            "id": 1099,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 1065,
+            "amount": 1
+          },
+          {
+            "id": 3105,
+            "amount": 1
+          },
+          null,
+          null,
+          {
+            "id": 890,
+            "amount": 100
+          },
+          null
+        ],
+        "curses": false,
+        "spellBook": 1,
+        "name": "f2p",
+        "xp": [
+          37224.0,
+          37224.0,
+          1.3034431E7,
+          1.3034431E7,
+          1.3034431E7,
+          123660.0,
+          1.3034431E7
+        ],
+        "runes": [
+          null,
+          null,
+          null
+        ]
+      },
       "60/45welfare": {
         "inventory": [
           {
@@ -2076,6 +2257,186 @@
           }
         ],
         "familiarPouch": "WOLPERTINGER"
+      },
+      "pure range/m": {
+        "inventory": [
+          {
+            "id": 10887,
+            "amount": 1
+          },
+          {
+            "id": 9244,
+            "amount": 50
+          },
+          {
+            "id": 2440,
+            "amount": 1
+          },
+          {
+            "id": 2436,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 9185,
+            "amount": 1
+          },
+          {
+            "id": 2444,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 2550,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 4153,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 8013,
+            "amount": 25
+          }
+        ],
+        "equipment": [
+          {
+            "id": 1169,
+            "amount": 1
+          },
+          {
+            "id": 10499,
+            "amount": 1
+          },
+          {
+            "id": 1712,
+            "amount": 1
+          },
+          {
+            "id": 861,
+            "amount": 1
+          },
+          {
+            "id": 544,
+            "amount": 1
+          },
+          null,
+          null,
+          {
+            "id": 2497,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 7459,
+            "amount": 1
+          },
+          {
+            "id": 3105,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 2550,
+            "amount": 1
+          },
+          {
+            "id": 19162,
+            "amount": 100
+          },
+          null
+        ],
+        "curses": false,
+        "spellBook": 1,
+        "name": "pure range/m",
+        "xp": [
+          273742.0,
+          0.0,
+          1.3034431E7,
+          1.3034431E7,
+          1.3034431E7,
+          123660.0,
+          1.3034431E7
+        ],
+        "runes": [
+          null,
+          null,
+          null
+        ]
       },
       "void melee": {
         "inventory": [
@@ -3641,7 +4002,7 @@
   },
   "staffCharges": {},
   "combatDefinitions": {
-    "attackStyle": 0,
+    "attackStyle": 1,
     "specialAttackPercentage": 100,
     "autoRetaliate": false,
     "sortSpellBook": 1,
@@ -3657,7 +4018,8 @@
       "11694": 1,
       "9185": 1,
       "5698": 1,
-      "4886": 1
+      "4886": 1,
+      "861": 1
     }
   },
   "dfsCharges": 0,
@@ -3932,10 +4294,10 @@
   },
   "timePiece": 0,
   "lastlevelUp": [
-    "80"
+    "40"
   ],
   "lastSkill": [
-    "Strength"
+    "Defence"
   ],
   "bossKillcount": {},
   "treasureTrailCount": {},
@@ -4039,7 +4401,7 @@
   "strongHoldSecurityFloor3": false,
   "strongHoldSecurityFloor4": false,
   "connectedClanChannel": false,
-  "lastLoggedIn": 1768615891424,
+  "lastLoggedIn": 1768758220220,
   "petManager": {
     "petDetails": {},
     "npcId": 0,
@@ -4103,9 +4465,9 @@
   ],
   "lostCannon": false,
   "prayer": {
-    "activeBook": "ANCIENT_CURSES",
+    "activeBook": "NORMAL",
     "usingQuickPrayer": false,
-    "prayerPoints": 990,
+    "prayerPoints": 520,
     "quickNormalPrayers": [
       false,
       false,
@@ -4160,6 +4522,12 @@
       false,
       false
     ]
+  },
+  "farmingManager": {
+    "growthMultiplier": 1000.0,
+    "spots": [],
+    "globalTickCounter": 679,
+    "playerGrowthOffset": 82
   },
   "controlerManager": {},
   "musicsManager": {
@@ -5585,7 +5953,6 @@
     ],
     "alwaysStackable": false
   },
-  "familiarPouch": "WOLPERTINGER",
   "frozenKeyCharges": 0,
   "member": false,
   "memberTill": 0,
@@ -5609,8 +5976,8 @@
   },
   "squealOfFortune": {
     "version": 1,
-    "lastDailySpinsGiveaway": 1768615881574,
-    "dailySpins": 7,
+    "lastDailySpinsGiveaway": 1768757797140,
+    "dailySpins": 8,
     "earnedSpins": 3,
     "boughtSpins": 0,
     "rewardSlot": -1,
@@ -5711,6 +6078,6 @@
     "entityName": "fullspawn"
   },
   "x": 3093,
-  "y": 3493,
+  "y": 3494,
   "plane": 0
 }

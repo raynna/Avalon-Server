@@ -117,9 +117,22 @@ public final class Utils {
 
 	public static final int[] DOOR_ROTATION_DIR_Y = { 0, 1, 0, -1 };
 
-	public static final int getAngle(int xOffset, int yOffset) {
-		return ((int) (Math.atan2(-xOffset, -yOffset) * 2607.5945876176133)) & 0x3fff;
+	public static int getAngle(int dx, int dy) {
+		return (int)(Math.atan2(dx, dy) * 2607.5945876176133) & 0x3FFF;
 	}
+
+	public static int getRelativeAngle(int srcAngle, int dstAngle) {
+		return (dstAngle - srcAngle) & 0x3FFF;
+	}
+
+	public static int angleToGfxRotation(int angle) {
+		return ((angle + 1024) / 2048) & 7;
+	}
+
+	public static int getGfxRotation(int srcAngle, int dstAngle) {
+		return angleToGfxRotation(getRelativeAngle(srcAngle, dstAngle));
+	}
+
 
 	public static synchronized long currentTimeMillis() {
 		long l = System.currentTimeMillis();

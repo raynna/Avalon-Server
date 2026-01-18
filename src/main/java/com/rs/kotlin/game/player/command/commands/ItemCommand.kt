@@ -17,7 +17,10 @@ class ItemCommand : Command {
             player.message("You can't use ::item in this mode.")
             return true
         }
-
+        if (!player.canUseCommand()) {
+            player.message("You can't use ::item here.")
+            return true
+        }
         if (args.isEmpty()) {
             player.message("Usage: $usage")
             return true

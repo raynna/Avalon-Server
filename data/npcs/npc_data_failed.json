@@ -127,6 +127,14 @@
     "lastSeen": "2026-01-14T15:55:15.284216Z",
     "attempts": 1
   },
+  "5105": {
+    "npcId": 5105,
+    "npcName": "Horned graahk",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-18T18:16:01.863243100Z",
+    "lastSeen": "2026-01-18T18:16:01.863243100Z",
+    "attempts": 1
+  },
   "6869": {
     "npcId": 6869,
     "npcName": "Wolpertinger",

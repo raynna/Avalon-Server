@@ -393,6 +393,28 @@ object ProjectileManager {
         return cycles / 30
     }
 
+    fun calculateRotation(
+        start: WorldTile,
+        end: WorldTile,
+        facing: Int
+    ): Int {
+        val dx = end.x - start.x
+        val dy = end.y - start.y
+
+        val angle = Math.atan2(dy.toDouble(), dx.toDouble())
+        var dir = Math.round(angle / (Math.PI / 4)).toInt()
+
+        if (dir < 0) dir += 8
+        dir %= 8
+
+        // make it relative to facing
+        var rot = dir - facing
+        if (rot < 0) rot += 8
+
+        return rot
+    }
+
+
     fun calculateRotation(startTile: WorldTile, endTile: WorldTile): Int {
         val dx = endTile.x - startTile.x
         val dy = endTile.y - startTile.y

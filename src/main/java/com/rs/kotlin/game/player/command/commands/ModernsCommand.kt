@@ -16,6 +16,10 @@ class ModernsCommand : Command {
             player.message("You can't use ::moderns in this mode.")
             return true
         }
+        if (!player.canUseCommand()) {
+            player.message("You can't switch spellbook here.")
+            return true
+        }
         val isModerns = player.combatDefinitions.getSpellBook() == 0
         if (isModerns) {
             player.message("Your spellbook is already set to moderns.");

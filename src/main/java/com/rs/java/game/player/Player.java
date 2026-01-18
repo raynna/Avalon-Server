@@ -3797,10 +3797,12 @@ public class Player extends Entity {
         timerOverlay.clearAll(this);
         lock(6);
         Player killer = getMostDamageReceivedSourcePlayer();
-        if (killer.getFrozenBy() == this)
-            killer.unfreeze();
+        if (killer != null) {
+            if (killer.getFrozenBy() == this)
+                killer.unfreeze();
+            WrathEffect.handleWrathEffect(this, killer);
+        }
         setFrozenBy(null);
-        WrathEffect.handleWrathEffect(this, killer);
         animate(new Animation(836));
         if (familiar != null)
             familiar.sendDeath(this);

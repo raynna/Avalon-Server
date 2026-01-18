@@ -119,6 +119,9 @@ interface CombatStyle {
                 if (combatDefinitions.defendSound != -1) {
                     defender.playSound(combatDefinitions.defendSound, 1)
                 }
+                if (combatDefinitions.defenceAnim != -1) {
+                    defender.animate(combatDefinitions.defenceAnim)
+                }
             }
             if (defender.id == Rscm.lookup("npc.magic_dummy") || defender.id == Rscm.lookup("npc.melee_dummy")) {
                 if (attacker.prayer.prayerPoints < attacker.skills.getLevelForXp(Skills.PRAYER) * 10) {

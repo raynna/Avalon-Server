@@ -12,15 +12,15 @@ import com.rs.kotlin.game.world.util.Msg
 class CopyCommand : Command {
     override val requiredRank = Ranks.Rank.PLAYER
     override val description = "Spawn a gear preset"
-    override val usage = "::gear <name>"
+    override val usage = "::copy <name>"
 
     override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
-            Msg.warn(player,"You can't use ::gear in this mode.")
+            Msg.warn(player,"You can't use ::copy in this mode.")
             return true
         }
         if (!player.canUseCommand()) {
-            Msg.warn(player,"You can't use ::gear here.")
+            Msg.warn(player,"You can't use ::copy here.")
             return true
         }
         val cmdArgs = CommandArguments(args)

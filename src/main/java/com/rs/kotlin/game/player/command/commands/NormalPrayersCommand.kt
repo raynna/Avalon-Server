@@ -16,6 +16,10 @@ class NormalPrayersCommand : Command {
             player.message("You can't use ::normals in this mode.")
             return true
         }
+        if (!player.canUseCommand()) {
+            player.message("You can't switch prayer book here.")
+            return true
+        }
         val isAncientCurses = player.prayer.isAncientCurses
         if (!isAncientCurses) {
             player.message("Your prayerbook is already set to normal prayers.");
