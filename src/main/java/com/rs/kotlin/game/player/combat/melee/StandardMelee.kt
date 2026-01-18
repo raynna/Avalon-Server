@@ -656,6 +656,66 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
+            itemId = Item.getIds("item.barrelchest_anchor"),
+            name = "Barrelchest anchor",
+            weaponStyle = WeaponStyle.MACE,
+            attackDelay = 1,
+            blockAnimationId = Animation.getId("animation.barrelchest_anchor_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.CONTROLLED, 0) to Animation.getId("animation.barrelchest_anchor_attack"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.barrelchest_anchor_attack"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.barrelchest_anchor_attack"),
+            ),
+            soundId = Rscm.sound("sound.barrelchest_attack_sound"),
+            special = SpecialAttack.Combat(
+                energyCost = 50,
+                accuracyMultiplier = 2.0,
+                damageMultiplier = 1.1,
+                execute = { context ->
+                    context.attacker.animate("animation.barrelchest_anchor_special")
+                    context.attacker.gfx("graphic.barrelchest_anchor_special")
+                    context.attacker.playSound("sound.barrelchest_special_sound", 0, 1)
+                    context.hits {
+                        val hit = melee(delay = 1)
+                        val defender = context.defender
+                        if (hit.damage > 0) {
+                            val drainOrderPlayers = listOf(
+                                Skills.DEFENCE, Skills.ATTACK,
+                                Skills.RANGE, Skills.MAGIC
+                            )
+                            val drainOrderNpcs = listOf(
+                                "defence", "attack", "ranged", "magic"
+                            )
+
+                            var remainingDrain = hit.damage / 10
+
+                            if (defender is Player) {
+                                for (skill in drainOrderPlayers) {
+                                    if (remainingDrain <= 0) break
+                                    val current = defender.skills.getLevel(skill)
+                                    if (current <= 0) continue
+
+                                    val drainAmount = minOf(current, remainingDrain)
+                                    defender.skills.drainLevel(skill, drainAmount)
+                                    remainingDrain -= drainAmount
+                                }
+                            } else if (defender is NPC) {
+                                for (skill in drainOrderNpcs) {
+                                    if (remainingDrain <= 0) break
+                                    val current = defender.combatData.getCurrentStat(skill)
+                                    if (current <= 0) continue
+
+                                    val drainAmount = minOf(current, remainingDrain)
+                                    defender.combatData.drain(skill, drainAmount)
+                                    remainingDrain -= drainAmount
+                                }
+                            }
+                        }
+                    }
+                }
+            )
+        ),
+        MeleeWeapon(
             itemId = listOf(
                 Rscm.lookup("item.saradomin_sword"),
                 Rscm.lookup("item.saradomin_sword_2"),
@@ -1355,7 +1415,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_longsword_special")
                     context.attacker.gfx("graphic.dragon_longsword_special", 100)
-                    //context.attacker.playSound("sound.dragon_longsword_special", 1)
+                    context.attacker.playSound("sound.dragon_longsword_special", 1)
                     context.meleeHit()
                 }
             )

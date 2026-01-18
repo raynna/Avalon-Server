@@ -26,4 +26,6 @@ mace_stab=2509
 punch=2564
 kick=2567
 potion_boost_end=2607
+barrelchest_attack_sound=3454
+barrelchest_special_sound=3460
 hand_cannon_attack=7206

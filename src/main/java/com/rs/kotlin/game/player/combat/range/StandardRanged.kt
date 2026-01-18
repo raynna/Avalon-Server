@@ -389,6 +389,16 @@ object StandardRanged : RangeData() {
             allowedAmmoIds = setOf(Item.getId("item.bone_bolts"))
         ),
         RangedWeapon(
+            itemId = Item.getIds("item.hunters_crossbow"),
+            name = "Hunter's crossbow",
+            weaponStyle = WeaponStyle.CROSSBOW,
+            attackSpeed = 4,
+            attackRange = 7,
+            animationId = 4230,
+            ammoType = AmmoType.BOLT,
+            allowedAmmoIds = setOf(Item.getId("item.kebbit_bolts"), Item.getId("item.long_kebbit_bolts"))
+        ),
+        RangedWeapon(
             itemId = Item.getIds("item.sagaie"),
             name = "Sagaie",
             weaponStyle = WeaponStyle.THROWING,
@@ -1789,6 +1799,14 @@ object StandardRanged : RangeData() {
             name = "Bone bolts",
             ammoType = AmmoType.BOLT,
             levelRequired = 28,
+            projectileId = 696,
+            startGfx = Graphics(697, 96),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.kebbit_bolts", "item.long_kebbit_bolts"),
+            name = "Kebbit bolts",
+            ammoType = AmmoType.BOLT,
+            levelRequired = 50,
             projectileId = 696,
             startGfx = Graphics(697, 96),
         ),

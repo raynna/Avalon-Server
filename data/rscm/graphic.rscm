@@ -123,7 +123,7 @@ abyssal_whip_special=2108
 korasi_special_attack_start=1729
 korasi_special_attack_end=1730
 statius_warhammer_special=1840
-anchor_special=1027
+barrelchest_anchor_special=1027
 #range-weapons
 iron_arrow_start=18
 bronze_arrow_start=19
