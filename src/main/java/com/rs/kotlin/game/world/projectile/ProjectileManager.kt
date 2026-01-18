@@ -301,7 +301,7 @@ object ProjectileManager {
                 override fun run() {
                     onLanded.invoke()
                 }
-            }, max(0, impactTicks))
+            }, max(0, impactTicks - 1))
         }
         return impactTicks
     }
