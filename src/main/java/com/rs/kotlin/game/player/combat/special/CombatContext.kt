@@ -410,7 +410,6 @@ fun fireChain(
     val useProjectile = if (isFirstHit) projectile else settings.projectile
     val useProjectileId = if (isFirstHit) projectileId else settings.projectileId
 
-    // ---- helper to continue chain ----
     fun continueChain(remainder: Int) {
         if (bouncesLeft <= 0) return
 
@@ -459,7 +458,7 @@ fun fireChain(
             gfxId = useProjectileId,
             attacker = source,
             defender = target,
-            delayOffset = startDelay,
+            delayOffset = 0,
             hitGraphic = if (settings.projectileEnd != -1) Graphics(settings.projectileEnd) else null
         ) { remainder ->
             continueChain(remainder)
@@ -471,7 +470,7 @@ fun fireChain(
         PendingHit(
             hit,
             target,
-            impactTicks
+            (impactTicks - 1).coerceAtLeast(0)
         ) {
 
             if (hit.damage <= 0) return@PendingHit

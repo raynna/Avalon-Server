@@ -4,7 +4,7 @@ import com.rs.kotlin.Rscm;
 
 public final class Graphics {
 
-	private int id, height, speed, rotation;
+	private int id, height, delay, rotation;
 
 
 	private static String normalizeGraphicKey(String graphic) {
@@ -35,13 +35,13 @@ public final class Graphics {
 		this(getGraphics(graphic), 0, height, 0);
 	}
 
-	public Graphics(String graphic, int speed, int height, int rotation) {
-		this(getGraphics(graphic), speed, height, rotation);
+	public Graphics(String graphic, int delay, int height, int rotation) {
+		this(getGraphics(graphic), delay, height, rotation);
 	}
 
-	public Graphics(int id, int speed, int height, int rotation) {
+	public Graphics(int id, int delay, int height, int rotation) {
 		this.id = id;
-		this.speed = speed;
+		this.delay = delay;
 		this.height = height;
 		this.rotation = rotation;
 	}
@@ -53,7 +53,7 @@ public final class Graphics {
 		result = prime * result + height;
 		result = prime * result + id;
 		result = prime * result + rotation;
-		result = prime * result + speed;
+		result = prime * result + delay;
 		return result;
 	}
 
@@ -72,7 +72,7 @@ public final class Graphics {
 			return false;
 		if (rotation != other.rotation)
 			return false;
-		if (speed != other.speed)
+		if (delay != other.delay)
 			return false;
 		return true;
 	}
@@ -84,7 +84,7 @@ public final class Graphics {
 	}
 
 	public int getSettingsHash() {
-		return (speed & 0xffff) | (height << 16);
+		return (delay & 0xffff) | (height << 16);
 	}
 
 	public int getSettings2Hash() {
@@ -93,8 +93,8 @@ public final class Graphics {
 		return hash;
 	}
 
-	public int getSpeed() {
-		return speed;
+	public int getDelay() {
+		return delay;
 	}
 
 	public int getHeight() {

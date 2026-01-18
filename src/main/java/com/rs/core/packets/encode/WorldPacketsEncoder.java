@@ -1208,7 +1208,7 @@ public class WorldPacketsEncoder extends Encoder {
 		stream.writePacket(player, 90);
 		stream.writeShort(graphics.getId());
 		stream.writeByte128(0); // slot id used for entitys
-		stream.writeShort(graphics.getSpeed());
+		stream.writeShort(graphics.getDelay());
 		stream.writeByte128(graphics.getSettings2Hash());
 		stream.writeShort(graphics.getHeight());
 		stream.writeIntLE(hash);

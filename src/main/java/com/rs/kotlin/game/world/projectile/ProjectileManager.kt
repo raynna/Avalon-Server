@@ -188,7 +188,7 @@ object ProjectileManager {
         val distance = Utils.getDistance(attacker, defender)
 
         val endCycle = type.endTime(distance)
-        val impactTicks = max(0, ((endCycle + 29) / 30) - 1)
+        val impactTicks = (endCycle / 30)
         val remainderCycles = endCycle % 30
 
         val startTile = attacker.faceWorldTile
@@ -206,21 +206,20 @@ object ProjectileManager {
         )
 
         val resolveDefender = resolveEntity(defender)
-
+        if (hitGraphic != null) {
+            val def = resolveDefender()
+            hitGraphic.let {
+                val rotation = calculateRotation(startTile, endTile)
+                if (def == null || def.hasFinished() || def.plane != endTile.plane)
+                    return@let
+                def.gfx(it.id, endCycle, 100, rotation)
+            }
+        }
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
-                val def = resolveDefender() ?: return
-                if (def.hasFinished()) return
-                if (def.plane != endTile.plane) return
-
-                hitGraphic?.let {
-                    val rotation = calculateRotation(startTile, endTile)
-                    def.gfx(it.id, it.height, rotation)
-                }
-
                 onLanded?.invoke(remainderCycles)
             }
-        }, max(0, impactTicks - 1))
+        }, max(0, impactTicks))
 
         return ProjectileResult(impactTicks, remainderCycles)
     }
@@ -265,10 +264,7 @@ object ProjectileManager {
         val distance = Utils.getDistance(attacker, defender)
 
         val endCycle = type.endTime(distance)
-
-        val impactTicks = endCycle / 30
-        val remainderCycles = endCycle % 30
-
+        val impactTicks = (endCycle + 15) / 30
 
         val startTile = if (projectile == Projectile.ICE_BARRAGE) {
             defender.worldTile
@@ -287,29 +283,26 @@ object ProjectileManager {
             creatorSize = attacker.size,
             endTime = endCycle
         )
-
-        if (hitGraphic != null || onLanded != null) {
-            val resolveDefender = resolveEntity(defender)
-            val startSnap = startTile
-            val endSnap = endTile
-
+        val resolveDefender = resolveEntity(defender)
+        if (hitGraphic != null) {
+            val def = resolveDefender()
+            hitGraphic.let {
+                val rotation = calculateRotation(startTile, endTile)
+                if (def == null || def.hasFinished() || def.plane != endTile.plane)
+                    return@let
+                def.gfx(it.id, endCycle, 100, rotation)
+            }
+            hitSound.let {
+                def?.playSound(it, endCycle, 1)
+            }
+        }
+        if (onLanded != null) {
             WorldTasksManager.schedule(object : WorldTask() {
                 override fun run() {
-                    val def = resolveDefender() ?: return
-                    if (def.hasFinished()) return
-                    if (def.plane != endSnap.plane) return
-
-                    hitGraphic?.let {
-                        val rotation = calculateRotation(startSnap, endSnap)
-                        def.gfx(it.id, it.height, rotation)
-                    }
-                    if (hitSound != -1)
-                        def.playSound(hitSound, 1)
-                    onLanded?.invoke()
+                    onLanded.invoke()
                 }
-            }, max(0, impactTicks - 1))
+            }, max(0, impactTicks))
         }
-
         return impactTicks
     }
 

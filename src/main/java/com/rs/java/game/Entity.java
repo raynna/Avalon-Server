@@ -1533,6 +1533,10 @@ public abstract class Entity extends WorldTile {
         gfx(new Graphics(gfxId, rotation, height));
     }
 
+    public void gfx(int gfxId, int delay, int height, int rotation) {
+        gfx(new Graphics(gfxId, delay, height, rotation));
+    }
+
     public WorldTile getSouthwestTile() {
         int size = this.getSize();
         int half = (size - 1) / 2;

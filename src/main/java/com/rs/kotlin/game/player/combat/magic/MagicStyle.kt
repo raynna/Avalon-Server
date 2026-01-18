@@ -285,7 +285,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
         spell.attackSound.takeIf { it != -1 }?.let { attacker.playSound(it, 1) }
 
-        var impactTicks = 1
+        var impactTicks = 0
 
         if (spell.projectileIds.isNotEmpty()) {
             val heightDifferences = listOf(10, 0, -10)
@@ -337,7 +337,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             PendingHit(
                 hit,
                 defender,
-                if (spell.chargeBoost) 1 else impactTicks
+                if (spell.chargeBoost) 1 else (impactTicks - 1).coerceAtLeast(0)
             )
         )
 
