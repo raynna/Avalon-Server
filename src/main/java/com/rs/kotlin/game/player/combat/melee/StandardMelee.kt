@@ -662,9 +662,10 @@ object StandardMelee : MeleeData() {
             attackDelay = 1,
             blockAnimationId = Animation.getId("animation.barrelchest_anchor_block"),
             animations = mapOf(
-                StyleKey(AttackStyle.CONTROLLED, 0) to Animation.getId("animation.barrelchest_anchor_attack"),
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.barrelchest_anchor_attack"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.barrelchest_anchor_attack"),
-                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.barrelchest_anchor_attack"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.barrelchest_anchor_attack"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.barrelchest_anchor_attack"),
             ),
             soundId = Rscm.sound("sound.barrelchest_attack_sound"),
             special = SpecialAttack.Combat(
