@@ -43,7 +43,7 @@ object PvpManager {
     }
 
     @JvmStatic
-    fun onPlayerDamagedByPlayer(victim: Player, attacker: Player) { // NEW
+    fun onPlayerDamagedByPlayer(victim: Player, attacker: Player) {
         val t = now()
         lastPvpHitAt[victim] = t
         if (!attacker.attackedBy.containsKey(victim))

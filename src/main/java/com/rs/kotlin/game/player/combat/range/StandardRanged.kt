@@ -17,6 +17,7 @@ import com.rs.kotlin.game.player.combat.special.ChainSettings
 import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
+import javax.sound.midi.Soundbank
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
@@ -720,11 +721,45 @@ object StandardRanged : RangeData() {
             itemId = Item.getIds("item.hand_cannon"),
             name = "Hand cannon",
             weaponStyle = WeaponStyle.SHORTBOW,
-            attackSpeed = 8,
+            attackSpeed = 8,//12156 block
             attackRange = 7,
+            startGfx = Graphics("graphic.hand_cannon_fire"),
             projectileId = 2143,
             animationId = 12174,
-            ammoType = AmmoType.CANNON
+            blockAnimationId = 12156,
+            soundId = Rscm.sound("sound.hand_cannon_attack"),
+            ammoType = AmmoType.CANNON,
+            special = SpecialAttack.Combat(
+                energyCost = 50,
+                accuracyMultiplier = 2.0,
+                damageMultiplier = 1.0,
+                execute = { context ->
+                    context.attacker.animate(Animation(12153))
+                    context.attacker.gfx(Graphics(2138))
+                    context.attacker.delayGfx(Graphics(2141), 2);
+                    context.attacker.playSound(7206,  0,1)
+                    context.attacker.playSound(7206,  60,1)
+                    ProjectileManager.send(
+                        Projectile.HAND_CANNON,
+                        2143,
+                        context.attacker,
+                        context.defender,
+                    )
+                    ProjectileManager.send(
+                        Projectile.HAND_CANNON,
+                        2143,
+                        context.attacker,
+                        context.defender,
+                        startTimeOffset = 25,
+                    )
+                    context.hits {
+                        val distance = Utils.getDistance(context.attacker, context.defender)
+                        val (firstDelay, secondDelay) = context.combat.getDoubleHitDelays(distance)
+                        ranged(delay = firstDelay)
+                        ranged(delay = secondDelay)
+                    }
+                }
+            )
         ),
 
         RangedWeapon(

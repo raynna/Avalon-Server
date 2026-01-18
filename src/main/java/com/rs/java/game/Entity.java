@@ -1463,11 +1463,11 @@ public abstract class Entity extends WorldTile {
     }
 
     public void animate(Animation animation) {
+        AnimationDefinitions newAnimation = AnimationDefinitions.getAnimationDefinitions(animation.getIds()[0]);
         if (animation == null) {
             this.nextAnimation = new Animation(-1);
         }
         if (this.nextAnimation != null && animation != null) {
-            AnimationDefinitions newAnimation = AnimationDefinitions.getAnimationDefinitions(animation.getIds()[0]);
             AnimationDefinitions nextAnim = AnimationDefinitions.getAnimationDefinitions(this.nextAnimation.getIds()[0]);
             if (newAnimation.getPriority() >= nextAnim.getPriority()) {
                 this.nextAnimation = animation;

@@ -32,7 +32,7 @@ object ProjectileRegistry {
         register(Projectile.SAGAIE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 32, arc = 15, displacement = 11))
         register(Projectile.SPREAD_ALL_SLOW, ProjectileType(startHeight = 36, endHeight = 36, startTime = 21, arc = 0, multiplier = 15))
         register(Projectile.CHAIN_ARROW, ProjectileType(startHeight = 40, endHeight = 36, startTime = 0, arc = 15, displacement = 11))
-        register(Projectile.HAND_CANNON, ProjectileType(startHeight = 25, endHeight = 25, startTime = 30, arc = 0, displacement = 11))
+        register(Projectile.HAND_CANNON, ProjectileType(startHeight = 25, endHeight = 25, startTime = 30, arc = 0, displacement = 31))
         register(Projectile.ICE_BARRAGE, ProjectileType(startHeight = 43, endHeight = 0, startTime = 51, arc = 16, displacement = 64, multiplier = 10, lengthAdjustment = -5))
 
         //NPCS

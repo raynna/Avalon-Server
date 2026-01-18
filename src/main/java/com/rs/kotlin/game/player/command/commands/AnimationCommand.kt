@@ -22,7 +22,7 @@ class AnimationCommand : Command {
             player.message("Unknown or invalid animation ID: $animationId")
             return false
         }
-        player.animateNoCheck(Animation(animationId))
+        player.animate(Animation(animationId))
         player.message("Animation $animationId has been executed.")
         return true
     }
