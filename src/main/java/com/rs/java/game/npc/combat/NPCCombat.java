@@ -65,7 +65,14 @@ public final class NPCCombat {
                 return false;
             }
             if (attackDelay <= 0) {
-                attackDelay = combatAttack();
+                int lastAttack = npc.getTickManager().getTicksLeft(TickManager.TickKeys.LAST_ATTACK_TICK);
+                boolean flinch = lastAttack == 0;
+                if (flinch) {
+                    attackDelay = 1;
+                    npc.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 16);
+                    return true;
+                }
+                combatAttack();
                 return true;
             }
             return true;
@@ -73,20 +80,20 @@ public final class NPCCombat {
         return false;
     }
 
-    private int combatAttack() {
+    private boolean combatAttack() {
         Entity target = getValidTarget();
-        if (target == null) return 0;
+        if (target == null) return false;
 
         int maxDistance = getMaxAttackDistance(target);
         if (!canReachTarget(target, maxDistance)) {
-            return 0;
+            return false;
         }
-        if (npc.getTickManager().getTicksLeft(TickManager.TickKeys.LAST_ATTACKED_TICK) == 0 && npc.getTickManager().getTicksLeft(TickManager.TickKeys.LAST_ATTACK_TICK) == 0 && npc.getTickManager().getTicksLeft(TickManager.TickKeys.FLINCH_TICKS) == 0) {
-            npc.getTickManager().addTicks(TickManager.TickKeys.FLINCH_TICKS, 10);
-            return npc.getAttackSpeed() / 2;
-        }
-        return CombatScriptsHandler.specialAttack(npc, target);
+        attackDelay = npc.getAttackSpeed();
+        target.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 16);
+        target.getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 12);
+        return CombatScriptsHandler.specialAttack(npc, target) > 0;
     }
+
 
     private Entity getValidTarget() {
         Entity target = this.target;
@@ -198,10 +205,10 @@ public final class NPCCombat {
                 && !target.hasWalkSteps()) {
 
             if (npc.isFrozen() || npc.isLocked()) {
-                attackDelay = 1;
+                attackDelay = Math.max(attackDelay, 1);
                 return true;
             }
-            attackDelay = 1;
+            attackDelay = Math.max(attackDelay, 1);
 
             npc.resetWalkSteps();
             return attemptWalkAroundTarget(target, size);
@@ -215,7 +222,7 @@ public final class NPCCombat {
                 && size == 1) {
             npc.resetWalkSteps();
             if (npc.isFrozen() || npc.isLocked()) {
-                attackDelay = 1;
+                attackDelay = Math.max(attackDelay, 1);
                 return true;
             }
             if (!npc.addWalkSteps(target.getX(), npc.getY(), 1))
