@@ -965,7 +965,7 @@ public final class WorldPacketsDecoder extends Decoder {
 			return;
 		if (!player.getControlerManager().canAttack(p2))
 			return;
-		player.stopAll(false);
+		player.stopAll();
 		player.getNewActionManager().setAction(new CombatAction(p2));
 	}
 
@@ -1020,14 +1020,14 @@ public final class WorldPacketsDecoder extends Decoder {
 		} else if (!npc.isForceMultiAttacked()) {
 			// Multi-combat rules
 			if (player.isAtMultiArea() && !npc.isAtMultiArea()) {
-				if (npc.getAttackedBy() != player && npc.getAttackedByDelay() > Utils.currentTimeMillis()) {
+				if (npc.getAttackedBy() != player && npc.isPjBlocked()) {
 					player.getPackets().sendGameMessage("This npc is already in combat.");
 					return;
 				}
 			}
 		}
 
-		player.stopAll(false);
+		player.stopAll();
 		player.getNewActionManager().setAction(new CombatAction(npc));
 	}
 
@@ -1186,17 +1186,17 @@ public final class WorldPacketsDecoder extends Decoder {
 					}
 					// multi-combat checks
 					if (player.isAtMultiArea() && !p2.isAtMultiArea()) {
-						if (p2.getAttackedBy() != player && p2.getAttackedByDelay() > Utils.currentTimeMillis()) {
+						if (p2.getAttackedBy() != player && p2.isPjBlocked()) {
 							player.getPackets().sendGameMessage("That player is already in combat.");
 							return;
 						}
 					}
 					if (!p2.isAtMultiArea() && !player.isAtMultiArea()) {
-						if (player.getAttackedBy() != p2 && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
+						if (player.getAttackedBy() != p2 && player.isPjBlocked()) {
 							player.getPackets().sendGameMessage("You are already in combat.");
 							return;
 						}
-						if (p2.getAttackedBy() != player && p2.getAttackedByDelay() > Utils.currentTimeMillis()) {
+						if (p2.getAttackedBy() != player && p2.isPjBlocked()) {
 							if (p2.getAttackedBy() instanceof NPC) p2.setAttackedBy(player);
 							else {
 								player.getPackets().sendGameMessage("That player is already in combat.");
@@ -1222,17 +1222,17 @@ public final class WorldPacketsDecoder extends Decoder {
 						return;
 					}
 					if (player.isAtMultiArea() && !p2.isAtMultiArea()) {
-						if (p2.getAttackedBy() != player && p2.getAttackedByDelay() > Utils.currentTimeMillis()) {
+						if (p2.getAttackedBy() != player && p2.isPjBlocked()) {
 							player.getPackets().sendGameMessage("That player is already in combat.");
 							return;
 						}
 					}
 					if (!p2.isAtMultiArea() && !player.isAtMultiArea()) {
-						if (player.getAttackedBy() != p2 && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
+						if (player.getAttackedBy() != p2 && player.isPjBlocked()) {
 							player.getPackets().sendGameMessage("You are already in combat.");
 							return;
 						}
-						if (p2.getAttackedBy() != player && p2.getAttackedByDelay() > Utils.currentTimeMillis()) {
+						if (p2.getAttackedBy() != player && p2.isPjBlocked()) {
 							if (p2.getAttackedBy() instanceof NPC) p2.setAttackedBy(player);
 							else {
 								player.getPackets().sendGameMessage("That player is already in combat.");
@@ -1376,17 +1376,17 @@ public final class WorldPacketsDecoder extends Decoder {
 						}
 					} else if (!npc.isForceMultiAttacked()) {
 						if (player.isAtMultiArea() && !npc.isAtMultiArea()) {
-							if (npc.getAttackedBy() != player && npc.getAttackedByDelay() > Utils.currentTimeMillis()) {
+							if (npc.getAttackedBy() != player && npc.isPjBlocked()) {
 								player.getPackets().sendGameMessage("This npc is already in combat.");
 								return;
 							}
 						}
 						if (!npc.isAtMultiArea() && !player.isAtMultiArea()) {
-							if (player.getAttackedBy() != npc && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
+							if (player.getAttackedBy() != npc && player.isPjBlocked()) {
 								player.getPackets().sendGameMessage("You are already in combat.");
 								return;
 							}
-							if (npc.getAttackedBy() != player && npc.getAttackedByDelay() > Utils.currentTimeMillis()) {
+							if (npc.getAttackedBy() != player && npc.isPjBlocked()) {
 								player.getPackets().sendGameMessage("This npc is already in combat.");
 								return;
 							}
@@ -1435,17 +1435,17 @@ public final class WorldPacketsDecoder extends Decoder {
 						}
 					} else if (!npc.isForceMultiAttacked()) {
 						if (player.isAtMultiArea() && !npc.isAtMultiArea()) {
-							if (npc.getAttackedBy() != player && npc.getAttackedByDelay() > Utils.currentTimeMillis()) {
+							if (npc.getAttackedBy() != player && npc.isPjBlocked()) {
 								player.getPackets().sendGameMessage("This npc is already in combat.");
 								return;
 							}
 						}
 						if (!npc.isAtMultiArea() && !player.isAtMultiArea()) {
-							if (player.getAttackedBy() != npc && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
+							if (player.getAttackedBy() != npc && player.isPjBlocked()) {
 								player.getPackets().sendGameMessage("You are already in combat.");
 								return;
 							}
-							if (npc.getAttackedBy() != player && npc.getAttackedByDelay() > Utils.currentTimeMillis()) {
+							if (npc.getAttackedBy() != player && npc.isPjBlocked()) {
 								player.getPackets().sendGameMessage("This npc is already in combat.");
 								return;
 							}

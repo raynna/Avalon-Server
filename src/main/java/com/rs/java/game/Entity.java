@@ -919,6 +919,10 @@ public abstract class Entity extends WorldTile {
         return getTickManager().isActive(TickManager.TickKeys.LAST_ATTACKED_TICK);
     }
 
+    public boolean isPjBlocked() {
+        return getTickManager().isActive(TickManager.TickKeys.PJ_TIMER);
+    }
+
     public void setFlinch(long flinchDelay) {
         temporaryAttribute().put("flinchDelay", flinchDelay + Utils.currentTimeMillis());
     }

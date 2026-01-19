@@ -18,7 +18,6 @@ import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.range.RangedStyle
 import com.rs.kotlin.game.player.combat.special.SpecialAttack
-import com.rs.kotlin.game.player.interfaces.HealthOverlay
 import com.rs.kotlin.game.world.pvp.PvpManager
 import kotlin.math.abs
 
@@ -232,17 +231,17 @@ class CombatAction(
         if (!PvpManager.canPlayerAttack(player, target))
             return false
         if (player.isAtMultiArea && !target.isAtMultiArea) {
-            if (target.attackedBy != player && target.tickManager.isActive(TickManager.TickKeys.PJ_TIMER)) {
+            if (target.attackedBy != player && target.isPjBlocked) {
                 player.message("That " + (if (player.getAttackedBy() is Player) "player" else "npc") + " is already in combat.")
                 return false
             }
         }
         if (!target.isAtMultiArea && !player.isAtMultiArea) {
-            if (player.getAttackedBy() !== target && player.tickManager.isActive(TickManager.TickKeys.PJ_TIMER)) {
+            if (player.getAttackedBy() !== target && player.isPjBlocked) {
                 player.message("You are already in combat.")
                 return false
             }
-            if (target.attackedBy !== player && target.tickManager.isActive(TickManager.TickKeys.PJ_TIMER)) {
+            if (target.attackedBy !== player && target.isPjBlocked) {
                 if (target is NPC) {
                     if (target.id == 4474 || target.id == 7891)
                         return true

@@ -2635,7 +2635,7 @@ public class PlayerCombat extends Action {
                 if (player.getTemporaryAttributtes().get("GODMODE") != null)
                     hit.setDamage(n.getHitpoints());
             }
-            if (player.inPkingArea() && player.get(Keys.IntKey.EP) != 100 && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
+            if (player.inPkingArea() && player.get(Keys.IntKey.EP) != 100 && player.isInCombat()) {
                 if (Utils.getRandom(2) == 0) {
                     int random = Utils.random(5) + 1;
                     if (player.get(Keys.IntKey.EP) + random > 100)
@@ -3324,18 +3324,18 @@ public class PlayerCombat extends Action {
         }
         if (!(target instanceof NPC && ((NPC) target).isForceMultiAttacked())) {
             if (player.isAtMultiArea() && !target.isAtMultiArea()) {
-                if (target.getAttackedBy() != player && target.getAttackedByDelay() > Utils.currentTimeMillis()) {
+                if (target.getAttackedBy() != player && target.isInCombat()) {
                     player.getPackets().sendGameMessage("That "
                             + (player.getAttackedBy() instanceof Player ? "player" : "npc") + " is already in combat.");
                     return false;
                 }
             }
             if (!target.isAtMultiArea() && !player.isAtMultiArea()) {
-                if (player.getAttackedBy() != target && player.getAttackedByDelay() > Utils.currentTimeMillis()) {
+                if (player.getAttackedBy() != target && player.isInCombat()) {
                     player.getPackets().sendGameMessage("You are already in combat.");
                     return false;
                 }
-                if (target.getAttackedBy() != player && target.getAttackedByDelay() > Utils.currentTimeMillis()) {
+                if (target.getAttackedBy() != player && target.isInCombat()) {
                     player.getPackets().sendGameMessage("That "
                             + (player.getAttackedBy() instanceof Player ? "player" : "npc") + " is already in combat.");
                     return false;
