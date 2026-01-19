@@ -151,10 +151,10 @@ public class LeatherCrafting extends Action {
 			}
 		}
 
-		int remaining = 5 - (crafted % 5);
-		if (remaining == 1 && !player.getInventory().containsItem(THREAD, 1)) {
-			player.message("You have run out of thread.");
-			return -1;
+		crafted++;
+
+		if (crafted % 5 == 0) {
+			player.getInventory().deleteItem(THREAD, 1);
 		}
 
 		player.getTemporaryAttributtes().put("THREAD_CRAFT_PROGRESS", crafted);
@@ -164,6 +164,7 @@ public class LeatherCrafting extends Action {
 
 		return 3;
 	}
+
 
 
 	@Override
