@@ -34,7 +34,7 @@ import com.rs.java.game.player.actions.HomeTeleport;
 import com.rs.java.game.player.actions.WaterFilling;
 import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.actions.skills.crafting.LeatherCrafting;
-import com.rs.java.game.player.actions.skills.crafting.LeatherData;
+import com.rs.java.game.player.actions.skills.crafting.leather.LeatherData;
 import com.rs.java.game.player.actions.skills.mining.DungeoneeringMining;
 import com.rs.java.game.player.actions.skills.mining.DungeoneeringMining.DungeoneeringRocks;
 import com.rs.java.game.player.actions.skills.mining.Mining;
@@ -66,7 +66,6 @@ import com.rs.java.game.player.content.dungeoneering.skills.DungeoneeringFishing
 import com.rs.java.game.player.content.dungeoneering.skills.DungeoneeringTraps;
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.java.game.player.dialogues.dungeoneering.DestroyCurrentStone;
-import com.rs.java.game.player.dialogues.skilling.LeatherCraftingD;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.decode.WorldPacketsDecoder;

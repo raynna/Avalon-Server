@@ -7,6 +7,7 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.firemaking.Firemaking;
 import com.rs.java.game.player.actions.skills.fletching.Fletching;
 import com.rs.java.game.player.actions.skills.fletching.Fletching.*;
+import com.rs.java.game.player.actions.skills.fletching.FletchingData;
 
 public class Logs extends ItemPlugin {
 
@@ -23,7 +24,7 @@ public class Logs extends ItemPlugin {
                     player.message("You need a knife to fletch this log.");
                     return true;
                 }
-                FletchingData fletchingData = FletchingData.forId(item.getId());
+                FletchingData fletchingData = FletchingData.forBase(item.getId());
                 player.getDialogueManager().startDialogue("FletchingD", fletchingData);
                 return true;
             case "light":

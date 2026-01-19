@@ -4,7 +4,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemPlugin;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.fletching.Fletching;
-import com.rs.java.game.player.actions.skills.fletching.Fletching.FletchingData;
+import com.rs.java.game.player.actions.skills.fletching.FletchingData;
 
 public class FletchingAttachments extends ItemPlugin {
 

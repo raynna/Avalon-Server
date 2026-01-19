@@ -16,6 +16,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ItemId;
 import com.rs.java.game.item.ItemPluginLoader;
 import com.rs.java.game.item.ItemPlugin;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
@@ -43,17 +44,17 @@ import com.rs.java.game.player.actions.combat.ModernMagicks;
 import com.rs.java.game.player.actions.combat.ModernMagicks.RSSpellStore;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking.Cook;
-import com.rs.java.game.player.actions.skills.crafting.GemCutting;
-import com.rs.java.game.player.actions.skills.crafting.GemCutting.Gem;
 import com.rs.java.game.player.actions.skills.crafting.LeatherCrafting;
-import com.rs.java.game.player.actions.skills.crafting.LeatherData;
+import com.rs.java.game.player.actions.skills.crafting.gem.GemData;
+import com.rs.java.game.player.actions.skills.crafting.glass.GlassBlowingData;
+import com.rs.java.game.player.actions.skills.crafting.leather.LeatherData;
 import com.rs.java.game.player.actions.skills.farming.FarmingManager.ProductInfo;
 import com.rs.java.game.player.actions.skills.farming.TreeSaplings;
 import com.rs.java.game.player.actions.skills.firemaking.FireLighter;
 import com.rs.java.game.player.actions.skills.firemaking.FireLighter.Lighters;
 import com.rs.java.game.player.actions.skills.firemaking.Firemaking;
 import com.rs.java.game.player.actions.skills.fletching.Fletching;
-import com.rs.java.game.player.actions.skills.fletching.Fletching.FletchingData;
+import com.rs.java.game.player.actions.skills.fletching.FletchingData;
 import com.rs.java.game.player.actions.skills.herblore.HerbCleaning;
 import com.rs.java.game.player.actions.skills.herblore.Herblore;
 import com.rs.java.game.player.actions.skills.hunter.Hunter;
@@ -82,7 +83,6 @@ import com.rs.java.game.player.content.WildernessArtefacts.Artefacts;
 import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.ColouredRecessRoom.Block;
 import com.rs.java.game.player.content.quest.QuestList.Quests;
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager;
-import com.rs.java.game.player.controlers.Barrows;
 import com.rs.java.game.player.controlers.FightKiln;
 import com.rs.java.game.player.controlers.GodCapes;
 import com.rs.java.game.player.dialogues.skilling.AmuletAttaching;
@@ -93,6 +93,7 @@ import com.rs.java.utils.HexColours;
 import com.rs.java.utils.HexColours.Colour;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.worldboss.RandomWorldBossHandler;
 import com.rs.kotlin.game.world.activity.BarrowsAreaKt;
 
@@ -188,21 +189,18 @@ public class InventoryOptionsHandler {
             player.getDungManager().openPartyInterface();
         if (player.getTreasureTrailsManager().useItem(item, slotId))
             return;
-        if ((itemId >= 1601 && itemId <= 1615 || itemId == 6573) || itemId == 10105 || itemId == 10107) {
+        FletchingData fletchingData = FletchingData.findByBase(new Item(itemId));
+        if (fletchingData != null) {
+
             if (Settings.FREE_TO_PLAY) {
                 player.message("You can't fletch items in free to play.");
                 return;
             }
-            if (!player.getInventory().containsItem(1755, 1) && !player.getToolbelt().contains(1755)) {
-                player.message("You need a chisel to cut this item.");
-            } else {
-                FletchingData fletchingData = Fletching.findFletchingData(new Item(1755), new Item(itemId));
-                if (fletchingData != null) {
-                    player.getDialogueManager().startDialogue("FletchingD", fletchingData);
-                    return;
-                }
-            }
+
+            player.getDialogueManager().startDialogue("FletchingD", fletchingData);
+            return;
         }
+
         if (itemId == 2574) {
             player.getTreasureTrailsManager().useSextant();
             return;
@@ -355,27 +353,13 @@ public class InventoryOptionsHandler {
             player.getDialogueManager().startDialogue("DiceBag", itemId);
             return;
         }
-        if (itemId >= 1617 && itemId <= 1631 || itemId == 6571) {
+        GemData gem = GemData.forUncut(itemId);
+        if (gem != null) {
             if (!player.getInventory().containsItem(1755, 1) && !player.getToolbelt().contains(1755)) {
                 player.message("You need a chisel to cut this item.");
-            } else {
-                if (itemId == 1617)
-                    GemCutting.cut(player, Gem.DIAMOND);
-                if (itemId == 1619)
-                    GemCutting.cut(player, Gem.RUBY);
-                if (itemId == 1621)
-                    GemCutting.cut(player, Gem.EMERALD);
-                if (itemId == 1623)
-                    GemCutting.cut(player, Gem.SAPPHIRE);
-                if (itemId == 1625)
-                    GemCutting.cut(player, Gem.OPAL);
-                if (itemId == 1627)
-                    GemCutting.cut(player, Gem.JADE);
-                if (itemId == 1631)
-                    GemCutting.cut(player, Gem.DRAGONSTONE);
-                if (itemId == 6571)
-                    GemCutting.cut(player, Gem.ONYX);
+                return;
             }
+            player.getDialogueManager().startDialogue("GemCuttingD", gem);
         }
         if (Item.isItem(itemId, "item.bones_to_peaches")) {
             int bones = player.getInventory().getNumberOf("item.bones");
@@ -708,9 +692,19 @@ public class InventoryOptionsHandler {
                 return;
             if (Firemaking.isFiremaking(player, itemUsed, usedWith))
                 return;
-            LeatherData data = LeatherCrafting.getLeatherData(usedWith, itemUsed);
-            if (data != null) {
-                player.getDialogueManager().startDialogue("LeatherCraftingD", data);
+            GlassBlowingData glass = GlassBlowingData.getGlassData(usedWith.getId(), itemUsed.getId());
+            if (glass != null) {
+                player.getDialogueManager().startDialogue("GlassBlowingD", glass);
+                return;
+            }
+            LeatherData leatherData = LeatherCrafting.getLeatherData(usedWith, itemUsed);
+            if (leatherData != null) {
+                player.getDialogueManager().startDialogue("LeatherCraftingD", leatherData);
+                return;
+            }
+            FletchingData fletchingData = Fletching.findFletchingData(new Item(itemUsed), new Item(usedWith));
+            if (fletchingData != null) {
+                player.getDialogueManager().startDialogue("FletchingD", fletchingData);
                 return;
             }
             Cook cook = DoughCooking.isCooking(usedWith, itemUsed);

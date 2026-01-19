@@ -1502,6 +1502,14 @@ object ModernMagicks : Spellbook(MODERN_ID) {
             projectileId = 1842,
             endGraphic = Graphics(1843)
         ),
+        Spell(
+            id = 27,
+            name = "Enchant Crossbow bolt",
+            level = 4,
+            xp = 0.0,
+            type = SpellType.Instant,
+            runes = listOf()
+        ),
 
         Spell(
             id = 29,

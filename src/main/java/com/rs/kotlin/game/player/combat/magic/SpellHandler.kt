@@ -1,25 +1,28 @@
 package com.rs.kotlin.game.player.combat.magic
 
 import com.rs.core.cache.defintions.ItemDefinitions
-import com.rs.java.game.*
-import com.rs.java.game.item.Item
-import com.rs.java.game.minigames.clanwars.FfaZone
-import com.rs.java.game.player.Player
-import com.rs.java.game.player.Skills
-import com.rs.java.game.player.controlers.*
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
+import com.rs.java.game.*
 import com.rs.java.game.item.FloorItem
+import com.rs.java.game.item.Item
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData
 import com.rs.java.game.item.meta.RunePouchMetaData
+import com.rs.java.game.minigames.clanwars.FfaZone
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
+import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.actions.combat.modernspells.Alchemy
 import com.rs.java.game.player.actions.combat.modernspells.BonesTo
 import com.rs.java.game.player.actions.combat.modernspells.Charge
 import com.rs.java.game.player.actions.combat.modernspells.ChargeOrb
 import com.rs.java.game.player.actions.skills.crafting.Enchanting
+import com.rs.java.game.player.controlers.CrucibleControler
+import com.rs.java.game.player.controlers.EdgevillePvPControler
+import com.rs.java.game.player.controlers.FightCaves
+import com.rs.java.game.player.controlers.FightKiln
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.CombatAction
 
@@ -79,10 +82,16 @@ object SpellHandler {
     }
 
     private fun castInstant(player: Player, spell: Spell) {
+        player.message("cast Instant: " + spell.name.toLowerCase())
         if (spell.name.equals("charge", ignoreCase = true)) {
             player.animate(811)
             player.tickManager.addMinutes(TickManager.TickKeys.CHARGE_SPELL, 2)
             player.message("You are now feeling the power of the charge spell.")
+        }
+        if (spell.name.contains("enchant", ignoreCase = true)) {
+
+            player.stopAll()
+            player.interfaceManager.sendInterface(432)
         }
     }
 

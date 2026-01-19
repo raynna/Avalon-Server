@@ -155,7 +155,7 @@ public final class Launcher {
                 null
         );
 		RandomWorldBossHandler.start();
-		TournamentScheduler.INSTANCE.start();
+		//TournamentScheduler.INSTANCE.start();
     }
 
 	private static void addCleanMemoryTask() {

@@ -1,35 +1,29 @@
 package com.rs.java.game.player.actions.skills.crafting;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.rs.core.cache.defintions.ItemDefinitions;
-import com.rs.java.game.Animation;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.item.ItemId;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
-import com.rs.java.utils.Utils;
-
-/**
- *
- * @Improved Andreas - AvalonPK
- *
- */
+import com.rs.java.game.player.actions.skills.crafting.leather.LeatherData;
+import com.rs.java.game.player.actions.skills.crafting.leather.LeatherProduct;
+import com.rs.java.game.player.actions.skills.crafting.leather.ReqItem;
 
 public class LeatherCrafting extends Action {
 
-	public static int THREAD = 1734;
-	public static int DUNG_NEEDLE = 17446;
+	public static final int THREAD = 1734;
+	public static final int DUNG_NEEDLE = 17446;
+	public static final int NORMAL_NEEDLE = 1733;
+	private static final int CRAFT_ANIMATION = 1249;
+
 
 	private LeatherData data;
-	private int option;
+	private LeatherProduct product;
 	private int quantity;
 
 	public LeatherCrafting(LeatherData data, int option, int quantity) {
 		this.data = data;
-		this.option = option;
+		this.product = data.getProducts()[option];
 		this.quantity = quantity;
 	}
 
@@ -39,45 +33,114 @@ public class LeatherCrafting extends Action {
 	}
 
 	private boolean check(Player player) {
-		if (player.getSkills().getLevel(Skills.CRAFTING) < data.getLevels()[option]) {
-			player.getPackets().sendGameMessage("You need a Crafting level of " + data.getLevels()[option] + ".");
+
+		if (player.getSkills().getLevel(Skills.CRAFTING) < product.getLevel()) {
+			player.getPackets().sendGameMessage(
+					"You need a Crafting level of " + product.getLevel() + "."
+			);
 			return false;
 		}
+
+		StringBuilder missing = new StringBuilder();
+
+		for (ReqItem req : product.getRequirements()) {
+			int have = player.getInventory().getAmountOf(req.getId());
+
+			if (have < req.getAmount()) {
+				if (!missing.isEmpty())
+					missing.append(", ");
+
+				missing.append(req.getAmount())
+						.append(" ")
+						.append(ItemDefinitions.getItemDefinitions(req.getId()).getName());
+			}
+		}
+
+		if (!missing.isEmpty()) {
+			player.getPackets().sendGameMessage(
+					"You need: " + missing + "."
+			);
+			return false;
+		}
+
 		return true;
 	}
 
+
 	public static LeatherData getLeatherData(Item used, Item usedWith) {
+		int id1 = used.getId();
+		int id2 = usedWith.getId();
+
+		boolean hasNeedle =
+				id1 == DUNG_NEEDLE || id2 == DUNG_NEEDLE ||
+						id1 == NORMAL_NEEDLE || id2 == NORMAL_NEEDLE;
+
+		if (!hasNeedle)
+			return null;
+
 		for (LeatherData data : LeatherData.values()) {
-			if (data.getBaseLeather() == used.getId() || data.getBaseLeather() == usedWith.getId())
+			int leatherId = data.getBaseLeather();
+			if (leatherId == id1 || leatherId == id2)
 				return data;
 		}
 		return null;
 	}
 
-
 	@Override
 	public boolean process(Player player) {
-		return quantity > 0 && check(player);
+
+		if (quantity <= 0)
+			return false;
+		player.animate(CRAFT_ANIMATION);
+		if (player.getSkills().getLevel(Skills.CRAFTING) < product.getLevel()) {
+			player.getPackets().sendGameMessage(
+					"You need a Crafting level of " + product.getLevel() + " to continue crafting this."
+			);
+			return false;
+		}
+
+		if (product.getRequirements().length == 0) {
+			if (!player.getInventory().containsItem(data.getBaseLeather(), 1)) {
+				String name = ItemDefinitions.getItemDefinitions(data.getBaseLeather()).getName();
+				player.message("You have run out of " + name + ".");
+				return false;
+			}
+			return true;
+		}
+
+		for (ReqItem req : product.getRequirements()) {
+			if (!player.getInventory().containsItem(req.getId(), req.getAmount())) {
+				String name = ItemDefinitions.getItemDefinitions(req.getId()).getName();
+				player.message("You have run out of " + name + ".");
+				return false;
+			}
+		}
+
+		return true;
 	}
+
 
 	@Override
 	public int processWithDelay(Player player) {
 		quantity--;
 
-		Item product = data.getProduct(option);
-
-		player.getInventory().deleteItem(data.getBaseLeather(), product.getAmount());
-		player.getInventory().deleteItem(LeatherCrafting.THREAD, 1);
+		if (product.getRequirements().length == 0) {
+			player.getInventory().deleteItem(data.getBaseLeather(), 1);
+		} else {
+			for (ReqItem req : product.getRequirements()) {
+				player.getInventory().deleteItem(req.getId(), req.getAmount());
+			}
+		}
 
 		player.getInventory().addItem(product.getId(), 1);
-		player.getSkills().addXp(Skills.CRAFTING, data.getXp()[option]);
+		player.getSkills().addXp(Skills.CRAFTING, product.getXp());
 
 		return 3;
 	}
+
 
 	@Override
 	public void stop(Player player) {
 		setActionDelay(player, 3);
 	}
 }
-
