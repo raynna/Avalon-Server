@@ -10,9 +10,7 @@ public final class Settings {
 	 * Launching settings
 	 */
 	public static boolean DEBUG;
-	public static boolean HOSTED;
 	public static int PORT_ID;
-	public static boolean VPS_HOSTED;
 
 	public static boolean ECONOMY;
 	public static boolean FREE_TO_PLAY = false;

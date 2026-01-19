@@ -1246,9 +1246,6 @@ public final class WorldPacketsDecoder extends Decoder {
 				break;
 			}
 		}
-
-		if (!Settings.HOSTED)
-			player.getPackets().sendFilteredGameMessage(true, "Spell:" + componentId);
 	}
 
 	private static void handleInterfaceOnNpc(Player player, InputStream stream) {
@@ -1461,9 +1458,6 @@ public final class WorldPacketsDecoder extends Decoder {
 				break;
 			}
 		}
-
-		if (!Settings.HOSTED)
-			player.getPackets().sendFilteredGameMessage(true, "Spell: " + componentId);
 	}
 
 	private static void handleItemTake(Player player, InputStream stream) {

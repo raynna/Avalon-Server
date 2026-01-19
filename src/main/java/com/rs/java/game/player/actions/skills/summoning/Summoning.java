@@ -88,7 +88,6 @@ public class Summoning {
 					.getConstructor(Player.class, Pouch.class, WorldTile.class, int.class, boolean.class)
 					.newInstance(player, pouch, player, -1, true);
 		} catch (Throwable e) {
-			if (!Settings.HOSTED)
 				e.printStackTrace();
 			return null;
 		}

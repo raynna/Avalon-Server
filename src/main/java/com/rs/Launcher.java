@@ -69,16 +69,12 @@ public final class Launcher {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println("Current working directory: " + System.getProperty("user.dir"));
-		if (args.length < 4) {
-			Settings.VPS_HOSTED = false;
+		if (args.length < 2) {
+			Settings.DEBUG = true;
 			Settings.PORT_ID = 43594;
-			Settings.HOSTED = true;
-			Settings.DEBUG = false;
 		} else {
-			Settings.VPS_HOSTED = Boolean.parseBoolean(args[3]);
-			Settings.PORT_ID = Integer.parseInt(args[2]);
-			Settings.HOSTED = Boolean.parseBoolean(args[1]);
 			Settings.DEBUG = Boolean.parseBoolean(args[0]);
+			Settings.PORT_ID = Integer.parseInt(args[1]);
 		}
 		Cache.init();
 		Rscm.loadAll();
