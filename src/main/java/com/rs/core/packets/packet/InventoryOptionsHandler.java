@@ -116,6 +116,8 @@ public class InventoryOptionsHandler {
             if (pluginExecuted)
                 return;
         }
+        if (Firemaking.isFiremaking(player, item.getId()))
+            return;
         /**item switching, wear is handled in player process*/
         if (!item.getDefinitions().isWearItem())
             return;
@@ -1007,6 +1009,8 @@ public class InventoryOptionsHandler {
             Hunter.openJar(player, slotId, new Item(itemId), impling);
             return;
         }
+        if (Firemaking.isFiremaking(player, itemId))
+            return;
         if (itemId == 20767 || itemId == 20769 || itemId == 20771)
             SkillCapeCustomizer.startCustomizing(player, itemId);
         if (itemId >= 18349 && itemId <= 18363) {
