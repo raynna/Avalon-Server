@@ -355,6 +355,16 @@ public class InventoryOptionsHandler {
             player.getDialogueManager().startDialogue("DiceBag", itemId);
             return;
         }
+        LeatherData leatherData = LeatherCrafting.getLeatherData(itemId);
+        if (leatherData != null) {
+            if (!player.getInventory().containsItem(LeatherCrafting.NORMAL_NEEDLE, 1)
+                    && !player.getInventory().containsItem(LeatherCrafting.DUNG_NEEDLE, 1) && !player.getToolbelt().contains(LeatherCrafting.NORMAL_NEEDLE)) {
+                player.message("You need a needle to craft leather.");
+                return;
+            }
+            player.getDialogueManager().startDialogue("LeatherCraftingD", leatherData);
+            return;
+        }
         GemData gem = GemData.forUncut(itemId);
         if (gem != null) {
             if (!player.getInventory().containsItem(1755, 1) && !player.getToolbelt().contains(1755)) {

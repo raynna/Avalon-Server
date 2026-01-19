@@ -39,6 +39,10 @@ public class LeatherCrafting extends Action {
 			player.message("You need a Crafting level of " + product.getLevel() + ".");
 			return false;
 		}
+		if (!player.getToolbelt().contains(NORMAL_NEEDLE) && !player.getInventory().containsOneItem(NORMAL_NEEDLE)) {
+			player.message("You don't have a needle to craft with.");
+			return false;
+		}
 		if (!player.getInventory().containsItem("item.thread", 1)) {
 			player.message("You don't have any thread to craft with.");
 			return false;
@@ -67,6 +71,13 @@ public class LeatherCrafting extends Action {
 		return true;
 	}
 
+	public static LeatherData getLeatherData(int itemId) {
+		for (LeatherData data : LeatherData.values()) {
+			if (data.getBaseLeather() == itemId)
+				return data;
+		}
+		return null;
+	}
 
 	public static LeatherData getLeatherData(Item used, Item usedWith) {
 		int id1 = used.getId();
