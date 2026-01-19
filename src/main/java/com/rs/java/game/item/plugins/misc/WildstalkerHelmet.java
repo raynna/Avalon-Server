@@ -8,7 +8,7 @@ public class WildstalkerHelmet extends ItemPlugin {
 
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { "Wildstalker" };
+		return new Object[] { 20801, 20802, 20803, 20804, 20805, 20806 };
 	}
 	@Override
 	public boolean processItem(Player player, Item item, int slotId, String option) {
