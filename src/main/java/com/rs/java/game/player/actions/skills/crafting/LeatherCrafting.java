@@ -39,7 +39,7 @@ public class LeatherCrafting extends Action {
 			player.message("You need a Crafting level of " + product.getLevel() + ".");
 			return false;
 		}
-		if (!player.getToolbelt().contains(NORMAL_NEEDLE) && !player.getInventory().containsOneItem(NORMAL_NEEDLE)) {
+		if (!player.hasTool(NORMAL_NEEDLE)) {
 			player.message("You don't have a needle to craft with.");
 			return false;
 		}
