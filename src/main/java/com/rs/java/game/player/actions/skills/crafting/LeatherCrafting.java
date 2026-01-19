@@ -125,6 +125,11 @@ public class LeatherCrafting extends Action {
 
 	@Override
 	public int processWithDelay(Player player) {
+
+		Integer crafted = (Integer) player.getTemporaryAttributtes().get("THREAD_CRAFT_PROGRESS");
+		if (crafted == null)
+			crafted = 0;
+
 		quantity--;
 
 		if (product.getRequirements().length == 0) {
@@ -135,10 +140,13 @@ public class LeatherCrafting extends Action {
 			}
 		}
 
-		crafted++;
-		if (crafted % 5 == 0) {
-			player.getInventory().deleteItem(THREAD, 1);
+		int remaining = 5 - (crafted % 5);
+		if (remaining == 1 && !player.getInventory().containsItem(THREAD, 1)) {
+			player.message("You have run out of thread.");
+			return -1;
 		}
+
+		player.getTemporaryAttributtes().put("THREAD_CRAFT_PROGRESS", crafted);
 
 		player.getInventory().addItem(product.getId(), 1);
 		player.getSkills().addXp(Skills.CRAFTING, product.getXp());
