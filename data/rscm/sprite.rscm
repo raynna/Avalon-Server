@@ -28,12 +28,8 @@ old_wilderness_skull=1184
 bronze_bounty_skull=1183
 health_icon=1197
 prayer_icon=1198
-moderator_crown=1455_0
-jagex_crown=1455_1
-youtuber_icon=1455_8
-bronze_star_icon=1455_9
-silver_star_icon=1455_10
-gold_star_icon=1455_11
+#moderator_crown=1455_0, jagex_crown=1455_1, youtuber_icon=1455_8, bronze_star_icon=1455_9, silver_star_icon=1455_10, gold_star_icon=1455_1, moderator_crown=1455_0
+#jagex_crown=1455_1, youtuber_icon=1455_8, bronze_star_icon=1455_9, silver_star_icon=1455_10, gold_star_icon=1455_11
 attack_skill=1478
 strength_skill=1479
 defence_skill=1480
@@ -58,8 +54,7 @@ farming_skill=1498
 hunter_skull=1501
 construction_skill=1502
 summoning_skill=1503
-red_health_bar=1509_0
-green_health_bar=1509_1
+#red_health_bar=1509_0, green_health_bar=1509_1
 usa_flag=1510
 uk_flag=1511
 canada_flag=1512

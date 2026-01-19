@@ -50,10 +50,10 @@ dungeoneering_resizeable=114
 squeel_of_fortune=119
 
 
-15=unknown but used for resizeable
-25=unknown but used for resizeable
-23=unknown but used
-25=unknown but used
+#15=unknown but used for resizeable
+#25=unknown but used for resizeable
+#23=unknown but used
+#25=unknown but used
 
 main=27
 overlay=0
@@ -74,15 +74,6 @@ health_overlay=203
 health_overlay_resizeable=10
 timer_tab=204
 timer_tab_resizeable=65
-validTabsFixed=[0,8,10,11,20,23,25,26,27,40(notsure if timers)(28 could work for timers)
-0=fade screen
-8=wildy
-10=xpdrop
-11=xpcounter
-25=pvp
-27=main
-29=health
-30=timers
-
+#validTabsFixed=[0,8,10,11,20,23,25,26,27,40(notsure if timers)(28 could work for timers)
 
 
