@@ -99,10 +99,10 @@ public class Toolbelt implements Serializable {
 	 * @return true, if successful
 	 */
 	public static boolean checkStorage(int item) {
-		for (int i = 0; i < TOOLBELT_ITEMS.length - 1; i++) {
-			if (item == TOOLBELT_ITEMS[i])
-				return true;
-		}
+        for (int toolbeltItem : TOOLBELT_ITEMS) {
+            if (item == toolbeltItem)
+                return true;
+        }
 		return false;
 	}
 

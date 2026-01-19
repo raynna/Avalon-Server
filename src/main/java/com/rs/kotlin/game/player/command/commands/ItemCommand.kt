@@ -2,6 +2,7 @@ package com.rs.kotlin.game.player.command.commands
 
 import com.rs.Settings
 import com.rs.core.cache.defintions.ItemDefinitions
+import com.rs.java.game.item.Item
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Ranks
 import com.rs.java.utils.EconomyPrices
@@ -67,7 +68,7 @@ class ItemCommand : Command {
                 player.message("This item costs money, look for this item in shops.")
                 return true
             }
-            if ((finalItem.id == 995 || finalItem.id == 12852) && !player.rank.isDeveloper) {
+            if ((finalItem.id == 995 || finalItem.id == Item.getId("item.pvp_token")) && !player.rank.isDeveloper) {
                 player.message("You can't spawn currency, You cheeky!")
                 return true
             }

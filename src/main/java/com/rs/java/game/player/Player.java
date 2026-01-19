@@ -3977,7 +3977,7 @@ public class Player extends Entity {
            killer.message("You recieved an extra " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(randomCoins, ',')) + " coins for killing: " + getDisplayName() + ".");
 
            int randomPvpTokens = Utils.randomise(250, 1000);
-           World.updateGroundItem(new Item(12852, randomPvpTokens), deathTile, killer, 60, 1);
+           World.updateGroundItem(new Item("item.pvp_token", randomPvpTokens), deathTile, killer, 60, 1);
            killer.message("You recieved " + randomPvpTokens + " pvp tokens for killing " + getDisplayName() + ".");
 
            killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");

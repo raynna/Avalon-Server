@@ -107,7 +107,7 @@ public final class PresetManager implements Serializable {
 
     private boolean isSpecialNonSpawnable(Item item) {
         int id = item.getId();
-        return id == 995 || id == 12852 || !item.getDefinitions().isTradeable();
+        return id == 995 || id == Item.getId("item.pvp_token") || !item.getDefinitions().isTradeable();
     }
 
     /**

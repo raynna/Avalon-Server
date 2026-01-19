@@ -16,6 +16,7 @@ public class LeatherCrafting extends Action {
 	public static final int NORMAL_NEEDLE = 1733;
 	private static final int CRAFT_ANIMATION = 1249;
 
+	private int crafted = 0;
 
 	private LeatherData data;
 	private LeatherProduct product;
@@ -35,9 +36,11 @@ public class LeatherCrafting extends Action {
 	private boolean check(Player player) {
 
 		if (player.getSkills().getLevel(Skills.CRAFTING) < product.getLevel()) {
-			player.getPackets().sendGameMessage(
-					"You need a Crafting level of " + product.getLevel() + "."
-			);
+			player.message("You need a Crafting level of " + product.getLevel() + ".");
+			return false;
+		}
+		if (!player.getInventory().containsItem("item.thread", 1)) {
+			player.message("You don't have any thread to craft with.");
 			return false;
 		}
 
@@ -57,9 +60,7 @@ public class LeatherCrafting extends Action {
 		}
 
 		if (!missing.isEmpty()) {
-			player.getPackets().sendGameMessage(
-					"You need: " + missing + "."
-			);
+			player.message("You need: " + missing + ".");
 			return false;
 		}
 
@@ -93,9 +94,11 @@ public class LeatherCrafting extends Action {
 			return false;
 		player.animate(CRAFT_ANIMATION);
 		if (player.getSkills().getLevel(Skills.CRAFTING) < product.getLevel()) {
-			player.getPackets().sendGameMessage(
-					"You need a Crafting level of " + product.getLevel() + " to continue crafting this."
-			);
+			player.message("You need a Crafting level of " + product.getLevel() + " to continue crafting this.");
+			return false;
+		}
+		if (!player.getInventory().containsItem("item.thread", 1)) {
+			player.message("You ran out of thread.");
 			return false;
 		}
 
@@ -130,6 +133,11 @@ public class LeatherCrafting extends Action {
 			for (ReqItem req : product.getRequirements()) {
 				player.getInventory().deleteItem(req.getId(), req.getAmount());
 			}
+		}
+
+		crafted++;
+		if (crafted % 5 == 0) {
+			player.getInventory().deleteItem(THREAD, 1);
 		}
 
 		player.getInventory().addItem(product.getId(), 1);
