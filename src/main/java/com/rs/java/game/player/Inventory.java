@@ -318,7 +318,6 @@ public final class Inventory implements Serializable {
 				continue;
 			deleteItem(item);
 		}
-		player.getPackets().sendSound(4500, 0, 1);
 		return true;
 	}
 
