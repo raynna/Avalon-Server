@@ -36,7 +36,7 @@ object ProjectileRegistry {
         register(Projectile.ICE_BARRAGE, ProjectileType(startHeight = 43, endHeight = 0, startTime = 51, arc = 16, displacement = 64, multiplier = 10, lengthAdjustment = -5))
 
         //NPCS
-        register(Projectile.DRAGONFIRE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15, displacement = 64))
+        register(Projectile.DRAGONFIRE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15, displacement = 128))
     }
 
     private fun register(projectile: Projectile, type: ProjectileType) {

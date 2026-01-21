@@ -305,31 +305,25 @@ public final class Pots {
 		ANTIPOISON() {
 			@Override
 			public void extra(Player player) {
-				player.getPoison().reset();
+				player.getNewPoison().reset();
 			}
 		},
 		SUPER_ANTIPOISON() {
 			@Override
 			public void extra(Player player) {
-				player.addPoisonImmune(360000);
-				player.getPackets()
-						.sendGameMessage("You are now immune to for " + getPoisonImmunityTimeLeft(player) + "");
+				player.addPoisonImmune(6);
 			}
 		},
 		ANTI_DOTE() {
 			@Override
 			public void extra(Player player) {
-				player.addPoisonImmune(540000);
-				player.getPackets()
-						.sendGameMessage("You are now immune to for " + getPoisonImmunityTimeLeft(player) + "");
+				player.addPoisonImmune(9);
 			}
 		},
 		SUPER_ANTI_DOTE() {
 			@Override
 			public void extra(Player player) {
-				player.addPoisonImmune(720000);
-				player.getPackets()
-						.sendGameMessage("You are now immune to for " + getPoisonImmunityTimeLeft(player) + "");
+				player.addPoisonImmune(12);
 			}
 		},
 		ENERGY_POTION() {
@@ -349,7 +343,7 @@ public final class Pots {
 		ANTI_FIRE() {
 			@Override
 			public void extra(final Player player) {
-				player.addAntifire(600);
+				player.addAntifire(6);
 				final long current = player.getAntifire();
 				player.getPackets().sendGameMessage("You are now immune to dragonfire.");
 				WorldTasksManager.schedule(new WorldTask() {

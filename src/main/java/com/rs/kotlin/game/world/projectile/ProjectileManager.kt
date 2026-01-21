@@ -107,6 +107,25 @@ object ProjectileManager {
         gfxId: Int,
         attacker: Entity,
         defender: Entity,
+        displacementOffset: Int,
+        onLanded: Runnable? = null
+    ): Int {
+        return send(
+            projectile = projectile,
+            gfxId = gfxId,
+            attacker = attacker,
+            defender = defender,
+            displacement = displacementOffset,
+            onLanded = { onLanded?.run() }
+        )
+    }
+
+    @JvmStatic
+    fun send(
+        projectile: Projectile,
+        gfxId: Int,
+        attacker: Entity,
+        defender: Entity,
         onLanded: Runnable? = null
     ): Int {
         return send(
@@ -248,6 +267,7 @@ object ProjectileManager {
         hitGraphic: Graphics? = null,
         hitSound: Int = -1,
         speedAdjustment: Int = 0,
+        displacement: Int = 0,
         onLanded: (() -> Unit)? = null
     ): Int {
 
@@ -259,6 +279,7 @@ object ProjectileManager {
             arc = (baseType.arc + arcOffset).coerceIn(0, 255),
             startTime = baseType.startTime + startTimeOffset,
             multiplier =  baseType.multiplier + speedAdjustment,
+            displacement = baseType.displacement + displacement,
         )
 
         val distance = Utils.getDistance(attacker, defender)

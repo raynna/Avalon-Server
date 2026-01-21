@@ -17,6 +17,19 @@ public class DragonFire {
     private static final int DRAGONFIRE_ABSORB_ANIMATION = 6695;
     private static final int DRAGONFIRE_ABSORB_GFX = 1164;
 
+    public enum DragonType {
+        CHROMATIC,
+        METALLIC,
+        VORKATH,
+        KING_BLACK_DRAGON,
+        ELVARG
+    }
+
+    private static class Protection {
+        boolean shield, prayer, antifire, superAntifire;
+    }
+
+
 
     public static boolean hasFireProtection(Entity entity) {
         if (entity instanceof NPC) return false;
@@ -34,48 +47,117 @@ public class DragonFire {
     /**
      * Applies dragonfire mitigation to a damage value and sends the appropriate messages.
      */
-    public static int applyDragonfireMitigation(Player player, int baseMaxHit, boolean allowPrayer) {
-        // 1. Super antifire always wins
-        if (player.getSuperAntifire() > 0) {
-            player.message("Your potion fully protects you from the dragon's breath.");
+
+    public static int applyDragonfireMitigation(Player player, int baseMaxHit, DragonType dragon) {
+        return applyDragonfireMitigation(player, baseMaxHit, dragon, false);
+    }
+
+    public static int applyDragonfireMitigation(
+            Player player,
+            int baseMaxHit,
+            DragonType dragon,
+            boolean special) {
+
+        Protection protection = new Protection();
+        protection.shield = hasDragonShield(player);
+        protection.antifire = player.getAntifire() > 0;
+        protection.superAntifire = player.getSuperAntifire() > 0;
+        protection.prayer = dragon != DragonType.METALLIC && player.getPrayer().isMageProtecting();
+
+        int cap = getDragonfireCap(dragon, special, protection);
+
+        cap = Math.min(cap, baseMaxHit);
+
+        int damage = Utils.random(0, cap);
+
+        if (damage == 0) {
+            if (protection.superAntifire)
+                player.message("Your potion fully protects you from the dragon's breath.");
+            else if ((protection.antifire && protection.shield) || (protection.antifire && protection.prayer))
+                player.message("Your protection fully shields you from the dragon's breath.");
+            else
+                player.message("You manage to resist some of the dragonfire!");
             return 0;
         }
 
-        boolean shield = hasDragonShield(player);
-        boolean antifire = player.getAntifire() > 0;
-        boolean prayer = allowPrayer && player.getPrayer().isMageProtecting();
-
-        // 2. Shield + antifire OR prayer + antifire = full immunity
-        if (antifire && (shield || prayer)) {
-            player.message("Your protection fully shields you from the dragon's breath.");
-            return 0;
-        }
-
-        // 3. Shield alone caps at ~5–10 damage
-        if (shield) {
-            int damage = Utils.random(0, 10);
+        if (protection.shield)
             player.message("Your shield protects you from most of the dragon's breath.");
-            return damage;
-        }
-
-        // 4. Antifire potion alone caps at ~35
-        if (antifire) {
-            int damage = Utils.random(0, 35);
+        else if (protection.antifire)
             player.message("Your potion protects you from some of the dragon's breath.");
-            return damage;
-        }
-
-        // 5. Prayer alone (if valid for this dragon) cuts damage a lot
-        if (prayer) {
-            int damage = Utils.random(0, baseMaxHit / 2);
+        else if (protection.prayer && dragon != DragonType.METALLIC)
             player.message("Your prayer protects you from some of the dragon's breath!");
-            return damage;
+        else
+            player.message("You're horribly burnt by the dragon fire!");
+
+        return damage;
+    }
+
+
+    private static int getDragonfireCap(
+            DragonType dragon,
+            boolean special,
+            Protection p) {
+
+        boolean shield = p.shield;
+        boolean prayer = p.prayer;
+        boolean antifire = p.antifire;
+        boolean superAntifire = p.superAntifire;
+
+        if (superAntifire) {
+            switch (dragon) {
+                case CHROMATIC, ELVARG, METALLIC -> { return 0; }
+                case KING_BLACK_DRAGON -> { return special ? 10 : 0; }
+            }
         }
 
-        // 6. No protection = full damage roll
-        int damage = Utils.random(0, baseMaxHit);
-        player.message("You're horribly burnt by the dragon fire!");
-        return damage;
+        if (shield && antifire) {
+            switch (dragon) {
+                case CHROMATIC, METALLIC -> { return 0; }
+                case KING_BLACK_DRAGON -> { return 10; }
+                case ELVARG -> { return 7; }
+            }
+        }
+
+        if (prayer && antifire && dragon != DragonType.METALLIC) {
+            switch (dragon) {
+                case CHROMATIC -> { return 0; }
+                case KING_BLACK_DRAGON -> { return 10; }
+                case ELVARG -> { return 4; }
+            }
+        }
+
+        if (shield) {
+            switch (dragon) {
+                case CHROMATIC, METALLIC -> { return 5; }
+                case KING_BLACK_DRAGON -> { return special ? 10 : 15; }
+                case ELVARG -> { return 10; }
+            }
+        }
+
+        if (prayer && dragon != DragonType.METALLIC) {
+            switch (dragon) {
+                case CHROMATIC -> { return 10; }
+                case KING_BLACK_DRAGON -> { return special ? 15 : 20; }
+                case ELVARG -> { return 55; }
+            }
+        }
+
+        if (antifire) {
+            switch (dragon) {
+                case CHROMATIC, METALLIC -> { return 35; }
+                case KING_BLACK_DRAGON -> { return 50; }
+                case ELVARG -> { return 55; }
+            }
+        }
+
+        switch (dragon) {
+            case CHROMATIC -> { return 50; }
+            case KING_BLACK_DRAGON -> { return special ? 50 : 65; }
+            case ELVARG -> { return 70; }
+            case METALLIC -> { return 50; }
+        }
+
+        return 0;
     }
 
 

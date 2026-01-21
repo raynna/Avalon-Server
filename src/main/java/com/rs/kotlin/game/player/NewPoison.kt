@@ -4,6 +4,7 @@ import com.rs.java.game.Entity
 import com.rs.java.game.Hit
 import com.rs.java.game.Keys
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
 import kotlin.math.floor
 
@@ -63,6 +64,8 @@ class NewPoison(@Transient private var entity: Entity) {
      */
     fun startPoison(severity: Int) {
         if (entity is Player) {
+            if (entity.tickManager.isActive(TickManager.TickKeys.POISON_IMMUNE_TICKS))
+                    return
             (entity as Player).packets.sendGameMessage("You are now poisoned.")
         }
         entity.set(POISON_SEVERITY, severity)

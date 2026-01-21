@@ -2,6 +2,7 @@ package com.rs.java.game.npc.combat.impl;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
+import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
@@ -37,34 +38,36 @@ public class FrostDragonCombat extends CombatScript {
 		switch (attackType) {
 			case 0: // Melee
 				if (npc.withinDistance(target, 3)) {
-					int damage = NpcCombatCalculations.getRandomMaxHit(
-							npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target
-					);
+					Hit meleeHit = npc.meleeHit(target, defs.getMaxHit());
 					npc.animate(new Animation(Utils.roll(1, 2) ? DRAGON_SLAM_ANIMATION : DRAGON_HEADBUTT_ANIMATION));
-					delayHit(npc, target, 0, getMeleeHit(npc, damage));
+					delayHit(npc, target, 0, meleeHit);
 					return npc.getAttackSpeed();
 				}
 			case 1: // Dragon breath / frost breath
 				if (!(target instanceof Player p)) break;
+				npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
 
 				int rawDamage = Utils.getRandom(650);
-				int mitigated = DragonFire.applyDragonfireMitigation(p, rawDamage, true);
-				npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION)); // dragon breath animation
-				ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, DRAGONFIRE_NORMAL_PROJECTILE, npc, target);
-				delayHit(npc, target, Utils.getDistance(npc, target) > 2 ? 2 : 1, getRegularHit(npc, mitigated));
-				DragonFire.handleDragonfireShield(p);
+				int mitigated = DragonFire.applyDragonfireMitigation(p, rawDamage, DragonFire.DragonType.CHROMATIC);
+				Hit dragonfire = npc.regularHit(target, mitigated);
+				ProjectileManager.send(Projectile.DRAGONFIRE, DRAGONFIRE_NORMAL_PROJECTILE, npc, target, () -> {
+					applyRegisteredHit(npc, target, dragonfire);
+					DragonFire.handleDragonfireShield(p);
+				});
 				break;
 			case 2: // Ice arrow range
-				int magicDamage = Utils.getRandom(250);
 				npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
-				ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, ICE_ARROW_PROJECTILE, npc, target);
-				delayHit(npc, target, 1, getRangeHit(npc, magicDamage));
+				Hit rangeHit = npc.rangedHit(target, 250);
+				ProjectileManager.send(Projectile.ARROW, ICE_ARROW_PROJECTILE, npc, target, 64, () -> {
+					applyRegisteredHit(npc, target, rangeHit);
+				});
 				break;
-			case 3: // Standard ranged
-				int rangeDamage = Utils.getRandom(250);
+			case 3:
 				npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
-				ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, WATER_PROJECTILE, npc, target);
-				delayHit(npc, target, 1, getMagicHit(npc, rangeDamage));
+				Hit magicHit = npc.magicHit(target, 250);
+				ProjectileManager.send(Projectile.ELEMENTAL_SPELL, WATER_PROJECTILE, npc, target, 64, () -> {
+					applyRegisteredHit(npc, target, magicHit);
+				});
 				break;
 		}
 

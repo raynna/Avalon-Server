@@ -695,14 +695,14 @@ public class NPC extends Entity implements Serializable {
         }
     }
 
-	public boolean isCantSetTargetAutoRelatio() {
-		return isCantSetTargetAutoRelatio();
-	}
+    public boolean isCantSetTargetAutoRelatio() {
+        return isCantSetTargetAutoRelatio();
+    }
 
-	public void setCantSetTargetAutoRelatio(boolean cantSetTargetAutoRelatio) {
-		this.forceAgressive = cantSetTargetAutoRelatio;
-	}
-	
+    public void setCantSetTargetAutoRelatio(boolean cantSetTargetAutoRelatio) {
+        this.forceAgressive = cantSetTargetAutoRelatio;
+    }
+
     public void checkAchievements(Player player, NPC npc) {
         String name = null;
         for (AchievementKills achievement : AchievementKills.values()) {
@@ -747,8 +747,8 @@ public class NPC extends Entity implements Serializable {
             // System.out.println("[rollDrops] Using drop table: " + table);
             return table.rollDrops(player);
         }
-        player.message("Missing droptable for npc: " + this.getName() + "("+this.getId()+")");
-        System.out.println("[rollDrops] No drop table found for NPC " + this.getName() + "("+this.getId()+")");
+        player.message("Missing droptable for npc: " + this.getName() + "(" + this.getId() + ")");
+        System.out.println("[rollDrops] No drop table found for NPC " + this.getName() + "(" + this.getId() + ")");
         return Collections.emptyList();
     }
 
@@ -1044,7 +1044,7 @@ public class NPC extends Entity implements Serializable {
     }
 
     public void resetForcewalk() {
-    	this.forceWalk = null;
+        this.forceWalk = null;
     }
 
     public void setTarget(Entity entity) {
@@ -1371,6 +1371,10 @@ public class NPC extends Entity implements Serializable {
         Hit hit = new Hit(this, damage, look);
         CombatScript.registerHit(this, target, hit);
         return hit;
+    }
+
+    public Hit regularHit(Entity target, int damage) {
+        return createAndRegisterHit(target, damage, HitLook.REGULAR_DAMAGE);
     }
 
     public Hit meleeHit(Entity target, int maxHit) {

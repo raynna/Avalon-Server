@@ -4517,6 +4517,11 @@ public class Player extends Entity {
         return getTickManager().getTicksLeft(TickManager.TickKeys.SPECIAL_FOOD_LOCK_TICK);
     }
 
+    public void addPoisonImmune(int minutes) {
+        tickManager.addMinutes(TickManager.TickKeys.POISON_IMMUNE_TICKS, minutes);
+        getNewPoison().reset();
+    }
+
     public void addPoisonImmune(long time) {
         poisonImmune = time + Utils.currentTimeMillis();
         getPoison().reset();

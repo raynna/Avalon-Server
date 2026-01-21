@@ -167,6 +167,54 @@
     "lastSeen": "2026-01-14T21:17:20.590249500Z",
     "attempts": 1
   },
+  "8387": {
+    "npcId": 8387,
+    "npcName": "Undead troll",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-21T11:01:27.371720600Z",
+    "lastSeen": "2026-01-21T11:01:27.371720600Z",
+    "attempts": 1
+  },
+  "8388": {
+    "npcId": 8388,
+    "npcName": "Undead troll",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-21T11:01:27.494233200Z",
+    "lastSeen": "2026-01-21T11:01:27.494233200Z",
+    "attempts": 1
+  },
+  "8389": {
+    "npcId": 8389,
+    "npcName": "Undead troll",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-21T11:01:27.753959900Z",
+    "lastSeen": "2026-01-21T11:01:27.753959900Z",
+    "attempts": 1
+  },
+  "8390": {
+    "npcId": 8390,
+    "npcName": "Undead troll",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-21T11:01:27.432180100Z",
+    "lastSeen": "2026-01-21T11:01:27.432180100Z",
+    "attempts": 1
+  },
+  "8391": {
+    "npcId": 8391,
+    "npcName": "Undead troll",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-21T11:01:27.630956700Z",
+    "lastSeen": "2026-01-21T11:01:27.630956700Z",
+    "attempts": 1
+  },
+  "8392": {
+    "npcId": 8392,
+    "npcName": "Undead troll",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-21T11:01:27.879227300Z",
+    "lastSeen": "2026-01-21T11:01:27.879227300Z",
+    "attempts": 1
+  },
   "14240": {
     "npcId": 14240,
     "npcName": "Mercenary warrior",

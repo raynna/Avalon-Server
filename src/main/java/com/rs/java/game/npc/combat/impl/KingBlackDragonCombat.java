@@ -2,6 +2,7 @@ package com.rs.java.game.npc.combat.impl;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
+import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
@@ -10,7 +11,6 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
-import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
@@ -51,16 +51,17 @@ public class KingBlackDragonCombat extends CombatScript {
 
 			case 1: // Breath attacks
 				if (player != null) {
-					int specialChance = inMelee ? 1 : 0;
-					int breathTypeRoll = Utils.random(4); // 0–3 inclusive // 0 normal, 1-2 special
+					npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
+					int breathTypeRoll = Utils.random(4);
 
-					int rawDamage = Utils.getRandom(650);
+					int baseDamage = 500;
 					int projectileId;
 					boolean applySpecialEffect = false;
 
 					switch (breathTypeRoll) {
 						case 0: // Normal dragonfire
 							projectileId = DRAGONFIRE_NORMAL_PROJECTILE;
+							baseDamage = 650;
 							break;
 						case 1: // Toxic (poison)
 							projectileId = DRAGONFIRE_TOXIC_PROJECTILE;
@@ -76,12 +77,14 @@ public class KingBlackDragonCombat extends CombatScript {
 							break;
 					}
 
-					int damage = DragonFire.applyDragonfireMitigation(player, rawDamage, true);
+					int rawDamage = Utils.random(baseDamage);
+					int damage = DragonFire.applyDragonfireMitigation(player, rawDamage, DragonFire.DragonType.KING_BLACK_DRAGON, applySpecialEffect);
 
-					npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
-					ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, projectileId, npc, target);
-					delayHit(npc, target, Utils.getDistance(npc, target) > 2 ? 2 : 1, getRegularHit(npc, damage));
-					DragonFire.handleDragonfireShield(player);
+					Hit dragonfire = npc.regularHit(target, damage);
+					ProjectileManager.send(Projectile.DRAGONFIRE, projectileId, npc, target, () -> {
+						applyRegisteredHit(npc, target, dragonfire);
+						DragonFire.handleDragonfireShield(player);
+					});
 
 					if (applySpecialEffect) {
 						applySpecialBreathEffect(player, breathTypeRoll - 1);

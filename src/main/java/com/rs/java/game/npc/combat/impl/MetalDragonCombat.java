@@ -2,6 +2,7 @@ package com.rs.java.game.npc.combat.impl;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
+import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
@@ -48,11 +49,9 @@ public class MetalDragonCombat extends CombatScript {
 
 	private void performMeleeAttack(NPC npc, Entity target) {
 		NpcCombatDefinition defs = npc.getCombatDefinitions();
-		npc.animate(new Animation(Utils.roll(1, 2) ? DRAGON_HEADBUTT_ANIMATION : DRAGON_HEADBUTT_ANIMATION));
-		int damage = NpcCombatCalculations.getRandomMaxHit(
-				npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target
-		);
-		delayHit(npc, target, 0, getMeleeHit(npc, damage));
+		npc.animate(DRAGON_HEADBUTT_ANIMATION);
+		Hit meleeAttack = npc.meleeHit(target, defs.getMaxHit());
+		delayHit(npc, target, 0, meleeAttack);
 	}
 
 	private void performDragonfireBreath(NPC npc, Entity target, NpcCombatDefinition defs) {
@@ -61,28 +60,27 @@ public class MetalDragonCombat extends CombatScript {
 		}
 
 		npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
-
 		npc.gfx(DRAGONFIRE_GFX, 100);
 
 		int rawDamage = Utils.getRandom(650);
-		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, rawDamage, true);
+		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, rawDamage, DragonFire.DragonType.METALLIC);
 
-		delayHit(npc, player, 1, getRegularHit(npc, mitigatedDamage));
-
+		Hit dragonfire = npc.regularHit(target, mitigatedDamage);
+		delayHit(npc, player, 1, dragonfire);
 		DragonFire.handleDragonfireShield(player);
 	}
 
 	private void performDragonfireAttack(NPC npc, Entity target) {
 		if (!(target instanceof Player player)) return;
+		npc.animate(new Animation(DRAGONFIRE_ANIMATION));
 
 		int rawDamage = Utils.getRandom(650);
+		int mitigated = DragonFire.applyDragonfireMitigation(player, rawDamage, DragonFire.DragonType.METALLIC);
 
-		npc.animate(new Animation(DRAGONFIRE_ANIMATION));
-		ProjectileManager.sendSimple(Projectile.DRAGONFIRE, DRAGONFIRE_NORMAL_PROJECTILE, npc, target);
-
-		int mitigated = DragonFire.applyDragonfireMitigation(player, rawDamage, false);
-		delayHit(npc, player, Utils.getDistance(player, npc) > 2 ? 2 : 1, getRegularHit(npc, mitigated));
-
-		DragonFire.handleDragonfireShield(player);
+		Hit dragonfire = npc.regularHit(target, mitigated);
+		ProjectileManager.send(Projectile.DRAGONFIRE, DRAGONFIRE_NORMAL_PROJECTILE, npc, target, () -> {
+			applyRegisteredHit(npc, target, dragonfire);
+			DragonFire.handleDragonfireShield(player);
+		});
 	}
 }
