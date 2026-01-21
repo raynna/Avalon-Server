@@ -120,9 +120,9 @@ object CombatCalculations {
 
             val baseDamage = 0.5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * multipliers.damage
             val baseMaxHit = baseDamage.toInt()
-            val rolledBaseDamage = Utils.random(baseMaxHit)
+            val maxHit = (baseMaxHit * specialMultiplier).toInt()
 
-            var finalDamage = (rolledBaseDamage * specialMultiplier).toInt()
+            var finalDamage =  Utils.random(maxHit)
             val finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
             if (target is NPC && target.id == 4474) {
                 finalDamage = finalMaxHit
@@ -139,7 +139,7 @@ object CombatCalculations {
                 player.message(
                     "[Combat Damage] -> " +
                             "BaseMax: $baseMaxHit, " +
-                            "RolledBase: $rolledBaseDamage, " +
+                            "MaxHit: $maxHit, " +
                             "FinalDamage: ${hit.damage}, " +
                             "Critical?: $isCritical"
                 )
@@ -225,21 +225,18 @@ object CombatCalculations {
             val baseDamage = 0.5 + (effectiveStrength * (strengthBonus + 640) / 640) * multipliers.damage
 
             val baseMaxHit = baseDamage.toInt()
-            val rolledBaseDamage = Utils.random(baseMaxHit)
 
-
-            var finalDamage = (rolledBaseDamage * specialMultiplier).toInt()
-            val finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
-
+            val maxHit = (baseMaxHit * specialMultiplier).toInt()
+            var finalDamage = Utils.random(maxHit);
             if (zaryteMaxHit > 0 && finalDamage > zaryteMaxHit) {
                 finalDamage = zaryteMaxHit
             }
             if (target is NPC && target.id == 4474) {
-                finalDamage = finalMaxHit
+                finalDamage = maxHit
             }
-            val hit = Hit(player, finalDamage, finalMaxHit, Hit.HitLook.RANGE_DAMAGE)
+            val hit = Hit(player, finalDamage, maxHit, Hit.HitLook.RANGE_DAMAGE)
             hit.baseMaxHit = baseMaxHit
-            hit.maxHit = finalMaxHit
+            hit.maxHit = maxHit
             val isCritical = finalDamage >= floor(baseMaxHit * 0.99)
             if (isCritical) {
                 hit.setCriticalMark()
@@ -249,7 +246,7 @@ object CombatCalculations {
                 player.message(
                     "Ranged Damage Calculation -> " +
                             "BaseMax: $baseMaxHit, " +
-                            "RolledBase: $rolledBaseDamage, " +
+                            "MaxHit: $maxHit, " +
                             "FinalDamage: ${hit.damage}, " +
                             "Critical?: $isCritical"
                 )
