@@ -105,6 +105,7 @@ object CombatCalculations {
         }
 
         override fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double): Hit {
+
             val styleBonus = getStrengthStyleBonus(player)
 
             val equipmentSet = EquipmentSets.getSet(player)
@@ -113,36 +114,40 @@ object CombatCalculations {
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MELEE)
 
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.StregthBonus.index].toDouble()
+            val baseStrengthLevel = getBaseStrengthLevel(player)
 
-            val baseStrengthLevel = getBaseStrengthLevel(player)//correct
             val effectiveStrength = floor((baseStrengthLevel + styleBonus + 8 * void) * dharokMultiplier)
-            val baseDamage = 0.5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * multipliers.damage
-            val effectiveMultiplier = min(specialMultiplier, 1.0)
 
-            val downscaledBaseDamage = baseDamage * effectiveMultiplier
-            val hit = Hit(player, 0, 0, Hit.HitLook.MELEE_DAMAGE)
-            val maxHit = (baseDamage * specialMultiplier).toInt()
-            var damage = Utils.random(maxHit)
-            if (target is NPC) {
-                if (target.id == 4474) {
-                    damage = maxHit
-                }
-            }
-            hit.baseMaxHit = baseDamage.toInt()
-            hit.maxHit = maxHit
-            hit.damage = damage
-            if (damage >= floor(downscaledBaseDamage * 0.95)) {
+            val baseDamage = 0.5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * multipliers.damage
+            val baseMaxHit = baseDamage.toInt()
+            val rolledBaseDamage = Utils.random(baseMaxHit)
+
+            val isCritical = rolledBaseDamage >= floor(baseMaxHit * 0.99)
+
+            val finalDamage = (rolledBaseDamage * specialMultiplier).toInt()
+            val finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
+
+            val hit = Hit(player, finalDamage, finalMaxHit, Hit.HitLook.MELEE_DAMAGE)
+            hit.baseMaxHit = baseMaxHit
+
+            if (isCritical) {
                 hit.setCriticalMark()
             }
+
+            if (target is NPC && target.id == 4474) {
+                hit.damage = finalMaxHit
+            }
+
             if (player.developerMode) {
                 player.message(
                     "[Combat Damage] -> " +
-                            "BaseDamage: ${baseDamage}, " +
-                            "MaxHit: ${maxHit}, " +
-                            "Rolled Damage: ${damage}, " +
-                            "Critical?: ${damage >= floor(baseDamage * 0.95)}"
+                            "BaseMax: $baseMaxHit, " +
+                            "RolledBase: $rolledBaseDamage, " +
+                            "FinalDamage: ${hit.damage}, " +
+                            "Critical?: $isCritical"
                 )
             }
+
             return hit
         }
     }
@@ -204,51 +209,60 @@ object CombatCalculations {
         }
 
         override fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double): Hit {
+
             val rangedLvl = player.skills.getLevel(Skills.RANGE).toDouble()
             val prayerBonus = player.prayer.rangedMultiplier
             val styleBonus = getStrengthStyleBonus(player)
+
             val equipmentSet = EquipmentSets.getSet(player)
             val void = EquipmentSets.getDamageMultiplier(player, equipmentSet, CombatMultipliers.Style.RANGE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.RANGE)
-            val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getTwistedBowBoost(player, target)
+
+            val (_, zaryteDamage, zaryteMaxHit) = getTwistedBowBoost(player, target)
 
             val baseStrength = floor(rangedLvl * prayerBonus)
             val effectiveStrength = floor((baseStrength + styleBonus + 8) * void * zaryteDamage)
-            val strengthBonus = player.combatDefinitions.bonuses[BonusType.RangedStrBonus.index].toDouble()
-            val baseDamage = 0.5 + (effectiveStrength * (strengthBonus + 640) / 640) * multipliers.damage
-            val effectiveMultiplier = min(specialMultiplier, 1.0)
 
-            val downscaledBaseDamage = baseDamage * effectiveMultiplier
-            var maxHit = floor(baseDamage * specialMultiplier).toInt()
-            var damage = Utils.random(maxHit)
-            if (target is NPC) {
-                if (target.id == 4474) {
-                    damage = maxHit
-                }
+            val strengthBonus = player.combatDefinitions.bonuses[BonusType.RangedStrBonus.index].toDouble()
+
+            val baseDamage = 0.5 + (effectiveStrength * (strengthBonus + 640) / 640) * multipliers.damage
+
+            val baseMaxHit = baseDamage.toInt()
+            val rolledBaseDamage = Utils.random(baseMaxHit)
+
+            val isCritical = rolledBaseDamage >= floor(baseMaxHit * 0.99)
+
+            var finalDamage = (rolledBaseDamage * specialMultiplier).toInt()
+            val finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
+
+            if (zaryteMaxHit > 0 && finalDamage > zaryteMaxHit) {
+                finalDamage = zaryteMaxHit
             }
-            val hit = Hit(player, damage, maxHit, Hit.HitLook.RANGE_DAMAGE)
-            if (zaryteMaxHit > 0) {
-                if (hit.damage > zaryteMaxHit) {
-                    hit.damage = zaryteMaxHit;
-                }
-                if (hit.damage >= floor(zaryteMaxHit * 0.95))
-                    hit.setCriticalMark()
-            }
-            if (damage >= floor(downscaledBaseDamage * 0.95)) {
+
+            val hit = Hit(player, finalDamage, finalMaxHit, Hit.HitLook.RANGE_DAMAGE)
+            hit.baseMaxHit = baseMaxHit
+
+            if (isCritical) {
                 hit.setCriticalMark()
             }
+
+            if (target is NPC && target.id == 4474) {
+                hit.damage = finalMaxHit
+            }
+
             if (player.developerMode) {
                 player.message(
                     "Ranged Damage Calculation -> " +
-                            "BaseDamage: ${baseDamage}, " +
-                            "StyleBonus: ${styleBonus}, " +
-                            "MaxHit: ${maxHit}, " +
-                            "Rolled Damage: ${damage}, " +
-                            "Critical?: ${damage >= floor(baseDamage * 0.90)}"
+                            "BaseMax: $baseMaxHit, " +
+                            "RolledBase: $rolledBaseDamage, " +
+                            "FinalDamage: ${hit.damage}, " +
+                            "Critical?: $isCritical"
                 )
             }
+
             return hit
         }
+
 
         fun getTwistedBowBoost(player: Player, target: Entity): Triple<Double, Double, Int> {
             if (target !is NPC) return Triple(1.0, 1.0, 0)
@@ -297,22 +311,25 @@ object CombatCalculations {
            return computeHitChance(attackRoll.toInt(), defenceRoll)
         }
 
-        fun calculateMaxHit(player: Player, target: Entity, baseDamage: Int = -1, spellId: Int = -1, specialMultiplier: Double = 1.0): Hit {
+        fun calculateMaxHit(
+            player: Player,
+            target: Entity,
+            baseDamage: Int = -1,
+            spellId: Int = -1,
+            specialMultiplier: Double = 1.0
+        ): Hit {
+
             val spell = Spellbook.getSpellById(player, spellId)
-            val min: Int = when {
-                spellId == 99 -> {
-                    160
-                }
+
+            val min = when {
+                spellId == 99 -> 160
                 else -> 0
             }
-            val base: Int = when {
+
+            val base = when {
                 spell != null && spell.chargeBoost -> {
-                    val base = spell.damage
-                    if (player.tickManager.isActive(TickManager.TickKeys.CHARGE_SPELL)) {
-                        base + 100
-                    } else {
-                        base
-                    }
+                    val b = spell.damage
+                    if (player.tickManager.isActive(TickManager.TickKeys.CHARGE_SPELL)) b + 100 else b
                 }
                 spellId == 1000 -> (5 * player.skills.getLevel(Skills.MAGIC)) - 180
                 spellId == 56 -> {
@@ -321,38 +338,49 @@ object CombatCalculations {
                 }
                 spellId == 99 -> {
                     val magicLevel = player.skills.getLevelForXp(Skills.MAGIC)
-                    val base = 160 + (magicLevel - 77) * 4
+                    val baseVal = 160 + (magicLevel - 77) * 4
                     val boost = (magicLevel - 77) * 4
-                    base + boost
+                    baseVal + boost
                 }
                 baseDamage > 0 -> baseDamage
                 spell != null && spell.damage > 0 -> spell.damage
                 else -> 0
             }
+
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
+
             val equipmentSet = EquipmentSets.getSet(player)
             val voidDamage = EquipmentSets.getDamageMultiplier(player, equipmentSet, CombatMultipliers.Style.MAGIC)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MAGIC)
 
             var levelMultiplier = getMagicLevelMultiplier(player)
-            if (target is NPC) {//just to make sure magic is a bit stronger for monsters so magic is a viable style in pvm
+            if (target is NPC) {
                 levelMultiplier *= player.prayer.magicMultiplier
             }
-            val maxHit = base * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage * specialMultiplier
 
-            var damage = Utils.random(min, maxHit.toInt())
-            if (target is NPC) {
-                if (target.id == 4474) {
-                    damage = maxHit.toInt();
-                }
+            val baseMaxHit = floor(base * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage).toInt()
+            val rolledBaseDamage = Utils.random(min, baseMaxHit)
+
+            val isCritical = rolledBaseDamage >= floor(baseMaxHit * 0.99)
+
+            var finalDamage = (rolledBaseDamage * specialMultiplier).toInt()
+            val finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
+
+            if (target is NPC && target.id == 4474) {
+                finalDamage = finalMaxHit
             }
-            val hit = Hit(player, damage, maxHit.toInt(), Hit.HitLook.MAGIC_DAMAGE)
-            if (damage >= floor(maxHit * 0.95)) {
+
+            val hit = Hit(player, finalDamage, finalMaxHit, Hit.HitLook.MAGIC_DAMAGE)
+            hit.baseMaxHit = baseMaxHit
+
+            if (isCritical) {
                 hit.setCriticalMark()
             }
+
             return hit
         }
+
 
         private fun getMagicLevelMultiplier(player: Player): Double {
             val currentLevel = player.skills.getLevel(Skills.MAGIC).toDouble()

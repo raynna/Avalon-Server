@@ -36,7 +36,7 @@ public class Hit {
 	}
 
 	public boolean checkCritical(int baseDamage, int maxHit) {
-        return baseDamage >= Math.floor(maxHit * 0.95);
+        return baseDamage >= Math.floor(maxHit * 0.99);
     }
 
 	public void setGraphic(Graphics graphic) {
@@ -68,8 +68,6 @@ public class Hit {
 	public boolean isCombatLook() {
 		return look == HitLook.MELEE_DAMAGE || look == HitLook.RANGE_DAMAGE || look == HitLook.MAGIC_DAMAGE;
 	}
-
-
 
 	public Hit(Entity source, int damage, HitLook look) {
 		this(source, damage, 0, look, 0, true);
@@ -170,11 +168,10 @@ public class Hit {
 	public Hit copy() {
 		Hit copy = new Hit(this.source, this.damage, this.maxHit, this.look, this.delay, this.landed);
 		copy.critical = this.critical;
-		copy.soaking = this.soaking; // shallow copy, adjust if needed
+		copy.soaking = this.soaking;
 		return copy;
 	}
 
-	// Overloaded copy with new damage example (optional)
 	public Hit copyWithDamage(int newDamage) {
 		Hit copy = new Hit(this.source, newDamage, this.maxHit, this.look, this.delay, this.landed);
 		copy.critical = this.critical;
