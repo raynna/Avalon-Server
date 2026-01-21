@@ -16,8 +16,6 @@ public class LeatherCrafting extends Action {
 	public static final int NORMAL_NEEDLE = 1733;
 	private static final int CRAFT_ANIMATION = 1249;
 
-	private int crafted = 0;
-
 	private LeatherData data;
 	private LeatherProduct product;
 	private int quantity;
@@ -83,20 +81,38 @@ public class LeatherCrafting extends Action {
 		int id1 = used.getId();
 		int id2 = usedWith.getId();
 
+		if (id1 == id2)
+			return null;
+
 		boolean hasNeedle =
 				id1 == DUNG_NEEDLE || id2 == DUNG_NEEDLE ||
 						id1 == NORMAL_NEEDLE || id2 == NORMAL_NEEDLE;
 
-		if (!hasNeedle)
-			return null;
-
 		for (LeatherData data : LeatherData.values()) {
-			int leatherId = data.getBaseLeather();
-			if (leatherId == id1 || leatherId == id2)
+
+			int base = data.getBaseLeather();
+
+			if (hasNeedle && (base == id1 || base == id2))
 				return data;
+
+			for (LeatherProduct p : data.getProducts()) {
+				boolean found1 = false;
+				boolean found2 = false;
+
+				for (ReqItem r : p.getRequirements()) {
+					int rid = r.getId();
+					if (rid == id1) found1 = true;
+					if (rid == id2) found2 = true;
+				}
+
+				if (found1 && found2)
+					return data;
+			}
 		}
+
 		return null;
 	}
+
 
 	@Override
 	public boolean process(Player player) {

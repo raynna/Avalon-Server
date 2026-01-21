@@ -64,6 +64,47 @@ public enum LeatherData {
             product("item.lunar_legs", 61, 30),
             product("item.lunar_torso", 61, 30)
     ),
+
+    FUNGAL("item.fungal_flake",
+            product("item.fungal_visor", 3, 15,
+                    requires("item.mycelium_visor_web"),
+                    requires("item.fungal_flake", 300)),
+
+            product("item.fungal_leggings", 12, 50,
+                    requires("item.mycelium_leggings_web"),
+                    requires("item.fungal_flake", 1000)),
+
+            product("item.fungal_poncho", 21, 125,
+                    requires("item.mycelium_poncho_web"),
+                    requires("item.fungal_flake", 2500))
+    ),
+    GRIFOLIC("item.grifolic_flake",
+            product("item.fungal_visor", 65, 40,
+                    requires("item.mycelium_visor_web"),
+                    requires("item.grifolic_flake", 400)),
+
+            product("item.fungal_leggings", 72, 120,
+                    requires("item.mycelium_leggings_web"),
+                    requires("item.grifolic_flake", 1200)),
+
+            product("item.fungal_poncho", 78, 350,
+                    requires("item.mycelium_poncho_web"),
+                    requires("item.grifolic_flake", 3500))
+    ),
+
+    GANODERMIC("item.ganodermic_flake",
+            product("item.ganodermic_visor", 86, 500,
+                    requires("item.mycelium_visor_web"),
+                    requires("item.ganodermic_flake", 500)),
+
+            product("item.ganodermic_leggings", 92, 300,
+                    requires("item.mycelium_leggings_web"),
+                    requires("item.ganodermic_flake", 1500)),
+
+            product("item.ganodermic_poncho", 98, 1000,
+                    requires("item.mycelium_poncho_web"),
+                    requires("item.ganodermic_flake", 5000))
+    )
     ;
 
     private final Object baseLeather;
@@ -75,6 +116,10 @@ public enum LeatherData {
 
     private static ReqItem requires(Object id, int amount) {
         return ReqItem.item(id, amount);
+    }
+
+    private static ReqItem requires(Object id) {
+        return ReqItem.item(id, 1);
     }
 
 
