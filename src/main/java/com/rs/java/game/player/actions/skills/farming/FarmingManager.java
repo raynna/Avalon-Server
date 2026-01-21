@@ -539,14 +539,10 @@ public class FarmingManager implements Serializable {
 
             @Override
             public boolean start(Player player) {
-                if (!player.getInventory().containsItemToolBelt(RAKE) && !player.getToolbelt().contains(RAKE)) {
+                if (!player.hasTool(RAKE)) {
                     player.getPackets().sendGameMessage("You'll need a rake to get rid of the weeds.");
                     return false;
                 }
-                /*if (!player.getInventory().hasFreeSlots()) {
-                    player.getPackets().sendGameMessage("You don't have any inventory space left.");
-                    return false;
-                }*/
                 player.getPackets().sendGameMessage("You start raking the patch.");
                 player.animate(RAKING_ANIMATION);
                 return true;
@@ -590,7 +586,7 @@ public class FarmingManager implements Serializable {
 
             @Override
             public boolean start(Player player) {
-                if (!player.getInventory().containsItem(SPADE, 1) && !player.getToolbelt().contains(SPADE)) {
+                if (!player.hasTool(SPADE)) {
                     player.getPackets().sendGameMessage("You need a spade to harvest your crops.");
                     return false;
                 }
@@ -749,7 +745,7 @@ public class FarmingManager implements Serializable {
 
             @Override
             public boolean start(Player player) {
-                if (!player.getInventory().containsItemToolBelt(SPADE) && !player.getToolbelt().contains(SPADE)) {
+                if (!player.hasTool(SPADE)) {
                     player.getPackets().sendGameMessage("You need a spade to clear this farming patch.");
                     return false;
                 }
@@ -813,7 +809,7 @@ public class FarmingManager implements Serializable {
         int requiredAmount = (productInfo.type == ALLOTMENT || productInfo.type == HOPS) ? 3 : 1;
         boolean isTree = productInfo.type == TREES || productInfo.type == FRUIT_TREES;
         int level = productInfo.level;
-        if (!player.getInventory().containsItemToolBelt(isTree ? SPADE : DIBBER) && !player.getToolbelt().contains(isTree ? SPADE : DIBBER)) {
+        if (!player.hasTool(isTree ? SPADE : DIBBER)) {
             player.getPackets().sendGameMessage(isTree ? "You need a spade to plant the sappling into the dirt." : "You need a seed dibber to plant the seed in the dirt.");
             return true;
         } else if (!player.getInventory().containsItem(item.getId(), requiredAmount)) {
@@ -873,7 +869,7 @@ public class FarmingManager implements Serializable {
             player.getPackets().sendGameMessage("This patch doesn't need to be cured.");
             return true;
         } else if (isTree || isBush) {
-            if (!(player.getInventory().containsItemToolBelt(SECATEURS) || player.getInventory().containsItemToolBelt(MAGIC_SECATEURS)) && !player.getToolbelt().contains(SECATEURS)) {
+            if (!player.hasTool(SECATEURS) && !player.hasTool(MAGIC_SECATEURS)) {
                 player.getPackets().sendGameMessage("You need a pair of secatures to prune the tree.");
             }
         }

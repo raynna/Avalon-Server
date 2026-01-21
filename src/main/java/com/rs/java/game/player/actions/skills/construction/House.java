@@ -486,15 +486,11 @@ public class House implements Serializable {
 				return;
 			}
 		} else {
-			if ((!player.getInventory().containsOneItem(HouseConstants.HAMMER)
-					&& !player.getInventory().containsOneItem(14112, 14104))
-					&& !player.getToolbelt().contains(HouseConstants.HAMMER)) {
+			if (!player.hasTool(HouseConstants.HAMMER)) {
 				player.getPackets().sendGameMessage("You will need a hammer to build this furniture.");
 				return;
 			}
-			if ((!player.getInventory().containsOneItem(HouseConstants.SAW)
-					&& !player.getInventory().containsOneItem(9625))
-					&& !player.getToolbelt().contains(HouseConstants.SAW)) {
+			if (!player.hasTool(HouseConstants.SAW)) {
 				player.getPackets().sendGameMessage("You will need a saw to build this furniture.");
 				return;
 			}

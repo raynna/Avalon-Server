@@ -25,7 +25,7 @@ public class Fletching extends Action {
         if (option >= data.getProducts().length)
             return false;
 
-        if (!hasTool(player)) {
+        if (!player.hasTool(data.getToolId())) {
             int tool = data.getToolId();
             player.message("You need a " + ItemDefinitions.getItemDefinitions(tool).getName() + " to fletch this.");
             return false;
@@ -59,7 +59,7 @@ public class Fletching extends Action {
             return false;
         }
 
-        if (!hasTool(player))
+        if (!player.hasTool(data.getToolId()))
             return false;
 
         if (!inventory.hasFreeSlots()
@@ -70,11 +70,6 @@ public class Fletching extends Action {
         }
 
         return true;
-    }
-
-    private boolean hasTool(Player player) {
-        return player.getInventory().containsOneItem(data.getToolId())
-                || player.getToolbelt().contains(data.getToolId());
     }
 
     @Override

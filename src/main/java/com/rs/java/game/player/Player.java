@@ -563,6 +563,9 @@ public class Player extends Entity {
         return toolbelt;
     }
 
+    public boolean hasTool(String item) {
+        return hasTool(Rscm.INSTANCE.item(item));
+    }
     public boolean hasTool(int itemId) {
         return inventory.containsOneItem(itemId) || equipment.containsOneItem(itemId) || toolbelt.contains(itemId);
     }

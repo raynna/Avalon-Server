@@ -439,7 +439,7 @@ public final class Woodcutting extends Action {
 
     private boolean hasAxe(Player player) {
         if (player.getInventory().containsOneItem(1351, 1349, 1353, 1355, 1357, 1361, 1359, 6739, 13661)
-                || player.getToolbelt().contains(1351))
+                || player.hasTool(1351))
             return true;
         int weaponId = player.getEquipment().getWeaponId();
         if (weaponId == -1)

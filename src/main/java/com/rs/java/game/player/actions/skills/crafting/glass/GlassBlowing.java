@@ -28,8 +28,7 @@ public class GlassBlowing extends Action {
     }
 
     private boolean check(Player player) {
-
-        if (!player.getInventory().containsItem(GLASSBLOWING_PIPE, 1)) {
+        if (!player.hasTool(GLASSBLOWING_PIPE)) {
             player.message("You need a glassblowing pipe to do that.");
             return false;
         }

@@ -340,7 +340,7 @@ public class Fishing extends Action {
 					"You need a fishing level of " + spot.getFish()[fishId].getLevel() + " to fish here.");
 			return false;
 		}
-		if (!player.getInventory().containsItem(spot.getTool(), 1) && !player.getToolbelt().contains(spot.getTool())) {
+		if (!player.hasTool(spot.getTool())) {
 			player.getPackets().sendGameMessage("You need a "
 					+ new Item(spot.getTool()).getDefinitions().getName().toLowerCase() + " to fish here.");
 			return false;

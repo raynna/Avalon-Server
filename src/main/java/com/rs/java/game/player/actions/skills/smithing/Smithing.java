@@ -151,7 +151,7 @@ public class Smithing extends Action {
 
 	@Override
 	public boolean process(Player player) {
-		if (!player.getInventory().containsItem(HAMMER, 1)) {
+		if (!player.hasTool(HAMMER)) {
 			player.getDialogueManager().startDialogue("SimpleMessage",
 					"You need a hammer in order to work with a bar of "
 							+ new Item(bar.getBarId(), 1).getDefinitions().getName().toLowerCase().replace(" bar", "")

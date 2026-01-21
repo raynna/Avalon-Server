@@ -357,8 +357,7 @@ public class InventoryOptionsHandler {
         }
         LeatherData leatherData = LeatherCrafting.getLeatherData(itemId);
         if (leatherData != null) {
-            if (!player.getInventory().containsItem(LeatherCrafting.NORMAL_NEEDLE, 1)
-                    && !player.getInventory().containsItem(LeatherCrafting.DUNG_NEEDLE, 1) && !player.getToolbelt().contains(LeatherCrafting.NORMAL_NEEDLE)) {
+            if (!player.hasTool("item.needle") && !player.hasTool("item.needle_2")) {
                 player.message("You need a needle to craft leather.");
                 return;
             }
@@ -367,10 +366,6 @@ public class InventoryOptionsHandler {
         }
         GemData gem = GemData.forUncut(itemId);
         if (gem != null) {
-            if (!player.getInventory().containsItem(1755, 1) && !player.getToolbelt().contains(1755)) {
-                player.message("You need a chisel to cut this item.");
-                return;
-            }
             player.getDialogueManager().startDialogue("GemCuttingD", gem);
         }
         if (Item.isItem(itemId, "item.bones_to_peaches")) {

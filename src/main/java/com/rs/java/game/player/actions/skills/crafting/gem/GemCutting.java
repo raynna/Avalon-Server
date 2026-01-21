@@ -23,7 +23,10 @@ public class GemCutting extends Action {
     }
 
     private boolean check(Player player) {
-
+        if (!player.hasTool("item.chisel")) {
+            player.message("You need a chisel to cut this item.");
+            return false;
+        }
         if (player.getSkills().getLevel(Skills.CRAFTING) < product.getLevel()) {
             player.message("You need a Crafting level of " + product.getLevel() + " to cut this gem.");
             return false;
@@ -57,7 +60,6 @@ public class GemCutting extends Action {
         player.message("You cut the " +
                 ItemDefinitions.getItemDefinitions(product.getUncut()).getName().toLowerCase() + ".", true);
 
-        // task hooks
         if (product.getUncut() == 1623)
             player.getTaskManager().checkComplete(Tasks.CUT_UNCUT_SAPPHIRE);
         if (product.getUncut() == 1617)
