@@ -37,7 +37,7 @@ public class KingBlackDragonCombat extends CombatScript {
 
         int attackStyle;
         if (inMelee) {
-            attackStyle = Utils.roll(1, 2) ? 0 : 1; //50/50 melee & dragonfire if close
+            attackStyle = Utils.randomBoolean() ? 0 : 1; //50/50 melee & dragonfire if close
         } else {
             attackStyle = 1;
         }
@@ -54,7 +54,7 @@ public class KingBlackDragonCombat extends CombatScript {
 
                 npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
 
-                boolean special = Utils.roll(1, 2);
+                boolean special = Utils.randomBoolean();
 
                 int projectileId;
                 int specialType;
