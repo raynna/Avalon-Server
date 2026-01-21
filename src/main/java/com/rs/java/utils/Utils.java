@@ -1083,6 +1083,10 @@ public final class Utils {
 		return getRandom(denominator) < numerator;
 	}
 
+	public static boolean randomBoolean() {
+		return roll(1, 2);
+	}
+
 	public static double getRandom(double maxValue) {
 		return Math.random() * (maxValue);
 	}

@@ -62,8 +62,8 @@ public class MetalDragonCombat extends CombatScript {
 		npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
 		npc.gfx(DRAGONFIRE_GFX, 100);
 
-		int rawDamage = Utils.getRandom(650);
-		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, rawDamage, DragonFire.DragonType.METALLIC);
+		boolean accuracyRoll = NpcCombatCalculations.getAccuracyRoll(npc, NpcAttackStyle.MAGIC, target);
+		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, accuracyRoll, DragonFire.DragonType.METALLIC);
 
 		Hit dragonfire = npc.regularHit(target, mitigatedDamage);
 		delayHit(npc, player, 1, dragonfire);
@@ -73,9 +73,8 @@ public class MetalDragonCombat extends CombatScript {
 	private void performDragonfireAttack(NPC npc, Entity target) {
 		if (!(target instanceof Player player)) return;
 		npc.animate(new Animation(DRAGONFIRE_ANIMATION));
-
-		int rawDamage = Utils.getRandom(650);
-		int mitigated = DragonFire.applyDragonfireMitigation(player, rawDamage, DragonFire.DragonType.METALLIC);
+		boolean accuracyCheck = NpcCombatCalculations.getAccuracyRoll(npc, NpcAttackStyle.MAGIC, target);
+		int mitigated = DragonFire.applyDragonfireMitigation(player, accuracyCheck, DragonFire.DragonType.METALLIC);
 
 		Hit dragonfire = npc.regularHit(target, mitigated);
 		ProjectileManager.send(Projectile.DRAGONFIRE, DRAGONFIRE_NORMAL_PROJECTILE, npc, target, () -> {

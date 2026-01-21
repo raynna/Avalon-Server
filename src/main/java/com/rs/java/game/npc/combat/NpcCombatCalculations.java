@@ -12,6 +12,19 @@ import com.rs.kotlin.game.player.equipment.BonusType;
 
 public class NpcCombatCalculations {
 
+
+    public static boolean getAccuracyRoll(NPC npc, NpcAttackStyle attackStyle, Entity target) {
+        CombatData data = npc.getCombatData();
+        if (npc.getName().toLowerCase().contains("kalphite queen")) {//kq quaranteed hit with range&magic
+            if (attackStyle == NpcAttackStyle.MAGIC || attackStyle == NpcAttackStyle.RANGED)
+                return true;
+        }
+        double attackRoll = calculateAttackRoll(npc, attackStyle, data);
+        double defenceRoll = calculateDefenceRoll(npc, attackStyle, target);
+        boolean hitChance = calculateHitProbability(attackRoll, defenceRoll);
+        return hitChance;
+    }
+
     public static int getRandomMaxHit(NPC npc, int maxHit, NpcAttackStyle attackStyle, Entity target) {
         CombatData data = npc.getCombatData();
         if (npc.getName().toLowerCase().contains("kalphite queen")) {//kq quaranteed hit with range&magic

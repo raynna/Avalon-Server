@@ -67,8 +67,8 @@ public class LeatherDragonCombat extends CombatScript {
 		npc.animate(new Animation(NEW_DRAGON_FIRE_ANIMATION));
 		npc.gfx(DRAGONFIRE_GFX, 100);
 
-		int rawDamage = Utils.getRandom(650);
-		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, rawDamage, DragonFire.DragonType.CHROMATIC);
+		boolean accuracyRoll = NpcCombatCalculations.getAccuracyRoll(npc, NpcAttackStyle.MAGIC, target);
+		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, accuracyRoll, DragonFire.DragonType.CHROMATIC);
 		Hit dragonfire = npc.regularHit(target, mitigatedDamage);
 		delayHit(npc, target, 1, dragonfire);
 		DragonFire.handleDragonfireShield(player);

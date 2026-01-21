@@ -5,7 +5,7 @@ import com.rs.kotlin.game.world.area.Area
 import com.rs.kotlin.game.world.area.shape.Rectangle
 
 
-class WildernessSafeArea : Area(
+class WildernessSafeArea : Area(arrayOf(9033),
     Rectangle(
         WorldTile(2944, 3520, 0),
         WorldTile(3327, 3524, 0)

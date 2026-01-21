@@ -307,7 +307,7 @@ public class WildernessControler extends Controler {
 
 	@Override
 	public void sendInterfaces() {
-		if (isAtWild(player)) {
+		if (isAtWild(player) && !isAtWildSafe(player)) {
 			showSkull();
 		}
 	}
@@ -407,6 +407,8 @@ public class WildernessControler extends Controler {
 	}
 
 	public static int getWildLevel(Player player) {
+		if (isAtWildSafe(player))
+			return 0;
 		if ((player.getX() >= 3060 && player.getX() <= 3072 && player.getY() >= 10251 && player.getY() <= 10263))
 			return 42;
 		if (player.getY() > 9900)

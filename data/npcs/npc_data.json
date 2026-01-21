@@ -1120,6 +1120,69 @@
       "spria"
     ]
   },
+  "49": {
+    "id": 49,
+    "name": "Hellhound",
+    "members": true,
+    "combatLevel": 122,
+    "attackLevel": 105,
+    "strengthLevel": 104,
+    "defenceLevel": 102,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 116,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 89,
+    "slayerXp": 116,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "50": {
     "id": 50,
     "name": "King Black Dragon",
@@ -1183,6 +1246,69 @@
       "konar",
       "nieve",
       "duradel"
+    ]
+  },
+  "51": {
+    "id": 51,
+    "name": "Frost dragon",
+    "members": true,
+    "combatLevel": 202,
+    "attackLevel": 180,
+    "strengthLevel": 150,
+    "defenceLevel": 150,
+    "magicLevel": 150,
+    "rangedLevel": 0,
+    "constitutionLevel": 230,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 90,
+      "crush": 15
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 70,
+      "standard": 50,
+      "heavy": 30
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[19 November]] [[2025]]",
+    "aliases": [],
+    "size": "4",
+    "examine": "Ice to see you, to see you ice!",
+    "attributes": [
+      "Dragon"
+    ],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "[[stab]]": 16,
+      "[[dragonfire]]": 50
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Melee]]",
+      "[[Dragonfire]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 7,
+    "slayerXp": 236,
+    "categories": [],
+    "assignedBy": [
+      "Nieve",
+      "Duradel"
     ]
   },
   "55": {
@@ -1724,6 +1850,67 @@
     "assignedBy": [
       "turael",
       "spria"
+    ]
+  },
+  "82": {
+    "id": 82,
+    "name": "Lesser demon",
+    "members": false,
+    "combatLevel": 82,
+    "attackLevel": 68,
+    "strengthLevel": 70,
+    "defenceLevel": 71,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 79,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": -10
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "Lesser, but still pretty big.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 79,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar"
     ]
   },
   "83": {
@@ -4036,6 +4223,349 @@
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []
+  },
+  "192": {
+    "id": 192,
+    "name": "Dark warrior",
+    "members": true,
+    "combatLevel": 8,
+    "attackLevel": 5,
+    "strengthLevel": 5,
+    "defenceLevel": 5,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 17,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 17,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
+  "195": {
+    "id": 195,
+    "name": "Bandit",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 17,
+    "strengthLevel": 17,
+    "defenceLevel": 17,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 27,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "A wilderness outlaw.",
+    "attributes": [],
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 100,
+    "slayerXp": 29,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
+  "196": {
+    "id": 196,
+    "name": "Guard Bandit",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 17,
+    "strengthLevel": 17,
+    "defenceLevel": 17,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 27,
+    "attackBonus": 11,
+    "strengthBonus": 12,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 4,
+      "slash": 8,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 1
+    },
+    "rangedDefence": {
+      "light": 4,
+      "standard": 4,
+      "heavy": 4
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Bandit Camp guard.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 100,
+    "slayerXp": 29,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
+  "202": {
+    "id": 202,
+    "name": "Black Heather",
+    "members": false,
+    "combatLevel": 34,
+    "attackLevel": 32,
+    "strengthLevel": 26,
+    "defenceLevel": 27,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 37,
+    "attackBonus": 9,
+    "strengthBonus": 9,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 9,
+      "slash": 8,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Has a fearsome scowl.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 37,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
+  "203": {
+    "id": 203,
+    "name": "Donny the Lad",
+    "members": false,
+    "combatLevel": 34,
+    "attackLevel": 32,
+    "strengthLevel": 26,
+    "defenceLevel": 27,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 37,
+    "attackBonus": 9,
+    "strengthBonus": 9,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 9,
+      "slash": 8,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Has a fearsome posture.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 37,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
+  "204": {
+    "id": 204,
+    "name": "Speedy Keith",
+    "members": false,
+    "combatLevel": 34,
+    "attackLevel": 32,
+    "strengthLevel": 26,
+    "defenceLevel": 27,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 37,
+    "attackBonus": 9,
+    "strengthBonus": 9,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 9,
+      "slash": 8,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Nice hair.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 37,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
   },
   "206": {
     "id": 206,
