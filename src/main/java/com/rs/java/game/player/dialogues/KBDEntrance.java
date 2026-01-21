@@ -2,10 +2,13 @@ package com.rs.java.game.player.dialogues;
 
 import java.util.concurrent.TimeUnit;
 
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.combat.Magic;
+import com.rs.java.utils.Utils;
 
 public class KBDEntrance extends Dialogue {
 
@@ -21,10 +24,12 @@ public class KBDEntrance extends Dialogue {
 	}
 
 	public static void Teleport(final Player player) {
-		CoresManager.getSlowExecutor().schedule(() -> {
-            Magic.pushLeverTeleport(player, new WorldTile(2273, 4681, 0));
-            return;
-        }, 1000, TimeUnit.MILLISECONDS);
+		WorldTasksManager.schedule(new WorldTask() {
+			@Override
+			public void run() {
+				Magic.pushLeverTeleport(player, new WorldTile(2273, 4681, 0));
+			}
+		});
 	}
 
 	@Override

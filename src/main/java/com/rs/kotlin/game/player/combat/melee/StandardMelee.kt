@@ -112,11 +112,15 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.vestas_longsword_special")
                     context.attacker.playSound("sound.dragon_longsword_special", 1)
-                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
-                    val roll = context.rollMelee();
-                    val damage = ((0.2 * maxHit).toInt()..(1.2 * maxHit).toInt()).random()
+                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).baseMaxHit
+                    val roll = context.rollMelee()
+                    var damage = ((0.2 * maxHit).toInt()..(1.2 * maxHit).toInt()).random()
+                    if (context.defender is NPC && context.defender.id == 4474)
+                        damage = (1.2 * maxHit).toInt()
                     context.hits {
                         val hit = Hit(context.attacker, damage, Hit.HitLook.MELEE_DAMAGE);
+                        if (hit.checkCritical(damage, maxHit))
+                            hit.setCriticalMark()
                         if (roll.damage > 0) {
                             addHit(context.defender, hit)
                         } else {
@@ -150,7 +154,7 @@ object StandardMelee : MeleeData() {
                     context.attacker.gfx("graphic.korasi_special_attack_start")
                     context.attacker.playSound("sound.saradomin_sword_special", 1)
                     context.attacker.playSound("sound.armadyl_godsword_special", 1)
-                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
+                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).baseMaxHit
 
                     val isMultiCombat = context.defender.isAtMultiArea
 
@@ -415,7 +419,7 @@ object StandardMelee : MeleeData() {
                     context.attacker.playSound("sound.hammer", 1)
                     context.attacker.playSound("sound.hammer", 10, 1)
 
-                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
+                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).baseMaxHit
                     val maxHit1 = (maxHit + 1) / 2
                     val maxHit2 = (maxHit / 2)
                     val firstHit = context.rollMelee()
@@ -1325,11 +1329,15 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.statius_warhammer_special")
                     context.attacker.gfx("graphic.statius_warhammer_special")
                     context.attacker.playSound("sound.hammer", 1)
-                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).maxHit
+                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).baseMaxHit
                     val roll = context.rollMelee();
-                    val damage = ((0.25 * maxHit).toInt()..(1.25 * maxHit).toInt()).random()
+                    var damage = ((0.25 * maxHit).toInt()..(1.25 * maxHit).toInt()).random()
+                    if (context.defender is NPC && context.defender.id == 4474)
+                        damage = (1.25 * maxHit).toInt()
                     context.hits {
-                        val hit = Hit(context.attacker, damage, Hit.HitLook.MELEE_DAMAGE);
+                        val hit = Hit(context.attacker, damage, Hit.HitLook.MELEE_DAMAGE)
+                        if (hit.checkCritical(damage, maxHit))
+                            hit.setCriticalMark()
                         if (roll.damage > 0) {
                             val defender = context.defender
                             addHit(context.defender, hit)

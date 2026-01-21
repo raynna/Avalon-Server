@@ -72,8 +72,6 @@ public class DragonFire {
         int max = cap.getSecond();
 
         int damage = Utils.random(min, max);
-        player.message("min: " + min + ", max: " + max);
-        player.message("special: " + special);
         if (damage == 0) {
             if (protection.superAntifire)
                 player.message("Your potion fully protects you from the dragon's breath.");

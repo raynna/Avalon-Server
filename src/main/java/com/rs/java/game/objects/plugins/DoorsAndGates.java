@@ -36,12 +36,6 @@ public class DoorsAndGates extends ObjectPlugin {
 			player.setNextWorldTile(new WorldTile(3069, 10255, 0));
 			player.getControlerManager().startControler("WildernessControler");
 		}
-		if (id == 1816) {
-			if (!player.KBDEntrance) {
-				player.getDialogueManager().startDialogue("KBDEntrance");
-				return false;
-			}
-		}
 		if (object.getId() == 29624) {
 			if (!player.safetyLever) {
 				player.getPackets().sendGameMessage("This gate is locked.");

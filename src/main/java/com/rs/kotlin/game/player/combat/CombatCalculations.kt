@@ -122,20 +122,17 @@ object CombatCalculations {
             val baseMaxHit = baseDamage.toInt()
             val rolledBaseDamage = Utils.random(baseMaxHit)
 
-            val isCritical = rolledBaseDamage >= floor(baseMaxHit * 0.99)
-
-            val finalDamage = (rolledBaseDamage * specialMultiplier).toInt()
+            var finalDamage = (rolledBaseDamage * specialMultiplier).toInt()
             val finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
-
+            if (target is NPC && target.id == 4474) {
+                finalDamage = finalMaxHit
+            }
             val hit = Hit(player, finalDamage, finalMaxHit, Hit.HitLook.MELEE_DAMAGE)
             hit.baseMaxHit = baseMaxHit
-
+            hit.maxHit = finalMaxHit
+            val isCritical = finalDamage >= floor(baseMaxHit * 0.99)
             if (isCritical) {
                 hit.setCriticalMark()
-            }
-
-            if (target is NPC && target.id == 4474) {
-                hit.damage = finalMaxHit
             }
 
             if (player.developerMode) {
@@ -230,7 +227,6 @@ object CombatCalculations {
             val baseMaxHit = baseDamage.toInt()
             val rolledBaseDamage = Utils.random(baseMaxHit)
 
-            val isCritical = rolledBaseDamage >= floor(baseMaxHit * 0.99)
 
             var finalDamage = (rolledBaseDamage * specialMultiplier).toInt()
             val finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
@@ -238,16 +234,15 @@ object CombatCalculations {
             if (zaryteMaxHit > 0 && finalDamage > zaryteMaxHit) {
                 finalDamage = zaryteMaxHit
             }
-
+            if (target is NPC && target.id == 4474) {
+                finalDamage = finalMaxHit
+            }
             val hit = Hit(player, finalDamage, finalMaxHit, Hit.HitLook.RANGE_DAMAGE)
             hit.baseMaxHit = baseMaxHit
-
+            hit.maxHit = finalMaxHit
+            val isCritical = finalDamage >= floor(baseMaxHit * 0.99)
             if (isCritical) {
                 hit.setCriticalMark()
-            }
-
-            if (target is NPC && target.id == 4474) {
-                hit.damage = finalMaxHit
             }
 
             if (player.developerMode) {
@@ -362,8 +357,6 @@ object CombatCalculations {
             val baseMaxHit = floor(base * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage).toInt()
             val rolledBaseDamage = Utils.random(min, baseMaxHit)
 
-            val isCritical = rolledBaseDamage >= floor(baseMaxHit * 0.99)
-
             var finalDamage = (rolledBaseDamage * specialMultiplier).toInt()
             val finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
 
@@ -373,7 +366,7 @@ object CombatCalculations {
 
             val hit = Hit(player, finalDamage, finalMaxHit, Hit.HitLook.MAGIC_DAMAGE)
             hit.baseMaxHit = baseMaxHit
-
+            val isCritical = finalDamage >= floor(baseMaxHit * 0.99)
             if (isCritical) {
                 hit.setCriticalMark()
             }

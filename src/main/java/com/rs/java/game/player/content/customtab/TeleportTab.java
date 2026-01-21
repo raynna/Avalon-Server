@@ -185,7 +185,7 @@ public class TeleportTab extends CustomTab {
 		LEEUNI(8, BOSSES, "Leeuni"),
 		NOMAD(9, BOSSES, "Nomad"),
 		BORK(10, BOSSES, "Bork"),
-		KBD(11, BOSSES, "King Black Dragon"),
+		KBD(11, BOSSES, true, "King Black Dragon"),
 		CHAOS_ELEMENTAL(12, BOSSES, true, "Chaos Elemental"),
 
 		FIGHTCAVES(3, MINIGAMES, "Fight Caves"),
