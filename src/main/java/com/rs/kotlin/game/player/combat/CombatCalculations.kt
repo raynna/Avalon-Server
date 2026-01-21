@@ -162,11 +162,11 @@ object CombatCalculations {
             val equipmentSet = EquipmentSets.getSet(player)
             val void = EquipmentSets.getAccuracyMultiplier(player, equipmentSet, CombatMultipliers.Style.RANGE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.RANGE)
-            val (zaryteAccuracy, zaryteDamage, zaryteMaxHit) = getTwistedBowBoost(player, target)
+            val (twistedBowAccuracy, _, _) = getTwistedBowBoost(player, target)
 
             var effectiveAttack = player.skills.getLevel(Skills.RANGE) * player.prayer.rangedMultiplier
             effectiveAttack += styleBonus + 8
-            effectiveAttack *= void * zaryteAccuracy
+            effectiveAttack *= void * twistedBowAccuracy
             val attackRoll = effectiveAttack * (rangeBonus + 64) * multipliers.accuracy * accuracyMultiplier
             /*
             * Range Defence Calculation
@@ -215,10 +215,10 @@ object CombatCalculations {
             val void = EquipmentSets.getDamageMultiplier(player, equipmentSet, CombatMultipliers.Style.RANGE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.RANGE)
 
-            val (_, zaryteDamage, zaryteMaxHit) = getTwistedBowBoost(player, target)
+            val (_, twistedBowMultiplier, twistedBowMax) = getTwistedBowBoost(player, target)
 
             val baseStrength = floor(rangedLvl * prayerBonus)
-            val effectiveStrength = floor((baseStrength + styleBonus + 8) * void * zaryteDamage)
+            val effectiveStrength = floor((baseStrength + styleBonus + 8) * void * twistedBowMultiplier)
 
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.RangedStrBonus.index].toDouble()
 
@@ -228,8 +228,8 @@ object CombatCalculations {
 
             val maxHit = (baseMaxHit * specialMultiplier).toInt()
             var finalDamage = Utils.random(maxHit);
-            if (zaryteMaxHit > 0 && finalDamage > zaryteMaxHit) {
-                finalDamage = zaryteMaxHit
+            if (twistedBowMax > 0 && finalDamage > twistedBowMax) {
+                finalDamage = twistedBowMax
             }
             if (target is NPC && target.id == 4474) {
                 finalDamage = maxHit
