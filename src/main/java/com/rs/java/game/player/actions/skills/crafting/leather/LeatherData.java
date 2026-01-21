@@ -79,15 +79,15 @@ public enum LeatherData {
                     requires("item.fungal_flake", 2500))
     ),
     GRIFOLIC("item.grifolic_flake",
-            product("item.fungal_visor", 65, 40,
+            product("item.grifolic_visor", 65, 40,
                     requires("item.mycelium_visor_web"),
                     requires("item.grifolic_flake", 400)),
 
-            product("item.fungal_leggings", 72, 120,
+            product("item.grifolic_leggings", 72, 120,
                     requires("item.mycelium_leggings_web"),
                     requires("item.grifolic_flake", 1200)),
 
-            product("item.fungal_poncho", 78, 350,
+            product("item.grifolic_poncho", 78, 350,
                     requires("item.mycelium_poncho_web"),
                     requires("item.grifolic_flake", 3500))
     ),
