@@ -266,7 +266,7 @@ public class DoorsAndGates extends ObjectPlugin {
 	public static boolean handleGate(Player player, WorldObject object) {
 		if (World.isSpawnedObject(object))
 			return false;
-		int doorDelay = 60000;
+		int doorDelay = 48;
 		if (object.getId() == 65386) {
 			WorldObject openedDoor1 = new WorldObject(object.getId(), object.getType(), object.getRotation(),
 					object.getX(), object.getY(), object.getPlane());
@@ -518,7 +518,7 @@ public class DoorsAndGates extends ObjectPlugin {
 				|| (object.getX() == 2945 && object.getY() == 3337) || (object.getX() == 2972 && object.getY() == 3314)
 				|| (object.getX() == 3034 && object.getY() == 3290)
 				|| (object.getX() == 3092 && object.getY() == 3287)) {
-			if (World.removeObjectTemporary(object, 60000, true)) {
+			if (World.removeObjectTemporary(object, 96, true)) {
 				if (object.getRotation() == 0) {
 					closedDoor.setRotation(3);
 					closedDoor.moveLocation(0, 1, 0);
@@ -557,7 +557,7 @@ public class DoorsAndGates extends ObjectPlugin {
 		return true;
 	}
 
-	public static boolean handle2DoorTemporary(Player player, WorldObject object, long timer) {
+	public static boolean handle2DoorTemporary(Player player, WorldObject object, int timer) {
 		if (World.isSpawnedObject(object))
 			return false;
 		WorldObject otherDoor = World.getObjectWithType(
@@ -615,7 +615,7 @@ public class DoorsAndGates extends ObjectPlugin {
 		return false;
 	}
 
-	public static boolean handleDoorTemporary(Player player, WorldObject object, long timer) {
+	public static boolean handleDoorTemporary(Player player, WorldObject object, int timer) {
 		if (World.isSpawnedObject(object))
 			return false;
 		WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() + 1,
@@ -653,7 +653,7 @@ public class DoorsAndGates extends ObjectPlugin {
 		return false;
 	}
 
-	public static boolean handleDoorTemporary2(Player player, WorldObject object, long timer) {
+	public static boolean handleDoorTemporary2(Player player, WorldObject object, int timer) {
 		if (World.isSpawnedObject(object))
 			return false;
 		WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() + 1,
@@ -710,7 +710,7 @@ public class DoorsAndGates extends ObjectPlugin {
 		return object.getId() + 1;
 	}
 
-	public static boolean handleDoor(Player player, WorldObject object, long timer) {
+	public static boolean handleDoor(Player player, WorldObject object, int timer) {
 		WorldObject openedDoor = new WorldObject(getOpenedDoorId(object), object.getType(), object.getRotation() + 1,
 				object.getX(), object.getY(), object.getPlane());
 		if (object.getRotation() == 0) {

@@ -30,6 +30,16 @@ public class WorldTasksManager {
 
 	}
 
+	public static void runOnGameThread(Runnable r) {
+		WorldTasksManager.schedule(new WorldTask() {
+			@Override
+			public void run() {
+				r.run();
+			}
+		});
+	}
+
+
 	public static void schedule(WorldTask task, int delayCount, int periodCount) {
 		if (task == null || delayCount < 0 || periodCount < 0)
 			return;

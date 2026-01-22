@@ -54,7 +54,7 @@ public final class Stomp extends DungeonBoss {
 				if (count == IVULNERABLE_TIMER - 3) {
 					List<Entity> possibleTargets = getPossibleTargets();
 					for (int[] s : shadows) {
-						WorldObject object = getManager().spawnObjectTemporary(getReference(), 49268, 10, 0, s[0], s[1], 30000);
+						WorldObject object = getManager().spawnObjectTemporary(getReference(), 49268, 10, 0, s[0], s[1], 48);
 						for (Entity target : possibleTargets)
 							if (target.getX() == object.getX() && target.getY() == object.getY())
 								target.applyHit(new Hit(this, 1 + Utils.random((int) (target.getMaxHitpoints() * 0.8)), HitLook.REGULAR_DAMAGE));

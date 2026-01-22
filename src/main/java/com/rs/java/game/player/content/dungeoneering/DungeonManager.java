@@ -778,7 +778,7 @@ public class DungeonManager {
 		return object;
 	}
 
-	public WorldObject spawnObjectTemporary(RoomReference reference, int id, int type, int rotation, int x, int y, long time) {
+	public WorldObject spawnObjectTemporary(RoomReference reference, int id, int type, int rotation, int x, int y, int time) {
 		final int mapRotation = dungeon.getRoom(reference).getRotation();
 		ObjectDefinitions defs = ObjectDefinitions.getObjectDefinitions(id);
 		int[] coords = translate(x, y, mapRotation, defs.sizeX, defs.sizeY, rotation);

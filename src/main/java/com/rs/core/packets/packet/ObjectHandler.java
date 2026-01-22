@@ -1308,8 +1308,8 @@ public final class ObjectHandler {
 
                 WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() - 1,
                         object.getX(), object.getY() - 1, object.getPlane());
-                if (World.removeObjectTemporary(object, 1200, false))
-                    World.spawnObjectTemporary(openedDoor, 1200);
+                if (World.removeObjectTemporary(object, 2, false))
+                    World.spawnObjectTemporary(openedDoor, 2);
                 player.lock(2);
                 player.stopAll();
                 player.addWalkSteps(2836, player.getY() >= object.getY() ? object.getY() - 1 : object.getY(), -1,
@@ -1737,7 +1737,7 @@ public final class ObjectHandler {
                                 player.addWalkSteps(object.getX(), object.getY());
                                 player.animate(new Animation(827));
                                 player.lock(3);
-                                World.removeObjectTemporary(object, 30000, true);
+                                World.removeObjectTemporary(object, 48, true);
                             }
                             break;
                         case "wheat":
@@ -1745,7 +1745,7 @@ public final class ObjectHandler {
                                 player.addWalkSteps(object.getX(), object.getY());
                                 player.animate(new Animation(827));
                                 player.lock(3);
-                                World.removeObjectTemporary(object, 30000, true);
+                                World.removeObjectTemporary(object, 48, true);
                             }
                             break;
                         case "potato":
@@ -1753,7 +1753,7 @@ public final class ObjectHandler {
                                 player.addWalkSteps(object.getX(), object.getY());
                                 player.animate(new Animation(827));
                                 player.lock(3);
-                                World.removeObjectTemporary(object, 30000, true);
+                                World.removeObjectTemporary(object, 48, true);
                             }
                             break;
                         case "onion":
@@ -1761,7 +1761,7 @@ public final class ObjectHandler {
                                 player.addWalkSteps(object.getX(), object.getY());
                                 player.animate(new Animation(827));
                                 player.lock(3);
-                                World.removeObjectTemporary(object, 30000, true);
+                                World.removeObjectTemporary(object, 48, true);
                             }
                             break;
                         case "flax":
@@ -1769,7 +1769,7 @@ public final class ObjectHandler {
                                 player.animate(new Animation(827));
                                 player.lock(1);
                                 if (Utils.getRandom(3) == 0)
-                                    World.removeObjectTemporary(object, 30000, true);
+                                    World.removeObjectTemporary(object, 48, true);
                             }
                             break;
                         case "bank":

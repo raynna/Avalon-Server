@@ -214,12 +214,6 @@ public class TickManager {
         SUPER_ANTI_FIRE_TICKS(54, 0),
         PRAYER_RENEWAL_TICKS(55, 0),
 
-
-
-
-
-
-
         DISRUPTION_SHIELD(11, 0),
         TELEPORT_BLOCK(11, 0),
         TELEPORT_BLOCK_IMMUNITY(12, 0);

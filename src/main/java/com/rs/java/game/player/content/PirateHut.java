@@ -24,8 +24,8 @@ public class PirateHut {
 				player.lock(2);
 				WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() + 1,
 						object.getX() + 1, object.getY(), object.getPlane());
-				if (World.removeObjectTemporary(object, 1200, false))
-					World.spawnObjectTemporary(openedDoor, 1200);
+				if (World.removeObjectTemporary(object, 2, false))
+					World.spawnObjectTemporary(openedDoor, 2);
 				player.addWalkSteps(object.getX() + 1, object.getY(), 1, false);
 			}
 		}, 1);
@@ -40,8 +40,8 @@ public class PirateHut {
 				player.lock(2);
 				WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() + 1,
 						object.getX() - 1, object.getY(), object.getPlane());
-				if (World.removeObjectTemporary(object, 1200, false))
-					World.spawnObjectTemporary(openedDoor, 1200);
+				if (World.removeObjectTemporary(object, 2, false))
+					World.spawnObjectTemporary(openedDoor, 2);
 				player.addWalkSteps(object.getX() - 1, object.getY(), 1, false);
 			}
 		}, 1);
@@ -56,8 +56,8 @@ public class PirateHut {
 				player.lock(2);
 				WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() + 1,
 						object.getX(), object.getY() + 1, object.getPlane());
-				if (World.removeObjectTemporary(object, 1200, false))
-					World.spawnObjectTemporary(openedDoor, 1200);
+				if (World.removeObjectTemporary(object, 2, false))
+					World.spawnObjectTemporary(openedDoor, 2);
 				player.addWalkSteps(object.getX(), object.getY() + 1, 1, false);
 			}
 		}, 1);
@@ -69,8 +69,8 @@ public class PirateHut {
 			player.lock(2);
 			WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() + 1,
 					object.getX() + 1, object.getY(), object.getPlane());
-			if (World.removeObjectTemporary(object, 1200, false))
-				World.spawnObjectTemporary(openedDoor, 1200);
+			if (World.removeObjectTemporary(object, 2, false))
+				World.spawnObjectTemporary(openedDoor, 2);
 			player.addWalkSteps(object.getX() - 1, object.getY(), 1, false);
 		}
 	}
@@ -80,8 +80,8 @@ public class PirateHut {
 			player.lock(2);
 			WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() + 1,
 					object.getX() - 1, object.getY(), object.getPlane());// Coordinations
-			if (World.removeObjectTemporary(object, 1200, false))
-				World.spawnObjectTemporary(openedDoor, 1200);
+			if (World.removeObjectTemporary(object, 2, false))
+				World.spawnObjectTemporary(openedDoor, 2);
 			player.addWalkSteps(object.getX(), object.getY(), 1, false);
 		}
 	}
@@ -91,8 +91,8 @@ public class PirateHut {
 			player.lock(2);
 			WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() + 1,
 					object.getX(), object.getY() + 1, object.getPlane());
-			if (World.removeObjectTemporary(object, 1200, false))
-				World.spawnObjectTemporary(openedDoor, 1200);
+			if (World.removeObjectTemporary(object, 2, false))
+				World.spawnObjectTemporary(openedDoor, 2);
 			player.addWalkSteps(object.getX(), object.getY(), 1, false);
 
 		}

@@ -479,8 +479,8 @@ public final class TutorialIsland extends Controler {
 			}
 			WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() + 1,
 					object.getX() - 1, object.getY(), object.getPlane());
-			if (World.removeObjectTemporary(object, 1200, false)) {
-				World.spawnObjectTemporary(openedDoor, 1200);
+			if (World.removeObjectTemporary(object, 2, false)) {
+				World.spawnObjectTemporary(openedDoor, 2);
 				player.lock(2);
 				player.stopAll();
 				player.addWalkSteps(player.getX() >= object.getX() ? object.getX() - 1 : object.getX(), player.getY(),
@@ -511,8 +511,8 @@ public final class TutorialIsland extends Controler {
 				updateProgress();
 			WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() + 1,
 					object.getX() - 1, object.getY(), object.getPlane());
-			if (World.removeObjectTemporary(object, 1200, false)) {
-				World.spawnObjectTemporary(openedDoor, 1200);
+			if (World.removeObjectTemporary(object, 2, false)) {
+				World.spawnObjectTemporary(openedDoor, 2);
 				player.lock(2);
 				player.stopAll();
 				player.addWalkSteps(player.getX() >= object.getX() ? object.getX() - 1 : object.getX(), player.getY(),

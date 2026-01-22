@@ -624,7 +624,7 @@ public class Region {
 			return null;
 		for (FloorItem item : groundItems) {
 			if (item.hasOwner() && item.isInvisible()) {
-				if (player == null || !player.getUsername().equals(item.getOwner()))
+				if (player == null || player != item.getOwner())
 					continue;
 			}
 			if (item.getId() == id && tile.matches(item.getTile()))
@@ -640,7 +640,7 @@ public class Region {
 			if (item.getId() != id)
 				continue;
 			if (item.getTile().matches(tile)) {
-				if (item.hasOwner() && item.isInvisible() && !item.getOwner().equals(player.getUsername()))
+				if (item.hasOwner() && item.isInvisible() && item.getOwner() != player)
 					continue;
 				return item;
 			}

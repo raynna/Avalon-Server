@@ -17,38 +17,28 @@ public class FloorItem extends Item {
 	private static final long serialVersionUID = -2287633342490535089L;
 
 	private final WorldTile tile;
-	private final String ownerName;
 	private transient Player owner;
 	// 0 visible, 1 invisible, 2 visible and reappears 30sec after taken
 	private int type;
 	private int tick;
 	private boolean spawned;
 	private boolean globalPicked;
-	private String cantPickupBy;
 
 	public FloorItem(int id) {
 		super(id);
 		this.tile = null;
-		this.ownerName = null;
-	}
-
-	public FloorItem(Item item, WorldTile tile, Player owner, boolean underGrave, boolean invisible, String ironmanName) {
-		super(item.getId(), item.getAmount(), item.getMetadata());
-		this.tile = tile;
-		this.ownerName = owner != null ? owner.getUsername() : null;
-		this.owner = owner;
-		this.type = invisible ? 1 : 0;
-		this.cantPickupBy = ironmanName;
 	}
 
 	public FloorItem(Item item, WorldTile tile, Player owner, boolean underGrave, boolean invisible) {
-		this(item, tile, owner, underGrave, invisible, null);
+		super(item.getId(), item.getAmount(), item.getMetadata());
+		this.tile = tile;
+		this.owner = owner;
+		this.type = invisible ? 1 : 0;
 	}
 
 	public FloorItem(Item item, WorldTile tile, Player owner, boolean invisible, int tick, boolean spawned) {
 		super(item.getId(), item.getAmount(), item.getMetadata());
 		this.tile = tile;
-		this.ownerName = owner != null ? owner.getUsername() : null;
 		this.owner = owner;
 		this.type = invisible ? 1 : 0;
 		this.tick = tick;
@@ -58,7 +48,7 @@ public class FloorItem extends Item {
 	public FloorItem(Item item, WorldTile tile, boolean appearForever) {
 		super(item.getId(), item.getAmount(), item.getMetadata());
 		this.tile = tile;
-		this.ownerName = null;
+		this.owner = null;
 		this.type = appearForever ? 2 : 0;
 	}
 
@@ -87,8 +77,8 @@ public class FloorItem extends Item {
 		return type == 2;
 	}
 
-	public String getOwner() {
-		return ownerName;
+	public Player getOwner() {
+		return owner;
 	}
 
 	public static void handleExamine(final Player player, InputStream stream) {
@@ -138,7 +128,7 @@ public class FloorItem extends Item {
 			player.getPackets()
 					.sendGameMessage(floorItem.getDefinitions().getName() + ", ItemId: "
 							+ floorItem.getDefinitions().getId() + ", X: " + tile.getX() + ", Y: " + tile.getY()
-							+ ", H: " + tile.getPlane() + ", Owner: " + floorItem.getOwner());
+							+ ", H: " + tile.getPlane() + ", Owner: " + floorItem.getOwner().getUsername());
 		}
 
 		player.getPackets().sendItemMessage(0, 15263739, id, x, y, ItemExamines.getExamine(new Item(id))); // ChatboxMessage
@@ -152,10 +142,6 @@ public class FloorItem extends Item {
 		type = invisible ? 1 : 0;
 	}
 
-	public Player getOwn() {
-		return owner;
-	}
-
 	public boolean isSpawned() {
 		return spawned;
 	}
@@ -164,11 +150,4 @@ public class FloorItem extends Item {
 		return tick;
 	}
 
-	public void setCantPickupBy(String player) {
-		cantPickupBy = player;
-	}
-
-	public boolean cantPickupBy(String player) {
-		return cantPickupBy != null && cantPickupBy.equalsIgnoreCase(player);
-	}
 }

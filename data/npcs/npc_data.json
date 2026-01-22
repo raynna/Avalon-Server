@@ -9155,6 +9155,360 @@
       "spria"
     ]
   },
+  "1951": {
+    "id": 1951,
+    "name": "Ice wolf",
+    "members": true,
+    "combatLevel": 132,
+    "attackLevel": 150,
+    "strengthLevel": 150,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "Not man\u0027s best friend.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 10,
+    "slayerXp": 70,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1952": {
+    "id": 1952,
+    "name": "Ice wolf",
+    "members": true,
+    "combatLevel": 132,
+    "attackLevel": 150,
+    "strengthLevel": 150,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "Not man\u0027s best friend.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 10,
+    "slayerXp": 70,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1953": {
+    "id": 1953,
+    "name": "Ice wolf",
+    "members": true,
+    "combatLevel": 132,
+    "attackLevel": 150,
+    "strengthLevel": 150,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "Not man\u0027s best friend.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 10,
+    "slayerXp": 70,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1954": {
+    "id": 1954,
+    "name": "Ice wolf",
+    "members": true,
+    "combatLevel": 132,
+    "attackLevel": 150,
+    "strengthLevel": 150,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "Not man\u0027s best friend.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 10,
+    "slayerXp": 70,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1955": {
+    "id": 1955,
+    "name": "Ice wolf",
+    "members": true,
+    "combatLevel": 132,
+    "attackLevel": 150,
+    "strengthLevel": 150,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "Not man\u0027s best friend.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 10,
+    "slayerXp": 70,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1956": {
+    "id": 1956,
+    "name": "Ice wolf",
+    "members": true,
+    "combatLevel": 132,
+    "attackLevel": 150,
+    "strengthLevel": 150,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "Not man\u0027s best friend.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 10,
+    "slayerXp": 70,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
   "2025": {
     "id": 2025,
     "name": "Ahrim the Blighted",

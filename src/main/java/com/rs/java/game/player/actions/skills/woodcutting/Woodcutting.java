@@ -486,7 +486,7 @@ public final class Woodcutting extends Action {
         if (!usedDeplateAurora && (1 + Math.random()) < player.getAuraManager().getChanceNotDepleteMN_WC()) {
             usedDeplateAurora = true;
         } else if (Utils.getRandom(definitions.getRandomLifeProbability()) == 0) {
-            long time = definitions.respawnDelay * 600;
+            int time = definitions.respawnDelay;
             if (definitions == TreeDefinitions.VINES) {
                 handleVines(player);
             } else {
@@ -606,7 +606,7 @@ public final class Woodcutting extends Action {
     private void handleVines(Player player) {
         WorldObject cutVine = new WorldObject(tree.getId(), tree.getType(), tree.getRotation(), tree.getX(),
                 tree.getY(), tree.getY(), tree.getPlane());
-        World.removeObjectTemporary(tree, 2400, false);
+        World.removeObjectTemporary(tree, 4, false);
         if (player.getX() > cutVine.getX())
             player.addWalkSteps(cutVine.getX() - 1, cutVine.getY(), 2, false);
         else if (player.getX() < cutVine.getX())

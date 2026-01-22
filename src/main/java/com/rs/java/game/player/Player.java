@@ -3928,7 +3928,7 @@ public class Player extends Entity {
                         if (charges.getKey() == null)
                             continue;
                         for (Item staffRunes : charges.getValue()) {
-                            World.updateGroundItem(staffRunes, deathTile, killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
+                            World.updateGroundItem(staffRunes, deathTile, killer, 60, 1);
                         }
                     }
                     message("All your runes in your runic staff were dropped.");
@@ -3953,7 +3953,7 @@ public class Player extends Entity {
                 getChargeManager().breakItem(item);
             if (ItemConstants.removeAttachedId(item) != -1) {
                 if (ItemConstants.removeAttachedId2(item) != -1)
-                    World.updateGroundItem(new Item(ItemConstants.removeAttachedId2(item), 1), deathTile, killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
+                    World.updateGroundItem(new Item(ItemConstants.removeAttachedId2(item), 1), deathTile, killer, 60, 1);
                 items[1][i] = new Item(ItemConstants.removeAttachedId(item));
             }
             if (ItemConstants.turnCoins(item) && (inPkingArea() || FfaZone.inRiskArea(this))) {
@@ -3968,7 +3968,7 @@ public class Player extends Entity {
             if (!ItemConstants.keptOnDeath(item))
                 killer.totalCurrentDrop += ((long) item.getDefinitions().getTipitPrice() * item.getAmount());
             item = items[1][i];
-            World.updateGroundItem(item, deathTile, killer, 60, 1, killer.getPlayerRank().isIronman() ? killer.getDisplayName() : null);
+            World.updateGroundItem(item, deathTile, killer, 60, 1);
         }
         message("You have lost approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
        if (killer != null && killer != this) {

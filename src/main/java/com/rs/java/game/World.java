@@ -5,6 +5,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.rs.Launcher;
 import com.rs.Settings;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
@@ -180,47 +182,22 @@ public final class World {
     public static void artisanWorkShopBonusExp() {
         spawnNPC(6654, new WorldTile(3060, 3339, 0), -1, true);
         NPC suak = getNPC(6654);
-        int time = 36000;
-        CoresManager.getFastExecutor().schedule(new TimerTask() {
 
+        int seconds = 36000;
+
+        WorldTasksManager.schedule(new WorldTask() {
             @Override
             public void run() {
-                try {
-                    ARTISAN_TYPES[] values2 = ARTISAN_TYPES.values();
-                    artisanBonusExp = values2[Utils.random(0, values2.length - 1)];
-                    assert suak != null;
+                ARTISAN_TYPES[] values = ARTISAN_TYPES.values();
+                artisanBonusExp = values[Utils.random(values.length - 1)];
+                if (suak != null) {
                     suak.setNextForceTalk(new ForceTalk("Smith " + artisanBonusExp));
-                } catch (Throwable e) {
-                    World.sendWorldMessage("" + e, true);
-                    Logger.handle(e);
                 }
+                WorldTasksManager.schedule(this, secondsToTicks(seconds));
             }
-        }, 0, time);
-        World.sendWorldMessage("" + artisanBonusExp, true);
+        }, 0);
     }
-    /*
-     * private static void addLogicPacketsTask() {
-     * CoresManager.fastExecutor.scheduleAtFixedRate(new TimerTask() {
-     *
-     * @Override public void run() { for (Player player : World.getPlayers()) { if
-     * (!player.hasStarted() || player.hasFinished()) continue;
-     * player.processLogicPackets(); } } }, 300, 300); }
-     */
 
-    /*
-     * private static void addNpcAgressionTask() {
-     * CoresManager.slowExecutor.scheduleWithFixedDelay(new Runnable() {
-     *
-     * @Override public void run() { try { for (NPC npc : getNPCs()) { for (Player
-     * player : getPlayers()) { if (player.withinDistance(npc, 5) &&
-     * player.inWilderness() && !npc.isDead() && npc.canWalkNPC(player.getX(),
-     * player.getY(), true)) { npc.setTarget(player); player.sm("NPC " + npc.getId()
-     * + " is wanting the D."); } } } } catch (Throwable e) { Logger.handle(e); }
-     *
-     * }
-     *
-     * }, 0, 2, TimeUnit.SECONDS); }
-     */
 
     public static void executeAfterLoadRegion(final int regionId, final Runnable event) {
         executeAfterLoadRegion(regionId, 0, event);
@@ -230,25 +207,20 @@ public final class World {
         executeAfterLoadRegion(regionId, startTime, 10000, event);
     }
 
-    public static void executeAfterLoadRegion(final int regionId, long startTime, final long expireTime,
-                                              final Runnable event) {
+    public static void executeAfterLoadRegion(final int regionId, long startDelayMs, final long expireTime, final Runnable event) {
         final long start = Utils.currentTimeMillis();
-        World.getRegion(regionId, true);
-        CoresManager.getFastExecutor().schedule(new TimerTask() {
+        getRegion(regionId, true);
 
+        WorldTasksManager.schedule(new WorldTask() {
             @Override
             public void run() {
-                try {
-                    if (!World.isRegionLoaded(regionId) && Utils.currentTimeMillis() - start < expireTime)
-                        return;
-                    event.run();
-                    cancel();
-                } catch (Throwable e) {
-                    System.out.println(e);
+                if (!isRegionLoaded(regionId) && Utils.currentTimeMillis() - start < expireTime) {
+                    WorldTasksManager.schedule(this, secondsToTicks(1));
+                    return;
                 }
+                event.run();
             }
-
-        }, startTime, 600);
+        }, secondsToTicks((int)(startDelayMs / 1000)));
     }
 
     public static void executeAfterLoadRegion(final int fromRegionX, final int fromRegionY, final int toRegionX,
@@ -288,84 +260,88 @@ public final class World {
     public static ShootingStar shootingStar;
 
     public static void executeShootingStar() {
-        CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> shootingStar = new ShootingStar(), 0, 30, TimeUnit.MINUTES);
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                shootingStar = new ShootingStar();
+                WorldTasksManager.schedule(this, secondsToTicks(1800)); // 30 minutes
+            }
+        }, 0);
     }
 
     private static void addOwnedObjectsTask() {
-        CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
-            try {
+        WorldTasksManager.schedule(new WorldTask() {
+            public void run() {
                 OwnedObjectManager.processAll();
-            } catch (Throwable e) {
-                Logger.handle(e);
             }
-        }, 0, 1, TimeUnit.SECONDS);
+        }, secondsToTicks(1));
     }
 
     private static void addRestoreShopItemsTask() {
-        CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
-            try {
-                ShopsHandler.restoreShops();
-            } catch (Throwable e) {
-                Logger.handle(e);
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                try {
+                    ShopsHandler.restoreShops();
+                } catch (Throwable e) {
+                    Logger.handle(e);
+                }
+                WorldTasksManager.schedule(this, secondsToTicks(5));
             }
-        }, 0, 5, TimeUnit.SECONDS);
+        }, secondsToTicks(5));
     }
 
     private static void addDegradeShopItemsTask() {
-        CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
-            try {
-                ShopsHandler.degradeShops();
-            } catch (Throwable e) {
-                Logger.handle(e);
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                try {
+                    ShopsHandler.degradeShops();
+                } catch (Throwable e) {
+                    Logger.handle(e);
+                }
+                WorldTasksManager.schedule(this, secondsToTicks(90));
             }
-        }, 0, 90, TimeUnit.SECONDS);
+        }, secondsToTicks(90));
     }
+
 
     private static final int lastMessage = -1;
 
     private static void addRandomMessagesTask() {
-        CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
-            try {
-                for (Player player : getPlayers()) {
-                    if (player == null || !player.isActive())
-                        continue;
-                    int random = Utils.getRandom(5);
-                    while (random != lastMessage) {
-                        random = Utils.getRandom(5);
-                    }
-                    String colorIcon = "<img=7><col=9966ff> ";
-                    switch (random) {
-                        case 0:
-                            player.getPackets().sendFilteredGameMessage(true,
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                try {
+                    for (Player player : getPlayers()) {
+                        if (player == null || !player.isActive()) continue;
+
+                        int random = Utils.random(5);
+                        String colorIcon = "<img=7><col=9966ff> ";
+
+                        switch (random) {
+                            case 0 -> player.getPackets().sendFilteredGameMessage(true,
                                     colorIcon + "Tip: It's always smart to report something suspicious!");
-                            break;
-                        case 1:
-                            player.getPackets().sendFilteredGameMessage(true,
+                            case 1 -> player.getPackets().sendFilteredGameMessage(true,
                                     colorIcon + "Like the server? Don't forget to give us your feedback!");
-                            break;
-                        case 2:
-                            player.getPackets().sendFilteredGameMessage(true,
+                            case 2 -> player.getPackets().sendFilteredGameMessage(true,
                                     colorIcon + "Tip: Don't forget to send in a ticket, if you need assistance.");
-                            break;
-                        case 3:
-                            player.getPackets().sendFilteredGameMessage(true,
+                            case 3 -> player.getPackets().sendFilteredGameMessage(true,
                                     colorIcon + "Tip: You can hide these kind of messages by filtering your chat.");
-                            break;
-                        case 4:
-                            player.getPackets().sendFilteredGameMessage(true,
+                            case 4 -> player.getPackets().sendFilteredGameMessage(true,
                                     colorIcon + "Did you know? " + Settings.SERVER_NAME + " has achievement diaries?");
-                            break;
-                        case 5:
-                            player.getPackets().sendFilteredGameMessage(true,
+                            case 5 -> player.getPackets().sendFilteredGameMessage(true,
                                     colorIcon + Utils.getRegisteredAccounts());
-                            break;
+                        }
                     }
+                } catch (Throwable e) {
+                    Logger.handle(e);
                 }
-            } catch (Throwable e) {
-                Logger.handle(e);
+                WorldTasksManager.schedule(this, secondsToTicks(120));
             }
-        }, 0, 120, TimeUnit.SECONDS);
+        }, secondsToTicks(120));
     }
+
 
     public static Map<Integer, Region> getRegions() {
         return regions;
@@ -1175,51 +1151,57 @@ public final class World {
                 object.getYInRegion());
     }
 
-    public static void spawnObjectTemporary(final WorldObject object, long time) {
-        spawnObjectTemporary(object, time, false, false);
+    public static void spawnObjectTemporary(final WorldObject object, int ticks) {
+        spawnObjectTemporary(object, ticks, false, false);
     }
 
-    public static void spawnObjectTemporary(final WorldObject object, long time,
-                                            final boolean checkObjectInstance, boolean checkObjectBefore) {
-        final WorldObject before = checkObjectBefore ? World.getObjectWithType(object, object.getType()) : null;
+    public static void spawnObjectTemporary(final WorldObject object, int ticks,
+                                            final boolean checkInstance, boolean checkBefore) {
+
+        final WorldObject before = checkBefore ? getObjectWithType(object, object.getType()) : null;
         spawnObject(object);
-        CoresManager.getSlowExecutor().schedule(() -> {
-            try {
-                if (checkObjectInstance && World.getObjectWithId(object, object.getId()) != object)
+
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                if (checkInstance && getObjectWithId(object, object.getId()) != object)
                     return;
+
                 if (before != null)
                     spawnObject(before);
                 else
                     removeObject(object);
-            } catch (Throwable e) {
-                Logger.handle(e);
             }
-        }, time, TimeUnit.MILLISECONDS);
+        }, ticks);
     }
 
-    public static boolean removeObjectTemporary(final WorldObject object, long time) {
+
+    public static boolean removeObjectTemporary(final WorldObject object, int ticks) {
         removeObject(object);
-        CoresManager.getSlowExecutor().schedule(() -> {
-            try {
+
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
                 spawnObject(object);
-            } catch (Throwable e) {
-                Logger.handle(e);
             }
-        }, time, TimeUnit.MILLISECONDS);
+        }, ticks);
+
         return true;
     }
 
-    public static void spawnTempGroundObject(final WorldObject object, final int replaceId, long time) {
+
+    public static void spawnTempGroundObject(final WorldObject object, final int replaceId, long timeMs) {
         spawnObject(object);
-        CoresManager.getSlowExecutor().schedule(() -> {
-            try {
+
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
                 removeObject(object);
-                addGroundItem(new Item(replaceId), object, null, false, 180);
-            } catch (Throwable e) {
-                Logger.handle(e);
+                addGroundItem(new Item(replaceId), object, null, false, 60);
             }
-        }, time, TimeUnit.MILLISECONDS);
+        }, secondsToTicks((int)(timeMs / 1000)));
     }
+
 
     public static WorldObject getStandardFloorObject(WorldTile tile) {
         return getRegion(tile.getRegionId()).getStandardFloorObject(tile.getPlane(), tile.getXInRegion(),
@@ -1279,46 +1261,47 @@ public final class World {
                 object.getYInRegion(), removeClip);
     }
 
-    public static void spawnObjectTemporaryNewItem(final WorldObject object, long time, int newId) {
-        WorldObject newObject = new WorldObject(newId, object.getType(), object.getRotation(), object.getX(),
-                object.getY(), object.getPlane());
+    public static void spawnObjectTemporaryNewItem(final WorldObject object, int time, int newId) {
+        WorldObject newObject = new WorldObject(newId, object.getType(), object.getRotation(),
+                object.getX(), object.getY(), object.getPlane());
+
         spawnObject(object);
-        CoresManager.getSlowExecutor().schedule(() -> {
-            try {
-                if (!World.isSpawnedObject(object))
+
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                if (!isSpawnedObject(object))
                     return;
                 spawnObject(newObject);
-            } catch (Throwable e) {
-                Logger.handle(e);
             }
-        }, time, TimeUnit.MILLISECONDS);
+        }, secondsToTicks(time));
     }
 
-    public static boolean removeObjectTemporary(final WorldObject object, long time, boolean removeClip) {
+
+    public static boolean removeObjectTemporary(final WorldObject object, int ticks, boolean removeClip) {
         removeObject(object, removeClip);
-        CoresManager.getSlowExecutor().schedule(() -> {
-            try {
-                // if (!World.containsObjectWithId(new WorldTile(object.getTileHash()),
-                // object.getId()))
+
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
                 spawnObject(object);
-            } catch (Throwable e) {
-                Logger.handle(e);
             }
-        }, time, TimeUnit.MILLISECONDS);
+        }, ticks);
+
         return true;
     }
+
 
     public static void spawnTempGroundObject(final WorldObject object, final int replaceId, long time,
                                              final boolean removeClip) {
         spawnObject(object);
-        CoresManager.getSlowExecutor().schedule(() -> {
-            try {
-                removeObject(object, removeClip);
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                removeObject(object);
                 addGroundItem(new Item(replaceId), object, null, false, 180);
-            } catch (Throwable e) {
-                Logger.handle(e);
             }
-        }, time, TimeUnit.MILLISECONDS);
+        }, secondsToTicks((int)(time / 1000)));
     }
 
     public static void addGlobalGroundItem(final Item item, final WorldTile tile, final int tick,
@@ -1350,22 +1333,17 @@ public final class World {
     }
 
     public static void addGroundItem(final Item item, final WorldTile tile, final Player owner, boolean invisible,
-                                     long hiddenTime) {
+                                     int hiddenTime) {
         addGroundItem(item, tile, owner, invisible, hiddenTime, 2, 60);
     }
 
     public static void addGlobalGroundItem(final Item item, final WorldTile tile) {
-        addGroundItem(item, tile, null, false, -1, 2, -1, null);
+        addGroundItem(item, tile, null, false, -1, 2, -1);
     }
 
     public static FloorItem addGroundItem(final Item item, final WorldTile tile, final Player owner,
-                                          boolean invisible, long hiddenTime, int type) {
+                                          boolean invisible, int hiddenTime, int type) {
         return addGroundItem(item, tile, owner, invisible, hiddenTime, type, 60);
-    }
-
-    public static FloorItem addGroundItem(final Item item, final WorldTile tile, final Player owner,
-                                          boolean invisible, long hiddenTime, int type, String ironmanName) {
-        return addGroundItem(item, tile, owner, invisible, hiddenTime, type, 60, ironmanName);
     }
 
     public static void turnPublic(FloorItem item, int publicTime) {
@@ -1376,7 +1354,7 @@ public final class World {
         if (!region.getGroundItemsSafe().contains(item))
             return;
 
-        Player owner = item.hasOwner() ? World.getPlayer(item.getOwner()) : null;
+        Player owner = item.getOwner();
 
         // Handle attached items
         int attachedId = ItemConstants.removeAttachedId(item);
@@ -1446,18 +1424,13 @@ public final class World {
     }
 
     public static FloorItem addGroundItem(Item item, WorldTile tile, Player owner,
-                                          boolean invisible, long hiddenTime, int type, int publicTime) {
-        return addGroundItemInternal(item, tile, owner, invisible, hiddenTime, type, publicTime, null);
-    }
-
-    public static FloorItem addGroundItem(Item item, WorldTile tile, Player owner,
-                                          boolean invisible, long hiddenTime, int type, int publicTime, String ironmanName) {
-        return addGroundItemInternal(item, tile, owner, invisible, hiddenTime, type, publicTime, ironmanName);
+                                          boolean invisible, int hiddenTime, int type, int publicTime) {
+        return addGroundItemInternal(item, tile, owner, invisible, hiddenTime, type, publicTime);
     }
 
     private static FloorItem addGroundItemInternal(Item item, WorldTile tile, Player owner,
-                                                   boolean invisible, long hiddenTime, int type, int publicTime, String ironmanName) {
-        FloorItem floorItem = new FloorItem(new Item(item), tile, owner, false, invisible, ironmanName);
+                                                   boolean invisible, int hiddenTime, int type, int publicTime) {
+        FloorItem floorItem = new FloorItem(item, tile, owner, false, invisible);
 
         Region region = getRegion(tile.getRegionId());
 
@@ -1468,7 +1441,6 @@ public final class World {
             region.getGroundItemsSafe().add(floorItem);
         }
 
-        // Send to owner if invisible
         if (invisible && owner != null) {
             if (type != 2 || ItemConstants.isTradeable(item) || ItemConstants.turnCoins(item))
                 owner.getPackets().sendGroundItem(floorItem);
@@ -1482,32 +1454,31 @@ public final class World {
                 removeGroundItem(floorItem, publicTime);
             }
         } else if (hiddenTime != -1) {
-            CoresManager.getSlowExecutor().schedule(() -> {
-                try {
+            WorldTasksManager.schedule(new WorldTask() {
+                @Override
+                public void run() {
                     turnPublic(floorItem, publicTime);
-                } catch (Throwable e) {
-                    Logger.handle(e);
                 }
-            }, hiddenTime, TimeUnit.SECONDS);
+            }, secondsToTicks(hiddenTime));
         }
 
         return floorItem;
     }
 
+    public static int secondsToTicks(int seconds) {
+        return Math.max(1, (int) Math.ceil((seconds * 1000d) / Settings.WORLD_CYCLE_TIME));
+
+    }
 
     public static void updateGroundItem(Item item, WorldTile tile, Player owner) {
-        updateGroundItem(item, tile, owner, 60, 0, null);
+        updateGroundItem(item, tile, owner, 60, 0);
     }
 
     public static void updateGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime, int type) {
-        updateGroundItem(item, tile, owner, hiddenTime, type, null);
-    }
-
-    public static void updateGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime, int type, String ironmanName) {
         FloorItem floorItem = World.getRegion(tile.getRegionId()).getGroundItem(item.getId(), tile, owner);
 
         if (floorItem == null) {
-            spawnAsNewGroundItem(item, tile, owner, hiddenTime, type, ironmanName);
+            spawnAsNewGroundItem(item, tile, owner, hiddenTime, type);
             return;
         }
 
@@ -1521,10 +1492,7 @@ public final class World {
                 floorItem.setAmount(Integer.MAX_VALUE);
                 item.setAmount(item.getAmount() - amountCanAdd);
 
-                if (ironmanName != null)
-                    addGroundItem(item, tile, owner, true, hiddenTime, type, ironmanName);
-                else
-                    addGroundItem(item, tile, owner, true, hiddenTime, type);
+                addGroundItem(item, tile, owner, true, hiddenTime, type);
 
                 owner.getPackets().sendRemoveGroundItem(floorItem);
                 owner.getPackets().sendGroundItem(floorItem);
@@ -1535,21 +1503,21 @@ public final class World {
             }
 
         } else {
-            spawnAsNewGroundItem(item, tile, owner, hiddenTime, type, ironmanName);
+            spawnAsNewGroundItem(item, tile, owner, hiddenTime, type);
         }
     }
 
-    private static void spawnAsNewGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime, int type, String ironmanName) {
+    private static void spawnAsNewGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime, int type) {
         boolean stackable = item.getDefinitions().isStackable() || item.getDefinitions().isNoted();
 
         if (!stackable && item.getAmount() > 1) {
             Item copy = item.clone();
             for (int i = 0; i < copy.getAmount(); i++) {
                 item.setAmount(1);
-                addGroundItem(item, tile, owner, false, hiddenTime, type, ironmanName);
+                addGroundItem(item, tile, owner, false, hiddenTime, type);
             }
         } else {
-            addGroundItem(item, tile, owner, owner != null, hiddenTime, type, ironmanName);
+            addGroundItem(item, tile, owner, owner != null, hiddenTime, type);
         }
     }
 
@@ -1562,26 +1530,25 @@ public final class World {
     }
 
 
-    private static void removeGroundItem(final FloorItem item, long delaySeconds) {
-        CoresManager.getSlowExecutor().schedule(() -> {
-            try {
+    private static void removeGroundItem(final FloorItem item, int seconds) {
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
                 final int regionId = item.getTile().getRegionId();
                 final Region region = getRegion(regionId);
 
-                if (!region.getGroundItemsSafe().remove(item)) {
-                    return; // Item already removed
-                }
+                if (!region.getGroundItemsSafe().remove(item))
+                    return;
 
                 for (Player player : World.getPlayers()) {
                     if (shouldNotifyPlayer(player, item, regionId)) {
                         player.getPackets().sendRemoveGroundItem(item);
                     }
                 }
-            } catch (Exception e) {
-                Logger.handle(e);
             }
-        }, delaySeconds, TimeUnit.SECONDS);
+        }, secondsToTicks(seconds));
     }
+
 
 
     public static void removeGroundItem(Player player, FloorItem floorItem) {
@@ -1641,8 +1608,7 @@ public final class World {
     }
 
     private static boolean canPickupItem(Player player, FloorItem item) {
-        if ((item.cantPickupBy(player.getDisplayName()) || item.getOwn() != player)
-                && player.getPlayerRank().isIronman()) {
+        if (item.getOwner() != player && player.getPlayerRank().isIronman()) {
             return sendIronmanRestriction(player);
         }
         if (isDeveloperOnlyItem(item, player)) {
@@ -1659,7 +1625,7 @@ public final class World {
     }
 
     private static boolean isDeveloperOnlyItem(FloorItem item, Player player) {
-        return item.getOwn() != null && item.getOwn().isDeveloper() && !player.isDeveloper();
+        return item.getOwner() != null && item.getOwner().isDeveloper() && !player.isDeveloper();
     }
 
     private static boolean canPickupClueScroll(Player player, FloorItem item) {
@@ -1721,13 +1687,12 @@ public final class World {
     }
 
     private static void scheduleGroundItemRespawn(FloorItem item) {
-        CoresManager.getSlowExecutor().schedule(() -> {
-            try {
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
                 addGroundItemForever(item, item.getTile());
-            } catch (Throwable e) {
-                Logger.handle(e);
             }
-        }, 60, TimeUnit.SECONDS);
+        }, secondsToTicks(60));
     }
 
     private static void handleBeamPickup(Player player, FloorItem item) {

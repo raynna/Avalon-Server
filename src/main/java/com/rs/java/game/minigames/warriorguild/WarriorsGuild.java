@@ -524,8 +524,8 @@ public class WarriorsGuild extends Controler {
 					player.lock(2);
 					WorldObject opened = new WorldObject(object.getId(), object.getType(), object.getRotation() - 1,
 							object.getX(), object.getY(), object.getPlane());
-					if (World.removeObjectTemporary(object, 600, false))
-						World.spawnObjectTemporary(opened, 600);
+					if (World.removeObjectTemporary(object, 1, false))
+						World.spawnObjectTemporary(opened, 1);
 					player.addWalkSteps(player.getX() == object.getX() ? object.getX() + 1 : object.getX(),
 							object.getY(), 1, false);
 					player.closeInterfaces();

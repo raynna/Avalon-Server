@@ -25,8 +25,8 @@ public class WildyAgility {
 		player.animate(new Animation(9908));
 		WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() + 1,
 				object.getX() + 1, object.getY() - 1, object.getPlane());
-		if (World.removeObjectTemporary(object, 1200, false))
-			World.spawnObjectTemporary(openedDoor, 1200);
+		if (World.removeObjectTemporary(object, 2, false))
+			World.spawnObjectTemporary(openedDoor, 2);
 		player.getPackets().sendGameMessage("You go trough the gate and try to edge over the ridge...", true);
 		final WorldTile toTile = new WorldTile(object.getX() + 1, object.getY() - 15, object.getPlane());
 		player.setNextForceMovement(new ForceMovement(player, 0, toTile, 16, ForceMovement.SOUTH));
@@ -49,8 +49,8 @@ public class WildyAgility {
 		player.animate(new Animation(9908));
 		WorldObject openedDoor = new WorldObject(object.getId(), object.getType(), object.getRotation() - 1,
 				object.getX(), object.getY() + 1, object.getPlane());
-		if (World.removeObjectTemporary(object, 1200, false))
-			World.spawnObjectTemporary(openedDoor, 1200);
+		if (World.removeObjectTemporary(object, 2, false))
+			World.spawnObjectTemporary(openedDoor, 2);
 		player.getPackets().sendGameMessage("You go trough the gate and try to edge over the ridge...", true);
 		final WorldTile toTile = new WorldTile(object.getX(), object.getY() + 15, object.getPlane());
 		player.setNextForceMovement(new ForceMovement(player, 0, toTile, 16, ForceMovement.NORTH));

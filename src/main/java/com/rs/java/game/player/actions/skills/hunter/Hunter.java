@@ -265,9 +265,9 @@ public class Hunter {
         player.lock(3);
         player.getActionManager().setActionDelay(3);
         player.animate(new Animation(5208));
-        if (World.removeObjectTemporary(object, 300000, false)) {
+        if (World.removeObjectTemporary(object, 48, false)) {
             World.spawnObjectTemporary(
-                    new WorldObject(kebbits ? 19206 : -1, object.getType(), object.getRotation(), object), 300000);
+                    new WorldObject(kebbits ? 19206 : -1, object.getType(), object.getRotation(), object), 48);
             Item item = null;
             for (int requiredLog : requiredLogs) {
                 if ((item = player.getInventory().getItems().lookup(requiredLog)) != null) {
