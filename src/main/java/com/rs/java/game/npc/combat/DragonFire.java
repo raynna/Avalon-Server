@@ -12,6 +12,12 @@ import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 import kotlin.Pair;
 
+
+/**
+ * @author -Andreas
+ * @created 2026-01-22
+ */
+
 public class DragonFire {
 
     private static final int[] DRAGON_SHIELDS = {11283, 11284, 1540};
@@ -30,7 +36,9 @@ public class DragonFire {
         boolean shield, prayer, antifire, superAntifire;
     }
 
-
+    /**
+     * Check for dragon protection on entities, this is mostly used for enchanted dragon bolt effect.
+     */
 
     public static boolean hasFireProtection(Entity entity) {
         if (entity instanceof NPC) return false;
@@ -52,6 +60,10 @@ public class DragonFire {
     public static int applyDragonfireMitigation(Player player, boolean accuracyRoll, DragonType dragon) {
         return applyDragonfireMitigation(player, accuracyRoll, dragon, false);
     }
+
+    /**
+     * Applies the dragon mitigation such as min-max damage caps & returns the damage & message depending on protection.
+     */
 
     public static int applyDragonfireMitigation(
             Player player,
@@ -94,6 +106,9 @@ public class DragonFire {
         return damage;
     }
 
+    /**
+     * Handles min and max damage caps for each protection & dragontype.
+     */
 
     private static Pair<Integer, Integer> getDragonfireCap(
             DragonType dragon,
