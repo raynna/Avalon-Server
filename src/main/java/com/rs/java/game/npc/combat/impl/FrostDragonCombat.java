@@ -1,6 +1,5 @@
 package com.rs.java.game.npc.combat.impl;
 
-import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
@@ -9,6 +8,7 @@ import com.rs.java.game.npc.combat.DragonFire;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.Projectile;
@@ -16,13 +16,16 @@ import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 public class FrostDragonCombat extends CombatScript {
 
-	private static final int[] DRAGON_SHIELDS = {11283, 11284, 1540};
-
-	private static final int DRAGONFIRE_GFX = 1, DRAGONFIRE_TOXIC_PROJECTILE = 393, DRAGONFIRE_NORMAL_PROJECTILE = 394, DRAGONFIRE_ICY_PROJECTILE = 395, DRAGONFIRE_SHOCKING_PROJECTILE = 396;
+	private static final int DRAGONFIRE_GFX = 1;
 	private static final int ICE_ARROW_PROJECTILE = 16, WATER_PROJECTILE = 2707;
+	private static final int MELEE_ANIMATION = Rscm.INSTANCE.animation("animation.frost_dragon_attack");
+	private static final int FIREBREATH_ANIMATION = Rscm.INSTANCE.animation("animation.frost_dragon_firebreath");
 
-	private static final int NEW_DRAGON_MELEE_ANIMATION = 12252, NEW_DRAGON_FIRE_ANIMATION = 12259;
+	private final static int FIREBREATH_SOUND = Rscm.INSTANCE.sound("sound.dragonfire_breath");
 
+	private static final FrostDragonAttack[] ATTACKS = FrostDragonAttack.values();
+
+	enum FrostDragonAttack { MELEE, DRAGON_BREATH, RANGE, MAGIC }
 
 	@Override
 	public Object[] getKeys() {
@@ -33,43 +36,42 @@ public class FrostDragonCombat extends CombatScript {
 	public int attack(NPC npc, Entity target) {
 		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 
-		boolean inMelee = npc.withinDistance(target, npc.getSize());
+		FrostDragonAttack attack;
 
-		int attackType;
+		boolean inMelee = npc.withinDistance(target, 1, npc.getSize());
 		if (inMelee) {
-			attackType = Utils.getRandom(3);
+			attack = ATTACKS[Utils.random(ATTACKS.length)];
 		} else {
-			attackType = Utils.random(1, 3);
+			attack = Utils.randomOf(FrostDragonAttack.RANGE, FrostDragonAttack.MAGIC);
 		}
-		switch (attackType) {
-			case 0: // Melee
-				if (npc.withinDistance(target, 3)) {
-					Hit meleeHit = npc.meleeHit(target, defs.getMaxHit());
-					npc.animate(NEW_DRAGON_MELEE_ANIMATION);
-					delayHit(npc, target, 0, meleeHit);
-					return npc.getAttackSpeed();
-				}
-			case 1: // Dragon breath / frost breath
-				if (!(target instanceof Player p)) break;
-				npc.animate(NEW_DRAGON_FIRE_ANIMATION);
-
+		switch (attack) {
+			case MELEE:
+				Hit meleeHit = npc.meleeHit(target, defs.getMaxHit());
+				npc.animate(MELEE_ANIMATION);
+				int attackSound = npc.getCombatDefinitions().getAttackSound();
+				if (attackSound != -1)
+					npc.playSound(attackSound, 1);
+				delayHit(npc, target, 0, meleeHit);
+				return npc.getAttackSpeed();
+			case DRAGON_BREATH:
+				if (!(target instanceof Player p)) return npc.getAttackSpeed();
+				npc.animate(FIREBREATH_ANIMATION);
+				npc.gfx(DRAGONFIRE_GFX);
+				npc.playSound(FIREBREATH_SOUND, 1);
 				boolean accuracyRoll = NpcCombatCalculations.getAccuracyRoll(npc, NpcAttackStyle.MAGIC, target);
 				int mitigated = DragonFire.applyDragonfireMitigation(p, accuracyRoll, DragonFire.DragonType.CHROMATIC);
 				Hit dragonfire = npc.regularHit(target, mitigated);
-				ProjectileManager.send(Projectile.DRAGONFIRE, DRAGONFIRE_NORMAL_PROJECTILE, npc, target, () -> {
-					applyRegisteredHit(npc, target, dragonfire);
-					DragonFire.handleDragonfireShield(p);
-				});
+				delayHit(npc, target, 1, dragonfire);
 				break;
-			case 2: // Ice arrow range
-				npc.animate(NEW_DRAGON_FIRE_ANIMATION);
+			case RANGE:
+				npc.animate(FIREBREATH_ANIMATION);
 				Hit rangeHit = npc.rangedHit(target, 250);
 				ProjectileManager.send(Projectile.ARROW, ICE_ARROW_PROJECTILE, npc, target, 64, () -> {
 					applyRegisteredHit(npc, target, rangeHit);
 				});
 				break;
-			case 3:
-				npc.animate(NEW_DRAGON_FIRE_ANIMATION);
+			case MAGIC:
+				npc.animate(FIREBREATH_ANIMATION);
 				Hit magicHit = npc.magicHit(target, 250);
 				ProjectileManager.send(Projectile.ELEMENTAL_SPELL, WATER_PROJECTILE, npc, target, 64, () -> {
 					applyRegisteredHit(npc, target, magicHit);

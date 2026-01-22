@@ -10,6 +10,7 @@ import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
@@ -17,8 +18,9 @@ import com.rs.kotlin.game.world.projectile.ProjectileManager;
 public class KingBlackDragonCombat extends CombatScript {
 
     private static final int DRAGON_SLAM_ANIMATION = 80, DRAGON_HEADBUTT_ANIMATION = 91, DRAGONFIRE_BREATH_ANIMATION = 84, DRAGON_DEATH_ANIMATION = 92;
-    private static final int DRAGONFIRE_GFX = 1, DRAGONFIRE_TOXIC_PROJECTILE = 394, DRAGONFIRE_NORMAL_PROJECTILE = 393, DRAGONFIRE_ICY_PROJECTILE = 395, DRAGONFIRE_SHOCKING_PROJECTILE = 396;
+    private static final int DRAGONFIRE_TOXIC_PROJECTILE = 394, DRAGONFIRE_NORMAL_PROJECTILE = 393, DRAGONFIRE_ICY_PROJECTILE = 395, DRAGONFIRE_SHOCKING_PROJECTILE = 396;
 
+    private final static int FIREBREATH_SOUND = Rscm.INSTANCE.sound("sound.dragonfire_breath");
 
     @Override
     public Object[] getKeys() {
@@ -53,7 +55,7 @@ public class KingBlackDragonCombat extends CombatScript {
                 if (player == null) break;
 
                 npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
-
+                npc.playSound(FIREBREATH_SOUND, 1);
                 boolean special = Utils.randomBoolean();
 
                 int projectileId;

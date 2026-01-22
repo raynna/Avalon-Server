@@ -39,6 +39,22 @@
     "lastSeen": "2026-01-17T22:44:27.835842900Z",
     "attempts": 1
   },
+  "1075": {
+    "npcId": 1075,
+    "npcName": "Archer",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-22T12:40:49.593125300Z",
+    "lastSeen": "2026-01-22T12:40:49.593125300Z",
+    "attempts": 1
+  },
+  "1081": {
+    "npcId": 1081,
+    "npcName": "Servant",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-22T12:40:49.733943200Z",
+    "lastSeen": "2026-01-22T12:40:49.733943200Z",
+    "attempts": 1
+  },
   "1309": {
     "npcId": 1309,
     "npcName": "Pontak",
@@ -229,6 +245,14 @@
     "reason": "\u0027wikitext\u0027 not found in JSON",
     "firstSeen": "2026-01-14T15:32:53.301991500Z",
     "lastSeen": "2026-01-14T15:32:53.301991500Z",
+    "attempts": 1
+  },
+  "14926": {
+    "npcId": 14926,
+    "npcName": "Troll commando",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-22T12:40:50.395562900Z",
+    "lastSeen": "2026-01-22T12:40:50.395562900Z",
     "attempts": 1
   }
 }

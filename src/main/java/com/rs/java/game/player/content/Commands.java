@@ -8,51 +8,21 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.rs.Settings;
-import com.rs.core.cache.defintions.ClientScriptMap;
-import com.rs.core.cache.defintions.GeneralRequirementMap;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.NPCDefinitions;
-import com.rs.core.cache.defintions.ObjectDefinitions;
 import com.rs.java.game.*;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.item.itemdegrading.ArmourRepair;
-import com.rs.java.game.item.meta.DragonFireShieldMetaData;
-import com.rs.java.game.item.meta.RunePouchMetaData;
-import com.rs.java.game.minigames.lividfarm.LividFarmControler;
-import com.rs.java.game.minigames.lividfarm.LividStore.Spell;
-import com.rs.java.game.minigames.pest.CommendationExchange;
-import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.*;
-import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager;
 import com.rs.kotlin.game.npc.drops.Drop;
 import com.rs.kotlin.game.npc.drops.DropTable;
 import com.rs.kotlin.game.npc.drops.DropTableRegistry;
-import com.rs.java.game.objects.ObjectPluginLoader;
 import com.rs.java.game.player.Ranks.Rank;
 import com.rs.java.game.player.actions.combat.Magic;
-import com.rs.java.game.player.actions.skills.construction.ConstructorsOutfit;
-import com.rs.java.game.player.actions.skills.summoning.Summoning;
-import com.rs.java.game.player.actions.skills.summoning.Summoning.Pouch;
-import com.rs.java.game.player.content.WildernessArtefacts.Artefacts;
-import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
-import com.rs.java.game.player.content.dungeoneering.DungeonManager;
-import com.rs.java.game.player.content.dungeoneering.DungeonPartyManager;
-import com.rs.java.game.player.content.grandexchange.GrandExchange;
-import com.rs.java.game.player.content.grandexchange.GrandExchangeManager;
-import com.rs.java.game.player.content.randomevent.AntiBot;
-import com.rs.java.game.player.controlers.EdgevillePvPControler;
-import com.rs.java.game.player.dialogues.LevelUp;
-import com.rs.core.tasks.WorldTask;
-import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.EconomyPrices;
-import com.rs.java.utils.Encrypt;
-import com.rs.java.utils.IPBanL;
-import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.AccountCreation;
-import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public final class Commands {
 
@@ -161,6 +131,10 @@ public final class Commands {
                 "Teleport to coordinates. Usage: ::tele [x] [y] [plane]");
         registerCommand("npc", Commands::spawnNpcCommand, CommandCategory.DEVELOPER,
                 "Spawn NPC. Usage: ::npc [id]");
+        registerCommand("tonpc", Commands::toNpcCommand, CommandCategory.DEVELOPER,
+                "Become NPC. Usage: ::tonpc [id]");
+        registerCommand("mypos", Commands::myPosCommand, CommandCategory.DEVELOPER,
+                "Shows players current location. Usage: ::mypos");
         registerCommand("object", Commands::spawnObjectCommand, CommandCategory.DEVELOPER,
                 "Spawn object. Usage: ::object [id] [type] [rotation]");
         registerCommand("emote", Commands::emoteCommand, CommandCategory.DEVELOPER,
@@ -694,28 +668,40 @@ public final class Commands {
     }
 
     private static boolean teleportCommand(Player player, String[] cmd) {
-            try {
-                String[] parts = cmd[1].split(",");
+        try {
+            String[] parts = cmd[1].split(",");
 
-                if (parts.length < 5) {
-                    player.message("Use: ::tele plane,x,y,chunkX,chunkY");
-                    return true;
-                }
+            int plane;
+            int x;
+            int y;
 
-                int plane = Integer.parseInt(parts[0]);
-                int x = Integer.parseInt(parts[1]) << 6 | Integer.parseInt(parts[3]);
-                int y = Integer.parseInt(parts[2]) << 6 | Integer.parseInt(parts[4]);
+            if (parts.length == 2) {
+                plane = player.getPlane();
+                x = Integer.parseInt(parts[0]);
+                y = Integer.parseInt(parts[1]);
 
-                player.resetWalkSteps();
-                player.setNextWorldTile(new WorldTile(x, y, plane));
+            } else if (parts.length >= 5) {
+                plane = Integer.parseInt(parts[0]);
+                x = (Integer.parseInt(parts[1]) << 6) | Integer.parseInt(parts[3]);
+                y = (Integer.parseInt(parts[2]) << 6) | Integer.parseInt(parts[4]);
 
-                player.message("Teleported to " + plane + "," + parts[1] + "," + parts[2] + "," + parts[3] + "," + parts[4]);
-            } catch (Exception e) {
-                player.message("Use: ::tele plane,x,y,chunkX,chunkY");
-                e.printStackTrace();
+            } else {
+                player.message("Use: ::tele x,y OR ::tele plane,x,y,chunkX,chunkY");
+                return true;
             }
+
+            player.resetWalkSteps();
+            player.setNextWorldTile(new WorldTile(x, y, plane));
+
+            player.message("Teleported to " + plane + "," + x + "," + y);
+
+        } catch (Exception e) {
+            player.message("Use: ::tele x,y OR ::tele plane,x,y,chunkX,chunkY");
+            e.printStackTrace();
+        }
         return true;
     }
+
 
     private static boolean spawnNpcCommand(Player player, String[] cmd) {
         if (cmd.length < 2) {
@@ -727,6 +713,37 @@ public final class Commands {
             int npcId = Integer.parseInt(cmd[1]);
             World.spawnNPC(npcId, player, -1, true, true);
             player.message("Spawned NPC " + npcId + " at " + player.getX() + " " + player.getY() + " " + player.getPlane());
+        } catch (NumberFormatException e) {
+            player.getPackets().sendPanelBoxMessage("Use: ::npc id(Integer)");
+        }
+        return true;
+    }
+
+    private static boolean myPosCommand(Player player, String[] cmd) {
+        player.message("x: " + player.getLocation().getX() + " y: " + player.getLocation().getY() + ", region: " + player.getRegionId());
+        return true;
+    }
+
+    private static boolean toNpcCommand(Player player, String[] cmd) {
+        if (cmd.length < 2) {
+            player.getPackets().sendPanelBoxMessage("Use: ::tonpc id(Integer)");
+            return true;
+        }
+
+        try {
+            int npcId = Integer.parseInt(cmd[1]);
+            player.getAppearence().transformIntoNPC(npcId);
+            NPCDefinitions defs = NPCDefinitions.getNPCDefinitions(npcId);
+            player.message("You transformed into " + npcId + ", (" + NPCDefinitions.getNPCDefinitions(npcId).name + ")");
+            NPCDefinitions def = NPCDefinitions.getNPCDefinitions(npcId);
+
+            if (def.clientScriptData != null) {
+                Object bas = def.clientScriptData.get(686);
+                if (bas instanceof Integer) {
+                    int basId = (int) bas;
+                    System.out.println("NPC " + npcId + " uses BAS " + basId);
+                }
+            }
         } catch (NumberFormatException e) {
             player.getPackets().sendPanelBoxMessage("Use: ::npc id(Integer)");
         }

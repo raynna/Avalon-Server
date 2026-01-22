@@ -1163,6 +1163,13 @@ public class NPC extends Entity implements Serializable {
             combat.reset();
     }
 
+    public boolean isWithinMeleeRange(Entity target) {
+        int distanceX = target.getX() - getX();
+        int distanceY = target.getY() - getY();
+        int size = getSize();
+        return distanceX <= size && distanceX >= -1 && distanceY <= size && distanceY >= -1;
+    }
+
     public int getCapDamage() {
         return capDamage;
     }

@@ -1100,13 +1100,16 @@ public final class Skills implements Serializable {
             return;
         int oldTotal = getTotalLevel(player);
         double oldExp = xp[skill];
+        boolean isOneXpPerHit = player.toggles("ONEXPPERHIT", false);
         if (getXp(skill) >= 200000000) {
             exp *= 1;
         } else {
             if ((skill >= Skills.ATTACK && skill <= Skills.RANGE) || skill == Skills.MAGIC) {
-                if (player.getTemporaryTarget() instanceof NPC npc && (npc.getId() == Rscm.lookup("npc.melee_dummy") || npc.getId() == Rscm.lookup("npc.magic_dummy"))) {
+                if (!isOneXpPerHit)
                     exp *= 1;
-                } else if (player.getTemporaryTarget() != null && player.inPkingArea()
+                else if (player.getTemporaryTarget() instanceof NPC npc && (npc.getId() == Rscm.lookup("npc.melee_dummy") || npc.getId() == Rscm.lookup("npc.magic_dummy")))
+                    exp *= 1;
+                else if (player.inPkingArea()
                         && !(player.getTemporaryTarget() instanceof NPC))
                     exp *= 1;
                 else if (player.getTemporaryTarget() != null && player.inPkingArea()

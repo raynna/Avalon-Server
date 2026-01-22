@@ -1049,6 +1049,29 @@ public final class Utils {
 		return newName.toString();
 	}
 
+	public static <T> T randomWeighted(Object... data) {
+		int total = 0;
+		for (int i = 1; i < data.length; i += 2)
+			total += (int) data[i];
+
+		int roll = ThreadLocalRandom.current().nextInt(total);
+
+		int current = 0;
+		for (int i = 0; i < data.length; i += 2) {
+			current += (int) data[i + 1];
+			if (roll < current)
+				return (T) data[i];
+		}
+		return (T) data[0];
+	}
+
+
+	@SafeVarargs
+	public static <T> T randomOf(T... values) {
+		return values[ThreadLocalRandom.current().nextInt(values.length)];
+	}
+
+
 	public static int random(int bound) {
 		if (bound <= 0) return 0;
 		return ThreadLocalRandom.current().nextInt(bound);

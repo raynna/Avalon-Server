@@ -7,18 +7,22 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
+import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class LeatherDragonCombat extends CombatScript {
 
-	private static final int DRAGON_SLAM_ANIMATION = 80, DRAGON_HEADBUTT_ANIMATION = 91, DRAGONFIRE_BREATH_ANIMATION = 84, DRAGON_DEATH_ANIMATION = 92;
-	private static final int DRAGONFIRE_GFX = 1, DRAGONFIRE_TOXIC_PROJECTILE = 393, DRAGONFIRE_NORMAL_PROJECTILE = 394, DRAGONFIRE_ICY_PROJECTILE = 395, DRAGONFIRE_SHOCKING_PROJECTILE = 396;
+	private static final int DRAGONFIRE_GFX = 1;
+	private static final int MELEE_ANIMATION = Rscm.INSTANCE.animation("animation.leather_dragon_attack");
+	private static final int FIREBREATH_ANIMATION = Rscm.INSTANCE.animation("animation.leather_dragon_firebreath");
 
-	private static final int NEW_DRAGON_MELEE_ANIMATION = 12252, NEW_DRAGON_FIRE_ANIMATION = 12259;
+	private final static int FIREBREATH_SOUND = Rscm.INSTANCE.sound("sound.dragonfire_breath");
 
+	enum DragonAttack { MELEE, FIREBREATH }
 
 	@Override
 	public Object[] getKeys() {
@@ -30,43 +34,38 @@ public class LeatherDragonCombat extends CombatScript {
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		if (!isWithinMeleeRange(npc, target)) {
+		boolean inMelee = npc.withinDistance(target, 1, npc.getSize());
+		if (!inMelee)
 			return 0;
+
+		DragonAttack attack = Utils.randomWeighted(
+				DragonAttack.MELEE, 75,
+				DragonAttack.FIREBREATH, 25
+		);
+		switch (attack) {
+			case MELEE -> performMeleeAttack(npc, target);
+			case FIREBREATH -> performDragonfireAttack(npc, target);
 		}
-
-		final NpcCombatDefinition defs = npc.getCombatDefinitions();
-
-		// 75% chance melee, 25% chance dragonfire
-		if (Utils.roll(3, 4)) {
-			performMeleeAttack(npc, target, defs);
-		} else {
-			performDragonfireAttack(npc, target, defs);
-		}
-
 		return npc.getAttackSpeed();
 	}
 
-	private boolean isWithinMeleeRange(NPC npc, Entity target) {
-		int distanceX = target.getX() - npc.getX();
-		int distanceY = target.getY() - npc.getY();
-		int size = npc.getSize();
-		return distanceX <= size && distanceX >= -1 && distanceY <= size && distanceY >= -1;
-	}
 
-	private void performMeleeAttack(NPC npc, Entity target, NpcCombatDefinition defs) {
-		npc.animate(new Animation(NEW_DRAGON_MELEE_ANIMATION));
+	private void performMeleeAttack(NPC npc, Entity target) {
+		npc.animate(new Animation(MELEE_ANIMATION));
+		if (npc.getCombatDefinitions().getAttackSound() != -1)
+			npc.playSound(npc.getCombatDefinitions().getAttackSound(), 1);
 		Hit meleeHit = npc.meleeHit(target, npc.getMaxHit(), NpcAttackStyle.CRUSH);
 		delayHit(npc, target, 0, meleeHit);
 	}
 
-	private void performDragonfireAttack(NPC npc, Entity target, NpcCombatDefinition defs) {
+	private void performDragonfireAttack(NPC npc, Entity target) {
 		if (!(target instanceof Player player)) {
 			return;
 		}
 
-		npc.animate(new Animation(NEW_DRAGON_FIRE_ANIMATION));
+		npc.animate(new Animation(FIREBREATH_ANIMATION));
 		npc.gfx(DRAGONFIRE_GFX, 100);
-
+		npc.playSound(FIREBREATH_SOUND, 1);
 		boolean accuracyRoll = NpcCombatCalculations.getAccuracyRoll(npc, NpcAttackStyle.MAGIC, target);
 		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, accuracyRoll, DragonFire.DragonType.CHROMATIC);
 		Hit dragonfire = npc.regularHit(target, mitigatedDamage);

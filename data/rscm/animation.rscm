@@ -372,3 +372,12 @@ zanik_crossbow_special=11359
 hand_cannon_shot=12174
 hand_cannon_special_start=12175
 hand_cannon_special_end=12152
+
+
+#npcs
+frost_dragon_attack=13151
+frost_dragon_firebreath=13152
+frost_dragon_death=13153
+frost_dragon_block=13154
+leather_dragon_attack=12252
+leather_dragon_firebreath=12259

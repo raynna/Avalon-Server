@@ -20,19 +20,23 @@ public class CombatScriptsHandler {
 		try {
 			Class<?>[] classes = Utils.getClasses("com.rs.java.game.npc.combat.impl");
 			for (Class<?> c : classes) {
-				if (c.isAnonymousClass())
+
+				if (c.isEnum() || c.isAnonymousClass() || c.isMemberClass() || c.isInterface())
 					continue;
-				Object o = c.getDeclaredConstructor().newInstance();
-				if (!(o instanceof CombatScript script))
+
+				if (!CombatScript.class.isAssignableFrom(c))
 					continue;
-                for (Object key : script.getKeys())
+
+				CombatScript script = (CombatScript) c.getDeclaredConstructor().newInstance();
+
+				for (Object key : script.getKeys())
 					cachedCombatScripts.put(key, script);
 			}
-		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException |
-                 ClassNotFoundException | IOException e) {
+		} catch (Exception e) {
 			Logger.handle(e);
 		}
 	}
+
 
 
 	public static int specialAttack(final NPC npc, final Entity target) {

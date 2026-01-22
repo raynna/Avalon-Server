@@ -163,11 +163,32 @@ public class WorldTile implements Serializable {
 	}
 
 	public boolean withinDistance(WorldTile tile, int distance) {
+		return withinDistance(tile, distance, 1);
+	}
+
+	public boolean withinDistance(WorldTile tile, int distance, int size) {
 		if (tile.plane != plane)
 			return false;
-		int deltaX = tile.x - x, deltaY = tile.y - y;
-		return deltaX <= distance && deltaX >= -distance && deltaY <= distance && deltaY >= -distance;
+		int minX = x;
+		int minY = y;
+		int maxX = x + size - 1;
+		int maxY = y + size - 1;
+
+		int dx = 0;
+		if (tile.x < minX)
+			dx = minX - tile.x;
+		else if (tile.x > maxX)
+			dx = tile.x - maxX;
+
+		int dy = 0;
+		if (tile.y < minY)
+			dy = minY - tile.y;
+		else if (tile.y > maxY)
+			dy = tile.y - maxY;
+
+		return dx <= distance && dy <= distance;
 	}
+
 
 	public boolean withinDistance(WorldTile tile) {
 		if (tile.plane != plane)

@@ -61,7 +61,6 @@ public final class NPCCombat {
         if (target != null) {
             npc.setNextFaceEntity(target);
             if (!checkAll()) {
-                removeTarget();
                 return false;
             }
             if (attackDelay <= 0) {
@@ -143,8 +142,14 @@ public final class NPCCombat {
 
     public boolean checkAll() {
         Entity target = this.target;
-        if (!isTargetValid(target)) return false;
-        if (!canAttackTarget(target)) return false;
+        if (!isTargetValid(target)) {
+            removeTarget();
+            return false;
+        }
+        if (!canAttackTarget(target)) {
+            removeTarget();
+            return false;
+        }
         if (isWithinRespawnRange() && npc.isForceWalking())
             npc.resetForcewalk();
         if (!isWithinRespawnRange()) {
