@@ -22,6 +22,8 @@ public class KingBlackDragonCombat extends CombatScript {
 
     private final static int FIREBREATH_SOUND = Rscm.INSTANCE.sound("sound.dragonfire_breath");
 
+    enum KingBlackDragonAttack { MELEE, DRAGONFIRE }
+
     @Override
     public Object[] getKeys() {
         return new Object[]{50};
@@ -31,27 +33,22 @@ public class KingBlackDragonCombat extends CombatScript {
     public int attack(NPC npc, Entity target) {
         final Player player = target instanceof Player ? (Player) target : null;
 
-        int size = npc.getSize();
-        int distanceX = target.getX() - npc.getX();
-        int distanceY = target.getY() - npc.getY();
-
-        boolean inMelee = distanceX <= size && distanceX >= -1 && distanceY <= size && distanceY >= -1;
-
-        int attackStyle;
+        KingBlackDragonAttack attack;
+        boolean inMelee = npc.isWithinMeleeRange(target);
         if (inMelee) {
-            attackStyle = Utils.randomBoolean() ? 0 : 1; //50/50 melee & dragonfire if close
+            attack = Utils.randomWeighted(KingBlackDragonAttack.MELEE, 50, KingBlackDragonAttack.DRAGONFIRE, 50); //50/50 melee & dragonfire if close
         } else {
-            attackStyle = 1;
+            attack = KingBlackDragonAttack.DRAGONFIRE;
         }
 
-        switch (attackStyle) {
-            case 0: // Melee
+        switch (attack) {
+            case MELEE:
                 npc.animate(new Animation(Utils.roll(1, 2) ? DRAGON_SLAM_ANIMATION : DRAGON_HEADBUTT_ANIMATION));
 				Hit melee = npc.meleeHit(target, 250);
 				delayHit(npc, target, 0, melee);
                 break;
 
-            case 1: //Dragonfire
+            case DRAGONFIRE:
                 if (player == null) break;
 
                 npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
