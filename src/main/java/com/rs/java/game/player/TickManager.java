@@ -154,7 +154,7 @@ public class TickManager {
     }
 
     public boolean isActive(TickKeys key) {
-        return tickTimers.containsKey(key);
+        return tickTimers.getOrDefault(key, 0) > 0;
     }
 
     public int getTicksLeft(TickKeys key) {

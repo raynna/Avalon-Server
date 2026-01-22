@@ -24,6 +24,13 @@ public class KingBlackDragonCombat extends CombatScript {
 
     enum KingBlackDragonAttack { MELEE, DRAGONFIRE }
 
+    enum AttackTypes { REGULAR, TOXIC, SHOCKING, ICY }
+
+    private static final AttackTypes[] SPECIAL_TYPES = {
+            AttackTypes.TOXIC,
+            AttackTypes.SHOCKING,
+            AttackTypes.ICY
+    };
     @Override
     public Object[] getKeys() {
         return new Object[]{50};
@@ -56,17 +63,18 @@ public class KingBlackDragonCombat extends CombatScript {
                 boolean special = Utils.randomBoolean();
 
                 int projectileId;
-                int specialType;
+                AttackTypes specialType;
 
                 if (!special) {
-                    specialType = -1;
+                    specialType = AttackTypes.REGULAR;
                     projectileId = DRAGONFIRE_NORMAL_PROJECTILE;
                 } else {
-                    specialType = Utils.random(2);
+                    specialType = SPECIAL_TYPES[Utils.random(SPECIAL_TYPES.length)];
                     projectileId = switch (specialType) {
-                        case 0 -> DRAGONFIRE_TOXIC_PROJECTILE;
-                        case 1 -> DRAGONFIRE_SHOCKING_PROJECTILE;
-                        default -> DRAGONFIRE_ICY_PROJECTILE;
+                        case TOXIC -> DRAGONFIRE_TOXIC_PROJECTILE;
+                        case SHOCKING -> DRAGONFIRE_SHOCKING_PROJECTILE;
+                        case ICY -> DRAGONFIRE_ICY_PROJECTILE;
+                        default -> DRAGONFIRE_NORMAL_PROJECTILE;
                     };
                 }
 
@@ -96,7 +104,7 @@ public class KingBlackDragonCombat extends CombatScript {
         return npc.getCombatData().attackSpeedTicks;
     }
 
-    private void attemptSpecialEffect(Player player, int type) {
+    private void attemptSpecialEffect(Player player, AttackTypes type) {
 
         boolean shield = DragonFire.hasDragonShield(player);
         boolean prayer = player.getPrayer().isMageProtecting();
@@ -107,18 +115,18 @@ public class KingBlackDragonCombat extends CombatScript {
             return;
 
         switch (type) {
-            case 0 -> {
+            case TOXIC -> {
                 if (!player.getNewPoison().isPoisoned())
                     player.getNewPoison().startPoison(40);
             }
-            case 1 -> {
+            case SHOCKING -> {
                 for (Skills.SkillData skills : Skills.SkillData.values()) {
                     if (skills.getId() == Skills.PRAYER || skills.getId() == Skills.HITPOINTS || skills.getId() == Skills.SUMMONING)
                         continue;
                     player.getSkills().drainLevel(skills.getId(), 2);
                 }
             }
-            case 2 -> player.addFreezeDelay(10, false);
+            case ICY -> player.addFreezeDelay(10, false);
         }
     }
 
