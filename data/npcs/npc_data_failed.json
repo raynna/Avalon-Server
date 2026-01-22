@@ -254,5 +254,21 @@
     "firstSeen": "2026-01-22T12:40:50.395562900Z",
     "lastSeen": "2026-01-22T12:40:50.395562900Z",
     "attempts": 1
+  },
+  "14927": {
+    "npcId": 14927,
+    "npcName": "Troll ranger commando",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-22T16:02:29.012469400Z",
+    "lastSeen": "2026-01-22T16:02:29.012469400Z",
+    "attempts": 1
+  },
+  "14928": {
+    "npcId": 14928,
+    "npcName": "Troll mage commando",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-22T16:02:29.083214900Z",
+    "lastSeen": "2026-01-22T16:02:29.083214900Z",
+    "attempts": 1
   }
 }

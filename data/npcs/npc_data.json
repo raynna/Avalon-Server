@@ -609,6 +609,61 @@
     "categories": [],
     "assignedBy": []
   },
+  "19": {
+    "id": 19,
+    "name": "White Knight",
+    "members": false,
+    "combatLevel": 36,
+    "attackLevel": 27,
+    "strengthLevel": 29,
+    "defenceLevel": 21,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 52,
+    "attackBonus": 30,
+    "strengthBonus": 31,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 83,
+      "slash": 76,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": -11
+    },
+    "rangedDefence": {
+      "light": 74,
+      "standard": 74,
+      "heavy": 54
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "Shiny armour!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 7,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "20": {
     "id": 20,
     "name": "Paladin",
@@ -4623,6 +4678,58 @@
     "categories": [],
     "assignedBy": []
   },
+  "222": {
+    "id": 222,
+    "name": "Monk",
+    "members": false,
+    "combatLevel": 5,
+    "attackLevel": 2,
+    "strengthLevel": 2,
+    "defenceLevel": 3,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 15,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "237": {
     "id": 237,
     "name": "Renegade Knight",
@@ -7957,6 +8064,59 @@
       "duradel"
     ]
   },
+  "1192": {
+    "id": 1192,
+    "name": "Rabbit",
+    "members": true,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 5,
+    "attackBonus": -47,
+    "strengthBonus": -42,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": -42,
+      "crush": -42
+    },
+    "magicDefence": {
+      "magic": -42
+    },
+    "rangedDefence": {
+      "light": -42,
+      "standard": -42,
+      "heavy": -42
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "Aww, how cute.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "1267": {
     "id": 1267,
     "name": "Rock Crab",
@@ -9859,6 +10019,397 @@
       "vannaka"
     ]
   },
+  "3222": {
+    "id": 3222,
+    "name": "Drunken man",
+    "members": false,
+    "combatLevel": 3,
+    "attackLevel": 1,
+    "strengthLevel": 3,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 7,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -21,
+      "slash": -21,
+      "crush": -21
+    },
+    "magicDefence": {
+      "magic": -21
+    },
+    "rangedDefence": {
+      "light": -21,
+      "standard": -21,
+      "heavy": -21
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[20 February]] [[2006]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "One of Gielinor\u0027s many citizens, currently incapacitated by alcohol.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3223": {
+    "id": 3223,
+    "name": "Man",
+    "members": false,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 7,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -21,
+      "slash": -21,
+      "crush": -21
+    },
+    "magicDefence": {
+      "magic": -21
+    },
+    "rangedDefence": {
+      "light": -21,
+      "standard": -21,
+      "heavy": -21
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 January]] [[2001]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "One of Gielinor\u0027s many citizens.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3226": {
+    "id": 3226,
+    "name": "Woman",
+    "members": false,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 7,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -21,
+      "slash": -21,
+      "crush": -21
+    },
+    "magicDefence": {
+      "magic": -21
+    },
+    "rangedDefence": {
+      "light": -21,
+      "standard": -21,
+      "heavy": -21
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[29 March]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "One of Gielinor\u0027s many citizens.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3228": {
+    "id": 3228,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 21,
+    "attackLevel": 19,
+    "strengthLevel": 18,
+    "defenceLevel": 14,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 4,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3229": {
+    "id": 3229,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3230": {
+    "id": 3230,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 19,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3231": {
+    "id": 3231,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "3237": {
     "id": 3237,
     "name": "Cuffs",
@@ -10134,6 +10685,222 @@
       "[[Stab]]"
     ],
     "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3242": {
+    "id": 3242,
+    "name": "Dark wizard",
+    "members": false,
+    "combatLevel": 23,
+    "attackLevel": 20,
+    "strengthLevel": 10,
+    "defenceLevel": 20,
+    "magicLevel": 25,
+    "rangedLevel": 1,
+    "constitutionLevel": 25,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3243": {
+    "id": 3243,
+    "name": "Dark wizard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 20,
+    "strengthLevel": 10,
+    "defenceLevel": 15,
+    "magicLevel": 25,
+    "rangedLevel": 1,
+    "constitutionLevel": 25,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3244": {
+    "id": 3244,
+    "name": "Dark wizard",
+    "members": false,
+    "combatLevel": 11,
+    "attackLevel": 5,
+    "strengthLevel": 5,
+    "defenceLevel": 10,
+    "magicLevel": 10,
+    "rangedLevel": 1,
+    "constitutionLevel": 15,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3245": {
+    "id": 3245,
+    "name": "Dark wizard",
+    "members": false,
+    "combatLevel": 11,
+    "attackLevel": 5,
+    "strengthLevel": 5,
+    "defenceLevel": 10,
+    "magicLevel": 10,
+    "rangedLevel": 1,
+    "constitutionLevel": 15,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
     "respawnTicks": 50,
     "slayerXp": 0,
     "categories": [],
@@ -11849,6 +12616,171 @@
       "turael",
       "spria"
     ]
+  },
+  "3348": {
+    "id": 3348,
+    "name": "White Knight",
+    "members": false,
+    "combatLevel": 38,
+    "attackLevel": 30,
+    "strengthLevel": 29,
+    "defenceLevel": 25,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 52,
+    "attackBonus": 30,
+    "strengthBonus": 31,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 83,
+      "slash": 76,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": -11
+    },
+    "rangedDefence": {
+      "light": 74,
+      "standard": 74,
+      "heavy": 54
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "A White Knight proselyte.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 7,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3349": {
+    "id": 3349,
+    "name": "White Knight",
+    "members": false,
+    "combatLevel": 39,
+    "attackLevel": 32,
+    "strengthLevel": 29,
+    "defenceLevel": 27,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 52,
+    "attackBonus": 30,
+    "strengthBonus": 31,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 83,
+      "slash": 76,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": -11
+    },
+    "rangedDefence": {
+      "light": 74,
+      "standard": 74,
+      "heavy": 54
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "A White Knight acolyte.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 7,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "3350": {
+    "id": 3350,
+    "name": "White Knight",
+    "members": false,
+    "combatLevel": 42,
+    "attackLevel": 32,
+    "strengthLevel": 35,
+    "defenceLevel": 27,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 55,
+    "attackBonus": 30,
+    "strengthBonus": 31,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 83,
+      "slash": 76,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": -11
+    },
+    "rangedDefence": {
+      "light": 85,
+      "standard": 85,
+      "heavy": 65
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "A White Knight partisan.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 7
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 7,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
   },
   "3407": {
     "id": 3407,
@@ -21812,6 +22744,233 @@
     "categories": [],
     "assignedBy": [
       ""
+    ]
+  },
+  "14920": {
+    "id": 14920,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 19,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "14997": {
+    "id": 14997,
+    "name": "Cow",
+    "members": false,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 8,
+    "attackBonus": -15,
+    "strengthBonus": -15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -21,
+      "slash": -21,
+      "crush": -21
+    },
+    "magicDefence": {
+      "magic": -21
+    },
+    "rangedDefence": {
+      "light": -21,
+      "standard": -21,
+      "heavy": -21
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 8,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "14998": {
+    "id": 14998,
+    "name": "Cow",
+    "members": false,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 8,
+    "attackBonus": -15,
+    "strengthBonus": -15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -21,
+      "slash": -21,
+      "crush": -21
+    },
+    "magicDefence": {
+      "magic": -21
+    },
+    "rangedDefence": {
+      "light": -21,
+      "standard": -21,
+      "heavy": -21
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 8,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "14999": {
+    "id": 14999,
+    "name": "Cow",
+    "members": false,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 8,
+    "attackBonus": -15,
+    "strengthBonus": -15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -21,
+      "slash": -21,
+      "crush": -21
+    },
+    "magicDefence": {
+      "magic": -21
+    },
+    "rangedDefence": {
+      "light": -21,
+      "standard": -21,
+      "heavy": -21
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 8,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
     ]
   }
 }

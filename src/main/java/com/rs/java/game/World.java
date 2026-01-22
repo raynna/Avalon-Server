@@ -1175,20 +1175,86 @@ public final class World {
         }, ticks);
     }
 
+    public static void replaceObjectTemporary(final WorldObject original, final WorldObject replacement, int restoreTicks) {
+       replaceObjectTemporary(original, replacement, restoreTicks, null);
+    }
 
-    public static boolean removeObjectTemporary(final WorldObject object, int ticks) {
+    public static void replaceObjectTemporary(final WorldObject original,
+                                              final WorldObject replacement,
+                                              int restoreTicks, Runnable done) {
+
+        removeObject(original, true);
+        spawnObject(replacement);
+
+        final WorldObject respawn = new WorldObject(
+                original.getId(),
+                original.getType(),
+                original.getRotation(),
+                original.getX(),
+                original.getY(),
+                original.getPlane()
+        );
+
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                removeObject(replacement);
+                spawnObject(respawn);
+                if (done != null)
+                    done.run();
+            }
+        }, Math.max(0, restoreTicks - 1));
+    }
+
+
+    public static void removeObjectTemporary(final WorldObject object, int ticks, Runnable afterRemove) {
         removeObject(object);
 
         WorldTasksManager.schedule(new WorldTask() {
             @Override
             public void run() {
-                spawnObject(object);
+                afterRemove.run();
+            }
+        }, 1);
+
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                spawnObject(new WorldObject(
+                        object.getId(),
+                        object.getType(),
+                        object.getRotation(),
+                        object.getX(),
+                        object.getY(),
+                        object.getPlane()
+                ));
+            }
+        }, ticks);
+    }
+
+
+    public static boolean removeObjectTemporary(final WorldObject object, int ticks) {
+        removeObject(object);
+
+        final WorldObject respawn = new WorldObject(
+                object.getId(),
+                object.getType(),
+                object.getRotation(),
+                object.getX(),
+                object.getY(),
+                object.getPlane()
+        );
+
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                spawnObject(respawn);
+                System.out.println("spawned the object back: " + respawn.getId());
             }
         }, ticks);
 
         return true;
     }
-
 
     public static void spawnTempGroundObject(final WorldObject object, final int replaceId, long timeMs) {
         spawnObject(object);

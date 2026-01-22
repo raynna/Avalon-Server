@@ -82,7 +82,7 @@ public class Thieving {
             return level;
         }
 
-        public double getTime() {
+        public int getTime() {
             return ticks;
         }
 
@@ -165,8 +165,7 @@ public class Thieving {
                         player.getSkills().addSkillingXp(Skills.THIEVING, totalXp, getThievingBoost(player));
                         checkGuards(player);
                         WorldObject emptyStall = new WorldObject(stall.getReplaceObject(), object.getType(), object.getRotation(), object);
-                        if (World.removeObjectTemporary(object, (int) (stall.getTime())))
-                            World.spawnObject(emptyStall);
+                        World.replaceObjectTemporary(object, emptyStall, stall.getTime());
                         stop();
                         /*
                          * World.spawnObjectTemporary(emptyStall, (int) (1500 * stall.getTime()));

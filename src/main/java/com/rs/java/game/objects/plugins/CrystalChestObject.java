@@ -42,14 +42,9 @@ public class CrystalChestObject extends ObjectPlugin {
 		player.lock(2);
 		player.getPackets().sendGameMessage("You attempt to unlock the chest...");
 		WorldObject openedChest = new WorldObject(173, object.getType(), object.getRotation(), object);
-		if (World.removeObjectTemporary(object, 2))
-			World.spawnObject(openedChest);
-		WorldTasksManager.schedule(new WorldTask() {
-			@Override
-			public void run() {
-				player.getInventory().deleteItem(CRYSTAL_KEY, 1);
-				CrystalChest.sendRewards(false, player);
-			}
-		}, 1);
+		World.replaceObjectTemporary(object, openedChest, 1, () -> {
+			player.getInventory().deleteItem(CRYSTAL_KEY, 1);
+			CrystalChest.sendRewards(false, player);
+		});
 	}
 }
