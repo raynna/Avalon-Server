@@ -536,7 +536,7 @@ public class DoorsAndGates extends ObjectPlugin {
 				else if (object.getId() == 24375)
 					closedDoor.setId(24376);
 				player.faceObject(closedDoor);
-				World.spawnObjectTemporary(closedDoor, 60000);
+				World.spawnObjectTemporary(closedDoor, 48);
 				return false;
 			}
 		}

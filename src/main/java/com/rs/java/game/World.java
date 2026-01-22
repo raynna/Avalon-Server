@@ -1206,56 +1206,6 @@ public final class World {
         }, Math.max(0, restoreTicks - 1));
     }
 
-
-    public static void removeObjectTemporary(final WorldObject object, int ticks, Runnable afterRemove) {
-        removeObject(object);
-
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                afterRemove.run();
-            }
-        }, 1);
-
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                spawnObject(new WorldObject(
-                        object.getId(),
-                        object.getType(),
-                        object.getRotation(),
-                        object.getX(),
-                        object.getY(),
-                        object.getPlane()
-                ));
-            }
-        }, ticks);
-    }
-
-
-    public static boolean removeObjectTemporary(final WorldObject object, int ticks) {
-        removeObject(object);
-
-        final WorldObject respawn = new WorldObject(
-                object.getId(),
-                object.getType(),
-                object.getRotation(),
-                object.getX(),
-                object.getY(),
-                object.getPlane()
-        );
-
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                spawnObject(respawn);
-                System.out.println("spawned the object back: " + respawn.getId());
-            }
-        }, ticks);
-
-        return true;
-    }
-
     public static void spawnTempGroundObject(final WorldObject object, final int replaceId, long timeMs) {
         spawnObject(object);
 

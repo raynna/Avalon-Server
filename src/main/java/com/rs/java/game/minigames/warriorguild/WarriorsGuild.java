@@ -81,9 +81,8 @@ public class WarriorsGuild extends Controler {
 		 */
 		private void switchDummieAction() {
 			int index = Utils.random(DUMMY_LOCATIONS.length);
-			World.spawnObjectTemporary(
-					new WorldObject(Utils.random(15624, 15630), 10, DUMMY_ROTATIONS[index], DUMMY_LOCATIONS[index]),
-					6000);
+			WorldObject dummy = new WorldObject(Utils.random(15624, 15630), 10, DUMMY_ROTATIONS[index], DUMMY_LOCATIONS[index]);
+			World.spawnObjectTemporary(dummy, 6);
 		}
 	}
 
@@ -176,7 +175,7 @@ public class WarriorsGuild extends Controler {
 		if (amountOfPlayers == 0)
 			init();
 		inCyclopse = (boolean) getArguments()[0];
-		cyclopseOption = (int) getArguments()[1];
+		cyclopseOption = ((Number) getArguments()[1]).intValue();
 		sendInterfaces();
 		amountOfPlayers++;
 	}

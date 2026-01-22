@@ -204,7 +204,7 @@ public class HouseControler extends Controler {
 			player.getInventory().deleteItem(new Item(251, 1));
 			WorldObject objectR = new WorldObject(object);
 			objectR.setId(object.getId() + 1);
-			int time = 1210000;
+			int time = 180;
 			World.spawnObjectTemporary(objectR, time); //lights for 2 min 10 seconds
 			World.sendObjectAnimation(objectR, new Animation(13209));
 			for (int burner : HouseConstants.INCENSE_BURNERS) {
@@ -216,7 +216,7 @@ public class HouseControler extends Controler {
 						public void run() {
 							house.setBurnerCount(house.getBurnerCount() - 1);
 						}
-					}, time / 600);
+					}, time);
 				}
 			}
 		} else if (Builds.LECTURN.containsObject(object)) {

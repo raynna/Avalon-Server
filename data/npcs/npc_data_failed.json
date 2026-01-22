@@ -55,6 +55,14 @@
     "lastSeen": "2026-01-22T12:40:49.733943200Z",
     "attempts": 1
   },
+  "1095": {
+    "npcId": 1095,
+    "npcName": "Rock",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-22T21:22:11.236420Z",
+    "lastSeen": "2026-01-22T21:22:11.236420Z",
+    "attempts": 1
+  },
   "1309": {
     "npcId": 1309,
     "npcName": "Pontak",

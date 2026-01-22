@@ -6954,6 +6954,504 @@
     "categories": [],
     "assignedBy": []
   },
+  "1096": {
+    "id": 1096,
+    "name": "Stick",
+    "members": true,
+    "combatLevel": 104,
+    "attackLevel": 60,
+    "strengthLevel": 110,
+    "defenceLevel": 60,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 135,
+    "attackBonus": 50,
+    "strengthBonus": 80,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 30,
+      "crush": 50
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 200,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 August]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A big, bad troll.",
+    "attributes": [],
+    "xpBonus": 5.0,
+    "maxHit": {
+      "default": 27
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1097": {
+    "id": 1097,
+    "name": "Pee Hat",
+    "members": true,
+    "combatLevel": 91,
+    "attackLevel": 50,
+    "strengthLevel": 100,
+    "defenceLevel": 50,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 120,
+    "attackBonus": 40,
+    "strengthBonus": 70,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 25,
+      "crush": 40
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 200,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 August]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A nasty looking troll.",
+    "attributes": [],
+    "xpBonus": 5.0,
+    "maxHit": {
+      "default": 23
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 126,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1098": {
+    "id": 1098,
+    "name": "Kraka",
+    "members": true,
+    "combatLevel": 91,
+    "attackLevel": 50,
+    "strengthLevel": 100,
+    "defenceLevel": 50,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 120,
+    "attackBonus": 40,
+    "strengthBonus": 70,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 25,
+      "crush": 40
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 200,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 August]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A nasty looking troll.",
+    "attributes": [],
+    "xpBonus": 5.0,
+    "maxHit": {
+      "default": 23
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 126,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1101": {
+    "id": 1101,
+    "name": "Thrower Troll",
+    "members": true,
+    "combatLevel": 67,
+    "attackLevel": 30,
+    "strengthLevel": 80,
+    "defenceLevel": 30,
+    "magicLevel": 0,
+    "rangedLevel": 60,
+    "constitutionLevel": 95,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 120,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 August]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Small for a troll but mean, ugly and throws rocks.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]](?)"
+    ],
+    "attackSpeedTicks": 7,
+    "respawnTicks": 25,
+    "slayerXp": 95,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1102": {
+    "id": 1102,
+    "name": "Thrower Troll",
+    "members": true,
+    "combatLevel": 67,
+    "attackLevel": 30,
+    "strengthLevel": 80,
+    "defenceLevel": 30,
+    "magicLevel": 0,
+    "rangedLevel": 60,
+    "constitutionLevel": 95,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 120,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 August]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Small for a troll but mean, ugly and throws rocks.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]](?)"
+    ],
+    "attackSpeedTicks": 7,
+    "respawnTicks": 25,
+    "slayerXp": 95,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1103": {
+    "id": 1103,
+    "name": "Thrower Troll",
+    "members": true,
+    "combatLevel": 67,
+    "attackLevel": 30,
+    "strengthLevel": 80,
+    "defenceLevel": 30,
+    "magicLevel": 0,
+    "rangedLevel": 60,
+    "constitutionLevel": 95,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 120,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 August]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Small for a troll but mean, ugly and throws rocks.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]](?)"
+    ],
+    "attackSpeedTicks": 7,
+    "respawnTicks": 25,
+    "slayerXp": 95,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1104": {
+    "id": 1104,
+    "name": "Thrower Troll",
+    "members": true,
+    "combatLevel": 67,
+    "attackLevel": 30,
+    "strengthLevel": 80,
+    "defenceLevel": 30,
+    "magicLevel": 0,
+    "rangedLevel": 60,
+    "constitutionLevel": 95,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 120,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 August]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Small for a troll but mean, ugly and throws rocks.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]](?)"
+    ],
+    "attackSpeedTicks": 7,
+    "respawnTicks": 25,
+    "slayerXp": 95,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1105": {
+    "id": 1105,
+    "name": "Thrower Troll",
+    "members": true,
+    "combatLevel": 67,
+    "attackLevel": 30,
+    "strengthLevel": 80,
+    "defenceLevel": 30,
+    "magicLevel": 0,
+    "rangedLevel": 60,
+    "constitutionLevel": 95,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 120,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 August]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Small for a troll but mean, ugly and throws rocks.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]](?)"
+    ],
+    "attackSpeedTicks": 7,
+    "respawnTicks": 25,
+    "slayerXp": 95,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "1106": {
     "id": 1106,
     "name": "Mountain troll",
@@ -7074,8 +7572,248 @@
       "duradel"
     ]
   },
+  "1108": {
+    "id": 1108,
+    "name": "Mountain troll",
+    "members": true,
+    "combatLevel": 69,
+    "attackLevel": 40,
+    "strengthLevel": 75,
+    "defenceLevel": 40,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 90,
+    "attackBonus": 20,
+    "strengthBonus": 20,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 40,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 90,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "1109": {
     "id": 1109,
+    "name": "Mountain troll",
+    "members": true,
+    "combatLevel": 69,
+    "attackLevel": 40,
+    "strengthLevel": 75,
+    "defenceLevel": 40,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 90,
+    "attackBonus": 20,
+    "strengthBonus": 20,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 40,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 90,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1110": {
+    "id": 1110,
+    "name": "Mountain troll",
+    "members": true,
+    "combatLevel": 69,
+    "attackLevel": 40,
+    "strengthLevel": 75,
+    "defenceLevel": 40,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 90,
+    "attackBonus": 20,
+    "strengthBonus": 20,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 40,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 90,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1111": {
+    "id": 1111,
+    "name": "Mountain troll",
+    "members": true,
+    "combatLevel": 69,
+    "attackLevel": 40,
+    "strengthLevel": 75,
+    "defenceLevel": 40,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 90,
+    "attackBonus": 20,
+    "strengthBonus": 20,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 40,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 90,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1112": {
+    "id": 1112,
     "name": "Mountain troll",
     "members": true,
     "combatLevel": 69,

@@ -80,5 +80,4 @@ public class WorldTasksManager {
 				task.needRemove = true;
 		}
 	}
-
 }

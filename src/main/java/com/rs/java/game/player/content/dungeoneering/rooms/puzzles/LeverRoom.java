@@ -44,7 +44,7 @@ public class LeverRoom extends PuzzleRoom {
 				addResetTask();
 			WorldObject down = new WorldObject(object);
 			down.setId(SWITCH_DOWN[type]);
-			World.spawnObjectTemporary(down, (maxTicks - leverTicks) * 600);
+			World.spawnObjectTemporary(down, (maxTicks - leverTicks));
 			leverCount++;
 			return false;
 		}

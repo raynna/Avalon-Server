@@ -215,7 +215,7 @@ public class AbbysObsticals {
 
 	private static void demolishObstacle(int objectId, WorldObject object) {
 		object.setId(objectId);
-		World.spawnObjectTemporary(object, 10000);
+		World.spawnObjectTemporary(object, 16);
 		return;
 	}
 

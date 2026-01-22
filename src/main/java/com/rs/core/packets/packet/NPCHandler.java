@@ -338,21 +338,18 @@ public class NPCHandler {
             player.setRun(forceRun);
         NpcPlugin plugin = NpcPluginLoader.getPlugin(npc);
         if (plugin != null) {
-            player.setRouteEvent(new RouteEvent(npc, new Runnable() {
-                @Override
-                public void run() {
-                    npc.resetWalkSteps();
-                    npc.faceEntity(player);
-                    player.stopAll();
-                    player.faceEntity(npc);
-                    boolean pluginExecuted = plugin.processNpc(player, npc);
-                    if (!pluginExecuted) {
-                        Logger.log("NpcPlugin", "Option 1 - Class: " + plugin.getClass().getSimpleName() + ".java, Failed: " + npc.getName() + "(" + npc.getId() + ") plugin does not have this option.");
-                    }
-                    if (pluginExecuted) {
-                        Logger.log("NpcPlugin", "Option 1 - Class: " + plugin.getClass().getSimpleName() + ".java, Executed: " + npc.getName() + "(" + npc.getId() + ")");
-                        return;
-                    }
+            player.setRouteEvent(new RouteEvent(npc, () -> {
+                npc.resetWalkSteps();
+                npc.faceEntity(player);
+                player.stopAll();
+                player.faceEntity(npc);
+                boolean pluginExecuted = plugin.processNpc(player, npc);
+                if (!pluginExecuted) {
+                    Logger.log("NpcPlugin", "Option 1 - Class: " + plugin.getClass().getSimpleName() + ".java, Failed: " + npc.getName() + "(" + npc.getId() + ") plugin does not have this option.");
+                }
+                if (pluginExecuted) {
+                    Logger.log("NpcPlugin", "Option 1 - Class: " + plugin.getClass().getSimpleName() + ".java, Executed: " + npc.getName() + "(" + npc.getId() + ")");
+                    return;
                 }
             }, true));
         }
@@ -360,17 +357,14 @@ public class NPCHandler {
             return;
         if (npc.getId() == 4296 || npc.getId() == 6362 || npc.getDefinitions().name.toLowerCase().contains("banker")
                 || npc.getDefinitions().name.toLowerCase().contains("gundai")) {
-            player.setRouteEvent(new RouteEvent(npc, new Runnable() {
-                @Override
-                public void run() {
-                    if (!player.withinDistance(npc, 3))
-                        return;
-                    npc.resetWalkSteps();
-                    npc.faceEntity(player);
-                    player.faceEntity(npc);
-                    player.getDialogueManager().startDialogue("Banker", npc.getId());
+            player.setRouteEvent(new RouteEvent(npc, () -> {
+                if (!player.withinDistance(npc, 3))
                     return;
-                }
+                npc.resetWalkSteps();
+                npc.faceEntity(player);
+                player.faceEntity(npc);
+                player.getDialogueManager().startDialogue("Banker", npc.getId());
+                return;
             }, true));
             return;
         }

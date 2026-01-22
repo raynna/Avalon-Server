@@ -128,7 +128,7 @@ public class Slayer {
 					npc.getCombat().setTarget(player);
 					WorldObject o = new WorldObject(object);
 					o.setId(22544);
-					World.spawnObjectTemporary(o, 30000);
+					World.spawnObjectTemporary(o, 48);
 				}
 			}, 1);
 			return true;
