@@ -232,18 +232,18 @@ class CombatAction(
         if (!PvpManager.canPlayerAttack(player, target))
             return false
         if (player.isAtMultiArea && !target.isAtMultiArea) {
-            if (target.isPjBlocked && target.getAttackedBy() != player) {
-                player.message("That " + (if (player.getAttackedBy() is Player) "player" else "npc") + " is already in combat.")
+            if (target.isPjBlocked && target.attackedBy != player) {
+                player.message("That " + (if (player.attackedBy is Player) "player" else "npc") + " is already in combat.")
                 return false
             }
         }
         if (!target.isAtMultiArea) {
-            if (player.isPjBlocked && player.getAttackedBy() != target) {
+            if (player.isPjBlocked && player.attackedBy != target) {
                 player.message("You are already in combat.")
                 return false
             }
 
-            if (target.isPjBlocked && target.getAttackedBy() != player) {
+            if (target.isPjBlocked && target.attackedBy != player) {
                 if (target is NPC) {
                     if (target.id == 4474 || target.id == 7891)
                         return true

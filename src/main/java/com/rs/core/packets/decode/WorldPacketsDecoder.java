@@ -1191,19 +1191,6 @@ public final class WorldPacketsDecoder extends Decoder {
 							return;
 						}
 					}
-					if (!p2.isAtMultiArea() && !player.isAtMultiArea()) {
-						if (player.getAttackedBy() != p2 && player.isPjBlocked()) {
-							player.getPackets().sendGameMessage("You are already in combat.");
-							return;
-						}
-						if (p2.getAttackedBy() != player && p2.isPjBlocked()) {
-							if (p2.getAttackedBy() instanceof NPC) p2.setAttackedBy(player);
-							else {
-								player.getPackets().sendGameMessage("That player is already in combat.");
-								return;
-							}
-						}
-					}
 				}
 				player.getTemporaryAttributtes().put("spell_target", p2);
 				SpellHandler.castOnPlayer(player, spell.getId(), p2);
@@ -1220,25 +1207,6 @@ public final class WorldPacketsDecoder extends Decoder {
 					if (!player.isCanPvp() || !p2.isCanPvp()) {
 						player.getPackets().sendGameMessage("You can only attack players in a player-vs-player area.");
 						return;
-					}
-					if (player.isAtMultiArea() && !p2.isAtMultiArea()) {
-						if (p2.getAttackedBy() != player && p2.isPjBlocked()) {
-							player.getPackets().sendGameMessage("That player is already in combat.");
-							return;
-						}
-					}
-					if (!p2.isAtMultiArea() && !player.isAtMultiArea()) {
-						if (player.getAttackedBy() != p2 && player.isPjBlocked()) {
-							player.getPackets().sendGameMessage("You are already in combat.");
-							return;
-						}
-						if (p2.getAttackedBy() != player && p2.isPjBlocked()) {
-							if (p2.getAttackedBy() instanceof NPC) p2.setAttackedBy(player);
-							else {
-								player.getPackets().sendGameMessage("That player is already in combat.");
-								return;
-							}
-						}
 					}
 				}
 				player.getTemporaryAttributtes().put("spell_target", p2);

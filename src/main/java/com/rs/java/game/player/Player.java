@@ -3758,11 +3758,6 @@ public class Player extends Entity {
             return;
         if (hit.getLook() != HitLook.MELEE_DAMAGE && hit.getLook() != HitLook.RANGE_DAMAGE && hit.getLook() != HitLook.MAGIC_DAMAGE)
             return;
-        setAttackedByDelay(4800);
-        Entity source = hit.getSource();
-        if (source == null)
-            return;
-        setAttackedBy(source);
     }
 
     public void checkPetDeath() {
