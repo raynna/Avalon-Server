@@ -236,7 +236,6 @@ object CombatCalculations {
             }
             val hit = Hit(player, finalDamage, maxHit, Hit.HitLook.RANGE_DAMAGE)
             hit.baseMaxHit = baseMaxHit
-            hit.maxHit = maxHit
             val isCritical = finalDamage >= floor(baseMaxHit * 0.99)
             if (isCritical) {
                 hit.setCriticalMark()

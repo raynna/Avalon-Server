@@ -95,7 +95,7 @@ public class EdgevillePvPControler extends Controler {
             Player p2 = (Player) target;
             if (isSafe(player) || isSafe(p2))
                 return false;
-            if (!player.attackedBy.containsKey(p2))
+            if (!player.skullList.containsKey(p2))
                 player.setWildernessSkull();
         }
         return true;

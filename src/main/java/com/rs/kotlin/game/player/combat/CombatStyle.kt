@@ -86,6 +86,7 @@ interface CombatStyle {
         if (hit.graphic != null) {
             defender.gfx(hit.graphic)
         }
+        defender.handleHit(hit);
         if (defender is Player) {
             if (this is RangedStyle || this is MagicStyle) {
                 defender.animate(CombatAnimations.getBlockAnimation(defender))
@@ -131,7 +132,6 @@ interface CombatStyle {
                     attacker.combatDefinitions.increaseSpecialAttack(100)
             }
         }
-        defender.handleHit(hit);
     }
 
 

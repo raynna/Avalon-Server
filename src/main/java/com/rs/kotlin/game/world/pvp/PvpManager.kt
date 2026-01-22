@@ -46,7 +46,7 @@ object PvpManager {
     fun onPlayerDamagedByPlayer(victim: Player, attacker: Player) {
         val t = now()
         lastPvpHitAt[victim] = t
-        if (!attacker.attackedBy.containsKey(victim))
+        if (!attacker.skullList.containsKey(victim))
             attacker.setWildernessSkull()
     }
 

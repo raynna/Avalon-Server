@@ -181,8 +181,8 @@ public class CombatDummy extends Action {
 			final Player player = (Player) hit.getSource();
 			if (target instanceof Player) {
 				Player p2 = (Player) target;
-				if (!p2.attackedBy.containsKey(player))
-					p2.attackedBy.put(player, 1440);// 15minutes add to list
+				if (!p2.skullList.containsKey(player))
+					p2.skullList.put(player, 1440);// 15minutes add to list
 				p2.getChargeManager().processIncommingHit();
 			}
 			player.getChargeManager().processOutgoingHit();

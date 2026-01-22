@@ -54,7 +54,6 @@ import com.rs.java.game.player.actions.skills.farming.FarmingManager;
 import com.rs.java.game.player.actions.skills.hunter.HunterImplings;
 import com.rs.java.game.player.actions.skills.slayer.SlayerManager;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
-import com.rs.java.game.player.content.WildernessArtefacts.Artefacts;
 import com.rs.java.game.player.content.clans.ClanMember;
 import com.rs.java.game.player.content.clans.ClansManager;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
@@ -116,7 +115,6 @@ import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentInstance;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
-import com.rs.kotlin.game.world.projectile.ProjectileType;
 import com.rs.kotlin.game.world.projectile.QueuedProjectile;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 import com.rs.kotlin.game.world.pvp.SafeZoneService;
@@ -348,7 +346,7 @@ public class Player extends Entity {
      * @Combat
      */
     public CombatDefinitions combatDefinitions;
-    public transient HashMap<Player, Integer> attackedBy = new HashMap<>();
+    public transient HashMap<Player, Integer> skullList = new HashMap<>();
     private int dfsCharges;
     private transient PlayerCombat playerCombat;
 
@@ -1493,8 +1491,8 @@ public class Player extends Entity {
             temporaryVarBits = new HashMap<Integer, Integer>();
         if (toggles == null)
             toggles = new HashMap<String, Object>();
-        if (attackedBy == null)
-            attackedBy = new HashMap<Player, Integer>();
+        if (skullList == null)
+            skullList = new HashMap<Player, Integer>();
         if (staffCharges == null)
             staffCharges = new HashMap<Integer, Item[]>();
         creationKiln = new CreationKiln(this);
@@ -2634,14 +2632,14 @@ public class Player extends Entity {
             healTick -= ticksPerHeal;
         }
         for (Player player : World.getPlayers()) {
-            if (player == null || attackedBy.isEmpty())
+            if (player == null || skullList.isEmpty())
                 continue;
-            if (attackedBy.containsKey(player)) {
-                if (attackedBy.get(player).intValue() <= 1) {
-                    attackedBy.remove(player);
+            if (skullList.containsKey(player)) {
+                if (skullList.get(player).intValue() <= 1) {
+                    skullList.remove(player);
                     return;
                 }
-                attackedBy.put(player, attackedBy.get(player).intValue() - 1);
+                skullList.put(player, skullList.get(player).intValue() - 1);
             }
         }
         if (getControlerManager().getControler() instanceof EdgevillePvPControler) {
@@ -3289,7 +3287,7 @@ public class Player extends Entity {
             slayerManager.resetSocialGroup(true);
         else if (pet != null)
             pet.finish();
-        attackedBy.clear();
+        skullList.clear();
         setMarker(false);
         house.finish();
         dungManager.finish();

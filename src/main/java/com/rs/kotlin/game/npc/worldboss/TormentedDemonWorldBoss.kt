@@ -9,9 +9,7 @@ import com.rs.java.game.World
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.player.Player
-import com.rs.java.game.item.Item
 import com.rs.java.game.player.Equipment
-import java.util.*
 
 class TormentedDemonWorldBoss(
     tile: WorldTile,
@@ -184,7 +182,7 @@ class TormentedDemonWorldBoss(
                             continue
                         }
 
-                        val attackedByMap = player.attackedBy as? Map<*, *>
+                        val attackedByMap = player.skullList as? Map<*, *>
                         if (attackedByMap == null || !attackedByMap.containsKey(this@TormentedDemonWorldBoss)) {
                             continue
                         }

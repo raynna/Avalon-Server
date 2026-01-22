@@ -2561,8 +2561,8 @@ public class PlayerCombat extends Action {
 
                     }, 0, TimeUnit.MILLISECONDS);
                 }
-                if (!p2.attackedBy.containsKey(player))
-                    p2.attackedBy.put(player, 1440);// 15minutes add to list
+                if (!p2.skullList.containsKey(player))
+                    p2.skullList.put(player, 1440);// 15minutes add to list
                 if (player.getEquipment().getWeaponId() == 4566)
                     hit.setDamage(p2.getHitpoints());
                 if (!isVeracEffect(player))

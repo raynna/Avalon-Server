@@ -10,6 +10,8 @@ import com.rs.Settings;
 import com.rs.core.cache.defintions.AnimationDefinitions;
 import com.rs.core.cache.defintions.ObjectDefinitions;
 import com.rs.java.game.Hit.HitLook;
+import com.rs.java.game.minigames.duel.DuelArena;
+import com.rs.java.game.minigames.duel.DuelControler;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.npc.nomad.Nomad;
@@ -197,7 +199,7 @@ public abstract class Entity extends WorldTile {
         //if (isDead())
           //  hit.setDamage(0);
         Entity source = hit.getSource();
-        if (source instanceof Player && source.dead && hit.isCombatLook()) {
+        if (source instanceof Player p && p.dead && p.getControlerManager().getControler() instanceof DuelControler) {
             resetReceivedHits();
             return;
         }
@@ -268,7 +270,7 @@ public abstract class Entity extends WorldTile {
 
     public void processHit(Hit hit) {
         Entity source = hit.getSource();
-        if (source instanceof Player && source.dead && hit.isCombatLook()) {
+        if (source instanceof Player p && p.dead && p.getControlerManager().getControler() instanceof DuelControler) {
             resetReceivedHits();
             return;
         }
@@ -300,8 +302,7 @@ public abstract class Entity extends WorldTile {
         if (isDead() || hit.getLook() == HitLook.ABSORB_DAMAGE)
             return;
         Entity source = hit.getSource();
-        if (source instanceof Player && source.dead && hit.isCombatLook()) {
-            System.out.println("reset3 damage because source was dead & hit is " + hit.getLook().name());
+        if (source instanceof Player p && p.dead && p.getControlerManager().getControler() instanceof DuelControler) {
             return;
         }
         if (hit.getLook() == HitLook.HEALED_DAMAGE) {
@@ -893,10 +894,7 @@ public abstract class Entity extends WorldTile {
     }
 
     public Entity getAttackedBy() {
-        Entity attackedBy = (Entity) temporaryAttribute().get("attackedBy");
-        if (attackedBy == null)
-            return null;
-        return attackedBy;
+        return (Entity) temporaryAttribute().get("attackedBy");
     }
 
     public void setAttackedByDelay(long attackedByDelay) {

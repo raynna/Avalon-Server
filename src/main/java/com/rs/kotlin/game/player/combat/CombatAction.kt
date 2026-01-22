@@ -205,8 +205,9 @@ class CombatAction(
                     player.tickManager.addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
                     target.tickManager.addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10)
                     target.tickManager.addTicks(TickManager.TickKeys.PJ_TIMER, 12)
+                    target.attackedBy = player
                     if (target is Player) {
-                        target.attackedBy[player] = 1440;
+                        target.skullList[player] = 1440;
                     }
                     if (target is Player) {
                         PvpManager.onPlayerDamagedByPlayer(target, player)
@@ -231,24 +232,23 @@ class CombatAction(
         if (!PvpManager.canPlayerAttack(player, target))
             return false
         if (player.isAtMultiArea && !target.isAtMultiArea) {
-            if (target.attackedBy != player && target.isPjBlocked) {
+            if (target.isPjBlocked && target.getAttackedBy() != player) {
                 player.message("That " + (if (player.getAttackedBy() is Player) "player" else "npc") + " is already in combat.")
                 return false
             }
         }
-        if (!target.isAtMultiArea && !player.isAtMultiArea) {
-            if (player.getAttackedBy() !== target && player.isPjBlocked) {
+        if (!target.isAtMultiArea) {
+            if (player.isPjBlocked && player.getAttackedBy() != target) {
                 player.message("You are already in combat.")
                 return false
             }
-            if (target.attackedBy !== player && target.isPjBlocked) {
+
+            if (target.isPjBlocked && target.getAttackedBy() != player) {
                 if (target is NPC) {
                     if (target.id == 4474 || target.id == 7891)
                         return true
                 }
-                player.message(
-                    ("That " + (if (player.getAttackedBy() is Player) "player" else "npc") + " is already in combat.")
-                )
+                player.message("That " + (if (target is Player) "player" else "npc") + " is already in combat.")
                 return false
             }
         }

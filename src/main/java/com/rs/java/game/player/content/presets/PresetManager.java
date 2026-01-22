@@ -326,6 +326,8 @@ public final class PresetManager implements Serializable {
     }
 
     public void copyPreset(Player p2) {
+        if (p2 == null)
+            return;
         if (player.inPkingArea()) {
             Msg.warn(player, "You can't load gear presets in player killing areas.");
             return;

@@ -97,7 +97,7 @@ public class WildernessControler extends Controler {
 		}
 		if (target instanceof Player) {
 			Player p2 = (Player) target;
-			if (!player.attackedBy.containsKey(p2))
+			if (!player.skullList.containsKey(p2))
 				player.setWildernessSkull();
 		}
 		return true;

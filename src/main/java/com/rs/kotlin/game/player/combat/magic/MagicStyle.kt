@@ -206,8 +206,8 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             scheduleHit(pending.delay) {
                 if (hit.damage > 0)
                     target.applyHit(hit)
-                onHit(attacker, target, hit)
                 pending.onApply?.invoke()
+                onHit(attacker, target, hit)
             }
         }
         addMagicExperience(totalDamage)
