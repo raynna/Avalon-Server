@@ -65,40 +65,6 @@ object ProjectileManager {
     }
 
     @JvmStatic
-    fun sendMagic(
-        projectile: Projectile,
-        projectileGfx: Int,
-        attacker: Entity,
-        defender: Entity,
-        hit: Hit,
-        successGraphic: Graphics,
-        splashGraphic: Graphics? = Graphics(85)
-    ) {
-        send(
-            projectile = projectile,
-            gfxId = projectileGfx,
-            attacker = attacker,
-            defender = defender,
-            onLanded = {
-                val gfx = if (hit.damage > 0) successGraphic else splashGraphic
-                if (gfx != null) {
-                    val startTile = WorldTile(
-                        attacker.getCoordFaceX(attacker.size),
-                        attacker.getCoordFaceY(attacker.size),
-                        attacker.plane
-                    )
-                    val endTile = WorldTile(
-                        defender.getCoordFaceX(defender.size),
-                        defender.getCoordFaceY(defender.size),
-                        defender.plane
-                    )
-                    defender.gfx(gfx.id, gfx.height, calculateRotation(startTile, endTile))
-                }
-            }
-        )
-    }
-
-    @JvmStatic
     fun send(
         projectile: Projectile,
         gfxId: Int,
@@ -240,18 +206,6 @@ object ProjectileManager {
         return ProjectileResult(impactTicks, remainderCycles)
     }
 
-
-    @JvmStatic
-    fun sendMagic(
-        projectile: Projectile,
-        projectileGfx: Int,
-        attacker: Entity,
-        defender: Entity,
-        hit: Hit,
-        successGraphic: Graphics
-    ) {
-        sendMagic(projectile, projectileGfx, attacker, defender, hit, successGraphic, Graphics(85, 100))
-    }
 
     fun send(
         projectile: Projectile,
