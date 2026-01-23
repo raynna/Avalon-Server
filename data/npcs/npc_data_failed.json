@@ -159,6 +159,14 @@
     "lastSeen": "2026-01-18T18:16:01.863243100Z",
     "attempts": 1
   },
+  "6214": {
+    "npcId": 6214,
+    "npcName": "Vampyre",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-23T21:42:26.721715800Z",
+    "lastSeen": "2026-01-23T21:42:26.721715800Z",
+    "attempts": 1
+  },
   "6869": {
     "npcId": 6869,
     "npcName": "Wolpertinger",
@@ -237,6 +245,14 @@
     "reason": "\u0027wikitext\u0027 not found in JSON",
     "firstSeen": "2026-01-21T11:01:27.879227300Z",
     "lastSeen": "2026-01-21T11:01:27.879227300Z",
+    "attempts": 1
+  },
+  "13459": {
+    "npcId": 13459,
+    "npcName": "Ancient mage",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-23T21:42:34.515614900Z",
+    "lastSeen": "2026-01-23T21:42:34.515614900Z",
     "attempts": 1
   },
   "14240": {

@@ -5828,6 +5828,62 @@
     "categories": [],
     "assignedBy": []
   },
+  "374": {
+    "id": 374,
+    "name": "Ogre",
+    "members": true,
+    "combatLevel": 58,
+    "attackLevel": 46,
+    "strengthLevel": 48,
+    "defenceLevel": 43,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 60,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
   "397": {
     "id": 397,
     "name": "Cow",
@@ -10053,6 +10109,433 @@
       "spria"
     ]
   },
+  "1936": {
+    "id": 1936,
+    "name": "Ice troll",
+    "members": true,
+    "combatLevel": 124,
+    "attackLevel": 140,
+    "strengthLevel": 120,
+    "defenceLevel": 80,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 80,
+    "attackBonus": 60,
+    "strengthBonus": 60,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 60,
+      "crush": 30
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Brrrrr...he must be cold!",
+    "attributes": [],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "default": 25
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 86,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1937": {
+    "id": 1937,
+    "name": "Ice troll",
+    "members": true,
+    "combatLevel": 123,
+    "attackLevel": 120,
+    "strengthLevel": 120,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 80,
+    "attackBonus": 60,
+    "strengthBonus": 60,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 60,
+      "crush": 30
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Brrrrr...he must be cold!",
+    "attributes": [],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "default": 25
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 86,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1938": {
+    "id": 1938,
+    "name": "Ice troll",
+    "members": true,
+    "combatLevel": 120,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 120,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 60,
+    "strengthBonus": 60,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 60,
+      "crush": 30
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Brrrrr...he must be cold!",
+    "attributes": [],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "default": 21
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 129,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1939": {
+    "id": 1939,
+    "name": "Ice troll",
+    "members": true,
+    "combatLevel": 121,
+    "attackLevel": 110,
+    "strengthLevel": 110,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 90,
+    "attackBonus": 60,
+    "strengthBonus": 60,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 60,
+      "crush": 30
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Brrrrr...he must be cold!",
+    "attributes": [],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "default": 23
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 97,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1940": {
+    "id": 1940,
+    "name": "Ice troll",
+    "members": true,
+    "combatLevel": 120,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 120,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 60,
+    "strengthBonus": 60,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 60,
+      "crush": 30
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Brrrrr...he must be cold!",
+    "attributes": [],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "default": 21
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 129,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1941": {
+    "id": 1941,
+    "name": "Ice troll",
+    "members": true,
+    "combatLevel": 120,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 120,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 60,
+    "strengthBonus": 60,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 60,
+      "crush": 30
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Brrrrr...he must be cold!",
+    "attributes": [],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "default": 21
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 129,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1942": {
+    "id": 1942,
+    "name": "Ice troll",
+    "members": true,
+    "combatLevel": 121,
+    "attackLevel": 110,
+    "strengthLevel": 110,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 90,
+    "attackBonus": 60,
+    "strengthBonus": 60,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 60,
+      "crush": 30
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Brrrrr...he must be cold!",
+    "attributes": [],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "default": 23
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 97,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "1951": {
     "id": 1951,
     "name": "Ice wolf",
@@ -13519,6 +14002,66 @@
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []
+  },
+  "3406": {
+    "id": 3406,
+    "name": "Icefiend",
+    "members": true,
+    "combatLevel": 18,
+    "attackLevel": 12,
+    "strengthLevel": 16,
+    "defenceLevel": 19,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "A small ice demon.\u003cbr\u003e\u0027\u0027\u0027In the Chambers of Xeric:\u0027\u0027\u0027 Servant of the Ice Demon.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 20,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
   },
   "3407": {
     "id": 3407,
@@ -21022,6 +21565,597 @@
       "duradel"
     ]
   },
+  "6210": {
+    "id": 6210,
+    "name": "Hellhound",
+    "members": true,
+    "combatLevel": 127,
+    "attackLevel": 107,
+    "strengthLevel": 116,
+    "defenceLevel": 106,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 116,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 13
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 116,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6211": {
+    "id": 6211,
+    "name": "Imp",
+    "members": false,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 8,
+    "attackBonus": -42,
+    "strengthBonus": -37,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -42,
+      "slash": -42,
+      "crush": -42
+    },
+    "magicDefence": {
+      "magic": -42
+    },
+    "rangedDefence": {
+      "light": -42,
+      "standard": -42,
+      "heavy": -42
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6212": {
+    "id": 6212,
+    "name": "Werewolf",
+    "members": true,
+    "combatLevel": 93,
+    "attackLevel": 77,
+    "strengthLevel": 76,
+    "defenceLevel": 85,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 92,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 60
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 June]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Eek! A werewolf!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 100,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
+  "6213": {
+    "id": 6213,
+    "name": "Werewolf",
+    "members": true,
+    "combatLevel": 93,
+    "attackLevel": 77,
+    "strengthLevel": 76,
+    "defenceLevel": 85,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 92,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 60
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 June]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Eek! A werewolf!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 100,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
+  "6215": {
+    "id": 6215,
+    "name": "Bloodveld",
+    "members": true,
+    "combatLevel": 76,
+    "attackLevel": 75,
+    "strengthLevel": 45,
+    "defenceLevel": 30,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 120,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "The tongue of evil.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 21,
+    "slayerXp": 120,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6216": {
+    "id": 6216,
+    "name": "Pyrefiend",
+    "members": true,
+    "combatLevel": 43,
+    "attackLevel": 52,
+    "strengthLevel": 30,
+    "defenceLevel": 22,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 45,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 10,
+      "slash": 10,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "A small fire demon.",
+    "attributes": [
+      "fiery",
+      "demon"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 45,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka"
+    ]
+  },
+  "6218": {
+    "id": 6218,
+    "name": "Gorak",
+    "members": true,
+    "combatLevel": 149,
+    "attackLevel": 133,
+    "strengthLevel": 126,
+    "defenceLevel": 135,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 128,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": true,
+    "attackStyles": [
+      "[[Typeless]] [[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6219": {
+    "id": 6219,
+    "name": "Spiritual warrior",
+    "members": true,
+    "combatLevel": 115,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 110,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 110,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6220": {
+    "id": 6220,
+    "name": "Spiritual ranger",
+    "members": true,
+    "combatLevel": 118,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 80,
+    "magicLevel": 1,
+    "rangedLevel": 140,
+    "constitutionLevel": 120,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "maxHit": {
+      "default": 15
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 106,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6221": {
+    "id": 6221,
+    "name": "Spiritual mage",
+    "members": true,
+    "combatLevel": 121,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 61,
+    "magicLevel": 180,
+    "rangedLevel": 1,
+    "constitutionLevel": 75,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 10.0,
+    "maxHit": {
+      "default": 19
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 75,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "6222": {
     "id": 6222,
     "name": "Kree\u0027arra",
@@ -21083,6 +22217,1130 @@
     "slayerXp": 357,
     "categories": [],
     "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6229": {
+    "id": 6229,
+    "name": "Spiritual warrior",
+    "members": true,
+    "combatLevel": 123,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 120,
+    "magicLevel": 1,
+    "rangedLevel": 141,
+    "constitutionLevel": 98,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 110,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "maxHit": {
+      "default": 15
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 98,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6230": {
+    "id": 6230,
+    "name": "Spiritual ranger",
+    "members": true,
+    "combatLevel": 127,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 130,
+    "magicLevel": 1,
+    "rangedLevel": 150,
+    "constitutionLevel": 89,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 120,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6231": {
+    "id": 6231,
+    "name": "Spiritual mage",
+    "members": true,
+    "combatLevel": 121,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 61,
+    "magicLevel": 180,
+    "rangedLevel": 1,
+    "constitutionLevel": 75,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 10.0,
+    "maxHit": {
+      "default": 19
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 75,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6232": {
+    "id": 6232,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 69,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 71,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 70,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6233": {
+    "id": 6233,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 79,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 85,
+    "constitutionLevel": 83,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 83,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6234": {
+    "id": 6234,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 84,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 93,
+    "constitutionLevel": 86,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 86,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6235": {
+    "id": 6235,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 83,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 76,
+    "constitutionLevel": 86,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 86,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6236": {
+    "id": 6236,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 92,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 90,
+    "constitutionLevel": 95,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 95,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6237": {
+    "id": 6237,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 97,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 99,
+    "constitutionLevel": 98,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 98,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6238": {
+    "id": 6238,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 137,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 160,
+    "magicLevel": 1,
+    "rangedLevel": 136,
+    "constitutionLevel": 124,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 15
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 124,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6239": {
+    "id": 6239,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 137,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 160,
+    "magicLevel": 1,
+    "rangedLevel": 136,
+    "constitutionLevel": 124,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 15
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 124,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6240": {
+    "id": 6240,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 71,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 55,
+    "magicLevel": 1,
+    "rangedLevel": 86,
+    "constitutionLevel": 63,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 63,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6241": {
+    "id": 6241,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 73,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 55,
+    "magicLevel": 1,
+    "rangedLevel": 89,
+    "constitutionLevel": 67,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 67,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6242": {
+    "id": 6242,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 79,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 85,
+    "constitutionLevel": 83,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 83,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6243": {
+    "id": 6243,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 89,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 115,
+    "magicLevel": 1,
+    "rangedLevel": 89,
+    "constitutionLevel": 69,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 69,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6244": {
+    "id": 6244,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 94,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 115,
+    "magicLevel": 1,
+    "rangedLevel": 96,
+    "constitutionLevel": 75,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 75,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6245": {
+    "id": 6245,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 97,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 99,
+    "constitutionLevel": 98,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 98,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6246": {
+    "id": 6246,
+    "name": "Aviansie",
+    "members": true,
+    "combatLevel": 131,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 175,
+    "magicLevel": 1,
+    "rangedLevel": 143,
+    "constitutionLevel": 115,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 15
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 115,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
       "chaeldar",
       "konar",
       "nieve",
@@ -21151,6 +23409,353 @@
       "duradel"
     ]
   },
+  "6254": {
+    "id": 6254,
+    "name": "Saradomin priest",
+    "members": true,
+    "combatLevel": 113,
+    "attackLevel": 120,
+    "strengthLevel": 46,
+    "defenceLevel": 120,
+    "magicLevel": 125,
+    "rangedLevel": 1,
+    "constitutionLevel": 89,
+    "attackBonus": 9,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 12,
+      "slash": 14,
+      "crush": 13
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 13,
+      "standard": 13,
+      "heavy": 13
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A holy man wearing ancient clothing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 20
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6255": {
+    "id": 6255,
+    "name": "Spiritual warrior",
+    "members": true,
+    "combatLevel": 125,
+    "attackLevel": 110,
+    "strengthLevel": 106,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 110,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 110,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "maxHit": {
+      "default": 13
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 110,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6256": {
+    "id": 6256,
+    "name": "Spiritual ranger",
+    "members": true,
+    "combatLevel": 122,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 146,
+    "constitutionLevel": 106,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 106,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6257": {
+    "id": 6257,
+    "name": "Spiritual mage",
+    "members": true,
+    "combatLevel": 120,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 86,
+    "magicLevel": 160,
+    "rangedLevel": 1,
+    "constitutionLevel": 85,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 10.0,
+    "maxHit": {
+      "default": 20
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 85,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6258": {
+    "id": 6258,
+    "name": "Knight of Saradomin",
+    "members": true,
+    "combatLevel": 101,
+    "attackLevel": 75,
+    "strengthLevel": 90,
+    "defenceLevel": 82,
+    "magicLevel": 60,
+    "rangedLevel": 1,
+    "constitutionLevel": 108,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 13,
+      "standard": 13,
+      "heavy": 13
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A valiant knight.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6259": {
+    "id": 6259,
+    "name": "Knight of Saradomin",
+    "members": true,
+    "combatLevel": 101,
+    "attackLevel": 75,
+    "strengthLevel": 90,
+    "defenceLevel": 82,
+    "magicLevel": 60,
+    "rangedLevel": 1,
+    "constitutionLevel": 108,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 13,
+      "standard": 13,
+      "heavy": 13
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A valiant knight.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "6260": {
     "id": 6260,
     "name": "General Graardor",
@@ -21211,6 +23816,924 @@
       "konar",
       "nieve",
       "duradel"
+    ]
+  },
+  "6268": {
+    "id": 6268,
+    "name": "Jogre",
+    "members": true,
+    "combatLevel": 53,
+    "attackLevel": 43,
+    "strengthLevel": 43,
+    "defenceLevel": 43,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 60,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 7
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6269": {
+    "id": 6269,
+    "name": "Cyclops",
+    "members": true,
+    "combatLevel": 76,
+    "attackLevel": 65,
+    "strengthLevel": 65,
+    "defenceLevel": 35,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 7
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 100,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka"
+    ]
+  },
+  "6270": {
+    "id": 6270,
+    "name": "Cyclops",
+    "members": true,
+    "combatLevel": 76,
+    "attackLevel": 65,
+    "strengthLevel": 65,
+    "defenceLevel": 35,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 7
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 100,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka"
+    ]
+  },
+  "6271": {
+    "id": 6271,
+    "name": "Ork",
+    "members": true,
+    "combatLevel": 107,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 60,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 110,
+    "attackBonus": 19,
+    "strengthBonus": 4,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 12,
+      "slash": 14,
+      "crush": 13
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 13,
+      "standard": 13,
+      "heavy": 13
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Ugly, fierce and with a bad attitude.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6272": {
+    "id": 6272,
+    "name": "Ork",
+    "members": true,
+    "combatLevel": 107,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 60,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 110,
+    "attackBonus": 19,
+    "strengthBonus": 4,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 12,
+      "slash": 14,
+      "crush": 13
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 13,
+      "standard": 13,
+      "heavy": 13
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Ugly, fierce and with a bad attitude.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6273": {
+    "id": 6273,
+    "name": "Ork",
+    "members": true,
+    "combatLevel": 107,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 60,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 110,
+    "attackBonus": 19,
+    "strengthBonus": 4,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 12,
+      "slash": 14,
+      "crush": 13
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 13,
+      "standard": 13,
+      "heavy": 13
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Ugly, fierce and with a bad attitude.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6274": {
+    "id": 6274,
+    "name": "Ork",
+    "members": true,
+    "combatLevel": 107,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 60,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 110,
+    "attackBonus": 19,
+    "strengthBonus": 4,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 12,
+      "slash": 14,
+      "crush": 13
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 13,
+      "standard": 13,
+      "heavy": 13
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Ugly, fierce and with a bad attitude.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6275": {
+    "id": 6275,
+    "name": "Hobgoblin",
+    "members": false,
+    "combatLevel": 47,
+    "attackLevel": 39,
+    "strengthLevel": 39,
+    "defenceLevel": 35,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 52,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 52,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka"
+    ]
+  },
+  "6276": {
+    "id": 6276,
+    "name": "Spiritual ranger",
+    "members": true,
+    "combatLevel": 115,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 96,
+    "magicLevel": 1,
+    "rangedLevel": 121,
+    "constitutionLevel": 131,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "maxHit": {
+      "default": 13
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 131,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6277": {
+    "id": 6277,
+    "name": "Spiritual warrior",
+    "members": true,
+    "combatLevel": 134,
+    "attackLevel": 116,
+    "strengthLevel": 120,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 131,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 110,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 135,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6278": {
+    "id": 6278,
+    "name": "Spiritual mage",
+    "members": true,
+    "combatLevel": 121,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 61,
+    "magicLevel": 180,
+    "rangedLevel": 1,
+    "constitutionLevel": 75,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 10.0,
+    "maxHit": {
+      "default": 19
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 75,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6279": {
+    "id": 6279,
+    "name": "Goblin",
+    "members": false,
+    "combatLevel": 13,
+    "attackLevel": 12,
+    "strengthLevel": 13,
+    "defenceLevel": 7,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 16,
+    "attackBonus": -21,
+    "strengthBonus": -15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -15,
+      "slash": -15,
+      "crush": -15
+    },
+    "magicDefence": {
+      "magic": -15
+    },
+    "rangedDefence": {
+      "light": -15,
+      "standard": -15,
+      "heavy": -15
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "An ugly green creature.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 16,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "6280": {
+    "id": 6280,
+    "name": "Goblin",
+    "members": false,
+    "combatLevel": 13,
+    "attackLevel": 12,
+    "strengthLevel": 13,
+    "defenceLevel": 7,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 16,
+    "attackBonus": -21,
+    "strengthBonus": -15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -15,
+      "slash": -15,
+      "crush": -15
+    },
+    "magicDefence": {
+      "magic": -15
+    },
+    "rangedDefence": {
+      "light": -15,
+      "standard": -15,
+      "heavy": -15
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "An ugly green creature.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 16,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "6281": {
+    "id": 6281,
+    "name": "Goblin",
+    "members": false,
+    "combatLevel": 13,
+    "attackLevel": 12,
+    "strengthLevel": 13,
+    "defenceLevel": 7,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 16,
+    "attackBonus": -21,
+    "strengthBonus": -15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -15,
+      "slash": -15,
+      "crush": -15
+    },
+    "magicDefence": {
+      "magic": -15
+    },
+    "rangedDefence": {
+      "light": -15,
+      "standard": -15,
+      "heavy": -15
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "An ugly green creature.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 16,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "6282": {
+    "id": 6282,
+    "name": "Goblin",
+    "members": false,
+    "combatLevel": 13,
+    "attackLevel": 12,
+    "strengthLevel": 13,
+    "defenceLevel": 7,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 16,
+    "attackBonus": -21,
+    "strengthBonus": -15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -15,
+      "slash": -15,
+      "crush": -15
+    },
+    "magicDefence": {
+      "magic": -15
+    },
+    "rangedDefence": {
+      "light": -15,
+      "standard": -15,
+      "heavy": -15
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "An ugly green creature.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 16,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "6283": {
+    "id": 6283,
+    "name": "Goblin",
+    "members": false,
+    "combatLevel": 13,
+    "attackLevel": 12,
+    "strengthLevel": 13,
+    "defenceLevel": 7,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 16,
+    "attackBonus": -21,
+    "strengthBonus": -15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -15,
+      "slash": -15,
+      "crush": -15
+    },
+    "magicDefence": {
+      "magic": -15
+    },
+    "rangedDefence": {
+      "light": -15,
+      "standard": -15,
+      "heavy": -15
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "An ugly green creature.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 16,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
     ]
   },
   "6346": {
@@ -22938,6 +26461,118 @@
     "categories": [],
     "assignedBy": []
   },
+  "9184": {
+    "id": 9184,
+    "name": "Ogre",
+    "members": true,
+    "combatLevel": 58,
+    "attackLevel": 46,
+    "strengthLevel": 48,
+    "defenceLevel": 43,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 60,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
+  "9185": {
+    "id": 9185,
+    "name": "Ogre",
+    "members": true,
+    "combatLevel": 58,
+    "attackLevel": 46,
+    "strengthLevel": 48,
+    "defenceLevel": 43,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 60,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
   "11232": {
     "id": 11232,
     "name": "Goblin",
@@ -23680,6 +27315,179 @@
       "mazchna",
       "vannaka"
     ]
+  },
+  "13456": {
+    "id": 13456,
+    "name": "Ancient warrior",
+    "members": true,
+    "combatLevel": 134,
+    "attackLevel": 116,
+    "strengthLevel": 120,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 131,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 110,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 135,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "13457": {
+    "id": 13457,
+    "name": "Ancient ranger",
+    "members": true,
+    "combatLevel": 127,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 130,
+    "magicLevel": 1,
+    "rangedLevel": 150,
+    "constitutionLevel": 89,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [
+      "spectral"
+    ],
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 120,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "13458": {
+    "id": 13458,
+    "name": "Blood reaver",
+    "members": true,
+    "combatLevel": 174,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 100,
+    "magicLevel": 190,
+    "rangedLevel": 1,
+    "constitutionLevel": 125,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 20,
+      "slash": 80,
+      "crush": 120
+    },
+    "magicDefence": {
+      "magic": 300
+    },
+    "rangedDefence": {
+      "light": 55,
+      "standard": 55,
+      "heavy": 55
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2022]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A strange and twisted demon.",
+    "attributes": [
+      "Demon"
+    ],
+    "maxHit": {},
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
   },
   "14244": {
     "id": 14244,

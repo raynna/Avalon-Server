@@ -375,7 +375,7 @@ object ProjectileManager {
         stream.writeShort(proj.type.startTime)
         stream.writeShort(proj.endTime)
         stream.writeByte(proj.type.arc)
-        stream.writeShort((proj.type.displacement shr 2))
+        stream.writeShort(proj.type.displacement)
         player.session.write(stream)
     }
 
