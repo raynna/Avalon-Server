@@ -47,7 +47,6 @@ public class NpcCombatCalculations {
         }
         int damage = Utils.getRandom(finalMaxHit);
         damage = ceilToNextTenIfEnabled(target, damage);
-        System.out.println("scaled up damage: " + damage);
         return damage;
     }
 

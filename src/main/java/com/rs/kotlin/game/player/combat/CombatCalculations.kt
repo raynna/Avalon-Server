@@ -125,9 +125,7 @@ object CombatCalculations {
 
             var finalDamage = Utils.random(maxHit)
             finalDamage = ceilToNextTen(player, finalDamage)
-            player.message("DAMAGE RAW=${maxHit} SCALED=${ceilToNextTen(player, maxHit)}")
             var finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
-            player.message("MAXHIT RAW=${finalMaxHit} SCALED=${ceilToNextTen(player, finalMaxHit)}")
             finalMaxHit = ceilToNextTen(player, finalMaxHit)
             if (target is NPC && target.id == 4474) {
                 finalDamage = finalMaxHit

@@ -20,24 +20,39 @@ public class CommanderZilyanaCombat extends CombatScript {
 		return new Object[]{6247}; // Commander Zilyana
 	}
 
+	private final static int MELEE_ANIMATION = 6964;
+	private final static int MAGIC_ANIMATION = 6967;
+	private final static int MAGIC_GFX = 1194;
+
+	enum CommanderZilyanaAttack { MELEE, MAGIC }
+
 	@Override
 	public int attack(NPC npc, Entity target) {
-		NpcCombatDefinition defs = npc.getCombatDefinitions();
-
 		maybeShout(npc);
-
-		if (Utils.random(2) == 0) {
-			performMagicAttack(npc);
-		} else {
-			performMeleeAttack(npc, target, defs);
+		CommanderZilyanaAttack attack = Utils.randomOf(CommanderZilyanaAttack.MAGIC, CommanderZilyanaAttack.MELEE);
+		switch (attack) {
+			case MELEE -> performMeleeAttack(npc, target);
+			case MAGIC -> performMagicAttack(npc, target);
 		}
-
 		return npc.getCombatData().attackSpeedTicks;
 	}
 
-	// --------------------------
-	// Shouts
-	// --------------------------
+	private void performMagicAttack(NPC npc, Entity target) {
+		npc.animate(MAGIC_ANIMATION);
+		int damage = Utils.random(100, 200);
+		Hit magicHit = npc.magicHit(target, damage);
+		if (magicHit.getDamage() > 0) {
+			delayHit(npc, target, 0, magicHit);
+			target.gfx(MAGIC_GFX);
+		}
+	}
+
+	private void performMeleeAttack(NPC npc, Entity target) {
+		npc.animate(MELEE_ANIMATION);
+		Hit meleeHit = npc.meleeHit(target, 270, NpcAttackStyle.SLASH);
+		delayHit(npc, target, 0, meleeHit);
+	}
+
 	private void maybeShout(NPC npc) {
 		if (Utils.random(4) != 0) return;
 
@@ -58,33 +73,5 @@ public class CommanderZilyanaCombat extends CombatScript {
 	private void shout(NPC npc, String text, int soundId) {
 		npc.setNextForceTalk(new ForceTalk(text));
 		npc.playSound(soundId, 2);
-	}
-
-	// --------------------------
-	// Magic attack
-	// --------------------------
-	private void performMagicAttack(NPC npc) {
-		npc.animate(new Animation(6967));
-
-		for (Entity t : npc.getPossibleTargets()) {
-			if (!t.withinDistance(npc, npc instanceof WorldBossNPC ? 16 : 3)) {
-				continue;
-			}
-			Hit magicHit = npc.magicHit(npc, 300);
-			if (magicHit.getDamage() > 0) {
-				delayHit(npc, t, 1, magicHit);
-				t.gfx(new Graphics(1194));
-			}
-		}
-	}
-
-	// --------------------------
-	// Melee attack
-	// --------------------------
-	private void performMeleeAttack(NPC npc, Entity target, NpcCombatDefinition defs) {
-		npc.animate(new Animation(defs.getAttackAnim()));
-
-		Hit meleeHit = npc.meleeHit(npc, defs.getMaxHit(), NpcAttackStyle.SLASH);
-		delayHit(npc, target, 0, meleeHit);
 	}
 }

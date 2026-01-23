@@ -8,6 +8,7 @@ import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
+import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.prayer.AncientPrayer;
 import com.rs.java.game.player.prayer.NormalPrayer;
@@ -24,25 +25,75 @@ public class KrilTsutsaroth extends CombatScript {
 		return new Object[]{6203}; // K'ril Tsutsaroth ID
 	}
 
+	private static final int SPECIAL_ANIMATION = 14968;
+	private static final int MELEE_ANIMATION = 14963;
+	private static final int MAGIC_ANIMATION = 14962;
+	private static final int MAGIC_GFX = 1210;
+	private static final int MAGIC_PROJECTILE = 1211;
+	private static final int MELEE_LEFT_SWING = 14374;
+	private static final int MELEE_RIGHT_SWING = 14375;
+
+	enum KrilTsutsarothAttack { MELEE, MAGIC, SPECIAL }
+
 	@Override
 	public int attack(NPC npc, Entity target) {
-		NpcCombatDefinition defs = npc.getCombatDefinitions();
-
 		maybeShout(npc);
-
-		int style = Utils.random(3);
-		switch (style) {
-			case 0 -> performMagicFlameAttack(npc);
-			case 1 -> performMeleeAttack(npc, target, defs, false);
-			case 2 -> performMeleeAttack(npc, target, defs, true);
+		KrilTsutsarothAttack attack = Utils.randomWeighted(KrilTsutsarothAttack.MELEE, 66, KrilTsutsarothAttack.MAGIC, 33);
+		boolean special = Utils.roll(1, 9);
+		if (target instanceof Player player) {
+			if (special && player.getPrayer().hasProtectFromMelee()) {
+				performSpecialAttack(npc, target);
+				return npc.getCombatData().attackSpeedTicks;
+			}
 		}
-
+		switch (attack) {
+			case MELEE -> performMeleeAttack(npc, target);
+			case MAGIC -> performMagicFlameAttack(npc);
+		}
 		return npc.getCombatData().attackSpeedTicks;
 	}
 
-	// --------------------------
-	// Shouts
-	// --------------------------
+	private void performMagicFlameAttack(NPC npc) {
+		npc.animate(MAGIC_ANIMATION);
+		npc.gfx(MAGIC_GFX);
+
+		for (Entity t : npc.getPossibleTargets()) {
+			int damage = Utils.random(100, 300);
+			Hit magicHit = npc.magicHit(t, damage);
+			ProjectileManager.send(Projectile.KRIL_TSUTSAROTH, MAGIC_PROJECTILE, npc, t, () -> {
+				applyRegisteredHit(npc, t, magicHit);
+			});
+		}
+	}
+
+	public void performSpecialAttack(NPC npc, Entity target) {
+		if (target instanceof Player p2) {
+			npc.animate(SPECIAL_ANIMATION);
+			npc.setNextForceTalk(new ForceTalk("YARRRRRRR!"));
+
+			int damage = Utils.random(350, 490);
+			Hit specialHit = npc.regularHit(p2, damage);
+			delayHit(npc, target, 1, specialHit);
+			if (p2.getPrayer().hasPrayerPoints()) {
+				int drainAmount = p2.getEquipment().getItem(Equipment.SLOT_SHIELD).isItem("item.spectral_spirit_shield") ? 4 : 2;
+				p2.getPrayer().drainPrayer(p2.getPrayer().getPrayerPoints() / drainAmount);
+				p2.getPackets().sendGameMessage(
+						"K'ril Tsutsaroth slams through your protection prayer, leaving you feeling drained.");
+			}
+		}
+	}
+
+	private void performMeleeAttack(NPC npc, Entity target) {
+		int[] attackAnims = { MELEE_LEFT_SWING, MELEE_RIGHT_SWING };
+		int anim = attackAnims[Utils.random(attackAnims.length)];
+		boolean poison = Utils.roll(1, 4);
+		if (poison)
+			target.getNewPoison().startPoison(80);
+		npc.animate(anim);
+		Hit meleeHit = npc.meleeHit(target, 460, NpcAttackStyle.SLASH);
+		delayHit(npc, target, 0, meleeHit);
+	}
+
 	private void maybeShout(NPC npc) {
 		if (Utils.random(4) != 0) {
 			return;
@@ -64,61 +115,5 @@ public class KrilTsutsaroth extends CombatScript {
 	private void shout(NPC npc, String text, int soundId) {
 		npc.setNextForceTalk(new ForceTalk(text));
 		npc.playSound(soundId, 2);
-	}
-
-	// --------------------------
-	// Magic flame attack
-	// --------------------------
-	private void performMagicFlameAttack(NPC npc) {
-		npc.animate(new Animation(14962));
-		npc.gfx(new Graphics(1210));
-
-		for (Entity t : npc.getPossibleTargets()) {
-			Hit magicHit = getMagicHit(npc,
-					NpcCombatCalculations.getRandomMaxHit(npc, 300, NpcAttackStyle.MAGIC, t)
-			);
-			delayHit(npc, t, 1, magicHit);
-
-			ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, 1211, npc, t);
-
-			if (Utils.random(4) == 0) {
-				t.getPoison().makePoisoned(168);
-			}
-		}
-	}
-
-	// --------------------------
-	// Melee attacks
-	// --------------------------
-	private void performMeleeAttack(NPC npc, Entity target, NpcCombatDefinition defs, boolean smiteStyle) {
-		int damage = 463;
-		int anim = 14963;
-
-		if (smiteStyle && target instanceof Player p2) {
-			if ((p2.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MELEE)
-					|| p2.getPrayer().isActive(AncientPrayer.DEFLECT_MELEE))
-					&& Utils.random(2) == 0) {
-
-				p2.getPrayer().drainPrayer(damage / 2);
-				damage = 597;
-				anim = 14968;
-
-				npc.setNextForceTalk(new ForceTalk("YARRRRRRR!"));
-				p2.getPackets().sendGameMessage(
-						"K'ril Tsutsaroth slams through your protection prayer, leaving you feeling drained.");
-			}
-		}
-
-		int[] attackAnims = {14374, 14375};
-		if (!smiteStyle) {
-			anim = attackAnims[Utils.random(attackAnims.length)];
-		}
-
-		npc.animate(new Animation(anim));
-
-		Hit meleeHit = getMeleeHit(npc,
-				NpcCombatCalculations.getRandomMaxHit(npc, damage, NpcAttackStyle.SLASH, target)
-		);
-		delayHit(npc, target, 0, meleeHit);
 	}
 }

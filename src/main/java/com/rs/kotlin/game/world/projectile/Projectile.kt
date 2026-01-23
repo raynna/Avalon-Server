@@ -35,4 +35,7 @@ enum class Projectile {
     //NPCS
     DRAGONFIRE,
     GENERAL_GRAARDOR,
+    KRIL_TSUTSAROTH,
+    KREE_ARRA,
+    COMMANDER_ZILYANA,
 }

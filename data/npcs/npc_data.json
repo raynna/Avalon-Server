@@ -20956,6 +20956,135 @@
       "duradel"
     ]
   },
+  "6222": {
+    "id": 6222,
+    "name": "Kree\u0027arra",
+    "members": true,
+    "combatLevel": 580,
+    "attackLevel": 300,
+    "strengthLevel": 200,
+    "defenceLevel": 260,
+    "magicLevel": 200,
+    "rangedLevel": 380,
+    "constitutionLevel": 255,
+    "attackBonus": 136,
+    "strengthBonus": 12,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 120,
+    "rangedStrengthBonus": 50,
+    "meleeDefence": {
+      "stab": 180,
+      "slash": 180,
+      "crush": 180
+    },
+    "magicDefence": {
+      "magic": 200
+    },
+    "rangedDefence": {
+      "light": 200,
+      "standard": 200,
+      "heavy": 200
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "5",
+    "examine": "Graceful avatar of Armadyl.",
+    "attributes": [
+      "flying"
+    ],
+    "xpBonus": 40.0,
+    "maxHit": {
+      "ranged": 69,
+      "magic": 21,
+      "melee": 25
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Ranged magic]]",
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 3,
+    "respawnTicks": 150,
+    "slayerXp": 357,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6247": {
+    "id": 6247,
+    "name": "Commander Zilyana",
+    "members": true,
+    "combatLevel": 596,
+    "attackLevel": 280,
+    "strengthLevel": 196,
+    "defenceLevel": 300,
+    "magicLevel": 300,
+    "rangedLevel": 250,
+    "constitutionLevel": 255,
+    "attackBonus": 195,
+    "strengthBonus": 20,
+    "magicBonus": 200,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 100,
+      "slash": 100,
+      "crush": 100
+    },
+    "magicDefence": {
+      "magic": 100
+    },
+    "rangedDefence": {
+      "light": 100,
+      "standard": 100,
+      "heavy": 75
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "Commander of Saradomin\u0027s forces.",
+    "attributes": [],
+    "xpBonus": 37.5,
+    "maxHit": {
+      "melee": 27,
+      "magic": 20
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 2,
+    "respawnTicks": 150,
+    "slayerXp": 350,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "6260": {
     "id": 6260,
     "name": "General Graardor",

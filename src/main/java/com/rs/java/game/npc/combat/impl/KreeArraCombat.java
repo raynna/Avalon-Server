@@ -14,6 +14,8 @@ public class KreeArraCombat extends CombatScript {
 
     private final static int MELEE_ANIMATION = 6977;
     private final static int RANGE_ANIMATION = 6976;
+    private final static int RANGE_PROJECTILE = 1197;
+    private final static int MAGIC_PROJECTILE = 1198;
 
     enum KreeArraAttack { MELEE, RANGE, MAGE }
 
@@ -26,13 +28,14 @@ public class KreeArraCombat extends CombatScript {
     public int attack(NPC npc, Entity target) {
         if (npc.getTickManager().getTicksLeft(TickManager.TickKeys.LAST_ATTACKED_TICK) == 0) {
             boolean inMelee = npc.isWithinMeleeRange(target);
-            if (!inMelee) {
-                npc.calcFollow(target, 2, true, false);
-                return 1;
+            if (!inMelee && !npc.hasWalkSteps()) {
+                npc.calcFollow(target, 2, true, true);
             }
-            npc.animate(MELEE_ANIMATION);
-            Hit hit = npc.meleeHit(npc, 260);
-            delayHit(npc, target, 1, hit);
+            if (inMelee) {
+                npc.animate(MELEE_ANIMATION);
+                Hit hit = npc.meleeHit(target, 260);
+                delayHit(npc, target, 0, hit);
+            }
             return npc.getAttackSpeed();
         }
 		getRandomAttack(npc, target);
@@ -51,8 +54,8 @@ public class KreeArraCombat extends CombatScript {
 
     private void sendRangedAttack(NPC npc, Entity target) {
         for (Entity t : npc.getPossibleTargets()) {
-            Hit rangeHit = npc.rangedHit(t, 720);
-            ProjectileManager.send(Projectile.STORM_OF_ARMADYL, 1197, npc, t, () -> {
+            Hit rangeHit = npc.rangedHit(t, 710);
+            ProjectileManager.send(Projectile.KREE_ARRA, RANGE_PROJECTILE, npc, t, () -> {
                 applyRegisteredHit(npc, target, rangeHit);
                 for (int c = 0; c < 10; c++) {
                     int dir = Utils.random(Utils.DIRECTION_DELTA_X.length);
@@ -69,9 +72,7 @@ public class KreeArraCombat extends CombatScript {
     private void sendMagicAttack(NPC npc, Entity target) {
         for (Entity t : npc.getPossibleTargets()) {
             Hit magicHit = npc.magicHit(t, 210);
-            ProjectileManager.send(Projectile.STORM_OF_ARMADYL, 1197, npc, t, () -> {
-                applyRegisteredHit(npc, target, magicHit);
-            });
+            ProjectileManager.send(Projectile.STORM_OF_ARMADYL, MAGIC_PROJECTILE, npc, t, () -> applyRegisteredHit(npc, target, magicHit));
         }
     }
 }

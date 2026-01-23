@@ -253,9 +253,11 @@ public final class NPCCombat {
                 return true;
             }
             attackDelay = Math.max(attackDelay, 1);
-
-            npc.resetWalkSteps();
-            return attemptWalkAroundTarget(target, size);
+            if (!npc.hasWalkSteps()) {
+                npc.resetWalkSteps();
+                return attemptWalkAroundTarget(target, size);
+            }
+            return true;
         }
 
         if (npc.getCombatDefinitions().getAttackStyle() == AttackStyle.MELEE
@@ -340,9 +342,6 @@ public final class NPCCombat {
             return;
         }
 
-        // Reset walk every tick before deciding next step
-        npc.resetWalkSteps();
-
         // If not in attack range, move closer
         boolean inAttackRange = Utils.isOnRange(
                 npc.getX(), npc.getY(), size,
@@ -350,11 +349,13 @@ public final class NPCCombat {
                 maxAttackDistance
         );
 
-        if (!inAttackRange || !npc.clipedProjectile(target, maxAttackDistance == 0 && !forceCheckClipAsRange(target))) {
-            if (npc.isIntelligentRouteFinder()) {
-                npc.calcFollow(target, npc.getRun() ? 2 : 1, true, true);
-            } else {
-                npc.addWalkStepsInteract(target.getX(), target.getY(), npc.getRun() ? 2 : 1, size, true);
+        if (!npc.hasWalkSteps()) {
+            if (!inAttackRange || !npc.clipedProjectile(target, maxAttackDistance == 0 && !forceCheckClipAsRange(target))) {
+                if (npc.isIntelligentRouteFinder()) {
+                    npc.calcFollow(target, npc.getRun() ? 2 : 1, true, true);
+                } else {
+                    npc.addWalkStepsInteract(target.getX(), target.getY(), npc.getRun() ? 2 : 1, size, true);
+                }
             }
         }
     }
