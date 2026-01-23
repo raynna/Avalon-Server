@@ -190,9 +190,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val first = hits.first()
         val firstHit = first.hit
 
-        val maxHit = CombatCalculations.calculateRangedMaxHit(attacker, defender).maxHit
-
-        val qualifies = firstHit.damage >= (maxHit * 0.66).toInt() || firstHit.damage == 0
+        val qualifies = firstHit.damage >= (firstHit.maxHit * 0.66).toInt() || firstHit.damage == 0
         if (!qualifies) return
         consumeAmmo()
         sendSwiftProjectile()
@@ -215,7 +213,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             delay = first.delay
         )
 
-        if (firstHit.damage >= maxHit) {
+        if (firstHit.isCriticalHit) {
             defender.lock(3)
             defender.gfx(Graphics(181, 0, 96))
         }
