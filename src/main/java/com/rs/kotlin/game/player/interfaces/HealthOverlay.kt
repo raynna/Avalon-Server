@@ -230,12 +230,16 @@ class HealthOverlay {
     }
 
     private fun buildHpText(viewer: Player, currentHp: Int, maxHp: Int): String {
-        return if (viewer.varsManager.getBitValue(1485) == 1) {
-            "${ceil(currentHp / 10.0).toInt()}/${ceil(maxHp / 10.0).toInt()}"
-        } else {
-            "$currentHp/$maxHp"
+        if (viewer.varsManager.getBitValue(1485) != 1) {
+            return "$currentHp/$maxHp"
         }
+
+        val scaledCurrent = (currentHp / 10)
+        val scaledMax = (maxHp / 10)
+
+        return "$scaledCurrent/$scaledMax"
     }
+
 
     private fun buildSkillRows(player: Player): List<String> {
         data class SkillRow(

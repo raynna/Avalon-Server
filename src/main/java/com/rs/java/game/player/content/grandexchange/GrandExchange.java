@@ -118,33 +118,66 @@ public class GrandExchange {
 
 	public static void sendOfferTracker(Player player) {
 		player.getInterfaceManager().sendInterface(275);
-		int number = 0;
+
 		for (int i = 0; i < 100; i++) {
 			player.getPackets().sendTextOnComponent(275, i, "");
 		}
+
+		int offerCount = 0;
+
 		for (Offer offer : OFFERS.values()) {
 			if (offer == null)
 				continue;
-			player.getPackets().sendTextOnComponent(275, 11, "Amount of Offers: " + number
-					+ "<br>It does only show items were price is over " + Settings.LOWPRICE_LIMIT + "<br><br>");
-			ItemDefinitions defs = ItemDefinitions.getItemDefinitions(offer.getId());
+			if (offer.isCompleted())
+				continue;
 			if (GrandExchange.getPrice(offer.getId()) < Settings.LOWPRICE_LIMIT
 					&& !LimitedGEReader.itemIsLimited(offer.getId()))
 				continue;
+
+			offerCount++;
+			if (offerCount >= 100)
+				break;
+		}
+
+		player.getPackets().sendTextOnComponent(
+				275,
+				11,
+				"Amount of Offers: " + offerCount +
+						"<br>"
+		);
+
+		player.getPackets().sendTextOnComponent(275, 1, "Grand Exchange Offers");
+
+		int index = 0;
+		for (Offer offer : OFFERS.values()) {
+			if (offer == null)
+				continue;
 			if (offer.isCompleted())
 				continue;
-			player.getPackets().sendTextOnComponent(275, 1, "Grand Exchange Offers");
+			if (GrandExchange.getPrice(offer.getId()) < Settings.LOWPRICE_LIMIT
+					&& !LimitedGEReader.itemIsLimited(offer.getId()))
+				continue;
+
+			ItemDefinitions defs = ItemDefinitions.getItemDefinitions(offer.getId());
 			int totalAmount = offer.getAmount() - offer.getTotalAmmountSoFar();
-			player.getPackets().sendTextOnComponent(275, (13 + number++),
-					Utils.formatPlayerNameForDisplay(offer.getUsername()) + " ["
-							+ (offer.isBuying() ? "Buying" : "Selling") + "] " + defs.getName()
-							+ (totalAmount > 1 ? " x " + Utils.getFormattedNumber(totalAmount, ',') : "") + " :  Price "
-							+ Utils.getFormattedNumber(offer.getPrice(), ',') + " " + (totalAmount > 1 ? "each" : ""));
-			if (number >= 100) {
+
+			player.getPackets().sendTextOnComponent(
+					275,
+					13 + index++,
+					Utils.formatPlayerNameForDisplay(offer.getUsername()) +
+							" [" + (offer.isBuying() ? "Buying" : "Selling") + "] " +
+							defs.getName() +
+							(totalAmount > 1 ? " x " + Utils.getFormattedNumber(totalAmount, ',') : "") +
+							" : Price " +
+							Utils.getFormattedNumber(offer.getPrice(), ',') +
+							(totalAmount > 1 ? " each" : "")
+			);
+
+			if (index >= 100)
 				break;
-			}
 		}
 	}
+
 
 	public static int getBestBuyPrice(int itemId) {
 		int price = 0;

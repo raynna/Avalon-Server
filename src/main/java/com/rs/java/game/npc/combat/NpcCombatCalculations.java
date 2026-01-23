@@ -44,7 +44,9 @@ public class NpcCombatCalculations {
                 }
             }
         }
-        return Utils.getRandom(maxHit);
+        int damage = Utils.getRandom(maxHit);
+        damage = ceilToNextTenIfEnabled(target, damage);
+        return damage;
     }
 
     private static double calculateAttackRoll(NPC npc, NpcAttackStyle style, CombatData data) {
@@ -146,5 +148,19 @@ public class NpcCombatCalculations {
         }
         return random < probability;
     }
+
+    private static int ceilToNextTenIfEnabled(Entity target, int damage) {
+        if (!(target instanceof Player player))
+            return damage;
+
+        if (player.getVarsManager().getBitValue(1485) == 0)
+            return damage;
+
+        if (damage <= 0)
+            return damage;
+
+        return ((damage + 9) / 10) * 10;
+    }
+
 
 }

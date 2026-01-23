@@ -183,8 +183,6 @@ public final class Commands {
         registerCommand("openticket", Commands::answerTicketCommand, CommandCategory.SUPPORT,
                 "Answer player ticket. Usage: ::answer [player]");
 
-
-
         registerCommand("youtube", Commands::youtubeCommand, CommandCategory.NORMAL,
                 "Search YouTube. Usage: ::youtube [search term]");
         registerCommand("channel", Commands::channelCommand, CommandCategory.NORMAL,

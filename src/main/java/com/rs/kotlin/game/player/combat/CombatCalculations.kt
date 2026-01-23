@@ -19,6 +19,7 @@ import com.rs.kotlin.game.player.equipment.EquipmentSets
 import com.rs.kotlin.game.player.equipment.EquipmentSets.getDharokMultiplier
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
+import kotlin.math.max
 import kotlin.math.min
 
 object CombatCalculations {
@@ -122,8 +123,12 @@ object CombatCalculations {
             val baseMaxHit = baseDamage.toInt()
             val maxHit = (baseMaxHit * specialMultiplier).toInt()
 
-            var finalDamage =  Utils.random(maxHit)
-            val finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
+            var finalDamage = Utils.random(maxHit)
+            finalDamage = ceilToNextTen(player, finalDamage)
+            player.message("DAMAGE RAW=${maxHit} SCALED=${ceilToNextTen(player, maxHit)}")
+            var finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
+            player.message("MAXHIT RAW=${finalMaxHit} SCALED=${ceilToNextTen(player, finalMaxHit)}")
+            finalMaxHit = ceilToNextTen(player, finalMaxHit)
             if (target is NPC && target.id == 4474) {
                 finalDamage = finalMaxHit
             }
@@ -226,8 +231,10 @@ object CombatCalculations {
 
             val baseMaxHit = baseDamage.toInt()
 
-            val maxHit = (baseMaxHit * specialMultiplier).toInt()
-            var finalDamage = Utils.random(maxHit);
+            var maxHit = (baseMaxHit * specialMultiplier).toInt()
+            maxHit = ceilToNextTen(player, maxHit)
+            var finalDamage = Utils.random(maxHit)
+            finalDamage = ceilToNextTen(player, finalDamage)
             if (twistedBowMax > 0 && finalDamage > twistedBowMax) {
                 finalDamage = twistedBowMax
             }
@@ -344,18 +351,19 @@ object CombatCalculations {
             val equipmentSet = EquipmentSets.getSet(player)
             val voidDamage = EquipmentSets.getDamageMultiplier(player, equipmentSet, CombatMultipliers.Style.MAGIC)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MAGIC)
-
             var levelMultiplier = getMagicLevelMultiplier(player)
             if (target is NPC) {
                 levelMultiplier *= player.prayer.magicMultiplier
             }
 
             val baseMaxHit = floor(base * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage).toInt()
+
             val rolledBaseDamage = Utils.random(min, baseMaxHit)
 
             var finalDamage = (rolledBaseDamage * specialMultiplier).toInt()
-            val finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
-
+            finalDamage = ceilToNextTen(player, finalDamage)
+            var finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
+            finalMaxHit = ceilToNextTen(player, finalMaxHit)
             if (target is NPC && target.id == 4474) {
                 finalDamage = finalMaxHit
             }
@@ -548,5 +556,13 @@ object CombatCalculations {
 
             else -> 0
         }
+    }
+
+    fun ceilToNextTen(player: Player?, damage: Int): Int {
+        if (player == null) return damage
+        if (player.varsManager.getBitValue(1485) == 0) return damage
+        if (damage <= 0) return damage
+
+        return ((damage + 9) / 10) * 10
     }
 }
