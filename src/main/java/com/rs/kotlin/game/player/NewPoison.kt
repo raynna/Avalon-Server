@@ -64,12 +64,13 @@ class NewPoison(@Transient private var entity: Entity) {
      */
     fun startPoison(severity: Int) {
         if (entity is Player) {
+            if (isPoisoned()) return
             if (entity.tickManager.isActive(TickManager.TickKeys.POISON_IMMUNE_TICKS))
-                    return
+                return
             (entity as Player).packets.sendGameMessage("You are now poisoned.")
         }
         entity.set(POISON_SEVERITY, severity)
-        entity.tickTimers[POISON_TICKS] = 0
+        entity.tickTimers[POISON_TICKS] = 30
         refresh()
     }
 

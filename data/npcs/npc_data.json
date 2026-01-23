@@ -20894,6 +20894,72 @@
       "krystilia"
     ]
   },
+  "6203": {
+    "id": 6203,
+    "name": "K\u0027ril Tsutsaroth",
+    "members": true,
+    "combatLevel": 650,
+    "attackLevel": 340,
+    "strengthLevel": 300,
+    "defenceLevel": 270,
+    "magicLevel": 200,
+    "rangedLevel": 1,
+    "constitutionLevel": 255,
+    "attackBonus": 160,
+    "strengthBonus": 31,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 70,
+      "slash": 80,
+      "crush": 80
+    },
+    "magicDefence": {
+      "magic": 80
+    },
+    "rangedDefence": {
+      "light": 80,
+      "standard": 80,
+      "heavy": 80
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "5",
+    "examine": "A servant of the god Zamorak.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 37.5,
+    "maxHit": {
+      "magic": 30,
+      "melee": 46,
+      "special attack": 49
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 150,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "6208": {
     "id": 6208,
     "name": "Balfrug Kreeyath",
