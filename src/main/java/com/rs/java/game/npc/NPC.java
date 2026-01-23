@@ -601,6 +601,11 @@ public class NPC extends Entity implements Serializable {
     }
 
     public void spawn() {
+        temporaryAttribute().clear();
+        tickManager.reset();
+        combat.reset();
+        removeTarget();
+
         setFinished(false);
         World.addNPC(this);
         setLastRegionId(0);

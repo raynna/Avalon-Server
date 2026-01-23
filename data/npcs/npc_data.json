@@ -20956,6 +20956,68 @@
       "duradel"
     ]
   },
+  "6260": {
+    "id": 6260,
+    "name": "General Graardor",
+    "members": true,
+    "combatLevel": 624,
+    "attackLevel": 280,
+    "strengthLevel": 350,
+    "defenceLevel": 250,
+    "magicLevel": 80,
+    "rangedLevel": 350,
+    "constitutionLevel": 255,
+    "attackBonus": 120,
+    "strengthBonus": 43,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 100,
+    "rangedStrengthBonus": 40,
+    "meleeDefence": {
+      "stab": 90,
+      "slash": 90,
+      "crush": 90
+    },
+    "magicDefence": {
+      "magic": 298
+    },
+    "rangedDefence": {
+      "light": 90,
+      "standard": 90,
+      "heavy": 90
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 October]] [[2013]]",
+    "aliases": [],
+    "size": "4",
+    "examine": "A huge war chief.",
+    "attributes": [],
+    "xpBonus": 32.5,
+    "maxHit": {
+      "melee": 60,
+      "ranged": 35
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 150,
+    "slayerXp": 338,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "6346": {
     "id": 6346,
     "name": "Pirate",

@@ -107,9 +107,10 @@ public final class NPCCombat {
 
         debug("combatAttack: ATTACKING");
         attackDelay = npc.getAttackSpeed();
-
-        target.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 16);
-        target.getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 12);
+        target.setAttackedBy(npc);
+        npc.setLastAttackTimer(16);
+        target.setInCombat(16);
+        target.setPjTimer(12);
 
         return CombatScriptsHandler.specialAttack(npc, target) > 0;
     }

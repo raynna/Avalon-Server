@@ -15,27 +15,53 @@ import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 public class GeneralGraardorCombat extends CombatScript {
 
+	private final static int MELEE_ANIMATION = 7060;
+	private final static int RANGE_ANIMATION = 7063;
+	private final static int RANGE_PROJECTILE = 1200;
+
+
+	enum GeneralGraardorAttack { MELEE, RANGE }
+
 	@Override
 	public Object[] getKeys() {
-		return new Object[]{6260}; // Graardor ID
+		return new Object[]{6260};
 	}
 
 	@Override
 	public int attack(NPC npc, Entity target) {
 		maybeShout(npc);
-
-		// 50% chance ranged, 50% melee
-		if (Utils.random(2) == 0) {
-			performRangedAttack(npc);
-		} else {
-			performMeleeAttack(npc, target);
+		boolean inMelee = npc.isWithinMeleeRange(target);
+		if (!inMelee) {
+			return npc.getAttackSpeed();
+		}
+		GeneralGraardorAttack attack = Utils.randomWeighted(GeneralGraardorAttack.MELEE, 66, GeneralGraardorAttack.RANGE, 33);
+		switch (attack) {
+			case RANGE -> performRangedAttack(npc);
+			case MELEE -> performMeleeAttack(npc, target);
 		}
 		return npc.getAttackSpeed();
 	}
 
-	// --------------------------
-	// Shouts
-	// --------------------------
+	private void performRangedAttack(NPC npc) {
+		npc.animate(new Animation(RANGE_ANIMATION));
+		for (Entity t : npc.getPossibleTargets()) {
+			int damage = Utils.random(150, 350);
+			Hit rangeHit = npc.rangedHit(t, damage);
+			ProjectileManager.send(Projectile.GENERAL_GRAARDOR, RANGE_PROJECTILE, npc, t, () -> applyRegisteredHit(npc, t, rangeHit));
+		}
+	}
+
+	private void performMeleeAttack(NPC npc, Entity target) {
+		npc.animate(MELEE_ANIMATION);
+		Hit meleeHit = npc.meleeHit(target, 600);
+		delayHit(npc, target, 0, meleeHit);
+	}
+
+	private void shout(NPC npc, String text, int soundId) {
+		npc.setNextForceTalk(new ForceTalk(text));
+		npc.playSound(soundId, 2);
+	}
+
 	private void maybeShout(NPC npc) {
 		if (Utils.random(4) != 0) {
 			return;
@@ -54,40 +80,5 @@ public class GeneralGraardorCombat extends CombatScript {
 			case 8 -> shout(npc, "GRAAAAAAAAAR!", 3207);
 			case 9 -> shout(npc, "FOR THE GLORY OF THE BIG HIGH WAR GOD!", 3228);
 		}
-	}
-
-	private void shout(NPC npc, String text, int soundId) {
-		npc.setNextForceTalk(new ForceTalk(text));
-		npc.playSound(soundId, 2);
-	}
-
-	// --------------------------
-	// Ranged
-	// --------------------------
-	private void performRangedAttack(NPC npc) {
-		npc.animate(new Animation(7063));
-		for (Entity t : npc.getPossibleTargets()) {
-			Hit rangeHit = npc.rangedHit(npc,335);
-			delayHit(npc, t, 1, rangeHit);
-			ProjectileManager.sendSimple(Projectile.ARROW, 1200, npc, t);
-		}
-	}
-
-	// --------------------------
-	// Melee
-	// --------------------------
-	private void performMeleeAttack(NPC npc, Entity target) {
-		NpcCombatDefinition defs = npc.getCombatDefinitions();
-		if (Utils.isOnRange(
-				npc.getX(), npc.getY(), npc.getSize(),
-				target.getX(), target.getY(), target.getSize(),
-				0)) {
-			npc.animate(new Animation(defs.getAttackAnim()));
-		}
-
-		Hit meleeHit = getMeleeHit(npc,
-				NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)
-		);
-		delayHit(npc, target, 0, meleeHit);
 	}
 }

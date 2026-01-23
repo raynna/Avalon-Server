@@ -10,7 +10,6 @@ import com.rs.Settings;
 import com.rs.core.cache.defintions.AnimationDefinitions;
 import com.rs.core.cache.defintions.ObjectDefinitions;
 import com.rs.java.game.Hit.HitLook;
-import com.rs.java.game.minigames.duel.DuelArena;
 import com.rs.java.game.minigames.duel.DuelControler;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.familiar.Familiar;
@@ -52,7 +51,6 @@ public abstract class Entity extends WorldTile {
     private transient int direction;
     private transient WorldTile lastWorldTile;
     private transient WorldTile nextWorldTile;
-    private transient WorldTile predictedWorldTile;
     private transient int nextWalkDirection;
     private transient int nextRunDirection;
     private transient WorldTile nextFaceWorldTile;
@@ -526,6 +524,15 @@ public abstract class Entity extends WorldTile {
         return new WorldTile(getCoordFaceX(getSize()), getCoordFaceY(getSize()), getPlane());
     }
 
+    public WorldTile getCenterTile() {
+        int size = getSize();
+        return new WorldTile(
+                getX() + (size - 1) / 2,
+                getY() + (size - 1) / 2,
+                getPlane()
+        );
+    }
+
 
     private Object[] previewWalkStep(int index) {
         if (walkSteps == null || walkSteps.isEmpty())
@@ -845,13 +852,36 @@ public abstract class Entity extends WorldTile {
         temporaryAttribute().put("attackDelay", attackDelay + Utils.currentTimeMillis());
     }
 
+    public void setLastAttackTimer(int ticks) {
+        tickManager.addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, ticks);
+    }
+
+    public int getLastAttack() {
+        return tickManager.getTicksLeft(TickManager.TickKeys.LAST_ATTACK_TICK);
+    }
+
+
+    public void setInCombat(int ticks) {
+        tickManager.addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, ticks);
+    }
+
     public boolean isInCombat() {
         return getTickManager().isActive(TickManager.TickKeys.LAST_ATTACKED_TICK);
     }
 
-    public boolean isPjBlocked() {
-        return getTickManager().isActive(TickManager.TickKeys.PJ_TIMER);
+    public void setPjTimer(int ticks) {
+        tickManager.addTicks(
+                TickManager.TickKeys.PJ_TIMER,
+                ticks,
+                () -> temporaryAttributes().remove("attackedBy")
+        );
     }
+
+    public boolean isPjBlocked() {
+        return getAttackedBy() != null &&
+                getTickManager().isActive(TickManager.TickKeys.PJ_TIMER);
+    }
+
 
     public void setFlinch(long flinchDelay) {
         temporaryAttribute().put("flinchDelay", flinchDelay + Utils.currentTimeMillis());

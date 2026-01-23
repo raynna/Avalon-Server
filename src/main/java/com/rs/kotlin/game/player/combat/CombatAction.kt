@@ -201,14 +201,13 @@ class CombatAction(
                 if (!check(player, target))
                     return -1
                 if (validateAttack(player, target)) {
-                    player.tickManager.addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 10)
-                    target.tickManager.addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10)
-                    target.tickManager.addTicks(TickManager.TickKeys.PJ_TIMER, 12)
                     target.attackedBy = player
+
+                    player.setLastAttackTimer(16);
+                    target.setInCombat(16);
+                    target.setPjTimer(12)
                     if (target is Player) {
-                        target.skullList[player] = 1440;
-                    }
-                    if (target is Player) {
+                        target.skullList[player] = 1440
                         PvpManager.onPlayerDamagedByPlayer(target, player)
                     }
                     style.attack()
@@ -230,18 +229,11 @@ class CombatAction(
             return false
         if (!PvpManager.canPlayerAttack(player, target))
             return false
-        if (player.isAtMultiArea && !target.isAtMultiArea) {
-            if (target.isPjBlocked && target.attackedBy != player) {
-                player.message("That " + (if (player.attackedBy is Player) "player" else "npc") + " is already in combat.")
-                return false
-            }
-        }
         if (!target.isAtMultiArea) {
             if (player.isPjBlocked && player.attackedBy != target) {
                 player.message("You are already in combat.")
                 return false
             }
-
             if (target.isPjBlocked && target.attackedBy != player) {
                 if (target is NPC) {
                     if (target.id == 4474 || target.id == 7891)

@@ -3,11 +3,8 @@ package com.rs.kotlin.game.world.projectile
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.core.thread.WorldThread
-import com.rs.java.game.Entity
-import com.rs.java.game.Graphics
-import com.rs.java.game.Hit
-import com.rs.java.game.World
-import com.rs.java.game.WorldTile
+import com.rs.java.game.*
+import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
@@ -23,7 +20,7 @@ object ProjectileManager {
         endTile: WorldTile,
         onLanded: Runnable? = null
     ) {
-        val type = ProjectileRegistry.get(projectile) ?: return
+        val type = ProjectileRegistry.get(projectile)?.resolve() ?: return
         val distance = Utils.getDistance(startTile.x, startTile.y, endTile.x, endTile.y)
         val endTime = type.endTime(distance)
         val impactCycles = queueProjectileAndGetImpactCycles(
@@ -197,12 +194,12 @@ object ProjectileManager {
 
         val baseType = ProjectileRegistry.get(projectile) ?: return ProjectileResult(0, 0)
 
-        val type = baseType.copy(
-            startHeight = (baseType.startHeight + heightOffset).coerceIn(0, 255),
-            endHeight = baseType.endHeight.coerceIn(0, 255),
-            arc = (baseType.arc + angleOffset).coerceIn(0, 255),
-            startTime = baseType.startTime + delayOffset
+        val type = baseType.resolve(
+            startHeightOffset = heightOffset,
+            arcOffset = angleOffset,
+            startTimeOffset = delayOffset
         )
+
 
         val distance = Utils.getDistance(attacker, defender)
 
@@ -272,28 +269,26 @@ object ProjectileManager {
     ): Int {
 
         val baseType = ProjectileRegistry.get(projectile) ?: return 1
-
-        val type = baseType.copy(
-            startHeight = (baseType.startHeight + startHeightOffset).coerceIn(0, 255),
-            endHeight = baseType.endHeight.coerceIn(0, 255),
-            arc = (baseType.arc + arcOffset).coerceIn(0, 255),
-            startTime = baseType.startTime + startTimeOffset,
-            multiplier =  baseType.multiplier + speedAdjustment,
-            displacement = baseType.displacement + displacement,
+        val type = baseType.resolve(
+            startHeightOffset = startHeightOffset,
+            arcOffset = arcOffset,
+            startTimeOffset = startTimeOffset,
+            displacementOffset = displacement,
+            speedAdjustment = speedAdjustment
         )
 
         val distance = Utils.getDistance(attacker, defender)
 
         val endCycle = type.endTime(distance)
-        val impactTicks = (endCycle + 15) / 30
+        val tickScale = if (attacker is NPC) 0 else 15
+        val impactTicks = (endCycle + tickScale) / 30
 
         val startTile = if (projectile == Projectile.ICE_BARRAGE) {
             defender.worldTile
         } else {
-            attacker.faceWorldTile
+            attacker.centerTile
         }
-        val endTile = defender.faceWorldTile
-
+        val endTile = defender.worldTile
         queueProjectileAndGetImpactCycles(
             attacker = attacker,
             defender = defender,
@@ -333,7 +328,7 @@ object ProjectileManager {
         startTile: WorldTile?,
         endTile: WorldTile?,
         gfx: Int,
-        type: ProjectileType,
+        type: ResolvedProjectileType,
         creatorSize: Int,
         endTime: Int
     ): Int {
@@ -380,7 +375,7 @@ object ProjectileManager {
         stream.writeShort(proj.type.startTime)
         stream.writeShort(proj.endTime)
         stream.writeByte(proj.type.arc)
-        stream.writeShort(proj.type.displacement)
+        stream.writeShort((proj.type.displacement shr 2))
         player.session.write(stream)
     }
 

@@ -61,10 +61,6 @@ public abstract class CombatScript {
 
         if (target instanceof Player player)
             player.handleIncommingHit(hit);
-        target.setAttackedBy(npc);
-        npc.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 16);
-        target.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 16);
-        target.getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 10);
 
         if (target instanceof Player playerTarget) {
             PrayerEffectHandler.handleProtectionEffects(npc, playerTarget, hit);

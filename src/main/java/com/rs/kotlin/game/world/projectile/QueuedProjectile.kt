@@ -9,7 +9,7 @@ data class QueuedProjectile(
     val startTile: WorldTile?,
     val endTile: WorldTile?,
     val spotanim: Int,
-    val type: ProjectileType,
+    val type: ResolvedProjectileType,
     val creatorSize: Int,
     val sendCycle: Int,
     val endTime: Int,

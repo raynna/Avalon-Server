@@ -672,7 +672,7 @@ object StandardRanged : RangeData() {
                         arrowProjectile,
                         context.attacker,
                         context.defender,
-                        arcOffset = 15,
+                        arcOffset = 10,
                         startTimeOffset = 5,
                         speedAdjustment = 5,
                         hitGraphic = Graphics(endGraphic, 100),
