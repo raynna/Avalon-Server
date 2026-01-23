@@ -454,39 +454,28 @@ public abstract class Entity extends WorldTile {
                 int size = target.getSize();
                 updateAngle(target, size, size);
             }
-            /*
-             * direction = Utils.getFaceDirection(target.getCoordFaceX(target.getSize()) -
-             * getCoordFaceX(getSize()), target.getCoordFaceY(target.getSize()) -
-             * getCoordFaceY(getSize()));
-             */
         }
         nextWalkDirection = nextRunDirection = -1;
         if (nextWorldTile != null) {
-            // int lastPlane = getPlane();
             setLocation(nextWorldTile);
             nextWorldTile = null;
             teleported = true;
-            // not required anymore due to new gpi change
             if (this instanceof Player && ((Player) this).getTemporaryMoveType() == -1)
                 ((Player) this).setTemporaryMoveType(Player.TELE_MOVE_TYPE);
             World.updateEntityRegion(this);
             if (needMapUpdate())
                 loadMapRegions();
-            /*
-             * else if (this instanceof Player && lastPlane != getPlane()) ((Player)
-             * this).setClientHasntLoadedMapRegion();
-             */
             resetWalkSteps();
             return;
         }
         teleported = false;
         if (walkSteps.isEmpty())
             return;
-        if (this instanceof Player) { // emotes are special on rs, when using one u will walk once emote done
+        if (this instanceof Player) {
             if (((Player) this).getEmotesManager().getNextEmoteEnd() >= Utils.currentTimeMillis())
                 return;
         }
-        if (this instanceof TorturedSoul) { // waste of process power personaly but meh.
+        if (this instanceof TorturedSoul) {
             if (((TorturedSoul) this).switchWalkStep()) {
                 return;
             }
@@ -498,7 +487,7 @@ public abstract class Entity extends WorldTile {
             if (nextStep == null)
                 break;
             int dir = (int) nextStep[0];
-            if (((boolean) nextStep[3] && !World.checkWalkStep(getPlane(), getX(), getY(), dir, getSize())) || (this instanceof NPC && !canWalkNPC(getX() + Utils.DIRECTION_DELTA_X[dir], getY() + Utils.DIRECTION_DELTA_Y[dir]))) {
+            if ((!World.checkWalkStep(getPlane(), getX(), getY(), dir, getSize())) || (this instanceof NPC && !canWalkNPC(getX() + Utils.DIRECTION_DELTA_X[dir], getY() + Utils.DIRECTION_DELTA_Y[dir]))) {
                 resetWalkSteps();
                 break;
             }
@@ -508,18 +497,10 @@ public abstract class Entity extends WorldTile {
             else
                 nextRunDirection = dir;
             moveLocation(Utils.DIRECTION_DELTA_X[dir], Utils.DIRECTION_DELTA_Y[dir], 0);
-            if (run && stepCount == 0) {
-                Object[] previewStep = previewNextWalkStep();
-                if (previewStep == null)
-                    break;
-                int previewDir = (int) previewStep[0];
-                if (Utils.getPlayerRunningDirection(Utils.DIRECTION_DELTA_X[dir] + Utils.DIRECTION_DELTA_X[previewDir], Utils.DIRECTION_DELTA_Y[dir] + Utils.DIRECTION_DELTA_Y[previewDir]) == -1)
-                    break;
-            }
         }
 
         if (this instanceof Player player && run && nextWalkDirection != -1 && nextRunDirection == -1) {
-            if (walkSteps.size() <= 1 || player.getRunEnergy() <= 0) {
+            if (walkSteps.isEmpty() || player.getRunEnergy() <= 0) {
                 player.setTemporaryMoveType(Player.WALK_MOVE_TYPE);
             }
         }
@@ -527,10 +508,6 @@ public abstract class Entity extends WorldTile {
         World.updateEntityRegion(this);
         if (needMapUpdate())
             loadMapRegions();
-        if (this instanceof Player) {
-            Player player = (Player) this;
-            //todo check players location
-        }
     }
 
     public static int getRelativeGfxRotation(int src, int dst) {
@@ -719,9 +696,7 @@ public abstract class Entity extends WorldTile {
         return (int) step[0];
     }
 
-    // checks collisions
     public boolean canWalkNPC(int toX, int toY) {
-        // stucking nomad is part of strategy
         if (this instanceof Familiar || this instanceof Nomad || ((NPC) this).isIntelligentRouteFinder() || ((NPC) this).isForceWalking())
             return true;
         int size = getSize();
@@ -733,64 +708,18 @@ public abstract class Entity extends WorldTile {
                     if (target == null || target == this || target.isDead() || target.hasFinished() || target.getPlane() != getPlane() || target instanceof Familiar || target instanceof Pet)
                         continue;
                     int targetSize = target.getSize();
-                    // npc is under this target so skip checking it
                     if (Utils.collides(this, target))
                         continue;
                     WorldTile tile = new WorldTile(target);
-                    // has to be checked aswell, cuz other one assumes npc will manage to move no
-                    // matter what
                     if (Utils.colides(toX, toY, size, tile.getX(), tile.getY(), targetSize))
                         return false;
                     if (target.getNextWalkDirection() != -1) {
                         tile.moveLocation(Utils.DIRECTION_DELTA_X[target.getNextWalkDirection()], Utils.DIRECTION_DELTA_Y[target.getNextWalkDirection()], 0);
                         if (target.getNextRunDirection() != -1)
                             tile.moveLocation(Utils.DIRECTION_DELTA_X[target.getNextRunDirection()], Utils.DIRECTION_DELTA_Y[target.getNextRunDirection()], 0);
-                        // target is at x,y
                         if (Utils.colides(toX, toY, size, tile.getX(), tile.getY(), targetSize))
                             return false;
                     }
-                }
-            }
-        }
-        return true;
-    }
-
-    // checks collisions
-    public boolean canWalkNPC(int toX, int toY, boolean checkUnder) {
-        if (!isAtMultiArea() /*
-         * || (!checkUnder && !canWalkNPC(getX(), getY(), true))
-         */)
-            return true;
-        int size = getSize();
-        for (int regionId : getMapRegionsIds()) {
-            List<Integer> npcIndexes = World.getRegion(regionId).getNPCsIndexes();
-            if (npcIndexes != null && npcIndexes.size() < 50) {
-                for (int npcIndex : npcIndexes) {
-                    NPC target = World.getNPCs().get(npcIndex);
-                    if (target == null || target == this || target.isDead() || target.hasFinished() || target.getPlane() != getPlane() || !target.isAtMultiArea() || (!(this instanceof Familiar) && target instanceof Familiar))
-                        continue;
-                    int targetSize = target.getSize();
-                    if (!checkUnder && target.getNextWalkDirection() == -1) { // means
-                        // the
-                        // walk
-                        // hasnt
-                        // been
-                        // processed
-                        // yet
-                        int previewDir = getPreviewNextWalkStep();
-                        if (previewDir != -1) {
-                            WorldTile tile = target.transform(Utils.DIRECTION_DELTA_X[previewDir], Utils.DIRECTION_DELTA_Y[previewDir], 0);
-                            if (Utils.colides(tile.getX(), tile.getY(), targetSize, getX(), getY(), size))
-                                continue;
-
-                            if (Utils.colides(tile.getX(), tile.getY(), targetSize, toX, toY, size))
-                                return false;
-                        }
-                    }
-                    if (Utils.colides(target.getX(), target.getY(), targetSize, getX(), getY(), size))
-                        continue;
-                    if (Utils.colides(target.getX(), target.getY(), targetSize, toX, toY, size))
-                        return false;
                 }
             }
         }

@@ -460,8 +460,7 @@ public final class LocalPlayerUpdate {
 	}
 
 	private void applyFaceDirectionMask(Player p, OutputStream data) {
-		data.writeShort(p.getDirection()); // also works as face tile as dir
-		// calced on setnextfacetile
+		data.writeShort(p.getDirection());
 	}
 
 	private void applyMoveTypeMask(Player p, OutputStream data) {
