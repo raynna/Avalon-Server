@@ -32,6 +32,7 @@ import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.NewPoison;
+import com.rs.kotlin.game.player.combat.damage.DamageScaler;
 
 public abstract class Entity extends WorldTile {
 
@@ -203,6 +204,7 @@ public abstract class Entity extends WorldTile {
             resetReceivedHits();
             return;
         }
+        hit.setDamage(DamageScaler.INSTANCE.getScaledDamage(hit.getSource(), this, hit));
         if (this instanceof Player player) {
             if (player.invulnerable)
                 return;
@@ -278,6 +280,7 @@ public abstract class Entity extends WorldTile {
             if (hit.getDamage() < 0)
                 return;
         }
+        hit.setDamage(DamageScaler.INSTANCE.getScaledDamage(hit.getSource(), this, hit));
         removeHitpoints(hit);
         if (nextHits.size() < totalHitsProcess) {
             nextHits.add(hit);

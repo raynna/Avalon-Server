@@ -35,7 +35,7 @@ public class MetalDragonCombat extends CombatScript {
 
 		boolean inMelee = npc.isWithinMeleeRange(target);
 		if (inMelee) {
-			attack = Utils.randomOf(MetallicDragonAttack.MELEE, MetallicDragonAttack.DRAGON_BREATH);
+			attack = Utils.randomWeighted(MetallicDragonAttack.MELEE, 75, MetallicDragonAttack.DRAGON_BREATH, 25);
 		} else {
 			attack = MetallicDragonAttack.DRAGONFIRE;
 		}

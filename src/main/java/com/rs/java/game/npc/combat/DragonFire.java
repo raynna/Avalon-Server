@@ -84,6 +84,7 @@ public class DragonFire {
         int max = cap.getSecond();
 
         int damage = Utils.random(min, max);
+        damage = ceilToNextTenIfEnabled(player, damage);
         if (damage == 0) {
             if (protection.superAntifire)
                 player.message("Your potion fully protects you from the dragon's breath.");
@@ -258,5 +259,13 @@ public class DragonFire {
             if (shieldId == id) return true;
         }
         return false;
+    }
+
+    private static int ceilToNextTenIfEnabled(Player player, int value) {
+        if (player.getVarsManager().getBitValue(1485) == 0)
+            return value;
+        if (value <= 0)
+            return value;
+        return ((value + 9) / 10) * 10;
     }
 }

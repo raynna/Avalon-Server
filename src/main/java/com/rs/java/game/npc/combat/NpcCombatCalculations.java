@@ -27,9 +27,10 @@ public class NpcCombatCalculations {
 
     public static int getRandomMaxHit(NPC npc, int maxHit, NpcAttackStyle attackStyle, Entity target) {
         CombatData data = npc.getCombatData();
+        int finalMaxHit = ceilToNextTenIfEnabled(target, maxHit);
         if (npc.getName().toLowerCase().contains("kalphite queen")) {//kq quaranteed hit with range&magic
             if (attackStyle == NpcAttackStyle.MAGIC || attackStyle == NpcAttackStyle.RANGED)
-                return Utils.getRandom(maxHit);
+                return Utils.getRandom(finalMaxHit);
         }
         double attackRoll = calculateAttackRoll(npc, attackStyle, data);
         double defenceRoll = calculateDefenceRoll(npc, attackStyle, target);
@@ -44,8 +45,9 @@ public class NpcCombatCalculations {
                 }
             }
         }
-        int damage = Utils.getRandom(maxHit);
+        int damage = Utils.getRandom(finalMaxHit);
         damage = ceilToNextTenIfEnabled(target, damage);
+        System.out.println("scaled up damage: " + damage);
         return damage;
     }
 
