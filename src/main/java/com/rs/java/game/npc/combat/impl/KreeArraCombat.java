@@ -51,7 +51,7 @@ public class KreeArraCombat extends CombatScript {
 
     private void sendRangedAttack(NPC npc, Entity target) {
         for (Entity t : npc.getPossibleTargets()) {
-            Hit rangeHit = npc.rangedHit(npc, 720);
+            Hit rangeHit = npc.rangedHit(t, 720);
             ProjectileManager.send(Projectile.STORM_OF_ARMADYL, 1197, npc, t, () -> {
                 applyRegisteredHit(npc, target, rangeHit);
                 for (int c = 0; c < 10; c++) {
@@ -68,7 +68,7 @@ public class KreeArraCombat extends CombatScript {
 
     private void sendMagicAttack(NPC npc, Entity target) {
         for (Entity t : npc.getPossibleTargets()) {
-            Hit magicHit = npc.magicHit(npc, 210);
+            Hit magicHit = npc.magicHit(t, 210);
             ProjectileManager.send(Projectile.STORM_OF_ARMADYL, 1197, npc, t, () -> {
                 applyRegisteredHit(npc, target, magicHit);
             });
