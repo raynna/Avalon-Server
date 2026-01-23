@@ -47,7 +47,7 @@ public final class NPCCombat {
     private static final int MAX_FAR_ATTACK_DISTANCE = 16;
     private static final int NEX_FORCE_MOVEMENT_ANIMATION = 17408;
 
-    private static final boolean DEBUG_COMBAT = true;
+    private static final boolean DEBUG_COMBAT = false;
 
     private void debug(String msg) {
         if (!DEBUG_COMBAT) return;
@@ -205,7 +205,9 @@ public final class NPCCombat {
         if (npc instanceof Familiar) return ((Familiar) npc).canAttack(target);
 
         if (!npc.isForceMultiAttacked() && !target.isAtMultiArea()) {
-            if (target.getAttackedBy() != npc && target.isInCombat()) return false;
+            if (target.getAttackedBy() != npc && target.isInCombat()) {
+                return false;
+            }
         }
         return true;
     }

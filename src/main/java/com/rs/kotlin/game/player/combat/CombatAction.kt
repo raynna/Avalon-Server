@@ -67,7 +67,6 @@ class CombatAction(
         }
         player.faceEntity(target)
         player.setNextFaceEntity(target)
-        val spellId = player.getCombatDefinitions().spellId
         updateStyle(player)
         player.resetWalkSteps()
         player.tickManager.addTicks(TickManager.TickKeys.LAST_INTERACTION_TARGET, 10)
