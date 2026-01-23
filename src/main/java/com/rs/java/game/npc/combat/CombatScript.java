@@ -61,6 +61,10 @@ public abstract class CombatScript {
 
         if (target instanceof Player player)
             player.handleIncommingHit(hit);
+        target.setAttackedBy(npc);
+        npc.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 16);
+        target.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 16);
+        target.getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 10);
 
         if (target instanceof Player playerTarget) {
             PrayerEffectHandler.handleProtectionEffects(npc, playerTarget, hit);
@@ -153,10 +157,6 @@ public abstract class CombatScript {
     }
 
     public static void delayHit(NPC npc, Entity target, int delay, Hit... hits) {
-        npc.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 10);
-        target.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10);
-        target.setAttackedBy(npc);
-        target.getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 10);
         if (target instanceof Player player) {
             if (player.getCombatDefinitions().isAutoRelatie()
                     && !player.hasWalkSteps()) {

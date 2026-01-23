@@ -47,51 +47,73 @@ public final class NPCCombat {
     private static final int MAX_FAR_ATTACK_DISTANCE = 16;
     private static final int NEX_FORCE_MOVEMENT_ANIMATION = 17408;
 
+    private static final boolean DEBUG_COMBAT = true;
+
+    private void debug(String msg) {
+        if (!DEBUG_COMBAT) return;
+        System.out.println("[NPCCombat][" + npc.getId() + "] " + msg);
+    }
+
     /*
      * returns if under combat
      */
     public boolean process() {
         if (npc.isLocked()) {
+            debug("NPC locked");
             return true;
         }
+
         if (attackDelay > 0) {
             attackDelay--;
-            //System.out.println("NPCCombat.process: decreased: " + attackDelay);
+            debug("Attack delay ticking: " + attackDelay);
         }
+
         if (target != null) {
+            debug("Processing target: " + target);
             npc.setNextFaceEntity(target);
+
             if (!checkAll()) {
+                debug("checkAll() returned FALSE → combat stopped");
                 return false;
             }
+
             if (attackDelay <= 0) {
-                int lastAttack = npc.getTickManager().getTicksLeft(TickManager.TickKeys.LAST_ATTACK_TICK);
-                boolean flinch = lastAttack == 0;
-                if (flinch) {
-                    attackDelay = 1;
-                    npc.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 16);
-                    return true;
-                }
+                debug("Attempting attack");
                 combatAttack();
                 return true;
             }
+
             return true;
         }
+
         return false;
     }
 
+
     private boolean combatAttack() {
         Entity target = getValidTarget();
-        if (target == null) return false;
-
-        int maxDistance = getMaxAttackDistance(target);
-        if (!canReachTarget(target, maxDistance)) {
+        if (target == null) {
+            debug("combatAttack: target invalid");
             return false;
         }
+
+        int maxDistance = getMaxAttackDistance(target);
+
+        if (!canReachTarget(target, maxDistance)) {
+            debug("combatAttack: cannot reach target (LOS or distance)");
+            attackDelay = 1;
+            return true;
+        }
+
+        debug("combatAttack: ATTACKING");
         attackDelay = npc.getAttackSpeed();
+
         target.getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 16);
         target.getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 12);
+
         return CombatScriptsHandler.specialAttack(npc, target) > 0;
     }
+
 
 
     private Entity getValidTarget() {
@@ -142,33 +164,47 @@ public final class NPCCombat {
 
     public boolean checkAll() {
         Entity target = this.target;
+
         if (!isTargetValid(target)) {
+            debug("checkAll: target no longer valid → REMOVED");
             removeTarget();
             return false;
         }
+
         if (!canAttackTarget(target)) {
+            debug("checkAll: canAttackTarget = false → REMOVED");
             removeTarget();
             return false;
         }
-        if (isWithinRespawnRange() && npc.isForceWalking())
+
+        if (isWithinRespawnRange() && npc.isForceWalking()) {
+            debug("checkAll: reset forcewalk");
             npc.resetForcewalk();
+        }
+
         if (!isWithinRespawnRange()) {
+            debug("checkAll: OUTSIDE respawn range → force walking home");
             combatDelay = 1;
             npc.forceWalkRespawnTile();
             npc.setNextFaceEntity(target);
             return true;
         }
-        if (handleCollisionMovement(target)) return true;
 
+        if (handleCollisionMovement(target)) {
+            debug("checkAll: collision movement handled");
+            return true;
+        }
+
+        debug("checkAll: normal follow");
         handleFollow(target);
         return true;
     }
 
+
     private boolean canAttackTarget(Entity target) {
         if (npc instanceof Familiar) return ((Familiar) npc).canAttack(target);
 
-        if (!npc.isForceMultiAttacked() && (!target.isAtMultiArea() || !npc.isAtMultiArea())) {
-            if (npc.getAttackedBy() != target && npc.isInCombat()) return false;
+        if (!npc.isForceMultiAttacked() && !target.isAtMultiArea()) {
             if (target.getAttackedBy() != npc && target.isInCombat()) return false;
         }
         return true;
