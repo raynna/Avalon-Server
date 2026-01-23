@@ -173,10 +173,6 @@ public final class PresetManager implements Serializable {
         }
     }
 
-    // --------------------------------------------------------------------
-    // MAIN LOGIC
-    // --------------------------------------------------------------------
-
     public void loadPreset(String name, Player p2) {
         loadPreset(name, p2, false);
     }
@@ -200,19 +196,17 @@ public final class PresetManager implements Serializable {
             return;
         }
 
-        // dump existing items to bank if not spawn
         for (Item item : player.getInventory().getItems().getItemsCopy()) {
-            if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
+            if (item != null) {
                 player.getBank().addItem(item, true);
             }
         }
         for (Item item : player.getEquipment().getItems().getItemsCopy()) {
-            if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
+            if (item != null) {
                 player.getBank().addItem(item, true);
             }
         }
 
-        // reset
         player.getRunePouch().reset();
         player.getInventory().reset();
         player.getEquipment().reset();
@@ -222,17 +216,18 @@ public final class PresetManager implements Serializable {
         player.refreshHitPoints();
         player.getPrayer().reset();
 
-        // restore skills
-        double[] presetXp = set.getLevels();
-        if (presetXp != null && presetXp.length >= 7) {
-            for (int i = 0; i < 7; i++) {
-                player.getSkills().setXp(i, presetXp[i]);
-                player.getSkills().set(i, player.getSkills().getLevelForXp(i));
-                player.getSkills().refresh(i);
+
+        if (Settings.ECONOMY_MODE != Settings.FULL_ECONOMY) {
+            double[] presetXp = set.getLevels();
+            if (presetXp != null && presetXp.length >= 7) {
+                for (int i = 0; i < 7; i++) {
+                    player.getSkills().setXp(i, presetXp[i]);
+                    player.getSkills().set(i, player.getSkills().getLevelForXp(i));
+                    player.getSkills().refresh(i);
+                }
             }
         }
 
-        // equipment
         Item[] data = set.getEquipment();
         if (data != null) {
             skip:
@@ -240,7 +235,6 @@ public final class PresetManager implements Serializable {
                 Item item = data[i];
                 if (item == null) continue;
 
-                // requirements
                 Map<Integer, Integer> requirements = item.getDefinitions().getWearingSkillRequiriments();
                 if (requirements != null) {
                     for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
@@ -265,7 +259,6 @@ public final class PresetManager implements Serializable {
             }
         }
 
-        // inventory
         data = set.getInventory();
         if (data != null) {
             for (int i = 0; i < data.length; i++) {
@@ -289,7 +282,6 @@ public final class PresetManager implements Serializable {
             }
         }
 
-        // runes
         data = set.getRunes();
         if (data != null) {
             for (Item item : data) {
@@ -300,7 +292,6 @@ public final class PresetManager implements Serializable {
             }
         }
 
-        // familiar
         Summoning.Pouch pouch = set.getFamiliar();
         if (pouch != null) {
             Item pouchItem = new Item(pouch.getRealPouchId());
@@ -337,7 +328,6 @@ public final class PresetManager implements Serializable {
             return;
         }
 
-        // dump current items to bank if not spawn
         for (Item item : player.getInventory().getItems().getItemsCopy()) {
             if (item != null && (Settings.ECONOMY_MODE != Settings.FULL_SPAWN)) {
                 player.getBank().addItem(item, true);
@@ -349,7 +339,6 @@ public final class PresetManager implements Serializable {
             }
         }
 
-        // dump charged items
         for (Map.Entry<Integer, Item[]> entry : player.getStaffCharges().entrySet()) {
             if (entry.getValue() != null) {
                 for (Item item : entry.getValue()) {
@@ -361,7 +350,6 @@ public final class PresetManager implements Serializable {
             }
         }
 
-        // reset
         player.getRunePouch().reset();
         player.getInventory().reset();
         player.getEquipment().reset();
@@ -371,15 +359,15 @@ public final class PresetManager implements Serializable {
         player.refreshHitPoints();
         player.getPrayer().reset();
 
-        // copy combat-related skills
-        for (int skillId = 0; skillId < 6; skillId++) {
-            double xp = p2.getSkills().getXp(skillId);
-            player.getSkills().setXp(skillId, xp);
-            player.getSkills().set(skillId, p2.getSkills().getLevel(skillId));
-            player.getSkills().refresh(skillId);
+        if (Settings.ECONOMY_MODE != Settings.FULL_ECONOMY) {
+            for (int skillId = 0; skillId < 6; skillId++) {
+                double xp = p2.getSkills().getXp(skillId);
+                player.getSkills().setXp(skillId, xp);
+                player.getSkills().set(skillId, p2.getSkills().getLevel(skillId));
+                player.getSkills().refresh(skillId);
+            }
         }
 
-        // equipment
         Item[] data = p2.getEquipment().getItems().getContainerItems();
         if (data != null) {
             skip:
@@ -387,7 +375,6 @@ public final class PresetManager implements Serializable {
                 Item item = data[i];
                 if (item == null) continue;
 
-                // requirements
                 Map<Integer, Integer> requirements = item.getDefinitions().getWearingSkillRequiriments();
                 if (requirements != null) {
                     for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
@@ -412,7 +399,6 @@ public final class PresetManager implements Serializable {
             }
         }
 
-        // inventory
         data = p2.getInventory().getItems().getContainerItems();
         if (data != null) {
             for (int i = 0; i < data.length; i++) {
@@ -436,7 +422,6 @@ public final class PresetManager implements Serializable {
             }
         }
 
-        // familiar
         Familiar familiar = p2.getFamiliar();
         if (familiar != null && familiar.getPouch() != null) {
             Summoning.Pouch pouch = familiar.getPouch();
@@ -453,7 +438,6 @@ public final class PresetManager implements Serializable {
         }
         player.getInventory().deleteItem(0, 28);
         int spellBook = p2.getCombatDefinitions().spellBook;
-        player.message("targets spellBook id " + spellBook);
         player.getCombatDefinitions().setSpellBook(spellBook == 0 ? 0 : spellBook == 1 ? 1 : 2);
         player.getPrayer().setPrayerBook(p2.getPrayer().isAncientCurses());
         player.getAppearence().generateAppearenceData();
