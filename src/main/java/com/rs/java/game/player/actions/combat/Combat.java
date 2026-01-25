@@ -8,27 +8,7 @@ import com.rs.java.utils.Utils;
 
 public final class Combat {
 	
-	public static final int MELEE_TYPE = 0, RANGE_TYPE = 1, MAGIC_TYPE = 2, ALL_TYPE = 3;
-	public static final int NONE_STYLE = 0, ARROW_STYLE = 8, BOLT_STYLE = 9, THROWN_STYLE = 10;
-
-	public static boolean rollHit(double att, double def) {
-		if (att < 0) // wont happen unless low att lv plus negative bonus
-			return false;
-		if (def < 0) // wont happen unless low def lv plus negative bonus
-			return true;
-		
-		double prob = att / def;
-		double random = Utils.getRandomDouble(100);
-		if (att <= def) {
-			prob = (att - 1) / (def * 2);
-		} else if (att > def) {
-			prob = 1 - (def + 1) / (att * 2);
-		}
-		if (prob < random / 100) {
-			return false;
-		}
-		return true;
-	}
+	public static final int MELEE_TYPE = 0, RANGE_TYPE = 1, MAGIC_TYPE = 2;
 
 	public static boolean hasAntiDragProtection(Entity target) {
 		if (target instanceof NPC)
@@ -40,15 +20,6 @@ public final class Combat {
 			return true;
 		int shieldId = p2.getEquipment().getShieldId();
 		return shieldId == 1540 || shieldId == 11283 || shieldId == 11284;
-	}
-
-	public static int getSlayerLevelForNPC(int id) {
-		switch (id) {
-		case 9463:
-			return 93;
-		default:
-			return 0;
-		}
 	}
 
 	public static int getDefenceEmote(Entity target) {

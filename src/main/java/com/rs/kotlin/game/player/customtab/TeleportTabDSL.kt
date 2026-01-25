@@ -3,8 +3,6 @@ package com.rs.kotlin.game.player.customtab
 
 import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Player
-import com.rs.java.game.player.actions.combat.ModernMagicks
-import com.rs.java.game.player.content.customtab.JournalTab
 import com.rs.java.game.player.content.customtab.TeleportTab
 import com.rs.java.game.player.controlers.WildernessControler
 import com.rs.java.game.player.teleportation.Teleports.TeleportLocations

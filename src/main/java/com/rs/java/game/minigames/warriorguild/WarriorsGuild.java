@@ -19,7 +19,6 @@ import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.controlers.Controler;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;

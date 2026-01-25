@@ -41,7 +41,6 @@ import com.rs.java.game.npc.pet.Pet;
 import com.rs.java.game.objects.GlobalObjectAddition;
 import com.rs.java.game.objects.GlobalObjectDeletion;
 import com.rs.java.game.objects.ObjectPlugin;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.actions.combat.QueuedInstantCombat;
 import com.rs.java.game.player.content.*;
 import com.rs.java.game.player.prayer.*;

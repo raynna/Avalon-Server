@@ -9,7 +9,6 @@ import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.item.meta.ItemMetadata;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.tools.CustomItemBonuses;
 import com.rs.kotlin.game.player.equipment.BonusType;
 

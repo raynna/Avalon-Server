@@ -222,6 +222,8 @@ class CombatAction(
     private fun check(player: Player, target: Entity): Boolean {
         if (target.isDead || target.hasFinished())
             return false
+        if (target is NPC && target.isCantInteract)
+            return false
         if (!style.canAttack(player, target)) {
             return false
         }

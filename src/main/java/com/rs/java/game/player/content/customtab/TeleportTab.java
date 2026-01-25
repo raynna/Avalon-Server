@@ -3,10 +3,8 @@ package com.rs.java.game.player.content.customtab;
 import java.util.function.Consumer;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.actions.combat.ModernMagicks;
 import com.rs.java.game.player.controlers.WildernessControler;
 import com.rs.java.game.player.teleportation.Teleports.TeleportLocations;
-import com.rs.java.utils.Utils;
 
 public class TeleportTab extends CustomTab {
 	private static final int CITY_TELEPORTS = 0;

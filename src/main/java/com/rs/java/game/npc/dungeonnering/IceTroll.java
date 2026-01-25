@@ -3,7 +3,6 @@ package com.rs.java.game.npc.dungeonnering;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.actions.combat.Combat;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.utils.WeaponTypesLoader.WeaponType;
 

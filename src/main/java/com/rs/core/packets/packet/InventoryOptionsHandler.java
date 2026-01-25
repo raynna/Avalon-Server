@@ -16,7 +16,6 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.item.ItemId;
 import com.rs.java.game.item.ItemPluginLoader;
 import com.rs.java.game.item.ItemPlugin;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
@@ -40,8 +39,6 @@ import com.rs.java.game.player.actions.ItemOnItem;
 import com.rs.java.game.player.actions.combat.LunarMagicks;
 import com.rs.java.game.player.actions.combat.LunarMagicks.RSLunarSpellStore;
 import com.rs.java.game.player.actions.combat.Magic;
-import com.rs.java.game.player.actions.combat.ModernMagicks;
-import com.rs.java.game.player.actions.combat.ModernMagicks.RSSpellStore;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking.Cook;
 import com.rs.java.game.player.actions.skills.crafting.LeatherCrafting;
@@ -93,7 +90,6 @@ import com.rs.java.utils.HexColours;
 import com.rs.java.utils.HexColours.Colour;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.worldboss.RandomWorldBossHandler;
 import com.rs.kotlin.game.world.activity.BarrowsAreaKt;
 
@@ -633,7 +629,7 @@ public class InventoryOptionsHandler {
         if (interfaceId == 192 && interfaceId2 == Inventory.INVENTORY_INTERFACE) {
             player.getTemporaryAttributtes().put("spell_itemid", itemUsedWithId);
             player.getTemporaryAttributtes().put("spell_slotid", toSlot);
-            RSSpellStore modern = RSSpellStore.getSpell(compId);
+            /*RSSpellStore modern = RSSpellStore.getSpell(compId);
             if (modern != null) {
                 if (!ModernMagicks.hasRequirement(player, spellId, false, false)) {
                     return;
@@ -641,7 +637,7 @@ public class InventoryOptionsHandler {
             } else {
                 player.message("Nothing interesting happens.");
                 return;
-            }
+            }*/
         } else if (interfaceId == 430 && interfaceId2 == Inventory.INVENTORY_INTERFACE) {
             player.getTemporaryAttributtes().put("spell_itemid", itemUsedWithId);
             player.getTemporaryAttributtes().put("spell_slotid", toSlot);

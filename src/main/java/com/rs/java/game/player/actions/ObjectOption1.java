@@ -9,7 +9,6 @@ import com.rs.java.game.objects.plugins.DoorsAndGates;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.RouteEvent;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.content.Canoes;
 
 public class ObjectOption1 {

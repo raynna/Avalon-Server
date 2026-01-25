@@ -37,7 +37,6 @@ import com.rs.java.game.player.actions.CowMilkingAction;
 import com.rs.java.game.player.actions.WaterFilling;
 import com.rs.java.game.player.actions.WhirlPool;
 import com.rs.java.game.player.actions.combat.Magic;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.actions.construction.BoneOffering;
 import com.rs.java.game.player.actions.runecrafting.SihponActionNodes;
 import com.rs.java.game.player.actions.skills.agility.Agility;

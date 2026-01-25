@@ -19,7 +19,6 @@ import com.rs.java.game.npc.qbd.TorturedSoul;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.TickManager;
-import com.rs.java.game.player.actions.combat.ModernMagicks;
 import com.rs.java.game.player.actions.combat.Poison;
 import com.rs.java.game.player.content.UpdateMask;
 import com.rs.java.game.player.prayer.NormalPrayer;

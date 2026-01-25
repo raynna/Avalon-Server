@@ -6,7 +6,6 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.minigames.clanwars.ClanWars.Rules;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.content.Foods.Food;
 import com.rs.java.game.player.content.Pots.Pot;
 import com.rs.java.game.player.controlers.Controler;

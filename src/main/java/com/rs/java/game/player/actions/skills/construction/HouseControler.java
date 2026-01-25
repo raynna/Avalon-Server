@@ -10,8 +10,6 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.others.ServantNPC;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.combat.ModernMagicks;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.actions.construction.SitChair;
 import com.rs.java.game.player.actions.skills.construction.HouseConstants.Builds;
 import com.rs.java.game.player.actions.skills.cooking.Cooking;

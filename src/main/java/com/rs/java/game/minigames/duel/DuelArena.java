@@ -22,7 +22,6 @@ import com.rs.java.game.item.ItemsContainer;
 import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.actions.combat.PlayerCombat;
 import com.rs.java.game.player.content.Foods.Food;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.game.player.content.Pots.Pot;
