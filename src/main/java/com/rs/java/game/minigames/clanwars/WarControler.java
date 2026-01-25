@@ -11,6 +11,7 @@ import com.rs.java.game.player.content.Pots.Pot;
 import com.rs.java.game.player.controlers.Controler;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.player.combat.CombatAction;
 
 /**
  * A controler subclass handling players in the clan wars activity.
@@ -176,7 +177,7 @@ public final class WarControler extends Controler {
 
 	@Override
 	public boolean keepCombating(Entity victim) {
-		boolean isRanging = PlayerCombat.isRanging(player) != 0;
+		boolean isRanging = false; //TODO GRAB ATTACK STYLES FROM NEW COMBAT SYSTEM
 		if (player.getCombatDefinitions().getSpellId() > 0) {
 			switch (clanWars.getMagicRuleCount()) {
 			case 1: // Standard spells only.

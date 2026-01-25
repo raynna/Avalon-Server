@@ -30,7 +30,6 @@ import com.rs.java.game.objects.GlobalObjectDeletion;
 import com.rs.java.game.objects.ObjectPluginLoader;
 import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.actions.combat.weaponscript.WeaponScriptsManager;
 import com.rs.java.game.player.actions.skills.fishing.FishingSpotsHandler;
 import com.rs.java.game.player.content.EdgevillePvPInstance;
 import com.rs.java.game.player.content.KillScoreBoard;
@@ -122,7 +121,6 @@ public final class Launcher {
 		ObjectPluginLoader.init();
 		NpcPluginLoader.init();
 		ItemPluginLoader.init();
-		WeaponScriptsManager.init();
 		CommandRegistry.registerCommands();
 		ShopInitializer.initializeShops();
 		JsonNpcCombatDefinitions.INSTANCE.init();

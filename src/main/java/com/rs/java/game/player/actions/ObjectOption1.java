@@ -172,13 +172,7 @@ public class ObjectOption1 {
 				return;
 			}
 			player.lock(3);
-			player.gfx(new Graphics(PlayerCombat.getStartArrowProjectileId(
-					player.getEquipment().getWeaponId(), player.getEquipment().getAmmoId()), 0, 100));
-			World.sendObjectProjectile(player, new WorldTile(object.getX(), object.getY(), player.getPlane()),
-					PlayerCombat.getStartArrowProjectileId(player.getEquipment().getWeaponId(),
-							player.getEquipment().getAmmoId()));
-			player.animate(new Animation(PlayerCombat.getWeaponAttackEmote(player.getEquipment().getWeaponId(),
-					player.getCombatDefinitions().getAttackStyle())));
+			//TODO add back animations & projectile for this
 			player.getSkills().addXp(Skills.RANGE, 3);
 			break;
 		default:

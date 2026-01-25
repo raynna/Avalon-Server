@@ -76,7 +76,7 @@ public final class AsteaFrostweb extends DungeonBoss {
 	
 	private static final WeaponType[][] WEAKNESS =
 		{
-		{ new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK), new WeaponType(Combat.RANGE_TYPE, -1), new WeaponType(Combat.MAGIC_TYPE, PlayerCombat.FIRE_SPELL) },};
+		{ new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK), new WeaponType(Combat.RANGE_TYPE, -1)}};
 
 	public WeaponType[][] getWeaknessStyle() {
 		return WEAKNESS;

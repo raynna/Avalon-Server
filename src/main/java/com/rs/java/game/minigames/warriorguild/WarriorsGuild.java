@@ -24,6 +24,9 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.combat.AttackStyle;
+import com.rs.kotlin.game.player.combat.CombatAnimations;
+import com.rs.kotlin.game.player.combat.melee.MeleeWeapon;
 
 public class WarriorsGuild extends Controler {
 
@@ -418,8 +421,11 @@ public class WarriorsGuild extends Controler {
 	 *            The object we are striking.
 	 */
 	private void submitDummyHit(final WorldObject object) {
-		player.animate(new Animation(PlayerCombat.getWeaponAttackEmote(player.getEquipment().getWeaponId(),
-				player.getCombatDefinitions().getAttackStyle())));
+		int attackStyle = player.getCombatDefinitions().getAttackStyle();
+		AttackStyle style = MeleeWeapon.Companion.getWeapon(player.getEquipment().getWeaponId()).getWeaponStyle().getStyleSet().styleAt(attackStyle);
+		int weaponEmote = (style != null ? CombatAnimations.INSTANCE.getAnimation(player.getEquipment().getWeaponId(), style, attackStyle) : -1);
+
+		player.animate(weaponEmote);
 		WorldTasksManager.schedule(new WorldTask() {
 
 			@Override

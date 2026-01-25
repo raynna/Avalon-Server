@@ -5,6 +5,7 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.controlers.WildernessControler;
 import com.rs.java.game.player.teleportation.Teleports.TeleportLocations;
+import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 
 public class TeleportTab extends CustomTab {
 	private static final int CITY_TELEPORTS = 0;
@@ -339,7 +340,7 @@ public class TeleportTab extends CustomTab {
 			return;
 		}
 		player.getTemporaryAttributtes().remove("PREVIOUSTELEPORT");
-		ModernMagicks.sendNormalTeleportSpell(player, -1, tile);
+		SpellHandler.INSTANCE.sendTeleportSpell(player, tile);
 		open(player);
 		player.getTemporaryAttributtes().put("PREVIOUSTELEPORT", tile);
 	}

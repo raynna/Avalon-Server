@@ -2,10 +2,13 @@
 package com.rs.kotlin.game.player.customtab
 
 import com.rs.java.game.WorldTile
+import com.rs.java.game.minigames.lividfarm.LividStore.Spell
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.content.customtab.TeleportTab
 import com.rs.java.game.player.controlers.WildernessControler
 import com.rs.java.game.player.teleportation.Teleports.TeleportLocations
+import com.rs.kotlin.game.player.combat.magic.ModernMagicks
+import com.rs.kotlin.game.player.combat.magic.SpellHandler
 
 object TeleportTabDSL {
 
@@ -256,7 +259,7 @@ object TeleportTabDSL {
             return
         }
         p.temporaryAttributes().remove("PREVIOUSTELEPORT")
-        ModernMagicks.sendNormalTeleportSpell(p, 0.0, tile)
+        SpellHandler.sendTeleportSpell(p, tile);
         open(p)
         p.temporaryAttributes()["PREVIOUSTELEPORT"] = tile
     }

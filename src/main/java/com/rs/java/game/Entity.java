@@ -31,6 +31,7 @@ import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.NewPoison;
 import com.rs.kotlin.game.player.combat.damage.DamageScaler;
+import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 
 public abstract class Entity extends WorldTile {
 
@@ -326,7 +327,7 @@ public abstract class Entity extends WorldTile {
                     p.getAppearence().generateAppearenceData();
                     p.getPackets().sendGameMessage("Your pheonix necklace heals you, but is destroyed in the process.");
                 } else if (p.getEquipment().getRingId() == 2570) {
-                    ModernMagicks.sendNormalTeleportSpell(p, -1, Settings.RESPAWN_PLAYER_LOCATION);
+                    SpellHandler.INSTANCE.sendTeleportSpell(p, Settings.RESPAWN_PLAYER_LOCATION);
                     p.getEquipment().deleteItem(2570, 1);
                     p.getAppearence().generateAppearenceData();
                     p.getPackets().sendGameMessage("Your ring of life saves you, but is destroyed in the process.");

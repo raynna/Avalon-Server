@@ -582,7 +582,7 @@ public class DuelArena extends Controler {
 	@Override
 	public boolean keepCombating(Entity victim) {
 		DuelRules rules = player.getLastDuelRules();
-		boolean isRanging = PlayerCombat.isRanging(player) != 0;
+		boolean isRanging = true;//TODO GET COMBAT STYLE FROM NEW COMBAT SYSTEM
 		if (player.temporaryAttribute().get("canFight") == Boolean.FALSE) {
 			player.getPackets().sendGameMessage("The duel hasn't started yet.", true);
 			return false;

@@ -22,6 +22,7 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 
 public class HouseControler extends Controler {
 
@@ -260,8 +261,7 @@ public class HouseControler extends Controler {
 			player.getDialogueManager().startDialogue("PortalChamberD", house.getRoom(player));
 			return false;
 		} else if (object.getId() >= 13615 && object.getId() <= 13635) {
-			ModernMagicks.sendNormalTeleportSpell(player, -1, HouseConstants.PORTAL_COORDINATES[object.getId() - (13615 + 7 * (((object.getId() - 13615) / 7)))]);
-			//Magic.sendTeleportSpell(player, -1, -1, -1, -1, 0, 0, HouseConstants.PORTAL_COORDINATES[object.getId() - (13615 + 7 * (((object.getId() - 13615) / 7)))], 0, true, Magic.OBJECT_TELEPORT, false, null);
+			SpellHandler.INSTANCE.sendTeleportSpell(player, HouseConstants.PORTAL_COORDINATES[object.getId() - (13615 + 7 * (((object.getId() - 13615) / 7)))]);
 			return false;
 		}
 		return false;
@@ -312,7 +312,7 @@ public class HouseControler extends Controler {
 	 */
 	private boolean canAttack() {
 		if (ringType == 1 || ringType == 2) {
-			if (player.getEquipment().getWeaponId() == 22496 || player.getCombatDefinitions().getSpellId() > 0 || PlayerCombat.isRanging(player) > 0) {
+			if (player.getEquipment().getWeaponId() == 22496 || player.getCombatDefinitions().getSpellId() > 0) {
 				player.getPackets().sendGameMessage("You may only use melee in this ring!");
 				return false;
 			}

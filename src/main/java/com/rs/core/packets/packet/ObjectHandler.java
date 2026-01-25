@@ -88,6 +88,11 @@ import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.InputStream;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.combat.AttackStyle;
+import com.rs.kotlin.game.player.combat.CombatAnimations;
+import com.rs.kotlin.game.player.combat.Weapon;
+import com.rs.kotlin.game.player.combat.melee.MeleeStyle;
+import com.rs.kotlin.game.player.combat.melee.MeleeWeapon;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 
@@ -339,34 +344,6 @@ public final class ObjectHandler {
             }
             if (id == 46307 && x == 3311 && y == 3491) {
                 Sawmill.enter(player, object);
-                return;
-            }
-            if (id == 23921) {
-                if ((player.getCombatDefinitions().getSpellId() > 0
-                        && player.getCombatDefinitions().getAutoCastSpell() > 0)) {
-                    player.getPackets().sendGameMessage("You can't use magic on a dummy.");
-                    return;
-                } else if (PlayerCombat.isRanging(player) > 0) {
-                    player.getPackets().sendGameMessage("You can't use ranged on a dummy.");
-                    return;
-                }
-                int weaponId = player.getEquipment().getWeaponId();
-                final ItemDefinitions defs = ItemDefinitions.getItemDefinitions(weaponId);
-                if (defs == null || weaponId == -1)
-                    player.lock(weaponId == -1 ? 3 : 4);
-                player.lock(defs.getAttackSpeed() - 1);
-                player.animate(new Animation(PlayerCombat.getWeaponAttackEmote(player.getEquipment().getWeaponId(),
-                        player.getCombatDefinitions().getAttackStyle())));
-                int xpStyle = player.getCombatDefinitions().getXpStyle(player.getEquipment().getWeaponId(),
-                        player.getCombatDefinitions().getAttackStyle());
-                if (xpStyle != CombatDefinitions.SHARED) {
-                    player.getSkills().addXp(xpStyle, 3);
-                } else {
-                    player.getSkills().addXp(Skills.ATTACK, 1);
-                    player.getSkills().addXp(Skills.STRENGTH, 1);
-                    player.getSkills().addXp(Skills.DEFENCE, 1);
-                }
-                player.getSkills().addXp(Skills.HITPOINTS, 1);
                 return;
             }
             if (id == 213 || id == 214) {
@@ -2139,9 +2116,9 @@ public final class ObjectHandler {
             }
             usingKnife = true;
         }
-
-        int weaponEmote = PlayerCombat.getWeaponAttackEmote(player.getEquipment().getWeaponId(),
-                player.getCombatDefinitions().getAttackStyle());
+        int attackStyle = player.getCombatDefinitions().getAttackStyle();
+        AttackStyle style = MeleeWeapon.Companion.getWeapon(player.getEquipment().getWeaponId()).getWeaponStyle().getStyleSet().styleAt(attackStyle);
+        int weaponEmote = (style != null ? CombatAnimations.INSTANCE.getAnimation(player.getEquipment().getWeaponId(), style, attackStyle) : -1);
         int knifeEmote = -1;
 
         player.animate(new Animation(usingKnife ? knifeEmote : weaponEmote));
@@ -2342,7 +2319,6 @@ public final class ObjectHandler {
                         player.getPackets().sendGameMessage("You need an level of at least 90 smithing to smith this.");
                     }
                 } else if (object.getId() == 733 || object.getId() == 64729) {
-                    player.animate(new Animation(PlayerCombat.getWeaponAttackEmote(-1, 0)));
                     slashWeb(player, object);
                 } else if (itemId == 2355) {
                     if (player.getSkills().getLevel(Skills.CRAFTING) < 23) {

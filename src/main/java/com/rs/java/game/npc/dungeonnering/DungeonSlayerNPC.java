@@ -73,11 +73,11 @@ public class DungeonSlayerNPC extends DungeonNPC {
 	}
 
 	private static final WeaponType[][][] WEAKNESSES = {
-		{ { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.CRUSH_ATTACK) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK) }, { new WeaponType(Combat.MAGIC_TYPE, PlayerCombat.FIRE_SPELL) } },
+		{ { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.CRUSH_ATTACK) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK) } },
 		{ { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.CRUSH_ATTACK) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK) }, },
 		{ { new WeaponType(Combat.MAGIC_TYPE, -1) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.CRUSH_ATTACK) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK) } },
 		{ { new WeaponType(Combat.MAGIC_TYPE, -1) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.STAB_ATTACK) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK) } },
-		{ { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.CRUSH_ATTACK) }, { new WeaponType(Combat.MAGIC_TYPE, PlayerCombat.FIRE_SPELL) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK) } },
+		{ { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.CRUSH_ATTACK) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK) } },
 		{ { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.CRUSH_ATTACK) }, { new WeaponType(Combat.MAGIC_TYPE, -1) } },
 		{ { new WeaponType(Combat.MAGIC_TYPE, -1) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.CRUSH_ATTACK) }, },
 		{ { new WeaponType(Combat.RANGE_TYPE, -1) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.STAB_ATTACK) }, { new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.CRUSH_ATTACK) } },

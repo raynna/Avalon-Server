@@ -815,14 +815,12 @@ public final class CombatDefinitions implements Serializable {
     public void setAttackStyle(int style) {
         int maxSize = 3;
         int weaponId = player.getEquipment().getWeaponId();
-        String name = weaponId == -1 ? "" : ItemDefinitions.getItemDefinitions(weaponId).getName().toLowerCase();
 
-        if (weaponId == -1 || PlayerCombat.isRanging(player) != 0 || name.contains("halberd")) {
+        if (weaponId == -1) {
             maxSize = 2;
         }
         if (style > maxSize) style = maxSize;
 
-        //Save the new style
         lastWeaponAttackStyle.put(weaponId, (byte) style);
 
         if (style != attackStyle) {

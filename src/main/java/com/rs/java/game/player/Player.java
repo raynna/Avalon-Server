@@ -99,6 +99,7 @@ import com.rs.java.utils.IsaacKeyPair;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.MachineInformation;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.combat.CombatAction;
 import com.rs.kotlin.game.player.combat.CombatStyle;
 import com.rs.kotlin.game.player.combat.Weapon;
 import com.rs.kotlin.game.player.combat.magic.MagicStyle;
@@ -347,7 +348,6 @@ public class Player extends Entity {
     public CombatDefinitions combatDefinitions;
     public transient HashMap<Player, Integer> skullList = new HashMap<>();
     private int dfsCharges;
-    private transient PlayerCombat playerCombat;
 
     private transient CombatStyle melee;
     private transient CombatStyle range;
@@ -3244,7 +3244,7 @@ public class Player extends Entity {
         }
         finishing = true;
         if (!World.containsLobbyPlayer(username)) {
-            stopAll(false, true, !(actionManager.getAction() instanceof PlayerCombat));
+            stopAll(false, true, !(newActionManager.getCurrentAction() instanceof CombatAction));
         }
         long currentTime = Utils.currentTimeMillis();
         if ((isInCombat() && tryCount < 6) || getEmotesManager().getNextEmoteEnd() >= currentTime || isDead()) {
@@ -3651,10 +3651,6 @@ public class Player extends Entity {
 
     public HunterImplings getHunterImplings() {
         return hunterImplings;
-    }
-
-    public PlayerCombat getPlayerCombat() {
-        return playerCombat;
     }
 
 
@@ -5261,92 +5257,6 @@ public class Player extends Entity {
 
     public void removeItem(int itemId, int amount) {
         getInventory().deleteItem(itemId, amount);
-    }
-
-    public void performInstantSpecial(Item weapon) {
-        int specAmt = PlayerCombat.getSpecialAmmount(weapon);
-        if (combatDefinitions.hasRingOfVigour())
-            specAmt *= 0.9;
-        if (combatDefinitions.getSpecialAttackPercentage() < specAmt) {
-            message("You don't have enough power left.");
-            combatDefinitions.decreaseSpecialAttack(0);
-            return;
-        }
-        switch (weapon.getId()) {
-            case 4153:
-            case 14679:
-                combatDefinitions.usingSpecialAttack = true;
-                combatDefinitions.setInstantAttack(true);
-                Entity target = (Entity) temporaryAttribute().get("last_target");
-                if (target != null && target.temporaryAttribute().get("last_attacker") == this) {
-                    if (!(getActionManager().getAction() instanceof PlayerCombat) || ((PlayerCombat) getActionManager().getAction()).getTarget() != target) {
-                        getActionManager().setAction(new PlayerCombat(target));
-                    }
-                }
-                break;
-            case 1377:
-            case 13472:
-                animate(new Animation(1056));
-                gfx(new Graphics(246));
-                setNextForceTalk(new ForceTalk("Raarrrrrgggggghhhhhhh!"));
-                int defence = (int) (skills.getLevelForXp(Skills.DEFENCE) * 0.90D);
-                int attack = (int) (skills.getLevelForXp(Skills.ATTACK) * 0.90D);
-                int range = (int) (skills.getLevelForXp(Skills.RANGE) * 0.90D);
-                int magic = (int) (skills.getLevelForXp(Skills.MAGIC) * 0.90D);
-                int strength = (int) (skills.getLevelForXp(Skills.STRENGTH) * 1.2D);
-                skills.set(Skills.DEFENCE, defence);
-                skills.set(Skills.ATTACK, attack);
-                skills.set(Skills.RANGE, range);
-                skills.set(Skills.MAGIC, magic);
-                skills.set(Skills.STRENGTH, strength);
-                combatDefinitions.decreaseSpecialAttack(specAmt);
-                break;
-            case 35:// Excalibur
-            case 8280:
-            case 14632:
-                animate(new Animation(1168));
-                gfx(new Graphics(247));
-                setNextForceTalk(new ForceTalk("For Camelot!"));
-                final boolean enhanced = weapon.getId() == 14632;
-                skills.set(Skills.DEFENCE, enhanced ? (int) (skills.getLevelForXp(Skills.DEFENCE) * 1.15D) : (skills.getLevel(Skills.DEFENCE) + 8));
-                WorldTasksManager.schedule(new WorldTask() {
-                    int count = 5;
-
-                    @Override
-                    public void run() {
-                        if (isDead() || hasFinished() || getHitpoints() >= getMaxHitpoints()) {
-                            stop();
-                            return;
-                        }
-                        heal(enhanced ? 80 : 40);
-                        if (count-- == 0) {
-                            stop();
-                            return;
-                        }
-                    }
-                }, 4, 2);
-                combatDefinitions.decreaseSpecialAttack(specAmt);
-                break;
-
-            case 18355:
-            case 4675:
-            case 6914:
-                combatDefinitions.decreaseSpecialAttack(0);
-                return;
-
-            case 15486:
-            case 11736:
-            case 22207:
-            case 22209:
-            case 22211:
-            case 22213:
-                animate(new Animation(12804));
-                gfx(new Graphics(2319));// 2320
-                gfx(new Graphics(2321));
-                addPolDelay(60000);
-                combatDefinitions.decreaseSpecialAttack(specAmt);
-                break;
-        }
     }
 
     public ClansManager getClanManager() {

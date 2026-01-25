@@ -41,7 +41,7 @@ public class Gravecreeper extends DungeonBoss {
 	}
 	
 	private static final WeaponType[][] WEAKNESS =
-		{{ new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK), new WeaponType(Combat.MAGIC_TYPE, PlayerCombat.FIRE_SPELL) },};
+		{{ new WeaponType(Combat.MELEE_TYPE, CombatDefinitions.SLASH_ATTACK)}};
 
 	public WeaponType[][] getWeaknessStyle() {
 		return WEAKNESS;

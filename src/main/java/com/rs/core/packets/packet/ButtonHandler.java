@@ -2701,29 +2701,6 @@ public class ButtonHandler {
         player.getEquipment().refresh(equipmentSlot);
     }
 
-    public static void submitSpecialRequest(final Player player) {
-        CoresManager.getSlowExecutor().execute(() -> {
-            try {
-                Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
-                if (player.hasInstantSpecial(weapon) && !player.itemSwitch) {
-                    final Entity target = (Entity) player.temporaryAttribute().get("last_target");
-                    if ((player.getActionManager().getAction() instanceof PlayerCombat) && target != null) {
-                        player.getActionManager().forceStop();
-                        player.performInstantSpecial(weapon);
-                        player.getActionManager().setAction(new PlayerCombat(target));
-                    } else {
-                        player.getActionManager().forceStop();
-                        player.performInstantSpecial(weapon);
-                    }
-                    return;
-                }
-                player.getCombatDefinitions().switchUsingSpecialAttack();
-            } catch (Throwable e) {
-                Logger.handle(e);
-            }
-        });
-    }
-
     public static void openItemsKeptOnDeath(Player player) {
         player.getInterfaceManager().sendInterface(17);
         sendItemsKeptOnDeath(player, player.inPkingArea() ? true : false);

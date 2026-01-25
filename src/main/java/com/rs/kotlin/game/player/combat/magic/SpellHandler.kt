@@ -340,6 +340,7 @@ object SpellHandler {
         player.newActionManager.setAction(CombatAction(target))
     }
 
+
     private fun handleTeleportSpell(player: Player, spell: Spell) {
         spell.teleportLocation?.let { location ->
             sendTeleportSpell(
@@ -421,12 +422,22 @@ object SpellHandler {
         player.message("Teleport ${target.displayName} to ${spell.name}")
     }
 
+    fun sendTeleportSpell(player: Player, tile: WorldTile) {
+        sendTeleportSpell(
+            player,
+            if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) 9599 else 8939,
+            if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) 1681 else 1576,
+            null,
+            tile
+        )
+    }
+
     @Suppress("UNUSED_VARIABLES")
     fun sendTeleportSpell(
         player: Player,
         upEmoteId: Int,
         upGraphicId: Int,
-        spell: Spell,
+        spell: Spell?,
         tile: WorldTile
     ) {
         if (player.controlerManager.controler.let { it is FfaZone || it is CrucibleControler ||
@@ -448,7 +459,8 @@ object SpellHandler {
         player.stopAll()
         player.resetReceivedHits()
 
-        player.skills.addXpDelayed(Skills.MAGIC, spell.xp)
+        if (spell != null)
+            player.skills.addXpDelayed(Skills.MAGIC, spell.xp)
         if (upEmoteId != -1) {
             player.animate(Animation(upEmoteId))
         }
@@ -471,8 +483,14 @@ object SpellHandler {
                 }
 
                 var teleTile = tile
-                if (spell.name.contains("home", ignoreCase = true) && (EdgevillePvPControler.isAtPvP(player) || EdgevillePvPControler.isAtBank(player))) {
-                    teleTile = WorldTile(85, 80, 0)
+                if (spell != null) {
+                    if (spell.name.contains(
+                            "home",
+                            ignoreCase = true
+                        ) && (EdgevillePvPControler.isAtPvP(player) || EdgevillePvPControler.isAtBank(player))
+                    ) {
+                        teleTile = WorldTile(85, 80, 0)
+                    }
                 }
                 val baseTile = tile
 
