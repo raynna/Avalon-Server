@@ -244,7 +244,10 @@ public final class NPCCombat {
     private boolean handleCollisionMovement(Entity target) {
         int size = npc.getSize();
         int targetSize = target.getSize();
-
+        if (npc.isCantFollowUnderCombat()) {
+            attackDelay = Math.max(attackDelay, 1);
+            return true;
+        }
         if (Utils.colides(npc.getX(), npc.getY(), size, target.getX(), target.getY(), targetSize)
                 && !target.hasWalkSteps()) {
 
@@ -282,7 +285,9 @@ public final class NPCCombat {
     private boolean attemptWalkAroundTarget(Entity target, int size) {
         int targetSize = target.getSize();
         int radius = size + targetSize;
-
+        if (npc.isCantFollowUnderCombat()) {
+            return false;
+        }
         List<WorldTile> candidates = new ArrayList<>();
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dy = -radius; dy <= radius; dy++) {
@@ -314,6 +319,11 @@ public final class NPCCombat {
 
 
     private void handleFollow(Entity target) {
+        if (npc.isCantFollowUnderCombat()) {
+            debug("handleFollow: NPC cannot follow in combat");
+            npc.setNextFaceEntity(target);
+            return;
+        }
         NpcCombatDefinition defs  = npc.getCombatDefinitions();
         AttackStyle attackStyle = defs.getAttackStyle();
         int size = npc.getSize();

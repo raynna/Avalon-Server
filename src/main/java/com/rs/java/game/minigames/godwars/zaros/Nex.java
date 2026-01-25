@@ -33,6 +33,9 @@ public final class Nex extends NPC {
 	private NPC[] bloodReavers;
 	private int switchPrayersDelay;
 
+	private int meleeAttackCount = 0;
+	private long lastSwitchTime = System.currentTimeMillis();
+
 	public Nex(int id, WorldTile tile, int mapAreaNameHash, boolean canBeAttackFromOutOfArea, boolean spawned) {
 		super(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
 		setCantInteract(true);
@@ -349,5 +352,25 @@ public final class Nex extends NPC {
 
 	public int getStage() {
 		return stage;
+	}
+
+	public void incrementMeleeAttackCount() {
+		meleeAttackCount++;
+	}
+
+	public void resetMeleeAttackCount() {
+		meleeAttackCount = 0;
+	}
+
+	public int getMeleeAttackCount() {
+		return meleeAttackCount;
+	}
+
+	public long getLastSwitchTime() {
+		return lastSwitchTime;
+	}
+
+	public void setLastSwitchTime(long time) {
+		this.lastSwitchTime = time;
 	}
 }

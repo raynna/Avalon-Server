@@ -63,7 +63,8 @@ public class GodWars extends Controler {
 	@Override
 	public boolean processObjectClick1(final WorldObject object) {
 		if (object.getId() == 57225) {
-			player.getDialogueManager().startDialogue("NexEntrance");
+			player.setNextWorldTile(new WorldTile(2911, 5204, 0));
+			player.getControlerManager().startControler("ZGDControler");
 			return false;
 		} else if (object.getId() == 26287 || object.getId() == 26286 || object.getId() == 26288 || object.getId() == 26289) {
 			if (lastPrayerRecharge >= Utils.currentTimeMillis()) {

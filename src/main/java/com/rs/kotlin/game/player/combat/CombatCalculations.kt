@@ -130,6 +130,12 @@ object CombatCalculations {
             if (target is NPC && target.id == 4474) {
                 finalDamage = finalMaxHit
             }
+            if (target is NPC) {
+                if (target.capDamage != -1 && finalDamage > target.capDamage) {
+                    finalDamage = target.capDamage
+                    finalMaxHit = target.capDamage
+                }
+            }
             val hit = Hit(player, finalDamage, finalMaxHit, Hit.HitLook.MELEE_DAMAGE)
             hit.baseMaxHit = baseMaxHit
             hit.maxHit = finalMaxHit
@@ -238,6 +244,12 @@ object CombatCalculations {
             }
             if (target is NPC && target.id == 4474) {
                 finalDamage = maxHit
+            }
+            if (target is NPC) {
+                if (target.capDamage != -1 && finalDamage > target.capDamage) {
+                    finalDamage = target.capDamage
+                    maxHit = target.capDamage
+                }
             }
             val hit = Hit(player, finalDamage, maxHit, Hit.HitLook.RANGE_DAMAGE)
             hit.baseMaxHit = baseMaxHit
@@ -365,7 +377,12 @@ object CombatCalculations {
             if (target is NPC && target.id == 4474) {
                 finalDamage = finalMaxHit
             }
-
+            if (target is NPC) {
+                if (target.capDamage != -1 && finalDamage > target.capDamage) {
+                    finalDamage = target.capDamage
+                    finalMaxHit = target.capDamage
+                }
+            }
             val hit = Hit(player, finalDamage, finalMaxHit, Hit.HitLook.MAGIC_DAMAGE)
             hit.baseMaxHit = baseMaxHit
             val isCritical = finalDamage >= floor(baseMaxHit * 0.99)

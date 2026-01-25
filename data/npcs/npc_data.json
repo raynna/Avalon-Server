@@ -9944,6 +9944,360 @@
       "duradel"
     ]
   },
+  "1600": {
+    "id": 1600,
+    "name": "Cave crawler",
+    "members": true,
+    "combatLevel": 23,
+    "attackLevel": 22,
+    "strengthLevel": 18,
+    "defenceLevel": 18,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 10,
+      "slash": 10,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 January]] [[2005]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A spiky crawling critter.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 22,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1601": {
+    "id": 1601,
+    "name": "Cave crawler",
+    "members": true,
+    "combatLevel": 23,
+    "attackLevel": 22,
+    "strengthLevel": 18,
+    "defenceLevel": 18,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 10,
+      "slash": 10,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 January]] [[2005]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A spiky crawling critter.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 22,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1602": {
+    "id": 1602,
+    "name": "Cave crawler",
+    "members": true,
+    "combatLevel": 23,
+    "attackLevel": 22,
+    "strengthLevel": 18,
+    "defenceLevel": 18,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 10,
+      "slash": 10,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 January]] [[2005]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A spiky crawling critter.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 22,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1603": {
+    "id": 1603,
+    "name": "Cave crawler",
+    "members": true,
+    "combatLevel": 23,
+    "attackLevel": 22,
+    "strengthLevel": 18,
+    "defenceLevel": 18,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 10,
+      "slash": 10,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 January]] [[2005]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A spiky crawling critter.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 22,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1631": {
+    "id": 1631,
+    "name": "Rockslug",
+    "members": true,
+    "combatLevel": 29,
+    "attackLevel": 22,
+    "strengthLevel": 27,
+    "defenceLevel": 27,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 27,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "The slime of evil.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 27,
+    "categories": [],
+    "assignedBy": [
+      "mazchna"
+    ]
+  },
+  "1632": {
+    "id": 1632,
+    "name": "Rockslug",
+    "members": true,
+    "combatLevel": 29,
+    "attackLevel": 22,
+    "strengthLevel": 27,
+    "defenceLevel": 27,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 27,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "The slime of evil.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 27,
+    "categories": [],
+    "assignedBy": [
+      "mazchna"
+    ]
+  },
   "1757": {
     "id": 1757,
     "name": "Farmer",
@@ -10107,6 +10461,231 @@
     "assignedBy": [
       "turael",
       "spria"
+    ]
+  },
+  "1828": {
+    "id": 1828,
+    "name": "Giant frog",
+    "members": false,
+    "combatLevel": 13,
+    "attackLevel": 10,
+    "strengthLevel": 8,
+    "defenceLevel": 6,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 23,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "It didn\u0027t get that big eating flies.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1829": {
+    "id": 1829,
+    "name": "Big frog",
+    "members": false,
+    "combatLevel": 24,
+    "attackLevel": 25,
+    "strengthLevel": 20,
+    "defenceLevel": 15,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 25,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "It didn\u0027t get that big eating flies.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1831": {
+    "id": 1831,
+    "name": "Cave slime",
+    "members": true,
+    "combatLevel": 23,
+    "attackLevel": 13,
+    "strengthLevel": 13,
+    "defenceLevel": 35,
+    "magicLevel": 13,
+    "rangedLevel": 1,
+    "constitutionLevel": 25,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[14 March]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A foul-smelling blob of protoplasm.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 25,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "1832": {
+    "id": 1832,
+    "name": "Cave bug",
+    "members": true,
+    "combatLevel": 6,
+    "attackLevel": 6,
+    "strengthLevel": 5,
+    "defenceLevel": 6,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 5,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 5,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
     ]
   },
   "1936": {
@@ -19908,6 +20487,231 @@
       "mazchna"
     ]
   },
+  "5750": {
+    "id": 5750,
+    "name": "Cave bug",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 82,
+    "strengthLevel": 80,
+    "defenceLevel": 84,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 93,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 93,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "5751": {
+    "id": 5751,
+    "name": "Molanisk",
+    "members": true,
+    "combatLevel": 51,
+    "attackLevel": 40,
+    "strengthLevel": 40,
+    "defenceLevel": 50,
+    "magicLevel": 0,
+    "rangedLevel": 1,
+    "constitutionLevel": 52,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 45,
+      "slash": 45,
+      "crush": 35
+    },
+    "magicDefence": {
+      "magic": 30
+    },
+    "rangedDefence": {
+      "light": 55,
+      "standard": 55,
+      "heavy": 55
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[20 March]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A strange mole-like being.\u003cbr/\u003e\u0027\u0027\u0027When on the wall\u0027\u0027\u0027: That white dot looks like an eye!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 52,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
+  "5800": {
+    "id": 5800,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "5801": {
+    "id": 5801,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "5842": {
     "id": 5842,
     "name": "Outlaw",
@@ -27315,6 +28119,294 @@
       "mazchna",
       "vannaka"
     ]
+  },
+  "13447": {
+    "id": 13447,
+    "name": "Nex",
+    "members": true,
+    "combatLevel": 1001,
+    "attackLevel": 315,
+    "strengthLevel": 200,
+    "defenceLevel": 260,
+    "magicLevel": 230,
+    "rangedLevel": 350,
+    "constitutionLevel": 3400,
+    "attackBonus": 200,
+    "strengthBonus": 20,
+    "magicBonus": 100,
+    "magicStrengthBonus": 22,
+    "rangedBonus": 150,
+    "rangedStrengthBonus": 5,
+    "meleeDefence": {
+      "stab": 40,
+      "slash": 140,
+      "crush": 60
+    },
+    "magicDefence": {
+      "magic": 300
+    },
+    "rangedDefence": {
+      "light": 190,
+      "standard": 190,
+      "heavy": 150
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2022]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "Even the gods fear her.",
+    "attributes": [],
+    "xpBonus": 100.0,
+    "maxHit": {
+      "magic": 33,
+      "ranged": 60,
+      "melee": 27,
+      "smoke dash": 50,
+      "shadow smash": 50,
+      "blood sacrifice": 80,
+      "containment": 60,
+      "ice prison": 75
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]",
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "13451": {
+    "id": 13451,
+    "name": "Fumus",
+    "members": true,
+    "combatLevel": 285,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 200,
+    "magicLevel": 200,
+    "rangedLevel": 1,
+    "constitutionLevel": 500,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 25,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 100,
+      "crush": 100
+    },
+    "magicDefence": {
+      "magic": 150
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 50,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A mage who has mastered the art of smoke magic.",
+    "attributes": [],
+    "maxHit": {
+      "default": 29
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "13452": {
+    "id": 13452,
+    "name": "Umbra",
+    "members": true,
+    "combatLevel": 285,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 200,
+    "magicLevel": 200,
+    "rangedLevel": 1,
+    "constitutionLevel": 500,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 25,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 100,
+      "slash": 100,
+      "crush": 100
+    },
+    "magicDefence": {
+      "magic": 150
+    },
+    "rangedDefence": {
+      "light": 25,
+      "standard": 25,
+      "heavy": 25
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A mage who has mastered the art of shadow magic.",
+    "attributes": [],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "default": 29
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "13453": {
+    "id": 13453,
+    "name": "Cruor",
+    "members": true,
+    "combatLevel": 285,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 200,
+    "magicLevel": 200,
+    "rangedLevel": 1,
+    "constitutionLevel": 500,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 25,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 100,
+      "slash": 25,
+      "crush": 100
+    },
+    "magicDefence": {
+      "magic": 150
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 50,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A mage who has mastered the art of blood magic.",
+    "attributes": [],
+    "xpBonus": 5.0,
+    "maxHit": {
+      "default": 29
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "13454": {
+    "id": 13454,
+    "name": "Glacies",
+    "members": true,
+    "combatLevel": 285,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 200,
+    "magicLevel": 200,
+    "rangedLevel": 1,
+    "constitutionLevel": 500,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 25,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 100,
+      "slash": 100,
+      "crush": 25
+    },
+    "magicDefence": {
+      "magic": 150
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 50,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[5 January]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A mage who has mastered the art of ice magic.",
+    "attributes": [],
+    "xpBonus": 5.0,
+    "maxHit": {
+      "default": 29
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
   },
   "13456": {
     "id": 13456,

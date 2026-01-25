@@ -29,7 +29,7 @@ public class KreeArraCombat extends CombatScript {
         if (npc.getTickManager().getTicksLeft(TickManager.TickKeys.LAST_ATTACKED_TICK) == 0) {
             boolean inMelee = npc.isWithinMeleeRange(target);
             if (!inMelee && !npc.hasWalkSteps()) {
-                npc.calcFollow(target, 2, true, true);
+                npc.setForceFollowClose(true);
             }
             if (inMelee) {
                 npc.animate(MELEE_ANIMATION);
@@ -37,9 +37,11 @@ public class KreeArraCombat extends CombatScript {
                 delayHit(npc, target, 0, hit);
             }
             return npc.getAttackSpeed();
+        } else {
+            npc.setForceFollowClose(false);
+            getRandomAttack(npc, target);
+            return npc.getAttackSpeed();
         }
-		getRandomAttack(npc, target);
-        return npc.getAttackSpeed();
     }
 
     private void getRandomAttack(NPC npc, Entity target) {
