@@ -12,6 +12,12 @@ object DagannothSupremeTable {
             drop("item.dagannoth_hide");
         }
 
+        preRollDrops {
+            drop("item.archers_ring", numerator = 1, denominator = 128)
+            drop("item.seercull", numerator = 1, denominator = 128)
+            drop("item.dragon_hatchet", numerator = 1, denominator = 128)
+        }
+
         mainDrops(128) {
             /** Weapons & Armour */
             drop("item.mithril_knife", amount = 25..50, weight = 10)
@@ -23,12 +29,9 @@ object DagannothSupremeTable {
             drop("item.fremennik_blade", amount = 1, weight = 1)
             drop("item.fremennik_shield", amount = 1, weight = 1)
             drop("item.fremennik_helm", amount = 1, weight = 1)
-            drop("item.seercull", amount = 1, weight = 1)
-            drop("item.dragon_hatchet", amount = 1, weight = 1)
             drop("item.archer_helm", amount = 1, weight = 1)
             drop("item.spined_body", amount = 1, weight = 1)
             drop("item.spined_chaps", amount = 1, weight = 1)
-            drop("item.archers_ring", amount = 1, weight = 1)
             /** Ammunition */
             drop("item.steel_arrow", amount = 50..250, weight = 5)
             drop("item.runite_bolts", amount = 2..12, weight = 5)

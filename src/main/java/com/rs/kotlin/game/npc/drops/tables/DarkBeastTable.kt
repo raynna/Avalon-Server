@@ -15,31 +15,34 @@ object DarkBeastTable {
             drop("item.big_bones")
         }
 
-        mainDrops(512) {
-            drop("item.black_battleaxe", weight = 12)
-            drop("item.adamant_sq_shield", weight = 4)
-            drop("item.rune_chainbody", weight = 4)
-            drop("item.rune_helm", weight = 4)
-            drop("item.rune_full_helm", weight = 4)
-            drop("item.rune_2h_sword", weight = 4)
-            drop("item.rune_battleaxe", weight = 4)
-            drop("item.dark_bow", weight = 1)
+        preRollDrops {
+            drop("item.dark_bow", numerator = 1, denominator = 512)
+        }
 
-            drop("item.death_rune", amount = 20, weight = 32)
-            drop("item.chaos_rune", amount = 30, weight = 28)
-            drop("item.blood_rune", amount = 15, weight = 16)
+        mainDrops(128) {
+            drop("item.black_battleaxe", weight = 6)
+            drop("item.adamant_sq_shield", weight = 1)
+            drop("item.rune_chainbody", weight = 1)
+            drop("item.rune_helm", weight = 1)
+            drop("item.rune_full_helm", weight = 1)
+            drop("item.rune_2h_sword", weight = 1)
+            drop("item.rune_battleaxe", weight = 1)
 
-            drop("item.coins", amount = 152, weight = 160)
-            drop("item.coins", amount = 64, weight = 24)
-            drop("item.coins", amount = 95, weight = 24)
-            drop("item.coins", amount = 220, weight = 20)
+            drop("item.death_rune", amount = 20, weight = 8)
+            drop("item.chaos_rune", amount = 30, weight = 7)
+            drop("item.blood_rune", amount = 15, weight = 4)
 
-            drop("item.shark", weight = 12)
-            drop("item.adamant_bar_noted", amount = 3, weight = 8)
-            drop("item.adamantite_ore_noted", amount = 5, weight = 4)
-            drop("item.death_talisman", weight = 4)
-            drop("item.runite_ore_noted", weight = 4)
-            drop("item.shark", amount = 2, weight = 4)
+            drop("item.coins", amount = 152, weight = 40)
+            drop("item.coins", amount = 64, weight = 6)
+            drop("item.coins", amount = 95, weight = 6)
+            drop("item.coins", amount = 220, weight = 5)
+
+            drop("item.shark", weight = 3)
+            drop("item.adamant_bar_noted", amount = 3, weight = 2)
+            drop("item.adamantite_ore_noted", amount = 5, weight = 1)
+            drop("item.death_talisman", weight = 1)
+            drop("item.runite_ore_noted", weight = 1)
+            drop("item.shark", amount = 2, weight = 1)
         }
 
         tertiaryDrops {

@@ -743,20 +743,31 @@ public class NPC extends Entity implements Serializable {
         }
     }
 
+    public double getDropRateMultiplier() {
+        double mult = 1.0;
+
+        if (Settings.DROP_MULTIPLIER > 1.0)
+            mult *= Settings.DROP_MULTIPLIER;
+
+        return mult;
+    }
+
     public List<Drop> rollDrops(Player player) {
         String key = DropTableRegistry.npcKeyFromId(this.id);
         //System.out.println("[rollDrops] NPC ID " + this.id + " key = " + key);
 
         DropTable table = DropTableRegistry.getDropTableForNpc(this.id);
         if (table != null) {
-            // System.out.println("[rollDrops] Using drop table: " + table);
-            return table.rollDrops(player);
+            if (Settings.DEBUG_DROP_MATH) {
+                table.writeRatesToFile(getDropRateMultiplier());
+            }
+            return table.rollDrops(player, getDropRateMultiplier());
         }
+
         player.message("Missing droptable for npc: " + this.getName() + "(" + this.getId() + ")");
         System.out.println("[rollDrops] No drop table found for NPC " + this.getName() + "(" + this.getId() + ")");
         return Collections.emptyList();
     }
-
 
     public void drop() {
         Player killer = getMostDamageReceivedSourcePlayer();

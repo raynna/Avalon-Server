@@ -12,6 +12,12 @@ object DagannothRexTable {
             drop("item.dagannoth_hide");
         }
 
+        preRollDrops {
+            drop("item.berserker_ring", 1, 128)
+            drop("item.warrior_ring", 1, 128)
+            drop("item.dragon_hatchet", 1, 128)
+        }
+
         mainDrops(128) {
             /** Weapons & Armour */
             drop("item.steel_kiteshield", weight = 17)
@@ -21,7 +27,6 @@ object DagannothRexTable {
             drop("item.mithril_pickaxe", amount = 1, weight = 3)
             drop("item.adamant_platebody", amount = 1, weight = 2)
             drop("item.fremennik_blade", amount = 1, weight = 2)
-            drop("item.dragon_hatchet", amount = 1, weight = 1)
             drop("item.rune_hatchet", amount = 1, weight = 1)
             drop("item.fremennik_shield", amount = 1, weight = 1)
             drop("item.fremennik_helm", amount = 1, weight = 1)
@@ -29,8 +34,6 @@ object DagannothRexTable {
             drop("item.ring_of_life", amount = 1, weight = 1)
             drop("item.rock_shell_plate", amount = 1, weight = 1)
             drop("item.rock_shell_legs", amount = 1, weight = 1)
-            drop("item.berserker_ring", amount = 1, weight = 1)
-            drop("item.warrior_ring", amount = 1, weight = 1)
             /** Potions */
             drop("item.antifire_2", amount = 1, weight = 1)
             drop("item.prayer_potion_2", amount = 1, weight = 1)

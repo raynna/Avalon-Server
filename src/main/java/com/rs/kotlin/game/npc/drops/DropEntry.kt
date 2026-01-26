@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom
 
 open class DropEntry @JvmOverloads constructor(
     @JvmField var itemId: Int,
-    @JvmField protected var amount: IntRange,
+    @JvmField var amount: IntRange,
     protected var always: Boolean = false,
     private val condition: ((Player) -> Boolean)? = null
 ) {

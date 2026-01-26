@@ -122,7 +122,6 @@ object Rscm {
             val trimmedLine = line.trim()
 
             if (trimmedLine.isEmpty() || trimmedLine.startsWith("#")) {
-                // silently skip blank lines and comments
                 return@mapIndexedNotNull null
             }
 

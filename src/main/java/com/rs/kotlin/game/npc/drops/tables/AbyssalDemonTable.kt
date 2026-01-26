@@ -22,35 +22,36 @@ object AbyssalDemonTable {
             blue(amount = 1, percent = 0.896)
         }
 
-        mainDrops(512) {
-            drop("item.black_sword", weight = 16)
-            drop("item.steel_battleaxe", weight = 12)
-            drop("item.black_hatchet", weight = 8)
-            drop("item.mithril_kiteshield", weight = 4)
-            drop("item.rune_chainbody", weight = 4)
-            drop("item.rune_helm", weight = 4)
-            drop("item.abyssal_whip", weight = 1)
+        preRollDrops {
+            drop("item.abyssal_whip", numerator = 1, denominator = 512)
+        }
 
-            drop("item.air_rune", amount = 50, weight = 32)
-            drop("item.chaos_rune", amount = 10, weight = 28)
-            drop("item.blood_rune", amount = 7, weight = 16)
-            drop("item.law_rune", amount = 3, weight = 4)
+        mainDrops(128) {
+            drop("item.black_sword", weight = 4)
+            drop("item.steel_battleaxe", weight = 3)
+            drop("item.black_hatchet", weight = 2)
+            drop("item.mithril_kiteshield", weight = 1)
+            drop("item.rune_chainbody", weight = 1)
+            drop("item.rune_helm", weight = 1)
 
-            drop("item.pure_essence_noted", amount = 60, weight = 20)
-            drop("item.adamant_bar", weight = 8)
+            drop("item.air_rune", amount = 50, weight = 8)
+            drop("item.chaos_rune", amount = 10, weight = 7)
+            drop("item.blood_rune", amount = 7, weight = 4)
+            drop("item.law_rune", amount = 3, weight = 1)
 
-            drop("item.coins", amount = 132, weight = 140)
-            drop("item.coins", amount = 220, weight = 36)
-            drop("item.coins", amount = 30, weight = 28)
-            drop("item.coins", amount = 44, weight = 24)
-            drop("item.coins", amount = 460, weight = 4)
+            drop("item.pure_essence_noted", amount = 60, weight = 5)
+            drop("item.adamant_bar", weight = 2)
 
-            drop("item.lobster", weight = 8)
-            drop("item.cosmic_talisman", weight = 4)
-            drop("item.chaos_talisman", weight = 4)
-            drop("item.defence_potion_3", weight = 4)
+            drop("item.coins", amount = 132, weight = 35)
+            drop("item.coins", amount = 220, weight = 9)
+            drop("item.coins", amount = 30, weight = 7)
+            drop("item.coins", amount = 44, weight = 6)
+            drop("item.coins", amount = 460, weight = 1)
 
-
+            drop("item.lobster", weight = 2)
+            drop("item.cosmic_talisman", weight = 1)
+            drop("item.chaos_talisman", weight = 1)
+            drop("item.defence_potion_3", weight = 1)
         }
 
         tertiaryDrops {

@@ -31,7 +31,7 @@ class DropTestCommand : Command {
         }
 
         val dropCounts: MutableMap<Int, Int> = HashMap()
-
+        table.writeRatesToFile(Settings.DROP_MULTIPLIER)
         for (i in 0..<times) {
             val drops = table.rollDrops(player)
             for (drop in drops) {

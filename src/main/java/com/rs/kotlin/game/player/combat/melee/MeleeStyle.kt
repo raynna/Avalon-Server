@@ -20,7 +20,7 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun canAttack(attacker: Player, defender: Entity): Boolean {
         if (defender is NPC) {
-            if (defender.name.contains("aviansie", ignoreCase = true) || defender.id == NPC.getNpc("npc.kree_arra_lv580")) {
+            if (defender.name.contains("aviansie", ignoreCase = true) || defender.isNpc("npc.kree_arra_lv580")) {
                 attacker.message("You can't use melee on flying enemies.")
                 return false
             }

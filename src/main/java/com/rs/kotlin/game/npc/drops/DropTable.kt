@@ -1,9 +1,12 @@
 package com.rs.kotlin.game.npc.drops
 
+import com.rs.Settings
+import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.DropTablesSetup.gemDropTable
 import com.rs.kotlin.game.npc.drops.DropTablesSetup.herbDropTable
+import java.io.File
 import java.util.concurrent.ThreadLocalRandom
 
 fun dropTable(
@@ -33,7 +36,7 @@ fun dropTable(
 
 class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
     private val alwaysDrops = mutableListOf<DropEntry>()
-    private val preRollDrops = mutableListOf<DropEntry>()
+    private val preRollDrops = mutableListOf<PreRollDropEntry>()
     private val tertiaryDrops = mutableListOf<TertiaryDropEntry>()
     private val mainDrops = WeightedTable()
     private val specialDrops = WeightedTable()
@@ -52,11 +55,12 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
         currentContext = null
     }
 
-    fun preRollDrops(block: MutableList<DropEntry>.() -> Unit) {
+    fun preRollDrops(block: MutableList<PreRollDropEntry>.() -> Unit) {
         currentContext = DropType.PREROLL
         preRollDrops.block()
         currentContext = null
     }
+
 
     fun mainDrops(size: Int, block: MutableList<WeightedDropEntry>.() -> Unit) {
         currentContext = DropType.MAIN
@@ -106,7 +110,8 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
     ) {
         val ctx = currentContext ?: error("Cannot call drop() outside a drop type scope")
         when (ctx) {
-            DropType.ALWAYS, DropType.PREROLL -> addDrop(ctx, Rscm.lookup(item), amount, condition, customLogic)
+            DropType.ALWAYS -> addDrop(ctx, Rscm.lookup(item), amount, condition, customLogic)
+            DropType.PREROLL -> { preRollDrops.add(PreRollDropEntry(Rscm.lookup(item), amount, numerator, denominator, condition)) }
             DropType.MAIN -> mainDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
             DropType.SPECIAL -> specialDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
             DropType.TERTIARY -> {
@@ -128,30 +133,44 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
         val entry = DropEntry(item, amount, always = context == DropType.ALWAYS, condition = condition)
         when (context) {
             DropType.ALWAYS -> alwaysDrops.add(entry)
-            DropType.PREROLL -> preRollDrops.add(entry)
             else -> error("Cannot addDrop to context $context")
         }
     }
 
     fun rollDrops(player: Player): List<Drop> {
+        return rollDrops(player, 1.0)
+    }
+
+    fun rollDrops(player: Player, multiplier: Double = 1.0): List<Drop> {
         val drops = mutableListOf<Drop>()
 
         alwaysDrops.forEach { it.roll(player)?.let(drops::add) }
-        preRollDrops.forEach { it.roll(player)?.let(drops::add) }
 
+        var preRollHit = false
+        for (entry in preRollDrops) {
+            val drop = entry.roll(player, multiplier)
+            if (drop != null) {
+                drops.add(drop)
+                preRollHit = true
+                break
+            }
+        }
         gemTableRoller?.let { if (it(player, drops)) return drops }
         herbTableRoller?.let { if (it(player, drops)) return drops }
-
-        repeat(rolls) {
-            if (gemTableRoller?.invoke(player, drops) == true) return@repeat
-            mainDrops.roll(player)?.let(drops::add)
+        if (!preRollHit) {
+            repeat(rolls) {
+                if (gemTableRoller?.invoke(player, drops) == true) return@repeat
+                mainDrops.roll(player)?.let(drops::add)
+            }
         }
 
         if (specialDrops.size() > 0) {
             specialDrops.roll(player)?.let(drops::add)
         }
 
-        tertiaryDrops.forEach { it.roll(player)?.let(drops::add) }
+        tertiaryDrops.forEach {
+            it.roll(player, multiplier)?.let(drops::add)
+        }
         charmTable?.roll()?.let(drops::add)
 
         return drops
@@ -159,4 +178,116 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
 
     fun totalDropCount(): Int =
         alwaysDrops.size + preRollDrops.size + mainDrops.size() + tertiaryDrops.size + specialDrops.size()
+
+    fun exportRatesToJson(multiplier: Double): String {
+        val sb = StringBuilder()
+
+        sb.append("{\n")
+        sb.append("\"name\":\"$name\",\n")
+        sb.append("\"multiplier\":$multiplier,\n")
+
+        // ---------------- ALWAYS ----------------
+        sb.append("\"alwaysDrops\":[\n")
+        alwaysDrops.forEachIndexed { i, e ->
+            sb.append(
+                "{" +
+                        "\"itemId\":${e.itemId}," +
+                        "\"name\":\"${ItemDefinitions.getItemDefinitions(e.itemId).name}\"," +
+                        "\"amount\":\"${e.amount}\"" +
+                        "}"
+            )
+            if (i < alwaysDrops.size - 1) sb.append(",")
+            sb.append("\n")
+        }
+        sb.append("],\n")
+
+        // ---------------- PREROLL ----------------
+        sb.append("\"preRollDrops\":[\n")
+        preRollDrops.forEachIndexed { i, e ->
+
+            val boostedDenom =
+                (e.denominator / multiplier)
+                    .toInt()
+                    .coerceAtLeast(1)
+
+            sb.append(
+                "{" +
+                        "\"itemId\":${e.itemId}," +
+                        "\"name\":\"${ItemDefinitions.getItemDefinitions(e.itemId).name}\"," +
+                        "\"amount\":\"${e.amount}\"," +
+                        "\"originalRate\":\"${e.numerator}/${e.denominator}\"," +
+                        "\"boostedRate\":\"1/$boostedDenom\"" +
+                        "}"
+            )
+
+            if (i < preRollDrops.size - 1) sb.append(",")
+            sb.append("\n")
+        }
+        sb.append("],\n")
+
+        // ---------------- MAIN ----------------
+        sb.append("\"mainDrops\":[\n")
+
+        val totalWeight = mainDrops.mutableEntries().sumOf { it.weight }.toDouble()
+
+        mainDrops.mutableEntries().forEachIndexed { i, e ->
+
+            val originalDenom = totalWeight / e.weight
+            sb.append(
+                "{" +
+                        "\"itemId\":${e.itemId}," +
+                        "\"name\":\"${ItemDefinitions.getItemDefinitions(e.itemId).name}\"," +
+                        "\"amount\":\"${e.amount}\"," +
+                        "\"weight\":${e.weight}," +
+                        "\"originalRate\":\"1/${"%.2f".format(originalDenom)}\"" +
+                        "}"
+            )
+
+
+            if (i < mainDrops.mutableEntries().size - 1) sb.append(",")
+            sb.append("\n")
+        }
+
+        sb.append("],\n")
+
+        // ---------------- TERTIARY ----------------
+        sb.append("\"tertiaryDrops\":[\n")
+
+        tertiaryDrops.forEachIndexed { i, e ->
+
+            val boosted =
+                (e.denominator / multiplier)
+                    .toInt()
+                    .coerceAtLeast(1)
+
+            sb.append(
+                "{" +
+                        "\"itemId\":${e.itemId}," +
+                        "\"name\":\"${ItemDefinitions.getItemDefinitions(e.itemId).name}\"," +
+                        "\"amount\":\"${e.amount}\"," +
+                        "\"originalRate\":\"1/${e.denominator}\"," +
+                        "\"boostedRate\":\"1/$boosted\"" +
+                        "}"
+            )
+
+            if (i < tertiaryDrops.size - 1) sb.append(",")
+            sb.append("\n")
+        }
+
+        sb.append("]\n")
+        sb.append("}")
+
+        return sb.toString()
+    }
+
+    fun writeRatesToFile(multiplier: Double) {
+        val json = exportRatesToJson(multiplier)
+
+        val file = File("data/droptables/${name.replace(" ", "_")}.json")
+        file.parentFile.mkdirs()
+        file.writeText(json)
+
+        println("[DROP EXPORT] Wrote ${file.path}")
+    }
+
 }
