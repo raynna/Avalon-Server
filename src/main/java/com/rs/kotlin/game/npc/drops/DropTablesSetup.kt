@@ -40,6 +40,10 @@ object DropTablesSetup {
         registerDropTable(DagannothRexTable.table, Rscm.lookup("npc.dagannoth_rex_lv303"))
         registerDropTable(DagannothPrimeTable.table, Rscm.lookup("npc.dagannoth_prime_lv303"))
         registerDropTable(DagannothSupremeTable.table, Rscm.lookup("npc.dagannoth_supreme_lv303"))
+        registerDropTable(GeneralGraardorTable.table, Rscm.lookup("npc.general_graardor_lv624"))
+        registerDropTable(KreeArraDropTable.table, Rscm.lookup("npc.kree_arra_lv580"))
+        registerDropTable(CommanderZilyanaDropTable.table, Rscm.lookup("npc.commander_zilyana_lv596"))
+        registerDropTable(KrilTsutsarothDropTable.table, Rscm.lookup("npc.k_ril_tsutsaroth_lv650"))
         registerDropTable(CrawlingHandTable.table,
             Rscm.lookupList("npc_group.crawling_hand"),
             Rscm.lookupList("npc_group.crawling_hand_lv7"),
