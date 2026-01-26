@@ -31,8 +31,6 @@ object CombatAnimations {
         return ShieldBlockAnimations.DEFAULT_BLOCK_ANIM
     }
 
-
-
     fun getSound(itemId: Int, attackStyle: AttackStyle, styleIndex: Int): Int {
         StandardMelee.getWeaponByItemId(itemId)?.let { meleeWeapon ->
             return meleeWeapon.sounds[StyleKey(attackStyle, styleIndex)] ?: meleeWeapon.soundId?: 2548
@@ -49,6 +47,13 @@ object CombatAnimations {
         return unarmed.sounds[StyleKey(attackStyle, styleIndex)] ?: Rscm.lookup("sound.punch")
     }
 
+    fun getSound(player: Player): Int {
+        val (weaponId, attackStyle, styleIndex) =
+            resolveStyle(player) ?: return Rscm.lookup("sound.punch")
+
+        return getSound(weaponId, attackStyle, styleIndex)
+    }
+
     fun getAnimation(itemId: Int, attackStyle: AttackStyle, styleIndex: Int): Int {
         StandardMelee.getWeaponByItemId(itemId)?.let { meleeWeapon ->
             return meleeWeapon.animations[StyleKey(attackStyle, styleIndex)] ?: meleeWeapon.animationId?: DEFAULT_ANIMATION
@@ -63,5 +68,26 @@ object CombatAnimations {
         }
         val unarmed = StandardMelee.getDefaultWeapon()
         return unarmed.animations[StyleKey(attackStyle, styleIndex)] ?: DEFAULT_ANIMATION
+    }
+
+    fun getAnimation(player: Player): Int {
+        val (weaponId, attackStyle, styleIndex) =
+            resolveStyle(player) ?: return DEFAULT_ANIMATION
+
+        return getAnimation(weaponId, attackStyle, styleIndex)
+    }
+
+    private fun resolveStyle(player: Player): Triple<Int, AttackStyle, Int>? {
+        val weaponId = player.equipment.weaponId
+        val styleIndex = player.combatDefinitions.attackStyle
+
+        val attackStyle = Weapon
+            .getWeapon(weaponId)
+            .weaponStyle
+            .styleSet
+            .styleAt(styleIndex)
+            ?: return null
+
+        return Triple(weaponId, attackStyle, styleIndex)
     }
 }

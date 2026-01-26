@@ -2,6 +2,7 @@ package com.rs.java.game.npc.combat.impl;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
+import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
@@ -19,8 +20,9 @@ public class GuthanCombat extends CombatScript {
 	public int attack(NPC npc, Entity target) {
 		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		npc.animate(new Animation(defs.getAttackAnim()));
-		int damage = NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.STAB, target);
-		delayHit(npc, target, 0, getMeleeHit(npc, damage));
+		Hit meleeHit = npc.meleeHit(target, defs.getMaxHit(), NpcAttackStyle.STAB);
+		//TODO ADD SPECIAL HEAL EFFECT
+		delayHit(npc, target, 0, meleeHit);
 		return npc.getAttackSpeed();
 	}
 }

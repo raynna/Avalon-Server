@@ -1,5 +1,8 @@
 package com.rs.kotlin.game.player.combat.range
 
+import com.rs.java.game.player.Equipment
+import com.rs.java.game.player.Player
+
 
 abstract class RangeData {
 
@@ -20,6 +23,11 @@ abstract class RangeData {
 
     companion object {
         private val allData: List<RangeData> = listOf(StandardRanged)
+
+        fun getCurrentAmmo(player: Player): RangedAmmo? {
+            val ammoItem = player.equipment.items[Equipment.SLOT_ARROWS.toInt()]
+            return ammoItem?.let { getAmmoByItemId(it.id) }
+        }
 
         fun getWeaponByItemId(itemId: Int): RangedWeapon? {
             return allData.firstNotNullOfOrNull { rangeData ->

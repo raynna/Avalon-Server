@@ -17,6 +17,8 @@ import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+import com.rs.kotlin.game.world.projectile.Projectile;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 public class GlacorCombat extends CombatScript {
 
@@ -28,12 +30,10 @@ public class GlacorCombat extends CombatScript {
 	@Override
 	public int attack(final NPC npc, final Entity target) {
 		Glacor glacor = (Glacor) npc;
-		NpcCombatDefinition defs = npc.getCombatDefinitions();
-		if (Utils.random(4) == 0)
+		if (Utils.roll(1, 4))
 			glacor.setRangeAttack(!glacor.isRangeAttack());
-		if (target instanceof Player) {
-			Player player = (Player) target;
-			if (glacor.getEffect() == 1)
+		if (target instanceof Player player) {
+            if (glacor.getEffect() == 1)
 				player.getPrayer().drainPrayer((int) (player.getPrayer().getPrayerPoints() * .1));
 			switch (Utils.getRandom(5)) {
 			case 0:
@@ -45,30 +45,24 @@ public class GlacorCombat extends CombatScript {
 				if (Utils.isOnRange(npc.getX(), npc.getY(), npc.getSize(), target.getX(), target.getY(),
 						target.getSize(), 0)) {
 					npc.animate(new Animation(9955));
-					delayHit(npc, target, 0,
-                            getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 350, NpcAttackStyle.CRUSH, target)));
+					Hit meleeHit = npc.meleeHit(target, 350);
+					delayHit(npc, target, 0, meleeHit);
 				} else
 					sendDistancedAttack(glacor, target);
 				break;
 			case 4:
 				final WorldTile tile = new WorldTile(target);
 				npc.animate(new Animation(9955));
-				World.sendProjectileToTile(npc, tile, 2314);
-				glacor.setRangeAttack(true);
-				WorldTasksManager.schedule(new WorldTask() {
-
-					@Override
-					public void run() {
-						for (Entity e : npc.getPossibleTargets()) {
-							if (e instanceof Player) {
-								Player player = (Player) e;
-								if (player.withinDistance(tile, 0))
-									player.applyHit(new Hit(npc, player.getHitpoints() / 2, HitLook.RANGE_DAMAGE));
-								player.getPackets().sendGraphics(new Graphics(2315), tile);
-							}
+				ProjectileManager.sendToTile(Projectile.ELEMENTAL_SPELL, 2314, npc, tile, () -> {
+					for (Entity e : npc.getPossibleTargets()) {
+						if (e instanceof Player t) {
+                            if (t.withinDistance(tile, 0))
+								t.applyHit(new Hit(npc, t.getHitpoints() / 2, HitLook.RANGE_DAMAGE));
+							t.getPackets().sendGraphics(new Graphics(2315), tile);
 						}
 					}
-				}, 3);
+				});
+				glacor.setRangeAttack(true);
 				break;
 			}
 		}
@@ -77,24 +71,22 @@ public class GlacorCombat extends CombatScript {
 
 	private void sendDistancedAttack(Glacor npc, final Entity target) {
 		boolean isRangedAttack = npc.isRangeAttack();
-		if (isRangedAttack) {
-			delayHit(npc, target, 2, getRangeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 294, NpcAttackStyle.RANGED, target)));
-			World.sendElementalProjectile(npc, target, 962);
-		} else {
-			delayHit(npc, target, 2, getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, 264, NpcAttackStyle.MAGIC, target)));
-			World.sendElementalProjectile(npc, target, 634);
-			if (Utils.random(5) == 0) {
-				WorldTasksManager.schedule(new WorldTask() {
-
-					@Override
-					public void run() {
-						target.gfx(new Graphics(369));
-						target.setFreezeDelay(10000); // ten seconds
-					}
-				});
-			}
-		}
 		npc.animate(new Animation(isRangedAttack ? 9968 : 9967));
+		if (isRangedAttack) {
+			Hit rangeHit = npc.rangedHit(target, 294);
+			ProjectileManager.send(Projectile.ELEMENTAL_SPELL, 962, npc, target, () -> {
+				applyRegisteredHit(npc, target, rangeHit);
+			});
+		} else {
+			Hit mageHit = npc.rangedHit(target, 264);
+			ProjectileManager.send(Projectile.ELEMENTAL_SPELL, 634, npc, target, () -> {
+				applyRegisteredHit(npc, target, mageHit);
+				if (Utils.roll(1, 5)) {
+					target.gfx(new Graphics(369));
+					target.setFreezeDelay(10000); // ten seconds
+				}
+			});
+		}
 	}
 
 }

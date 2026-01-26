@@ -1,5 +1,10 @@
 package com.rs.kotlin.game.player.combat
 
+import com.rs.java.game.player.Equipment
+import com.rs.java.game.player.Player
+import com.rs.kotlin.game.player.combat.melee.StandardMelee
+import com.rs.kotlin.game.player.combat.range.RangeData
+
 enum class AttackBonusType(val index: Int) {
     STAB(0),
     SLASH(1),
@@ -9,10 +14,11 @@ enum class AttackBonusType(val index: Int) {
 
 data class StyleSet(
     val styles: List<AttackStyle>,
-    val bonuses: List<AttackBonusType>) {
-        fun styleAt(index: Int) = styles.getOrNull(index)
-        fun bonusAt(index: Int) = bonuses.getOrNull(index)
-    }
+    val bonuses: List<AttackBonusType>
+) {
+    fun styleAt(index: Int) = styles.getOrNull(index)
+    fun bonusAt(index: Int) = bonuses.getOrNull(index)
+}
 
 fun styles(vararg pairs: Pair<AttackStyle, AttackBonusType>) =
     StyleSet(
@@ -185,5 +191,26 @@ enum class WeaponStyle(
     );
 
     companion object {
+        fun getWeaponStyle(player: Player): AttackStyle {
+            val styleIndex = player.combatDefinitions.attackStyle
+            val weapon = Weapon.getWeapon(player.equipment.weaponId)
+
+            return weapon.weaponStyle
+                .styleSet
+                .styleAt(styleIndex)
+                ?: AttackStyle.ACCURATE
+        }
+
+        fun getAttackBonusType(player: Player): AttackBonusType {
+            val styleIndex = player.combatDefinitions.attackStyle
+            val weapon = Weapon.getWeapon(player.equipment.weaponId)
+
+            return weapon.weaponStyle
+                .styleSet
+                .bonusAt(styleIndex)
+                ?: AttackBonusType.CRUSH
+        }
+
+
     }
 }

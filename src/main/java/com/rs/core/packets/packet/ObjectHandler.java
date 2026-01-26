@@ -2116,9 +2116,7 @@ public final class ObjectHandler {
             }
             usingKnife = true;
         }
-        int attackStyle = player.getCombatDefinitions().getAttackStyle();
-        AttackStyle style = MeleeWeapon.Companion.getWeapon(player.getEquipment().getWeaponId()).getWeaponStyle().getStyleSet().styleAt(attackStyle);
-        int weaponEmote = (style != null ? CombatAnimations.INSTANCE.getAnimation(player.getEquipment().getWeaponId(), style, attackStyle) : -1);
+        int weaponEmote = CombatAnimations.INSTANCE.getAnimation(player);
         int knifeEmote = -1;
 
         player.animate(new Animation(usingKnife ? knifeEmote : weaponEmote));

@@ -18,6 +18,7 @@ enum class AttackStyle(
     ACCURATE_RANGE(combatType = CombatType.RANGED, xpMode = XpMode.RANGED),
     RAPID(attackSpeedModifier = -1, combatType = CombatType.RANGED, xpMode = XpMode.RANGED),
     LONGRANGE(attackSpeedModifier = 1, combatType = CombatType.RANGED, xpMode = XpMode.SHARED);
+
 }
 
 

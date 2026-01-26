@@ -421,9 +421,7 @@ public class WarriorsGuild extends Controler {
 	 *            The object we are striking.
 	 */
 	private void submitDummyHit(final WorldObject object) {
-		int attackStyle = player.getCombatDefinitions().getAttackStyle();
-		AttackStyle style = MeleeWeapon.Companion.getWeapon(player.getEquipment().getWeaponId()).getWeaponStyle().getStyleSet().styleAt(attackStyle);
-		int weaponEmote = (style != null ? CombatAnimations.INSTANCE.getAnimation(player.getEquipment().getWeaponId(), style, attackStyle) : -1);
+		int weaponEmote = CombatAnimations.INSTANCE.getAnimation(player);
 
 		player.animate(weaponEmote);
 		WorldTasksManager.schedule(new WorldTask() {

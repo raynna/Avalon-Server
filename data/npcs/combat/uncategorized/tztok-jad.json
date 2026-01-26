@@ -7,7 +7,7 @@
   "defenceAnim": 16201,
   "defendSound": -1,
   "deathAnim": 16188,
-  "deathDelay": 12,
+  "deathDelay": 4,
   "deathSound": -1,
   "respawnDelay": 0,
   "hitpoints": 2500,

@@ -11705,6 +11705,70 @@
       "spria"
     ]
   },
+  "2745": {
+    "id": 2745,
+    "name": "TzTok-Jad",
+    "members": true,
+    "combatLevel": 702,
+    "attackLevel": 640,
+    "strengthLevel": 960,
+    "defenceLevel": 480,
+    "magicLevel": 480,
+    "rangedLevel": 960,
+    "constitutionLevel": 250,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 60,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 October]] [[2005]]",
+    "aliases": [],
+    "size": "5",
+    "examine": "This is going to hurt...",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "[[melee]]": 97,
+      "[[ranged]]": 97,
+      "[[magic]]": 95
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]",
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 8,
+    "respawnTicks": 25,
+    "slayerXp": 25250,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "2801": {
     "id": 2801,
     "name": "Ogre",

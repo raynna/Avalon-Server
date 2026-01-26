@@ -1,10 +1,6 @@
 package com.rs.java.game.npc.combat.impl;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldTile;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
@@ -71,8 +67,8 @@ public class GiantMoleCombat extends CombatScript {
 
 		} else {
 			npc.animate(new Animation(defs.getAttackAnim()));
-			delayHit(npc, target, 0,
-                    getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)));
+			Hit meleeHit = npc.meleeHit(target, defs.getMaxHit());
+			delayHit(npc, target, 0, meleeHit);
 		}
 		return npc.getAttackSpeed();
 	}

@@ -3,6 +3,7 @@ package com.rs.java.game.npc.combat.impl;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
+import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.others.TormentedDemon;
@@ -17,7 +18,7 @@ import com.rs.kotlin.game.world.projectile.ProjectileManager;
 public class TormentedDemonCombat extends CombatScript {
 
     //GFX
-    private static final int HIT_GFX = 2883;
+    private static final int MAGIC_HIT_GFX = 1883;
     private static final int MAGIC_PROJECTILE_ID = 1884;
     private static final int SHIELD_GFX = 1885;
     private static final Graphics MELEE_GFX = new Graphics(1886, 2, 0);
@@ -87,10 +88,10 @@ public class TormentedDemonCombat extends CombatScript {
     }
 
     private void attackMelee(NPC npc, Entity target) {
-        int damage = NpcCombatCalculations.getRandomMaxHit(npc, MELEE_MAX_HIT, NpcAttackStyle.SLASH, target);
+        Hit meleeHit = npc.meleeHit(target, MELEE_MAX_HIT, NpcAttackStyle.SLASH);
         npc.animate(MELEE_ANIMATION);
         npc.gfx(MELEE_GFX);
-        delayHit(npc, target, 0, getMeleeHit(npc, damage));
+        delayHit(npc, target, 0, meleeHit);
     }
 
     private void attackMagic(NPC npc, Entity target) {
@@ -110,17 +111,19 @@ public class TormentedDemonCombat extends CombatScript {
     }
 
     private void attackMagicSingle(NPC npc, Entity target) {
-        int damage = NpcCombatCalculations.getRandomMaxHit(npc, MAGIC_MAX_HIT, NpcAttackStyle.MAGIC, target);
         npc.animate(MAGIC_ANIMATION);
-        ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, MAGIC_PROJECTILE_ID, npc, target);
-        delayHit(npc, target, 2, getMagicHit(npc, damage));
+        Hit magicHit = npc.magicHit(target, MAGIC_MAX_HIT);
+        ProjectileManager.send(Projectile.ELEMENTAL_SPELL, MAGIC_PROJECTILE_ID, npc, target, () -> {
+            applyRegisteredHit(npc, target, magicHit);
+        });
     }
 
     private void attackRangedSingle(NPC npc, Entity target) {
-        int damage = NpcCombatCalculations.getRandomMaxHit(npc, RANGED_MAX_HIT, NpcAttackStyle.RANGED, target);
         npc.animate(RANGED_ANIMATION);
-        ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, RANGE_PROJECTILE_ID, npc, target);
-        delayHit(npc, target, 2, getRangeHit(npc, damage));
+        Hit rangeHit = npc.rangedHit(target, RANGED_MAX_HIT);
+        ProjectileManager.send(Projectile.ELEMENTAL_SPELL, RANGE_PROJECTILE_ID, npc, target, () -> {
+            applyRegisteredHit(npc, target, rangeHit);
+        });
     }
 
     private void attackMagicAoE(NPC npc, Entity mainTarget) {
@@ -130,10 +133,10 @@ public class TormentedDemonCombat extends CombatScript {
             if (target == null || target.hasFinished() || !target.withinDistance(npc, npc.getForceTargetDistance())) {
                 continue;
             }
-
-            int damage = NpcCombatCalculations.getRandomMaxHit(npc, MAGIC_MAX_HIT, NpcAttackStyle.MAGIC, target);
-            ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, MAGIC_PROJECTILE_ID, npc, target);
-            delayHit(npc, target, 2, getMagicHit(npc, damage));
+            Hit magicHit = npc.magicHit(target, MAGIC_MAX_HIT);
+            ProjectileManager.send(Projectile.ELEMENTAL_SPELL, MAGIC_PROJECTILE_ID, new Graphics(MAGIC_HIT_GFX), npc, target, () -> {
+                applyRegisteredHit(npc, target, magicHit);
+            });
         }
     }
 
@@ -145,9 +148,10 @@ public class TormentedDemonCombat extends CombatScript {
                 continue;
             }
 
-            int damage = NpcCombatCalculations.getRandomMaxHit(npc, RANGED_MAX_HIT, NpcAttackStyle.RANGED, target);
-            ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, RANGE_PROJECTILE_ID, npc, target);
-            delayHit(npc, target, 2, getRangeHit(npc, damage));
+            Hit rangeHit = npc.rangedHit(target, RANGED_MAX_HIT);
+            ProjectileManager.send(Projectile.ELEMENTAL_SPELL, RANGE_PROJECTILE_ID, npc, target, () -> {
+                applyRegisteredHit(npc, target, rangeHit);
+            });
         }
     }
 }

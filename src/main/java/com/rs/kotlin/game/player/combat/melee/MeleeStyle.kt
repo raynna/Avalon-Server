@@ -19,71 +19,23 @@ import kotlin.math.min
 class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun canAttack(attacker: Player, defender: Entity): Boolean {
-        val currentWeapon = getCurrentWeapon(attacker)
-        val currentWeaponId = getCurrentWeaponId(attacker)
-        val attackStyle = getAttackStyle(currentWeapon)
-        val attackBonusType = getAttackBonusType(currentWeapon)
         if (defender is NPC) {
             if (defender.name.contains("aviansie", ignoreCase = true) || defender.id == NPC.getNpc("npc.kree_arra_lv580")) {
                 attacker.message("You can't use melee on flying enemies.")
-                return false;
+                return false
             }
         }
-        val combatContext = CombatContext(
-            combat = this,
-            attacker = this.attacker,
-            defender = this.defender,
-            weapon = currentWeapon,
-            weaponId = currentWeaponId,
-            attackStyle = attackStyle,
-            attackBonusType = attackBonusType
-        )
-        //TODO
         return true
     }
 
-    private fun getCurrentWeaponId(attacker: Player): Int {
-        val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
-        val gloves = attacker.equipment.getItem(Equipment.SLOT_HANDS.toInt())
-        val hasGoliathGloves = attacker.combatDefinitions.hasGoliath(gloves)
-        return when {
-            weaponId != -1 -> weaponId
-            hasGoliathGloves && weaponId == -1 -> StandardMelee.getGoliathWeapon().itemId[0]
-            else -> -1
-        }
-    }
-
-
-    private fun getCurrentWeapon(attacker: Player): Weapon {
-        val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
-        val gloves = attacker.equipment.getItem(Equipment.SLOT_HANDS.toInt())
-        val hasGoliathGloves = attacker.combatDefinitions.hasGoliath(gloves)
-        return when {
-            weaponId != -1 && StandardMelee.getWeaponByItemId(weaponId) != null ->
-                StandardMelee.getWeaponByItemId(weaponId)!!
-            hasGoliathGloves -> StandardMelee.getGoliathWeapon()
-            else -> StandardMelee.getDefaultWeapon()
-        }
-    }
-
-    private fun getAttackStyle(currentWeapon: Weapon): AttackStyle {
-        val attackStyleId = attacker.combatDefinitions.attackStyle
-        return currentWeapon.weaponStyle.styleSet.styleAt(attackStyleId) ?: AttackStyle.ACCURATE
-    }
-
-    private fun getAttackBonusType(currentWeapon: Weapon): AttackBonusType {
-        val attackStyleId = attacker.combatDefinitions.attackStyle
-        return currentWeapon.weaponStyle.styleSet.bonusAt(attackStyleId) ?: AttackBonusType.CRUSH
-    }
-
     override fun getAttackDistance(): Int {
-        val currentWeapon = getCurrentWeapon(attacker) // unarmed
+        val currentWeapon = Weapon.getCurrentWeapon(attacker) // unarmed
         return currentWeapon.attackRange ?: 0
     }
 
     override fun getAttackSpeed(): Int {
-        val currentWeapon = getCurrentWeapon(attacker)
-        val style = getAttackStyle(currentWeapon)
+        val currentWeapon = Weapon.getCurrentWeapon(attacker)
+        val style = WeaponStyle.getWeaponStyle(attacker)
         var baseSpeed = 4
         if (currentWeapon.attackSpeed != -1) {
             baseSpeed = currentWeapon.attackSpeed!!
@@ -102,15 +54,15 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     override fun getHitDelay(): Int {
-        val currentWeapon = getCurrentWeapon(attacker) // unarmed
+        val currentWeapon = Weapon.getCurrentWeapon(attacker)
         return currentWeapon.attackDelay?:0
     }
 
     override fun attack() {
-        val currentWeapon = getCurrentWeapon(attacker)
-        val currentWeaponId = getCurrentWeaponId(attacker)
-        val attackStyle = getAttackStyle(currentWeapon)
-        val attackBonusType = getAttackBonusType(currentWeapon)
+        val currentWeapon = Weapon.getCurrentWeapon(attacker)
+        val currentWeaponId = Weapon.getCurrentWeaponId(attacker)
+        val attackStyle = WeaponStyle.getWeaponStyle(attacker)
+        val attackBonusType = WeaponStyle.getAttackBonusType(attacker)
         val combatContext = CombatContext(
             combat = this,
             attacker = attacker,
@@ -125,8 +77,8 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         if (executeEffect(combatContext))
             return
-        attacker.animate(CombatAnimations.getAnimation(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle))
-        attacker.playSound(CombatAnimations.getSound(currentWeaponId, attackStyle, attacker.combatDefinitions.attackStyle), 1)
+        attacker.animate(CombatAnimations.getAnimation(attacker))
+        attacker.playSound(CombatAnimations.getSound(attacker), 1)
         val hit = combatContext.meleeHit(delay = getHitDelay())
         if (attacker.developerMode) {
             attacker.message("[Melee Attack] -> " +
@@ -140,8 +92,7 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     override fun delayHits(vararg hits: PendingHit) {
-        val currentWeapon = getCurrentWeapon(attacker)
-        val attackStyle = getAttackStyle(currentWeapon)
+        val attackStyle = WeaponStyle.getWeaponStyle(attacker)
         var totalDamage = 0
         for (pending in hits) {
             val target = pending.target

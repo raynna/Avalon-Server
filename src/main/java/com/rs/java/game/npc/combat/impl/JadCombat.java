@@ -1,17 +1,14 @@
 package com.rs.java.game.npc.combat.impl;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
-import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
+import com.rs.kotlin.game.world.projectile.Projectile;
 
 public class JadCombat extends CombatScript {
 
@@ -33,8 +30,8 @@ public class JadCombat extends CombatScript {
 				attackStyle = Utils.random(2); // set mage
 			else {
 				npc.animate(new Animation(defs.getAttackAnim()));
-				delayHit(npc, target, 1,
-                        getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)));
+				Hit meleeHit = npc.meleeHit(target, defs.getMaxHit());
+				delayHit(npc, target, 1, meleeHit);
 				return npc.getAttackSpeed();
 			}
 		}
@@ -44,8 +41,8 @@ public class JadCombat extends CombatScript {
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
-					delayHit(npc, target, 2, getRangeHit(npc,
-							NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit() - 2,NpcAttackStyle.RANGED, target)));
+					Hit rangeHit = npc.rangedHit(target, defs.getMaxHit() - 2);
+					delayHit(npc, target, 1, rangeHit);
 					WorldTasksManager.schedule(new WorldTask() {
 						@Override
 						public void run() {
@@ -53,18 +50,19 @@ public class JadCombat extends CombatScript {
 						}
 					}, 1);
 				}
-			}, 3);
+			}, 2);
 		} else {
 			npc.animate(new Animation(16195));
 			npc.gfx(new Graphics(2995));
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
-					delayHit(npc, target, 2, getMagicHit(npc,
-							NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit() - 2, NpcAttackStyle.MAGIC, target)));
-							World.sendJadProjectile(npc, target, 2996);
+					Hit magicHit = npc.magicHit(target, defs.getMaxHit() - 2);
+					ProjectileManager.send(Projectile.ELEMENTAL_SPELL, 2996, npc, target, () -> {
+						applyRegisteredHit(npc, target, magicHit);
+					});
 				}
-			}, 3);
+			}, 2);
 		}
 
 		return npc.getAttackSpeed() + 2;

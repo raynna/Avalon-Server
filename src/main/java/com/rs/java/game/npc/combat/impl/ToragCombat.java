@@ -3,6 +3,7 @@ package com.rs.java.game.npc.combat.impl;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
+import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.player.Player;
@@ -23,14 +24,14 @@ public class ToragCombat extends CombatScript {
 	public int attack(NPC npc, Entity target) {
 		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		npc.animate(new Animation(defs.getAttackAnim()));
-		int damage = getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target);
-		int damage2 = getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target);
-		if ((damage != 0  || damage2 != 0) && target instanceof Player targetPlayer && Utils.random(3) == 0) {
+		Hit hit = npc.meleeHit(target, defs.getMaxHit() / 2);
+		Hit hit2 = npc.meleeHit(target, defs.getMaxHit() / 2);
+		if ((hit.getDamage() != 0  || hit2.getDamage() != 0) && target instanceof Player targetPlayer && Utils.random(3) == 0) {
 			target.gfx(new Graphics(399));
             targetPlayer.setRunEnergy(targetPlayer.getRunEnergy() > 4 ? targetPlayer.getRunEnergy() - 4 : 0);
 		}
-		delayHit(npc, target, 0, getMeleeHit(npc, damage));
-		delayHit(npc, target, 0, getMeleeHit(npc, damage2));
+		delayHit(npc, target, 0, hit);
+		delayHit(npc, target, 0, hit2);
 		return npc.getAttackSpeed();
 	}
 }

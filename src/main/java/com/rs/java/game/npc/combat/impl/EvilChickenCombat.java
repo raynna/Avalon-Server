@@ -1,9 +1,6 @@
 package com.rs.java.game.npc.combat.impl;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.ForceTalk;
-import com.rs.java.game.Graphics;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
@@ -50,8 +47,8 @@ public class EvilChickenCombat extends CombatScript {
 			break;
 		}
 		target.gfx(new Graphics(337));
-		delayHit(npc, target, 0,
-                getMagicHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, target)));
+		Hit magicHit = npc.magicHit(target, defs.getMaxHit());
+		delayHit(npc, target, 0, magicHit);
 		return npc.getAttackSpeed();
 	}
 }

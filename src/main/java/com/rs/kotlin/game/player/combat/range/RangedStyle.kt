@@ -24,40 +24,9 @@ import kotlin.math.min
 
 class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
-    fun getCurrentWeapon(): RangedWeapon {
-        val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
-        return RangeData.getWeaponByItemId(weaponId) ?: StandardRanged.getDefaultWeapon()
-    }
-
-    private fun getCurrentWeaponId(attacker: Player): Int {
-        val weaponId = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]?.id ?: -1
-        return when {
-            weaponId != -1 -> weaponId
-            else -> -1
-        }
-    }
-
-    fun getCurrentAmmo(): RangedAmmo? {
-        val ammoItem = attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]
-        if (ammoItem != null) {
-            return RangeData.getAmmoByItemId(ammoItem.id);
-        }
-        return null
-    }
-
-    private fun getAttackStyle(currentWeapon: RangedWeapon): AttackStyle {
-        val styleId = attacker.combatDefinitions.attackStyle
-        return currentWeapon.weaponStyle.styleSet.styleAt(styleId) ?: AttackStyle.RAPID
-    }
-
-    private fun getAttackBonusType(currentWeapon: RangedWeapon): AttackBonusType {
-        val styleId = attacker.combatDefinitions.attackStyle
-        return currentWeapon.weaponStyle.styleSet.bonusAt(styleId) ?: AttackBonusType.RANGE
-    }
-
     override fun getAttackSpeed(): Int {
-        val currentWeapon = getCurrentWeapon()
-        val style = getAttackStyle(currentWeapon)
+        val currentWeapon = Weapon.getCurrentWeapon(attacker)
+        val style = WeaponStyle.getWeaponStyle(attacker)
 
         var baseSpeed = if (currentWeapon.attackSpeed != -1) {
             currentWeapon.attackSpeed!!
@@ -74,9 +43,10 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     override fun getAttackDistance(): Int {
-        val currentWeapon = getCurrentWeapon()
+        val currentWeapon = Weapon.getCurrentWeapon(attacker)
+        val weaponStyle = WeaponStyle.getWeaponStyle(attacker);
         val baseRange = currentWeapon.attackRange ?: 5
-        return when (getAttackStyle(currentWeapon)) {
+        return when (weaponStyle) {
             AttackStyle.LONGRANGE -> (baseRange + 2).coerceAtMost(10)
             AttackStyle.ACCURATE, AttackStyle.RAPID -> baseRange.coerceAtMost(10)
             else -> baseRange.coerceAtMost(10)
@@ -85,8 +55,8 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
 
     override fun canAttack(attacker: Player, defender: Entity): Boolean {
-        val currentWeapon = getCurrentWeapon()
-        val currentAmmo = getCurrentAmmo()
+        val currentWeapon = Weapon.getRangedWeapon(attacker) ?: return false
+        val currentAmmo = RangeData.getCurrentAmmo(attacker)
         val ammoId = attacker.getEquipment().ammoId
         val ammoTier = currentAmmo?.ammoTier
         val ammoType = currentAmmo?.ammoType
@@ -135,11 +105,14 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
 
     private fun performRangedAttack() {
-        val currentWeapon = getCurrentWeapon()
-        val currentWeaponId = getCurrentWeaponId(attacker)
-        val attackStyle = getAttackStyle(currentWeapon)
-        val attackBonusType = getAttackBonusType(currentWeapon)
-        val currentAmmo = getCurrentAmmo()
+        val currentWeapon = Weapon.getRangedWeapon(attacker) ?: run {
+            println("Combat error: trying to range without a ranged weapon")
+            return
+        }
+        val currentWeaponId = Weapon.getCurrentWeaponId(attacker)
+        val attackStyle = WeaponStyle.getWeaponStyle(attacker)
+        val attackBonusType = WeaponStyle.getAttackBonusType(attacker)
+        val currentAmmo =  RangeData.getCurrentAmmo(attacker)
 
         val combatContext = CombatContext(
             combat = this,
@@ -194,16 +167,17 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (!qualifies) return
         consumeAmmo()
         sendSwiftProjectile()
-
+        val weapon = Weapon.getRangedWeapon(attacker) ?: return
+        val ammo = RangeData.getCurrentAmmo(attacker)
         val swiftHit = CombatContext(
             combat = this,
             attacker = attacker,
             defender = defender,
-            attackStyle = getAttackStyle(getCurrentWeapon()),
-            attackBonusType = getAttackBonusType(getCurrentWeapon()),
-            weapon = getCurrentWeapon(),
+            attackStyle = WeaponStyle.getWeaponStyle(attacker),
+            attackBonusType = WeaponStyle.getAttackBonusType(attacker),
+            weapon = weapon,
             weaponId = attacker.equipment.weaponId,
-            ammo = getCurrentAmmo(),
+            ammo =  ammo,
             usingSpecial = false
         ).rollRanged()
 
@@ -217,9 +191,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             defender.lock(3)
             defender.gfx(Graphics(181, 0, 96))
         }
-
-        val weapon = getCurrentWeapon()
-        val ammo = getCurrentAmmo()
 
         val type = weapon.ammoType ?: ammo?.ammoType
 
@@ -240,7 +211,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         super.onHit(attacker, defender, hit)
-        val currentAmmo = getCurrentAmmo()
+        val currentAmmo = RangeData.getCurrentAmmo(attacker)
         if (currentAmmo != null) {
             if (currentAmmo.endGfx != null) {
                 defender.gfx(currentAmmo.endGfx);
@@ -262,9 +233,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val modified = hits.toMutableList()
         applySwiftGlovesToPendingHits(modified)
 
-        val currentWeapon = getCurrentWeapon()
-        val attackStyle = getAttackStyle(currentWeapon)
-
+        val attackStyle = WeaponStyle.getWeaponStyle(attacker)
         var totalDamage = 0
 
         for (pending in modified) {
@@ -290,8 +259,8 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun consumeAmmo(): Boolean {
-        val currentWeapon = getCurrentWeapon()
-        val currentAmmo = getCurrentAmmo()
+        val currentWeapon = Weapon.getRangedWeapon(attacker) ?: return false
+        val currentAmmo = RangeData.getCurrentAmmo(attacker)
         val weapon = attacker.equipment.items[Equipment.SLOT_WEAPON.toInt()]
         val ammoItem = attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]
         val ammoType = currentWeapon.ammoType ?: currentAmmo?.ammoType
@@ -345,8 +314,8 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     }
 
     private fun sendProjectile(heightOffset: Int = 0): Int {
-        val currentWeapon = getCurrentWeapon()
-        val currentAmmo = getCurrentAmmo()
+        val currentWeapon = Weapon.getRangedWeapon(attacker) ?: return -1
+        val currentAmmo = RangeData.getCurrentAmmo(attacker)
         val projectileId = currentWeapon.projectileId ?: currentAmmo?.projectileId ?: 27
         val type = currentWeapon.ammoType ?: currentAmmo?.ammoType
 

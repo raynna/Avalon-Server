@@ -1,9 +1,6 @@
 package com.rs.java.game.npc.combat.impl;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.core.tasks.WorldTask;
@@ -24,7 +21,8 @@ public class FakeNomadCombat extends CombatScript {
 	public int attack(final NPC npc, final Entity target) {
 		NpcCombatDefinition defs = npc.getCombatDefinitions();
 		npc.animate(new Animation(12697));
-		boolean hit = NpcCombatCalculations.getRandomMaxHit(npc, 50, NpcAttackStyle.MAGIC, target) != 0;
+		Hit magicHit = npc.magicHit(target, 50);
+		boolean hit = magicHit.getDamage() != 0;
 		delayHit(npc, target, 2, getRegularHit(npc, hit ? 50 : 0));
 		World.sendElementalProjectile(npc, target, 1657);
 		if (hit) {
