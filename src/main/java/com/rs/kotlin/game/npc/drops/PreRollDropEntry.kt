@@ -4,12 +4,13 @@ import com.rs.java.game.player.Player
 import java.util.concurrent.ThreadLocalRandom
 
 class PreRollDropEntry(
-    itemId: Int,
+    itemId: Int?,
     amount: IntRange,
     val numerator: Int,
     val denominator: Int,
-    private val condition: ((Player) -> Boolean)? = null
-) : DropEntry(itemId, amount) {
+    val condition: ((Player) -> Boolean)? = null,
+    val dynamicItem: ((Player) -> Int?)? = null
+) : DropEntry(itemId ?: -1, amount) {
 
     init {
         require(numerator in 1..denominator) {
@@ -28,9 +29,14 @@ class PreRollDropEntry(
 
         val roll = ThreadLocalRandom.current().nextInt(effectiveDenominator)
 
-        return if (roll < numerator)
-            Drop(itemId, rollAmount())
-        else
-            null
+        if (roll >= numerator)
+            return null
+
+        val finalItemId =
+            dynamicItem?.invoke(player)
+                ?: itemId.takeIf { it != -1 }
+                ?: return null
+
+        return Drop(finalItemId, rollAmount(), source = DropSource.PREROLL)
     }
 }

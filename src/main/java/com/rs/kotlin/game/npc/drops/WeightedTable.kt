@@ -17,14 +17,13 @@ class WeightedTable {
 
     fun size() = entries.size
 
-    fun roll(player: Player): Drop? {
+    fun roll(player: Player, source: DropSource): Drop? {
         val rand = ThreadLocalRandom.current().nextInt(tableSize)
         var acc = 0
         for (entry in entries) {
             acc += entry.weight
             if (rand < acc) {
-                val drop = entry.roll(player)
-                return drop
+                return entry.roll(player, source)
             }
         }
         return null

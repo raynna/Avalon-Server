@@ -22,6 +22,7 @@ object DropTablesSetup {
         gemDropTable = GemTableEntry()
         superRareTable = SuperRareTableEntry()
         herbDropTable = HerbTableEntry()
+        registerDropTable(CyclopsDropTable.table, Rscm.lookupList("npc_group.cyclops_lv56"), Rscm.lookupList("npc_group.cyclops_lv76"))
         registerDropTable(GreenDragonDropTable.greenDragonTable, Rscm.lookupList("npc_group.green_dragon_lv79"))
         registerDropTable(BlackDragonDropTable.blackDragonTable, Rscm.lookupList("npc_group.black_dragon_lv227"))
         registerDropTable(KingBlackDragonDropTable.kingBlackDragonTable, Rscm.lookup("npc.king_black_dragon_lv276"))

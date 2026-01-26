@@ -18,7 +18,7 @@ open class DropEntry @JvmOverloads constructor(
     open fun roll(player: Player): Drop? {
         if (condition?.invoke(player) == false) return null
 
-        val mainDrop = Drop(itemId, rollAmount(), always)
+        val mainDrop = Drop(itemId, rollAmount(), always, DropSource.ALWAYS)
 
         extraDropEntry?.roll(player)?.let {
             mainDrop.extraDrop = it

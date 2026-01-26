@@ -38,7 +38,7 @@ open class TertiaryDropEntry(
             .nextInt(effectiveDenominator)
 
         if (roll < numerator) {
-            return Drop(itemId, rollAmount())
+            return Drop(itemId, rollAmount(), source = DropSource.TERTIARY)
         }
 
         return null

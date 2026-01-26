@@ -28,6 +28,7 @@ import com.rs.java.game.player.TickManager;
 import com.rs.json.JsonNpcCombatDefinitions;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.combatdata.*;
+import com.rs.kotlin.game.npc.drops.DropSource;
 import com.rs.kotlin.game.npc.drops.DropTable;
 import com.rs.kotlin.game.npc.drops.DropTableRegistry;
 import com.rs.kotlin.game.npc.drops.Drop;
@@ -655,10 +656,9 @@ public class NPC extends Entity implements Serializable {
                 : (points * killer.getBonusPoints()) - points;
         double totalPoints = points + bonusPoints;
         killer.setAvalonPoints(killer.getAvalonPoints() + (int) (totalPoints + bonusPoints));
-        killer.getPackets()
-                .sendGameMessage("You gain " + (int) totalPoints
-                        + (bonusPoints > 1 ? " (" + (int) bonusPoints + " bonus points) " : " ") + Settings.SERVER_NAME
-                        + " points for killing " + getName() + (wildy ? " in the wilderness." : " boss."));
+        killer.message("You gain " + (int) totalPoints
+                + (bonusPoints > 1 ? " (" + (int) bonusPoints + " bonus points) " : " ") + Settings.SERVER_NAME
+                + " points for killing " + getName() + (wildy ? " in the wilderness." : " boss."));
     }
 
     public enum BossIds {
@@ -714,10 +714,8 @@ public class NPC extends Entity implements Serializable {
             if (achievement.getId() == npc.getId()) {
                 name = npc.getName();
                 if (player.getBossKillcount().get(name).intValue() == achievement.getKills()) {
-                    player.getPackets()
-                            .sendGameMessage("<col=ff0000>Congratulations, you have completed an achievement;");
-                    player.getPackets()
-                            .sendGameMessage("<col=ff0000>Kill " + achievement.getKills() + " " + name + ".");
+                    player.message("<col=ff0000>Congratulations, you have completed an achievement;");
+                    player.message("<col=ff0000>Kill " + achievement.getKills() + " " + name + ".");
                     player.getAdventureLog().addActivity("Completed completionist cape requirement; kill "
                             + achievement.getKills() + " " + name + "");
                 }
@@ -734,8 +732,7 @@ public class NPC extends Entity implements Serializable {
                 addAvalonPoints(player, this, false);
                 player.getBossKillcount().put(getName().replace("_1", "").replace("_2", "").replace("3_", ""),
                         totalKills);
-                player.getPackets()
-                        .sendGameMessage("Your " + getName() + " killcount is: <col=ff0000>" + totalKills + "</col>.");
+                player.message("Your " + getName() + " killcount is: <col=ff0000>" + totalKills + "</col>.");
                 if (totalKills % 50 == 0)
                     player.getAdventureLog().addActivity("Killed " + totalKills + " " + getName() + "");
                 checkAchievements(player, this);
@@ -789,7 +786,6 @@ public class NPC extends Entity implements Serializable {
         }
 
         for (Drop drop : drops) {
-            Item item = new Item(drop.itemId, drop.amount);
             sendDrop(killer, drop);
             if (drop.extraDrop != null) {
                 sendDrop(killer, drop.extraDrop);
@@ -859,11 +855,10 @@ public class NPC extends Entity implements Serializable {
             if (item.getAmount() > 0) {
                 World.updateGroundItem(item, new WorldTile(getCoordFaceX(size), getCoordFaceY(size), getPlane()),
                         luckyPlayer, 60, 0);
-                luckyPlayer
-                        .message(String.format(
-                                (luckyPlayer.getRareItem() == item ? "<col=ff0000>" : "<col=216902>") + "You received: %s x %s. ("
-                                        + getName() + ") </col>",
-                                Utils.getFormattedNumber(item.getAmount(), ','), dropName));
+                luckyPlayer.message(String.format(
+                        (luckyPlayer.getRareItem() == item ? "<col=ff0000>" : "<col=216902>") + "You received: %s x %s. ("
+                                + getName() + ") </col>",
+                        Utils.getFormattedNumber(item.getAmount(), ','), dropName));
                 for (Player p : playersWithLs) {
                     if (!p.equals(luckyPlayer)) {
                         p.message(String.format("%s</col> received: %s x %s. (" + getName() + ") ",
@@ -873,27 +868,25 @@ public class NPC extends Entity implements Serializable {
                 }
                 if (item.getDefinitions().getTipitPrice() > luckyPlayer.getDropLogs().getLowestValue()) {
                     if (!luckyPlayer.getDropLogs().toggledMessage()) {
-                        luckyPlayer.getPackets().sendGameMessage(item.getName() + " added to your droplog.");
+                        luckyPlayer.message(item.getName() + " added to your droplog.");
                     }
                     if (!luckyPlayer.getDropLogs().getLowestValueMessage()) {
                         luckyPlayer.getDropLogs().setLowestValueMessage(true);
-                        luckyPlayer.getPackets()
-                                .sendGameMessage("If you want to change value of droplogs enter ::droplogvalue price");
-                        luckyPlayer.getPackets()
-                                .sendGameMessage("You can also hide droplog messages with ::toggledroplogmessage");
+                        luckyPlayer.message("If you want to change value of droplogs enter ::droplogvalue price");
+                        luckyPlayer.message("You can also hide droplog messages with ::toggledroplogmessage");
                     }
                     luckyPlayer.getDropLogs().addDrop(item);
                 }
                 if (luckyPlayer.getValueableDrop() < 1)
                     luckyPlayer.setValueableDrop(5000);
                 if ((item.getDefinitions().getTipitPrice() * item.getAmount()) >= luckyPlayer.getValueableDrop()) {
-                    luckyPlayer.getPackets().sendGameMessage("<col=ff0000>Valuable drop: " + item.getName()
+                    luckyPlayer.message("<col=ff0000>Valuable drop: " + item.getName()
                             + (item.getAmount() > 1 ? " x " + item.getAmount() + " " : " ") + "("
                             + Utils.getFormattedNumber(item.getDefinitions().getTipitPrice() * item.getAmount(), ',')
                             + " coins.)");
                 }
                 if (!item.getDefinitions().isTradeable() && !item.getName().toLowerCase().contains(" charm")) {
-                    luckyPlayer.getPackets().sendGameMessage("<col=ff0000>Untradeable drop: " + item.getName() + ".");
+                    luckyPlayer.message("<col=ff0000>Untradeable drop: " + item.getName() + ".");
                 }
                 if (player.getRareItem() != null) {
                     if (player.getRareItem().getId() == item.getId() && player.getRareItem().getAmount() == item.getAmount()) {
@@ -931,14 +924,12 @@ public class NPC extends Entity implements Serializable {
         } else if (!player.isToogleLootShare() || sendDp) {
             if (item.getDefinitions().getTipitPrice() > player.getDropLogs().getLowestValue()) {
                 if (!player.getDropLogs().toggledMessage()) {
-                    player.getPackets().sendGameMessage(item.getName() + " added to your droplog.");
+                    player.message(item.getName() + " added to your droplog.");
                 }
                 if (!player.getDropLogs().getLowestValueMessage()) {
                     player.getDropLogs().setLowestValueMessage(true);
-                    player.getPackets()
-                            .sendGameMessage("If you want to change value of droplogs enter ::droplogvalue price");
-                    player.getPackets()
-                            .sendGameMessage("You can also hide droplog messages with ::toggledroplogmessage");
+                    player.message("If you want to change value of droplogs enter ::droplogvalue price");
+                    player.message("You can also hide droplog messages with ::toggledroplogmessage");
                 }
                 player.getDropLogs().addDrop(item);
             }
@@ -947,16 +938,15 @@ public class NPC extends Entity implements Serializable {
                 i = new Item(item.getDefinitions().getCertId(), item.getAmount());
             if ((i.getDefinitions().getTipitPrice() * i.getAmount()) >= Integer
                     .parseInt(player.getToggleValue(player.toggles.get("DROPVALUE")))) {
-                player.getPackets()
-                        .sendGameMessage("<col=ff0000>Valuable drop: " + i.getName()
-                                + (i.getAmount() > 1 ? " x " + i.getAmount() + " " : " ") + "("
-                                + Utils.getFormattedNumber(i.getDefinitions().getTipitPrice() * i.getAmount(), ',')
-                                + " coins.)");
+                player.message("<col=ff0000>Valuable drop: " + i.getName()
+                        + (i.getAmount() > 1 ? " x " + i.getAmount() + " " : " ") + "("
+                        + Utils.getFormattedNumber(i.getDefinitions().getTipitPrice() * i.getAmount(), ',')
+                        + " coins.)");
                 sendLootBeam(item, player, this);
             }
             if (player.toggles("UNTRADEABLEMESSAGE", false) && !item.getDefinitions().isTradeable()
                     && !item.getName().toLowerCase().contains(" charm")) {
-                player.getPackets().sendGameMessage("<col=ff0000>Untradeable drop: " + item.getName()
+                player.message("<col=ff0000>Untradeable drop: " + item.getName()
                         + (item.getAmount() > 1 ? " x " + item.getAmount() + " " : " "));
             }
             if (player.getInventory().containsItem(19675, 1) && defs.getName().toLowerCase().contains("grimy")
@@ -978,23 +968,22 @@ public class NPC extends Entity implements Serializable {
             if (item.getName().toLowerCase().contains("grimy")) {
                 item.setAmount(item.getAmount() * 3);
                 if (!item.getDefinitions().isNoted())
-                    item.setId(item.getDefinitions().getCertId());// grimy herbs to noted
+                    item.setId(item.getDefinitions().getCertId());
             }
             if (item.getAmount() > 0) {
                 World.updateGroundItem(item, new WorldTile(getCoordFaceX(size), getCoordFaceY(size), getPlane()),
                         player, 60, 0);
-                if (player.getRareItem() != null) {
-                    if (player.getRareItem().getId() == item.getId() && player.getRareItem().getAmount() == item.getAmount()) {
-                        if (EconomyPrices.getPrice(item.getId()) >= 1000000) {
-                            World.sendWorldMessage(
-                                    "<img=7><col=36648b>News: " + player.getDisplayName() + " has recieved "
-                                            + (item.getAmount() > 1 ? item.getAmount() + " x " + Utils.formatString(dropName)
-                                            : Utils.formatString(dropName))
-                                            + " as a loot from " + getName() + "!",
-                                    false);
-                        }
-                        sendLootBeam(item, player, this);
-                    }
+                if (drop.getSource() == DropSource.PREROLL || drop.getSource() == DropSource.TERTIARY) {
+                    sendLootBeam(item, player, this);
+                }
+                if (EconomyPrices.getPrice(item.getId()) >= 1000000) {
+                    World.sendWorldMessage(
+                            "<img=7><col=36648b>News: " + player.getDisplayName() + " has recieved "
+                                    + (item.getAmount() > 1 ? item.getAmount() + " x " + Utils.formatString(dropName)
+                                    : Utils.formatString(dropName))
+                                    + " as a loot from " + getName() + "!",
+                            false);
+                    sendLootBeam(item, player, this);
                 }
             }
         }
@@ -1163,6 +1152,7 @@ public class NPC extends Entity implements Serializable {
                         && !WildernessControler.isAtWild(target))
                     return false;
             }
+            resetWalkSteps();
             setTarget(target);
             return true;
         }

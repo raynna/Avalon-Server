@@ -40,7 +40,7 @@ class HerbTableEntry : DropEntry(-1, 1..1) {
         tempTable.setSize(tableSizeOrDefault())
         entries.forEach { tempTable.add(it) }
 
-        return tempTable.roll(player)?.takeIf { it.itemId != -1 }
+        return tempTable.roll(player, source = DropSource.HERB)?.takeIf { it.itemId != -1 }
     }
 
     private fun tableSizeOrDefault() = 128

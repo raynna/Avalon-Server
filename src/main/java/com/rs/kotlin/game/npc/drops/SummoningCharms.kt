@@ -35,7 +35,7 @@ class SummoningCharms(private val dropTable: DropTable) {
         for (entry in entries) {
             acc += entry.percent
             if (roll < acc) {
-                return Drop(entry.itemId, entry.amount)
+                return Drop(entry.itemId, entry.amount, source = DropSource.CHARM)
             }
         }
 

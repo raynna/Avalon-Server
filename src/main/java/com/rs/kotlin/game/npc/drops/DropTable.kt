@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.npc.drops
 
-import com.rs.Settings
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
@@ -100,6 +99,32 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
 
     // ------------------ Drop DSL ------------------
     fun DropTable.drop(
+        numerator: Int = 1,
+        denominator: Int = 4,
+        amount: IntRange = 1..1,
+        condition: ((Player) -> Boolean)? = null,
+        dynamicItem: (Player) -> Int?
+    ) {
+        val ctx = currentContext ?: error("Cannot call drop() outside a drop type scope")
+
+        if (ctx != DropType.PREROLL) {
+            error("dynamicItem drops are only supported in preRollDrops")
+        }
+
+        preRollDrops.add(
+            PreRollDropEntry(
+                itemId = null,
+                amount = amount,
+                numerator = numerator,
+                denominator = denominator,
+                condition = condition,
+                dynamicItem = dynamicItem
+            )
+        )
+    }
+
+
+    fun DropTable.drop(
         item: String,
         amount: IntRange = 1..1,
         weight: Int = 1,                 // new weight for main/special
@@ -160,12 +185,12 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
         if (!preRollHit) {
             repeat(rolls) {
                 if (gemTableRoller?.invoke(player, drops) == true) return@repeat
-                mainDrops.roll(player)?.let(drops::add)
+                mainDrops.roll(player, source = DropSource.MAIN)?.let(drops::add)
             }
         }
 
         if (specialDrops.size() > 0) {
-            specialDrops.roll(player)?.let(drops::add)
+            specialDrops.roll(player, source = DropSource.SPECIAL)?.let(drops::add)
         }
 
         tertiaryDrops.forEach {

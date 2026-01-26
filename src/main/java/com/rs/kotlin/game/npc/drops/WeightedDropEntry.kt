@@ -10,10 +10,15 @@ open class WeightedDropEntry(
     private val customLogic: ((Player, Drop?) -> Unit)? = null
 ) : DropEntry(itemId, amount) {
 
-    override fun roll(player: Player): Drop? {
+    fun roll(player: Player, source: DropSource): Drop? {
         if (condition != null && !condition.invoke(player)) return null
-        val drop = Drop(itemId, rollAmount())
+
+        val drop = Drop(itemId, rollAmount(), source = source)
         customLogic?.invoke(player, drop)
         return drop
+    }
+
+    override fun roll(player: Player): Drop? {
+        return roll(player, DropSource.MAIN)
     }
 }
