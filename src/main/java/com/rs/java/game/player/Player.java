@@ -2927,19 +2927,34 @@ public class Player extends Entity {
                 if (familiar.getOwner() == null) {
                     familiar.setOwner(World.getPlayer(familiar.getOwnerUsername()));
                 }
-            }
-            familiar = Summoning.createFamiliar(this, familiarPouch);
-            if (bobItems != null) {
-                for (Item item : bobItems.getItemsCopy()) {
-                    if (item == null)
-                        continue;
-                    familiar.getBob().addItem(item);
+
+                // Reset/refresh the existing familiar instead of creating new
+                familiar.respawnFamiliar(this);
+
+                if (bobItems != null) {
+                    for (Item item : bobItems.getItemsCopy()) {
+                        if (item == null)
+                            continue;
+                        if (familiar.getBob() != null) {
+                            familiar.getBob().addItem(item);
+                        }
+                    }
+                }
+            } else {
+                // Only create new familiar if one doesn't exist
+                familiar = Summoning.createFamiliar(this, familiarPouch);
+                if (familiar != null && bobItems != null) {
+                    for (Item item : bobItems.getItemsCopy()) {
+                        if (item == null)
+                            continue;
+                        if (familiar.getBob() != null) {
+                            familiar.getBob().addItem(item);
+                        }
+                    }
                 }
             }
         }
-        if (familiar != null) {
-            familiar.respawnFamiliar(this);
-        } else {
+        if (familiar == null) {
             petManager.init(this);
         }
         refreshPrivateChatSetup();
@@ -3039,7 +3054,7 @@ public class Player extends Entity {
                     getPackets().sendResetCamera();
                     lodestone[object.getId() - 69827] = true;
                     refreshLodestoneNetwork();
-                    unlock();
+                    sendOrbParams();
                     stop();
                 }
                 count++;
@@ -3266,7 +3281,7 @@ public class Player extends Entity {
         if (hasFinished())
             return;
         stopAll();
-        unlock();
+        sendOrbParams();
         if (!World.containsLobbyPlayer(username)) {
             stopAll();
             cutscenesManager.logout();

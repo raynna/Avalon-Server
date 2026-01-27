@@ -36,7 +36,7 @@ public class FireSpirit extends NPC {
 
 			@Override
 			public void run() {
-				player.unlock();
+				player.sendOrbParams();
 				player.getInventory().addItem(new Item(12158, Utils.random(1, 6)));
 				player.getInventory().addItem(new Item(12159, Utils.random(1, 6)));
 				player.getInventory().addItem(new Item(12160, Utils.random(1, 6)));

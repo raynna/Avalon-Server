@@ -117,7 +117,7 @@ public class MistalinUnderground extends ObjectPlugin {
 							@Override
 							public void run() {
 								player.setNextWorldTile(toTile);
-								player.unlock();
+								player.sendOrbParams();
 							}
 						}, 0);
 					}

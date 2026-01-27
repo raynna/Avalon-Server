@@ -44,7 +44,7 @@ public class Instance extends Controler {
             WorldTasksManager.schedule(new WorldTask() {
                 @Override
                 public void run() {
-                    player.unlock();
+                    player.sendOrbParams();
                     bandos = new NPC(6260, getWorldTile(20, 33, 2), -1, true);
                     minion = new NPC(6261, getWorldTile(18, 33, 2), -1, true);
                     minion2 = new NPC(6263, getWorldTile(25, 33, 2), -1, true);

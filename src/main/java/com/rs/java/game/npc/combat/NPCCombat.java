@@ -62,7 +62,6 @@ public final class NPCCombat {
             debug("NPC locked");
             return true;
         }
-
         if (attackDelay > 0) {
             attackDelay--;
             debug("Attack delay ticking: " + attackDelay);
@@ -96,7 +95,16 @@ public final class NPCCombat {
             debug("combatAttack: target invalid");
             return false;
         }
-
+        if (target instanceof Familiar familiar) {
+            Player player = familiar.getOwner();
+            if (player != null) {
+                target = player;
+                npc.setTarget(target);
+            }
+            if (target == familiar.getOwner()) {
+                npc.setTarget(target);
+            }
+        }
         int maxDistance = getMaxAttackDistance(target);
 
         if (!canReachTarget(target, maxDistance)) {
@@ -165,7 +173,8 @@ public final class NPCCombat {
 
     public boolean checkAll() {
         Entity target = this.target;
-
+        if (npc instanceof Familiar && target instanceof NPC && ((NPC) target).isCantInteract())
+            return false;
         if (!isTargetValid(target)) {
             debug("checkAll: target no longer valid → REMOVED");
             removeTarget();
@@ -203,7 +212,8 @@ public final class NPCCombat {
 
 
     private boolean canAttackTarget(Entity target) {
-        if (npc instanceof Familiar) return ((Familiar) npc).canAttack(target);
+        if (npc instanceof Familiar)
+            return ((Familiar) npc).canAttack(target);
 
         if (!npc.isForceMultiAttacked() && !target.isAtMultiArea()) {
             if (target.getAttackedBy() != npc && target.isInCombat()) {
@@ -224,13 +234,15 @@ public final class NPCCombat {
         int npcDistY = npc.getY() - npc.getRespawnTile().getY();
 
         // If NPC has a defined MapArea, enforce area rules
-        if (npc.getMapAreaNameHash() != -1) {
-            boolean npcInside = MapAreas.isAtArea(npc.getMapAreaNameHash(), npc);
-            boolean tgtInside = MapAreas.isAtArea(npc.getMapAreaNameHash(), target);
+        if (!(npc instanceof Familiar)) {
+            if (npc.getMapAreaNameHash() != -1) {
+                boolean npcInside = MapAreas.isAtArea(npc.getMapAreaNameHash(), npc);
+                boolean tgtInside = MapAreas.isAtArea(npc.getMapAreaNameHash(), target);
 
-            if (!npcInside) return false; // NPC wandered outside
-            if (!npc.canBeAttackFromOutOfArea() && !tgtInside) return false; // Target outside and not allowed
-            return true;
+                if (!npcInside) return false; // NPC wandered outside
+                if (!npc.canBeAttackFromOutOfArea() && !tgtInside) return false; // Target outside and not allowed
+                return true;
+            }
         }
 
         // Fallback: distance-based leash

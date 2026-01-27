@@ -14,7 +14,6 @@ import com.rs.java.game.*;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
-import com.rs.java.game.item.meta.RunePouchMetaData;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.*;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
@@ -1383,7 +1382,7 @@ public final class Commands {
             return true;
         }
 
-        target.unlock();
+        target.sendOrbParams();
         target.getControlerManager().forceStop();
         target.setNextWorldTile(Settings.START_PLAYER_LOCATION);
         player.getPackets().sendGameMessage("You have sent home " + target.getDisplayName() + ".");

@@ -7,6 +7,14 @@
     "lastSeen": "2026-01-17T22:40:36.327853600Z",
     "attempts": 1
   },
+  "35": {
+    "npcId": 35,
+    "npcName": "Soldier",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:28:56.069638300Z",
+    "lastSeen": "2026-01-27T14:28:56.069638300Z",
+    "attempts": 1
+  },
   "96": {
     "npcId": 96,
     "npcName": "Adolescent White wolf",
@@ -39,6 +47,14 @@
     "lastSeen": "2026-01-17T22:44:27.835842900Z",
     "attempts": 1
   },
+  "944": {
+    "npcId": 944,
+    "npcName": "Combat instructor",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:35:20.901011600Z",
+    "lastSeen": "2026-01-27T14:35:20.901011600Z",
+    "attempts": 1
+  },
   "1075": {
     "npcId": 1075,
     "npcName": "Archer",
@@ -61,6 +77,14 @@
     "reason": "No Infobox Monster found",
     "firstSeen": "2026-01-22T21:22:11.236420Z",
     "lastSeen": "2026-01-22T21:22:11.236420Z",
+    "attempts": 1
+  },
+  "1223": {
+    "npcId": 1223,
+    "npcName": "Vampyre",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:46.309509Z",
+    "lastSeen": "2026-01-27T14:24:46.309509Z",
     "attempts": 1
   },
   "1309": {
@@ -119,12 +143,84 @@
     "lastSeen": "2026-01-17T22:40:36.775447200Z",
     "attempts": 1
   },
+  "1879": {
+    "npcId": 1879,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:22.570932800Z",
+    "lastSeen": "2026-01-27T14:26:22.570932800Z",
+    "attempts": 1
+  },
+  "1886": {
+    "npcId": 1886,
+    "npcName": "Cowardly Bandit",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:23.361113400Z",
+    "lastSeen": "2026-01-27T14:26:23.361113400Z",
+    "attempts": 1
+  },
+  "1887": {
+    "npcId": 1887,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:22.779074600Z",
+    "lastSeen": "2026-01-27T14:26:22.779074600Z",
+    "attempts": 1
+  },
+  "1891": {
+    "npcId": 1891,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:23.000567800Z",
+    "lastSeen": "2026-01-27T14:26:23.000567800Z",
+    "attempts": 1
+  },
+  "1895": {
+    "npcId": 1895,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:23.074837200Z",
+    "lastSeen": "2026-01-27T14:26:23.074837200Z",
+    "attempts": 1
+  },
+  "1903": {
+    "npcId": 1903,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:23.160656900Z",
+    "lastSeen": "2026-01-27T14:26:23.160656900Z",
+    "attempts": 1
+  },
+  "2795": {
+    "npcId": 2795,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:28:02.404766Z",
+    "lastSeen": "2026-01-27T14:28:02.404766Z",
+    "attempts": 1
+  },
+  "3041": {
+    "npcId": 3041,
+    "npcName": "Tarik",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:23.697108800Z",
+    "lastSeen": "2026-01-27T14:26:23.697108800Z",
+    "attempts": 1
+  },
   "3090": {
     "npcId": 3090,
     "npcName": "Haakon the Champion",
     "reason": "No Infobox Monster found",
     "firstSeen": "2026-01-14T15:28:40.404902700Z",
     "lastSeen": "2026-01-14T15:28:40.404902700Z",
+    "attempts": 1
+  },
+  "3624": {
+    "npcId": 3624,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:25:57.907222800Z",
+    "lastSeen": "2026-01-27T14:25:57.907222800Z",
     "attempts": 1
   },
   "3705": {
@@ -151,6 +247,14 @@
     "lastSeen": "2026-01-14T15:55:15.284216Z",
     "attempts": 1
   },
+  "5104": {
+    "npcId": 5104,
+    "npcName": "Spined larupia",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:29:02.556196600Z",
+    "lastSeen": "2026-01-27T14:29:02.556196600Z",
+    "attempts": 1
+  },
   "5105": {
     "npcId": 5105,
     "npcName": "Horned graahk",
@@ -165,6 +269,134 @@
     "reason": "No Infobox Monster found",
     "firstSeen": "2026-01-23T21:42:26.721715800Z",
     "lastSeen": "2026-01-23T21:42:26.721715800Z",
+    "attempts": 1
+  },
+  "6378": {
+    "npcId": 6378,
+    "npcName": "Tenacious toucan",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:28:25.873325400Z",
+    "lastSeen": "2026-01-27T14:28:25.873325400Z",
+    "attempts": 1
+  },
+  "6379": {
+    "npcId": 6379,
+    "npcName": "Giant ant worker",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:28:24.968350200Z",
+    "lastSeen": "2026-01-27T14:28:24.968350200Z",
+    "attempts": 1
+  },
+  "6380": {
+    "npcId": 6380,
+    "npcName": "Giant ant soldier",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:28:24.912826700Z",
+    "lastSeen": "2026-01-27T14:28:24.912826700Z",
+    "attempts": 1
+  },
+  "6382": {
+    "npcId": 6382,
+    "npcName": "Pernicious parrot",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:28:25.774547800Z",
+    "lastSeen": "2026-01-27T14:28:25.774547800Z",
+    "attempts": 1
+  },
+  "6753": {
+    "npcId": 6753,
+    "npcName": "Mummy",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:24.524072600Z",
+    "lastSeen": "2026-01-27T14:26:24.524072600Z",
+    "attempts": 1
+  },
+  "6754": {
+    "npcId": 6754,
+    "npcName": "Mummy",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:24.756140400Z",
+    "lastSeen": "2026-01-27T14:26:24.756140400Z",
+    "attempts": 1
+  },
+  "6755": {
+    "npcId": 6755,
+    "npcName": "Mummy",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:24.589286600Z",
+    "lastSeen": "2026-01-27T14:26:24.589286600Z",
+    "attempts": 1
+  },
+  "6756": {
+    "npcId": 6756,
+    "npcName": "Mummy",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:24.657411800Z",
+    "lastSeen": "2026-01-27T14:26:24.657411800Z",
+    "attempts": 1
+  },
+  "6761": {
+    "npcId": 6761,
+    "npcName": "Dried zombie",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:26:24.398312100Z",
+    "lastSeen": "2026-01-27T14:26:24.398312100Z",
+    "attempts": 1
+  },
+  "6762": {
+    "npcId": 6762,
+    "npcName": "Dried zombie",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:26:24.341000800Z",
+    "lastSeen": "2026-01-27T14:26:24.341000800Z",
+    "attempts": 1
+  },
+  "6763": {
+    "npcId": 6763,
+    "npcName": "Dried zombie",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:26:24.453781100Z",
+    "lastSeen": "2026-01-27T14:26:24.453781100Z",
+    "attempts": 1
+  },
+  "6773": {
+    "npcId": 6773,
+    "npcName": "Scabaras ranger",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:27:03.528483700Z",
+    "lastSeen": "2026-01-27T14:27:03.528483700Z",
+    "attempts": 1
+  },
+  "6774": {
+    "npcId": 6774,
+    "npcName": "Scabaras lancer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:27:03.418026900Z",
+    "lastSeen": "2026-01-27T14:27:03.418026900Z",
+    "attempts": 1
+  },
+  "6776": {
+    "npcId": 6776,
+    "npcName": "Scabaras locust",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:27:03.470208900Z",
+    "lastSeen": "2026-01-27T14:27:03.470208900Z",
+    "attempts": 1
+  },
+  "6777": {
+    "npcId": 6777,
+    "npcName": "Locust lancer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:27:03.243143200Z",
+    "lastSeen": "2026-01-27T14:27:03.243143200Z",
+    "attempts": 1
+  },
+  "6778": {
+    "npcId": 6778,
+    "npcName": "Locust ranger",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:27:03.356677300Z",
+    "lastSeen": "2026-01-27T14:27:03.356677300Z",
     "attempts": 1
   },
   "6869": {
@@ -183,12 +415,132 @@
     "lastSeen": "2026-01-17T19:51:04.347236600Z",
     "attempts": 1
   },
+  "7078": {
+    "npcId": 7078,
+    "npcName": "Ogress champion",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:29:02.305147Z",
+    "lastSeen": "2026-01-27T14:29:02.305147Z",
+    "attempts": 1
+  },
+  "7081": {
+    "npcId": 7081,
+    "npcName": "Ogress",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:29:02.185558300Z",
+    "lastSeen": "2026-01-27T14:29:02.185558300Z",
+    "attempts": 1
+  },
+  "7082": {
+    "npcId": 7082,
+    "npcName": "Ogress",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:29:02.243905600Z",
+    "lastSeen": "2026-01-27T14:29:02.243905600Z",
+    "attempts": 1
+  },
   "7158": {
     "npcId": 7158,
     "npcName": "Cockroach drone",
     "reason": "\u0027wikitext\u0027 not found in JSON",
     "firstSeen": "2026-01-14T15:28:37.938494200Z",
     "lastSeen": "2026-01-14T15:28:37.938494200Z",
+    "attempts": 1
+  },
+  "7343": {
+    "npcId": 7343,
+    "npcName": "Steel titan",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T19:04:52.076790400Z",
+    "lastSeen": "2026-01-27T19:04:52.076790400Z",
+    "attempts": 1
+  },
+  "7344": {
+    "npcId": 7344,
+    "npcName": "Steel titan",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T19:04:42.722542500Z",
+    "lastSeen": "2026-01-27T19:04:42.722542500Z",
+    "attempts": 1
+  },
+  "7478": {
+    "npcId": 7478,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:26:23.242928500Z",
+    "lastSeen": "2026-01-27T14:26:23.242928500Z",
+    "attempts": 1
+  },
+  "7492": {
+    "npcId": 7492,
+    "npcName": "Bandit looter",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:26:14.718997900Z",
+    "lastSeen": "2026-01-27T14:26:14.718997900Z",
+    "attempts": 1
+  },
+  "7493": {
+    "npcId": 7493,
+    "npcName": "Bandit looter",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:26:14.811334600Z",
+    "lastSeen": "2026-01-27T14:26:14.811334600Z",
+    "attempts": 1
+  },
+  "7494": {
+    "npcId": 7494,
+    "npcName": "Bandit looter",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:26:15.001819600Z",
+    "lastSeen": "2026-01-27T14:26:15.001819600Z",
+    "attempts": 1
+  },
+  "7495": {
+    "npcId": 7495,
+    "npcName": "Bandit looter",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:26:14.944572900Z",
+    "lastSeen": "2026-01-27T14:26:14.944572900Z",
+    "attempts": 1
+  },
+  "7496": {
+    "npcId": 7496,
+    "npcName": "Bandit looter",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:26:15.161993700Z",
+    "lastSeen": "2026-01-27T14:26:15.161993700Z",
+    "attempts": 1
+  },
+  "7521": {
+    "npcId": 7521,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:28:55.311264800Z",
+    "lastSeen": "2026-01-27T14:28:55.311264800Z",
+    "attempts": 1
+  },
+  "7522": {
+    "npcId": 7522,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:28:55.457127Z",
+    "lastSeen": "2026-01-27T14:28:55.457127Z",
+    "attempts": 1
+  },
+  "7837": {
+    "npcId": 7837,
+    "npcName": "Customs Officer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:28:06.676429600Z",
+    "lastSeen": "2026-01-27T14:28:06.676429600Z",
+    "attempts": 1
+  },
+  "7838": {
+    "npcId": 7838,
+    "npcName": "Customs Officer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:28:06.617404900Z",
+    "lastSeen": "2026-01-27T14:28:06.617404900Z",
     "attempts": 1
   },
   "7891": {
@@ -263,6 +615,174 @@
     "lastSeen": "2026-01-23T21:42:34.515614900Z",
     "attempts": 1
   },
+  "13820": {
+    "npcId": 13820,
+    "npcName": "Mutated jadinko baby",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:35:59.960455500Z",
+    "lastSeen": "2026-01-27T14:35:59.960455500Z",
+    "attempts": 1
+  },
+  "13821": {
+    "npcId": 13821,
+    "npcName": "Mutated jadinko guard",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:36:00.019319400Z",
+    "lastSeen": "2026-01-27T14:36:00.019319400Z",
+    "attempts": 1
+  },
+  "13822": {
+    "npcId": 13822,
+    "npcName": "Mutated jadinko male",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:36:00.076611200Z",
+    "lastSeen": "2026-01-27T14:36:00.076611200Z",
+    "attempts": 1
+  },
+  "14100": {
+    "npcId": 14100,
+    "npcName": "Vyrewatch guard",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:25:58.019862Z",
+    "lastSeen": "2026-01-27T14:25:58.019862Z",
+    "attempts": 1
+  },
+  "14120": {
+    "npcId": 14120,
+    "npcName": "Vyrelady",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.356995400Z",
+    "lastSeen": "2026-01-27T14:24:49.356995400Z",
+    "attempts": 1
+  },
+  "14122": {
+    "npcId": 14122,
+    "npcName": "Vyrelady",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.419217100Z",
+    "lastSeen": "2026-01-27T14:24:49.419217100Z",
+    "attempts": 1
+  },
+  "14124": {
+    "npcId": 14124,
+    "npcName": "Vyrelady",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.208061900Z",
+    "lastSeen": "2026-01-27T14:24:49.208061900Z",
+    "attempts": 1
+  },
+  "14126": {
+    "npcId": 14126,
+    "npcName": "Vyrelady",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.087113Z",
+    "lastSeen": "2026-01-27T14:24:49.087113Z",
+    "attempts": 1
+  },
+  "14128": {
+    "npcId": 14128,
+    "npcName": "Vyrelord",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.482581400Z",
+    "lastSeen": "2026-01-27T14:24:49.482581400Z",
+    "attempts": 1
+  },
+  "14130": {
+    "npcId": 14130,
+    "npcName": "Vyrelord",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.783054800Z",
+    "lastSeen": "2026-01-27T14:24:49.783054800Z",
+    "attempts": 1
+  },
+  "14132": {
+    "npcId": 14132,
+    "npcName": "Vyrelord",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.540555800Z",
+    "lastSeen": "2026-01-27T14:24:49.540555800Z",
+    "attempts": 1
+  },
+  "14134": {
+    "npcId": 14134,
+    "npcName": "Vyrelord",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.662547100Z",
+    "lastSeen": "2026-01-27T14:24:49.662547100Z",
+    "attempts": 1
+  },
+  "14136": {
+    "npcId": 14136,
+    "npcName": "Vyrelord",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.602679900Z",
+    "lastSeen": "2026-01-27T14:24:49.602679900Z",
+    "attempts": 1
+  },
+  "14137": {
+    "npcId": 14137,
+    "npcName": "Vyrelady",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.147062900Z",
+    "lastSeen": "2026-01-27T14:24:49.147062900Z",
+    "attempts": 1
+  },
+  "14138": {
+    "npcId": 14138,
+    "npcName": "Vyrelord",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.722067100Z",
+    "lastSeen": "2026-01-27T14:24:49.722067100Z",
+    "attempts": 1
+  },
+  "14139": {
+    "npcId": 14139,
+    "npcName": "Vyrelady",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:24:49.302660800Z",
+    "lastSeen": "2026-01-27T14:24:49.302660800Z",
+    "attempts": 1
+  },
+  "14140": {
+    "npcId": 14140,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:25:27.255985400Z",
+    "lastSeen": "2026-01-27T14:25:27.255985400Z",
+    "attempts": 1
+  },
+  "14143": {
+    "npcId": 14143,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:25:27.324769600Z",
+    "lastSeen": "2026-01-27T14:25:27.324769600Z",
+    "attempts": 1
+  },
+  "14146": {
+    "npcId": 14146,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:25:27.472442300Z",
+    "lastSeen": "2026-01-27T14:25:27.472442300Z",
+    "attempts": 1
+  },
+  "14149": {
+    "npcId": 14149,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:25:27.608326700Z",
+    "lastSeen": "2026-01-27T14:25:27.608326700Z",
+    "attempts": 1
+  },
+  "14152": {
+    "npcId": 14152,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:25:27.738894800Z",
+    "lastSeen": "2026-01-27T14:25:27.738894800Z",
+    "attempts": 1
+  },
   "14240": {
     "npcId": 14240,
     "npcName": "Mercenary warrior",
@@ -277,6 +797,14 @@
     "reason": "\u0027wikitext\u0027 not found in JSON",
     "firstSeen": "2026-01-14T15:32:53.301991500Z",
     "lastSeen": "2026-01-14T15:32:53.301991500Z",
+    "attempts": 1
+  },
+  "14339": {
+    "npcId": 14339,
+    "npcName": "Armoured zombie",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-27T14:30:21.333309Z",
+    "lastSeen": "2026-01-27T14:30:21.333309Z",
     "attempts": 1
   },
   "14926": {
@@ -301,6 +829,14 @@
     "reason": "\u0027wikitext\u0027 not found in JSON",
     "firstSeen": "2026-01-22T16:02:29.083214900Z",
     "lastSeen": "2026-01-22T16:02:29.083214900Z",
+    "attempts": 1
+  },
+  "15172": {
+    "npcId": 15172,
+    "npcName": "LolthenKILL",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-01-27T14:33:13.462063100Z",
+    "lastSeen": "2026-01-27T14:33:13.462063100Z",
     "attempts": 1
   }
 }

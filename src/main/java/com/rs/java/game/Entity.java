@@ -1119,7 +1119,7 @@ public abstract class Entity extends WorldTile {
         return tickManager.getTicksLeft(TickManager.TickKeys.ENTITY_LOCK_TICK);
     }
 
-    public void unlock() {
+    public void sendOrbParams() {
         tickManager.remove(TickManager.TickKeys.ENTITY_LOCK_TICK);
     }
 
@@ -1129,7 +1129,7 @@ public abstract class Entity extends WorldTile {
 
     public void setLocked(boolean locked) {
         if (locked) {
-            unlock();
+            sendOrbParams();
         } else {
             lock(5000);
         }

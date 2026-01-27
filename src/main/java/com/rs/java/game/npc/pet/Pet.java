@@ -240,7 +240,7 @@ public final class Pet extends NPC {
 		owner.getPackets().sendVarBit(4286, (int) details.getHunger());
 		boolean res = owner.getInterfaceManager().hasRezizableScreen();
 		owner.getPackets().sendInterface(true, res ? 746 : 548, res ? 109 : 167, 662);
-		unlock();
+		sendOrbParams();
 		owner.getPackets().sendGlobalVar(168, 98);// tab id
 	}
 
@@ -253,7 +253,7 @@ public final class Pet extends NPC {
 	public void switchOrb(boolean enable) {
 		owner.getPackets().sendVar(1174, enable ? getId() : 0);
 		if (enable) {
-			unlock();
+			sendOrbParams();
 			return;
 		}
 		lockOrb();
@@ -270,7 +270,7 @@ public final class Pet extends NPC {
 	/**
 	 * Unlocks the interfaces.
 	 */
-	public void unlock() {
+	public void sendOrbParams() {
 		owner.getPackets().sendHideIComponent(747, 9, false);
 	}
 

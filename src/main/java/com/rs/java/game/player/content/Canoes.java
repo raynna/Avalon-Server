@@ -116,7 +116,7 @@ public class Canoes {
 			@Override
 			public void run() {
 				player.getTemporaryAttributtes().put("canoe_shaped", true);
-				player.unlock();
+				player.sendOrbParams();
 				player.getVarsManager().sendVarBit((int) player.getTemporaryAttributtes().get("canoe_config"),
 						11 + selectedCanoe);
 				return;

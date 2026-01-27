@@ -45,7 +45,7 @@ public class CompletionistStand extends Dialogue {
 					switch (phase) {
 					case 0:
 						player.addWalkSteps(3089, 3484, 1);
-						player.unlock();
+						player.sendOrbParams();
 						break;
 					}
 					phase++;
@@ -165,7 +165,7 @@ public class CompletionistStand extends Dialogue {
 						case 7:
 							player.setNextWorldTile(new WorldTile(3088, 3487, 0));
 							sendNPCDialogue(3373, 9827, "Looks like Dahmaroc had a sense of humour!");
-							player.unlock();
+							player.sendOrbParams();
 							sendRequirementMessages();
 							break;
 						}
@@ -196,7 +196,7 @@ public class CompletionistStand extends Dialogue {
 							player.animate(new Animation(857));
 							break;
 						case 4:
-							player.unlock();
+							player.sendOrbParams();
 							sendNPCDialogue(3373, 9827, "I've not seen a reaction like that! I think this cape is"
 									+ " identifying it's true owner.");
 							stage = 16;
@@ -208,7 +208,7 @@ public class CompletionistStand extends Dialogue {
 			}
 			break;
 		case 15:
-			player.unlock();
+			player.sendOrbParams();
 			sendNPCDialogue(3373, 9827,
 					"Sorry, it doesn't look like you are worthy of this cape. At" + " least not yet...");
 			stage = -2;

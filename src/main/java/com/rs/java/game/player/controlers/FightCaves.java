@@ -155,7 +155,7 @@ public class FightCaves extends Controler {
                             "You're on your own now, JalYt.<br>Prepare to fight for your life!");
                     player.setForceMultiArea(true);
                     playMusic();
-                    player.unlock(); // unlocks player
+                    player.sendOrbParams(); // unlocks player
                     stage = Stages.RUNNING;
                 }
 

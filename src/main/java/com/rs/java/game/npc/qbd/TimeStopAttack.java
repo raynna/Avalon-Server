@@ -57,7 +57,7 @@ public final class TimeStopAttack implements QueenAttack {
 					for (NPC worm : npc.getWorms()) {
 						worm.setLocked(false);
 					}
-					victim.unlock();
+					victim.sendOrbParams();
 					victim.getPackets().sendGlobalVar(1925, 0);
 					return;
 				} else if (stage == 4) {

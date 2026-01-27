@@ -16,6 +16,7 @@ import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
+import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public class WildernessControler extends Controler {
 
@@ -83,14 +84,18 @@ public class WildernessControler extends Controler {
 				player.getPackets().sendGameMessage("That player is not in the wilderness.");
 				return false;
 			}
-			if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > getWildLevel(
-					player)) {
-				player.getPackets().sendGameMessage("Your level diffrence is too great!");
+
+			int baseRange = PvpManager.isInDangerous(player) ? PvpManager.INSTANCE.getLevelRange() : 0;
+			int attackerRange = baseRange + getWildLevel(player);
+			int targetRange = baseRange + getWildLevel(p2);
+
+			if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > attackerRange) {
+				player.getPackets().sendGameMessage("Your level difference is too great!");
 				player.getPackets().sendGameMessage("You need to move deeper into the Wilderness.");
 				return false;
 			}
-			if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > getWildLevel(p2)) {
-				player.getPackets().sendGameMessage("Your level diffrence is too great!");
+			if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > targetRange) {
+				player.getPackets().sendGameMessage("Your level difference is too great!");
 				player.getPackets().sendGameMessage("You need to move deeper into the Wilderness.");
 				return false;
 			}
@@ -111,19 +116,23 @@ public class WildernessControler extends Controler {
 				player.getPackets().sendGameMessage("That player is not in the wilderness.");
 				return false;
 			}
-			if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > getWildLevel(
-					player)) {
+
+			int baseRange = PvpManager.isInDangerous(player) ? PvpManager.INSTANCE.getLevelRange() : 0;
+			int attackerRange = baseRange + getWildLevel(player);
+			int targetRange = baseRange + getWildLevel(p2);
+
+			if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > attackerRange) {
 				player.getPackets().sendGameMessage("The difference between your combat level and the combat level of "
 						+ p2.getDisplayName() + " is too great.");
 				player.getPackets()
-						.sendGameMessage("You need to move deeper into the Wilderness before you can attack him.");
+						.sendGameMessage("You need to move deeper into the Wilderness before you can attack.");
 				return false;
 			}
-			if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > getWildLevel(p2)) {
+			if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > targetRange) {
 				player.getPackets().sendGameMessage("The difference between your combat level and the combat level of "
 						+ p2.getDisplayName() + " is too great.");
 				player.getPackets()
-						.sendGameMessage("He needs to move deeper into the Wilderness before you can attack him.");
+						.sendGameMessage("Player needs to move deeper into the Wilderness before you can attack.");
 				return false;
 			}
 			if (canHit(target))
@@ -144,9 +153,12 @@ public class WildernessControler extends Controler {
 			return false;
 		}
 		Player p2 = (Player) target;
-		if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > getWildLevel(player))
+		int baseRange = PvpManager.isInDangerous(player) ? PvpManager.INSTANCE.getLevelRange() : 0;
+		int attackerRange = baseRange + getWildLevel(player);
+		int targetRange = baseRange + getWildLevel(p2);
+		if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > attackerRange)
 			return false;
-		if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > getWildLevel(p2))
+		if (Math.abs(player.getSkills().getCombatLevel() - p2.getSkills().getCombatLevel()) > targetRange)
 			return false;
 		return true;
 	}
@@ -216,7 +228,13 @@ public class WildernessControler extends Controler {
 	}
 
 	public void showSkull() {
-		player.getInterfaceManager().sendTab(player.getInterfaceManager().hasRezizableScreen() ? "tab.wildy_skull_resizeable" : "tab.wildy_skull_tab", "interface.wilderness_skull");
+		String tabId = player.getInterfaceManager().hasRezizableScreen() ?
+				"tab.wildy_skull_resizeable" : "tab.wildy_skull_tab";
+		String interfaceId = "interface.wilderness_skull";
+
+		if (!player.getInterfaceManager().containsTab(tabId)) {
+			player.getInterfaceManager().sendTab(tabId, interfaceId);
+		}
 	}
 
 	public static void showKDRInter(Player player) {
@@ -354,19 +372,40 @@ public class WildernessControler extends Controler {
 		return false;
 	}
 
+	private boolean skullShown = false;
+
 	@Override
 	public void moved() {
 		boolean isAtWild = isAtWild(player);
 		boolean isAtWildSafe = isAtWildSafe(player);
+
 		if (isAtWildSafe) {
 			removeIcon();
 			removeControler();
+			skullShown = false;
+			if (player.getFamiliar() != null) {
+				player.getFamiliar().call(false);
+			}
+			return;
 		}
+
 		if (isAtWild && !isAtWildSafe) {
-			showSkull();
+			if (!skullShown) {
+				showSkull();
+				skullShown = true;
+				if (player.getFamiliar() != null) {
+					player.getFamiliar().call(false);
+				}
+			}
+
 			player.getPackets().sendGlobalVar(1000, player.getSkills().getCombatLevel() + player.getSkills().getSummoningCombatLevel());
 			player.getAppearence().generateAppearenceData();
 			checkBoosts(player);
+		} else {
+			if (skullShown) {
+				removeIcon();
+				skullShown = false;
+			}
 		}
 	}
 

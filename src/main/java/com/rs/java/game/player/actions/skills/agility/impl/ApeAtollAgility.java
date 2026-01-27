@@ -36,7 +36,7 @@ public class ApeAtollAgility {
 				player.setNextWorldTile(toTile);
 				player.getSkills().addXp(Skills.AGILITY, 55);
 				player.getAppearence().setRenderEmote(-1);
-				player.unlock();
+				player.sendOrbParams();
 				stop();
 			}
 		}, 2);

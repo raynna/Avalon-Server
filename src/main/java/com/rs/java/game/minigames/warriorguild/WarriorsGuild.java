@@ -24,9 +24,7 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.game.player.combat.AttackStyle;
 import com.rs.kotlin.game.player.combat.CombatAnimations;
-import com.rs.kotlin.game.player.combat.melee.MeleeWeapon;
 
 public class WarriorsGuild extends Controler {
 
@@ -383,7 +381,7 @@ public class WarriorsGuild extends Controler {
 						npc.addWalkSteps(player.getX(), player.getY() + 2);
 						player.temporaryAttribute().put("animator_spawned", true);
 						npc.getCombat().setTarget(player);
-						player.unlock();
+						player.sendOrbParams();
 						player.getHintIconsManager().addHintIcon(npc, 0, -1, false);
 					} else if (ticks == 6) {
 						stop();
@@ -635,7 +633,7 @@ public class WarriorsGuild extends Controler {
 		if ((player.getSkills().getLevel(Skills.STRENGTH) / 100) > Math.random()) {
 			player.getPackets().sendGameMessage("You fumble and drop the shot onto your toe. Ow!");
 			player.applyHit(new Hit(player, 10, HitLook.REGULAR_DAMAGE));
-			player.unlock();
+			player.sendOrbParams();
 			return;
 		}
 		WorldTasksManager.schedule(new WorldTask() {

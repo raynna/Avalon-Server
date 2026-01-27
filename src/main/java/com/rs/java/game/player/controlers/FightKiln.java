@@ -215,7 +215,7 @@ public class FightKiln extends Controler {
                             player.getDialogueManager().startDialogue("TokHaarHok", 0, TOKHAAR_HOK, kiln);
                             player.setRun(run);
                             stage = Stages.RUNNING;
-                            player.unlock(); // unlocks player
+                            player.sendOrbParams(); // unlocks player
                             stop();
                         }
                         count++;
@@ -403,7 +403,7 @@ public class FightKiln extends Controler {
                                 Cutscene.getY(player, posTile.getY()), 3000);
                         player.getDialogueManager().startDialogue("TokHaarHok", 1, TOKHAAR_HOK_SCENE, kiln);
                         stage = Stages.RUNNING;
-                        player.unlock();
+                        player.sendOrbParams();
                     }
 
                 }, 1);
@@ -415,7 +415,7 @@ public class FightKiln extends Controler {
                     @Override
                     public void run() {
                         stage = Stages.RUNNING;
-                        player.unlock();
+                        player.sendOrbParams();
                     }
                 }, 1);
             }
@@ -610,7 +610,7 @@ public class FightKiln extends Controler {
 
     public void unlockPlayer() {
         stage = Stages.RUNNING;
-        player.unlock(); // unlocks player
+        player.sendOrbParams(); // unlocks player
     }
 
     public void removeScene() {

@@ -12,6 +12,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.glacior.Glacyte;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.actions.skills.summoning.Summoning.Pouch;
 import com.rs.core.tasks.WorldTask;
@@ -156,7 +157,14 @@ public abstract class Familiar extends NPC implements Serializable {
 	public void processNPC() {
 		if (isDead())
 			return;
-		unlockOrb();
+		System.out.println("Familiar ID: " + getId() + " | Original ID: " + getOriginalId() +
+				" | Owner PvP: " + owner.isCanPvp() +
+				" | Time: " + Utils.currentTimeMillis());
+		System.out.println("Familiar count for owner " + owner.getUsername() + ": " +
+				World.getNPCs().stream()
+						.filter(n -> n instanceof Familiar)
+						.filter(f -> ((Familiar)f).getOwner() == owner)
+						.count());
 		trackTimer++;
 		if (trackTimer == 50) {
 			trackTimer = 0;
@@ -189,8 +197,8 @@ public abstract class Familiar extends NPC implements Serializable {
 			return;
 		}
 		if (!getCombat().process()) {
-			if (isAgressive() && owner.getAttackedBy() != null && owner.getAttackedByDelay() > Utils.currentTimeMillis() && canAttack(owner.getAttackedBy()) && Utils.random(25) == 0)
-				getCombat().setTarget(owner.getAttackedBy());
+			if (isAgressive() && owner.getTickManager().isActive(TickManager.TickKeys.LAST_ATTACK_TICK) && canAttack(owner.getTemporaryTarget()))
+				getCombat().setTarget(owner.getTemporaryTarget());
 			else
 				sendFollow();
 		}
@@ -252,50 +260,73 @@ public abstract class Familiar extends NPC implements Serializable {
 		owner.getVarsManager().sendVar(1176, ticks * 65);
 	}
 
+	/**
+	 * public void sendMainConfigs() {
+	 *     // 1. Set familiar type
+	 *     owner.getVarsManager().sendVar(448, pouch.getRealPouchId());
+	 *
+	 *     // 2. Refresh orb (value should be based on if familiar is active)
+	 *     // -1 = visible/lit, 0 = hidden
+	 *     owner.getVarsManager().sendVar(1174, -1);
+	 *
+	 *     // 3. Set familiar head animation/emote
+	 *     // You need to implement getHeadAnimIndex() or use a default
+	 *     int headAnimIndex = getHeadAnimIndex(); // Method to get animation index
+	 *     owner.getVarsManager().sendVarBit(4282, headAnimIndex);
+	 *
+	 *     // 4. Update special energy and timer
+	 *     refreshSpecialEnergy();
+	 *     sendTimeRemaining();
+	 *
+	 *     // 5. Set special attack cost (bit 4288)
+	 *     owner.getVarsManager().sendVarBit(4288, getSpecialAmount() >> 23);
+
+	 *     // 6. Set special attack name/description
+	 *     owner.getPackets().sendGlobalString(204, getSpecialName());
+	 *     owner.getPackets().sendGlobalString(205, getSpecialDescription());
+	 *
+	 *     // 7. Set special attack type
+	 *     owner.getPackets().sendGlobalVar(1436, getSpecialAttack() == SpecialAttack.CLICK ? 1 : 0);
+	 *
+	 *     // 8. Initialize interface with script 751
+	 *     owner.getPackets().sendRunScript(751);
+	 *
+	 *     // 9. Send left click option
+	 *     sendLeftClickOption(owner);
+	 *
+	 *     // 10. Send orb target parameters (need to implement)
+	 *     sendOrbTargetParams();
+	 *
+	 *     // 11. Unlock orb controls
+	 *     unlockOrb();
+	 * }
+	 */
+
 	public void sendMainConfigs() {
 		switchOrb(true);
 		owner.getVarsManager().sendVar(448, pouch.getRealPouchId());
-		owner.getVarsManager().sendVar(1160, 243269632);
-		owner.getPackets().sendVar(1160, 243269632); // sets npc emote
-		owner.getPackets().sendGlobalVar(1436, 0);
+		owner.getVarsManager().setVarBit(4282, pouch.getPouchSetting());
 		refreshSpecialEnergy();
 		sendTimeRemaining();
-		owner.getVarsManager().sendVar(1175, getSpecialAmount() >> 23);
+		owner.getVarsManager().setVarBit(4288, pouch.getSummoningCost());
 		owner.getPackets().sendGlobalString(204, getSpecialName());
 		owner.getPackets().sendGlobalString(205, getSpecialDescription());
 		owner.getPackets().sendGlobalVar(1436, getSpecialAttack() == SpecialAttack.CLICK ? 1 : 0);
-		unlockOrb();
+		owner.getPackets().sendRunScript(751);
+		sendLeftClickOption(owner);
+		sendOrbParams();
 	}
+
 
 	public void sendFollowerDetails() {
 		boolean res = owner.getInterfaceManager().hasRezizableScreen();
 		owner.getInterfaceManager().sendTab(res ? "tab.summoning_resizeable" : "tab.summoning", "interface.summoning_tab");
 		owner.getPackets().sendGlobalVar(168, 98);
-		owner.getPackets().sendHideIComponent(662, 44, true);
-		owner.getPackets().sendHideIComponent(662, 45, true);
-		owner.getPackets().sendHideIComponent(662, 46, true);
-		owner.getPackets().sendHideIComponent(662, 47, true);
-		owner.getPackets().sendHideIComponent(662, 48, true);
-		owner.getPackets().sendHideIComponent(662, 71, false);
-		owner.getPackets().sendHideIComponent(662, 72, false);
-		unlock();
-		sendMainConfigs();
 	}
 
 	public void switchOrb(boolean on) {
 		owner.getVarsManager().sendVar(1174, on ? -1 : 0);
-		if (on)
-			unlock();
-		else
-			lockOrb();
-	}
-
-	public void unlockOrb() {
-		if (owner == null)
-			return;
-		owner.getPackets().sendHideIComponent(747, 9, false);
-		sendLeftClickOption(owner);
-		unlock();
+		owner.getPackets().sendHideIComponent(747, 9, !on);
 	}
 
 	public static void selectLeftOption(Player player) {
@@ -307,7 +338,7 @@ public abstract class Familiar extends NPC implements Serializable {
 
 	public static void confirmLeftOption(Player player) {
 		player.getPackets().sendGlobalVar(168, 4);// inv tab id
-		boolean res = player.getInterfaceManager().hasRezizableScreen();
+		sendLeftClickOption(player);
 	}
 
 	public static void setLeftclickOption(Player player, int summoningLeftClickOption) {
@@ -330,7 +361,7 @@ public abstract class Familiar extends NPC implements Serializable {
 		specialActivated = activated;
 	}
 
-	public void unlock() {
+	public void sendOrbParams() {
 		switch (getSpecialAttack()) {
 		case CLICK:
 			owner.getPackets().sendComponentSettings(747, 18, 0, 0, 2);
@@ -349,11 +380,6 @@ public abstract class Familiar extends NPC implements Serializable {
 			owner.getPackets().sendComponentSettings(662, 74, 0, 0, 65536);
 			break;
 		}
-		owner.getPackets().sendHideIComponent(747, 9, false);
-	}
-
-	public void lockOrb() {
-		owner.getPackets().sendHideIComponent(747, 9, true);
 	}
 
 	private transient int[][] checkNearDirs;
@@ -371,6 +397,7 @@ public abstract class Familiar extends NPC implements Serializable {
 
 	public void call(boolean login) {
 		int size = getSize();
+		switchOrb(true);
 		if (login) {
 			if (bob != null)
 				bob.setEntitys(owner, this);
@@ -388,7 +415,8 @@ public abstract class Familiar extends NPC implements Serializable {
 			}
 		}
 		if (login || teleTile != null)
-			WorldTasksManager.schedule(new WorldTask() {
+			WorldTasksManager.schedule(
+					new WorldTask() {
 				@Override
 				public void run() {
 					gfx(new Graphics(getDefinitions().size > 1 ? 1315 : 1314));
@@ -407,26 +435,26 @@ public abstract class Familiar extends NPC implements Serializable {
 
 	public void removeFamiliar() {
 		owner.setFamiliar(null);
+		owner.familiarPouch = null;
 	}
 
 	public void dissmissFamiliar(boolean logged) {
 		finish();
 		if (!logged && !isFinished()) {
-			long familiarDelay = 5000;
-			owner.addFamiliarDelay(familiarDelay);
 			setFinished(true);
 			switchOrb(false);
-			owner.getPackets().sendComponentSettings(747, 18, 0, 0, 0);
+			owner.getPackets().sendRunScript(2471);
 			if (owner.storedScrolls >= 1) {
 				if (owner.getInventory().hasFreeSlots())
 					owner.getInventory().addItem(Summoning.getScrollId(pouch.getRealPouchId()), owner.storedScrolls);
 				else
-					World.addGroundItem(new Item(Summoning.getScrollId(pouch.getRealPouchId()), owner.storedScrolls),
-							new WorldTile(owner), 60);
+					World.updateGroundItem(new Item(Summoning.getScrollId(pouch.getRealPouchId()), owner.storedScrolls),
+							new WorldTile(owner), owner, 60, 1);
 				owner.storedScrolls = 0;
 			}
 			if (bob != null)
 				bob.dropBob();
+			removeFamiliar();
 		}
 	}
 
@@ -446,17 +474,14 @@ public abstract class Familiar extends NPC implements Serializable {
 		resetWalkSteps();
 		setCantInteract(true);
 		getCombat().removeTarget();
-		owner.setFamiliarPouch(null);
-		owner.setFamiliarBoB(null);
-		owner.addFamiliarDelay(5000);
-		setNextAnimationNoPriority(new Animation(defs.getDeathAnim()), this);
-		owner.getPackets().sendGameMessage("Your familiar slowly begins to fade away..");
+		animate(defs.getDeathAnim());
+		owner.message("Your familiar slowly begins to fade away..");
 		WorldTasksManager.schedule(new WorldTask() {
 			int loop;
 
 			@Override
 			public void run() {
-				if (loop >= defs.getDeathDelay()) {
+				if (loop >= defs.getDeathDelay() - 4) {
 					dissmissFamiliar(false);
 					removeFamiliar();
 					stop();

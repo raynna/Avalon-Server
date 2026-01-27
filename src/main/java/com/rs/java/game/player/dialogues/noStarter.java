@@ -22,7 +22,7 @@ public class noStarter extends Dialogue {
 		case 0:
 			stage = 1;
 			sendPlayerDialogue(9828, "It's fine, I can make money other ways!");
-			player.unlock();
+			player.sendOrbParams();
 			break;
 		default:
 			end();

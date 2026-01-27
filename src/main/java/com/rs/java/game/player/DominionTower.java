@@ -233,7 +233,7 @@ public final class DominionTower implements Serializable {
         player.setNextFaceWorldTile(new WorldTile(getBaseX() + 11, getBaseY() + 29, 0));
         player.getControlerManager().startControler("DTControler", mode);
         player.getCombatDefinitions().updateBonuses();
-        player.unlock();
+        player.sendOrbParams();
         player.setNextWorldTile(new WorldTile(getBaseX() + 10, getBaseY() + 29, 2));
         player.getMusicsManager().playMusic(MUSICS[Utils.random(MUSICS.length)]);
     }
@@ -320,7 +320,7 @@ public final class DominionTower implements Serializable {
                         boss.setCantInteract(false);
                         boss.setTarget(player);
                     }
-                    player.unlock();
+                    player.sendOrbParams();
                     stop();
                 }
                 count++;
@@ -369,7 +369,7 @@ public final class DominionTower implements Serializable {
                     player.animate(new Animation(-1));
                     player.closeInterfaces();
                     player.getPackets().sendResetCamera();
-                    player.unlock();
+                    player.sendOrbParams();
                     destroyArena(false, mode);
                     stop();
                 }
@@ -452,7 +452,7 @@ public final class DominionTower implements Serializable {
                         MapBuilder.destroyMap(mapBaseCoords[0], mapBaseCoords[1], 8, 8);
                         if (!logout) {
                             mapBaseCoords = null;
-                            player.unlock();
+                            player.sendOrbParams();
                         }
                     } catch (Exception | Error e) {
                         e.printStackTrace();

@@ -113,7 +113,7 @@ public class AgilityFalador {
 		 				player.setNextWorldTile(tile);
 		 			    } else if (ticks == 6) {
 		 				player.setNextWorldTile(new WorldTile(tile.getX(), tile.getY() + (withinFalador ? -1 : 1), tile.getPlane()));
-		 				player.unlock();
+		 				player.sendOrbParams();
 		 				stop();
 		 			    }
 		 			}
@@ -129,7 +129,7 @@ public class AgilityFalador {
 
 								@Override
 								public void run() {
-									player.unlock();
+									player.sendOrbParams();
 									player.animate(new Animation(-1));
 									  if (player.getX() == 3006 && player.getY() == 3394) {
 									    	 player.setNextWorldTile(new WorldTile(3006, 3396, 0));  

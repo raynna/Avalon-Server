@@ -1331,7 +1331,7 @@ public class RunespanControler extends Controler {
 									Utils.getFaceDirection(dest.getX() - object.getX(), dest.getY() - object.getY())));
 							player.gfx(new Graphics(3091));
 						} else if (stage == 35) {
-							player.unlock();
+							player.sendOrbParams();
 							player.setNextWorldTile(dest);
 							stop();
 						}
@@ -1357,7 +1357,7 @@ public class RunespanControler extends Controler {
 									Utils.getFaceDirection(dest.getX() - object.getX(), dest.getY() - object.getY())));
 							player.gfx(new Graphics(3091));
 						} else if (stage == 35) {
-							player.unlock();
+							player.sendOrbParams();
 							player.setNextWorldTile(dest);
 							stop();
 						}

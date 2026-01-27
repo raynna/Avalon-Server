@@ -111,7 +111,7 @@ public class SecurityManager implements Serializable {
 		}
 		if (email.equalsIgnoreCase("exit") || email.equalsIgnoreCase("close")) {
 			player.getInterfaceManager().sendTabInterfaces(false);
-			player.unlock();
+			player.sendOrbParams();
 			Email(false);
 			return false;
 		}
@@ -121,7 +121,7 @@ public class SecurityManager implements Serializable {
 		}
 		Email(false);
 		player.getInterfaceManager().sendTabInterfaces(false);
-		player.unlock();
+		player.sendOrbParams();
 		Email.add(email);
 		player.message("The e-mail " + email + " has successfully been added to your account.");
 		return true;

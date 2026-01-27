@@ -3,7 +3,6 @@ package com.rs.core.packets.packet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.rs.Settings;
-import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.ObjectDefinitions;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.Animation;
@@ -88,11 +87,7 @@ import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.InputStream;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.game.player.combat.AttackStyle;
 import com.rs.kotlin.game.player.combat.CombatAnimations;
-import com.rs.kotlin.game.player.combat.Weapon;
-import com.rs.kotlin.game.player.combat.melee.MeleeStyle;
-import com.rs.kotlin.game.player.combat.melee.MeleeWeapon;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 
@@ -1207,7 +1202,7 @@ public final class ObjectHandler {
                             player.setNextWorldTile(tile);
                         } else if (count == 14) {
                             stop();
-                            player.unlock();
+                            player.sendOrbParams();
                         }
                         count++;
                     }
@@ -1260,7 +1255,7 @@ public final class ObjectHandler {
                         if (count == 0) {
                             player.setNextFaceWorldTile(new WorldTile(object.getX() - 1, object.getY(), 0));
                             player.animate(new Animation(12216));
-                            player.unlock();
+                            player.sendOrbParams();
                         } else if (count == 2) {
                             player.setNextWorldTile(new WorldTile(3651, 5122, 0));
                             player.setNextFaceWorldTile(new WorldTile(3651, 5121, 0));
@@ -1271,7 +1266,7 @@ public final class ObjectHandler {
                             // WorldObject(45078, 0, 3, 3651, 5123, 0), new
                             // Animation(12220));
                         } else if (count == 5) {
-                            player.unlock();
+                            player.sendOrbParams();
                             stop();
                         }
                         count++;

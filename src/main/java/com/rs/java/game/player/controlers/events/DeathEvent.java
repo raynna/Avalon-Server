@@ -70,7 +70,7 @@ public class DeathEvent extends Controler {
                     player.getMusicsManager().playMusic(683);
                     player.getPackets().sendBlackOut(2);
                     sendInterfaces();
-                    player.unlock(); // unlocks player
+                    player.sendOrbParams(); // unlocks player
                     stage = Stages.RUNNING;
                 }
 

@@ -189,7 +189,7 @@ public class GodWars extends Controler {
 							player.getAppearence().setHidden(false);
 							player.animate(new Animation(16672));
 							player.setNextWorldTile(tile);
-							player.unlock();
+							player.sendOrbParams();
 							player.resetReceivedHits();
 							sector = withinArmadyl ? EMPTY_SECTOR : ARMADYL_SECTOR;
 							stop();
@@ -224,7 +224,7 @@ public class GodWars extends Controler {
 
 				@Override
 				public void run() {
-					player.unlock();
+					player.sendOrbParams();
 					player.resetReceivedHits();
 					player.animate(new Animation(-1));
 					player.setNextWorldTile(tile);

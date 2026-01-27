@@ -128,7 +128,7 @@ public class InventoryOptionsHandler {
 
             @Override
             public void run() {
-                player.unlock();
+                player.sendOrbParams();
                 if (BarrowsAreaKt.digIntoHill(player))
                     return;
                 if (player.getTreasureTrailsManager().useDig())

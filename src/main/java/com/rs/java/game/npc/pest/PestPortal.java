@@ -29,7 +29,7 @@ public class PestPortal extends NPC {
 		return isLocked;
 	}
 
-	public void unlock() {
+	public void sendOrbParams() {
 		if (getId() >= 6146) {
 			setNextNPCTransformation(getId() - 4);
 			control.sendTeamMessage(getStringForId() + " portal shield has been dropped!");

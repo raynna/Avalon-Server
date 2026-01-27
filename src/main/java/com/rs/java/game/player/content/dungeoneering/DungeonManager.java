@@ -1,7 +1,6 @@
 package com.rs.java.game.player.content.dungeoneering;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +31,6 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.mining.DungeoneeringMining;
 import com.rs.java.game.player.content.ItemConstants;
-import com.rs.java.game.player.content.dungeoneering.*;
 import com.rs.java.game.player.content.dungeoneering.rooms.BossRoom;
 import com.rs.java.game.player.content.dungeoneering.rooms.HandledPuzzleRoom;
 import com.rs.java.game.player.content.dungeoneering.rooms.StartRoom;
@@ -219,7 +217,7 @@ public class DungeonManager {
 						count++;
 						if(!player.isLocked() || isDestroyed() || player.hasFinished() || !player.getDungManager().isInside() || count > 10) {
 							stop();
-							player.unlock();
+							player.sendOrbParams();
 							return;
 						}
 						if (visibleMap[x][y].isLoaded()) {

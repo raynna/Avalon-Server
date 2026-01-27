@@ -84,7 +84,7 @@ public final class QueenBlackDragonController extends Controler {
                         player.setNextWorldTile(base.transform(33, 28, 0));
                         player.setLargeSceneView(true);
                         player.setForceMultiArea(true);
-                        player.unlock();
+                        player.sendOrbParams();
                         player.getPackets().sendGlobalVar(184, 150);
                         player.getPackets().sendGlobalVar(1924, 0);
                         player.getPackets().sendGlobalVar(1925, 0);
@@ -129,7 +129,7 @@ public final class QueenBlackDragonController extends Controler {
 					player.setNextWorldTile(base.transform(31, 36, -1));
 					boolean resizable = player.getInterfaceManager().hasRezizableScreen();
 					player.getPackets().closeInterface(resizable ? 746 : 548, resizable ? 1 : 0);
-					player.unlock();
+					player.sendOrbParams();
 				}
 			});
 			return false;

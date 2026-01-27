@@ -54,8 +54,7 @@ public class SteelTitanCombat extends CombatScript {
 		} else {
 			performRegularAttack(familiar, npc, target, distant);
 		}
-
-		return npc.getAttackSpeed() + 1;
+		return npc.getAttackSpeed();
 	}
 
 	private boolean isDistant(NPC npc, Entity target) {

@@ -152,7 +152,7 @@ public class InterfaceManager {
 		player.getPackets().sendTextOnComponent(182, 1,
 				"When you finished playing " + Settings.SERVER_NAME + ", click the log out button to save your progress properly.");
 		if (player.getFamiliar() != null && player.isActive())
-			player.getFamiliar().unlock();
+			player.getFamiliar().sendOrbParams();
 		player.getPackets().sendGlobalVar(234, 4);//overwrite questtab icon
 		player.getControlerManager().sendInterfaces();
 	}

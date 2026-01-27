@@ -65,7 +65,7 @@ public class Allround extends Dialogue {
 			player.getPackets().sendGameMessage("NOTICE: Starter money went directly to your Money pouch!");
 			break;
 		case 12:
-			player.unlock();
+			player.sendOrbParams();
 			player.getDialogueManager().startDialogue("StarterSkills");
 			break;
 		default:

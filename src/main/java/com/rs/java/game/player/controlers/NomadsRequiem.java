@@ -70,7 +70,7 @@ public class NomadsRequiem extends Controler {
 				@Override
 				public void run() {
 					player.getControlerManager().forceStop();
-					player.unlock();
+					player.sendOrbParams();
 				}
 
 			});
@@ -116,7 +116,7 @@ public class NomadsRequiem extends Controler {
 			WorldTasksManager.schedule(new WorldTask() {
 				@Override
 				public void run() {
-					player.unlock();
+					player.sendOrbParams();
 				}
 			}, 1);
 		}
@@ -195,7 +195,7 @@ public class NomadsRequiem extends Controler {
 					player.getDialogueManager().startDialogue("SimplePlayerMessage",
 							"Maybe I should follow that guy..");
 					Dialogue.closeNoContinueDialogue(player);
-					player.unlock();
+					player.sendOrbParams();
 					stop();
 				}
 				stage++;
@@ -300,7 +300,7 @@ public class NomadsRequiem extends Controler {
 					World.removeObject(object, true);
 					player.getPackets()
 							.sendSpawnedObject(new WorldObject(48073, 10, 0, getBaseX() + 14, getBaseY() + 22, 0));
-					player.unlock();
+					player.sendOrbParams();
 					player.setRun(true);
 					stop();
 				}
