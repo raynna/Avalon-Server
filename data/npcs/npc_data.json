@@ -6399,6 +6399,62 @@
     "categories": [],
     "assignedBy": []
   },
+  "830": {
+    "id": 830,
+    "name": "Mercenary Captain",
+    "members": true,
+    "combatLevel": 47,
+    "attackLevel": 32,
+    "strengthLevel": 29,
+    "defenceLevel": 32,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 80,
+    "attackBonus": 9,
+    "strengthBonus": 14,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 17,
+      "slash": 15,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 19,
+      "standard": 19,
+      "heavy": 19
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[14 April]] [[2003]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He looks a bit aggressive.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "837": {
     "id": 837,
     "name": "Shantay Guard",
@@ -9255,6 +9311,139 @@
       "duradel"
     ]
   },
+  "1153": {
+    "id": 1153,
+    "name": "Kalphite Worker",
+    "members": true,
+    "combatLevel": 28,
+    "attackLevel": 20,
+    "strengthLevel": 20,
+    "defenceLevel": 20,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 40,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 5,
+      "slash": 5,
+      "crush": 1
+    },
+    "magicDefence": {
+      "magic": 10
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 40,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1154": {
+    "id": 1154,
+    "name": "Kalphite Soldier",
+    "members": true,
+    "combatLevel": 85,
+    "attackLevel": 70,
+    "strengthLevel": 70,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 90,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 25,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "3",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 90,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "1155": {
     "id": 1155,
     "name": "Kalphite Guardian",
@@ -9310,6 +9499,141 @@
     "attackSpeedTicks": 4,
     "respawnTicks": 20,
     "slayerXp": 170,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1157": {
+    "id": 1157,
+    "name": "Kalphite Guardian",
+    "members": true,
+    "combatLevel": 141,
+    "attackLevel": 110,
+    "strengthLevel": 110,
+    "defenceLevel": 110,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 170,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 25,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "4",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 20,
+    "slayerXp": 170,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1158": {
+    "id": 1158,
+    "name": "Kalphite Queen",
+    "members": true,
+    "combatLevel": 333,
+    "attackLevel": 300,
+    "strengthLevel": 300,
+    "defenceLevel": 300,
+    "magicLevel": 150,
+    "rangedLevel": 1,
+    "constitutionLevel": 255,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 September]] [[2004]]",
+    "aliases": [],
+    "size": "5",
+    "examine": "I don\u0027t think insect repellent will work...",
+    "attributes": [
+      "kalphite"
+    ],
+    "maxHit": {
+      "default": 31
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
     "categories": [],
     "assignedBy": [
       "turael",
@@ -9433,6 +9757,62 @@
       "mazchna",
       "vannaka"
     ]
+  },
+  "1239": {
+    "id": 1239,
+    "name": "Bedabin Nomad Fighter",
+    "members": true,
+    "combatLevel": 56,
+    "attackLevel": 40,
+    "strengthLevel": 50,
+    "defenceLevel": 60,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 50,
+    "attackBonus": 9,
+    "strengthBonus": 14,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "14 - 18 October [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A bedabin nomad fighter - a sandy swordsman.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 7
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
   },
   "1267": {
     "id": 1267,
@@ -20776,6 +21156,734 @@
     ],
     "attackSpeedTicks": 4,
     "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4989": {
+    "id": 4989,
+    "name": "Mercenary",
+    "members": true,
+    "combatLevel": 45,
+    "attackLevel": 32,
+    "strengthLevel": 32,
+    "defenceLevel": 39,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 60,
+    "attackBonus": 9,
+    "strengthBonus": 14,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 17,
+      "slash": 15,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 19,
+      "standard": 19,
+      "heavy": 19
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[14 April]] [[2003]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He looks a bit aggressive.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4990": {
+    "id": 4990,
+    "name": "Mercenary",
+    "members": true,
+    "combatLevel": 45,
+    "attackLevel": 32,
+    "strengthLevel": 32,
+    "defenceLevel": 39,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 60,
+    "attackBonus": 9,
+    "strengthBonus": 14,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 17,
+      "slash": 15,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 19,
+      "standard": 19,
+      "heavy": 19
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[14 April]] [[2003]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He looks a bit aggressive.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4991": {
+    "id": 4991,
+    "name": "Mercenary",
+    "members": true,
+    "combatLevel": 45,
+    "attackLevel": 32,
+    "strengthLevel": 32,
+    "defenceLevel": 39,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 60,
+    "attackBonus": 9,
+    "strengthBonus": 14,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 17,
+      "slash": 15,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 19,
+      "standard": 19,
+      "heavy": 19
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[14 April]] [[2003]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He looks a bit aggressive.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4992": {
+    "id": 4992,
+    "name": "Mercenary",
+    "members": true,
+    "combatLevel": 45,
+    "attackLevel": 32,
+    "strengthLevel": 32,
+    "defenceLevel": 39,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 60,
+    "attackBonus": 9,
+    "strengthBonus": 14,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 17,
+      "slash": 15,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 19,
+      "standard": 19,
+      "heavy": 19
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[14 April]] [[2003]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He looks a bit aggressive.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4993": {
+    "id": 4993,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4994": {
+    "id": 4994,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4995": {
+    "id": 4995,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4996": {
+    "id": 4996,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4997": {
+    "id": 4997,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4998": {
+    "id": 4998,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4999": {
+    "id": 4999,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "5000": {
+    "id": 5000,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "5002": {
+    "id": 5002,
+    "name": "Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 15,
+    "strengthLevel": 15,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 26,
+    "constitutionLevel": 22,
+    "attackBonus": 6,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 18,
+      "slash": 25,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -4
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 November]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He tries to keep order around here.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []

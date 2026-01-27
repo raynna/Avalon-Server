@@ -181,7 +181,7 @@ public class InterfaceManager {
 		sendTab("tab.summoning_orb_resizeable", "interface.summoning_orb");
 		player.getPackets().sendInterface(true, 752, 9, Rscm.lookup("interface.chatbox"));
 		player.getPackets().sendGlobalVar(823, 1);
-		sendTab("tab.squeel_of_fortune", "interface.custom_quest");
+		sendTab("tab.squeel_of_fortune_resizeable", "interface.custom_quest");
 		sendCombatStyles();
 		sendTaskSystem();
 		sendSkills();
@@ -198,6 +198,8 @@ public class InterfaceManager {
 		sendTab("tab.music_resizeable", "interface.music"); // music
 		sendTab("tab.notes_resizeable", "interface.notes"); // notes
 		sendTab("tab.logout_resizeable", "interface.logout"); // logout*/
+		player.getSkills().switchXPPopup(true);
+		player.getSkills().switchXPPopup(true);
 	}
 
 	public void sendFixedInterfaces() {
@@ -221,7 +223,7 @@ public class InterfaceManager {
 		sendEquipment();
 		sendInventory();
 		sendQuestTab();
-		sendSummoningTab();
+		//sendSummoningTab();
 		sendTab("tab.frienschat", "interface.friendschat");
 		sendTab("tab.clanchat", "interface.clanchat");
 		sendTab("tab.friendslist", "interface.friendslist");
@@ -233,7 +235,8 @@ public class InterfaceManager {
 		sendSettings();
 		sendTaskSystem();
 		sendCombatStyles();
-		//sendTimerInterface();
+		player.getSkills().switchXPPopup(true);
+		player.getSkills().switchXPPopup(true);
 	}
 	
 	public void sendTimerInterface() {

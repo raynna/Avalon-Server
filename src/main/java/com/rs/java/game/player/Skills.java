@@ -256,7 +256,7 @@ public final class Skills implements Serializable {
     }
 
     public void switchXPPopup(boolean silent) {
-        xpPopup = !xpPopup ? true : false;
+        xpPopup = !xpPopup;
         if (!silent)
             player.getPackets().sendGameMessage("XP pop-ups are now " + (xpPopup ? "en" : "dis") + "abled.");
         if (xpPopup)
