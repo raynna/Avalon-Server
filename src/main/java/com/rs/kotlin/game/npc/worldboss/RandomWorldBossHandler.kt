@@ -92,7 +92,7 @@ object RandomWorldBossHandler {
         ),
         BossEntry.WithMinions.of(
             bossKey = "npc.tormented_demon_lv450",
-            BossEntry.WithMinions.minion("npc.abyssal_demon_lv124", 10),
+            BossEntry.WithMinions.minion("npc.abyssal_demon_lv124", 5),
         ),
         BossEntry.group("npc.dagannoth_rex_lv303", "npc.dagannoth_supreme_lv303", "npc.dagannoth_prime_lv303", displayName = "Dagannoth Kings"),
         BossEntry.single("npc.chaos_elemental_lv305")

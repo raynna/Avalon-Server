@@ -6399,6 +6399,178 @@
     "categories": [],
     "assignedBy": []
   },
+  "837": {
+    "id": 837,
+    "name": "Shantay Guard",
+    "members": false,
+    "combatLevel": 22,
+    "attackLevel": 17,
+    "strengthLevel": 16,
+    "defenceLevel": 16,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 32,
+    "attackBonus": 11,
+    "strengthBonus": 12,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 12,
+      "slash": 15,
+      "crush": 18
+    },
+    "magicDefence": {
+      "magic": 6
+    },
+    "rangedDefence": {
+      "light": 15,
+      "standard": 15,
+      "heavy": 15
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[14 April]] [[2003]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He patrols the Shantay Pass.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "839": {
+    "id": 839,
+    "name": "Desert Wolf",
+    "members": true,
+    "combatLevel": 27,
+    "attackLevel": 20,
+    "strengthLevel": 21,
+    "defenceLevel": 22,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 34,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[14 April]] [[2003]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A vicious desert wolf.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 34,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "840": {
+    "id": 840,
+    "name": "Ugthanki",
+    "members": true,
+    "combatLevel": 42,
+    "attackLevel": 35,
+    "strengthLevel": 35,
+    "defenceLevel": 35,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 45,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[14 April]] [[2003]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A vicious attacking camel.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 350,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "912": {
     "id": 912,
     "name": "Battle mage",
@@ -12980,6 +13152,192 @@
     "categories": [],
     "assignedBy": [
       "vannaka"
+    ]
+  },
+  "2881": {
+    "id": 2881,
+    "name": "Dagannoth Supreme",
+    "members": true,
+    "combatLevel": 303,
+    "attackLevel": 255,
+    "strengthLevel": 255,
+    "defenceLevel": 128,
+    "magicLevel": 255,
+    "rangedLevel": 255,
+    "constitutionLevel": 255,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 10,
+      "slash": 10,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 255
+    },
+    "rangedDefence": {
+      "light": 550,
+      "standard": 550,
+      "heavy": 550
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 November]] [[2005]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "The dagannoth king responsible for the death of the Bukalla.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 30
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 150,
+    "slayerXp": 255,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "2882": {
+    "id": 2882,
+    "name": "Dagannoth Prime",
+    "members": true,
+    "combatLevel": 303,
+    "attackLevel": 255,
+    "strengthLevel": 255,
+    "defenceLevel": 255,
+    "magicLevel": 255,
+    "rangedLevel": 0,
+    "constitutionLevel": 255,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 255,
+      "slash": 255,
+      "crush": 255
+    },
+    "magicDefence": {
+      "magic": 255
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 November]] [[2005]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "A legendary dagannoth king, rumoured to fly on the North winds.",
+    "attributes": [],
+    "xpBonus": 30.0,
+    "maxHit": {
+      "default": 50
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 150,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "2883": {
+    "id": 2883,
+    "name": "Dagannoth Rex",
+    "members": true,
+    "combatLevel": 303,
+    "attackLevel": 255,
+    "strengthLevel": 255,
+    "defenceLevel": 255,
+    "magicLevel": 0,
+    "rangedLevel": 255,
+    "constitutionLevel": 255,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 255,
+      "slash": 255,
+      "crush": 255
+    },
+    "magicDefence": {
+      "magic": 10
+    },
+    "rangedDefence": {
+      "light": 255,
+      "standard": 255,
+      "heavy": 255
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 November]] [[2005]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "Firstborn of the legendary dagannoth kings.",
+    "attributes": [],
+    "xpBonus": 30.0,
+    "maxHit": {
+      "default": 26
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 150,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
     ]
   },
   "3153": {
@@ -20310,6 +20668,118 @@
       "spria"
     ]
   },
+  "4933": {
+    "id": 4933,
+    "name": "Goat",
+    "members": true,
+    "combatLevel": 23,
+    "attackLevel": 20,
+    "strengthLevel": 20,
+    "defenceLevel": 20,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 21,
+    "attackBonus": 10,
+    "strengthBonus": 29,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 10,
+      "slash": 10,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[18 October]] [[2006]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "They\u0027ll eat anything!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "4934": {
+    "id": 4934,
+    "name": "Goat",
+    "members": true,
+    "combatLevel": 23,
+    "attackLevel": 20,
+    "strengthLevel": 20,
+    "defenceLevel": 20,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 21,
+    "attackBonus": 10,
+    "strengthBonus": 29,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 10,
+      "slash": 10,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[18 October]] [[2006]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "They\u0027ll eat anything!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "5168": {
     "id": 5168,
     "name": "Ram",
@@ -24761,6 +25231,126 @@
     ],
     "attackSpeedTicks": 4,
     "respawnTicks": 90,
+    "slayerXp": 34,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "6050": {
+    "id": 6050,
+    "name": "Desert Wolf",
+    "members": true,
+    "combatLevel": 27,
+    "attackLevel": 20,
+    "strengthLevel": 21,
+    "defenceLevel": 22,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 34,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[14 April]] [[2003]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A vicious desert wolf.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 34,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "6051": {
+    "id": 6051,
+    "name": "Desert Wolf",
+    "members": true,
+    "combatLevel": 27,
+    "attackLevel": 20,
+    "strengthLevel": 21,
+    "defenceLevel": 22,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 34,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[14 April]] [[2003]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A vicious desert wolf.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
     "slayerXp": 34,
     "categories": [],
     "assignedBy": [

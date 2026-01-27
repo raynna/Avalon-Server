@@ -103,6 +103,10 @@ open class WorldBossNPC : NPC {
         return 0.2
     }
 
+    override fun getDropRateMultiplier(): Double {
+        return super.getDropRateMultiplier() + 5.0
+    }
+
     override fun sendDeath(source: Entity?) {
         try {
             handler.onBossDeath(this)

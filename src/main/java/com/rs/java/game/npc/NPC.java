@@ -834,7 +834,7 @@ public class NPC extends Entity implements Serializable {
 
     private transient boolean sendDp = false;
 
-    public void sendLootshare(Player player, Item item) {
+    public void sendLootshare(Player player, Item item, Drop drop) {
         int size = getSize();
         String dropName = ItemDefinitions.getItemDefinitions(item.getId()).getName();
         /* LootShare/CoinShare */
@@ -878,28 +878,29 @@ public class NPC extends Entity implements Serializable {
                     luckyPlayer.getDropLogs().addDrop(item);
                 }
                 if (luckyPlayer.getValueableDrop() < 1)
-                    luckyPlayer.setValueableDrop(5000);
-                if ((item.getDefinitions().getTipitPrice() * item.getAmount()) >= luckyPlayer.getValueableDrop()) {
-                    luckyPlayer.message("<col=ff0000>Valuable drop: " + item.getName()
-                            + (item.getAmount() > 1 ? " x " + item.getAmount() + " " : " ") + "("
-                            + Utils.getFormattedNumber(item.getDefinitions().getTipitPrice() * item.getAmount(), ',')
-                            + " coins.)");
-                }
+                    luckyPlayer.setValueableDrop(15000);
                 if (!item.getDefinitions().isTradeable() && !item.getName().toLowerCase().contains(" charm")) {
                     luckyPlayer.message("<col=ff0000>Untradeable drop: " + item.getName() + ".");
                 }
-                if (player.getRareItem() != null) {
-                    if (player.getRareItem().getId() == item.getId() && player.getRareItem().getAmount() == item.getAmount()) {
-                        if (EconomyPrices.getPrice(item.getId()) > 1000000) {
-                            World.sendWorldMessage(
-                                    "<img=7><col=36648b>News: " + luckyPlayer.getDisplayName() + " has recieved "
-                                            + (item.getAmount() > 1 ? item.getAmount() + " x " + Utils.formatString(dropName)
-                                            : Utils.formatString(dropName))
-                                            + " as a loot from " + getName() + "!",
-                                    false);
-                        }
-                        sendLootBeam(item, luckyPlayer, this);
-                    }
+                if ((item.getDefinitions().getTipitPrice() * item.getAmount()) >= Integer
+                        .parseInt(luckyPlayer.getToggleValue(luckyPlayer.toggles.get("DROPVALUE")))) {
+                    player.message("<col=ff0000>Valuable drop: " + item.getName()
+                            + (item.getAmount() > 1 ? " x " + item.getAmount() + " " : " ") + "("
+                            + Utils.getFormattedNumber(item.getDefinitions().getTipitPrice() * item.getAmount(), ',')
+                            + " coins.)");
+                    sendLootBeam(item, luckyPlayer, this);
+                } else if (drop.getSource() == DropSource.PREROLL || drop.getSource() == DropSource.TERTIARY) {
+                    sendLootBeam(item, luckyPlayer, this);
+                } else if (EconomyPrices.getPrice(item.getId()) >= 1_000_000) {
+                    sendLootBeam(item, luckyPlayer, this);
+                }
+                if (EconomyPrices.getPrice(item.getId()) > 1_000_000) {
+                    World.sendWorldMessage(
+                            "<img=7><col=36648b>News: " + luckyPlayer.getDisplayName() + " has recieved "
+                                    + (item.getAmount() > 1 ? item.getAmount() + " x " + Utils.formatString(dropName)
+                                    : Utils.formatString(dropName))
+                                    + " as a loot from " + getName() + "!",
+                            false);
                 }
             }
         }
@@ -920,7 +921,7 @@ public class NPC extends Entity implements Serializable {
         ItemDefinitions defs = ItemDefinitions.getItemDefinitions(drop.itemId);
         /* LootShare/CoinShare */
         if (player.isToogleLootShare()) {
-            sendLootshare(player, item);
+            sendLootshare(player, item, drop);
         } else if (!player.isToogleLootShare() || sendDp) {
             if (item.getDefinitions().getTipitPrice() > player.getDropLogs().getLowestValue()) {
                 if (!player.getDropLogs().toggledMessage()) {
@@ -973,7 +974,16 @@ public class NPC extends Entity implements Serializable {
             if (item.getAmount() > 0) {
                 World.updateGroundItem(item, new WorldTile(getCoordFaceX(size), getCoordFaceY(size), getPlane()),
                         player, 60, 0);
-                if (drop.getSource() == DropSource.PREROLL || drop.getSource() == DropSource.TERTIARY) {
+                if ((i.getDefinitions().getTipitPrice() * i.getAmount()) >= Integer
+                        .parseInt(player.getToggleValue(player.toggles.get("DROPVALUE")))) {
+                    player.message("<col=ff0000>Valuable drop: " + i.getName()
+                            + (i.getAmount() > 1 ? " x " + i.getAmount() + " " : " ") + "("
+                            + Utils.getFormattedNumber(i.getDefinitions().getTipitPrice() * i.getAmount(), ',')
+                            + " coins.)");
+                    sendLootBeam(item, player, this);
+                } else if (drop.getSource() == DropSource.PREROLL || drop.getSource() == DropSource.TERTIARY) {
+                    sendLootBeam(item, player, this);
+                } else if (EconomyPrices.getPrice(item.getId()) >= 1_000_000) {
                     sendLootBeam(item, player, this);
                 }
                 if (EconomyPrices.getPrice(item.getId()) >= 1000000) {
@@ -983,7 +993,6 @@ public class NPC extends Entity implements Serializable {
                                     : Utils.formatString(dropName))
                                     + " as a loot from " + getName() + "!",
                             false);
-                    sendLootBeam(item, player, this);
                 }
             }
         }
