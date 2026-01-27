@@ -352,7 +352,7 @@ object StandardRanged : RangeData() {
 
                     context.attacker.animate(Animation(4230))
 
-                    ProjectileManager.send(
+                    val ticks = ProjectileManager.send(
                         Projectile.BOLT, 328,
                         context.attacker,
                         context.defender
@@ -371,7 +371,7 @@ object StandardRanged : RangeData() {
                             ranged(
                                 accuracyMultiplier = 2.0,
                                 damageMultiplier = 1.1,
-                                delay = context.combat.getHitDelay()
+                                delay = ticks - 1
                             )
                         }
                     }
@@ -410,16 +410,16 @@ object StandardRanged : RangeData() {
                     val attacker = context.attacker
                     val defender = context.defender
                     attacker.animate("animation.sagaie_attack")
-                    ProjectileManager.send(Projectile.SAGAIE, "graphic.sagaie_projectile", attacker, defender)
+                    val ticks = ProjectileManager.send(Projectile.SAGAIE, "graphic.sagaie_projectile", attacker, defender)
                     val rangedHit = context.rollRanged()
                     context.hits {
                         if (rangedHit.damage > 0) {
                             val distance = Utils.getDistance(attacker, defender)
                             val boost = 20 * (min(5, distance))
                             val boostedHit = rangedHit.copyWithDamage(rangedHit.damage + boost)
-                            nextHit(boostedHit, delay = context.combat.getHitDelay())
+                            nextHit(boostedHit, delay = ticks - 1)
                         } else {
-                            nextHit(Hit(attacker, 0, rangedHit.look), delay = context.combat.getHitDelay())
+                            nextHit(Hit(attacker, 0, rangedHit.look), delay = ticks - 1)
                         }
                     }
                     true
@@ -482,9 +482,9 @@ object StandardRanged : RangeData() {
                 execute = { context ->
                     context.attacker.animate("animation.bow_attack")
                     context.attacker.gfx("graphic.ice_arrow_start", 100)
-                    ProjectileManager.send(Projectile.ARROW, "graphic.ice_arrow_projectile", context.attacker, context.defender)
+                    val ticks = ProjectileManager.send(Projectile.ARROW, "graphic.ice_arrow_projectile", context.attacker, context.defender)
                     context.hits {
-                        ranged(delay = context.combat.getHitDelay())
+                        ranged(delay = ticks - 1)
                     }
                     true
                 }
@@ -511,9 +511,9 @@ object StandardRanged : RangeData() {
                 execute = { context ->
                     context.attacker.animate("animation.bow_attack")
                     context.attacker.gfx("graphic.crystal_bow_start", 100)
-                    ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
+                    val ticks = ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
                     context.hits {
-                        ranged(delay = context.combat.getHitDelay())
+                        ranged(delay = ticks - 1)
                     }
                     true
                 }
@@ -533,9 +533,9 @@ object StandardRanged : RangeData() {
                 damageMultiplier = 1.5,
                 execute = { context ->
                     context.attacker.animate(Animation(426))
-                    ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
+                    val ticks = ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
                     context.hits {
-                        val rangedHit = ranged()
+                        val rangedHit = ranged(delay = ticks - 1)
                         if (rangedHit.damage > 0) {
                             context.attacker.applyHeal(rangedHit.copyWithDamage(rangedHit.damage))
                         }
@@ -557,9 +557,9 @@ object StandardRanged : RangeData() {
                 damageMultiplier = 1.5,
                 execute = { context ->
                     context.attacker.animate(Animation(426))
-                    ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
+                    val ticks = ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
                     context.hits {
-                        val rangedHit = ranged()
+                        val rangedHit = ranged(delay = ticks - 1)
                         if (rangedHit.damage > 0) {
                             context.attacker.applyHeal(rangedHit.copyWithDamage(rangedHit.damage))
                         }
@@ -581,9 +581,9 @@ object StandardRanged : RangeData() {
                 damageMultiplier = 1.5,
                 execute = { context ->
                     context.attacker.animate(Animation(426))
-                    ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
+                    val ticks = ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
                     context.hits {
-                        val rangedHit = ranged()
+                        val rangedHit = ranged(delay = ticks - 1)
                         if (rangedHit.damage > 0) {
                             context.attacker.applyHeal(rangedHit.copyWithDamage(rangedHit.damage))
                         }
