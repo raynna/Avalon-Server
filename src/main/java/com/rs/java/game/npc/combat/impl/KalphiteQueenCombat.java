@@ -24,11 +24,10 @@ public class KalphiteQueenCombat extends CombatScript {
 	private void attackRanged(NPC npc, Entity target) {
 		npc.animate(new Animation(npc.getId() == 1158 ? 6240 : 6234));
 		for (Entity t : npc.getPossibleTargets()) {
-			delayHit(npc, t, 0, npc.rangedHit(t, npc.getMaxHit()));
-			ProjectileManager.sendSimple(
-					Projectile.ELEMENTAL_SPELL, 289,
-					npc, t
-			);
+			Hit rangedHit = npc.rangedHit(t, npc.getMaxHit());
+			ProjectileManager.send(Projectile.ELEMENTAL_SPELL, 289, npc, t, () -> {
+				applyRegisteredHit(npc, t, rangedHit);
+			});
 		}
 	}
 
@@ -42,18 +41,16 @@ public class KalphiteQueenCombat extends CombatScript {
 		if (chosen instanceof Player p) {
 			new ArrayList<Player>().add(p);
 		}
-
-		ProjectileManager.sendWithGraphic(
-				Projectile.ELEMENTAL_SPELL, 280,
-				npc, chosen,
-				new Graphics(281)
-		);
-		delayHit(npc, chosen, 2, npc.magicHit(chosen, npc.getMaxHit()));
+		Hit mageHit = npc.magicHit(chosen, npc.getMaxHit());
+		ProjectileManager.send(Projectile.ELEMENTAL_SPELL, 280, new Graphics(281), npc, chosen, () -> {
+			applyRegisteredHit(npc, chosen, mageHit);
+		});
 	}
 
 	private void attackMelee(NPC npc, Entity target) {
 		npc.animate(new Animation(npc.getId() == 1158 ? 6241 : 6235));
-		delayHit(npc, target, 0, npc.meleeHit(target, npc.getMaxHit()));
+		Hit meleeHit = npc.meleeHit(target, npc.getMaxHit());
+		delayHit(npc, target, 0, meleeHit);
 	}
 
 

@@ -937,14 +937,6 @@ public class NPC extends Entity implements Serializable {
             Item i = item;
             if (item.getDefinitions().isNoted())
                 i = new Item(item.getDefinitions().getCertId(), item.getAmount());
-            if ((i.getDefinitions().getTipitPrice() * i.getAmount()) >= Integer
-                    .parseInt(player.getToggleValue(player.toggles.get("DROPVALUE")))) {
-                player.message("<col=ff0000>Valuable drop: " + i.getName()
-                        + (i.getAmount() > 1 ? " x " + i.getAmount() + " " : " ") + "("
-                        + Utils.getFormattedNumber(i.getDefinitions().getTipitPrice() * i.getAmount(), ',')
-                        + " coins.)");
-                sendLootBeam(item, player, this);
-            }
             if (player.toggles("UNTRADEABLEMESSAGE", false) && !item.getDefinitions().isTradeable()
                     && !item.getName().toLowerCase().contains(" charm")) {
                 player.message("<col=ff0000>Untradeable drop: " + item.getName()
