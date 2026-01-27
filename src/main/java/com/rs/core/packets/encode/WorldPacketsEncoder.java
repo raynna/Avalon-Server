@@ -1244,8 +1244,9 @@ public class WorldPacketsEncoder extends Encoder {
 			}
 		}
 		int[] xteas = new int[4];
-		OutputStream stream = new OutputStream(24);
+		OutputStream stream = new OutputStream();
 		stream.writePacket(player, 14);
+
 		stream.writeShort(interfaceId);
 		stream.writeInt(xteas[0]);
 		stream.writeIntV2(xteas[1]);
@@ -1253,6 +1254,7 @@ public class WorldPacketsEncoder extends Encoder {
 		stream.writeByte(nocliped ? 1 : 0);
 		stream.writeIntV1(xteas[3]);
 		stream.writeIntV2(xteas[2]);
+
 		session.write(stream);
 	}
 

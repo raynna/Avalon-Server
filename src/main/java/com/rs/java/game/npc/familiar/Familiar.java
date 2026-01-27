@@ -157,14 +157,7 @@ public abstract class Familiar extends NPC implements Serializable {
 	public void processNPC() {
 		if (isDead())
 			return;
-		System.out.println("Familiar ID: " + getId() + " | Original ID: " + getOriginalId() +
-				" | Owner PvP: " + owner.isCanPvp() +
-				" | Time: " + Utils.currentTimeMillis());
-		System.out.println("Familiar count for owner " + owner.getUsername() + ": " +
-				World.getNPCs().stream()
-						.filter(n -> n instanceof Familiar)
-						.filter(f -> ((Familiar)f).getOwner() == owner)
-						.count());
+		switchOrb(true);
 		trackTimer++;
 		if (trackTimer == 50) {
 			trackTimer = 0;
@@ -303,18 +296,46 @@ public abstract class Familiar extends NPC implements Serializable {
 	 */
 
 	public void sendMainConfigs() {
-		switchOrb(true);
+		// Set familiar NPC ID (VARP 1174)
+		owner.getVarsManager().sendVar(1174, getId()); // NOT getDefinitions().getId()!
+
+		// Set pouch ID (VARP 448)
 		owner.getVarsManager().sendVar(448, pouch.getRealPouchId());
+
+		// Set head animation index (VARPBIT 4282)
 		owner.getVarsManager().setVarBit(4282, pouch.getPouchSetting());
+
 		refreshSpecialEnergy();
 		sendTimeRemaining();
+
+		// Set summoning cost (VARPBIT 4288)
 		owner.getVarsManager().setVarBit(4288, pouch.getSummoningCost());
+
 		owner.getPackets().sendGlobalString(204, getSpecialName());
 		owner.getPackets().sendGlobalString(205, getSpecialDescription());
 		owner.getPackets().sendGlobalVar(1436, getSpecialAttack() == SpecialAttack.CLICK ? 1 : 0);
+
+		// RUN SCRIPT 751 - This sets up the entire orb interface
 		owner.getPackets().sendRunScript(751);
+
 		sendLeftClickOption(owner);
 		sendOrbParams();
+		switchOrb(true);
+	}
+
+	public void switchOrb(boolean on) {
+		if (owner == null) return;
+
+		if (on) {
+			// Show orb - run official script
+			owner.getPackets().sendRunScript(751);
+			owner.getPackets().sendHideIComponent(747, 9, false);
+			unlock();
+		} else {
+			// Hide orb - run official hide script
+			owner.getPackets().sendRunScript(2471);
+			owner.getPackets().sendHideIComponent(747, 9, true);
+		}
 	}
 
 
@@ -322,11 +343,6 @@ public abstract class Familiar extends NPC implements Serializable {
 		boolean res = owner.getInterfaceManager().hasRezizableScreen();
 		owner.getInterfaceManager().sendTab(res ? "tab.summoning_resizeable" : "tab.summoning", "interface.summoning_tab");
 		owner.getPackets().sendGlobalVar(168, 98);
-	}
-
-	public void switchOrb(boolean on) {
-		owner.getVarsManager().sendVar(1174, on ? -1 : 0);
-		owner.getPackets().sendHideIComponent(747, 9, !on);
 	}
 
 	public static void selectLeftOption(Player player) {
@@ -443,7 +459,6 @@ public abstract class Familiar extends NPC implements Serializable {
 		if (!logged && !isFinished()) {
 			setFinished(true);
 			switchOrb(false);
-			owner.getPackets().sendRunScript(2471);
 			if (owner.storedScrolls >= 1) {
 				if (owner.getInventory().hasFreeSlots())
 					owner.getInventory().addItem(Summoning.getScrollId(pouch.getRealPouchId()), owner.storedScrolls);
