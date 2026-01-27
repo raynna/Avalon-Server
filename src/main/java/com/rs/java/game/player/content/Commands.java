@@ -486,6 +486,10 @@ public final class Commands {
                 "Show interface components. Usage: ::inters [interfaceId]");
         registerCommand("runes", Commands::runesCommand, CommandCategory.DEVELOPER,
                 "Get all runes");
+        registerCommand("tab", Commands::testTabcommand, CommandCategory.DEVELOPER,
+                "testing for summoning tab");
+        registerCommand("script", Commands::runScript, CommandCategory.DEVELOPER,
+                "testing script");
     }
 
     private static void registerCommand(String name, Command command, CommandCategory category, String description) {
@@ -2381,6 +2385,41 @@ public final class Commands {
                 player.getVarsManager().sendVarBit(i, value);
             }
             player.message("Sent varbits " + start + "-" + end + " with value " + value);
+        } catch (NumberFormatException e) {
+            player.message("Invalid parameters.");
+        }
+        return true;
+    }
+
+    private static boolean runScript(Player player, String[] cmd) {
+        if (cmd.length < 2) {
+            player.message("Usage: ::script [id]");
+            return true;
+        }
+
+        try {
+            int scriptId = Integer.parseInt(cmd[1]);
+            player.getPackets().sendRunScript(scriptId);
+            player.message("Sent script " + scriptId);
+        } catch (NumberFormatException e) {
+            player.message("Invalid parameters.");
+        }
+        return true;
+    }
+
+    private static boolean testTabcommand(Player player, String[] cmd) {
+        if (cmd.length < 2) {
+            player.message("Usage: ::tab [id]");
+            return true;
+        }
+
+        try {
+            int tabId = Integer.parseInt(cmd[1]);
+            player.getPackets().sendGlobalVar(168, 98);//navigate to hidden tab
+            player.getInterfaceManager().sendTab(tabId, 880);
+            player.getVarsManager().sendVar(1493, player.getSummoningLeftClickOption());
+            player.getVarsManager().sendVar(1494, player.getSummoningLeftClickOption());
+            player.message("Sent tab " + tabId);
         } catch (NumberFormatException e) {
             player.message("Invalid parameters.");
         }

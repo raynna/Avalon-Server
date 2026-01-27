@@ -256,27 +256,27 @@ class HealthOverlay {
 
         val allSkills = listOf(
             SkillRow(
-                "Attack", 1478,
+                "Attack", 197,//1478
                 player.skills.getLevel(Skills.ATTACK),
                 player.skills.getLevelForXp(Skills.ATTACK)
             ),
             SkillRow(
-                "Strength", 1479,
+                "Strength", 198,//1479
                 player.skills.getLevel(Skills.STRENGTH),
                 player.skills.getLevelForXp(Skills.STRENGTH)
             ),
             SkillRow(
-                "Defence", 1480,
+                "Defence", 199,//1480
                 player.skills.getLevel(Skills.DEFENCE),
                 player.skills.getLevelForXp(Skills.DEFENCE)
             ),
             SkillRow(
-                "Ranged", 1481,
+                "Ranged", 200,//1481
                 player.skills.getLevel(Skills.RANGE),
                 player.skills.getLevelForXp(Skills.RANGE)
             ),
             SkillRow(
-                "Magic", 1483,
+                "Magic", 202,//1483
                 player.skills.getLevel(Skills.MAGIC),
                 player.skills.getLevelForXp(Skills.MAGIC)
             )

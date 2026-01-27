@@ -136,7 +136,7 @@ public final class Pet extends NPC {
 		owner.getPetManager().setNpcId(-1);
 		owner.getPetManager().setItemId(-1);
 		switchOrb(false);
-		owner.getPackets().closeInterface(owner.getInterfaceManager().hasRezizableScreen() ? 98 : 212);
+		//owner.getPackets().closeInterface(owner.getInterfaceManager().hasRezizableScreen() ? 98 : 212);
 		owner.getPackets().sendComponentSettings(747, 17, 0, 0, 0);
 		finish();
 	}
@@ -239,9 +239,9 @@ public final class Pet extends NPC {
 		owner.getPackets().sendVarBit(4285, (int) details.getGrowth());
 		owner.getPackets().sendVarBit(4286, (int) details.getHunger());
 		boolean res = owner.getInterfaceManager().hasRezizableScreen();
-		owner.getPackets().sendInterface(true, res ? 746 : 548, res ? 119 : 179, 662);
+		owner.getPackets().sendInterface(true, res ? 746 : 548, res ? 109 : 167, 662);
 		unlock();
-		owner.getPackets().sendGlobalVar(168, 8);// tab id
+		owner.getPackets().sendGlobalVar(168, 98);// tab id
 	}
 
 	/**

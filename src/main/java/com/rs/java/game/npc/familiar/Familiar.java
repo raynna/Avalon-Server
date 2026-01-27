@@ -269,7 +269,7 @@ public abstract class Familiar extends NPC implements Serializable {
 
 	public void sendFollowerDetails() {
 		boolean res = owner.getInterfaceManager().hasRezizableScreen();
-		owner.getInterfaceManager().sendTab("tab.summoning_tab", "interface.summoning_tab");
+		owner.getInterfaceManager().sendTab(res ? "tab.summoning_resizeable" : "tab.summoning", "interface.summoning_tab");
 		owner.getPackets().sendGlobalVar(168, 98);
 		owner.getPackets().sendHideIComponent(662, 44, true);
 		owner.getPackets().sendHideIComponent(662, 45, true);
@@ -300,7 +300,7 @@ public abstract class Familiar extends NPC implements Serializable {
 
 	public static void selectLeftOption(Player player) {
 		boolean res = player.getInterfaceManager().hasRezizableScreen();
-		player.getInterfaceManager().sendTab("tab.summoning_tab", "interface.summoning_options");//send interface on tab
+		player.getInterfaceManager().sendTab(res ? "tab.summoning_resizeable" : "tab.summoning", "interface.summoning_options");//send interface on tab
 		player.getPackets().sendGlobalVar(168, 98);//navigate to hidden tab
 		sendLeftClickOption(player);
 	}
@@ -308,7 +308,6 @@ public abstract class Familiar extends NPC implements Serializable {
 	public static void confirmLeftOption(Player player) {
 		player.getPackets().sendGlobalVar(168, 4);// inv tab id
 		boolean res = player.getInterfaceManager().hasRezizableScreen();
-		player.getPackets().closeInterface(res ? 119 : 179);
 	}
 
 	public static void setLeftclickOption(Player player, int summoningLeftClickOption) {
@@ -417,7 +416,6 @@ public abstract class Familiar extends NPC implements Serializable {
 			owner.addFamiliarDelay(familiarDelay);
 			setFinished(true);
 			switchOrb(false);
-			owner.getPackets().closeInterface(owner.getInterfaceManager().hasRezizableScreen() ? 98 : 212);
 			owner.getPackets().sendComponentSettings(747, 18, 0, 0, 0);
 			if (owner.storedScrolls >= 1) {
 				if (owner.getInventory().hasFreeSlots())

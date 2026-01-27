@@ -180,8 +180,8 @@ public class InterfaceManager {
 		sendTab("tab.run_orb_resizeable", "interface.run_orb");
 		sendTab("tab.summoning_orb_resizeable", "interface.summoning_orb");
 		player.getPackets().sendInterface(true, 752, 9, Rscm.lookup("interface.chatbox"));
-		sendTab("tab.summoning_resizeable", "interface.custom_quest");
 		player.getPackets().sendGlobalVar(823, 1);
+		sendTab("tab.squeel_of_fortune", "interface.custom_quest");
 		sendCombatStyles();
 		sendTaskSystem();
 		sendSkills();
