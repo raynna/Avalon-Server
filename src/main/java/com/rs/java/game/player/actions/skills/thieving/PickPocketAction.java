@@ -125,7 +125,7 @@ public class PickPocketAction extends Action {
 			npc.faceEntity(player);
 			player.animate(new Animation(424));
 			player.gfx(new Graphics(80, 5, 60));
-			player.sendOrbParams();
+			player.unlock();
 			player.getPackets().sendGameMessage("You've been stunned.");
 			player.applyHit(new Hit(player, npcData.getStunDamage(), HitLook.REGULAR_DAMAGE));
 			player.lock(npcData.getStunTime());

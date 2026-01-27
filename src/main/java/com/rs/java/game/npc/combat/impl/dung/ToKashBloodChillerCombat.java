@@ -106,7 +106,7 @@ public class ToKashBloodChillerCombat extends CombatScript {
 	}
 
 	public static void removeSpecialFreeze(Player player) {
-		player.sendOrbParams();
+		player.unlock();
 		player.getAppearence().transformIntoNPC(-1);
 		player.gfx(new Graphics(2548));
 		player.getPackets().sendGameMessage("The ice encasing you shatters violently.");

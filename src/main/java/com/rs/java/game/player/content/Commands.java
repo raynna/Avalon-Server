@@ -1382,7 +1382,7 @@ public final class Commands {
             return true;
         }
 
-        target.sendOrbParams();
+        target.unlock();
         target.getControlerManager().forceStop();
         target.setNextWorldTile(Settings.START_PLAYER_LOCATION);
         player.getPackets().sendGameMessage("You have sent home " + target.getDisplayName() + ".");

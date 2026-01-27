@@ -59,7 +59,7 @@ public class AntiBot {
 			return false;
 		}
 		if (answer.equalsIgnoreCase(getCorrectAnswer())) {
-			player.sendOrbParams();
+			player.unlock();
 			player.getMoneyPouch().addMoney(50000, false);
 			player.message("Way to go! You can now continue playing." + (player.isDeveloper()
 					? " Time left to next round: " + Utils.getFormatedTime(appearTime) + "" : ""));

@@ -2111,7 +2111,7 @@ public final class WorldPacketsDecoder extends Decoder {
 			other.getInterfaceManager().sendTabInterfaces(false);
 			if (other.getControlerManager().getControler() != null)
 				other.getControlerManager().getControler().removeControler();
-			other.sendOrbParams();
+			other.unlock();
 			return;
 		} else if (player.temporaryAttribute().remove("report_category") == Boolean.TRUE) {
 			Report.category = value;

@@ -264,7 +264,7 @@ public class UnknownLocations implements CityEvent {
 
 					@Override
 					public void run() {
-						player.sendOrbParams();
+						player.unlock();
 						player.closeInterfaces();
 						player.setNextWorldTile(new WorldTile(2834,
 								3335, 0));

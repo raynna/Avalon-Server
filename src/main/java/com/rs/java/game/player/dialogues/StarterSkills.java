@@ -256,11 +256,11 @@ public class StarterSkills extends Dialogue {
 			}
 		} else if (stage == 2) {
 			if (componentId == OPTION_1) {
-				player.sendOrbParams();
+				player.unlock();
 				player.getInterfaceManager().closeChatBoxInterface();
 			} else if (componentId == OPTION_2) {
 				player.switchItemsLook();
-				player.sendOrbParams();
+				player.unlock();
 				player.getInterfaceManager().closeChatBoxInterface();
 			}
 		}

@@ -57,7 +57,7 @@ public class AbbysObsticals {
 							.getAnimationId()));
 				} else if (ticks == 4) {
 					if (!isSuccessFul(player, Skills.MINING)) {
-						player.sendOrbParams();
+						player.unlock();
 						player.animate(new Animation(-1));
 						stop();
 					}
@@ -66,7 +66,7 @@ public class AbbysObsticals {
 				} else if (ticks == 9) {
 					player.setNextWorldTile(new WorldTile(object.getX(), object
 							.getY() + 13, 0));
-					player.sendOrbParams();
+					player.unlock();
 					stop();
 				}
 			}
@@ -97,7 +97,7 @@ public class AbbysObsticals {
 							.getEmoteId()));
 				} else if (ticks == 3) {
 					if (!isSuccessFul(player, Skills.WOODCUTTING)) {
-						player.sendOrbParams();
+						player.unlock();
 						player.animate(new Animation(-1));
 						stop();
 					}
@@ -105,7 +105,7 @@ public class AbbysObsticals {
 					demolishObstacle(7161 + (ticks - 4), object);
 				} else if (ticks == 7) {
 					player.setNextWorldTile(tile);
-					player.sendOrbParams();
+					player.unlock();
 					stop();
 				}
 			}
@@ -128,7 +128,7 @@ public class AbbysObsticals {
 					player.animate(new Animation(866));
 				} else if (ticks == 3) {
 					if (!isSuccessFul(player, Skills.THIEVING)) {
-						player.sendOrbParams();
+						player.unlock();
 						player.animate(new Animation(-1));
 						stop();
 					}
@@ -136,7 +136,7 @@ public class AbbysObsticals {
 					demolishObstacle(7168 + (ticks - 4), object);
 				} else if (ticks == 7) {
 					player.setNextWorldTile(tile);
-					player.sendOrbParams();
+					player.unlock();
 					stop();
 				}
 			}
@@ -161,14 +161,14 @@ public class AbbysObsticals {
 						if (!isSuccessFul(player, Skills.AGILITY)) {
 							player.getPackets().sendGameMessage(
 									"You cannot seem to slip through the gap.");
-							player.sendOrbParams();
+							player.unlock();
 							player.animate(new Animation(-1));
 							stop();
 						}
 					}
 				} else if (ticks == 4) {
 					player.setNextWorldTile(tile);
-					player.sendOrbParams();
+					player.unlock();
 					stop();
 				}
 			}
@@ -197,7 +197,7 @@ public class AbbysObsticals {
 					player.animate(new Animation(733));
 				} else if (ticks == 3) {
 					if (!isSuccessFul(player, Skills.THIEVING)) {
-						player.sendOrbParams();
+						player.unlock();
 						player.animate(new Animation(-1));
 						stop();
 					}
@@ -205,7 +205,7 @@ public class AbbysObsticals {
 					demolishObstacle(7165 + (ticks - 4), object);
 				} else if (ticks == 7) {
 					player.setNextWorldTile(tile);
-					player.sendOrbParams();
+					player.unlock();
 					stop();
 				}
 			}

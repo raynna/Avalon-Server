@@ -1202,7 +1202,7 @@ public final class ObjectHandler {
                             player.setNextWorldTile(tile);
                         } else if (count == 14) {
                             stop();
-                            player.sendOrbParams();
+                            player.unlock();
                         }
                         count++;
                     }
@@ -1255,7 +1255,7 @@ public final class ObjectHandler {
                         if (count == 0) {
                             player.setNextFaceWorldTile(new WorldTile(object.getX() - 1, object.getY(), 0));
                             player.animate(new Animation(12216));
-                            player.sendOrbParams();
+                            player.unlock();
                         } else if (count == 2) {
                             player.setNextWorldTile(new WorldTile(3651, 5122, 0));
                             player.setNextFaceWorldTile(new WorldTile(3651, 5121, 0));
@@ -1266,7 +1266,7 @@ public final class ObjectHandler {
                             // WorldObject(45078, 0, 3, 3651, 5123, 0), new
                             // Animation(12220));
                         } else if (count == 5) {
-                            player.sendOrbParams();
+                            player.unlock();
                             stop();
                         }
                         count++;

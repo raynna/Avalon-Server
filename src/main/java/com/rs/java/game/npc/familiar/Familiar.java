@@ -314,7 +314,7 @@ public abstract class Familiar extends NPC implements Serializable {
 		owner.getPackets().sendGlobalVar(1436, getSpecialAttack() == SpecialAttack.CLICK ? 1 : 0);
 		owner.getPackets().sendRunScript(751);
 		sendLeftClickOption(owner);
-		sendOrbParams();
+		unlock();
 	}
 
 
@@ -361,7 +361,7 @@ public abstract class Familiar extends NPC implements Serializable {
 		specialActivated = activated;
 	}
 
-	public void sendOrbParams() {
+	public void unlock() {
 		switch (getSpecialAttack()) {
 		case CLICK:
 			owner.getPackets().sendComponentSettings(747, 18, 0, 0, 2);

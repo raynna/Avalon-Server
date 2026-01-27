@@ -217,7 +217,7 @@ public class DungeonManager {
 						count++;
 						if(!player.isLocked() || isDestroyed() || player.hasFinished() || !player.getDungManager().isInside() || count > 10) {
 							stop();
-							player.sendOrbParams();
+							player.unlock();
 							return;
 						}
 						if (visibleMap[x][y].isLoaded()) {

@@ -381,7 +381,7 @@ public class WarriorsGuild extends Controler {
 						npc.addWalkSteps(player.getX(), player.getY() + 2);
 						player.temporaryAttribute().put("animator_spawned", true);
 						npc.getCombat().setTarget(player);
-						player.sendOrbParams();
+						player.unlock();
 						player.getHintIconsManager().addHintIcon(npc, 0, -1, false);
 					} else if (ticks == 6) {
 						stop();
@@ -633,7 +633,7 @@ public class WarriorsGuild extends Controler {
 		if ((player.getSkills().getLevel(Skills.STRENGTH) / 100) > Math.random()) {
 			player.getPackets().sendGameMessage("You fumble and drop the shot onto your toe. Ow!");
 			player.applyHit(new Hit(player, 10, HitLook.REGULAR_DAMAGE));
-			player.sendOrbParams();
+			player.unlock();
 			return;
 		}
 		WorldTasksManager.schedule(new WorldTask() {

@@ -89,7 +89,7 @@ public class PestControl {
 
 	private void sendBeginningWave() {
 		knight = new PestPortal(KNIGHT_IDS[Utils.random(KNIGHT_IDS.length)], true, getWorldTile(32, 32), this);
-		knight.sendOrbParams();
+		knight.unlock();
 		for (int index = 0; index < portals.length; index++) {
 			PestPortal portal = portals[index] = new PestPortal(6146 + index, true,
 					getWorldTile(PORTAL_LOCATIONS[0][index], PORTAL_LOCATIONS[1][index]), this);
@@ -190,7 +190,7 @@ public class PestControl {
 
 				@Override
 				public void run() {
-					portals[index].sendOrbParams();
+					portals[index].unlock();
 				}
 			}, 30);
 		}

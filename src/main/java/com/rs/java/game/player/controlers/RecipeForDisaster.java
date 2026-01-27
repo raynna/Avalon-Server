@@ -127,7 +127,7 @@ public class RecipeForDisaster extends Controler {
             WorldTasksManager.schedule(new WorldTask() {
                 @Override
                 public void run() {
-                    player.sendOrbParams(); // unlocks player
+                    player.unlock(); // unlocks player
                     stage = Stages.RUNNING;
                 }
 

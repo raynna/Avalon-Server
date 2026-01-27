@@ -36,7 +36,7 @@ public class WildyAgility {
 
 			@Override
 			public void run() {
-				player.sendOrbParams();
+				player.unlock();
 				player.setNextWorldTile(toTile);
 				player.getPackets().sendGameMessage("You skillfully balance across the ridge.", true);
 			}
@@ -59,7 +59,7 @@ public class WildyAgility {
 
 			@Override
 			public void run() {
-				player.sendOrbParams();
+				player.unlock();
 				player.setNextWorldTile(toTile);
 				player.getPackets().sendGameMessage("You skillfully balance across the ridge.", true);
 			}

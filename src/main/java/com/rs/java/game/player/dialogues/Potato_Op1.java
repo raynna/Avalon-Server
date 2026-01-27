@@ -42,7 +42,7 @@ public class Potato_Op1 extends Dialogue {
 				break;
 			case OPTION_3:
 				player.setNextWorldTile(new WorldTile(Settings.HOME_PLAYER_LOCATION));
-				player.sendOrbParams();
+				player.unlock();
 				player.getInterfaceManager().sendTabInterfaces(false);
 				player.getControlerManager().removeControlerWithoutCheck();
 				end();

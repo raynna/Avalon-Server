@@ -203,7 +203,7 @@ public class NomadCombat extends CombatScript {
 								player.getPackets().sendVoice(8001);
 								player.setNextFaceWorldTile(new WorldTile(player.getX(), player.getY() + 1, 0));
 								player.gfx(new Graphics(369));
-								player.sendOrbParams();
+								player.unlock();
 								secondLoop = true;
 								WorldTasksManager.schedule(new WorldTask() {
 									@Override

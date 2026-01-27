@@ -36,7 +36,7 @@ public class BenefitTicket extends Dialogue {
 					public void run() {
 						sendDialogue("5 days of membership has successfully been added to your account!");
 						player.member = true;
-						player.sendOrbParams();
+						player.unlock();
 						player.makeMember(5);
 						stage = END;
 					}
@@ -51,7 +51,7 @@ public class BenefitTicket extends Dialogue {
 					public void run() {
 						sendDialogue("5,000,000 coins has successfully been added to your account.");
 						player.getMoneyPouch().addMoney(5000000, false);
-						player.sendOrbParams();
+						player.unlock();
 						stage = END;
 					}
 				}, 5);

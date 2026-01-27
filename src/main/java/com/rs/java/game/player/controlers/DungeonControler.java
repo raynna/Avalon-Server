@@ -1311,7 +1311,7 @@ public class DungeonControler extends Controler {
 		Magic.sendTeleportSpell(player, 13288, 13285, 2516, 2517, group ? 64 : 32, 0, tile, 2, false,
 				Magic.MAGIC_TELEPORT, group ? DungeonConstants.GROUP_GATESTONE_RUNES : new int[] {});
 		player.resetReceivedDamage();
-		player.sendOrbParams();
+		player.unlock();
 		// TODO player.setCantWalk(true);
 		player.getEmotesManager().setNextEmoteEnd(2000); // prevents dropping etc
 		WorldTasksManager.schedule(new WorldTask() {

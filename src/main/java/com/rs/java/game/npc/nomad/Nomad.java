@@ -84,7 +84,7 @@ public class Nomad extends NPC {
 					Dialogue.closeNoContinueDialogue(target);
 					FadingScreen.fade(target, () -> {
                         target.getControlerManager().forceStop();
-                        target.sendOrbParams();
+                        target.unlock();
                     });
 				}
 			}, getAttackSpeed() + 1);

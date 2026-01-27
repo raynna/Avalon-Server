@@ -3054,7 +3054,7 @@ public class Player extends Entity {
                     getPackets().sendResetCamera();
                     lodestone[object.getId() - 69827] = true;
                     refreshLodestoneNetwork();
-                    sendOrbParams();
+                    unlock();
                     stop();
                 }
                 count++;
@@ -3281,7 +3281,7 @@ public class Player extends Entity {
         if (hasFinished())
             return;
         stopAll();
-        sendOrbParams();
+        unlock();
         if (!World.containsLobbyPlayer(username)) {
             stopAll();
             cutscenesManager.logout();

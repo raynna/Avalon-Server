@@ -58,7 +58,7 @@ public class WhirlPool extends Action {
 			player.setNextWorldTile(TELE_LOC);
 		} else if (currentTime == 14) {
 			player.setNextWorldTile(TELE_LOC);
-			player.sendOrbParams();
+			player.unlock();
 		} else if (currentTime == 15)
 			return -1;
 		return 0;

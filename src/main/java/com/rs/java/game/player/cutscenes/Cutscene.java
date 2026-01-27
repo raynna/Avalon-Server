@@ -40,7 +40,7 @@ public abstract class Cutscene {
 		player.getPackets().sendVar(1241, 0);
 		player.getPackets().sendResetCamera();
 		player.setLargeSceneView(false);
-		player.sendOrbParams();
+		player.unlock();
 		deleteCache();
 		if (currentMapData != null) {
 			CoresManager.getSlowExecutor().execute(() -> {
