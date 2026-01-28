@@ -55,9 +55,12 @@ public class PrayerEffectHandler {
         if (reflectDamage > 0) {
             attacker.applyHit(new Hit(defender, reflectDamage, HitLook.REFLECTED_DAMAGE));
             defender.gfx(deflectPrayer.getGraphic());
-            CoresManager.getSlowExecutor().schedule(() -> {
-                defender.animate(deflectPrayer.getAnimation());
-            }, 60, TimeUnit.MILLISECONDS);
+            WorldTasksManager.schedule(new WorldTask() {
+                @Override
+                public void run() {
+                    defender.animate(deflectPrayer.getAnimation());
+                }
+            });
         }
     }
 
@@ -91,9 +94,8 @@ public class PrayerEffectHandler {
 
     private static void handleSoulSplitEffect(Player attacker, Entity target, Hit hit) {
         int damage = Math.min(hit.getDamage(), target.getHitpoints());
-        if (damage <= 0) return;
         Prayer soulSplit = AncientPrayer.SOUL_SPLIT;
-        ProjectileManager.sendSimple(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), attacker, target);
+        if (damage <= 0) return;
         int healAmount = (int)(damage * soulSplit.getHealPercentage());
         if (healAmount > 0 && attacker.getHitpoints() < attacker.getMaxHitpoints()) {
             attacker.heal(healAmount, true, false);
@@ -104,16 +106,11 @@ public class PrayerEffectHandler {
                 targetPlayer.getPrayer().drainPrayer(prayerDrain);
             }
         }
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                if (!isValidForSoulSplitEffect(attacker, target)) return;
-
-                target.gfx(soulSplit.getGraphic());
-                if (soulSplit.getProjectile() != null)
-                    ProjectileManager.sendSimple(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), target, attacker);
-            }
-        }, Utils.getDistance(attacker, target) > 2 ? 2 : 1);
+        ProjectileManager.send(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), attacker, target, () -> {
+            if (!isValidForSoulSplitEffect(attacker, target)) return;
+            target.gfx(soulSplit.getGraphic());
+            ProjectileManager.sendSimple(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), target, attacker);
+        });
     }
 
     private static boolean isValidForSoulSplitEffect(Player attacker, Entity target) {
@@ -146,12 +143,14 @@ public class PrayerEffectHandler {
     }
 
     private static void playLeechEffects(Player attacker, Entity target, AncientPrayer prayer) {
-        attacker.animateNoCheck(new Animation(Rscm.lookup("animation.curses_leech")));
-        ProjectileManager.sendWithGraphic(Projectile.LEECH, prayer.getProjectile().getId(), attacker, target, prayer.getGraphic());
+        attacker.animate(Rscm.lookup("animation.curses_leech"));
+        ProjectileManager.send(Projectile.LEECH, prayer.getProjectile().getId(), attacker, target, () -> {
+            target.gfx(prayer.getGraphic());
+        });
         String statAffected = prayer.getName().replace("Leech ", "");
-        attacker.getPackets().sendGameMessage("Your curse drains " + statAffected + " from the enemy, boosting your " + statAffected + ".", true);
+        attacker.message("Your curse drains " + statAffected + " from the enemy, boosting your " + statAffected + ".", true);
         if (target instanceof Player p2) {
-            p2.getPackets().sendGameMessage("Your " + statAffected + " has been drained by an enemy curse.", true);
+            p2.message("Your " + statAffected + " has been drained by an enemy curse.", true);
         }
     }
 
@@ -164,7 +163,7 @@ public class PrayerEffectHandler {
         PrayerBook attackerPrayer = attacker.getPrayer();
 
         if (attackerPrayer.reachedMax(prayer.getLeechBonusIndex()) || attackerPrayer.reachedMin(prayer.getLeechBonusIndex())) {
-            attacker.getPackets().sendGameMessage("You are boosted so much that your leech curse has no effect.", true);
+            attacker.message("You are boosted so much that your leech curse has no effect.", true);
             return;
         }
 
@@ -177,9 +176,10 @@ public class PrayerEffectHandler {
 
     private static void handleSpecialLeechCases(Player attacker, Entity target, AncientPrayer prayer) {
         if (target instanceof Player defender) {
-            attacker.animateNoCheck(new Animation(Rscm.lookup("animation.curses_leech")));
-            World.sendLeechProjectile(attacker, defender, prayer.getProjectile().getId());
-            ProjectileManager.sendSimple(Projectile.LEECH, prayer.getProjectile().getId(), attacker, defender);
+            attacker.animate(Rscm.lookup("animation.curses_leech"));
+            ProjectileManager.send(Projectile.LEECH, prayer.getProjectile().getId(), attacker, defender, () -> {
+                defender.gfx(prayer.getGraphic());
+            });
             if (prayer == AncientPrayer.LEECH_ENERGY) {
                 handleRunEnergyDrain(attacker, defender, prayer);
             } else if (prayer == AncientPrayer.LEECH_SPECIAL) {
@@ -191,8 +191,7 @@ public class PrayerEffectHandler {
     private static void handleRunEnergyDrain(Player attacker, Player defender, AncientPrayer prayer) {
         int defenderEnergy = defender.getRunEnergy();
         if (defenderEnergy <= 0) {
-            attacker.message(
-                    "Your opponent has too little run energy for your curse to take effect.", true);
+            attacker.message("Your opponent has too little run energy for your curse to take effect.", true);
             return;
         }
         int maxLeech = 10, maxEnergy = 100;
