@@ -32,6 +32,7 @@ class TournamentGame(
         players.forEach {
             it.activePvPGame = this
             it.setCanPvp(false)
+            it.packets.sendGlobalVar(271, 3)//set ingame var to show you & opponent instead of participants
             it.packets.sendGlobalVar(270, countdownTicks)
             it.packets.sendGlobalVar(260, 0)
             it.message("Loadout: ${lobby.getTournamentPreset().name}")

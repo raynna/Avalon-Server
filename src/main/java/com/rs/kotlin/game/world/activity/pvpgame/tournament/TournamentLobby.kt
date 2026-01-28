@@ -12,6 +12,7 @@ import com.rs.java.game.player.content.presets.PresetDefaults
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.command.CommandRegistry
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGameManager
+import com.rs.kotlin.game.world.activity.pvpgame.closePvPOverlay
 import com.rs.kotlin.game.world.activity.pvpgame.showResult
 import com.rs.kotlin.game.world.util.Msg
 
@@ -79,7 +80,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
                         val allPlayers = participants.toList()
                         for (p in allPlayers) {
                             restoreItems(p)
-                            p.interfaceManager.closeOverlay(false)
+                            p.closePvPOverlay()
                             p.activeTournament = null
                             p.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
                             p.message("The tournament didn't have enough players to start, you've been sent back home.")
@@ -100,6 +101,9 @@ class TournamentLobby(private val instance: TournamentInstance) {
         if (participants.contains(player)) {
             player.message("You are already in the tournament.")
             return
+        }
+        if (player.familiar != null) {
+            player.familiar.dissmissFamiliar(false)
         }
         participants.add(player)
         waitingPlayers.add(player)
@@ -149,7 +153,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
             restoreItems(player)
         }
 
-        player.interfaceManager.closeOverlay(false)
+        player.closePvPOverlay()
         player.activeTournament = null
 
         player.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
@@ -167,6 +171,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
                 player.skills.refresh(i)
             }
         }
+        player.prayer.reset()
         player.appearence.generateAppearenceData()
         CommandRegistry.execute(player, "heal")
     }
@@ -178,18 +183,9 @@ class TournamentLobby(private val instance: TournamentInstance) {
             if (p.hasFinished() || !p.hasStarted()) continue
             if (!p.interfaceManager.containsInterface(265))
             p.interfaceManager.sendOverlay(265, false)
-
-            p.packets.sendTextOnComponent(265, 1, "Waiting:")
-            p.packets.sendTextOnComponent(265, 2, "Waiting:")
-            p.packets.sendTextOnComponent(265, 3, "Waiting:")
-            p.packets.sendTextOnComponent(265, 9, "Winners:")
-            p.packets.sendGlobalVar(
-                261, waitingPlayers.size
-            )
-            p.packets.sendGlobalVar(
-                262,
-                participants.size
-            )
+            p.packets.sendGlobalVar(271, 2)//set text to participants on left side
+            p.packets.sendGlobalVar(262, waitingPlayers.size)
+            p.packets.sendGlobalVar(261, participants.size)
             p.packets.sendGlobalVar(260, 0)
             if (nextFight > 0) {
                 p.packets.sendGlobalVar(270, nextFight) // ticks
@@ -252,7 +248,12 @@ class TournamentLobby(private val instance: TournamentInstance) {
 
             val scoreW = finalScores[winner] ?: 0
             val scoreL = finalScores[loser] ?: 0
-
+            if (scoreW >= 2) {
+                winner.showResult(winner)
+                loser.showResult(null)
+                finishTournament(winner)
+                return
+            }
             winner.message("You won this round! Next fight starting soon")
             winner.message("You have $scoreW wins in the final (best of 3).")
 
@@ -262,17 +263,13 @@ class TournamentLobby(private val instance: TournamentInstance) {
             preparePlayer(winner)
             preparePlayer(loser)
 
-            if (scoreW >= 2) {
-                finishTournament(winner)
-                winner.showResult(winner)
-                return
-            }
-
             winner.nextWorldTile = getLobby1Tile()
             loser.nextWorldTile = getLobby1Tile()
 
             waitingPlayers.add(winner)
             waitingPlayers.add(loser)
+            loser.interfaceManager.sendOverlay(265, false)//just to refresh interface
+            winner.interfaceManager.sendOverlay(265, false)
 
             scheduleNextMatch(false)
             return
@@ -303,7 +300,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
             try {
                 for (p in allPlayers) {
                     restoreItems(p)
-                    p.interfaceManager.closeOverlay(false)
+                    p.closePvPOverlay()
                     p.activeTournament = null
                     p.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
                     p.message("The tournament has ended. You’ve been sent back home.")

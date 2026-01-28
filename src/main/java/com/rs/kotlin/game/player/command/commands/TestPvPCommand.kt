@@ -10,7 +10,7 @@ import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentScheduler
 class TestPvPCommand : Command {
     override val requiredRank = Ranks.Rank.DEVELOPER
     override val description = "Test PvP games (Tournament or LMS)"
-    override val usage = "::pvp <tournament|lms|end> [opponentName]"
+    override val usage = "::pvptest <tournament|lms|end> [opponentName]"
 
     override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         // Debug: print raw args

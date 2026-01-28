@@ -20,7 +20,7 @@ public enum AncientPrayer implements Prayer {
         @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_deflect_magic")); }
         @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
     },
-    DEFLECT_MISSILES(8, 65, 12, "Deflect Missiles") {
+    DEFLECT_MISSILES(8, 68, 12, "Deflect Missiles") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
             return new PrayerConflictGroup[]{PrayerConflictGroup.PROTECTION, PrayerConflictGroup.OVERHEAD};
         }
@@ -32,7 +32,7 @@ public enum AncientPrayer implements Prayer {
         @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_deflect_ranged")); }
         @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
     },
-    DEFLECT_MELEE(9, 65, 12, "Deflect Melee") {
+    DEFLECT_MELEE(9, 71, 12, "Deflect Melee") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
             return new PrayerConflictGroup[]{PrayerConflictGroup.PROTECTION, PrayerConflictGroup.OVERHEAD};
         }
@@ -44,7 +44,7 @@ public enum AncientPrayer implements Prayer {
         @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_deflect_melee")); }
         @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
     },
-    DEFLECT_SUMMONING(6, 85, 12, "Deflect Summoning") {
+    DEFLECT_SUMMONING(6, 62, 12, "Deflect Summoning") {
         @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.OTHER}; }
         @Override public boolean isProtectionPrayer() { return true; }
         @Override public boolean isDeflectPrayer() { return true; }
@@ -71,7 +71,7 @@ public enum AncientPrayer implements Prayer {
         @Override public int getAffectedStatIndex() { return Skills.PRAYER; }
     },
 
-    LEECH_ATTACK(10, 62, 9, "Leech Attack") {
+    LEECH_ATTACK(10, 74, 9, "Leech Attack") {
         @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.SAP_CURSES, PrayerConflictGroup.MELEE}; }
         @Override public int getAffectedStatIndex() { return Skills.ATTACK; }
         @Override public double getAttackBoost() { return 0.05; }
@@ -79,7 +79,7 @@ public enum AncientPrayer implements Prayer {
         @Override public Graphics getProjectile() { return new Graphics(Rscm.lookup("graphic.curses_leech_attack_projectile")); }
         @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_leech_attack_gfx")); }
     },
-    LEECH_RANGED(11, 64, 9, "Leech Ranged") {
+    LEECH_RANGED(11, 76, 9, "Leech Ranged") {
         @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.SAP_CURSES, PrayerConflictGroup.MELEE}; }
         @Override public int getAffectedStatIndex() { return Skills.RANGE; }
         @Override public double getRangedBoost() { return 0.05; }
@@ -87,7 +87,7 @@ public enum AncientPrayer implements Prayer {
         @Override public Graphics getProjectile() { return new Graphics(Rscm.lookup("graphic.curses_leech_ranged_projectile")); }
         @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_leech_ranged_gfx")); }
     },
-    LEECH_MAGIC(12, 66, 9, "Leech Magic") {
+    LEECH_MAGIC(12, 78, 9, "Leech Magic") {
         @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.SAP_CURSES, PrayerConflictGroup.MELEE}; }
         @Override public int getAffectedStatIndex() { return Skills.MAGIC; }
         @Override public double getMagicBoost() { return 0.05; }
@@ -95,7 +95,7 @@ public enum AncientPrayer implements Prayer {
         @Override public Graphics getProjectile() { return new Graphics(Rscm.lookup("graphic.curses_leech_magic_projectile")); }
         @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_leech_magic_gfx")); }
     },
-    LEECH_DEFENCE(13, 68, 9, "Leech Defence") {
+    LEECH_DEFENCE(13, 80, 9, "Leech Defence") {
         @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.SAP_CURSES, PrayerConflictGroup.MELEE}; }
         @Override public int getAffectedStatIndex() { return Skills.DEFENCE; }
         @Override public double getDefenceBoost() { return 0.05; }
@@ -103,7 +103,7 @@ public enum AncientPrayer implements Prayer {
         @Override public Graphics getProjectile() { return new Graphics(Rscm.lookup("graphic.curses_leech_defence_projectile")); }
         @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_leech_defence_gfx")); }
     },
-    LEECH_STRENGTH(14, 70, 9, "Leech Strength") {
+    LEECH_STRENGTH(14, 82, 9, "Leech Strength") {
         @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.SAP_CURSES, PrayerConflictGroup.MELEE}; }
         @Override public int getAffectedStatIndex() { return Skills.STRENGTH; }
         @Override public double getStrengthBoost() { return 0.05; }
@@ -111,10 +111,10 @@ public enum AncientPrayer implements Prayer {
         @Override public Graphics getProjectile() { return new Graphics(Rscm.lookup("graphic.curses_leech_strength_projectile")); }
         @Override public Graphics getGraphic() { return new Graphics(Rscm.lookup("graphic.curses_leech_strength_gfx")); }
     },
-    LEECH_ENERGY(15, 72, 9, "Leech Energy") {
+    LEECH_ENERGY(15, 84, 9, "Leech Energy") {
         @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.SAP_CURSES, PrayerConflictGroup.SPECIAL_DRAIN, PrayerConflictGroup.MELEE}; }//TODO LEECH SPEC GROUP
     },
-    LEECH_SPECIAL(16, 74, 9, "Leech Special Attack", Rscm.lookup("graphic.curses_leech_special_activation"), Rscm.lookup("animation.curses_activation_prayer")) {
+    LEECH_SPECIAL(16, 86, 9, "Leech Special Attack", Rscm.lookup("graphic.curses_leech_special_activation"), Rscm.lookup("animation.curses_activation_prayer")) {
         @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.SAP_CURSES, PrayerConflictGroup.ENERGY_DRAIN, PrayerConflictGroup.SPECIAL_DRAIN, PrayerConflictGroup.MELEE}; }//TODO LEECH SPEC GROUP
     },
 
@@ -122,13 +122,13 @@ public enum AncientPrayer implements Prayer {
     PROTECT_ITEM_CURSE(0, 50, 2, "Protect Item", Rscm.lookup("graphic.curses_protect_item"), Rscm.lookup("animation.curses_protect_item")) {
         @Override public boolean isProtectItemPrayer() { return true; }
     },
-    BERSERK(5, 99, 2, "Berserk", Rscm.lookup("graphic.curses_berserker"), Rscm.lookup("animation.curses_berserker")),
-    WRATH(17, 59, 6, "Wrath") {
+    BERSERK(5, 59, 2, "Berserk", Rscm.lookup("graphic.curses_berserker"), Rscm.lookup("animation.curses_berserker")),
+    WRATH(17, 89, 6, "Wrath") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
             return new PrayerConflictGroup[]{PrayerConflictGroup.OTHER, PrayerConflictGroup.OVERHEAD};
         }
     },
-    SOUL_SPLIT(18, 80, 18, "Soul Split") {
+    SOUL_SPLIT(18, 92, 18, "Soul Split") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
             return new PrayerConflictGroup[]{PrayerConflictGroup.OTHER, PrayerConflictGroup.OVERHEAD};
         }

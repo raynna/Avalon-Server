@@ -756,6 +756,7 @@ public final class Commands {
         double dr = kill / death;
         if (kill == 0 && death == 0)
             dr = 0;
+        player.getInterfaceManager().closeOverlay(false);
         player.setNextForceTalk(
                 new ForceTalk("Kills: " + player.getKillCount() + " Deaths: " + player.getDeathCount()
                         + " Streak: " + player.get(Keys.IntKey.KILLSTREAK) + " Ratio: " + new DecimalFormat("##.#").format(dr)));
