@@ -52,8 +52,7 @@ object GeneralGraardorTable {
             drop(
                 "item.long_bone",
                 numerator = 1,
-                denominator = 400,
-                condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) })
+                denominator = 400)
             drop(
                 "item.curved_bone",
                 numerator = 1,

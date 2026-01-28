@@ -1,17 +1,17 @@
 package com.rs.kotlin.game.player.command.commands
 
 import com.rs.Settings
+import com.rs.java.game.item.Item
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Ranks
-import com.rs.java.game.player.Skills
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.getDropTableForNpc
 import com.rs.kotlin.game.player.command.Command
 import com.rs.kotlin.game.player.command.CommandArguments
 
 class DropTestCommand : Command {
     override val requiredRank = Ranks.Rank.DEVELOPER
-    override val description = "Set a level for a skill"
-    override val usage = "::setlevel <id> <level>"
+    override val description = "Test a npc drop & banks items"
+    override val usage = "::droptest <id> <level>"
 
     override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
         val cmdArgs = CommandArguments(args)
@@ -57,6 +57,7 @@ class DropTestCommand : Command {
 
         for ((itemId, totalAmount) in dropCounts) {
             player.getBank().addItem(itemId, totalAmount, true)
+            player.collectionLog.addItem(Item(itemId, totalAmount))
         }
 
         player.message("Simulated $times kills of NPC ID $npcId. Drops deposited to bank.")

@@ -35,28 +35,27 @@ public class AchievementsTab extends CustomTab {
 			UNMARKED_3 = 3898, MARKED_4 = 3899, UNMARKED_4 = 3900;
 
 	private static void sendComponentButtons(Player player) {
-		player.getPackets().sendHideIComponent(3003, BACK_BUTTON, true);
-		player.getPackets().sendHideIComponent(3003, FORWARD_BUTTON, true);
-		;
-		player.getPackets().sendHideIComponent(3003, 24, false);
-		player.getPackets().sendHideIComponent(3003, BLUE_STAR_COMP, false);
-		player.getPackets().sendSpriteOnIComponent(3003, BLUE_STAR_COMP, 1820);
-		player.getPackets().sendHideIComponent(3003, GREEN_STAR_COMP, false);
-		player.getPackets().sendSpriteOnIComponent(3003, GREEN_STAR_COMP, UNMARKED_1);
-		player.getPackets().sendHideIComponent(3003, RED_STAR_COMP, false);
-		player.getPackets().sendSpriteOnIComponent(3003, RED_STAR_COMP, UNMARKED_2);
-		player.getPackets().sendHideIComponent(3003, PURPLE_STAR_COMP, false);
-		player.getPackets().sendSpriteOnIComponent(3003, PURPLE_STAR_COMP, UNMARKED_3);
-		player.getPackets().sendHideIComponent(3003, YELLOW_STAR_COMP, false);
-		player.getPackets().sendSpriteOnIComponent(3003, YELLOW_STAR_COMP, UNMARKED_4);
+		player.getPackets().sendHideIComponent(3002, BACK_BUTTON, true);
+		player.getPackets().sendHideIComponent(3002, FORWARD_BUTTON, true);
+		player.getPackets().sendHideIComponent(3002, 24, false);
+		player.getPackets().sendHideIComponent(3002, BLUE_STAR_COMP, false);
+		player.getPackets().sendSpriteOnIComponent(3002, BLUE_STAR_COMP, 1820);
+		player.getPackets().sendHideIComponent(3002, GREEN_STAR_COMP, false);
+		player.getPackets().sendSpriteOnIComponent(3002, GREEN_STAR_COMP, UNMARKED_1);
+		player.getPackets().sendHideIComponent(3002, RED_STAR_COMP, false);
+		player.getPackets().sendSpriteOnIComponent(3002, RED_STAR_COMP, UNMARKED_2);
+		player.getPackets().sendHideIComponent(3002, PURPLE_STAR_COMP, false);
+		player.getPackets().sendSpriteOnIComponent(3002, PURPLE_STAR_COMP, UNMARKED_3);
+		player.getPackets().sendHideIComponent(3002, YELLOW_STAR_COMP, false);
+		player.getPackets().sendSpriteOnIComponent(3002, YELLOW_STAR_COMP, UNMARKED_4);
 	}
 
 	public static void open(Player player) {
 		sendComponentButtons(player);
 		for (int i = 3; i <= 22; i++)
-			player.getPackets().sendHideIComponent(3003, i, true);
+			player.getPackets().sendHideIComponent(3002, i, true);
 		for (int i = 28; i <= 56; i++)
-			player.getPackets().sendHideIComponent(3003, i, true);
+			player.getPackets().sendHideIComponent(3002, i, true);
 		player.getTemporaryAttributtes().put("ACHIEVEMENTTAB", 0);
 		player.getTemporaryAttributtes().remove("ACHIEVEMENTCATEGORY");
 		player.getTemporaryAttributtes().remove("GEARTAB");
@@ -76,20 +75,20 @@ public class AchievementsTab extends CustomTab {
 		}
 		for (AchievementsStore store : AchievementsStore.values()) {
 			if (store != null) {
-				player.getPackets().sendHideIComponent(3003, store.compId, false);
+				player.getPackets().sendHideIComponent(3002, store.compId, false);
 				if (store.text != null) {
-					player.getPackets().sendTextOnComponent(3003, store.compId, store.text);
+					player.getPackets().sendTextOnComponent(3002, store.compId, store.text);
 				}
 			}
 		}
 		double percentage = getPercentage(currentActions, totalActions);
-		player.getPackets().sendTextOnComponent(3003, 24,
+		player.getPackets().sendTextOnComponent(3002, 24,
 				completedTasks + "/" + totalTasks + (percentage == 100 ? "" : " ")
 						+ (percentage == 100 ? "<col=04BB3B>" : percentage == 0 ? "<col=BB0404>" : "<col=FFF300>")
 						+ (percentage == 100 ? "100%" : new DecimalFormat("##.##").format(percentage) + "%"));
 		if (percentage == 100) {
-			player.getPackets().sendHideIComponent(3003, 10, false);
-			player.getPackets().sendTextOnComponent(3003, 10, "<col=04BB3B>You completed all " + totalTasks + " tasks!");
+			player.getPackets().sendHideIComponent(3002, 10, false);
+			player.getPackets().sendTextOnComponent(3002, 10, "<col=04BB3B>You completed all " + totalTasks + " tasks!");
 		}
 	}
 
@@ -178,20 +177,20 @@ public class AchievementsTab extends CustomTab {
 
 	public static void openTasks(Player player, String category) {
 		for (int i = 3; i <= 15; i++)
-			player.getPackets().sendHideIComponent(3003, i, true);
+			player.getPackets().sendHideIComponent(3002, i, true);
 		player.getTemporaryAttributtes().put("ACHIEVEMENTCATEGORY", category);
 		sendComponentButtons(player);
 		if (!category.contains("elite"))
-			player.getPackets().sendHideIComponent(3003, FORWARD_BUTTON, false);
-		player.getPackets().sendHideIComponent(3003, BACK_BUTTON, false);
+			player.getPackets().sendHideIComponent(3002, FORWARD_BUTTON, false);
+		player.getPackets().sendHideIComponent(3002, BACK_BUTTON, false);
 		if (category.contains("easy"))
-		player.getPackets().sendSpriteOnIComponent(3003, GREEN_STAR_COMP, MARKED_1);
+		player.getPackets().sendSpriteOnIComponent(3002, GREEN_STAR_COMP, MARKED_1);
 		else if (category.contains("medium"))
-			player.getPackets().sendSpriteOnIComponent(3003, RED_STAR_COMP, MARKED_2);
+			player.getPackets().sendSpriteOnIComponent(3002, RED_STAR_COMP, MARKED_2);
 		else if (category.contains("hard"))
-			player.getPackets().sendSpriteOnIComponent(3003, PURPLE_STAR_COMP, MARKED_3);
+			player.getPackets().sendSpriteOnIComponent(3002, PURPLE_STAR_COMP, MARKED_3);
 		else if (category.contains("elite"))
-			player.getPackets().sendSpriteOnIComponent(3003, YELLOW_STAR_COMP, MARKED_4);
+			player.getPackets().sendSpriteOnIComponent(3002, YELLOW_STAR_COMP, MARKED_4);
 		int i = 3;
 		completedTasks = 0;
 		totalTasks = 0;
@@ -207,20 +206,20 @@ public class AchievementsTab extends CustomTab {
 				totalTasks++;
 				if (player.getTaskManager().completedTask(store))
 					completedTasks++;
-				player.getPackets().sendHideIComponent(3003, i, false);
-				player.getPackets().sendTextOnComponent(3003, i,
+				player.getPackets().sendHideIComponent(3002, i, false);
+				player.getPackets().sendTextOnComponent(3002, i,
 						(player.getTaskManager().completedTask(store) ? "<col=04BB3B>"
 								: player.getTaskManager().getTaskStage(store) > 0 ? "<col=FFF300>" : "<col=BB0404>")
 								+ Utils.formatString(store.name()).replace("$", "'")
 								+ (store.getAmount() > 1 && !player.getTaskManager().completedTask(store) ? " ("
 										+ player.getTaskManager().getTaskStage(store) + "/" + store.getAmount() + ")"
 										: ""));
-				player.getPackets().sendTextOnComponent(3003, 25, Utils.formatString(category) + "");
+				player.getPackets().sendTextOnComponent(3002, 25, Utils.formatString(category) + "");
 				i++;
 			}
 		}
 		double percentage = getPercentage(currentActions, totalActions);
-		player.getPackets().sendTextOnComponent(3003, 24,
+		player.getPackets().sendTextOnComponent(3002, 24,
 				completedTasks + "/" + totalTasks + (percentage == 100 ? "" : " ")
 						+ (percentage == 100 ? "<col=04BB3B>" : percentage == 0 ? "<col=BB0404>" : "<col=FFF300>")
 						+ (percentage == 100 ? "100%" : new DecimalFormat("##.#").format(percentage) + "%"));

@@ -23,8 +23,6 @@ public class Item implements Serializable {
 	private int amount;
 	private ItemMetadata metadata;
 
-	// -------------------- Static helpers (unchanged) --------------------
-
 	private static String normalizeItemKey(String name) {
 		return name.startsWith("item.") ? name : "item." + name;
 	}

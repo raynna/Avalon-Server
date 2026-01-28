@@ -121,6 +121,13 @@ public class ButtonHandler {
             player.getDominionTower().handleButtons(interfaceId, componentId, slotId, packetId);
         if (interfaceId == 3010) {
             player.getShopSystem().handleItemOption(slotId2, packetId);
+        } else if (interfaceId == 3004) {
+            if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
+                if (componentId == 45) {
+                    player.message(ItemExamines.getExamine(new Item(slotId2)));
+                }
+                player.getCollectionLog().buttonClick(componentId);
+            }
         } else if (interfaceId == 548 || interfaceId == 746) {
             if (componentId == 75 || componentId == 99) {
                 player.getTemporaryAttributtes().put("ACHIEVEMENTTAB", 0);
@@ -214,6 +221,11 @@ public class ButtonHandler {
         } else if (interfaceId == 3002) {
             Integer tab = (Integer) player.temporaryAttribute().get("CUSTOMTAB");
             Integer gear = (Integer) player.getTemporaryAttributtes().get("GEARTAB");
+            Integer achievement = (Integer) player.getTemporaryAttributtes().get("ACHIEVEMENTTAB");
+            if (achievement != null) {
+                AchievementsTab.handleButtons(player, componentId);
+                return;
+            }
             if (gear != null) {
                 String otherPreset = (String) player.getTemporaryAttributtes().get("OTHERPRESET_NAME");
                 GearTab.handleButtons(player, otherPreset, componentId);
@@ -2873,7 +2885,7 @@ public class ButtonHandler {
                 slotIndex = rawSlot;
             }
             if (sentSlots.add(slotIndex)) {
-                int slotConfig = Rscm.lookup("varbit.death_kept_item_count") + keptSlotCount;
+                int slotConfig = 9222 + keptSlotCount;
                 player.getVarsManager().sendVarBit(slotConfig, slotIndex);
                 keptSlotCount++;
             }
@@ -2881,11 +2893,10 @@ public class ButtonHandler {
 
         //clear the unused slots
         for (int i = keptSlotCount; i < 4; i++) {
-            int slotConfig = Rscm.lookup("varbit.death_kept_item_count") + i;
-            player.getVarsManager().sendVarBit(slotConfig, -1);
+            player.getVarsManager().sendVarBit(9222 + i, -1);
         }
 
-        player.getVarsManager().sendVarBit("varbit.death_kept_item_count", Math.max(keptSlotCount, 1));
+        player.getVarsManager().sendVarBit(9227, Math.max(keptSlotCount, 1));
         player.getVarsManager().sendVarBit("varbit.death_in_unsafe_area", (wilderness || inFfa) ? 1 : 0);
         if (!inFfa) player.getVarsManager().sendVarBit("varbit.death_player_skulled", player.hasSkull() ? 1 : 0);
         StringBuffer text = new StringBuffer();

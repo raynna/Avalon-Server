@@ -47,6 +47,17 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
 
     override fun toString(): String = "DropTable(name='$name')"
 
+
+
+    fun getAllItemIdsForCollectionLog(): Set<Int> {
+        val set = mutableSetOf<Int>()
+
+        preRollDrops.forEach { it.itemId.let(set::add) }
+        tertiaryDrops.forEach { set.add(it.itemId) }
+        specialDrops.mutableEntries().forEach { set.add(it.itemId) }
+
+        return set
+    }
     // ------------------ Scopes ------------------
     fun alwaysDrops(block: MutableList<DropEntry>.() -> Unit) {
         currentContext = DropType.ALWAYS
@@ -314,5 +325,6 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
 
         println("[DROP EXPORT] Wrote ${file.path}")
     }
+
 
 }

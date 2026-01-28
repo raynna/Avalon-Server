@@ -43,6 +43,7 @@ import com.rs.java.game.objects.GlobalObjectDeletion;
 import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.actions.combat.QueuedInstantCombat;
 import com.rs.java.game.player.content.*;
+import com.rs.java.game.player.content.collectionlog.CollectionLog;
 import com.rs.java.game.player.prayer.*;
 import com.rs.java.game.player.Ranks.Rank;
 import com.rs.kotlin.Rscm;
@@ -184,6 +185,8 @@ public class Player extends Entity {
             activeTournament = null;
         }
     }
+
+
 
     //Area
     private transient Set<Area> lastAreas = Collections.emptySet();
@@ -990,6 +993,10 @@ public class Player extends Entity {
     private PrayerBook prayer;
 
     /**
+     * Collection log
+     */
+    private CollectionLog collectionLog;
+    /**
      * @Farming
      */
     private FarmingManager farmingManager;
@@ -1299,6 +1306,7 @@ public class Player extends Entity {
         musicsManager = new MusicsManager();
         emotesManager = new EmotesManager();
         friendsIgnores = new FriendsIgnores();
+        collectionLog = new CollectionLog();
         notes = new Notes();
         toolbelt = new Toolbelt();
         dominionTower = new DominionTower();
@@ -1407,6 +1415,8 @@ public class Player extends Entity {
             playerRank = new PlayerRank();
         if (questManager == null)
             questManager = new QuestManager(this);
+        if (collectionLog == null)
+            collectionLog = new CollectionLog();
         for (Puzzles puzzle : Puzzles.values()) {
             if (getPuzzleBox() == null)
                 puzzleBox = new PuzzleBox(this, puzzle.getFirstTileId());
@@ -1517,6 +1527,7 @@ public class Player extends Entity {
             healthOverlay = new HealthOverlay();
         if (timerOverlay == null)
             timerOverlay = new TimerOverlay();
+        collectionLog.init(this);
         treasureTrailsManager.setPlayer(this);
         lividFarm.setPlayer(this);
         playerRank.setPlayer(this);
@@ -4235,6 +4246,10 @@ public class Player extends Entity {
 
     public PrayerBook getPrayer() {
         return prayer;
+    }
+
+    public CollectionLog getCollectionLog() {
+        return collectionLog;
     }
 
     public long getSpecDelay() {

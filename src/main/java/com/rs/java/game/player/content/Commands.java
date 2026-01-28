@@ -757,6 +757,7 @@ public final class Commands {
         if (kill == 0 && death == 0)
             dr = 0;
         player.getInterfaceManager().closeOverlay(false);
+        player.getCollectionLog().open();
         player.setNextForceTalk(
                 new ForceTalk("Kills: " + player.getKillCount() + " Deaths: " + player.getDeathCount()
                         + " Streak: " + player.get(Keys.IntKey.KILLSTREAK) + " Ratio: " + new DecimalFormat("##.#").format(dr)));
@@ -790,6 +791,7 @@ public final class Commands {
             int itemId = entry.getKey();
             int totalAmount = entry.getValue();
             player.getBank().addItem(itemId, totalAmount, true);
+            player.getCollectionLog().addItem(new Item(itemId, totalAmount));
         }
 
         player.message("Simulated " + times + " kills of NPC ID " + npcId + ". Drops deposited to bank.");
@@ -2399,7 +2401,8 @@ public final class Commands {
 
         try {
             int scriptId = Integer.parseInt(cmd[1]);
-            player.getPackets().sendRunScript(scriptId);
+            int arg = Integer.parseInt(cmd[2]);
+            player.getPackets().sendRunScript(scriptId, arg);
             player.message("Sent script " + scriptId);
         } catch (NumberFormatException e) {
             player.message("Invalid parameters.");

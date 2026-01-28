@@ -4,21 +4,25 @@ import com.displee.cache.CacheLibrary;
 import com.displee.cache.index.archive.Archive;
 import com.displee.cache.index.archive.file.File;
 
-
 public class InterfaceCopyTool {
 
 	private static final String CACHE_PATH = "data/cache/";
+	private static final String CACHE_PATH2 = "data/onyxcache/cache/";
 
 	public static void main(String[] args) {
 
-		int sourceInterface = 3002; // interface to copy FROM
-		int destinationInterface = 3003; // interface to copy TO
+		int sourceInterface = 3031;       // interface from other cache
+		int destinationInterface = 3004;  // interface in your cache
 
 		try {
 			CacheLibrary cache = new CacheLibrary(CACHE_PATH, false, null);
+			CacheLibrary fromCache = new CacheLibrary(CACHE_PATH2, false, null);
 
+			// Update both indexes
 			cache.index(3).update();
-			System.out.println("Index 3 updated.");
+			fromCache.index(3).update();
+
+			System.out.println("Index 3 updated in both caches.");
 
 			Archive destArchive = cache.index(3).archive(destinationInterface);
 			if (destArchive != null) {
@@ -30,10 +34,10 @@ public class InterfaceCopyTool {
 				}
 			}
 
-			Archive sourceArchive = cache.index(3).archive(sourceInterface);
+			Archive sourceArchive = fromCache.index(3).archive(sourceInterface);
 
 			if (sourceArchive == null) {
-				System.out.println("Source interface does not exist!");
+				System.out.println("Source interface does not exist in external cache!");
 				return;
 			}
 
@@ -52,7 +56,8 @@ public class InterfaceCopyTool {
 			cache.index(3).update();
 
 			System.out.println("Successfully copied interface "
-					+ sourceInterface + " → " + destinationInterface);
+					+ sourceInterface + " from external cache → "
+					+ destinationInterface + " in your cache.");
 
 		} catch (Exception e) {
 			e.printStackTrace();

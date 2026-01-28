@@ -20,6 +20,7 @@ import com.rs.java.game.item.ground.AutomaticGroundItem;
 import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.npc.NpcPluginLoader;
 import com.rs.java.game.npc.combat.CombatScriptsHandler;
+import com.rs.java.game.player.content.collectionlog.CollectionLog;
 import com.rs.json.JsonNpcCombatDefinitions;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.data.npc.JsonNpcSpawns;
@@ -148,6 +149,7 @@ public final class Launcher {
                 "World is up and running!",
                 null
         );
+		CollectionLog.init();
 		RandomWorldBossHandler.start();
 		TournamentScheduler.INSTANCE.start();
     }

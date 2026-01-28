@@ -588,6 +588,7 @@ public class Bank implements Serializable {
 		player.getInterfaceManager().sendInterface(762);
 		player.getInterfaceManager().sendInventoryInterface(763);
 		unlockButtons();
+		player.getPackets().sendRunScript(6255);
 	}
 
 	public void refreshLastX() {

@@ -16,8 +16,8 @@ public class QuestTab extends CustomTab {
 
 	public enum QuestStore {
 		
-		TITLE(24, "Quests"),
-		POINTS(25, "Points"),
+		TITLE(25, "Quests"),
+		POINTS(24, "Points"),
 		COOKSASSISTANT(3, Quests.COOKS_ASSISTANT),
 		DEMONSLAYER(4, Quests.DEMON_SLAYER),
 		DORICSQUEST(5, Quests.DORICS_QUEST),

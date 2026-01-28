@@ -25,6 +25,7 @@ import com.rs.java.game.npc.combat.NPCCombat;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.TickManager;
+import com.rs.java.game.player.content.collectionlog.CategoryType;
 import com.rs.json.JsonNpcCombatDefinitions;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.combatdata.*;
@@ -978,6 +979,7 @@ public class NPC extends Entity implements Serializable {
                 } else if (EconomyPrices.getPrice(item.getId()) >= 1_000_000) {
                     sendLootBeam(item, player, this);
                 }
+                player.getCollectionLog().addItem(item);
                 if (EconomyPrices.getPrice(item.getId()) >= 1000000) {
                     World.sendWorldMessage(
                             "<img=7><col=36648b>News: " + player.getDisplayName() + " has recieved "

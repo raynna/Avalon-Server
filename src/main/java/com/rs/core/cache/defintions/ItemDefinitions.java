@@ -492,11 +492,13 @@ ItemDefinitions {
     }
 
     public int getStageOnDeath() {
-        if (clientScriptData == null)
-            return 0;
         Item item = new Item(id);
         if (ItemConstants.keptOnDeath(item))
             return 1;
+        if (!isTradeable())
+            return 1;
+        if (clientScriptData == null)
+            return 0;
         Object protectedOnDeath = clientScriptData.get(1397);
         if (protectedOnDeath != null && protectedOnDeath instanceof Integer)
             return (Integer) protectedOnDeath;
@@ -1297,6 +1299,10 @@ getRenderAnimId = clientScriptData.get(644); (1426 if getRenderAnimId = null)
     }
 
     public boolean isTradeable() {
+        if (isBindItem())
+            return false;
+        if (isDestroyItem())
+            return false;
         if (ItemConstants.isTradeable(new Item(id)))
             return true;
         return false;

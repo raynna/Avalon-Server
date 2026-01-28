@@ -540,29 +540,32 @@ public class WorldPacketsEncoder extends Encoder {
 	public void sendRunScript(int scriptId, Object... params) {
 		OutputStream stream = new OutputStream();
 		stream.writePacketVarShort(player, 119);
-		String parameterTypes = "";
+
+		StringBuilder types = new StringBuilder();
+
 		if (params != null) {
-			for (int count = params.length - 1; count >= 0; count--) {
-				if (params[count] instanceof String)
-					parameterTypes += "s"; // string
-				else
-					parameterTypes += "i"; // integer
+			for (int i = params.length - 1; i >= 0; i--) {
+				types.append(params[i] instanceof String ? 's' : 'i');
 			}
 		}
-		stream.writeString(parameterTypes);
+
+		stream.writeString(types.toString());
+
 		if (params != null) {
 			int index = 0;
-			for (int count = parameterTypes.length() - 1; count >= 0; count--) {
-				if (parameterTypes.charAt(count) == 's')
+			for (int i = types.length() - 1; i >= 0; i--) {
+				if (types.charAt(i) == 's')
 					stream.writeString((String) params[index++]);
 				else
-					stream.writeInt((Integer) params[index++]);
+					stream.writeInt(((Number) params[index++]).intValue());
 			}
 		}
+
 		stream.writeInt(scriptId);
 		stream.endPacketVarShort();
 		session.write(stream);
 	}
+
 
 	public void sendGlobalVar(String var, int value) {
 		int id = Rscm.lookup(var);
@@ -1359,6 +1362,7 @@ public class WorldPacketsEncoder extends Encoder {
 		stream.endPacketVarShort();
 		session.write(stream);
 	}
+
 
 	public void sendLogout(boolean lobby) {
 		// Highscores.highscores(player, null);
