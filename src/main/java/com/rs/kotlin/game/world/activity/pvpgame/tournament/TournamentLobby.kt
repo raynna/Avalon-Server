@@ -78,6 +78,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
                     } else {
                         val allPlayers = participants.toList()
                         for (p in allPlayers) {
+                            restoreItems(p)
                             p.interfaceManager.closeOverlay(false)
                             p.activeTournament = null
                             p.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
@@ -350,7 +351,8 @@ class TournamentLobby(private val instance: TournamentInstance) {
         waitingPlayers.remove(player)
         participants.remove(player)
         player.activeTournament = null
-        player.location = Settings.HOME_PLAYER_LOCATION // force-save safe coords
+        player.location = Settings.HOME_PLAYER_LOCATION
+        restoreItems(player)
     }
 
 

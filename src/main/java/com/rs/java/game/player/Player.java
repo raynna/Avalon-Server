@@ -112,6 +112,7 @@ import com.rs.kotlin.game.player.interfaces.TimerOverlay;
 import com.rs.kotlin.game.player.shop.ShopSystem;
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGame;
 import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentInstance;
+import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentLobby;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
@@ -3224,6 +3225,9 @@ public class Player extends Entity {
 
         Logger.log("Player", username + " has logged out.");
         PvpManager.onLogout(this);
+        if (activeTournament != null) {
+            activeTournament.getLobby().onLogout(this);
+        }
         timerOverlay.clearAll(this);
         TicketSystem.destroyChatOnLogOut(this);
         AntiBot.getInstance().destroy(this);
