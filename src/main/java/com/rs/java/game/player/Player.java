@@ -145,7 +145,8 @@ public class Player extends Entity {
     private Item[] tempInventory;
     private Item[] tempEquipment;
 
-
+    public double[] tempXpSnapshot;
+    public short[] tempLevelSnapshot;
     public Item[] getTempInventory() {
         return tempInventory;
     }

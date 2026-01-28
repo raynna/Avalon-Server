@@ -309,7 +309,7 @@ public abstract class Familiar extends NPC implements Serializable {
 		sendTimeRemaining();
 
 		// Set summoning cost (VARPBIT 4288)
-		owner.getVarsManager().setVarBit(4288, pouch.getSummoningCost());
+		owner.getVarsManager().setVarBit(4288, getSpecialAmount());
 
 		owner.getPackets().sendGlobalString(204, getSpecialName());
 		owner.getPackets().sendGlobalString(205, getSpecialDescription());

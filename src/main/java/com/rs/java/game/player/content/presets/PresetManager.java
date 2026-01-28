@@ -11,6 +11,7 @@ import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.controlers.EdgevillePvPControler;
 import com.rs.java.utils.EconomyPrices;
@@ -448,4 +449,98 @@ public final class PresetManager implements Serializable {
         CommandRegistry.execute(player, "heal");
         Msg.info(player, "You copied " + p2.getDisplayName() + " current preset.");
     }
+
+    // ============================================
+    // TOURNAMENT / FORCE PRESET APPLY
+    // ============================================
+
+    public void applyPreset(Preset preset) {
+
+        if (preset == null)
+            return;
+
+        player.getInventory().reset();
+        player.getEquipment().reset();
+        player.getRunePouch().reset();
+        player.getPrayer().reset();
+
+        player.getInventory().refresh();
+        player.getEquipment().refresh();
+
+        double[] levels = preset.getLevels();
+
+        int[] combatSkills = {
+                Skills.ATTACK,
+                Skills.DEFENCE,
+                Skills.STRENGTH,
+                Skills.HITPOINTS,
+                Skills.RANGE,
+                Skills.PRAYER,
+                Skills.MAGIC
+        };
+
+        for (int i = 0; i < combatSkills.length; i++) {
+            player.getSkills().setXp(
+                    combatSkills[i],
+                    Skills.getXPForLevel((int) levels[i])
+            );
+
+            player.getSkills().set(
+                    combatSkills[i],
+                    (int) levels[i]
+            );
+
+            player.getSkills().refresh(combatSkills[i]);
+        }
+
+        Item[] equipment = preset.getEquipment();
+        if (equipment != null) {
+            for (Item item : equipment) {
+
+                if (item == null)
+                    continue;
+
+                Item copy = item.copy();
+                handleForcedCharges(copy);
+
+                int slot = copy.getDefinitions().getEquipSlot();
+
+                if (slot < 0)
+                    continue;
+
+                player.getEquipment().getItems().set(slot, copy);
+                player.getEquipment().refresh(slot);
+            }
+        }
+
+        Item[] inventory = preset.getInventory();
+        if (inventory != null) {
+            for (Item item : inventory) {
+
+                if (item == null)
+                    continue;
+
+                Item copy = item.copy();
+                handleForcedCharges(copy);
+
+                player.getInventory().addItem(copy);
+            }
+        }
+
+        Item[] runes = preset.getRunes();
+        if (runes != null) {
+            for (Item rune : runes) {
+                if (rune != null)
+                    player.getRunePouch().add(rune.copy());
+            }
+        }
+        player.getCombatDefinitions().setSpellBook(preset.getSpellBook(), false);
+        player.getPrayer().setPrayerBook(preset.isAncientCurses());
+
+        player.getAppearence().generateAppearenceData();
+        player.getSkills().switchXPPopup(true);
+        player.getSkills().switchXPPopup(true);
+        CommandRegistry.execute(player, "heal");
+    }
+
 }

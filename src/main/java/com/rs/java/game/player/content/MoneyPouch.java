@@ -246,8 +246,8 @@ public class MoneyPouch implements Serializable {
 		int total = getTotal();
 
 		if (total + amount < 0) { // overflow
-			player.getPackets().sendGameMessage("Your money pouch can't hold that much cash.");
-			World.addGroundItem(new Item(995, amount), player, player, true, 60);
+			player.getPackets().sendGameMessage("Your money pouch can't hold that much cash, cash was dropped on the ground.");
+			World.updateGroundItem(new Item(995, amount), player, player, 60, 1);
 			return;
 		}
 

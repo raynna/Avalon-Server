@@ -1,28 +1,23 @@
 package com.rs.kotlin.game.world.activity.pvpgame.tournament
 
-import TournamentLobby
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
-import com.rs.core.thread.CoresManager
 import com.rs.java.game.ForceTalk
-import com.rs.java.game.World
-import com.rs.kotlin.game.player.AccountCreation
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.actions.combat.Magic
-import com.rs.java.utils.Logger
-import com.rs.java.utils.Utils
+import com.rs.kotlin.game.player.command.CommandRegistry.execute
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGame
+import com.rs.kotlin.game.world.activity.pvpgame.PvPGameManager
 import com.rs.kotlin.game.world.activity.pvpgame.activePvPGame
 import com.rs.kotlin.game.world.activity.pvpgame.openPvPOverlay
-import com.rs.kotlin.game.world.activity.pvpgame.showResult
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 class TournamentGame(
     private val p1: Player,
     private val p2: Player,
-    private val lobby: TournamentLobby
+    val lobby: TournamentLobby
 ) : PvPGame() {
+
+    override fun shouldDestroyArea(): Boolean = false
 
     override fun start() {
         players.addAll(listOf(p1, p2))
@@ -36,10 +31,10 @@ class TournamentGame(
         p2.openPvPOverlay(p2, p1)
         players.forEach {
             it.activePvPGame = this
-            setupLoadout(it)
             it.setCanPvp(false)
             it.packets.sendGlobalVar(270, countdownTicks)
             it.packets.sendGlobalVar(260, 0)
+            it.message("Loadout: ${lobby.getTournamentPreset().name}")
             it.message("Tournament match will begin in $secondsRemaining seconds. Get ready!")
         }
 
@@ -66,51 +61,63 @@ class TournamentGame(
         //Safety: check if players are still present every tick
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
+
                 val stillHere = players.filter { it.isActive && !it.hasFinished() }
 
                 if (stillHere.size < 2) {
-                    // One player missing -> auto win for the other
+
+                    println("[TOURNAMENT] SAFETY TASK FIRED. stillHere=${stillHere.map { it.username }} players=${players.map { it.username }}")
+
+
                     val winner = stillHere.firstOrNull()
                     val loser = if (winner == p1) p2 else p1
+
+                    players.clear()
 
                     p1.setCanPvp(false)
                     p2.setCanPvp(false)
 
-                    if (winner != null && loser != null) {
+                    println("[TOURNAMENT] Safety unregistering PvPGame")
+                    PvPGameManager.unregisterGame(this@TournamentGame)
+
+                    if (winner != null) {
+                        println("[TOURNAMENT] Safety winner=${winner.username} loser=${loser.username}")
                         lobby.recordResult(winner, loser)
-                    } else {
-                        cleanup(null)
                     }
                     stop()
                 }
             }
-        }, 0, 1) // check every tick
-
-    }
+        }, 0, 1)
 
 
-
-    private fun setupLoadout(player: Player) {
-        player.inventory.reset()
-        player.equipment.reset()
-        // load some preset (this could be dynamic later)
-        val template = World.getPlayerByDisplayName("halfeco")
-            ?: AccountCreation.loadPlayer("halfeco")
-        if (template != null) {
-            player.presetManager.loadPreset("hybrid", template)
-        }
-        player.appearence.generateAppearenceData()
     }
 
     override fun onPlayerDeath(player: Player) {
+
+        println("[TOURNAMENT] onPlayerDeath fired. Dead=${player.username}")
+
         players.remove(player)
+
         val winner = players.firstOrNull()
+
+        println("[TOURNAMENT] Remaining players after death: ${players.map { it.username }}")
+
+        players.clear()
+
+        p1.setCanPvp(false)
+        p2.setCanPvp(false)
+
+        println("[TOURNAMENT] Unregistering PvPGame")
+        PvPGameManager.unregisterGame(this)
+
         if (winner != null) {
-            p1.setCanPvp(false)
-            p2.setCanPvp(false)
+            println("[TOURNAMENT] Winner by death = ${winner.username}")
             lobby.recordResult(winner, player)
         } else {
+            println("[TOURNAMENT] No winner found, cleanup")
             cleanup(null)
         }
     }
+
+
 }

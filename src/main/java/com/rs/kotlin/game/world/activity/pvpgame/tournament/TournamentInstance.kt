@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.world.activity.pvpgame.tournament
 
-import TournamentLobby
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.World
@@ -94,7 +93,6 @@ class TournamentInstance {
             for (y in instSouthWest.y..instNorthEast.y) {
                 for (z in 0..3) {
                     val tile = WorldTile(x, y, z)
-                    debugTile(tile)
 
                     World.getStandardFloorObject(tile)?.let { obj ->
                         if (shouldRemove(obj)) {

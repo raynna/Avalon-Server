@@ -447,6 +447,11 @@ object RandomWorldBossHandler {
         player.inventory.deleteItem(chest.id, 1)
         for (drop in drops) {
             val item = Item(drop.itemId, drop.amount)
+            if (item.id == 995) {
+                player.message(Msg.chestOpen("Your Magic Chest rewards you with ${item.amount} x ${item.name}!"))
+                player.moneyPouch.addMoney(item.amount, false)
+                continue
+            }
             player.inventory.addItem(item)
             player.message(Msg.chestOpen("Your Magic Chest rewards you with ${item.amount} x ${item.name}!"))
             val price = item.definitions.tipitPrice

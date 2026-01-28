@@ -1,9 +1,7 @@
 package com.rs.kotlin.game.world.activity.pvpgame.tournament
 
-import TournamentLobby
 import com.rs.core.thread.CoresManager
 import com.rs.discord.DiscordAnnouncer
-import com.rs.java.game.World
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.world.util.Msg
 import java.util.concurrent.ScheduledFuture

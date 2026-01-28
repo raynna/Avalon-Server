@@ -1,8 +1,8 @@
 package com.rs.kotlin.game.world.activity.pvpgame
 
-import TournamentLobby
 import com.rs.java.game.player.Player
 import com.rs.kotlin.game.world.activity.pvpgame.lms.LastManStandingLobby
+import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentLobby
 
 object PvPGameManager {
     private val activeGames = mutableListOf<PvPGame>()
