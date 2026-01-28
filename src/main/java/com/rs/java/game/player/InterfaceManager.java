@@ -313,7 +313,7 @@ public class InterfaceManager {
 	}
 
 	public void sendTaskSystem() {
-		sendTab(resizableScreen ? "tab.achievements_resizeable" : "tab.achievements", "interface.custom_quest");
+		sendTab(resizableScreen ? "tab.achievements_resizeable" : "tab.achievements", "interface.custom_achievement");
 	}
 
 	public void sendSkills() {

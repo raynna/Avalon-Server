@@ -19,22 +19,67 @@ public class SettingsTab extends CustomTab {
 
             @Override
             public String text(Player p) {
-                return "Toggles";
+                return "Settings";
             }
         },
 
-        SETTINGS(3) {
+        COMBATSETTINGS(3) {
             @Override
             public void usage(Player p) {
             }
 
             @Override
             public String text(Player p) {
-                return "<u>Settings";
+                return "<col="+ Colour.YELLOW.getHex() + "<u>Combat Settings";
             }
         },
 
-        BREAKVIALS(4) {
+        ONEXPPERHIT(4) {
+            @Override
+            public void usage(Player p) {
+                p.toggles.put("ONEXPPERHIT", !p.toggles("ONEXPPERHIT", false));
+                p.getSkills().switchXPPopup(true);
+                p.getSkills().switchXPPopup(true);
+            }
+
+            @Override
+            public String text(Player p) {
+                return "One XP per Hit: " + (p.toggles("ONEXPPERHIT", false) ? "<col=04BB3B>On" : "<col=BB0404>Off");
+            }
+        },
+
+        ONEXHITS(5) {
+            @Override
+            public void usage(Player p) {
+                boolean active = p.getVarsManager().getBitValue(1485) == 1;
+                p.getVarsManager().sendVarBit(1485, active ? 0 : 1, true);
+                p.getVarsManager().forceSendVarBit(9816, p.getPrayer().getPrayerPoints());
+                p.refreshHitPoints();
+                p.getSkills().switchXPPopup(true);
+                p.getSkills().switchXPPopup(true);
+            }
+
+            @Override
+            public String text(Player p) {
+                boolean active = p.getVarsManager().getBitValue(1485) == 1;
+                return "1x Hitpoints & prayer: " + (active ? "<col=04BB3B>On" : "<col=BB0404>Off");
+            }
+        },
+
+
+
+        SETTINGS(6) {
+            @Override
+            public void usage(Player p) {
+            }
+
+            @Override
+            public String text(Player p) {
+                return "<col="+ Colour.YELLOW.getHex() + "<u>General Settings";
+            }
+        },
+
+        BREAKVIALS(7) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("BREAK_VIALS", !p.toggles("BREAK_VIALS", false));
@@ -46,7 +91,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        IGNORE_LOWPRICE_ITEMS(5) {
+        IGNORE_LOWPRICE_ITEMS(8) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("IGNORE_LOW_VALUE", !p.toggles("IGNORE_LOW_VALUE", false));
@@ -58,7 +103,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        ITEMSLOOK(6) {
+        ITEMSLOOK(9) {
             @Override
             public void usage(Player p) {
                 p.switchItemsLook();
@@ -70,7 +115,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        FORCE_LEFTCLICK_ATTACK(7) {
+        FORCE_LEFTCLICK_ATTACK(10) {
             @Override
             public void usage(Player p) {
                 p.switchLeftClickAttack();
@@ -82,7 +127,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        SHIFTDROP(8) {
+        SHIFTDROP(11) {
             @Override
             public void usage(Player p) {
                 p.switchShiftDrop();
@@ -94,7 +139,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        DRAGSETTING(9) {
+        DRAGSETTING(12) {
             @Override
             public void usage(Player p) {
                 p.switchSlowDrag();
@@ -107,7 +152,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        ZOOMSETTING(10) {
+        ZOOMSETTING(13) {
             @Override
             public void usage(Player p) {
                 p.switchZoom();
@@ -119,7 +164,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        HEALTH_OVERLAY(11) {
+        HEALTH_OVERLAY(14) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("HEALTH_OVERLAY", !p.toggles("HEALTH_OVERLAY", false));
@@ -131,7 +176,7 @@ public class SettingsTab extends CustomTab {
                 return "Health Overlay: " + (p.toggles("HEALTH_OVERLAY", false) ? "<col=04BB3B>On" : "<col=BB0404>Off");
             }
         },
-        HITCHANCE(12) {
+        HITCHANCE(15) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("HITCHANCE_OVERLAY", !p.toggles("HITCHANCE_OVERLAY", false));
@@ -143,7 +188,7 @@ public class SettingsTab extends CustomTab {
                 return "Hitchance Overlay: " + (p.toggles("HITCHANCE_OVERLAY", false) ? "<col=04BB3B>On" : "<col=BB0404>Off");
             }
         },
-        LEVEL_BOOST(13) {
+        LEVEL_BOOST(16) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("LEVELSTATUS_OVERLAY", !p.toggles("LEVELSTATUS_OVERLAY", false));
@@ -156,7 +201,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        KDRINTER(14) {
+        KDRINTER(17) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("KDRINTER", !p.toggles("KDRINTER", false));
@@ -175,61 +220,18 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        COMBATSETTINGS(16) {
+        DROPS(18) {
             @Override
             public void usage(Player p) {
             }
 
             @Override
             public String text(Player p) {
-                return "<u>Combat Settings";
+                return "<col="+ Colour.YELLOW.getHex() + "Drop Settings";
             }
         },
 
-        ONEXPPERHIT(17) {
-            @Override
-            public void usage(Player p) {
-                p.toggles.put("ONEXPPERHIT", !p.toggles("ONEXPPERHIT", false));
-                p.getSkills().switchXPPopup(true);
-                p.getSkills().switchXPPopup(true);
-            }
-
-            @Override
-            public String text(Player p) {
-                return "One XP per Hit: " + (p.toggles("ONEXPPERHIT", false) ? "<col=04BB3B>On" : "<col=BB0404>Off");
-            }
-        },
-
-        ONEXHITS(18) {
-            @Override
-            public void usage(Player p) {
-                boolean active = p.getVarsManager().getBitValue(1485) == 1;
-                p.getVarsManager().sendVarBit(1485, active ? 0 : 1, true);
-                p.getVarsManager().forceSendVarBit(9816, p.getPrayer().getPrayerPoints());
-                p.refreshHitPoints();
-                p.getSkills().switchXPPopup(true);
-                p.getSkills().switchXPPopup(true);
-            }
-
-            @Override
-            public String text(Player p) {
-                boolean active = p.getVarsManager().getBitValue(1485) == 1;
-                return "1x Hitpoints & prayer: " + (active ? "<col=04BB3B>On" : "<col=BB0404>Off");
-            }
-        },
-
-        DROPS(20) {
-            @Override
-            public void usage(Player p) {
-            }
-
-            @Override
-            public String text(Player p) {
-                return "<u>Drop Settings";
-            }
-        },
-
-        LOOTBEAMS(21) {
+        LOOTBEAMS(19) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("LOOTBEAMS", !p.toggles("LOOTBEAMS", false));
@@ -241,7 +243,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        UNTRADEABLEMESSAGE(22) {
+        UNTRADEABLEMESSAGE(20) {
             @Override
             public void usage(Player p) {
                 p.toggles.put("UNTRADEABLEMESSAGE", !p.toggles("UNTRADEABLEMESSAGE", false));
@@ -254,7 +256,7 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        DROPVALUE(23) {
+        DROPVALUE(21) {
             @Override
             public void usage(Player p) {
                 p.getTemporaryAttributtes().put("SET_DROPVALUE", Boolean.TRUE);
@@ -268,17 +270,17 @@ public class SettingsTab extends CustomTab {
             }
         },
 
-        DEVELOPER_SETTINGS(30) {
+        DEVELOPER_SETTINGS(22) {
             @Override
             public void usage(Player p) {
             }
 
             @Override
             public String text(Player p) {
-                return "<u>Developer Settings";
+                return "<col="+ Colour.YELLOW.getHex() + "<u>Developer Settings";
             }
         },
-        INTERACTIVE(31) {
+        INTERACTIVE(28) {
             @Override
             public void usage(Player p) {
                 p.switchDeveloperMode();

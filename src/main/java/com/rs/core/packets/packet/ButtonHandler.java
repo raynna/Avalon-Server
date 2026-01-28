@@ -205,14 +205,16 @@ public class ButtonHandler {
             }
         } else if (interfaceId == 1083) {
             LividStore.handleButtons(player, componentId);
-        } else if (interfaceId == 3002) {
-            Integer tab = (Integer) player.temporaryAttribute().get("CUSTOMTAB");
+        } else if (interfaceId == 3003) {
             Integer achievement = (Integer) player.getTemporaryAttributtes().get("ACHIEVEMENTTAB");
-            Integer gear = (Integer) player.getTemporaryAttributtes().get("GEARTAB");
             if (achievement != null) {
                 AchievementsTab.handleButtons(player, componentId);
                 return;
-            } else if (gear != null) {
+            }
+        } else if (interfaceId == 3002) {
+            Integer tab = (Integer) player.temporaryAttribute().get("CUSTOMTAB");
+            Integer gear = (Integer) player.getTemporaryAttributtes().get("GEARTAB");
+            if (gear != null) {
                 String otherPreset = (String) player.getTemporaryAttributtes().get("OTHERPRESET_NAME");
                 GearTab.handleButtons(player, otherPreset, componentId);
                 return;
