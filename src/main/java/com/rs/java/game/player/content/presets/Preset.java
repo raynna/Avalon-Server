@@ -15,18 +15,18 @@ public final class Preset implements Serializable {
 	private final boolean curses;
 	private final byte spellBook;
 	private String name;
-	private final double[] xp;
+	private final int[] levels;
 	private final Item[] runes;
 	private final Summoning.Pouch familiarPouch;
 
 	public Preset(String name, final Item[] inventory, final Item[] equipment, boolean curses, byte spellBook,
-			double[] xp, Item[] runes, Summoning.Pouch pouch) {
+			int[] levels, Item[] runes, Summoning.Pouch pouch) {
 		this.name = name;
 		this.inventory = inventory;
 		this.equipment = equipment;
 		this.curses = curses;
 		this.spellBook = spellBook;
-		this.xp = xp;
+		this.levels = levels;
 		this.runes = runes;
 		this.familiarPouch = pouch;
 		/*int i = 0;
@@ -86,8 +86,8 @@ public final class Preset implements Serializable {
 		return spellBook;
 	}
 
-	public double[] getLevels() {
-		return xp;
+	public int[] getLevels() {
+		return levels;
 	}
 
 	public int getId(final Player player) {

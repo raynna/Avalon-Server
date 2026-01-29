@@ -198,6 +198,8 @@ public abstract class Familiar extends NPC implements Serializable {
 	}
 
 	public boolean canAttack(Entity target) {
+		if (target == null)
+			return false;
 		if (target instanceof Player) {
 			if (target == owner)
 				return false;
@@ -224,7 +226,9 @@ public abstract class Familiar extends NPC implements Serializable {
 				}
 			}
 		}
-		return !target.isDead() && ((target.isAtMultiArea()) || (target.isForceMultiArea()))
+		if (target.isDead() || target.hasFinished())
+			return false;
+		return ((target.isAtMultiArea()) || (target.isForceMultiArea()))
 				&& owner.getControlerManager().canAttack(target);
 	}
 

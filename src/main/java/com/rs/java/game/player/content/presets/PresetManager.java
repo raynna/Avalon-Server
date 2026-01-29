@@ -76,7 +76,7 @@ public final class PresetManager implements Serializable {
         Summoning.Pouch pouch = (familiar != null && familiar.getPouch() != null) ? familiar.getPouch() : null;
         PRESET_SETUPS.put(name,
                 new Preset(name, inventory, equipment, player.getPrayer().isAncientCurses(),
-                        player.getCombatDefinitions().spellBook, (Arrays.copyOf(player.getSkills().getXp(), 7)), runes, pouch));
+                        player.getCombatDefinitions().spellBook, toIntArray(Arrays.copyOf(player.getSkills().getLevels(), 7)), runes, pouch));
         Msg.success(player, "You've successfully stored the set " + name + ".");
     }
 
@@ -219,11 +219,11 @@ public final class PresetManager implements Serializable {
 
 
         if (Settings.ECONOMY_MODE != Settings.FULL_ECONOMY) {
-            double[] presetXp = set.getLevels();
-            if (presetXp != null && presetXp.length >= 7) {
+            int[] levels = set.getLevels();
+            if (levels != null && levels.length >= 7) {
                 for (int i = 0; i < 7; i++) {
-                    player.getSkills().setXp(i, presetXp[i]);
-                    player.getSkills().set(i, player.getSkills().getLevelForXp(i));
+                    player.getSkills().set(i, levels[i]);
+                    player.getSkills().setXp(i, Skills.getXPForLevel(levels[i]));
                     player.getSkills().refresh(i);
                 }
             }
@@ -467,7 +467,7 @@ public final class PresetManager implements Serializable {
         player.getInventory().refresh();
         player.getEquipment().refresh();
 
-        double[] levels = preset.getLevels();
+        int[] levels = preset.getLevels();
 
         int[] combatSkills = {
                 Skills.ATTACK,
@@ -541,6 +541,14 @@ public final class PresetManager implements Serializable {
         player.getSkills().switchXPPopup(true);
         player.getSkills().switchXPPopup(true);
         CommandRegistry.execute(player, "heal");
+    }
+
+    private static int[] toIntArray(short[] data) {
+        int[] out = new int[data.length];
+        for (int i = 0; i < data.length; i++) {
+            out[i] = data[i];
+        }
+        return out;
     }
 
 }

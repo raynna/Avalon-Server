@@ -27,8 +27,8 @@ class TournamentInstance {
 
     fun addPlayer(player: Player) {
         val tile = getLobby1()
-        player.nextWorldTile = tile
         lobby.addPlayer(player)
+        player.nextWorldTile = tile
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
                 clearClutter()

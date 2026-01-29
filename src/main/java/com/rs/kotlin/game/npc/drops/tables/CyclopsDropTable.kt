@@ -52,7 +52,6 @@ object CyclopsDropTable {
             drop(
                 numerator = 1,
                 denominator = 50,
-                condition = { player -> nextDefender(player) != null },
                 dynamicItem = { player -> nextDefender(player) }
             )
         }

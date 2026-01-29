@@ -8,7 +8,6 @@ import com.rs.discord.DiscordAnnouncer
 import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.content.presets.Preset
-import com.rs.java.game.player.content.presets.PresetDefaults
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.command.CommandRegistry
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGameManager
@@ -18,16 +17,12 @@ import com.rs.kotlin.game.world.util.Msg
 
 class TournamentLobby(private val instance: TournamentInstance) {
 
+    private val tournamentPreset = TournamentPresetDefaults.random()
 
-
-    private val tournamentPreset: Preset = PresetDefaults.randomTournamentPreset();
-
-    fun getTournamentPreset(): Preset = tournamentPreset;
-
+    fun getTournamentPreset(): Preset = tournamentPreset.preset
+    fun getRules(): TournamentRules = tournamentPreset.rules
 
     private val participants = mutableSetOf<Player>()
-
-
     private val waitingPlayers = mutableListOf<Player>()
 
     private var joinPhase = true
@@ -40,12 +35,12 @@ class TournamentLobby(private val instance: TournamentInstance) {
         Msg.world(
             Msg.GREEN,
             icon = 22,
-            "News: Tournament Loadout: ${tournamentPreset.name}"
+            "News: Tournament Loadout: ${tournamentPreset.preset.name}"
         )
 
         DiscordAnnouncer.announce(
             "Tournament",
-            "Loadout: ${tournamentPreset.name}"
+            "Loadout: ${tournamentPreset.preset.name}"
         )
         var lastAnnounced = -1
         WorldTasksManager.schedule(object : WorldTask() {
@@ -55,18 +50,18 @@ class TournamentLobby(private val instance: TournamentInstance) {
                 if (secondsRemaining != lastAnnounced) {
                     when (secondsRemaining) {
                         180 -> {
-                            Msg.world(Msg.GREEN, icon = 22, "News: A ${tournamentPreset.name} tournament starts in 3 minutes!")
-                            DiscordAnnouncer.announce("Tournament", "News: A ${tournamentPreset.name} tournament starts in 3 minutes!")
+                            Msg.world(Msg.GREEN, icon = 22, "News: A ${tournamentPreset.preset.name} tournament starts in 3 minutes!")
+                            DiscordAnnouncer.announce("Tournament", "News: A ${tournamentPreset.preset.name} tournament starts in 3 minutes!")
                         }
 
                         120 -> {
-                            Msg.world(Msg.GREEN, icon = 22, "News: A ${tournamentPreset.name} tournament starts in 2 minutes!")
-                            DiscordAnnouncer.announce("Tournament", "News: A ${tournamentPreset.name} tournament starts in 2 minutes!")
+                            Msg.world(Msg.GREEN, icon = 22, "News: A ${tournamentPreset.preset.name} tournament starts in 2 minutes!")
+                            DiscordAnnouncer.announce("Tournament", "News: A ${tournamentPreset.preset.name} tournament starts in 2 minutes!")
                         }
 
                         60 -> {
-                            Msg.world(Msg.GREEN, icon = 22, "News: A ${tournamentPreset.name} tournament starts in 1 minutes!")
-                            DiscordAnnouncer.announce("Tournament", "News: A ${tournamentPreset.name} tournament starts in 1 minutes!")
+                            Msg.world(Msg.GREEN, icon = 22, "News: A ${tournamentPreset.preset.name} tournament starts in 1 minutes!")
+                            DiscordAnnouncer.announce("Tournament", "News: A ${tournamentPreset.preset.name} tournament starts in 1 minutes!")
                         }
                     }
                     lastAnnounced = secondsRemaining
@@ -79,10 +74,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
                     } else {
                         val allPlayers = participants.toList()
                         for (p in allPlayers) {
-                            restoreItems(p)
-                            p.closePvPOverlay()
-                            p.activeTournament = null
-                            p.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
+                            TournamentRecovery.restore(p)
                             p.message("The tournament didn't have enough players to start, you've been sent back home.")
                         }
                         instance.end(null)
@@ -112,6 +104,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
         player.tempEquipment = player.equipment.createSnapshot()
         player.tempXpSnapshot = DoubleArray(25)
         player.tempLevelSnapshot = ShortArray(25)
+        player.tempWorldTile = WorldTile(player.x, player.y, player.plane)
 
         for (i in 0 until 25) {
             player.tempXpSnapshot[i] = player.skills.getXp(i)
@@ -133,7 +126,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
             else -> "$seconds second${if (seconds > 1) "s" else ""}"
         }
 
-        player.message("You joined the ${tournamentPreset.name} tournament lobby. The first match begins in $timeStr!")
+        player.message("You joined the ${tournamentPreset.preset.name} tournament lobby. The first match begins in $timeStr!")
         refreshInterface(ticksRemaining)
     }
 
@@ -150,32 +143,11 @@ class TournamentLobby(private val instance: TournamentInstance) {
         waitingPlayers.remove(player)
 
         if (restore) {
-            restoreItems(player)
+            TournamentRecovery.restore(player)
         }
 
-        player.closePvPOverlay()
-        player.activeTournament = null
-
-        player.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
-        player.message("You have left the tournament and been returned home.")
+        player.message("You have left the tournament and returned to your original position.")
     }
-
-
-    fun restoreItems(player: Player) {
-        player.inventory.restoreSnapshot(player.tempInventory)
-        player.equipment.restoreSnapshot(player.tempEquipment)
-        if (player.tempXpSnapshot != null && player.tempLevelSnapshot != null) {
-            for (i in 0 until 25) {
-                player.skills.setXp(i, player.tempXpSnapshot[i])
-                player.skills.set(i, player.tempLevelSnapshot[i].toInt())
-                player.skills.refresh(i)
-            }
-        }
-        player.prayer.reset()
-        player.appearence.generateAppearenceData()
-        CommandRegistry.execute(player, "heal")
-    }
-
 
     private fun refreshInterface(nextFight: Int) {
         val allPlayers = participants.toList()
@@ -299,10 +271,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
         CoresManager.getSlowExecutor().execute {
             try {
                 for (p in allPlayers) {
-                    restoreItems(p)
-                    p.closePvPOverlay()
-                    p.activeTournament = null
-                    p.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
+                    TournamentRecovery.restore(p)
                     p.message("The tournament has ended. You’ve been sent back home.")
                     if (champion == p) {
                         p.message("You've been rewarded a magic chest & 10m coins for winning the tournament")
@@ -329,27 +298,21 @@ class TournamentLobby(private val instance: TournamentInstance) {
 
     fun onLogin(player: Player) {
         if (!joinPhase && waitingPlayers.isEmpty() && participants.isEmpty()) {
-            player.activeTournament = null
-            player.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
-            restoreItems(player)
+            TournamentRecovery.restore(player)
             return
         }
 
         if (waitingPlayers.contains(player) || participants.contains(player)) {
             player.activeTournament = null
         } else {
-            player.activeTournament = null
-            player.nextWorldTile = WorldTile(Settings.HOME_PLAYER_LOCATION)
-            restoreItems(player)
+            TournamentRecovery.restore(player)
         }
     }
 
     fun onLogout(player: Player) {
         waitingPlayers.remove(player)
         participants.remove(player)
-        player.activeTournament = null
-        player.location = Settings.HOME_PLAYER_LOCATION
-        restoreItems(player)
+        TournamentRecovery.restore(player)
     }
 
 

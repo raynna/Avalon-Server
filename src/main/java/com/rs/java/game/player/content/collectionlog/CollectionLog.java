@@ -79,7 +79,7 @@ public class CollectionLog implements Serializable {
             public void run() {
                 player.getPackets().sendRunScript(6255);
             }
-        });
+        }, 1);
         player.setCloseInterfacesEvent(() -> {
             tabId = 0;
             category = CategoryType.BOSSES;
@@ -411,6 +411,19 @@ public class CollectionLog implements Serializable {
 
             if (masterTab.containsKey(item.getId())) {
                 add(CategoryType.SLAYER, slayerName, item, !shown);
+                shown = true;
+            }
+        }
+
+        // Add to Other
+        for (Map.Entry<String, Map<Integer, Integer>> entry :
+                MASTER.getOthers().getDrops().entrySet()) {
+
+            String otherName = entry.getKey();
+            Map<Integer, Integer> masterTab = entry.getValue();
+
+            if (masterTab.containsKey(item.getId())) {
+                add(CategoryType.OTHERS, otherName, item, !shown);
                 shown = true;
             }
         }

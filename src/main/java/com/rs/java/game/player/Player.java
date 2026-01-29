@@ -114,6 +114,7 @@ import com.rs.kotlin.game.player.shop.ShopSystem;
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGame;
 import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentInstance;
 import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentLobby;
+import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentRecovery;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
@@ -149,6 +150,8 @@ public class Player extends Entity {
 
     public double[] tempXpSnapshot;
     public short[] tempLevelSnapshot;
+    public WorldTile tempWorldTile;
+
     public Item[] getTempInventory() {
         return tempInventory;
     }
@@ -182,10 +185,8 @@ public class Player extends Entity {
     public void leaveTournament() {
         if (activeTournament != null) {
             activeTournament.getLobby().onLeave(this, true);
-            activeTournament = null;
         }
     }
-
 
 
     //Area
@@ -568,6 +569,7 @@ public class Player extends Entity {
     public boolean hasTool(String item) {
         return hasTool(Rscm.INSTANCE.item(item));
     }
+
     public boolean hasTool(int itemId) {
         return inventory.containsOneItem(itemId) || equipment.containsOneItem(itemId) || toolbelt.contains(itemId);
     }
@@ -2481,7 +2483,6 @@ public class Player extends Entity {
     }
 
 
-
     public void processQueuedInstantSpecials() {
         if (getTemporaryTarget() == null || queuedInstantCombats.isEmpty())
             return;
@@ -2572,6 +2573,13 @@ public class Player extends Entity {
         controlerManager.process();
         farmingManager.process();
         prayer.processPrayerDrain(gameTick);
+        if (getActiveTournament() == null) {
+            if (tempInventory != null || tempEquipment != null
+                    || tempXpSnapshot != null || tempLevelSnapshot != null || tempWorldTile != null) {
+                TournamentRecovery.INSTANCE.restore(this);
+            }
+        }
+
         if (memberTill < Utils.currentTimeMillis() && isMember()) {
             message("Your membership has expired.");
             memberTill = 0;
@@ -3179,8 +3187,6 @@ public class Player extends Entity {
             setAtMultiArea(false);
         }
     }
-
-
 
 
     @Override
@@ -3997,22 +4003,22 @@ public class Player extends Entity {
             World.updateGroundItem(item, deathTile, killer, 60, 1);
         }
         message("You have lost approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
-       if (killer != null && killer != this) {
-           int randomCoins = Utils.randomise(25000, 100000);
-           World.updateGroundItem(new Item(995, randomCoins), deathTile, killer, 60, 1);
-           killer.message("You recieved an extra " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(randomCoins, ',')) + " coins for killing: " + getDisplayName() + ".");
+        if (killer != null && killer != this) {
+            int randomCoins = Utils.randomise(25000, 100000);
+            World.updateGroundItem(new Item(995, randomCoins), deathTile, killer, 60, 1);
+            killer.message("You recieved an extra " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(randomCoins, ',')) + " coins for killing: " + getDisplayName() + ".");
 
-           int randomPvpTokens = Utils.randomise(250, 1000);
-           World.updateGroundItem(new Item("item.pvp_token", randomPvpTokens), deathTile, killer, 60, 1);
-           killer.message("You recieved " + randomPvpTokens + " pvp tokens for killing " + getDisplayName() + ".");
+            int randomPvpTokens = Utils.randomise(250, 1000);
+            World.updateGroundItem(new Item("item.pvp_token", randomPvpTokens), deathTile, killer, 60, 1);
+            killer.message("You recieved " + randomPvpTokens + " pvp tokens for killing " + getDisplayName() + ".");
 
-           killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
-           if (killer.totalCurrentDrop > killer.getHighestValuedKill() && killer.hasWildstalker() && killer != this) {
-               killer.setHighestValuedKill(killer.totalCurrentDrop);
-               killer.message("New highest value Wilderness kill: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.getHighestValuedKill())) + " coins!");
-           }
-           PvpManager.onDeath(this, killer);
-       }
+            killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
+            if (killer.totalCurrentDrop > killer.getHighestValuedKill() && killer.hasWildstalker() && killer != this) {
+                killer.setHighestValuedKill(killer.totalCurrentDrop);
+                killer.message("New highest value Wilderness kill: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.getHighestValuedKill())) + " coins!");
+            }
+            PvpManager.onDeath(this, killer);
+        }
     }
 
     public final boolean isAtWild() {
@@ -4284,7 +4290,6 @@ public class Player extends Entity {
     public void teleportBlock(long time) {
         teleportDelay = Utils.currentTimeMillis() + (time * 600);
     }
-
 
 
     public void startteleporting() {

@@ -16,6 +16,7 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.TickManager;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentRules;
 
 public class PrayerBook implements Serializable {
     @Serial
@@ -197,6 +198,22 @@ public class PrayerBook implements Serializable {
         }
         if (isDisabledInClanWars()) {
             return false;
+        }
+        if (player.getActiveTournament() != null) {
+            TournamentRules rules = player.getActiveTournament().getLobby().getRules();
+            if (!rules.getProtectionPrayersAllowed() && prayer.isProtectionPrayer()) {
+                player.message("Protection prayers are disabled in this tournament.");
+                return false;
+            }
+            PrayerConflictGroup[] groups = prayer.getConflictGroups();
+            if (!rules.getOverheadPrayersAllowed() && groups != null) {
+                for (PrayerConflictGroup g : groups) {
+                    if (g == PrayerConflictGroup.OVERHEAD) {
+                        player.message("Overhead prayers are disabled in this tournament.");
+                        return false;
+                    }
+                }
+            }
         }
         if (prayer.isProtectionPrayer()) {
             return !isPrayerDelayActive();
