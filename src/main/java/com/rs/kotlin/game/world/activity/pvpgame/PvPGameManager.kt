@@ -36,7 +36,7 @@ var Player.activePvPGame: PvPGame?
 
 
 fun Player.openPvPOverlay(player: Player, target: Player) {
-    interfaceManager.sendTab(if (interfaceManager.hasRezizableScreen())  11 else 29, 265)
+    interfaceManager.sendOverlay(265, interfaceManager.hasRezizableScreen())
     packets.sendTextOnComponent(265, 4, player.displayName)
     packets.sendHideIComponent(265, 5, true)
     packets.sendHideIComponent(265, 11, true)

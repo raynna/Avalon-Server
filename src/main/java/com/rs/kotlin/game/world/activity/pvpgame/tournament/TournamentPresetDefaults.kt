@@ -35,7 +35,7 @@ object TournamentPresetDefaults {
             Item("item.super_restore_4", 2),
             Item("item.rocktail", 2),
             Item("item.saradomin_brew_4", 2),
-            Item("item.rocktail", 15),
+            Item("item.rocktail", 13),
             Item("item.blood_rune", 200),
             Item("item.death_rune", 400),
             Item("item.water_rune", 600),

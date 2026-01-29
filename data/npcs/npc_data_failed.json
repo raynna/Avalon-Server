@@ -215,6 +215,14 @@
     "lastSeen": "2026-01-14T15:28:40.404902700Z",
     "attempts": 1
   },
+  "3283": {
+    "npcId": 3283,
+    "npcName": "Squirrel",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-01-29T23:22:13.320043500Z",
+    "lastSeen": "2026-01-29T23:22:13.320043500Z",
+    "attempts": 1
+  },
   "3624": {
     "npcId": 3624,
     "npcName": "null",

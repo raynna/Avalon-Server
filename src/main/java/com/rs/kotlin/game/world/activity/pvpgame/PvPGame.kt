@@ -32,6 +32,7 @@ abstract class PvPGame {
         )
     }
 
+
     fun cleanup(winner: Player?) {
         players.forEach {
             it.closePvPOverlay()

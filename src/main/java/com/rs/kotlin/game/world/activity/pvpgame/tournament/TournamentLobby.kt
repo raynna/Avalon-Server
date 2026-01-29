@@ -11,6 +11,7 @@ import com.rs.java.game.player.content.presets.Preset
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.command.CommandRegistry
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGameManager
+import com.rs.kotlin.game.world.activity.pvpgame.activePvPGame
 import com.rs.kotlin.game.world.activity.pvpgame.closePvPOverlay
 import com.rs.kotlin.game.world.activity.pvpgame.showResult
 import com.rs.kotlin.game.world.util.Msg
@@ -26,7 +27,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
     private val waitingPlayers = mutableListOf<Player>()
 
     private var joinPhase = true
-    private var ticksRemaining = 500//500 original
+    private var ticksRemaining = 30//500 original
 
     private var bestOfThree: Boolean = false
     private val finalScores = mutableMapOf<Player, Int>()
@@ -139,6 +140,11 @@ class TournamentLobby(private val instance: TournamentInstance) {
     }
 
     fun onLeave(player: Player, restore: Boolean = true) {
+        val game = player.activePvPGame
+        if (game is TournamentGame) {
+            forfeit(player)
+            return
+        }
         participants.remove(player)
         waitingPlayers.remove(player)
 
@@ -149,12 +155,26 @@ class TournamentLobby(private val instance: TournamentInstance) {
         player.message("You have left the tournament and returned to your original position.")
     }
 
+    fun forfeit(player: Player) {
+        val game = player.activePvPGame
+        if (game is TournamentGame) {
+            game.handleForfeit(player)  // you'll add this
+            return
+        }
+        waitingPlayers.remove(player)
+        participants.remove(player)
+        TournamentRecovery.restore(player)
+        player.message("You have forfeited tournament.")
+    }
+
     private fun refreshInterface(nextFight: Int) {
         val allPlayers = participants.toList()
         for (p in allPlayers) {
             if (p.hasFinished() || !p.hasStarted()) continue
-            if (!p.interfaceManager.containsInterface(265))
-            p.interfaceManager.sendOverlay(265, false)
+
+            if (!p.interfaceManager.containsInterface(265)) {
+                p.interfaceManager.sendOverlay(265, p.interfaceManager.hasRezizableScreen())
+            }
             p.packets.sendGlobalVar(271, 2)//set text to participants on left side
             p.packets.sendGlobalVar(262, waitingPlayers.size)
             p.packets.sendGlobalVar(261, participants.size)
@@ -212,7 +232,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
 
 
     fun recordResult(winner: Player, loser: Player) {
-        if (!participants.contains(winner) || !participants.contains(loser)) return
+        if (!participants.contains(winner)) return
 
         if (bestOfThree) {
 

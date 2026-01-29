@@ -120,5 +120,26 @@ class TournamentGame(
         }
     }
 
+    fun handleForfeit(leaver: Player) {
+        if (!players.contains(leaver)) return
+
+        val winner = players.firstOrNull { it != leaver }
+        val loser = leaver
+
+        println("[TOURNAMENT] Forfeit detected. Leaver=${leaver.username}, Winner=${winner?.username}")
+
+        players.clear()
+
+        p1.setCanPvp(false)
+        p2.setCanPvp(false)
+
+        PvPGameManager.unregisterGame(this)
+
+        if (winner != null) {
+            lobby.recordResult(winner, loser)
+        } else {
+            cleanup(null)
+        }
+    }
 
 }
