@@ -384,10 +384,6 @@ public final class Commands {
                 "Set title. Usage: ::title [id]");
         registerCommand("customtitle", Commands::customTitleCommand, CommandCategory.DEVELOPER,
                 "Set custom title");
-        registerCommand("customtitle1", Commands::customTitle1Command, CommandCategory.DEVELOPER,
-                "Set custom title before name");
-        registerCommand("customtitle2", Commands::customTitle2Command, CommandCategory.DEVELOPER,
-                "Set custom title after name");
         registerCommand("setdisplay", Commands::setDisplayCommand, CommandCategory.DEVELOPER,
                 "Set display name");
         registerCommand("changedisplay", Commands::setDisplayCommand, CommandCategory.DEVELOPER,
@@ -489,6 +485,13 @@ public final class Commands {
                 "testing for summoning tab");
         registerCommand("script", Commands::runScript, CommandCategory.DEVELOPER,
                 "testing script");
+        registerCommand("bronze", Commands::makeBronzeMember, CommandCategory.DEVELOPER, "Gives yourself bronze rank.");
+        registerCommand("silver", Commands::makeSilverMember, CommandCategory.DEVELOPER, "Gives yourself silver rank.");
+        registerCommand("gold", Commands::makeGoldMember, CommandCategory.DEVELOPER, "Gives yourself gold rank.");
+        registerCommand("ironman", Commands::makeIronman, CommandCategory.DEVELOPER, "Gives yourself ironman rank.");
+        registerCommand("hardcore", Commands::makeHardcoreIronman, CommandCategory.DEVELOPER, "Gives yourself hardcore ironman rank.");
+        registerCommand("removeironman", Commands::removeIronman, CommandCategory.DEVELOPER, "Removes your ironman ranks.");
+        registerCommand("removedonator", Commands::removeDonator, CommandCategory.DEVELOPER, "Removes your donator ranks.");
     }
 
     private static void registerCommand(String name, Command command, CommandCategory category, String description) {
@@ -2410,6 +2413,48 @@ public final class Commands {
         return true;
     }
 
+    private static boolean makeBronzeMember(Player player, String[] cmd) {
+        player.getPlayerRank().addRank(Rank.BRONZE_DONATOR);
+        player.message("You are now a bronze donator.");
+        return true;
+    }
+
+    private static boolean makeSilverMember(Player player, String[] cmd) {
+        player.getPlayerRank().addRank(Rank.SILVER_DONATOR);
+        player.message("You are now a silver donator.");
+        return true;
+    }
+
+    private static boolean makeGoldMember(Player player, String[] cmd) {
+        player.getPlayerRank().addRank(Rank.GOLD_DONATOR);
+        player.message("You are now a gold donator.");
+        return true;
+    }
+
+    private static boolean makeIronman(Player player, String[] cmd) {
+        player.getPlayerRank().addRank(Rank.IRONMAN);
+        player.message("You are now an ironman.");
+        return true;
+    }
+
+    private static boolean makeHardcoreIronman(Player player, String[] cmd) {
+        player.getPlayerRank().addRank(Rank.HARDCORE_IRONMAN);
+        player.message("You are now a hardcore ironman.");
+        return true;
+    }
+
+    private static boolean removeIronman(Player player, String[] cmd) {
+        player.getPlayerRank().setRank(2, null);
+        player.message("You have removed your donator rank.");
+        return true;
+    }
+
+    private static boolean removeDonator(Player player, String[] cmd) {
+        player.getPlayerRank().setRank(1, null);
+        player.message("You have removed your donator rank.");
+        return true;
+    }
+
     private static boolean testTabcommand(Player player, String[] cmd) {
         if (cmd.length < 2) {
             player.message("Usage: ::tab [id]");
@@ -3022,35 +3067,20 @@ public final class Commands {
     }
 
     private static boolean customTitleCommand(Player player, String[] cmd) {
-        if (!player.isMember()) {
+        if (!player.getPlayerRank().isDonator()) {
             player.message("You need to be a member to use custom titles.");
             return true;
         }
-
-        player.temporaryAttribute().put("customtitle", Boolean.TRUE);
+        player.temporaryAttribute().remove("TITLE_COLOR_SET");
+        player.temporaryAttribute().remove("TITLE_ORDER_SET");
+        player.temporaryAttribute().put("CUSTOM_TITLE_SET", Boolean.TRUE);;
         player.getPackets().sendInputNameScript("Enter your custom title");
         player.message("Enter custom title (appears after name)");
         return true;
     }
 
-    private static boolean customTitle1Command(Player player, String[] cmd) {
-        if (!player.isMember()) {
-            player.message("You need to be a member to use custom titles.");
-            return true;
-        }
-
-        player.temporaryAttribute().put("setcustom_title2", Boolean.TRUE);
-        player.getPackets().sendInputNameScript("Enter your custom title");
-        player.message("Enter custom title (appears before name)");
-        return true;
-    }
-
-    private static boolean customTitle2Command(Player player, String[] cmd) {
-        return customTitle1Command(player, cmd);
-    }
-
     private static boolean setDisplayCommand(Player player, String[] cmd) {
-        if (!player.isMember()) {
+        if (!player.getPlayerRank().isDonator()) {
             player.message("You need to be a member to change display name.");
             return true;
         }

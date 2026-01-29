@@ -80,11 +80,6 @@ public class Appearence implements Serializable {
 
 	private String titleName;
 
-	public String customTitle() {
-		return player.isTitle ? "<col=" + player.color + ">" + " " + player.title + "</col>"
-				: "<col=" + player.color + ">" + player.title + " " + "</col>";
-	}
-
 	public void generateAppearenceData() {
 		player.clanTag = player.getClanManager() != null ? "<col=FF5B1A>" + player.getClanName() + "</col> " : "";
 		OutputStream stream = new OutputStream();
@@ -98,19 +93,84 @@ public class Appearence implements Serializable {
 					: 0x40;
 		stream.writeByte(flag);
 		if (title != 0) {
+
 			if (title == 65535 && !player.getPlayerRank().isIronman())
 				title = 0;
-			setTitleName(title == 25 ? "<col=C12006>Yt'Haar </col>"
-					: title == 5000 ? "<col=C12006>" + player.clanTag + "</col>"
-							: title == 9001 ? "<col=734d26> the Recruiter"
-									: title == 9002 ? "<col=827e7d> the Recruiter"
-											: title == 9003 ? "<col=ffc800> the Recruiter"
-													: title == 800 ? "<col="+player.getCustomTitle() + ">" : title == 900 ? player.getCustomTitle()
-															: title == 901 ? player.getCustomTitle2()
-																	: title == 65535 ? player.getPlayerRank().getRankName(0)
-																			: ClientScriptMap.getMap(male ? 1093 : 3872)
-																					.getStringValue(title));
-			stream.writeGJString(getTitleName());
+
+			String titleName = null;
+
+			switch (title) {
+
+				case 25:
+					titleName = "<col=C12006>Yt'Haar </col>";
+					break;
+
+				case 5000:
+					titleName = "<col=C12006>" + player.clanTag + "</col>";
+					break;
+
+				case 9001:
+					titleName = "<col=734d26> the Recruiter";
+					break;
+
+				case 9002:
+					titleName = "<col=827e7d> the Recruiter";
+					break;
+
+				case 9003:
+					titleName = "<col=ffc800> the Recruiter";
+					break;
+
+				case 800: // colored custom title
+					titleName = "<col=" + player.getCustomTitle() + ">";
+					break;
+
+				case 900: { // front custom title
+					String title = player.getCustomTitle();
+					String color = player.getCustomTitleColour();
+
+					if (title == null || title.isEmpty())
+						break;
+
+					if (color == null || !color.matches("[0-9a-fA-F]{6}"))
+						color = "ffffff";
+
+					titleName = "<col=" + color + ">" + title + "</col> ";
+					break;
+				}
+
+				case 901: { // back custom title
+					String title = player.getCustomTitle();
+					String color = player.getCustomTitleColour();
+
+					if (title == null || title.isEmpty())
+						break;
+
+					if (color == null || !color.matches("[0-9a-fA-F]{6}"))
+						color = "ffffff";
+
+					titleName = " <col=" + color + ">" + title + "</col>";
+					break;
+				}
+
+				case 65535: // rank title
+					titleName = player.getPlayerRank().getRankName(0);
+					break;
+
+				default:
+					titleName = ClientScriptMap
+							.getMap(male ? 1093 : 3872)
+							.getStringValue(title);
+					break;
+			}
+
+			if (titleName != null) {
+				setTitleName(titleName);
+			}
+			if (titleName == null)
+				titleName = "";
+
+			stream.writeGJString(titleName);
 		}
 		stream.writeByte(player.hasSkull() ? player.getSkullId() : -1);
 		stream.writeByte(player.getPrayer().getPrayerHeadIcon());

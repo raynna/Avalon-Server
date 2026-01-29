@@ -10,9 +10,10 @@ class CustomTitleCommand : Command {
     override val usage = "::customtitle"
 
     override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
-        player.temporaryAttribute()["customtitle"] = java.lang.Boolean.TRUE
-        player.packets.sendInputNameScript("Enter your custom title")
-        player.packets.sendGameMessage("To get the title AFTER your name use commands ::customtitle.")
+        player.temporaryAttribute().remove("TITLE_COLOR_SET")
+        player.temporaryAttribute().remove("TITLE_ORDER_SET")
+        player.temporaryAttribute()["CUSTOM_TITLE_SET"] = java.lang.Boolean.TRUE
+        player.packets.sendInputNameScript("Enter your custom title, or id 0-58")
         return true
     }
 }

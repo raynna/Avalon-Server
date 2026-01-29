@@ -113,7 +113,6 @@ import com.rs.kotlin.game.player.interfaces.TimerOverlay;
 import com.rs.kotlin.game.player.shop.ShopSystem;
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGame;
 import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentInstance;
-import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentLobby;
 import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentRecovery;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
@@ -617,8 +616,7 @@ public class Player extends Entity {
     /**
      * @Titles
      */
-    public boolean isTitle;
-    public String title;
+    public boolean titleIsBehindName;
     public String color;
     public String clanTag = "";
 
@@ -1226,6 +1224,7 @@ public class Player extends Entity {
     public String gameType;
 
     public String customTitle;
+    public String customTitleColour;
     public transient long restoreDelay;
     public int pouchMoney;
     private double[] warriorPoints;
@@ -2385,7 +2384,7 @@ public class Player extends Entity {
         }
     }
 
-    public String getTitle() {
+    public String getTitleIsBehindName() {
         PlayerRank rank = getPlayerRank();
         return rank.getRankName(rank.isStaff() ? 0 : 1);
     }
@@ -5458,22 +5457,20 @@ public class Player extends Entity {
         this.customName = customName;
     }
 
+    public String getCustomTitleColour() {
+        return customTitleColour;
+    }
+
+    public void setCustomTitleColour(String customTitleColour) {
+        this.customTitleColour = customTitleColour;
+    }
+
     public String getCustomTitle() {
         return customTitle;
     }
 
     public void setCustomTitle(String customTitle) {
         this.customTitle = customTitle;
-    }
-
-    private String customTitle2;
-
-    public String getCustomTitle2() {
-        return customTitle2;
-    }
-
-    public void setCustomTitle2(String customTitle2) {
-        this.customTitle2 = customTitle2;
     }
 
     /**
@@ -6067,10 +6064,6 @@ public class Player extends Entity {
     }
 
     private DropLogs dropLogs;
-
-    public boolean hasCustomTitle() {
-        return isTitle;
-    }
 
     public DropLogs getDropLogs() {
         return dropLogs;

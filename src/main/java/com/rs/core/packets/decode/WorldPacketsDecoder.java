@@ -11,6 +11,8 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import com.rs.Settings;
+import com.rs.core.tasks.WorldTask;
+import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Graphics;
@@ -2203,29 +2205,61 @@ public final class WorldPacketsDecoder extends Decoder {
 		} else if (player.getTemporaryAttributtes().remove("DUNGEON_INVITE") == Boolean.TRUE) {
 			player.getDungManager().invite(value);
 			return;
-		} else if (player.temporaryAttribute().get("titlecolor") == Boolean.TRUE) {
+		} else if (player.temporaryAttribute().get("TITLE_COLOR_SET") != null) {
 			if (value.length() != 6) {
 				player.getDialogueManager().startDialogue("SimpleMessage", "The HEX yell color you wanted to pick cannot be longer and shorter then 6.");
 			} else if (Utils.containsInvalidCharacter(value) || value.contains("_")) {
 				player.getDialogueManager().startDialogue("SimpleMessage", "The requested title color can only contain numeric and regular characters.");
 			} else {
-				player.color = value;
+				player.setCustomTitleColour(value.toLowerCase());
+				player.setCustomTitle(player.getCustomTitle());
+				player.getAppearence().generateAppearenceData();
+				JournalTab.open(player);
+				player.message("Set your title colour to: <col=" + player.getCustomTitleColour() +">COLOUR");
 				player.getPackets().sendRunScript(109, new Object[] { "Would you like the title infront or behind your name? Front/Back" });
-				player.temporaryAttribute().put("titlecustom", Boolean.TRUE);
+				player.temporaryAttribute().put("TITLE_ORDER_SET", Boolean.TRUE);
 			}
-			player.temporaryAttribute().put("titlecolor", Boolean.FALSE);
+			player.temporaryAttribute().remove("CUSTOM_TITLE_SET");
+			player.temporaryAttribute().remove("TITLE_COLOR_SET");
 			return;
-		} else if (player.temporaryAttribute().get("titlecustom") == Boolean.TRUE) {
+		} else if (player.temporaryAttribute().get("TITLE_ORDER_SET") != null) {
 			if (value.toLowerCase().contains("back") || value.equalsIgnoreCase("b")) {
-				player.isTitle = true;  player.getAppearence().setTitle(901);
+				player.titleIsBehindName = true;  player.getAppearence().setTitle(901);
+				player.message("Set your title order to the back.");
 			} else if (value.toLowerCase().contains("front") || value.equalsIgnoreCase("f")) {
-				player.isTitle = false; player.getAppearence().setTitle(900);
+				player.titleIsBehindName = false; player.getAppearence().setTitle(900);
+				player.message("Set your title order to the front.");
 			}
 			player.getDialogueManager().startDialogue("SimpleMessage", "The process was successfully done!");
+			if (player.titleIsBehindName) {
+				player.getAppearence().setTitle(901);
+			} else {
+				player.getAppearence().setTitle(900);
+			}
 			player.getAppearence().generateAppearenceData();
-			player.temporaryAttribute().put("titlecustom", Boolean.FALSE);
+			JournalTab.open(player);
+			player.temporaryAttribute().remove("CUSTOM_TITLE_SET");
+			player.temporaryAttribute().remove("TITLE_COLOR_SET");
+			player.temporaryAttribute().remove("TITLE_ORDER_SET");
 			return;
-		} else if (player.temporaryAttribute().get("customtitle") == Boolean.TRUE) {
+		} else if (player.temporaryAttribute().get("CUSTOM_TITLE_SET") != null) {
+			try {
+				int titleId = Integer.parseInt(value);
+
+				if (titleId >= 0 && titleId <= 58) {
+
+					if (titleId == 0)
+						titleId = -1;
+
+					player.getAppearence().setTitle(titleId);
+					player.getAppearence().generateAppearenceData();
+					player.getPackets().sendGameMessage(
+							"Title set to: " + player.getAppearence().getTitleName()
+					);
+					JournalTab.open(player);
+					return;
+				}
+			} catch (NumberFormatException ignored) {}
 			String[] invalid = { ">", "<", "-", "'", "_", "mod", "admin", "owner", "jagex", "allah", "developer", "recruit" };
 			if (value.length() > 10) {
 				player.getDialogueManager().startDialogue("SimpleMessage", "Titles are limted to ten characters due to spam.");
@@ -2234,14 +2268,18 @@ public final class WorldPacketsDecoder extends Decoder {
 			for (String s : invalid) {
 				if (value.toLowerCase().contains(s)) {
 					player.getDialogueManager().startDialogue("SimpleMessage", "You cannot use this in your title.");
-					player.temporaryAttribute().put("customTitle", Boolean.FALSE);
+					player.temporaryAttribute().remove("CUSTOM_TITLE_SET");
 					return;
 				}
 			}
-			player.title = value;
+			player.setCustomTitle(value);
+			player.getAppearence().setTitle(900);
+			player.message("Set your title to: <col=" + player.getCustomTitleColour() +">" + value);
+			JournalTab.open(player);
 			player.getPackets().sendRunScript(109, new Object[] { "Please enter the color you would like. (HEX FORMAT)" });
-			player.temporaryAttribute().put("titlecolor", Boolean.TRUE);
-			player.temporaryAttribute().put("customTitle", Boolean.FALSE);
+			player.temporaryAttribute().put("TITLE_COLOR_SET", Boolean.TRUE);
+			player.temporaryAttribute().remove("CUSTOM_TITLE_SET");
+			player.temporaryAttribute().remove("TITLE_ORDER_SET");
 			return;
 		} else if (player.temporaryAttribute().get("SAVESETUP") == Boolean.TRUE) {
 			player.temporaryAttribute().remove("SAVESETUP");

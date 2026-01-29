@@ -128,7 +128,7 @@ public class JournalTab extends CustomTab {
 										? p.getMessageIcon() - 1
 										: p.getPlayerRank().isHardcore() ? 24
 												: p.getPlayerRank().isIronman() ? 23 : p.getMessageIcon())
-						+ ">" + p.getPlayerRank().getRankName(0);
+						+ ">";
 			}
 		},
 		PLAYERRANK2(12) {
@@ -144,20 +144,21 @@ public class JournalTab extends CustomTab {
 			public String text(Player p) {
 				boolean donator = p.getPlayerRank().isDonator();
 				return "Donator rank:  " + Colour.WHITE.getHex()
-						+ (donator ? "<img=" + p.getDonatorIcon() + ">" + p.getPlayerRank().getRankName(1)
+						+ (donator ? "<img=" + p.getDonatorIcon() + ">" + p.getPlayerRank().getRankName(1).replace(" Donator", "")
 								: Colour.RED.getHex() +  "I'm not a donator");
 			}
 		},
 		PLAYERTITLE(13) {
 			@Override
 			public void usage(Player p) {
-				p.getTemporaryAttributtes().put("SET_TITLE", Boolean.TRUE);
-				p.getPackets().sendRunScript(108, new Object[] { "Enter title id, 0-58, 0 = none:" });
+				p.temporaryAttribute().remove("TITLE_COLOR_SET");
+				p.temporaryAttribute().remove("TITLE_ORDER_SET");
+				p.getTemporaryAttributtes().put("CUSTOM_TITLE_SET", Boolean.TRUE);
+				p.getPackets().sendInputNameScript("Enter your custom title, or id 0-58");
 			}
 
 			@Override
 			public String text(Player p) {
-				p.setCustomTitle(p.getAppearence().getTitleString());
 				if(p.getAppearence().getTitle() != -1){
 					return "Title: " + p.getAppearence().getTitleString();
 				} else {

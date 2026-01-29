@@ -16,12 +16,13 @@ public class PlayerRank implements Serializable {
 	private static final long serialVersionUID = -773408484495708325L;
 
 	private transient Player player;
-	private Rank[] rank;
+	private final Rank[] rank;
+
+	private final transient int PLAYER_INDEX = 0, DONATOR_INDEX = 1, IRONMAN_INDEX = 2;
 
 	public PlayerRank() {
-		if (rank == null)
-			rank = new Rank[3];
-		rank[0] = Rank.PLAYER;
+        rank = new Rank[3];
+		rank[PLAYER_INDEX] = Rank.PLAYER;
 
 	}
 
@@ -40,7 +41,7 @@ public class PlayerRank implements Serializable {
 	}
 
 	public boolean isAtLeast(Rank other) {
-		Rank current = rank[0]; // primary rank
+		Rank current = rank[PLAYER_INDEX]; // primary rank
 		if (current == null) {
 			return false;
 		}
@@ -49,14 +50,14 @@ public class PlayerRank implements Serializable {
 
 	public void addRank(Rank rank) {
 		if (rank == Rank.IRONMAN || rank == Rank.HARDCORE_IRONMAN) {
-			setRank(2, rank);
+			setRank(IRONMAN_INDEX, rank);
 			return;
 		}
 		if (rank.getRankName().toLowerCase().contains("donator")) {
-			setRank(1, rank);
+			setRank(DONATOR_INDEX, rank);
 			return;
 		}
-		setRank(0, rank);
+		setRank(PLAYER_INDEX, rank);
 	}
 
 	public String getRankNames() {
@@ -87,28 +88,28 @@ public class PlayerRank implements Serializable {
 	}
 
 	public int getIconId() {
-		Rank rank = getRank()[0];
+		Rank rank = getRank()[PLAYER_INDEX];
 		return rank.getIconId();
 	}
 
 	public boolean isDeveloper() {
-		return rank[0] == Rank.DEVELOPER;
+		return rank[PLAYER_INDEX] == Rank.DEVELOPER;
 	}
 
 	public boolean isModerator() {
-		return rank[0] == Rank.MODERATOR;
+		return rank[PLAYER_INDEX] == Rank.MODERATOR;
 	}
 
 	public boolean isIronman() {
-		return rank[2] == Rank.IRONMAN || rank[2] == Rank.HARDCORE_IRONMAN;
+		return rank[IRONMAN_INDEX] == Rank.IRONMAN || rank[IRONMAN_INDEX] == Rank.HARDCORE_IRONMAN;
 	}
 
 	public boolean isHardcore() {
-		return rank[2] == Rank.HARDCORE_IRONMAN;
+		return rank[IRONMAN_INDEX] == Rank.HARDCORE_IRONMAN;
 	}
 
 	public boolean isStaff() {
-		Rank rank = getRank()[0];
+		Rank rank = getRank()[PLAYER_INDEX];
 		return rank != Rank.PLAYER && rank != Rank.YOUTUBER;
 	}
 }
