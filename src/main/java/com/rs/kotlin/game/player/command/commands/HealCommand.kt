@@ -30,6 +30,7 @@ class HealCommand : Command {
         }
         player.prayer.restorePrayer(player.skills.getLevelForXp(Skills.PRAYER) * 10)
         if (player.poison.isPoisoned) player.poison.reset()
+        if (player.newPoison.isPoisoned()) player.newPoison.reset()
         player.setRunEnergy(100)
         player.heal(player.maxHitpoints)
         player.skills.restoreSkills()

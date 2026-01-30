@@ -878,6 +878,10 @@ public final class Pots {
 			return true;
 		if (player.isPotLocked())
 			return true;
+		if (player.inTournament() && !player.isCanPvp()) {
+			player.message("You cannot drink potions until tournament has started.");
+			return true;
+		}
 		//if (!player.getControlerManager().canPot(pot))
 		//	return true;
 		if (!pot.effect.canDrink(player))

@@ -1397,6 +1397,10 @@ public class InventoryOptionsHandler {
             return;
         if (!player.getControlerManager().canDropItem(item))
             return;
+        if (player.inTournament() && !player.isCanPvp()) {
+            player.message("You cannot drop items until tournament has started.");
+            return;
+        }
         player.stopAll(false);
         ItemPlugin plugin = ItemPluginLoader.getPlugin(item);
         String optionName = item.getDefinitions().getInventoryOption(true, option);

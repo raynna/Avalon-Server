@@ -7,6 +7,7 @@ import com.rs.core.thread.CoresManager
 import com.rs.discord.DiscordAnnouncer
 import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
 import com.rs.java.game.player.content.presets.Preset
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.command.CommandRegistry
@@ -135,8 +136,16 @@ class TournamentLobby(private val instance: TournamentInstance) {
         val preset = getTournamentPreset()
         player.presetManager.applyPreset(preset)
 
-        player.appearence.generateAppearenceData()
-        CommandRegistry.execute(player, "heal")
+        player.prayer.restorePrayer(player.skills.getLevelForXp(Skills.PRAYER) * 10)
+        if (player.poison.isPoisoned) player.poison.reset()
+        if (player.newPoison.isPoisoned()) player.newPoison.reset()
+        player.setRunEnergy(100)
+        player.heal(player.maxHitpoints)
+        player.skills.restoreSkills()
+        player.getAppearence().generateAppearenceData()
+        player.skills[Skills.SUMMONING] = player.skills.getLevelForXp(Skills.SUMMONING)
+        player.skills.refresh(Skills.SUMMONING)
+        player.getCombatDefinitions().resetSpecialAttack()
     }
 
     fun onLeave(player: Player, restore: Boolean = true) {

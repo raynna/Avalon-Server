@@ -105,6 +105,10 @@ public class ComboFoods {
 			return false;
 		if (player.isSpecialFoodLocked())
 			return true;
+		if (player.inTournament() && !player.isCanPvp()) {
+			player.message("You cannot consume food until tournament has started.");
+			return true;
+		}
 		String name = ItemDefinitions.getItemDefinitions(food.getId()).getName().toLowerCase();
 		player.getPackets().sendGameMessage("You eat the " + name + ".");
 		player.animate(EAT_ANIM);

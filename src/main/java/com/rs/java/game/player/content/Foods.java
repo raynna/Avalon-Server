@@ -670,6 +670,10 @@ public class Foods {
 			//return true;
 		if (player.isDead())
 			return true;
+		if (player.inTournament() && !player.isCanPvp()) {
+			player.message("You cannot consume food until tournament has started.");
+			return true;
+		}
 		if (food.isComboFood() && player.isSpecialFoodLocked())
 			return true;
 		if (!food.isComboFood() && player.isFoodLocked())
