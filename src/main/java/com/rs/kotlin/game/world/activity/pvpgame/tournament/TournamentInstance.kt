@@ -29,12 +29,12 @@ class TournamentInstance {
         val tile = getLobby1()
         lobby.addPlayer(player)
         player.nextWorldTile = tile
-        WorldTasksManager.schedule(object : WorldTask() {
+        /*WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
                 clearClutter()
                 stop()
             }
-        }, 1)
+        }, 1)*/
     }
 
     fun end(winner: Player?) {
@@ -65,10 +65,9 @@ class TournamentInstance {
 
     private fun shouldRemove(obj: WorldObject): Boolean {
         return when (obj.id) {
-            // Rock piles, rubble, bushes
             83, 14384, 14385, 14386, 14388, 14389, 28195, 28177, 38806, 38807 -> true
 
-            else -> false // keep everything else
+            else -> false
         }
     }
 

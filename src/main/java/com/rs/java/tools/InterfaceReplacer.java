@@ -11,7 +11,7 @@ public class InterfaceReplacer {
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		int interfaceId = 320;
 		CacheLibrary cache1 = new CacheLibrary("data/cache/", false, null);
-		CacheLibrary cache2 = new CacheLibrary("data/cache/", false, null);
+		CacheLibrary cache2 = new CacheLibrary("data/isikcache/", false, null);
 		cache1.index(3).update();
 		System.out.println("Updated index 3");
 

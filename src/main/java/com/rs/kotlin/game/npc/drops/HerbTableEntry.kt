@@ -44,4 +44,9 @@ class HerbTableEntry : DropEntry(-1, 1..1) {
     }
 
     private fun tableSizeOrDefault() = 128
+
+    fun getEntries(): List<WeightedDropEntry> {
+        return table.mutableEntries()
+    }
+
 }

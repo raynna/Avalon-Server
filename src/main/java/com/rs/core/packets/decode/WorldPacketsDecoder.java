@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -79,6 +80,8 @@ import com.rs.java.utils.huffman.Huffman;
 import com.rs.kotlin.game.player.combat.CombatAction;
 import com.rs.kotlin.game.player.combat.magic.*;
 import com.rs.kotlin.game.player.command.CommandRegistry;
+import com.rs.kotlin.game.player.interfaces.DropInterface;
+import com.rs.kotlin.game.player.interfaces.DropSearch;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
 /**
@@ -2222,7 +2225,49 @@ public final class WorldPacketsDecoder extends Decoder {
 			player.temporaryAttribute().remove("CUSTOM_TITLE_SET");
 			player.temporaryAttribute().remove("TITLE_COLOR_SET");
 			return;
-		} else if (player.temporaryAttribute().get("TITLE_ORDER_SET") != null) {
+		} else if (player.temporaryAttribute().get("npc_find") != null) {
+
+			player.temporaryAttribute().remove("npc_find");
+
+			List<Integer> results =
+					DropSearch.INSTANCE.findNpcsByName(value);
+
+			player.temporaryAttribute().put(
+					"drop_viewer_found_npcs",
+					results
+			);
+
+			player.temporaryAttribute().put("drop_viewer_npc_page", 0);
+			player.temporaryAttribute().put("drop_viewer_in_search", true);
+
+			DropInterface.INSTANCE.sendNpcList(player);
+
+			if (!results.isEmpty())
+				DropInterface.INSTANCE.selectNpc(player, results.getFirst());
+
+			return;
+		} else if (player.temporaryAttribute().get("drop_find") != null) {
+
+		player.temporaryAttribute().remove("drop_find");
+
+		List<Integer> results =
+				DropSearch.INSTANCE.findNpcsByDrop(value);
+
+		player.temporaryAttribute().put(
+				"drop_viewer_found_npcs",
+				results
+		);
+
+		player.temporaryAttribute().put("drop_viewer_npc_page", 0);
+		player.temporaryAttribute().put("drop_viewer_in_search", true);
+
+		DropInterface.INSTANCE.sendNpcList(player);
+
+		if (!results.isEmpty())
+			DropInterface.INSTANCE.selectNpc(player, results.getFirst());
+
+		return;
+	} else if (player.temporaryAttribute().get("TITLE_ORDER_SET") != null) {
 			if (value.toLowerCase().contains("back") || value.equalsIgnoreCase("b")) {
 				player.titleIsBehindName = true;  player.getAppearence().setTitle(901);
 				player.message("Set your title order to the back.");

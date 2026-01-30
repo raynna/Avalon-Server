@@ -33,6 +33,7 @@ import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.AccountCreation;
+import com.rs.kotlin.game.player.interfaces.DropInterface;
 
 public final class Commands {
 
@@ -492,6 +493,7 @@ public final class Commands {
         registerCommand("hardcore", Commands::makeHardcoreIronman, CommandCategory.DEVELOPER, "Gives yourself hardcore ironman rank.");
         registerCommand("removeironman", Commands::removeIronman, CommandCategory.DEVELOPER, "Removes your ironman ranks.");
         registerCommand("removedonator", Commands::removeDonator, CommandCategory.DEVELOPER, "Removes your donator ranks.");
+        registerCommand("drops", Commands::showDrops, CommandCategory.DEVELOPER, "Shows drops interface");
     }
 
     private static void registerCommand(String name, Command command, CommandCategory category, String description) {
@@ -2452,6 +2454,11 @@ public final class Commands {
     private static boolean removeDonator(Player player, String[] cmd) {
         player.getPlayerRank().setRank(1, null);
         player.message("You have removed your donator rank.");
+        return true;
+    }
+
+    private static boolean showDrops(Player player, String[] cmd) {
+        DropInterface.INSTANCE.open(player);
         return true;
     }
 

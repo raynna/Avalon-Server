@@ -74,6 +74,7 @@ import com.rs.kotlin.game.player.customtab.JournalTabDSL;
 import com.rs.kotlin.game.player.customtab.SettingsTabDSL;
 import com.rs.kotlin.game.player.customtab.TeleportTabDSL;
 import com.rs.kotlin.game.player.equipment.BonusType;
+import com.rs.kotlin.game.player.interfaces.DropInterface;
 
 /**
  * @Improved Andreas, Phillip - AvalonPK
@@ -116,7 +117,10 @@ public class ButtonHandler {
             player.getCreationKiln().handleButton(componentId, packetId);
             return;
         }
-
+        if (interfaceId == 3005) {
+            DropInterface.INSTANCE.handleButtons(player, componentId);
+            return;
+        }
         if (interfaceId == 1163 || interfaceId == 1164 || interfaceId == 1168 || interfaceId == 1170 || interfaceId == 1171 || interfaceId == 1173)
             player.getDominionTower().handleButtons(interfaceId, componentId, slotId, packetId);
         if (interfaceId == 3010) {

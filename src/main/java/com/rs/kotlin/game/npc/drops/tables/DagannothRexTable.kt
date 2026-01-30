@@ -13,9 +13,9 @@ object DagannothRexTable {
         }
 
         preRollDrops {
-            drop("item.berserker_ring", 1, 128)
-            drop("item.warrior_ring", 1, 128)
-            drop("item.dragon_hatchet", 1, 128)
+            drop("item.berserker_ring", numerator = 1, denominator = 128)
+            drop("item.warrior_ring", numerator = 1, denominator = 128)
+            drop("item.dragon_hatchet", numerator = 1, denominator = 128)
         }
 
         mainDrops(128) {

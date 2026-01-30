@@ -5,6 +5,7 @@ import java.util.concurrent.ThreadLocalRandom
 
 class WeightedTable {
     private val entries = mutableListOf<WeightedDropEntry>()
+
     private var tableSize: Int = 0
 
     fun setSize(size: Int) {

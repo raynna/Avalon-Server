@@ -7,7 +7,9 @@ import com.rs.java.game.ForceTalk;
 import com.rs.java.game.World;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Ranks.Rank;
+import com.rs.java.game.player.content.collectionlog.CollectionLog;
 import com.rs.java.utils.HexColours.Colour;
+import com.rs.kotlin.game.player.interfaces.DropInterface;
 
 public class JournalTab extends CustomTab {
 
@@ -36,7 +38,7 @@ public class JournalTab extends CustomTab {
 
 			@Override
 			public String text(Player p) {
-				return "<u>Server Information";
+				return "<col="+ Colour.YELLOW.getHex() + "<u>Server Information";
 			}
 		},
 
@@ -65,32 +67,7 @@ public class JournalTab extends CustomTab {
 				return "Players in Wilderness: <col=04BB3B>" + World.getPlayersInWilderness();
 			}
 		},
-		
-		PVPCOUNT(6) {
-			@Override
-			public void usage(Player p) {
-				p.getPackets().sendGameMessage("Players in Edgeville PvP: " + World.getPlayersInPVP() + ".");
-			}
-
-			@Override
-			public String text(Player p) {
-				return "Players in Edgeville PvP: <col=04BB3B>" + World.getPlayersInPVP();
-			}
-		},
-
-		FFACOUNT(7) {
-			@Override
-			public void usage(Player p) {
-				p.getPackets().sendGameMessage("Players in Clan Wars (FFA): " + World.getPlayersInFFA() + ".");
-			}
-
-			@Override
-			public String text(Player p) {
-				return "Clan Wars (FFA): <col=04BB3B>" + World.getPlayersInFFA();
-			}
-		},
-
-		DOUBLEDROPS(8) {
+		DOUBLEDROPS(6) {
 			@Override
 			public void usage(Player p) {
 				p.getPackets()
@@ -103,6 +80,30 @@ public class JournalTab extends CustomTab {
 			}
 		},
 
+		SEARCH_DROPS(7) {
+			@Override
+			public void usage(Player p) {
+				DropInterface.INSTANCE.open(p);
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Drop Viewer - <col=04BB3B>Click here";
+			}
+		},
+
+		COLLECTION_LOG(8) {
+			@Override
+			public void usage(Player p) {
+				p.getCollectionLog().open();
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Collection log - <col=04BB3B>Click here";
+			}
+		},
+
 		PLAYERINFO(10) {
 			@Override
 			public void usage(Player p) {
@@ -110,7 +111,7 @@ public class JournalTab extends CustomTab {
 
 			@Override
 			public String text(Player p) {
-				return "<u>Player Information";
+				return "<col="+ Colour.YELLOW.getHex() + "<u>Player Information";
 			}
 		},
 		PLAYERRANK(11) {

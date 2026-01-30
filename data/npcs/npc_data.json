@@ -4530,6 +4530,64 @@
       "spria"
     ]
   },
+  "124": {
+    "id": 124,
+    "name": "Earth warrior",
+    "members": true,
+    "combatLevel": 51,
+    "attackLevel": 42,
+    "strengthLevel": 42,
+    "defenceLevel": 42,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 54,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 40,
+      "crush": 20
+    },
+    "magicDefence": {
+      "magic": 10
+    },
+    "rangedDefence": {
+      "light": 30,
+      "standard": 30,
+      "heavy": 30
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[12 December]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A strange, inhuman, elemental warrior.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 54,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
   "125": {
     "id": 125,
     "name": "Ice warrior",
@@ -10955,6 +11013,64 @@
       "turael",
       "spria"
     ]
+  },
+  "1019": {
+    "id": 1019,
+    "name": "Fire elemental",
+    "members": true,
+    "combatLevel": 35,
+    "attackLevel": 35,
+    "strengthLevel": 35,
+    "defenceLevel": 20,
+    "magicLevel": 20,
+    "rangedLevel": 20,
+    "constitutionLevel": 30,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[2 June]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A fire elemental.",
+    "attributes": [
+      "fiery"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
   },
   "1044": {
     "id": 1044,
@@ -18356,6 +18472,69 @@
       "nieve"
     ]
   },
+  "1624": {
+    "id": 1624,
+    "name": "Dust devil",
+    "members": true,
+    "combatLevel": 93,
+    "attackLevel": 105,
+    "strengthLevel": 70,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 105,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "The vacuumed face of evil.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "without [[facemask]]": 16
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 105,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel",
+      "krystilia"
+    ]
+  },
   "1626": {
     "id": 1626,
     "name": "Turoth",
@@ -18531,6 +18710,67 @@
     "attackSpeedTicks": 4,
     "respawnTicks": 15,
     "slayerXp": 76,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve"
+    ]
+  },
+  "1629": {
+    "id": 1629,
+    "name": "Turoth",
+    "members": true,
+    "combatLevel": 87,
+    "attackLevel": 56,
+    "strengthLevel": 86,
+    "defenceLevel": 86,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 79,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 20,
+      "crush": 20
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": true,
+      "burn": false
+    },
+    "releaseDate": "[[26 January]] [[2005]]",
+    "aliases": [],
+    "attributes": [
+      "leafy"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 79,
     "categories": [],
     "assignedBy": [
       "vannaka",
@@ -19259,6 +19499,64 @@
   },
   "1643": {
     "id": 1643,
+    "name": "Infernal Mage",
+    "members": true,
+    "combatLevel": 66,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 60,
+    "magicLevel": 75,
+    "rangedLevel": 1,
+    "constitutionLevel": 60,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 40
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An evil magic user.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 60,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
+  "1645": {
+    "id": 1645,
     "name": "Infernal Mage",
     "members": true,
     "combatLevel": 66,
@@ -21759,6 +22057,67 @@
       "konar",
       "nieve",
       "duradel"
+    ]
+  },
+  "2033": {
+    "id": 2033,
+    "name": "Giant crypt rat",
+    "members": true,
+    "combatLevel": 76,
+    "attackLevel": 80,
+    "strengthLevel": 50,
+    "defenceLevel": 65,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A nasty overgrown rodent.",
+    "attributes": [
+      "rat"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 70,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
     ]
   },
   "2091": {
@@ -24354,6 +24713,62 @@
     "attackSpeedTicks": 4,
     "respawnTicks": 150,
     "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "2887": {
+    "id": 2887,
+    "name": "Dagannoth",
+    "members": true,
+    "combatLevel": 92,
+    "attackLevel": 68,
+    "strengthLevel": 70,
+    "defenceLevel": 71,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 120,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "examine": "A horror from the ocean depths...",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": true,
+    "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 120,
     "categories": [],
     "assignedBy": [
       "vannaka",
@@ -35920,6 +36335,128 @@
       "konar",
       "nieve",
       "duradel"
+    ]
+  },
+  "4920": {
+    "id": 4920,
+    "name": "Giant crypt rat",
+    "members": true,
+    "combatLevel": 76,
+    "attackLevel": 80,
+    "strengthLevel": 50,
+    "defenceLevel": 65,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A nasty overgrown rodent.",
+    "attributes": [
+      "rat"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 70,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "4921": {
+    "id": 4921,
+    "name": "Giant crypt rat",
+    "members": true,
+    "combatLevel": 76,
+    "attackLevel": 80,
+    "strengthLevel": 50,
+    "defenceLevel": 65,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 70,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A nasty overgrown rodent.",
+    "attributes": [
+      "rat"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 70,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
     ]
   },
   "4926": {
@@ -48840,6 +49377,58 @@
     "assignedBy": [
       "krystilia"
     ]
+  },
+  "6363": {
+    "id": 6363,
+    "name": "Zamorak warrior",
+    "members": true,
+    "combatLevel": 84,
+    "attackLevel": 85,
+    "strengthLevel": 70,
+    "defenceLevel": 90,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 45,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 October]] [[2016]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A warrior of Zamorak.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": true,
+    "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
   },
   "6376": {
     "id": 6376,

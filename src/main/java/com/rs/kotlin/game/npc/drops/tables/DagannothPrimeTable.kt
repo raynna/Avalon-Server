@@ -13,9 +13,9 @@ object DagannothPrimeTable {
         }
 
         preRollDrops {
-            drop("item.seers_ring")
-            drop("item.dragon_hatchet")
-            drop("item.mud_battlestaff")
+            drop("item.seers_ring", numerator = 1, denominator = 128)
+            drop("item.dragon_hatchet", numerator = 1, denominator = 128)
+            drop("item.mud_battlestaff", numerator = 1, denominator = 128)
         }
 
         mainDrops(128) {
