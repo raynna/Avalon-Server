@@ -1,11 +1,12 @@
 package com.rs.kotlin.game.npc.drops.tables
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
+import com.rs.kotlin.game.npc.MonsterCategory
 import com.rs.kotlin.game.npc.drops.dropTable
 
 object NechryaelDropTable {
 
-    val table = dropTable(rareDropTable = true, rolls = 1) {
+    val table = dropTable(category = MonsterCategory.SLAYER, rareDropTable = true, rolls = 1) {
 
         alwaysDrops {
             drop("item.infernal_ashes")

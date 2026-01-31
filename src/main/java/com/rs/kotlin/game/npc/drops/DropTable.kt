@@ -3,6 +3,7 @@ package com.rs.kotlin.game.npc.drops
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
+import com.rs.kotlin.game.npc.MonsterCategory
 import com.rs.kotlin.game.npc.drops.DropTablesSetup.gemDropTable
 import com.rs.kotlin.game.npc.drops.DropTablesSetup.herbDropTable
 import com.rs.kotlin.game.player.interfaces.DropDisplay
@@ -11,10 +12,12 @@ import java.util.concurrent.ThreadLocalRandom
 
 fun dropTable(
     rolls: Int = 1,
+    name: String = "DropTable",
+    category: MonsterCategory = MonsterCategory.REGULAR,
     herbTable: HerbTableConfig? = null,
     rareDropTable: Boolean = false,
     block: DropTable.() -> Unit
-): DropTable = DropTable(rolls).apply {
+): DropTable = DropTable(rolls, name, category).apply {
     herbTableConfig = herbTable
     if (herbTable != null) herbTable { player, drops ->
         val roll = ThreadLocalRandom.current().nextInt(herbTable.denominator)
@@ -35,7 +38,7 @@ fun dropTable(
 }
 
 
-class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
+class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val category: MonsterCategory = MonsterCategory.REGULAR) {
     private val alwaysDrops = mutableListOf<DropEntry>()
     private val preRollDrops = mutableListOf<PreRollDropEntry>()
     private val tertiaryDrops = mutableListOf<TertiaryDropEntry>()
@@ -361,6 +364,10 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable") {
         return list
     }
 
+
+    fun setPreRollDenominator(value: Int) {
+        preRollDrops.firstOrNull()?.denominator = value
+    }
 
     fun totalDropCount(): Int =
         alwaysDrops.size + preRollDrops.size + mainDrops.size() + tertiaryDrops.size + specialDrops.size()

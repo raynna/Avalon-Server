@@ -1244,7 +1244,7 @@ public class InventoryOptionsHandler {
         } else if (item.getDefinitions().isBindItem()) {
                 player.getDungManager().bind(item, slotId);
         } else if (itemId == 20802) {
-            if (player.getKillCount() < 100) {
+            if (player.getPlayerKillcount() < 100) {
                 player.getInventory().deleteItem(itemId, 1);
                 player.getInventory().addItem(itemId - 1, 1);
                 return;

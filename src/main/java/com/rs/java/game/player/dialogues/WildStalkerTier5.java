@@ -36,7 +36,7 @@ public class WildStalkerTier5 extends Dialogue {
 				player.getInventory().addItem(20804, 1);
 			} else if (componentId == OPTION_5) {
 				end();
-				if (player.getKillCount() < 5000) {
+				if (player.getPlayerKillcount() < 5000) {
 					player.getPackets().sendGameMessage(
 							"You can't change the look of your wildstalker helmet until you earned additional tiers.");
 					player.getPackets().sendGameMessage("You need at least 5000 wilderness kills.");

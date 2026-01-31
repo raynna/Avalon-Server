@@ -35,7 +35,6 @@ import com.rs.java.game.minigames.duel.DuelRules;
 import com.rs.java.game.minigames.lividfarm.LividFarm;
 import com.rs.java.game.minigames.warriorguild.WarriorsGuild;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.NPC.AchievementKills;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.npc.pet.Pet;
 import com.rs.java.game.objects.GlobalObjectAddition;
@@ -47,6 +46,7 @@ import com.rs.java.game.player.content.collectionlog.CollectionLog;
 import com.rs.java.game.player.prayer.*;
 import com.rs.java.game.player.Ranks.Rank;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.npc.KillCountContainer;
 import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.kotlin.game.player.action.NewActionManager;
 import com.rs.java.game.player.actions.skills.construction.House;
@@ -1325,6 +1325,7 @@ public class Player extends Entity {
         treasureTrailsManager = new TreasureTrailsManager();
         godwarsKillcount = new GodwarsKillcount();
         bossKillcount = new HashMap<>();
+        killcount = new KillCountContainer();
         treasureTrailCount = new HashMap<>();
         CustomDuelRule = new HashMap<>();
         lividFarm = new LividFarm();
@@ -1438,6 +1439,8 @@ public class Player extends Entity {
             petManager = new PetManager();
         if (bossKillcount == null)
             bossKillcount = new HashMap<>();
+        if (killcount == null)
+            killcount = new KillCountContainer();
         if (treasureTrailCount == null)
             treasureTrailCount = new HashMap<>();
         if (CustomDuelRule == null)
@@ -2086,14 +2089,6 @@ public class Player extends Entity {
         return exp;
     }
 
-    public String checkKillcount(String name) {
-        return name + ": <col=FFFF00>" + (getBossKillcount().get(name) != null ? Utils.getFormattedNumber(getBossKillcount().get(name).intValue(), ',') : "0");
-    }
-
-    public int checkKillsInt(String name) {
-        return (getBossKillcount().get(name) != null ? getBossKillcount().get(name).intValue() : 0);
-    }
-
     public void sendFriendsOnline() {
         int online = 0;
         for (Player p2 : World.getPlayers()) {
@@ -2245,7 +2240,7 @@ public class Player extends Entity {
     }
 
     public boolean hasCompletionistRequirements() {
-        if (getSkills().getLevelForXp(Skills.ATTACK) >= 99 && getSkills().getLevelForXp(Skills.STRENGTH) >= 99 && getSkills().getLevelForXp(Skills.DEFENCE) >= 99 && getSkills().getLevelForXp(Skills.HITPOINTS) >= 99 && getSkills().getLevelForXp(Skills.RANGE) >= 99 && getSkills().getLevelForXp(Skills.MAGIC) >= 99 && getSkills().getLevelForXp(Skills.RUNECRAFTING) >= 99 && getSkills().getLevelForXp(Skills.FISHING) >= 99 && getSkills().getLevelForXp(Skills.AGILITY) >= 99 && getSkills().getLevelForXp(Skills.COOKING) >= 99 && getSkills().getLevelForXp(Skills.PRAYER) >= 99 && getSkills().getLevelForXp(Skills.THIEVING) >= 99 && getSkills().getLevelForXp(Skills.MINING) >= 99 && getSkills().getLevelForXp(Skills.SMITHING) >= 99 && getSkills().getLevelForXp(Skills.SUMMONING) >= 99 && getSkills().getLevelForXp(Skills.SLAYER) >= 99 && getSkills().getLevelForXp(Skills.CRAFTING) >= 99 && getSkills().getLevelForXp(Skills.WOODCUTTING) >= 99 && getSkills().getLevelForXp(Skills.FIREMAKING) >= 99 && getSkills().getLevelForXp(Skills.FLETCHING) >= 99 && getSkills().getLevelForXp(Skills.HERBLORE) >= 99 && getSkills().getLevelForXp(Skills.DUNGEONEERING) >= 120 && isCompletedFightKiln() && isCompletedFightCaves() && checkKillsInt("King Black Dragon") >= 50 && checkKillsInt("Corporeal Beast") >= 25 && checkKillsInt("General Graardor") >= 25 && checkKillsInt("Commander Zilyana") >= 25 && checkKillsInt("K'ril Tsutsaroth") >= 25 && checkKillsInt("Kree'arra") >= 25 && checkKillsInt("Dagannoth Rex") >= 25 && checkKillsInt("Dagannoth Prime") >= 25 && checkKillsInt("Dagannoth Supreme") >= 25 && getTaskManager().hasCompletedAllTasks())
+        if (getSkills().getLevelForXp(Skills.ATTACK) >= 99 && getSkills().getLevelForXp(Skills.STRENGTH) >= 99 && getSkills().getLevelForXp(Skills.DEFENCE) >= 99 && getSkills().getLevelForXp(Skills.HITPOINTS) >= 99 && getSkills().getLevelForXp(Skills.RANGE) >= 99 && getSkills().getLevelForXp(Skills.MAGIC) >= 99 && getSkills().getLevelForXp(Skills.RUNECRAFTING) >= 99 && getSkills().getLevelForXp(Skills.FISHING) >= 99 && getSkills().getLevelForXp(Skills.AGILITY) >= 99 && getSkills().getLevelForXp(Skills.COOKING) >= 99 && getSkills().getLevelForXp(Skills.PRAYER) >= 99 && getSkills().getLevelForXp(Skills.THIEVING) >= 99 && getSkills().getLevelForXp(Skills.MINING) >= 99 && getSkills().getLevelForXp(Skills.SMITHING) >= 99 && getSkills().getLevelForXp(Skills.SUMMONING) >= 99 && getSkills().getLevelForXp(Skills.SLAYER) >= 99 && getSkills().getLevelForXp(Skills.CRAFTING) >= 99 && getSkills().getLevelForXp(Skills.WOODCUTTING) >= 99 && getSkills().getLevelForXp(Skills.FIREMAKING) >= 99 && getSkills().getLevelForXp(Skills.FLETCHING) >= 99 && getSkills().getLevelForXp(Skills.HERBLORE) >= 99 && getSkills().getLevelForXp(Skills.DUNGEONEERING) >= 120 && isCompletedFightKiln() && isCompletedFightCaves() && getTaskManager().hasCompletedAllTasks())
             return true;
         return false;
     }
@@ -4088,7 +4083,7 @@ public class Player extends Entity {
 
     public void upgradeWildstalker() {
         for (WildStalker helm : WildStalker.values()) {
-            if (getKillCount() == helm.getKC()) {
+            if (getPlayerKillcount() == helm.getKC()) {
                 if (getBank().getItem(helm.getOldHelmID()) != null) {
                     getBank().removeItem(helm.getOldHelmID());
                     getBank().addItem(new Item(helm.getHelmID(), 1), true);
@@ -4766,7 +4761,7 @@ public class Player extends Entity {
         return tickTimers.getOrDefault(Keys.IntKey.TELEPORT_BLOCK_IMMUNITY, 0);
     }
 
-    public int getKillCount() {
+    public int getPlayerKillcount() {
         return get(Keys.IntKey.KILLCOUNT);
     }
 
@@ -4849,6 +4844,10 @@ public class Player extends Entity {
 
     public boolean[] getKilledBarrowBrothers() {
         return killedBarrowBrothers;
+    }
+
+    public void setKilledBarrowBrothers(boolean[] killed) {
+        this.killedBarrowBrothers = killed;
     }
 
     public void setHiddenBrother(int hiddenBrother) {
@@ -5678,28 +5677,6 @@ public class Player extends Entity {
             message("You must have completed the Fight kiln.");
         if (!isCompletedFightCaves())
             message("You must have completed the Fight caves.");
-        checkRequirement("Corporeal Beast");
-        checkRequirement("Kree'arra");
-        checkRequirement("K'ril_Tsutsaroth");
-        checkRequirement("General Graardor");
-        checkRequirement("Commander Zilyana");
-        checkRequirement("King Black Dragon");
-        checkRequirement("Dagannoth Rex");
-        checkRequirement("Dagannoth Prime");
-        checkRequirement("Dagannoth Supreme");
-
-    }
-
-    public void checkRequirement(String name) {
-        int totalKills = 0;
-        for (AchievementKills achievement : AchievementKills.values()) {
-            if (achievement.name().replace("_", " ").replace("'", "").equalsIgnoreCase(name)) {
-                totalKills = (getBossKillcount().get(name) != null ? getBossKillcount().get(name).intValue() : 0);
-                if (totalKills < achievement.getKills()) {
-                    message("You must have killed at least " + achievement.getKills() + " " + name + ", " + (achievement.getKills() - totalKills) + " left.");
-                }
-            }
-        }
     }
 
     /**
@@ -5906,9 +5883,12 @@ public class Player extends Entity {
         this.clueScrollRewards = clueScrollRewards;
     }
 
-    public HashMap<String, Integer> getBossKillcount() {
-        return bossKillcount;
+    private KillCountContainer killcount = new KillCountContainer();
+
+    public KillCountContainer getKillcount() {
+        return killcount;
     }
+
 
     public HashMap<String, Integer> getTreasureTrailCompleted() {
         return treasureTrailCount;

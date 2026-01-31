@@ -6,11 +6,11 @@ public class WildStalkerTiers extends Dialogue {
 
 	@Override
 	public void start() {
-		if (player.getKillCount() > 99)
+		if (player.getPlayerKillcount() > 99)
 			sendOptionsDialogue("Choose which hat to change to:", "Tier 1", "Tier 2");
-		if (player.getKillCount() > 499)
+		if (player.getPlayerKillcount() > 499)
 			sendOptionsDialogue("Choose which hat to change to:", "Tier 1", "Tier 2", "Tier 3");
-		if (player.getKillCount() > 1999)
+		if (player.getPlayerKillcount() > 1999)
 			sendOptionsDialogue("Choose which hat to change to:", "Tier 1", "Tier 2", "Tier 3", "Tier 4");
 	}
 

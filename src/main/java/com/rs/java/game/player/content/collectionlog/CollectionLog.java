@@ -71,15 +71,10 @@ public class CollectionLog implements Serializable {
     }
 
     public void open() {
+        player.getInterfaceManager().sendInterface(ID);
         sendComponentOps();
         writeCategory();
-        player.getInterfaceManager().sendInterface(ID);
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                player.getPackets().sendRunScript(6255);
-            }
-        }, 1);
+        player.getPackets().sendRunScript(6255);
         player.setCloseInterfacesEvent(() -> {
             tabId = 0;
             category = CategoryType.BOSSES;
@@ -165,24 +160,16 @@ public class CollectionLog implements Serializable {
 
         switch(category) {
             case BOSSES:
-                lookup = player.getBossKillcount().get(key.toLowerCase());
-                return "" + (lookup == null ? 0 : lookup);
             case SLAYER:
-                switch(key) {
-                    case "Theatre of Blood":
-                        lookup = player.getBossKillcount().get("Theatre of Blood".toLowerCase());
-                        return "" + (lookup == null ? 0 : lookup);
-                }
-                break;
+                lookup = player.getKillcount().getByName(key.toLowerCase());
+                return lookup + "";
             case CLUES:
-                switch(key) {
-                }
                 break;
             case MINIGAMES:
                 switch(key) {
                     case "Barrows":
-                        lookup = player.getBossKillcount().get("Barrows Chests".toLowerCase());
-                        return "" + (lookup == null ? 0 : lookup);
+                        lookup = player.getKillcount().getByName("barrows chest");
+                        return lookup + "";
 
                 }
                 break;
@@ -389,7 +376,18 @@ public class CollectionLog implements Serializable {
     public void addItem(Item item) {
         boolean shown = false;
 
-        // Add to Bosses
+        // Add to Minigames
+        for (Map.Entry<String, Map<Integer, Integer>> entry :
+                MASTER.getMinigames().getDrops().entrySet()) {
+
+            String minigameName = entry.getKey();
+            Map<Integer, Integer> masterTab = entry.getValue();
+
+            if (masterTab.containsKey(item.getId())) {
+                add(CategoryType.MINIGAMES, minigameName, item, !shown);
+                shown = true;
+            }
+        }
         for (Map.Entry<String, Map<Integer, Integer>> entry :
                 MASTER.getBosses().getDrops().entrySet()) {
 

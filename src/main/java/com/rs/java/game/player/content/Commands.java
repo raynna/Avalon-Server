@@ -756,7 +756,7 @@ public final class Commands {
     }
 
     private static boolean kdrCommand(Player player, String[] cmd) {
-        double kill = player.getKillCount();
+        double kill = player.getPlayerKillcount();
         double death = player.getDeathCount();
         double dr = kill / death;
         if (kill == 0 && death == 0)
@@ -764,7 +764,7 @@ public final class Commands {
         player.getInterfaceManager().closeOverlay(false);
         player.getCollectionLog().open();
         player.setNextForceTalk(
-                new ForceTalk("Kills: " + player.getKillCount() + " Deaths: " + player.getDeathCount()
+                new ForceTalk("Kills: " + player.getPlayerKillcount() + " Deaths: " + player.getDeathCount()
                         + " Streak: " + player.get(Keys.IntKey.KILLSTREAK) + " Ratio: " + new DecimalFormat("##.#").format(dr)));
         return true;
     }

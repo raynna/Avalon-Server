@@ -261,7 +261,7 @@ object PvpManager {
 
     private fun showKDRInter(player: Player) {
         if (player.toggles("KDRINTER", false)) {
-            val kills = player.killCount
+            val kills = player.playerKillcount
             val deaths = player.deathCount
             val ratioText = if (deaths == 0) kills.toString() else String.format("%.2f", kills.toDouble() / deaths)
             if (!player.interfaceManager.containsInterface("interface.kdr_interface")) player.interfaceManager.sendTab("tab.kdr_tab", "interface.kdr_interface")

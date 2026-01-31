@@ -239,7 +239,7 @@ public class WildernessControler extends Controler {
 
 	public static void showKDRInter(Player player) {
 		if (player.toggles("KDRINTER", false)) {
-			int kills = player.getKillCount();
+			int kills = player.getPlayerKillcount();
 			int deaths = player.getDeathCount();
 
 			String ratioText;

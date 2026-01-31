@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.world.activity.pvpgame.tournament
 
-import com.rs.Settings
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.core.thread.CoresManager
@@ -10,10 +9,8 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.content.presets.Preset
 import com.rs.kotlin.Rscm
-import com.rs.kotlin.game.player.command.CommandRegistry
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGameManager
 import com.rs.kotlin.game.world.activity.pvpgame.activePvPGame
-import com.rs.kotlin.game.world.activity.pvpgame.closePvPOverlay
 import com.rs.kotlin.game.world.activity.pvpgame.showResult
 import com.rs.kotlin.game.world.util.Msg
 

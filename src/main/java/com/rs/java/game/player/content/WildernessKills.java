@@ -126,7 +126,7 @@ public class WildernessKills {
 		}
 		player.getPackets().sendTextOnComponent(275, 10,
 				player.hasWildstalker()
-						? "<col=990000>Your kill/death ratio: " + player.getKillCount() + "/" + player.getDeathCount()
+						? "<col=990000>Your kill/death ratio: " + player.getPlayerKillcount() + "/" + player.getDeathCount()
 						: "Claim wildstalker helmet to view KDR.");
 		for (int i = 0; i < Kills.size(); i++) {
 			StartLine++;

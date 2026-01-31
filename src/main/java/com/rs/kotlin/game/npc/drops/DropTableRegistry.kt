@@ -1,6 +1,7 @@
 package com.rs.kotlin.game.npc.drops
 
 import com.rs.core.cache.defintions.NPCDefinitions
+import com.rs.kotlin.game.npc.MonsterCategory
 
 object DropTableRegistry {
 
@@ -25,6 +26,17 @@ object DropTableRegistry {
             }
         }
     }
+
+    @JvmStatic
+    fun isTrackable(npcId: Int): Boolean {
+        return npcDropTables.containsKey(npcId)
+    }
+
+    @JvmStatic
+    fun getCategory(npcId: Int): MonsterCategory {
+        return npcDropTables[npcId]?.category ?: MonsterCategory.REGULAR
+    }
+
 
     /**
      * Get DropTable by NPC ID.

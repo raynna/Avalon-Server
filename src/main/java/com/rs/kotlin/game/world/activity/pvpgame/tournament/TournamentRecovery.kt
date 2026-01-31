@@ -1,10 +1,7 @@
 package com.rs.kotlin.game.world.activity.pvpgame.tournament
 
 import com.rs.java.game.player.Player
-import com.rs.Settings
-import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Skills
-import com.rs.kotlin.game.player.command.CommandRegistry
 import com.rs.kotlin.game.world.activity.pvpgame.closePvPOverlay
 
 object TournamentRecovery {

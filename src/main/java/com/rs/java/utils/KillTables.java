@@ -7,7 +7,6 @@ import java.util.Comparator;
 
 import com.rs.java.game.Keys;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.VariableKeys;
 
 public final class KillTables implements Serializable {
 
@@ -89,7 +88,7 @@ public final class KillTables implements Serializable {
 	}
 
 	public static void checkRank(Player player) {
-		int kills = player.getKillCount();
+		int kills = player.getPlayerKillcount();
 		for (int i = 0; i < ranks.length; i++) {
 			KillTables rank = ranks[i];
 			if (rank == null)

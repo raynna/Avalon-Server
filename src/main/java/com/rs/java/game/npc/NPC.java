@@ -662,83 +662,12 @@ public class NPC extends Entity implements Serializable {
                 + " points for killing " + getName() + (wildy ? " in the wilderness." : " boss."));
     }
 
-    public enum BossIds {
-        GENERAL_GRAARDOR(6260), KREEARRA(6222), KRIL_TSUTSAROTH(6203), COMMANDER_ZILYANA(6247), KING_BLACK_DRAGON(50),
-        KALPHITE_QUEEN(1160), CORPOREAL_BEAST(8133), DAGANNOTH_SUPREME(2881), DAGANNOTH_PRIME(2882),
-        DAGANNOTH_REX(2883), TORMENTED_DEMON_1(8349), TORMENTED_DEMON_2(8350), TORMENTED_DEMON_3(8351),
-        CHAOS_ELEMENTAL(3200);
-
-        private int id;
-
-        private BossIds(int id) {
-            this.id = id;
-        }
-
-        public int getId() {
-            return id;
-        }
-    }
-
-    public enum AchievementKills {
-        Dagannoth_Supreme(2881, 25), Dagannoth_Prime(2882, 25), Dagannoth_Rex(2883, 25), Corporeal_Beast(8133, 10),
-        King_Black_Dragon(50, 50), General_Graardor(6260, 25), Kril_Tsutsaroth(6203, 25), Kreearra(6222, 25),
-        Commander_Zilyana(6247, 25);
-
-        private int id;
-        private int kills;
-
-        private AchievementKills(int id, int kills) {
-            this.id = id;
-            this.kills = kills;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public int getKills() {
-            return kills;
-        }
-    }
-
     public boolean isCantSetTargetAutoRelatio() {
         return isCantSetTargetAutoRelatio();
     }
 
     public void setCantSetTargetAutoRelatio(boolean cantSetTargetAutoRelatio) {
         this.forceAgressive = cantSetTargetAutoRelatio;
-    }
-
-    public void checkAchievements(Player player, NPC npc) {
-        String name = null;
-        for (AchievementKills achievement : AchievementKills.values()) {
-            if (achievement.getId() == npc.getId()) {
-                name = npc.getName();
-                if (player.getBossKillcount().get(name).intValue() == achievement.getKills()) {
-                    player.message("<col=ff0000>Congratulations, you have completed an achievement;");
-                    player.message("<col=ff0000>Kill " + achievement.getKills() + " " + name + ".");
-                    player.getAdventureLog().addActivity("Completed completionist cape requirement; kill "
-                            + achievement.getKills() + " " + name + "");
-                }
-            }
-        }
-    }
-
-    public void getKillcount(Player player) {
-        for (BossIds id : BossIds.values()) {
-            if (getId() == id.getId()) {
-                int totalKills = 1;
-                if (player.getBossKillcount().containsKey(getName()))
-                    totalKills = player.getBossKillcount().get(getName()) + 1;
-                addAvalonPoints(player, this, false);
-                player.getBossKillcount().put(getName().replace("_1", "").replace("_2", "").replace("3_", ""),
-                        totalKills);
-                player.message("Your " + getName() + " killcount is: <col=ff0000>" + totalKills + "</col>.");
-                if (totalKills % 50 == 0)
-                    player.getAdventureLog().addActivity("Killed " + totalKills + " " + getName() + "");
-                checkAchievements(player, this);
-            }
-        }
     }
 
     public double getDropRateMultiplier() {
@@ -775,7 +704,7 @@ public class NPC extends Entity implements Serializable {
         SlayerManager manager = killer.getSlayerManager();
         if (manager.isValidTask(getName()))
             manager.checkCompletedTask(getDamageReceived(killer), 0);
-        getKillcount(killer);
+        killer.getKillcount().increment(getId());
         if (getId() == 1615) {
             killer.getTaskManager().checkComplete(Tasks.KILL_ABYSSAL_DEMON);
         }

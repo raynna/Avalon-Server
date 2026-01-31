@@ -2034,10 +2034,6 @@ public class ButtonHandler {
                 player.getPackets().sendTextOnComponent(629, 62, "");
                 player.getPackets().sendTextOnComponent(629, 50, "Highest value Wildy kill:");
                 player.getPackets().sendTextOnComponent(629, 63, (player.getHighestValuedKill() >= Integer.MAX_VALUE ? "Lots!" : Utils.getFormattedNumber(player.getHighestValuedKill(), ',')));
-                int bossKills = 0;
-                bossKills += player.getBossKillcount().size();
-                player.getPackets().sendTextOnComponent(629, 51, "Total boss kills:");
-                player.getPackets().sendTextOnComponent(629, 64, Utils.getFormattedNumber(bossKills, ','));
                 player.getPackets().sendTextOnComponent(629, 52, "Slayer tasks completed:");
                 player.getPackets().sendTextOnComponent(629, 65, Utils.getFormattedNumber(player.getSlayerManager().getCompletedTasks()));
                 player.getPackets().sendHideIComponent(629, 68, true);

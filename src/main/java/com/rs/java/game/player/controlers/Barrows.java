@@ -12,6 +12,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.item.ItemId;
 import com.rs.java.game.npc.others.BarrowsBrother;
@@ -19,7 +20,10 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.java.game.player.content.collectionlog.CategoryType;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.drops.Drop;
+import com.rs.kotlin.game.npc.drops.tables.BarrowsChestTable;
 
 public final class Barrows extends Controler {
 
@@ -140,28 +144,57 @@ public final class Barrows extends Controler {
             {477, 471, 472, 476, 475, 478, 480, 477}};
 
     public void sendReward() {
-        double percentage = 0;
-        for (boolean died : player.getKilledBarrowBrothers()) {
-            if (died)
-                percentage += 2.5;
-        }
-        percentage += (player.getBarrowsKillCount() / 40d);
-        if (percentage > 90)
-            percentage = 90;
-        if (percentage >= Math.random() * 95) {
-            player.getInventory().addItem(405, 1);
-            player.getPackets().sendGameMessage("You recieved a barrows casket.");
-        }
-        for (int i = 0; i < 10; i++)
-            if (percentage >= Math.random() * 100)
-                drop(COMMON_REWARDS[Utils.random(COMMON_REWARDS.length)]);
-        drop(new Item(995, Utils.random(50307)));
-        player.setBarrowsKillCount(0);
-    }
 
-    private void drop(Item item) {
-        player.getInventory().addItemDrop(item.getId(), item.getAmount());
+        int brothersKilled = 0;
+        for (boolean b : player.getKilledBarrowBrothers())
+            if (b) brothersKilled++;
 
+        if (brothersKilled == 0) {
+            player.getPackets().sendGameMessage("You found nothing.");
+            return;
+        }
+        ItemsContainer<Item> rewards = new ItemsContainer<>(10, false);
+        int rolls = 1 + brothersKilled;
+
+        for (int i = 0; i < rolls; i++) {
+
+            int denom = BarrowsChestTable.barrowsUniqueChance(brothersKilled);
+
+            BarrowsChestTable.BARROWS_CHEST_TABLE
+                    .setPreRollDenominator(denom);
+
+            List<Drop> drops =
+                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player);
+
+            for (Drop d : drops) {
+                rewards.add(new Item(d.itemId, d.amount));
+            }
+        }
+        player.getKillcount().increment("barrows chest");
+        player.getInterfaceManager().sendInterface(1171);
+        player.getPackets().sendItems(999, rewards);
+        player.getPackets().sendInterSetItemsOptionsScript(
+                1171,
+                7,
+                999,
+                5,
+                4,
+                "Take", "Bank", "Examine"
+        );
+        player.getPackets().sendComponentSettings(
+                1171, // interface
+                7,    // component holding items
+                0,
+                rewards.getSize(),
+                0 // default interaction flags
+        );
+        player.temporaryAttribute().remove("barrows_used");
+        player.setCloseInterfacesEvent(() -> {
+            for (Item item : rewards.getContainerItems()) {
+                if (item == null) continue;
+                player.getInventory().addItemDrop(item.getId(), item.getAmount());
+            }
+        });
     }
 
     @Override

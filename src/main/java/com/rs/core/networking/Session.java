@@ -166,6 +166,7 @@ public class Session {
 		return null;
 	}
 
+
 	public Channel getChannel() {
 		return channel;
 	}

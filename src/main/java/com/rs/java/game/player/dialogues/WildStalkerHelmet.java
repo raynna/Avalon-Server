@@ -3,7 +3,6 @@ package com.rs.java.game.player.dialogues;
 import java.text.DecimalFormat;
 
 import com.rs.java.game.Keys;
-import com.rs.java.game.player.VariableKeys;
 import com.rs.java.utils.Utils;
 
 public class WildStalkerHelmet extends Dialogue {
@@ -19,7 +18,7 @@ public class WildStalkerHelmet extends Dialogue {
 	public void run(int interfaceId, int componentId) {
 		int ks = player.get(Keys.IntKey.KILLSTREAK);
 		int ksr = player.get(Keys.IntKey.KILLSTREAK_RECORD);
-		double kills = player.getKillCount();
+		double kills = player.getPlayerKillcount();
 		double deaths = player.getDeathCount();
 		double dr = (kills / deaths);
 		if (stage == -1) {
@@ -27,7 +26,7 @@ public class WildStalkerHelmet extends Dialogue {
 				stage = 15;
 				sendDialogue("Kill streak & Kill/Death ratio (KDR):</col><br>" + "Current kills in a row: " + ks
 						+ ".<br>" + "Current kills in a row record: " + ksr + ".<br>" + "Current total kills: "
-						+ player.getKillCount() + ".<br>" + "Current total deaths: " + player.getDeathCount()
+						+ player.getPlayerKillcount() + ".<br>" + "Current total deaths: " + player.getDeathCount()
 						+ ".<br>".replace(".0", "") + "Current ratio: " + new DecimalFormat("##.#").format(dr)
 						+ ".<br>");
 			} else if (componentId == OPTION_2) {
@@ -40,7 +39,7 @@ public class WildStalkerHelmet extends Dialogue {
 						"No, I wan't to keep it!");
 			} else if (componentId == OPTION_4) {
 				stage = 15;
-				sendDialogue("Current stats (Wilderness):</col><br>" + player.getKillCount() + " kills, " + player.getDeathCount()
+				sendDialogue("Current stats (Wilderness):</col><br>" + player.getPlayerKillcount() + " kills, " + player.getDeathCount()
 						+ " deaths.<br>" + "Current kills in a row: " + ks + ".<br>" + "Current kills in a row record: "
 						+ ksr + ".<br>" + "Most valuable kill: "
 						+ (player.getHighestValuedKill() == Integer.MAX_VALUE ? "Lots!"

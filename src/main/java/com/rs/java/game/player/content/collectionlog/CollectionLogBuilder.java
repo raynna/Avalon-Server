@@ -1,6 +1,7 @@
 package com.rs.java.game.player.content.collectionlog;
 
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.npc.drops.tables.BarrowsChestTable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -106,6 +107,9 @@ public class CollectionLogBuilder {
 
 
     private static void buildMinigames(LogCategory cat) {
+        cat.init("Barrows", getItems(
+                BarrowsChestTable.getAllBarrowsItems()
+        ));
     }
 
     private static void buildClues(LogCategory cat) {

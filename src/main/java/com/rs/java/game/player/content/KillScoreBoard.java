@@ -26,7 +26,7 @@ public final class KillScoreBoard implements Serializable {
 
 	public KillScoreBoard(Player player) {
 		this.username = player.getUsername();
-		this.kills = player.getKillCount();
+		this.kills = player.getPlayerKillcount();
 		this.deaths = player.getDeathCount();
 		this.kdr = kills / deaths;
 	}

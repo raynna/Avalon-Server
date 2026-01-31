@@ -7,7 +7,7 @@ class PreRollDropEntry(
     itemId: Int?,
     amount: IntRange,
     val numerator: Int,
-    val denominator: Int,
+    var denominator: Int,
     val condition: ((Player) -> Boolean)? = null,
     val dynamicItem: ((Player) -> Int?)? = null,
     val displayItems: List<Int>? = null

@@ -104,19 +104,19 @@ object JournalTabDSL {
         }
 
         // Kill/death/ratio
-        action({ "Kills: <col=04BB3B>${it.killCount}" }) { p ->
-            p.packets.sendGameMessage("My killcount is: ${p.killCount}.")
-            p.setNextForceTalk(ForceTalk("My killcount is: ${p.killCount}."))
+        action({ "Kills: <col=04BB3B>${it.playerKillcount}" }) { p ->
+            p.packets.sendGameMessage("My killcount is: ${p.playerKillcount}.")
+            p.setNextForceTalk(ForceTalk("My killcount is: ${p.playerKillcount}."))
         }
         action({ "Deaths: <col=04BB3B>${it.deathCount}" }) { p ->
             p.packets.sendGameMessage("My deathcount is: ${p.deathCount}.")
             p.setNextForceTalk(ForceTalk("My deathcount is: ${p.deathCount}."))
         }
         action({
-            val dr = if (it.deathCount == 0) it.killCount.toDouble() else it.killCount.toDouble() / it.deathCount
+            val dr = if (it.deathCount == 0) it.playerKillcount.toDouble() else it.playerKillcount.toDouble() / it.deathCount
             "K/D Ratio: <col=04BB3B>${DecimalFormat("0.00").format(dr)}"
         }) { p ->
-            val dr = if (p.deathCount == 0) p.killCount.toDouble() else p.killCount.toDouble() / p.deathCount
+            val dr = if (p.deathCount == 0) p.playerKillcount.toDouble() else p.playerKillcount.toDouble() / p.deathCount
             val f = DecimalFormat("0.00").format(dr)
             p.packets.sendGameMessage("My kill/death ratio is: $f.")
             p.setNextForceTalk(ForceTalk("My kill/death ratio is: $f."))

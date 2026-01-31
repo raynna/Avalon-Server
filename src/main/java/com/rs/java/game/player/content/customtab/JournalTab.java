@@ -7,7 +7,6 @@ import com.rs.java.game.ForceTalk;
 import com.rs.java.game.World;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Ranks.Rank;
-import com.rs.java.game.player.content.collectionlog.CollectionLog;
 import com.rs.java.utils.HexColours.Colour;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
 
@@ -170,13 +169,13 @@ public class JournalTab extends CustomTab {
 		KILLS(14) {
 			@Override
 			public void usage(Player p) {
-				p.getPackets().sendGameMessage("My killcount is: " + p.getKillCount() + ".");
-				p.setNextForceTalk(new ForceTalk("My killcount is: " + p.getKillCount() + "."));
+				p.getPackets().sendGameMessage("My killcount is: " + p.getPlayerKillcount() + ".");
+				p.setNextForceTalk(new ForceTalk("My killcount is: " + p.getPlayerKillcount() + "."));
 			}
 
 			@Override
 			public String text(Player p) {
-				return "Kills: <col=04BB3B>" + p.getKillCount();
+				return "Kills: <col=04BB3B>" + p.getPlayerKillcount();
 			}
 		},
 		DEATHS(15) {
@@ -194,7 +193,7 @@ public class JournalTab extends CustomTab {
 		KDR(16) {
 			@Override
 			public void usage(Player p) {
-				double kill = p.getKillCount();
+				double kill = p.getPlayerKillcount();
 				double death = p.getDeathCount();
 				double dr = death == 0 ? kill : (kill / death);
 				p.getPackets().sendGameMessage("My kill/death ratio is: " + new DecimalFormat("0.00").format(dr) + ".");
@@ -204,7 +203,7 @@ public class JournalTab extends CustomTab {
 
 			@Override
 			public String text(Player p) {
-				double kill = p.getKillCount();
+				double kill = p.getPlayerKillcount();
 				double death = p.getDeathCount();
 				double dr = death == 0 ? kill : (kill / death);
 				return "K/D Ratio: <col=04BB3B>" + new DecimalFormat("0.00").format(dr);

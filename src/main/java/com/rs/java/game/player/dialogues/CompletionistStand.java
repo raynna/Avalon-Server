@@ -8,7 +8,6 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.NPC.AchievementKills;
 import com.rs.java.game.player.Skills;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
@@ -280,20 +279,6 @@ public class CompletionistStand extends Dialogue {
 		}
 	}
 
-	public void getKillcount(String name) {
-		int totalKills = 0;
-		for (AchievementKills achievement : AchievementKills.values()) {
-			if (achievement.name().replace("_", " ").replace("'", "").equalsIgnoreCase(name)) {
-				totalKills = (player.getBossKillcount().get(name) != null
-						? player.getBossKillcount().get(name).intValue() : 0);
-				if (totalKills < achievement.getKills()) {
-					player.getPackets().sendGameMessage("You must have killed at least " + achievement.getKills() + " "
-							+ name + ", " + (achievement.getKills() - totalKills) + " left.");
-				}
-			}
-		}
-	}
-
 	public void sendRequirementMessages() {
 		if (!player.hasCompletionistStatRequirements()) {
 			player.getPackets().sendGameMessage("You need level 99 in the following: ");
@@ -317,15 +302,6 @@ public class CompletionistStand extends Dialogue {
 			player.getPackets().sendGameMessage("You must have completed the Fight kiln.");
 		if (!player.isCompletedFightCaves())
 			player.getPackets().sendGameMessage("You must have completed the Fight caves.");
-		getKillcount("Corporeal Beast");
-		getKillcount("Kree'arra");
-		getKillcount("K'ril_Tsutsaroth");
-		getKillcount("General Graardor");
-		getKillcount("Commander Zilyana");
-		getKillcount("King Black Dragon");
-		getKillcount("Dagannoth Rex");
-		getKillcount("Dagannoth Prime");
-		getKillcount("Dagannoth Supreme");
 	}
 
 	@Override
