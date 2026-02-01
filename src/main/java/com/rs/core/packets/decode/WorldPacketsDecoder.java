@@ -29,6 +29,7 @@ import com.rs.java.game.minigames.duel.DuelArena;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.npc.familiar.Familiar.SpecialAttack;
+import com.rs.java.utils.*;
 import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Inventory;
 import com.rs.java.game.player.LogicPacket;
@@ -71,11 +72,6 @@ import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.core.packets.packet.InventoryOptionsHandler;
 import com.rs.core.packets.packet.NPCHandler;
 import com.rs.core.packets.packet.ObjectHandler;
-import com.rs.java.utils.DisplayNames;
-import com.rs.java.utils.Encrypt;
-import com.rs.java.utils.Logger;
-import com.rs.java.utils.SerializableFilesManager;
-import com.rs.java.utils.Utils;
 import com.rs.java.utils.huffman.Huffman;
 import com.rs.kotlin.game.player.combat.CombatAction;
 import com.rs.kotlin.game.player.combat.magic.*;
@@ -2231,20 +2227,39 @@ public final class WorldPacketsDecoder extends Decoder {
 			player.getDungManager().invite(value);
 			return;
 		} else if (player.temporaryAttribute().get("TITLE_COLOR_SET") != null) {
-			if (value.length() != 6) {
-				player.getDialogueManager().startDialogue("SimpleMessage", "The HEX yell color you wanted to pick cannot be longer and shorter then 6.");
-			} else if (Utils.containsInvalidCharacter(value) || value.contains("_")) {
-				player.getDialogueManager().startDialogue("SimpleMessage", "The requested title color can only contain numeric and regular characters.");
-			} else {
-				player.setCustomTitleColour(value.toLowerCase());
+
+			String input = value.toLowerCase().trim();
+
+			String presetHex = Colors.getHexByName(input);
+			if (presetHex != null) {
+
+				player.setCustomTitleColour(presetHex.toLowerCase());
 				player.setCustomTitle(player.getCustomTitle());
 				player.getAppearence().generateAppearenceData();
 				JournalTab.open(player);
-				player.message("Set your title colour to: <col=" + player.getCustomTitleColour() +">COLOUR");
-				player.getPackets().sendRunScript(109, new Object[] { "Would you like the title infront or behind your name? Front/Back" });
-				player.temporaryAttribute().put("TITLE_ORDER_SET", Boolean.TRUE);
-			}
-			player.temporaryAttribute().remove("CUSTOM_TITLE_SET");
+				player.message("Set your title colour to: <col=" + presetHex + ">COLOUR");
+            } else {
+				String hex = input;
+				if (hex.startsWith("#")) {
+					hex = hex.substring(1);
+				}
+				if (!hex.matches("[0-9a-fA-F]{6}")) {
+					player.getDialogueManager().startDialogue(
+							"SimpleMessage",
+							"Enter a valid 6-digit HEX or preset (red, blue, darkred, etc)."
+					);
+					return;
+				}
+				player.setCustomTitleColour(hex.toLowerCase());
+				player.setCustomTitle(player.getCustomTitle());
+				player.getAppearence().generateAppearenceData();
+				JournalTab.open(player);
+				player.message("Set your title colour to: <col=" + hex + ">COLOUR");
+            }
+            player.getPackets().sendRunScript(109, "Would you like the title infront or behind your name? Front/Back");
+            player.temporaryAttribute().put("TITLE_ORDER_SET", Boolean.TRUE);
+
+            player.temporaryAttribute().remove("CUSTOM_TITLE_SET");
 			player.temporaryAttribute().remove("TITLE_COLOR_SET");
 			return;
 		} else if (player.temporaryAttribute().get("npc_find") != null) {
@@ -2343,7 +2358,7 @@ public final class WorldPacketsDecoder extends Decoder {
 			player.getAppearence().setTitle(900);
 			player.message("Set your title to: <col=" + player.getCustomTitleColour() +">" + value);
 			JournalTab.open(player);
-			player.getPackets().sendRunScript(109, new Object[] { "Please enter the color you would like. (HEX FORMAT)" });
+			player.getPackets().sendRunScript(109, "Enter a color (HEX) or preset: " + Colors.getPresetList());
 			player.temporaryAttribute().put("TITLE_COLOR_SET", Boolean.TRUE);
 			player.temporaryAttribute().remove("CUSTOM_TITLE_SET");
 			player.temporaryAttribute().remove("TITLE_ORDER_SET");
