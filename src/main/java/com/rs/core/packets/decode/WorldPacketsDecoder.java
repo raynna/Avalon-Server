@@ -298,7 +298,7 @@ public final class WorldPacketsDecoder extends Decoder {
 		PACKET_SIZES[95] = -2;
 		PACKET_SIZES[96] = 8;
 		PACKET_SIZES[97] = 2;
-		PACKET_SIZES[98] = 6;
+		PACKET_SIZES[98] = 7;
 		PACKET_SIZES[99] = 2;
 		PACKET_SIZES[100] = -2;
 		PACKET_SIZES[101] = 3;
@@ -322,22 +322,44 @@ public final class WorldPacketsDecoder extends Decoder {
 	@Override
 	public void decode(InputStream stream) {
 		while (stream.getRemaining() > 0 && session.getChannel().isConnected() && !player.hasFinished()) {
+
+			int startOffset = stream.getOffset();
+
 			int packetId = stream.readPacket(player);
-			if (packetId >= PACKET_SIZES.length || packetId < 0) {
+			if (packetId < 0 || packetId >= PACKET_SIZES.length) {
 				if (Settings.DEBUG)
 					System.out.println("PacketId " + packetId + " has fake packet id.");
-				break;
+				stream.setOffset(startOffset);
+				return;
 			}
-			int length = resolvePacketLength(stream, packetId);
+
+			int length = PACKET_SIZES[packetId];
+
+			if (length == -1) {
+				if (stream.getRemaining() < 1) {
+					stream.setOffset(startOffset);
+					return;
+				}
+				length = stream.readUnsignedByte();
+			}
+			else if (length == -2) {
+				if (stream.getRemaining() < 2) {
+					stream.setOffset(startOffset);
+					return;
+				}
+				length = stream.readUnsignedShort();
+			}
+
 			if (length > stream.getRemaining()) {
-				length = stream.getRemaining();
-				if (Settings.DEBUG)
-					System.out.println("PacketId " + packetId + " has fake size. - expected size " + length);
+				stream.setOffset(startOffset);
+				return;
 			}
-			int startOffset = stream.getOffset();
+
+			int startData = stream.getOffset();
 			processPackets(packetId, stream, length);
-			stream.setOffset(startOffset + length);
+			stream.setOffset(startData + length);
 		}
+
 	}
 
 	private static int resolvePacketLength(InputStream stream, int packetId) {

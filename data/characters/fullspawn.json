@@ -49,55 +49,65 @@
     "items": {
       "data": [
         {
-          "id": 10887,
+          "id": 10386,
           "amount": 1
         },
         {
-          "id": 9244,
-          "amount": 50
-        },
-        {
-          "id": 2440,
+          "id": 4151,
           "amount": 1
         },
         {
-          "id": 2436,
+          "id": 23659,
+          "amount": 1
+        },
+        {
+          "id": 13911,
+          "amount": 1,
+          "metadata": {
+            "type": 2,
+            "data": {
+              "charges": 22,
+              "lastDisplayedPercentage": 0
+            }
+          }
+        },
+        {
+          "id": 10388,
+          "amount": 1
+        },
+        {
+          "id": 8850,
+          "amount": 1
+        },
+        {
+          "id": 6585,
+          "amount": 1
+        },
+        {
+          "id": 13917,
+          "amount": 1,
+          "metadata": {
+            "type": 2,
+            "data": {
+              "charges": 21,
+              "lastDisplayedPercentage": 0
+            }
+          }
+        },
+        {
+          "id": 9739,
+          "amount": 1
+        },
+        {
+          "id": 5698,
           "amount": 1
         },
         {
           "id": 15272,
-          "amount": 1
-        },
-        {
-          "id": 9185,
-          "amount": 1
-        },
-        {
-          "id": 2444,
           "amount": 1
         },
         {
           "id": 3024,
-          "amount": 1
-        },
-        {
-          "id": 15272,
-          "amount": 1
-        },
-        {
-          "id": 15272,
-          "amount": 1
-        },
-        {
-          "id": 2550,
-          "amount": 1
-        },
-        {
-          "id": 3024,
-          "amount": 1
-        },
-        {
-          "id": 15272,
           "amount": 1
         },
         {
@@ -113,7 +123,7 @@
           "amount": 1
         },
         {
-          "id": 15272,
+          "id": 3024,
           "amount": 1
         },
         {
@@ -130,10 +140,6 @@
         },
         {
           "id": 15272,
-          "amount": 1
-        },
-        {
-          "id": 4153,
           "amount": 1
         },
         {
@@ -159,6 +165,24 @@
         {
           "id": 8013,
           "amount": 25
+        },
+        {
+          "id": 12437,
+          "amount": 25
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
         }
       ],
       "alwaysStackable": false
@@ -168,34 +192,37 @@
     "items": {
       "data": [
         {
-          "id": 1169,
+          "id": 3751,
           "amount": 1
         },
         {
-          "id": 10499,
+          "id": 2412,
           "amount": 1
         },
         {
-          "id": 1712,
+          "id": 18335,
           "amount": 1
         },
         {
-          "id": 861,
+          "id": 15486,
           "amount": 1
         },
         {
-          "id": 544,
+          "id": 6916,
           "amount": 1
         },
-        null,
-        null,
         {
-          "id": 2497,
+          "id": 13734,
           "amount": 1
         },
         null,
         {
-          "id": 7459,
+          "id": 6924,
+          "amount": 1
+        },
+        null,
+        {
+          "id": 7462,
           "amount": 1
         },
         {
@@ -204,13 +231,10 @@
         },
         null,
         {
-          "id": 2550,
+          "id": 15220,
           "amount": 1
         },
-        {
-          "id": 19162,
-          "amount": 100
-        },
+        null,
         null
       ],
       "alwaysStackable": false
@@ -237,11 +261,11 @@
         },
         {
           "id": 3751,
-          "amount": 137
+          "amount": 142
         },
         {
           "id": 10828,
-          "amount": 119
+          "amount": 121
         },
         {
           "id": 3122,
@@ -277,11 +301,11 @@
         },
         {
           "id": 1333,
-          "amount": 100
+          "amount": 101
         },
         {
           "id": 4587,
-          "amount": 111
+          "amount": 113
         },
         {
           "id": 1305,
@@ -289,11 +313,11 @@
         },
         {
           "id": 1434,
-          "amount": 103
+          "amount": 104
         },
         {
           "id": 5698,
-          "amount": 139
+          "amount": 147
         },
         {
           "id": 1377,
@@ -317,7 +341,7 @@
         },
         {
           "id": 4153,
-          "amount": 113
+          "amount": 118
         },
         {
           "id": 14679,
@@ -341,7 +365,7 @@
         },
         {
           "id": 1093,
-          "amount": 122
+          "amount": 126
         },
         {
           "id": 9678,
@@ -353,43 +377,43 @@
         },
         {
           "id": 10386,
-          "amount": 37
+          "amount": 43
         },
         {
           "id": 4151,
-          "amount": 46
+          "amount": 53
         },
         {
           "id": 6570,
-          "amount": 45
+          "amount": 53
         },
         {
           "id": 10551,
-          "amount": 35
+          "amount": 40
         },
         {
           "id": 10388,
-          "amount": 37
+          "amount": 43
         },
         {
           "id": 8850,
-          "amount": 37
+          "amount": 43
         },
         {
           "id": 11694,
-          "amount": 27
+          "amount": 31
         },
         {
           "id": 2440,
-          "amount": 28
+          "amount": 30
         },
         {
           "id": 2436,
-          "amount": 28
+          "amount": 30
         },
         {
           "id": 3024,
-          "amount": 146
+          "amount": 179
         },
         {
           "id": 391,
@@ -397,303 +421,303 @@
         },
         {
           "id": 6685,
-          "amount": 149
+          "amount": 180
         },
         {
           "id": 12437,
-          "amount": 3571
+          "amount": 4246
         },
         {
           "id": 2412,
-          "amount": 77
-        },
-        {
-          "id": 13734,
-          "amount": 38
-        },
-        {
-          "id": 7462,
-          "amount": 76
-        },
-        {
-          "id": 3105,
-          "amount": 38
-        },
-        {
-          "id": 15220,
           "amount": 89
         },
         {
+          "id": 13734,
+          "amount": 43
+        },
+        {
+          "id": 7462,
+          "amount": 86
+        },
+        {
+          "id": 3105,
+          "amount": 47
+        },
+        {
+          "id": 15220,
+          "amount": 104
+        },
+        {
           "id": 6585,
-          "amount": 52
+          "amount": 60
         },
         {
           "id": 18335,
-          "amount": 65
+          "amount": 75
         },
         {
           "id": 23659,
-          "amount": 42
+          "amount": 49
         },
         {
           "id": 6924,
-          "amount": 15
+          "amount": 17
         },
         {
           "id": 6916,
-          "amount": 15
+          "amount": 17
         },
         {
           "id": 15486,
-          "amount": 47
+          "amount": 51
         },
         {
           "id": 6914,
-          "amount": 7
+          "amount": 9
         },
         {
           "id": 20671,
-          "amount": 7
+          "amount": 9
         },
         {
           "id": 1712,
-          "amount": 18
+          "amount": 25
         },
         {
           "id": 15272,
-          "amount": 723
+          "amount": 892
         },
         {
           "id": 4736,
-          "amount": 13
+          "amount": 14
         },
         {
           "id": 11726,
-          "amount": 13
+          "amount": 14
         },
         {
           "id": 20072,
-          "amount": 47
+          "amount": 55
         },
         {
           "id": 3144,
-          "amount": 91
+          "amount": 109
         },
         {
           "id": 4712,
-          "amount": 23
+          "amount": 26
         },
         {
           "id": 6889,
-          "amount": 13
+          "amount": 14
         },
         {
           "id": 4714,
-          "amount": 23
+          "amount": 26
         },
         {
           "id": 11732,
-          "amount": 23
+          "amount": 26
         },
         {
           "id": 4718,
-          "amount": 6
+          "amount": 7
         },
         {
           "id": 4716,
-          "amount": 10
+          "amount": 12
         },
         {
           "id": 4720,
-          "amount": 10
+          "amount": 12
         },
         {
           "id": 4722,
-          "amount": 10
+          "amount": 12
         },
         {
           "id": 8013,
-          "amount": 1525
+          "amount": 1975
         },
         {
           "id": 9739,
-          "amount": 40
+          "amount": 53
         },
         {
           "id": 21371,
-          "amount": 24
-        },
-        {
-          "id": 14484,
-          "amount": 27
-        },
-        {
-          "id": 21787,
           "amount": 28
         },
         {
+          "id": 14484,
+          "amount": 32
+        },
+        {
+          "id": 21787,
+          "amount": 33
+        },
+        {
           "id": 8842,
-          "amount": 16
+          "amount": 20
         },
         {
           "id": 19712,
-          "amount": 4
+          "amount": 5
         },
         {
           "id": 11663,
-          "amount": 4
+          "amount": 5
         },
         {
           "id": 11664,
-          "amount": 6
+          "amount": 8
         },
         {
           "id": 11665,
-          "amount": 10
+          "amount": 13
         },
         {
           "id": 8839,
-          "amount": 6
+          "amount": 8
         },
         {
           "id": 8840,
-          "amount": 6
+          "amount": 8
         },
         {
           "id": 19785,
-          "amount": 10
+          "amount": 13
         },
         {
           "id": 19786,
-          "amount": 10
+          "amount": 13
         },
         {
           "id": 13738,
-          "amount": 16
+          "amount": 18
         },
         {
           "id": 10499,
-          "amount": 5
+          "amount": 9
         },
         {
           "id": 18353,
-          "amount": 6
+          "amount": 8
         },
         {
           "id": 18357,
-          "amount": 3
+          "amount": 4
         },
         {
           "id": 18349,
-          "amount": 3
+          "amount": 4
         },
         {
           "id": 4749,
-          "amount": 6
+          "amount": 8
         },
         {
           "id": 4751,
-          "amount": 6
+          "amount": 8
         },
         {
           "id": 3842,
-          "amount": 10
+          "amount": 13
         },
         {
           "id": 2444,
-          "amount": 5
+          "amount": 9
         },
         {
           "id": 11700,
-          "amount": 2
+          "amount": 3
         },
         {
           "id": 13896,
-          "amount": 3
+          "amount": 4
         },
         {
           "id": 13887,
-          "amount": 3
+          "amount": 4
         },
         {
           "id": 13893,
-          "amount": 3
+          "amount": 4
         },
         {
           "id": 1725,
-          "amount": 3
+          "amount": 5
         },
         {
           "id": 22361,
-          "amount": 3
+          "amount": 4
         },
         {
           "id": 11212,
-          "amount": 200
+          "amount": 300
         },
         {
           "id": 11235,
-          "amount": 2
+          "amount": 3
         },
         {
           "id": 15126,
-          "amount": 2
+          "amount": 3
         },
         {
           "id": 2577,
-          "amount": 2
+          "amount": 3
         },
         {
           "id": 15019,
-          "amount": 2
+          "amount": 3
         },
         {
           "id": 20139,
-          "amount": 12
+          "amount": 13
         },
         {
           "id": 20151,
-          "amount": 12
+          "amount": 13
         },
         {
           "id": 20143,
-          "amount": 12
+          "amount": 13
         },
         {
           "id": 20135,
-          "amount": 12
+          "amount": 13
         },
         {
           "id": 13742,
-          "amount": 12
+          "amount": 13
         },
         {
           "id": 23447,
-          "amount": 12
+          "amount": 13
         },
         {
           "id": 23399,
-          "amount": 24
+          "amount": 26
         },
         {
           "id": 23351,
-          "amount": 24
+          "amount": 26
         },
         {
           "id": 20159,
-          "amount": 13
+          "amount": 14
         },
         {
           "id": 20163,
-          "amount": 13
+          "amount": 14
         },
         {
           "id": 20167,
-          "amount": 13
+          "amount": 14
         },
         {
           "id": 19335,
-          "amount": 11
+          "amount": 12
         },
         {
           "id": 24202,
@@ -719,16 +743,369 @@
               }
             }
           }
+        },
+        {
+          "id": 10887,
+          "amount": 2
+        },
+        {
+          "id": 2550,
+          "amount": 4
+        },
+        {
+          "id": 544,
+          "amount": 3
+        },
+        {
+          "id": 7459,
+          "amount": 2
+        },
+        {
+          "id": 19162,
+          "amount": 200
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 40,
+                "557": 200,
+                "9075": 80
+              }
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 40,
+                "557": 200,
+                "9075": 80
+              }
+            }
+          }
+        },
+        {
+          "id": 11283,
+          "amount": 1,
+          "metadata": {
+            "type": 0,
+            "data": {
+              "charges": 50
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 4718,
+          "amount": 1,
+          "metadata": {
+            "type": 3,
+            "data": {
+              "charges": 1,
+              "lastDisplayedPercentage": -1
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 11283,
+          "amount": 1,
+          "metadata": {
+            "type": 0,
+            "data": {
+              "charges": 50
+            }
+          }
+        },
+        {
+          "id": 1319,
+          "amount": 1
+        },
+        {
+          "id": 2667,
+          "amount": 1
+        },
+        {
+          "id": 2661,
+          "amount": 1
+        },
+        {
+          "id": 373,
+          "amount": 18
+        },
+        {
+          "id": 113,
+          "amount": 1
+        },
+        {
+          "id": 2665,
+          "amount": 1
+        },
+        {
+          "id": 2663,
+          "amount": 1
+        },
+        {
+          "id": 2301,
+          "amount": 2
+        },
+        {
+          "id": 9756,
+          "amount": 1
+        },
+        {
+          "id": 853,
+          "amount": 1
+        },
+        {
+          "id": 24203,
+          "amount": 1,
+          "metadata": {
+            "type": 5,
+            "data": {
+              "spellId": 23,
+              "charges": 250
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24203,
+          "amount": 1,
+          "metadata": {
+            "type": 5,
+            "data": {
+              "spellId": 23,
+              "charges": 250
+            }
+          }
+        },
+        {
+          "id": 13911,
+          "amount": 1,
+          "metadata": {
+            "type": 2,
+            "data": {
+              "charges": 42,
+              "lastDisplayedPercentage": 80
+            }
+          }
+        },
+        {
+          "id": 13919,
+          "amount": 1,
+          "metadata": {
+            "type": 2,
+            "data": {
+              "charges": 1492,
+              "lastDisplayedPercentage": 95
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 13911,
+          "amount": 1,
+          "metadata": {
+            "type": 2,
+            "data": {
+              "charges": 42,
+              "lastDisplayedPercentage": 80
+            }
+          }
+        },
+        {
+          "id": 13919,
+          "amount": 1,
+          "metadata": {
+            "type": 2,
+            "data": {
+              "charges": 1492,
+              "lastDisplayedPercentage": 95
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
         }
       ],
       [
         {
           "id": 9185,
-          "amount": 102
+          "amount": 105
         },
         {
           "id": 2503,
-          "amount": 110
+          "amount": 113
         },
         {
           "id": 2491,
@@ -736,11 +1113,11 @@
         },
         {
           "id": 1169,
-          "amount": 100
+          "amount": 103
         },
         {
           "id": 1065,
-          "amount": 100
+          "amount": 101
         },
         {
           "id": 1135,
@@ -760,7 +1137,7 @@
         },
         {
           "id": 890,
-          "amount": 5000
+          "amount": 5100
         },
         {
           "id": 9243,
@@ -768,7 +1145,7 @@
         },
         {
           "id": 2497,
-          "amount": 100
+          "amount": 102
         },
         {
           "id": 6328,
@@ -784,7 +1161,7 @@
         },
         {
           "id": 1099,
-          "amount": 100
+          "amount": 101
         },
         {
           "id": 6324,
@@ -796,17 +1173,17 @@
         },
         {
           "id": 861,
-          "amount": 100
+          "amount": 102
         },
         {
           "id": 9244,
-          "amount": 12500
+          "amount": 15850
         }
       ],
       [
         {
           "id": 4675,
-          "amount": 120
+          "amount": 123
         },
         {
           "id": 4089,
@@ -850,7 +1227,7 @@
         },
         {
           "id": 4091,
-          "amount": 123
+          "amount": 126
         },
         {
           "id": 14497,
@@ -882,7 +1259,7 @@
         },
         {
           "id": 560,
-          "amount": 20974
+          "amount": 21014
         },
         {
           "id": 4097,
@@ -890,7 +1267,7 @@
         },
         {
           "id": 4093,
-          "amount": 123
+          "amount": 126
         },
         {
           "id": 14501,
@@ -914,7 +1291,7 @@
         },
         {
           "id": 9075,
-          "amount": 10880
+          "amount": 10960
         },
         {
           "id": 554,
@@ -922,7 +1299,7 @@
         },
         {
           "id": 557,
-          "amount": 12200
+          "amount": 12400
         }
       ]
     ],
@@ -937,12 +1314,12 @@
   },
   "skills": {
     "level": [
-      60,
-      1,
+      75,
+      45,
       99,
       99,
       99,
-      52,
+      99,
       99,
       99,
       99,
@@ -964,12 +1341,8 @@
       99
     ],
     "xp": [
-      273742.0,
-      0.0,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      123660.0,
+      1210421.0,
+      61512.0,
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
@@ -987,11 +1360,15 @@
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
-      1.3034631E7,
+      1.3034431E7,
+      1.3034431E7,
+      1.3034431E7,
+      1.3034431E7,
+      1.3034831E7,
       1.3034431E7
     ],
     "xpTracks": [
-      1.307804917200002E7,
+      1.307824917200002E7,
       0.0,
       0.0
     ],
@@ -1142,7 +1519,7 @@
             "amount": 1
           },
           {
-            "id": 373,
+            "id": 2301,
             "amount": 1
           },
           {
@@ -1162,7 +1539,7 @@
             "amount": 1
           },
           {
-            "id": 2301,
+            "id": 373,
             "amount": 1
           },
           {
@@ -1261,14 +1638,14 @@
         "curses": false,
         "spellBook": 1,
         "name": "f2p",
-        "xp": [
-          37224.0,
-          37224.0,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          123660.0,
-          1.3034431E7
+        "levels": [
+          40,
+          40,
+          70,
+          99,
+          99,
+          43,
+          99
         ],
         "runes": [
           null,
@@ -1415,13 +1792,13 @@
             "amount": 1
           },
           {
-            "id": 24202,
+            "id": 24203,
             "amount": 1,
             "metadata": {
               "type": 5,
               "data": {
-                "spellId": 0,
-                "charges": 0
+                "spellId": 23,
+                "charges": 250
               }
             }
           },
@@ -1458,14 +1835,14 @@
         "curses": true,
         "spellBook": 1,
         "name": "60/45welfare",
-        "xp": [
-          273742.0,
-          61512.0,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
+        "levels": [
+          60,
+          45,
+          99,
+          99,
+          99,
+          99,
+          99
         ],
         "runes": [
           null,
@@ -1649,14 +2026,14 @@
         "curses": true,
         "spellBook": 1,
         "name": "max hybrid",
-        "xp": [
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
+        "levels": [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99
         ],
         "runes": [
           null,
@@ -1840,14 +2217,14 @@
         "curses": true,
         "spellBook": 1,
         "name": "maxmax",
-        "xp": [
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
+        "levels": [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99
         ],
         "runes": [
           {
@@ -1861,6 +2238,209 @@
           {
             "id": 555,
             "amount": 600
+          }
+        ],
+        "familiarPouch": "WOLPERTINGER"
+      },
+      "dharoks": {
+        "inventory": [
+          {
+            "id": 4718,
+            "amount": 1
+          },
+          {
+            "id": 9739,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 14484,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 3144,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 3144,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 3144,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 3144,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 3144,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 4153,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 8013,
+            "amount": 25
+          },
+          {
+            "id": 12437,
+            "amount": 100
+          },
+          {
+            "id": 24510,
+            "amount": 1,
+            "metadata": {
+              "type": 1,
+              "data": {
+                "runes": {
+                  "560": 40,
+                  "557": 200,
+                  "9075": 80
+                }
+              }
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": 4716,
+            "amount": 1
+          },
+          {
+            "id": 23659,
+            "amount": 1
+          },
+          {
+            "id": 6585,
+            "amount": 1
+          },
+          {
+            "id": 21371,
+            "amount": 1
+          },
+          {
+            "id": 4720,
+            "amount": 1
+          },
+          {
+            "id": 20072,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 4722,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 7462,
+            "amount": 1
+          },
+          {
+            "id": 21787,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 15220,
+            "amount": 1
+          },
+          {
+            "id": 9244,
+            "amount": 1000
+          },
+          null
+        ],
+        "curses": true,
+        "spellBook": 2,
+        "name": "dharoks",
+        "levels": [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99
+        ],
+        "runes": [
+          {
+            "id": 560,
+            "amount": 40
+          },
+          {
+            "id": 9075,
+            "amount": 80
+          },
+          {
+            "id": 557,
+            "amount": 200
           }
         ],
         "familiarPouch": "WOLPERTINGER"
@@ -1904,11 +2484,11 @@
             "amount": 1
           },
           {
-            "id": 15272,
+            "id": 3144,
             "amount": 1
           },
           {
-            "id": 15272,
+            "id": 3144,
             "amount": 1
           },
           {
@@ -2039,222 +2619,19 @@
         "curses": false,
         "spellBook": 2,
         "name": "void range",
-        "xp": [
-          1210421.0,
-          1210421.0,
-          737627.0,
-          1.3034431E7,
-          1.3034431E7,
-          1475581.0,
-          1.3034431E7
+        "levels": [
+          75,
+          75,
+          70,
+          99,
+          99,
+          77,
+          99
         ],
         "runes": [
           null,
           null,
           null
-        ],
-        "familiarPouch": "WOLPERTINGER"
-      },
-      "dharoks": {
-        "inventory": [
-          {
-            "id": 4718,
-            "amount": 1
-          },
-          {
-            "id": 9739,
-            "amount": 1
-          },
-          {
-            "id": 3024,
-            "amount": 1
-          },
-          {
-            "id": 3024,
-            "amount": 1
-          },
-          {
-            "id": 14484,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 6685,
-            "amount": 1
-          },
-          {
-            "id": 6685,
-            "amount": 1
-          },
-          {
-            "id": 3144,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 3144,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 3144,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 3144,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 3144,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 4153,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 8013,
-            "amount": 25
-          },
-          {
-            "id": 12437,
-            "amount": 100
-          },
-          {
-            "id": 24510,
-            "amount": 1,
-            "metadata": {
-              "type": 1,
-              "data": {
-                "runes": {
-                  "560": 40,
-                  "9075": 80,
-                  "557": 200
-                }
-              }
-            }
-          }
-        ],
-        "equipment": [
-          {
-            "id": 4716,
-            "amount": 1
-          },
-          {
-            "id": 23659,
-            "amount": 1
-          },
-          {
-            "id": 6585,
-            "amount": 1
-          },
-          {
-            "id": 21371,
-            "amount": 1
-          },
-          {
-            "id": 4720,
-            "amount": 1
-          },
-          {
-            "id": 20072,
-            "amount": 1
-          },
-          null,
-          {
-            "id": 4722,
-            "amount": 1
-          },
-          null,
-          {
-            "id": 7462,
-            "amount": 1
-          },
-          {
-            "id": 21787,
-            "amount": 1
-          },
-          null,
-          {
-            "id": 15220,
-            "amount": 1
-          },
-          {
-            "id": 9244,
-            "amount": 1000
-          },
-          null
-        ],
-        "curses": true,
-        "spellBook": 2,
-        "name": "dharoks",
-        "xp": [
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
-        ],
-        "runes": [
-          {
-            "id": 560,
-            "amount": 40
-          },
-          {
-            "id": 9075,
-            "amount": 80
-          },
-          {
-            "id": 557,
-            "amount": 200
-          }
         ],
         "familiarPouch": "WOLPERTINGER"
       },
@@ -2423,14 +2800,14 @@
         "curses": false,
         "spellBook": 1,
         "name": "pure range/m",
-        "xp": [
-          273742.0,
-          0.0,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          123660.0,
-          1.3034431E7
+        "levels": [
+          60,
+          1,
+          99,
+          99,
+          99,
+          52,
+          99
         ],
         "runes": [
           null,
@@ -2556,8 +2933,8 @@
               "data": {
                 "runes": {
                   "560": 40,
-                  "9075": 80,
-                  "557": 200
+                  "557": 200,
+                  "9075": 80
                 }
               }
             }
@@ -2616,14 +2993,14 @@
         "curses": true,
         "spellBook": 2,
         "name": "void melee",
-        "xp": [
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
+        "levels": [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99
         ],
         "runes": [
           {
@@ -2823,14 +3200,14 @@
         "curses": true,
         "spellBook": 1,
         "name": "dh hybrid",
-        "xp": [
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
+        "levels": [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99
         ],
         "runes": [
           null,
@@ -2971,14 +3348,14 @@
         "curses": true,
         "spellBook": 1,
         "name": "max strength",
-        "xp": [
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
+        "levels": [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99
         ],
         "runes": [
           null,
@@ -3165,14 +3542,14 @@
         "curses": true,
         "spellBook": 1,
         "name": "void tribrid",
-        "xp": [
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
+        "levels": [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99
         ],
         "runes": [
           null,
@@ -3370,14 +3747,14 @@
         "curses": true,
         "spellBook": 1,
         "name": "75/45 max",
-        "xp": [
-          1210421.0,
-          61512.0,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
+        "levels": [
+          75,
+          45,
+          99,
+          99,
+          99,
+          99,
+          99
         ],
         "runes": [
           null,
@@ -3575,205 +3952,14 @@
         "curses": true,
         "spellBook": 1,
         "name": "60/45 max",
-        "xp": [
-          273742.0,
-          61512.0,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
-        ],
-        "runes": [
-          null,
-          null,
-          null
-        ],
-        "familiarPouch": "WOLPERTINGER"
-      },
-      "75/45welfare": {
-        "inventory": [
-          {
-            "id": 10386,
-            "amount": 1
-          },
-          {
-            "id": 4151,
-            "amount": 1
-          },
-          {
-            "id": 6570,
-            "amount": 1
-          },
-          {
-            "id": 10551,
-            "amount": 1
-          },
-          {
-            "id": 10388,
-            "amount": 1
-          },
-          {
-            "id": 8850,
-            "amount": 1
-          },
-          {
-            "id": 1093,
-            "amount": 1
-          },
-          {
-            "id": 11694,
-            "amount": 1
-          },
-          {
-            "id": 9739,
-            "amount": 1
-          },
-          {
-            "id": 3024,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 3024,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 6685,
-            "amount": 1
-          },
-          {
-            "id": 6685,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 15272,
-            "amount": 1
-          },
-          {
-            "id": 8013,
-            "amount": 25
-          },
-          {
-            "id": 12437,
-            "amount": 25
-          },
-          {
-            "id": 24510,
-            "amount": 1,
-            "metadata": {
-              "type": 1,
-              "data": {
-                "runes": {
-                  "560": 400,
-                  "565": 200,
-                  "555": 600
-                }
-              }
-            }
-          }
-        ],
-        "equipment": [
-          {
-            "id": 3751,
-            "amount": 1
-          },
-          {
-            "id": 2412,
-            "amount": 1
-          },
-          {
-            "id": 1712,
-            "amount": 1
-          },
-          {
-            "id": 15486,
-            "amount": 1
-          },
-          {
-            "id": 4091,
-            "amount": 1
-          },
-          {
-            "id": 13734,
-            "amount": 1
-          },
-          null,
-          {
-            "id": 4093,
-            "amount": 1
-          },
-          null,
-          {
-            "id": 7462,
-            "amount": 1
-          },
-          {
-            "id": 3105,
-            "amount": 1
-          },
-          null,
-          {
-            "id": 15220,
-            "amount": 1
-          },
-          null,
-          null
-        ],
-        "curses": true,
-        "spellBook": 1,
-        "name": "75/45welfare",
-        "xp": [
-          1210421.0,
-          61512.0,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
+        "levels": [
+          60,
+          45,
+          99,
+          99,
+          99,
+          99,
+          99
         ],
         "runes": [
           null,
@@ -3957,14 +4143,205 @@
         "curses": true,
         "spellBook": 1,
         "name": "main hybrid",
-        "xp": [
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
+        "levels": [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99
+        ],
+        "runes": [
+          null,
+          null,
+          null
+        ],
+        "familiarPouch": "WOLPERTINGER"
+      },
+      "75/45welfare": {
+        "inventory": [
+          {
+            "id": 10386,
+            "amount": 1
+          },
+          {
+            "id": 4151,
+            "amount": 1
+          },
+          {
+            "id": 6570,
+            "amount": 1
+          },
+          {
+            "id": 10551,
+            "amount": 1
+          },
+          {
+            "id": 10388,
+            "amount": 1
+          },
+          {
+            "id": 8850,
+            "amount": 1
+          },
+          {
+            "id": 1093,
+            "amount": 1
+          },
+          {
+            "id": 11694,
+            "amount": 1
+          },
+          {
+            "id": 9739,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 15272,
+            "amount": 1
+          },
+          {
+            "id": 8013,
+            "amount": 25
+          },
+          {
+            "id": 12437,
+            "amount": 25
+          },
+          {
+            "id": 24510,
+            "amount": 1,
+            "metadata": {
+              "type": 1,
+              "data": {
+                "runes": {
+                  "560": 400,
+                  "565": 200,
+                  "555": 600
+                }
+              }
+            }
+          }
+        ],
+        "equipment": [
+          {
+            "id": 3751,
+            "amount": 1
+          },
+          {
+            "id": 2412,
+            "amount": 1
+          },
+          {
+            "id": 1712,
+            "amount": 1
+          },
+          {
+            "id": 15486,
+            "amount": 1
+          },
+          {
+            "id": 4091,
+            "amount": 1
+          },
+          {
+            "id": 13734,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 4093,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 7462,
+            "amount": 1
+          },
+          {
+            "id": 3105,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 15220,
+            "amount": 1
+          },
+          null,
+          null
+        ],
+        "curses": true,
+        "spellBook": 1,
+        "name": "75/45welfare",
+        "levels": [
+          75,
+          45,
+          99,
+          99,
+          99,
+          99,
+          99
         ],
         "runes": [
           null,
@@ -4057,6 +4434,11 @@
   "KBDEntrance": false,
   "advlog": {
     "Activities": [
+      "I levelled up my Prayer. I am now level 99.",
+      "I levelled up my Strength. I am now level 99.",
+      "I levelled up my Prayer. I am now level 99.",
+      "I levelled up my Defence. I am now level 99.",
+      "I levelled up my Attack. I am now level 99.",
       "I levelled up my Summoning. I am now level 99.",
       "I levelled up my Magic. I am now level 99.",
       "I levelled up my Prayer. I am now level 99.",
@@ -4101,6 +4483,11 @@
       "I levelled up my Attack. I am now level 99."
     ],
     "ActivitiesTime": [
+      "02:16:02",
+      "02:15:17",
+      "02:12:24",
+      "02:12:22",
+      "02:12:21",
       "01:05:19",
       "01:05:19",
       "01:05:19",
@@ -4145,6 +4532,11 @@
       "07:25:33"
     ],
     "ActivitiesDate": [
+      "1st February",
+      "1st February",
+      "1st February",
+      "1st February",
+      "1st February",
       "18th August",
       "18th August",
       "18th August",
@@ -4294,10 +4686,10 @@
   },
   "timePiece": 0,
   "lastlevelUp": [
-    "40"
+    "75"
   ],
   "lastSkill": [
-    "Defence"
+    "Attack"
   ],
   "bossKillcount": {},
   "treasureTrailCount": {},
@@ -4389,7 +4781,7 @@
   "IsInInstance": false,
   "familiarAutoAttack": false,
   "storedScrolls": 0,
-  "isTitle": false,
+  "titleIsBehindName": false,
   "clanTag": "",
   "recievedStarter": true,
   "healMode": false,
@@ -4401,7 +4793,7 @@
   "strongHoldSecurityFloor3": false,
   "strongHoldSecurityFloor4": false,
   "connectedClanChannel": false,
-  "lastLoggedIn": 1768758220220,
+  "lastLoggedIn": 1769908617400,
   "petManager": {
     "petDetails": {},
     "npcId": 0,
@@ -4465,9 +4857,9 @@
   ],
   "lostCannon": false,
   "prayer": {
-    "activeBook": "NORMAL",
+    "activeBook": "ANCIENT_CURSES",
     "usingQuickPrayer": false,
-    "prayerPoints": 520,
+    "prayerPoints": 990,
     "quickNormalPrayers": [
       false,
       false,
@@ -4523,10 +4915,32 @@
       false
     ]
   },
+  "collectionLog": {
+    "bosses": {
+      "obtainedDrops": {},
+      "categoryType": "BOSSES"
+    },
+    "clues": {
+      "obtainedDrops": {},
+      "categoryType": "CLUES"
+    },
+    "minigames": {
+      "obtainedDrops": {},
+      "categoryType": "MINIGAMES"
+    },
+    "others": {
+      "obtainedDrops": {},
+      "categoryType": "OTHERS"
+    },
+    "slayers": {
+      "obtainedDrops": {},
+      "categoryType": "SLAYER"
+    }
+  },
   "farmingManager": {
     "growthMultiplier": 1000.0,
     "spots": [],
-    "globalTickCounter": 679,
+    "globalTickCounter": 1160,
     "playerGrowthOffset": 82
   },
   "controlerManager": {},
@@ -5953,6 +6367,7 @@
     ],
     "alwaysStackable": false
   },
+  "familiarPouch": "WOLPERTINGER",
   "frozenKeyCharges": 0,
   "member": false,
   "memberTill": 0,
@@ -5968,6 +6383,9 @@
       0
     ]
   },
+  "killcount": {
+    "kills": {}
+  },
   "dropLogs": {
     "drops": [],
     "lowestValue": 1000000,
@@ -5976,7 +6394,7 @@
   },
   "squealOfFortune": {
     "version": 1,
-    "lastDailySpinsGiveaway": 1768757797140,
+    "lastDailySpinsGiveaway": 1769908325873,
     "dailySpins": 8,
     "earnedSpins": 3,
     "boughtSpins": 0,
@@ -6077,7 +6495,7 @@
     "tickTimers": {},
     "entityName": "fullspawn"
   },
-  "x": 3093,
-  "y": 3494,
+  "x": 3092,
+  "y": 3492,
   "plane": 0
 }

@@ -66,20 +66,17 @@ public class CollectionLog implements Serializable {
     public void init(Player player) {
         this.player = player;
         this.category = CategoryType.BOSSES;
-        tabs = new ArrayList<>();
-        CollectionLog.MASTER.player = player;
     }
 
     public void open() {
         player.getInterfaceManager().sendInterface(ID);
+        writeTabs();
+        writeGhostItems();
+        writeCollectedItems();
+        writeDetails();
         sendComponentOps();
-        writeCategory();
-        player.getPackets().sendRunScript(6255);
-        player.setCloseInterfacesEvent(() -> {
-            tabId = 0;
-            category = CategoryType.BOSSES;
-        });
     }
+
 
 
 
@@ -133,12 +130,6 @@ public class CollectionLog implements Serializable {
         for(int i = 0; i < CategoryType.values().length; i++) {
             player.getPackets().sendIComponentSprite(ID, CAT_SPRITE_START + i*3, category == CategoryType.values()[i] ? 952 : 953);
         }
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                player.getPackets().sendRunScript(6255);
-            }
-        });
     }
 
     private void writeDetails() {
@@ -190,7 +181,6 @@ public class CollectionLog implements Serializable {
 
         String prefix = "";
         if(completion == masterTab.size())
-            // completed tab = numbers green
             prefix = "<col=00ff00>";
         else if (completion == 0)
         	 prefix = "<col=FF0000>";
@@ -239,12 +229,6 @@ public class CollectionLog implements Serializable {
         player.getPackets().sendInterSetItemsOptionsScript(
                 ID, COLLECTED_ITEM_CONTAINER,
                 ITEM_CONTAINER_KEY, ITEM_WIDTH, ITEM_HEIGHT);
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                player.getPackets().sendRunScript(6255);
-            }
-        });
     }
 
 
@@ -266,6 +250,13 @@ public class CollectionLog implements Serializable {
             }
         }
         player.getPackets().sendItems(GHOST_CONTAINER_KEY, ghosts);
+        WorldTasksManager.schedule(new WorldTask() {
+            @Override
+            public void run() {
+                player.getPackets().sendRunScript(6255);
+            }
+        });
+
     }
 
 
@@ -285,18 +276,24 @@ public class CollectionLog implements Serializable {
         Item[] masterItems = masterLog.getItemsCopy();
         Item[] playerItems = log.getItemsCopy();
 
+        Map<Integer, Item> lookup = new HashMap<>();
+
+        for (Item it : playerItems) {
+            if (it != null)
+                lookup.put(it.getId(), it);
+        }
+
         for (int i = 0; i < masterItems.length; i++) {
             Item master = masterItems[i];
             if (master == null)
                 continue;
 
-            for (Item it : playerItems) {
-                if (it != null && it.getId() == master.getId()) {
-                    real.set(i, new Item(it));
-                    break;
-                }
-            }
+            Item owned = lookup.get(master.getId());
+            if (owned != null)
+                real.set(i, new Item(owned));
         }
+
+
 
         player.getPackets().sendItems(ITEM_CONTAINER_KEY, real);
     }

@@ -3,6 +3,7 @@ package com.rs.java.game.player.controlers;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rs.Settings;
 import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.java.game.Entity;
 import com.rs.java.game.ForceTalk;
@@ -164,7 +165,7 @@ public final class Barrows extends Controler {
                     .setPreRollDenominator(denom);
 
             List<Drop> drops =
-                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player);
+                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player, Settings.DROP_MULTIPLIER);
 
             for (Drop d : drops) {
                 rewards.add(new Item(d.itemId, d.amount));

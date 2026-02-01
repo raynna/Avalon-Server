@@ -93,7 +93,7 @@ class DropTestCommand : Command {
                     .setPreRollDenominator(denom)
 
                 val drops =
-                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player)
+                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player, Settings.DROP_MULTIPLIER)
 
                 for (drop in drops) {
                     dropCounts.merge(drop.itemId, drop.amount, Int::plus)
@@ -112,7 +112,8 @@ class DropTestCommand : Command {
             player.bank.addItem(itemId, totalAmount, true)
             player.collectionLog.addItem(Item(itemId, totalAmount))
         }
-
+        BarrowsChestTable.BARROWS_CHEST_TABLE
+            .writeRatesToFile(Settings.DROP_MULTIPLIER)
         player.message(
             "Simulated $times Barrows chests with $brothersKilled brothers killed."
         )
