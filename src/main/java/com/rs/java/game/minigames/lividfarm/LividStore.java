@@ -25,8 +25,7 @@ public class LividStore {
 			public void process(Player player) {
 				int[] seeds = { 5321, 5280, 5106, 5323, 5286, 5285 };
 				for (int ids : seeds) {
-					World.updateGroundItem(new Item(ids, Utils.random(7, 11)), Utils.getRandomTile(player, 3), player,
-							60, 0);
+					World.updateGroundItem(new Item(ids, Utils.random(7, 11)), Utils.getRandomTile(player, 3), player);
 				}
 				removeProduce(player);
 				player.getDialogueManager().startDialogue("SimpleMessage",
@@ -131,7 +130,7 @@ public class LividStore {
 				Item[] seeds = { new Item(5295, 4), new Item(5321, 4), new Item(5286, 6), new Item(5287, 2),
 						new Item(5288, 2), new Item(5313, 4) };
 				for (Item item : seeds) {
-					World.updateGroundItem(item, Utils.getRandomTile(player, 3), player, 60, 0);
+					World.updateGroundItem(item, Utils.getRandomTile(player, 3), player);
 				}
 				removeProduce(player);
 				player.getDialogueManager().startDialogue("SimpleMessage",

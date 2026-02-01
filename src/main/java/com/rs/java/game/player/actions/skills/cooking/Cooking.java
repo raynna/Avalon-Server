@@ -450,7 +450,7 @@ public class Cooking extends Action {
 				if (player.getInventory().hasFreeSlots())
 					player.getInventory().addItem(cook.getProduct().getId(), cook.getProduct().getAmount());
 				else
-					World.updateGroundItem(new Item(cook.getProduct().getId(), 1), player, player, 60, 0);
+					World.updateGroundItem(new Item(cook.getProduct().getId(), 1), player, player);
 				player.getSkills().addXp(Skills.COOKING, cook.getXp());
 			}
 			if (cook.getRawItem().getId() == 327)

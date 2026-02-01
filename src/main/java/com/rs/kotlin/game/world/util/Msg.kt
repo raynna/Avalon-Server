@@ -29,13 +29,13 @@ object Msg {
     fun reward(msg: String)     = player(GREEN, msg)
     fun rewardRare(msg: String) = player(PURPLE, msg)
     fun chestOpen(msg: String)  = player(GREEN, msg)
-    fun topDamager(msg: String) = player(ORANGE, msg)
+    fun topDamager(msg: String) = player(DARK_ORANGE, msg)
 
     @JvmStatic fun success(msg: String) = player(GREEN, msg)
     @JvmStatic fun info(msg: String)    = player(BLUE, msg)
     @JvmStatic fun warn(msg: String)    = player(RED, msg)
 
-    fun news(msg: String)      = world(ORANGE, icon = 7, msg = "News: $msg")
+    fun news(msg: String)      = world(DARK_ORANGE, icon = 7, msg = "News: $msg")
     fun newsRare(msg: String)  = world(RED,    icon = 7, msg = "News: $msg")
     fun newsEpic(msg: String)  = world(PURPLE, icon = 7, msg = "News: $msg")
 

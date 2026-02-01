@@ -257,7 +257,7 @@ public class BirdNest {
 		if (nest == null)
 			return false;
 		Item item = new Item(nest.itemId);
-		World.updateGroundItem(item, tile, player, 60, 2);
+		World.updateGroundItem(item, tile, player);
 		player.getPackets().sendGameMessage("A bird's nest falls out of the tree!", true);
 		return true;
 	}

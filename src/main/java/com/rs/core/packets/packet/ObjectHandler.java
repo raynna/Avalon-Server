@@ -2349,7 +2349,7 @@ public final class ObjectHandler {
                             }
                             player.animate(new Animation(833));
                             player.getInventory().deleteItem(new Item(item.getId(), item.getAmount()));
-                            World.updateGroundItem(item, new WorldTile(object), player, 60, 0);
+                            World.updateGroundItem(item, new WorldTile(object), player, 60);
                             break;
                         case "anvil":
                             ForgingBar bar = ForgingBar.forId(itemId);

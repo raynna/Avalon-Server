@@ -63,7 +63,7 @@ public class CharmDrops {
 		if (drop == null)
 			return;
 		World.updateGroundItem(new Item(drop.getItemId(), getCharmsAmount(npc, drop)),
-				new WorldTile(npc.getCoordFaceX(size), npc.getCoordFaceY(size), npc.getPlane()), player, 60, 0);
+				new WorldTile(npc.getCoordFaceX(size), npc.getCoordFaceY(size), npc.getPlane()), player);
 	}
 
 	public static Charms calculateCharm(Player player, NPC npc) {

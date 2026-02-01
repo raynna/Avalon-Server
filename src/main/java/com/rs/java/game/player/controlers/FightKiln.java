@@ -588,7 +588,7 @@ public class FightKiln extends Controler {
             int[] crystals = getLavaCrystal();
             if (crystals != null) {
                 for (int crystal : crystals) {
-                    World.updateGroundItem(new Item(crystal), getWorldTile(32, 32), player, 60, 0);
+                    World.updateGroundItem(new Item(crystal), getWorldTile(32, 32), player);
                 }
             }
         }

@@ -18,6 +18,6 @@ public class HunterImplings {
 								+ Utils.getRandom(drop.getExtraAmount() * Settings.DROP_RATE))
 				: new Item(drop.getItemId(), (drop.getMinAmount() + Utils.getRandom(drop.getExtraAmount())));
 		World.updateGroundItem(new Item(item.getId(), item.getAmount()),
-				new WorldTile(player.getX() + 1, player.getY(), player.getPlane()), player, 1, 0);
+				new WorldTile(player.getX() + 1, player.getY(), player.getPlane()), player);
 	}
 }

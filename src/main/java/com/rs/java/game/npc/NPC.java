@@ -784,7 +784,7 @@ public class NPC extends Entity implements Serializable {
             Player luckyPlayer = playersWithLs.get((int) (Math.random() * playersWithLs.size()));
             if (item.getAmount() > 0) {
                 World.updateGroundItem(item, new WorldTile(getCoordFaceX(size), getCoordFaceY(size), getPlane()),
-                        luckyPlayer, 60, 0);
+                        luckyPlayer);
                 luckyPlayer.message(String.format(
                         (luckyPlayer.getRareItem() == item ? "<col=ff0000>" : "<col=216902>") + "You received: %s x %s. ("
                                 + getName() + ") </col>",
@@ -895,7 +895,7 @@ public class NPC extends Entity implements Serializable {
             }
             if (item.getAmount() > 0) {
                 World.updateGroundItem(item, new WorldTile(getCoordFaceX(size), getCoordFaceY(size), getPlane()),
-                        player, 60, 0);
+                        player);
                 if ((i.getDefinitions().getTipitPrice() * i.getAmount()) >= Integer
                         .parseInt(player.getToggleValue(player.toggles.get("DROPVALUE")))) {
                     player.message("<col=ff0000>Valuable drop: " + i.getName()

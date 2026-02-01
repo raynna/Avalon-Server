@@ -10,11 +10,27 @@ object WorldBossTable {
             drop("item.pvp_token", amount = 500..1_500)
         }
 
+        preRollDrops {
+            listOf(
+                "statius_s_platebody", "statius_s_platelegs", "statius_s_full_helm",
+                "vesta_s_chainbody", "vesta_s_plateskirt", "vesta_s_longsword", "vesta_s_spear",
+                "zuriel_s_robe_top", "zuriel_s_robe_bottom", "zuriel_s_staff",
+                "morrigan_s_leather_body", "morrigan_s_leather_chaps"
+            ).forEach { drop("item.$it", numerator = 1, denominator = 256) }
+
+            listOf(
+                "corrupt_statius_s_platebody", "corrupt_statius_s_platelegs", "corrupt_statius_s_full_helm",
+                "corrupt_vesta_s_chainbody", "corrupt_vesta_s_plateskirt", "corrupt_vesta_s_longsword", "corrupt_vesta_s_spear",
+                "corrupt_zuriel_s_robe_top", "corrupt_zuriel_s_robe_bottom", "corrupt_zuriel_s_staff",
+                "corrupt_morrigan_s_leather_body", "corrupt_morrigan_s_leather_chaps"
+            ).forEach { drop("item.$it", numerator = 1, denominator = 129) }
+        }
+
         mainDrops(512) {
-            drop("item.saradomin_brew_4", amount = 3..10, weight = 68)
-            drop("item.super_restore_4", amount = 3..10, weight = 68)
-            drop("item.rocktail", amount = 5..50, weight = 68)
-            drop("item.overload_4", amount = 2..5, weight = 12)
+            drop("item.saradomin_brew_4", amount = 3..5, weight = 68)
+            drop("item.super_restore_4", amount = 3..5, weight = 68)
+            drop("item.rocktail", amount = 5..10, weight = 68)
+            drop("item.overload_4", amount = 2..4, weight = 12)
 
             drop("item.broken_statue_headdress", weight = 16)
             drop("item.seren_statuette", weight = 10)
@@ -54,22 +70,6 @@ object WorldBossTable {
                 "torag_s_helm", "torag_s_platebody", "torag_s_platelegs", "torag_s_hammers",
                 "verac_s_helm", "verac_s_brassard", "verac_s_plateskirt", "verac_s_flail"
             ).forEach { drop("item.$it", weight = 12) }
-
-            listOf(
-                "statius_s_platebody", "statius_s_platelegs", "statius_s_full_helm",
-                "vesta_s_chainbody", "vesta_s_plateskirt", "vesta_s_longsword", "vesta_s_spear",
-                "zuriel_s_robe_top", "zuriel_s_robe_bottom", "zuriel_s_staff",
-                "morrigan_s_leather_body", "morrigan_s_leather_chaps"
-            ).forEach { drop("item.$it", weight = 1) }
-
-            listOf(
-                "corrupt_statius_s_platebody", "corrupt_statius_s_platelegs", "corrupt_statius_s_full_helm",
-                "corrupt_vesta_s_chainbody", "corrupt_vesta_s_plateskirt", "corrupt_vesta_s_longsword", "corrupt_vesta_s_spear",
-                "corrupt_zuriel_s_robe_top", "corrupt_zuriel_s_robe_bottom", "corrupt_zuriel_s_staff",
-                "corrupt_morrigan_s_leather_body", "corrupt_morrigan_s_leather_chaps"
-            ).forEach { drop("item.$it", weight = 2) }
-
-
         }
     }
     .apply { name = "World Boss Regular" }

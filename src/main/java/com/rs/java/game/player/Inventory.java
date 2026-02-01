@@ -306,8 +306,10 @@ public final class Inventory implements Serializable {
 			return;
 		Item[] itemsBefore = items.getItemsCopy();
 		items.remove(slot, item);
-		if (addToGround)
-			World.updateGroundItem(item, new WorldTile(player), player, player.inPkingArea() && ItemConstants.isTradeable(item) ? 0 : 60, 0);
+		if (addToGround) {
+			Item groundItem = item.clone();
+			World.updateGroundItem(groundItem, player, player, player.inPkingArea() && ItemConstants.isTradeable(item) ? 0 : 60, 0);
+		}
 		refreshItems(itemsBefore);
 		player.getPackets().sendSound(4500, 0, 1);
 	}
@@ -326,7 +328,7 @@ public final class Inventory implements Serializable {
 			if (item == null)
 				continue;
 			if (addToGround)
-				World.updateGroundItem(item, new WorldTile(player), player, player.inPkingArea() ? 0 : 60, 0);
+				World.updateGroundItem(item, new WorldTile(player), player);
 			deleteItem(item);
 		}
 		player.getPackets().sendSound(4500, 0, 1);

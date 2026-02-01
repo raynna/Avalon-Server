@@ -565,7 +565,7 @@ public final class Woodcutting extends Action {
                 if (player.getInventory().hasFreeSlots())
                     player.getInventory().addItem(definitions.getLogsId(), 1);
                 else
-                    World.updateGroundItem(new Item(definitions.getLogsId(), 1), player, player, 60, 0);
+                    World.updateGroundItem(new Item(definitions.getLogsId(), 1), player, player);
                 totalXp *= 2;
             }
         }

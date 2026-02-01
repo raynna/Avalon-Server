@@ -2693,7 +2693,7 @@ public final class Commands {
 
                 int itemId = itemIds[Utils.getRandom(itemIds.length - 1)];
                 World.updateGroundItem(new Item(itemId, 1),
-                        new WorldTile(tiles[Utils.getRandom(tiles.length - 1)]), player, 0, 0);
+                        new WorldTile(tiles[Utils.getRandom(tiles.length - 1)]), player, 0);
             }
             player.message("Dropped " + amount + " items around you.");
         } catch (NumberFormatException e) {

@@ -410,11 +410,9 @@ object RandomWorldBossHandler {
         val pct = (damage * 100 / maxHp)
         player.message(Msg.info("You dealt $damage ($pct%) damage and earned loot!"))
 
-        val drops = WorldBossTable.regular.rollDrops(player)
+        val drops = WorldBossTable.regular.rollDrops(player, boss.dropRateMultiplier)
         for (drop in drops) {
             val item = Item(drop.itemId, drop.amount)
-            World.updateGroundItem(item, boss.tile, player, 60, 1)
-
             if (item.isItem("item.magic_chest")) {
                 player.message(Msg.rewardRare("You receive a mysterious Magic Chest!"))
                 Msg.world(Msg.PURPLE, "${player.displayName} has received a Magic Chest!")
@@ -424,6 +422,7 @@ object RandomWorldBossHandler {
                     Msg.world(Msg.RED, "${player.displayName} has received ${item.name} from killing the world boss!")
                 }
             }
+            World.updateGroundItem(item, boss.tile, player, 60, 1)
         }
     }
 

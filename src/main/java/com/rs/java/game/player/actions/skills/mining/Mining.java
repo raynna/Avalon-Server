@@ -198,7 +198,7 @@ public class Mining extends MiningBase {
         }
 		if (definitions.getOreId() != -1) {
 			if (player.getAuraManager().usingQuarryMaster())
-				World.updateGroundItem(new Item(definitions.getOreId() + idSome, 1), player, player, 60, 0);
+				World.updateGroundItem(new Item(definitions.getOreId() + idSome, 1), player, player);
 			else
 				player.getInventory().addItem(definitions.getOreId() + idSome, 1);
 			String oreName = ItemDefinitions.getItemDefinitions(definitions.getOreId() + idSome).getName()
@@ -208,7 +208,7 @@ public class Mining extends MiningBase {
 				if (player.getInventory().hasFreeSlots())
 					player.getInventory().addItem(definitions.getOreId() + idSome, 1);
 				else
-					World.updateGroundItem(new Item(definitions.getOreId() + idSome, 1), player, player, 60, 0);
+					World.updateGroundItem(new Item(definitions.getOreId() + idSome, 1), player, player);
 				player.getSkills().addXp(Skills.MINING, totalXp);
 			}
 			if (definitions.getOreId() == 436 || definitions.getOreId() == 438)

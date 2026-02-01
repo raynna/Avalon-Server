@@ -23,14 +23,14 @@ public class HighValueOption extends Dialogue {
 			if (item.getId() == 21371) {
 				item.setId(ItemConstants.removeAttachedId(item));
 				if (player.inPkingArea() && ItemConstants.isTradeable(item))
-					World.updateGroundItem(new Item(4151, 1), new WorldTile(player), player, 1, 0);
+					World.updateGroundItem(new Item(4151, 1), new WorldTile(player), player, 0);
 				else
-					World.updateGroundItem(new Item(4151, 1), new WorldTile(player), player, 60, 0);
+					World.updateGroundItem(new Item(4151, 1), new WorldTile(player), player, 60);
 			}
 			if (player.inPkingArea() && ItemConstants.isTradeable(item))
-				World.updateGroundItem(item, new WorldTile(player), player, 1, 0);
+				World.updateGroundItem(item, new WorldTile(player), player, 0);
 			else
-				World.updateGroundItem(item, new WorldTile(player), player, 60, 0);
+				World.updateGroundItem(item, new WorldTile(player), player, 60);
 			player.getPackets().sendSound(4500, 0, 1);
 		} else if (player.inPkingArea()) {
 			sendItemDialogue(item.getDefinitions().isNoted() ? item.getId() - 1 : item.getId(), "The item you are trying to drop is considered <col=ff0000>valuable.<br>You are standing in a PvP zone. Your item will appear instantly to everyone.");

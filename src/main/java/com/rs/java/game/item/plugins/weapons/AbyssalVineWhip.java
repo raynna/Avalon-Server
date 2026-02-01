@@ -32,8 +32,8 @@ public class AbyssalVineWhip extends ItemPlugin {
                 if (item.getId() == 21369)
                     return false;//script false, continues to regular drop method
                 player.getInventory().dropItem(slotId, item, false);
-                World.updateGroundItem(new Item(21369, 1), new WorldTile(player), player, player.inPkingArea() ? 0 : 60, 2);
-                World.updateGroundItem(new Item(4151, 1), new WorldTile(player), player, player.inPkingArea() ? 0 : 60, 2);
+                World.updateGroundItem(new Item(21369, 1), new WorldTile(player), player, player.inPkingArea() ? 0 : 60);
+                World.updateGroundItem(new Item(4151, 1), new WorldTile(player), player, player.inPkingArea() ? 0 : 60);
                 return true;
         }
         return false;

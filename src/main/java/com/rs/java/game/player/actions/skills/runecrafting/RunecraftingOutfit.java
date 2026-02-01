@@ -78,7 +78,7 @@ public class RunecraftingOutfit {
 		if (player.getInventory().hasFreeSlots())
 			player.getInventory().addItem(piece.getItemId(), 1);
 		else
-			World.updateGroundItem(new Item(piece.getItemId()), player, player, 60, 0);
+			World.updateGroundItem(new Item(piece.getItemId()), player, player);
 		return true;
 	}
 }

@@ -77,10 +77,8 @@ public class GreaterRunicStaffItem extends ItemPlugin {
                         if (totalAmount > 0) {
                             World.updateGroundItem(
                                     new Item(rune.getId(), totalAmount),
-                                    new WorldTile(player),
                                     player,
-                                    player.inPkingArea() ? 0 : 60,
-                                    0
+                                    player
                             );
                         }
                     }

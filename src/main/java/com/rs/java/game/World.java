@@ -1375,11 +1375,10 @@ public final class World {
         if (attachedId != -1) {
             int attachedId2 = ItemConstants.removeAttachedId2(item);
             if (attachedId2 != -1) {
-                World.updateGroundItem(new Item(attachedId2, 1), item.getTile(), owner, 0, 2);
+                World.updateGroundItem(new Item(attachedId2, 1), item.getTile(), owner, 0);
             }
-            removeGroundItem(item, 0);
             removeGroundItem(item, 0); // Remove the untradeable one
-            World.updateGroundItem(new Item(attachedId, 1), item.getTile(), null, 0, 2); // Spawn tradeable (no owner)
+            World.updateGroundItem(new Item(attachedId, 1), item.getTile(), null, 0); // Spawn tradeable (no owner)
             return;
         }
 
@@ -1459,6 +1458,9 @@ public final class World {
             if (type != 2 || ItemConstants.isTradeable(item) || ItemConstants.turnCoins(item))
                 owner.getPackets().sendGroundItem(floorItem);
         }
+        if (type == 0 && owner != null && owner.inPkingArea()) {
+            hiddenTime = 0;
+        }
 
         // Public broadcast
         if (shouldBroadcast) {
@@ -1488,9 +1490,13 @@ public final class World {
         updateGroundItem(item, tile, owner, 60, 0);
     }
 
+    public static void updateGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime) {
+        updateGroundItem(item, tile, owner, hiddenTime, 0);
+    }
+
     public static void updateGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime, int type) {
         FloorItem floorItem = World.getRegion(tile.getRegionId()).getGroundItem(item.getId(), tile, owner);
-
+        //droptypes, 0 = normal, 1 = personal, 2 = untradeables/hidden for others
         if (floorItem == null) {
             spawnAsNewGroundItem(item, tile, owner, hiddenTime, type);
             return;
