@@ -49,7 +49,7 @@
     "items": {
       "data": [
         {
-          "id": 10386,
+          "id": 4749,
           "amount": 1
         },
         {
@@ -57,45 +57,23 @@
           "amount": 1
         },
         {
-          "id": 23659,
+          "id": 1712,
           "amount": 1
         },
         {
-          "id": 13911,
-          "amount": 1,
-          "metadata": {
-            "type": 2,
-            "data": {
-              "charges": 22,
-              "lastDisplayedPercentage": 0
-            }
-          }
-        },
-        {
-          "id": 10388,
+          "id": 2503,
           "amount": 1
         },
         {
-          "id": 8850,
+          "id": 4751,
           "amount": 1
         },
         {
-          "id": 6585,
+          "id": 20072,
           "amount": 1
         },
         {
-          "id": 13917,
-          "amount": 1,
-          "metadata": {
-            "type": 2,
-            "data": {
-              "charges": 21,
-              "lastDisplayedPercentage": 0
-            }
-          }
-        },
-        {
-          "id": 9739,
+          "id": 6570,
           "amount": 1
         },
         {
@@ -103,7 +81,11 @@
           "amount": 1
         },
         {
-          "id": 15272,
+          "id": 9739,
+          "amount": 1
+        },
+        {
+          "id": 3024,
           "amount": 1
         },
         {
@@ -115,7 +97,11 @@
           "amount": 1
         },
         {
-          "id": 6685,
+          "id": 3144,
+          "amount": 1
+        },
+        {
+          "id": 3144,
           "amount": 1
         },
         {
@@ -123,7 +109,7 @@
           "amount": 1
         },
         {
-          "id": 3024,
+          "id": 6685,
           "amount": 1
         },
         {
@@ -168,7 +154,7 @@
         },
         {
           "id": 12437,
-          "amount": 25
+          "amount": 50
         },
         {
           "id": 24510,
@@ -192,7 +178,7 @@
     "items": {
       "data": [
         {
-          "id": 3751,
+          "id": 10828,
           "amount": 1
         },
         {
@@ -204,20 +190,20 @@
           "amount": 1
         },
         {
-          "id": 15486,
+          "id": 4675,
           "amount": 1
         },
         {
-          "id": 6916,
+          "id": 4712,
           "amount": 1
         },
         {
-          "id": 13734,
+          "id": 3842,
           "amount": 1
         },
         null,
         {
-          "id": 6924,
+          "id": 4714,
           "amount": 1
         },
         null,
@@ -226,7 +212,7 @@
           "amount": 1
         },
         {
-          "id": 3105,
+          "id": 11732,
           "amount": 1
         },
         null,
@@ -261,7 +247,7 @@
         },
         {
           "id": 3751,
-          "amount": 142
+          "amount": 143
         },
         {
           "id": 10828,
@@ -317,7 +303,7 @@
         },
         {
           "id": 5698,
-          "amount": 147
+          "amount": 148
         },
         {
           "id": 1377,
@@ -377,11 +363,11 @@
         },
         {
           "id": 10386,
-          "amount": 43
+          "amount": 44
         },
         {
           "id": 4151,
-          "amount": 53
+          "amount": 54
         },
         {
           "id": 6570,
@@ -393,11 +379,11 @@
         },
         {
           "id": 10388,
-          "amount": 43
+          "amount": 44
         },
         {
           "id": 8850,
-          "amount": 43
+          "amount": 44
         },
         {
           "id": 11694,
@@ -413,7 +399,7 @@
         },
         {
           "id": 3024,
-          "amount": 179
+          "amount": 192
         },
         {
           "id": 391,
@@ -421,55 +407,55 @@
         },
         {
           "id": 6685,
-          "amount": 180
+          "amount": 194
         },
         {
           "id": 12437,
-          "amount": 4246
+          "amount": 4271
         },
         {
           "id": 2412,
-          "amount": 89
+          "amount": 90
         },
         {
           "id": 13734,
-          "amount": 43
+          "amount": 44
         },
         {
           "id": 7462,
-          "amount": 86
+          "amount": 87
         },
         {
           "id": 3105,
-          "amount": 47
+          "amount": 48
         },
         {
           "id": 15220,
-          "amount": 104
+          "amount": 105
         },
         {
           "id": 6585,
-          "amount": 60
+          "amount": 62
         },
         {
           "id": 18335,
-          "amount": 75
+          "amount": 76
         },
         {
           "id": 23659,
-          "amount": 49
+          "amount": 50
         },
         {
           "id": 6924,
-          "amount": 17
+          "amount": 18
         },
         {
           "id": 6916,
-          "amount": 17
+          "amount": 18
         },
         {
           "id": 15486,
-          "amount": 51
+          "amount": 52
         },
         {
           "id": 6914,
@@ -485,7 +471,7 @@
         },
         {
           "id": 15272,
-          "amount": 892
+          "amount": 903
         },
         {
           "id": 4736,
@@ -537,11 +523,11 @@
         },
         {
           "id": 8013,
-          "amount": 1975
+          "amount": 2000
         },
         {
           "id": 9739,
-          "amount": 53
+          "amount": 54
         },
         {
           "id": 21371,
@@ -597,7 +583,7 @@
         },
         {
           "id": 10499,
-          "amount": 9
+          "amount": 10
         },
         {
           "id": 18353,
@@ -720,31 +706,6 @@
           "amount": 12
         },
         {
-          "id": 24202,
-          "amount": 1,
-          "metadata": {
-            "type": 5,
-            "data": {
-              "spellId": 0,
-              "charges": 0
-            }
-          }
-        },
-        {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
-            }
-          }
-        },
-        {
           "id": 10887,
           "amount": 2
         },
@@ -765,110 +726,12 @@
           "amount": 200
         },
         {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
-            }
-          }
-        },
-        {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
-            }
-          }
-        },
-        {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
-            }
-          }
-        },
-        {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
-            }
-          }
-        },
-        {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 40,
-                "557": 200,
-                "9075": 80
-              }
-            }
-          }
-        },
-        {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 40,
-                "557": 200,
-                "9075": 80
-              }
-            }
-          }
-        },
-        {
           "id": 11283,
           "amount": 1,
           "metadata": {
             "type": 0,
             "data": {
               "charges": 50
-            }
-          }
-        },
-        {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
             }
           }
         },
@@ -880,20 +743,6 @@
             "data": {
               "charges": 1,
               "lastDisplayedPercentage": -1
-            }
-          }
-        },
-        {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
             }
           }
         },
@@ -948,52 +797,24 @@
           "amount": 1
         },
         {
-          "id": 24203,
+          "id": 13911,
           "amount": 1,
           "metadata": {
-            "type": 5,
+            "type": 2,
             "data": {
-              "spellId": 23,
-              "charges": 250
+              "charges": 42,
+              "lastDisplayedPercentage": 80
             }
           }
         },
         {
-          "id": 24510,
+          "id": 13919,
           "amount": 1,
           "metadata": {
-            "type": 1,
+            "type": 2,
             "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
-            }
-          }
-        },
-        {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
-            }
-          }
-        },
-        {
-          "id": 24203,
-          "amount": 1,
-          "metadata": {
-            "type": 5,
-            "data": {
-              "spellId": 23,
-              "charges": 250
+              "charges": 1492,
+              "lastDisplayedPercentage": 95
             }
           }
         },
@@ -1020,82 +841,85 @@
           }
         },
         {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
-            }
-          }
-        },
-        {
           "id": 13911,
           "amount": 1,
           "metadata": {
             "type": 2,
             "data": {
-              "charges": 42,
-              "lastDisplayedPercentage": 80
+              "charges": 22,
+              "lastDisplayedPercentage": 0
             }
           }
         },
         {
-          "id": 13919,
+          "id": 13917,
           "amount": 1,
           "metadata": {
             "type": 2,
             "data": {
-              "charges": 1492,
-              "lastDisplayedPercentage": 95
+              "charges": 21,
+              "lastDisplayedPercentage": 0
             }
           }
         },
         {
           "id": 24510,
+          "amount": 16
+        },
+        {
+          "id": 24606,
+          "amount": 989
+        },
+        {
+          "id": 15332,
+          "amount": 1
+        },
+        {
+          "id": 5952,
+          "amount": 1
+        },
+        {
+          "id": 2452,
+          "amount": 1
+        },
+        {
+          "id": 12825,
+          "amount": 100
+        },
+        {
+          "id": 18357,
           "amount": 1,
           "metadata": {
-            "type": 1,
+            "type": 3,
             "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
+              "charges": 29955,
+              "lastDisplayedPercentage": -1
             }
           }
         },
         {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
-            }
-          }
+          "id": 24382,
+          "amount": 1
         },
         {
-          "id": 24510,
-          "amount": 1,
-          "metadata": {
-            "type": 1,
-            "data": {
-              "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
-              }
-            }
-          }
+          "id": 1540,
+          "amount": 1
+        },
+        {
+          "id": 24379,
+          "amount": 1
+        },
+        {
+          "id": 22362,
+          "amount": 1
+        },
+        {
+          "id": 2572,
+          "amount": 1
+        },
+        {
+          "id": 24608,
+          "amount": 998
         }
       ],
       [
@@ -1129,7 +953,7 @@
         },
         {
           "id": 3749,
-          "amount": 100
+          "amount": 101
         },
         {
           "id": 892,
@@ -1149,7 +973,7 @@
         },
         {
           "id": 6328,
-          "amount": 100
+          "amount": 101
         },
         {
           "id": 1129,
@@ -1207,7 +1031,7 @@
         },
         {
           "id": 565,
-          "amount": 15266
+          "amount": 16266
         },
         {
           "id": 561,
@@ -1255,11 +1079,11 @@
         },
         {
           "id": 555,
-          "amount": 25801
+          "amount": 28801
         },
         {
           "id": 560,
-          "amount": 21014
+          "amount": 23014
         },
         {
           "id": 4097,
@@ -1314,8 +1138,6 @@
   },
   "skills": {
     "level": [
-      75,
-      45,
       99,
       99,
       99,
@@ -1338,11 +1160,13 @@
       99,
       99,
       99,
+      99,
+      97,
       99
     ],
     "xp": [
-      1210421.0,
-      61512.0,
+      1.3034431E7,
+      1.3034431E7,
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
@@ -1652,6 +1476,197 @@
           null,
           null
         ]
+      },
+      "kbd": {
+        "inventory": [
+          {
+            "id": 24606,
+            "amount": 989
+          },
+          {
+            "id": 15332,
+            "amount": 1
+          },
+          {
+            "id": 5952,
+            "amount": 1
+          },
+          {
+            "id": 2452,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 6685,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 3024,
+            "amount": 1
+          },
+          {
+            "id": 12825,
+            "amount": 100
+          }
+        ],
+        "equipment": [
+          {
+            "id": 3749,
+            "amount": 1
+          },
+          {
+            "id": 10499,
+            "amount": 1
+          },
+          {
+            "id": 6585,
+            "amount": 1
+          },
+          {
+            "id": 18357,
+            "amount": 1,
+            "metadata": {
+              "type": 3,
+              "data": {
+                "charges": 29955,
+                "lastDisplayedPercentage": -1
+              }
+            }
+          },
+          {
+            "id": 24382,
+            "amount": 1
+          },
+          {
+            "id": 1540,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 24379,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 22362,
+            "amount": 1
+          },
+          {
+            "id": 6328,
+            "amount": 1
+          },
+          null,
+          {
+            "id": 2572,
+            "amount": 1
+          },
+          {
+            "id": 24608,
+            "amount": 998
+          },
+          null
+        ],
+        "curses": true,
+        "spellBook": 1,
+        "name": "kbd",
+        "levels": [
+          99,
+          99,
+          99,
+          99,
+          99,
+          99,
+          99
+        ],
+        "runes": [
+          null,
+          null,
+          null
+        ],
+        "familiarPouch": "WOLPERTINGER"
       },
       "60/45welfare": {
         "inventory": [
@@ -2360,8 +2375,8 @@
               "data": {
                 "runes": {
                   "560": 40,
-                  "557": 200,
-                  "9075": 80
+                  "9075": 80,
+                  "557": 200
                 }
               }
             }
@@ -2933,8 +2948,8 @@
               "data": {
                 "runes": {
                   "560": 40,
-                  "557": 200,
-                  "9075": 80
+                  "9075": 80,
+                  "557": 200
                 }
               }
             }
@@ -4940,7 +4955,7 @@
   "farmingManager": {
     "growthMultiplier": 1000.0,
     "spots": [],
-    "globalTickCounter": 1160,
+    "globalTickCounter": 1563,
     "playerGrowthOffset": 82
   },
   "controlerManager": {},
@@ -6495,7 +6510,7 @@
     "tickTimers": {},
     "entityName": "fullspawn"
   },
-  "x": 3092,
-  "y": 3492,
+  "x": 3093,
+  "y": 3495,
   "plane": 0
 }

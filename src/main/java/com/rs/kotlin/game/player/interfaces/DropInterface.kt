@@ -5,6 +5,8 @@ import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.core.cache.defintions.NPCDefinitions
 import com.rs.java.game.player.Player
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.getDropTableForNpc
+import java.util.Locale
+import java.util.Locale.getDefault
 
 /**
  * Drop Viewer Interface
@@ -115,7 +117,7 @@ object DropInterface {
             if (drops.isEmpty())
                 continue
 
-            val name = def.name
+            val name = def.name.lowercase(getDefault())
 
             // Prevent duplicates of same NPC name
             if (!seenNames.add(name))
@@ -361,7 +363,7 @@ object DropInterface {
 
             for (drop in drops) {
                 if (drop.itemId == itemId) {
-                    if (seen.add(def.name))
+                    if (seen.add(def.name.lowercase(getDefault())))
                         results.add(npcId)
                     break
                 }

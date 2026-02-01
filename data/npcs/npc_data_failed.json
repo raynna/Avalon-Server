@@ -47,6 +47,14 @@
     "lastSeen": "2026-01-17T22:44:27.835842900Z",
     "attempts": 1
   },
+  "637": {
+    "npcId": 637,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-01T18:35:50.106215500Z",
+    "lastSeen": "2026-02-01T18:35:50.106215500Z",
+    "attempts": 1
+  },
   "944": {
     "npcId": 944,
     "npcName": "Combat instructor",

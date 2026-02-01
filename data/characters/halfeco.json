@@ -2,47 +2,10 @@
   "chatType": 0,
   "username": "halfeco",
   "password": "99efc50a9206bde3d7a8e694aad8e138ca7dc3f7",
-  "healthOverlay": {},
-  "timerOverlay": {
-    "ROW_DEFS": [
-      {
-        "textId": 3,
-        "iconId": 2
-      },
-      {
-        "textId": 5,
-        "iconId": 4
-      },
-      {
-        "textId": 7,
-        "iconId": 6
-      },
-      {
-        "textId": 9,
-        "iconId": 8
-      },
-      {
-        "textId": 11,
-        "iconId": 10
-      },
-      {
-        "textId": 13,
-        "iconId": 12
-      },
-      {
-        "textId": 15,
-        "iconId": 14
-      },
-      {
-        "textId": 17,
-        "iconId": 16
-      }
-    ]
-  },
   "varBitList": {},
   "playerRank": {
     "rank": [
-      "DEVELOPER",
+      "PLAYER",
       null,
       null
     ]
@@ -213,9 +176,11 @@
           "id": 4675,
           "amount": 1,
           "metadata": {
-            "spellId": -1,
-            "charges": 0,
-            "type": 5
+            "type": 5,
+            "data": {
+              "spellId": -1,
+              "charges": 0
+            }
           }
         },
         {
@@ -741,9 +706,11 @@
             "id": 4675,
             "amount": 1,
             "metadata": {
-              "spellId": -1,
-              "charges": 0,
-              "type": 5
+              "type": 5,
+              "data": {
+                "spellId": -1,
+                "charges": 0
+              }
             }
           },
           {
@@ -779,15 +746,6 @@
         "curses": true,
         "spellBook": 1,
         "name": "hybrid",
-        "xp": [
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7,
-          1.3034431E7
-        ],
         "runes": [
           null,
           null,
@@ -1157,7 +1115,7 @@
   "IsInInstance": false,
   "familiarAutoAttack": true,
   "storedScrolls": 0,
-  "isTitle": false,
+  "titleIsBehindName": false,
   "clanTag": "",
   "recievedStarter": true,
   "healMode": false,
@@ -1169,7 +1127,7 @@
   "strongHoldSecurityFloor3": false,
   "strongHoldSecurityFloor4": false,
   "connectedClanChannel": false,
-  "lastLoggedIn": 1767035055467,
+  "lastLoggedIn": 1769970577129,
   "petManager": {
     "petDetails": {},
     "npcId": 0,
@@ -1192,6 +1150,7 @@
   "acceptAid": true,
   "RCReport": false,
   "filter": false,
+  "logicPackets": [],
   "temporaryMovementType": -1,
   "updateMovementType": false,
   "hasDesign": false,
@@ -1289,6 +1248,34 @@
       false,
       false
     ]
+  },
+  "collectionLog": {
+    "bosses": {
+      "obtainedDrops": {},
+      "categoryType": "BOSSES"
+    },
+    "clues": {
+      "obtainedDrops": {},
+      "categoryType": "CLUES"
+    },
+    "minigames": {
+      "obtainedDrops": {},
+      "categoryType": "MINIGAMES"
+    },
+    "others": {
+      "obtainedDrops": {},
+      "categoryType": "OTHERS"
+    },
+    "slayers": {
+      "obtainedDrops": {},
+      "categoryType": "SLAYER"
+    }
+  },
+  "farmingManager": {
+    "growthMultiplier": 1000.0,
+    "spots": [],
+    "globalTickCounter": 11,
+    "playerGrowthOffset": 191
   },
   "controlerManager": {},
   "musicsManager": {
@@ -2734,6 +2721,9 @@
       0
     ]
   },
+  "killcount": {
+    "kills": {}
+  },
   "dropLogs": {
     "drops": [],
     "lowestValue": 1000000,
@@ -2742,8 +2732,8 @@
   },
   "squealOfFortune": {
     "version": 1,
-    "lastDailySpinsGiveaway": 1767035013244,
-    "dailySpins": 5,
+    "lastDailySpinsGiveaway": 1769970570347,
+    "dailySpins": 6,
     "earnedSpins": 0,
     "boughtSpins": 0,
     "rewardSlot": -1,

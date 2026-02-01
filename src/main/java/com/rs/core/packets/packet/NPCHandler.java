@@ -60,6 +60,7 @@ import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.player.command.CommandRegistry;
+import com.rs.kotlin.game.player.interfaces.DropInterface;
 import com.rs.kotlin.tool.WikiApi;
 
 /**
@@ -77,6 +78,8 @@ public class NPCHandler {
         if (npc == null || npc.hasFinished() || !player.getMapRegionsIds().contains(npc.getRegionId()))
             return;
         if (npc.getDefinitions().hasAttackOption()) {
+            DropInterface.INSTANCE.open(player);
+            DropInterface.INSTANCE.selectNpc(player, npc.getId());
             if (npc.getHitpoints() > 0)
                 player.getPackets().sendGameMessage("%s has %s hitpoints left.", npc.getName(), npc.getHitpoints());
             else
@@ -115,22 +118,14 @@ public class NPCHandler {
         if (npc.getCombatData() == null) {
             npc.setBonuses();
         }
-        try {
+        /*try {
             // Build the input string like a player typed it
             String input = "lookupnpc " + npc.getId();
             CommandRegistry.execute(player, input);
         } catch (Exception e) {
             System.out.println(e.toString());
             player.message("Failed to look up NPC stats for " + npc.getName());
-        }
-        if (Settings.DEBUG) {
-            player.message("NpcId: " + npc.getId() + ", Index: " + npcIndex);
-            player.message(npc.getName() + " size:" + npc.getSize());
-            player.message("Visible On Map: " + npc.getDefinitions().isVisibleOnMap);
-            player.message("Visible:" + npc.getDefinitions().aBoolean849);
-            for (int id : npc.getDefinitions().modelIds)
-                player.message("ModelId: " + id);
-        }
+        }*/
     }
 
     public static void dumpAllNpcDefinitions(String path) throws IOException {
