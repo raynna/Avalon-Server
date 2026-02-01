@@ -199,6 +199,22 @@
     "lastSeen": "2026-01-27T14:26:23.160656900Z",
     "attempts": 1
   },
+  "2241": {
+    "npcId": 2241,
+    "npcName": "Grand Exchange clerk",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-01T19:27:27.246646100Z",
+    "lastSeen": "2026-02-01T19:27:27.246646100Z",
+    "attempts": 1
+  },
+  "2759": {
+    "npcId": 2759,
+    "npcName": "Banker",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-01T19:27:25.540159Z",
+    "lastSeen": "2026-02-01T19:27:25.540159Z",
+    "attempts": 1
+  },
   "2795": {
     "npcId": 2795,
     "npcName": "null",

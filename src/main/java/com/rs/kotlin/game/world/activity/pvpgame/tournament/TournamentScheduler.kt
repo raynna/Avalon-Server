@@ -42,13 +42,13 @@ object TournamentScheduler {
 
     fun startNewTournament(): TournamentLobby {
         cancelPending()
+        announceWorldAndDiscord(colour = Msg.GREEN, message = "A new Tournament has begun! Type ::tournament to join.")
         val instance = TournamentInstance()
         instance.create()
 
         val lobby = instance.getLobby()
         currentInstance = instance
         currentLobby = lobby
-        announceWorldAndDiscord(colour = Msg.GREEN, message = "News: A new Tournament has begun! Type ::tournament to join.")
         return lobby
     }
 
@@ -87,7 +87,7 @@ object TournamentScheduler {
     }
 
     private fun announceWorldAndDiscord(message: String, colour: String = Msg.ORANGE) {
-        Msg.world(colour, icon = 22, "News: $message")
-        DiscordAnnouncer.announce("Tournament", "News: $message")
+        Msg.world(colour, icon = 22, message)
+        DiscordAnnouncer.announce("Tournament", message)
     }
 }

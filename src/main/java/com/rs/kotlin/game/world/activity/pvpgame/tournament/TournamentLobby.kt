@@ -25,7 +25,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
     private val waitingPlayers = mutableListOf<Player>()
 
     private var joinPhase = true
-    private var ticksRemaining = 30//500 original
+    private var ticksRemaining = 180//500 original
 
     private var bestOfThree: Boolean = false
     private val finalScores = mutableMapOf<Player, Int>()
@@ -34,7 +34,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
         Msg.world(
             Msg.GREEN,
             icon = 22,
-            "News: Tournament Loadout: ${tournamentPreset.preset.name}"
+            "[Tournament] Loadout: ${tournamentPreset.preset.name}"
         )
 
         DiscordAnnouncer.announce(
@@ -49,18 +49,21 @@ class TournamentLobby(private val instance: TournamentInstance) {
                 if (secondsRemaining != lastAnnounced) {
                     when (secondsRemaining) {
                         180 -> {
-                            Msg.world(Msg.GREEN, icon = 22, "News: A ${tournamentPreset.preset.name} tournament starts in 3 minutes!")
-                            DiscordAnnouncer.announce("Tournament", "News: A ${tournamentPreset.preset.name} tournament starts in 3 minutes!")
+                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Fighting will begin in 3 minutes!")
+                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Loadout: ${tournamentPreset.preset.name}")
+                            DiscordAnnouncer.announce("Tournament", "Fighting will begin in 3 minutes!")
                         }
 
                         120 -> {
-                            Msg.world(Msg.GREEN, icon = 22, "News: A ${tournamentPreset.preset.name} tournament starts in 2 minutes!")
-                            DiscordAnnouncer.announce("Tournament", "News: A ${tournamentPreset.preset.name} tournament starts in 2 minutes!")
+                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Fighting will begin in 2 minutes!")
+                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Loadout: ${tournamentPreset.preset.name}")
+                            DiscordAnnouncer.announce("Tournament", "Fighting will begin in 2 minutes!")
                         }
 
                         60 -> {
-                            Msg.world(Msg.GREEN, icon = 22, "News: A ${tournamentPreset.preset.name} tournament starts in 1 minutes!")
-                            DiscordAnnouncer.announce("Tournament", "News: A ${tournamentPreset.preset.name} tournament starts in 1 minutes!")
+                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Fighting will begin in 1 minute!")
+                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Loadout: ${tournamentPreset.preset.name}")
+                            DiscordAnnouncer.announce("Tournament", "Fighting will begin in 1 minute!")
                         }
                     }
                     lastAnnounced = secondsRemaining
