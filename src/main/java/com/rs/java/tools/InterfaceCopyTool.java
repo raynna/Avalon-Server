@@ -7,12 +7,12 @@ import com.displee.cache.index.archive.file.File;
 public class InterfaceCopyTool {
 
 	private static final String CACHE_PATH = "data/cache/";
-	private static final String CACHE_PATH2 = "data/isikcache/";
+	private static final String CACHE_PATH2 = "data/cache/";
 
 	public static void main(String[] args) {
 
-		int sourceInterface = 3221;       //interface from other cache
-		int destinationInterface = 3005;  //interface in your cache
+		int sourceInterface = 3051;       //interface from other cache
+		int destinationInterface = 3050;  //interface in your cache
 
 		try {
 			CacheLibrary cache = new CacheLibrary(CACHE_PATH, false, null);

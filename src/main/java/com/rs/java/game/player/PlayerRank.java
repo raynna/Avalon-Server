@@ -36,7 +36,7 @@ public class PlayerRank implements Serializable {
 
 	public void setRank(int index, Rank rank) {
 		this.rank[index] = rank;
-		if (this.rank[index] != Rank.DEVELOPER && this.rank[index] != Rank.MODERATOR)
+		if (rank != null && this.rank[index] != Rank.DEVELOPER && this.rank[index] != Rank.MODERATOR)
 			World.sendNewsMessage(player.getDisplayName() + " is now a " + rank.getRankName() + "!", false);
 	}
 

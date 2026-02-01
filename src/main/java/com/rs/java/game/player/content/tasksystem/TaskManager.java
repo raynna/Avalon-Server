@@ -171,10 +171,15 @@ public class TaskManager implements Serializable {
 		completedTasks.add(task);
 		taskStages.put(task, task.getAmount());
 		// taskStages.remove(task);
-		player.gfx(new Graphics(3201, 0, 150));
-		player.getInterfaceManager().sendOverlay(1073, false);
-		player.getPackets().sendTextOnComponent(1073, 10, "<col=ffc800>Task completed");
-		player.getPackets().sendTextOnComponent(1073, 11, Utils.formatString(task.toString()));
+		player.queue().enqueue(() -> {
+			player.getInterfaceManager().sendOverlay(3050, false);
+			player.getPackets().sendTextOnComponent(3050, 6, Utils.wrapItemName(Utils.formatString(task.toString()), 18));
+			player.getPackets().sendRunScript(10003);
+		});
+		player.queue().enqueue(4, () -> {
+			player.getPackets().sendRunScript(10005);
+		});
+		player.queue().enqueueDelay(2);
 		player.getPackets().sendFilteredGameMessage(true,
 				(finishTaskMessage() + " You completed a " + Utils.formatString(task.getDifficulity())
 								+ " task: " + Utils.formatString(task.name().replace("$", "'"))

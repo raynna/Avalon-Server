@@ -6,6 +6,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.HexColours;
+import com.rs.java.utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -488,21 +489,15 @@ class LogCategory implements Serializable {
                                 HexColours.Colour.RED.getHex() + value.getName()
                 );
 
-                player.queue().enqueue(() -> {
-                    player.getInterfaceManager().sendOverlay(1073, false);
+                player.queue().enqueue(0, () -> {
+                    player.getInterfaceManager().sendOverlay(3051, false);
                     player.getPackets().sendTextOnComponent(
-                            1073, 10, "Collection Log"
-                    );
-                    player.getPackets().sendTextOnComponent(
-                            1073, 11,
-                            "<col=" + HexColours.Colour.ORANGE.getHex() +
-                                    "New item:<br>" + value.getName()
-                    );
+                            3051, 6,
+                            Utils.wrapItemName(value.getName(), 18));
+                    player.getPackets().sendRunScript(10000);
                 });
-
-                player.queue().enqueue(6, () -> {
-                    player.getInterfaceManager().closeOverlay(false);
-                });
+                player.queue().enqueue(4, () -> player.getPackets().sendRunScript(10002));
+                player.queue().enqueueDelay(2);
             }
         }
     }

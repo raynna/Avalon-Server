@@ -146,7 +146,7 @@ public class Player extends Entity {
     public transient TimerOverlay timerOverlay = new TimerOverlay();
 
 
-    private transient final PlayerActionQueue actionQueue = new PlayerActionQueue();
+    private transient PlayerActionQueue actionQueue = new PlayerActionQueue();
 
     public PlayerActionQueue queue() {
         return actionQueue;
@@ -1582,6 +1582,8 @@ public class Player extends Entity {
         godwarsKillcount.setPlayer(this);
         setDirection(Utils.getFaceDirection(0, -1));
         temporaryMovementType = -1;
+        if (actionQueue == null)
+            actionQueue = new PlayerActionQueue();
         logicPackets = new ConcurrentLinkedQueue<>();
         switchItemCache = Collections.synchronizedList(new ArrayList<>());
 

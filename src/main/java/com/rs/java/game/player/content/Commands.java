@@ -761,8 +761,38 @@ public final class Commands {
         double dr = kill / death;
         if (kill == 0 && death == 0)
             dr = 0;
-        player.getInterfaceManager().closeOverlay(false);
-        player.getCollectionLog().open();
+        player.queue().enqueue(0, () -> {
+            player.getInterfaceManager().sendOverlay(3051, false);
+            player.getPackets().sendRunScript(10000);
+        });
+        player.queue().enqueue(4, () -> {
+            player.getPackets().sendRunScript(10002);
+        });
+        /*player.getInterfaceManager().sendOverlay(1055, false);
+
+// task id you want to show (example: 3)
+        int taskId = 0;
+
+// force script to run by making values different
+        player.getPackets().sendCSVarInteger(1427, 190);
+        player.getPackets().sendCSVarInteger(1426, -1);
+        player.getPackets().sendCSVarInteger(1425, taskId);
+
+// allow script to proceed
+        player.getPackets().sendCSVarInteger(1429, 0);
+
+// enable click behavior
+        player.getPackets().sendCSVarInteger(281, 1000);
+
+// run client logic
+        player.getPackets().sendRunScript(3968);
+        player.getPackets().sendRunScript(3969);
+        player.getPackets().sendRunScript(3970);
+        System.out.println(player.getVarsManager().getValue(1425));
+        System.out.println(player.getVarsManager().getValue(1426));
+        System.out.println(player.getVarsManager().getValue(1429));*/
+
+
         player.setNextForceTalk(
                 new ForceTalk("Kills: " + player.getPlayerKillcount() + " Deaths: " + player.getDeathCount()
                         + " Streak: " + player.get(Keys.IntKey.KILLSTREAK) + " Ratio: " + new DecimalFormat("##.#").format(dr)));
@@ -2399,15 +2429,10 @@ public final class Commands {
     }
 
     private static boolean runScript(Player player, String[] cmd) {
-        if (cmd.length < 2) {
-            player.message("Usage: ::script [id]");
-            return true;
-        }
 
         try {
             int scriptId = Integer.parseInt(cmd[1]);
-            int arg = Integer.parseInt(cmd[2]);
-            player.getPackets().sendRunScript(scriptId, arg);
+            player.getPackets().sendRunScript(scriptId);
             player.message("Sent script " + scriptId);
         } catch (NumberFormatException e) {
             player.message("Invalid parameters.");

@@ -71,6 +71,37 @@ public final class Utils {
 		return tile;
 	}
 
+	public static String wrapItemName(String name, int maxLineLength) {
+		if (name.length() <= maxLineLength) {
+			return name;
+		}
+
+		String[] words = name.split(" ");
+		StringBuilder line1 = new StringBuilder();
+		StringBuilder line2 = new StringBuilder();
+
+		for (String word : words) {
+			if (line1.length() + word.length() + 1 <= maxLineLength) {
+				if (line1.length() > 0) {
+					line1.append(" ");
+				}
+				line1.append(word);
+			} else {
+				if (line2.length() > 0) {
+					line2.append(" ");
+				}
+				line2.append(word);
+			}
+		}
+
+		if (line2.length() == 0) {
+			return line1.toString();
+		} else {
+			return line1 + "<br>" + line2;
+		}
+	}
+
+
 	public static int clamp(int value, int min, int max) {
 		return Math.max(min, Math.min(max, value));
 	}

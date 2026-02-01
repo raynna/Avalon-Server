@@ -146,16 +146,16 @@ public class Thieving {
                         if (!World.containsObjectWithId(object, object.getId()))
                             return;
                         if (stall.getObjectId() == 34384) {
-                            player.getTaskManager().checkComplete(Tasks.STEAL_FROM_BAKERS_STALL);
                             player.getMoneyPouch().addMoney(5000, false);
+                            player.getTaskManager().checkComplete(Tasks.STEAL_FROM_BAKERS_STALL);
                         }
                         if (stall.getObjectId() == 34383) {
-                            player.getTaskManager().checkComplete(Tasks.STEAL_FROM_SILK_STALL);
                             player.getMoneyPouch().addMoney(7500, false);
+                            player.getTaskManager().checkComplete(Tasks.STEAL_FROM_SILK_STALL);
                         }
                         if (stall.getObjectId() == 34385) {
-                            player.getTaskManager().checkComplete(Tasks.STEAL_FROM_GEM_STALL);
                             player.getMoneyPouch().addMoney(10000, false);
+                            player.getTaskManager().checkComplete(Tasks.STEAL_FROM_GEM_STALL);
                         }
                         BlackIbisOutfit.addPiece(player);
                         player.getInventory().addItem(stall.getItem(Utils.getRandom(stall.item.length - 1)),
