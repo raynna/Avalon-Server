@@ -367,7 +367,7 @@ public class CollectionLog implements Serializable {
     }
 
     public void add(CategoryType category, String tab, Item item, boolean showMessage) {
-        getCategory(category).addToLog(tab, item, showMessage);
+        getCategory(category).addToLog(player, tab, item, showMessage);
     }
 
     public void addItem(Item item) {
@@ -465,7 +465,7 @@ class LogCategory implements Serializable {
     /**
      * Call to add a drop to the log (ex. boss drops, clue reward, etc)
      */
-    public void addToLog(String key, Item value, boolean showMessage) {
+    public void addToLog(Player player, String key, Item value, boolean showMessage) {
 
         Map<Integer, Integer> lootTab = obtainedDrops.get(key);
 
@@ -480,10 +480,7 @@ class LogCategory implements Serializable {
 
         lootTab.merge(value.getId(), value.getAmount(), Integer::sum);
 
-        // Only one tab is allowed to show message
         if (firstTime && showMessage && !isMaster()) {
-            Player player = CollectionLog.MASTER.player;
-
             if (player != null) {
 
                 player.message(
@@ -491,25 +488,21 @@ class LogCategory implements Serializable {
                                 HexColours.Colour.RED.getHex() + value.getName()
                 );
 
-                player.getPackets().sendTextOnComponent(
-                        1073, 10, "Collection Log"
-                );
+                player.queue().enqueue(() -> {
+                    player.getInterfaceManager().sendOverlay(1073, false);
+                    player.getPackets().sendTextOnComponent(
+                            1073, 10, "Collection Log"
+                    );
+                    player.getPackets().sendTextOnComponent(
+                            1073, 11,
+                            "<col=" + HexColours.Colour.ORANGE.getHex() +
+                                    "New item:<br>" + value.getName()
+                    );
+                });
 
-                player.getPackets().sendTextOnComponent(
-                        1073, 11,
-                        "<col=" + HexColours.Colour.ORANGE.getHex() +
-                                "New item:<br>" + value.getName()
-                );
-
-                player.getInterfaceManager().sendOverlay(1073, false);
-
-                WorldTasksManager.schedule(new WorldTask() {
-                    @Override
-                    public void run() {
-                        player.getInterfaceManager().closeOverlay(false);
-                        stop();
-                    }
-                }, 6);
+                player.queue().enqueue(6, () -> {
+                    player.getInterfaceManager().closeOverlay(false);
+                });
             }
         }
     }

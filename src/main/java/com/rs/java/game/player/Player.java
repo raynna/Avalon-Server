@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
@@ -45,6 +46,7 @@ import com.rs.java.game.player.content.*;
 import com.rs.java.game.player.content.collectionlog.CollectionLog;
 import com.rs.java.game.player.prayer.*;
 import com.rs.java.game.player.Ranks.Rank;
+import com.rs.java.game.player.queue.PlayerActionQueue;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.KillCountContainer;
 import com.rs.kotlin.game.player.AccountCreation;
@@ -143,6 +145,16 @@ public class Player extends Entity {
     public transient HealthOverlay healthOverlay = new HealthOverlay();
     public transient TimerOverlay timerOverlay = new TimerOverlay();
 
+
+    private transient final PlayerActionQueue actionQueue = new PlayerActionQueue();
+
+    public PlayerActionQueue queue() {
+        return actionQueue;
+    }
+
+    public void queue(Consumer<PlayerActionQueue> block) {
+        block.accept(actionQueue);
+    }
 
     private Item[] tempInventory;
     private Item[] tempEquipment;

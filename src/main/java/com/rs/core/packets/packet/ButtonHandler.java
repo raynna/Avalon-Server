@@ -91,19 +91,19 @@ public class ButtonHandler {
 
         if (componentId == 65535)
             componentId = -1;
-
         if (interfaceId < 0 || interfaceId >= Utils.getInterfaceDefinitionsSize())
             return;
 
         if (componentId != -1 &&
                 (componentId < 0 || componentId >= Utils.getInterfaceDefinitionsComponentsSize(interfaceId)))
             return;
-
         if (player.isDead())
             return;
 
         final int slotId2 = stream.readUnsignedShort128();
         final int slotId = stream.readUnsignedShortLE128();
+        if (player.isDeveloperMode())
+            System.out.println("Component clicked :" + componentId + " on interface: " + interfaceId + ", slot: " + slotId + ", slotId2: " + slotId2 + ", packetId: " + packetId);
         if (!player.getControlerManager().processButtonClick(interfaceId, componentId, slotId, slotId2, packetId))
             return;
         if (interfaceId == 403) Sawmill.handlePlanksConvertButtons(player, componentId, packetId);
@@ -1993,76 +1993,7 @@ public class ButtonHandler {
             else if (componentId == 24) player.getBank().depositAllBob(false);
             else if (componentId == 20) player.getBank().depositMoneyPouch(false);
         } else if (interfaceId == 762) {
-            if (componentId == 15) player.getBank().switchInsertItems();
-            else if (componentId == 19) {
-                player.getPackets().sendVar(115, player.getBank().getWithdrawNotes() ? 1 : 0);
-                player.getBank().switchWithdrawNotes();
-            } else if (componentId == 33) player.getBank().depositAllInventory(true);
-            else if (componentId == 37) player.getBank().depositAllEquipment(true);
-            else if (componentId == 39) player.getBank().depositAllBob(true);
-            else if (componentId == 35) player.getBank().depositMoneyPouch(true);
-            else if (componentId == 46) {
-                long moneyPouch = player.getMoneyPouch().getTotal();
-                long bankValue = player.getBank().getBankValue();
-                long inventoryValue = player.getInventory().getInventoryValue();
-                long equipmentValue = player.getEquipment().getEquipmentValue();
-                long totalValue = 0;
-                long grandexchangeValue = GrandExchange.getTotalOfferValues(player);
-                long collectionValue = GrandExchange.getTotalCollectionValue(player);
-                player.closeInterfaces();
-                player.getInterfaceManager().sendInterface(629);
-                player.getPackets().sendTextOnComponent(629, 11, "Information Tab");
-                player.getPackets().sendTextOnComponent(629, 12, "");
-                player.getPackets().sendTextOnComponent(629, 41, "Money pouch:");
-                player.getPackets().sendTextOnComponent(629, 54, Utils.formatDoubledAmount(moneyPouch));
-                player.getPackets().sendTextOnComponent(629, 42, "Bank:");
-                player.getPackets().sendTextOnComponent(629, 55, Utils.formatDoubledAmount(bankValue));
-                player.getPackets().sendTextOnComponent(629, 43, "Inventory:");
-                player.getPackets().sendTextOnComponent(629, 56, Utils.formatDoubledAmount(inventoryValue));
-                player.getPackets().sendTextOnComponent(629, 44, "Equipment:");
-                player.getPackets().sendTextOnComponent(629, 57, Utils.formatDoubledAmount(equipmentValue));
-                player.getPackets().sendTextOnComponent(629, 45, "Grand Exchange");
-                player.getPackets().sendTextOnComponent(629, 58, "");
-                player.getPackets().sendTextOnComponent(629, 46, "Pending Offers:");
-                player.getPackets().sendTextOnComponent(629, 59, Utils.formatDoubledAmount(grandexchangeValue));
-                player.getPackets().sendTextOnComponent(629, 47, "Collection Box:");
-                player.getPackets().sendTextOnComponent(629, 60, Utils.formatDoubledAmount(collectionValue));
-                totalValue = bankValue + inventoryValue + equipmentValue + moneyPouch + collectionValue + grandexchangeValue;
-                player.getPackets().sendTextOnComponent(629, 48, "Total wealth:");
-                player.getPackets().sendTextOnComponent(629, 61, Utils.formatDoubledAmount(totalValue));
-                player.getPackets().sendTextOnComponent(629, 49, "");
-                player.getPackets().sendTextOnComponent(629, 62, "");
-                player.getPackets().sendTextOnComponent(629, 50, "Highest value Wildy kill:");
-                player.getPackets().sendTextOnComponent(629, 63, (player.getHighestValuedKill() >= Integer.MAX_VALUE ? "Lots!" : Utils.getFormattedNumber(player.getHighestValuedKill(), ',')));
-                player.getPackets().sendTextOnComponent(629, 52, "Slayer tasks completed:");
-                player.getPackets().sendTextOnComponent(629, 65, Utils.getFormattedNumber(player.getSlayerManager().getCompletedTasks()));
-                player.getPackets().sendHideIComponent(629, 68, true);
-                player.getPackets().sendHideIComponent(629, 69, true);
-            } else if (componentId >= 46 && componentId <= 64) {
-                int tabId = 9 - ((componentId - 46) / 2);
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getBank().setCurrentTab(tabId);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) player.getBank().collapse(tabId);
-            } else if (componentId == 95) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getBank().withdrawItem(slotId, 1);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.getBank().withdrawItem(slotId, 5);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    player.getBank().withdrawItem(slotId, 10);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                    player.getBank().withdrawLastAmount(slotId);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
-                    player.temporaryAttribute().put("bank_item_X_Slot", slotId);
-                    player.temporaryAttribute().put("bank_isWithdraw", Boolean.TRUE);
-                    player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
-                } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
-                    player.getBank().withdrawItem(slotId, Integer.MAX_VALUE);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON6_PACKET)
-                    player.getBank().withdrawItemButOne(slotId);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET) player.getBank().sendExamine(slotId);
-
-            } else if (componentId == 119) {
-                openEquipmentBonuses(player, true);
-            }
+            player.getBank().handleButtons(componentId, slotId, packetId);
         } else if (interfaceId == 763) {
             if (componentId == 0) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
