@@ -25,7 +25,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
     private val waitingPlayers = mutableListOf<Player>()
 
     private var joinPhase = true
-    private var ticksRemaining = 180//500 original
+    private var ticksRemaining = 500//500 original
 
     private var bestOfThree: Boolean = false
     private val finalScores = mutableMapOf<Player, Int>()

@@ -89,6 +89,10 @@ sealed class SpecialAttack(
                     }
                 }
                 is InstantCombat -> {
+                    if (player.itemSwitch && !player.combatDefinitions.isUsingSpecialAttack) {
+                        player.combatDefinitions.switchUsingSpecialAttack()
+                        return
+                    }
                     if (player.newActionManager.getActionDelay() == 0) {
                         if (!player.combatDefinitions.usingSpecialAttack)
                             player.message("Warning: Since the maul's special is an instant attack, it will be wasted when used on a first strike.")

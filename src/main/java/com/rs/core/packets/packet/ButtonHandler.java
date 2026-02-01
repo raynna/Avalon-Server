@@ -2503,6 +2503,7 @@ public class ButtonHandler {
         if (player.getInventory().getItem(slotId).getEquipSlot() == Equipment.SLOT_WEAPON) {
             if (player.lastSpecClickTick != player.lastItemSwitchTick && player.getCombatDefinitions().isUsingSpecialAttack()) {
                 player.combatDefinitions.switchUsingSpecialAttack();
+                player.clearAllQueuedSpecialAttacks();
                 //player.getQueuedInstantCombats().clear();
             }
             player.itemSwitch = true;

@@ -241,6 +241,11 @@ public class Player extends Entity {
         queuedInstantCombats.remove(queued);
     }
 
+    public void clearAllQueuedSpecialAttacks() {
+        queuedInstantCombats.clear();
+        activeInstantSpecial = null;
+    }
+
 
     public boolean isOutOfRange(Entity target, int distance) {
         return !clipedProjectile(target, distance == 0) || !Utils.isOnRange(this.getX(), this.getY(), this.getSize(), target.getX(), target.getY(), target.getSize(), distance);
@@ -2429,7 +2434,6 @@ public class Player extends Entity {
     public transient int prayerTick = 0;
 
     public void processActiveInstantSpecial() {
-
         if (combatDefinitions.usingSpecialAttack && getActiveInstantSpecial() == null && newActionManager.getActionDelay() > 0) {
 
             Weapon weapon = Weapon.Companion.getWeapon(equipment.getWeaponId());
@@ -2464,18 +2468,29 @@ public class Player extends Entity {
         QueuedInstantCombat<? extends SpecialAttack> activeSpecial = getActiveInstantSpecial();
         if (activeSpecial == null)
             return;
-
+        if (equipment.getWeaponId() != activeSpecial.context.getWeaponId()) {
+            clearAllQueuedSpecialAttacks();
+            return;
+        }
         if (!combatDefinitions.usingSpecialAttack)
             return;
 
         SpecialAttack special = activeSpecial.special;
-
+        if (equipment.getWeaponId() != activeSpecial.context.getWeaponId()) {
+            clearActiveInstantSpecial();
+            return;
+        }
         if (!(special instanceof SpecialAttack.InstantCombat
                 || special instanceof SpecialAttack.InstantRangeCombat))
             return;
 
-        if (isOutOfRange(activeInstantSpecial.context.getDefender(),
-                activeInstantSpecial.context.getCombat().getAttackDistance()))
+        Entity defender = activeInstantSpecial.context.getDefender();
+        CombatStyle style = activeInstantSpecial.context.getCombat();
+
+        if (shouldAdjustDiagonal(this, defender, style.getAttackDistance()))
+            return;
+
+        if (isOutOfRange(defender, style.getAttackDistance()))
             return;
 
         faceEntity(activeInstantSpecial.context.getDefender());
@@ -2530,10 +2545,16 @@ public class Player extends Entity {
 
         if (!toExecute.isEmpty()) {
             for (QueuedInstantCombat queued : toExecute) {
+                if (equipment.getWeaponId() != queued.context.getWeaponId()) {
+                    queuedInstantCombats.remove(queued);
+                    continue;
+                }
                 faceEntity(queued.context.getDefender());
                 combatDefinitions.decreaseSpecialAttack(queued.special.getEnergyCost());
                 queued.execute();
                 queuedInstantCombats.remove(queued);
+                queued.context.getDefender().getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 16);
+                queued.context.getDefender().getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 12);
             }
             stopAll(false, true, true);
         }

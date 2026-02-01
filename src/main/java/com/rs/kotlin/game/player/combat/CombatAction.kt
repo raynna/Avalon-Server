@@ -133,6 +133,9 @@ class CombatAction(
 
         if (toExecute.isNotEmpty()) {
             for (queued in toExecute) {
+                if (player.equipment.getWeaponId() != queued.context.weaponId) {
+                    continue
+                }
                 if (queued.special is SpecialAttack.InstantCombat) {
                     if (!check(player, target))
                         return false
