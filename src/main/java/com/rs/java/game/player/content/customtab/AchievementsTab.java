@@ -52,6 +52,7 @@ public class AchievementsTab extends CustomTab {
 
 	public static void open(Player player) {
 		sendComponentButtons(player);
+		player.getPackets().sendRunScript(10007);
 		for (int i = 3; i <= 22; i++)
 			player.getPackets().sendHideIComponent(3002, i, true);
 		for (int i = 28; i <= 56; i++)

@@ -323,6 +323,7 @@ public class SettingsTab extends CustomTab {
                 }
             }
         }
+        player.getPackets().sendRunScript(10007);
     }
 
     public static void handleButtons(Player player, int compId) {

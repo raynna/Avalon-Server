@@ -278,6 +278,7 @@ public class TeleportTab extends CustomTab {
 	public static void open(Player player) {
 		initializeTeleportTab(player);
 		displayMainTeleportOptions(player);
+		player.getPackets().sendRunScript(10007);
 	}
 
 	private static void initializeTeleportTab(Player player) {

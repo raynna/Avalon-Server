@@ -88,6 +88,7 @@ public class GearTab extends CustomTab {
 			}
 			i++;
 		}
+		player.getPackets().sendRunScript(10007);
 	}
 
 	public static void removeAttributtes(Player player) {
