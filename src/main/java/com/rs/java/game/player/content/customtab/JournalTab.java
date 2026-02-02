@@ -17,6 +17,8 @@ public class JournalTab extends CustomTab {
 	 *
 	 */
 
+	private static final JournalStore[] STORES = JournalStore.values();
+
 	public enum JournalStore {
 
 		TITLE(25) {
@@ -291,25 +293,36 @@ public class JournalTab extends CustomTab {
 		player.getPackets().sendHideIComponent(3002, BACK_BUTTON, true);
 		player.getPackets().sendHideIComponent(3002, FORWARD_BUTTON, false);
 		player.getPackets().sendSpriteOnIComponent(3002, BLUE_STAR_COMP, BLUE_HIGHLIGHTED);
-		for (JournalStore store : JournalStore.values()) {
-			if (store != null) {
-				player.getPackets().sendHideIComponent(3002, store.compId, false);
-				String text = store.text(player);
-				if (text != null) {
-					player.getPackets().sendTextOnComponent(3002, store.compId, text);
-				}
-			}
-		}
-		player.getPackets().sendRunScript(10007);
+		refresh(player);
 	}
 
+	public static void refresh(Player player) {
+		for (JournalStore store : STORES) {
+			if (store == null)
+				continue;
+
+			player.getPackets().sendHideIComponent(3002, store.compId, false);
+
+			String text = store.text(player);
+			if (text != null) {
+				player.getPackets().sendTextOnComponent(
+						3002,
+						store.compId,
+						text
+				);
+			}
+		}
+		refreshScrollbar(player, STORES.length);
+	}
+
+
 	public static void handleButtons(Player player, int compId) {
-		for (JournalStore store : JournalStore.values()) {
+		for (JournalStore store : STORES) {
 			if (store != null) {
 				if (compId != store.compId)
 					continue;
 				store.usage(player);
-				open(player);
+				refresh(player);
 			}
 		}
 		switch (compId) {

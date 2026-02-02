@@ -44,6 +44,7 @@ import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.actions.combat.QueuedInstantCombat;
 import com.rs.java.game.player.content.*;
 import com.rs.java.game.player.content.collectionlog.CollectionLog;
+import com.rs.java.game.player.content.customtab.AchievementsTab;
 import com.rs.java.game.player.prayer.*;
 import com.rs.java.game.player.Ranks.Rank;
 import com.rs.java.game.player.queue.PlayerActionQueue;
@@ -6356,5 +6357,23 @@ public class Player extends Entity {
     public int getMaxHitpoints() {
         return (skills.getLevel(Skills.HITPOINTS) * 10) + equipment.getEquipmentHpIncrease();
     }
+
+    public void refreshAchievementTab() {
+        if (getInterfaceManager().containsInterface(3002)) {
+            if (temporaryAttributes().get("ACHIEVEMENTTAB") != null) {
+                if ((int) temporaryAttributes().get("ACHIEVEMENTTAB") == 0) {
+                    if (temporaryAttributes().get("ACHIEVEMENTCATEGORY") != null) {
+                        AchievementsTab.openTasks(
+                                this,
+                                (String) temporaryAttributes().get("ACHIEVEMENTCATEGORY")
+                        );
+                    } else {
+                        AchievementsTab.open(this);
+                    }
+                }
+            }
+        }
+    }
+
 
 }

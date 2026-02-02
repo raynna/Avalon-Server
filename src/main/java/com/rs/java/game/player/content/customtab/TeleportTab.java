@@ -27,6 +27,9 @@ public class TeleportTab extends CustomTab {
 	private static final int SKILLING_RUNECRAFTING = 21;
 	private static final int SKILLING_HUNTER = 22;
 
+	private static final TeleportsTab[] TELEPORT_TABS = TeleportsTab.values();
+	private static final TeleportTabData[] TELEPORT_DATA = TeleportTabData.values();
+
 	public enum TeleportsTab {
 		TITLE(25, "Teleports"),
 		CITIES(3, "City Teleports"),
@@ -276,9 +279,10 @@ public class TeleportTab extends CustomTab {
 	}
 
 	public static void open(Player player) {
+		int rows = TELEPORT_TABS.length;
 		initializeTeleportTab(player);
 		displayMainTeleportOptions(player);
-		player.getPackets().sendRunScript(10007);
+		refreshScrollbar(player, rows);
 	}
 
 	private static void initializeTeleportTab(Player player) {
@@ -303,7 +307,7 @@ public class TeleportTab extends CustomTab {
 	}
 
 	private static void displayMainTeleportOptions(Player player) {
-		for (TeleportsTab tab : TeleportsTab.values()) {
+		for (TeleportsTab tab : TELEPORT_TABS) {
 			if (tab != null) {
 				player.getPackets().sendHideIComponent(3002, tab.getComponentId(), false);
 				if (tab.getText() != null) {
@@ -328,6 +332,7 @@ public class TeleportTab extends CustomTab {
 		player.getPackets().sendTextOnComponent(3002, 9, "<col=BB0404>No</col>, I don't want to teleport.");
 		player.getPackets().sendTextOnComponent(3002, 25, "Dangerous!");
 		player.getPackets().sendSpriteOnIComponent(3002, BLUE_STAR_COMP, 439);
+		refreshScrollbar(player, 3);
 	}
 
 	private static void sendTeleport(Player player, WorldTile tile, int type) {
@@ -354,7 +359,6 @@ public class TeleportTab extends CustomTab {
 		Integer type = (Integer) player.temporaryAttribute().get("TELEPORTTYPE");
 		WorldTile dangerTile = (WorldTile) player.getTemporaryAttributtes().get("DANGEROUSTELEPORT");
 		WorldTile previousTile = (WorldTile) player.getTemporaryAttributtes().get("PREVIOUSTELEPORT");
-
 		if (dangerTile != null) {
 			handleDangerousTeleportButtons(player, componentId, type, dangerTile);
 			return;
@@ -391,7 +395,7 @@ public class TeleportTab extends CustomTab {
 	}
 
 	private static void handleTeleportSelection(Player player, int componentId, int type) {
-		for (TeleportTabData teleport : TeleportTabData.values()) {
+		for (TeleportTabData teleport : TELEPORT_DATA) {
 			if (teleport != null && teleport.getCategory() == type && teleport.getComponentId() == componentId) {
 				processTeleportSelection(player, teleport, type);
 				return;
@@ -473,13 +477,16 @@ public class TeleportTab extends CustomTab {
 	}
 
 	public static void openTeleports(Player player, int type) {
+		int rows = countTeleportsForCategory(type);
 		initializeTeleportCategory(player, type);
-
 		String categoryName = getMainCategoryName(type);
 		player.getPackets().sendTextOnComponent(3002, 25, categoryName);
 
 		displayTeleportOptions(player, type);
+
+		refreshScrollbar(player, rows);
 	}
+
 
 	private static String getMainCategoryName(int type) {
         return switch (type) {
@@ -509,7 +516,7 @@ public class TeleportTab extends CustomTab {
 	}
 
 	private static void displayTeleportOptions(Player player, int type) {
-		for (TeleportTabData teleport : TeleportTabData.values()) {
+		for (TeleportTabData teleport : TELEPORT_DATA) {
 			if (teleport != null && (teleport.getCategory() == type || teleport.getCategory() == -1)) {
 				player.getPackets().sendHideIComponent(3002, teleport.getComponentId(), false);
 				if (teleport.getText() != null) {
@@ -539,5 +546,18 @@ public class TeleportTab extends CustomTab {
 		}
 
 		return text.toString();
+	}
+
+	private static int countTeleportsForCategory(int type) {
+		int count = 0;
+
+		for (TeleportTabData teleport : TELEPORT_DATA) {
+			if (teleport != null &&
+					(teleport.getCategory() == type || teleport.getCategory() == -1)) {
+				count++;
+			}
+		}
+
+		return count;
 	}
 }

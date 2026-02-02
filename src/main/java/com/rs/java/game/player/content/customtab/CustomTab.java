@@ -58,4 +58,16 @@ public class CustomTab {
 		//	player.getPackets().sendHideIComponent("interface.quest_tab", i, true);
 	}
 
+	static void refreshScrollbar(Player player, int rows) {
+
+		int visibleHeight = 192;   // height of the scroll viewport
+		int rowHeight = 15;        // pixel height per text line
+
+		int contentHeight = rows * rowHeight;
+		boolean needsScroll = contentHeight > visibleHeight;
+		player.getPackets().sendHideIComponent(3002, 23, !needsScroll);
+		player.getPackets().sendCSVarInteger(350, needsScroll ? contentHeight : visibleHeight);
+		player.getPackets().sendRunScript(10007);
+	}
+
 }

@@ -94,8 +94,7 @@ object DropInterface {
 
             player.packets.sendHideIComponent(INTERFACE_ID, PREVIOUS_BUTTON, true)
             player.packets.sendHideIComponent(INTERFACE_ID, NEXT_BUTTON, true)
-            player.packets.sendCSVarInteger(350, 0)
-
+            refreshScrollbar(player, 0)
             buildInitialNpcList(player)
             sendNpcList(player)
         }
@@ -144,10 +143,7 @@ object DropInterface {
 
     fun selectNpc(player: Player, npcId: Int) {
         val rows = getNpcDrops(npcId).size
-        val viewportHeight = 250
-        val height = maxOf(rows * 35, viewportHeight)
-        player.packets.sendCSVarInteger(350, height)
-        player.packets.sendRunScript(10006)
+        refreshScrollbar(player, rows)
         val npcName = NPCDefinitions.getNPCDefinitions(npcId).name
         player.temporaryAttributtes[ATTR_CURRENT_NPC] = npcId
         player.temporaryAttributtes[ATTR_CURRENT_NPC_NAME] = npcName
@@ -217,9 +213,28 @@ object DropInterface {
 
             row += ROW_STRIDE
         }
-        player.packets.sendCSVarInteger(350, height)
+        refreshScrollbar(player, rows)
+        updatePageButtons(player);
+    }
+
+    private fun refreshScrollbar(player: Player, rows: Int) {
+
+        val rowHeight = 35
+        val viewportHeight = 264
+
+        val contentHeight = rows * rowHeight
+        val needsScroll = contentHeight > viewportHeight
+
+        player.packets.sendHideIComponent(3005, 649, !needsScroll)
+
+        player.packets.sendCSVarInteger(
+            350,
+            if (needsScroll) contentHeight else viewportHeight
+        )
+
         player.packets.sendRunScript(10006)
     }
+
 
     /**
      * NPC List (Left Panel)
@@ -300,11 +315,15 @@ object DropInterface {
                 val inSearchMode =
                     player.temporaryAttributtes.containsKey(ATTR_IN_SEARCH_MODE)
 
-                if (page <= 0 && (hasItemFilter || inSearchMode)) {
+                val hasNpcSelected =
+                    player.temporaryAttributtes.containsKey(ATTR_CURRENT_NPC)
+
+                if (page <= 0 && (hasItemFilter || inSearchMode || hasNpcSelected)) {
                     clearViewer(player)
                 } else {
                     previousPage(player)
                 }
+
             }
         }
 
@@ -442,12 +461,14 @@ object DropInterface {
         val inSearchMode =
             player.temporaryAttributtes.containsKey(ATTR_IN_SEARCH_MODE)
 
-        val canClear = page <= 0 && (hasItemFilter || inSearchMode)
+        val hasNpcSelected =
+            player.temporaryAttributtes.containsKey(ATTR_CURRENT_NPC)
 
-        // Always show Previous
+        val canClear =
+            page <= 0 && (hasItemFilter || inSearchMode || hasNpcSelected)
+
         player.packets.sendHideIComponent(INTERFACE_ID, PREVIOUS_BUTTON, false)
 
-        // Only show Next if more pages
         player.packets.sendHideIComponent(
             INTERFACE_ID,
             NEXT_BUTTON,
@@ -482,6 +503,7 @@ object DropInterface {
 
         sendNpcList(player)
         updateTitle(player, "Drop Viewer")
+        refreshScrollbar(player, 0)
     }
 
 

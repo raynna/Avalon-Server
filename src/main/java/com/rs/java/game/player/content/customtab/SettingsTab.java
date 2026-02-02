@@ -10,6 +10,8 @@ import com.rs.java.utils.Utils;
 
 public class SettingsTab extends CustomTab {
 
+    private static final SettingsStore[] STORES = SettingsStore.values();
+
     public enum SettingsStore {
 
         TITLE(25) {
@@ -307,32 +309,51 @@ public class SettingsTab extends CustomTab {
 
     public static void open(Player player) {
         sendComponents(player);
+
         for (int i = 3; i <= 22; i++)
             player.getPackets().sendHideIComponent(3002, i, true);
         for (int i = 28; i <= 56; i++)
             player.getPackets().sendHideIComponent(3002, i, true);
+
         player.getTemporaryAttributtes().put("CUSTOMTAB", 2);
+
         player.getPackets().sendHideIComponent(3002, BACK_BUTTON, false);
         player.getPackets().sendHideIComponent(3002, FORWARD_BUTTON, false);
-        player.getPackets().sendSpriteOnIComponent(3002, RED_STAR_COMP, RED_HIGHLIGHTED);
-        for (SettingsStore store : SettingsStore.values()) {
-            if (store != null) {
-                player.getPackets().sendHideIComponent(3002, store.compId, false);
-                if (store.text(player) != null) {
-                    player.getPackets().sendTextOnComponent(3002, store.compId, store.text(player));
-                }
-            }
-        }
-        player.getPackets().sendRunScript(10007);
+        player.getPackets().sendSpriteOnIComponent(
+                3002,
+                RED_STAR_COMP,
+                RED_HIGHLIGHTED
+        );
+        refresh(player);
+        refreshScrollbar(player, STORES.length);
     }
 
+
+    public static void refresh(Player player) {
+        for (SettingsStore store : STORES) {
+            if (store == null)
+                continue;
+
+            player.getPackets().sendHideIComponent(3002, store.compId, false);
+
+            if (store.text(player) != null) {
+                player.getPackets().sendTextOnComponent(
+                        3002,
+                        store.compId,
+                        store.text(player)
+                );
+            }
+        }
+    }
+
+
     public static void handleButtons(Player player, int compId) {
-        for (SettingsStore store : SettingsStore.values()) {
+        for (SettingsStore store : STORES) {
             if (store != null) {
                 if (compId != store.compId)
                     continue;
                 store.usage(player);
-                open(player);
+                refresh(player);
             }
         }
         switch (compId) {

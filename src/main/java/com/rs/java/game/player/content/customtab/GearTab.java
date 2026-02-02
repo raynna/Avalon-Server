@@ -11,8 +11,6 @@ import com.rs.java.utils.Utils;
 public class GearTab extends CustomTab {
 
 
-	private static int EQUIPMENT_SPRITE = 675, CLOSE_SPRITE = 8553, ADD_SPRITE = 1842, REMOVE_SPRITE = 1845, SEARCH_SPRITE = 8486;
-
 	public static void refresh(Player player) {
 		int i = 3;
 		player.getTemporaryAttributtes().put("GEARTAB", 0);
@@ -88,7 +86,7 @@ public class GearTab extends CustomTab {
 			}
 			i++;
 		}
-		player.getPackets().sendRunScript(10007);
+		refreshScrollbar(player, 60);
 	}
 
 	public static void removeAttributtes(Player player) {

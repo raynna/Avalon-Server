@@ -6,7 +6,11 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.utils.Utils;
 
+import static com.rs.java.game.player.content.tasksystem.TaskManager.TASK_STORES;
+
 public class AchievementsTab extends CustomTab {
+
+	private static final AchievementsStore[] ACHIEVEMENT_STORES = AchievementsStore.values();
 
 	public enum AchievementsStore {
 
@@ -24,7 +28,7 @@ public class AchievementsTab extends CustomTab {
 		private int compId;
 		private String text;
 
-		private AchievementsStore(int compId, String text) {
+		AchievementsStore(int compId, String text) {
 			this.compId = compId;
 			this.text = text;
 		}
@@ -52,7 +56,7 @@ public class AchievementsTab extends CustomTab {
 
 	public static void open(Player player) {
 		sendComponentButtons(player);
-		player.getPackets().sendRunScript(10007);
+;
 		for (int i = 3; i <= 22; i++)
 			player.getPackets().sendHideIComponent(3002, i, true);
 		for (int i = 28; i <= 56; i++)
@@ -64,7 +68,7 @@ public class AchievementsTab extends CustomTab {
 		totalTasks = 0;
 		totalActions = 0;
 		currentActions = 0;
-		for (Tasks tasks : Tasks.values()) {
+		for (Tasks tasks : TASK_STORES) {
 			if (tasks != null) {
 				currentActions += tasks.getAmount() > 0 ? player.getTaskManager().getTaskStage(tasks)
 						: player.getTaskManager().completedTask(tasks) ? 1 : 0;
@@ -74,7 +78,7 @@ public class AchievementsTab extends CustomTab {
 				totalTasks++;
 			}
 		}
-		for (AchievementsStore store : AchievementsStore.values()) {
+		for (AchievementsStore store : ACHIEVEMENT_STORES) {
 			if (store != null) {
 				player.getPackets().sendHideIComponent(3002, store.compId, false);
 				if (store.text != null) {
@@ -91,6 +95,12 @@ public class AchievementsTab extends CustomTab {
 			player.getPackets().sendHideIComponent(3002, 10, false);
 			player.getPackets().sendTextOnComponent(3002, 10, "<col=04BB3B>You completed all " + totalTasks + " tasks!");
 		}
+		int rows = 0;
+		for (AchievementsStore store : ACHIEVEMENT_STORES) {
+			if (store != null)
+				rows++;
+		}
+		refreshScrollbar(player, rows);
 	}
 
 	public static void handleButtons(Player player, int compId) {
@@ -121,7 +131,7 @@ public class AchievementsTab extends CustomTab {
 		}
 		if (category != null) {
 			int i = 3;
-			for (Tasks task : Tasks.values()) {
+			for (Tasks task : TASK_STORES) {
 				if (task != null) {
 					if (!task.getDifficulity().contains(category))
 						continue;
@@ -141,7 +151,7 @@ public class AchievementsTab extends CustomTab {
 			}
 		} else {
 			player.temporaryAttribute().remove("ACHIEVEMENTCATEGORY");
-			for (AchievementsStore store : AchievementsStore.values()) {
+			for (AchievementsStore store : ACHIEVEMENT_STORES) {
 				if (store != null) {
 					if (compId == store.compId) {
 						String c = store.text.toLowerCase().replace(" achievements", "").trim();
@@ -177,8 +187,11 @@ public class AchievementsTab extends CustomTab {
 	static int currentActions;
 
 	public static void openTasks(Player player, String category) {
-		for (int i = 3; i <= 15; i++)
+		for (int i = 3; i <= 56; i++) {
+			if (i >= 23 && i <= 27)
+				continue;
 			player.getPackets().sendHideIComponent(3002, i, true);
+		}
 		player.getTemporaryAttributtes().put("ACHIEVEMENTCATEGORY", category);
 		sendComponentButtons(player);
 		if (!category.contains("elite"))
@@ -197,7 +210,7 @@ public class AchievementsTab extends CustomTab {
 		totalTasks = 0;
 		totalActions = 0;
 		currentActions = 0;
-		for (Tasks store : Tasks.values()) {
+		for (Tasks store : TASK_STORES) {
 			if (store != null) {
 				if (!store.getDifficulity().equals(category)) {
 					continue;
@@ -219,11 +232,19 @@ public class AchievementsTab extends CustomTab {
 				i++;
 			}
 		}
+		int rows = 0;
+		for (Tasks store : TASK_STORES) {
+			if (store != null && store.getDifficulity().equals(category))
+				rows++;
+		}
+		refreshScrollbar(player, rows);
+
 		double percentage = getPercentage(currentActions, totalActions);
 		player.getPackets().sendTextOnComponent(3002, 24,
 				completedTasks + "/" + totalTasks + (percentage == 100 ? "" : " ")
 						+ (percentage == 100 ? "<col=04BB3B>" : percentage == 0 ? "<col=BB0404>" : "<col=FFF300>")
 						+ (percentage == 100 ? "100%" : new DecimalFormat("##.#").format(percentage) + "%"));
+
 	}
 
 	public static double getPercentage(double completed, double totaltasks) {

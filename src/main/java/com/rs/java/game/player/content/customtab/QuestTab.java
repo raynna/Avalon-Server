@@ -14,6 +14,8 @@ public class QuestTab extends CustomTab {
 	 *
 	 */
 
+	private static final QuestStore[] QUEST_STORES = QuestStore.values();
+
 	public enum QuestStore {
 		
 		TITLE(25, "Quests"),
@@ -94,18 +96,18 @@ public class QuestTab extends CustomTab {
 		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:back", false);
 		player.getPackets().sendHideIComponent("interface.quest_tab", "component.quest_tab:forward", true);
 		player.getPackets().sendSpriteOnIComponent("interface.quest_tab", "component.quest_tab:purple_star", "sprite.quest_tab_purple_star_highlight");
-		for (QuestStore store : QuestStore.values()) {
+		for (QuestStore store : QUEST_STORES) {
 			if (store != null) {
 				player.getPackets().sendHideIComponent("interface.quest_tab", store.compId, false);
 				if (store.text(player) != null)
 					player.getPackets().sendTextOnComponent("interface.quest_tab", store.compId, store.text(player));
 			}
 		}
-		player.getPackets().sendRunScript(10007);
+		refreshScrollbar(player, QUEST_STORES.length);
 	}
 
 	public static void handleButtons(Player player, int compId) {
-		for (QuestStore store : QuestStore.values()) {
+		for (QuestStore store : QUEST_STORES) {
 			if (store != null) {
 				if (compId != store.compId)
 					continue;

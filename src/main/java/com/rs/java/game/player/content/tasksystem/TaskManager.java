@@ -7,10 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
-import com.rs.java.game.Graphics;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.content.customtab.AchievementsTab;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
@@ -19,12 +17,21 @@ public class TaskManager implements Serializable {
 
 	private static final long serialVersionUID = 5402478562684453627L;
 
-	public static String EASY = "easy";
-	public static String MEDIUM = "medium";
-	public static String HARD = "hard";
-	public static String ELITE = "elite";
+	public static final String EASY = "easy";
+	public static final String MEDIUM = "medium";
+	public static final String HARD = "hard";
+	public static final String ELITE = "elite";
 
-	public static enum Tasks {
+
+	public static Rewards[] REWARD_STORES;
+	public static Tasks[] TASK_STORES;
+
+	static {
+		TASK_STORES = Tasks.values();
+		REWARD_STORES = Rewards.values();
+	}
+
+	public enum Tasks {
 
 		/*
 		 * Easy Tasks
@@ -87,7 +94,8 @@ public class TaskManager implements Serializable {
 		}
 	}
 
-	public static enum Rewards {
+
+	public enum Rewards {
 
 		/*
 		 * Easy Rewards
@@ -160,7 +168,7 @@ public class TaskManager implements Serializable {
 			"Amazing!" };
 
 	public void resetAllTasks() {
-		for (Tasks tasks : Tasks.values()) {
+		for (Tasks tasks : TASK_STORES) {
 			taskStages.put(tasks, 0);
 			completedTasks.remove(tasks);
 		}
@@ -212,7 +220,7 @@ public class TaskManager implements Serializable {
 
 	public boolean hasCompletedTasks(String d) {
 		boolean completed = true;
-		for (Tasks tasks : Tasks.values()) {
+		for (Tasks tasks : TASK_STORES) {
 			if (tasks.getDifficulity() == d) {
 				if (!player.getTaskManager().completedTask(tasks)) {
 					completed = false;
@@ -225,7 +233,7 @@ public class TaskManager implements Serializable {
 	}
 
 	public void getRewards(String d) {
-		for (Rewards rewards : Rewards.values()) {
+		for (Rewards rewards : REWARD_STORES) {
 			if (rewards.getDifficulity() != d) {
 				for (Item equipment : player.getEquipment().getItems().getContainerItems()) {
 					if (equipment == null)
@@ -330,7 +338,7 @@ public class TaskManager implements Serializable {
 	}
 
 	public boolean hasCompletedAllTasks() {
-		List<Tasks> tasks = Arrays.asList(Tasks.values());
+		List<Tasks> tasks = Arrays.asList(TASK_STORES);
 		return (completedTasks.containsAll(tasks) ? true : false);
 	}
 
@@ -368,18 +376,7 @@ public class TaskManager implements Serializable {
 				player.getTaskManager().completeTask(task);
 			}
 		}
-		if (player.getInterfaceManager().containsInterface(3002)) {
-			if (player.temporaryAttributes().get("ACHIEVEMENTTAB") != null) {
-				if ((int) player.temporaryAttributes().get("ACHIEVEMENTTAB") == 0) {
-					if ((String) player.temporaryAttributes().get("ACHIEVEMENTCATEGORY") != null) {
-						AchievementsTab.openTasks(player, (String) player.temporaryAttributes().get("ACHIEVEMENTCATEGORY"));
-					} else {
-						AchievementsTab.open(player);
-					}
-				}
-			}
-
-		}
+		player.refreshAchievementTab();
 	}
 
 	public void checkComplete(Tasks task, int amount) {
