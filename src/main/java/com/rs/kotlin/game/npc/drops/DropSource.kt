@@ -4,6 +4,7 @@ enum class DropSource {
     ALWAYS,
     PREROLL,
     MAIN,
+    MINOR,
     SPECIAL,
     TERTIARY,
     CHARM,

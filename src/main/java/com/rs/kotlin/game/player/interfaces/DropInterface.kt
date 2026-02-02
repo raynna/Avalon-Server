@@ -7,6 +7,7 @@ import com.rs.java.game.player.Player
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.getDropTableForNpc
 import java.util.Locale
 import java.util.Locale.getDefault
+import java.util.concurrent.CompletableFuture
 
 /**
  * Drop Viewer Interface
@@ -29,7 +30,7 @@ object DropInterface {
     private const val INTERFACE_ID = 3005
 
     private const val ROW_START = 73
-    private const val ROW_END = 345
+    private const val ROW_END = 641
     private const val ROW_STRIDE = 8
 
     private const val ICON_OFFSET = 2
@@ -81,21 +82,23 @@ object DropInterface {
      */
 
     fun open(player: Player) {
-        player.interfaceManager.sendInterface(INTERFACE_ID)
+        CompletableFuture.runAsync {
+            player.interfaceManager.sendInterface(INTERFACE_ID)
 
-        // Hide all rows
-        var row = ROW_START
-        while (row <= ROW_END) {
-            hideRow(player, row)
-            row += ROW_STRIDE
+            // Hide all rows
+            var row = ROW_START
+            while (row <= ROW_END) {
+                hideRow(player, row)
+                row += ROW_STRIDE
+            }
+
+            player.packets.sendHideIComponent(INTERFACE_ID, PREVIOUS_BUTTON, true)
+            player.packets.sendHideIComponent(INTERFACE_ID, NEXT_BUTTON, true)
+            player.packets.sendCSVarInteger(350, 0)
+
+            buildInitialNpcList(player)
+            sendNpcList(player)
         }
-
-        player.packets.sendHideIComponent(INTERFACE_ID, PREVIOUS_BUTTON, true)
-        player.packets.sendHideIComponent(INTERFACE_ID, NEXT_BUTTON, true)
-
-
-        buildInitialNpcList(player)
-        sendNpcList(player)
     }
 
     /**
@@ -140,9 +143,12 @@ object DropInterface {
      */
 
     fun selectNpc(player: Player, npcId: Int) {
-
+        val rows = getNpcDrops(npcId).size
+        val viewportHeight = 250
+        val height = maxOf(rows * 35, viewportHeight)
+        player.packets.sendCSVarInteger(350, height)
+        player.packets.sendRunScript(10006)
         val npcName = NPCDefinitions.getNPCDefinitions(npcId).name
-
         player.temporaryAttributtes[ATTR_CURRENT_NPC] = npcId
         player.temporaryAttributtes[ATTR_CURRENT_NPC_NAME] = npcName
 
@@ -153,19 +159,20 @@ object DropInterface {
         else
             updateTitle(player, "Viewing: $npcName")
 
-        // Clear rows
         var clearRow = ROW_START
         while (clearRow <= ROW_END) {
             hideRow(player, clearRow)
             clearRow += ROW_STRIDE
         }
 
-        // Populate rows
-        val drops = getNpcDrops(npcId)
+        val maxRows = ((ROW_END - ROW_START) / ROW_STRIDE) + 1
+        val drops = getNpcDrops(npcId).take(maxRows)
+
         var row = ROW_START
 
         for (drop in drops) {
-            if (drop == null || row > ROW_END) continue
+            if (drop == null) continue
+            if (row > ROW_END) break
 
             val def = ItemDefinitions.getItemDefinitions(drop.itemId)
 
@@ -175,7 +182,7 @@ object DropInterface {
                 INTERFACE_ID,
                 row + ICON_OFFSET,
                 drop.itemId,
-                drop.amount.last
+                (drop.amount ?: 1..1).last
             )
 
             player.packets.sendTextOnComponent(
@@ -199,7 +206,7 @@ object DropInterface {
             player.packets.sendTextOnComponent(
                 INTERFACE_ID,
                 row + AMOUNT_VALUE,
-                drop.amount.toDisplayString()
+                (drop.amount ?: 1..1).toDisplayString()
             )
 
             player.packets.sendTextOnComponent(
@@ -210,6 +217,8 @@ object DropInterface {
 
             row += ROW_STRIDE
         }
+        player.packets.sendCSVarInteger(350, height)
+        player.packets.sendRunScript(10006)
     }
 
     /**

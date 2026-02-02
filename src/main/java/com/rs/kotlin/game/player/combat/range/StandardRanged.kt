@@ -658,15 +658,16 @@ object StandardRanged : RangeData() {
                     val endGraphic = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1100 else 1103
                     val soundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3733 else 3736
                     val hitSoundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3731 else 3732
+                    context.attacker.playSound(soundId,  1)
+                    context.attacker.playSound(soundId,  30,1)
                     ProjectileManager.send(
                         Projectile.DRAGON_ARROW,
                         arrowProjectile,
                         context.attacker,
                         context.defender,
-                        hitGraphic = Graphics(endGraphic, 100)
-                    ) {
-                        context.defender.playSound(hitSoundId,  1)
-                    }
+                        hitGraphic = Graphics(endGraphic, 100),
+                        hitSound = hitSoundId
+                    )
                     ProjectileManager.send(
                         Projectile.DRAGON_ARROW,
                         arrowProjectile,
@@ -676,11 +677,8 @@ object StandardRanged : RangeData() {
                         startTimeOffset = 5,
                         speedAdjustment = 5,
                         hitGraphic = Graphics(endGraphic, 100),
-                    ) {
-                        context.defender.playSound(hitSoundId,  10, 1)
-                    }
-                    context.attacker.playSound(soundId,  1)
-                    context.attacker.playSound(soundId,  30,1)
+                        hitSound = hitSoundId
+                    )
                     context.hits {
                         val distance = Utils.getDistance(context.attacker, context.defender)
                         val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)

@@ -1793,6 +1793,10 @@ public abstract class Entity extends WorldTile {
         }
     }
 
+    public void playSound(int soundId) {
+        playSound(soundId, 0, 1);
+    }
+
 
     public void playSound(int soundId, int type) {
         playSound(soundId, 0, type);

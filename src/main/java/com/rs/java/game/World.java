@@ -156,7 +156,6 @@ public final class World {
         addRestoreShopItemsTask();
         addDegradeShopItemsTask();
         addOwnedObjectsTask();
-        Update.ProcessUpdates();
         LivingRockCavern.init();
         WarriorsGuild.init();
         //TODO DISABLED FOR NOW executeShootingStar();
@@ -337,9 +336,9 @@ public final class World {
                 } catch (Throwable e) {
                     Logger.handle(e);
                 }
-                WorldTasksManager.schedule(this, secondsToTicks(120));
+                WorldTasksManager.schedule(this, secondsToTicks(300));
             }
-        }, secondsToTicks(120));
+        }, secondsToTicks(300));
     }
 
 

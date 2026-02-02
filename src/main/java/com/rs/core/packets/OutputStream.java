@@ -13,6 +13,12 @@ public final class OutputStream extends Stream {
 			BIT_MASK[i] = (1 << i) - 1;
 	}
 
+	public byte[] toByteArray() {
+		byte[] data = new byte[offset];
+		System.arraycopy(buffer, 0, data, 0, offset);
+		return data;
+	}
+
 	public OutputStream(int capacity) {
 		setBuffer(new byte[capacity]);
 	}

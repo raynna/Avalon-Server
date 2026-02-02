@@ -4,6 +4,7 @@ enum class DropType {
     ALWAYS,
     PREROLL,
     MAIN,
+    MINOR,
     TERTIARY,
     SPECIAL,
     CHARM

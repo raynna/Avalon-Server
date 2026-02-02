@@ -4,6 +4,7 @@ import java.util.Hashtable;
 
 import com.rs.core.cache.Cache;
 import com.rs.core.packets.InputStream;
+import com.rs.core.packets.OutputStream;
 import com.rs.java.utils.Utils;
 
 @SuppressWarnings("unused")
@@ -24,7 +25,7 @@ public class IComponentDefinitions {
 	protected boolean hidden;
 	private short[] aShortArray4690;
 	protected int anInt4691;
-	protected int parentId;
+	public int parentId;
 	protected int anInt4693;
 	protected int anInt4694 = -1;
 	protected int anInt4695;
@@ -106,7 +107,7 @@ public class IComponentDefinitions {
 	protected int[] anIntArray4789;
 	public String aString4790;
 	protected int anInt4792;
-	protected IComponentDefinitions[] aWidgetArray4793;
+	public IComponentDefinitions[] aWidgetArray4793;
 	protected int anInt4794;
 	protected int anInt4795;
 	protected int anInt4796;
@@ -127,7 +128,7 @@ public class IComponentDefinitions {
 	protected int anInt4811;
 	protected int[] anIntArray4812;
 	protected int anInt4813;
-	protected int anInt4814;
+	public int anInt4814;
 	protected int anInt4815;
 	protected int anInt4816;
 	protected int anInt4817;
@@ -135,7 +136,7 @@ public class IComponentDefinitions {
 	protected boolean aBoolean4819;
 	protected int anInt4820;
 	protected int anInt4821;
-	protected int ihash;
+	public int ihash;
 	@SuppressWarnings("rawtypes")
 	public Hashtable aHashTable4823;
 	protected int anInt4824;
@@ -200,8 +201,49 @@ public class IComponentDefinitions {
 		return icomponentsdefs[id];
 	}
 
+	public byte[] encode() {
+		OutputStream stream = new OutputStream();
+		encode(stream);
+		return stream.toByteArray();
+	}
+
+	public void encode(OutputStream stream) {
+
+		stream.writeByte(255); // newInt
+		stream.writeByte(type);
+
+		if ((type & 0x80) != 0) {
+			stream.writeString(aString4765);
+		}
+
+		stream.writeShort(anInt4814);
+		stream.writeShort(anInt4850);
+		stream.writeShort(anInt4816);
+		stream.writeShort(anInt4693);
+		stream.writeShort(anInt4722);
+
+		stream.writeByte(aByte4750);
+		stream.writeByte(aByte4741);
+		stream.writeByte(aByte4720);
+		stream.writeByte(aByte4851);
+
+		// PARENT ID (IMPORTANT)
+		if (parentId == -1)
+			stream.writeShort(65535);
+		else
+			stream.writeShort(parentId & 0xFFFF);
+
+		stream.writeByte(hidden ? 1 : 0);
+
+		// NOTE:
+		// For cloning purposes we reuse original byte data later,
+		// so this encode only needs to exist for writing modified parentId.
+	}
+
+
+
 	@SuppressWarnings("unchecked")
-	final void decode(InputStream stream) {
+    public final void decode(InputStream stream) {
 		int newInt = stream.readUnsignedByte();
 		if (newInt == 255) {
 			newInt = -1;
@@ -482,6 +524,20 @@ public class IComponentDefinitions {
 	static final int method925(int i) {
 		return (i & 0x3fda8) >> 11;
 	}
+
+	public static IComponentDefinitions cloneDef(byte[] data) {
+		IComponentDefinitions def = new IComponentDefinitions();
+		def.decode(new InputStream(data));
+
+		// Re-encode and decode to force full population
+		OutputStream out = new OutputStream();
+		def.encode(out);
+
+		IComponentDefinitions clone = new IComponentDefinitions();
+		clone.decode(new InputStream(out.getBuffer()));
+		return clone;
+	}
+
 
 	public IComponentDefinitions() {
 		anInt4698 = -1;

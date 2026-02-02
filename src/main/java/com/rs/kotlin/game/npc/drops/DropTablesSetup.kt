@@ -22,6 +22,7 @@ object DropTablesSetup {
         gemDropTable = GemTableEntry()
         superRareTable = SuperRareTableEntry()
         herbDropTable = HerbTableEntry()
+        registerDropTable(ChaosElementalDropTable.table, Rscm.lookupList("npc_group.chaos_elemental_lv305"))
         registerDropTable(KalphiteQueenDropTable.table, Rscm.lookupList("npc_group.kalphite_queen_lv333"))
         registerDropTable(KalphiteGuardianDropTable.table, Rscm.lookupList("npc_group.kalphite_guardian_lv141"))
         registerDropTable(KalphiteSoldierDropTable.table, Rscm.lookupList("npc_group.kalphite_soldier_lv85"))

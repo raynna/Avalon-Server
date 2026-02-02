@@ -43,6 +43,7 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
     private val preRollDrops = mutableListOf<PreRollDropEntry>()
     private val tertiaryDrops = mutableListOf<TertiaryDropEntry>()
     private val mainDrops = WeightedTable()
+    private val minorDrops = WeightedTable()
     private val specialDrops = WeightedTable()
     private var charmTable: SummoningCharms? = null
 
@@ -110,6 +111,20 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
                     it.amount,
                     "1/${"%.2f".format(denom)}",
                     DropType.MAIN
+                )
+            )
+        }
+
+        val minorWeight = minorDrops.mutableEntries().sumOf { it.weight }.toDouble()
+
+        minorDrops.mutableEntries().forEach {
+            val denom = (minorWeight / it.weight)
+            list.add(
+                DropDisplay(
+                    it.itemId,
+                    it.amount,
+                    "1/${"%.2f".format(denom)}",
+                    DropType.MINOR
                 )
             )
         }
@@ -217,6 +232,13 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
         currentContext = null
     }
 
+    fun minorDrops(size: Int, block: MutableList<WeightedDropEntry>.() -> Unit) {
+        currentContext = DropType.MINOR
+        minorDrops.setSize(size)
+        minorDrops.mutableEntries().block()
+        currentContext = null
+    }
+
     fun specialDrops(size: Int, block: MutableList<WeightedDropEntry>.() -> Unit) {
         currentContext = DropType.SPECIAL
         specialDrops.setSize(size)
@@ -289,6 +311,7 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
             DropType.ALWAYS -> addDrop(ctx, Rscm.lookup(item), amount, condition, customLogic)
             DropType.PREROLL -> { preRollDrops.add(PreRollDropEntry(Rscm.lookup(item), amount, numerator, denominator, condition)) }
             DropType.MAIN -> mainDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
+            DropType.MINOR -> minorDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
             DropType.SPECIAL -> specialDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
             DropType.TERTIARY -> {
                 if (numerator <= 0 || denominator <= 0) {
@@ -337,6 +360,7 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
             repeat(rolls) {
                 if (gemTableRoller?.invoke(player, drops) == true) return@repeat
                 mainDrops.roll(player, source = DropSource.MAIN)?.let(drops::add)
+                minorDrops.roll(player, source = DropSource.MINOR)?.let(drops::add)
             }
         }
 
@@ -438,6 +462,27 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
 
 
             if (i < mainDrops.mutableEntries().size - 1) sb.append(",")
+            sb.append("\n")
+        }
+
+        sb.append("],\n")
+
+        sb.append("\"minorDrops\":[\n")
+
+        val minorWeight = minorDrops.mutableEntries().sumOf { it.weight }.toDouble()
+
+        minorDrops.mutableEntries().forEachIndexed { i, e ->
+            val originalDenom = minorWeight / e.weight
+            sb.append(
+                "{" +
+                        "\"itemId\":${e.itemId}," +
+                        "\"name\":\"${ItemDefinitions.getItemDefinitions(e.itemId).name}\"," +
+                        "\"amount\":\"${e.amount}\"," +
+                        "\"weight\":${e.weight}," +
+                        "\"originalRate\":\"1/${"%.2f".format(originalDenom)}\"" +
+                        "}"
+            )
+            if (i < minorDrops.mutableEntries().size - 1) sb.append(",")
             sb.append("\n")
         }
 
