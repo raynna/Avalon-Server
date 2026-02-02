@@ -608,31 +608,31 @@ object StandardRanged : RangeData() {
                     context.attacker.animate(Animation(1074))
                     context.attacker.gfx(Graphics(256, 100))
                     context.attacker.playSound(2545,  1)
-                    ProjectileManager.send(
+                    val ticks = ProjectileManager.send(
                         Projectile.ARROW,
                         249,
                         context.attacker,
                         context.defender,
                         startHeightOffset = 0,
                         arcOffset = 5,
-                        speedAdjustment = -2,
-                        startTimeOffset = 0,
+                        speedAdjustment = -1,
+                        startTimeOffset = -5,
                     )
-                    ProjectileManager.send(
+                    val ticks2 = ProjectileManager.send(
                         Projectile.ARROW,
                         249,
                         context.attacker,
                         context.defender,
                         startHeightOffset = 0,
                         arcOffset = 5,
-                        speedAdjustment = -2,
-                        startTimeOffset = 15,
+                        speedAdjustment = -1,
+                        startTimeOffset = 10,
                     )
                     context.hits {
                         val distance = Utils.getDistance(context.attacker, context.defender)
                         val (firstDelay, secondDelay) = context.combat.getDoubleHitDelays(distance)
-                        ranged(delay = firstDelay)
-                        ranged(delay = secondDelay)
+                        ranged(delay = ticks - 1)
+                        ranged(delay = ticks2 - 1)
                     }
                 }
             )
