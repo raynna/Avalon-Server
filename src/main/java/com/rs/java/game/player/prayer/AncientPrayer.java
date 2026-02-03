@@ -19,7 +19,7 @@ public enum AncientPrayer implements Prayer {
         @Override public double getReflectAmount() { return 0.1; }
         @Override public Graphics getHitGraphics() { return new Graphics(Rscm.lookup("graphic.curses_deflect_magic")); }
         @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
-        @Override public int getActivationSound() {return Rscm.lookup("sound.protection_prayer_activation");}
+        @Override public int getActivationSound() {return Rscm.lookup("sound.protect_from_magic");}
     },
     DEFLECT_MISSILES(8, 68, 12, "Deflect Missiles") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
@@ -32,7 +32,7 @@ public enum AncientPrayer implements Prayer {
         @Override public double getReflectAmount() { return 0.1; }
         @Override public Graphics getHitGraphics() { return new Graphics(Rscm.lookup("graphic.curses_deflect_ranged")); }
         @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
-        @Override public int getActivationSound() {return Rscm.lookup("sound.protection_prayer_activation");}
+        @Override public int getActivationSound() {return Rscm.lookup("sound.protect_from_missiles");}
     },
     DEFLECT_MELEE(9, 71, 12, "Deflect Melee") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
@@ -45,7 +45,7 @@ public enum AncientPrayer implements Prayer {
         @Override public double getReflectAmount() { return 0.1; }
         @Override public Graphics getHitGraphics() { return new Graphics(Rscm.lookup("graphic.curses_deflect_melee")); }
         @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
-        @Override public int getActivationSound() {return Rscm.lookup("sound.protection_prayer_activation");}
+        @Override public int getActivationSound() {return Rscm.lookup("sound.protect_from_melee");}
     },
     DEFLECT_SUMMONING(6, 62, 12, "Deflect Summoning") {
         @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.OTHER}; }
@@ -54,7 +54,7 @@ public enum AncientPrayer implements Prayer {
         @Override public boolean isSummoningProtection() { return true; }
         @Override public Graphics getHitGraphics() { return new Graphics(Rscm.lookup("graphic.curses_deflect_summoning")); }
         @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
-        @Override public int getActivationSound() {return Rscm.lookup("sound.protection_prayer_activation");}
+        @Override public int getActivationSound() {return Rscm.lookup("sound.protect_from_melee");}
 
     },
 
@@ -139,12 +139,15 @@ public enum AncientPrayer implements Prayer {
     // Other Prayers
     PROTECT_ITEM_CURSE(0, 50, 2, "Protect Item", Rscm.lookup("graphic.curses_protect_item"), Rscm.lookup("animation.curses_protect_item")) {
         @Override public boolean isProtectItemPrayer() { return true; }
+        @Override public int getActivationSound() {return Rscm.lookup("sound.protect_from_item");}
     },
     BERSERK(5, 59, 2, "Berserk", Rscm.lookup("graphic.curses_berserker"), Rscm.lookup("animation.curses_berserker")),
+
     WRATH(17, 89, 6, "Wrath") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
             return new PrayerConflictGroup[]{PrayerConflictGroup.OTHER, PrayerConflictGroup.OVERHEAD};
         }
+        @Override public int getActivationSound() {return Rscm.lookup("sound.retribution");}
     },
     SOUL_SPLIT(18, 92, 18, "Soul Split") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
