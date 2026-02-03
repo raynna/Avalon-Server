@@ -5,20 +5,17 @@ import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.java.game.Hit.HitLook
 import com.rs.java.game.item.Item
-import com.rs.java.game.npc.NPC
-import com.rs.java.game.npc.combat.DragonFire
-import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.range.special.ArrowEffects
+import com.rs.kotlin.game.player.combat.range.special.BoltEffects
 import com.rs.kotlin.game.player.combat.special.ChainMode
 import com.rs.kotlin.game.player.combat.special.ChainSettings
 import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
-import javax.sound.midi.Soundbank
-import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 
@@ -351,7 +348,7 @@ object StandardRanged : RangeData() {
                 execute = { context ->
 
                     context.attacker.animate(Animation(4230))
-
+                    context.attacker.playSound(2546,  1)
                     val ticks = ProjectileManager.send(
                         Projectile.BOLT, 328,
                         context.attacker,
@@ -1356,43 +1353,7 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.guthix_arrow_projectile"),
             doubleGfx = Graphics(124, 100),
             startGfx = Graphics(95, 100),
-            specialEffect = SpecialEffect(
-                chance = 10,
-                execute = { context ->
-                    val chance = if (context.weaponId == 19146) 5 else 10
-                    context.ammo?.endGfx = null
-
-                    if (!Utils.roll(1, chance)) return@SpecialEffect false
-
-                    val rangedHit = context.combat.registerHit(attacker = context.attacker,
-                        defender = context.defender,
-                        attackStyle = context.attackStyle,
-                        weapon = context.weapon,
-                        combatType = CombatType.RANGED)
-                    val magicHit = context.combat.registerHit(
-                        attacker = context.attacker,
-                        defender = context.defender,
-                        attackStyle = context.attackStyle,
-                        weapon = context.weapon,
-                        combatType = CombatType.RANGED,
-                        hitLook = HitLook.MAGIC_DAMAGE,
-                        damageMultiplier = 0.2
-                    )
-
-                    if (magicHit.damage == 0) {
-                        context.ammo?.endGfx = Graphics(85, 100)
-                    } else {
-                        context.ammo?.endGfx = Graphics(127)
-                        magicHit.setCriticalMark()
-                    }
-
-                    context.combat.delayHits(
-                        PendingHit(rangedHit, context.defender, context.combat.getHitDelay()),
-                        PendingHit(magicHit, context.defender, context.combat.getHitDelay() + 1)
-                    )
-                    true
-                }
-            )
+            specialEffect = ArrowEffects.GUTHIX_ARROW
         ),
         RangedAmmo(
             itemId = Item.getIds("item.saradomin_arrows"),
@@ -1402,45 +1363,7 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.saradomin_arrow_projectile"),
             doubleGfx = Graphics(125, 100),
             startGfx = Graphics(96, 100),
-            specialEffect = SpecialEffect(
-                chance = 10,
-                execute = { context ->
-                    val chance = if (context.weaponId == 19143) 5 else 10
-                    context.ammo?.endGfx = null // TODO: handle this elsewhere if possible
-
-                    if (!Utils.roll(1, chance)) return@SpecialEffect false
-
-                    val rangedHit = context.combat.registerHit(attacker = context.attacker,
-                        defender = context.defender,
-                        attackStyle = context.attackStyle,
-                        weapon = context.weapon,
-                        combatType = CombatType.RANGED)
-                    val magicHit = context.combat.registerHit(
-                        attacker = context.attacker,
-                        defender = context.defender,
-                        attackStyle = context.attackStyle,
-                        weapon = context.weapon,
-                        combatType = CombatType.RANGED,
-                        hitLook = HitLook.MAGIC_DAMAGE,
-                        damageMultiplier = 0.2
-                    )
-
-                    if (magicHit.damage == 0) {
-                        context.ammo?.endGfx = Graphics(85, 100)
-                    } else {
-                        context.ammo?.endGfx = Graphics(128)
-                        magicHit.setCriticalMark()
-                    }
-
-                    context.combat.delayHits(
-                        PendingHit(rangedHit, context.defender, context.combat.getHitDelay()),
-                        PendingHit(magicHit, context.defender, context.combat.getHitDelay() + 1)
-                    )
-
-                    true
-                }
-
-            )
+            specialEffect = ArrowEffects.SARADOMIN_ARROW
         ),
         RangedAmmo(
             itemId = Item.getIds("item.zamorak_arrows"),
@@ -1450,53 +1373,27 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.zamorak_arrow_projectile"),
             doubleGfx = Graphics("graphic.double_zamorak_arrow_start", 100),
             startGfx = Graphics("graphic.zamorak_arrow_start", 100),
-            specialEffect = SpecialEffect(
-                chance = 10,
-                execute = { context ->
-                    val chance = if (context.weaponId == 19149) 5 else 10
-                    context.ammo?.endGfx = null
-
-                    if (!Utils.roll(1, chance)) return@SpecialEffect false
-                    val rangedHit = context.combat.registerHit(attacker = context.attacker,
-                        defender = context.defender,
-                        attackStyle = context.attackStyle,
-                        weapon = context.weapon,
-                        combatType = CombatType.RANGED)
-                    val magicHit = context.combat.registerHit(
-                        attacker = context.attacker,
-                        defender = context.defender,
-                        attackStyle = context.attackStyle,
-                        weapon = context.weapon,
-                        combatType = CombatType.RANGED,
-                        hitLook = HitLook.MAGIC_DAMAGE,
-                        damageMultiplier = 0.2
-                    )
-
-                    if (magicHit.damage == 0) {
-                        context.ammo?.endGfx = Graphics(85, 100)
-                    } else {
-                        context.ammo?.endGfx = Graphics(129)
-                        magicHit.setCriticalMark()
-                    }
-                    context.combat.delayHits(
-                        PendingHit(rangedHit, context.defender, context.combat.getHitDelay()),
-                        PendingHit(magicHit, context.defender, context.combat.getHitDelay() + 1)
-                    )
-
-                    true
-                }
-
-            )
+            specialEffect = ArrowEffects.ZAMORAK_ARROW
         ),
         // Bolts
         RangedAmmo(
-            itemId = Item.getIds("item.bronze_bolts", "item.bronze_bolts_p", "item.bronze_bolts_p+", "item.bronze_bolts_p++"),
+            itemId = Item.getIds("item.bronze_bolts", "item.bronze_bolts_p", "item.bronze_bolts_p+", "item.bronze_bolts_p++", "item.opal_bolts"),
             name = "Bronze bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.BRONZE_BOLT,
             levelRequired = 1,
             startGfx = Graphics("graphic.bolt_start", 90),
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.opal_bolts_e"),
+            name = "Opal bolts e",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.BRONZE_BOLT,
+            levelRequired = 1,
+            startGfx = Graphics("graphic.bolt_start", 90),
+            projectileId = Rscm.lookup("graphic.bolt_projectile"),
+            specialEffect = BoltEffects.OPAL
         ),
         RangedAmmo(
             itemId = Item.getIds("item.iron_bolts", "item.iron_bolts_p", "item.iron_bolts_p+", "item.iron_bolts_p++"),
@@ -1552,26 +1449,7 @@ object StandardRanged : RangeData() {
             levelRequired = 46,
             startGfx = Graphics("graphic.bolt_start", 96),
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
-            specialEffect = SpecialEffect(
-                execute = { context ->
-                    val zaryteCbowSpec = context.guaranteedBoltEffect
-                    val rawChance = if (context.defender is NPC) 6 else 11
-                    val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
-                    if (!Utils.roll(rawChance + extraChance, 100) && !zaryteCbowSpec)
-                        return@SpecialEffect false
-                    context.defender.gfx(754, 0)
-                    context.defender.playSound(2912, 1)
-                    context.hits {
-                        val cap = if (zaryteCbowSpec) 1100 else 1000
-                        val boost = if (zaryteCbowSpec) 0.22 else 0.2
-                        val damage = (context.defender.hitpoints * boost).toInt().coerceAtMost(cap)
-                        val hit = Hit(context.attacker, damage, HitLook.REGULAR_DAMAGE)
-                        addHit(context.defender, hit = hit, delay = context.combat.getHitDelay())
-                    }
-                    context.attacker.applyHit(Hit(context.attacker, (context.attacker.hitpoints * 0.1).toInt(), HitLook.REGULAR_DAMAGE))
-                    true
-                }
-            )
+            specialEffect = BoltEffects.RUBY
         ),
         RangedAmmo(
             itemId = Item.getIds("item.diamond_bolts_e"),
@@ -1581,23 +1459,7 @@ object StandardRanged : RangeData() {
             levelRequired = 46,
             startGfx = Graphics("graphic.bolt_start", 96),
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
-            specialEffect = SpecialEffect(
-                execute = { context ->
-                    val zaryteCbowSpec = context.guaranteedBoltEffect
-                    val rawChance = if (context.defender is NPC) 10 else 5
-                    val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
-                    if (!Utils.roll(rawChance + extraChance, 100) && !zaryteCbowSpec)
-                        return@SpecialEffect false
-                    val boost = if (zaryteCbowSpec) 1.26 else 1.15
-                    val hit = context.registerDamage(combatType = CombatType.RANGED, damageMultiplier = boost)
-                    context.defender.gfx(758, 0)
-                    context.defender.playSound(2913, 1)
-                    context.combat.delayHits(
-                        PendingHit(hit, context.defender, context.combat.getHitDelay())
-                    )
-                    true
-                }
-            )
+            specialEffect = BoltEffects.DIAMOND
         ),
         RangedAmmo(
             itemId = Item.getIds("item.runite_bolts", "item.dragonstone_bolts", "item.onyx_bolts"),
@@ -1616,29 +1478,7 @@ object StandardRanged : RangeData() {
             levelRequired = 61,
             startGfx = Graphics("graphic.bolt_start", 90),
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
-            specialEffect = SpecialEffect(
-                execute = { context ->
-                    val zaryteCbowSpec = context.guaranteedBoltEffect
-                    val chance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 12 else 6
-                    if (DragonFire.hasFireProtection(context.defender))
-                        return@SpecialEffect false
-                    if (!Utils.roll(chance, 100) && !zaryteCbowSpec)
-                        return@SpecialEffect false
-
-                    val hit = context.rollRanged(acc = if (zaryteCbowSpec) 2.0 else 1.0)
-                    if (hit.damage == 0)
-                        return@SpecialEffect false
-                    context.defender.gfx(756, 0)
-                    context.defender.playSound(2915, 1)
-                    val boost = if (zaryteCbowSpec) 0.22 else 0.20
-                    val extraDamage = floor(context.attacker.skills.getLevel(Skills.RANGE) * boost).toInt() * 10
-                    hit.damage = min(hit.damage + extraDamage, context.defender.hitpoints);
-                    context.combat.delayHits(
-                        PendingHit(hit, context.defender, context.combat.getHitDelay())
-                    )
-                    true
-                }
-            )
+            specialEffect = BoltEffects.DRAGONSTONE
         ),
         RangedAmmo(
             itemId = Item.getIds("item.onyx_bolts_e"),
@@ -1648,34 +1488,26 @@ object StandardRanged : RangeData() {
             levelRequired = 61,
             startGfx = Graphics("graphic.bolt_start", 96),
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
-            specialEffect = SpecialEffect(
-                execute = { context ->
-                    val zaryteCbowSpec = context.guaranteedBoltEffect
-                    val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
-                    val chance = if (context.defender is NPC) 11 else 10
-                    if (!Utils.roll(chance + extraChance, 100) && !zaryteCbowSpec)
-                        return@SpecialEffect false
-                    context.hits {
-                        val hit = ranged(accuracyMultiplier = if (zaryteCbowSpec) 2.0 else 1.0, damageMultiplier = if (zaryteCbowSpec) 1.32 else 1.20, delay = context.combat.getHitDelay())
-                        if (hit.damage == 0)
-                            return@hits
-                        context.defender.gfx(753, 0)
-                        context.defender.playSound(2917, 1)
-                        val heal = hit.damage * 0.25
-                        context.attacker.applyHeal(Hit(context.attacker, heal.toInt(), HitLook.HEALED_DAMAGE));
-                    }
-                    true
-                }
-            )
+            specialEffect = BoltEffects.ONYX
         ),
         RangedAmmo(
-            itemId = Item.getIds("item.dragon_bolts", "item.dragonstone_dragon_bolts", "item.onyx_dragon_bolts"),
+            itemId = Item.getIds("item.dragon_bolts", "item.ruby_dragon_bolts", "item.diamond_dragon_bolts", "item.dragonstone_dragon_bolts", "item.onyx_dragon_bolts", "item.opal_dragon_bolts"),
             name = "Dragon bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.DRAGON_BOLT,
             levelRequired = 64,
             startGfx = Graphics("graphic.bolt_start", 96),
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
+        ),
+        RangedAmmo(
+            itemId = Item.getIds("item.opal_dragon_bolts_e"),
+            name = "Opal dragon bolts (e)",
+            ammoType = AmmoType.BOLT,
+            ammoTier = AmmoTier.DRAGON_BOLT,
+            levelRequired = 64,
+            startGfx = Graphics(955, 90),
+            projectileId = Rscm.lookup("graphic.bolt_projectile"),
+            specialEffect = BoltEffects.OPAL
         ),
         RangedAmmo(
             itemId = Item.getIds("item.dragonstone_dragon_bolts_e"),
@@ -1685,29 +1517,7 @@ object StandardRanged : RangeData() {
             levelRequired = 64,
             startGfx = Graphics(955, 90),
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
-            specialEffect = SpecialEffect(
-                execute = { context ->
-
-                    val zaryteCbowSpec = context.guaranteedBoltEffect
-                    val chance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 12 else 6
-                    if (DragonFire.hasFireProtection(context.defender))
-                        return@SpecialEffect false
-                    if (!Utils.roll(chance, 100) && !context.guaranteedBoltEffect)
-                        return@SpecialEffect false
-                    val hit = context.rollRanged(acc = if (zaryteCbowSpec) 2.0 else 1.0)
-                    if (hit.damage == 0)
-                        return@SpecialEffect false
-                    context.defender.gfx(756, 0)
-                    context.defender.playSound(2915, 1)
-                    val boost = if (zaryteCbowSpec) 0.22 else 0.20
-                    val extraDamage = floor(context.attacker.skills.getLevel(Skills.RANGE) * boost).toInt() * 10
-                    hit.damage = min(hit.damage + extraDamage, context.defender.hitpoints);
-                    context.combat.delayHits(
-                        PendingHit(hit, context.defender, context.combat.getHitDelay())
-                    )
-                    true
-                }
-            )
+            specialEffect = BoltEffects.DRAGONSTONE
         ),
         RangedAmmo(
             itemId = Item.getIds("item.onyx_dragon_bolts_e"),
@@ -1717,25 +1527,7 @@ object StandardRanged : RangeData() {
             levelRequired = 64,
             startGfx = Graphics(955, 96),
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
-            specialEffect = SpecialEffect(
-                execute = { context ->
-                    val zaryteCbowSpec = context.guaranteedBoltEffect
-                    val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
-                    val chance = if (context.defender is NPC) 11 else 10
-                    if (!Utils.roll(chance + extraChance, 100) && !zaryteCbowSpec)
-                        return@SpecialEffect false
-                    context.hits {
-                        val hit = ranged(damageMultiplier = if (zaryteCbowSpec) 1.32 else 1.20, accuracyMultiplier = if (zaryteCbowSpec) 2.0 else 1.0, delay = context.combat.getHitDelay())
-                        if (hit.damage == 0)
-                            return@hits
-                        context.defender.gfx(753, 0)
-                        context.defender.playSound(2917, 1)
-                        val heal = hit.damage * 0.25
-                        context.attacker.applyHeal(Hit(context.attacker, heal.toInt(), HitLook.HEALED_DAMAGE));
-                    }
-                    true
-                }
-            )
+            specialEffect = BoltEffects.ONYX
         ),
         RangedAmmo(
             itemId = Item.getIds("item.diamond_dragon_bolts_e"),
@@ -1745,23 +1537,7 @@ object StandardRanged : RangeData() {
             levelRequired = 64,
             startGfx = Graphics("graphic.bolt_start", 96),
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
-            specialEffect = SpecialEffect(
-                execute = { context ->
-                    val zaryteCbowSpec = context.guaranteedBoltEffect
-                    val rawChance = if (context.defender is NPC) 10 else 5
-                    val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
-                    if (!Utils.roll(rawChance + extraChance, 100) && !zaryteCbowSpec)
-                        return@SpecialEffect false
-                    val boost = if (zaryteCbowSpec) 1.26 else 1.15
-                    val hit = context.registerDamage(combatType = CombatType.RANGED, damageMultiplier = boost)
-                    context.defender.gfx(758, 0)
-                    context.defender.playSound(2913, 1)
-                    context.combat.delayHits(
-                        PendingHit(hit, context.defender, context.combat.getHitDelay())
-                    )
-                    true
-                }
-            )
+            specialEffect = BoltEffects.DIAMOND
         ),
         RangedAmmo(
             itemId = Item.getIds("item.ruby_dragon_bolts_e"),
@@ -1771,26 +1547,7 @@ object StandardRanged : RangeData() {
             levelRequired = 64,
             startGfx = Graphics("graphic.bolt_start", 96),
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
-            specialEffect = SpecialEffect(
-                execute = { context ->
-                    val zaryteCbowSpec = context.guaranteedBoltEffect
-                    val rawChance = if (context.defender is NPC) 6 else 11
-                    val extraChance = if (context.weaponId == Item.getId("item.chaotic_crossbow")) 2 else 0
-                    if (!Utils.roll(rawChance + extraChance, 100) && !zaryteCbowSpec)
-                        return@SpecialEffect false
-                    context.defender.gfx(754, 0)
-                    context.defender.playSound(2912, 1)
-                    context.hits {
-                        val cap = if (zaryteCbowSpec) 1100 else 1000
-                        val boost = if (zaryteCbowSpec) 0.22 else 0.2
-                        val damage = (context.defender.hitpoints * boost).toInt().coerceAtMost(cap)
-                        val hit = Hit(context.attacker, damage, HitLook.REGULAR_DAMAGE)
-                        addHit(context.defender, hit = hit, delay = context.combat.getHitDelay())
-                    }
-                    context.attacker.applyHit(Hit(context.attacker, (context.attacker.hitpoints * 0.1).toInt(), HitLook.REGULAR_DAMAGE))
-                    true
-                }
-            )
+            specialEffect = BoltEffects.RUBY
         ),
         RangedAmmo(
             itemId = Item.getIds("item.bone_bolts"),

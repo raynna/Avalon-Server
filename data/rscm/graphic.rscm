@@ -57,6 +57,17 @@ lava_ball_hit=540
 katana_swing=553
 void_ranger_projectile=656
 
+#bolt effects
+opal_bolt_effect=749
+pearl_bolt_effect=750
+sapphire_bolt_effect=751
+emerald_bolt_effect=752
+onyx_bolt_effect=753
+ruby_bolt_effect=754
+jade_bolt_effect=755
+dragonstone_bolt_effect=756
+topaz_bolt_effect=757
+diamond_bolt_effect=758
 
 #prayer-graphics
 curses_protect_item=2213

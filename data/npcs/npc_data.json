@@ -3285,6 +3285,69 @@
       "mazchna"
     ]
   },
+  "91": {
+    "id": 91,
+    "name": "Skeleton",
+    "members": false,
+    "combatLevel": 21,
+    "attackLevel": 17,
+    "strengthLevel": 17,
+    "defenceLevel": 17,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 24,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 5,
+      "slash": 5,
+      "crush": -5
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 5,
+      "standard": 5,
+      "heavy": 5
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 January]] [[2001]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Could do with gaining a few pounds.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 24,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
   "92": {
     "id": 92,
     "name": "Skeleton",
@@ -24051,6 +24114,63 @@
       "duradel"
     ]
   },
+  "2685": {
+    "id": 2685,
+    "name": "Hobgoblin",
+    "members": false,
+    "combatLevel": 28,
+    "attackLevel": 22,
+    "strengthLevel": 24,
+    "defenceLevel": 24,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 29,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 29,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka"
+    ]
+  },
   "2687": {
     "id": 2687,
     "name": "Hobgoblin",
@@ -36564,6 +36684,63 @@
       "konar",
       "nieve",
       "duradel"
+    ]
+  },
+  "4898": {
+    "id": 4898,
+    "name": "Hobgoblin",
+    "members": false,
+    "combatLevel": 28,
+    "attackLevel": 22,
+    "strengthLevel": 24,
+    "defenceLevel": 24,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 29,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 29,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka"
     ]
   },
   "4920": {

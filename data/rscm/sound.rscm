@@ -1,3 +1,4 @@
+#melee sounds
 saradomin_sword_special=3853
 godsword_slash=3846
 armadyl_godsword_special=3865
@@ -25,7 +26,9 @@ mace_crush=2508
 mace_stab=2509
 punch=2564
 kick=2567
-potion_boost_end=2607
+barrelchest_attack_sound=3454
+barrelchest_special_sound=3460
+#prayer sounds
 default_prayer_activation=2663
 default_prayer_deactivation=2663
 protect_from_item=1982
@@ -55,9 +58,24 @@ thick_skin=2690
 ultimate_strenth=2691
 piety=3825
 chivarly=3826
-barrelchest_attack_sound=3454
-barrelchest_special_sound=3460
+#bolteffects
+ruby_bolt_effect=2911
+sapphire_bolt_effect=2912
+diamond_bolt_effect=2913
+topaz_bolt_effect=2914
+dragonstone_bolt_effect=2915
+jade_bolt_effect=2916
+onyx_bolt_effect=2917
+opal_bolt_effect=2918
+emerald_bolt_effect=2919
+pearl_bolt_effect=2920
+#other
+potion_boost_end=2607
+
+#range sounds
 hand_cannon_attack=7206
+bow_attack=2702
+magic_shortbow_special=2545
 
 #npc
 dragonfire_breath=3750
