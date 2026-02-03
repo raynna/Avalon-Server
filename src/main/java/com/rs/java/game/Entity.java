@@ -869,11 +869,17 @@ public abstract class Entity extends WorldTile {
         return getTickManager().isActive(TickManager.TickKeys.LAST_ATTACKED_TICK);
     }
 
+    public void setGraniteMaulTimer(int ticks) {
+        tickManager.addTicks(
+                TickManager.TickKeys.GRANITE_MAUL_TIMER,
+                ticks
+        );
+    }
+
     public void setPjTimer(int ticks) {
         tickManager.addTicks(
                 TickManager.TickKeys.PJ_TIMER,
-                ticks,
-                () -> temporaryAttributes().remove("attackedBy")
+                ticks
         );
     }
 

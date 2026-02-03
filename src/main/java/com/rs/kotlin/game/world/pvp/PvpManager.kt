@@ -62,7 +62,8 @@ object PvpManager {
             return;
         lastPvpHitAt.remove(deadPlayer)
         lastPvpHitAt.remove(killer)
-
+        safeGraceUntil.remove(deadPlayer)
+        wasInRawSafe.remove(deadPlayer)
         val ep = killer.ep
         val chance = ep / 100.0
         if (Math.random() > chance) return

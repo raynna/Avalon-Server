@@ -2,6 +2,7 @@ package com.rs.kotlin.game.player.combat.special
 
 import com.rs.core.thread.WorldThread
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.TickManager.TickKeys
 import com.rs.kotlin.game.player.combat.Weapon
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.RangedStyle
@@ -93,7 +94,7 @@ sealed class SpecialAttack(
                         player.combatDefinitions.switchUsingSpecialAttack()
                         return
                     }
-                    if (player.newActionManager.getActionDelay() == 0) {
+                    if (!player.tickManager.isActive(TickKeys.GRANITE_MAUL_TIMER)) {
                         if (!player.combatDefinitions.usingSpecialAttack)
                             player.message("Warning: Since the maul's special is an instant attack, it will be wasted when used on a first strike.")
                         player.combatDefinitions.switchUsingSpecialAttack()

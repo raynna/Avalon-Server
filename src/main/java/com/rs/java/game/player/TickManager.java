@@ -201,6 +201,7 @@ public class TickManager {
         TELEPORTING_TICK(18, 0),
         CHARGE_SPELL(19, 0),
         MIASMIC_EFFECT(20, 0),
+        GRANITE_MAUL_TIMER(21, 0),
 
 
         /**

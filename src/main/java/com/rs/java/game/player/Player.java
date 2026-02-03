@@ -2554,6 +2554,8 @@ public class Player extends Entity {
                 combatDefinitions.decreaseSpecialAttack(queued.special.getEnergyCost());
                 queued.execute();
                 queuedInstantCombats.remove(queued);
+                setGraniteMaulTimer(5);
+                setLastAttackTimer(16);
                 queued.context.getDefender().getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 16);
                 queued.context.getDefender().getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 12);
             }

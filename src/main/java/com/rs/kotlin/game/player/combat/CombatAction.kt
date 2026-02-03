@@ -206,8 +206,9 @@ class CombatAction(
                 if (validateAttack(player, target)) {
                     target.attackedBy = player
 
-                    player.setLastAttackTimer(16);
-                    target.setInCombat(16);
+                    player.setLastAttackTimer(16)
+                    player.setGraniteMaulTimer(5)
+                    target.setInCombat(16)
                     target.setPjTimer(12)
                     if (target is Player) {
                         target.skullList[player] = 1440
