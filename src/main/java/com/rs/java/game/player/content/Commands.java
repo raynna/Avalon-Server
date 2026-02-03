@@ -1825,7 +1825,7 @@ public final class Commands {
 
         try {
             int soundId = Integer.parseInt(cmd[1]);
-            player.getPackets().sendSound(soundId, 0, 0);
+            player.getPackets().sendSound(soundId, 0, 1);
             player.message("Playing sound " + soundId);
         } catch (NumberFormatException e) {
             player.message("Invalid sound ID.");

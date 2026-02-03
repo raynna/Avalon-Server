@@ -70,6 +70,32 @@ object ProjectileManager {
         gfxId: Int,
         attacker: Entity,
         defender: Entity,
+        hitGraphic: Graphics,
+        hitSound: Int,
+    ): Int {
+        return send(
+            projectile = projectile,
+            gfxId = gfxId,
+            attacker = attacker,
+            defender = defender,
+            arcOffset = 0,
+            startHeightOffset = 0,
+            startTimeOffset = 0,
+            hitGraphic = hitGraphic,
+            hitSound = hitSound,
+            speedAdjustment = 0,
+            displacement = 0,
+            onLanded = null
+        )
+    }
+
+
+    @JvmStatic
+    fun send(
+        projectile: Projectile,
+        gfxId: Int,
+        attacker: Entity,
+        defender: Entity,
         displacementOffset: Int,
         onLanded: Runnable? = null
     ): Int {
@@ -260,7 +286,7 @@ object ProjectileManager {
                 val rotation = calculateRotation(startTile, endTile)
                 if (def == null || def.hasFinished() || def.plane != endTile.plane)
                     return@let
-                def.gfx(it.id, endCycle, 100, rotation)
+                def.gfx(it.id, endCycle, it.height, rotation)
             }
             hitSound.let {
                 def?.playSound(it, endCycle, 1)

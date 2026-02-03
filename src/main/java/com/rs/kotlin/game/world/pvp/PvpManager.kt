@@ -105,6 +105,8 @@ object PvpManager {
             closeInterface(player)
             return
         }
+        safeGraceUntil.remove(player)
+        wasInRawSafe.remove(player)
         ensureInterfaceOpen(player)
         refreshAll(player)
         onMoved(player)

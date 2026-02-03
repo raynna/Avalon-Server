@@ -143,7 +143,7 @@ public class ButtonHandler {
                     else AchievementsTab.open(player);
                 }
             }
-            if (componentId == 68) {
+            if (componentId == 68 || componentId == 82) {
                 player.getTemporaryAttributtes().put("GEARTAB", 0);
                 GearTab.open(player, null);
             }

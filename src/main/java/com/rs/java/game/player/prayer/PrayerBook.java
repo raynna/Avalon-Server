@@ -155,7 +155,7 @@ public class PrayerBook implements Serializable {
 
         this.prayerActivatedTick = currentTick;
 
-        player.getPackets().sendSound(2662, 0, 1);
+        player.getPackets().sendSound(prayer.getActivationSound(), 0, 1);
         recalculatePrayer();
         return true;
     }
@@ -177,7 +177,7 @@ public class PrayerBook implements Serializable {
             Arrays.fill(turmoilBonuses, 0);
             updateLeechBonuses();
         }
-        player.getPackets().sendSound(2662, 0, 1);
+        player.getPackets().sendSound(2663, 0, 1);
         recalculatePrayer();
         return true;
     }

@@ -47,8 +47,20 @@ public interface Prayer {
     default boolean isSummoningProtection() { return false; }
     default Animation getAnimation() { return new Animation(-1); }
     default Graphics getProjectile() { return new Graphics(-1); }
-    default Graphics getGraphic() { return new Graphics(-1); }
+
+    default Graphics getStartGraphics() {
+        return new Graphics(-1);
+    }
+
+    default Graphics getHitGraphics() { return new Graphics(-1); }
     default PrayerConflictGroup[] getConflictGroups() {
         return new PrayerConflictGroup[PrayerConflictGroup.NONE.getGroupId()];
+    }
+
+    /**
+     * Sound played when the prayer is activated
+     */
+    default int getActivationSound() {
+        return 2662; // default prayer activation sound
     }
 }

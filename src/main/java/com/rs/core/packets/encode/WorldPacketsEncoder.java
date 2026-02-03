@@ -1129,6 +1129,8 @@ public class WorldPacketsEncoder extends Encoder {
 	/*
 	 * sets the pane interface
 	 */
+
+
 	public void sendWindowsPane(int id, int type) {
 		int[] xteas = new int[4];
 		player.getInterfaceManager().setWindowsPane(id);

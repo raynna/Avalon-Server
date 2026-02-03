@@ -294,7 +294,7 @@ public final class WorldPacketsDecoder extends Decoder {
 		PACKET_SIZES[95] = -2;
 		PACKET_SIZES[96] = 8;
 		PACKET_SIZES[97] = 2;
-		PACKET_SIZES[98] = 7;
+		PACKET_SIZES[98] = 6;
 		PACKET_SIZES[99] = 2;
 		PACKET_SIZES[100] = -2;
 		PACKET_SIZES[101] = 3;
@@ -513,6 +513,7 @@ public final class WorldPacketsDecoder extends Decoder {
 				int displayMode = stream.readUnsignedByte();
 				player.setScreenWidth(stream.readUnsignedShort());
 				player.setScreenHeight(stream.readUnsignedShort());
+				@SuppressWarnings("unused")
 				boolean switchScreenMode = stream.readUnsignedByte() == 1;
 				if (!player.hasStarted() || player.hasFinished() || displayMode == player.getDisplayMode()
 						|| !player.getInterfaceManager().containsInterface(742))

@@ -17,6 +17,15 @@ class GraphicCommand : Command {
         }
         val gfxId = args[0].toInt()
         player.gfx(gfxId, 250, 0)
+        val defs = GraphicDefinitions.getAnimationDefinitions(gfxId)
+
+        if (defs.intValue != -1) {
+            player.message(
+                "Graphic $gfxId sound=${defs.intValue}, type=${defs.byteValue}"
+            )
+        } else {
+            player.message("Graphic $gfxId has no embedded sound.")
+        }
         player.message("Graphic $gfxId has been executed.")
         return true
     }

@@ -170,18 +170,18 @@ public class InterfaceManager {
 	}
 
 	public void sendFullScreenInterfaces() {
-		player.getPackets().sendWindowsPane(746, 0);
+		setDefaultRootInterface();
 		sendTab("tab.chat_resizeable", "interface.chat");
 		sendTab("tab.chat_options_resizeable", "interface.chat_options");
 		sendTab(15, 745);
-		sendTab(25, 754);
+		sendTab(24, 754);
 		sendTab("tab.hp_orb_resizeable", "interface.hp_orb");
 		sendTab("tab.prayer_orb_resizeable", "interface.prayer_orb");
 		sendTab("tab.run_orb_resizeable", "interface.run_orb");
 		sendTab("tab.summoning_orb_resizeable", "interface.summoning_orb");
 		player.getPackets().sendInterface(true, 752, 9, Rscm.lookup("interface.chatbox"));
 		player.getPackets().sendGlobalVar(823, 1);
-		sendTab("tab.squeel_of_fortune_resizeable", "interface.custom_quest");
+		sendTab(119, 3002);
 		sendCombatStyles();
 		sendTaskSystem();
 		sendSkills();
@@ -203,7 +203,7 @@ public class InterfaceManager {
 	}
 
 	public void sendFixedInterfaces() {
-		player.getPackets().sendWindowsPane(548, 0);
+		setDefaultRootInterface();
 		sendTab("tab.chat", "interface.chat");
 		sendTab("tab.chat_options", "interface.chat_options");
 		sendTab(23, 745);//unknown
@@ -525,11 +525,11 @@ public class InterfaceManager {
 	}
 
 	public void setWindowsPane(int windowsPane) {
-		this.windowsPane = windowsPane;
+		this.rootInterface = windowsPane;
 	}
 
 	public int getWindowsPane() {
-		return windowsPane;
+		return rootInterface;
 	}
 
 	public void gazeOrbOfOculus() {
@@ -605,7 +605,7 @@ public class InterfaceManager {
 		player.getPackets().sendRootInterface(rootInterface, gc ? 3 : 0);
 	}
 	
-	public void setDefaultRootInterface2() {
+	public void setDefaultRootInterface() {
 		setRootInterface(resizableScreen ? 746 : 548, false);
 	}
 

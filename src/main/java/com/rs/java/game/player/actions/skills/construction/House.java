@@ -730,7 +730,7 @@ public class House implements Serializable {
 				public void run() {
 					player.lock(1);
 					player.resetReceivedHits();
-					player.getInterfaceManager().setDefaultRootInterface2();
+					player.getInterfaceManager().setDefaultRootInterface();
 				}
 			}, 4);
 		} else {
@@ -1174,7 +1174,7 @@ public class House implements Serializable {
 				player.setForceNextMapLoadRefresh(true);
 				player.loadMapRegions();
 				player.lock(2);
-				player.getInterfaceManager().setDefaultRootInterface2();
+				player.getInterfaceManager().setDefaultRootInterface();
 				if (tp) {
 					teleportPlayer(player);
 					refreshServant();
