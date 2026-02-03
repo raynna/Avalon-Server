@@ -37,6 +37,7 @@ import com.rs.java.game.player.actions.combat.lunarspells.TuneBaneOre;
 import com.rs.java.game.player.actions.combat.lunarspells.Vengeance;
 import com.rs.java.game.player.actions.combat.lunarspells.VengeanceGroup;
 import com.rs.java.game.player.actions.combat.lunarspells.VengeanceOther;
+import com.rs.java.game.player.content.customtab.TeleportTab;
 import com.rs.java.game.player.controlers.CrucibleControler;
 import com.rs.java.game.player.controlers.FightCaves;
 import com.rs.java.game.player.controlers.FightKiln;
@@ -84,6 +85,8 @@ public class LunarMagicks {
     public static final int INVENTORY = 0, NPC = 1, PLAYER = 2, OBJECT = 3, ONE_CLICK = 4;
 
     public final static int RUNE_POUCH = 24510;
+
+    private static final RSLunarSpellStore[] LUNAR_SPELLS = RSLunarSpellStore.values();
 
     public enum RSLunarSpellStore {
 
@@ -231,7 +234,7 @@ public class LunarMagicks {
         private int spellType;
 
         public static RSLunarSpellStore getSpell(int i) {
-            for (RSLunarSpellStore s : RSLunarSpellStore.values()) {
+            for (RSLunarSpellStore s : LUNAR_SPELLS) {
                 if (s.getSpellId() == i)
                     return s;
             }

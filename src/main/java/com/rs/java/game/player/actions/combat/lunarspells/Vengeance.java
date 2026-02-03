@@ -14,8 +14,8 @@ public class Vengeance {
 			return false;
 		}
 		player.addXp(Skills.MAGIC, xp);
-		player.gfx(new Graphics(726, 0, 100));
-		player.animate(new Animation(4410));
+		player.gfx(726, 100, 0);
+		player.animate(4410);
 		player.setVengeance(true);
 		player.getTickManager().addSeconds(TickManager.TickKeys.VENGEANCE_COOLDOWN, 30, () -> {
 			player.message("You can now cast vengeance again.");

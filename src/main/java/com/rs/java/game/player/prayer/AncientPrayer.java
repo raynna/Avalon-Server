@@ -19,6 +19,7 @@ public enum AncientPrayer implements Prayer {
         @Override public double getReflectAmount() { return 0.1; }
         @Override public Graphics getHitGraphics() { return new Graphics(Rscm.lookup("graphic.curses_deflect_magic")); }
         @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
+        @Override public int getActivationSound() {return Rscm.lookup("sound.protection_prayer_activation");}
     },
     DEFLECT_MISSILES(8, 68, 12, "Deflect Missiles") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
@@ -31,6 +32,7 @@ public enum AncientPrayer implements Prayer {
         @Override public double getReflectAmount() { return 0.1; }
         @Override public Graphics getHitGraphics() { return new Graphics(Rscm.lookup("graphic.curses_deflect_ranged")); }
         @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
+        @Override public int getActivationSound() {return Rscm.lookup("sound.protection_prayer_activation");}
     },
     DEFLECT_MELEE(9, 71, 12, "Deflect Melee") {
         @Override public PrayerConflictGroup[] getConflictGroups() {
@@ -43,6 +45,7 @@ public enum AncientPrayer implements Prayer {
         @Override public double getReflectAmount() { return 0.1; }
         @Override public Graphics getHitGraphics() { return new Graphics(Rscm.lookup("graphic.curses_deflect_melee")); }
         @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
+        @Override public int getActivationSound() {return Rscm.lookup("sound.protection_prayer_activation");}
     },
     DEFLECT_SUMMONING(6, 62, 12, "Deflect Summoning") {
         @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.OTHER}; }
@@ -51,6 +54,7 @@ public enum AncientPrayer implements Prayer {
         @Override public boolean isSummoningProtection() { return true; }
         @Override public Graphics getHitGraphics() { return new Graphics(Rscm.lookup("graphic.curses_deflect_summoning")); }
         @Override public Animation getAnimation() { return new Animation(Rscm.lookup("animation.curses_deflect")); }
+        @Override public int getActivationSound() {return Rscm.lookup("sound.protection_prayer_activation");}
 
     },
 

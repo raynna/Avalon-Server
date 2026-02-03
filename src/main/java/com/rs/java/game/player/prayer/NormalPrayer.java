@@ -75,21 +75,25 @@ public enum NormalPrayer implements Prayer {
             @Override public boolean isSummoningProtection() { return true; }
             @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.OTHER}; }
             @Override public double getDamageReduction() { return 0.6; }
+            @Override public int getActivationSound() {return 2675;}
         },
         PROTECT_FROM_MAGIC(17, 4096, 37, 12, "Protect from Magic") {
             @Override public boolean isProtectionPrayer() { return true; }
             @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.PROTECTION, PrayerConflictGroup.OVERHEAD}; }
             @Override public double getDamageReduction() { return 0.6; }
+            @Override public int getActivationSound() {return 2675;}
         },
         PROTECT_FROM_MISSILES(18, 8192, 40, 12, "Protect from Missiles") {
             @Override public boolean isProtectionPrayer() { return true; }
             @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.PROTECTION, PrayerConflictGroup.OVERHEAD}; }
             @Override public double getDamageReduction() { return 0.6; }
+            @Override public int getActivationSound() {return 2675;}
         },
         PROTECT_FROM_MELEE(19, 16384, 43, 12, "Protect from Melee") {
             @Override public boolean isProtectionPrayer() { return true; }
             @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.PROTECTION, PrayerConflictGroup.OVERHEAD}; }
             @Override public double getDamageReduction() { return 0.6; }
+            @Override public int getActivationSound() {return 2675;}
         },
         EAGLE_EYE(20, 4194304, 44, 12, "Eagle Eye") {
             @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.OFFENSIVE}; }
