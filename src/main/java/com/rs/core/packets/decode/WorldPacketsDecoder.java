@@ -2475,7 +2475,6 @@ public final class WorldPacketsDecoder extends Decoder {
             DisplayNames.setDisplayName(player, value);
             return;
         } else if (player.temporaryAttribute().remove("VERIFY_PASSWORD") == Boolean.TRUE) {
-            player.message("value in verify: " + value);
             value = value.trim();
             String encrypted = Encrypt.hashPassword(value);
 
