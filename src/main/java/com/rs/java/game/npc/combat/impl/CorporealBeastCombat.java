@@ -118,7 +118,7 @@ public class CorporealBeastCombat extends CombatScript {
 	private void handleMagicSpikyBall(NPC npc, Entity target) {
 		npc.animate(10410);
 		Hit magicHit = npc.magicHit(target, 650);
-		ProjectileManager.send(Projectile.STANDARD_MAGIC_INSTANT, 1825, npc, target, () -> {
+		ProjectileManager.send(Projectile.CORPOREAL_BEAST_ATTACK, 1825, npc, target, () -> {
 			applyRegisteredHit(npc, target, magicHit);
 		});
 	}
@@ -126,7 +126,7 @@ public class CorporealBeastCombat extends CombatScript {
 	private void handleMagicDrainBall(NPC npc, Entity target) {
 		npc.animate(10410);
 		Hit magicHit = npc.magicHit(target, 550);
-		ProjectileManager.send(Projectile.STANDARD_MAGIC_INSTANT, 1823, npc, target, () -> {
+		ProjectileManager.send(Projectile.CORPOREAL_BEAST_ATTACK, 1823, npc, target, () -> {
 			applyRegisteredHit(npc, target, magicHit);
 			if (target instanceof Player p2) {
 				drainRandomSkill(p2);
@@ -139,7 +139,7 @@ public class CorporealBeastCombat extends CombatScript {
 		final WorldTile impactTile = new WorldTile(target);
 
 		ProjectileManager.send(
-				Projectile.STANDARD_MAGIC_INSTANT,
+				Projectile.CORPOREAL_BEAST_ATTACK,
 				1824,
 				npc,
 				target,
@@ -177,15 +177,17 @@ public class CorporealBeastCombat extends CombatScript {
 			if (!World.canMoveNPC(aoeTile.getPlane(), aoeTile.getX(), aoeTile.getY(), 1))
 				continue;
 			ProjectileManager.sendToTile(
-					Projectile.STANDARD_MAGIC_INSTANT,
+					Projectile.CORPOREAL_BEAST_AOE,
 					1824,
 					baseTile,
 					aoeTile,
+
 					() -> {
-						for (Entity t : npc.getPossibleTargets()) {
+						for (Entity t : targets) {
+							Hit magicHit = npc.magicHit(t, 350);
 							if (Utils.getDistance(t, aoeTile) <= 1 &&
 									t.clipedProjectile(aoeTile, false)) {
-								delayHit(npc, t, 0, npc.magicHit(t, 350));
+								applyRegisteredHit(npc, t, magicHit);
 							}
 						}
 						World.sendGraphics(npc, new Graphics(1806), aoeTile);

@@ -2863,7 +2863,7 @@ public class Player extends Entity {
         }
     }
 
-    public void toogleRun(boolean update) {
+    public void toggleRun(boolean update) {
         super.setRun(!getRun());
         updateMovementType = true;
         if (update)

@@ -35,11 +35,15 @@ object ProjectileManager {
         )
 
         onLanded ?: return
+
+        val impactTicks = impactCycles / 30
+
         WorldTasksManager.schedule(object : WorldTask() {
             override fun run() {
                 onLanded.run()
             }
-        }, impactCycles)
+        }, impactTicks)
+
     }
 
     @JvmStatic

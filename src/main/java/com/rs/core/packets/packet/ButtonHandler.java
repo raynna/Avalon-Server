@@ -1944,7 +1944,7 @@ public class ButtonHandler {
                         player.sendRunButtonConfig();
                         return;
                     }
-                    player.toogleRun(player.isResting() ? false : true);
+                    player.toggleRun(player.isResting() ? false : true);
                     if (player.isResting()) player.stopAll();
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     if (player.isResting()) {

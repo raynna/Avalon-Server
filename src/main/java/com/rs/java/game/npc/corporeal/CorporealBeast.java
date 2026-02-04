@@ -64,4 +64,9 @@ public class CorporealBeast extends NPC {
 		if (core != null)
 			core.sendDeath(source);
 	}
+
+	@Override
+	public double getProtectionPrayerEffectiveness() {
+		return 0.33;
+	}
 }

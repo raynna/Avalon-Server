@@ -83,17 +83,17 @@ object RandomWorldBossHandler {
         ),
         BossEntry.WithMinions.of(
             bossKey = "npc.king_black_dragon_lv276",
-            BossEntry.WithMinions.minion("npc.baby_black_dragon_lv83", 10),
+            BossEntry.WithMinions.minion("npc.baby_black_dragon_lv83", 4),
         ),
         BossEntry.WithMinions.of(
             bossKey = "npc.kalphite_queen_lv333",
-            BossEntry.WithMinions.minion("npc.kalphite_guardian_lv141", 2),
-            BossEntry.WithMinions.minion("npc.kalphite_soldier_lv85", 4),
-            BossEntry.WithMinions.minion("npc.kalphite_worker_lv28", 6),
+            BossEntry.WithMinions.minion("npc.kalphite_guardian_lv141", 1),
+            BossEntry.WithMinions.minion("npc.kalphite_soldier_lv85", 2),
+            BossEntry.WithMinions.minion("npc.kalphite_worker_lv28", 4),
         ),
         BossEntry.WithMinions.of(
             bossKey = "npc.tormented_demon_lv450",
-            BossEntry.WithMinions.minion("npc.abyssal_demon_lv124", 5),
+            BossEntry.WithMinions.minion("npc.abyssal_demon_lv124", 4),
         ),
         BossEntry.group("npc.dagannoth_rex_lv303", "npc.dagannoth_supreme_lv303", "npc.dagannoth_prime_lv303", displayName = "Dagannoth Kings"),
         BossEntry.single("npc.chaos_elemental_lv305")

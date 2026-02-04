@@ -56,6 +56,7 @@ public class SettingsTab extends CustomTab {
                 p.getVarsManager().sendVarBit(1485, active ? 0 : 1, true);
                 p.getVarsManager().forceSendVarBit(9816, p.getPrayer().getPrayerPoints());
                 p.refreshHitPoints();
+                p.getPrayer().refresh();
                 p.getSkills().switchXPPopup(true);
                 p.getSkills().switchXPPopup(true);
             }
