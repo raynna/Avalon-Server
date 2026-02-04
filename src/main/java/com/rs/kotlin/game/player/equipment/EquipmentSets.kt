@@ -87,26 +87,41 @@ object EquipmentSets {
 
 
 
-    fun getDamageMultiplier(player: Player, set: EquipmentSet, style: CombatMultipliers.Style): Double {
+    fun getDamageMultiplier(
+        player: Player,
+        set: EquipmentSet,
+        style: CombatMultipliers.Style
+    ): Double {
+
         val equipment = player.getEquipment()
-        return when (set) {
+        var multiplier = 1.0
+
+        multiplier *= when (set) {
             EquipmentSet.CRYSTAL -> {
                 if (style == CombatMultipliers.Style.RANGE) {
                     getCrystalBonuses(equipment).second
                 } else 1.0
             }
+
             EquipmentSet.VOID_MELEE -> if (style == CombatMultipliers.Style.MELEE) 1.10 else 1.0
             EquipmentSet.VOID_RANGE -> if (style == CombatMultipliers.Style.RANGE) 1.20 else 1.0
-            EquipmentSet.VOID_MAGIC -> 1.0 // base void mage = accuracy only, no damage boost
+            EquipmentSet.VOID_MAGIC -> 1.0
 
             EquipmentSet.ELITE_VOID_MELEE -> if (style == CombatMultipliers.Style.MELEE) 1.10 else 1.0
-            EquipmentSet.ELITE_VOID_RANGE -> if (style == CombatMultipliers.Style.RANGE) 1.225 else 1.0 // 12.5% dmg
-            EquipmentSet.ELITE_VOID_MAGIC -> if (style == CombatMultipliers.Style.MAGIC) 1.05 else 1.0  // +5% dmg
+            EquipmentSet.ELITE_VOID_RANGE -> if (style == CombatMultipliers.Style.RANGE) 1.225 else 1.0
+            EquipmentSet.ELITE_VOID_MAGIC -> if (style == CombatMultipliers.Style.MAGIC) 1.05 else 1.0
 
             EquipmentSet.DHAROK -> 1.0
             EquipmentSet.NONE -> 1.0
         }
+
+        if (hasBerserkerObsidianBonus(equipment, style)) {
+            multiplier *= 1.20
+        }
+
+        return multiplier
     }
+
 
 
     fun getAccuracyMultiplier(player: Player, set: EquipmentSet, style: CombatMultipliers.Style): Double {
@@ -161,6 +176,23 @@ object EquipmentSets {
                 equipment.containsAny(VOID_MAGE_HELM)
     }
 
+    private fun hasBerserkerNecklace(equipment: Equipment): Boolean {
+        return equipment.containsItem(BERSERKER_NECKLACE)
+    }
+
+    private fun hasObsidianWeapon(equipment: Equipment): Boolean {
+        return equipment.containsAny(*OBSIDIAN_WEAPONS.toIntArray())
+    }
+
+    private fun hasBerserkerObsidianBonus(
+        equipment: Equipment,
+        style: CombatMultipliers.Style
+    ): Boolean {
+        return style == CombatMultipliers.Style.MELEE
+                && hasBerserkerNecklace(equipment)
+                && hasObsidianWeapon(equipment)
+    }
+
     private fun getCrystalBonuses(equipment: Equipment): Pair<Double, Double> {
         if (!hasCrystalBow(equipment)) return 1.0 to 1.0
 
@@ -202,6 +234,15 @@ object EquipmentSets {
                 equipment.containsAny(*DHAROK_GREATAXE.toIntArray())
     }
 
+    private val BERSERKER_NECKLACE = Item.getId("item.berserker_necklace")
+
+    private val OBSIDIAN_WEAPONS = Item.getIds(
+        "item.toktz_xil_ak",
+        "item.tzhaar_ket_om",
+        "item.tzhaar_ket_em",
+        "item.toktz_xil_ek"
+    )
+
     fun Equipment.containsItem(itemId: Int): Boolean =
         items.containsOne(Item(itemId, 1))
 
@@ -210,5 +251,11 @@ object EquipmentSets {
 
     fun Equipment.containsAll(vararg itemIds: Int): Boolean =
         itemIds.all { containsItem(it) }
+
+    private fun debug(player: Player, msg: String) {
+        if (player.username.equals("andreas", true)) {
+            player.packets.sendGameMessage("[EQ DEBUG] $msg")
+        }
+    }
 
 }

@@ -1956,23 +1956,8 @@ public class Player extends Entity {
         return true;
     }
 
-    private void debugFloorItem(String stage, FloorItem item) {
-        System.out.println(
-                "[REFRESH][" + stage + "] "
-                        + item.getName()
-                        + " id=" + item.getId()
-                        + " tile=" + item.getTile().getX() + "," + item.getTile().getY()
-                        + " invisible=" + item.isInvisible()
-                        + " owner=" + (item.hasOwner() ? item.getOwner().getUsername() : "null")
-                        + " removed=" + item.isRemoved()
-                        + " viewer=" + getUsername()
-        );
-    }
-
-
     public void refreshSpawnedItems() {
 
-        // REMOVE PASS
         for (int regionId : getMapRegionsIds()) {
             List<FloorItem> floorItems = World.getRegion(regionId).getGroundItems();
             if (floorItems == null)
@@ -1980,19 +1965,14 @@ public class Player extends Entity {
 
             for (FloorItem item : floorItems) {
 
-                debugFloorItem("CHECK_REMOVE", item);
-
                 if (!shouldShowFloorItem(this, item)) {
-                    debugFloorItem("SKIP_REMOVE", item);
                     continue;
                 }
 
-                debugFloorItem("SEND_REMOVE", item);
                 getPackets().sendRemoveGroundItem(item);
             }
         }
 
-        // ADD PASS
         for (int regionId : getMapRegionsIds()) {
             List<FloorItem> floorItems = World.getRegion(regionId).getGroundItems();
             if (floorItems == null)
@@ -2000,14 +1980,9 @@ public class Player extends Entity {
 
             for (FloorItem item : floorItems) {
 
-                debugFloorItem("CHECK_ADD", item);
-
                 if (!shouldShowFloorItem(this, item)) {
-                    debugFloorItem("SKIP_ADD", item);
                     continue;
                 }
-
-                debugFloorItem("SEND_ADD", item);
                 getPackets().sendGroundItem(item);
             }
         }
@@ -2033,11 +2008,6 @@ public class Player extends Entity {
                         getPackets().sendDestroyObject(object);
                     }
             }
-
-            /*
-             * Region r = World.getRegion(getRegionY() | (getRegionX() << 8)); r =
-             * World.getRegion(getLastRegionId(), false); r.loadRegionMap();
-             */
         }
     }
 

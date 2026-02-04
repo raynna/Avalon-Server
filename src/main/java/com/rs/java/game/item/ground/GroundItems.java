@@ -25,17 +25,9 @@ public final class GroundItems {
 
     private GroundItems() {}
 
-    /* ------------------------------------------------------------
-     *  TICK UTILS
-     * ------------------------------------------------------------ */
-
     public static int secondsToTicks(int seconds) {
         return Math.max(1, (int) Math.ceil((seconds * 1000d) / Settings.WORLD_CYCLE_TIME));
     }
-
-    /* ------------------------------------------------------------
-     *  PUBLIC ENTRY: SIMPLE SPAWNS
-     * ------------------------------------------------------------ */
 
     public static FloorItem addGroundItem(Item item, WorldTile tile) {
         return addGroundItem(item, tile, null, false, -1, 2, -1);
@@ -61,16 +53,9 @@ public final class GroundItems {
         return addGroundItemInternal(item, tile, owner, invisible, hiddenTime, type, publicTime);
     }
 
-    /**
-     * Alias used in some codebases.
-     */
     public static void addGlobalGroundItem(Item item, WorldTile tile) {
         addGroundItem(item, tile, null, false, -1, 2, -1);
     }
-
-    /* ------------------------------------------------------------
-     *  GLOBAL GROUND ITEM SPAWN (USED FOR GLOBAL ITEM SPAWNS)
-     * ------------------------------------------------------------ */
 
     public static void addGlobalGroundItem(final Item item, final WorldTile tile, final int tick,
                                            final boolean spawned) {
@@ -107,20 +92,12 @@ public final class GroundItems {
         }
     }
 
-    /* ------------------------------------------------------------
-     *  FOREVER (STATIC) SPAWNS
-     * ------------------------------------------------------------ */
-
     public static void addGroundItemForever(Item item, WorldTile tile) {
         FloorItem floorItem = new FloorItem(item, tile, true);
         Region region = World.getRegion(tile.getRegionId());
         region.getGroundItemsSafe().add(floorItem);
         broadcastGroundItem(floorItem, false);
     }
-
-    /* ------------------------------------------------------------
-     *  INTERNAL SPAWN LOGIC (INVISIBLE/PUBLIC TIMERS, TRACKING)
-     * ------------------------------------------------------------ */
 
     private static FloorItem addGroundItemInternal(Item item, WorldTile tile, Player owner,
                                                    boolean invisible, int hiddenTime,
@@ -166,10 +143,6 @@ public final class GroundItems {
 
         return floorItem;
     }
-
-    /* ------------------------------------------------------------
-     *  TURN PUBLIC (INCLUDES ATTACHED ITEM SPLIT LOGIC)
-     * ------------------------------------------------------------ */
 
     public static void turnPublic(FloorItem item, int publicTime) {
         if (!item.isInvisible() || item.isRemoved())
@@ -228,10 +201,6 @@ public final class GroundItems {
             removeGroundItem(item, publicTime);
         }
     }
-
-    /* ------------------------------------------------------------
-     *  UPDATE (STACK MERGE) — USED BY DROP TABLES / MULTI DROPS
-     * ------------------------------------------------------------ */
 
     public static void updateGroundItem(Item item, WorldTile tile, Player owner) {
         updateGroundItem(item, tile, owner, 60, 0);
@@ -299,10 +268,6 @@ public final class GroundItems {
         }
     }
 
-    /* ------------------------------------------------------------
-     *  BROADCAST HELPERS
-     * ------------------------------------------------------------ */
-
     private static void broadcastGroundItem(FloorItem item, boolean checkTradeable) {
         if (item.isRemoved())
             return;
@@ -336,10 +301,6 @@ public final class GroundItems {
             player.getPackets().sendRemoveGroundItem(item);
         }
     }
-
-    /* ------------------------------------------------------------
-     *  PICKUP HANDLING
-     * ------------------------------------------------------------ */
 
     public static boolean pickup(Player player, FloorItem item) {
 
@@ -452,10 +413,6 @@ public final class GroundItems {
         return true;
     }
 
-    /* ------------------------------------------------------------
-     *  COIN PICKUP -> MONEY POUCH (matches your World logic)
-     * ------------------------------------------------------------ */
-
     private static boolean handleCoinPickup(Player player, FloorItem item, Region region) {
         int amount = item.getAmount();
 
@@ -512,10 +469,6 @@ public final class GroundItems {
         return true;
     }
 
-    /* ------------------------------------------------------------
-     *  LOOT BEAM CLEANUP
-     * ------------------------------------------------------------ */
-
     private static void handleBeamPickup(Player player, FloorItem item) {
         if (player.getBeam() != null && player.getBeamItem() != null) {
             if (item.getTile().matches(player.getBeam()) && player.getBeamItem().getId() == item.getId()) {
@@ -524,10 +477,6 @@ public final class GroundItems {
             }
         }
     }
-
-    /* ------------------------------------------------------------
-     *  REMOVALS
-     * ------------------------------------------------------------ */
 
     public static void removeGroundItem(FloorItem item, int seconds) {
         WorldTasksManager.schedule(new WorldTask() {
@@ -609,10 +558,6 @@ public final class GroundItems {
         floorItem.setRemoved(true);
         return true;
     }
-
-    /* ------------------------------------------------------------
-     *  RESPAWN (FOREVER ITEMS)
-     * ------------------------------------------------------------ */
 
     private static void scheduleRespawn(FloorItem item) {
         WorldTasksManager.schedule(new WorldTask() {

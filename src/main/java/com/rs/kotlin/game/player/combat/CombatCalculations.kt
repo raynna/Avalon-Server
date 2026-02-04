@@ -49,7 +49,6 @@ object CombatCalculations {
             /*
              * Attack Calculation DONE
              */
-            val baseAttack = getBaseAttackLevel(player)
             val bonusType = getAttackBonusIndex(player)
             val attackBonus = player.combatDefinitions.bonuses[bonusType].toDouble()
             val styleBonus = getAttackStyleBonus(player)
@@ -57,9 +56,9 @@ object CombatCalculations {
             val voidBonus = EquipmentSets.getAccuracyMultiplier(player, equipmentSet, CombatMultipliers.Style.MELEE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MELEE)
 
-            var effectiveAttack = player.skills.getLevel(Skills.ATTACK) * player.prayer.attackMultiplier
-            effectiveAttack += styleBonus + 8
-            effectiveAttack *= voidBonus
+            val baseAttack = getBaseAttackLevel(player)
+
+            val effectiveAttack = floor((baseAttack + styleBonus + 8) * voidBonus)
 
             val attackRoll = effectiveAttack * (attackBonus + 64) * multipliers.accuracy * accuracyMultiplier
 
@@ -117,7 +116,8 @@ object CombatCalculations {
             val strengthBonus = player.combatDefinitions.bonuses[BonusType.StregthBonus.index].toDouble()
             val baseStrengthLevel = getBaseStrengthLevel(player)
 
-            val effectiveStrength = floor((baseStrengthLevel + styleBonus + 8 * void) * dharokMultiplier)
+            val effectiveStrength =
+                floor(((baseStrengthLevel + styleBonus + 8) * void) * dharokMultiplier)
 
             val baseDamage = 0.5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * multipliers.damage
             val baseMaxHit = baseDamage.toInt()

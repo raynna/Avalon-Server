@@ -1499,7 +1499,7 @@ public final class WorldPacketsDecoder extends Decoder {
 
 			// Delegates inventory/bank/pouch/ground logic
 			AutomaticGroundItem.pickup(tile, item);
-			GroundItems.removeGroundItem(player, item);
+			GroundItems.pickup(player, item);
 		}));
 	}
 
