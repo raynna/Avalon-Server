@@ -26,6 +26,13 @@ public class Encrypt {
 		return hash;
 	}
 
+	public static String hashPassword(String input) {
+		if (input == null)
+			return null;
+		return encryptSHA1(input.trim().toLowerCase());
+	}
+
+
 	/**
 	 * Encrypt the string to a SHA-1 hash.
 	 * 

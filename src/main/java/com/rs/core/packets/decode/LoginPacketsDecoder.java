@@ -92,7 +92,7 @@ public final class LoginPacketsDecoder extends Decoder {
 
 				// Todo(Mujtaba): change the encryption algorithm, its not very secure.
 				String password = securePayload.readString();
-				password = Encrypt.encryptSHA1(password);
+				password = Encrypt.hashPassword(password);
 				
 				long[] lseeds = new long[2];
 				for (int i = 0; i < 2; i++)
@@ -206,7 +206,7 @@ public final class LoginPacketsDecoder extends Decoder {
 			session.getLoginPackets().sendClientPacket(3);
 			return;
 		}
-		password = Encrypt.encryptSHA1(password);
+		password = Encrypt.hashPassword(password);
 		@SuppressWarnings("unused")
 		String unknown = Utils.longToString(rsaStream.readLong());
 		rsaStream.readLong(); // random value
