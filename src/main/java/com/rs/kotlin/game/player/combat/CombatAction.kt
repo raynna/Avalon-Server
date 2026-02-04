@@ -347,7 +347,7 @@ class CombatAction(
     }
 
     private fun stopFollowTask(player: Player) {
-        player.resetWalkSteps()
+        //player.resetWalkSteps()
         followTask?.stop()
         followTask = null
     }
