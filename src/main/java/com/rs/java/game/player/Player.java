@@ -2447,9 +2447,7 @@ public class Player extends Entity {
                         clearAllQueuedSpecialAttacks();
                         return;
                     }
-                    CombatStyle style = Weapon.isRangedWeapon(this)
-                            ? new RangedStyle(this, target)
-                            : new MeleeStyle(this, target);
+                    CombatStyle style = activeInstantSpecial.context.getCombat();
 
                     CombatContext ctx = new CombatContext(
                             this,
@@ -2480,6 +2478,7 @@ public class Player extends Entity {
             return;
 
         SpecialAttack special = activeSpecial.special;
+        boolean isInstantRange = special instanceof SpecialAttack.InstantRangeCombat;
         if (equipment.getWeaponId() != activeSpecial.context.getWeaponId()) {
             clearActiveInstantSpecial();
             return;
@@ -2491,11 +2490,22 @@ public class Player extends Entity {
         Entity defender = activeInstantSpecial.context.getDefender();
         CombatStyle style = activeInstantSpecial.context.getCombat();
 
-        if (shouldAdjustDiagonal(this, defender, style.getAttackDistance()))
+        if (shouldAdjustDiagonal(this, defender, style.getAttackDistance())) {
+            if (isInstantRange) {
+                calcFollow(defender, getRun() ? 2 : 1, true, true);
+            }
             return;
+        }
 
-        if (isOutOfRange(defender, style.getAttackDistance()))
+        if (isOutOfRange(defender, style.getAttackDistance())) {
+            if (isInstantRange) {
+                calcFollow(defender, getRun() ? 2 : 1, true, true);
+            }
             return;
+        }
+        if (isInstantRange) {
+            resetWalkSteps();
+        }
 
         faceEntity(activeInstantSpecial.context.getDefender());
         activeSpecial.execute();

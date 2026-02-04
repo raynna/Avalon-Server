@@ -153,7 +153,7 @@ class CombatAction(
             player.stopAll(false, true, true)
         }
 
-        val activeInstantSpecial = player.activeInstantSpecial
+        /*val activeInstantSpecial = player.activeInstantSpecial
         if (activeInstantSpecial != null) {
             player.clearActiveInstantSpecial()
             val special = activeInstantSpecial.special
@@ -165,7 +165,7 @@ class CombatAction(
                 player.stopAll(false, true, true)
                 return true
             }
-        }
+        }*/
 
         player.combatStyle = style
         val requiredDistance = getAdjustedFollowDistance(target);
