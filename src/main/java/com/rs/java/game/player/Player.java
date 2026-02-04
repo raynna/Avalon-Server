@@ -51,7 +51,6 @@ import com.rs.java.game.player.queue.PlayerActionQueue;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.KillCountContainer;
 import com.rs.kotlin.game.player.AccountCreation;
-import com.rs.kotlin.game.player.action.NewActionManager;
 import com.rs.java.game.player.actions.skills.construction.House;
 import com.rs.java.game.player.actions.skills.farming.FarmingManager;
 import com.rs.java.game.player.actions.skills.hunter.HunterImplings;
@@ -739,11 +738,6 @@ public class Player extends Entity {
      */
     private transient ActionManager actionManager;
 
-    /**
-     * New Action Manager
-     */
-
-    private transient NewActionManager newActionManager;
 
     /**
      * @Cutscenes
@@ -1536,7 +1530,6 @@ public class Player extends Entity {
         localPlayerUpdate = new LocalPlayerUpdate(this);
         localNPCUpdate = new LocalNPCUpdate(this);
         actionManager = new ActionManager(this);
-        newActionManager = new NewActionManager(this);
         if (farmingManager == null)
             farmingManager = new FarmingManager();
         farmingManager.setPlayer(this);
@@ -2040,7 +2033,6 @@ public class Player extends Entity {
         if (stopWalk)
             resetWalkSteps();
         if (stopActions) {
-            newActionManager.forceStop();
             actionManager.forceStop();
         }
         if (stopSpecial)
@@ -3714,10 +3706,6 @@ public class Player extends Entity {
         return actionManager;
     }
 
-    public NewActionManager getNewActionManager() {
-        return newActionManager;
-    }
-
     public void setCoordsEvent(CoordsEvent coordsEvent) {
         this.coordsEvent = coordsEvent;
     }
@@ -4529,7 +4517,7 @@ public class Player extends Entity {
 
     public void addFoodLock(int ticks) {
         if (!isFoodLocked())
-            getNewActionManager().setActionDelay(getNewActionManager().getActionDelay() + ticks);
+            getActionManager().setActionDelay(getActionManager().getActionDelay() + ticks);
         getTickManager().addTicks(TickManager.TickKeys.FOOD_LOCK_TICK, ticks);
     }
 

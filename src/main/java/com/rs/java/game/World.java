@@ -1510,20 +1510,25 @@ public final class World {
                 int amountCanAdd = Integer.MAX_VALUE - floorItem.getAmount();
                 floorItem.setAmount(Integer.MAX_VALUE);
                 item.setAmount(item.getAmount() - amountCanAdd);
-
-                addGroundItem(item, tile, owner, true, hiddenTime, type);
-
-                owner.getPackets().sendRemoveGroundItem(floorItem);
-                owner.getPackets().sendGroundItem(floorItem);
+                addGroundItem(item, tile, owner, owner != null, hiddenTime, type);
             } else {
-                floorItem.setAmount(floorItem.getAmount() + item.getAmount());
-                owner.getPackets().sendRemoveGroundItem(floorItem);
-                owner.getPackets().sendGroundItem(floorItem);
+                floorItem.setAmount(total);
+            }
+            for (Player p : World.getPlayers()) {
+                if (p == null || !p.hasStarted() || p.hasFinished())
+                    continue;
+                if (p.getPlane() != tile.getPlane())
+                    continue;
+                if (!p.withinDistance(tile, 64))
+                    continue;
+
+                p.getPackets().sendRemoveGroundItem(floorItem);
+                p.getPackets().sendGroundItem(floorItem);
             }
 
-        } else {
-            spawnAsNewGroundItem(item, tile, owner, hiddenTime, type);
+            return;
         }
+        spawnAsNewGroundItem(item, tile, owner, hiddenTime, type);
     }
 
     private static void spawnAsNewGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime, int type) {
@@ -1540,13 +1545,14 @@ public final class World {
         }
     }
 
-    private static boolean shouldNotifyPlayer(Player player, FloorItem item, int regionId) {
+    private static boolean shouldNotifyPlayer(Player player, FloorItem item) {
         return player != null
                 && player.hasStarted()
                 && !player.hasFinished()
                 && player.getPlane() == item.getTile().getPlane()
-                && player.getMapRegionsIds().contains(regionId);
+                && player.withinDistance(item.getTile(), 64);
     }
+
 
 
     private static void removeGroundItem(final FloorItem item, int seconds) {
@@ -1560,8 +1566,9 @@ public final class World {
                     return;
 
                 for (Player player : World.getPlayers()) {
-                    if (shouldNotifyPlayer(player, item, regionId)) {
+                    if (shouldNotifyPlayer(player, item)) {
                         player.getPackets().sendRemoveGroundItem(item);
+                        player.refreshSpawnedItems();
                     }
                 }
             }
@@ -1580,7 +1587,7 @@ public final class World {
 
         if (player == null) {
             region.getGroundItemsSafe().remove(floorItem);
-            broadcastRemoveGroundItem(floorItem, regionId);
+            broadcastRemoveGroundItem(floorItem);
 
             if (floorItem.isForever()) {
                 scheduleGroundItemRespawn(floorItem);
@@ -1617,7 +1624,7 @@ public final class World {
         if (floorItem.isInvisible()) {
             player.getPackets().sendRemoveGroundItem(floorItem);
         } else {
-            broadcastRemoveGroundItem(floorItem, regionId);
+            broadcastRemoveGroundItem(floorItem);
             if (floorItem.isForever()) {
                 scheduleGroundItemRespawn(floorItem);
             }
@@ -1696,11 +1703,11 @@ public final class World {
         return true;
     }
 
-    private static void broadcastRemoveGroundItem(FloorItem item, int regionId) {
+    private static void broadcastRemoveGroundItem(FloorItem item) {
         for (Player player : World.getPlayers()) {
             if (player == null || !player.hasStarted() || player.hasFinished()) continue;
             if (player.getPlane() != item.getTile().getPlane()) continue;
-            if (!player.getMapRegionsIds().contains(regionId)) continue;
+            if (!player.withinDistance(item.getTile(), 64)) continue;
             player.getPackets().sendRemoveGroundItem(item);
         }
     }
@@ -1767,7 +1774,7 @@ public final class World {
         if (item.isInvisible()) {
             player.getPackets().sendRemoveGroundItem(item);
         } else {
-            broadcastRemoveGroundItem(item, regionId);
+            broadcastRemoveGroundItem(item);
             if (item.isForever()) scheduleGroundItemRespawn(item);
         }
         return true;

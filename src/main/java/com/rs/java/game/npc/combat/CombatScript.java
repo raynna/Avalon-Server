@@ -163,7 +163,7 @@ public abstract class CombatScript {
                         if (player.isDead() || npc.isDead() || player.isLocked())
                             return;
 
-                        if (player.getNewActionManager().hasActionWorking())
+                        if (player.getActionManager().getAction() != null)
                             return;
 
                         player.closeInterfaces();
@@ -172,7 +172,7 @@ public abstract class CombatScript {
                                 EntityUtils.getAutoRetaliateDelay(player, npc);
 
                         int currentDelay =
-                                player.getNewActionManager().getActionDelay();
+                                player.getActionManager().getActionDelay();
 
                         int finalDelay = Math.max(currentDelay, retaliateDelay);
 

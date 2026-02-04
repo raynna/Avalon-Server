@@ -61,19 +61,19 @@ interface CombatStyle {
             }
             defender.chargeManager.processIncommingHit()
             if (defender.combatDefinitions.isAutoRelatie) {
-                if (defender.newActionManager.hasActionWorking()) return
+                if (defender.actionManager.action != null) return
                 WorldTasksManager.schedule(object : WorldTask() {
                     override fun run() {
                         if (defender.isDead || attacker.isDead || defender.isLocked) return
                         val style = CombatAction.getCombatStyle(defender, attacker)
                         val retaliateDelay = (style.getAttackSpeed() + 1) / 2
 
-                        val currentDelay = defender.newActionManager.getActionDelay()
+                        val currentDelay = defender.actionManager.actionDelay
                         val finalDelay = max(currentDelay, retaliateDelay)
 
                         defender.actionManager.setAction(CombatAction(attacker))
                         if (defender.actionManager.actionDelay > 0)
-                            defender.newActionManager.setActionDelay(finalDelay)
+                            defender.actionManager.actionDelay = finalDelay
                     }
                 })
             }

@@ -344,7 +344,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (manual) {
             WorldTasksManager.schedule(object : WorldTask() {
                 override fun run() {
-                    attacker.newActionManager.forceStop()
+                    attacker.actionManager.forceStop()
                     attacker.resetWalkSteps()
                     attacker.setNextFaceEntity(null)
                 }
@@ -424,7 +424,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         if (manual) {
             attacker.combatDefinitions.resetSpells(false)
-            attacker.newActionManager.forceStop()
+            attacker.actionManager.forceStop()
             attacker.resetWalkSteps()
             attacker.setNextFaceEntity(null)
         }

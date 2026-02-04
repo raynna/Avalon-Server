@@ -9,7 +9,6 @@ import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.actions.Action
 import com.rs.java.game.player.actions.combat.QueuedInstantCombat
 import com.rs.java.utils.Utils
-import com.rs.kotlin.game.player.action.NewAction
 import com.rs.kotlin.game.player.combat.magic.MagicStyle
 import com.rs.kotlin.game.player.combat.magic.special.GreaterRunicStaffWeapon
 import com.rs.kotlin.game.player.combat.magic.special.NightmareStaff
@@ -54,7 +53,7 @@ class CombatAction(
 
         private fun isRangedWeapon(player: Player): Boolean {
             val weaponId =
-                if (player.predictedWeaponSwitch != -1) player.predictedWeaponSwitch else player.equipment.getWeaponId()
+                if (player.predictedWeaponSwitch > 0) player.predictedWeaponSwitch else player.equipment.getWeaponId()
             val ranged = RangeData.getWeaponByItemId(weaponId)
             return ranged != null
         }
@@ -338,7 +337,7 @@ class CombatAction(
                     lastTargetX = target.x
                     lastTargetY = target.y
                     //player.resetWalkSteps()
-                    if (moved || (!player.hasWalkSteps() && player.newActionManager.getCurrentAction() != null)) {
+                    if (moved || (!player.hasWalkSteps() && player.actionManager.action != null)) {
                         player.calcFollow(target, if (player.run) 2 else 1, true, true)
                         return
                     }
