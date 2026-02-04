@@ -87,10 +87,10 @@ class CombatAction(
 
         val requiredDistance = getAdjustedFollowDistance(target);
         if (player.isOutOfRange(target, requiredDistance)) {
-            player.calcFollow(target, if (player.run) 2 else 1, false, true)
+            player.calcFollow(target, if (player.run) 2 else 1, true, true)
         }
         if (player.isDiagonalMeleeBlocked(target, style)) {
-            player.calcFollow(target, if (player.run) 2 else 1, false, true)
+            player.calcFollow(target, if (player.run) 2 else 1, true, true)
         }
 
         if (player.isCollidingWithTarget(target)) {
@@ -114,14 +114,6 @@ class CombatAction(
             player.temporaryTarget = target;
         }
         updateStyle(player)
-        if (player.isCollidingWithTarget(target)) {
-            if (player.isFrozen) {
-                player.packets.sendGameMessage("A magical force prevents you from moving.")
-                return true
-            }
-            handleCollisionMovement(player, target, player.size)
-        }
-
 
         val toExecute = mutableListOf<QueuedInstantCombat<out SpecialAttack>>()
         var totalEnergyCost = 0
@@ -179,11 +171,11 @@ class CombatAction(
         val requiredDistance = getAdjustedFollowDistance(target);
         if (player.isOutOfRange(target, requiredDistance)) {
             player.resetWalkSteps()
-            player.calcFollow(target, if (player.run) 2 else 1, false, true)
+            player.calcFollow(target, if (player.run) 2 else 1, true, true)
         }
         if (player.isDiagonalMeleeBlocked(target, style)) {
             player.resetWalkSteps()
-            player.calcFollow(target, if (player.run) 2 else 1, false, true)
+            player.calcFollow(target, if (player.run) 2 else 1, true, true)
         }
         if (player.isOutOfRegion(target)) {
             return false
@@ -202,6 +194,11 @@ class CombatAction(
         }
 
         if (player.isCollidingWithTarget(target)) {
+            if (player.isFrozen) {
+                player.packets.sendGameMessage("A magical force prevents you from moving.")
+                return 0
+            }
+            handleCollisionMovement(player, target, player.size)
             return 0
         }
         if (player.isDiagonalMeleeBlocked(target, style)) {
@@ -395,7 +392,7 @@ class CombatAction(
             return false
         }
 
-        //player.resetWalkSteps()
+        player.resetWalkSteps()
         return listOf(
             { player.addWalkSteps(target.x + target.size, player.y) },
             { player.addWalkSteps(target.x - size, player.y) },
