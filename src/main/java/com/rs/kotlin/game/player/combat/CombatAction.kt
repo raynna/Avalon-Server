@@ -303,6 +303,7 @@ class CombatAction(
                 val requiredDistance = getAdjustedFollowDistance(target)
                 if (player.isCollidingWithTarget(target)) {
                     if (player.isFrozen) {
+                        player.resetWalkSteps()
                         player.packets.sendGameMessage("A magical force prevents you from moving.")
                         stopFollowTask(player)
                         return
@@ -329,11 +330,12 @@ class CombatAction(
                     player.calcFollow(target, if (player.run) 2 else 1, true, true)
                     return
                 }
+                player.resetWalkSteps()
                 if (player.isOutOfRange(target, requiredDistance)) {
                     val moved = lastTargetX != target.x || lastTargetY != target.y
                     lastTargetX = target.x
                     lastTargetY = target.y
-                    //player.resetWalkSteps()
+                    player.resetWalkSteps()
                     if (moved || (!player.hasWalkSteps() && player.actionManager.action != null)) {
                         player.calcFollow(target, if (player.run) 2 else 1, true, true)
                         return
