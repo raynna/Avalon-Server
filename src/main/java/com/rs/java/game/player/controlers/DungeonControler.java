@@ -379,7 +379,7 @@ public class DungeonControler extends Controler {
 			if (!item.hasOwner()) {
 				World.removeGroundItem(player, item);
 				return false;
-			} else if (!item.getOwner().equals(player.getUsername())) {
+			} else if (!item.getOwner().getUsername().equalsIgnoreCase(player.getUsername())) {
 				player.getPackets().sendGameMessage("This isn't your gatestone!");
 				return false;
 			}

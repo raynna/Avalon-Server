@@ -17,12 +17,15 @@ public class FloorItem extends Item {
 	private static final long serialVersionUID = -2287633342490535089L;
 
 	private final WorldTile tile;
-	private transient Player owner;
+	private Player owner;
 	// 0 visible, 1 invisible, 2 visible and reappears 30sec after taken
 	private int type;
 	private int tick;
 	private boolean spawned;
 	private boolean globalPicked;
+	private boolean removed;
+	private final long uid = System.nanoTime(); // or a static incrementing counter
+	public long getUid() { return uid; }
 
 	public FloorItem(int id) {
 		super(id);
@@ -34,6 +37,7 @@ public class FloorItem extends Item {
 		this.tile = tile;
 		this.owner = owner;
 		this.type = invisible ? 1 : 0;
+		System.out.println("Floor item created: " + item.getName() + ", tile: " + tile.getX() + "-" + tile.getY() + ", owner: " + (owner != null ? owner.getUsername() : "None"));
 	}
 
 	public FloorItem(Item item, WorldTile tile, Player owner, boolean invisible, int tick, boolean spawned) {
@@ -43,6 +47,7 @@ public class FloorItem extends Item {
 		this.type = invisible ? 1 : 0;
 		this.tick = tick;
 		this.spawned = spawned;
+		System.out.println("Floor item created: " + item.getName() + ", tile: " + tile.getX() + "-" + tile.getY() + ", owner: " + (owner != null ? owner.getUsername() : "None"));
 	}
 
 	public FloorItem(Item item, WorldTile tile, boolean appearForever) {
@@ -50,6 +55,7 @@ public class FloorItem extends Item {
 		this.tile = tile;
 		this.owner = null;
 		this.type = appearForever ? 2 : 0;
+		System.out.println("Floor item created: " + item.getName() + ", tile: " + tile.getX() + "-" + tile.getY() + ", owner: " + (owner != null ? owner.getUsername() : "None"));
 	}
 
 	@Override
@@ -128,7 +134,7 @@ public class FloorItem extends Item {
 			player.getPackets()
 					.sendGameMessage(floorItem.getDefinitions().getName() + ", ItemId: "
 							+ floorItem.getDefinitions().getId() + ", X: " + tile.getX() + ", Y: " + tile.getY()
-							+ ", H: " + tile.getPlane() + ", Owner: " + floorItem.getOwner().getUsername());
+							+ ", H: " + tile.getPlane() + ", Owner: " + (floorItem.hasOwner() ? floorItem.getOwner().getUsername() : "None"));
 		}
 
 		player.getPackets().sendItemMessage(0, 15263739, id, x, y, ItemExamines.getExamine(new Item(id))); // ChatboxMessage
@@ -148,6 +154,26 @@ public class FloorItem extends Item {
 
 	public int getTick() {
 		return tick;
+	}
+
+	public boolean isRemoved() {
+		return removed;
+	}
+
+	public void setRemoved(boolean removed) {
+		this.removed = removed;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof FloorItem other)) return false;
+		return uid == other.uid;
+	}
+
+	@Override
+	public int hashCode() {
+		return Long.hashCode(uid);
 	}
 
 }

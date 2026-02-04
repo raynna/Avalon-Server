@@ -1483,7 +1483,7 @@ public final class WorldPacketsDecoder extends Decoder {
 			if (!player.getControlerManager().canTakeItem(item))
 				return;
 
-			if (item.hasOwner() && item.isInvisible() && !player.getUsername().equals(item.getOwner())) {
+			if (item.hasOwner() && item.isInvisible() && !item.getOwner().getUsername().equalsIgnoreCase(player.getUsername())) {
 				if (player.getPlayerRank().isIronman()) {
 					player.message("You are not able to pick up other players' items.");
 					return;

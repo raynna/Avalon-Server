@@ -1942,28 +1942,76 @@ public class Player extends Entity {
         }
     }
 
+    private boolean shouldShowFloorItem(Player player, FloorItem item) {
+        if (item.isRemoved())
+            return false;
+        if (item.getTile().getPlane() != player.getPlane())
+            return false;
+        if (item.isInvisible()) {
+            if (item.getOwner().getUsername().equalsIgnoreCase(player.getUsername()))
+                return true;
+            return false;
+        }
+        return true;
+    }
+
+    private void debugFloorItem(String stage, FloorItem item) {
+        System.out.println(
+                "[REFRESH][" + stage + "] "
+                        + item.getName()
+                        + " id=" + item.getId()
+                        + " tile=" + item.getTile().getX() + "," + item.getTile().getY()
+                        + " invisible=" + item.isInvisible()
+                        + " owner=" + (item.hasOwner() ? item.getOwner().getUsername() : "null")
+                        + " removed=" + item.isRemoved()
+                        + " viewer=" + getUsername()
+        );
+    }
+
+
     public void refreshSpawnedItems() {
+
+        // REMOVE PASS
         for (int regionId : getMapRegionsIds()) {
             List<FloorItem> floorItems = World.getRegion(regionId).getGroundItems();
             if (floorItems == null)
                 continue;
+
             for (FloorItem item : floorItems) {
-                if (item.isInvisible() && (item.hasOwner() && this != item.getOwner()) || item.getTile().getPlane() != getPlane() || !getUsername().equals(item.getOwner()) && !ItemConstants.isTradeable(item))
+
+                debugFloorItem("CHECK_REMOVE", item);
+
+                if (!shouldShowFloorItem(this, item)) {
+                    debugFloorItem("SKIP_REMOVE", item);
                     continue;
+                }
+
+                debugFloorItem("SEND_REMOVE", item);
                 getPackets().sendRemoveGroundItem(item);
             }
         }
+
+        // ADD PASS
         for (int regionId : getMapRegionsIds()) {
             List<FloorItem> floorItems = World.getRegion(regionId).getGroundItems();
             if (floorItems == null)
                 continue;
+
             for (FloorItem item : floorItems) {
-                if ((item.isInvisible()) && (item.hasOwner() && this != item.getOwner()) || item.getTile().getPlane() != getPlane() || !getUsername().equals(item.getOwner()) && !ItemConstants.isTradeable(item))
+
+                debugFloorItem("CHECK_ADD", item);
+
+                if (!shouldShowFloorItem(this, item)) {
+                    debugFloorItem("SKIP_ADD", item);
                     continue;
+                }
+
+                debugFloorItem("SEND_ADD", item);
                 getPackets().sendGroundItem(item);
             }
         }
     }
+
 
     public void refreshSpawnedObjects() {
         removeGlobalObjects();

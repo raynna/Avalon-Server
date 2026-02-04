@@ -622,16 +622,32 @@ public class Region {
 	public FloorItem getGroundItem(int id, WorldTile tile, Player player) {
 		if (groundItems == null)
 			return null;
+
 		for (FloorItem item : groundItems) {
+
+			if (item.isRemoved())
+				continue;
+
+			// id + tile must match
+			if (item.getId() != id || !tile.matches(item.getTile()))
+				continue;
+
+			// Owner & invisibility rules
 			if (item.hasOwner() && item.isInvisible()) {
-				if (player == null || player != item.getOwner())
+				if (player == null)
+					continue;
+				if (!item.getOwner().getUsername()
+						.equalsIgnoreCase(player.getUsername()))
 					continue;
 			}
-			if (item.getId() == id && tile.matches(item.getTile()))
-				return item;
+
+			return item;
 		}
+
 		return null;
 	}
+
+
 
 	public FloorItem getVisibleGroundItem(int id, WorldTile tile, Player player) {
 		if (groundItems == null)
@@ -640,7 +656,7 @@ public class Region {
 			if (item.getId() != id)
 				continue;
 			if (item.getTile().matches(tile)) {
-				if (item.hasOwner() && item.isInvisible() && item.getOwner() != player)
+				if (item.hasOwner() && item.isInvisible() && !item.getOwner().getUsername().equalsIgnoreCase(player.getUsername()))
 					continue;
 				return item;
 			}
