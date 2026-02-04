@@ -4,7 +4,7 @@ import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Hit;
 import com.rs.java.game.Hit.HitLook;
-import com.rs.java.game.npc.dungeonnering.DungeonFishSpot;
+import com.rs.java.game.npc.dungeoneering.DungeonFishSpot;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;

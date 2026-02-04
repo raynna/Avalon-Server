@@ -12,8 +12,6 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import com.rs.Settings;
-import com.rs.core.tasks.WorldTask;
-import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Graphics;
@@ -23,6 +21,7 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ground.AutomaticGroundItem;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
 import com.rs.java.game.minigames.clanwars.ClanWars;
 import com.rs.java.game.minigames.duel.DuelArena;
@@ -61,7 +60,7 @@ import com.rs.java.game.player.content.pet.Pets;
 import com.rs.java.game.player.content.presets.Preset;
 import com.rs.java.game.player.content.randomevent.AntiBot;
 import com.rs.java.game.player.content.unlockables.UnlockableManager;
-import com.rs.java.game.player.controlers.construction.SawmillController;
+import com.rs.java.game.player.controllers.construction.SawmillController;
 import com.rs.java.game.player.dialogues.Report;
 import com.rs.java.game.route.RouteFinder;
 import com.rs.java.game.route.strategy.FixedTileStrategy;
@@ -1123,7 +1122,7 @@ public final class WorldPacketsDecoder extends Decoder {
 				return;
 			}
 			player.getInventory().addItem(item.getId(), item.getAmount());
-			World.removeGroundItem(player, item);
+			GroundItems.removeGroundItem(player, item);
 		}, 2, TimeUnit.SECONDS);
 	}
 
@@ -1500,7 +1499,7 @@ public final class WorldPacketsDecoder extends Decoder {
 
 			// Delegates inventory/bank/pouch/ground logic
 			AutomaticGroundItem.pickup(tile, item);
-			World.removeGroundItem(player, item);
+			GroundItems.removeGroundItem(player, item);
 		}));
 	}
 

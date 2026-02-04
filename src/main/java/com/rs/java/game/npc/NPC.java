@@ -20,12 +20,12 @@ import com.rs.java.game.SecondaryBar;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NPCCombat;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.TickManager;
-import com.rs.java.game.player.content.collectionlog.CategoryType;
 import com.rs.json.JsonNpcCombatDefinitions;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.combatdata.*;
@@ -41,8 +41,8 @@ import com.rs.java.game.player.actions.skills.prayer.Burying;
 import com.rs.java.game.player.actions.skills.slayer.SlayerManager;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
 import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
-import com.rs.java.game.player.controlers.DungeonControler;
-import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controllers.DungeonController;
+import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.java.game.route.RouteFinder;
 import com.rs.java.game.route.strategy.FixedTileStrategy;
 import com.rs.core.tasks.WorldTask;
@@ -651,7 +651,7 @@ public class NPC extends Entity implements Serializable {
     }
 
     private void addAvalonPoints(Player killer, NPC npc, boolean wildy) {
-        double points = wildy ? (getCombatLevel() / 2) * (WildernessControler.getWildLevel(killer) / 2)
+        double points = wildy ? (getCombatLevel() / 2) * (WildernessController.getWildLevel(killer) / 2)
                 : npc.getCombatLevel() * 4;
         double bonusPoints = wildy ? Math.round((points * killer.getBonusPoints()) - points)
                 : (points * killer.getBonusPoints()) - points;
@@ -708,7 +708,7 @@ public class NPC extends Entity implements Serializable {
         if (getId() == 1615) {
             killer.getTaskManager().checkComplete(Tasks.KILL_ABYSSAL_DEMON);
         }
-        if (killer.isAtWild() && killer.getControlerManager().getControler() instanceof WildernessControler)
+        if (killer.isAtWild() && killer.getControlerManager().getControler() instanceof WildernessController)
             addAvalonPoints(killer, this, true);
         List<Drop> drops = rollDrops(killer);
         if (drops.isEmpty()) {
@@ -783,7 +783,7 @@ public class NPC extends Entity implements Serializable {
             }
             Player luckyPlayer = playersWithLs.get((int) (Math.random() * playersWithLs.size()));
             if (item.getAmount() > 0) {
-                World.updateGroundItem(item, new WorldTile(getCoordFaceX(size), getCoordFaceY(size), getPlane()),
+                GroundItems.updateGroundItem(item, new WorldTile(getCoordFaceX(size), getCoordFaceY(size), getPlane()),
                         luckyPlayer);
                 luckyPlayer.message(String.format(
                         (luckyPlayer.getRareItem() == item ? "<col=ff0000>" : "<col=216902>") + "You received: %s x %s. ("
@@ -894,7 +894,7 @@ public class NPC extends Entity implements Serializable {
                     item.setId(item.getDefinitions().getCertId());
             }
             if (item.getAmount() > 0) {
-                World.updateGroundItem(item, new WorldTile(getCoordFaceX(size), getCoordFaceY(size), getPlane()),
+                GroundItems.updateGroundItem(item, new WorldTile(getCoordFaceX(size), getCoordFaceY(size), getPlane()),
                         player);
                 if ((i.getDefinitions().getTipitPrice() * i.getAmount()) >= Integer
                         .parseInt(player.getToggleValue(player.toggles.get("DROPVALUE")))) {
@@ -1026,7 +1026,7 @@ public class NPC extends Entity implements Serializable {
                                         : isNoDistanceCheck() ? 64
                                         : this instanceof WorldBossNPC ? 16
                                         : player.getControlerManager()
-                                        .getControler() instanceof DungeonControler
+                                        .getControler() instanceof DungeonController
                                         ? 12
                                         : getCombatDefinitions().getAggroDistance())
                                 || (!forceMultiAttacked && (!isAtMultiArea() || !player.isAtMultiArea())
@@ -1036,7 +1036,7 @@ public class NPC extends Entity implements Serializable {
                                 (attackStyle != AttackStyle.RANGE
                                         && attackStyle != AttackStyle.MAGIC))
                                 || !getDefinitions().hasAttackOption()
-                                || (!forceAgressive && !WildernessControler.isAtWild(this)
+                                || (!forceAgressive && !WildernessController.isAtWild(this)
                                 && player.getSkills().getCombatLevelWithSummoning() >= getCombatLevel() * 2)) {
                             continue;
                         }
@@ -1081,7 +1081,7 @@ public class NPC extends Entity implements Serializable {
             if (!forceAgressive) {
                 NpcCombatDefinition defs = getCombatDefinitions();
                 if (defs.getAggressivenessType() == AggressivenessType.PASSIVE
-                        && !WildernessControler.isAtWild(target))
+                        && !WildernessController.isAtWild(target))
                     return false;
             }
             resetWalkSteps();

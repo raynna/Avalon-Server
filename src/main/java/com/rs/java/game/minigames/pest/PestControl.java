@@ -19,7 +19,7 @@ import com.rs.java.game.npc.pest.Shifter;
 import com.rs.java.game.npc.pest.Spinner;
 import com.rs.java.game.npc.pest.Splatter;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.pestcontrol.PestControlGame;
+import com.rs.java.game.player.controllers.pestcontrol.PestControlGame;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;

@@ -16,6 +16,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.item.meta.MetaDataType;
 import com.rs.java.game.item.meta.RunePouchMetaData;
@@ -179,7 +180,7 @@ public final class Inventory implements Serializable {
 			return false;
 		Item[] itemsBefore = items.getItemsCopy();
 		if (!items.add(new Item(itemId, amount))) {
-			World.updateGroundItem(new Item(itemId, amount), player, player, 60, 0);
+			GroundItems.updateGroundItem(new Item(itemId, amount), player, player, 60, 0);
 			player.getPackets().sendGameMessage("Not enough space in your inventory.");
 			refreshItems(itemsBefore);
 			return false;
@@ -308,7 +309,7 @@ public final class Inventory implements Serializable {
 		items.remove(slot, item);
 		if (addToGround) {
 			Item groundItem = item.clone();
-			World.updateGroundItem(groundItem, player.getTile(), player, 5, 0);
+			GroundItems.updateGroundItem(groundItem, player.getTile(), player, 60, 0);
 		}
 		refreshItems(itemsBefore);
 		player.getPackets().sendSound(4500, 0, 1);
@@ -328,7 +329,7 @@ public final class Inventory implements Serializable {
 			if (item == null)
 				continue;
 			if (addToGround)
-				World.updateGroundItem(item, new WorldTile(player), player);
+				GroundItems.updateGroundItem(item, new WorldTile(player), player);
 			deleteItem(item);
 		}
 		player.getPackets().sendSound(4500, 0, 1);

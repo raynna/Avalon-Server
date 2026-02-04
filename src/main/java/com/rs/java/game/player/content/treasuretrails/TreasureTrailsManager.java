@@ -17,7 +17,7 @@ import com.rs.java.game.npc.others.ClueNPC;
 import com.rs.java.game.npc.others.Ugi;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
@@ -200,7 +200,7 @@ public class TreasureTrailsManager implements Serializable {
 		} else {
 			if (cluePhase == 0 && (lastClue.details.type == COORDINATE || lastClue.details.type == EMOTE)
 					&& lastClue.dificulty >= HARD) {
-				boolean inWilderness = player.getControlerManager().getControler() instanceof WildernessControler;
+				boolean inWilderness = player.getControlerManager().getControler() instanceof WildernessController;
 				boolean isCoordinateClue = lastClue.details.type == COORDINATE;
 				final ClueNPC npc = new ClueNPC(player,
 						inWilderness ? isCoordinateClue ? 1007 : 5144 : isCoordinateClue ? 1264 : 5145,

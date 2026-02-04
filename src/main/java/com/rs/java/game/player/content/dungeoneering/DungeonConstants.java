@@ -7,7 +7,7 @@ import com.rs.java.utils.Logger;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.WorldTile;
-import com.rs.java.game.npc.dungeonnering.DungeonNPC;
+import com.rs.java.game.npc.dungeoneering.DungeonNPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.smithing.DungeoneeringSmelting.SmeltingBar;

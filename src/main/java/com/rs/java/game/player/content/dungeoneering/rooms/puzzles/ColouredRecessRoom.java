@@ -6,7 +6,7 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.dungeonnering.DungeonNPC;
+import com.rs.java.game.npc.dungeoneering.DungeonNPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.rooms.PuzzleRoom;
 import com.rs.core.tasks.WorldTask;

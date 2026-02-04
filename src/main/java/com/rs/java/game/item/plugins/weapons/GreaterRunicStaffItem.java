@@ -4,6 +4,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemPlugin;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.GreaterRunicStaffManager;
@@ -75,7 +76,7 @@ public class GreaterRunicStaffItem extends ItemPlugin {
                     for (Item rune : s.getRune()) {
                         int totalAmount = rune.getAmount() * meta.getCharges();
                         if (totalAmount > 0) {
-                            World.updateGroundItem(
+                            GroundItems.updateGroundItem(
                                     new Item(rune.getId(), totalAmount),
                                     player,
                                     player

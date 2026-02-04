@@ -1,15 +1,15 @@
 package com.rs.java.game.player.dialogues.dungeoneering;
 
-import com.rs.java.game.player.controlers.DungeonControler;
+import com.rs.java.game.player.controllers.DungeonController;
 import com.rs.java.game.player.dialogues.Dialogue;
 
 public class DungeonLeave extends Dialogue {
 
-	private DungeonControler dungeon;
+	private DungeonController dungeon;
 
 	@Override
 	public void start() {
-		dungeon = (DungeonControler) parameters[0];
+		dungeon = (DungeonController) parameters[0];
 		sendOptionsDialogue("Leave the dungeon permanently?", "Yes.", "No.");
 	}
 

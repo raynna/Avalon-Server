@@ -5,6 +5,7 @@ import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.*
 import com.rs.java.game.item.Item
 import com.rs.java.game.item.ItemId
+import com.rs.java.game.item.ground.GroundItems
 import com.rs.java.game.npc.others.BarrowsBrother
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
@@ -238,7 +239,7 @@ class BarrowsArea : Area(14231, 14131) {//regions
             if (player.inventory.hasFreeSlots())
                 player.inventory.addItem(casket.id, 1)
             else
-                World.updateGroundItem(casket, player, player, 60, 1)
+                GroundItems.updateGroundItem(casket, player, player, 60, 1)
 
             player.packets.sendGameMessage("You received a barrows casket.")
         }
@@ -249,7 +250,7 @@ class BarrowsArea : Area(14231, 14131) {//regions
                 if (player.inventory.hasFreeSlots())
                     player.inventory.addItem(reward.id, reward.amount)
                 else
-                    World.updateGroundItem(reward, player, player, 60, 1)
+                    GroundItems.updateGroundItem(reward, player, player, 60, 1)
             }
         }
 
@@ -258,7 +259,7 @@ class BarrowsArea : Area(14231, 14131) {//regions
         if (player.inventory.hasFreeSlots())
             player.inventory.addItem(995, randomCoins)
         else
-            World.updateGroundItem(Item(995, randomCoins), player, player, 60, 1)
+            GroundItems.updateGroundItem(Item(995, randomCoins), player, player, 60, 1)
         player.teleportBlock(60)
         player.packets.sendBlackOut(0)
     }

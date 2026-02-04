@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.quest.Entry;
 import com.rs.java.game.player.content.quest.Quest;
@@ -410,7 +411,7 @@ public class PiratesTreasure extends Quest implements Serializable  {
 		if(player.getQuestManager().get(Quests.PIRATES_TREASURE).getState() == QuestState.COMPLETED) {
 			for (Item i : CASKET_REWARDS) {
 				if (!player.getInventory().addItem(i)) {
-					World.addGroundItem(i, new WorldTile(player));
+					GroundItems.addGroundItem(i, new WorldTile(player));
 				}
 			}
 			player.getInventory().deleteItem(CHEST, 1);
@@ -428,7 +429,7 @@ public class PiratesTreasure extends Quest implements Serializable  {
 					if (player.getInventory().getFreeSlots() > 1) {
 						player.getInventory().addItem(CHEST, 1);
 					} else {
-						World.addGroundItem(new Item(CHEST, 1), new WorldTile(player));
+						GroundItems.addGroundItem(new Item(CHEST, 1), new WorldTile(player));
 					}
 				}
 			}

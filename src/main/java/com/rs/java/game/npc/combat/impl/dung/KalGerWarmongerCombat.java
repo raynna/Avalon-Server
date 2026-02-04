@@ -9,7 +9,7 @@ import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.dungeonnering.KalGerWarmonger;
+import com.rs.java.game.npc.dungeoneering.KalGerWarmonger;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.core.tasks.WorldTask;

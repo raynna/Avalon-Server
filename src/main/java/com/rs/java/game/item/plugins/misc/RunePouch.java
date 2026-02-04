@@ -3,6 +3,7 @@ package com.rs.java.game.item.plugins.misc;
 import com.rs.java.game.World;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemPlugin;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.item.meta.RunePouchMetaData;
 import com.rs.java.game.player.Player;
@@ -98,7 +99,7 @@ public class RunePouch extends ItemPlugin {
                 int runeId = entry.getKey();
                 int amount = entry.getValue();
                 if (amount > 0) {
-                    World.updateGroundItem(new Item(runeId, amount), player.getLocation(), player);
+                    GroundItems.updateGroundItem(new Item(runeId, amount), player.getLocation(), player);
                 }
             }
             player.getRunePouch().reset();

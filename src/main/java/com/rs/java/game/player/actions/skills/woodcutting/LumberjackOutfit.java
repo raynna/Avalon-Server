@@ -3,6 +3,7 @@ package com.rs.java.game.player.actions.skills.woodcutting;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.World;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.utils.HexColours;
@@ -77,7 +78,7 @@ public class LumberjackOutfit {
 		if (player.getInventory().hasFreeSlots())
 			player.getInventory().addItem(piece.getItemId(), 1);
 		else
-			World.updateGroundItem(new Item(piece.getItemId()), player, player);
+			GroundItems.updateGroundItem(new Item(piece.getItemId()), player, player);
 		return true;
 	}
 }

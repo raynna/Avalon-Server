@@ -15,7 +15,7 @@ import com.rs.java.game.npc.others.CastleWarBarricade;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.Foods.Food;
-import com.rs.java.game.player.controlers.castlewars.CastleWarsPlaying;
+import com.rs.java.game.player.controllers.castlewars.CastleWarsPlaying;
 import com.rs.java.game.player.dialogues.CastleWarsScoreboard;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;

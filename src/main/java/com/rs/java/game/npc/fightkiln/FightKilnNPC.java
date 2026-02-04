@@ -10,7 +10,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.FightKiln;
+import com.rs.java.game.player.controllers.FightKiln;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;

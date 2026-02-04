@@ -3,7 +3,7 @@ package com.rs.java.game.npc.combat.impl.dung;
 import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.dungeonnering.BalLakThePummeler;
+import com.rs.java.game.npc.dungeoneering.BalLakThePummeler;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.core.tasks.WorldTask;

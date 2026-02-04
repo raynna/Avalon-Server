@@ -26,11 +26,12 @@ import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.item.itemdegrading.ChargesManager;
 import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.minigames.clanwars.RequestController;
-import com.rs.java.game.minigames.clanwars.WarControler;
+import com.rs.java.game.minigames.clanwars.WarController;
 import com.rs.java.game.minigames.duel.DuelArena;
 import com.rs.java.game.minigames.duel.DuelRules;
 import com.rs.java.game.minigames.lividfarm.LividFarm;
@@ -72,23 +73,23 @@ import com.rs.java.game.player.content.randomevent.AntiBot;
 import com.rs.java.game.player.content.tasksystem.TaskManager;
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager;
 import com.rs.java.game.player.content.unlockables.UnlockableItems;
-import com.rs.java.game.player.controlers.Controler;
-import com.rs.java.game.player.controlers.CorpBeastControler;
-import com.rs.java.game.player.controlers.CrucibleControler;
-import com.rs.java.game.player.controlers.DTControler;
-import com.rs.java.game.player.controlers.EdgevillePvPControler;
-import com.rs.java.game.player.controlers.FightCaves;
-import com.rs.java.game.player.controlers.FightKiln;
-import com.rs.java.game.player.controlers.GodWars;
-import com.rs.java.game.player.controlers.NomadsRequiem;
-import com.rs.java.game.player.controlers.QueenBlackDragonController;
-import com.rs.java.game.player.controlers.WildernessControler;
-import com.rs.java.game.player.controlers.ZGDControler;
-import com.rs.java.game.player.controlers.castlewars.CastleWarsPlaying;
-import com.rs.java.game.player.controlers.castlewars.CastleWarsWaiting;
-import com.rs.java.game.player.controlers.fightpits.FightPitsArena;
-import com.rs.java.game.player.controlers.pestcontrol.PestControlGame;
-import com.rs.java.game.player.controlers.pestcontrol.PestControlLobby;
+import com.rs.java.game.player.controllers.Controller;
+import com.rs.java.game.player.controllers.CorpBeastController;
+import com.rs.java.game.player.controllers.CrucibleController;
+import com.rs.java.game.player.controllers.DTController;
+import com.rs.java.game.player.controllers.EdgevillePvPController;
+import com.rs.java.game.player.controllers.FightCaves;
+import com.rs.java.game.player.controllers.FightKiln;
+import com.rs.java.game.player.controllers.GodWars;
+import com.rs.java.game.player.controllers.NomadsRequiem;
+import com.rs.java.game.player.controllers.QueenBlackDragonController;
+import com.rs.java.game.player.controllers.WildernessController;
+import com.rs.java.game.player.controllers.ZGDController;
+import com.rs.java.game.player.controllers.castlewars.CastleWarsPlaying;
+import com.rs.java.game.player.controllers.castlewars.CastleWarsWaiting;
+import com.rs.java.game.player.controllers.fightpits.FightPitsArena;
+import com.rs.java.game.player.controllers.pestcontrol.PestControlGame;
+import com.rs.java.game.player.controllers.pestcontrol.PestControlLobby;
 import com.rs.java.game.player.cutscenes.Cutscene;
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.core.networking.Session;
@@ -2761,12 +2762,12 @@ public class Player extends Entity {
                 skullList.put(player, skullList.get(player).intValue() - 1);
             }
         }
-        if (getControlerManager().getControler() instanceof EdgevillePvPControler) {
-            if (!EdgevillePvPControler.isAtPvP(this) && !EdgevillePvPControler.isAtBank(this)) {
+        if (getControlerManager().getControler() instanceof EdgevillePvPController) {
+            if (!EdgevillePvPController.isAtPvP(this) && !EdgevillePvPController.isAtBank(this)) {
                 getControlerManager().getControler().forceClose();
             }
         }
-        if (EdgevillePvPControler.isAtPvP(this) && !(getControlerManager().getControler() instanceof EdgevillePvPControler)) {
+        if (EdgevillePvPController.isAtPvP(this) && !(getControlerManager().getControler() instanceof EdgevillePvPController)) {
             getControlerManager().startControler("EdgevillePvPControler");
         }
         if (isInClanwarsLobby() && !(getControlerManager().getControler() instanceof RequestController))
@@ -2856,7 +2857,7 @@ public class Player extends Entity {
                 message("You can now accept.");
             }
         }
-        if (!(getControlerManager().getControler() instanceof WildernessControler) && isAtWild()) {
+        if (!(getControlerManager().getControler() instanceof WildernessController) && isAtWild()) {
             getControlerManager().startControler("WildernessControler");
         }
         if (getFrozenBy() != null) {
@@ -4045,7 +4046,7 @@ public class Player extends Entity {
                     for (Item runes : getRunePouch().getContainerItems()) {
                         if (runes == null)
                             continue;
-                        World.addGroundItem(new Item(runes.getId(), runes.getAmount()), deathTile, killer, true, 60);
+                        GroundItems.addGroundItem(new Item(runes.getId(), runes.getAmount()), deathTile, killer, true, 60);
                         getRunePouch().remove(runes);
                     }
                     message("Your rune pouch and your runes was lost at death.");
@@ -4056,7 +4057,7 @@ public class Player extends Entity {
                         if (charges.getKey() == null)
                             continue;
                         for (Item staffRunes : charges.getValue()) {
-                            World.updateGroundItem(staffRunes, deathTile, killer, 60, 1);
+                            GroundItems.updateGroundItem(staffRunes, deathTile, killer, 60, 1);
                         }
                     }
                     message("All your runes in your runic staff were dropped.");
@@ -4072,7 +4073,7 @@ public class Player extends Entity {
                 inventory.addItem(item.getId(), item.getAmount());
             }
         }
-        World.updateGroundItem(new Item(526), deathTile, killer, 60, 1);
+        GroundItems.updateGroundItem(new Item(526), deathTile, killer, 60, 1);
         for (int i = 0; i < items[1].length; i++) {
             Item item = items[1][i];
             if (Settings.ECONOMY_MODE == 1 && !LimitedGEReader.itemIsLimited(item.getId()) && ItemConstants.isTradeable(item) && EconomyPrices.getPrice(item.getId()) == 0)// skip to drop free
@@ -4081,7 +4082,7 @@ public class Player extends Entity {
                 getChargeManager().breakItem(item);
             if (ItemConstants.removeAttachedId(item) != -1) {
                 if (ItemConstants.removeAttachedId2(item) != -1)
-                    World.updateGroundItem(new Item(ItemConstants.removeAttachedId2(item), 1), deathTile, killer, 60, 1);
+                    GroundItems.updateGroundItem(new Item(ItemConstants.removeAttachedId2(item), 1), deathTile, killer, 60, 1);
                 items[1][i] = new Item(ItemConstants.removeAttachedId(item));
             }
             if (ItemConstants.turnCoins(item) && (inPkingArea() || FfaZone.inRiskArea(this))) {
@@ -4096,16 +4097,16 @@ public class Player extends Entity {
             if (!ItemConstants.keptOnDeath(item))
                 killer.totalCurrentDrop += ((long) item.getDefinitions().getTipitPrice() * item.getAmount());
             item = items[1][i];
-            World.updateGroundItem(item, deathTile, killer, 60, 1);
+            GroundItems.updateGroundItem(item, deathTile, killer, 60, 1);
         }
         message("You have lost approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
         if (killer != this) {
             int randomCoins = Utils.randomise(25000, 100000);
-            World.updateGroundItem(new Item(995, randomCoins), deathTile, killer, 60, 1);
+            GroundItems.updateGroundItem(new Item(995, randomCoins), deathTile, killer, 60, 1);
             killer.message("You recieved an extra " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(randomCoins, ',')) + " coins for killing: " + getDisplayName() + ".");
 
             int randomPvpTokens = Utils.randomise(250, 1000);
-            World.updateGroundItem(new Item("item.pvp_token", randomPvpTokens), deathTile, killer, 60, 1);
+            GroundItems.updateGroundItem(new Item("item.pvp_token", randomPvpTokens), deathTile, killer, 60, 1);
             killer.message("You recieved " + randomPvpTokens + " pvp tokens for killing " + getDisplayName() + ".");
 
             killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
@@ -4118,7 +4119,7 @@ public class Player extends Entity {
     }
 
     public final boolean isAtWild() {
-        return WildernessControler.isAtWild(getTile());
+        return WildernessController.isAtWild(getTile());
     }
 
     public final boolean isAtBank() {
@@ -5296,11 +5297,11 @@ public class Player extends Entity {
     public boolean canUseCommand() {
         if (playerRank.isDeveloper())
             return true;
-        if (inPkingArea() || getControlerManager().getControler() instanceof FightPitsArena || getControlerManager().getControler() instanceof CorpBeastControler || getControlerManager().getControler() instanceof PestControlLobby || getControlerManager().getControler() instanceof PestControlGame || getControlerManager().getControler() instanceof ZGDControler || getControlerManager().getControler() instanceof GodWars || getControlerManager().getControler() instanceof DTControler || getControlerManager().getControler() instanceof DuelArena || getControlerManager().getControler() instanceof CastleWarsPlaying || getControlerManager().getControler() instanceof CastleWarsWaiting || getControlerManager().getControler() instanceof FightCaves || getControlerManager().getControler() instanceof FightKiln || FfaZone.inPvpArea(this) || getControlerManager().getControler() instanceof NomadsRequiem || getControlerManager().getControler() instanceof QueenBlackDragonController || getControlerManager().getControler() instanceof WarControler) {
+        if (inPkingArea() || getControlerManager().getControler() instanceof FightPitsArena || getControlerManager().getControler() instanceof CorpBeastController || getControlerManager().getControler() instanceof PestControlLobby || getControlerManager().getControler() instanceof PestControlGame || getControlerManager().getControler() instanceof ZGDController || getControlerManager().getControler() instanceof GodWars || getControlerManager().getControler() instanceof DTController || getControlerManager().getControler() instanceof DuelArena || getControlerManager().getControler() instanceof CastleWarsPlaying || getControlerManager().getControler() instanceof CastleWarsWaiting || getControlerManager().getControler() instanceof FightCaves || getControlerManager().getControler() instanceof FightKiln || FfaZone.inPvpArea(this) || getControlerManager().getControler() instanceof NomadsRequiem || getControlerManager().getControler() instanceof QueenBlackDragonController || getControlerManager().getControler() instanceof WarController) {
             return false;
         }
-        if (getControlerManager().getControler() instanceof CrucibleControler) {
-            CrucibleControler controler = (CrucibleControler) getControlerManager().getControler();
+        if (getControlerManager().getControler() instanceof CrucibleController) {
+            CrucibleController controler = (CrucibleController) getControlerManager().getControler();
             return !controler.isInside();
         }
         return true;
@@ -5719,10 +5720,10 @@ public class Player extends Entity {
     public void setWarriorPoints(int index, double pointsDifference) {
         warriorPoints[index] += pointsDifference;
         if (warriorPoints[index] < 0) {
-            Controler controler = getControlerManager().getControler();
-            if (controler == null || !(controler instanceof WarriorsGuild))
+            Controller controller = getControlerManager().getControler();
+            if (controller == null || !(controller instanceof WarriorsGuild))
                 return;
-            WarriorsGuild guild = (WarriorsGuild) controler;
+            WarriorsGuild guild = (WarriorsGuild) controller;
             guild.inCyclopse = false;
             setNextWorldTile(WarriorsGuild.CYCLOPS_LOBBY);
             warriorPoints[index] = 0;

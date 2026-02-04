@@ -19,13 +19,14 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.Foods.Food;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.game.player.content.Pots.Pot;
-import com.rs.java.game.player.controlers.Controler;
+import com.rs.java.game.player.controllers.Controller;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
@@ -33,7 +34,7 @@ import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.Utils;
 
-public class DuelArena extends Controler {
+public class DuelArena extends Controller {
 
 	enum DuelStage {
 		DECLINED, NO_SPACE, SECOND, DONE
@@ -311,7 +312,7 @@ public class DuelArena extends Controler {
 					if (player.getInventory().hasFreeSlots())
 						player.getInventory().addItem(item);
 					else
-						World.addGroundItem(item, new WorldTile(player), player, true, 60);
+						GroundItems.addGroundItem(item, new WorldTile(player), player, true, 60);
 				}
 			}
 			player.getInventory().init();
@@ -322,11 +323,11 @@ public class DuelArena extends Controler {
 		}
 		if (oldTarget == null)
 			return;
-		Controler controler = oldTarget.getControlerManager().getControler();
-		if (controler == null || !(controler instanceof DuelArena))
+		Controller controller = oldTarget.getControlerManager().getControler();
+		if (controller == null || !(controller instanceof DuelArena))
 			return;
-		DuelArena targetConfiguration = (DuelArena) controler;
-		if (controler instanceof DuelArena) {
+		DuelArena targetConfiguration = (DuelArena) controller;
+		if (controller instanceof DuelArena) {
 			if (targetConfiguration.hasTarget()) {
 				oldTarget.setCloseInterfacesEvent(null);
 				oldTarget.closeInterfaces();
@@ -410,7 +411,7 @@ public class DuelArena extends Controler {
 						if (target.getInventory().hasFreeSlots()) {
 							target.getInventory().addItem(item);
 						} else {
-							World.addGroundItem(item, new WorldTile(target), target, true, 60);
+							GroundItems.addGroundItem(item, new WorldTile(target), target, true, 60);
 							target.getPackets().sendGameMessage("Items were dropped on the ground.");
 						}
 					} else {
@@ -443,7 +444,7 @@ public class DuelArena extends Controler {
 						if (target.getInventory().hasFreeSlots()) {
 							target.getInventory().addItem(item);
 						} else {
-							World.addGroundItem(item, new WorldTile(target), target, true, 60);
+							GroundItems.addGroundItem(item, new WorldTile(target), target, true, 60);
 							target.getPackets().sendGameMessage("Items were dropped on the ground.");
 						}
 					} else {
@@ -624,7 +625,7 @@ public class DuelArena extends Controler {
 					if (target.getInventory().hasFreeSlots())
 						target.getInventory().addItem(item);
 					else
-						World.addGroundItem(item, new WorldTile(target), target, true, 60);
+						GroundItems.addGroundItem(item, new WorldTile(target), target, true, 60);
 				}
 			}
 			player.getInventory().init();
@@ -638,7 +639,7 @@ public class DuelArena extends Controler {
 					if (target.getInventory().hasFreeSlots())
 						target.getInventory().addItem(item);
 					else
-						World.addGroundItem(item, new WorldTile(target), target, true, 60);
+						GroundItems.addGroundItem(item, new WorldTile(target), target, true, 60);
 				}
 			}
 			target.getInventory().init();
@@ -745,12 +746,12 @@ public class DuelArena extends Controler {
 	public boolean processButtonClick(int interfaceId, int componentId, int slotId, int slotId2, int packetId) {
 		if (target == null)
 			return true;
-		Controler controler = target.getControlerManager().getControler();
-		if (!(controler instanceof DuelArena)) {
+		Controller controller = target.getControlerManager().getControler();
+		if (!(controller instanceof DuelArena)) {
 			return true;
 		}
 		synchronized (this) {
-			synchronized (controler) {
+			synchronized (controller) {
 				DuelRules rules = player.getLastDuelRules();
 				Player p2 = (Player) target;
 				if (player.getCustomDuelRule().get(1).equals(true) && p2.getCustomDuelRule().get(1).equals(true)

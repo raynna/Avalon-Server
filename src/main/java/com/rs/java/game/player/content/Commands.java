@@ -13,6 +13,7 @@ import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.java.game.*;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.*;
@@ -2654,7 +2655,7 @@ public final class Commands {
             };
 
             player.getInventory().deleteItem(item);
-            World.addGroundItem(item, new WorldTile(tile[Utils.getRandom(tile.length - 1)]), player, false, 0);
+            GroundItems.addGroundItem(item, new WorldTile(tile[Utils.getRandom(tile.length - 1)]), player, false, 0);
         }
         player.message("Drop party started!");
         return true;
@@ -2692,7 +2693,7 @@ public final class Commands {
                 };
 
                 int itemId = itemIds[Utils.getRandom(itemIds.length - 1)];
-                World.updateGroundItem(new Item(itemId, 1),
+                GroundItems.updateGroundItem(new Item(itemId, 1),
                         new WorldTile(tiles[Utils.getRandom(tiles.length - 1)]), player, 0);
             }
             player.message("Dropped " + amount + " items around you.");
@@ -2732,7 +2733,7 @@ public final class Commands {
                 };
 
                 int itemId = rareIds[Utils.getRandom(rareIds.length - 1)];
-                World.addGroundItem(new Item(itemId, 1),
+                GroundItems.addGroundItem(new Item(itemId, 1),
                         new WorldTile(tiles[Utils.getRandom(tiles.length - 1)]), player, false, 0);
             }
             player.message("Dropped " + amount + " rare items around you.");

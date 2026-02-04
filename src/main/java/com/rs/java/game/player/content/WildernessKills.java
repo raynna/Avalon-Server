@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.java.utils.Utils;
 
 /**
@@ -39,7 +39,7 @@ public class WildernessKills {
 				+ (kCB > vCB ? "<col=990000>" + kCB : "<col=990000>" + vCB) + "</col>)<col=ffffff>killed</col> "
 				+ "<img=" + victim.getRights() + ">" + victim.getDisplayName() + "("
 				+ (kCB > vCB ? "<col=990000>" + kCB : "<col=990000>" + vCB) + " at level <col=990000>"
-				+ WildernessControler.getWildLevel(killer) + "</col> wilderness.";
+				+ WildernessController.getWildLevel(killer) + "</col> wilderness.";
 		return highestCB;
 	}
 

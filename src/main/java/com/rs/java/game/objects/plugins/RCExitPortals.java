@@ -4,7 +4,7 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.EdgevillePvPControler;
+import com.rs.java.game.player.controllers.EdgevillePvPController;
 
 public class RCExitPortals extends ObjectPlugin {
 
@@ -19,10 +19,10 @@ public class RCExitPortals extends ObjectPlugin {
 	public boolean processObject(Player player, WorldObject object) {
 		int id = object.getId();
 		 if (id == 2468 && object.getX() == 3091 && object.getY() == 3493) {
-			EdgevillePvPControler.enterPVP(player);
+			EdgevillePvPController.enterPVP(player);
 			return false;
 		} else if (id == 2465 && object.getX() == 83 && object.getY() == 80) {
-			EdgevillePvPControler.leavePVP(player);
+			EdgevillePvPController.leavePVP(player);
 			return false;
 		}
 		if (id == 2465) {// air

@@ -9,7 +9,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
-import com.rs.java.game.npc.dungeonnering.DungeonBoss;
+import com.rs.java.game.npc.dungeoneering.DungeonBoss;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.core.tasks.WorldTask;

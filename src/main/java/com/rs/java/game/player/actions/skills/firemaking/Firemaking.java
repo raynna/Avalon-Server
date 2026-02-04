@@ -7,15 +7,16 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.minigames.duel.DuelArena;
-import com.rs.java.game.minigames.duel.DuelControler;
+import com.rs.java.game.minigames.duel.DuelController;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
 import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
 import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
-import com.rs.java.game.player.controlers.DungeonControler;
+import com.rs.java.game.player.controllers.DungeonController;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.InventoryOptionsHandler;
@@ -149,7 +150,7 @@ public class Firemaking extends Action {
 			return false;
 		player.getPackets().sendGameMessage("You attempt to light the logs.", true);
 		player.getInventory().deleteItem(fire.getLogId(), 1);
-		World.addGroundItem(new Item(fire.getLogId(), 1), new WorldTile(player), player, true, 60, 0);
+		GroundItems.addGroundItem(new Item(fire.getLogId(), 1), new WorldTile(player), player, true, 60, 0);
 		Long time = (Long) player.temporaryAttribute().remove("Fire");
 		boolean quickFire = time != null && time > Utils.currentTimeMillis();
 		setActionDelay(player, quickFire ? 1 : 2);
@@ -181,7 +182,7 @@ public class Firemaking extends Action {
 	}
 
 	public boolean checkAll(Player player) {
-		if (player.getControlerManager().getControler() instanceof DungeonControler) {
+		if (player.getControlerManager().getControler() instanceof DungeonController) {
 			if (!player.getInventory().containsOneItem(DungeonConstants.TINDERBOX)) {
 				player.getPackets().sendGameMessage("You don't have any tinderbox.");
 				return false;
@@ -200,7 +201,7 @@ public class Firemaking extends Action {
 				// updated
 				// api
 				|| player.getControlerManager().getControler() instanceof DuelArena
-				|| player.getControlerManager().getControler() instanceof DuelControler) { // contains
+				|| player.getControlerManager().getControler() instanceof DuelController) { // contains
 			// object
 			player.getPackets().sendGameMessage("You can't light a fire here.");
 			return false;
@@ -240,7 +241,7 @@ public class Firemaking extends Action {
 				final FloorItem item = World.getRegion(tile.getRegionId()).getGroundItem(fire.getLogId(), tile, player);
 				if (item == null)
 					return;
-				if (!World.removeGroundItem(player, item, false))
+				if (!GroundItems.removeGroundItem(player, item, false))
 					return;
 				World.spawnTempGroundObject(
 						new WorldObject(fire.getFireId(), 10, 0, tile.getX(), tile.getY(), tile.getPlane()), 592,

@@ -3,7 +3,7 @@ package com.rs.java.game.player.content.customtab;
 import java.util.function.Consumer;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.java.game.player.teleportation.Teleports.TeleportLocations;
 import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 
@@ -336,7 +336,7 @@ public class TeleportTab extends CustomTab {
 	}
 
 	private static void sendTeleport(Player player, WorldTile tile, int type) {
-		if (WildernessControler.getWildLevel(player) >= 20 && player.isAtWild()) {
+		if (WildernessController.getWildLevel(player) >= 20 && player.isAtWild()) {
 			player.getPackets().sendGameMessage("You can't use this teleport deeper than 20 wilderness.");
 			openTeleports(player, type);
 			return;

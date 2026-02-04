@@ -6,6 +6,7 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.summoning.Summoning.Pouch;
 import com.rs.java.utils.Utils;
@@ -64,7 +65,7 @@ public class Spiritspider extends Familiar {
 					Player players = (Player) entity;
 					players.getPackets().sendGraphics(new Graphics(1342), tile);
 				}
-				World.addGroundItem(new Item(223, 1), tile, player, false, 120, 0);
+				GroundItems.addGroundItem(new Item(223, 1), tile, player, false, 120, 0);
 			}
 		}
 		return true;

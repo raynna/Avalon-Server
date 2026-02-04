@@ -48,14 +48,14 @@ public class LividFarm {
 	public void addProduce(int value) {
 		this.produce += (value * 20);
 		player.getVarsManager().sendVarBit(9065, player.getLivid().getProduce() / 10, true);
-		if (player.getControlerManager().getControler() instanceof LividFarmControler)
+		if (player.getControlerManager().getControler() instanceof LividFarmController)
 			updateProduce(player);
 	}
 
 	public void removeProduce(int value) {
 		this.produce -= value;
 		player.getVarsManager().sendVarBit(9065, player.getLivid().getProduce() / 10, true);
-		if (player.getControlerManager().getControler() instanceof LividFarmControler)
+		if (player.getControlerManager().getControler() instanceof LividFarmController)
 			updateProduce(player);
 	}
 

@@ -8,6 +8,7 @@ import java.util.Map;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.content.customtab.QuestTab;
@@ -87,7 +88,7 @@ private Map<String, String> data = new HashMap<String, String>();
 					if (player.getInventory().getFreeSlots() >= 1) {
 						player.getInventory().addItem(item);
 					} else {
-						 World.addGroundItem(item, new WorldTile(player));
+						GroundItems.addGroundItem(item, new WorldTile(player));
 					}
 				break;
 			case STRING:

@@ -1,12 +1,12 @@
 package com.rs.kotlin.game.world.pvp
 
 import com.rs.java.game.Entity
-import com.rs.java.game.World
 import com.rs.java.game.item.Item
+import com.rs.java.game.item.ground.GroundItems
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
-import com.rs.java.game.player.controlers.WildernessControler
+import com.rs.java.game.player.controllers.WildernessController
 import com.rs.java.utils.HexColours
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.world.util.Msg
@@ -70,7 +70,7 @@ object PvpManager {
         val drops = EpTable.main.rollDrops(killer)
         for (drop in drops) {
             val item = Item(drop.itemId, drop.amount)
-            World.updateGroundItem(item, deadPlayer.tile, killer, 60, 1)
+            GroundItems.updateGroundItem(item, deadPlayer.tile, killer, 60, 1)
             killer.message("You received ${item.amount} x ${item.name} as a PvP drop!")
 
             val price = item.definitions.tipitPrice
@@ -303,7 +303,7 @@ object PvpManager {
 
     private fun buildLevelRangeText(player: Player): String {
         val levelRange = levelRange
-        val wildyLevel = if (player.controlerManager.controler is WildernessControler) WildernessControler.getWildLevel(player) else 0
+        val wildyLevel = if (player.controlerManager.controler is WildernessController) WildernessController.getWildLevel(player) else 0
         val c = player.skills.combatLevel
         val minus = c - levelRange - wildyLevel
         val plus = c + levelRange + wildyLevel

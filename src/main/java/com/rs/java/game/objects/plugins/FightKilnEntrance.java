@@ -3,7 +3,7 @@ package com.rs.java.game.objects.plugins;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.FightKiln;
+import com.rs.java.game.player.controllers.FightKiln;
 
 public class FightKilnEntrance extends ObjectPlugin {
 

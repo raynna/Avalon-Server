@@ -8,7 +8,7 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.dungeonnering.BulwarkBeast;
+import com.rs.java.game.npc.dungeoneering.BulwarkBeast;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.Projectile;

@@ -1,6 +1,6 @@
 package com.rs.java.game.player.dialogues;
 
-import com.rs.java.game.player.controlers.NomadsRequiem;
+import com.rs.java.game.player.controllers.NomadsRequiem;
 
 public class NomadThrone extends Dialogue {
 

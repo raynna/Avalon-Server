@@ -7,6 +7,7 @@ import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 
@@ -257,7 +258,7 @@ public class BirdNest {
 		if (nest == null)
 			return false;
 		Item item = new Item(nest.itemId);
-		World.updateGroundItem(item, tile, player);
+		GroundItems.updateGroundItem(item, tile, player);
 		player.getPackets().sendGameMessage("A bird's nest falls out of the tree!", true);
 		return true;
 	}

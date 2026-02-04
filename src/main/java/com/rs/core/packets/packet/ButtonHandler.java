@@ -4,10 +4,8 @@ import java.util.*;
 
 import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
-import com.rs.core.thread.CoresManager;
 import com.rs.core.thread.WorldThread;
 import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
@@ -18,7 +16,7 @@ import com.rs.java.game.item.meta.PolyporeStaffMetaData;
 import com.rs.java.game.item.plugins.misc.RunePouch;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.minigames.crucible.Crucible;
-import com.rs.java.game.minigames.duel.DuelControler;
+import com.rs.java.game.minigames.duel.DuelController;
 import com.rs.java.game.minigames.lividfarm.LividStore;
 import com.rs.java.game.minigames.pest.CommendationExchange;
 import com.rs.java.game.npc.familiar.Familiar;
@@ -61,18 +59,12 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.InputStream;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
-import com.rs.java.utils.ItemBonuses;
 import com.rs.java.utils.ItemExamines;
-import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 import com.rs.kotlin.game.player.combat.special.SpecialAttack;
-import com.rs.kotlin.game.player.customtab.GearTabDSL;
-import com.rs.kotlin.game.player.customtab.JournalTabDSL;
-import com.rs.kotlin.game.player.customtab.SettingsTabDSL;
-import com.rs.kotlin.game.player.customtab.TeleportTabDSL;
 import com.rs.kotlin.game.player.equipment.BonusType;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
 
@@ -1798,7 +1790,7 @@ public class ButtonHandler {
                 player.temporaryAttribute().put("WillDuelFriendly", false);
                 player.getPackets().sendVar(283, 134217728);
             } else if (componentId == 20) {
-                DuelControler.challenge(player);
+                DuelController.challenge(player);
             }
         } else if (interfaceId == 650) {
             if (componentId == 15) {

@@ -3,6 +3,7 @@ package com.rs.java.game.player.content.quest.impl.runemysteries.dialogues;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.content.quest.QuestList.Quests;
 import com.rs.java.game.player.content.quest.impl.runemysteries.RuneMysteries;
 import com.rs.java.game.player.dialogues.Dialogue;
@@ -140,7 +141,7 @@ public class Aubury extends Dialogue {
     			if(player.getInventory().getFreeSlots() > 0) {
     				player.getInventory().addItem(RuneMysteries.RESEARCH_NOTES, 1);
     			} else {
-    				World.addGroundItem(new Item(RuneMysteries.RESEARCH_NOTES), new WorldTile(player.getX(), player.getY(), player.getPlane()));
+                    GroundItems.addGroundItem(new Item(RuneMysteries.RESEARCH_NOTES), new WorldTile(player.getX(), player.getY(), player.getPlane()));
     			}
     			stageInt = -2;
     			break;
@@ -163,7 +164,7 @@ public class Aubury extends Dialogue {
                 if(player.getInventory().getFreeSlots() > 0) {
     				player.getInventory().addItem(RuneMysteries.RESEARCH_NOTES, 1);
     			} else {
-    				World.addGroundItem(new Item(RuneMysteries.RESEARCH_NOTES), new WorldTile(player.getX(), player.getY(), player.getPlane()));
+                    GroundItems.addGroundItem(new Item(RuneMysteries.RESEARCH_NOTES), new WorldTile(player.getX(), player.getY(), player.getPlane()));
     			}
                 stageInt = -2;
                 break;

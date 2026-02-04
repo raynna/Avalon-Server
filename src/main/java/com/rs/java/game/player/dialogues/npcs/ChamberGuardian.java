@@ -1,7 +1,7 @@
 package com.rs.java.game.player.dialogues.npcs;
 
 import com.rs.java.game.item.Item;
-import com.rs.java.game.player.controlers.GodCapes;
+import com.rs.java.game.player.controllers.GodCapes;
 import com.rs.java.game.player.dialogues.Dialogue;
 
 public class ChamberGuardian extends Dialogue {

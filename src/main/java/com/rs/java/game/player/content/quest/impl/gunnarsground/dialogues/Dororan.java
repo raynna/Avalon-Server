@@ -3,6 +3,7 @@ package com.rs.java.game.player.content.quest.impl.gunnarsground.dialogues;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.content.quest.QuestList.Quests;
 import com.rs.java.game.player.content.quest.State.QuestState;
 import com.rs.java.game.player.content.quest.impl.gunnarsground.GunnarsGround;
@@ -486,7 +487,7 @@ public class Dororan extends Dialogue {
             if(player.getInventory().getFreeSlots() > 0) {
                 player.getInventory().addItem(GunnarsGround.JEFFERYS_RING, 1);
             } else {
-                World.addGroundItem(new Item(GunnarsGround.JEFFERYS_RING), new WorldTile(player.getX(), player.getY(), player.getPlane()));
+                GroundItems.addGroundItem(new Item(GunnarsGround.JEFFERYS_RING), new WorldTile(player.getX(), player.getY(), player.getPlane()));
             }
             stageInt = 38;
             break;
@@ -1517,7 +1518,7 @@ public class Dororan extends Dialogue {
             if(player.getInventory().getFreeSlots() > 0) {
                 player.getInventory().addItem(GunnarsGround.GUNNARS_GROUND, 1);
             } else {
-                World.addGroundItem(new Item(GunnarsGround.GUNNARS_GROUND), new WorldTile(player.getX(), player.getY(), player.getPlane()));
+                GroundItems.addGroundItem(new Item(GunnarsGround.GUNNARS_GROUND), new WorldTile(player.getX(), player.getY(), player.getPlane()));
             }
             stageInt = 137;
             break;

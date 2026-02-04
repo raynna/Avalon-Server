@@ -6,6 +6,7 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.content.quest.Entry;
@@ -459,7 +460,7 @@ public class RestlessGhost extends Quest implements Serializable {
             if(player.getInventory().getFreeSlots() > 0) {
                 player.getInventory().addItem(SKULL, 1);
             } else {
-                World.addGroundItem(new Item(SKULL), new WorldTile(player.getX(), player.getY(), player.getPlane()));
+                GroundItems.addGroundItem(new Item(SKULL), new WorldTile(player.getX(), player.getY(), player.getPlane()));
             }
             //TODO send object config
             player.getQuestManager().get(Quests.THE_RESTLESS_GHOST).setStage(4);

@@ -5,8 +5,8 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.Controler;
-import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controllers.Controller;
+import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 
@@ -17,7 +17,7 @@ import com.rs.core.tasks.WorldTasksManager;
  * @Improved Andreas - AvalonPK
  * 
  */
-public final class FfaZone extends Controler {
+public final class FfaZone extends Controller {
 
 	/**
 	 * If the FFA zone is the risk zone.
@@ -108,7 +108,7 @@ public final class FfaZone extends Controler {
 			if (!player.getInterfaceManager().containsInterface(789))
 				showInterface();
 			if (isRisk())
-				WildernessControler.checkBoosts(player);
+				WildernessController.checkBoosts(player);
 		} else if (inSafeArea) {
 			player.setCanPvp(false);
 		} else if (!inSafeArea && !inPvpArea) {

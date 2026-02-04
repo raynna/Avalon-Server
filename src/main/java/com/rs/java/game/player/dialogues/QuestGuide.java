@@ -1,7 +1,7 @@
 package com.rs.java.game.player.dialogues;
 
 import com.rs.core.cache.defintions.NPCDefinitions;
-import com.rs.java.game.player.controlers.StartTutorial;
+import com.rs.java.game.player.controllers.StartTutorial;
 
 public class QuestGuide extends Dialogue {
 

@@ -2,12 +2,10 @@
 package com.rs.kotlin.game.player.customtab
 
 import com.rs.java.game.WorldTile
-import com.rs.java.game.minigames.lividfarm.LividStore.Spell
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.content.customtab.TeleportTab
-import com.rs.java.game.player.controlers.WildernessControler
+import com.rs.java.game.player.controllers.WildernessController
 import com.rs.java.game.player.teleportation.Teleports.TeleportLocations
-import com.rs.kotlin.game.player.combat.magic.ModernMagicks
 import com.rs.kotlin.game.player.combat.magic.SpellHandler
 
 object TeleportTabDSL {
@@ -249,7 +247,7 @@ object TeleportTabDSL {
     }
 
     private fun sendTeleport(p: Player, tile: WorldTile, type: Int) {
-        if (WildernessControler.getWildLevel(p) >= 20 && p.isAtWild) {
+        if (WildernessController.getWildLevel(p) >= 20 && p.isAtWild) {
             p.packets.sendGameMessage("You can't use this teleport deeper than 20 wilderness.")
             openCategory(p, type)
             return

@@ -3,6 +3,7 @@ package com.rs.java.game.player.npcdrops;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
@@ -62,7 +63,7 @@ public class CharmDrops {
 		int size = npc.getSize();
 		if (drop == null)
 			return;
-		World.updateGroundItem(new Item(drop.getItemId(), getCharmsAmount(npc, drop)),
+		GroundItems.updateGroundItem(new Item(drop.getItemId(), getCharmsAmount(npc, drop)),
 				new WorldTile(npc.getCoordFaceX(size), npc.getCoordFaceY(size), npc.getPlane()), player);
 	}
 

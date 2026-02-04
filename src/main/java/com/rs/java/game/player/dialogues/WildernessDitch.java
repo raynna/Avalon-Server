@@ -9,7 +9,7 @@ import com.rs.java.game.ForceMovement;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.EdgevillePvPControler;
+import com.rs.java.game.player.controllers.EdgevillePvPController;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 
@@ -81,7 +81,7 @@ public class WildernessDitch extends Dialogue {
 				public void run() {
 					player.setNextWorldTile(toTile);
 					player.faceObject(ditch);
-					if (!EdgevillePvPControler.isAtPvP(player)) {
+					if (!EdgevillePvPController.isAtPvP(player)) {
 						player.getControlerManager().startControler("WildernessControler");
 						player.resetReceivedDamage();
 						playersOn.add(player);

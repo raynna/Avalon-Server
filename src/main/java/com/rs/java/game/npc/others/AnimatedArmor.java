@@ -5,6 +5,7 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.minigames.warriorguild.WarriorsGuild;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
@@ -44,7 +45,7 @@ public class AnimatedArmor extends NPC {
 						for (Integer items : getDroppedItems()) {
 							if (items == -1)
 								continue;
-							World.addGroundItem(new Item(items),
+							GroundItems.addGroundItem(new Item(items),
 									new WorldTile(getCoordFaceX(getSize()), getCoordFaceY(getSize()), getPlane()),
 									player, true, 60);
 						}

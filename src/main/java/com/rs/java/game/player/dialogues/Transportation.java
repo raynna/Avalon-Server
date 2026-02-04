@@ -3,7 +3,7 @@ package com.rs.java.game.player.dialogues;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.actions.combat.Magic;
-import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.java.utils.Utils;
 
 public class Transportation extends Dialogue {
@@ -28,7 +28,7 @@ public class Transportation extends Dialogue {
 			teleported = Magic.sendJewerlyTeleportSpell(player, true, EMOTE, GFX, 4, (WorldTile) parameters[1]);
 		} else if (componentId == OPTION_2) {
 			if (player.getTeleBlockDelay() < Utils.currentTimeMillis()
-					&& !(player.getControlerManager().getControler() instanceof WildernessControler)) {
+					&& !(player.getControlerManager().getControler() instanceof WildernessController)) {
 				player.getControlerManager().startControler("WildernessControler");
 			}
 			teleported = Magic.sendJewerlyTeleportSpell(player, true, EMOTE, GFX, 4, (WorldTile) parameters[3]);
@@ -56,7 +56,7 @@ public class Transportation extends Dialogue {
 			player.getInventory().refresh(slot);
 		}
 		player.stopAll();
-		player.teleporting(player.getControlerManager().getControler() instanceof WildernessControler ? 10 : 8);
+		player.teleporting(player.getControlerManager().getControler() instanceof WildernessController ? 10 : 8);
 		end();
 	}
 

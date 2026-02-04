@@ -13,7 +13,7 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.minigames.clanwars.RequestController;
-import com.rs.java.game.minigames.clanwars.WarControler;
+import com.rs.java.game.minigames.clanwars.WarController;
 import com.rs.java.game.minigames.duel.DuelArena;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Equipment;
@@ -24,12 +24,12 @@ import com.rs.java.game.player.actions.HomeTeleport;
 import com.rs.java.game.player.actions.WaterFilling.Fill;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
-import com.rs.java.game.player.controlers.CrucibleControler;
-import com.rs.java.game.player.controlers.EdgevillePvPControler;
-import com.rs.java.game.player.controlers.FightCaves;
-import com.rs.java.game.player.controlers.FightKiln;
-import com.rs.java.game.player.controlers.Instance;
-import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controllers.CrucibleController;
+import com.rs.java.game.player.controllers.EdgevillePvPController;
+import com.rs.java.game.player.controllers.FightCaves;
+import com.rs.java.game.player.controllers.FightKiln;
+import com.rs.java.game.player.controllers.Instance;
+import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
@@ -138,8 +138,8 @@ public class Magic {
 
 		case 48:
 			if (player.getControlerManager().getControler() instanceof FfaZone
-					|| player.getControlerManager().getControler() instanceof CrucibleControler
-					|| player.getControlerManager().getControler() instanceof WarControler) {
+					|| player.getControlerManager().getControler() instanceof CrucibleController
+					|| player.getControlerManager().getControler() instanceof WarController) {
 				player.getPackets().sendGameMessage("You cannot teleport out of here.");
 				return;
 			}
@@ -687,7 +687,7 @@ public class Magic {
 			return false;
 		}
 		if (player.getControlerManager().getControler() instanceof FfaZone
-				|| player.getControlerManager().getControler() instanceof CrucibleControler
+				|| player.getControlerManager().getControler() instanceof CrucibleController
 				|| player.getControlerManager().getControler() instanceof FightKiln
 				|| player.getControlerManager().getControler() instanceof FightCaves) {
 			player.getPackets().sendGameMessage("You cannot teleport out of here.");
@@ -873,7 +873,7 @@ public class Magic {
 			return false;
 		}
 		if (player.getControlerManager().getControler() instanceof FfaZone
-				|| player.getControlerManager().getControler() instanceof CrucibleControler
+				|| player.getControlerManager().getControler() instanceof CrucibleController
 				|| player.getControlerManager().getControler() instanceof FightKiln) {
 			player.getPackets().sendGameMessage("You cannot teleport out of here.");
 			return false;
@@ -896,7 +896,7 @@ public class Magic {
 					player.animate(new Animation(4731));
 					stage = 1;
 				} else if (stage == 1) {
-					WorldTile teleTile = player.getControlerManager().getControler() instanceof EdgevillePvPControler
+					WorldTile teleTile = player.getControlerManager().getControler() instanceof EdgevillePvPController
 							&& itemId == 8013 ? pvp : tile;
 					for (int trycount = 0; trycount < 10; trycount++) {
 						teleTile = new WorldTile(tile, 2);
@@ -905,7 +905,7 @@ public class Magic {
 						teleTile = tile;
 					}
 					player.setNextWorldTile(
-							EdgevillePvPControler.isAtPvP(player) ? pvp
+							EdgevillePvPController.isAtPvP(player) ? pvp
 									: teleTile);
 					player.getControlerManager().magicTeleported(ITEM_TELEPORT);
 					if (player.getControlerManager().getControler() == null)
@@ -919,7 +919,7 @@ public class Magic {
 					stage = 2;
 				} else if (stage == 2) {
 					player.setFreezeDelay(-1);
-					if (!(player.getControlerManager().getControler() instanceof EdgevillePvPControler))
+					if (!(player.getControlerManager().getControler() instanceof EdgevillePvPController))
 						player.getControlerManager().forceStop();
 					stop();
 				}
@@ -929,7 +929,7 @@ public class Magic {
 	}
 
 	public static void teleControlersCheck(Player player, WorldTile teleTile) {
-		if (WildernessControler.isAtWild(teleTile))
+		if (WildernessController.isAtWild(teleTile))
 			player.getControlerManager().startControler("WildernessControler");
 		else if (RequestController.inWarRequest(player))
 			player.getControlerManager().startControler("clan_wars_request");

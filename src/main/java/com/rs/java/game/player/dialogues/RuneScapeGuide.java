@@ -1,7 +1,7 @@
 package com.rs.java.game.player.dialogues;
 
 import com.rs.core.cache.defintions.NPCDefinitions;
-import com.rs.java.game.player.controlers.TutorialIsland;
+import com.rs.java.game.player.controllers.TutorialIsland;
 
 public class RuneScapeGuide extends Dialogue {
 

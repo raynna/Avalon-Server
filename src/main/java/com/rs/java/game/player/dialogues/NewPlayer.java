@@ -1,7 +1,7 @@
 package com.rs.java.game.player.dialogues;
 
 import com.rs.Settings;
-import com.rs.java.game.player.controlers.WelcomeTutorial;
+import com.rs.java.game.player.controllers.WelcomeTutorial;
 
 public class NewPlayer extends Dialogue {
 

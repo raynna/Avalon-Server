@@ -7,7 +7,7 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.player.controlers.FightKiln;
+import com.rs.java.game.player.controllers.FightKiln;
 import com.rs.java.utils.Utils;
 
 @SuppressWarnings("serial")

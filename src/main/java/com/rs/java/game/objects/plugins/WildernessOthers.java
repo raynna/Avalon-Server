@@ -8,7 +8,7 @@ import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.content.WildernessObelisk;
-import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.InventoryOptionsHandler;
@@ -23,7 +23,7 @@ public class WildernessOthers extends ObjectPlugin {
 	@Override
 	public boolean processObject(Player player, WorldObject object) {
 		int id = object.getId();
-		if (WildernessControler.isDitch(id)) {
+		if (WildernessController.isDitch(id)) {
 			// if player is outside wilderness -> show dialogue first
 			boolean needsDialogue = false;
 			switch (object.getRotation()) {

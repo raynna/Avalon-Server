@@ -1,9 +1,8 @@
 package com.rs.java.game.player.content.customtab;
 
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.controlers.EdgevillePvPControler;
-import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controllers.EdgevillePvPController;
+import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.HexColours.Colour;
 import com.rs.java.utils.Utils;
@@ -222,8 +221,8 @@ public class SettingsTab extends CustomTab {
                 if (p.getInterfaceManager().containsTab("tab.kdr_tab") && !p.toggles("KDRINTER", false)) {
                     p.getInterfaceManager().closeTab("tab.kdr_tab");
                 } else {
-                    if (WildernessControler.isAtWild(p) || EdgevillePvPControler.isAtBank(p) || EdgevillePvPControler.isAtPvP(p)) {
-                        WildernessControler.showKDRInter(p);
+                    if (WildernessController.isAtWild(p) || EdgevillePvPController.isAtBank(p) || EdgevillePvPController.isAtPvP(p)) {
+                        WildernessController.showKDRInter(p);
                     }
                 }
             }

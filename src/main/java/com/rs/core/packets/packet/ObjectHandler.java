@@ -16,6 +16,7 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.cityhandler.CityEventHandler;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
 import com.rs.java.game.minigames.castlewars.CastleWars;
 import com.rs.java.game.minigames.crucible.Crucible;
@@ -78,9 +79,9 @@ import com.rs.java.game.player.content.KillScoreBoard;
 import com.rs.java.game.player.content.WildernessKills;
 import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.FishingFerretRoom;
 import com.rs.java.game.player.content.shootingstar.ShootingStarAction;
-import com.rs.java.game.player.controlers.Falconry;
-import com.rs.java.game.player.controlers.FightCaves;
-import com.rs.java.game.player.controlers.RecipeForDisaster;
+import com.rs.java.game.player.controllers.Falconry;
+import com.rs.java.game.player.controllers.FightCaves;
+import com.rs.java.game.player.controllers.RecipeForDisaster;
 import com.rs.java.game.player.dialogues.npcs.MiningGuildDwarf;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
@@ -2349,7 +2350,7 @@ public final class ObjectHandler {
                             }
                             player.animate(new Animation(833));
                             player.getInventory().deleteItem(new Item(item.getId(), item.getAmount()));
-                            World.updateGroundItem(item, new WorldTile(object), player, 60);
+                            GroundItems.updateGroundItem(item, new WorldTile(object), player, 60);
                             break;
                         case "anvil":
                             ForgingBar bar = ForgingBar.forId(itemId);

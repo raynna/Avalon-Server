@@ -1,6 +1,6 @@
 package com.rs.java.game.player.dialogues.npcs;
 
-import com.rs.java.game.player.controlers.TutorialIsland;
+import com.rs.java.game.player.controllers.TutorialIsland;
 import com.rs.java.game.player.dialogues.Dialogue;
 
 public class MasterChef extends Dialogue {

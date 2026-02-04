@@ -3,6 +3,7 @@ package com.rs.java.game.player.content.quest.impl.princealirescue.dialogues;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.content.quest.QuestList.Quests;
 import com.rs.java.game.player.content.quest.State.QuestState;
 import com.rs.java.game.player.content.quest.impl.princealirescue.PrinceAliRescue;
@@ -298,7 +299,7 @@ public class Leela extends Dialogue {
 			if(player.getInventory().getFreeSlots() > 0) {
 				player.getInventory().addItem(new Item(PrinceAliRescue.BRONZE_KEY));
 			} else {
-				World.addGroundItem(new Item(PrinceAliRescue.BRONZE_KEY), new WorldTile(player.getX(), player.getY(), player.getPlane()));
+				GroundItems.addGroundItem(new Item(PrinceAliRescue.BRONZE_KEY), new WorldTile(player.getX(), player.getY(), player.getPlane()));
 			}
 			sendDialogue("Leela gives you a copy of the key to the prince's door.");
 			player.getQuestManager().get(Quests.PRINCE_ALI_RESCUE).setStage(4);

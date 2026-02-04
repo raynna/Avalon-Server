@@ -24,7 +24,7 @@ public class FloorItem extends Item {
 	private boolean spawned;
 	private boolean globalPicked;
 	private boolean removed;
-	private final long uid = System.nanoTime(); // or a static incrementing counter
+	private final long uid = System.nanoTime();
 	public long getUid() { return uid; }
 
 	public FloorItem(int id) {

@@ -4,7 +4,7 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.WorldTile;
-import com.rs.java.game.player.controlers.FightCaves;
+import com.rs.java.game.player.controllers.FightCaves;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;

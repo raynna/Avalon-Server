@@ -7,6 +7,7 @@ import com.rs.discord.DiscordAnnouncer.announceGlobalEvent
 import com.rs.java.game.World
 import com.rs.java.game.WorldTile
 import com.rs.java.game.item.Item
+import com.rs.java.game.item.ground.GroundItems
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
@@ -422,14 +423,14 @@ object RandomWorldBossHandler {
                     Msg.world(Msg.RED, "${player.displayName} has received ${item.name} from killing the world boss!")
                 }
             }
-            World.updateGroundItem(item, boss.tile, player, 60, 1)
+            GroundItems.updateGroundItem(item, boss.tile, player, 60, 1)
         }
     }
 
     fun onBossTopDamageReward(boss: WorldBossNPC, player: Player, damage: Int, maxHp: Int) {
         player.message(Msg.topDamager("You were the top damager on ${boss.name} and received an extra reward!"))
         Msg.world(Msg.ORANGE, "${player.displayName} has received a Magic Chest!")
-        World.updateGroundItem(Item("item.magic_chest", 1), boss.tile, player, 60, 1)
+        GroundItems.updateGroundItem(Item("item.magic_chest", 1), boss.tile, player, 60, 1)
     }
 
     @JvmStatic

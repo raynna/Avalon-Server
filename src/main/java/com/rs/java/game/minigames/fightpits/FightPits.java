@@ -12,6 +12,7 @@ import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.fightpits.FightPitsNPC;
 import com.rs.java.game.npc.fightpits.TzKekPits;
@@ -175,7 +176,7 @@ public final class FightPits {
 					int tokkul = (lobby.size() + arena.size()) * 100;
 					tokkul *= Settings.DROP_RATE; // 10x more
 					if (!player.getInventory().addItem(6529, tokkul) && type == 1)
-						World.addGroundItem(new Item(6529, tokkul), new WorldTile(4585, 5076, 0), player, true, 60, 0);
+						GroundItems.addGroundItem(new Item(6529, tokkul), new WorldTile(4585, 5076, 0), player, true, 60, 0);
 				}
 				if (type == 1) {
 					player.lock(5);

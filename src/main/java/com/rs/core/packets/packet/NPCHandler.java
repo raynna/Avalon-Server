@@ -49,7 +49,7 @@ import com.rs.java.game.player.content.ItemSets;
 import com.rs.java.game.player.content.PlayerLook;
 import com.rs.java.game.player.content.customtab.TeleportTab;
 import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.SlidingTilesRoom;
-import com.rs.java.game.player.controlers.Falconry;
+import com.rs.java.game.player.controllers.Falconry;
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.java.game.player.dialogues.npcs.FremennikShipmaster;
 import com.rs.core.tasks.WorldTask;
@@ -59,7 +59,6 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
-import com.rs.kotlin.game.player.command.CommandRegistry;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
 import com.rs.kotlin.tool.WikiApi;
 

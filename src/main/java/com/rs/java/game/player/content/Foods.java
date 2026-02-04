@@ -10,8 +10,7 @@ import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.TickManager;
-import com.rs.java.game.player.controlers.DungeonControler;
+import com.rs.java.game.player.controllers.DungeonController;
 import com.rs.java.utils.Utils;
 
 /**
@@ -700,7 +699,7 @@ public class Foods {
 		}
 		if (player.getHitpoints() >= (player.getMaxHitpoints() + (food.getExtraHP() * 10)))
 			return false;
-		if (player.getControlerManager().getControler() instanceof DungeonControler) {
+		if (player.getControlerManager().getControler() instanceof DungeonController) {
 			player.applyHeal(new Hit(player, food.getHeal() * 10, HitLook.HEALED_DAMAGE));
 		} else {
 			player.heal(food.getHeal() * 10, food.getExtraHP() * 10);

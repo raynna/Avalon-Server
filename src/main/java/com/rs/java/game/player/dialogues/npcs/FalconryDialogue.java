@@ -1,6 +1,6 @@
 package com.rs.java.game.player.dialogues.npcs;
 
-import com.rs.java.game.player.controlers.Falconry;
+import com.rs.java.game.player.controllers.Falconry;
 import com.rs.java.game.player.dialogues.Dialogue;
 
 public class FalconryDialogue extends Dialogue {

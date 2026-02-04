@@ -11,8 +11,8 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.Controler;
-import com.rs.java.game.player.controlers.GodWars;
+import com.rs.java.game.player.controllers.Controller;
+import com.rs.java.game.player.controllers.GodWars;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
@@ -73,8 +73,8 @@ public class GodWarMinion extends NPC {
                         for (Player p : players) {
                             if (p == null)
                                 continue;
-                            Controler controler = p.getControlerManager().getControler();
-                            if (controler instanceof GodWars godControler) {
+                            Controller controller = p.getControlerManager().getControler();
+                            if (controller instanceof GodWars godControler) {
                                 godControler.incrementKillCount(type);
                             }
                         }

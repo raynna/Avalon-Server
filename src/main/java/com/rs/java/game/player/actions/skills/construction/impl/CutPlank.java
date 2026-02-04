@@ -7,7 +7,7 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
 import com.rs.java.game.player.actions.skills.woodcutting.LumberjackOutfit;
-import com.rs.java.game.player.controlers.construction.SawmillController;
+import com.rs.java.game.player.controllers.construction.SawmillController;
 
 
 public class CutPlank extends Action {

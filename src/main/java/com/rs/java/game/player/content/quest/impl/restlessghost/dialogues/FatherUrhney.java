@@ -3,6 +3,7 @@ package com.rs.java.game.player.content.quest.impl.restlessghost.dialogues;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.content.quest.QuestList.Quests;
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.java.game.player.dialogues.Mood;
@@ -256,7 +257,7 @@ public class FatherUrhney extends Dialogue {
                 if(player.getInventory().getFreeSlots() > 0) {
                     player.getInventory().addItem(GHOSTSPEAK_AMULET, 1);
                 } else {
-                    World.addGroundItem(new Item(GHOSTSPEAK_AMULET), new WorldTile(player.getX(), player.getY(), player.getPlane()));
+                    GroundItems.addGroundItem(new Item(GHOSTSPEAK_AMULET), new WorldTile(player.getX(), player.getY(), player.getPlane()));
                 }
                 stageInt = 36;
                 break;

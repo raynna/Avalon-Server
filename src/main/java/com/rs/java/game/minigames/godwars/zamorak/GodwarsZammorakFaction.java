@@ -9,8 +9,8 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.Controler;
-import com.rs.java.game.player.controlers.GodWars;
+import com.rs.java.game.player.controllers.Controller;
+import com.rs.java.game.player.controllers.GodWars;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
@@ -92,9 +92,9 @@ public class GodwarsZammorakFaction extends NPC {
 				} else if (loop >= defs.getDeathDelay()) {
 					if (source instanceof Player) {
 						Player player = (Player) source;
-						Controler controler = player.getControlerManager().getControler();
-						if (controler != null && controler instanceof GodWars) {
-							GodWars godControler = (GodWars) controler;
+						Controller controller = player.getControlerManager().getControler();
+						if (controller != null && controller instanceof GodWars) {
+							GodWars godControler = (GodWars) controller;
 							godControler.incrementKillCount(3);
 						}
 					}

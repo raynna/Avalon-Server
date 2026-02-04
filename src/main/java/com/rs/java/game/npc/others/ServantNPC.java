@@ -6,6 +6,7 @@ import com.rs.java.game.ForceTalk;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Bank;
 import com.rs.java.game.player.Player;
@@ -137,7 +138,7 @@ public class ServantNPC extends NPC {
 							int rotation = kitchen.getRotation();
 							for (int x = 0; x < (rotation == 1 || rotation == 3 ? 2 : 4); x++)
 								for (int y = 0; y < (rotation == 1 || rotation == 3 ? 4 : 2); y++)
-									World.addGroundItem(new Item(builds.length == 6 ? 7736 : builds.length == 5 ? house.getServant().getFoodId() : HouseConstants.BEERS[kitchen.getBuildSlot(Builds.BARRELS)]), diningTable.transform(x, y, 0), null, false, 300);
+									GroundItems.addGroundItem(new Item(builds.length == 6 ? 7736 : builds.length == 5 ? house.getServant().getFoodId() : HouseConstants.BEERS[kitchen.getBuildSlot(Builds.BARRELS)]), diningTable.transform(x, y, 0), null, false, 300);
 							setCantInteract(false);
 							stop();
 						}

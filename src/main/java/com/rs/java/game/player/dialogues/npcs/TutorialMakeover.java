@@ -1,7 +1,7 @@
 package com.rs.java.game.player.dialogues.npcs;
 
 import com.rs.Settings;
-import com.rs.java.game.player.controlers.WelcomeTutorial;
+import com.rs.java.game.player.controllers.WelcomeTutorial;
 import com.rs.java.game.player.dialogues.Dialogue;
 
 public class TutorialMakeover extends Dialogue {

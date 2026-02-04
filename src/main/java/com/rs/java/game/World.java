@@ -8,8 +8,8 @@ import com.rs.Settings;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.thread.CoresManager;
-import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.map.MapUtils;
 import com.rs.java.game.map.MapUtils.Structure;
 import com.rs.java.game.minigames.clanwars.FfaZone;
@@ -40,12 +40,10 @@ import com.rs.java.game.player.OwnedObjectManager;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.BoxAction.HunterNPC;
 import com.rs.java.game.player.actions.skills.mining.LivingRockCavern;
-import com.rs.java.game.player.content.ItemConstants;
-import com.rs.java.game.player.content.Update;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.game.player.content.shootingstar.ShootingStar;
-import com.rs.java.game.player.controlers.EdgevillePvPControler;
-import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controllers.EdgevillePvPController;
+import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.java.game.route.Flags;
 import com.rs.java.game.timer.TimerRepository;
 import com.rs.java.utils.AntiFlood;
@@ -127,7 +125,7 @@ public final class World {
     public static int getPlayersInWilderness() {
         int result = 0;
         for (Player players : World.getPlayers())
-            if ((players.getControlerManager().getControler() instanceof WildernessControler)) {
+            if ((players.getControlerManager().getControler() instanceof WildernessController)) {
                 result++;
             }
         return result;
@@ -145,7 +143,7 @@ public final class World {
     public static int getPlayersInPVP() {
         int result = 0;
         for (Player players : World.getPlayers())
-            if ((players.getControlerManager().getControler() instanceof EdgevillePvPControler)) {
+            if ((players.getControlerManager().getControler() instanceof EdgevillePvPController)) {
                 result++;
             }
         return result;
@@ -1210,7 +1208,7 @@ public final class World {
             @Override
             public void run() {
                 removeObject(object);
-                addGroundItem(new Item(replaceId), object, null, false, 60);
+                GroundItems.addGroundItem(new Item(replaceId), object, null, false, 60);
             }
         }, secondsToTicks((int)(timeMs / 1000)));
     }
@@ -1312,544 +1310,16 @@ public final class World {
             @Override
             public void run() {
                 removeObject(object);
-                addGroundItem(new Item(replaceId), object, null, false, 60);
+                GroundItems.addGroundItem(new Item(replaceId), object, null, false, 60);
             }
         }, secondsToTicks((int)(time / 1000)));
     }
 
-    public static void addGlobalGroundItem(final Item item, final WorldTile tile, final int tick,
-                                           final boolean spawned) {
-        FloorItem floorItem = null;
-        if (item.getDefinitions().isStackable() || item.getDefinitions().isNoted()) {
-            floorItem = World.getRegion(tile.getRegionId())
-                    .getGroundItem(item.getId(), tile, null);
-        }
-        if (floorItem == null) {
-            floorItem = new FloorItem(item, tile, null, false, tick, spawned);
-            final Region region = getRegion(tile.getRegionId());
-            if (floorItem.isGlobalPicked())
-                return;
-            region.getGroundItemsSafe().add(floorItem);
-            int regionId = tile.getRegionId();
-            for (Player player : players) {
-                if (player == null || !player.hasStarted() || player.hasFinished()
-                        || player.getPlane() != tile.getPlane() || !player.getMapRegionsIds().contains(regionId)
-                        || player.getRegionId() != region.getRegionId())
-                    continue;
-                player.getPackets().sendGroundItem(floorItem);
-            }
-        }
-    }
-
-    public static void addGroundItem(final Item item, final WorldTile tile) {
-        addGroundItem(item, tile, null, false, -1, 2, -1);
-    }
-
-    public static void addGroundItem(final Item item, final WorldTile tile, int publicTime) {
-        addGroundItem(item, tile, null, false, -1, 2, publicTime);
-    }
-
-    public static void addGroundItem(final Item item, final WorldTile tile, final Player owner, boolean invisible,
-                                     int hiddenTime) {
-        addGroundItem(item, tile, owner, invisible, hiddenTime, 2, 120);
-    }
-
-    public static void addGlobalGroundItem(final Item item, final WorldTile tile) {
-        addGroundItem(item, tile, null, false, -1, 2, -1);
-    }
-
-    public static FloorItem addGroundItem(final Item item, final WorldTile tile, final Player owner,
-                                          boolean invisible, int hiddenTime, int type) {
-        return addGroundItem(item, tile, owner, invisible, hiddenTime, type, 120);
-    }
-
-    private static void debug(String msg) {
-        System.out.println("[TurnPublic] " + msg);
-    }
-
-
-    public static void turnPublic(FloorItem item, int publicTime) {
-        if (!item.isInvisible())
-            return;
-        if (item.isRemoved())
-            return;
-
-        Region region = getRegion(item.getTile().getRegionId());
-        if (!region.getGroundItemsSafe().contains(item))
-            return;
-
-        Player owner = item.getOwner();
-
-        // Handle attached items
-        int attachedId = ItemConstants.removeAttachedId(item);
-        if (attachedId != -1) {
-
-            WorldTile tile = new WorldTile(
-                    item.getTile().getX(),
-                    item.getTile().getY(),
-                    item.getTile().getPlane()
-            );
-
-            debug("Attached item detected.");
-            debug("Original item id: " + item.getId());
-            debug("Tile X=" + tile.getX() + " Y=" + tile.getY() + " P=" + tile.getPlane());
-            debug("Owner: " + (owner == null ? "null" : owner.getUsername()));
-
-            int attachedId2 = ItemConstants.removeAttachedId2(item);
-
-            debug("Will spawn item1: " + attachedId);
-            debug("Will spawn item2: " + attachedId2);
-
-            // HARD REMOVE
-            World.removeGroundItemInstant(item);
-            debug("Original ground item removed.");
-
-            // SPAWN 1
-            World.addGroundItem(new Item(attachedId, 1), tile, null, false, -1, 0, -1);
-
-            debug("Spawned item1.");
-
-            // SPAWN 2
-            if (attachedId2 != -1) {
-                World.addGroundItem(new Item(attachedId2, 1), tile, null, false, -1, 0, -1);
-                debug("Spawned item2.");
-            }
-
-            return;
-        }
-
-        item.setInvisible(false);
-
-        // Remove player beam if applicable
-        if (owner != null && owner.getBeam() != null && owner.getBeamItem() != null) {
-            if (item.getTile().matches(owner.getBeam()) && owner.getBeamItem().getId() == item.getId()) {
-                owner.setBeam(null);
-                owner.setBeamItem(null);
-            }
-        }
-
-        // Send ground item to other players
-        int regionId = item.getTile().getRegionId();
-        for (Player player : players) {
-            if (player == null || player == owner || !player.hasStarted() || player.hasFinished())
-                continue;
-            if (player.getPlane() != item.getTile().getPlane())
-                continue;
-            if (!player.getMapRegionsIds().contains(regionId))
-                continue;
-            if (!ItemConstants.isTradeable(item))
-                continue;
-
-            player.getPackets().sendGroundItem(item);
-        }
-
-        if (publicTime != -1)
-            removeGroundItem(item, publicTime);
-    }
-
-    private static void broadcastGroundItem(FloorItem item, boolean checkTradeable) {
-        if (item.isRemoved())
-            return;
-        int regionId = item.getTile().getRegionId();
-        for (Player player : players) {
-            if (player == null || !player.hasStarted() || player.hasFinished())
-                continue;
-            if (player.getPlane() != item.getTile().getPlane())
-                continue;
-            if (!player.getMapRegionsIds().contains(regionId))
-                continue;
-            if (checkTradeable && !ItemConstants.isTradeable(item))
-                continue;
-
-            player.getPackets().sendGroundItem(item);
-        }
-    }
-
-
-    public static void addGroundItemForever(Item item, WorldTile tile) {
-        FloorItem floorItem = new FloorItem(item, tile, true);
-        Region region = getRegion(tile.getRegionId());
-        region.getGroundItemsSafe().add(floorItem);
-
-        broadcastGroundItem(floorItem, false);
-    }
-
-    public static FloorItem addGroundItem(Item item, WorldTile tile, Player owner,
-                                          boolean invisible, int hiddenTime, int type, int publicTime) {
-        return addGroundItemInternal(item, tile, owner, invisible, hiddenTime, type, publicTime);
-    }
-
-    private static FloorItem addGroundItemInternal(Item item, WorldTile tile, Player owner,
-                                                   boolean invisible, int hiddenTime, int type, int publicTime) {
-        FloorItem floorItem = new FloorItem(item, tile, owner, false, invisible);
-
-        Region region = getRegion(tile.getRegionId());
-
-        boolean shouldBroadcast = !invisible;
-        boolean shouldTrack = type != 2 || ItemConstants.isTradeable(item) || ItemConstants.turnCoins(item);
-
-        if (shouldTrack) {
-            region.getGroundItemsSafe().add(floorItem);
-        }
-
-        if (invisible && owner != null) {
-            if (type != 2 || ItemConstants.isTradeable(item) || ItemConstants.turnCoins(item))
-                owner.getPackets().sendGroundItem(floorItem);
-        }
-        if (type == 0 && owner != null && owner.inPkingArea()) {
-            hiddenTime = 0;
-        }
-
-        // Public broadcast
-        if (shouldBroadcast) {
-            boolean checkTradeable = (type != 2);
-            broadcastGroundItem(floorItem, checkTradeable);
-            if (publicTime != -1) {
-                removeGroundItem(floorItem, publicTime);
-            }
-        } else if (hiddenTime != -1) {
-            WorldTasksManager.schedule(new WorldTask() {
-                @Override
-                public void run() {
-                    turnPublic(floorItem, publicTime);
-                }
-            }, secondsToTicks(hiddenTime));
-        }
-
-        return floorItem;
-    }
 
     public static int secondsToTicks(int seconds) {
         return Math.max(1, (int) Math.ceil((seconds * 1000d) / Settings.WORLD_CYCLE_TIME));
 
     }
-
-    public static void updateGroundItem(Item item, WorldTile tile, Player owner) {
-        updateGroundItem(item, tile, owner, 60, 0);
-    }
-
-    public static void updateGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime) {
-        updateGroundItem(item, tile, owner, hiddenTime, 0);
-    }
-
-    public static void updateGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime, int type) {
-        FloorItem floorItem = null;
-        if (item.getDefinitions().isStackable() || item.getDefinitions().isNoted()) {
-            floorItem = World.getRegion(tile.getRegionId())
-                    .getGroundItem(item.getId(), tile, owner);
-        }
-        //droptypes, 0 = normal, 1 = personal, 2 = untradeables/hidden for others
-        if (floorItem == null) {
-            spawnAsNewGroundItem(item, tile, owner, hiddenTime, type);
-            return;
-        }
-
-        boolean stackable = floorItem.getDefinitions().isStackable() || floorItem.getDefinitions().isNoted();
-
-        if (stackable) {
-            int total = floorItem.getAmount() + item.getAmount();
-
-            if (total < 0) {
-                int amountCanAdd = Integer.MAX_VALUE - floorItem.getAmount();
-                floorItem.setAmount(Integer.MAX_VALUE);
-                item.setAmount(item.getAmount() - amountCanAdd);
-                addGroundItem(item, tile, owner, owner != null, hiddenTime, type);
-            } else {
-                floorItem.setAmount(total);
-            }
-            for (Player p : World.getPlayers()) {
-                if (p == null || !p.hasStarted() || p.hasFinished())
-                    continue;
-                if (p.getPlane() != tile.getPlane())
-                    continue;
-                if (!p.withinDistance(tile, 64))
-                    continue;
-
-                p.getPackets().sendRemoveGroundItem(floorItem);
-                p.getPackets().sendGroundItem(floorItem);
-            }
-
-            return;
-        }
-        spawnAsNewGroundItem(item, tile, owner, hiddenTime, type);
-    }
-
-    private static void spawnAsNewGroundItem(Item item, WorldTile tile, Player owner, int hiddenTime, int type) {
-        boolean stackable = item.getDefinitions().isStackable() || item.getDefinitions().isNoted();
-
-        if (!stackable && item.getAmount() > 1) {
-            for (int i = 0; i < item.getAmount(); i++) {
-                Item single = item.clone();
-                single.setAmount(1);
-                addGroundItem(single, tile, owner, false, hiddenTime, type);
-            }
-        } else {
-            addGroundItem(item, tile, owner, owner != null, hiddenTime, type);
-        }
-    }
-
-    private static boolean shouldNotifyPlayer(Player player, FloorItem item) {
-        return player != null
-                && player.hasStarted()
-                && !player.hasFinished()
-                && player.getPlane() == item.getTile().getPlane()
-                && player.withinDistance(item.getTile(), 64);
-    }
-
-    public static void removeGroundItemInstant(FloorItem item) {
-        item.setRemoved(true);
-
-        int regionId = item.getTile().getRegionId();
-        Region region = getRegion(regionId);
-
-        boolean removed = region.getGroundItemsSafe().removeIf(fi -> fi == item);
-        if (!removed)
-            return;
-
-        for (Player player : World.getPlayers()) {
-            if (shouldNotifyPlayer(player, item)) {
-                player.getPackets().sendRemoveGroundItem(item);
-            }
-        }
-    }
-
-
-
-    private static void removeGroundItem(final FloorItem item, int seconds) {
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                final int regionId = item.getTile().getRegionId();
-                final Region region = getRegion(regionId);
-
-                boolean removed = region.getGroundItemsSafe().removeIf(fi -> fi == item);
-                if (!removed)
-                    return;
-
-                for (Player player : World.getPlayers()) {
-                    if (shouldNotifyPlayer(player, item)) {
-                        player.getPackets().sendRemoveGroundItem(item);
-                        item.setRemoved(true);
-                        player.refreshSpawnedItems();
-                    }
-                }
-            }
-        }, secondsToTicks(seconds));
-    }
-
-
-
-    public static void removeGroundItem(Player player, FloorItem floorItem) {
-        removeGroundItem(player, floorItem, true);
-    }
-
-    public static boolean removeGroundItem(Player player, final FloorItem floorItem, boolean addToInventory) {
-        final int regionId = floorItem.getTile().getRegionId();
-        final Region region = getRegion(regionId);
-
-        if (player == null) {
-            region.getGroundItemsSafe().removeIf(fi -> fi == floorItem);
-            broadcastRemoveGroundItem(floorItem);
-
-            if (floorItem.isForever()) {
-                scheduleGroundItemRespawn(floorItem);
-            }
-            return false;
-        }
-
-        if (!region.getGroundItemsSafe().contains(floorItem)) return false;
-
-        if (!canPickupItem(player, floorItem)) return false;
-
-        if (floorItem.getId() == 995 && !player.inPkingArea() && !FfaZone.inRiskArea(player)) {
-            return handleCoinPickup(player, floorItem, region, regionId);
-        }
-
-        if (!hasInventorySpace(player, floorItem)) {
-            player.getPackets().sendGameMessage("Not enough space in your inventory.");
-            return false;
-        }
-
-        if (player.isFrozen() && !floorItem.getTile().matches(player.getTile())) {
-            player.animate(new Animation("animation.pickup_floor"));
-        }
-
-        if (addToInventory) {
-            if (floorItem.getId() == 7957)
-                floorItem.setId(1005);
-            player.getInventory().addItem(floorItem);
-        }
-        region.getGroundItemsSafe().removeIf(fi -> fi == floorItem);
-        handleBeamPickup(player, floorItem);
-
-        if (floorItem.isInvisible()) {
-            player.getPackets().sendRemoveGroundItem(floorItem);
-        } else {
-            broadcastRemoveGroundItem(floorItem);
-            if (floorItem.isForever()) {
-                scheduleGroundItemRespawn(floorItem);
-            }
-        }
-
-        return true;
-    }
-
-    private static boolean canPickupItem(Player player, FloorItem item) {
-        if (item.getOwner() != null) {
-            if (!item.getOwner().getUsername().equalsIgnoreCase(player.getUsername()) && player.getPlayerRank().isIronman()) {
-                return sendIronmanRestriction(player);
-            }
-        }
-        if (isDeveloperOnlyItem(item, player)) {
-            player.getPackets().sendGameMessage("This item has been dropped by a developer, therefore you can't pick it up.");
-            return false;
-        }
-        return canPickupClueScroll(player, item);
-    }
-
-    private static boolean sendIronmanRestriction(Player player) {
-        player.getPackets().sendGameMessage("You can't pickup other players items as an Iron " +
-                (player.getAppearence().isMale() ? "Man" : "Woman") + ".");
-        return false;
-    }
-
-    private static boolean isDeveloperOnlyItem(FloorItem item, Player player) {
-        return item.getOwner() != null && item.getOwner().isDeveloper() && !player.isDeveloper();
-    }
-
-    private static boolean canPickupClueScroll(Player player, FloorItem item) {
-        int id = item.getId();
-        switch (id) {
-            case 2677: // easy
-            case 2801: // medium
-            case 2722: // hard
-            case 19043: // elite
-                if (player.getInventory().containsOneItem(id) || player.getBank().getItem(id) != null) {
-                    player.getPackets().sendGameMessage("You can only have one " + getClueTypeName(id) + " clue scroll at a time.");
-                    return false;
-                }
-                break;
-        }
-        return true;
-    }
-
-    private static String getClueTypeName(int id) {
-        switch (id) {
-            case 2677:
-                return "easy";
-            case 2801:
-                return "medium";
-            case 2722:
-                return "hard";
-            case 19043:
-                return "elite";
-            default:
-                return "";
-        }
-    }
-
-    private static boolean hasInventorySpace(Player player, FloorItem item) {
-        int id = item.getId();
-        int amount = item.getAmount();
-        boolean stackable = item.getDefinitions().isStackable() || item.getDefinitions().isNoted();
-
-        if (player.getInventory().getAmountOf(id) == Integer.MAX_VALUE) {
-            return false;
-        }
-        if (!player.getInventory().hasFreeSlots()) {
-            if (stackable && !player.getInventory().containsItem(id, 1)) {
-                return false;
-            } else if (!stackable) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static void broadcastRemoveGroundItem(FloorItem item) {
-        int regionId = item.getTile().getRegionId();
-
-        for (Player player : World.getPlayers()) {
-            if (player == null || !player.hasStarted() || player.hasFinished())
-                continue;
-            if (player.getPlane() != item.getTile().getPlane())
-                continue;
-            if (!player.getMapRegionsIds().contains(regionId))
-                continue;
-
-            player.getPackets().sendRemoveGroundItem(item);
-        }
-    }
-
-
-    private static void scheduleGroundItemRespawn(FloorItem item) {
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                addGroundItemForever(item, item.getTile());
-            }
-        }, secondsToTicks(60));
-    }
-
-    private static void handleBeamPickup(Player player, FloorItem item) {
-        if (player.getBeam() != null && player.getBeamItem() != null) {
-            if (item.getTile().matches(player.getBeam()) && player.getBeamItem().getId() == item.getId()) {
-                World.sendGraphics(player, new Graphics(-1, 0, 0), new WorldTile(item.getTile()));
-                player.setBeam(null);
-                player.setBeamItem(null);
-            }
-        }
-    }
-
-    private static boolean handleCoinPickup(Player player, FloorItem item, Region region, int regionId) {
-        int amount = item.getAmount();
-        int pouchTotal = player.getMoneyPouch().getTotal();
-        int coinsInventory = player.getInventory().getNumberOf(995);
-
-        if (pouchTotal == Integer.MAX_VALUE && coinsInventory == Integer.MAX_VALUE) {
-            player.getPackets().sendGameMessage("You don't have enough space to hold more coins.");
-            return false;
-        }
-
-        int canAdd = Integer.MAX_VALUE - pouchTotal;
-        int toPouch = Math.min(amount, canAdd);
-        int leftover = amount - toPouch;
-
-        if (toPouch > 0) {
-            player.getMoneyPouch().setTotal(pouchTotal + toPouch);
-            player.getPackets().sendRunScript(5561, 1, toPouch);
-            player.getMoneyPouch().refresh();
-            player.getPackets().sendGameMessage(
-                    toPouch == 1 ? "One coin has been added to your money pouch." :
-                            Utils.getFormattedNumber(toPouch, ',') + " coins have been added to your money pouch.");
-        }
-
-        if (leftover > 0) {
-            if (!player.getInventory().hasFreeSlots() && !player.getInventory().containsOneItem(995)) {
-                player.getPackets().sendGameMessage("You don't have enough inventory space.");
-                return false;
-            }
-            if (player.getInventory().getNumberOf(995) + leftover < 0) {
-                int invCanAdd = Integer.MAX_VALUE - player.getInventory().getNumberOf(995);
-                player.getInventory().addItem(995, invCanAdd);
-                item.setAmount(leftover - invCanAdd);
-                player.getPackets().sendRemoveGroundItem(item);
-                player.getPackets().sendGroundItem(item);
-                return false;
-            }
-            player.getInventory().addItem(995, leftover);
-        }
-
-        region.getGroundItemsSafe().removeIf(fi -> fi == item);
-        if (item.isInvisible()) {
-            player.getPackets().sendRemoveGroundItem(item);
-        } else {
-            broadcastRemoveGroundItem(item);
-            if (item.isForever()) scheduleGroundItemRespawn(item);
-        }
-        return true;
-    }
-
 
     public static void sendObjectAnimation(WorldObject object, Animation animation) {
         sendObjectAnimation(null, object, animation);
@@ -2224,11 +1694,11 @@ public final class World {
 
 
     public static boolean inWilderness(WorldTile tile) {
-        return WildernessControler.isAtWild(tile);
+        return WildernessController.isAtWild(tile);
     }
 
     public static boolean isPvpArea(WorldTile tile) {
-        return WildernessControler.isAtWild(tile) || EdgevillePvPControler.isAtPvP(tile);
+        return WildernessController.isAtWild(tile) || EdgevillePvPController.isAtPvP(tile);
     }
 
     private static final EntityList<Player> lobbyPlayers = new EntityList<>(Settings.PLAYERS_LIMIT);

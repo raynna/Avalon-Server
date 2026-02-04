@@ -1,6 +1,6 @@
 package com.rs.java.game.player.dialogues;
 
-import com.rs.java.game.player.controlers.construction.SawmillController;
+import com.rs.java.game.player.controllers.construction.SawmillController;
 
 public class Overseer extends Dialogue {
 

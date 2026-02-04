@@ -8,14 +8,14 @@ import com.rs.java.game.Hit;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.dungeonnering.DungeonNPC;
+import com.rs.java.game.npc.dungeoneering.DungeonNPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.game.player.content.dungeoneering.DungeonUtils;
 import com.rs.java.game.player.content.dungeoneering.VisibleRoom;
 import com.rs.java.game.player.content.dungeoneering.rooms.PuzzleRoom;
-import com.rs.java.game.player.controlers.DungeonControler;
+import com.rs.java.game.player.controllers.DungeonController;
 import com.rs.java.utils.Utils;
 
 public class SlidingTilesRoom extends PuzzleRoom {
@@ -125,7 +125,7 @@ public class SlidingTilesRoom extends PuzzleRoom {
 	}
 
 	public static boolean handleSlidingBlock(Player player, NPC npc) {
-		if (!npc.getDefinitions().name.equals("Sliding block") || player.getControlerManager().getControler() == null || !(player.getControlerManager().getControler() instanceof DungeonControler)) {
+		if (!npc.getDefinitions().name.equals("Sliding block") || player.getControlerManager().getControler() == null || !(player.getControlerManager().getControler() instanceof DungeonController)) {
 			return false;
 		}
 		DungeonManager manager = player.getDungManager().getParty().getDungeon();

@@ -6,6 +6,7 @@ import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
 import com.rs.java.game.World
 import com.rs.java.game.item.Item
+import com.rs.java.game.item.ground.GroundItems
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
@@ -276,7 +277,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 attacker.equipment.decreaseItem(Equipment.SLOT_WEAPON.toInt(), 1)
                 attacker.appearence.generateAppearenceData()
                 if (!Utils.roll(1, 3))
-                    World.updateGroundItem(Item(weapon.id, 1), defender.tile, attacker);
+                    GroundItems.updateGroundItem(Item(weapon.id, 1), defender.tile, attacker);
                 return true
             }
         }
@@ -350,7 +351,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
     private fun dropAmmoOnGround() {
         val ammoId = attacker.getEquipment().ammoId
         if (!Utils.roll(1, 3))
-            World.updateGroundItem(Item(ammoId, 1), defender.tile, attacker);
+            GroundItems.updateGroundItem(Item(ammoId, 1), defender.tile, attacker);
     }
 
     override fun getHitDelay(): Int {

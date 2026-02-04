@@ -24,8 +24,9 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.map.MapBuilder;
-import com.rs.java.game.npc.dungeonnering.*;
+import com.rs.java.game.npc.dungeoneering.*;
 import com.rs.java.game.player.OwnedObjectManager;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
@@ -36,7 +37,7 @@ import com.rs.java.game.player.content.dungeoneering.rooms.HandledPuzzleRoom;
 import com.rs.java.game.player.content.dungeoneering.rooms.StartRoom;
 import com.rs.java.game.player.content.dungeoneering.rooms.puzzles.PoltergeistRoom;
 import com.rs.java.game.player.content.dungeoneering.skills.DungeoneeringFishing;
-import com.rs.java.game.player.controlers.DungeonControler;
+import com.rs.java.game.player.controllers.DungeonController;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.*;
@@ -602,8 +603,8 @@ public class DungeonManager {
 	}
 
 	public void sendSettings(Player player) {
-		if (player.getControlerManager().getControler() instanceof DungeonControler)
-			((DungeonControler) player.getControlerManager().getControler()).reset();
+		if (player.getControlerManager().getControler() instanceof DungeonController)
+			((DungeonController) player.getControlerManager().getControler()).reset();
 		else {
 			player.getControlerManager().startControler("DungeonControler", DungeonManager.this);
 			player.setForceMultiArea(true);
@@ -643,14 +644,14 @@ public class DungeonManager {
 			for (Item item : player.getEquipment().getItems().getContainerItems()) {
 				if (item == null || !ItemConstants.isTradeable(item))
 					continue;
-				World.addGroundItem(item, new WorldTile(player));
+				GroundItems.addGroundItem(item, new WorldTile(player));
 			}
 			for (Item item : player.getInventory().getItems().getContainerItems()) {
 				if (item == null || !ItemConstants.isTradeable(item))
 					continue;
 				if (hasLoadedNoRewardScreen() & item.getId() == DungeonConstants.GROUP_GATESTONE)
 					setGroupGatestone(new WorldTile(player));
-				World.addGroundItem(item, new WorldTile(player));
+				GroundItems.addGroundItem(item, new WorldTile(player));
 			}
 		}
 		player.getEquipment().reset();
@@ -837,7 +838,7 @@ public class DungeonManager {
 	public void spawnItem(RoomReference reference, Item item, int x, int y) {
 		final int mapRotation = dungeon.getRoom(reference).getRotation();
 		int[] coords = translate(x, y, mapRotation, 1, 1, 0);
-		World.addGroundItem(item, new WorldTile(((boundChuncks[0] * 8) + reference.getX() * 16) + coords[0], ((boundChuncks[1] * 8) + reference.getY() * 16) + coords[1], 0));
+		GroundItems.addGroundItem(item, new WorldTile(((boundChuncks[0] * 8) + reference.getX() * 16) + coords[0], ((boundChuncks[1] * 8) + reference.getY() * 16) + coords[1], 0));
 	}
 
 	public boolean isFloorFree(RoomReference reference, int x, int y) {
@@ -1185,7 +1186,7 @@ public class DungeonManager {
 	public Integer[] getAchievements(Player player) { //TODO
 		List<Integer> achievements = new ArrayList<Integer>();
 
-		DungeonControler controller = (DungeonControler) player.getControlerManager().getControler();
+		DungeonController controller = (DungeonController) player.getControlerManager().getControler();
 
 		//solo achievements
 		if (controller.isKilledBossWithLessThan10HP())
@@ -1208,7 +1209,7 @@ public class DungeonManager {
 			for (Player teamMate : party.getTeam()) {
 				if (teamMate == player)
 					continue;
-				DungeonControler tmController = (DungeonControler) teamMate.getControlerManager().getControler();
+				DungeonController tmController = (DungeonController) teamMate.getControlerManager().getControler();
 				if (tmController.getMeleeDamage() >= controller.getMeleeDamage())
 					mostMeleeDmg = false;
 				if (tmController.getMageDamage() >= controller.getMageDamage())
@@ -1733,8 +1734,8 @@ public class DungeonManager {
 	public void showBar(RoomReference reference, String name, int percentage) {
 		for (Player player : party.getTeam()) {
 			RoomReference current = getCurrentRoomReference(player);
-			if (reference.getX() == current.getX() && reference.getY() == current.getY() && player.getControlerManager().getControler() instanceof DungeonControler) {
-				DungeonControler c = (DungeonControler) player.getControlerManager().getControler();
+			if (reference.getX() == current.getX() && reference.getY() == current.getY() && player.getControlerManager().getControler() instanceof DungeonController) {
+				DungeonController c = (DungeonController) player.getControlerManager().getControler();
 				c.showBar(true, name);
 				c.sendBarPercentage(percentage);
 			}
@@ -1744,8 +1745,8 @@ public class DungeonManager {
 	public void hideBar(RoomReference reference) {
 		for (Player player : party.getTeam()) {
 			RoomReference current = getCurrentRoomReference(player);
-			if (reference.getX() == current.getX() && reference.getY() == current.getY() && player.getControlerManager().getControler() instanceof DungeonControler) {
-				DungeonControler c = (DungeonControler) player.getControlerManager().getControler();
+			if (reference.getX() == current.getX() && reference.getY() == current.getY() && player.getControlerManager().getControler() instanceof DungeonController) {
+				DungeonController c = (DungeonController) player.getControlerManager().getControler();
 				c.showBar(false, null);
 			}
 		}

@@ -10,8 +10,8 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Ranks.Rank;
-import com.rs.java.game.player.controlers.CrucibleControler;
-import com.rs.java.game.player.controlers.WildernessControler;
+import com.rs.java.game.player.controllers.CrucibleController;
+import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.java.utils.Utils;
 
 /**
@@ -68,8 +68,8 @@ public class Ironman implements Serializable {
 
 	public void WildernessDeath(Player player, Player killer) {
 		if (player.getPlayerRank().isHardcore()) {
-			if (player.getControlerManager().getControler() instanceof WildernessControler
-					|| player.getControlerManager().getControler() instanceof CrucibleControler) {
+			if (player.getControlerManager().getControler() instanceof WildernessController
+					|| player.getControlerManager().getControler() instanceof CrucibleController) {
 				takeLife(player, killer);
 			}
 		}

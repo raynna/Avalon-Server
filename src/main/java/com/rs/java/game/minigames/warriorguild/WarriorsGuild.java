@@ -19,14 +19,14 @@ import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.controlers.Controler;
+import com.rs.java.game.player.controllers.Controller;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.combat.CombatAnimations;
 
-public class WarriorsGuild extends Controler {
+public class WarriorsGuild extends Controller {
 
 	public transient static WarriorTimer timer;
 	public transient static int killedCyclopses;

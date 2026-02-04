@@ -7,6 +7,7 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
@@ -450,7 +451,7 @@ public class Cooking extends Action {
 				if (player.getInventory().hasFreeSlots())
 					player.getInventory().addItem(cook.getProduct().getId(), cook.getProduct().getAmount());
 				else
-					World.updateGroundItem(new Item(cook.getProduct().getId(), 1), player, player);
+					GroundItems.updateGroundItem(new Item(cook.getProduct().getId(), 1), player, player);
 				player.getSkills().addXp(Skills.COOKING, cook.getXp());
 			}
 			if (cook.getRawItem().getId() == 327)

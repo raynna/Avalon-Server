@@ -10,8 +10,9 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.FloorItem;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.npc.dungeonnering.DungeonFishSpot;
-import com.rs.java.game.npc.dungeonnering.DungeonNPC;
+import com.rs.java.game.item.ground.GroundItems;
+import com.rs.java.game.npc.dungeoneering.DungeonFishSpot;
+import com.rs.java.game.npc.dungeoneering.DungeonNPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
@@ -19,7 +20,7 @@ import com.rs.java.game.player.content.dungeoneering.VisibleRoom;
 import com.rs.java.game.player.content.dungeoneering.rooms.PuzzleRoom;
 import com.rs.java.game.player.content.dungeoneering.skills.DungeoneeringFishing;
 import com.rs.java.game.player.content.dungeoneering.skills.DungeoneeringFishing.Fish;
-import com.rs.java.game.player.controlers.DungeonControler;
+import com.rs.java.game.player.controllers.DungeonController;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
@@ -84,12 +85,12 @@ public class FishingFerretRoom extends PuzzleRoom {
 	}
 
 	private void removeVileFish() {
-		World.removeGroundItem(null, vileFishes.remove(0));
+		GroundItems.removeGroundItem(null, vileFishes.remove(0));
 	}
 
 	public void removeAllVileFish() {
 		for (FloorItem fish : vileFishes)
-			World.removeGroundItem(null, fish);
+			GroundItems.removeGroundItem(null, fish);
 		vileFishes.clear();
 	}
 
@@ -146,7 +147,7 @@ public class FishingFerretRoom extends PuzzleRoom {
 	}
 	
 	public static boolean handleFerretThrow(final Player player, final WorldObject object, final Item item) {
-		if (!object.getDefinitions().name.equals("Tile") && !object.getDefinitions().name.equals("Pressure plate") || item.getId() != VILE_FISH || player.getControlerManager().getControler() == null || !(player.getControlerManager().getControler() instanceof DungeonControler)) {
+		if (!object.getDefinitions().name.equals("Tile") && !object.getDefinitions().name.equals("Pressure plate") || item.getId() != VILE_FISH || player.getControlerManager().getControler() == null || !(player.getControlerManager().getControler() instanceof DungeonController)) {
 			return false;
 		}
 		DungeonManager manager = player.getDungManager().getParty().getDungeon();
@@ -180,7 +181,7 @@ public class FishingFerretRoom extends PuzzleRoom {
 			@Override
 			public void run() {
 				World.sendGraphics(player, new Graphics(2523), object);
-				World.addGroundItem(item, object, null, false, 0, 2, 40);
+				GroundItems.addGroundItem(item, object, null, false, 0, 2, 40);
 				puzzle.getVileFishes().add(World.getRegion(player.getRegionId()).getGroundItem(item.getId(), object, player));
 			}
 		}, 2);

@@ -7,6 +7,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.npc.CombatEventNPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
@@ -565,7 +566,7 @@ public final class Woodcutting extends Action {
                 if (player.getInventory().hasFreeSlots())
                     player.getInventory().addItem(definitions.getLogsId(), 1);
                 else
-                    World.updateGroundItem(new Item(definitions.getLogsId(), 1), player, player);
+                    GroundItems.updateGroundItem(new Item(definitions.getLogsId(), 1), player, player);
                 totalXp *= 2;
             }
         }

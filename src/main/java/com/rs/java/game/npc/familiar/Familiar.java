@@ -9,6 +9,7 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.glacior.Glacyte;
 import com.rs.java.game.player.Player;
@@ -467,7 +468,7 @@ public abstract class Familiar extends NPC implements Serializable {
 				if (owner.getInventory().hasFreeSlots())
 					owner.getInventory().addItem(Summoning.getScrollId(pouch.getRealPouchId()), owner.storedScrolls);
 				else
-					World.updateGroundItem(new Item(Summoning.getScrollId(pouch.getRealPouchId()), owner.storedScrolls),
+					GroundItems.updateGroundItem(new Item(Summoning.getScrollId(pouch.getRealPouchId()), owner.storedScrolls),
 							new WorldTile(owner), owner);
 				owner.storedScrolls = 0;
 			}

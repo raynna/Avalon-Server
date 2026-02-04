@@ -1,8 +1,8 @@
 package com.rs.java.game.player.dialogues.dungeoneering;
 
 import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
-import com.rs.java.game.player.controlers.Controler;
-import com.rs.java.game.player.controlers.DungeonControler;
+import com.rs.java.game.player.controllers.Controller;
+import com.rs.java.game.player.controllers.DungeonController;
 import com.rs.java.game.player.dialogues.Dialogue;
 
 public class DestroyCurrentStone extends Dialogue {
@@ -24,9 +24,9 @@ public class DestroyCurrentStone extends Dialogue {
 			stage = 0;
 		} else if (stage == 0) {
 			if (componentId == OPTION_1) {
-				Controler c = player.getControlerManager().getControler();
-				if (c != null && c instanceof DungeonControler) {
-					DungeonControler dc = (DungeonControler) c;
+				Controller c = player.getControlerManager().getControler();
+				if (c != null && c instanceof DungeonController) {
+					DungeonController dc = (DungeonController) c;
 					dc.removeCurrentGatestone();
 					dc.addGatestone();
 				}

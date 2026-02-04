@@ -4,7 +4,7 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.java.game.npc.dungeonnering.FleshspoilerHaasghenahk;
+import com.rs.java.game.npc.dungeoneering.FleshspoilerHaasghenahk;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 

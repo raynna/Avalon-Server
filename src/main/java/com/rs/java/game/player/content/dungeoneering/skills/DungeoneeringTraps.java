@@ -3,7 +3,7 @@ package com.rs.java.game.player.content.dungeoneering.skills;
 import com.rs.java.game.Animation;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.dungeonnering.MastyxTrap;
+import com.rs.java.game.npc.dungeoneering.MastyxTrap;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;

@@ -3,6 +3,7 @@ package com.rs.java.game.player.npcdrops;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
@@ -52,7 +53,7 @@ public class CasketDrops {
 		if (drop == null)
 			return;
 		player.getPackets().sendGameMessage("You recieve a casket loot!");
-		World.addGroundItem(new Item(drop.getItemId(), 1),
+		GroundItems.addGroundItem(new Item(drop.getItemId(), 1),
 				new WorldTile(npc.getCoordFaceX(size), npc.getCoordFaceY(size), npc.getPlane()), player, true, 60, 0);
 	}
 

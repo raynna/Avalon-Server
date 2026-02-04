@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 import com.rs.java.game.World;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 
@@ -222,7 +223,7 @@ public class MoneyPouch implements Serializable {
 				}
 				amount -= spaceLeft;
 				if (amount > 0) {
-					World.updateGroundItem(new Item(995, amount), player, player);
+					GroundItems.updateGroundItem(new Item(995, amount), player, player);
 				}
 			} else {
 				player.getInventory().addItem(new Item(995, amount));
@@ -247,7 +248,7 @@ public class MoneyPouch implements Serializable {
 
 		if (total + amount < 0) { // overflow
 			player.getPackets().sendGameMessage("Your money pouch can't hold that much cash, cash was dropped on the ground.");
-			World.updateGroundItem(new Item(995, amount), player, player, 60, 1);
+			GroundItems.updateGroundItem(new Item(995, amount), player, player, 60, 1);
 			return;
 		}
 

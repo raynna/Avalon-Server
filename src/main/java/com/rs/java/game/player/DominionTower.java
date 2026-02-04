@@ -12,6 +12,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.map.MapBuilder;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.cutscenes.Cutscene;
@@ -312,7 +313,7 @@ public final class DominionTower implements Serializable {
                     player.getPackets().sendVoice(7882);
                 } else if (count == 8) {
                     if (nextBossIndex == 47) {
-                        World.addGroundItem(new Item(2402), new WorldTile(getBaseX() + 26, getBaseY() + 33, 2));
+                        GroundItems.addGroundItem(new Item(2402), new WorldTile(getBaseX() + 26, getBaseY() + 33, 2));
                     }
                     player.closeInterfaces();
                     player.getPackets().sendResetCamera();

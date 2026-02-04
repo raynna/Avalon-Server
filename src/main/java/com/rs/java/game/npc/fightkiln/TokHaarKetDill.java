@@ -5,7 +5,7 @@ import com.rs.java.game.Hit;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.FightKiln;
+import com.rs.java.game.player.controllers.FightKiln;
 
 @SuppressWarnings("serial")
 public class TokHaarKetDill extends FightKilnNPC {

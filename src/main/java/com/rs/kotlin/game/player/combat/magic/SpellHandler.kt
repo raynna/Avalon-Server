@@ -19,10 +19,10 @@ import com.rs.java.game.player.actions.combat.modernspells.BonesTo
 import com.rs.java.game.player.actions.combat.modernspells.Charge
 import com.rs.java.game.player.actions.combat.modernspells.ChargeOrb
 import com.rs.java.game.player.actions.skills.crafting.Enchanting
-import com.rs.java.game.player.controlers.CrucibleControler
-import com.rs.java.game.player.controlers.EdgevillePvPControler
-import com.rs.java.game.player.controlers.FightCaves
-import com.rs.java.game.player.controlers.FightKiln
+import com.rs.java.game.player.controllers.CrucibleController
+import com.rs.java.game.player.controllers.EdgevillePvPController
+import com.rs.java.game.player.controllers.FightCaves
+import com.rs.java.game.player.controllers.FightKiln
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.CombatAction
 
@@ -440,7 +440,7 @@ object SpellHandler {
         spell: Spell?,
         tile: WorldTile
     ) {
-        if (player.controlerManager.controler.let { it is FfaZone || it is CrucibleControler ||
+        if (player.controlerManager.controler.let { it is FfaZone || it is CrucibleController ||
                     it is FightKiln || it is FightCaves }) {
             player.packets.sendGameMessage("You cannot teleport out of here.")
             return
@@ -487,7 +487,7 @@ object SpellHandler {
                     if (spell.name.contains(
                             "home",
                             ignoreCase = true
-                        ) && (EdgevillePvPControler.isAtPvP(player) || EdgevillePvPControler.isAtBank(player))
+                        ) && (EdgevillePvPController.isAtPvP(player) || EdgevillePvPController.isAtBank(player))
                     ) {
                         teleTile = WorldTile(85, 80, 0)
                     }

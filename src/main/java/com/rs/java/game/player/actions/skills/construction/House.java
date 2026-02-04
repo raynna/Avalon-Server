@@ -29,7 +29,7 @@ import com.rs.java.game.player.actions.skills.construction.HouseConstants.POHLoc
 import com.rs.java.game.player.actions.skills.construction.HouseConstants.Roof;
 import com.rs.java.game.player.actions.skills.construction.HouseConstants.Room;
 import com.rs.java.game.player.actions.skills.construction.HouseConstants.Servant;
-import com.rs.java.game.player.controlers.Controler;
+import com.rs.java.game.player.controllers.Controller;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Logger;
@@ -750,12 +750,12 @@ public class House implements Serializable {
 	}
 
 	public static void leaveHouse(Player player) {
-		Controler controller = player.getControlerManager().getControler();
-		if (controller == null || !(controller instanceof HouseControler)) {
+		Controller controller = player.getControlerManager().getControler();
+		if (controller == null || !(controller instanceof HouseController)) {
 			player.getPackets().sendGameMessage("You're not in a house.");
 			return;
 		}
-		((HouseControler) controller).getHouse().leaveHouse(player, KICKED);
+		((HouseController) controller).getHouse().leaveHouse(player, KICKED);
 	}
 
 	/*

@@ -3,6 +3,7 @@ package com.rs.java.game.player.content.quest.impl.piratestreasure.dialogues;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.content.quest.QuestList.Quests;
 import com.rs.java.game.player.content.quest.State.QuestState;
 import com.rs.java.game.player.content.quest.impl.piratestreasure.PiratesTreasure;
@@ -204,7 +205,7 @@ public class RedbeardFrank extends Dialogue {
                         player.getQuestManager().get(Quests.PIRATES_TREASURE).setStage(7);
                         player.getInventory().addItem(PiratesTreasure.CHEST_KEY, 1);
                     } else {
-                        World.addGroundItem(new Item(PiratesTreasure.CHEST_KEY), new WorldTile(player));
+                        GroundItems.addGroundItem(new Item(PiratesTreasure.CHEST_KEY), new WorldTile(player));
                     }
                     stageInt = 17;
                     break;
@@ -249,7 +250,7 @@ public class RedbeardFrank extends Dialogue {
                 case 22:
                     sendHandedItem(PiratesTreasure.CHEST_KEY, "Frank hands you a chest key.");
                     if(player.getInventory().getFreeSlots() < 1) {
-                		World.addGroundItem(new Item(PiratesTreasure.CHEST_KEY), new WorldTile(player));
+                        GroundItems.addGroundItem(new Item(PiratesTreasure.CHEST_KEY), new WorldTile(player));
                 		stageInt = 23;
                 	} else {
                 		player.getInventory().addItem(PiratesTreasure.CHEST_KEY, 1);

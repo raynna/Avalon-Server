@@ -37,10 +37,9 @@ import com.rs.java.game.player.actions.combat.lunarspells.TuneBaneOre;
 import com.rs.java.game.player.actions.combat.lunarspells.Vengeance;
 import com.rs.java.game.player.actions.combat.lunarspells.VengeanceGroup;
 import com.rs.java.game.player.actions.combat.lunarspells.VengeanceOther;
-import com.rs.java.game.player.content.customtab.TeleportTab;
-import com.rs.java.game.player.controlers.CrucibleControler;
-import com.rs.java.game.player.controlers.FightCaves;
-import com.rs.java.game.player.controlers.FightKiln;
+import com.rs.java.game.player.controllers.CrucibleController;
+import com.rs.java.game.player.controllers.FightCaves;
+import com.rs.java.game.player.controllers.FightKiln;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
@@ -742,7 +741,7 @@ public class LunarMagicks {
                                                   int upGraphicId, final int downGraphicId, final double xp, final WorldTile tile, int delay,
                                                   final boolean randomize) {
         if (player.getControlerManager().getControler() instanceof FfaZone
-                || player.getControlerManager().getControler() instanceof CrucibleControler
+                || player.getControlerManager().getControler() instanceof CrucibleController
                 || player.getControlerManager().getControler() instanceof FightKiln
                 || player.getControlerManager().getControler() instanceof FightCaves) {
             player.getPackets().sendGameMessage("You cannot teleport out of here.");

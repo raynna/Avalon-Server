@@ -3,6 +3,7 @@ package com.rs.java.game.player.dialogues;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 
 public class BarrowDrop extends Dialogue {
 
@@ -31,13 +32,13 @@ public class BarrowDrop extends Dialogue {
 			int brokenItem = player.getChargeManager().breakItem(item);
 			if (brokenItem != -1) {
 				item.setId(brokenItem);
-				World.addGroundItem(item, new WorldTile(player), player, true, 60);
+				GroundItems.addGroundItem(item, new WorldTile(player), player, true, 60);
 				player.message("Your " + item.getName() + " breaks as it hits the ground.");
 				player.getPackets().sendSound(4500, 0, 1);
 				end();
 				return;
 			}
-			World.addGroundItem(item, new WorldTile(player), player, true, 60);
+			GroundItems.addGroundItem(item, new WorldTile(player), player, true, 60);
 		}
 		end();
 	}

@@ -11,7 +11,7 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.FadingScreen;
-import com.rs.java.game.player.controlers.SorceressGarden;
+import com.rs.java.game.player.controllers.SorceressGarden;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 

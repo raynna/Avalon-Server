@@ -6,7 +6,7 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
-import com.rs.java.game.npc.dungeonnering.WorldGorgerShukarhazh;
+import com.rs.java.game.npc.dungeoneering.WorldGorgerShukarhazh;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.utils.Utils;

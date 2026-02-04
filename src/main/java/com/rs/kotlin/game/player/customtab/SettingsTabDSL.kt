@@ -2,8 +2,8 @@
 package com.rs.kotlin.game.player.customtab
 
 import com.rs.java.game.player.Player
-import com.rs.java.game.player.controlers.EdgevillePvPControler
-import com.rs.java.game.player.controlers.WildernessControler
+import com.rs.java.game.player.controllers.EdgevillePvPController
+import com.rs.java.game.player.controllers.WildernessController
 import com.rs.java.utils.HexColours
 import com.rs.java.utils.HexColours.Colour
 import com.rs.java.utils.Utils
@@ -83,13 +83,13 @@ object SettingsTabDSL {
         ) { p ->
             p.toggles.put("KDRINTER", !p.toggles("KDRINTER", false))
             val enabled = p.toggles("KDRINTER", false)
-            val openNow = WildernessControler.isAtWild(p)
-                || EdgevillePvPControler.isAtBank(p)
-                || EdgevillePvPControler.isAtPvP(p)
+            val openNow = WildernessController.isAtWild(p)
+                || EdgevillePvPController.isAtBank(p)
+                || EdgevillePvPController.isAtPvP(p)
             if (!enabled && p.interfaceManager.containsTab(10)) {
                 p.interfaceManager.closeTab(p.interfaceManager.isResizableScreen, 10)
             } else if (enabled && openNow) {
-                WildernessControler.showKDRInter(p)
+                WildernessController.showKDRInter(p)
             }
         }
 

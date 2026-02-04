@@ -3,7 +3,7 @@ package com.rs.java.game.player.content.dungeoneering.rooms.puzzles;
 import com.rs.java.game.Animation;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.dungeonnering.DungeonNPC;
+import com.rs.java.game.npc.dungeoneering.DungeonNPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
 import com.rs.java.game.player.content.dungeoneering.rooms.PuzzleRoom;

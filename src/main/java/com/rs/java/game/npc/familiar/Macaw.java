@@ -5,6 +5,7 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.herblore.HerbCleaning.Herbs;
 import com.rs.java.game.player.actions.skills.summoning.Summoning.Pouch;
@@ -56,7 +57,7 @@ public class Macaw extends Familiar {
 			herb = Herbs.values()[Utils.random(Herbs.values().length)];
 		else
 			herb = Herbs.values()[Utils.getRandom(3)];
-		World.addGroundItem(new Item(herb.getHerbId(), 1), player);
+		GroundItems.addGroundItem(new Item(herb.getHerbId(), 1), player);
 		return true;
 	}
 }

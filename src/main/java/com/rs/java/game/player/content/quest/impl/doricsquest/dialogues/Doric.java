@@ -4,6 +4,7 @@ package com.rs.java.game.player.content.quest.impl.doricsquest.dialogues;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.content.quest.Quest;
 import com.rs.java.game.player.content.quest.QuestList.Quests;
 import com.rs.java.game.player.content.quest.State.QuestState;
@@ -136,7 +137,7 @@ public class Doric extends Dialogue {
 			player.getQuestManager().get(Quests.DORICS_QUEST).setState(QuestState.STARTED);
 			player.reset();
 			if (!player.getInventory().hasFreeSlots()) {
-				World.addGroundItem(PICKAXE, new WorldTile(player));
+				GroundItems.addGroundItem(PICKAXE, new WorldTile(player));
 			}
 			sendPlayerChat(Mood.NORMAL, "Certainly, I'll be right back!");
 			stageInt = 17;

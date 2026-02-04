@@ -5,14 +5,14 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.quest.QuestList.Quests;
-import com.rs.java.game.player.content.quest.impl.demonslayer.DelrithControler;
+import com.rs.java.game.player.content.quest.impl.demonslayer.DelrithController;
 
 @SuppressWarnings("serial")
 public class Delrith extends NPC {
 
-	private DelrithControler delrith;
+	private DelrithController delrith;
 
-	public Delrith(int id, WorldTile tile, DelrithControler delrith) {
+	public Delrith(int id, WorldTile tile, DelrithController delrith) {
 		super(id, tile, -1, true, true);
 		this.delrith = delrith;
 	}

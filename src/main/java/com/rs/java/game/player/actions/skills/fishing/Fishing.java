@@ -7,6 +7,7 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.npc.CombatEventNPC;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
@@ -291,7 +292,7 @@ public class Fishing extends Action {
 			if (player.getInventory().hasFreeSlots())
 				player.getInventory().addItem(fish);
 			else
-				World.updateGroundItem(fish, player, player);
+				GroundItems.updateGroundItem(fish, player, player);
 			totalXp *= 2;
 		}
 		player.getSkills().addSkillingXp(Skills.FISHING, totalXp, multiplier);

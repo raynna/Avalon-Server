@@ -8,6 +8,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.utils.EconomyPrices;
@@ -51,7 +52,7 @@ public class BeastOfBurden implements Serializable {
 		for (int i = 0; i < beastItems.getSize(); i++) {
 			Item item = beastItems.get(i);
 			if (item != null)
-				World.updateGroundItem(item, WorldTile, player);
+				GroundItems.updateGroundItem(item, WorldTile, player);
 		}
 		beastItems.reset();
 	}

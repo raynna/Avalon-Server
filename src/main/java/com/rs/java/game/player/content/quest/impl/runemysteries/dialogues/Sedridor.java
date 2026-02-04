@@ -4,6 +4,7 @@ import com.rs.java.game.ForceTalk;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.content.quest.QuestList.Quests;
@@ -381,7 +382,7 @@ public class Sedridor extends Dialogue {
 				if(player.getInventory().getFreeSlots() > 0) {
 					player.getInventory().addItem(RuneMysteries.RESEARCH_PACKAGE, 1);
 				} else {
-					World.addGroundItem(new Item(RuneMysteries.RESEARCH_PACKAGE), new WorldTile(player.getX(), player.getY(), player.getPlane()));
+					GroundItems.addGroundItem(new Item(RuneMysteries.RESEARCH_PACKAGE), new WorldTile(player.getX(), player.getY(), player.getPlane()));
 				}
 				player.getQuestManager().get(Quests.RUNE_MYSTERIES).setStage(3);
 				stageInt = 36;
@@ -672,7 +673,7 @@ public class Sedridor extends Dialogue {
 				if(player.getInventory().getFreeSlots() > 0) {
 					player.getInventory().addItem(RuneMysteries.RESEARCH_PACKAGE, 1);
 				} else {
-					World.addGroundItem(new Item(RuneMysteries.RESEARCH_PACKAGE), new WorldTile(player.getX(), player.getY(), player.getPlane()));
+					GroundItems.addGroundItem(new Item(RuneMysteries.RESEARCH_PACKAGE), new WorldTile(player.getX(), player.getY(), player.getPlane()));
 				}
 				stageInt = -2;
 			} else {

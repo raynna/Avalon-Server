@@ -1,15 +1,15 @@
 package com.rs.java.game.player.dialogues.dungeoneering;
 
-import com.rs.java.game.player.controlers.DungeonControler;
+import com.rs.java.game.player.controllers.DungeonController;
 import com.rs.java.game.player.dialogues.Dialogue;
 
 public class DungeonExit extends Dialogue {
 
-	private DungeonControler dungeon;
+	private DungeonController dungeon;
 
 	@Override
 	public void start() {
-		dungeon = (DungeonControler) parameters[0];
+		dungeon = (DungeonController) parameters[0];
 		sendDialogue("This ladder leads back to the surface. You will not be able", "to come back to this dungeon if you leave.");
 
 	}

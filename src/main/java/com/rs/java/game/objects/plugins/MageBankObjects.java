@@ -4,7 +4,7 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.controlers.GodCapes;
+import com.rs.java.game.player.controllers.GodCapes;
 
 public class MageBankObjects extends ObjectPlugin {
 

@@ -11,7 +11,7 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
-import com.rs.java.game.npc.dungeonnering.ShadowForgerIhlakhizan;
+import com.rs.java.game.npc.dungeoneering.ShadowForgerIhlakhizan;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;

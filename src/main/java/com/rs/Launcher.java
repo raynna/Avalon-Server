@@ -39,7 +39,7 @@ import com.rs.java.game.player.content.friendschat.FriendChatsManager;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.game.player.content.grandexchange.LimitedGEReader;
 import com.rs.java.game.player.content.grandexchange.UnlimitedGEReader;
-import com.rs.java.game.player.controlers.ControlerHandler;
+import com.rs.java.game.player.controllers.ControlerHandler;
 import com.rs.java.game.player.cutscenes.CutscenesHandler;
 import com.rs.java.game.player.dialogues.DialogueHandler;
 import com.rs.java.game.worldlist.WorldList;

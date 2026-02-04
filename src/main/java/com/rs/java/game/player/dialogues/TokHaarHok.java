@@ -4,7 +4,7 @@ import java.util.TimerTask;
 
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.WorldTile;
-import com.rs.java.game.player.controlers.FightKiln;
+import com.rs.java.game.player.controllers.FightKiln;
 import com.rs.java.game.player.cutscenes.Cutscene;
 import com.rs.java.utils.Logger;
 

@@ -3,6 +3,7 @@ package com.rs.java.game.player.content.quest.impl.princealirescue.dialogues;
 import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.content.quest.QuestList.Quests;
 import com.rs.java.game.player.content.quest.State.QuestState;
 import com.rs.java.game.player.dialogues.Dialogue;
@@ -100,7 +101,7 @@ public class Hassan extends Dialogue {
 		case 2:
 			sendHandedItem(1937, "The chancellor hands your some water.");
 			if(player.getInventory().getFreeSlots() < 1) {
-				World.addGroundItem(new Item(1937), new WorldTile(player));
+				GroundItems.addGroundItem(new Item(1937), new WorldTile(player));
 			} else {
 				player.getInventory().addItem(1937, 1);
 			}

@@ -13,7 +13,7 @@ import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
-import com.rs.java.game.player.controlers.EdgevillePvPControler;
+import com.rs.java.game.player.controllers.EdgevillePvPController;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.kotlin.game.player.command.CommandRegistry;
 import com.rs.kotlin.game.world.util.Msg;
@@ -185,7 +185,7 @@ public final class PresetManager implements Serializable {
             Msg.warn(player, "You can't load gear presets in player killing areas.");
             return;
         }
-        if (EdgevillePvPControler.isAtPvP(player) && !EdgevillePvPControler.isAtBank(player)) {
+        if (EdgevillePvPController.isAtPvP(player) && !EdgevillePvPController.isAtBank(player)) {
             Msg.warn(player, "You can't load gear presets in pvp area.");
             return;
         }
@@ -324,7 +324,7 @@ public final class PresetManager implements Serializable {
             Msg.warn(player, "You can't load gear presets in player killing areas.");
             return;
         }
-        if (EdgevillePvPControler.isAtPvP(player) && !EdgevillePvPControler.isAtBank(player)) {
+        if (EdgevillePvPController.isAtPvP(player) && !EdgevillePvPController.isAtBank(player)) {
             Msg.warn(player, "You can't load gear presets in pvp area.");
             return;
         }

@@ -6,7 +6,7 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.minigames.clanwars.ClanWars.Rules;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.RouteEvent;
-import com.rs.java.game.player.controlers.Controler;
+import com.rs.java.game.player.controllers.Controller;
 
 /**
  * A controller subclass handling the clan wars requesting.
@@ -14,7 +14,7 @@ import com.rs.java.game.player.controlers.Controler;
  * @author Emperor
  *
  */
-public final class RequestController extends Controler {
+public final class RequestController extends Controller {
 
 	@Override
 	public void start() {
