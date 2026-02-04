@@ -2447,7 +2447,9 @@ public class Player extends Entity {
                         clearAllQueuedSpecialAttacks();
                         return;
                     }
-                    CombatStyle style = activeInstantSpecial.context.getCombat();
+                    CombatStyle style = Weapon.isRangedWeapon(this)
+                            ? new RangedStyle(this, target)
+                            : new MeleeStyle(this, target);
 
                     CombatContext ctx = new CombatContext(
                             this,

@@ -15521,6 +15521,238 @@
       "vannaka"
     ]
   },
+  "1243": {
+    "id": 1243,
+    "name": "Phrin Shadow",
+    "members": true,
+    "combatLevel": 60,
+    "attackLevel": 64,
+    "strengthLevel": 47,
+    "defenceLevel": 42,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 56,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[18 October]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 56,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka"
+    ]
+  },
+  "1245": {
+    "id": 1245,
+    "name": "Riyl Shadow",
+    "members": true,
+    "combatLevel": 80,
+    "attackLevel": 88,
+    "strengthLevel": 55,
+    "defenceLevel": 60,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 76,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[18 October]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 76,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka"
+    ]
+  },
+  "1247": {
+    "id": 1247,
+    "name": "Asyn Shadow",
+    "members": true,
+    "combatLevel": 100,
+    "attackLevel": 102,
+    "strengthLevel": 84,
+    "defenceLevel": 70,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 90,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[18 October]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 90,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka"
+    ]
+  },
+  "1249": {
+    "id": 1249,
+    "name": "Fiyr Shadow",
+    "members": true,
+    "combatLevel": 120,
+    "attackLevel": 120,
+    "strengthLevel": 100,
+    "defenceLevel": 85,
+    "magicLevel": 0,
+    "rangedLevel": 0,
+    "constitutionLevel": 110,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[18 October]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 110,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka"
+    ]
+  },
   "1257": {
     "id": 1257,
     "name": "Afflicted",
@@ -22351,6 +22583,123 @@
       "duradel"
     ]
   },
+  "2031": {
+    "id": 2031,
+    "name": "Bloodworm",
+    "members": true,
+    "combatLevel": 52,
+    "attackLevel": 80,
+    "strengthLevel": 20,
+    "defenceLevel": 35,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 45,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "I think I should keep my distance...",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2032": {
+    "id": 2032,
+    "name": "Crypt rat",
+    "members": true,
+    "combatLevel": 43,
+    "attackLevel": 70,
+    "strengthLevel": 20,
+    "defenceLevel": 20,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 35,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A nasty little rodent.",
+    "attributes": [
+      "rat"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 35,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
   "2033": {
     "id": 2033,
     "name": "Giant crypt rat",
@@ -22410,6 +22759,250 @@
     "assignedBy": [
       "turael",
       "spria"
+    ]
+  },
+  "2034": {
+    "id": 2034,
+    "name": "Crypt spider",
+    "members": true,
+    "combatLevel": 56,
+    "attackLevel": 45,
+    "strengthLevel": 47,
+    "defenceLevel": 45,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 60,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 20,
+      "slash": 20,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 17
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Incey wincey.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 45,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2035": {
+    "id": 2035,
+    "name": "Giant crypt spider",
+    "members": true,
+    "combatLevel": 79,
+    "attackLevel": 65,
+    "strengthLevel": 67,
+    "defenceLevel": 65,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 80,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 20,
+      "slash": 20,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 17
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Not very incey wincey.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 80,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2036": {
+    "id": 2036,
+    "name": "Skeleton",
+    "members": false,
+    "combatLevel": 45,
+    "attackLevel": 32,
+    "strengthLevel": 35,
+    "defenceLevel": 36,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 59,
+    "attackBonus": 15,
+    "strengthBonus": 14,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 9,
+      "slash": 11,
+      "crush": -2
+    },
+    "magicDefence": {
+      "magic": 1
+    },
+    "rangedDefence": {
+      "light": 4,
+      "standard": 4,
+      "heavy": 4
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 September]] [[2001]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Could do with gaining a few pounds.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 60,
+    "slayerXp": 59,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "2037": {
+    "id": 2037,
+    "name": "Skeleton",
+    "members": false,
+    "combatLevel": 45,
+    "attackLevel": 32,
+    "strengthLevel": 35,
+    "defenceLevel": 36,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 59,
+    "attackBonus": 15,
+    "strengthBonus": 14,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 9,
+      "slash": 11,
+      "crush": -2
+    },
+    "magicDefence": {
+      "magic": 1
+    },
+    "rangedDefence": {
+      "light": 4,
+      "standard": 4,
+      "heavy": 4
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 September]] [[2001]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Could do with gaining a few pounds.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 60,
+    "slayerXp": 59,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
     ]
   },
   "2091": {
@@ -42002,6 +42595,132 @@
       "mazchna"
     ]
   },
+  "5381": {
+    "id": 5381,
+    "name": "Skeleton",
+    "members": false,
+    "combatLevel": 45,
+    "attackLevel": 32,
+    "strengthLevel": 35,
+    "defenceLevel": 36,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 59,
+    "attackBonus": 15,
+    "strengthBonus": 14,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 9,
+      "slash": 11,
+      "crush": -2
+    },
+    "magicDefence": {
+      "magic": 1
+    },
+    "rangedDefence": {
+      "light": 4,
+      "standard": 4,
+      "heavy": 4
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 September]] [[2001]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Could do with gaining a few pounds.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 60,
+    "slayerXp": 59,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "5422": {
+    "id": 5422,
+    "name": "Skeleton",
+    "members": false,
+    "combatLevel": 45,
+    "attackLevel": 32,
+    "strengthLevel": 35,
+    "defenceLevel": 36,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 59,
+    "attackBonus": 15,
+    "strengthBonus": 14,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 9,
+      "slash": 11,
+      "crush": -2
+    },
+    "magicDefence": {
+      "magic": 1
+    },
+    "rangedDefence": {
+      "light": 4,
+      "standard": 4,
+      "heavy": 4
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 September]] [[2001]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Could do with gaining a few pounds.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 60,
+    "slayerXp": 59,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
   "5750": {
     "id": 5750,
     "name": "Cave bug",
@@ -51201,6 +51920,134 @@
     "categories": [],
     "assignedBy": [
       "mazchna",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "7642": {
+    "id": 7642,
+    "name": "Mutated bloodveld",
+    "members": true,
+    "combatLevel": 123,
+    "attackLevel": 110,
+    "strengthLevel": 115,
+    "defenceLevel": 30,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 170,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 June]] [[2016]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "The twisted tongue of evil.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 170,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "7643": {
+    "id": 7643,
+    "name": "Mutated bloodveld",
+    "members": true,
+    "combatLevel": 123,
+    "attackLevel": 110,
+    "strengthLevel": 115,
+    "defenceLevel": 30,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 170,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 June]] [[2016]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "The twisted tongue of evil.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 170,
+    "categories": [],
+    "assignedBy": [
       "vannaka",
       "chaeldar",
       "konar",

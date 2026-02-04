@@ -567,6 +567,22 @@
     "lastSeen": "2026-01-27T14:28:55.457127Z",
     "attempts": 1
   },
+  "7640": {
+    "npcId": 7640,
+    "npcName": "Skeletal hand",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-02-04T09:13:26.469054Z",
+    "lastSeen": "2026-02-04T09:13:26.469054Z",
+    "attempts": 1
+  },
+  "7641": {
+    "npcId": 7641,
+    "npcName": "Zombie hand",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-04T09:13:26.539625800Z",
+    "lastSeen": "2026-02-04T09:13:26.539625800Z",
+    "attempts": 1
+  },
   "7837": {
     "npcId": 7837,
     "npcName": "Customs Officer",
