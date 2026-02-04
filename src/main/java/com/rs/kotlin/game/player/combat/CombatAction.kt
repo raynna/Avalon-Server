@@ -392,7 +392,6 @@ class CombatAction(
             return false
         }
 
-        player.resetWalkSteps()
         return listOf(
             { player.addWalkSteps(target.x + target.size, player.y) },
             { player.addWalkSteps(target.x - size, player.y) },
