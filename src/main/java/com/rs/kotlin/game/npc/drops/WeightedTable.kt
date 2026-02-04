@@ -19,16 +19,30 @@ class WeightedTable {
     fun size() = entries.size
 
     fun roll(player: Player, source: DropSource): Drop? {
-        val rand = ThreadLocalRandom.current().nextInt(tableSize)
+
+        val validEntries = entries.filter { it.weight > 0 }
+
+        if (validEntries.isEmpty()) {
+            return null
+        }
+
+        val totalWeight = validEntries.sumOf { it.weight }
+
+        if (totalWeight <= 0) {
+            return null
+        }
+        val rand = ThreadLocalRandom.current().nextInt(totalWeight)
         var acc = 0
-        for (entry in entries) {
+        for (entry in validEntries) {
             acc += entry.weight
             if (rand < acc) {
                 return entry.roll(player, source)
             }
         }
+
         return null
     }
+
 
     fun mutableEntries(): MutableList<WeightedDropEntry> = entries
 }

@@ -176,8 +176,8 @@ public abstract class CombatScript {
 
                         int finalDelay = Math.max(currentDelay, retaliateDelay);
 
-                        player.getNewActionManager().setAction(new CombatAction(npc));
-                        player.getNewActionManager().setActionDelay(finalDelay);
+                        player.getActionManager().setAction(new CombatAction(npc));
+                        player.getActionManager().setActionDelay(finalDelay);
                     }
                 }, 1);
             }

@@ -1003,7 +1003,7 @@ public final class World {
         for (Player p2 : players) {
             if (p2 == null)
                 continue;
-            if (p2.getUsername().equals(username))
+            if (p2.getUsername().equalsIgnoreCase(username))
                 return true;
         }
         return false;
@@ -1013,7 +1013,7 @@ public final class World {
         for (Player player : getPlayers()) {
             if (player == null)
                 continue;
-            if (player.getUsername().equals(username))
+            if (player.getUsername().equalsIgnoreCase(username))
                 return player;
         }
         return null;

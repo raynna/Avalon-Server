@@ -213,8 +213,7 @@ public final class LoginPacketsDecoder extends Decoder {
 		rsaStream.readLong(); // random value
 		stream.decodeXTEA(isaacKeys, stream.getOffset(), stream.getLength());
 		boolean stringUsername = stream.readUnsignedByte() == 1; // unknown
-		String username = Utils
-				.formatPlayerNameForProtocol(stringUsername ? stream.readString() : Utils.longToString(stream.readLong()));
+		String username = Utils.formatPlayerNameForProtocol(stringUsername ? stream.readString() : Utils.longToString(stream.readLong()));
 		int displayMode = stream.readUnsignedByte();
 		int screenWidth = stream.readUnsignedShort();
 		int screenHeight = stream.readUnsignedShort();
@@ -283,6 +282,7 @@ public final class LoginPacketsDecoder extends Decoder {
 		if (!AccountCreation.exists(username)) {
 			Logger.log(this, "account: " + username + " doesnt exist, creating new account.");
 			player = new Player(password);
+			player.setUsername(Utils.formatFirstLoginName(username));
 		} else {
 			player = AccountCreation.loadPlayer(username);
 			if (player == null) {
@@ -298,7 +298,7 @@ public final class LoginPacketsDecoder extends Decoder {
 			session.getLoginPackets().sendClientPacket(4);
 			return;
 		}
-		player.init(session, username, displayMode, screenWidth, screenHeight, mInformation, new IsaacKeyPair(isaacKeys));
+		player.init(session, player.getUsername(), displayMode, screenWidth, screenHeight, mInformation, new IsaacKeyPair(isaacKeys));
 		session.getLoginPackets().sendLoginDetails(player);
 		session.setDecoder(3, player);
 		session.setEncoder(2, player);

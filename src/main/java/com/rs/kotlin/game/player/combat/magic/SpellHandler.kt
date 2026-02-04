@@ -337,7 +337,7 @@ object SpellHandler {
             player.message("Invalid spell target")
             return
         }
-        player.newActionManager.setAction(CombatAction(target))
+        player.actionManager.setAction(CombatAction(target))
     }
 
 

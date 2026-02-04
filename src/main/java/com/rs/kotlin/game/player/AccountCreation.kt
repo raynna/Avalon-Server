@@ -1,6 +1,7 @@
 package com.rs.kotlin.game.player
 
 import com.rs.java.game.player.Player
+import com.rs.java.utils.Utils
 import com.rs.json.GSONParser
 import java.io.File
 
@@ -10,6 +11,10 @@ class AccountCreation {
 
         private val userDir: String =
             System.getProperty("user.dir") + "/data/characters/"
+
+        private fun normalize(username: String): String {
+            return username.trim().lowercase()
+        }
 
         @JvmStatic
         fun init() {
@@ -23,7 +28,8 @@ class AccountCreation {
 
         @JvmStatic
         fun loadPlayer(username: String): Player? {
-            val path = "$userDir$username.json"
+            val clean = normalize(username)
+            val path = "$userDir$clean.json"
             val file = File(path)
 
             if (!file.exists() || !file.isFile) {
@@ -35,10 +41,20 @@ class AccountCreation {
         }
 
         @JvmStatic
+        fun rename(oldName: String, newName: String) {
+            val oldFile = File("$userDir${Utils.formatPlayerNameForProtocol(oldName)}.json")
+            val newFile = File("$userDir${Utils.formatPlayerNameForProtocol(newName)}.json")
+
+            if (oldFile.exists()) {
+                oldFile.renameTo(newFile)
+            }
+        }
+
+
+        @JvmStatic
         fun savePlayer(player: Player) {
-            // todo(Mujtaba): forbid namespace in user names.
-            val filename = player.username.replace(" ", "_")
-            //GSONParser.debugSave(player, Player::class.java);
+            val filename = Utils.formatPlayerNameForProtocol(player.username)
+
             GSONParser.save(
                 player,
                 "$userDir$filename.json",
@@ -48,7 +64,8 @@ class AccountCreation {
 
         @JvmStatic
         fun exists(username: String): Boolean {
-            val path = "$userDir$username.json"
+            val clean = Utils.formatPlayerNameForProtocol(username)
+            val path = "$userDir$clean.json"
             val file = File(path)
 
             if (!file.exists() || !file.isFile) {

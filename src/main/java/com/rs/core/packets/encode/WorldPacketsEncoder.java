@@ -1566,8 +1566,8 @@ public class WorldPacketsEncoder extends Encoder {
 		stream.writeByte(maskData);
 		if ((maskData & 0x1) != 0) {
 			stream.writeString(p.getDisplayName());
-			if (p.hasDisplayName())
-				stream.writeString(Utils.formatPlayerNameForDisplay(p.getUsername()));
+			if (p.hasDisplayName())//stream.writeString(Utils.formatPlayerNameForDisplay(p.getUsername()));
+				stream.writeString(p.getUsername());
 		}
 		stream.writeString(text);
 		stream.endPacketVarByte();

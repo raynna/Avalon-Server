@@ -81,31 +81,39 @@ class NewActionManager(@Transient private val player: Player) {
             return false
         }
 
+        // SPECIAL CASE: If new action is combat, always force stop current action
+        // This mimics the old ActionManager behavior
+        if (newAction.getPriority() == NewAction.ActionPriority.COMBAT) {
+            if (currentAction != null) {
+                currentAction!!.stop(player, true)
+            }
+            if (!newAction.start(player)) {
+                return false
+            }
+            this.currentAction = newAction
+            return true
+        }
+
+        // Original logic for non-combat actions
         // Check if we can replace current action
         if (currentAction != null) {
-            //println("[NewActionManager] setAction(): Current action ${currentAction!!.javaClass.simpleName} present, checking interruptibility and priority")
             if (!currentAction!!.isInterruptible() &&
                 newAction.getPriority().ordinal <= currentAction!!.getPriority().ordinal) {
-                //println("[NewActionManager] setAction(): Current action is not interruptible and new action priority is not higher, reject new action")
                 return false
             }
 
             if (!currentAction!!.onActionReplaced(newAction)) {
-                //println("[NewActionManager] setAction(): Current action rejected being replaced by new action")
                 return false
             }
 
             // Stop current action properly
-            //println("[NewActionManager] setAction(): Stopping current action ${currentAction!!.javaClass.simpleName} for new action ${newAction.javaClass.simpleName}")
             currentAction!!.stop(player, true)
         }
 
         if (!newAction.start(player)) {
-            //println("[NewActionManager] setAction(): Failed to start new action ${newAction.javaClass.simpleName}")
             return false
         }
         this.currentAction = newAction
-        //println("[NewActionManager] setAction(): New action ${newAction.javaClass.simpleName} started and set as current action")
         return true
     }
 

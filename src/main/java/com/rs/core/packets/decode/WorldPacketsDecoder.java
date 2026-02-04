@@ -990,7 +990,7 @@ public final class WorldPacketsDecoder extends Decoder {
 		if (!player.getControlerManager().canAttack(p2))
 			return;
 		player.stopAll();
-		player.getNewActionManager().setAction(new CombatAction(p2));
+		player.getActionManager().setAction(new CombatAction(p2));
 	}
 
 	private static void handlePlayerOption9(Player player, InputStream stream) {
@@ -1020,6 +1020,7 @@ public final class WorldPacketsDecoder extends Decoder {
 
 		int npcIndex = stream.readUnsignedShort128();
 		boolean forceRun = stream.read128Byte() == 1;
+		player.stopAll();
 		if (forceRun)
 			player.setRun(true);
 
@@ -1052,7 +1053,7 @@ public final class WorldPacketsDecoder extends Decoder {
 		}
 
 		player.stopAll();
-		player.getNewActionManager().setAction(new CombatAction(npc));
+		player.getActionManager().setAction(new CombatAction(npc));
 	}
 
 	private static void handleTelekineticGrab(Player player, InputStream stream) {
@@ -2343,7 +2344,7 @@ public final class WorldPacketsDecoder extends Decoder {
 					return;
 				}
 			} catch (NumberFormatException ignored) {}
-			String[] invalid = { ">", "<", "-", "'", "_", "mod", "admin", "owner", "jagex", "allah", "developer", "recruit" };
+			String[] invalid = { ">", "<", "_", "donator", "superdonator", "member", "mod", "admin", "owner", "jagex", "developer", "recruit" };
 			if (value.length() > 10) {
 				player.getDialogueManager().startDialogue("SimpleMessage", "Titles are limted to ten characters due to spam.");
 				return;
@@ -2449,7 +2450,10 @@ public final class WorldPacketsDecoder extends Decoder {
 			return;
 		} else if (player.temporaryAttribute().remove("setdisplay") != null) {
 			DisplayNames.setDisplayName(player, value);
-			player.getPackets().sendGameMessage("Changed display name!");
+			return;
+		} else if (player.temporaryAttribute().remove("SETUSERNAME") != null) {
+			DisplayNames.setUsername(player, value);
+			SettingsTab.open(player);
 			return;
 		}
 

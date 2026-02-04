@@ -155,7 +155,7 @@ public class FriendChatsManager {
 				player.message("You cannot kick developers!");
 				return;
 			}
-			if (kicked.getUsername() == owner && !player.isDeveloper()) {
+			if (kicked.getUsername().equalsIgnoreCase(owner) && !player.isDeveloper()) {
 				player.message("You cannot kick the owner!");
 				return;
 			}

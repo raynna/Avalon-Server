@@ -175,7 +175,7 @@ public final class Settings {
 			13887, 13890, 13893, 13896, 13899, 13902, 13905, 14484, 19784, 11694, 13738, 13740, 13742, 13744, 15017,
 			15018, 15019, 15020, 15220, 23659, 6570 };
 
-	public static final String[] DEVELOPERS = { "Andreas", "Manager", "Isik", "Mujtaba" };
+	public static final String[] DEVELOPERS = { "Andreas", "Manager", "Isik", "Mujtaba", "nostlgia" };
 
 	public static final String[] MODERATORS = {};
 

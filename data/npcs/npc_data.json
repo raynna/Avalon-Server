@@ -25127,6 +25127,108 @@
       "duradel"
     ]
   },
+  "2892": {
+    "id": 2892,
+    "name": "Spinolyp",
+    "members": true,
+    "combatLevel": 76,
+    "attackLevel": 10,
+    "strengthLevel": 10,
+    "defenceLevel": 10,
+    "magicLevel": 1,
+    "rangedLevel": 100,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 November]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": true,
+    "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 10,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2894": {
+    "id": 2894,
+    "name": "Spinolyp",
+    "members": true,
+    "combatLevel": 76,
+    "attackLevel": 10,
+    "strengthLevel": 10,
+    "defenceLevel": 10,
+    "magicLevel": 1,
+    "rangedLevel": 100,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 November]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": true,
+    "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 10,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "3042": {
     "id": 3042,
     "name": "Poltenip",
@@ -52518,6 +52620,65 @@
     ],
     "attackSpeedTicks": 4,
     "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "8133": {
+    "id": 8133,
+    "name": "Corporeal Beast",
+    "members": true,
+    "combatLevel": 785,
+    "attackLevel": 320,
+    "strengthLevel": 320,
+    "defenceLevel": 310,
+    "magicLevel": 350,
+    "rangedLevel": 150,
+    "constitutionLevel": 2000,
+    "attackBonus": 50,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 200,
+      "crush": 100
+    },
+    "magicDefence": {
+      "magic": 150
+    },
+    "rangedDefence": {
+      "light": 230,
+      "standard": 230,
+      "heavy": 100
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[16 October]] [[2014]]",
+    "aliases": [],
+    "size": "5",
+    "examine": "A vision of supernatural horror.",
+    "attributes": [],
+    "xpBonus": 55.0,
+    "maxHit": {
+      "melee": 33,
+      "magic": 65,
+      "stomp": 51
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []

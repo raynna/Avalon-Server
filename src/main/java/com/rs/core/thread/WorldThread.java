@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.rs.Settings;
 import com.rs.core.networking.Session;
+import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.game.World;
 import com.rs.java.game.item.ground.AutomaticGroundItem;
@@ -36,80 +37,86 @@ public final class WorldThread extends Thread {
     public void run() {
         while (!CoresManager.shutdown) {
             long cycleStart = Utils.currentTimeMillis();
+            WorldTasksManager.processTasks();
+            AutomaticGroundItem.processGameTick();
 
-            try {
-                WorldTasksManager.processTasks();
-                AutomaticGroundItem.processGameTick();
-
-                List<Player> toCloseChannels = new ArrayList<>();
-                for (Player player : World.getPlayers()) {
-                    if (player == null || !player.hasStarted() || player.hasFinished())
-                        continue;
-
-                    player.processLogicPackets();
-
-                    long lastPing = player.getPacketsDecoderPing();
-                    if (lastPing != 0) {
-                        long pingDelay = cycleStart - lastPing;
-                        if (pingDelay > Settings.MAX_PACKETS_DECODER_PING_DELAY
-                                && player.getSession() != null
-                                && player.getSession().getChannel() != null
-                                && player.getSession().getChannel().isOpen()) {
-                            toCloseChannels.add(player);
-                        }
-                    }
-                }
-                for (Player player : World.getPlayers()) {
+            for (Player player : World.getPlayers()) {
+                try {
                     if (player == null || !player.hasStarted() || player.hasFinished())
                         continue;
                     player.processEntity();
+                } catch (Throwable e) {
+                    Logger.handle(e);
                 }
-                for (NPC npc : World.getNPCs()) {
+            }
+            for (NPC npc : World.getNPCs()) {
+                try {
                     if (npc == null || npc.hasFinished())
                         continue;
                     npc.processEntity();
+                } catch (Throwable e) {
+                    Logger.handle(e);
                 }
-
-                for (Player p : toCloseChannels) {
-                    try {
-                        if (p.getSession() != null && p.getSession().getChannel() != null)
-                            p.getSession().getChannel().close();
-                    } catch (Exception e) {
-                        Logger.handle(e);
-                    }
-                }
-
-            } catch (Throwable e) {
-                Logger.handle(e);
             }
 
-            try {
-                for (Player player : World.getPlayers()) {
+            for (Player player : World.getPlayers()) {
+                try {
+                    if (player == null || !player.hasStarted() || player.hasFinished())
+                        continue;
+                    player.processProjectiles();
+                } catch (Throwable e) {
+                    Logger.handle(e);
+                }
+            }
+            for (Player player : World.getPlayers()) {
+                try {
                     if (player == null || !player.hasStarted() || player.hasFinished())
                         continue;
 
                     player.getPackets().sendLocalPlayersUpdate();
                     player.getPackets().sendLocalNPCsUpdate();
+                } catch (Throwable e) {
+                    Logger.handle(e);
                 }
-                for (Player player : World.getPlayers()) {
-                    if (player == null || !player.hasStarted() || player.hasFinished())
-                        continue;
-                    player.processProjectiles();
-                }
+            }
 
-                for (Player player : World.getPlayers()) {
-                    if (player == null || !player.hasStarted() || player.hasFinished())
-                        continue;
-                    player.resetMasks();
-                }
+            for (Player player : World.getPlayers()) {
+                if (player == null || !player.hasStarted() || player.hasFinished())
+                    continue;
+                player.resetMasks();
+            }
 
-                for (NPC npc : World.getNPCs()) {
-                    if (npc == null || npc.hasFinished())
-                        continue;
-                    npc.resetMasks();
+            for (NPC npc : World.getNPCs()) {
+                if (npc == null || npc.hasFinished())
+                    continue;
+                npc.resetMasks();
+            }
+
+            List<Player> toCloseChannels = new ArrayList<>();
+            for (Player player : World.getPlayers()) {
+                if (player == null || !player.hasStarted() || player.hasFinished())
+                    continue;
+
+                //player.processLogicPackets();
+
+                long lastPing = player.getPacketsDecoderPing();
+                if (lastPing != 0) {
+                    long pingDelay = cycleStart - lastPing;
+                    if (pingDelay > Settings.MAX_PACKETS_DECODER_PING_DELAY
+                            && player.getSession() != null
+                            && player.getSession().getChannel() != null
+                            && player.getSession().getChannel().isOpen()) {
+                        toCloseChannels.add(player);
+                    }
                 }
-            } catch (Throwable e) {
-                Logger.handle(e);
+            }
+            for (Player p : toCloseChannels) {
+                try {
+                    if (p.getSession() != null && p.getSession().getChannel() != null)
+                        p.getSession().getChannel().close();
+                } catch (Exception e) {
+                    Logger.handle(e);
+                }
             }
 
             LAST_CYCLE_CTM = Utils.currentTimeMillis();

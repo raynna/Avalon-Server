@@ -52,6 +52,12 @@ public final class Utils {
 	/** The last time update. */
 	private static long lastTimeUpdate;
 
+
+	public static String normalizeUsername(String name) {
+		if (name == null) return null;
+		return name.trim().toLowerCase();
+	}
+
 	/**
 	 * Current time millis.
 	 *
@@ -1048,10 +1054,36 @@ public final class Utils {
 	public static String formatPlayerNameForProtocol(String name) {
 		if (name == null)
 			return "";
+		name = name.trim();
 		name = name.replaceAll(" ", "_");
-		name = name.toLowerCase();
-		return name;
+		return name.toLowerCase();
 	}
+
+	public static String formatFirstLoginName(String name) {
+		if (name == null || name.isEmpty())
+			return "";
+
+		// Convert protocol format back to readable format
+		name = name.replace("_", " ");
+
+		name = name.trim().toLowerCase();
+
+		String[] parts = name.split(" ");
+		StringBuilder sb = new StringBuilder();
+
+		for (String part : parts) {
+			if (part.isEmpty())
+				continue;
+
+			sb.append(Character.toUpperCase(part.charAt(0)))
+					.append(part.substring(1))
+					.append(" ");
+		}
+
+		return sb.toString().trim();
+	}
+
+
 
 	/**
 	 * Format player name for display.
@@ -1204,9 +1236,15 @@ public final class Utils {
 	}
 
 	/** The Constant VALID_CHARS. */
-	public static final char[] VALID_CHARS = { '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7',
-			'8', '9' };
+	public static final char[] VALID_CHARS = {
+			'_', ' ',
+			'a','b','c','d','e','f','g','h','i','j','k','l','m',
+			'n','o','p','q','r','s','t','u','v','w','x','y','z',
+			'A','B','C','D','E','F','G','H','I','J','K','L','M',
+			'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+			'0','1','2','3','4','5','6','7','8','9'
+	};
+
 
 	/**
 	 * Invalid account name.

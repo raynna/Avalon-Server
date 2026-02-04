@@ -2501,6 +2501,7 @@ public class ButtonHandler {
         player.lastItemSwitchTick = WorldThread.getCycleIndex();
         player.stopAll(false, false, true);
         if (player.getInventory().getItem(slotId).getEquipSlot() == Equipment.SLOT_WEAPON) {
+            player.predictedWeaponSwitch = player.getInventory().getItem(slotId).getId();
             if (player.lastSpecClickTick != player.lastItemSwitchTick && player.getCombatDefinitions().isUsingSpecialAttack()) {
                 player.combatDefinitions.switchUsingSpecialAttack();
                 player.clearAllQueuedSpecialAttacks();

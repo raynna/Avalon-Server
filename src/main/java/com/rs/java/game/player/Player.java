@@ -1955,7 +1955,7 @@ public class Player extends Entity {
             if (floorItems == null)
                 continue;
             for (FloorItem item : floorItems) {
-                if (item.isInvisible() && (item.hasOwner() && !getUsername().equals(item.getOwner())) || item.getTile().getPlane() != getPlane() || !getUsername().equals(item.getOwner()) && !ItemConstants.isTradeable(item))
+                if (item.isInvisible() && (item.hasOwner() && this != item.getOwner()) || item.getTile().getPlane() != getPlane() || !getUsername().equals(item.getOwner()) && !ItemConstants.isTradeable(item))
                     continue;
                 getPackets().sendRemoveGroundItem(item);
             }
@@ -1965,7 +1965,7 @@ public class Player extends Entity {
             if (floorItems == null)
                 continue;
             for (FloorItem item : floorItems) {
-                if ((item.isInvisible()) && (item.hasOwner() && !getUsername().equals(item.getOwner())) || item.getTile().getPlane() != getPlane() || !getUsername().equals(item.getOwner()) && !ItemConstants.isTradeable(item))
+                if ((item.isInvisible()) && (item.hasOwner() && this != item.getOwner()) || item.getTile().getPlane() != getPlane() || !getUsername().equals(item.getOwner()) && !ItemConstants.isTradeable(item))
                     continue;
                 getPackets().sendGroundItem(item);
             }
@@ -2008,7 +2008,7 @@ public class Player extends Entity {
     }
 
     public void stopAll() {
-        stopAll(true);
+        stopAll(true, true, true);
     }
 
     public void stopAll(boolean stopWalk) {
@@ -2028,7 +2028,6 @@ public class Player extends Entity {
             resetWalkSteps();
         if (stopActions) {
             actionManager.forceStop();
-            newActionManager.forceStop();
         }
         combatDefinitions.resetSpells(false);
     }
@@ -2328,7 +2327,7 @@ public class Player extends Entity {
 
     public void processLogicPackets() {
         int processed = 0;
-        final int MAX_INTERNAL_PER_TICK = 50;
+        final int MAX_INTERNAL_PER_TICK = 1000;
 
         while (!logicPackets.isEmpty()) {
             LogicPacket packet = logicPackets.peek();
@@ -2357,6 +2356,7 @@ public class Player extends Entity {
         if (!getSwitchItemCache().isEmpty()) {
             getSwitchItemCache().clear();
             ButtonHandler.sendWear(instance, slot);
+            predictedWeaponSwitch = -1;
         }
     }
 
@@ -2435,15 +2435,26 @@ public class Player extends Entity {
     public transient int prayerTick = 0;
 
     public void processActiveInstantSpecial() {
-        if (combatDefinitions.usingSpecialAttack && getActiveInstantSpecial() == null && newActionManager.getActionDelay() > 0) {
+        if (isDead()) {
+            clearAllQueuedSpecialAttacks();
+            return;
+        }
+        if (combatDefinitions.usingSpecialAttack && getActiveInstantSpecial() == null && tickManager.isActive(TickManager.TickKeys.GRANITE_MAUL_TIMER)) {
 
             Weapon weapon = Weapon.Companion.getWeapon(equipment.getWeaponId());
 
             if (weapon != null && weapon.getSpecial() instanceof SpecialAttack.InstantCombat) {
 
                 Entity target = getTemporaryTarget();
+                if (isDead()) {
+                    clearAllQueuedSpecialAttacks();
+                    return;
+                }
                 if (target != null) {
-
+                    if (target.isDead()) {
+                        clearAllQueuedSpecialAttacks();
+                        return;
+                    }
                     CombatStyle style = Weapon.isRangedWeapon(this)
                             ? new RangedStyle(this, target)
                             : new MeleeStyle(this, target);
@@ -2510,10 +2521,13 @@ public class Player extends Entity {
     public void processQueuedInstantSpecials() {
         if (getTemporaryTarget() == null || queuedInstantCombats.isEmpty())
             return;
-
+        if (isDead()) {
+            clearAllQueuedSpecialAttacks();
+            return;
+        }
         Entity target = getTemporaryTarget();
         if (target.isDead() || target.hasFinished()) {
-            queuedInstantCombats.clear();
+            clearAllQueuedSpecialAttacks();
             return;
         }
 
@@ -2582,29 +2596,30 @@ public class Player extends Entity {
 
     @Override
     public void processEntity() {
-        if (coordsEvent != null && coordsEvent.processEvent(this))
-            coordsEvent = null;
-        if (routeEvent != null && routeEvent.processEvent(this))
-            routeEvent = null;
-        if (addItemEvent != null) {
-            addItemEvent.run();
-            addItemEvent = null;
-        }
-        super.processEntity();
-        PvpManager.onEpTick(this);
-        PvpManager.refreshAll(this);
+        processLogicPackets();
         processEquip();
         processUnequip();
         processQueuedInstantSpecials();
         processActiveInstantSpecial();
+        actionManager.processPreMovement();
+        if (coordsEvent != null && coordsEvent.processEvent(this))
+            coordsEvent = null;
+        if (routeEvent != null && routeEvent.processEvent(this))
+            routeEvent = null;
+        super.processEntity();
+        actionManager.processPostMovement();
+        if (addItemEvent != null) {
+            addItemEvent.run();
+            addItemEvent = null;
+        }
+        PvpManager.onEpTick(this);
+        PvpManager.refreshAll(this);
         cutscenesManager.process();
-        charges.process();
         auraManager.process();
-        actionManager.process();
-        newActionManager.process();
         controlerManager.process();
         farmingManager.process();
         prayer.processPrayerDrain(gameTick);
+        charges.process();
         if (getActiveTournament() == null) {
             if (tempInventory != null || tempEquipment != null
                     || tempXpSnapshot != null || tempLevelSnapshot != null || tempWorldTile != null) {
@@ -3313,7 +3328,7 @@ public class Player extends Entity {
         }
         finishing = true;
         if (!World.containsLobbyPlayer(username)) {
-            stopAll(false, true, !(newActionManager.getCurrentAction() instanceof CombatAction));
+            stopAll(false, true, !(actionManager.getAction() instanceof CombatAction));
         }
         long currentTime = Utils.currentTimeMillis();
         if ((isInCombat() && tryCount < 6) || getEmotesManager().getNextEmoteEnd() >= currentTime || isDead()) {
@@ -3551,7 +3566,8 @@ public class Player extends Entity {
     public String getDisplayName() {
         if (displayName != null)
             return displayName;
-        return Utils.formatPlayerNameForDisplay(username);
+        //return Utils.formatPlayerNameForDisplay(username);
+        return username;
     }
 
     public boolean hasDisplayName() {
@@ -4035,7 +4051,7 @@ public class Player extends Entity {
             World.updateGroundItem(item, deathTile, killer, 60, 1);
         }
         message("You have lost approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
-        if (killer != null && killer != this) {
+        if (killer != this) {
             int randomCoins = Utils.randomise(25000, 100000);
             World.updateGroundItem(new Item(995, randomCoins), deathTile, killer, 60, 1);
             killer.message("You recieved an extra " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(randomCoins, ',')) + " coins for killing: " + getDisplayName() + ".");
@@ -4045,7 +4061,7 @@ public class Player extends Entity {
             killer.message("You recieved " + randomPvpTokens + " pvp tokens for killing " + getDisplayName() + ".");
 
             killer.message("Total loot is worth approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
-            if (killer.totalCurrentDrop > killer.getHighestValuedKill() && killer.hasWildstalker() && killer != this) {
+            if (killer.totalCurrentDrop > killer.getHighestValuedKill() && killer.hasWildstalker()) {
                 killer.setHighestValuedKill(killer.totalCurrentDrop);
                 killer.message("New highest value Wilderness kill: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.getHighestValuedKill())) + " coins!");
             }
@@ -5634,6 +5650,7 @@ public class Player extends Entity {
     public transient boolean itemSwitch;
     public transient long lastSpecClickTick = -1;
     public transient long lastItemSwitchTick = -1;
+    public transient int predictedWeaponSwitch = -1;
 
     public boolean isProcessingVote() {
         return this.processingVote;

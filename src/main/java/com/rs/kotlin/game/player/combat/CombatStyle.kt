@@ -71,8 +71,8 @@ interface CombatStyle {
                         val currentDelay = defender.newActionManager.getActionDelay()
                         val finalDelay = max(currentDelay, retaliateDelay)
 
-                        defender.newActionManager.setAction(CombatAction(attacker))
-                        if (defender.newActionManager.getActionDelay() > 0)
+                        defender.actionManager.setAction(CombatAction(attacker))
+                        if (defender.actionManager.actionDelay > 0)
                             defender.newActionManager.setActionDelay(finalDelay)
                     }
                 })

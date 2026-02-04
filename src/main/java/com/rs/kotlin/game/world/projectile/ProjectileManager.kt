@@ -326,7 +326,7 @@ object ProjectileManager {
         )
 
         for (player in World.getPlayers()) {
-            if (player == null || !player.hasStarted() || player.hasFinished() || player.isOutOfRegion(attacker)) continue
+            if (player == null || !player.hasStarted() || player.hasFinished() || (attacker != null && player.isOutOfRegion(attacker))) continue
             player.queueProjectile(queued)
         }
 

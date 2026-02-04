@@ -12,7 +12,7 @@ public final class ActionManager {
 		this.player = player;
 	}
 
-	public void process() {
+	public void processPreMovement() {
 		if (action != null) {
 			if (player.isDead()) {
 				forceStop();
@@ -20,12 +20,16 @@ public final class ActionManager {
 				forceStop();
 			}
 		}
+	}
+
+	public void processPostMovement() {
 		if (actionDelay > 0) {
 			actionDelay--;
 			return;
 		}
 		if (action == null)
 			return;
+
 		int delay = action.processWithDelay(player);
 		if (delay == -1) {
 			forceStop();
@@ -36,11 +40,12 @@ public final class ActionManager {
 
 	public boolean setAction(Action skill) {
 		forceStop();
-		if (player == null) {
+		if (player == null)
 			return false;
-		}
+
 		if (!skill.start(player))
 			return false;
+
 		this.action = skill;
 		return true;
 	}
@@ -52,23 +57,23 @@ public final class ActionManager {
 		action = null;
 	}
 
+	public Action getAction() {
+		return action;
+	}
+
 	public int getActionDelay() {
 		return actionDelay;
 	}
 
-	public void addActionDelay(int skillDelay) {
-		this.actionDelay += skillDelay;
+	public void addActionDelay(int delay) {
+		this.actionDelay += delay;
 	}
 
-	public void setActionDelay(int skillDelay) {
-		this.actionDelay = skillDelay;
+	public void setActionDelay(int delay) {
+		this.actionDelay = delay;
 	}
 
 	public boolean hasSkillWorking() {
 		return action != null;
-	}
-
-	public Action getAction() {
-		return action;
 	}
 }
