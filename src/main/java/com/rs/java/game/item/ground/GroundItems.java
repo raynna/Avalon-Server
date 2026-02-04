@@ -185,7 +185,7 @@ public final class GroundItems {
         // Send to other players (tradeable-only visibility)
         int regionId = item.getTile().getRegionId();
         for (Player player : World.getPlayers()) {
-            if (player == null || player == owner || !player.hasStarted() || player.hasFinished())
+            if (player == null || (owner != null && owner.getUsername().equalsIgnoreCase(player.getUsername())) || !player.hasStarted() || player.hasFinished())
                 continue;
             if (player.getPlane() != item.getTile().getPlane())
                 continue;
@@ -244,6 +244,13 @@ public final class GroundItems {
                     continue;
                 if (!p.withinDistance(tile, 64))
                     continue;
+                if (floorItem.isInvisible()) {
+                    if (floorItem.getOwner() != null && !floorItem.getOwner().getUsername().equalsIgnoreCase(p.getUsername())) {
+                        continue;
+                    }
+                }
+                if (type == 1 && p != floorItem.getOwner())
+                    continue;
 
                 p.getPackets().sendRemoveGroundItem(floorItem);
                 p.getPackets().sendGroundItem(floorItem);
@@ -261,7 +268,7 @@ public final class GroundItems {
             for (int i = 0; i < item.getAmount(); i++) {
                 Item single = item.clone();
                 single.setAmount(1);
-                addGroundItem(single, tile, owner, false, hiddenTime, type);
+                addGroundItem(single, tile, owner, owner != null, hiddenTime, type);
             }
         } else {
             addGroundItem(item, tile, owner, owner != null, hiddenTime, type);

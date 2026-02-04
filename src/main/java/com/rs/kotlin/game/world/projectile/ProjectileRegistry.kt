@@ -44,7 +44,7 @@ object ProjectileRegistry {
         register(Projectile.KRIL_TSUTSAROTH, ProjectileType(startHeight = 0, endHeight = 0, startTime = 31, multiplier = 5, arc = RollableInt.Range(10, 25), displacement = 50, lengthAdjustment = 34))
         register(Projectile.KREE_ARRA, ProjectileType(startHeight = 0, endHeight = 0, startTime = 31, multiplier = 5, arc = RollableInt.Range(10, 25), displacement = 50, lengthAdjustment = 34))
         register(Projectile.COMMANDER_ZILYANA, ProjectileType(startHeight = 0, endHeight = 0, startTime = 31, multiplier = 5, arc = RollableInt.Range(10, 25), displacement = 50, lengthAdjustment = 34))
-        register(Projectile.CORPOREAL_BEAST_ATTACK, ProjectileType(startHeight = 40, endHeight = 36, startTime = 31, multiplier = 5, arc = RollableInt.Range(10, 25), displacement = 50, lengthAdjustment = 34))
+        register(Projectile.CORPOREAL_BEAST_ATTACK, ProjectileType(startHeight = 40, endHeight = 36, startTime = 11, multiplier = 7, arc = RollableInt.Range(10, 25), displacement = 100, lengthAdjustment = 34))
         register(Projectile.CORPOREAL_BEAST_AOE, ProjectileType(startHeight = 0, endHeight = 0, startTime = 0, multiplier = 10, arc = RollableInt.Range(10, 25), displacement = 0, lengthAdjustment = 34))
     }
 

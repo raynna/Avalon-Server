@@ -413,11 +413,11 @@ object StandardMelee : MeleeData() {
             ),
             name = "Torag's hammers",
             weaponStyle = WeaponStyle.HAMMER,
+            soundId = Rscm.sound("sound.torag_attack"),
             effect = SpecialEffect(
                 execute = { context ->
                     context.attacker.animate(Animation("animation.torag_hammer_attack"))
-                    context.attacker.playSound("sound.hammer", 1)
-                    context.attacker.playSound("sound.hammer", 10, 1)
+                    context.attacker.playSound("sound.torag_attack", 1)
 
                     val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).baseMaxHit
                     val maxHit1 = (maxHit + 1) / 2
@@ -772,7 +772,7 @@ object StandardMelee : MeleeData() {
             ),
             name = "Armadyl godsword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
-            soundId = Rscm.lookup("sound.godsword_slash"),
+            //soundId = Rscm.lookup("sound.godsword_slash"),
             blockAnimationId = Animation.getId("animation.godsword_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
@@ -787,7 +787,6 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.armadyl_godsword_special")
                     context.attacker.gfx("graphic.armadyl_godsword_special")
-                    context.attacker.playSound("sound.armadyl_godsword_special", 1)
                     context.meleeHit()
                 }
             )
@@ -800,7 +799,7 @@ object StandardMelee : MeleeData() {
             ),
             name = "Saradomin godsword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
-            soundId = Rscm.lookup("sound.godsword_slash"),
+            //soundId = Rscm.lookup("sound.godsword_slash"),
             blockAnimationId = Animation.getId("animation.godsword_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
@@ -846,7 +845,7 @@ object StandardMelee : MeleeData() {
             ),
             name = "Bandos godsword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
-            soundId = Rscm.lookup("sound.godsword_slash"),
+            //soundId = Rscm.lookup("sound.godsword_slash"),
             blockAnimationId = Animation.getId("animation.godsword_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
@@ -910,7 +909,7 @@ object StandardMelee : MeleeData() {
             ),
             name = "Zamorak godsword",
             weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
-            soundId = Rscm.lookup("sound.godsword_slash"),
+            //soundId = Rscm.lookup("sound.godsword_slash"),
             blockAnimationId = Animation.getId("animation.godsword_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
@@ -1429,6 +1428,23 @@ object StandardMelee : MeleeData() {
                 }
             )
         ),
+
+        MeleeWeapon(
+            itemId = Item.getIds("item.viggora_s_chainmace", "item.viggora_s_chainmace_u",
+                "item.verac_s_flail", "item.verac_s_flail_100", "item.verac_s_flail_75",
+                "item.verac_s_flail_50", "item.verac_s_flail_25", "item.verac_s_flail_0"),
+            name = "Flail",
+            weaponStyle = WeaponStyle.MACE,
+            blockAnimationId = Animation.getId("animation.flail_block"),
+            soundId = Rscm.lookup("sound.flail_crush"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.flail_attack"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.flail_attack"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.flail_attack"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.flail_attack"),
+            ),
+        ),
+
         MeleeWeapon(
             itemId = Item.getIds(
                 "item.chaotic_rapier", "item.chaotic_rapier_broken", "item.brackish_blade",
@@ -1463,6 +1479,7 @@ object StandardMelee : MeleeData() {
             name = "Tzhaar Maul",
             weaponStyle = WeaponStyle.MAUL,
             blockAnimationId = Animation.getId("animation.maul_block"),
+            soundId = Rscm.sound("sound.tzhaar_ket_om"),
             animations = mapOf(
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.tzhaar_tok_om_attack"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.tzhaar_tok_om_attack"),

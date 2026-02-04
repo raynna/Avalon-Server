@@ -1645,8 +1645,6 @@ public final class WorldPacketsDecoder extends Decoder {
             ClansManager.setMottifColor(player, colorId);
     }
 
-    // --- Interface switching / drag & drop ---
-
     private static void handleSwitchInterfaceItem(Player player, InputStream stream) {
         stream.readShortLE128();
         int fromInterfaceHash = stream.readIntV1();
@@ -1704,8 +1702,6 @@ public final class WorldPacketsDecoder extends Decoder {
             player.getNotes().switchNotes(fromSlot, toSlot);
         }
     }
-
-    // --- Inputs: integer / long text / name ---
 
     private void handleEnterInteger(Player player, InputStream stream) {
         if (!player.isActive() || player.isDead()) return;

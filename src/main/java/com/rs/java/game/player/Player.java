@@ -4053,11 +4053,12 @@ public class Player extends Entity {
             if (ItemConstants.removeAttachedId(item) != -1) {
                 if (ItemConstants.removeAttachedId2(item) != -1)
                     GroundItems.updateGroundItem(new Item(ItemConstants.removeAttachedId2(item), 1), deathTile, killer, 60, 1);
-                items[1][i] = new Item(ItemConstants.removeAttachedId(item));
+                items[1][i].setId(ItemConstants.removeAttachedId(item));
             }
             if (ItemConstants.turnCoins(item) && (inPkingArea() || FfaZone.inRiskArea(this))) {
                 int price = item.getDefinitions().getHighAlchPrice();
-                items[1][i] = new Item(995, price);
+                items[1][i].setId(995);
+                items[1][i].setAmount(price);
             }
             if (inPkingArea() && Settings.ECONOMY_MODE == Settings.HALF_ECONOMY && killer.toggles.get("IGNORE_LOW_VALUE") == Boolean.TRUE) {
                 if (item.getDefinitions().getTipitPrice() == 0) {
@@ -4547,9 +4548,10 @@ public class Player extends Entity {
     }
 
     public void addFoodLock(int ticks) {
+        //if (!isFoodLocked())
+            //getActionManager().setActionDelay(getActionManager().getActionDelay() + ticks);
         if (!isFoodLocked())
-            getActionManager().setActionDelay(getActionManager().getActionDelay() + ticks);
-        getTickManager().addTicks(TickManager.TickKeys.FOOD_LOCK_TICK, ticks);
+            getTickManager().addTicks(TickManager.TickKeys.FOOD_LOCK_TICK, ticks);
     }
 
     public boolean isFoodLocked() {

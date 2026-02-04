@@ -23,11 +23,15 @@ sword_slash=2500
 sword_stab=2501
 sword_crush=2499
 mace_crush=2508
+tzhaar_ket_om=2520
 mace_stab=2509
 punch=2564
 kick=2567
 barrelchest_attack_sound=3454
 barrelchest_special_sound=3460
+flail_crush=1336
+flail_stab=1337
+torag_attack=1332
 #prayer sounds
 default_prayer_activation=2663
 default_prayer_deactivation=2663

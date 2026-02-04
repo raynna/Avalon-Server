@@ -65,10 +65,7 @@ public final class InputStream extends Stream {
 	}
 
 	public int readPacket(Player player) {
-		int id = 0xff & readUnsignedByte() - player.getIsaacKeyPair().inKey().getNextValue();
-		if (id < 128)
-			return id;
-		return (id - 128 << 8) + (readUnsignedByte() - player.getIsaacKeyPair().inKey().getNextValue());
+        return 0xff & readUnsignedByte() - player.getIsaacKeyPair().inKey().getNextValue();
 	}
 
 	public String readString() {
