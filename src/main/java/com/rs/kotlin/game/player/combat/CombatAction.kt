@@ -78,7 +78,6 @@ class CombatAction(
             stop(player)
             return false
         }
-        println(getCombatStyle(player, target))
         style = getCombatStyle(player, target)
         player.faceEntity(target)
         player.setNextFaceEntity(target)
@@ -182,12 +181,10 @@ class CombatAction(
         if (player.isOutOfRange(target, requiredDistance)) {
             player.resetWalkSteps()
             player.calcFollow(target, if (player.run) 2 else 1, false, true)
-            println("out of range, needs moving at start")
         }
         if (player.isDiagonalMeleeBlocked(target, style)) {
             player.resetWalkSteps()
             player.calcFollow(target, if (player.run) 2 else 1, false, true)
-            println("diagonal melee block, needs moving at start")
         }
         if (player.isOutOfRegion(target)) {
             return false
@@ -202,9 +199,7 @@ class CombatAction(
         updateStyle(player)
         val requiredDistance = getAdjustedAttackRange(player, target)
         if (player.isOutOfRange(target, requiredDistance)) {
-            //if (!willBeInRangeAfterStep(player, target, requiredDistance)) {
                 return 0
-            //}
         }
 
         if (player.isCollidingWithTarget(target)) {

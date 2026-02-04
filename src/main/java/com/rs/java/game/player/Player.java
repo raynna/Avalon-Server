@@ -2599,14 +2599,14 @@ public class Player extends Entity {
         processLogicPackets();
         processEquip();
         processUnequip();
-        processQueuedInstantSpecials();
-        processActiveInstantSpecial();
         actionManager.processPreMovement();
         if (coordsEvent != null && coordsEvent.processEvent(this))
             coordsEvent = null;
         if (routeEvent != null && routeEvent.processEvent(this))
             routeEvent = null;
         super.processEntity();
+        processQueuedInstantSpecials();
+        processActiveInstantSpecial();
         actionManager.processPostMovement();
         if (addItemEvent != null) {
             addItemEvent.run();

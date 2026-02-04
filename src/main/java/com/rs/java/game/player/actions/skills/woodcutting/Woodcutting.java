@@ -23,7 +23,7 @@ import com.rs.java.utils.Utils;
 
 public final class Woodcutting extends Action {
 
-    public static enum TreeDefinitions {
+    public enum TreeDefinitions {
 
         NORMAL(1, 25, 1511, 10, 4, 8, 100), // TODO
 
