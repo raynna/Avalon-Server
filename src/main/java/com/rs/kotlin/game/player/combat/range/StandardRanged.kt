@@ -3,12 +3,10 @@ package com.rs.kotlin.game.player.combat.range
 import com.rs.java.game.Animation
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
-import com.rs.java.game.Hit.HitLook
 import com.rs.java.game.item.Item
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
-import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.range.special.ArrowEffects
 import com.rs.kotlin.game.player.combat.range.special.BoltEffects
 import com.rs.kotlin.game.player.combat.special.ChainMode
@@ -457,7 +455,7 @@ object StandardRanged : RangeData() {
                         projectileId = Graphics.getGraphics("graphic.zaryte_bow_projectile"),
                         animationId = Animation.getId("animation.bow_attack"),
                         graphicsId = Graphics.getGraphics("graphic.zaryte_bow_start"),
-                        maxTargets = 2,
+                        additionalTargets = 2,
                         bounceRange = 10
                     )
                     /*context.attacker.animate("animation.bow_attack")
@@ -962,6 +960,90 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.DART
         ),
 
+        /**
+         * Throwing axes
+         */
+
+        RangedWeapon(
+            itemId = Item.getIds("item.bronze_thrownaxe"),
+            name = "Bronze thrownaxe",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.thrownaxe_throw"),
+            projectileId = Rscm.graphic("graphic.bronze_thrownaxe_projectile"),
+            ammoType = AmmoType.THROWING
+        ),
+
+        RangedWeapon(
+            itemId = Item.getIds("item.iron_thrownaxe"),
+            name = "Iron thrownaxe",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.thrownaxe_throw"),
+            projectileId = Rscm.graphic("graphic.iron_thrownaxe_projectile"),
+            ammoType = AmmoType.THROWING
+        ),
+
+        RangedWeapon(
+            itemId = Item.getIds("item.steel_thrownaxe"),
+            name = "Steel thrownaxe",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.thrownaxe_throw"),
+            projectileId = Rscm.graphic("graphic.steel_thrownaxe_projectile"),
+            ammoType = AmmoType.THROWING
+        ),
+
+        RangedWeapon(
+            itemId = Item.getIds("item.mithril_thrownaxe"),
+            name = "Mithril thrownaxe",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.thrownaxe_throw"),
+            projectileId = Rscm.graphic("graphic.mithril_thrownaxe_projectile"),
+            ammoType = AmmoType.THROWING
+        ),
+
+        RangedWeapon(
+            itemId = Item.getIds("item.adamant_thrownaxe"),
+            name = "Adamant thrownaxe",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.thrownaxe_throw"),
+            projectileId = Rscm.graphic("graphic.adamant_thrownaxe_projectile"),
+            ammoType = AmmoType.THROWING
+        ),
+
+        RangedWeapon(
+            itemId = Item.getIds("item.rune_thrownaxe"),
+            name = "Rune thrownaxe",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.thrownaxe_throw"),
+            projectileId = Rscm.graphic("graphic.rune_thrownaxe_projectile"),
+            ammoType = AmmoType.THROWING,
+            special = SpecialAttack.Combat(
+                energyCost = 50,
+                accuracyMultiplier = 1.0,
+                execute = { context ->
+                    context.startChainAttack(
+                        settings = ChainSettings(
+                            projectile = Projectile.CHAIN_ARROW,
+                            projectileId = Graphics.getGraphics("graphic.rune_thrownaxe_projectile"),
+                            chainMode = ChainMode.RANDOM_NEARBY,
+                            firstCombatType = CombatType.RANGED,
+                            spreadCombatType = CombatType.RANGED,
+                            damageScaleMode = DamageScaleMode.ABSOLUTE,
+                        ),
+                        projectile = Projectile.THROWNAXE,
+                        projectileId = Graphics.getGraphics("graphic.rune_thrownaxe_projectile"),
+                        animationId = Animation.getId("animation.thrownaxe_throw"),
+                        additionalTargets = 4,
+                        bounceRange = 3
+                    )
+                }
+            )
+        ),
 
         RangedWeapon(
             itemId = Item.getIds("item.morrigan_s_throwing_axe"),
@@ -986,6 +1068,83 @@ object StandardRanged : RangeData() {
             )
         ),
         RangedWeapon(
+            itemId = Item.getIds("item.corrupt_morrigan_s_throwing_axe"),
+            name = "Corrupt Morrigan's throwing axe",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 4,
+            animationId = 10504,
+            ammoType = AmmoType.MORRIGAN_THROWING,
+            startGfx = Graphics("graphic.morrigans_throwing_axe_start", 0),
+            projectileId = Rscm.graphic("graphic.morrigans_throwing_axe_projectile"),
+        ),
+
+        /**
+         * Javelins
+         */
+
+        RangedWeapon(
+            itemId = Item.getIds("item.bronze_javelin", "item.bronze_javelin_p", "item.bronze_javelin_p_2"),
+            name = "Bronze javelin",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.javelin_throw"),
+            startGfx = Graphics("graphic.javelin_start", 0),
+            projectileId = Rscm.graphic("graphic.bronze_javelin_projectile"),
+            ammoType = AmmoType.JAVELIN
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.iron_javelin", "item.iron_javelin_p", "item.iron_javelin_p_2", "item.iron_javelin_p_3"),
+            name = "Iron javelin",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.javelin_throw"),
+            startGfx = Graphics("graphic.javelin_start", 0),
+            projectileId = Rscm.graphic("graphic.iron_javelin_projectile"),
+            ammoType = AmmoType.JAVELIN
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.steel_javelin", "item.steel_javelin_p", "item.steel_javelin_p_2", "item.steel_javelin_p_3"),
+            name = "Steel javelin",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.javelin_throw"),
+            startGfx = Graphics("graphic.javelin_start", 0),
+            projectileId = Rscm.graphic("graphic.steel_javelin_projectile"),
+            ammoType = AmmoType.JAVELIN
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.mithril_javelin", "item.mithril_javelin_p", "item.mithril_javelin_p_2", "item.mithril_javelin_p_3"),
+            name = "Mithril javelin",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.javelin_throw"),
+            startGfx = Graphics("graphic.javelin_start", 0),
+            projectileId = Rscm.graphic("graphic.mithril_javelin_projectile"),
+            ammoType = AmmoType.JAVELIN
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.adamant_javelin", "item.adamant_javelin_p", "item.adamant_javelin_p_2", "item.adamant_javelin_p_3"),
+            name = "Adamant javelin",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.javelin_throw"),
+            startGfx = Graphics("graphic.javelin_start", 0),
+            projectileId = Rscm.graphic("graphic.adamant_javelin_projectile"),
+            ammoType = AmmoType.JAVELIN
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.rune_javelin", "item.rune_javelin_p", "item.rune_javelin_p_2", "item.rune_javelin_p_3"),
+            name = "Rune javelin",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = Rscm.animation("animation.javelin_throw"),
+            startGfx = Graphics("graphic.javelin_start", 0),
+            projectileId = Rscm.graphic("graphic.rune_javelin_projectile"),
+            ammoType = AmmoType.JAVELIN
+        ),
+
+
+        RangedWeapon(
             itemId = Item.getIds("item.morrigan_s_javelin", "item.morrigan_s_javelin_p", "item.morrigan_s_javelin_p+", "item.morrigan_s_javelin_p++"),
             name = "Morrigan's Javelin",
             weaponStyle = WeaponStyle.THROWING,
@@ -1008,6 +1167,16 @@ object StandardRanged : RangeData() {
                     }
                 }
             )
+        ),
+        RangedWeapon(
+            itemId = Item.getIds("item.corrupt_morrigan_s_javelin"),
+            name = "Corrupt Morrigan's Javelin",
+            weaponStyle = WeaponStyle.THROWING,
+            attackRange = 5,
+            animationId = 10501,
+            ammoType = AmmoType.JAVELIN,
+            startGfx = Graphics("graphic.morrigans_javelin_start", 0),
+            projectileId = Rscm.graphic("graphic.morrigans_javelin_projectile"),
         ),
 
         RangedWeapon(itemId = Item.getIds("item.toktz_xil_ul"),

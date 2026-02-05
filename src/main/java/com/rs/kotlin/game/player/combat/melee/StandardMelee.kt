@@ -1007,7 +1007,7 @@ object StandardMelee : MeleeData() {
                         projectile = Projectile.SPREAD_ALL_SLOW,
                         animationId = Animation.getId("animation.katana_slash"),
                         projectileId = Rscm.graphic("graphic.double_lightning_projectile"),
-                        maxTargets = 2,
+                        additionalTargets = 2,
                         bounceRange = 6
                     )
                     true
@@ -1030,10 +1030,11 @@ object StandardMelee : MeleeData() {
                 "item.katagon_spear", "item.katagon_spear_b",
                 "item.gorgonite_spear", "item.gorgonite_spear_b",
                 "item.promethium_spear", "item.promethium_spear_b",
-                "item.primal_spear", "item.primal_spear_b"
+                "item.primal_spear", "item.primal_spear_b", "item.corrupt_vesta_s_spear", "item.corrupt_vesta_s_spear_deg"
             ),
             name = "Spear",
             weaponStyle = WeaponStyle.SPEAR,
+            soundId = Rscm.sound("sound.sword_stab"),
             blockAnimationId = Animation.getId("animation.new_spear_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.CONTROLLED, 0) to Animation.getId("animation.new_spear_stab"),
@@ -1048,6 +1049,7 @@ object StandardMelee : MeleeData() {
             ),
             name = "Dragon & zamorakian spear",
             weaponStyle = WeaponStyle.SPEAR,
+            soundId = Rscm.sound("sound.sword_stab"),
             blockAnimationId = Animation.getId("animation.new_spear_block"),
             animations = mapOf(
                 StyleKey(AttackStyle.CONTROLLED, 0) to Animation.getId("animation.new_spear_stab"),

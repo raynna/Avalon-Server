@@ -182,11 +182,24 @@ dragon_arrow_start=1116
 dragon_arrow_projectile=1120
 dragon_dart_projectile=1122
 dragon_dart_start=1123
+bronze_javelin_projectile=200
+iron_javelin_projectile=201
+steel_javelin_projectile=202
+mithril_javelin_projectile=203
+adamant_javelin_projectile=204
+rune_javelin_projectile=205
+bronze_thrownaxe_projectile=36
+iron_thrownaxe_projectile=35
+steel_thrownaxe_projectile=37
+mithril_thrownaxe_projectile=38
+adamant_thrownaxe_projectile=39
+rune_thrownaxe_projectile=41
 
 crystal_bow_start=250
 zaryte_bow_start=2962
 morrigans_throwing_axe_start=1838
 morrigans_javelin_start=1836
+javelin_start=1836
 anchor_special=1027
 #spells
 saradomin_strike_hit=76

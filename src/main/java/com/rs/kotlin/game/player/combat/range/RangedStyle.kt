@@ -125,9 +125,12 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             ammo = currentAmmo,
             usingSpecial = false
         )
-        consumeAmmo()
-        if (executeSpecialAttack(attacker, defender)) return
+        if (executeSpecialAttack(attacker, defender)) {
+            consumeAmmo()
+            return
+        }
         if (executeEffect(combatContext.copy(usingSpecial = false))) {
+            consumeAmmo()
             return
         }
 
@@ -154,6 +157,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val impactTicks = sendProjectile()
         if (executeAmmoEffect(combatContext)) return
         combatContext.rangedHit(delay = (impactTicks - 1).coerceAtLeast(0))
+        consumeAmmo()
     }
 
     private fun applySwiftGlovesToPendingHits(hits: MutableList<PendingHit>) {

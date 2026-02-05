@@ -9,10 +9,7 @@ import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.range.AmmoType
 import com.rs.kotlin.game.player.combat.range.RangedAmmo
-import com.rs.kotlin.game.player.combat.range.RangedStyle
-import com.rs.kotlin.game.player.combat.range.special.SwiftGloves
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 
@@ -330,7 +327,7 @@ fun CombatContext.startChainAttack(
     projectile: Projectile = Projectile.ARROW,
     projectileId: Int = -1,
     endGraphicsId: Int = -1,
-    maxTargets: Int,
+    additionalTargets: Int,
     bounceRange: Int
 ) {
     val deathSpreadUsed = mutableSetOf<Entity>()
@@ -349,7 +346,7 @@ fun CombatContext.startChainAttack(
         projectileId = projectileId,
         endGraphicsId = endGraphicsId,
         deathSpreadUsed = deathSpreadUsed,
-        bouncesLeft = maxTargets,
+        bouncesLeft = additionalTargets,
         deathSpreadAmount = settings.deathSpreadAmount,
         bounceRange = bounceRange,
         chainMode = settings.chainMode,
@@ -377,8 +374,7 @@ fun fireChain(
     bounceRange: Int,
     chainMode: ChainMode,
     isFirstHit: Boolean,
-    bounceIndex: Int,
-    startDelay: Int = 0
+    bounceIndex: Int
 ) {
 
     if (deathSpreadUsed.size > 500) return
@@ -428,23 +424,22 @@ fun fireChain(
 
         nextTargets.forEach { next ->
             fireChain(
-                context,
-                settings,
-                target,
-                next,
-                target,
-                rootTarget,
-                settings.projectile,
-                settings.projectileId,
-                endGraphicsId,
-                deathSpreadUsed,
-                if (chainMode == ChainMode.SPREAD_ALL) 0 else bouncesLeft - 1,
-                deathSpreadAmount,
-                bounceRange,
-                chainMode,
-                false,
-                bounceIndex + 1,
-                remainder
+                context = context,
+                settings = settings,
+                source = target,
+                target = next,
+                previousTarget = target,
+                rootTarget = rootTarget,
+                projectile = settings.projectile,
+                projectileId = settings.projectileId,
+                endGraphicsId = endGraphicsId,
+                deathSpreadUsed = deathSpreadUsed,
+                bouncesLeft = if (chainMode == ChainMode.SPREAD_ALL) 0 else bouncesLeft - 1,
+                deathSpreadAmount = deathSpreadAmount,
+                bounceRange = bounceRange,
+                chainMode = chainMode,
+                isFirstHit = false,
+                bounceIndex = bounceIndex + 1
             )
         }
     }
@@ -501,23 +496,22 @@ fun fireChain(
 
                 deathTargets.forEach { next ->
                     fireChain(
-                        context,
-                        settings,
-                        target,
-                        next,
-                        target,
-                        rootTarget,
-                        useProjectile,
-                        useProjectileId,
-                        settings.projectileEnd,
-                        deathSpreadUsed,
-                        if (chainMode == ChainMode.SPREAD_ALL) 0 else deathSpreadAmount - 1,
-                        deathSpreadAmount,
-                        bounceRange,
-                        chainMode,
-                        false,
-                        bounceIndex + 1,
-                        0
+                        context = context,
+                        settings = settings,
+                        source = target,
+                        target = next,
+                        previousTarget = target,
+                        rootTarget = rootTarget,
+                        projectile = useProjectile,
+                        projectileId = useProjectileId,
+                        endGraphicsId = settings.projectileEnd,
+                        deathSpreadUsed = deathSpreadUsed,
+                        bouncesLeft = if (chainMode == ChainMode.SPREAD_ALL) 0 else deathSpreadAmount - 1,
+                        deathSpreadAmount = deathSpreadAmount,
+                        bounceRange = bounceRange,
+                        chainMode = chainMode,
+                        isFirstHit = false,
+                        bounceIndex = bounceIndex + 1
                     )
                 }
             }
