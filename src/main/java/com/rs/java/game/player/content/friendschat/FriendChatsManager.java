@@ -93,16 +93,21 @@ public class FriendChatsManager {
 
 	public void leaveChat(Player player, boolean logout) {
 		synchronized (this) {
+
 			player.setCurrentFriendChat(null);
+
 			if (players != null) {
 				players.remove(player.getDisplayName());
-				if (players.size() == 0) { // no1 at chat so uncache it
+
+				if (players.isEmpty()) {
 					synchronized (cachedFriendChats) {
 						cachedFriendChats.remove(owner);
 					}
-				} else
+				} else {
 					refreshChannel();
+				}
 			}
+
 			if (!logout) {
 				player.setCurrentFriendChatOwner(null);
 				player.disableLootShare();
@@ -110,11 +115,13 @@ public class FriendChatsManager {
 				player.getPackets().sendGameMessage("You have left the channel.");
 				player.getPackets().sendFriendsChatChannel();
 			}
+
 			if (clanWars != null) {
 				clanWars.leave(player, false);
 			}
 		}
 	}
+
 
 	public Player getPlayerByDisplayName(String username) {
 		String formatedUsername = Utils.formatPlayerNameForProtocol(username);
@@ -333,13 +340,14 @@ public class FriendChatsManager {
 	public void refreshChannel() {
 		synchronized (this) {
 			OutputStream stream = new OutputStream();
-			stream.writeString(ownerDisplayName + " <col=ffc800>~" + players.size() + "~");
+			stream.writeString(Utils.formatPlayerNameForDisplay(ownerDisplayName)+ " - <col=ffc800>" + getPlayers().size() + "/200");
 			String ownerName = Utils.formatPlayerNameForDisplay(owner);
 			stream.writeByte(getOwnerDisplayName().equals(ownerName) ? 0 : 1);
 			String channelName = getChannelName();
 			if (!getOwnerDisplayName().equals(ownerName))
 				stream.writeString(ownerName);
-			stream.writeLong(Utils.stringToLong(channelName));
+			stream.writeLong(Utils.stringToLong(
+					Utils.formatPlayerNameForProtocol(channelName)));
 			int kickOffset = stream.getOffset();
 			stream.writeByte(0);
 			stream.writeByte(getPlayers().size());

@@ -371,10 +371,10 @@ public class Player extends Entity {
     public CombatDefinitions combatDefinitions;
     public transient HashMap<Player, Integer> skullList = new HashMap<>();
 
-    private long carriedWealth = 0;
-    private long protectedWealth = 0;
-    private long riskedWealth = 0;
-    private boolean wealthDirty = true;
+    private transient long carriedWealth = 0;
+    private transient long protectedWealth = 0;
+    private transient long riskedWealth = 0;
+    private transient boolean wealthDirty = true;
 
     private int dfsCharges;
 

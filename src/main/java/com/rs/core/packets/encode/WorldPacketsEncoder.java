@@ -34,6 +34,7 @@ import com.rs.java.utils.MapArchiveKeys;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.huffman.Huffman;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class WorldPacketsEncoder extends Encoder {
@@ -1164,8 +1165,15 @@ public class WorldPacketsEncoder extends Encoder {
 		} else {
 			byte[] chatStr = new byte[250];
 			chatStr[0] = (byte) message.getMessage().length();
-			int offset = 1 + Huffman.encryptMessage(1, message.getMessage().length(), chatStr, 0,
-					message.getMessage().getBytes());
+
+			int offset = 1 + Huffman.encryptMessage(
+					1,
+					message.getMessage().length(),
+					chatStr,
+					0,
+					message.getMessage().getBytes(StandardCharsets.ISO_8859_1)
+			);
+
 			stream.writeBytes(chatStr, 0, offset);
 		}
 		stream.endPacketVarByte();

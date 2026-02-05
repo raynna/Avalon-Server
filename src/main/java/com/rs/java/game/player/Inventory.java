@@ -119,6 +119,7 @@ public final class Inventory implements Serializable {
 		}
 
 		player.getPackets().sendItems(93, finalised);
+		player.setWealthDirty(true);
 	}
 
 	public void unlockInventoryOptions() {

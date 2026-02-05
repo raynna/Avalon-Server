@@ -3,6 +3,8 @@ package com.rs.core.packets;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
 
+import java.nio.charset.StandardCharsets;
+
 public final class OutputStream extends Stream {
 
 	private static final int[] BIT_MASK = new int[32];
@@ -223,9 +225,10 @@ public final class OutputStream extends Stream {
 	}
 
 	public void writeString(String s) {
-		checkCapacityPosition(getOffset() + s.length() + 1);
-		System.arraycopy(s.getBytes(), 0, getBuffer(), getOffset(), s.length());
-		setOffset(getOffset() + s.length());
+		byte[] data = s.getBytes(StandardCharsets.ISO_8859_1);
+		checkCapacityPosition(getOffset() + data.length + 1);
+		System.arraycopy(data, 0, getBuffer(), getOffset(), data.length);
+		setOffset(getOffset() + data.length);
 		writeByte(0);
 	}
 

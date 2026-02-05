@@ -152,6 +152,7 @@ public final class Launcher {
 		CollectionLog.init();
 		RandomWorldBossHandler.start();
 		TournamentScheduler.INSTANCE.start();
+		FriendChatsManager.init();
     }
 
 	private static void addCleanMemoryTask() {
