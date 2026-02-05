@@ -47,6 +47,35 @@ object CombatAnimations {
         return unarmed.sounds[StyleKey(attackStyle, styleIndex)] ?: Rscm.lookup("sound.punch")
     }
 
+    fun getBlockSound(player: Player): Int {
+
+        val shieldId = player.equipment.getShieldId()
+        if (shieldId != -1) {
+            val shieldName = player.equipment.getItem(shieldId)?.definitions?.name
+                ?.lowercase() ?: ""
+
+            if (shieldName.contains("shield")) {
+                return Rscm.lookup("sound.shield_block")
+            }
+        }
+
+        val bodyId = player.equipment.getChestId()
+        if (bodyId != -1) {
+            val bodyName = player.equipment.getItem(bodyId)?.definitions?.name
+                ?.lowercase() ?: ""
+
+            return when {
+                bodyName.contains("platebody") -> Rscm.lookup("sound.metal_block")
+                bodyName.contains("chainbody") -> Rscm.lookup("sound.metal_block")
+                else -> Rscm.lookup("sound.human_block")
+            }
+        }
+
+        return Rscm.lookup("sound.human_block")
+    }
+
+
+
     fun getSound(player: Player): Int {
         val (weaponId, attackStyle, styleIndex) =
             resolveStyle(player) ?: return Rscm.lookup("sound.punch")

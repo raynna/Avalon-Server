@@ -312,8 +312,11 @@ public abstract class Entity extends WorldTile {
         }
         handleHit(hit);
         addReceivedDamage(hit.getSource(), hit.getDamage());
-        if (this instanceof Player) {
-            Player p = (Player) this;
+        if (this instanceof Player p) {
+            if (hit.getDamage() > 0) {
+                int soundId = Utils.randomBoolean() ? 516 : 522;
+                p.playSound(soundId, 1);
+            }
             if (hitpoints - hit.getDamage() <= p.getMaxHitpoints() * 0.2 && hitpoints - hit.getDamage() > 0) {
                 if (p.getPrayer().isActive(NormalPrayer.RETRIBUTION)) {
                     p.gfx(new Graphics(436));

@@ -58,6 +58,7 @@ interface CombatStyle {
         if (defender is Player) {
             if (this is MeleeStyle) {
                 defender.animate(CombatAnimations.getBlockAnimation(defender))
+                defender.playSound(CombatAnimations.getBlockSound(defender))
             }
             defender.chargeManager.processIncommingHit()
             if (defender.combatDefinitions.isAutoRelatie) {
@@ -90,6 +91,7 @@ interface CombatStyle {
         if (defender is Player) {
             if (this is RangedStyle || this is MagicStyle) {
                 defender.animate(CombatAnimations.getBlockAnimation(defender))
+                defender.playSound(CombatAnimations.getBlockSound(defender))
             }
             defender.chargeManager.processHit(hit)
 

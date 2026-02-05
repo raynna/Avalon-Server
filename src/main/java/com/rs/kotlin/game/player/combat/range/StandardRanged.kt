@@ -254,6 +254,7 @@ object StandardRanged : RangeData() {
             attackSpeed = 6,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.BRONZE_BOLT
         ),
@@ -264,6 +265,7 @@ object StandardRanged : RangeData() {
             attackSpeed = 6,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.IRON_BOLT
         ),
@@ -274,6 +276,7 @@ object StandardRanged : RangeData() {
             attackSpeed = 6,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.STEEL_BOLT
         ),
@@ -284,6 +287,7 @@ object StandardRanged : RangeData() {
             attackSpeed = 6,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.BLACK_BOLT
         ),
@@ -294,6 +298,7 @@ object StandardRanged : RangeData() {
             attackSpeed = 6,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.MITHRIL_BOLT
         ),
@@ -304,6 +309,7 @@ object StandardRanged : RangeData() {
             attackSpeed = 6,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.ADAMANT_BOLT
         ),
@@ -313,6 +319,7 @@ object StandardRanged : RangeData() {
             weaponStyle = WeaponStyle.CROSSBOW,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.RUNE_BOLT
         ),
@@ -322,6 +329,7 @@ object StandardRanged : RangeData() {
             weaponStyle = WeaponStyle.CROSSBOW,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.DRAGON_BOLT
         ),
@@ -331,6 +339,7 @@ object StandardRanged : RangeData() {
             weaponStyle = WeaponStyle.CROSSBOW,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.DRAGON_BOLT
         ),
@@ -340,6 +349,7 @@ object StandardRanged : RangeData() {
             weaponStyle = WeaponStyle.CROSSBOW,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             maxAmmoTier = AmmoTier.DRAGON_BOLT,
             special = SpecialAttack.Combat(
@@ -382,6 +392,7 @@ object StandardRanged : RangeData() {
             attackSpeed = 6,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             allowedAmmoIds = setOf(Item.getId("item.bone_bolts"))
         ),
@@ -392,6 +403,7 @@ object StandardRanged : RangeData() {
             attackSpeed = 4,
             attackRange = 7,
             animationId = 4230,
+            soundId = 2695,
             ammoType = AmmoType.BOLT,
             allowedAmmoIds = setOf(Item.getId("item.kebbit_bolts"), Item.getId("item.long_kebbit_bolts"))
         ),

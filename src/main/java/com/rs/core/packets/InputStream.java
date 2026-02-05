@@ -64,9 +64,18 @@ public final class InputStream extends Stream {
 		}
 	}
 
+	/**
+	 * int id = (readUnsignedByte() & 0xff) - player.getIsaacKeyPair().inKey().getNextValue();
+	 * return id;
+	 * @param player
+	 * @return
+	 */
+
 	public int readPacket(Player player) {
-        return 0xff & readUnsignedByte() - player.getIsaacKeyPair().inKey().getNextValue();
+		return ((readUnsignedByte() & 0xff)
+				- player.getIsaacKeyPair().inKey().getNextValue()) & 0xff;
 	}
+
 
 	public String readString() {
 		int startpos = offset;

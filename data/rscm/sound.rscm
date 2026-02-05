@@ -80,6 +80,12 @@ potion_boost_end=2607
 hand_cannon_attack=7206
 bow_attack=2702
 magic_shortbow_special=2545
+#blocksounds
+human_block=511
+human_hit=516
+human_hit_2=522
+shield_block=2501
+metal_block=2499
 
 #npc
 dragonfire_breath=3750
