@@ -115,6 +115,8 @@ public final class Commands {
                 "Show kill/death ratio");
         registerCommand("score", Commands::kdrCommand, CommandCategory.NORMAL,
                 "Show kill/death ratio");
+        registerCommand("risk", Commands::showRiskCommand, CommandCategory.NORMAL,
+                "Show your current risk.");
         registerCommand("testdrop", Commands::testDropCommand, CommandCategory.DEVELOPER,
                 "Test drop tables. Usage: ::testdrop [npcId] [times]");
         registerCommand("droptest", Commands::dropTestToggleCommand, CommandCategory.DEVELOPER,
@@ -1607,6 +1609,7 @@ public final class Commands {
     private static boolean skullCommand(Player player, String[] cmd) {
         player.skullDelay = 2000;
         player.skullId = 0;
+        Skulls.checkSkulls(player, player.isAtPvP());
         player.getAppearence().generateAppearenceData();
         return true;
     }
@@ -3062,19 +3065,11 @@ public final class Commands {
     }
 
     private static boolean showRiskCommand(Player player, String[] cmd) {
-        Integer[][] slots = ButtonHandler.getItemSlotsKeptOnDeath(player, player.inPkingArea(), player.hasSkull(),
-                player.getPrayer().hasProtectItemPrayerActive());
-        Item[][] riskitems = ButtonHandler.getItemsKeptOnDeath(player, slots);
-        long riskedWealth = 0;
+       long risk = Skulls.getRiskedWealth(player);
 
-        for (Item item : riskitems[1]) {
-            if (item == null) continue;
-            riskedWealth += GrandExchange.getPrice(item.getId()) * item.getAmount();
-        }
-
-        player.message("My risk is: " + Utils.getFormattedNumber(riskedWealth, ',') + " coins.");
+        player.message("My risk is: " + Utils.formatAmount(risk) + " coins.");
         player.setNextForceTalk(
-                new ForceTalk("My risk is: " + Utils.getFormattedNumber(riskedWealth, ',') + " coins."));
+                new ForceTalk("My risk is: " + Utils.formatAmount(risk) + " coins."));
         return true;
     }
 

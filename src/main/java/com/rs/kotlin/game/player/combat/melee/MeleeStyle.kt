@@ -2,16 +2,12 @@ package com.rs.kotlin.game.player.combat.melee
 
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.Entity
-import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
-import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
-import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
-import com.rs.kotlin.game.player.combat.damage.SoakDamage
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.meleeHit
 import kotlin.math.min
@@ -77,8 +73,8 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
         if (executeEffect(combatContext))
             return
-        attacker.animate(CombatAnimations.getAnimation(attacker))
-        attacker.playSound(CombatAnimations.getSound(attacker), 1)
+        attacker.animate(CombatUtils.getAnimation(attacker))
+        attacker.playSound(CombatUtils.getSound(attacker), 1)
         val hit = combatContext.meleeHit(delay = getHitDelay())
         if (attacker.developerMode) {
             attacker.message("[Melee Attack] -> " +

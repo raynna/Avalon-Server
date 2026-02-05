@@ -21,9 +21,11 @@ import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.item.meta.MetaDataType;
 import com.rs.java.game.item.meta.RunePouchMetaData;
 import com.rs.java.game.player.content.ItemConstants;
+import com.rs.java.game.player.content.Skulls;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.utils.*;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public final class Inventory implements Serializable {
 
@@ -159,6 +161,10 @@ public final class Inventory implements Serializable {
 			player.getPackets().sendUpdateItems(93, finalised, slots);
 		} else {
 			player.getPackets().sendItems(93, finalised);
+		}
+		player.setWealthDirty(true);
+		if (player.hasSkull()) {
+			PvpManager.INSTANCE.updateSkullIfNeeded(player);
 		}
 	}
 

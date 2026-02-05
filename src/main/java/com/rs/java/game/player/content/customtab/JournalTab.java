@@ -7,7 +7,9 @@ import com.rs.java.game.ForceTalk;
 import com.rs.java.game.World;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Ranks.Rank;
+import com.rs.java.game.player.content.Skulls;
 import com.rs.java.utils.HexColours.Colour;
+import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
 
 public class JournalTab extends CustomTab {
@@ -192,7 +194,42 @@ public class JournalTab extends CustomTab {
 				}
 			}
 		},
-		KILLS(16) {
+		PKINGCATEGORY(16) {
+			@Override
+			public void usage(Player p) {
+			}
+
+			@Override
+			public String text(Player p) {
+				return "<col="+ Colour.YELLOW.getHex() + "<u>Pking";
+			}
+		},
+		RISKWEALTH(17) {
+			@Override
+			public void usage(Player p) {
+				p.getPackets().sendGameMessage("My current risk is: " + Utils.formatAmount(Skulls.getRiskedWealth(p)) + ".");
+				p.setNextForceTalk(new ForceTalk("My current risk is: " + Utils.formatAmount(Skulls.getRiskedWealth(p)) + "."));
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Current risk: <col=04BB3B>" +  Utils.formatAmount(Skulls.getRiskedWealth(p)) + ".";
+			}
+		},
+		EP(18) {
+			@Override
+			public void usage(Player p) {
+				p.getPackets().sendGameMessage("My current Ep is: " + p.getEP() + ".");
+				p.setNextForceTalk(new ForceTalk("I have a total of " + p.getEP() + "% EP."));
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Ep: " + (p.getEP() == 100 ? "<col=04BB3B>" : p.getEP() > 0 ? "<col=FFF300>" : "<col=BB0404>")
+						+ p.getEP() + "%";
+			}
+		},
+		KILLS(19) {
 			@Override
 			public void usage(Player p) {
 				p.getPackets().sendGameMessage("My killcount is: " + p.getPlayerKillcount() + ".");
@@ -204,7 +241,7 @@ public class JournalTab extends CustomTab {
 				return "Kills: <col=04BB3B>" + p.getPlayerKillcount();
 			}
 		},
-		DEATHS(17) {
+		DEATHS(20) {
 			@Override
 			public void usage(Player p) {
 				p.getPackets().sendGameMessage("My deathcount is: " + p.getDeathCount() + ".");
@@ -216,7 +253,7 @@ public class JournalTab extends CustomTab {
 				return "Deaths: <col=04BB3B>" + p.getDeathCount();
 			}
 		},
-		KDR(18) {
+		KDR(21) {
 			@Override
 			public void usage(Player p) {
 				double kill = p.getPlayerKillcount();
@@ -235,7 +272,7 @@ public class JournalTab extends CustomTab {
 				return "K/D Ratio: <col=04BB3B>" + new DecimalFormat("0.00").format(dr);
 			}
 		},
-		PLAYERXP(19) {
+		PLAYERXP(22) {
 			@Override
 			public void usage(Player p) {
 				p.getPackets().sendGameMessage("Your bonus experience is " + p.getBonusExp() + ".");
@@ -249,21 +286,8 @@ public class JournalTab extends CustomTab {
 			}
 		},
 
-		EP(20) {
-			@Override
-			public void usage(Player p) {
-				p.getPackets().sendGameMessage("Your Ep is: " + p.getEP() + ".");
-				p.setNextForceTalk(new ForceTalk("I have a total of " + p.getEP() + "% EP."));
-			}
 
-			@Override
-			public String text(Player p) {
-				return "Ep: " + (p.getEP() == 100 ? "<col=04BB3B>" : p.getEP() > 0 ? "<col=FFF300>" : "<col=BB0404>")
-						+ p.getEP() + "%";
-			}
-		},
-
-		SLAYERTASK(21) {
+		SLAYERTASK(23) {
 			@Override
 			public void usage(Player p) {
 				p.getPackets().sendGameMessage(p.getSlayerTask() == null ? "I don't have a slayer task."
@@ -279,7 +303,7 @@ public class JournalTab extends CustomTab {
 			}
 		},
 
-		TASKLOCATION(22) {
+		TASKLOCATION(24) {
 			@Override
 			public void usage(Player p) {
 				if (p.getSlayerTaskTip() != null)
@@ -346,7 +370,7 @@ public class JournalTab extends CustomTab {
 				if (compId != store.compId)
 					continue;
 				store.usage(player);
-				refresh(player);
+				//refresh(player);
 			}
 		}
 		switch (compId) {

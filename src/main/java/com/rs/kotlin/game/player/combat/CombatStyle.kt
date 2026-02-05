@@ -11,7 +11,6 @@ import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
-import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.NewPoison
@@ -53,12 +52,11 @@ interface CombatStyle {
             attacker,
             defender,
             hit
-        )//boost prayers effects, like increase turmoil or leech prayers
-        // last, due to soulsplit would heal confusing heals if not & rest is just increase prayer %
+        )
         if (defender is Player) {
             if (this is MeleeStyle) {
-                defender.animate(CombatAnimations.getBlockAnimation(defender))
-                defender.playSound(CombatAnimations.getBlockSound(defender))
+                defender.animate(CombatUtils.getBlockAnimation(defender))
+                defender.playSound(CombatUtils.getBlockSound(defender), 20, 1)
             }
             defender.chargeManager.processIncommingHit()
             if (defender.combatDefinitions.isAutoRelatie) {
@@ -90,8 +88,8 @@ interface CombatStyle {
         defender.handleHit(hit);
         if (defender is Player) {
             if (this is RangedStyle || this is MagicStyle) {
-                defender.animate(CombatAnimations.getBlockAnimation(defender))
-                defender.playSound(CombatAnimations.getBlockSound(defender))
+                defender.animate(CombatUtils.getBlockAnimation(defender))
+                defender.playSound(CombatUtils.getBlockSound(defender), 20, 1)
             }
             defender.chargeManager.processHit(hit)
 
@@ -316,7 +314,7 @@ interface CombatStyle {
 
     fun executeEffect(combatContext: CombatContext): Boolean {
         combatContext.weapon.effect?.let { effect ->
-            CombatAnimations.getAnimation(
+            CombatUtils.getAnimation(
                 combatContext.weaponId,
                 combatContext.attackStyle,
                 combatContext.attacker.combatDefinitions.attackStyle

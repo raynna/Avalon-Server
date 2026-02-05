@@ -88,7 +88,7 @@ import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.InputStream;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.game.player.combat.CombatAnimations;
+import com.rs.kotlin.game.player.combat.CombatUtils;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 
@@ -2112,7 +2112,7 @@ public final class ObjectHandler {
             }
             usingKnife = true;
         }
-        int weaponEmote = CombatAnimations.INSTANCE.getAnimation(player);
+        int weaponEmote = CombatUtils.INSTANCE.getAnimation(player);
         int knifeEmote = -1;
 
         player.animate(new Animation(usingKnife ? knifeEmote : weaponEmote));

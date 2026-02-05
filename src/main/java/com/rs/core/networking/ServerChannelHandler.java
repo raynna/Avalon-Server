@@ -61,7 +61,6 @@ public final class ServerChannelHandler extends SimpleChannelHandler {
 		Session session = new Session(e.getChannel());
 		ctx.setAttachment(session);
 	}
-
 	@Override
 	public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
 		Logger.log("NET", "Channel disconnected: " + e.getChannel());

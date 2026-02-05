@@ -4,9 +4,8 @@ import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.melee.StandardMelee
 import com.rs.kotlin.game.player.combat.range.RangeData
-import com.rs.kotlin.game.player.combat.range.StandardRanged
 
-object CombatAnimations {
+object CombatUtils {
 
     private const val DEFAULT_ANIMATION = 422
     private const val DEFAULT_RANGE_ANIMATION = 426

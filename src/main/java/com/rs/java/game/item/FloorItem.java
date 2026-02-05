@@ -37,7 +37,6 @@ public class FloorItem extends Item {
 		this.tile = tile;
 		this.owner = owner;
 		this.type = invisible ? 1 : 0;
-		System.out.println("Floor item created: " + item.getName() + ", tile: " + tile.getX() + "-" + tile.getY() + ", owner: " + (owner != null ? owner.getUsername() : "None"));
 	}
 
 	public FloorItem(Item item, WorldTile tile, Player owner, boolean invisible, int tick, boolean spawned) {
@@ -47,7 +46,6 @@ public class FloorItem extends Item {
 		this.type = invisible ? 1 : 0;
 		this.tick = tick;
 		this.spawned = spawned;
-		System.out.println("Floor item created: " + item.getName() + ", tile: " + tile.getX() + "-" + tile.getY() + ", owner: " + (owner != null ? owner.getUsername() : "None"));
 	}
 
 	public FloorItem(Item item, WorldTile tile, boolean appearForever) {
@@ -55,7 +53,6 @@ public class FloorItem extends Item {
 		this.tile = tile;
 		this.owner = null;
 		this.type = appearForever ? 2 : 0;
-		System.out.println("Floor item created: " + item.getName() + ", tile: " + tile.getX() + "-" + tile.getY() + ", owner: " + (owner != null ? owner.getUsername() : "None"));
 	}
 
 	@Override

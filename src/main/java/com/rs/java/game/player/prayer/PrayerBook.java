@@ -17,6 +17,7 @@ import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.TickManager;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentRules;
+import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public class PrayerBook implements Serializable {
     @Serial
@@ -125,7 +126,6 @@ public class PrayerBook implements Serializable {
     public boolean switchPrayer(Prayer prayer) {
         boolean currentlyActive = isActive(prayer);
         int currentTick = getCurrentTick();
-
         if (currentlyActive) {
             boolean result = deactivatePrayer(prayer);
             return result;
@@ -154,9 +154,14 @@ public class PrayerBook implements Serializable {
         }
 
         this.prayerActivatedTick = currentTick;
-
         player.getPackets().sendSound(prayer.getActivationSound(), 0, 1);
         recalculatePrayer();
+        if (prayer == AncientPrayer.PROTECT_ITEM_CURSE || prayer == NormalPrayer.PROTECT_ITEM) {
+            if (player.hasSkull()) {
+                player.setWealthDirty(true);
+                PvpManager.INSTANCE.updateSkullIfNeeded(player);
+            }
+        }
         return true;
     }
 
@@ -179,6 +184,12 @@ public class PrayerBook implements Serializable {
         }
         player.getPackets().sendSound(2663, 0, 1);
         recalculatePrayer();
+        if (prayer == AncientPrayer.PROTECT_ITEM_CURSE || prayer == NormalPrayer.PROTECT_ITEM) {
+            if (player.hasSkull()) {
+                player.setWealthDirty(true);
+                PvpManager.INSTANCE.updateSkullIfNeeded(player);
+            }
+        }
         return true;
     }
 
@@ -822,15 +833,15 @@ public class PrayerBook implements Serializable {
     }
 
     public boolean hasProtectFromMelee() {
-        return  isActive(NormalPrayer.PROTECT_FROM_MELEE) || isActive(AncientPrayer.DEFLECT_MELEE);
+        return isActive(NormalPrayer.PROTECT_FROM_MELEE) || isActive(AncientPrayer.DEFLECT_MELEE);
     }
 
     public boolean hasProtectFromRanging() {
-        return  isActive(NormalPrayer.PROTECT_FROM_MISSILES) || isActive(AncientPrayer.DEFLECT_MISSILES);
+        return isActive(NormalPrayer.PROTECT_FROM_MISSILES) || isActive(AncientPrayer.DEFLECT_MISSILES);
     }
 
     public boolean hasProtectFromMagic() {
-       return  isActive(NormalPrayer.PROTECT_FROM_MAGIC) || isActive(AncientPrayer.DEFLECT_MAGIC);
+        return isActive(NormalPrayer.PROTECT_FROM_MAGIC) || isActive(AncientPrayer.DEFLECT_MAGIC);
     }
 
     public boolean hasProtectItemPrayerActive() {
@@ -891,20 +902,20 @@ public class PrayerBook implements Serializable {
 
             long lastBoost = lastLeechTimes.getOrDefault(i, 0L);
 
-                if (current > 0) {
-                    leechBonuses[i]--;
-                } else {
-                    leechBonuses[i]++;
-                }
+            if (current > 0) {
+                leechBonuses[i]--;
+            } else {
+                leechBonuses[i]++;
+            }
 
-                adjustStat(i, leechBonuses[i]);
-                int newCurrent = leechBonuses[i];
-                if (newCurrent != current && newCurrent > 0)
-                    changed = true;
-                String statAffected = BonusIndex.nameOf(i);
-                if (newCurrent == 0) {
-                    player.message("Your " + statAffected + " is now unaffected by sap and leech curses.", true);
-                }
+            adjustStat(i, leechBonuses[i]);
+            int newCurrent = leechBonuses[i];
+            if (newCurrent != current && newCurrent > 0)
+                changed = true;
+            String statAffected = BonusIndex.nameOf(i);
+            if (newCurrent == 0) {
+                player.message("Your " + statAffected + " is now unaffected by sap and leech curses.", true);
+            }
         }
         if (changed)
             player.message("The sap or leech curses currently affecting your stats reduce a little.", true);

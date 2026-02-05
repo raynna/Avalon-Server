@@ -6,12 +6,14 @@ import com.rs.java.game.item.ground.GroundItems
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
+import com.rs.java.game.player.content.Skulls.checkSkulls
 import com.rs.java.game.player.controllers.WildernessController
 import com.rs.java.utils.HexColours
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.world.util.Msg
 import java.util.*
 import kotlin.math.abs
+
 
 object PvpManager {
 
@@ -46,8 +48,10 @@ object PvpManager {
     fun onPlayerDamagedByPlayer(victim: Player, attacker: Player) {
         val t = now()
         lastPvpHitAt[victim] = t
-        if (!attacker.skullList.containsKey(victim))
+        if (!attacker.skullList.containsKey(victim)) {
             attacker.setWildernessSkull()
+            updateSkullIfNeeded(attacker)
+        }
     }
 
     @JvmStatic
@@ -110,6 +114,7 @@ object PvpManager {
         ensureInterfaceOpen(player)
         refreshAll(player)
         onMoved(player)
+        updateSkullIfNeeded(player)
     }
 
     @JvmStatic
@@ -131,7 +136,6 @@ object PvpManager {
 
         val safeEffectiveForSelf = isEffectivelySafeForSelf(player)
         val canPvp = !safeEffectiveForSelf
-
         if (player.isCanPvp != canPvp) {
             player.setCanPvp(canPvp)
             player.getAppearence().generateAppearenceData()
@@ -221,12 +225,10 @@ object PvpManager {
         return diff <= levelRange
     }
 
-    fun onFirstHitPlayer(attacker: Player) {
-        if (attacker.isDead) return
-        if (!isEffectivelySafeForSelf(attacker)) {
-            attacker.setWildernessSkull()
-        }
+    fun updateSkullIfNeeded(player: Player) {
+        checkSkulls(player, player.isAtPvP)
     }
+
 
     private fun sendPvpInterface(player: Player, safeForSelf: Boolean) {
         ensureInterfaceOpen(player)

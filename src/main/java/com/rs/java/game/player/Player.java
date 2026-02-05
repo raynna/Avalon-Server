@@ -370,6 +370,12 @@ public class Player extends Entity {
      */
     public CombatDefinitions combatDefinitions;
     public transient HashMap<Player, Integer> skullList = new HashMap<>();
+
+    private long carriedWealth = 0;
+    private long protectedWealth = 0;
+    private long riskedWealth = 0;
+    private boolean wealthDirty = true;
+
     private int dfsCharges;
 
     private transient CombatStyle melee;
@@ -1251,26 +1257,6 @@ public class Player extends Entity {
 
     public LividFarm getLivid() {
         return lividFarm;
-    }
-
-    public long getWealth() {
-        boolean skulled = hasSkull();
-        boolean wilderness = inPkingArea();
-        Integer[][] slots = ButtonHandler.getItemSlotsKeptOnDeath(this, wilderness, skulled, getPrayer().hasProtectItemPrayerActive());
-        Item[][] items = getItemsKeptOnDeath(this, slots);
-        long riskedWealth = 0;
-        long carriedWealth = 0;
-        for (Item item : items[1]) {
-            if (item == null)
-                continue;
-            carriedWealth = riskedWealth += GrandExchange.getPrice(item.getId()) * item.getAmount();
-        }
-        for (Item item : items[0]) {
-            if (item == null)
-                continue;
-            carriedWealth += GrandExchange.getPrice(item.getId()) * item.getAmount();
-        }
-        return wilderness ? riskedWealth : carriedWealth;
     }
 
     public void refreshMoneyPouch() {
@@ -6414,6 +6400,39 @@ public class Player extends Entity {
             }
         }
     }
+
+    public long getCarriedWealth() {
+        return carriedWealth;
+    }
+
+    public void setCarriedWealth(long carriedWealth) {
+        this.carriedWealth = carriedWealth;
+    }
+
+    public long getProtectedWealth() {
+        return protectedWealth;
+    }
+
+    public void setProtectedWealth(long protectedWealth) {
+        this.protectedWealth = protectedWealth;
+    }
+
+    public long getRiskedWealth() {
+        return riskedWealth;
+    }
+
+    public void setRiskedWealth(long riskedWealth) {
+        this.riskedWealth = riskedWealth;
+    }
+
+    public boolean isWealthDirty() {
+        return wealthDirty;
+    }
+
+    public void setWealthDirty(boolean wealthDirty) {
+        this.wealthDirty = wealthDirty;
+    }
+
 
 
 }

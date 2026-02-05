@@ -4,7 +4,6 @@ import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.Entity
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
-import com.rs.java.game.World
 import com.rs.java.game.item.Item
 import com.rs.java.game.item.ground.GroundItems
 import com.rs.java.game.player.Equipment
@@ -133,7 +132,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         }
 
         attacker.animate(
-            CombatAnimations.getAnimation(
+            CombatUtils.getAnimation(
                 currentWeaponId,
                 attackStyle,
                 attacker.combatDefinitions.attackStyle
@@ -141,7 +140,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         )
 
         attacker.playSound(
-            CombatAnimations.getSound(
+            CombatUtils.getSound(
                 currentWeaponId,
                 attackStyle,
                 attacker.combatDefinitions.attackStyle

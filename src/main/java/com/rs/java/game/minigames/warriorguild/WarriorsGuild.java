@@ -24,7 +24,7 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.game.player.combat.CombatAnimations;
+import com.rs.kotlin.game.player.combat.CombatUtils;
 
 public class WarriorsGuild extends Controller {
 
@@ -419,7 +419,7 @@ public class WarriorsGuild extends Controller {
 	 *            The object we are striking.
 	 */
 	private void submitDummyHit(final WorldObject object) {
-		int weaponEmote = CombatAnimations.INSTANCE.getAnimation(player);
+		int weaponEmote = CombatUtils.INSTANCE.getAnimation(player);
 
 		player.animate(weaponEmote);
 		WorldTasksManager.schedule(new WorldTask() {

@@ -1529,7 +1529,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     val attacker = context.attacker
                     val defender = context.defender
-                    attacker.animate(CombatAnimations.getAnimation(context.weaponId, context.attackStyle, attacker.combatDefinitions.attackStyle))
+                    attacker.animate(CombatUtils.getAnimation(context.weaponId, context.attackStyle, attacker.combatDefinitions.attackStyle))
                     val targets = context.getScytheTargets()
                     if (defender.size == 1 && (defender is NPC && !defender.name.contains("dummy", ignoreCase = true))) {
                         for (victim in targets) {

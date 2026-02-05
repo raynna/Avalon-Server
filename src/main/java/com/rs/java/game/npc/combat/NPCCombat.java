@@ -8,13 +8,12 @@ import com.rs.java.game.npc.fightcaves.FightCavesNPC;
 import com.rs.java.game.npc.fightkiln.HarAkenTentacle;
 import com.rs.java.game.npc.pest.PestPortal;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.actions.combat.Combat;
 import com.rs.java.utils.MapAreas;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.AttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
-import com.rs.kotlin.game.player.combat.CombatAnimations;
+import com.rs.kotlin.game.player.combat.CombatUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -388,7 +387,7 @@ public final class NPCCombat {
         int anim;
 
         if (target instanceof Player player) {
-            anim = CombatAnimations.INSTANCE
+            anim = CombatUtils.INSTANCE
                     .getBlockAnimation(player);
         } else {
             anim = Combat.getDefenceEmote(target);
