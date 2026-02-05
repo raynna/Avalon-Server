@@ -77,7 +77,7 @@ public class NPCHandler {
         if (npc == null || npc.hasFinished() || !player.getMapRegionsIds().contains(npc.getRegionId()))
             return;
         if (npc.getDefinitions().hasAttackOption()) {
-            DropInterface.INSTANCE.open(player);
+            DropInterface.INSTANCE.open(player, true);
             DropInterface.INSTANCE.selectNpc(player, npc.getId());
             if (npc.getHitpoints() > 0)
                 player.getPackets().sendGameMessage("%s has %s hitpoints left.", npc.getName(), npc.getHitpoints());

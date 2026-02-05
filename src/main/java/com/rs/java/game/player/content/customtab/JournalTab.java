@@ -86,7 +86,7 @@ public class JournalTab extends CustomTab {
 		SEARCH_DROPS(7) {
 			@Override
 			public void usage(Player p) {
-				DropInterface.INSTANCE.open(p);
+				DropInterface.INSTANCE.open(p, true);
 			}
 
 			@Override

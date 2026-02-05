@@ -25,6 +25,7 @@ import com.rs.java.game.player.content.Skulls;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.utils.*;
 import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.player.interfaces.DropInterface;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public final class Inventory implements Serializable {
@@ -610,6 +611,8 @@ public final class Inventory implements Serializable {
 					.append(item.getMetadata().getValue());
 			player.message(metaBuilder.toString());
 		}
+		DropInterface.INSTANCE.open(player, false);
+		DropInterface.INSTANCE.selectItem(player, item.getId(), true);
 	}
 
 

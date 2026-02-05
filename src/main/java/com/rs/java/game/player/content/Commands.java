@@ -2487,7 +2487,7 @@ public final class Commands {
     }
 
     private static boolean showDrops(Player player, String[] cmd) {
-        DropInterface.INSTANCE.open(player);
+        DropInterface.INSTANCE.open(player, true);
         return true;
     }
 

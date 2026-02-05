@@ -8,6 +8,7 @@ import com.rs.core.packets.InputStream;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.ItemExamines;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.interfaces.DropInterface;
 
 import java.io.Serial;
 
@@ -104,17 +105,11 @@ public class FloorItem extends Item {
 			player.getPackets().sendGameMessage(
 					"[Price Checker] " + (floorItem.getAmount() > 1 ? floorItem.getAmount() + " x " : "")
 							+ floorItem.getDefinitions().getName() + " is untradeable.");
-			return;
-		}
-
-		if (floorItem.getId() == 995) {
+		} else if (floorItem.getId() == 995) {
 			player.getPackets()
 					.sendGameMessage("[Price Checker] " + Utils.getFormattedNumber(floorItem.getAmount(), ',') + " x "
 							+ floorItem.getDefinitions().getName() + ".");
-			return;
-		}
-
-		if ((floorItem.getDefinitions().isNoted() || floorItem.getDefinitions().isStackable())
+		} else if ((floorItem.getDefinitions().isNoted() || floorItem.getDefinitions().isStackable())
 				&& floorItem.getAmount() > 1) {
 			long amount = floorItem.getAmount();
 			long price = EconomyPrices.getPrice(floorItem.getId()) * amount;
@@ -133,6 +128,8 @@ public class FloorItem extends Item {
 							+ floorItem.getDefinitions().getId() + ", X: " + tile.getX() + ", Y: " + tile.getY()
 							+ ", H: " + tile.getPlane() + ", Owner: " + (floorItem.hasOwner() ? floorItem.getOwner().getUsername() : "None"));
 		}
+		DropInterface.INSTANCE.open(player, false);
+		DropInterface.INSTANCE.selectItem(player, floorItem.getId(), true);
 
 		player.getPackets().sendItemMessage(0, 15263739, id, x, y, ItemExamines.getExamine(new Item(id))); // ChatboxMessage
 	}

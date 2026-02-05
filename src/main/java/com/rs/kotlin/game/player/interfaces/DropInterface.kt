@@ -81,11 +81,10 @@ object DropInterface {
      * Open Interface
      */
 
-    fun open(player: Player) {
+    fun open(player: Player, buildList: Boolean = true) {
         CompletableFuture.runAsync {
             player.interfaceManager.sendInterface(INTERFACE_ID)
 
-            // Hide all rows
             var row = ROW_START
             while (row <= ROW_END) {
                 hideRow(player, row)
@@ -95,10 +94,14 @@ object DropInterface {
             player.packets.sendHideIComponent(INTERFACE_ID, PREVIOUS_BUTTON, true)
             player.packets.sendHideIComponent(INTERFACE_ID, NEXT_BUTTON, true)
             refreshScrollbar(player, 0)
-            buildInitialNpcList(player)
-            sendNpcList(player)
+
+            if (buildList) {
+                buildInitialNpcList(player)
+                sendNpcList(player)
+            }
         }
     }
+
 
     /**
      * Builds initial NPC list containing every NPC that has drops,
@@ -136,6 +139,9 @@ object DropInterface {
     }
 
 
+    fun selectItem(player: Player, itemId: Int, autoSelect: Boolean = true) {
+        searchByItem(player, itemId, autoSelect)
+    }
 
     /**
      * NPC Selection
