@@ -208,11 +208,9 @@ public final class LocalNPCUpdate {
 			int hpBarPercentage = hp * 255 / maxHp;
 			for (Hit hit : n.getNextHits()) {
 				if (hit == null) continue;
-				boolean interactingWith = hit.interactingWith(player, n); // unused but may have side effects
-				if (hit.getDamage() < 0) hit.setDamage(0);
-				if (hit.missed()) {
-					data.writeSmart(hit.getMark(player, n));
-					data.writeSmart(0);
+				boolean interactingWith = hit.interactingWith(player, n);
+				if (hit.missed() && !interactingWith) {
+					data.writeSmart(32766);
 				} else {
 					boolean oneXHits = player.getVarsManager().getBitValue(1485) == 1;
 					int reduced = (int) Math.max(1, Math.ceil(hit.getDamage() / 10.0));

@@ -430,9 +430,8 @@ public final class LocalPlayerUpdate {
 					hit.setDamage(0);
 				@SuppressWarnings("unused")
 				boolean interactingWith = hit.interactingWith(player, p);
-				if (hit.missed()) {
-					data.writeSmart(hit.getMark(player, p));
-					data.writeSmart(0);
+				if (hit.missed() && !interactingWith) {
+					data.writeSmart(32766);
 				} else {
 					int reduced = (int) Math.max(1, Math.ceil(hit.getDamage() / 10.0));
 					double hitAmount = player.getVarsManager().getBitValue(1485) == 0 ? hit.getDamage() : reduced;
