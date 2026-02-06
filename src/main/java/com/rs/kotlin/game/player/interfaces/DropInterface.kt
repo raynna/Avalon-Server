@@ -177,7 +177,7 @@ object DropInterface {
 
 
     private fun clearViewer(player: Player) {
-        refreshScrollbar(player, 0)
+        refreshScrollbar(player, 1)
         resetState(player)
 
         var row = ROW_START
@@ -192,7 +192,7 @@ object DropInterface {
 
         sendSourceList(player)
         updateTitle(player, "Drop Viewer")
-        refreshScrollbar(player, 0)
+        refreshScrollbar(player, 1)
     }
 
 
@@ -470,6 +470,9 @@ object DropInterface {
         val list =
             player.temporaryAttributtes[ATTR_FOUND] as? List<*>
 
+        val page =
+            player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
+
         val hasFilter =
             player.temporaryAttributtes.containsKey(ATTR_ITEM_FILTER)
 
@@ -479,13 +482,14 @@ object DropInterface {
         val hasSelected =
             player.temporaryAttributtes.containsKey(ATTR_CURRENT)
 
-        val showClear = hasFilter || inSearch || hasSelected || list.isNullOrEmpty()
+        val canClear =
+            page == 0 && (hasFilter || inSearch || hasSelected || list.isNullOrEmpty())
 
         player.packets.sendHideIComponent(INTERFACE_ID, PREVIOUS_BUTTON, false)
 
         updatePreviousButtonText(
             player,
-            if (showClear) "Clear" else "Previous"
+            if (canClear) "Clear" else "Previous"
         )
 
         if (list.isNullOrEmpty()) {
@@ -493,7 +497,6 @@ object DropInterface {
             return
         }
 
-        val page = player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
         val maxPage = (list.size + 12) / 13
 
         player.packets.sendHideIComponent(
@@ -502,6 +505,7 @@ object DropInterface {
             page + 1 >= maxPage
         )
     }
+
 
 
     private fun refreshScrollbar(player: Player, rows: Int) {
