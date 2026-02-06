@@ -135,7 +135,8 @@ object DropInterface {
 
         player.temporaryAttributtes.remove(ATTR_CURRENT)
         player.temporaryAttributtes.remove(ATTR_CURRENT_NAME)
-
+        player.temporaryAttributtes[ATTR_SOURCE_FILTER] =
+            sourceName(source)
         open(player, buildList = false)
 
         val list = mutableListOf(source)
@@ -474,7 +475,7 @@ object DropInterface {
             player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
 
         val hasFilter =
-            player.temporaryAttributtes.containsKey(ATTR_ITEM_FILTER)
+            player.temporaryAttributtes.containsKey(ATTR_ITEM_FILTER) || player.temporaryAttributtes.containsKey(ATTR_SOURCE_FILTER)
 
         val inSearch =
             player.temporaryAttributtes.containsKey(ATTR_IN_SEARCH)
