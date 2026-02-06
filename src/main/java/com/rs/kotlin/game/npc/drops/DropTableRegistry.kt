@@ -1,6 +1,7 @@
 package com.rs.kotlin.game.npc.drops
 
 import com.rs.core.cache.defintions.NPCDefinitions
+import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.MonsterCategory
 
 object DropTableRegistry {
@@ -13,21 +14,65 @@ object DropTableRegistry {
     private val objectAliases = mutableMapOf<Int, String>()
 
     @JvmStatic
-    fun registerDropTable(table: DropTable, vararg npcIds: Int) {
-        val mappedIds = mutableListOf<Int>()
-        for (npcId in npcIds) {
-            npcDropTables[npcId] = table
-            mappedIds += npcId
+    fun registerObjectTable(
+        name: String,
+        key: String,
+        table: DropTable
+    ) {
+
+        val list = Rscm.lookupList(key)
+            ?: error("Unknown object group key: $key")
+
+        for (objectId in list) {
+            objectDropTables[objectId] = table
+            objectAliases[objectId] = name
         }
     }
 
     @JvmStatic
-    fun registerDropTable(table: DropTable, vararg npcKeyGroups: List<Int>) {
-        val mappedIds = mutableListOf<Int>()
-        for (group in npcKeyGroups) {
-            for (npcId in group) {
+    fun registerItemTable(key: String, table: DropTable) {
+
+        val list = Rscm.lookupList(key)
+            ?: error("Unknown item group key: $key")
+
+        for (itemId in list) {
+            itemDropTables[itemId] = table
+        }
+    }
+
+    @JvmStatic
+    fun registerItemGroupDropTable(table: DropTable, vararg keys: String) {
+        for (key in keys) {
+            val list = Rscm.lookupList(key)
+                ?: error("Unknown item group key: $key")
+
+            for (id in list) {
+                itemDropTables[id] = table
+            }
+        }
+    }
+
+    @JvmStatic
+    fun registerNpcKeyDropTable(table: DropTable, vararg npcKeys: String) {
+
+        for (key in npcKeys) {
+            val id = Rscm.lookup(key)
+                ?: error("Unknown NPC key: $key")
+
+            npcDropTables[id] = table
+        }
+    }
+
+
+    @JvmStatic
+    fun registerNpcGroupDropTable(table: DropTable, vararg groupKeys: String) {
+
+        for (key in groupKeys) {
+            val list = Rscm.lookupList(key)
+                ?: error("Unknown NPC group key: $key")
+
+            for (npcId in list) {
                 npcDropTables[npcId] = table
-                mappedIds += npcId
             }
         }
     }
@@ -36,14 +81,17 @@ object DropTableRegistry {
     fun registerNamedTable(name: String, table: DropTable) {
         namedDropTables[name.lowercase()] = table
     }
+
     @JvmStatic
     fun registerItemTable(itemId: Int, table: DropTable) {
         itemDropTables[itemId] = table
     }
+
     @JvmStatic
     fun registerObjectTable(objectId: Int, table: DropTable) {
         objectDropTables[objectId] = table
     }
+
     @JvmStatic
     fun registerObjectTable(name: String, objectId: Int, table: DropTable) {
         objectDropTables[objectId] = table
@@ -78,26 +126,9 @@ object DropTableRegistry {
     fun getAllNamedTables(): Map<String, DropTable> =
         namedDropTables
 
-    fun getItemDropTable(itemId: Int): DropTable? =
-        itemDropTables[itemId]
-
-    fun getObjectDropTable(objectId: Int): DropTable? =
-        objectDropTables[objectId]
 
     fun getObjectAlias(objectId: Int): String? =
         objectAliases[objectId]
-
-    fun getAllItemTables(): Map<Int, DropTable> = itemDropTables
-    fun getAllObjectTables(): Map<Int, DropTable> = objectDropTables
-
-    fun getAllTables(): Collection<DropTable> {
-        return buildList {
-            addAll(npcDropTables.values)
-            addAll(namedDropTables.values)
-            addAll(itemDropTables.values)
-            addAll(objectDropTables.values)
-        }
-    }
 
     @JvmStatic
     fun getSourceForNpc(npcId: Int): DropTableSource? {

@@ -1,9 +1,9 @@
 package com.rs.kotlin.game.npc.drops
 
-import com.rs.kotlin.Rscm
-import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerDropTable
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerItemTable
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerNamedTable
+import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerNpcGroupDropTable
+import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerNpcKeyDropTable
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerObjectTable
 import com.rs.kotlin.game.npc.drops.tables.*
 import com.rs.kotlin.game.npc.worldboss.WorldBossTable
@@ -19,64 +19,129 @@ object DropTablesSetup {
     lateinit var herbDropTable: HerbTableEntry
         private set
 
-
     @JvmStatic
     fun setup() {
+
+        /**
+         * Shared Sub Tables
+         **/
+
         rareDropTable = RareDropTableEntry()
         gemDropTable = GemTableEntry()
         superRareTable = SuperRareTableEntry()
         herbDropTable = HerbTableEntry()
-        registerNamedTable("World Boss", WorldBossTable.regular)
-        registerItemTable(Rscm.lookup("item.magic_chest"), WorldBossTable.chest)
-        registerObjectTable("Barrows", 10284, BarrowsChestTable.BARROWS_CHEST_TABLE)
-        registerDropTable(TzTokJadTable.table, Rscm.lookup("npc.tztok_jad_lv702"))
-        registerDropTable(ChaosElementalDropTable.table, Rscm.lookupList("npc_group.chaos_elemental_lv305"))
-        registerDropTable(KalphiteQueenDropTable.table, Rscm.lookupList("npc_group.kalphite_queen_lv333"))
-        registerDropTable(KalphiteGuardianDropTable.table, Rscm.lookupList("npc_group.kalphite_guardian_lv141"))
-        registerDropTable(KalphiteSoldierDropTable.table, Rscm.lookupList("npc_group.kalphite_soldier_lv85"))
-        registerDropTable(KalphiteWorkerDropTable.table, Rscm.lookupList("npc_group.kalphite_worker_lv28"))
-        registerDropTable(CyclopsDropTable.table, Rscm.lookupList("npc_group.cyclops_lv56"), Rscm.lookupList("npc_group.cyclops_lv76"))
-        registerDropTable(GreenDragonDropTable.greenDragonTable, Rscm.lookupList("npc_group.green_dragon_lv79"))
-        registerDropTable(BlackDragonDropTable.blackDragonTable, Rscm.lookupList("npc_group.black_dragon_lv227"))
-        registerDropTable(KingBlackDragonDropTable.kingBlackDragonTable, Rscm.lookup("npc.king_black_dragon_lv276"))
-        registerDropTable(GoblinDropTable.table, Rscm.lookupList("npc_group.goblin_lv1"), Rscm.lookupList("npc_group.goblin_lv2"))
-        registerDropTable(GoblinLvl5DropTable.table,
-            Rscm.lookupList("npc_group.goblin_lv5"),
-            Rscm.lookupList("npc_group.goblin_lv11"),
-            Rscm.lookupList("npc_group.goblin_lv12"),
-            Rscm.lookupList("npc_group.goblin_lv13"),
-            Rscm.lookupList("npc_group.goblin_lv15"),
-            Rscm.lookupList("npc_group.goblin_lv16"),
-            Rscm.lookupList("npc_group.goblin_lv17"),
-            Rscm.lookupList("npc_group.goblin_lv25"))
-        registerDropTable(RockCrabTable.table, Rscm.lookupList("npc_group.rock_crab_lv13"))
-        registerDropTable(DagannothRexTable.table, Rscm.lookup("npc.dagannoth_rex_lv303"))
-        registerDropTable(DagannothPrimeTable.table, Rscm.lookup("npc.dagannoth_prime_lv303"))
-        registerDropTable(DagannothSupremeTable.table, Rscm.lookup("npc.dagannoth_supreme_lv303"))
-        registerDropTable(GeneralGraardorTable.table, Rscm.lookup("npc.general_graardor_lv624"))
-        registerDropTable(KreeArraDropTable.table, Rscm.lookup("npc.kree_arra_lv580"))
-        registerDropTable(CommanderZilyanaDropTable.table, Rscm.lookup("npc.commander_zilyana_lv596"))
-        registerDropTable(KrilTsutsarothDropTable.table, Rscm.lookup("npc.k_ril_tsutsaroth_lv650"))
-        registerDropTable(CrawlingHandTable.table,
-            Rscm.lookupList("npc_group.crawling_hand"),
-            Rscm.lookupList("npc_group.crawling_hand_lv7"),
-            Rscm.lookupList("npc_group.crawling_hand_lv8"),
-            Rscm.lookupList("npc_group.crawling_hand_lv11"),
-            Rscm.lookupList("npc_group.crawling_hand_lv12"))
-        registerDropTable(BansheeTable.table,
-            Rscm.lookupList("npc_group.banshee_lv23"),)
-        registerDropTable(AbyssalDemonTable.table,
-            Rscm.lookupList("npc_group.abyssal_demon"),
-            Rscm.lookupList("npc_group.abyssal_demon_lv124"))
-        registerDropTable(DarkBeastTable.darkBeasts, Rscm.lookup("npc.dark_beast_lv182"))
-        registerDropTable(GargoyleDropTable.table, Rscm.lookupList("npc_group.gargoyle_lv111"))
-        registerDropTable(NechryaelDropTable.table, Rscm.lookupList("npc_group.nechryael_lv115"))
-        registerDropTable(BloodveldDropTable.table,
-            Rscm.lookupList("npc_group.bloodveld_lv76"),
-            Rscm.lookupList("npc_group.bloodveld_lv81"))
-        registerDropTable(InfernalMageDropTable.table, Rscm.lookupList("npc_group.infernal_mage_lv66"))
-        registerDropTable(AberrantSpectreDropTable.table, Rscm.lookupList("npc_group.aberrant_spectre_lv96"))
 
-        DropTableRegistry.logDropTableSizes();
+        /**
+         * Special / Global Tables
+         **/
+
+        registerNamedTable("World Boss", WorldBossTable.regular)
+        registerItemTable("item.magic_chest", WorldBossTable.chest)
+        registerObjectTable(
+            name = "Barrows",
+            objectId = 10284,
+            BarrowsChestTable.BARROWS_CHEST_TABLE
+        )
+
+        /**
+         * God Wars Dungeon
+         **/
+
+        registerNpcKeyDropTable(GeneralGraardorTable.table, "npc.general_graardor_lv624")
+        registerNpcKeyDropTable(KreeArraDropTable.table, "npc.kree_arra_lv580")
+        registerNpcKeyDropTable(CommanderZilyanaDropTable.table, "npc.commander_zilyana_lv596")
+        registerNpcKeyDropTable(KrilTsutsarothDropTable.table, "npc.k_ril_tsutsaroth_lv650")
+
+        /**
+         * Bosses
+         **/
+
+        registerNpcKeyDropTable(TzTokJadTable.table, "npc.tztok_jad_lv702")
+        registerNpcKeyDropTable(KingBlackDragonDropTable.kingBlackDragonTable, "npc.king_black_dragon_lv276")
+        registerNpcKeyDropTable(ChaosElementalDropTable.table, "npc.chaos_elemental_lv305")
+
+        registerNpcGroupDropTable(KalphiteQueenDropTable.table, "npc_group.kalphite_queen_lv333")
+
+        /**
+         * Dagannoths
+         **/
+
+        registerNpcKeyDropTable(DagannothRexTable.table, "npc.dagannoth_rex_lv303")
+        registerNpcKeyDropTable(DagannothPrimeTable.table, "npc.dagannoth_prime_lv303")
+        registerNpcKeyDropTable(DagannothSupremeTable.table, "npc.dagannoth_supreme_lv303")
+
+        /**
+         * Dragons
+         **/
+
+        registerNpcGroupDropTable(GreenDragonDropTable.greenDragonTable, "npc_group.green_dragon_lv79")
+        registerNpcGroupDropTable(BlackDragonDropTable.blackDragonTable, "npc_group.black_dragon_lv227")
+
+        /**
+         * Slayer Monsters
+         **/
+
+        registerNpcGroupDropTable(CrawlingHandTable.table,
+            "npc_group.crawling_hand",
+            "npc_group.crawling_hand_lv7",
+            "npc_group.crawling_hand_lv8",
+            "npc_group.crawling_hand_lv11",
+            "npc_group.crawling_hand_lv12"
+        )
+
+        registerNpcGroupDropTable(BansheeTable.table, "npc_group.banshee_lv23")
+
+        registerNpcGroupDropTable(AbyssalDemonTable.table,
+            "npc_group.abyssal_demon",
+            "npc_group.abyssal_demon_lv124"
+        )
+
+        registerNpcKeyDropTable(DarkBeastTable.darkBeasts, "npc.dark_beast_lv182")
+        registerNpcGroupDropTable(GargoyleDropTable.table, "npc_group.gargoyle_lv111")
+        registerNpcGroupDropTable(NechryaelDropTable.table, "npc_group.nechryael_lv115")
+
+        registerNpcGroupDropTable(BloodveldDropTable.table,
+            "npc_group.bloodveld_lv76",
+            "npc_group.bloodveld_lv81"
+        )
+
+        registerNpcGroupDropTable(InfernalMageDropTable.table, "npc_group.infernal_mage_lv66")
+        registerNpcGroupDropTable(AberrantSpectreDropTable.table, "npc_group.aberrant_spectre_lv96")
+
+        /**
+         * Low-Level Monsters
+         **/
+
+        registerNpcGroupDropTable(GoblinDropTable.table,
+            "npc_group.goblin_lv1",
+            "npc_group.goblin_lv2"
+        )
+
+        registerNpcGroupDropTable(GoblinLvl5DropTable.table,
+            "npc_group.goblin_lv5",
+            "npc_group.goblin_lv11",
+            "npc_group.goblin_lv12",
+            "npc_group.goblin_lv13",
+            "npc_group.goblin_lv15",
+            "npc_group.goblin_lv16",
+            "npc_group.goblin_lv17",
+            "npc_group.goblin_lv25"
+        )
+
+        registerNpcGroupDropTable(RockCrabTable.table, "npc_group.rock_crab_lv13")
+        registerNpcGroupDropTable(CyclopsDropTable.table,
+            "npc_group.cyclops_lv56",
+            "npc_group.cyclops_lv76"
+        )
+
+        /**
+         * Kalphites
+         **/
+
+        registerNpcGroupDropTable(KalphiteGuardianDropTable.table, "npc_group.kalphite_guardian_lv141")
+        registerNpcGroupDropTable(KalphiteSoldierDropTable.table, "npc_group.kalphite_soldier_lv85")
+        registerNpcGroupDropTable(KalphiteWorkerDropTable.table, "npc_group.kalphite_worker_lv28")
+
+        DropTableRegistry.logDropTableSizes()
     }
 }
