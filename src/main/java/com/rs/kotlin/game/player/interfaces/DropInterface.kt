@@ -224,7 +224,7 @@ object DropInterface {
                 val page = player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
 
                 val hasFilter =
-                    player.temporaryAttributtes.containsKey(ATTR_ITEM_FILTER)
+                    player.temporaryAttributtes.containsKey(ATTR_ITEM_FILTER) || player.temporaryAttributtes.containsKey(ATTR_SOURCE_FILTER)
 
                 val inSearch =
                     player.temporaryAttributtes.containsKey(ATTR_IN_SEARCH)
