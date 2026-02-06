@@ -2286,6 +2286,8 @@ public final class WorldPacketsDecoder extends Decoder {
             player.temporaryAttribute().put("drop_viewer_npc_page", 0);
             player.temporaryAttribute().put("drop_viewer_in_search", true);
 
+            player.temporaryAttribute().put("drop_viewer_source_filter", value);
+
             DropInterface.INSTANCE.sendSourceList(player);
 
             if (!results.isEmpty())
@@ -2303,11 +2305,12 @@ public final class WorldPacketsDecoder extends Decoder {
             player.temporaryAttribute().put("drop_viewer_found_npcs", results);
             player.temporaryAttribute().put("drop_viewer_npc_page", 0);
             player.temporaryAttribute().put("drop_viewer_in_search", true);
+            player.temporaryAttribute().put("drop_viewer_item_filter", value);
 
             DropInterface.INSTANCE.sendSourceList(player);
 
             if (!results.isEmpty())
-                DropInterface.INSTANCE.selectSource(player, results.get(0));
+                DropInterface.INSTANCE.selectSource(player, results.getFirst());
 
             return;
         } else if (player.temporaryAttribute().get("TITLE_ORDER_SET") != null) {

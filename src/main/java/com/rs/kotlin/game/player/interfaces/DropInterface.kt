@@ -50,6 +50,7 @@ object DropInterface {
     private const val ATTR_CURRENT = "current_drop_source"
     private const val ATTR_CURRENT_NAME = "current_drop_name"
     private const val ATTR_IN_SEARCH = "drop_viewer_in_search"
+    private const val ATTR_SOURCE_FILTER = "drop_viewer_source_filter"
 
     private fun resetState(player: Player) {
         player.temporaryAttributtes.remove(ATTR_FOUND)
@@ -58,6 +59,7 @@ object DropInterface {
         player.temporaryAttributtes.remove(ATTR_CURRENT)
         player.temporaryAttributtes.remove(ATTR_CURRENT_NAME)
         player.temporaryAttributtes.remove(ATTR_IN_SEARCH)
+        player.temporaryAttributtes.remove(ATTR_SOURCE_FILTER)
         player.temporaryAttributtes.remove("drop_find")
         player.temporaryAttributtes.remove("npc_find")
     }
@@ -175,11 +177,8 @@ object DropInterface {
 
 
     private fun clearViewer(player: Player) {
-
-        player.temporaryAttributtes.remove(ATTR_ITEM_FILTER)
-        player.temporaryAttributtes.remove(ATTR_IN_SEARCH)
-        player.temporaryAttributtes.remove(ATTR_CURRENT)
-        player.temporaryAttributtes.remove(ATTR_CURRENT_NAME)
+        refreshScrollbar(player, 0)
+        resetState(player)
 
         var row = ROW_START
         while (row <= ROW_END) {
@@ -253,7 +252,7 @@ object DropInterface {
 
             val source = list.getOrNull(index) ?: return
 
-            player.temporaryAttributtes.remove(ATTR_ITEM_FILTER)
+            //player.temporaryAttributtes.remove(ATTR_ITEM_FILTER)
 
             selectSource(player, source)
             return
@@ -320,20 +319,32 @@ object DropInterface {
         player.temporaryAttributtes[ATTR_CURRENT] = source
         player.temporaryAttributtes[ATTR_CURRENT_NAME] = sourceName(source)
 
-        val filter =
+        val itemFilter =
             player.temporaryAttributtes[ATTR_ITEM_FILTER] as? String
 
-        if (filter != null) {
-            updateTitle(
-                player,
-                "Viewing: ${sourceName(source)}",
-                "Filtered by item: $filter"
-            )
-        } else {
-            updateTitle(
-                player,
-                "Viewing: ${sourceName(source)}"
-            )
+        val sourceFilter =
+            player.temporaryAttributtes[ATTR_SOURCE_FILTER] as? String
+
+        when {
+            itemFilter != null ->
+                updateTitle(
+                    player,
+                    "Viewing: ${sourceName(source)}",
+                    "Filtered by item: $itemFilter"
+                )
+
+            sourceFilter != null ->
+                updateTitle(
+                    player,
+                    "Viewing: ${sourceName(source)}",
+                    "Filtered by npc: $sourceFilter"
+                )
+
+            else ->
+                updateTitle(
+                    player,
+                    "Viewing: ${sourceName(source)}"
+                )
         }
 
 
