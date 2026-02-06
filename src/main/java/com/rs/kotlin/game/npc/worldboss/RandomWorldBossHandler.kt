@@ -448,17 +448,17 @@ object RandomWorldBossHandler {
         for (drop in drops) {
             val item = Item(drop.itemId, drop.amount)
             if (item.id == 995) {
-                player.message(Msg.chestOpen("Your Magic Chest rewards you with ${item.amount} x ${item.name}!"))
+                player.message(Msg.chestOpen("Your Magic Chest rewards you with ${Utils.formatAmount(item.amount.toLong())} x ${item.name}!"))
                 player.moneyPouch.addMoney(item.amount, false)
                 continue
             }
             player.inventory.addItem(item)
-            player.message(Msg.chestOpen("Your Magic Chest rewards you with ${item.amount} x ${item.name}!"))
+            player.message(Msg.chestOpen("Your Magic Chest rewards you with ${Utils.formatAmount(item.amount.toLong())} x ${item.name}!"))
             val price = item.definitions.tipitPrice
-            if (price in 1_000_000..9_999_999) {
+            if (price in 5_000_000..24_999_999) {
                 Msg.world(Msg.RED, "${player.displayName} has received ${item.name} from a Magic Chest!")
             }
-            if (item.definitions.tipitPrice >= 10_000_000) {
+            if (item.definitions.tipitPrice >= 25_000_000) {
                 Msg.world(Msg.PURPLE, "${player.displayName} has received ${item.name} from a Magic Chest!")
             }
         }

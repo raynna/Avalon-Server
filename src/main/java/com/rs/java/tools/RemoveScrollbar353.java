@@ -9,7 +9,7 @@ public class RemoveScrollbar353 {
     private static final String CACHE_PATH = "data/cache/";
     private static final int INDEX = 3;
     private static final int INTERFACE_ID = 3005;
-    private static final int SCROLLBAR_ID = 609;
+    private static final int SCROLLBAR_ID = 649;
 
     public static void main(String[] args) {
 

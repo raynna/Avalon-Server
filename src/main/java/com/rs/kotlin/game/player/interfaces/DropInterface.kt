@@ -25,7 +25,7 @@ object DropInterface {
     private const val INTERFACE_ID = 3005
 
     private const val ROW_START = 73
-    private const val ROW_END = 641
+    private const val ROW_END = 905
     private const val ROW_STRIDE = 8
 
     private const val ICON_OFFSET = 2
@@ -53,8 +53,8 @@ object DropInterface {
     private const val ATTR_SOURCE_FILTER = "drop_viewer_source_filter"
 
     private fun resetState(player: Player) {
+        player.temporaryAttributtes[ATTR_PAGE] = 0
         player.temporaryAttributtes.remove(ATTR_FOUND)
-        player.temporaryAttributtes.remove(ATTR_PAGE)
         player.temporaryAttributtes.remove(ATTR_ITEM_FILTER)
         player.temporaryAttributtes.remove(ATTR_CURRENT)
         player.temporaryAttributtes.remove(ATTR_CURRENT_NAME)
@@ -85,7 +85,7 @@ object DropInterface {
         }
 
     fun open(player: Player, buildList: Boolean = true) {
-
+        player.temporaryAttributtes[ATTR_PAGE] = 0
         player.interfaceManager.sendInterface(INTERFACE_ID)
 
         var row = ROW_START
@@ -150,18 +150,52 @@ object DropInterface {
 
 
     fun openForItem(player: Player, itemId: Int) {
+
         player.temporaryAttributtes.remove(ATTR_CURRENT)
         player.temporaryAttributtes.remove(ATTR_CURRENT_NAME)
-        val bound = DropTableRegistry.getSourceForItem(itemId)
-
-        if (bound != null) {
-            openForSource(player, bound)
-            return
-        }
 
         open(player, false)
-        selectItem(player, itemId, true)
+
+        val results = mutableListOf<DropTableSource>()
+        val seen = HashSet<String>()
+
+        val itemSource = DropTableSource.Item(itemId)
+        if (DropTableRegistry.getTableForSource(itemSource) != null) {
+            results += itemSource
+            seen += sourceName(itemSource).lowercase()
+        }
+
+        for (source in DropTableRegistry.getAllSources()) {
+
+            val table = tableFor(source) ?: continue
+
+            for (drop in table.getAllDropsForDisplay(dropRateMult())) {
+                if (drop.itemId == itemId) {
+
+                    val key = sourceName(source).lowercase()
+                    if (seen.add(key))
+                        results += source
+
+                    break
+                }
+            }
+        }
+
+        player.temporaryAttributtes[ATTR_FOUND] = results
+        player.temporaryAttributtes[ATTR_PAGE] = 0
+
+        val itemName = ItemDefinitions.getItemDefinitions(itemId).name
+        updateTitle(player, "Viewing Sources", "Filtered by item: $itemName")
+        player.temporaryAttributtes[ATTR_IN_SEARCH] = true
+        player.temporaryAttributtes[ATTR_ITEM_FILTER] = itemName
+        sendSourceList(player)
+
+        if (results.isNotEmpty()) {
+            selectSource(player, results[0])
+        }
     }
+
+
 
     fun openForObject(player: Player, objectId: Int) {
 
@@ -178,7 +212,7 @@ object DropInterface {
 
 
     private fun clearViewer(player: Player) {
-        refreshScrollbar(player, 1)
+        refreshScrollbar(player, 0)
         resetState(player)
 
         var row = ROW_START
@@ -193,7 +227,7 @@ object DropInterface {
 
         sendSourceList(player)
         updateTitle(player, "Drop Viewer")
-        refreshScrollbar(player, 1)
+        refreshScrollbar(player, 0)
     }
 
 
@@ -256,6 +290,7 @@ object DropInterface {
             //player.temporaryAttributtes.remove(ATTR_ITEM_FILTER)
 
             selectSource(player, source)
+            updatePageButtons(player)
             return
         }
 
@@ -338,7 +373,7 @@ object DropInterface {
                 updateTitle(
                     player,
                     "Viewing: ${sourceName(source)}",
-                    "Filtered by npc: $sourceFilter"
+                    "Filtered by: $sourceFilter"
                 )
 
             else ->
@@ -363,10 +398,8 @@ object DropInterface {
         val drops =
             table.getAllDropsForDisplay(dropRateMult())
 
-        refreshScrollbar(player, drops.size)
-
         val maxRows = ((ROW_END - ROW_START) / ROW_STRIDE) + 1
-
+        refreshScrollbar(player, drops.size)
         row = ROW_START
 
         for (drop in drops.take(maxRows)) {
@@ -486,7 +519,11 @@ object DropInterface {
         val canClear =
             page == 0 && (hasFilter || inSearch || hasSelected || list.isNullOrEmpty())
 
-        player.packets.sendHideIComponent(INTERFACE_ID, PREVIOUS_BUTTON, false)
+        player.packets.sendHideIComponent(
+            INTERFACE_ID,
+            PREVIOUS_BUTTON,
+            page == 0 && !(hasFilter || inSearch || hasSelected)
+        )
 
         updatePreviousButtonText(
             player,
@@ -514,7 +551,7 @@ object DropInterface {
         val contentHeight = rows * 35
         val needsScroll = contentHeight > 264
 
-        player.packets.sendHideIComponent(INTERFACE_ID, 649, !needsScroll)
+        player.packets.sendHideIComponent(INTERFACE_ID, 913, !needsScroll)
 
         player.packets.sendCSVarInteger(350,
             if (needsScroll) contentHeight else 264

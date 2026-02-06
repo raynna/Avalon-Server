@@ -19,47 +19,56 @@ object WorldBossTable {
             ).forEach { drop("item.$it", numerator = 1, denominator = 256) }
 
             listOf(
-                "corrupt_statius_s_platebody", "corrupt_statius_s_platelegs", "corrupt_statius_s_full_helm",
-                "corrupt_vesta_s_chainbody", "corrupt_vesta_s_plateskirt", "corrupt_vesta_s_longsword", "corrupt_vesta_s_spear",
-                "corrupt_zuriel_s_robe_top", "corrupt_zuriel_s_robe_bottom", "corrupt_zuriel_s_staff",
-                "corrupt_morrigan_s_leather_body", "corrupt_morrigan_s_leather_chaps"
+                "corrupt_statius_s_platebody",
+                "corrupt_statius_s_platelegs",
+                "corrupt_statius_s_full_helm",
+                "corrupt_vesta_s_chainbody",
+                "corrupt_vesta_s_plateskirt",
+                "corrupt_vesta_s_longsword",
+                "corrupt_vesta_s_spear",
+                "corrupt_zuriel_s_robe_top",
+                "corrupt_zuriel_s_robe_bottom",
+                "corrupt_zuriel_s_staff",
+                "corrupt_morrigan_s_leather_body",
+                "corrupt_morrigan_s_leather_chaps"
             ).forEach { drop("item.$it", numerator = 1, denominator = 129) }
         }
 
         mainDrops(512) {
-            drop("item.saradomin_brew_4", amount = 3..5, weight = 68)
-            drop("item.super_restore_4", amount = 3..5, weight = 68)
-            drop("item.rocktail", amount = 5..10, weight = 68)
-            drop("item.overload_4", amount = 2..4, weight = 12)
 
-            drop("item.broken_statue_headdress", weight = 16)
-            drop("item.seren_statuette", weight = 10)
-            drop("item.zamorak_statuette", weight = 10)
-            drop("item.saradomin_statuette", weight = 10)
-            drop("item.bandos_statuette", weight = 10)
-            drop("item.armadyl_statuette", weight = 8)
-            drop("item.ruby_chalice", weight = 8)
-            drop("item.guthixian_brazier", weight = 8)
-            drop("item.armadyl_totem", weight = 6)
-            drop("item.zamorak_medallion", weight = 6)
-            drop("item.saradomin_carving", weight = 6)
-            drop("item.bandos_scrimshaw", weight = 6)
+            drop("item.saradomin_brew_4", amount = 3..5, weight = 55)
+            drop("item.super_restore_4", amount = 3..5, weight = 55)
+            drop("item.rocktail", amount = 5..10, weight = 55)
+            drop("item.overload_4", amount = 2..4, weight = 10)
+
+            drop("item.broken_statue_headdress", weight = 14)
+            drop("item.seren_statuette", weight = 9)
+            drop("item.zamorak_statuette", weight = 9)
+            drop("item.saradomin_statuette", weight = 9)
+            drop("item.bandos_statuette", weight = 9)
+            drop("item.armadyl_statuette", weight = 7)
+            drop("item.ruby_chalice", weight = 7)
+            drop("item.guthixian_brazier", weight = 7)
+            drop("item.armadyl_totem", weight = 5)
+            drop("item.zamorak_medallion", weight = 5)
+            drop("item.saradomin_carving", weight = 5)
+            drop("item.bandos_scrimshaw", weight = 5)
             drop("item.saradomin_amphora", weight = 4)
             drop("item.ancient_psaltery_bridge", weight = 4)
             drop("item.bronzed_dragon_claw", weight = 3)
             drop("item.third_age_carafe", weight = 3)
             drop("item.ancient_statuette", weight = 2)
 
-            drop("item.abyssal_whip", weight = 12)
-            drop("item.saradomin_sword", weight = 12)
-            drop("item.staff_of_light", weight = 12)
-            drop("item.amulet_of_fury", weight = 12)
-            drop("item.berserker_ring", weight = 12)
-            drop("item.seers_ring", weight = 12)
-            drop("item.archers_ring", weight = 12)
-            drop("item.warrior_ring", weight = 12)
-            drop("item.dragon_scimitar", weight = 12)
-            drop("item.dragon_boots", weight = 12)
+            drop("item.abyssal_whip", weight = 10)
+            drop("item.saradomin_sword", weight = 10)
+            drop("item.staff_of_light", weight = 10)
+            drop("item.amulet_of_fury", weight = 10)
+            drop("item.berserker_ring", weight = 10)
+            drop("item.seers_ring", weight = 10)
+            drop("item.archers_ring", weight = 10)
+            drop("item.warrior_ring", weight = 10)
+            drop("item.dragon_scimitar", weight = 10)
+            drop("item.dragon_boots", weight = 10)
             drop("item.magic_chest", weight = 6)
 
             listOf(
@@ -69,10 +78,11 @@ object WorldBossTable {
                 "karil_s_coif", "karil_s_top", "karil_s_skirt", "karil_s_crossbow",
                 "torag_s_helm", "torag_s_platebody", "torag_s_platelegs", "torag_s_hammers",
                 "verac_s_helm", "verac_s_brassard", "verac_s_plateskirt", "verac_s_flail"
-            ).forEach { drop("item.$it", weight = 12) }
+            ).forEach { drop("item.$it", weight = 10) }
         }
+
     }
-    .apply { name = "World Boss Regular" }
+        .apply { name = "World Boss Regular" }
 
     val chest = dropTable(rolls = 1) {
         alwaysDrops {
@@ -80,42 +90,36 @@ object WorldBossTable {
             drop("item.pvp_token", amount = 1_000..3_000)
         }
         mainDrops(512) {
-            drop("item.broken_statue_headdress", weight = 40)
-            drop("item.seren_statuette", weight = 20)
-            drop("item.zamorak_statuette", weight = 20)
-            drop("item.saradomin_statuette", weight = 20)
-            drop("item.bandos_statuette", weight = 20)
-            drop("item.armadyl_statuette", weight = 10)
-            drop("item.ruby_chalice", weight = 10)
-            drop("item.guthixian_brazier", weight = 10)
-            drop("item.armadyl_totem", weight = 6)
-            drop("item.zamorak_medallion", weight = 6)
-            drop("item.saradomin_carving", weight = 6)
-            drop("item.bandos_scrimshaw", weight = 6)
-            drop("item.saradomin_amphora", weight = 5)
-            drop("item.ancient_psaltery_bridge", weight = 5)
 
-            drop("item.abyssal_whip", weight = 10)
-            drop("item.staff_of_light", weight = 10)
-            drop("item.amulet_of_fury", weight = 10)
-            drop("item.berserker_ring", weight = 10)
-            drop("item.seers_ring", weight = 8)
-            drop("item.archers_ring", weight = 8)
-            drop("item.warrior_ring", weight = 8)
+            drop("item.abyssal_whip", weight = 8)
+            drop("item.staff_of_light", weight = 8)
+            drop("item.amulet_of_fury", weight = 8)
+            drop("item.berserker_ring", weight = 8)
+            drop("item.seers_ring", weight = 6)
+            drop("item.archers_ring", weight = 6)
+            drop("item.warrior_ring", weight = 6)
 
             listOf(
                 "statius_s_platebody", "statius_s_platelegs", "statius_s_full_helm",
                 "vesta_s_chainbody", "vesta_s_plateskirt", "vesta_s_longsword", "vesta_s_spear",
                 "zuriel_s_robe_top", "zuriel_s_robe_bottom", "zuriel_s_staff",
                 "morrigan_s_leather_body", "morrigan_s_leather_chaps"
-            ).forEach { drop("item.$it", weight = 2) }
+            ).forEach { drop("item.$it", weight = 3) }
 
             listOf(
-                "corrupt_statius_s_platebody", "corrupt_statius_s_platelegs", "corrupt_statius_s_full_helm",
-                "corrupt_vesta_s_chainbody", "corrupt_vesta_s_plateskirt", "corrupt_vesta_s_longsword", "corrupt_vesta_s_spear",
-                "corrupt_zuriel_s_robe_top", "corrupt_zuriel_s_robe_bottom", "corrupt_zuriel_s_staff",
-                "corrupt_morrigan_s_leather_body", "corrupt_morrigan_s_leather_chaps"
-            ).forEach { drop("item.$it", weight = 4) }
+                "corrupt_statius_s_platebody",
+                "corrupt_statius_s_platelegs",
+                "corrupt_statius_s_full_helm",
+                "corrupt_vesta_s_chainbody",
+                "corrupt_vesta_s_plateskirt",
+                "corrupt_vesta_s_longsword",
+                "corrupt_vesta_s_spear",
+                "corrupt_zuriel_s_robe_top",
+                "corrupt_zuriel_s_robe_bottom",
+                "corrupt_zuriel_s_staff",
+                "corrupt_morrigan_s_leather_body",
+                "corrupt_morrigan_s_leather_chaps"
+            ).forEach { drop("item.$it", weight = 5) }
 
             listOf(
                 "ahrim_s_hood", "ahrim_s_robe_top", "ahrim_s_robe_skirt", "ahrim_s_staff",
@@ -124,58 +128,51 @@ object WorldBossTable {
                 "karil_s_coif", "karil_s_top", "karil_s_skirt", "karil_s_crossbow",
                 "torag_s_helm", "torag_s_platebody", "torag_s_platelegs", "torag_s_hammers",
                 "verac_s_helm", "verac_s_brassard", "verac_s_plateskirt", "verac_s_flail"
-            ).forEach { drop("item.$it", weight = 6) }
+            ).forEach { drop("item.$it", weight = 7) }
 
-            drop("item.spirit_shield", weight = 4)
-            drop("item.blessed_spirit_shield", weight = 2)
+            drop("item.spirit_shield", weight = 6)
+            drop("item.blessed_spirit_shield", weight = 3)
             drop("item.arcane_spirit_shield", weight = 1)
             drop("item.spectral_spirit_shield", weight = 1)
             drop("item.divine_spirit_shield", weight = 1)
             drop("item.elysian_spirit_shield", weight = 1)
-            drop("item.armadyl_helmet", weight = 3)
-            drop("item.armadyl_chestplate", weight = 3)
-            drop("item.armadyl_chainskirt", weight = 3)
-            drop("item.bandos_chestplate", weight = 3)
-            drop("item.bandos_tassets", weight = 3)
-            drop("item.bandos_boots", weight = 3)
 
-            drop("item.torva_full_helm", weight = 1)
-            drop("item.torva_platebody", weight = 1)
-            drop("item.torva_platelegs", weight = 1)
-            drop("item.pernix_cowl", weight = 1)
-            drop("item.pernix_body", weight = 1)
-            drop("item.pernix_chaps", weight = 1)
-            drop("item.virtus_mask", weight = 1)
-            drop("item.virtus_robe_top", weight = 1)
-            drop("item.virtus_robe_legs", weight = 1)
-            drop("item.ancestral_hat", weight = 1)
-            drop("item.ancestral_robe_top", weight = 1)
-            drop("item.ancestral_robe_bottoms", weight = 1)
-            drop("item.scythe_of_vitur", weight = 1)
-            drop("item.twisted_bow", weight = 1)
-            drop("item.dragon_hunter_crossbow", weight = 1)
-            drop("item.dragon_hunter_lance", weight = 1)
-            drop("item.kodai_wand", weight = 1)
-            drop("item.nightmare_staff", weight = 1)
-            drop("item.volatile_orb", weight = 1)
-            drop("item.harmonised_orb", weight = 1)
-            drop("item.eldritch_orb", weight = 1)
+            listOf(
+                "armadyl_helmet", "armadyl_chestplate", "armadyl_chainskirt",
+                "bandos_chestplate", "bandos_tassets", "bandos_boots"
+            ).forEach { drop("item.$it", weight = 4) }
+
+            listOf(
+                "torva_full_helm", "torva_platebody", "torva_platelegs",
+                "pernix_cowl", "pernix_body", "pernix_chaps",
+                "virtus_mask", "virtus_robe_top", "virtus_robe_legs",
+                "ancestral_hat", "ancestral_robe_top", "ancestral_robe_bottoms",
+                "scythe_of_vitur", "twisted_bow",
+                "dragon_hunter_crossbow", "dragon_hunter_lance",
+                "kodai_wand", "nightmare_staff",
+                "volatile_orb", "harmonised_orb", "eldritch_orb",
+                "amulet_of_rancour"
+            ).forEach { drop("item.$it", weight = 1) }
+
             drop("item.elder_maul", weight = 2)
             drop("item.amulet_of_torture", weight = 2)
             drop("item.necklace_of_anguish", weight = 2)
             drop("item.tormented_bracelet", weight = 2)
-            drop("item.crystal_helm", weight = 3)
-            drop("item.crystal_body", weight = 3)
-            drop("item.crystal_legs", weight = 3)
             drop("item.bow_of_faerdhinen", weight = 2)
-            drop("item.thammaron_s_sceptre", weight = 3)
-            drop("item.craw_s_bow", weight = 3)
-            drop("item.viggora_s_chainmace", weight = 3)
-            drop("item.amulet_of_rancour", weight = 1)
             drop("item.noxious_halberd", weight = 2)
             drop("item.neitiznot_faceguard", weight = 2)
-            drop("item.ancient_statuette", weight = 19)
+
+            listOf(
+                "thammaron_s_sceptre",
+                "craw_s_bow",
+                "viggora_s_chainmace"
+            ).forEach { drop("item.$it", weight = 4) }
+
+            listOf("crystal_helm", "crystal_body", "crystal_legs")
+                .forEach { drop("item.$it", weight = 5) }
+
+            drop("item.ancient_statuette", weight = 30)
         }
-    }.apply { name = "World Boss Chest"}
-    }
+    }.apply { name = "World Boss Chest" }
+}
 

@@ -613,18 +613,13 @@ public final class Inventory implements Serializable {
 					.append(item.getMetadata().getValue());
 			player.message(metaBuilder.toString());
 		}
-		DropTableSource source =
-				DropTableRegistry.getSourceForItem(item.getId());
 
-		if (source != null) {
-			System.out.println("We opened dropviewer based of openForSource" + item.getId());
-			player.getTemporaryAttributtes().remove("drop_viewer_item_filter");
-			player.getTemporaryAttributtes().remove("drop_viewer_in_search");
-			DropInterface.INSTANCE.openForSource(player, source);
-		} else {
-			System.out.println("We opened dropviewer based of openForItem" + item.getId());
-			DropInterface.INSTANCE.openForItem(player, item.getId());
-		}
+		System.out.println("We opened dropviewer based of openForItem " + item.getId());
+		player.getTemporaryAttributtes().remove("drop_viewer_item_filter");
+		player.getTemporaryAttributtes().remove("drop_viewer_in_search");
+
+		DropInterface.INSTANCE.openForItem(player, item.getId());
+
 
 	}
 

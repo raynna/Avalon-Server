@@ -32,12 +32,10 @@ object DropTableRegistry {
     @JvmStatic
     fun registerItemTable(key: String, table: DropTable) {
 
-        val list = Rscm.lookupList(key)
+        val item = Rscm.lookup(key)
             ?: error("Unknown item group key: $key")
 
-        for (itemId in list) {
-            itemDropTables[itemId] = table
-        }
+        itemDropTables[item] = table
     }
 
     @JvmStatic
