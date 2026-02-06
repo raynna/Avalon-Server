@@ -59,6 +59,8 @@ import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+import com.rs.kotlin.game.npc.drops.DropTableRegistry;
+import com.rs.kotlin.game.npc.drops.DropTableSource;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
 import com.rs.kotlin.tool.WikiApi;
 
@@ -77,8 +79,12 @@ public class NPCHandler {
         if (npc == null || npc.hasFinished() || !player.getMapRegionsIds().contains(npc.getRegionId()))
             return;
         if (npc.getDefinitions().hasAttackOption()) {
-            DropInterface.INSTANCE.open(player, true);
-            DropInterface.INSTANCE.selectNpc(player, npc.getId());
+            DropTableSource source =
+                    DropTableRegistry.getSourceForNpc(npc.getId());
+
+            if (source != null) {
+                DropInterface.INSTANCE.openForSource(player, source);
+            }
             if (npc.getHitpoints() > 0)
                 player.getPackets().sendGameMessage("%s has %s hitpoints left.", npc.getName(), npc.getHitpoints());
             else

@@ -2,7 +2,11 @@ package com.rs.kotlin.game.npc.drops
 
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerDropTable
+import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerItemTable
+import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerNamedTable
+import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerObjectTable
 import com.rs.kotlin.game.npc.drops.tables.*
+import com.rs.kotlin.game.npc.worldboss.WorldBossTable
 
 object DropTablesSetup {
 
@@ -22,6 +26,10 @@ object DropTablesSetup {
         gemDropTable = GemTableEntry()
         superRareTable = SuperRareTableEntry()
         herbDropTable = HerbTableEntry()
+        registerNamedTable("World Boss", WorldBossTable.regular)
+        registerItemTable(Rscm.lookup("item.magic_chest"), WorldBossTable.chest)
+        registerObjectTable("Barrows", 10284, BarrowsChestTable.BARROWS_CHEST_TABLE)
+        registerDropTable(TzTokJadTable.table, Rscm.lookup("npc.tztok_jad_lv702"))
         registerDropTable(ChaosElementalDropTable.table, Rscm.lookupList("npc_group.chaos_elemental_lv305"))
         registerDropTable(KalphiteQueenDropTable.table, Rscm.lookupList("npc_group.kalphite_queen_lv333"))
         registerDropTable(KalphiteGuardianDropTable.table, Rscm.lookupList("npc_group.kalphite_guardian_lv141"))

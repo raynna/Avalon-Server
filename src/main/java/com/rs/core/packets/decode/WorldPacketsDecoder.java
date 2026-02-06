@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import com.rs.Settings;
@@ -29,6 +26,7 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.npc.familiar.Familiar.SpecialAttack;
 import com.rs.java.utils.*;
+import com.rs.kotlin.game.npc.drops.DropTableSource;
 import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Inventory;
 import com.rs.java.game.player.LogicPacket;
@@ -2278,42 +2276,38 @@ public final class WorldPacketsDecoder extends Decoder {
 
             player.temporaryAttribute().remove("npc_find");
 
-            List<Integer> results =
-                    DropSearch.INSTANCE.findNpcsByName(value);
+            // Rebuild master list then filter by name
+            DropInterface.INSTANCE.open(player, true);
 
-            player.temporaryAttribute().put(
-                    "drop_viewer_found_npcs",
-                    results
-            );
+            List<DropTableSource> results =
+                    DropSearch.INSTANCE.findSourcesByName(value);
 
+            player.temporaryAttribute().put("drop_viewer_found_npcs", results);
             player.temporaryAttribute().put("drop_viewer_npc_page", 0);
             player.temporaryAttribute().put("drop_viewer_in_search", true);
 
-            DropInterface.INSTANCE.sendNpcList(player);
+            DropInterface.INSTANCE.sendSourceList(player);
 
             if (!results.isEmpty())
-                DropInterface.INSTANCE.selectNpc(player, results.getFirst());
+                DropInterface.INSTANCE.selectSource(player, results.get(0));
 
             return;
+
         } else if (player.temporaryAttribute().get("drop_find") != null) {
 
             player.temporaryAttribute().remove("drop_find");
 
-            List<Integer> results =
-                    DropSearch.INSTANCE.findNpcsByDrop(value);
+            List<DropTableSource> results =
+                    DropSearch.INSTANCE.findSourcesByDrop(value);
 
-            player.temporaryAttribute().put(
-                    "drop_viewer_found_npcs",
-                    results
-            );
-
+            player.temporaryAttribute().put("drop_viewer_found_npcs", results);
             player.temporaryAttribute().put("drop_viewer_npc_page", 0);
             player.temporaryAttribute().put("drop_viewer_in_search", true);
 
-            DropInterface.INSTANCE.sendNpcList(player);
+            DropInterface.INSTANCE.sendSourceList(player);
 
             if (!results.isEmpty())
-                DropInterface.INSTANCE.selectNpc(player, results.getFirst());
+                DropInterface.INSTANCE.selectSource(player, results.get(0));
 
             return;
         } else if (player.temporaryAttribute().get("TITLE_ORDER_SET") != null) {

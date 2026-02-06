@@ -21,6 +21,9 @@ object BarrowsChestTable {
         5 to listOf("item.verac_s_helm","item.verac_s_brassard","item.verac_s_plateskirt","item.verac_s_flail")
     )
 
+    private val ALL_BARROWS_ITEMS: List<String> =
+        BROTHER_ITEMS.values.flatten()
+
     private fun rollBarrowsItem(player: Player): Int? {
 
         val used = player.temporaryAttribute()["barrows_used"] as? MutableSet<Int>
@@ -64,7 +67,8 @@ object BarrowsChestTable {
                 denominator = 102, // fallback, overridden by controller logic
                 dynamicItem = { player ->
                     rollBarrowsItem(player)
-                }
+                },
+                displayItems = ALL_BARROWS_ITEMS
             )
         }
 
@@ -76,9 +80,9 @@ object BarrowsChestTable {
             drop("item.death_rune", amount = 70..83, weight = 125)
             drop("item.blood_rune", amount = 37..43, weight = 125)
             drop("item.bolt_rack", amount = 35..40, weight = 125)
-            drop("item.loop_half_of_a_key", amount = 6)
-            drop("item.tooth_half_of_a_key", amount = 6)
-            drop("item.dragon_helm", amount = 1)
+            drop("item.loop_half_of_a_key", weight = 6)
+            drop("item.tooth_half_of_a_key", weight = 6)
+            drop("item.dragon_helm", weight = 1)
         }
 
         tertiaryDrops {

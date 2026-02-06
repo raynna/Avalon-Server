@@ -88,7 +88,10 @@ import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.InputStream;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.drops.DropTableRegistry;
+import com.rs.kotlin.game.npc.drops.DropTableSource;
 import com.rs.kotlin.game.player.combat.CombatUtils;
+import com.rs.kotlin.game.player.interfaces.DropInterface;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 
@@ -1987,6 +1990,7 @@ public final class ObjectHandler {
                             + object.getY() + ", " + object.getPlane() + ", ");
             }
         }));
+
     }
 
     private static void handleOptionExamine(final Player player, final WorldObject object) {
@@ -2014,6 +2018,13 @@ public final class ObjectHandler {
                             + object.getPlane() + ", t" + object.getType() + ", r" + object.getRotation() + ", "
                             + object.getDefinitions().name + ", varbit: " + object.getConfigByFile() + ", var: "
                             + object.getConfig());
+        DropTableSource source =
+                DropTableRegistry.getSourceForObject(object.getId());
+
+        if (source != null) {
+            DropInterface.INSTANCE.openForSource(player, source);
+        }
+
     }
 
     private static void dumpAllObjectDefinitions() throws IOException {
