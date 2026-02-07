@@ -9,20 +9,20 @@ class ShopDsl {
         val maxStock: Int,
         val restockRate: Int = 1,
         val price: Int? = null,
-        val unlimitedStock: Boolean? = true
+        val unlimitedStock: Boolean? = true,
+        val baseStock: Int = currentStock,
     )
 
-    var id: Int = 0
     var title: String = ""
     var currency: CurrencyType = CurrencyType.COINS
     var items: MutableList<ShopItem> = mutableListOf()
     var isGlobal: Boolean = true
+    var isGeneralStore: Boolean = false
 
     fun shop(builder: ShopDsl.() -> Unit): ShopDefinition {
         val dsl = ShopDsl()
         dsl.builder()
         return ShopDefinition(
-            id = dsl.id,
             title = dsl.title,
             currency = dsl.currency,
             items = dsl.items,
@@ -38,6 +38,27 @@ class ShopDsl {
             else -> throw IllegalArgumentException("Unsupported item reference: $input")
         }
     }
+
+    fun generalStoreItem(
+        itemRef: Any,
+        baseStock: Int,
+        restockRate: Int = 1,
+        price: Int? = null
+    ) {
+        val itemId = resolveItemId(itemRef)
+        items.add(
+            ShopItem(
+                itemId = itemId,
+                currentStock = baseStock,
+                baseStock = baseStock,
+                maxStock = baseStock * 2, // optional cap
+                restockRate = restockRate,
+                price = price,
+                unlimitedStock = false
+            )
+        )
+    }
+
 
     fun item(itemRef: Any, currentStock: Int = 1, price: Int? = null) {
         val itemId = resolveItemId(itemRef)

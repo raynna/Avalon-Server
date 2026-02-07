@@ -14,7 +14,15 @@ import java.util.*
 class ShopSystem(private val player: Player) {
     companion object {
         const val INTERFACE_ID = 3010
-        private val viewingPlayers = WeakHashMap<Player, Int>()
+        private val viewingPlayers = WeakHashMap<Player, GameShop>()
+
+
+        fun getViewingPlayers(shop: ShopDefinition): List<Player> {
+            return viewingPlayers
+                .filterValues { it.definition == shop }
+                .keys
+                .toList()
+        }
 
         // Component IDs for the shop interface
         private val ITEM_CONTAINERS = intArrayOf(
@@ -102,18 +110,18 @@ class ShopSystem(private val player: Player) {
         private const val CURRENCY2_COMPONENT = 495
     }
 
-    fun openShop(shopId: Int) {
-        val shop = GlobalShopManager.getShop(shopId) ?: return
+    fun openShop(shop: GameShop) {
+        val definition = shop.definition
 
         player.interfaceManager.closeScreenInterface()
-        viewingPlayers[player] = shopId
+        viewingPlayers[player] = shop
 
         // Hide all item components initially
         ITEM_CONTAINERS.forEach { component ->
             player.packets.sendHideIComponent(INTERFACE_ID, component, true)
         }
 
-        sendShop(shop)
+        sendShop(definition)
         player.interfaceManager.sendInterface(INTERFACE_ID)
         player.interfaceManager.sendInventoryInterface(1266)
 
@@ -122,10 +130,8 @@ class ShopSystem(private val player: Player) {
         }
     }
 
-    private fun getCurrentShop(): ShopDefinition? {
-        val shopId = viewingPlayers[player] ?: return null
-        return GlobalShopManager.getShop(shopId)
-    }
+    private fun getCurrentShop(): ShopDefinition? =
+        viewingPlayers[player]?.definition
 
     private fun sendShop(shop: ShopDefinition) {
         // Clear all previous items
@@ -146,7 +152,7 @@ class ShopSystem(private val player: Player) {
             val displayAmount = if (shopItem.maxStock == -1) shopItem.currentStock
             else minOf(shopItem.currentStock, shopItem.maxStock)
 
-            val price = shopItem.price ?: EconomyPrices.getPrice(shopItem.itemId)
+            val price = shop.getBuyPrice(shopItem.itemId, shopItem)
             val canAfford = when (shop.currency) {
                 CurrencyType.COINS -> player.totalCoins >= price
                 CurrencyType.PVP_TOKENS -> player.pvpTokens >= price
@@ -223,8 +229,7 @@ class ShopSystem(private val player: Player) {
         }
     }
 
-    private fun refresh(shop: ShopDefinition) {
-
+    fun refresh(shop: ShopDefinition) {
         shop.items.forEachIndexed { index, shopItem ->
             if (index >= ITEM_CONTAINERS.size) return@forEachIndexed
 
@@ -238,7 +243,7 @@ class ShopSystem(private val player: Player) {
             val displayAmount = if (shopItem.maxStock == -1) shopItem.currentStock
             else minOf(shopItem.currentStock, shopItem.maxStock)
 
-            val price = shopItem.price ?: EconomyPrices.getPrice(shopItem.itemId)
+            val price = shop.getBuyPrice(shopItem.itemId, shopItem)
             val canAfford = when (shop.currency) {
                 CurrencyType.COINS -> player.totalCoins >= price
                 CurrencyType.PVP_TOKENS -> player.pvpTokens >= price
@@ -247,7 +252,7 @@ class ShopSystem(private val player: Player) {
 
             // Send the item to the correct container
             val item = Item(shopItem.itemId, if (inStock) displayAmount else 0)
-            player.packets.sendUpdateItems(containerId, arrayOf(item))
+            player.packets.sendItems(containerId, arrayOf(item))
 
             // Display price (red if out of stock or can't afford)
             val rawPriceText = when {
@@ -306,7 +311,7 @@ class ShopSystem(private val player: Player) {
             WorldPacketsDecoder.ACTION_BUTTON3_PACKET -> buyItem(itemId, 10)
             WorldPacketsDecoder.ACTION_BUTTON4_PACKET -> buyItem(itemId, 50)
             WorldPacketsDecoder.ACTION_BUTTON5_PACKET -> handleBuyXOption(itemId)
-            WorldPacketsDecoder.ACTION_BUTTON6_PACKET -> player.message(ItemExamines.getExamine(Item(itemId)))
+            WorldPacketsDecoder.ACTION_BUTTON9_PACKET -> player.message(ItemExamines.getExamine(Item(itemId)))
         }
     }
 
@@ -318,7 +323,7 @@ class ShopSystem(private val player: Player) {
             WorldPacketsDecoder.ACTION_BUTTON3_PACKET -> sellItem(item.id, 5)
             WorldPacketsDecoder.ACTION_BUTTON4_PACKET -> sellItem(item.id, 10)
             WorldPacketsDecoder.ACTION_BUTTON5_PACKET -> sellItem(item.id, 50)
-            WorldPacketsDecoder.ACTION_BUTTON6_PACKET -> sellItem(item.id, item.amount)
+            WorldPacketsDecoder.ACTION_BUTTON9_PACKET -> sellItem(item.id, player.inventory.getNumberOf(item.id))
         }
     }
 
@@ -350,7 +355,7 @@ class ShopSystem(private val player: Player) {
         }
 
         // Get the price (use custom price if set, otherwise economy price)
-        val price = shopItem.price ?: EconomyPrices.getPrice(shopItem.itemId)
+        val price = shop.getBuyPrice(itemId, shopItem)
         val itemDef = ItemDefinitions.getItemDefinitions(itemId)
 
         player.message("${itemDef.name} costs ${price.fullFormat()} ${currency.displayName}.")
@@ -358,6 +363,7 @@ class ShopSystem(private val player: Player) {
 
     private fun showSellInfo(itemId: Int, currency: CurrencyType) {
         val shop = getCurrentShop() ?: return
+        val normalizedItemId = normalizeItemId(itemId)
         if (currency == CurrencyType.AVALON_POINTS || currency == CurrencyType.PVP_TOKENS) {
             Msg.warn(player, "You cannot sell this item to the shop.")
             return
@@ -366,29 +372,36 @@ class ShopSystem(private val player: Player) {
             Msg.warn(player, "You can't sell untradeable items.")
             return
         }
-        val shopItem = shop.items.find { it.itemId == itemId }
-        if (shopItem == null) {
+        val shopItem = shop.items.find { it.itemId == normalizedItemId }
+        if (shopItem == null && !shop.isGeneralStore) {
             Msg.warn(player, "This item is not available in this shop.")
             return
         }
 
-        val basePrice = shopItem.price ?: EconomyPrices.getPrice(shopItem.itemId)
+        var basePrice = shop.getSellPrice(normalizedItemId, shopItem)
+        if (shop.isGeneralStore && basePrice < 0)
+            basePrice = 1
         if (basePrice == 0) {
             Msg.warn(player, "You cannot sell free items to the shop.")
             return
         }
-        val sellPrice = (basePrice * 0.66).toInt() // 66% of base price
 
-        val itemDef = ItemDefinitions.getItemDefinitions(itemId)
+        val itemDef = ItemDefinitions.getItemDefinitions(normalizedItemId)
 
-        Msg.info(player, "${itemDef.name} will sell back for ${sellPrice.fullFormat()} ${currency.displayName}.")
+        Msg.info(player, "${itemDef.name} will sell back for ${basePrice.fullFormat()} ${currency.displayName}.")
     }
 
 
     fun buyItem(itemId: Int, amount: Int) {
         val shop = getCurrentShop() ?: return
         val shopItem = shop.items.find { it.itemId == itemId } ?: return
-
+        if (
+            shopItem.unlimitedStock == false &&
+            shopItem.currentStock <= 0
+        ) {
+            Msg.warn(player, "This item is currently out of stock.")
+            return
+        }
         var buyAmount = amount
         var buyItem = shopItem.itemId;
         // --- Cap to stock ---
@@ -401,7 +414,7 @@ class ShopSystem(private val player: Player) {
                 buyItem = def.getCertId();
             }
         }
-        val price = shopItem.price ?: EconomyPrices.getPrice(buyItem)
+        val price = shop.getBuyPrice(itemId, shopItem)
         val currency = shop.currency
 
         // --- Cap to what player can afford ---
@@ -447,13 +460,27 @@ class ShopSystem(private val player: Player) {
             shopItem.currentStock -= buyAmount
         }
 
+        val removed = shop.removeIfDepleted(shopItem)
+
         Msg.success(player, "You bought $buyAmount x ${def.name} for ${totalPrice.fullFormat()} ${currency.displayName}.")
-        refresh(shop)
+        if (removed) {
+            rebuild(shop)
+        } else {
+            refresh(shop)
+        }
     }
+
+    fun rebuild(shop: ShopDefinition) {
+        for (i in ITEM_CONTAINERS.indices) {
+            player.packets.sendItems(i, emptyArray())
+            player.packets.sendHideIComponent(INTERFACE_ID, ITEM_CONTAINERS[i], true)
+        }
+        sendShop(shop)
+    }
+
 
     fun sellItem(itemId: Int, requestedAmount: Int) {
         val shop = getCurrentShop() ?: return
-
         if (shop.currency != CurrencyType.COINS) {
             Msg.warn(player, "This shop does not accept coins.")
             return
@@ -464,10 +491,18 @@ class ShopSystem(private val player: Player) {
             return
         }
 
+        val normalizedId = normalizeItemId(itemId)
+        val shopItem = shop.items.find { it.itemId == normalizedId }
+        if (!shop.isGeneralStore && shop.items.none { it.itemId == normalizedId }) {
+            Msg.warn(player, "This shop doesn't accept this item.")
+            return
+        }
+
         val owned = player.inventory.getAmountOf(itemId)
         if (owned <= 0) return
-
-        val pricePerItem = (EconomyPrices.getPrice(itemId) * 0.66).toInt()
+        var pricePerItem = shop.getSellPrice(itemId, shopItem)
+        if (shop.isGeneralStore && pricePerItem < 0)
+            pricePerItem = 1
         if (pricePerItem <= 0) {
             Msg.warn(player, "You can't sell this item.")
             return
@@ -487,8 +522,19 @@ class ShopSystem(private val player: Player) {
 
         player.inventory.deleteItem(itemId, sellAmount)
         player.moneyPouch.addMoney(totalCoins, false)
+        val sellItemId = normalizeItemId(itemId)
+        val addedNewItem =
+            shop.isGeneralStore && shop.items.none { it.itemId == sellItemId }
 
-        val itemDef = ItemDefinitions.getItemDefinitions(itemId)
+        if (addedNewItem) {
+            shop.addGeneralStoreItem(sellItemId, sellAmount)
+            rebuild(shop)
+        } else {
+            shop.increaseStock(sellItemId, sellAmount)
+        }
+
+
+        val itemDef = ItemDefinitions.getItemDefinitions(sellItemId)
         Msg.success(
             player,
             "Sold $sellAmount x ${itemDef.name} for ${totalCoins.fullFormat()} coins."
@@ -496,7 +542,6 @@ class ShopSystem(private val player: Player) {
 
         refresh(shop)
     }
-
 
 
     private fun getPlayerCurrencyAmount(currency: CurrencyType): Int {
@@ -526,4 +571,14 @@ class ShopSystem(private val player: Player) {
     private fun Int.fullFormat(): String {
         return "%,d".format(this) // adds commas: 1,479 → "1,479"
     }
+
+    private fun normalizeItemId(itemId: Int): Int {
+        val def = ItemDefinitions.getItemDefinitions(itemId)
+        return if (def.isNoted && def.getCertId() != -1) {
+            def.getCertId()
+        } else {
+            itemId
+        }
+    }
+
 }

@@ -2,8 +2,9 @@ package com.rs.java.game.player.dialogues.npcs;
 
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.java.utils.ShopsHandler;
+import com.rs.kotlin.game.player.shop.shops.GeneralStore;
 
-public class GeneralStore extends Dialogue {
+public class GeneralStoreDialogue extends Dialogue {
 
 	private int npcId;
 	private int shopId;
@@ -11,7 +12,6 @@ public class GeneralStore extends Dialogue {
 	@Override
 	public void start() {
 		npcId = (Integer) parameters[0];
-		shopId = (Integer) parameters[1];
 		sendNPCDialogue(npcId, 9827, "Can I help you at all?");
 	}
 
@@ -25,7 +25,7 @@ public class GeneralStore extends Dialogue {
 			break;
 		case 0:
 			if (componentId == OPTION_1) {
-				ShopsHandler.openShop(player, shopId);
+				player.getShopSystem().openShop(GeneralStore.INSTANCE);
 				end();
 			} else if (componentId == OPTION_2) {
 				stage = 1;

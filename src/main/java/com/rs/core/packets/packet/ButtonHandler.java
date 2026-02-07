@@ -2106,7 +2106,7 @@ public class ButtonHandler {
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) shop.handleShop(player, slotId, 5);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) shop.handleShop(player, slotId, 10);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) shop.handleShop(player, slotId, 50);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET) shop.handleShop(player, slotId, 500);
+                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON6_PACKET) shop.handleShop(player, slotId, 500);
                 else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
                     shop.handleShop(player, slotId, shop.getMainStock()[slot].getAmount());
             } else if (componentId == 201) {
@@ -2166,6 +2166,7 @@ public class ButtonHandler {
                     else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) shop.sell(player, slot, 5);
                     else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET) shop.sell(player, slot, 10);
                     else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) shop.sell(player, slot, 50);
+                    else if (packetId == WorldPacketsDecoder.ACTION_BUTTON6_PACKET) shop.sell(player, slot, 50);
                 }
             }
         } else if (interfaceId == 1028) CharacterDesign.handleButtons(player, componentId, slotId, packetId);

@@ -39,6 +39,43 @@ public class WorldTasksManager {
 		});
 	}
 
+	public static void schedule(int delay, int period, Runnable runnable) {
+		if (runnable == null)
+			return;
+
+		schedule(new WorldTask() {
+			@Override
+			public void run() {
+				runnable.run();
+			}
+		}, delay, period);
+	}
+
+	public static void schedule(int delay, Runnable runnable) {
+		if (runnable == null)
+			return;
+
+		schedule(new WorldTask() {
+			@Override
+			public void run() {
+				runnable.run();
+			}
+		}, delay);
+	}
+
+	public static void schedule(Runnable runnable) {
+		if (runnable == null)
+			return;
+
+		schedule(new WorldTask() {
+			@Override
+			public void run() {
+				runnable.run();
+			}
+		});
+	}
+
+
 
 	public static void schedule(WorldTask task, int delayCount, int periodCount) {
 		if (task == null || delayCount < 0 || periodCount < 0)

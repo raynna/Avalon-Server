@@ -4,6 +4,7 @@ import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.java.game.World;
 import com.rs.java.game.player.dialogues.Dialogue;
+import com.rs.kotlin.game.player.shop.shops.GeneralStore;
 
 public class Max extends Dialogue {
 
@@ -123,7 +124,7 @@ public class Max extends Dialogue {
 		} else if (stage == 41) {
 			stage = 50;
 			player.stopAll();
-			player.getShopSystem().openShop(11);
+			player.getShopSystem().openShop(GeneralStore.INSTANCE);
 		} else if (stage == 50)
 			end();
 	}

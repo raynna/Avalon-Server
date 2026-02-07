@@ -1,32 +1,51 @@
 package com.rs.kotlin.game.player.shop
 
+import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.player.tasks.Task
 
 object GlobalShopManager {
-    private val globalShops = LinkedHashMap<Int, ShopDefinition>() // preserves insertion order
-    private val restockTasks = mutableMapOf<Int, Task>()
+    private val globalShops = LinkedHashSet<ShopDefinition>() // preserves insertion order
+
+    private var restockTaskStarted = false
 
     fun registerShop(shop: ShopDefinition) {
-        globalShops[shop.id] = shop
+        globalShops += shop
+        startRestockTaskIfNeeded()
     }
 
-    fun getShop(shopId: Int): ShopDefinition? {
-        return globalShops[shopId]
-    }
+    private fun startRestockTaskIfNeeded() {
+        if (restockTaskStarted) return
+        restockTaskStarted = true
 
-    @JvmStatic
-    fun getShopsInOrder(): List<ShopDefinition> = globalShops.values.toList()
-    
-    /*private fun startRestockTask(shopId: Int) {
-        restockTasks[shopId] = WorldTasksManager.schedule(0, 100) { // Restock every 100 ticks (60 seconds)
-            globalShops[shopId]?.let { shop ->
-                shop.items.forEach { item ->
-                    if (item.maxStock != -1 && item.currentStock < item.maxStock) {
-                        item.currentStock = minOf(item.maxStock, item.currentStock + item.restockRate)
+        WorldTasksManager.schedule(0, 10) {
+            globalShops
+                .filter { it.isGlobal }
+                .forEach { shop ->
+
+                    val beforeStocks = shop.items.map { it.currentStock }
+
+                    val structureChanged = shop.restock()
+
+                    val afterStocks = shop.items.map { it.currentStock }
+
+                    when {
+                        structureChanged -> rebuildViewers(shop)
+                        beforeStocks != afterStocks -> refreshViewers(shop)
                     }
                 }
-            }
         }
-    }*/
+    }
+
+    private fun refreshViewers(shop: ShopDefinition) {
+        ShopSystem.getViewingPlayers(shop).forEach { player ->
+            player.shopSystem.refresh(shop)
+        }
+    }
+
+    private fun rebuildViewers(shop: ShopDefinition) {
+        ShopSystem.getViewingPlayers(shop).forEach { player ->
+            player.shopSystem.rebuild(shop)
+        }
+    }
 }

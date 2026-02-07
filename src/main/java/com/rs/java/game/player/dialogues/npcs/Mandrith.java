@@ -3,6 +3,7 @@ package com.rs.java.game.player.dialogues.npcs;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.game.player.content.WildernessArtefacts;
 import com.rs.java.game.player.dialogues.Dialogue;
+import com.rs.kotlin.game.player.shop.shops.PvpShop;
 
 public class Mandrith extends Dialogue {
 
@@ -253,7 +254,7 @@ public class Mandrith extends Dialogue {
                 break;
             case 30:
                 player.getInterfaceManager().closeChatBoxInterface();
-                player.getShopSystem().openShop(10);
+                player.getShopSystem().openShop(PvpShop.INSTANCE);
                 break;
             case 31:
                 player.getInterfaceManager().closeChatBoxInterface();

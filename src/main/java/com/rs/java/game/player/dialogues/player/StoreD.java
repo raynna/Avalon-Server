@@ -34,7 +34,7 @@ public class StoreD extends Dialogue {
         if (index >= 0 && index < displays.size()) {
             var display = displays.get(index);
             player.getActionManager().setAction(
-                    new OpenShopAction(display.getShopId(), 0)); // ticks unused
+                    new OpenShopAction(display.getShop(), 0)); // ticks unused
         }
         end();
     }

@@ -62,6 +62,7 @@ import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.npc.drops.DropTableRegistry;
 import com.rs.kotlin.game.npc.drops.DropTableSource;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
+import com.rs.kotlin.game.player.shop.shops.GeneralStore;
 import com.rs.kotlin.tool.WikiApi;
 
 /**
@@ -507,7 +508,7 @@ public class NPCHandler {
             else if (npc.getName().contains("Dommik"))
                 ShopsHandler.openShop(player, 5);
             else if (npc.getId() == 524 || npc.getId() == 525)
-                player.getDialogueManager().startDialogue("GeneralStore", npc.getId(), 6);
+                player.getDialogueManager().startDialogue("GeneralStoreDialogue", npc.getId());
             else if (npc.getName().contains("Aubury"))
                 ShopsHandler.openShop(player, 7);
             else if (npc.getId() == 15513 || npc.getId() >= 11303 && npc.getId() <= 11307)
@@ -523,13 +524,13 @@ public class NPCHandler {
             else if (npc.getId() == 546)
                 ShopsHandler.openShop(player, 12);
             else if (npc.getId() == 522 || npc.getId() == 523)
-                player.getDialogueManager().startDialogue("GeneralStore", npc.getId(), 13);
+                player.getDialogueManager().startDialogue("GeneralStoreDialogue", npc.getId());
             else if (npc.getId() == 538)
                 ShopsHandler.openShop(player, 14);
             else if (npc.getId() == 528 || npc.getId() == 529)
-                player.getDialogueManager().startDialogue("GeneralStore", npc.getId(), 15);
+                player.getDialogueManager().startDialogue("GeneralStoreDialogue", npc.getId());
             else if (npc.getId() == 520 || npc.getId() == 521)
-                player.getDialogueManager().startDialogue("GeneralStore", npc.getId(), 17);
+                player.getDialogueManager().startDialogue("GeneralStoreDialogue", npc.getId());
             else if (npc.getId() == 577)
                 ShopsHandler.openShop(player, 18);
             else if (npc.getId() == 580)
@@ -539,7 +540,7 @@ public class NPCHandler {
             else if (npc.getId() == 581)
                 ShopsHandler.openShop(player, 21);
             else if (npc.getId() == 526 || npc.getId() == 527)
-                player.getDialogueManager().startDialogue("GeneralStore", npc.getId(), 22);
+                player.getDialogueManager().startDialogue("GeneralStoreDialogue", npc.getId());
             else if (npc.getId() == 579)
                 ShopsHandler.openShop(player, 23);
             else if (npc.getId() == 594)
@@ -559,13 +560,13 @@ public class NPCHandler {
             else if (npc.getId() == 585)
                 ShopsHandler.openShop(player, 31);
             else if (npc.getId() == 555)
-                player.getDialogueManager().startDialogue("GeneralStore", npc.getId(), 32);
+                player.getDialogueManager().startDialogue("GeneralStoreDialogue", npc.getId());
             else if (npc.getId() == 536)
                 ShopsHandler.openShop(player, 33);
             else if (npc.getId() == 537)
                 ShopsHandler.openShop(player, 34);
             else if (npc.getId() == 11674 || npc.getId() == 11678)
-                player.getDialogueManager().startDialogue("GeneralStore", npc.getId(), 36);
+                player.getDialogueManager().startDialogue("GeneralStoreDialogue", npc.getId());
             else if (npc.getId() == 568)
                 ShopsHandler.openShop(player, 37);
             else if (npc.getId() == 970)
@@ -1061,7 +1062,7 @@ public class NPCHandler {
                 else if (npc.getId() == 538)
                     ShopsHandler.openShop(player, 14);
                 else if (npc.getId() == 528 || npc.getId() == 529)
-                    ShopsHandler.openShop(player, 15);
+                    player.getShopSystem().openShop(GeneralStore.INSTANCE);
                 else if (npc.getId() == 519)
                     ShopsHandler.openShop(player, 16);
                 else if (npc.getId() == 520 || npc.getId() == 521)
@@ -1121,7 +1122,7 @@ public class NPCHandler {
                 else if (npc.getId() == 1301)
                     PlayerLook.openYrsaShop(player);
                 else if (npc.getId() == 6988)
-                    player.getShopSystem().openShop(8);
+                    player.getShopSystem().openShop(GeneralStore.INSTANCE);
                 else if (npc instanceof Pet) {
                     if (npc != player.getPet()) {
                         player.getPackets().sendGameMessage("This isn't your pet!");
@@ -1245,7 +1246,7 @@ public class NPCHandler {
                 else if (npc.getId() == 1301)
                     PlayerLook.openYrsaShop(player);
                 else if (npc.getId() == 3373) {
-                    player.getShopSystem().openShop(7);
+                    player.getShopSystem().openShop(GeneralStore.INSTANCE);
                 } else if (npc.getId() == 8929) {
                     player.getDialogueManager().startDialogue("Titles", npc.getId());
                     npc.faceEntity(player);
@@ -1253,7 +1254,7 @@ public class NPCHandler {
                 } else if (npc.getId() == 9085)
                     ShopsHandler.openShop(player, 29);
                 else if (npc.getId() == 4250)
-                    player.getShopSystem().openShop(9);
+                    player.getShopSystem().openShop(GeneralStore.INSTANCE);
                 else if (npc.getId() == 5532) {
                     npc.setNextForceTalk(new ForceTalk("Senventior Disthinte Molesko!"));
                     player.getControlerManager().startControler("SorceressGarden");
