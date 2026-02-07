@@ -384,9 +384,13 @@ public final class Equipment implements Serializable {
 		Item oldItem = getItem(slot);
 		if (oldItem == null) return;
 
-		Item newItem = new Item(itemId, oldItem.getAmount());
-		items.set(slot, newItem);
+		Item newItem = new Item(
+				itemId,
+				oldItem.getAmount(),
+				oldItem.getMetadata() == null ? null : oldItem.getMetadata().deepCopy()
+		);
 
+		items.set(slot, newItem);
 		refresh(slot);
 		player.getAppearence().generateAppearenceData();
 	}

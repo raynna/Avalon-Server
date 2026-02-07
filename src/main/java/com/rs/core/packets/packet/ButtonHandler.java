@@ -2635,33 +2635,32 @@ public class ButtonHandler {
         if (equippedItem != null && itemToEquip.getDefinitions().isStackable() && equippedItem.getId() == itemToEquip.getId()) {
             itemToEquip.setAmount(itemToEquip.getAmount() + equippedItem.getAmount());
         }
+        player.getEquipment().getItems().set(equipmentSlot, itemToEquip);
+        equippedItem = player.getEquipment().getItem(equipmentSlot);
         if (Settings.ECONOMY_MODE != Settings.FULL_ECONOMY) {
-            if (itemToEquip.isAnyOf("item.dragonfire_shield_charged", "item.dragonfire_shield_uncharged")) {
-                if (itemToEquip.getMetadata() == null) {
-                    itemToEquip.setMetadata(new DragonFireShieldMetaData(50));
-                    if (itemToEquip.isItem("item.dragonfire_shield_uncharged")) {
-                        itemToEquip.setId(Item.getId("item.dragonfire_shield_charged"));
-                        player.getEquipment().refresh();
+            if (equippedItem.isAnyOf("item.dragonfire_shield_charged", "item.dragonfire_shield_uncharged")) {
+                if (equippedItem.getMetadata() == null) {
+                    equippedItem.setMetadata(new DragonFireShieldMetaData(50));
+                    if (equippedItem.isItem("item.dragonfire_shield_uncharged")) {
+                        equippedItem.changeId(Item.getId("item.dragonfire_shield_charged"), true);
                         player.message("As you equip your dragonfire shield, it magically charges itself.");
                     }
                 } else {
-                    itemToEquip.getMetadata().setValue(50);
+                    equippedItem.getMetadata().setValue(50);
                 }
             }
-            if (itemToEquip.isAnyOf("item.ancient_wyvern_shield_uncharged", "item.ancient_wyvern_shield_charged")) {
-                if (itemToEquip.getMetadata() == null) {
-                    itemToEquip.setMetadata(new DragonFireShieldMetaData(50));
-                    if (itemToEquip.isItem("item.ancient_wyvern_shield_uncharged")) {
-                        itemToEquip.setId(Item.getId("item.ancient_wyvern_shield_charged"));
-                        player.getEquipment().refresh();
+            if (equippedItem.isAnyOf("item.ancient_wyvern_shield_uncharged", "item.ancient_wyvern_shield_charged")) {
+                if (equippedItem.getMetadata() == null) {
+                    equippedItem.setMetadata(new DragonFireShieldMetaData(50));
+                    if (equippedItem.isItem("item.ancient_wyvern_shield_uncharged")) {
+                        equippedItem.changeId(Item.getId("item.ancient_wyvern_shield_charged"), true);
                         player.message("As you equip your ancient wyvern shield, it magically charges itself.");
                     }
                 } else {
-                    itemToEquip.getMetadata().setValue(50);
+                    equippedItem.getMetadata().setValue(50);
                 }
             }
         }
-        player.getEquipment().getItems().set(equipmentSlot, itemToEquip);
         player.getEquipment().refresh(equipmentSlot);
     }
 

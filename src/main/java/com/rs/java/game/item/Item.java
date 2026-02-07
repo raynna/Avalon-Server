@@ -129,7 +129,13 @@ public class Item implements Serializable {
 	 */
 	public void setId(int id) {
 		this.id = (short) id;
-		this.metadata = null;
+	}
+
+	public void changeId(int newId, boolean preserveMetadata) {
+		this.id = (short) newId;
+		if (!preserveMetadata) {
+			this.metadata = null;
+		}
 	}
 
 	public int getAmount() {

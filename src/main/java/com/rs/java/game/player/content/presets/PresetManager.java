@@ -153,7 +153,7 @@ public final class PresetManager implements Serializable {
             if (item.getMetadata() == null) {
                 item.setMetadata(new DragonFireShieldMetaData(50));
                 if (item.isItem("item.dragonfire_shield_uncharged")) {
-                    item.setId(Item.getId("item.dragonfire_shield_charged"));
+                    item.changeId(Item.getId("item.dragonfire_shield_charged"), true);
                 }
             } else {
                 item.getMetadata().setValue(50);
@@ -163,7 +163,7 @@ public final class PresetManager implements Serializable {
             if (item.getMetadata() == null) {
                 item.setMetadata(new DragonFireShieldMetaData(50));
                 if (item.isItem("item.ancient_wyvern_shield_uncharged")) {
-                    item.setId(Item.getId("item.ancient_wyvern_shield_charged"));
+                    item.changeId(Item.getId("item.ancient_wyvern_shield_charged"), true);
                 }
             } else {
                 item.getMetadata().setValue(50);
@@ -171,15 +171,15 @@ public final class PresetManager implements Serializable {
         }
 
         if (item.isAnyOf("item.greater_runic_staff_charged", "item.greater_runic_staff_uncharged")) {
-            if (item.isItem("item.greater_runic_staff_uncharged")) {
-                item.setId(Item.getId("item.greater_runic_staff_charged"));
-            }
             GreaterRunicStaffMetaData staffData = (GreaterRunicStaffMetaData) item.getMetadata();
             if (staffData == null) {
                 item.setMetadata(new GreaterRunicStaffMetaData(23, 250));
             } else if (staffData.getCharges() == 0 || staffData.getSpellId() == -1) {
                 staffData.setSpellId(23);
                 staffData.setValue(250);
+            }
+            if (item.isItem("item.greater_runic_staff_uncharged")) {
+                item.changeId(Item.getId("item.greater_runic_staff_charged"), true);
             }
         }
     }
