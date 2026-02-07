@@ -577,7 +577,8 @@ object StandardMelee : MeleeData() {
                 "item.greater_runic_staff_inactive",
                 "item.greater_runic_staff_uncharged",
                 "item.greater_runic_staff_charged",
-                "item.nightmare_staff"
+                "item.nightmare_staff",
+                "item.staff_of_the_dead"
             ),
             name = "Staff & Wand",
             weaponStyle = WeaponStyle.STAFF,
@@ -587,6 +588,31 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.staff_bash"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.staff_bash"),
                 StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.staff_bash"),
+            )
+        ),
+
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.staff_of_the_dead"
+            ),
+            name = "Staff of the dead",
+            weaponStyle = WeaponStyle.STAFF,
+            blockAnimationId = Animation.getId("animation.staff_block"),
+            soundId = Rscm.lookup("sound.staff_bash"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.staff_bash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.staff_bash"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.staff_bash"),
+            ),
+            special = SpecialAttack.Instant(
+                energyCost = 100,
+                execute = { attacker ->
+                    attacker.animate("animation.staff_of_light_special")
+                    attacker.gfx("graphic.staff_of_light_special")
+                    attacker.tickManager.addMinutes(TickManager.TickKeys.STAFF_OF_LIGHT_EFFECT, 1) {
+                        attacker.message("The power of the dead fades. Your resistance to melee attacks return to normal.")
+                    }
+                }
             )
         ),
         MeleeWeapon(
@@ -1108,6 +1134,54 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.sword_slash"),
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.sword_stab"),
             ),
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.zamorakian_hasta",
+            ),
+            name = "Hasta",
+            weaponStyle = WeaponStyle.SPEAR,
+            blockAnimationId = Animation.getId("animation.battleaxe_block"),
+            soundId = Rscm.lookup("sound.sword_stab"),
+            animations = mapOf(
+                StyleKey(AttackStyle.CONTROLLED, 0) to Animation.getId("animation.chaotic_stab"),
+                StyleKey(AttackStyle.CONTROLLED, 1) to Animation.getId("animation.chaotic_slash"),
+                StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.staff_bash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.chaotic_stab"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 25,
+                execute = { context ->
+                    val defender = context.defender
+                    val attacker = context.attacker
+                    attacker.animate("animation.dragon_spear_special")
+                    defender.gfx("graphic.stun")
+                    defender.resetWalkSteps();
+                    val dx = defender.x - attacker.x
+                    val dy = defender.y - attacker.y
+
+                    val pushX = dx.coerceIn(-1, 1)
+                    val pushY = dy.coerceIn(-1, 1)
+
+                    val destX = defender.x + pushX
+                    val destY = defender.y + pushY
+
+                    if (defender is Player) {
+                        defender.stopAll()
+                    }
+                    var moved = defender.addWalkSteps(destX, destY, 1)
+                    if (!moved) {
+                        val swapX = attacker.x
+                        val swapY = attacker.y
+                        moved = defender.addWalkSteps(swapX, swapY, 1)
+                    }
+                    defender.lock(5)
+                    attacker.setNextFaceEntity(defender)
+                    defender.setNextFaceEntity(null)
+                    defender.direction = attacker.direction
+
+                }
+            )
         ),
         MeleeWeapon(
             itemId = Item.getIds(

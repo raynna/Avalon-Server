@@ -146,7 +146,7 @@ public final class PresetManager implements Serializable {
 
     private void handleForcedCharges(Item item) {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
-            return; // does not work in full eco
+            return;
         }
 
         if (item.isAnyOf("item.dragonfire_shield_charged", "item.dragonfire_shield_uncharged")) {
@@ -154,6 +154,16 @@ public final class PresetManager implements Serializable {
                 item.setMetadata(new DragonFireShieldMetaData(50));
                 if (item.isItem("item.dragonfire_shield_uncharged")) {
                     item.setId(Item.getId("item.dragonfire_shield_charged"));
+                }
+            } else {
+                item.getMetadata().setValue(50);
+            }
+        }
+        if (item.isAnyOf("item.ancient_wyvern_shield_uncharged", "item.ancient_wyvern_shield_charged")) {
+            if (item.getMetadata() == null) {
+                item.setMetadata(new DragonFireShieldMetaData(50));
+                if (item.isItem("item.ancient_wyvern_shield_uncharged")) {
+                    item.setId(Item.getId("item.ancient_wyvern_shield_charged"));
                 }
             } else {
                 item.getMetadata().setValue(50);
