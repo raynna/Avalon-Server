@@ -1936,7 +1936,6 @@ public final class WorldPacketsDecoder extends Decoder {
             return;
         }
 
-        // BoB
         if (player.getInterfaceManager().containsInterface(671)
                 && player.getInterfaceManager().containsInterface(665)) {
             if (player.getFamiliar() == null || player.getFamiliar().getBob() == null) return;
@@ -2074,12 +2073,10 @@ public final class WorldPacketsDecoder extends Decoder {
         }
 
         // Money pouch withdraw via main gameframe
-        if (player.getInterfaceManager().containsInterface(548)
-                || player.getInterfaceManager().containsInterface(746)) {
-            if (player.temporaryAttribute().get("money_pouch_remove") == Boolean.TRUE) {
-                player.getMoneyPouch().withdrawPouch(value);
-                player.temporaryAttribute().put("money_pouch_remove", Boolean.FALSE);
-            }
+        if (player.temporaryAttribute().get("money_pouch_remove") == Boolean.TRUE) {
+            player.message("withdraw cash");
+            player.getMoneyPouch().withdrawPouch(value);
+            player.temporaryAttribute().put("money_pouch_remove", Boolean.FALSE);
         }
     }
 

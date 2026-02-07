@@ -451,49 +451,53 @@ class ShopSystem(private val player: Player) {
         refresh(shop)
     }
 
-    fun sellItem(itemId: Int, amount: Int) {
-        val shop = getCurrentShop()?: return
-        val currency = shop.currency
-        var sellAmount = amount
-        if (sellAmount > player.inventory.getNumberOf(itemId))
-            sellAmount = player.inventory.getAmountOf(itemId)
+    fun sellItem(itemId: Int, requestedAmount: Int) {
+        val shop = getCurrentShop() ?: return
 
-        val price = (EconomyPrices.getPrice(itemId) * 0.66).toInt()
-        if (price <= 0) {
+        if (shop.currency != CurrencyType.COINS) {
+            Msg.warn(player, "This shop does not accept coins.")
+            return
+        }
+
+        if (!ItemConstants.isTradeable(Item(itemId))) {
+            Msg.warn(player, "You can't sell untradeable items.")
+            return
+        }
+
+        val owned = player.inventory.getAmountOf(itemId)
+        if (owned <= 0) return
+
+        val pricePerItem = (EconomyPrices.getPrice(itemId) * 0.66).toInt()
+        if (pricePerItem <= 0) {
             Msg.warn(player, "You can't sell this item.")
             return
         }
-        val sellPrice = price * sellAmount
 
+        val maxSellable = player.moneyPouch
+            .getMaxSellableAmount(pricePerItem, requestedAmount)
 
-        when (currency) {
-            CurrencyType.COINS -> {
-                if (!ItemConstants.isTradeable(Item(itemId))) {
-                    Msg.warn(player, "You can't sell untradeable items.")
-                    return
-                }
-                player.moneyPouch.addMoney(sellPrice, false)
-            }
-            CurrencyType.PVP_TOKENS -> {
-                val tokenId = Item.getId("item.pvp_token")
-                if (!player.inventory.canHold(tokenId, 1)) {
-                    Msg.warn(player, "You don't have any inventory space.")
-                    return
-                }
-                player.addItem(tokenId, sellPrice)
-            }
+        val sellAmount = minOf(owned, maxSellable)
 
-            CurrencyType.AVALON_POINTS -> {
-                Msg.warn(player, "You can't sell this item to this shop.")
-                return
-            }
+        if (sellAmount <= 0) {
+            Msg.warn(player, "You don't have enough space to receive the money.")
+            return
         }
+
+        val totalCoins = sellAmount * pricePerItem
+
         player.inventory.deleteItem(itemId, sellAmount)
+        player.moneyPouch.addMoney(totalCoins, false)
 
         val itemDef = ItemDefinitions.getItemDefinitions(itemId)
-        Msg.success(player, "Sold $sellAmount x ${itemDef.name} for ${sellPrice.fullFormat()} ${currency.displayName}.")
+        Msg.success(
+            player,
+            "Sold $sellAmount x ${itemDef.name} for ${totalCoins.fullFormat()} coins."
+        )
+
         refresh(shop)
     }
+
+
 
     private fun getPlayerCurrencyAmount(currency: CurrencyType): Int {
         return when (currency) {

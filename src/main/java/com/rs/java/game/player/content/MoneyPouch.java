@@ -165,6 +165,43 @@ public class MoneyPouch implements Serializable {
 
 
 	/**
+	 * Calculates how many items can be sold given a per-item price,
+	 * respecting pouch + inventory limits and mirroring addMoney().
+	 */
+	public int getMaxSellableAmount(int pricePerItem, int requestedAmount) {
+		if (pricePerItem <= 0 || requestedAmount <= 0) {
+			return 0;
+		}
+
+		int pouchTotal = getTotal();
+		int pouchSpace = Integer.MAX_VALUE - pouchTotal;
+
+		int inventoryCoins = player.getInventory().getNumberOf(995);
+		boolean canUseInventory =
+				inventoryCoins > 0 || player.getInventory().getFreeSlots() > 0;
+
+		if (pouchSpace == 0 && !canUseInventory) {
+			return 0;
+		}
+
+		long totalCoinCapacity = pouchSpace;
+
+		if (canUseInventory) {
+			totalCoinCapacity += (long) Integer.MAX_VALUE - inventoryCoins;
+		}
+
+		long maxSellableByMoney = totalCoinCapacity / pricePerItem;
+
+		if (maxSellableByMoney <= 0) {
+			return 0;
+		}
+
+		return (int) Math.min(requestedAmount, maxSellableByMoney);
+	}
+
+
+
+	/**
 	 * Adds money directly to pouch.
 	 * If delete is true, removes coins from inventory.
 	 */
