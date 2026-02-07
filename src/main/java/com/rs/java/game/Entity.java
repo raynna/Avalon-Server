@@ -243,7 +243,7 @@ public abstract class Entity extends WorldTile {
             }
             if (player.getEmotesManager().getNextEmoteEnd() >= Utils.currentTimeMillis())
                 return;
-            if (player.isLocked())
+            if (player.isLocked() && !player.isDead())
                 return;
         }
         int processedCount = 0;
@@ -253,7 +253,7 @@ public abstract class Entity extends WorldTile {
             if (this instanceof Player player) {
                 if (player.getEmotesManager().getNextEmoteEnd() >= Utils.currentTimeMillis())
                     return;
-                if (player.isLocked())
+                if (player.isLocked() && !player.isDead())
                     return;
             }
             if (hit instanceof BleedHit bleed) {

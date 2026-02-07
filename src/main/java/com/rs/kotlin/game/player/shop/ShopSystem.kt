@@ -4,6 +4,7 @@ import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.core.packets.decode.WorldPacketsDecoder
 import com.rs.java.game.item.Item
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.content.ItemConstants
 import com.rs.java.utils.EconomyPrices
 import com.rs.java.utils.HexColours
 import com.rs.java.utils.ItemExamines
@@ -357,7 +358,14 @@ class ShopSystem(private val player: Player) {
 
     private fun showSellInfo(itemId: Int, currency: CurrencyType) {
         val shop = getCurrentShop() ?: return
-
+        if (currency == CurrencyType.AVALON_POINTS || currency == CurrencyType.PVP_TOKENS) {
+            Msg.warn(player, "You cannot sell this item to the shop.")
+            return
+        }
+        if (!ItemConstants.isTradeable(Item(itemId))) {
+            Msg.warn(player, "You can't sell untradeable items.")
+            return
+        }
         val shopItem = shop.items.find { it.itemId == itemId }
         if (shopItem == null) {
             Msg.warn(player, "This item is not available in this shop.")
@@ -459,7 +467,13 @@ class ShopSystem(private val player: Player) {
 
 
         when (currency) {
-            CurrencyType.COINS -> player.moneyPouch.addMoney(sellPrice, false)
+            CurrencyType.COINS -> {
+                if (!ItemConstants.isTradeable(Item(itemId))) {
+                    Msg.warn(player, "You can't sell untradeable items.")
+                    return
+                }
+                player.moneyPouch.addMoney(sellPrice, false)
+            }
             CurrencyType.PVP_TOKENS -> {
                 val tokenId = Item.getId("item.pvp_token")
                 if (!player.inventory.canHold(tokenId, 1)) {
@@ -469,7 +483,10 @@ class ShopSystem(private val player: Player) {
                 player.addItem(tokenId, sellPrice)
             }
 
-            CurrencyType.AVALON_POINTS -> player.avalonPoints += sellPrice
+            CurrencyType.AVALON_POINTS -> {
+                Msg.warn(player, "You can't sell this item to this shop.")
+                return
+            }
         }
         player.inventory.deleteItem(itemId, sellAmount)
 

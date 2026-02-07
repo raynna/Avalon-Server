@@ -217,7 +217,7 @@ object SpellHandler {
         if (spell.type == SpellType.Combat) {
             if (staffOfLightEffect(player)) {
                 val isKodai = weapon.isAnyOf("item.kodai_wand")
-                player.packets.sendGameMessage("Your spell draws its power completely from your " + if (isKodai) "staff." else "wand.")
+                player.packets.sendGameMessage("Your spell draws its power completely from your " + if (isKodai) "wand." else "staff.")
                 return true
             }
         }

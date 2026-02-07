@@ -606,4 +606,3 @@ object DropInterface {
         return if (l2.isEmpty()) l1.toString() else "$l1<br>$l2"
     }
 }
-
