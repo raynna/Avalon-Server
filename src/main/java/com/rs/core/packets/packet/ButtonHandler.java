@@ -9,10 +9,7 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.item.meta.DragonFireShieldMetaData;
-import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
-import com.rs.java.game.item.meta.ItemMetadata;
-import com.rs.java.game.item.meta.PolyporeStaffMetaData;
+import com.rs.java.game.item.meta.*;
 import com.rs.java.game.item.plugins.misc.RunePouch;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.minigames.crucible.Crucible;
@@ -1619,6 +1616,9 @@ public class ButtonHandler {
                     if (weaponId >= 18349 && weaponId <= 18357) {
                         player.getChargeManager().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(weaponId).getName() + " has ##% charges left.", weapon, false);
                     }
+                    if (weapon.isItem("item.toxic_staff_charged")) {
+                        player.getChargeManager().checkPercentage("Your " + ItemDefinitions.getItemDefinitions(weaponId).getName() + " has ##% charges left.", weapon, false);
+                    }
                     if (weaponId == 15484) player.getInterfaceManager().gazeOrbOfOculus();
                     if (weaponId == 9013) {
                         if (player.getSkullSkeptreCharges() == 1) {
@@ -2659,6 +2659,28 @@ public class ButtonHandler {
                     }
                 } else {
                     equippedItem.getMetadata().setValue(50);
+                }
+            }
+            if (equippedItem.isAnyOf("item.dragonfire_ward_uncharged", "item.dragonfire_ward_charged")) {
+                if (equippedItem.getMetadata() == null) {
+                    equippedItem.setMetadata(new DragonFireShieldMetaData(50));
+                    if (equippedItem.isItem("item.dragonfire_ward_uncharged")) {
+                        equippedItem.changeId(Item.getId("item.dragonfire_ward_charged"), true);
+                        player.message("As you equip your dragonfire ward, it magically charges itself.");
+                    }
+                } else {
+                    equippedItem.getMetadata().setValue(50);
+                }
+            }
+            if (equippedItem.isAnyOf("item.toxic_staff_uncharged", "item.toxic_staff_charged")) {
+                if (equippedItem.getMetadata() == null) {
+                    equippedItem.setMetadata(new DegradeHitsMetaData(1000, 100));
+                    if (equippedItem.isItem("item.toxic_staff_uncharged")) {
+                        equippedItem.changeId(Item.getId("item.toxic_staff_charged"), true);
+                        player.message("As you equip your toxic staff of the dead, it magically charges itself.");
+                    }
+                } else {
+                    equippedItem.getMetadata().setValue(1000);
                 }
             }
         }

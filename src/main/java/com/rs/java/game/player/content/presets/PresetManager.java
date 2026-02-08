@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.rs.Settings;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.meta.DegradeHitsMetaData;
 import com.rs.java.game.item.meta.DragonFireShieldMetaData;
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData;
 import com.rs.java.game.npc.familiar.Familiar;
@@ -169,6 +170,16 @@ public final class PresetManager implements Serializable {
                 item.getMetadata().setValue(50);
             }
         }
+        if (item.isAnyOf("item.dragonfire_ward_uncharged", "item.dragonfire_ward_charged")) {
+            if (item.getMetadata() == null) {
+                item.setMetadata(new DragonFireShieldMetaData(50));
+                if (item.isItem("item.dragonfire_ward_uncharged")) {
+                    item.changeId(Item.getId("item.dragonfire_ward_charged"), true);
+                }
+            } else {
+                item.getMetadata().setValue(50);
+            }
+        }
 
         if (item.isAnyOf("item.greater_runic_staff_charged", "item.greater_runic_staff_uncharged")) {
             GreaterRunicStaffMetaData staffData = (GreaterRunicStaffMetaData) item.getMetadata();
@@ -182,6 +193,17 @@ public final class PresetManager implements Serializable {
                 item.changeId(Item.getId("item.greater_runic_staff_charged"), true);
             }
         }
+        if (item.isAnyOf("item.toxic_staff_uncharged", "item.toxic_staff_charged")) {
+            if (item.getMetadata() == null) {
+                item.setMetadata(new DegradeHitsMetaData(1000, 100));
+                if (item.isItem("item.toxic_staff_uncharged")) {
+                    item.changeId(Item.getId("item.toxic_staff_charged"), true);
+                }
+            } else {
+                item.getMetadata().setValue(1000);
+            }
+        }
+
     }
 
     public void loadPreset(String name, Player p2) {

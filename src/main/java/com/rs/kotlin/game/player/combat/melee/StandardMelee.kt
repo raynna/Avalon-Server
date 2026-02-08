@@ -1,20 +1,24 @@
 package com.rs.kotlin.game.player.combat.melee
 
+import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Animation
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
+import com.rs.java.game.Hit.HitLook
 import com.rs.java.game.item.Item
+import com.rs.java.game.minigames.godwars.zaros.ZarosGodwars.nex
 import com.rs.java.game.npc.NPC
+import com.rs.java.game.player.BodyGlow
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
-import com.rs.kotlin.game.player.combat.special.ChainMode
-import com.rs.kotlin.game.player.combat.special.ChainSettings
 import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
+import kotlin.math.min
+
 
 object StandardMelee : MeleeData() {
 
@@ -577,8 +581,7 @@ object StandardMelee : MeleeData() {
                 "item.greater_runic_staff_inactive",
                 "item.greater_runic_staff_uncharged",
                 "item.greater_runic_staff_charged",
-                "item.nightmare_staff",
-                "item.staff_of_the_dead"
+                "item.nightmare_staff"
             ),
             name = "Staff & Wand",
             weaponStyle = WeaponStyle.STAFF,
@@ -593,7 +596,9 @@ object StandardMelee : MeleeData() {
 
         MeleeWeapon(
             itemId = Item.getIds(
-                "item.staff_of_the_dead"
+                "item.staff_of_the_dead",
+                "item.toxic_staff_uncharged",
+                "item.toxic_staff_charged",
             ),
             name = "Staff of the dead",
             weaponStyle = WeaponStyle.STAFF,
@@ -814,6 +819,54 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.armadyl_godsword_special")
                     context.attacker.gfx("graphic.armadyl_godsword_special")
                     context.meleeHit()
+                }
+            )
+        ),
+        MeleeWeapon(
+            itemId = listOf(
+                Rscm.lookup("item.ancient_godsword")
+            ),
+            name = "Ancient godsword",
+            weaponStyle = WeaponStyle.TWO_HANDED_SWORD,
+            //soundId = Rscm.lookup("sound.godsword_slash"),
+            blockAnimationId = Animation.getId("animation.godsword_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.godsword_chop"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.godsword_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.godsword_smash"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.godsword_slash"),
+            ),
+            special = SpecialAttack.Combat(
+                energyCost = 50,
+                accuracyMultiplier = 2.0,
+                damageMultiplier = 1.10,
+                execute = { context ->
+                    context.attacker.gfx("graphic.katana_swing")
+                    context.attacker.gfx(553, 30, 0, 0)
+                    context.attacker.animate(1882)
+                    WorldTasksManager.schedule(0) {
+                        context.attacker.animate(1884)
+                    }
+                    context.hits {
+                        val hit = melee()
+
+                        if (hit.damage > 0) {
+                            context.defender.gfx(556)
+                            context.defender.gfx(556, 60, 0, 0)
+                            context.defender.gfx(556, 120, 0, 0)
+                            WorldTasksManager.schedule(7) {
+                                val healCap = if (context.defender is Player) 150 else 250
+                                val maxHeal = min(
+                                    (context.defender.maxHitpoints * 0.15).toInt(),
+                                    healCap
+                                )
+                                val heal = min(hit.damage, maxHeal)
+                                context.attacker.heal(heal)
+                                context.defender.applyHit(Hit(context.attacker, 250, HitLook.REGULAR_DAMAGE))
+                                context.defender.gfx(376)
+                            }
+                        }
+                    }
                 }
             )
         ),
@@ -1585,6 +1638,20 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.chaotic_crush"),
                 StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.chaotic_crush"),
                 StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.chaotic_crush"),
+            ),
+        ),
+        MeleeWeapon(
+            itemId = Item.getIds(
+                "item.abyssal_bludgeon",
+            ),
+            name = "Bludgeon",
+            weaponStyle = WeaponStyle.MAUL,
+            attackDelay = 0,
+            blockAnimationId = Animation.getId("animation.chaotic_maul_block"),
+            animations = mapOf(
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.new_spear_slash"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.new_spear_slash"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.new_spear_slash"),
             ),
         ),
         MeleeWeapon(

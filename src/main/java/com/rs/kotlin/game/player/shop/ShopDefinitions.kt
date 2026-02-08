@@ -58,8 +58,6 @@ class ShopDefinition(
         return false
     }
 
-
-
     fun increaseStock(itemId: Int, amount: Int) {
         val item = items.find { it.itemId == itemId } ?: return
 
@@ -78,7 +76,6 @@ class ShopDefinition(
             return
         }
 
-        // Player-sold temporary item
         items.add(
             ShopDsl.ShopItem(
                 itemId = itemId,
@@ -97,7 +94,6 @@ class ShopDefinition(
 
         for (item in items.toList()) {
             when {
-                // Refill
                 item.currentStock < item.baseStock -> {
                     item.currentStock = minOf(
                         item.baseStock,
@@ -105,13 +101,11 @@ class ShopDefinition(
                     )
                 }
 
-                // Decay toward base stock
                 isGeneralStore && item.currentStock > item.baseStock -> {
                     item.currentStock -= item.restockRate
                 }
             }
 
-            // 🔥 FINAL removal check
             if (isGeneralStore && item.baseStock == 0 && item.currentStock <= 0) {
                 items.remove(item)
                 structureChanged = true

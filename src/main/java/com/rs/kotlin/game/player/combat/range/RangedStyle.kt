@@ -269,7 +269,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val ammoItem = attacker.equipment.items[Equipment.SLOT_ARROWS.toInt()]
         val ammoType = currentWeapon.ammoType ?: currentAmmo?.ammoType
 
-        if (attacker.equipment.items[Equipment.SLOT_CAPE.toInt()]?.id in listOf(10498, 10499, 20068)) {
+        if (attacker.equipment.items[Equipment.SLOT_CAPE.toInt()]?.id in listOf(10498, 10499, 20068, 24635, 20769, 20771)) {
             if (Utils.roll(3, 4)) {
                 return true
             }

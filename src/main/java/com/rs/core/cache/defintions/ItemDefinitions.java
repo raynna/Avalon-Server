@@ -1167,6 +1167,9 @@ getRenderAnimId = clientScriptData.get(644); (1426 if getRenderAnimId = null)
                 if (itemId == id) {
                     if (LimitedGEReader.itemIsLimited(id))
                         return price;
+                    if (price == 0) {
+                        return getPrice();
+                    }
                     return (Settings.ECONOMY_MODE == 1 && price < Settings.LOWPRICE_LIMIT) ? 0 : price;
                 }
             }
