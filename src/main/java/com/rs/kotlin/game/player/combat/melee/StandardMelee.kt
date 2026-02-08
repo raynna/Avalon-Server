@@ -841,8 +841,6 @@ object StandardMelee : MeleeData() {
                 accuracyMultiplier = 2.0,
                 damageMultiplier = 1.10,
                 execute = { context ->
-                    context.attacker.gfx("graphic.katana_swing")
-                    context.attacker.gfx(553, 30, 0, 0)
                     context.attacker.animate(1882)
                     WorldTasksManager.schedule(0) {
                         context.attacker.animate(1884)
@@ -851,9 +849,7 @@ object StandardMelee : MeleeData() {
                         val hit = melee()
 
                         if (hit.damage > 0) {
-                            context.defender.gfx(556)
-                            context.defender.gfx(556, 60, 0, 0)
-                            context.defender.gfx(556, 120, 0, 0)
+                            context.defender.gfx("graphic.ruby_bolt_effect")
                             WorldTasksManager.schedule(7) {
                                 val healCap = if (context.defender is Player) 150 else 250
                                 val maxHeal = min(

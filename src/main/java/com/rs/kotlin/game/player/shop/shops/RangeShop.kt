@@ -39,8 +39,6 @@ object RangeShop : GameShop {
         item("item.ranger_boots")
         item("item.robin_hood_hat")
         item("item.glaiven_boots")
-        item("item.ava_s_accumulator")
-        item("item.ava_s_alerter")
         item("item.iron_knife", 10)
         item("item.rune_knife", 10)
         item("item.dragon_dart", 10)
@@ -64,6 +62,7 @@ object RangeShop : GameShop {
         item("item.ruby_dragon_bolts_e", 10)
         item("item.diamond_dragon_bolts_e", 10)
         item("item.dragonstone_dragon_bolts_e", 10)
+        item("item.opal_dragon_bolts_e", 10)
         item("item.onyx_dragon_bolts_e", 10)
         item("item.dark_bow")
         item("item.hunters_crossbow")
@@ -75,5 +74,14 @@ object RangeShop : GameShop {
 
         item("item.morrigan_s_throwing_axe", 10)
         item("item.morrigan_s_javelin", 10)
+        item("item.dragonfire_ward_uncharged", 10)
+        item("item.crystal_helm", 10)
+        item("item.crystal_body", 10)
+        item("item.crystal_legs", 10)
+        item("item.crystal_bow_full", 10)
+        item("item.bow_of_faerdhinen", 10)
+        item("item.zaryte_crossbow", 10)
+        item("item.zaryte_bow", 10)
+        item("item.craw_s_bow", 10)
     }
 }

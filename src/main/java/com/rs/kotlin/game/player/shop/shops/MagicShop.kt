@@ -84,5 +84,8 @@ object MagicShop : GameShop {
         item("item.polypore_staff")
         item("item.greater_runic_staff_inactive")
         item("item.zuriel_s_staff")
+        item("item.ancient_wyvern_shield_uncharged")
+        item("item.thammaron_s_sceptre")
+        item("item.staff_of_the_dead")
     }
 }

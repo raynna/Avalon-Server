@@ -161,12 +161,13 @@ object WorldBossTable {
             drop("item.bow_of_faerdhinen", weight = 2)
             drop("item.noxious_halberd", weight = 2)
             drop("item.neitiznot_faceguard", weight = 2)
+            drop("item.toxic_staff_uncharged", weight = 2)
 
             listOf(
                 "thammaron_s_sceptre",
                 "craw_s_bow",
                 "viggora_s_chainmace"
-            ).forEach { drop("item.$it", weight = 4) }
+            ).forEach { drop("item.$it", weight = 2) }
 
             listOf("crystal_helm", "crystal_body", "crystal_legs")
                 .forEach { drop("item.$it", weight = 5) }
