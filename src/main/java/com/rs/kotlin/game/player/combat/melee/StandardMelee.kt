@@ -1,23 +1,23 @@
 package com.rs.kotlin.game.player.combat.melee
 
 import com.rs.core.tasks.WorldTasksManager
+import com.rs.core.thread.WorldThread
 import com.rs.java.game.Animation
+import com.rs.java.game.Entity
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
-import com.rs.java.game.Hit.HitLook
 import com.rs.java.game.item.Item
-import com.rs.java.game.minigames.godwars.zaros.ZarosGodwars.nex
 import com.rs.java.game.npc.NPC
-import com.rs.java.game.player.BodyGlow
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
+import com.rs.java.game.player.content.Tint
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
+import com.rs.kotlin.game.player.combat.effects.AncientGodswordEffect
 import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
-import kotlin.math.min
 
 
 object StandardMelee : MeleeData() {
@@ -59,6 +59,7 @@ object StandardMelee : MeleeData() {
             }
         )
     )
+
     override val weapons = listOf(
         MeleeWeapon(
             itemId = Weapon.itemIds("item.dragon_claws", "item.dragon_claws_2", "item.lucky_dragon_claws"),
@@ -842,25 +843,21 @@ object StandardMelee : MeleeData() {
                 damageMultiplier = 1.10,
                 execute = { context ->
                     context.attacker.animate(1882)
-                    WorldTasksManager.schedule(0) {
+                    WorldTasksManager.schedule(1) {
                         context.attacker.animate(1884)
                     }
                     context.hits {
                         val hit = melee()
 
                         if (hit.damage > 0) {
-                            context.defender.gfx("graphic.ruby_bolt_effect")
-                            WorldTasksManager.schedule(7) {
-                                val healCap = if (context.defender is Player) 150 else 250
-                                val maxHeal = min(
-                                    (context.defender.maxHitpoints * 0.15).toInt(),
-                                    healCap
-                                )
-                                val heal = min(hit.damage, maxHeal)
-                                context.attacker.heal(heal)
-                                context.defender.applyHit(Hit(context.attacker, 250, HitLook.REGULAR_DAMAGE))
-                                context.defender.gfx(376)
-                            }
+                            val effect = AncientGodswordEffect(
+                                attacker = context.attacker,
+                                defender = context.defender,
+                                hitDamage = hit.damage,
+                                startTick = WorldThread.WORLD_TICK,
+                                durationTicks = 8
+                            )
+                            context.attacker.addPendingEffect(effect);
                         }
                     }
                 }

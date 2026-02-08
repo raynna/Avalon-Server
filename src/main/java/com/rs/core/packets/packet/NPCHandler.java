@@ -717,7 +717,7 @@ public class NPCHandler {
                 player.setRunEnergy(100);
                 player.heal(player.getMaxHitpoints());
                 player.getSkills().restoreSkills();
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
                 player.getSkills().set(Skills.SUMMONING, player.getSkills().getLevelForXp(Skills.SUMMONING));
                 player.getSkills().refresh(Skills.SUMMONING);
                 player.getCombatDefinitions().resetSpecialAttack();
@@ -978,7 +978,7 @@ public class NPCHandler {
                     player.setRunEnergy(100);
                     player.heal(player.getMaxHitpoints());
                     player.getSkills().restoreSkills();
-                    player.getAppearence().generateAppearenceData();
+                    player.getAppearance().generateAppearenceData();
                     player.getSkills().set(Skills.SUMMONING, player.getSkills().getLevelForXp(Skills.SUMMONING));
                     player.getSkills().refresh(Skills.SUMMONING);
                     player.getCombatDefinitions().resetSpecialAttack();

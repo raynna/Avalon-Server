@@ -878,8 +878,8 @@ public final class WorldPacketsDecoder extends Decoder {
             player.stopAll(false);
             if (player.getPlayerRank().isIronman()) {
                 player.message("You cannot assist as a " + (player.getPlayerRank().isHardcore()
-                        ? "Hardcore Iron " + (player.getAppearence().isMale() ? "Man" : "Woman") + "."
-                        : "Iron " + (player.getAppearence().isMale() ? "Man" : "Woman") + "."));
+                        ? "Hardcore Iron " + (player.getAppearance().isMale() ? "Man" : "Woman") + "."
+                        : "Iron " + (player.getAppearance().isMale() ? "Man" : "Woman") + "."));
                 return;
             }
             if (p2.getPlayerRank().isIronman()) {
@@ -929,8 +929,8 @@ public final class WorldPacketsDecoder extends Decoder {
             player.stopAll(false);
             if (player.getPlayerRank().isIronman()) {
                 player.message("You cannot trade as a " + (player.getPlayerRank().isHardcore()
-                        ? "Hardcore Iron " + (player.getAppearence().isMale() ? "Man" : "Woman") + "."
-                        : "Iron " + (player.getAppearence().isMale() ? "Man" : "Woman") + "."));
+                        ? "Hardcore Iron " + (player.getAppearance().isMale() ? "Man" : "Woman") + "."
+                        : "Iron " + (player.getAppearance().isMale() ? "Man" : "Woman") + "."));
                 return;
             }
             if (p2.getPlayerRank().isIronman()) {
@@ -2017,7 +2017,7 @@ public final class WorldPacketsDecoder extends Decoder {
             else if (value > 99) value = 99;
             player.getSkills().set(skillId, value);
             player.getSkills().setXp(skillId, Skills.getXPForLevel(value));
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
             player.getDialogueManager().finishDialogue();
             return;
         }
@@ -2065,9 +2065,9 @@ public final class WorldPacketsDecoder extends Decoder {
             if (value < 1) value = 0;
             if (value == 0) value = -1;
             if (value > 58 && value != 65535) value = 58;
-            player.getAppearence().setTitle(value);
-            player.getAppearence().generateAppearenceData();
-            player.getPackets().sendGameMessage("Title set to: " + player.getAppearence().getTitleName());
+            player.getAppearance().setTitle(value);
+            player.getAppearance().generateAppearenceData();
+            player.getPackets().sendGameMessage("Title set to: " + player.getAppearance().getTitleName());
             JournalTab.open(player);
             return;
         }
@@ -2115,7 +2115,7 @@ public final class WorldPacketsDecoder extends Decoder {
                 player.message("Target offline, or does not exist.");
                 return;
             }
-            if (other.getControlerManager().getControler() != null) player.getAppearence().switchHidden();
+            if (other.getControlerManager().getControler() != null) player.getAppearance().switchHidden();
             player.setNextWorldTile(new WorldTile(other.getX(), other.getY(), other.getPlane()));
             return;
         } else if (player.temporaryAttribute().remove("tp_to_me") == Boolean.TRUE) {
@@ -2242,7 +2242,7 @@ public final class WorldPacketsDecoder extends Decoder {
 
                 player.setCustomTitleColour(presetHex.toLowerCase());
                 player.setCustomTitle(player.getCustomTitle());
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
                 JournalTab.open(player);
                 player.message("Set your title colour to: <col=" + presetHex + ">COLOUR");
             } else {
@@ -2259,7 +2259,7 @@ public final class WorldPacketsDecoder extends Decoder {
                 }
                 player.setCustomTitleColour(hex.toLowerCase());
                 player.setCustomTitle(player.getCustomTitle());
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
                 JournalTab.open(player);
                 player.message("Set your title colour to: <col=" + hex + ">COLOUR");
             }
@@ -2313,20 +2313,20 @@ public final class WorldPacketsDecoder extends Decoder {
         } else if (player.temporaryAttribute().get("TITLE_ORDER_SET") != null) {
             if (value.toLowerCase().contains("back") || value.equalsIgnoreCase("b")) {
                 player.titleIsBehindName = true;
-                player.getAppearence().setTitle(901);
+                player.getAppearance().setTitle(901);
                 player.message("Set your title order to the back.");
             } else if (value.toLowerCase().contains("front") || value.equalsIgnoreCase("f")) {
                 player.titleIsBehindName = false;
-                player.getAppearence().setTitle(900);
+                player.getAppearance().setTitle(900);
                 player.message("Set your title order to the front.");
             }
             player.getDialogueManager().startDialogue("SimpleMessage", "The process was successfully done!");
             if (player.titleIsBehindName) {
-                player.getAppearence().setTitle(901);
+                player.getAppearance().setTitle(901);
             } else {
-                player.getAppearence().setTitle(900);
+                player.getAppearance().setTitle(900);
             }
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
             JournalTab.open(player);
             player.temporaryAttribute().remove("CUSTOM_TITLE_SET");
             player.temporaryAttribute().remove("TITLE_COLOR_SET");
@@ -2341,10 +2341,10 @@ public final class WorldPacketsDecoder extends Decoder {
                     if (titleId == 0)
                         titleId = -1;
 
-                    player.getAppearence().setTitle(titleId);
-                    player.getAppearence().generateAppearenceData();
+                    player.getAppearance().setTitle(titleId);
+                    player.getAppearance().generateAppearenceData();
                     player.getPackets().sendGameMessage(
-                            "Title set to: " + player.getAppearence().getTitleName()
+                            "Title set to: " + player.getAppearance().getTitleName()
                     );
                     JournalTab.open(player);
                     return;
@@ -2364,7 +2364,7 @@ public final class WorldPacketsDecoder extends Decoder {
                 }
             }
             player.setCustomTitle(value);
-            player.getAppearence().setTitle(900);
+            player.getAppearance().setTitle(900);
             player.message("Set your title to: <col=" + player.getCustomTitleColour() + ">" + value);
             JournalTab.open(player);
             player.getPackets().sendRunScript(109, "Enter a color (HEX) or preset: " + Colors.getPresetList());

@@ -64,7 +64,6 @@ public class BlinkCombat extends CombatScript {
 				if (manager.getParty().getTeam().size() > 1 || Utils.random(3) == 0) {
 					WorldTile beginningTile = boss.getNextPath();
 					boss.animate(new Animation(14949));
-					boss.resetCombat();
 					boss.setNextFaceEntity(null);
 					boss.setNextFaceWorldTile(beginningTile);//Faces the direction it throws into
 					World.sendProjectileToTile(boss, beginningTile, 2853);

@@ -143,7 +143,7 @@ public class DuelController extends Controller {
 
 	public void remove() {
 		player.getPackets().closeInterface(player.getInterfaceManager().hasRezizableScreen() ? 11 : 0);
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 		player.getPackets().sendPlayerOption("null", 1, false);
 	}
 
@@ -199,7 +199,7 @@ public class DuelController extends Controller {
 	public void start() {
 		sendInterfaces();
 		player.getPackets().sendPlayerOption("Challenge", 1, false);
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 		moved();
 	}
 }

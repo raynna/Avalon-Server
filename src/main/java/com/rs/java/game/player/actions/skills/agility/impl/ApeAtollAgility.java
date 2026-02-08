@@ -27,7 +27,7 @@ public class ApeAtollAgility {
 		player.lock();
 		final WorldTile toTile = new WorldTile(2769, 2746, 1);
 		player.setNextForceMovement(new ForceMovement(player, 1, toTile, 7, ForceMovement.NORTH));
-		player.getAppearence().setRenderEmote(760);
+		player.getAppearance().setRenderEmote(760);
 		player.getPackets().sendGameMessage("You climb the vine...");
 		WorldTasksManager.schedule(new WorldTask() {
 			@Override
@@ -35,7 +35,7 @@ public class ApeAtollAgility {
 				player.getPackets().sendGameMessage("..And make it carefully to the end of it.");
 				player.setNextWorldTile(toTile);
 				player.getSkills().addXp(Skills.AGILITY, 55);
-				player.getAppearence().setRenderEmote(-1);
+				player.getAppearance().setRenderEmote(-1);
 				player.unlock();
 				stop();
 			}
@@ -75,14 +75,14 @@ public class ApeAtollAgility {
 		player.lock(4);
 		final WorldTile toTile = new WorldTile(2743, 2741, 0);
 		player.setNextForceMovement(new ForceMovement(player, 0, toTile, 3, ForceMovement.WEST));
-		player.getAppearence().setRenderEmote(739);
+		player.getAppearance().setRenderEmote(739);
 		WorldTasksManager.schedule(new WorldTask() {
 			@Override
 			public void run() {
 				player.getPackets().sendGameMessage("You climb up the skull slope.");
 				player.setNextWorldTile(toTile);
 				player.getSkills().addXp(Skills.AGILITY, 45);
-				player.getAppearence().setRenderEmote(-1);
+				player.getAppearance().setRenderEmote(-1);
 				stop();
 			}
 		}, 2);
@@ -122,13 +122,13 @@ public class ApeAtollAgility {
 		final WorldTile toTile = new WorldTile(2747, 2741, 0);
 		final WorldTile toTile2 = new WorldTile(2747, 2741, 2);
 		player.setNextForceMovement(new ForceMovement(player, 0, toTile2, 4, ForceMovement.WEST));
-		player.getAppearence().setRenderEmote(744);
+		player.getAppearance().setRenderEmote(744);
 		player.getPackets().sendGameMessage("You jump to the monkey bars...");
 		WorldTasksManager.schedule(new WorldTask() {
 			@Override
 			public void run() {
 				player.getPackets().sendGameMessage("..And made it carefully to the other side.");
-				player.getAppearence().setRenderEmote(-1);
+				player.getAppearance().setRenderEmote(-1);
 				player.setNextWorldTile(toTile);
 				player.getSkills().addXp(Skills.AGILITY, 35);
 				stop();
@@ -164,11 +164,11 @@ public class ApeAtollAgility {
 							player.applyHit(new Hit(player, Utils.random(200), HitLook.REGULAR_DAMAGE));
 							player.setNextForceMovement(
 									new ForceMovement(player, 0, WaterTile, 3, ForceMovement.NORTH));
-							player.getAppearence().setRenderEmote(741);
+							player.getAppearance().setRenderEmote(741);
 							WorldTasksManager.schedule(new WorldTask() {
 								@Override
 								public void run() {
-									player.getAppearence().setRenderEmote(-1);
+									player.getAppearance().setRenderEmote(-1);
 									player.setNextWorldTile(Land);
 									stop();
 								}

@@ -187,8 +187,8 @@ public class JournalTab extends CustomTab {
 
 			@Override
 			public String text(Player p) {
-				if(p.getAppearence().getTitle() != -1){
-					return "Title: " + p.getAppearence().getTitleString();
+				if(p.getAppearance().getTitle() != -1){
+					return "Title: " + p.getAppearance().getTitleString();
 				} else {
 					return "Title: <col=BB0404>None - click to set";
 				}

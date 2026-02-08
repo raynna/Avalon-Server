@@ -117,7 +117,7 @@ public class GearCommands {
 		player.getInterfaceManager().closeXPDisplay();
 		player.getInterfaceManager().sendXPDisplay();
 		ButtonHandler.refreshEquipBonuses(player);
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 	}
 
 	private static void setStats(Player player, Gears gear) {

@@ -92,8 +92,8 @@ object JournalTabDSL {
             p.setNextForceTalk(ForceTalk("My Donator rank is: $msg"))
         }
         action({
-            "Title: " + if (it.appearence.title != -1 && it.customTitle == null) {
-                it.appearence.titleString
+            "Title: " + if (it.appearance.title != -1 && it.customTitle == null) {
+                it.appearance.titleString
             } else {
                 "<col=BB0404>None - click to set"
             }

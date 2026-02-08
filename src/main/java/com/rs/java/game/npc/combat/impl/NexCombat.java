@@ -244,14 +244,14 @@ public class NexCombat extends CombatScript {
 				npc.setNextForceTalk(new ForceTalk("I demand a blood sacrifice!"));
 				nex.playSound(3293, 2);
 				final Player player = (Player) target;
-				player.getAppearence().setGlowRed(true);
+				player.getAppearance().setGlowRed(true);
 				player.getPackets().sendGameMessage("Nex has marked you as a sacrifice, RUN!");
 				final int x = player.getX();
 				final int y = player.getY();
 				WorldTasksManager.schedule(new WorldTask() {
 					@Override
 					public void run() {
-						player.getAppearence().setGlowRed(false);
+						player.getAppearance().setGlowRed(false);
 						if (x == player.getX() && y == player.getY()) {
 							player.getPackets().sendGameMessage(
 									"You didn't make it far enough in time - Nex fires a punishing attack!");

@@ -5,7 +5,6 @@ import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
-import com.rs.java.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -119,7 +118,7 @@ public class Skulls {
 
 		if (player.skullId != newSkull) {
 			player.skullId = newSkull;
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 		}
 	}
 

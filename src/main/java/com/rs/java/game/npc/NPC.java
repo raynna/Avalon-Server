@@ -1019,7 +1019,7 @@ public class NPC extends Entity implements Serializable {
                     for (int playerIndex : playerIndexes) {
                         Player player = World.getPlayers().get(playerIndex);
                         if (player == null || player.isDead() || player.hasFinished() || !player.isActive()
-                                || player.getAppearence().isHidden()
+                                || player.getAppearance().isHidden()
                                 || !Utils.isOnRange(getX(), getY(), size, player.getX(), player.getY(),
                                 player.getSize(),
                                 forceAgressiveDistance != 0 ? forceAgressiveDistance

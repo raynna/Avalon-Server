@@ -5,7 +5,6 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.Ranks
 import com.rs.java.game.player.Skills
 import com.rs.kotlin.game.player.command.Command
-import com.rs.kotlin.game.player.command.CommandArguments
 
 class MasterCommand : Command {
     override val requiredRank = Ranks.Rank.PLAYER
@@ -33,7 +32,7 @@ class MasterCommand : Command {
         player.dialogueManager.startDialogue("LevelUp", Skills.SUMMONING)
         player.skills.switchXPPopup(true)
         player.skills.switchXPPopup(true)
-        player.appearence.generateAppearenceData()
+        player.appearance.generateAppearenceData()
         player.message("You set all your combat stats to level 99.")
         return true
     }

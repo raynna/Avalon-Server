@@ -194,9 +194,9 @@ public class GnomeAgility {
 			public void run() {
 				if (!secondloop) {
 					secondloop = true;
-					player.getAppearence().setRenderEmote(155);
+					player.getAppearance().setRenderEmote(155);
 				} else {
-					player.getAppearence().setRenderEmote(-1);
+					player.getAppearance().setRenderEmote(-1);
 					player.setRunHidden(running);
 					setGnomeStage(player, 0);
 					player.getSkills().addXp(Skills.AGILITY, 7.5);
@@ -249,9 +249,9 @@ public class GnomeAgility {
 			public void run() {
 				if (!secondloop) {
 					secondloop = true;
-					player.getAppearence().setRenderEmote(155);
+					player.getAppearance().setRenderEmote(155);
 				} else {
-					player.getAppearence().setRenderEmote(-1);
+					player.getAppearance().setRenderEmote(-1);
 					player.setRunHidden(running);
 					player.getSkills().addXp(Skills.AGILITY, 7.5);
 					player.getPackets().sendGameMessage("You passed the obstacle succesfully.", true);
@@ -275,9 +275,9 @@ public class GnomeAgility {
 			public void run() {
 				if (!secondloop) {
 					secondloop = true;
-					player.getAppearence().setRenderEmote(155);
+					player.getAppearance().setRenderEmote(155);
 				} else {
-					player.getAppearence().setRenderEmote(-1);
+					player.getAppearance().setRenderEmote(-1);
 					player.setRunHidden(running);
 					if (getGnomeStage(player) == 2)
 						setGnomeStage(player, 3);
@@ -333,9 +333,9 @@ public class GnomeAgility {
 			public void run() {
 				if (!secondloop) {
 					secondloop = true;
-					player.getAppearence().setRenderEmote(295);
+					player.getAppearance().setRenderEmote(295);
 				} else {
-					player.getAppearence().setRenderEmote(-1);
+					player.getAppearance().setRenderEmote(-1);
 					player.setRunHidden(running);
 					if (getGnomeStage(player) == 5) {
 						removeGnomeStage(player);

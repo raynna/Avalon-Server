@@ -46,7 +46,7 @@ public class StarterSkills extends Dialogue {
 				player.getSkills().setXp(3, Skills.getXPForLevel(99));
 				player.getSkills().set(23, 99);
 				player.getSkills().setXp(23, Skills.getXPForLevel(99));
-				player.getAppearence().generateAppearenceData();
+				player.getAppearance().generateAppearenceData();
 				player.getInventory().addItem(4091, 1);
 				player.getInventory().addItem(4093, 1);
 				player.getInventory().addItem(3751, 1);
@@ -92,7 +92,7 @@ public class StarterSkills extends Dialogue {
 				player.getSkills().setXp(3, Skills.getXPForLevel(99));
 				player.getSkills().set(23, 99);
 				player.getSkills().setXp(23, Skills.getXPForLevel(99));
-				player.getAppearence().generateAppearenceData();
+				player.getAppearance().generateAppearenceData();
 				player.getInventory().addItem(4103, 1);
 				player.getInventory().addItem(4101, 1);
 				player.getInventory().addItem(8494, 1);
@@ -138,7 +138,7 @@ public class StarterSkills extends Dialogue {
 				player.getSkills().setXp(3, Skills.getXPForLevel(99));
 				player.getSkills().set(23, 99);
 				player.getSkills().setXp(23, Skills.getXPForLevel(99));
-				player.getAppearence().generateAppearenceData();
+				player.getAppearance().generateAppearenceData();
 				player.getInventory().addItem(4111, 1);
 				player.getInventory().addItem(4113, 1);
 				player.getInventory().addItem(10828, 1);
@@ -185,7 +185,7 @@ public class StarterSkills extends Dialogue {
 				player.getSkills().setXp(3, Skills.getXPForLevel(99));
 				player.getSkills().set(23, 99);
 				player.getSkills().setXp(23, Skills.getXPForLevel(99));
-				player.getAppearence().generateAppearenceData();
+				player.getAppearance().generateAppearenceData();
 				player.getInventory().addItem(6107, 1);
 				player.getInventory().addItem(6108, 1);
 				player.getInventory().addItem(656, 1);
@@ -231,7 +231,7 @@ public class StarterSkills extends Dialogue {
 				player.getSkills().setXp(3, Skills.getXPForLevel(99));
 				player.getSkills().set(23, 99);
 				player.getSkills().setXp(23, Skills.getXPForLevel(99));
-				player.getAppearence().generateAppearenceData();
+				player.getAppearance().generateAppearenceData();
 				player.getInventory().addItem(4111, 1);
 				player.getInventory().addItem(4113, 1);
 				player.getInventory().addItem(10828, 1);

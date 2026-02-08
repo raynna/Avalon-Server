@@ -278,7 +278,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (ammoType == AmmoType.THROWING || ammoType == AmmoType.DART|| ammoType == AmmoType.MORRIGAN_THROWING || ammoType == AmmoType.JAVELIN || ammoType == AmmoType.THROWNAXE) {
             if (weapon != null) {
                 attacker.equipment.decreaseItem(Equipment.SLOT_WEAPON.toInt(), 1)
-                attacker.appearence.generateAppearenceData()
+                attacker.appearance.generateAppearenceData()
                 if (!Utils.roll(1, 3))
                     GroundItems.updateGroundItem(Item(weapon.id, 1), defender.tile, attacker);
                 return true
@@ -303,7 +303,7 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 return true
             }
             attacker.equipment.decreaseItem(Equipment.SLOT_ARROWS.toInt(), 1)
-            attacker.appearence.generateAppearenceData()
+            attacker.appearance.generateAppearenceData()
             if (currentAmmo.dropOnGround) {
                 dropAmmoOnGround()
             }

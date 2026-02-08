@@ -23,17 +23,17 @@ public class EdgevillePvPController extends Controller {
         player.getControlerManager().startControler("EdgevillePvPControler");
         player.setNextWorldTile(TeleportLocations.EDGEVILLE_PVP_INSTANCE.getLocation());
         player.message("You " + HexColours.getShortMessage(Colour.RED, "enter") + " edgeville pvp instance.");
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
     }
 
     public static void leavePVP(Player player) {
         player.getControlerManager().forceStop();
         player.setNextWorldTile(new WorldTile(Settings.HOME_PLAYER_LOCATION));
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         player.message("You " + HexColours.getShortMessage(Colour.RED, "leave") + " edgeville pvp instance.");
         player.setCanPvp(false);
         player.getPackets().sendGlobalVar(1000, 0);
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
     }
 
     @Override
@@ -259,7 +259,7 @@ public class EdgevillePvPController extends Controller {
             player.setCanPvp(true);
             player.getPackets().sendGlobalVar(1000, player.getSkills().getCombatLevel() + player.getSkills().getSummoningCombatLevel());
             player.getPackets().sendSpriteOnIComponent(3043, 2, inDangerSprite);
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
             sendInterfaces();
         } else if (isAtBank(player)) {
             sendInterfaces();
@@ -267,10 +267,10 @@ public class EdgevillePvPController extends Controller {
             player.getPackets().sendGlobalVar(1000, 0);
             player.setCanPvp(false);
             player.getPackets().sendSpriteOnIComponent(3043, 2, inSafeSprite);
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
         } else if (!isAtPvP(player) && !isAtBank(player)) {
             player.getPackets().sendGlobalVar(1000, 0);
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
             forceClose();
         }
     }
@@ -279,7 +279,7 @@ public class EdgevillePvPController extends Controller {
         if (showingSkull) {
             showingSkull = false;
             player.setCanPvp(false);
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
             player.getEquipment().refresh(null);
         }
     }
@@ -295,7 +295,7 @@ public class EdgevillePvPController extends Controller {
         player.getInterfaceManager().closeTab(getTabId(player));
         removeControler();
         player.setCanPvp(false);
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
     }
 
     public static final boolean isAtPvP(WorldTile tile) {

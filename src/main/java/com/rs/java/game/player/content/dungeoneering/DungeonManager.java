@@ -572,7 +572,7 @@ public class DungeonManager {
 			if (defenceTier > 8)
 				defenceTier = 8;
 			player.getInventory().addItem(new Item(DungeonUtils.getPlatebody(defenceTier)));
-			player.getInventory().addItem(new Item(DungeonUtils.getPlatelegs(defenceTier, player.getAppearence().isMale())));
+			player.getInventory().addItem(new Item(DungeonUtils.getPlatelegs(defenceTier, player.getAppearance().isMale())));
 			if (party.getComplexity() <= 2) {
 				int attackTier = DungeonUtils.getTier(player.getSkills().getLevelForXp(Skills.ATTACK));
 				if (attackTier > 8)
@@ -657,7 +657,7 @@ public class DungeonManager {
 		player.getEquipment().reset();
 		player.getInventory().reset();
 		if (!logout)
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 	}
 
 	public void sendRing(Player player) {
@@ -676,7 +676,7 @@ public class DungeonManager {
 				worn = true;
 		}
 		if (worn) {
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 			player.getInventory().getItems().shift();
 			player.getInventory().refresh();
 		}
@@ -1101,7 +1101,7 @@ public class DungeonManager {
 			player.setLargeSceneView(false);
 			player.getInterfaceManager().closeOverlay(true);
 			player.getMusicsManager().reset();
-			player.getAppearence().setRenderEmote(-1);
+			player.getAppearance().setRenderEmote(-1);
 		}
 
 	}

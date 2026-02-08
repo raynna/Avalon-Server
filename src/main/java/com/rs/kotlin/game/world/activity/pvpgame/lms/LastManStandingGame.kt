@@ -27,7 +27,7 @@ class LastManStandingGame(players: List<Player>) : PvPGame() {
         if (p2 != null) {
             player.presetManager.loadPreset("hybrid", p2)
         }
-        player.appearence.generateAppearenceData()
+        player.appearance.generateAppearenceData()
     }
 
     override fun onPlayerDeath(player: Player) {

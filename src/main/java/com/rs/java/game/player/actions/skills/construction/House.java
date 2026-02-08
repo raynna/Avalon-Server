@@ -772,8 +772,8 @@ public class House implements Serializable {
 			player.getPoison().reset();
 		if (player.isCanPvp())
 			player.setCanPvp(false);
-		if (player.getAppearence().getRenderEmote() != -1)
-			player.getAppearence().setRenderEmote(-1);
+		if (player.getAppearance().getRenderEmote() != -1)
+			player.getAppearance().setRenderEmote(-1);
 		if (isOwner(player) && servantInstance != null)
 			servantInstance.setFollowing(false);
 		players.remove(player);

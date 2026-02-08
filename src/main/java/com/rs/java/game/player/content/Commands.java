@@ -993,7 +993,7 @@ public final class Commands {
                 player.getSkills().addXpNoBonus(skillId, Skills.getXPForLevel(level) - player.getSkills().getXp(skillId));
             }
 
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
             player.getSkills().switchXPPopup(true);
         } catch (NumberFormatException e) {
             player.getPackets().sendGameMessage("Usage ::setlevel skillId level");
@@ -1012,7 +1012,7 @@ public final class Commands {
         for (int i = 0; i < 25; i++)
             player.getDialogueManager().startDialogue("LevelUp", i);
 
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         player.getSkills().switchXPPopup(true);
         return true;
     }
@@ -1091,7 +1091,7 @@ public final class Commands {
 
         try {
             int npcId = Integer.parseInt(cmd[1]);
-            player.getAppearence().transformIntoNPC(npcId);
+            player.getAppearance().transformIntoNPC(npcId);
             NPCDefinitions defs = NPCDefinitions.getNPCDefinitions(npcId);
             player.message("You transformed into " + npcId + ", (" + NPCDefinitions.getNPCDefinitions(npcId).name + ")");
             NPCDefinitions def = NPCDefinitions.getNPCDefinitions(npcId);
@@ -1363,7 +1363,7 @@ public final class Commands {
             return true;
         }
 
-        if (target.getAppearence().isHidden()) {
+        if (target.getAppearance().isHidden()) {
             player.getPackets().sendGameMessage("Couldn't find player " + name + ".");
             return true;
         }
@@ -1610,7 +1610,7 @@ public final class Commands {
         player.skullDelay = 2000;
         player.skullId = 0;
         Skulls.checkSkulls(player, player.isAtPvP());
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         return true;
     }
 
@@ -1905,7 +1905,7 @@ public final class Commands {
             target.getSkills().set(skill, level);
             target.getSkills().setXp(skill, Skills.getXPForLevel(level));
             target.getDialogueManager().startDialogue("LevelUp", skill);
-            target.getAppearence().generateAppearenceData();
+            target.getAppearance().generateAppearenceData();
             target.getSkills().switchXPPopup(true);
             player.message("Set level " + level + " in skill " + skill + " for " + target.getDisplayName());
 
@@ -1961,7 +1961,7 @@ public final class Commands {
         player.heal(player.getMaxHitpoints());
         player.getSkills().restoreSkills();
         player.getCombatDefinitions().resetSpecialAttack();
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
 
         int hitpointsModification = (int) (player.getMaxHitpoints() * 0.15);
         player.heal(hitpointsModification + 20, hitpointsModification);
@@ -1993,7 +1993,7 @@ public final class Commands {
         target.heal(target.getMaxHitpoints());
         target.getSkills().restoreSkills();
         target.getCombatDefinitions().resetSpecialAttack();
-        target.getAppearence().generateAppearenceData();
+        target.getAppearance().generateAppearenceData();
 
         player.message("Healed " + target.getDisplayName());
         target.message("You were healed by " + player.getDisplayName());
@@ -2076,7 +2076,7 @@ public final class Commands {
 
         try {
             int emoteId = Integer.parseInt(cmd[1]);
-            player.getAppearence().setRenderEmote(emoteId);
+            player.getAppearance().setRenderEmote(emoteId);
         } catch (NumberFormatException e) {
             player.message("Invalid emote ID.");
         }
@@ -3086,8 +3086,8 @@ public final class Commands {
 
         try {
             int titleId = Integer.parseInt(cmd[1]);
-            player.getAppearence().setTitle(titleId);
-            player.message("Title set to: " + player.getAppearence().getTitleString());
+            player.getAppearance().setTitle(titleId);
+            player.message("Title set to: " + player.getAppearance().getTitleString());
         } catch (NumberFormatException e) {
             player.message("Invalid title ID.");
         }
@@ -3212,8 +3212,8 @@ public final class Commands {
         try {
             int slot = Integer.parseInt(cmd[1]);
             int value = Integer.parseInt(cmd[2]);
-            player.getAppearence().setLook(slot, value);
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().setLook(slot, value);
+            player.getAppearance().generateAppearenceData();
             player.message("Appearance updated.");
         } catch (NumberFormatException e) {
             player.message("Invalid slot or value.");
@@ -3400,7 +3400,7 @@ public final class Commands {
                 }
             }
 
-            p1.getAppearence().generateAppearenceData();
+            p1.getAppearance().generateAppearenceData();
         }
 
         party.setFloor(18);
@@ -3588,7 +3588,7 @@ public final class Commands {
             player.getSkills().setXp(i, Skills.getXPForLevel(player.getSkills().getLevelForXp(i) + 10));
             player.getSkills().set(i, player.getSkills().getLevelForXp(i));
         }
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         player.getSkills().switchXPPopup(true);
         player.message("Added 10 levels to all skills.");
         return true;

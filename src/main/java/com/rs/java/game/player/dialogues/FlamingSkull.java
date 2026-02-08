@@ -38,7 +38,7 @@ public class FlamingSkull extends Dialogue {
 		item.setId(itemId == 24442 ? 24437 : itemId);
 		if (slot == -1) {
 			player.getEquipment().refresh(Equipment.SLOT_HEAD);
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 		} else
 			player.getInventory().refresh(slot);
 		end();

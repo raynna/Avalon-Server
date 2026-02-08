@@ -240,7 +240,7 @@ public class TaskManager implements Serializable {
 						continue;
 					if (equipment.getId() == rewards.getItemId()) {
 						player.getEquipment().deleteItem(equipment.getId(), Integer.MAX_VALUE);
-						player.getAppearence().generateAppearenceData();
+						player.getAppearance().generateAppearenceData();
 					}
 				}
 				for (Item inventory : player.getInventory().getItems().getContainerItems()) {

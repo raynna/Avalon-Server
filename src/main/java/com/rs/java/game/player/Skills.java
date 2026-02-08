@@ -8,14 +8,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.rs.Settings;
-import com.rs.core.tasks.WorldTask;
-import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.thread.CoresManager;
 import com.rs.discord.DiscordAnnouncer;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.utils.HexColours;
-import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 import kotlin.Pair;
@@ -916,7 +913,7 @@ public final class Skills implements Serializable {
             sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
             sendLevelAttributtes(player, skill, oldLevel, newLevel);
             if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
                 if (skill == HITPOINTS)
                     player.heal(levelDifference * 10);
                 else if (skill == PRAYER)
@@ -969,7 +966,7 @@ public final class Skills implements Serializable {
             sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
             sendLevelAttributtes(player, skill, oldLevel, newLevel);
             if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
                 if (skill == HITPOINTS)
                     player.heal(levelDiff * 10);
                 else if (skill == PRAYER)
@@ -1039,7 +1036,7 @@ public final class Skills implements Serializable {
             sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
             sendLevelAttributtes(player, skill, oldLevel, newLevel);
             if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
                 if (skill == HITPOINTS)
                     player.heal(levelDiff * 10);
                 else if (skill == PRAYER)
@@ -1178,7 +1175,7 @@ public final class Skills implements Serializable {
             sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
             sendLevelAttributtes(player, skill, oldLevel, newLevel);
             if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
                 if (skill == HITPOINTS)
                     player.heal(levelDiff * 10);
                 else if (skill == PRAYER)

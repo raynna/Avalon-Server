@@ -226,7 +226,7 @@ public final class ObjectHandler {
 
                         @Override
                         public void run() {
-                            player.getAppearence().setRenderEmote(west ? 157 : 156);
+                            player.getAppearance().setRenderEmote(west ? 157 : 156);
                             if (x == 1)
                                 player.addWalkSteps(west ? player.getX() + 2 : player.getX() - 2, player.getY(), 2,
                                         false);
@@ -234,7 +234,7 @@ public final class ObjectHandler {
                                 player.addWalkSteps(west ? player.getX() + 2 : player.getX() - 2, player.getY(), 2,
                                         false);
                             if (x == 3) {
-                                player.getAppearence().setRenderEmote(-1);
+                                player.getAppearance().setRenderEmote(-1);
                                 player.setNextAnimationNoPriority(new Animation(west ? 759 : 758), player);
                                 stop();
                                 return;
@@ -1065,9 +1065,9 @@ public final class ObjectHandler {
                     public void run() {
                         if (!secondloop) {
                             secondloop = true;
-                            player.getAppearence().setRenderEmote(295);
+                            player.getAppearance().setRenderEmote(295);
                         } else {
-                            player.getAppearence().setRenderEmote(-1);
+                            player.getAppearance().setRenderEmote(-1);
                             player.setRunHidden(running);
                             player.getSkills().addXp(Skills.AGILITY, 7);
                             stop();
@@ -2190,7 +2190,7 @@ public final class ObjectHandler {
             WorldObject o = new WorldObject(object);
             o.setId(1997);
             player.getPackets().sendAddObject(o);
-            player.getAppearence().setRenderEmote(188);
+            player.getAppearance().setRenderEmote(188);
             player.setNextForceMovement(new ForceMovement(object, 8, ForceMovement.SOUTH));
             WorldTasksManager.schedule(new WorldTask() {
 
@@ -2205,7 +2205,7 @@ public final class ObjectHandler {
                     WorldObject o = new WorldObject(object);
                     o.setId(1996);
                     player.getPackets().sendAddObject(o);
-                    player.getAppearence().setRenderEmote(-1);
+                    player.getAppearance().setRenderEmote(-1);
                     player.setNextWorldTile(new WorldTile(2513, 3468, 0));
                 }
             }, 7);

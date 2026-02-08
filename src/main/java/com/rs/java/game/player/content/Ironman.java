@@ -90,7 +90,7 @@ public class Ironman implements Serializable {
 						false);
 				player.getPackets()
 						.sendGameMessage("You have fallen as a Hardcore Iron "
-								+ (player.getAppearence().isMale() ? "Man" : "Woman")
+								+ (player.getAppearance().isMale() ? "Man" : "Woman")
 								+ ", your Hardcore status has been revoked.");
 				player.getPlayerRank().setRank(2, Rank.IRONMAN);
 			}
@@ -104,7 +104,7 @@ public class Ironman implements Serializable {
 						+ Utils.getFormattedNumber(PlayerTotalXP, ',') + " XP)" + ".", false);
 				player.getPackets()
 						.sendGameMessage("You have fallen as a Hardcore Iron"
-								+ (player.getAppearence().isMale() ? "man" : "woman")
+								+ (player.getAppearance().isMale() ? "man" : "woman")
 								+ ", your Hardcore status has been revoked.");
 				//if (Settings.discordEnabled) {
 				//	Launcher.getDiscordBot().getChannelByName("public-chat")

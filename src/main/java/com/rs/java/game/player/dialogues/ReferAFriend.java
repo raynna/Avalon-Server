@@ -40,7 +40,7 @@ public class ReferAFriend extends Dialogue {
 			switch (componentId) {
 			case OPTION_1:
 				if (player.getTotalRefs() >= 5) {
-					player.getAppearence().setTitle(9001);
+					player.getAppearance().setTitle(9001);
 					end();
 				} else {
 					player.message("Not enough refs yet!");
@@ -49,7 +49,7 @@ public class ReferAFriend extends Dialogue {
 				break;
 			case OPTION_2:
 				if (player.getTotalRefs() >= 10) {
-					player.getAppearence().setTitle(9002);
+					player.getAppearance().setTitle(9002);
 					end();
 				} else {
 					player.message("Not enough refs yet!");
@@ -58,7 +58,7 @@ public class ReferAFriend extends Dialogue {
 				break;
 			case OPTION_3:
 				if (player.getTotalRefs() >= 20) {
-					player.getAppearence().setTitle(9003);
+					player.getAppearance().setTitle(9003);
 					end();
 				} else {
 					player.message("Not enough refs yet!");

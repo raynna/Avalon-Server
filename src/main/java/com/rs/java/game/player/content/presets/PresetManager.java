@@ -245,7 +245,7 @@ public final class PresetManager implements Serializable {
         player.getEquipment().reset();
         player.getInventory().refresh();
         player.getEquipment().refresh();
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         player.refreshHitPoints();
         player.getPrayer().reset();
 
@@ -342,7 +342,7 @@ public final class PresetManager implements Serializable {
         player.getInventory().deleteItem(0, 28);
         player.getCombatDefinitions().setSpellBook(set.getSpellBook(), false);
         player.getPrayer().setPrayerBook(set.isAncientCurses());
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         player.getSkills().switchXPPopup(true);
         player.getSkills().switchXPPopup(true);
         CommandRegistry.execute(player, "heal");
@@ -388,7 +388,7 @@ public final class PresetManager implements Serializable {
         player.getEquipment().reset();
         player.getInventory().refresh();
         player.getEquipment().refresh();
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         player.refreshHitPoints();
         player.getPrayer().reset();
 
@@ -473,7 +473,7 @@ public final class PresetManager implements Serializable {
         int spellBook = p2.getCombatDefinitions().spellBook;
         player.getCombatDefinitions().setSpellBook(spellBook == 0 ? 0 : spellBook == 1 ? 1 : 2);
         player.getPrayer().setPrayerBook(p2.getPrayer().isAncientCurses());
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         player.getSkills().switchXPPopup(true);
         player.getSkills().switchXPPopup(true);
         player.inventory.refresh();
@@ -569,7 +569,7 @@ public final class PresetManager implements Serializable {
         player.getCombatDefinitions().setSpellBook(preset.getSpellBook(), false);
         player.getPrayer().setPrayerBook(preset.isAncientCurses());
 
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         player.getSkills().switchXPPopup(true);
         player.getSkills().switchXPPopup(true);
         CommandRegistry.execute(player, "heal");

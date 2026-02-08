@@ -108,7 +108,7 @@ public class StarterProtection {
 				player.getVarsManager().sendVar(1494, player.getSummoningLeftClickOption());
 				player.getPresetManager().PRESET_SETUPS = p2.getPresetManager().PRESET_SETUPS;
 			}
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 			player.getPresetManager().loadPreset("max hybrid", null, true);
 		}
 		if (Settings.ECONOMY_MODE == Settings.HALF_ECONOMY) {
@@ -137,7 +137,7 @@ public class StarterProtection {
 				player.getVarsManager().sendVar(1494, player.getSummoningLeftClickOption());
 				player.getPresetManager().PRESET_SETUPS = p2.getPresetManager().PRESET_SETUPS;
 			}
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 			player.getPresetManager().loadPreset("hybrid", null, true);
 		}
 		if (Settings.ECONOMY_MODE == 0) {
@@ -180,7 +180,7 @@ public class StarterProtection {
 		player.getPrayer().restorePrayer(990);
 		player.toggleRun(true);
 		player.combatDefinitions.switchAutoRelatie();
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 		player.getSkills().switchXPPopup(true);
 		player.getSkills().switchXPPopup(true);
 		CommandRegistry.execute(player, "command");

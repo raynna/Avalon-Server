@@ -298,7 +298,7 @@ public class PrayerBook implements Serializable {
             }
         }
         if (group == PrayerConflictGroup.PROTECTION || group == PrayerConflictGroup.OTHER || group == PrayerConflictGroup.OVERHEAD || group == PrayerConflictGroup.SPECIAL) {
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
         }
     }
 
@@ -412,7 +412,7 @@ public class PrayerBook implements Serializable {
 
     private void updateAppearanceIfNeeded(Prayer prayer) {
         if (prayer.isProtectionPrayer() || prayer == NormalPrayer.RETRIBUTION || prayer == NormalPrayer.REDEMPTION || prayer == NormalPrayer.SMITE || prayer == AncientPrayer.DEFLECT_MAGIC || prayer == AncientPrayer.DEFLECT_MISSILES || prayer == AncientPrayer.DEFLECT_MELEE || prayer == AncientPrayer.WRATH || prayer == AncientPrayer.SOUL_SPLIT || prayer == AncientPrayer.TURMOIL) {
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
         }
     }
 
@@ -604,7 +604,7 @@ public class PrayerBook implements Serializable {
 
         unlockPrayerBookButtons();
 
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
 
         recalculatePrayer();
 
@@ -739,7 +739,7 @@ public class PrayerBook implements Serializable {
         activeAncientPrayers.clear();
         recalculatePrayer();
         player.getPackets().sendGlobalVar(182, 0);
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
     }
 
     public void closeProtectionPrayers() {
@@ -752,7 +752,7 @@ public class PrayerBook implements Serializable {
             activeNormalPrayers.remove(NormalPrayer.PROTECT_FROM_MISSILES);
             activeNormalPrayers.remove(NormalPrayer.PROTECT_FROM_MELEE);
         }
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
     }
 
     public boolean drainPrayer(int amount) {
@@ -979,7 +979,7 @@ public class PrayerBook implements Serializable {
         player.getInterfaceManager().sendPrayerBook();
         refreshPrayerPoints();
         recalculatePrayer();
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         player.getPackets().sendGlobalVar("globalvar.prayer_switch_quickpray", usingQuickPrayer ? 1 : 0);
         player.getPackets().sendVar("var.active_prayerbook", isAncientCurses() ? 1 : 0);
         player.getPackets().sendUnlockOptions(271, usingQuickPrayer ? 42 : 8, 0, 29, 0);

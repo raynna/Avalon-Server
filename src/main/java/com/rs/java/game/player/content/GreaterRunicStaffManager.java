@@ -301,7 +301,7 @@ public class GreaterRunicStaffManager implements Serializable {
             if (weapon != null) {
                 weapon.setId(Item.getId("item.greater_runic_staff_uncharged"));
                 player.getEquipment().refresh(Equipment.SLOT_WEAPON);
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
                 player.getPackets().sendGameMessage("You are out of charges in your runic staff.");
             }
         }
@@ -353,7 +353,7 @@ public class GreaterRunicStaffManager implements Serializable {
         if (wearingStaff) {
             player.getEquipment().getItem(Equipment.SLOT_WEAPON).setId(Item.getId("item.greater_runic_staff_uncharged"));
             player.getEquipment().refresh(Equipment.SLOT_WEAPON);
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
         } else {
             Item newStaff = new Item(staff.clone());
             newStaff.setId(Item.getId("item.greater_runic_staff_uncharged"));
@@ -422,7 +422,7 @@ public class GreaterRunicStaffManager implements Serializable {
         if (wearing) {
             weapon.setId(Item.getId("item.greater_runic_staff_uncharged"));
             player.getEquipment().refresh(Equipment.SLOT_WEAPON);
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
         } else {
             Item unchargedStaff = weapon.clone();
             unchargedStaff.setId(Item.getId("item.greater_runic_staff_uncharged"));
@@ -484,7 +484,7 @@ public class GreaterRunicStaffManager implements Serializable {
             if (player.getEquipment().getItem(Equipment.SLOT_WEAPON).isItem("item.greater_runic_staff_uncharged")) {
                 weapon.setId(Item.getId("item.greater_runic_staff_inactive"));
                 player.getEquipment().refresh(Equipment.SLOT_WEAPON);
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
             } else {
                 player.getInventory().deleteItem("item.greater_runic_staff_uncharged", 1);
                 player.getInventory().addItem("item.greater_runic_staff_inactive", 1);
@@ -532,7 +532,7 @@ public class GreaterRunicStaffManager implements Serializable {
         if (weapon.isItem("item.greater_runic_staff_uncharged")) {
             weapon.setId(Item.getId("item.greater_runic_staff_charged"));
             player.getEquipment().refresh(Equipment.SLOT_WEAPON);
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
         }
 
         player.message("Your greater runic staff has been charged with " + toAdd + " spell" + (toAdd > 1 ? "s." : "."));
@@ -605,7 +605,7 @@ public class GreaterRunicStaffManager implements Serializable {
             if (weapon.isItem("item.greater_runic_staff_uncharged")) {
                 weapon.setId(Item.getId("item.greater_runic_staff_charged"));
                 player.getEquipment().refresh(Equipment.SLOT_WEAPON);
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
             }
         }
 

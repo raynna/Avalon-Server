@@ -113,7 +113,7 @@ public final class CustomGear implements Serializable {
 		player.getInterfaceManager().closeXPDisplay();
 		player.getInterfaceManager().sendXPDisplay();
 		ButtonHandler.refreshEquipBonuses(player);
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 	}
 
 	public String getName() {

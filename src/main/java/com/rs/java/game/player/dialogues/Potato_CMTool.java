@@ -60,7 +60,7 @@ public class Potato_CMTool extends Dialogue {
 				player.getEquipment().getItems().set(Equipment.SLOT_HEAD, new Item(20770));
 				player.getEquipment().refresh(Equipment.SLOT_CAPE);
 				player.getEquipment().refresh(Equipment.SLOT_HEAD);
-				player.getAppearence().generateAppearenceData();
+				player.getAppearance().generateAppearenceData();
 				break;
 			case OPTION_5:
 				player.getPackets().sendInputIntegerScript(true, "Enter the time in minutes:");

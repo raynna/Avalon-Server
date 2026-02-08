@@ -23,7 +23,7 @@ public class ZMIShortcut extends ObjectPlugin {
 	@Override
 	public boolean processObject(Player player, WorldObject object) {
 		FadingScreen.fade(player);
-		player.getAppearence().setRenderEmote(295);
+		player.getAppearance().setRenderEmote(295);
 		player.message("You squeeze through the cracks..");
 		WorldTasksManager.schedule(new WorldTask() {
 			int unfade = 0;
@@ -38,7 +38,7 @@ public class ZMIShortcut extends ObjectPlugin {
 					}
 				} else if (unfade == 3) {
 					stop();
-					player.getAppearence().setRenderEmote(-1);
+					player.getAppearance().setRenderEmote(-1);
 					player.getInterfaceManager().closeFadingInterface();
 				}
 				unfade++;

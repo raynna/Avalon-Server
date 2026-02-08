@@ -11,7 +11,6 @@ import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.CombatAction
 import com.rs.kotlin.game.player.combat.Weapon
 import com.rs.kotlin.game.player.combat.special.CombatContext
-import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 class HealthOverlay {
@@ -222,8 +221,8 @@ class HealthOverlay {
 
     private fun buildTargetName(target: Player): String {
         return buildString {
-            if (target.appearence.title != -1) {
-                append(target.appearence.titleName)
+            if (target.appearance.title != -1) {
+                append(target.appearance.titleName)
             }
             append(target.displayName)
         }

@@ -170,10 +170,10 @@ public final class Equipment implements Serializable {
 		}
 
 		if (hasTransformItem) {
-			if (!player.getAppearence().isNPC())
-				player.getAppearence().transformIntoNPC(4024 - 2544);
-		} else if (player.getAppearence().isNPC()) {
-			player.getAppearence().transformIntoNPC(-1);
+			if (!player.getAppearance().isNPC())
+				player.getAppearance().transformIntoNPC(4024 - 2544);
+		} else if (player.getAppearance().isNPC()) {
+			player.getAppearance().transformIntoNPC(-1);
 		}
 
 		player.sendDefaultPlayersOptions();
@@ -392,7 +392,7 @@ public final class Equipment implements Serializable {
 
 		items.set(slot, newItem);
 		refresh(slot);
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 	}
 
 
@@ -404,7 +404,7 @@ public final class Equipment implements Serializable {
 		}
 		oldItem.setId(itemId);
 		refresh(slot);
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 	}
 
 	public void refreshItems(Item[] itemsBefore) {

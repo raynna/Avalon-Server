@@ -21,7 +21,7 @@ public class SteelTitan extends Dialogue {
 		if (player.getEquipment().hasWeapon() && Utils.random(1) == 0) {
 
 			sendNPCDialogue(NPC, NPCCONFIG,
-					"Let us go forth to battle, my " + (player.getAppearence().isMale() ? "Lord" : "Lady") + "!");
+					"Let us go forth to battle, my " + (player.getAppearance().isMale() ? "Lord" : "Lady") + "!");
 			stage = -2;
 
 		} else {

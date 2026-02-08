@@ -150,14 +150,14 @@ public class CompletionistStand extends Dialogue {
 							break;
 						case 4:
 							player.gfx(new Graphics(86));
-							player.getAppearence().transformIntoNPC(randomNPC[Utils.random(randomNPC.length - 1)]);
+							player.getAppearance().transformIntoNPC(randomNPC[Utils.random(randomNPC.length - 1)]);
 							break;
 						case 5:
 							player.setNextForceTalk(new ForceTalk("..What."));
 							break;
 						case 6:
 							player.gfx(new Graphics(86));
-							player.getAppearence().transformIntoNPC(-1);
+							player.getAppearance().transformIntoNPC(-1);
 							player.animate(new Animation(10070));
 							player.setNextForceMovement(new ForceMovement(new WorldTile(3088, 3487, 0), 1, 0));
 							break;

@@ -192,7 +192,7 @@ public class Nonprod extends Controller {
 		if (showingSkull) {
 			showingSkull = false;
 			player.setCanPvp(false);
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 			player.getEquipment().refresh(null);
 		}
 	}

@@ -18,7 +18,7 @@ public class FrozenAdventurer extends NPC {
 		if (player == null || player.isDead() || player.hasFinished()) {
 			finish();
 			return;
-		} else if (!player.getAppearence().isNPC()) {
+		} else if (!player.getAppearance().isNPC()) {
 			//TODO ToKashBloodChillerCombat.removeSpecialFreeze(player);
 			finish();
 			return;

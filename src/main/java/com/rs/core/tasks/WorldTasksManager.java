@@ -51,7 +51,7 @@ public class WorldTasksManager {
 		}, delay, period);
 	}
 
-	public static void schedule(int delay, Runnable runnable) {
+	public static void schedule(int ticks, Runnable runnable) {
 		if (runnable == null)
 			return;
 
@@ -60,7 +60,7 @@ public class WorldTasksManager {
 			public void run() {
 				runnable.run();
 			}
-		}, delay);
+		}, ticks - 1);
 	}
 
 	public static void schedule(Runnable runnable) {

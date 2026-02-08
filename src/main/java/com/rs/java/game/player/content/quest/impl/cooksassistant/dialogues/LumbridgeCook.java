@@ -36,7 +36,7 @@ public class LumbridgeCook extends Dialogue {
 		//System.out.println(progress);
 		if (player.getQuestManager().get(Quests.COOKS_ASSISTANT).getState() == QuestState.COMPLETED) {
 			sendNPCChat(Mood.HAPPY,  "Hi there, "
-					+ (player.getAppearence().isMale() ? "sir"
+					+ (player.getAppearance().isMale() ? "sir"
 							: "ma'am") + "!",
 					"What can I help you with today?");
 			stageInt = -1;

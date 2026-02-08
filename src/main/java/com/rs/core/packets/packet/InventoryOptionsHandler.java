@@ -1022,7 +1022,7 @@ public class InventoryOptionsHandler {
         } else if (itemId == 9013) {
             if (player.getSkullSkeptreCharges() == 1) {
                 player.getInventory().deleteItem(slotId, item);
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
                 player.setSkullSkeptreCharges(5);
                 player.message("You have no more charges, the sceptre crumbled to dust.");
                 player.animate(new Animation(9601));

@@ -46,7 +46,7 @@ class SetLevelCommand : Command {
         }
         player.skills.switchXPPopup(true)
         player.skills.switchXPPopup(true)
-        player.appearence.generateAppearenceData()
+        player.appearance.generateAppearenceData()
         player.message("You have set your ${(Skills.SKILL_NAME[skill])} to level $level.")
         return true
     }

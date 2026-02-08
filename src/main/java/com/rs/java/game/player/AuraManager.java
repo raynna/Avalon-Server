@@ -30,7 +30,7 @@ public class AuraManager implements Serializable {
 	public void process() {
 		if (isActivated() && player.getEquipment().getItem(Equipment.SLOT_AURA) == null) {
 			desactive();
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 			return;
 		}
 		if (!isActivated())
@@ -43,7 +43,7 @@ public class AuraManager implements Serializable {
 		if (Utils.currentTimeMillis() < activation)
 			return;
 		desactive();
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 	}
 
 	public void removeAura() {
@@ -84,7 +84,7 @@ public class AuraManager implements Serializable {
 		if (toId != -1) {
 			player.getEquipment().getItem(Equipment.SLOT_AURA).setId(toId);
 			player.getEquipment().refresh(Equipment.SLOT_AURA);
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 		} else {
 			if (activation != 0) {
 				player.getPackets().sendGameMessage("Aura is already activated.");
@@ -99,7 +99,7 @@ public class AuraManager implements Serializable {
 			cooldowns.put(item.getId(), activation + getCooldown(item.getId()) * 1000);
 			player.animate(new Animation(2231));
 			player.gfx(new Graphics(getActiveGraphic(tier)));
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 		}
 	}
 
@@ -193,7 +193,7 @@ public class AuraManager implements Serializable {
 	 */
 	public int getAuraModelId2() {
 		int aura = player.getEquipment().getAuraId();
-		boolean male = player.getAppearence().isMale();
+		boolean male = player.getAppearance().isMale();
 		switch (aura) {
 		case 22905: // Corruption.
 			return 16449;

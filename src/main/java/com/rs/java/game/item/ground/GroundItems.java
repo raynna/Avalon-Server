@@ -361,7 +361,7 @@ public final class GroundItems {
                     && player.getPlayerRank().isIronman()) {
                 player.getPackets().sendGameMessage(
                         "You can't pickup other players items as an Iron "
-                                + (player.getAppearence().isMale() ? "Man" : "Woman") + "."
+                                + (player.getAppearance().isMale() ? "Man" : "Woman") + "."
                 );
                 return false;
             }

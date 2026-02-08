@@ -17,11 +17,11 @@ public class CharacterDesign {
 		player.getPackets().sendComponentSettings(1028, 132, 0, 250, 2);
 		player.getPackets().sendHideIComponent(1028, 123, true);
 		player.getPackets().sendVar(2533, 0);
-		player.getPackets().sendVar(1363, player.getAppearence().isMale() ? 0 : 4096);
+		player.getPackets().sendVar(1363, player.getAppearance().isMale() ? 0 : 4096);
 		player.temporaryAttribute().put("customizing_stage", Integer.valueOf(0));
 		player.temporaryAttribute().put("customizing_set", Integer.valueOf(-1));
 		player.temporaryAttribute().put("extra_set", Integer.valueOf(-1));
-		armStyle = player.getAppearence().getArmsStyle();
+		armStyle = player.getAppearance().getArmsStyle();
 	}
 
 	public static void handleButtons(Player player, int componentId, int slotId, int packetId) {
@@ -34,7 +34,7 @@ public class CharacterDesign {
 			if (set == -1)
 				set = 0;
 			setPlayerSet(player, set);
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 			player.getPackets().sendWindowsPane(player.getInterfaceManager().hasRezizableScreen() ? 746 : 548, 0);
 			player.hasDesign = true;
 		}
@@ -50,7 +50,7 @@ public class CharacterDesign {
 				break;
 
 			case 65:
-				player.getAppearence().setSkinColor(ClientScriptMap.getMap(748).getIntValue(slotId));
+				player.getAppearance().setSkinColor(ClientScriptMap.getMap(748).getIntValue(slotId));
 				break;
 
 			case 68:
@@ -68,7 +68,7 @@ public class CharacterDesign {
 		case 1:
 			switch (componentId) {
 			case 132:
-				player.getAppearence().setSkinColor(ClientScriptMap.getMap(748).getIntValue(slotId));
+				player.getAppearance().setSkinColor(ClientScriptMap.getMap(748).getIntValue(slotId));
 				break;
 			}
 			break;
@@ -76,11 +76,11 @@ public class CharacterDesign {
 		case 2:
 			switch (componentId) {
 			case 128:
-				player.getAppearence().setHairStyle(HAIR_STYLES[player.getAppearence().isMale() ? 0 : 1][slotId]);
+				player.getAppearance().setHairStyle(HAIR_STYLES[player.getAppearance().isMale() ? 0 : 1][slotId]);
 				break;
 
 			case 132:
-				player.getAppearence().setHairColor(ClientScriptMap.getMap(2345).getIntValue(slotId));
+				player.getAppearance().setHairColor(ClientScriptMap.getMap(2345).getIntValue(slotId));
 				break;
 			}
 			break;
@@ -94,16 +94,16 @@ public class CharacterDesign {
 				break;
 
 			case 128:
-				player.getAppearence().setTopStyle(
-						ClientScriptMap.getMap(player.getAppearence().isMale() ? 690 : 1591).getIntValue(slotId));
-				int arms = TORSOS[player.getAppearence().isMale() ? 0 : 1][0][slotId];
+				player.getAppearance().setTopStyle(
+						ClientScriptMap.getMap(player.getAppearance().isMale() ? 690 : 1591).getIntValue(slotId));
+				int arms = TORSOS[player.getAppearance().isMale() ? 0 : 1][0][slotId];
 				if (arms != -1)
-					player.getAppearence().setArmsStyle(arms);
-				player.getAppearence().setWristsStyle(TORSOS[player.getAppearence().isMale() ? 0 : 1][1][slotId]);
+					player.getAppearance().setArmsStyle(arms);
+				player.getAppearance().setWristsStyle(TORSOS[player.getAppearance().isMale() ? 0 : 1][1][slotId]);
 				break;
 
 			case 132:
-				player.getAppearence().setTopColor(ClientScriptMap.getMap(3283).getIntValue(slotId));
+				player.getAppearance().setTopColor(ClientScriptMap.getMap(3283).getIntValue(slotId));
 				break;
 			}
 			break;
@@ -111,12 +111,12 @@ public class CharacterDesign {
 		case 4:
 			switch (componentId) {
 			case 128:
-				player.getAppearence().setLegsStyle(
-						ClientScriptMap.getMap(player.getAppearence().isMale() ? 1586 : 1607).getIntValue(slotId));
+				player.getAppearance().setLegsStyle(
+						ClientScriptMap.getMap(player.getAppearance().isMale() ? 1586 : 1607).getIntValue(slotId));
 				break;
 
 			case 132:
-				player.getAppearence().setLegsColor(ClientScriptMap.getMap(3283).getIntValue(slotId));
+				player.getAppearance().setLegsColor(ClientScriptMap.getMap(3283).getIntValue(slotId));
 				break;
 			}
 			break;
@@ -124,12 +124,12 @@ public class CharacterDesign {
 		case 5:
 			switch (componentId) {
 			case 128:
-				player.getAppearence().setBootsStyle(
-						ClientScriptMap.getMap(player.getAppearence().isMale() ? 1136 : 1137).getIntValue(slotId));
+				player.getAppearance().setBootsStyle(
+						ClientScriptMap.getMap(player.getAppearance().isMale() ? 1136 : 1137).getIntValue(slotId));
 				break;
 
 			case 132:
-				player.getAppearence().setBootsColor(ClientScriptMap.getMap(3297).getIntValue(slotId));
+				player.getAppearance().setBootsColor(ClientScriptMap.getMap(3297).getIntValue(slotId));
 				break;
 			}
 			break;
@@ -137,11 +137,11 @@ public class CharacterDesign {
 		case 6:
 			switch (componentId) {
 			case 128:
-				player.getAppearence().setBeardStyle(ClientScriptMap.getMap(3307).getIntValue(slotId));
+				player.getAppearance().setBeardStyle(ClientScriptMap.getMap(3307).getIntValue(slotId));
 				break;
 
 			case 132:
-				player.getAppearence().setHairColor(ClientScriptMap.getMap(2345).getIntValue(slotId));
+				player.getAppearance().setHairColor(ClientScriptMap.getMap(2345).getIntValue(slotId));
 				break;
 			}
 			break;
@@ -150,29 +150,29 @@ public class CharacterDesign {
 
 	private static void setGender(Player player, boolean male) {
 		if (male) {
-			player.getAppearence().male();
-			player.getAppearence().setLook(0, 5);
-			player.getAppearence().setLook(1, 14);
+			player.getAppearance().male();
+			player.getAppearance().setLook(0, 5);
+			player.getAppearance().setLook(1, 14);
 		} else {
-			player.getAppearence().female();
-			player.getAppearence().setLook(0, 141);
-			player.getAppearence().setLook(1, 57);
+			player.getAppearance().female();
+			player.getAppearance().setLook(0, 141);
+			player.getAppearance().setLook(1, 57);
 		}
-		player.getAppearence().setLookStyles(SETS[player.getAppearence().isMale() ? 0 : 1][0][0]);
-		player.getAppearence().setColours(SETS[player.getAppearence().isMale() ? 0 : 1][0][1]);
-		player.getPackets().sendVar(1363, player.getAppearence().isMale() ? 0 : 4096);
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().setLookStyles(SETS[player.getAppearance().isMale() ? 0 : 1][0][0]);
+		player.getAppearance().setColours(SETS[player.getAppearance().isMale() ? 0 : 1][0][1]);
+		player.getPackets().sendVar(1363, player.getAppearance().isMale() ? 0 : 4096);
+		player.getAppearance().generateAppearenceData();
 	}
 
 	private static void setPlayerSet(Player player, int set) {
 		int doubleSet = -1;
 		if (set < 4)
 			doubleSet = ((Integer) player.temporaryAttribute().get("extra_set")).intValue();
-		player.getAppearence()
-				.setLookStyles(SETS[player.getAppearence().isMale() ? 0 : 1][set][doubleSet != -1 ? doubleSet * 2 : 0]);
-		player.getAppearence().setColours(
-				SETS[player.getAppearence().isMale() ? 0 : 1][set][(doubleSet != -1 ? doubleSet * 2 : 0) + 1]);
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance()
+				.setLookStyles(SETS[player.getAppearance().isMale() ? 0 : 1][set][doubleSet != -1 ? doubleSet * 2 : 0]);
+		player.getAppearance().setColours(
+				SETS[player.getAppearance().isMale() ? 0 : 1][set][(doubleSet != -1 ? doubleSet * 2 : 0) + 1]);
+		player.getAppearance().generateAppearenceData();
 	}
 
 	private static final short HAIR_STYLES[][] = {

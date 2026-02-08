@@ -5,7 +5,7 @@ public class ClanDialogue extends Dialogue {
 	@Override
 	public void start() {
 		sendOptionsDialogue("Select an option.",
-				player.getAppearence().getTitle() != 5000 ? "Enable clan title" : "Disable clan title",
+				player.getAppearance().getTitle() != 5000 ? "Enable clan title" : "Disable clan title",
 				"Just passing by.");
 	}
 
@@ -14,8 +14,8 @@ public class ClanDialogue extends Dialogue {
 		if (stage == -1) {
 			if (componentId == OPTION_1) {
 				end();
-				player.getAppearence().setTitle(player.getAppearence().getTitle() != 5000 ? 5000 : -1);
-				player.getAppearence().generateAppearenceData();
+				player.getAppearance().setTitle(player.getAppearance().getTitle() != 5000 ? 5000 : -1);
+				player.getAppearance().generateAppearenceData();
 			} else if (componentId == OPTION_2) {
 				end();
 			}

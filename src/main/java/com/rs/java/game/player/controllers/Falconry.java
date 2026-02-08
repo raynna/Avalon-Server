@@ -44,7 +44,7 @@ public class Falconry extends Controller {
         });
         player.getEquipment().getItems().set(3, new Item(10024, 1));
         player.getEquipment().refresh(3);
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         player.getDialogueManager().startDialogue("SimpleMessage", "Simply click on the target and try your luck.");
     }
 
@@ -66,7 +66,7 @@ public class Falconry extends Controller {
         if (player.getEquipment().getWeaponId() == 10024) {
             player.getEquipment().getItems().set(3, new Item(-1, 1));
             player.getEquipment().refresh(3);
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
         }
     }
 
@@ -95,7 +95,7 @@ public class Falconry extends Controller {
                 })) {
                     player.getEquipment().getItems().set(3, new Item(10023, 1));
                     player.getEquipment().refresh(3);
-                    player.getAppearence().generateAppearenceData();
+                    player.getAppearance().generateAppearenceData();
                     player.temporaryAttribute().put("falconReleased", true);
                     WorldTasksManager.schedule(new WorldTask() {
                         @Override
@@ -117,7 +117,7 @@ public class Falconry extends Controller {
                 } else {
                     player.getEquipment().getItems().set(3, new Item(10023, 1));
                     player.getEquipment().refresh(3);
-                    player.getAppearence().generateAppearenceData();
+                    player.getAppearance().generateAppearenceData();
                     player.temporaryAttribute().put("falconReleased", true);
                     WorldTasksManager.schedule(new WorldTask() {
                         @Override
@@ -132,7 +132,7 @@ public class Falconry extends Controller {
                                         public void run() {
                                             player.getEquipment().getItems().set(3, new Item(10024, 1));
                                             player.getEquipment().refresh(3);
-                                            player.getAppearence().generateAppearenceData();
+                                            player.getAppearance().generateAppearenceData();
                                             player.temporaryAttribute().remove("falconReleased");
                                             player.getPackets().sendGameMessage(
                                                     "The falcon swoops down on the kebbit, but just barely misses catching it.");
@@ -163,7 +163,7 @@ public class Falconry extends Controller {
                     player.getHintIconsManager().removeUnsavedHintIcon();
                     player.getEquipment().getItems().set(3, new Item(10024, 1));
                     player.getEquipment().refresh(3);
-                    player.getAppearence().generateAppearenceData();
+                    player.getAppearance().generateAppearenceData();
                     player.temporaryAttribute().remove("ownedFalcon");
                     player.temporaryAttribute().remove("falconReleased");
                     npc.transformIntoNPC(npc.getId() + 4);

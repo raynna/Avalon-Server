@@ -235,7 +235,7 @@ public class DragonFire {
                 shield.setId(Item.getId("item.dragonfire_shield_charged"));
                 shield.setMetadata(new DragonFireShieldMetaData(0));
                 player.getEquipment().refresh(Equipment.SLOT_SHIELD);
-                player.getAppearence().generateAppearenceData();
+                player.getAppearance().generateAppearenceData();
             }
         }
 

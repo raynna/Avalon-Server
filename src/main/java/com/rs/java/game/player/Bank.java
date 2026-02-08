@@ -457,7 +457,7 @@ public class Bank implements Serializable {
             for (int i = 0; i < space; i++)
                 player.getEquipment().getItems().set(i, null);
             player.getEquipment().init();
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
         }
         refreshItems();
     }

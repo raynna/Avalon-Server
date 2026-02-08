@@ -297,7 +297,7 @@ public class Player extends Entity {
     /**
      * @PlayerAppearence
      */
-    public Appearence appearence;
+    public Appearance appearance;
 
     /**
      * @Inventory
@@ -1293,7 +1293,7 @@ public class Player extends Entity {
         runicStaff = new GreaterRunicStaffManager();
         ironman = new Ironman();
         advlog = new AdventuresLog();
-        appearence = new Appearence();
+        appearance = new Appearance();
         dungManager = new DungManager();
         house = new House();
         inventory = new Inventory();
@@ -1422,6 +1422,8 @@ public class Player extends Entity {
             if (getPuzzleBox() == null)
                 puzzleBox = new PuzzleBox(this, puzzle.getFirstTileId());
         }
+        if (appearance == null)
+            appearance = new Appearance();
         if (queuedInstantCombats == null)
             queuedInstantCombats = new ArrayList<>();
         if (projectileQueue == null)
@@ -1545,7 +1547,7 @@ public class Player extends Entity {
         pouch = new MoneyPouch(this);
         trade = new Trade(this);
         assist = new AssistManager(this);
-        appearence.setPlayer(this);
+        appearance.setPlayer(this);
         inventory.setPlayer(this);
         equipment.setPlayer(this);
         skills.setPlayer(this);
@@ -1741,23 +1743,23 @@ public class Player extends Entity {
     public void setWildernessSkull() {
         skullDelay = 2000; // 20minutes
         skullId = 0;
-        appearence.generateAppearenceData();
+        appearance.generateAppearenceData();
     }
 
     public void setFightPitsSkull() {
         skullDelay = Integer.MAX_VALUE;
-        appearence.generateAppearenceData();
+        appearance.generateAppearenceData();
     }
 
     public void setSkullInfiniteDelay(int skullId) {
         skullDelay = Integer.MAX_VALUE;
         this.skullId = skullId;
-        appearence.generateAppearenceData();
+        appearance.generateAppearenceData();
     }
 
     public void removeSkull() {
         skullDelay = -1;
-        appearence.generateAppearenceData();
+        appearance.generateAppearenceData();
     }
 
     public boolean hasSkull() {
@@ -2063,7 +2065,7 @@ public class Player extends Entity {
         castedVeng = false;
         getTickManager().reset();
         setRunEnergy(100);
-        appearence.generateAppearenceData();
+        appearance.generateAppearenceData();
     }
 
     @Override
@@ -2218,7 +2220,7 @@ public class Player extends Entity {
                 getEquipment().deleteItem(20767, 1);
                 getEquipment().deleteItem(20768, 1);
                 getEquipment().refresh(1);
-                getAppearence().generateAppearenceData();
+                getAppearance().generateAppearenceData();
             }
         }
     }
@@ -2245,7 +2247,7 @@ public class Player extends Entity {
             }
         }
         player.getEquipment().refresh();
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         player.getDialogueManager().startDialogue("SimpleItemMessage", COMP_CAPE, "There are new requirements for this cape. If you wish to equip it again, you must complete the requirements.");
     }
 
@@ -2288,7 +2290,7 @@ public class Player extends Entity {
             }
         }
         player.getEquipment().refresh();
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         WorldTasksManager.schedule(new WorldTask() {
             int close = 10;
 
@@ -2751,7 +2753,7 @@ public class Player extends Entity {
         if (hasSkull()) {
             skullDelay--;
             if (!hasSkull())
-                appearence.generateAppearenceData();
+                appearance.generateAppearenceData();
         }
         if (staffOfLightSpecial != 0 && staffOfLightSpecial <= Utils.currentTimeMillis()) {
             message("The power of the light fades. Your resistance to melee attacks return to normal.");
@@ -2833,7 +2835,7 @@ public class Player extends Entity {
 
     @Override
     public boolean needMasksUpdate() {
-        return super.needMasksUpdate() || temporaryMovementType != -1 || updateMovementType || nextClanMemberUpdate != null;
+        return super.needMasksUpdate() || getTint() != null || temporaryMovementType != -1 || updateMovementType || nextClanMemberUpdate != null;
     }
 
     @Override
@@ -2959,7 +2961,7 @@ public class Player extends Entity {
         sendUnlockedObjectConfigs();
         checkRights();
         updateMovementType = true;
-        appearence.generateAppearenceData();
+        appearance.generateAppearenceData();
         OwnedObjectManager.linkKeys(this);
         startGame(this);
         warriorCheck();
@@ -3583,8 +3585,8 @@ public class Player extends Entity {
         return displayName != null;
     }
 
-    public Appearence getAppearence() {
-        return appearence;
+    public Appearance getAppearance() {
+        return appearance;
     }
 
     public Equipment getEquipment() {
@@ -3867,8 +3869,8 @@ public class Player extends Entity {
         if (!active || hasFinished())
             return;
         final Player instance = this;
-        if (getAppearence().isNPC()) {
-            getAppearence().transformIntoNPC(-1);
+        if (getAppearance().isNPC()) {
+            getAppearance().transformIntoNPC(-1);
         }
         if (isDreaming)
             isDreaming = false;
@@ -3994,7 +3996,7 @@ public class Player extends Entity {
         equipment.reset();
         prayer.reset();
         killer.totalCurrentDrop = 0;
-        appearence.generateAppearenceData();
+        appearance.generateAppearenceData();
         for (int i = 0; i < items[0].length; i++) {
             Item item = items[0][i];
             if (ItemConstants.keptOnDeath(item)) {
@@ -4290,7 +4292,7 @@ public class Player extends Entity {
 
     @Override
     public int getSize() {
-        return appearence.getSize();
+        return appearance.getSize();
     }
 
     public boolean isCanPvp() {
@@ -4299,7 +4301,7 @@ public class Player extends Entity {
 
     public void setCanPvp(boolean canPvp) {
         this.canPvp = canPvp;
-        appearence.generateAppearenceData();
+        appearance.generateAppearenceData();
         getPackets().sendPlayerOption(canPvp ? "Attack" : "null", 1, true);
         getPackets().sendPlayerUnderNPCPriority(canPvp);
     }
@@ -5887,7 +5889,7 @@ public class Player extends Entity {
     public void switchRCReport() {
         RCReport = !RCReport;
         refreshRCReport();
-        appearence.generateAppearenceData();
+        appearance.generateAppearenceData();
         getPackets().sendPlayerOption(RCReportEnabled() ? "Report" : "null", 6, false);
     }
 

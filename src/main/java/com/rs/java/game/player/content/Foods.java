@@ -607,7 +607,7 @@ public class Foods {
 			@Override
 			public void effect(Object object) {
 				Player player = (Player) object;
-				player.getPackets().sendGameMessage("It hurts to see a grown " + player.getAppearence().isMale() != null
+				player.getPackets().sendGameMessage("It hurts to see a grown " + player.getAppearance().isMale() != null
 						? "male" : "female" + "cry.");
 			}
 		},

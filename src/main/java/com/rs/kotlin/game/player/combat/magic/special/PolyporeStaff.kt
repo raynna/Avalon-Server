@@ -47,7 +47,7 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
                 degraded
             )
             attacker.equipment.refresh()
-            attacker.appearence.generateAppearenceData()
+            attacker.appearance.generateAppearenceData()
             weapon = attacker.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return
 
         }
@@ -90,7 +90,7 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
             attacker.message("Your polypore staff has run out of charges.")
             attacker.equipment.updateItem(Equipment.SLOT_WEAPON.toInt(), Item.getId("item.polypore_stick"))
             attacker.equipment.refresh()
-            attacker.appearence.generateAppearenceData()
+            attacker.appearance.generateAppearenceData()
         }
     }
 }

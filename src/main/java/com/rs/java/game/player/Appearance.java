@@ -13,7 +13,7 @@ import com.rs.core.packets.OutputStream;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
-public class Appearence implements Serializable {
+public class Appearance implements Serializable {
 
 	private static final long serialVersionUID = 7655608569741626586L;
 
@@ -32,7 +32,7 @@ public class Appearence implements Serializable {
 
 	private transient Player player;
 
-	public Appearence() {
+	public Appearance() {
 		male = true;
 		renderEmote = -1;
 		title = -1;

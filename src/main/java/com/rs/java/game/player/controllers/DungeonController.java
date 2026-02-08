@@ -137,7 +137,7 @@ public class DungeonController extends Controller {
 		refreshDeaths();
 		showDeaths();
 		hideBar();
-		player.getAppearence().setRenderEmote(-1);
+		player.getAppearance().setRenderEmote(-1);
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class DungeonController extends Controller {
 				if (!player.isLocked()
 						&& World.getObjectWithType(new WorldTile(player.getX() + Utils.DIRECTION_DELTA_X[dir],
 								player.getY() + Utils.DIRECTION_DELTA_Y[dir], 0), 22) == null) {
-					player.getAppearence().setRenderEmote(1429);
+					player.getAppearance().setRenderEmote(1429);
 					player.setRun(true);
 					// TODO player.setCantWalk(true);
 				}
@@ -172,7 +172,7 @@ public class DungeonController extends Controller {
 					if (collides || ((object != null && (object.getId() == 49331 || object.getId() == 49333))
 							|| !player.addWalkSteps(nextStep.getX(), nextStep.getY(), 1))) {
 						// TODO player.setCantWalk(false);
-						player.getAppearence().setRenderEmote(-1);
+						player.getAppearance().setRenderEmote(-1);
 					}
 				}
 			}
@@ -295,7 +295,7 @@ public class DungeonController extends Controller {
 						increaseDeaths();
 					}
 					player.animate(new Animation(-1));
-					player.getAppearence().setRenderEmote(-1);
+					player.getAppearance().setRenderEmote(-1);
 					hideBar();
 				} else if (loop == 4) {
 					stop();
@@ -483,7 +483,7 @@ public class DungeonController extends Controller {
 			return false;
 		} else if (npc.getId() == 10023) {
 			FrozenAdventurer adventurer = (FrozenAdventurer) npc;
-			adventurer.getFrozenPlayer().getAppearence().transformIntoNPC(-1);
+			adventurer.getFrozenPlayer().getAppearance().transformIntoNPC(-1);
 			return false;
 		} else if (npc.getId() == DungeonConstants.SMUGGLER) {
 			npc.faceEntity(player);

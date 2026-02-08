@@ -321,7 +321,7 @@ public class ClansManager {
 				if (player == null)
 					continue;
 				if (membersOnline.contains(player.getDisplayName()))
-					player.getAppearence().generateAppearenceData();
+					player.getAppearance().generateAppearenceData();
 			}
 		}
 	}
@@ -838,7 +838,7 @@ public class ClansManager {
 				connectChannel(player);
 			linkClan(player, guestClan);
 			refreshAllMapDots();
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 		}
 	}
 
@@ -867,7 +867,7 @@ public class ClansManager {
 				player.setNextClanMemberUpdate("i");
 				refreshAllMapDots();
 				destroyIfEmpty();
-				player.getAppearence().generateAppearenceData();
+				player.getAppearance().generateAppearenceData();
 			}
 		}
 	}
@@ -888,7 +888,7 @@ public class ClansManager {
 			channelPlayers.add(player.getDisplayName());
 			generateClanChannelDataBlock();
 			refreshClanChannel();
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 		}
 	}
 
@@ -900,7 +900,7 @@ public class ClansManager {
 			channelPlayers.remove(player.getDisplayName());
 			player.getPackets().sendClanChannel(null, membersOnline.contains(player.getDisplayName()));
 			generateClanChannelDataBlock();
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 		}
 	}
 
@@ -959,7 +959,7 @@ public class ClansManager {
 			manager.generateClanSettingsDataBlock();
 			manager.refreshClanSettings();
 			linkClanMember(player, manager.clan.getClanName());
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 		}
 	}
 

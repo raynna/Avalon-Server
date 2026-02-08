@@ -2,7 +2,6 @@ package com.rs.java.utils;
 
 import java.util.ArrayList;
 
-import com.dropbox.core.v2.users.Account;
 import com.rs.java.game.World;
 import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Player;
@@ -75,7 +74,7 @@ public final class DisplayNames {
 			p.getPackets().sendFriends();
 		}
 
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 
 		player.getPackets().sendGameMessage(
 				"Changed your username from " + oldName + " to " + newName + "."
@@ -107,7 +106,7 @@ public final class DisplayNames {
 			p.getFriendsIgnores().refreshChatName();
 			p.getPackets().sendFriends();
 		}
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 		player.getPackets().sendGameMessage("Changed display name!");
 		return true;
 	}
@@ -128,7 +127,7 @@ public final class DisplayNames {
 				p.getCurrentFriendChat().refreshChannel();
 			p.getFriendsIgnores().refreshChatName();
 		}
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 		return true;
 	}
 }

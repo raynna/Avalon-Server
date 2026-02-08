@@ -158,7 +158,7 @@ public final class ControlerManager implements Serializable {
 	public void magicTeleported(int type) {
 		if (controller == null || !inited)
 			return;
-		player.getAppearence().setRenderEmote(-1);
+		player.getAppearance().setRenderEmote(-1);
 		controller.magicTeleported(type);
 	}
 

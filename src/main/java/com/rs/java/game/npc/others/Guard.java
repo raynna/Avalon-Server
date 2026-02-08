@@ -34,7 +34,6 @@ public class Guard extends NPC {
 		Entity target = getCombat().getTarget();
 		if (target != null && !withinDistance(target, 7)) {
 			getCombat().reset();
-			resetCombat();
 			WorldTile tile = getRespawnTile();
 			addWalkSteps(tile.getX(), tile.getY());
 			setNextFaceEntity(null);

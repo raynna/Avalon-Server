@@ -678,12 +678,12 @@ public class WarriorsGuild extends Controller {
 			@Override
 			public void run() {
 				if (kegCount == 0)
-					player.getAppearence().setRenderEmote(2671);
+					player.getAppearance().setRenderEmote(2671);
 				kegCount++;
 				player.getVarsManager().sendVarBit(object.getDefinitions().configFileId, 1);
 				player.getEquipment().getItems().set(Equipment.SLOT_HEAD, new Item(8859 + kegCount));
 				player.getEquipment().refresh(Equipment.SLOT_HEAD);
-				player.getAppearence().generateAppearenceData();
+				player.getAppearance().generateAppearenceData();
 			}
 
 		}, 2);
@@ -706,8 +706,8 @@ public class WarriorsGuild extends Controller {
 		if (kegCount >= 1) {
 			player.getEquipment().getItems().set(Equipment.SLOT_HEAD, null);
 			player.getEquipment().refresh(Equipment.SLOT_HEAD);
-			player.getAppearence().generateAppearenceData();
-			player.getAppearence().setRenderEmote(-1);
+			player.getAppearance().generateAppearenceData();
+			player.getAppearance().setRenderEmote(-1);
 		}
 		kegCount = 0;
 		kegTicks = 0;

@@ -176,9 +176,9 @@ public class WildyAgility {
 			public void run() {
 				if (!secondloop) {
 					secondloop = true;
-					player.getAppearence().setRenderEmote(155);
+					player.getAppearance().setRenderEmote(155);
 				} else {
-					player.getAppearence().setRenderEmote(-1);
+					player.getAppearance().setRenderEmote(-1);
 					player.setRunHidden(running);
 					player.getSkills().addXp(Skills.AGILITY, 20);
 					player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
@@ -203,7 +203,7 @@ public class WildyAgility {
 			public void run() {
 				player.setNextWorldTile(toTile);
 				player.animate(new Animation(-1));
-				player.getAppearence().setRenderEmote(-1);
+				player.getAppearance().setRenderEmote(-1);
 				stop();
 				if (getWildyStage(player) == 3) {
 					removeWildyStage(player);

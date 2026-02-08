@@ -142,7 +142,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
         player.setRunEnergy(100)
         player.heal(player.maxHitpoints)
         player.skills.restoreSkills()
-        player.getAppearence().generateAppearenceData()
+        player.getAppearance().generateAppearenceData()
         player.skills[Skills.SUMMONING] = player.skills.getLevelForXp(Skills.SUMMONING)
         player.skills.refresh(Skills.SUMMONING)
         player.getCombatDefinitions().resetSpecialAttack()

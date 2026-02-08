@@ -1623,7 +1623,7 @@ public class ButtonHandler {
                     if (weaponId == 9013) {
                         if (player.getSkullSkeptreCharges() == 1) {
                             player.getEquipment().deleteItem(9013, 1);
-                            player.getAppearence().generateAppearenceData();
+                            player.getAppearance().generateAppearenceData();
                             player.setSkullSkeptreCharges(5);
                             player.getPackets().sendGameMessage("You have no more charges, the sceptre crumbled to dust.");
                             player.animate(new Animation(9601));
@@ -2434,7 +2434,7 @@ public class ButtonHandler {
         }
         player.getInventory().refreshItems(copy);
         if (worn) {
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
             player.getPackets().sendSound(2240, 0, 1);
         }
     }
@@ -2451,7 +2451,7 @@ public class ButtonHandler {
         }
         player.getEquipment().refresh();
         if (worn) {
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
             player.getPackets().sendSound(2241, 0, 1);
         }
     }
@@ -2467,7 +2467,7 @@ public class ButtonHandler {
         }
         player.getEquipment().getItems().set(slotId, null);
         player.getEquipment().refresh(slotId);
-        if (item.getId() == 4024) player.getAppearence().transformIntoNPC(-1);
+        if (item.getId() == 4024) player.getAppearance().transformIntoNPC(-1);
         if (slotId == 3) player.getCombatDefinitions().decreaseSpecialAttack(0);
 
         if (player.getHitpoints() > (player.getMaxHitpoints() * 1.15)) {
@@ -2475,7 +2475,7 @@ public class ButtonHandler {
             player.refreshHitPoints();
         }
         if (Runecrafting.isTiara(item.getId())) player.getPackets().sendVar(491, 0);
-        player.getAppearence().generateAppearenceData();
+        player.getAppearance().generateAppearenceData();
         refreshEquipBonuses(player);
         return true;
     }

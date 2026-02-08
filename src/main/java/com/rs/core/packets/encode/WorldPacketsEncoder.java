@@ -1120,7 +1120,7 @@ public class WorldPacketsEncoder extends Encoder {
 			// xteas
 			for (int i = 0; i < 4; i++)
 				stream.writeInt(0);
-		byte[] appearence = player.getAppearence().getAppeareanceData();
+		byte[] appearence = player.getAppearance().getAppeareanceData();
 		stream.writeByte(appearence.length);
 		stream.writeBytes(appearence);
 		stream.endPacketVarShort();

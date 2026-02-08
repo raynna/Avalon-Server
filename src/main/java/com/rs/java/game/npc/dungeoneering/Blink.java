@@ -117,7 +117,6 @@ public class Blink extends DungeonBoss {
 			if (rushCount == 1) {
 				resetWalkSteps();
 				setNextFaceEntity(null);
-				resetCombat();
 				setCantInteract(true);
 			} else if (rushCount == 3) {
 				setNextForceTalk(new ForceTalk("He saw me!"));

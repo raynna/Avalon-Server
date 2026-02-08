@@ -34,12 +34,12 @@ public class ToKashBloodChillerCombat extends CombatScript {
 
 		if (target instanceof Player) {
 			Player player = (Player) target;
-			if (player.getAppearence().isNPC())
+			if (player.getAppearance().isNPC())
 				perfectDamage = true;
 		}
 
 		if (perfectDamage) {
-			((Player) target).getAppearence().transformIntoNPC(-1);
+			((Player) target).getAppearance().transformIntoNPC(-1);
 			delayHit(npc, target, 0, getRangeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, (int) Utils.random(boss.getMaxHit() * 0.90, boss.getMaxHit()), NpcAttackStyle.MAGIC, target)));
 		}
 
@@ -81,7 +81,7 @@ public class ToKashBloodChillerCombat extends CombatScript {
 		player.stopAll();
 		player.gfx(new Graphics(2545));
 		player.addFreezeDelay(10000, false);
-		player.getAppearence().transformIntoNPC(10022);
+		player.getAppearance().transformIntoNPC(10022);
 		FrozenAdventurer npc = new FrozenAdventurer(10023, player, -1, false);
 		npc.setPlayer(player);
 		player.getPackets().sendGameMessage("You have been frozen solid!");
@@ -107,7 +107,7 @@ public class ToKashBloodChillerCombat extends CombatScript {
 
 	public static void removeSpecialFreeze(Player player) {
 		player.unlock();
-		player.getAppearence().transformIntoNPC(-1);
+		player.getAppearance().transformIntoNPC(-1);
 		player.gfx(new Graphics(2548));
 		player.getPackets().sendGameMessage("The ice encasing you shatters violently.");
 	}

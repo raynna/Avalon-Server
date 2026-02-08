@@ -17,7 +17,6 @@ import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.TickManager;
-import com.rs.java.utils.Utils;
 
 /**
  * @author -Andreas 1 feb. 2020 13:58:09
@@ -250,7 +249,7 @@ public class ChargesManager implements Serializable {
 		}
 
 		player.getEquipment().refresh(slot);
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 	}
 
 

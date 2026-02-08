@@ -155,7 +155,7 @@ public class JewllerySmithing {
 				int transformationId = EGG_IDS[Utils.random(EGG_IDS.length)];
 				if (itemId == 6583)
 					transformationId = 2626;
-				player.getAppearence().transformIntoNPC(transformationId);
+				player.getAppearance().transformIntoNPC(transformationId);
 				player.getInterfaceManager().sendInventoryInterface(375);
 				return true;
 			}
@@ -182,6 +182,6 @@ public class JewllerySmithing {
 		player.getInterfaceManager().closeInventoryInterface();
 		player.getInventory().init();
 		player.animate(new Animation(14884));
-		player.getAppearence().transformIntoNPC(-1);
+		player.getAppearance().transformIntoNPC(-1);
 	}
 }

@@ -336,7 +336,7 @@ public final class DominionTower implements Serializable {
         if (nextBossIndex == 47) {
             player.getInventory().deleteItem(2402, 1);
             player.getEquipment().deleteItem(2402, 1);
-            player.getAppearence().generateAppearenceData();
+            player.getAppearance().generateAppearenceData();
         }
     }
 

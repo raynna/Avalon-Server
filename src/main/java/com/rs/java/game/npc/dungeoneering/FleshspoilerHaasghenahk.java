@@ -48,7 +48,6 @@ public class FleshspoilerHaasghenahk extends DungeonBoss {
 		if (secondStage && cachedTarget != null && (cachedTarget.isDead() || cachedTarget.hasFinished())) {
 			calculateNextTarget();
 			for (DungeonNPC npc : creatures) {
-				npc.resetCombat();
 				if (cachedTarget != null)
 					npc.getCombat().setTarget(cachedTarget);
 			}

@@ -6,6 +6,7 @@ import com.rs.Settings;
 import com.rs.java.game.Hit;
 import com.rs.java.game.World;
 import com.rs.core.packets.OutputStream;
+import com.rs.java.game.player.content.Tint;
 import com.rs.java.utils.Utils;
 
 public final class LocalPlayerUpdate {
@@ -156,7 +157,7 @@ public final class LocalPlayerUpdate {
 				stream.writeBits(6, p.getXInRegion());
 				stream.writeBits(6, p.getYInRegion());
 				boolean needAppearenceUpdate = needAppearenceUpdate(p.getIndex(),
-						p.getAppearence().getMD5AppeareanceDataHash());
+						p.getAppearance().getMD5AppeareanceDataHash());
 				appendUpdateBlock(p, updateBlockData, needAppearenceUpdate, true);
 				stream.writeBits(1, 1);
 				localAddedPlayers++;
@@ -225,7 +226,7 @@ public final class LocalPlayerUpdate {
 				localPlayers[playerIndex] = null;
 			} else {
 				boolean needAppearenceUpdate = needAppearenceUpdate(p.getIndex(),
-						p.getAppearence().getMD5AppeareanceDataHash());
+						p.getAppearance().getMD5AppeareanceDataHash());
 				boolean needUpdate = p.needMasksUpdate() || needAppearenceUpdate;
 				if (needUpdate)
 					appendUpdateBlock(p, updateBlockData, needAppearenceUpdate, false);
@@ -297,7 +298,7 @@ public final class LocalPlayerUpdate {
 						Player p2 = localPlayers[p2Index];
 						if (needsRemove(p2) || p2.hasTeleported() || p2.getNextWalkDirection() != -1
 								|| (p2.needMasksUpdate() || needAppearenceUpdate(p2.getIndex(),
-								p2.getAppearence().getMD5AppeareanceDataHash())))
+								p2.getAppearance().getMD5AppeareanceDataHash())))
 							break;
 						skip++;
 					}
@@ -328,6 +329,7 @@ public final class LocalPlayerUpdate {
 			data.writeByte(maskData >> 8);
 		if (maskData >= 0xffff)
 			data.writeByte(maskData >> 16);
+		//under correct order
 		if (p.getNextGraphics1() != null)
 			applyGraphicsMask1(p, data);
 		if (added || (p.getNextFaceWorldTile() != null && p.getNextRunDirection() == -1
@@ -347,54 +349,60 @@ public final class LocalPlayerUpdate {
 			applyFaceEntityMask(p, data);
 		if (p.getTemporaryMoveType() != -1)
 			applyTemporaryMoveTypeMask(p, data);
-		if (isClanMember(p))
-			data.writeByteC(isClanMember(p) ? 1 : 0);
-		else
-			data.writeByteC(0);
+		data.writeByteC(isClanMember(p) ? 1 : 0);//clanmask for orange dot & force rightclick
+		//missing 0x20000 here
+		//missing 0x2000 here
 		if (p.getNextForceMovement() != null)
 			applyForceMovementMask(p, data);
-		if (p.getUpdatedMask() != null)
-			applyUpdatedMask(p, data);
 		if (added || p.isUpdateMovementType())
 			applyMoveTypeMask(p, data);
 		if (p.getNextAnimation() != null)
 			applyAnimationMask(p, data);
 		if (p.getNextForceTalk() != null)
 			applyForceTalkMask(p, data);
+		if (p.getTint() != null)
+			applyTint(p, data);//correct 0x200_000
+		System.out.println("=== DEBUG: appendUpdateBlock for " + p.getDisplayName() + " ===");
+		System.out.println("Has updateMask: " + (p.getTint() != null));
+		//missing 0x80_000
 	}
 
 	private static int getMaskData(Player p, boolean needAppearenceUpdate, boolean added) {
 		int maskData = 0;
 		if (p.getNextGraphics1() != null)
-			maskData |= 0x4;
+			maskData |= 0x4;//correct
 		if (added || (p.getNextFaceWorldTile() != null && p.getNextRunDirection() == -1
 				&& p.getNextWalkDirection() == -1))
 			maskData |= 0x40;
 		if (p.getNextGraphics2() != null)
-			maskData |= 0x8000;
+			maskData |= 0x8000;//correct
 		if (!p.getNextHits().isEmpty())
 			maskData |= 0x8;
 		if (p.getNextGraphics3() != null)
-			maskData |= 0x400000;
+			maskData |= 0x400000;//correct
 		if (p.getNextGraphics4() != null)
-			maskData |= 0x800000;
+			maskData |= 0x800000;//correct
 		if (p.getLastFaceEntity() != -2 || (added && p.getLastFaceEntity() != -1))
-			maskData |= 0x1;
+			maskData |= 0x1;//correct
 		if (needAppearenceUpdate)
-			maskData |= 0x10;
+			maskData |= 0x10;//correct
 		if (p.getTemporaryMoveType() != -1)
-			maskData |= 0x800;
-		maskData |= 0x40000;
+			maskData |= 0x800;//correct
+		maskData |= 0x40000;//correct
 		if (p.getNextForceMovement() != null)
-			maskData |= 0x1000;
-		if (p.getUpdatedMask() != null)
-			maskData |= 0x200000;
+			maskData |= 0x1000;//correct
+		if (p.getTint() != null)
+			maskData |= 0x200000;//correct
 		if (added || p.isUpdateMovementType())
-			maskData |= 0x80;
+			maskData |= 0x80;//correct
+		//missing 0x10_000
+		//missing 0x200
+		//missing 0x2000
+
 		if (p.getNextAnimation() != null)
-			maskData |= 0x20;
+			maskData |= 0x20;//correct
 		if (p.getNextForceTalk() != null)
-			maskData |= 0x100;
+			maskData |= 0x100;//correct
 
 		if (maskData >= 0xff)
 			maskData |= 0x2;
@@ -407,13 +415,17 @@ public final class LocalPlayerUpdate {
 		data.writeString(p.getNextForceTalk().getText());
 	}
 
-	private void applyUpdatedMask(Player p, OutputStream data) {
-		data.writeByte(p.getUpdatedMask().getColors()[0]);
-		data.writeByteC(p.getUpdatedMask().getColors()[1]);
-		data.writeByte128(p.getUpdatedMask().getColors()[2]);
-		data.writeByteC(p.getUpdatedMask().getColors()[3]);
-		data.writeShort(0);
-		data.writeShort(p.getUpdatedMask().getDuration());
+	private void applyTint(Player p, OutputStream data) {
+		Tint mask = p.getTint();
+
+		data.writeByte(mask.hue() & 0xFF);
+		data.writeByteC(mask.saturation() & 0xFF);
+		data.writeByte128(mask.lightness() & 0xFF);
+		data.writeByteC(mask.strength() & 0xFF);
+
+		data.writeShort(mask.startDelay());
+		data.writeShort(mask.duration());
+
 	}
 
 	private void applyHitsMask(Player p, OutputStream data) {
@@ -501,9 +513,9 @@ public final class LocalPlayerUpdate {
 	}
 
 	private void applyAppearanceMask(Player p, OutputStream data) {
-		byte[] renderData = p.getAppearence().getAppeareanceData();
+		byte[] renderData = p.getAppearance().getAppeareanceData();
 		totalRenderDataSentLength += renderData.length;
-		cachedAppearencesHashes[p.getIndex()] = p.getAppearence().getMD5AppeareanceDataHash();
+		cachedAppearencesHashes[p.getIndex()] = p.getAppearance().getMD5AppeareanceDataHash();
 		data.writeByte128(renderData.length);
 		data.writeBytes(renderData);
 

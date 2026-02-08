@@ -138,7 +138,7 @@ object PvpManager {
         val canPvp = !safeEffectiveForSelf
         if (player.isCanPvp != canPvp) {
             player.setCanPvp(canPvp)
-            player.getAppearence().generateAppearenceData()
+            player.getAppearance().generateAppearenceData()
         }
         if (canPvp) {
             val combatAndSummon = player.skills.combatLevel + player.skills.summoningCombatLevel

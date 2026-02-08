@@ -129,7 +129,7 @@ public final class FfaZone extends Controller {
 	public void removeIcon() {
 		player.setCanPvp(false);
 		player.getPackets().closeInterface(player.getInterfaceManager().hasRezizableScreen() ? 11 : 0);
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().generateAppearenceData();
 		player.getEquipment().refresh(null);
 	}
 

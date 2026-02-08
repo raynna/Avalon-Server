@@ -15,11 +15,11 @@ public class WildyViewing extends Action {
 		if (!process(player))
 			return false;
 		tile = new WorldTile(player);
-		player.getAppearence().isHidden();
+		player.getAppearance().isHidden();
 		player.getPackets().sendBlackOut(5);
 		player.setNextWorldTile(ORB_TELEPORTS[0]);
-		player.getAppearence().transformIntoNPC(15155);
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().transformIntoNPC(15155);
+		player.getAppearance().generateAppearenceData();
 		return true;
 	}
 
@@ -45,11 +45,11 @@ public class WildyViewing extends Action {
 	public void stop(final Player player) {
 		player.lock(2);
 		player.getInterfaceManager().closeInventoryInterface();
-		player.getAppearence().resetAppearence();
-		player.getAppearence().generateAppearenceData();
+		player.getAppearance().resetAppearence();
+		player.getAppearance().generateAppearenceData();
 		player.getPackets().sendBlackOut(0);
 		player.setNextWorldTile(HOME[0]);
-		player.getAppearence().transformIntoNPC(-1);
+		player.getAppearance().transformIntoNPC(-1);
 		player.setNextWorldTile(tile);
 	}
 

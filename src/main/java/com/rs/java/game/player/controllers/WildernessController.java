@@ -399,7 +399,7 @@ public class WildernessController extends Controller {
 			}
 
 			player.getPackets().sendGlobalVar(1000, player.getSkills().getCombatLevel() + player.getSkills().getSummoningCombatLevel());
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 			checkBoosts(player);
 		} else {
 			if (skullShown) {
@@ -411,7 +411,7 @@ public class WildernessController extends Controller {
 
 	public void removeIcon() {
 			player.getPackets().closeInterface(player.getInterfaceManager().hasRezizableScreen() ? Rscm.lookup("tab.wildy_skull_resizeable") : Rscm.lookup("tab.wildy_skull_tab"));
-			player.getAppearence().generateAppearenceData();
+			player.getAppearance().generateAppearenceData();
 			player.getEquipment().refresh(null);
 			player.getPackets().sendGlobalVar(1000, 0);
 	}

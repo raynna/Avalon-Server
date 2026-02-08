@@ -109,14 +109,14 @@ public class AgilityPyramid {
 					public void run() {
 						if (loop == 3) {
 							player.getSkills().addXp(Skills.AGILITY, getXp(object.getId()));
-							player.getAppearence().setRenderEmote(-1);
+							player.getAppearance().setRenderEmote(-1);
 							player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
 							stop();
 						} else if (loop == 0) {
 							player.lock(3);
 							player.setRun(false);
 							player.addWalkSteps(player.getX() + 5, player.getY(), 5, false);
-							player.getAppearence().setRenderEmote(1427);
+							player.getAppearance().setRenderEmote(1427);
 							player.message("You attempt to cross the ledge...");
 							loop++;
 						} else {
@@ -132,14 +132,14 @@ public class AgilityPyramid {
 					public void run() {
 						if (loop == 3) {
 							player.getSkills().addXp(Skills.AGILITY, getXp(object.getId()));
-							player.getAppearence().setRenderEmote(-1);
+							player.getAppearance().setRenderEmote(-1);
 							player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
 							stop();
 						} else if (loop == 0) {
 							player.lock(3);
 							player.setRun(false);
 							player.addWalkSteps(player.getX(), player.getY() - 5, 5, false);
-							player.getAppearence().setRenderEmote(1427);
+							player.getAppearance().setRenderEmote(1427);
 							player.message("You attempt to cross the ledge...");
 							loop++;
 						} else {
@@ -155,14 +155,14 @@ public class AgilityPyramid {
 					public void run() {
 						if (loop == 3) {
 							player.getSkills().addXp(Skills.AGILITY, getXp(object.getId()));
-							player.getAppearence().setRenderEmote(-1);
+							player.getAppearance().setRenderEmote(-1);
 							player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
 							stop();
 						} else if (loop == 0) {
 							player.lock(3);
 							player.setRun(false);
 							player.addWalkSteps(player.getX(), player.getY() + 5, 5, false);
-							player.getAppearence().setRenderEmote(1427);
+							player.getAppearance().setRenderEmote(1427);
 							player.message("You attempt to cross the ledge...");
 							loop++;
 						} else {
@@ -178,14 +178,14 @@ public class AgilityPyramid {
 					public void run() {
 						if (loop == 3) {
 							player.getSkills().addXp(Skills.AGILITY, getXp(object.getId()));
-							player.getAppearence().setRenderEmote(-1);
+							player.getAppearance().setRenderEmote(-1);
 							player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
 							stop();
 						} else if (loop == 0) {
 							player.lock(3);
 							player.setRun(false);
 							player.addWalkSteps(player.getX() - 5, player.getY(), 5, false);
-							player.getAppearence().setRenderEmote(1427);
+							player.getAppearance().setRenderEmote(1427);
 							player.message("You attempt to cross the ledge...");
 							loop++;
 						} else {
@@ -207,7 +207,7 @@ public class AgilityPyramid {
 					public void run() {
 						if (loop == 1) {
 							player.getSkills().addXp(Skills.AGILITY, getXp(object.getId()));
-							player.getAppearence().setRenderEmote(-1);
+							player.getAppearance().setRenderEmote(-1);
 							player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
 							stop();
 						} else {
@@ -225,7 +225,7 @@ public class AgilityPyramid {
 					public void run() {
 						if (loop == 1) {
 							player.getSkills().addXp(Skills.AGILITY, getXp(object.getId()));
-							player.getAppearence().setRenderEmote(-1);
+							player.getAppearance().setRenderEmote(-1);
 							player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
 							stop();
 						} else {
@@ -243,7 +243,7 @@ public class AgilityPyramid {
 					public void run() {
 						if (loop == 1) {
 							player.getSkills().addXp(Skills.AGILITY, getXp(object.getId()));
-							player.getAppearence().setRenderEmote(-1);
+							player.getAppearance().setRenderEmote(-1);
 							player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
 							stop();
 						} else {
@@ -261,7 +261,7 @@ public class AgilityPyramid {
 					public void run() {
 						if (loop == 1) {
 							player.getSkills().addXp(Skills.AGILITY, getXp(object.getId()));
-							player.getAppearence().setRenderEmote(-1);
+							player.getAppearance().setRenderEmote(-1);
 							player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
 							stop();
 						} else {
@@ -603,13 +603,13 @@ public class AgilityPyramid {
 						if (loop == 3) {
 							player.lock(3);
 							player.getSkills().addXp(Skills.AGILITY, getXp(object.getId()));
-							player.getAppearence().setRenderEmote(-1);
+							player.getAppearance().setRenderEmote(-1);
 							player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
 							stop();
 						} else if (loop == 0) {
 							player.setRunHidden(false);
 							player.addWalkSteps(player.getX(), player.getY() - 6, 6, false);
-							player.getAppearence().setRenderEmote(1637);
+							player.getAppearance().setRenderEmote(1637);
 							player.message("You attempt to cross the plank...");
 							loop++;
 						} else {
@@ -627,13 +627,13 @@ public class AgilityPyramid {
 						if (loop == 3) {
 							player.lock(3);
 							player.getSkills().addXp(Skills.AGILITY, getXp(object.getId()));
-							player.getAppearence().setRenderEmote(-1);
+							player.getAppearance().setRenderEmote(-1);
 							player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
 							stop();
 						} else if (loop == 0) {
 							player.setRunHidden(false);
 							player.addWalkSteps(player.getX() - 6, player.getY(), 6, false);
-							player.getAppearence().setRenderEmote(1637);
+							player.getAppearance().setRenderEmote(1637);
 							player.message("You attempt to cross the plank...");
 							loop++;
 						} else {
@@ -655,7 +655,7 @@ public class AgilityPyramid {
 						if (loop == 1) {
 							player.lock(3);
 							player.getSkills().addXp(Skills.AGILITY, getXp(object.getId()));
-							player.getAppearence().setRenderEmote(-1);
+							player.getAppearance().setRenderEmote(-1);
 							player.getPackets().sendGameMessage("... and make it safely to the other side.", true);
 							final WorldTile toTile = new WorldTile(player.getX() - 6, player.getY(), player.getPlane());
 							player.setNextWorldTile(toTile);

@@ -182,11 +182,11 @@ public class GodWars extends Controller {
 						else if (ticks == 5) {
 							player.animate(new Animation(16635));
 						} else if (ticks == 6) {
-							player.getAppearence().setHidden(true);
+							player.getAppearance().setHidden(true);
 							projectileTicks = ticks + 4;
 							player.setNextForceMovement(new ForceMovement(player, 1, tile, 6, withinArmadyl ? ForceMovement.NORTH : ForceMovement.SOUTH));
 						} else if (ticks == projectileTicks) {
-							player.getAppearence().setHidden(false);
+							player.getAppearance().setHidden(false);
 							player.animate(new Animation(16672));
 							player.setNextWorldTile(tile);
 							player.unlock();

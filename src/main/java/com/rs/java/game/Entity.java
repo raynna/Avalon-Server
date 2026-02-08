@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.rs.Settings;
 import com.rs.core.cache.defintions.AnimationDefinitions;
 import com.rs.core.cache.defintions.ObjectDefinitions;
+import com.rs.core.thread.WorldThread;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.minigames.duel.DuelController;
 import com.rs.java.game.npc.NPC;
@@ -20,7 +21,7 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.actions.combat.Poison;
-import com.rs.java.game.player.content.UpdateMask;
+import com.rs.java.game.player.content.Tint;
 import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.game.route.RouteFinder;
 import com.rs.java.game.route.strategy.EntityStrategy;
@@ -30,6 +31,7 @@ import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.player.NewPoison;
+import com.rs.kotlin.game.player.PendingEffect;
 import com.rs.kotlin.game.player.combat.damage.DamageScaler;
 import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 
@@ -56,6 +58,8 @@ public abstract class Entity extends WorldTile {
     private transient WorldTile nextFaceWorldTile;
     private transient boolean teleported;
     private transient ConcurrentLinkedQueue<Object[]> walkSteps;// called by
+
+    private transient List<PendingEffect> pendingEffects;
     // more
     // than 1thread
     // so concurent
@@ -63,7 +67,7 @@ public abstract class Entity extends WorldTile {
     public transient Map<Entity, Integer> receivedDamage;
     private transient boolean finished; // if removed
     // entity masks
-    private transient UpdateMask updateMask;
+    private transient Tint tint;
     private transient Animation nextAnimation;
     private transient Animation pendingAnimation;
     private transient boolean forceAnimation;
@@ -167,7 +171,6 @@ public abstract class Entity extends WorldTile {
     public void reset(boolean attributes) {
         setHitpoints(getMaxHitpoints());
         receivedHits.clear();
-        resetCombat();
         walkSteps.clear();
         poison.reset();
         newPoison.reset();
@@ -187,11 +190,67 @@ public abstract class Entity extends WorldTile {
         reset(true);
     }
 
-    public void updatePlayerMask(UpdateMask newMask) {
-        this.updateMask = newMask;
+    public void addPendingEffect(PendingEffect effect) {
+        if (pendingEffects == null) {
+            pendingEffects = new ArrayList<>();
+        }
+        pendingEffects.add(effect);
+        effect.apply();
     }
 
-    public void resetCombat() {
+    public void processPendingEffects() {
+        if (pendingEffects == null || pendingEffects.isEmpty()) {
+            return;
+        }
+
+        int currentTick = WorldThread.WORLD_TICK;
+        Iterator<PendingEffect> iterator = pendingEffects.iterator();
+
+        while (iterator.hasNext()) {
+            PendingEffect effect = iterator.next();
+
+            if (effect.shouldCancel()) {
+                effect.onCancel();
+                iterator.remove();
+                continue;
+            }
+
+            if (effect.onTick(currentTick)) {
+                effect.onExecute();
+                iterator.remove();
+            }
+        }
+    }
+
+    public void clearPendingEffects() {
+        if (pendingEffects != null) {
+            for (PendingEffect effect : pendingEffects) {
+                effect.onCancel();
+            }
+            pendingEffects.clear();
+        }
+    }
+
+    public void removePendingEffectsForEntity(Entity entity) {
+        if (pendingEffects == null) {
+            return;
+        }
+
+        Iterator<PendingEffect> iterator = pendingEffects.iterator();
+        while (iterator.hasNext()) {
+            PendingEffect effect = iterator.next();
+            if (effect.getAttacker() == entity || effect.getDefender() == entity) {
+                effect.onCancel();
+                iterator.remove();
+            }
+        }
+    }
+
+    public List<PendingEffect> getPendingEffects() {
+        if (pendingEffects == null) {
+            pendingEffects = new ArrayList<>();
+        }
+        return pendingEffects;
     }
 
     public void applyHit(Hit hit) {
@@ -327,12 +386,12 @@ public abstract class Entity extends WorldTile {
                     for (Hit hits : p.getNextHits())
                         hits.setDamage(-2);
                     p.getEquipment().deleteItem(11090, 1);
-                    p.getAppearence().generateAppearenceData();
+                    p.getAppearance().generateAppearenceData();
                     p.getPackets().sendGameMessage("Your pheonix necklace heals you, but is destroyed in the process.");
                 } else if (p.getEquipment().getRingId() == 2570) {
                     SpellHandler.INSTANCE.sendTeleportSpell(p, Settings.RESPAWN_PLAYER_LOCATION);
                     p.getEquipment().deleteItem(2570, 1);
-                    p.getAppearence().generateAppearenceData();
+                    p.getAppearance().generateAppearenceData();
                     p.getPackets().sendGameMessage("Your ring of life saves you, but is destroyed in the process.");
                 }
             }
@@ -1100,7 +1159,7 @@ public abstract class Entity extends WorldTile {
     }
 
     public boolean needMasksUpdate() {
-        return nextFaceEntity != -2 || nextAnimation != null || nextGraphics1 != null || nextGraphics2 != null || nextGraphics3 != null || nextGraphics4 != null || (nextWalkDirection == -1 && nextFaceWorldTile != null) || !nextHits.isEmpty() || nextForceMovement != null || updateMask != null || nextForceTalk != null;
+        return nextFaceEntity != -2 || nextAnimation != null || nextGraphics1 != null || nextGraphics2 != null || nextGraphics3 != null || nextGraphics4 != null || (nextWalkDirection == -1 && nextFaceWorldTile != null) || !nextHits.isEmpty() || nextForceMovement != null || tint != null || nextForceTalk != null;
     }
 
     public boolean dead = false;
@@ -1111,11 +1170,11 @@ public abstract class Entity extends WorldTile {
 
     public void resetMasks() {
         nextAnimation = null;
+        tint = null;
         nextGraphics1 = null;
         nextGraphics2 = null;
         nextGraphics3 = null;
         nextGraphics4 = null;
-        updateMask = null;
         if (nextWalkDirection == -1)
             nextFaceWorldTile = null;
         nextForceMovement = null;
@@ -1169,6 +1228,7 @@ public abstract class Entity extends WorldTile {
         newPoison.processPoison();
         tickManager.tick();
         gameTick++;
+        processPendingEffects();
         processReceivedHits();
         processReceivedDamage();
         Iterator<Map.Entry<Keys.IntKey, Integer>> it = tickTimers.entrySet().iterator();
@@ -1822,25 +1882,15 @@ public abstract class Entity extends WorldTile {
         playSound(soundId, delay, type);
     }
 
-    public UpdateMask getUpdatedMask() {
-        return updateMask;
+    public void setTint(Tint mask) {
+        this.tint = mask;
     }
 
-    public void glow(UpdateMask newMask) {
-        if (updateMask != null)
-            updateMask = null;
-        this.updateMask = newMask;
-        if (this instanceof Player)
-            ((Player) this).getAppearence().generateAppearenceData();
+    public Tint getTint() {
+        return tint;
     }
 
-    public void glow(int duration, int[] colors) {
-        if (updateMask != null)
-            updateMask = null;
-        this.updateMask = new UpdateMask(duration, colors);
-        if (this instanceof Player)
-            ((Player) this).getAppearence().generateAppearenceData();
-    }
+
 
     public long getFindTargetDelay() {
         return findTargetDelay;

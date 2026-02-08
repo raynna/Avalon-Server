@@ -74,7 +74,7 @@ public class ServantNPC extends NPC {
 			owner.getPackets().sendGameMessage("Your servant cannot prepare food while in building mode.");
 			return;
 		}
-		String basicResponse = "I appologise, but I cannot serve " + (owner.getAppearence().isMale() ? "Sire" : "Madam") + " without";
+		String basicResponse = "I appologise, but I cannot serve " + (owner.getAppearance().isMale() ? "Sire" : "Madam") + " without";
 		final RoomReference kitchen = house.getRoom(Room.KITCHEN), diningRoom = house.getRoom(Room.DINING_ROOM);
 		if (kitchen == null) {
 			owner.getDialogueManager().startDialogue("SimpleNPCMessage", getId(), basicResponse + " a proper kitchen.");

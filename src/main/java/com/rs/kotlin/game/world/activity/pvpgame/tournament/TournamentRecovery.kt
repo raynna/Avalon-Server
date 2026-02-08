@@ -35,7 +35,7 @@ object TournamentRecovery {
         player.tempWorldTile = null
 
         player.prayer.reset()
-        player.appearence.generateAppearenceData()
+        player.appearance.generateAppearenceData()
         player.activeTournament = null
         player.prayer.restorePrayer(player.skills.getLevelForXp(Skills.PRAYER) * 10)
         if (player.poison.isPoisoned) player.poison.reset()
@@ -43,7 +43,7 @@ object TournamentRecovery {
         player.setRunEnergy(100)
         player.heal(player.maxHitpoints)
         player.skills.restoreSkills()
-        player.getAppearence().generateAppearenceData()
+        player.getAppearance().generateAppearenceData()
         player.skills[Skills.SUMMONING] = player.skills.getLevelForXp(Skills.SUMMONING)
         player.skills.refresh(Skills.SUMMONING)
         player.getCombatDefinitions().resetSpecialAttack()

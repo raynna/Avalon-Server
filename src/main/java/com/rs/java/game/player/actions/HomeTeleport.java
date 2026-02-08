@@ -36,7 +36,7 @@ public class HomeTeleport extends Action {
 
 	@Override
 	public int processWithDelay(Player player) {
-		player.getAppearence().resetAppearence(); //keeping this in case
+		player.getAppearance().resetAppearence(); //keeping this in case
 		if (currentTime++ == 0) {
 			player.animate(new Animation(FIRST_ANIMATION));
 			player.gfx(new Graphics(FIRST_GRAPHIC));

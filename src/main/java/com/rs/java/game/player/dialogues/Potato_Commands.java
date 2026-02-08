@@ -18,7 +18,7 @@ public class Potato_Commands extends Dialogue {
 			stage = END;
 		} else {
 			sendOptions("Potato_Commands", "Player look up", "Teleport to player", "Teleport player to me",
-					"Send home player", player.getAppearence().isHidden() ? "Vis: 1" : "Vis: 0");
+					"Send home player", player.getAppearance().isHidden() ? "Vis: 1" : "Vis: 0");
 			stage = 1;
 		}
 
@@ -55,8 +55,8 @@ public class Potato_Commands extends Dialogue {
 				end();
 				break;
 			case OPTION_5:
-				player.getAppearence().switchHidden();
-				player.message(player.getAppearence().isHidden() ? "Vis: 1" : "Vis: 0");
+				player.getAppearance().switchHidden();
+				player.message(player.getAppearance().isHidden() ? "Vis: 1" : "Vis: 0");
 				end();
 				break;
 			}

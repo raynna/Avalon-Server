@@ -84,7 +84,7 @@ public class MithrilDragonCombat extends CombatScript {
 				if (player.getEquipment().getShieldId() == 11284) {
 					if (player.getDfsCharges() < 50) {
 						player.getEquipment().getItems().set(5, new Item(11283));
-						player.getAppearence().generateAppearenceData();
+						player.getAppearance().generateAppearenceData();
 						player.animate(new Animation(6695));
 						player.gfx(new Graphics(1164, 1, 100));
 						player.setDfsCharges(player.getDfsCharges() + 1);
@@ -161,7 +161,7 @@ public class MithrilDragonCombat extends CombatScript {
 				}
 				if (player.getEquipment().getShieldId() == 11284) {
 					player.getEquipment().getItems().set(5, new Item(11283));
-					player.getAppearence().generateAppearenceData();
+					player.getAppearance().generateAppearenceData();
 					if (player.getDfsCharges() < 50) {
 						player.animate(new Animation(6695));
 						player.gfx(new Graphics(1164, 1, 100));
