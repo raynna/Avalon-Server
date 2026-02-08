@@ -9,6 +9,7 @@ import com.rs.java.game.Hit;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.core.packets.OutputStream;
+import com.rs.java.game.player.content.Tint;
 import com.rs.java.utils.Utils;
 
 public final class LocalNPCUpdate {
@@ -118,20 +119,34 @@ public final class LocalNPCUpdate {
 
 	private void appendUpdateBlock(NPC n, OutputStream data, boolean added) {
 		int maskData = 0;
-		if (n.getNextForceTalk() != null) maskData |= 0x20;
-		if (n.getNextFaceEntity() != -2 || (added && n.getLastFaceEntity() != -1)) maskData |= 0x10;
+		//missing 0x2
+		//missing 0x8000
+		//missing 0x10_000
+		if (n.getNextForceTalk() != null) maskData |= 0x20;//correctorder
+		if (n.getNextFaceEntity() != -2 || (added && n.getLastFaceEntity() != -1)) maskData |= 0x10;//correctorder
+		if (n.getTint() != null)
+			maskData |= 0x80000;
 		if (n.getNextFaceWorldTile() != null && n.getNextRunDirection() == -1 && n.getNextWalkDirection() == -1)
-			maskData |= 0x80;
-		if (n.getNextAnimation() != null) maskData |= 0x8;
-		if (!n.getNextHits().isEmpty()) maskData |= 0x4;
-		if (n.getNextGraphics4() != null) maskData |= 0x2000000;
-		if (n.getNextGraphics1() != null) maskData |= 0x40;
-		if (n.getNextGraphics2() != null) maskData |= 0x100;
-		if (n.getNextForceMovement() != null) maskData |= 0x800;
-		if (n.getNextGraphics3() != null) maskData |= 0x1000000;
-		if (n.hasChangedName() || (added && n.getCustomName() != null)) maskData |= 0x800000;
-		if (n.hasChangedCombatLevel() || (added && n.getCustomCombatLevel() >= 0)) maskData |= 0x40000;
-		if (n.getNextTransformation() != null) maskData |= 0x1;
+			maskData |= 0x80;//correctorder
+		if (n.getNextAnimation() != null) maskData |= 0x8;//correctorder
+		//missing 0x200
+		//missing 0x2000
+		if (!n.getNextHits().isEmpty()) maskData |= 0x4;//correctorder
+		//missing 0x1000
+		if (n.getNextGraphics4() != null) maskData |= 0x2000000;//correctorder
+		if (n.getNextGraphics1() != null) maskData |= 0x40;//correctorder
+		if (n.getNextGraphics2() != null) maskData |= 0x100;//correctorder
+		//missing 0x4000
+		//missing 0x400
+		//missing 0x100_000
+		if (n.getNextForceMovement() != null) maskData |= 0x800;//correctorder
+		//missing 0x400_000
+		if (n.getNextGraphics3() != null) maskData |= 0x1000000;//correctorder
+		if (n.hasChangedName() || (added && n.getCustomName() != null)) maskData |= 0x800000;//correctorder
+		//missing 0x20_000
+		//missing 0x200_000
+		if (n.hasChangedCombatLevel() || (added && n.getCustomCombatLevel() >= 0)) maskData |= 0x40000;//correctorder
+		if (n.getNextTransformation() != null) maskData |= 0x1;//correctorder
 		if (maskData > 0xff) maskData |= 0x2;
 		if (maskData > 0xffff) maskData |= 0x8000;
 		if (maskData > 0xffffff) maskData |= 0x10000;
@@ -143,6 +158,7 @@ public final class LocalNPCUpdate {
 
 		if (n.getNextForceTalk() != null) applyForceTalkMask(n, data);
 		if (n.getNextFaceEntity() != -2 || (added && n.getLastFaceEntity() != -1)) applyFaceEntityMask(n, data);
+		if (n.getTint() != null) applyTint(n, data);
 		if (n.getNextFaceWorldTile() != null && n.getNextRunDirection() == -1 && n.getNextWalkDirection() == -1)
 			applyFaceWorldTileMask(n, data);
 		if (n.getNextAnimation() != null) applyAnimationMask(n, data);
@@ -176,6 +192,20 @@ public final class LocalNPCUpdate {
 		String text = n.getNextForceTalk().getText();
 		if (text == null) text = "";
 		data.writeString(text);
+	}
+
+
+	private void applyTint(NPC n, OutputStream data) {
+		Tint mask = n.getTint();
+
+		data.writeByte128(mask.hue() & 0xFF);
+		data.writeByte128(mask.saturation() & 0xFF);
+		data.writeByteC(mask.lightness() & 0xFF);
+		data.writeByte128(mask.strength() & 0xFF);
+
+		data.writeShortLE128(mask.startDelay());
+		data.writeShortLE128(mask.duration());
+
 	}
 
 	private void applyForceMovementMask(NPC n, OutputStream data) {
