@@ -109,9 +109,9 @@ public class Skulls {
 			newSkull = 6; // Brown
 		else if (risk < 1_000_000)
 			newSkull = 5; // Silver
-		else if (risk < 10_000_000)
-			newSkull = 4; // Green
 		else if (risk < 50_000_000)
+			newSkull = 4; // Green
+		else if (risk < 200_000_000)
 			newSkull = 3; // Blue
 		else
 			newSkull = 2; // Red

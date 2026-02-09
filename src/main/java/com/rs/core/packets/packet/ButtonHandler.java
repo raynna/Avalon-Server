@@ -1441,6 +1441,8 @@ public class ButtonHandler {
                 player.getPackets().sendVar(965, ((componentId - 9) * 1024) + skillMenu);
             else if (componentId == 29) player.stopAll();
         } else if (interfaceId == 387) {
+            if (player.isDeveloperMode())
+                player.message("Clicked option: " + componentId + ", packetId: " + packetId);
             if (componentId == 6) {
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     int hatId = player.getEquipment().getHatId();
@@ -1508,6 +1510,35 @@ public class ButtonHandler {
 
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {
                     int capeId = player.getEquipment().getCapeId();
+                    Item cape = player.getEquipment().getItem(Equipment.SLOT_CAPE);
+                    if (cape.isItem("item.infernal_cape")) {
+                        cape.changeId("item.infernal_cape_particle", true);
+                        player.getEquipment().refresh(cape.getEquipSlot());
+                        player.getAppearance().generateAppearenceData();
+                        player.message("You switch to the Infernal cape (i).");
+                        return;
+                    }
+                    if (cape.isItem("item.infernal_cape_particle")) {
+                        cape.changeId("item.infernal_cape", true);
+                        player.getEquipment().refresh(cape.getEquipSlot());
+                        player.getAppearance().generateAppearenceData();
+                        player.message("You switch to the Infernal cape.");
+                        return;
+                    }
+                    if (cape.isItem("item.tokhaar_kal")) {
+                        cape.changeId("item.tokhaar_kal_particles", true);
+                        player.getEquipment().refresh(cape.getEquipSlot());
+                        player.getAppearance().generateAppearenceData();
+                        player.message("You switch to the TokHaar-Kal (i).");
+                        return;
+                    }
+                    if (cape.isItem("item.tokhaar_kal_particles")) {
+                        cape.changeId("item.tokhaar_kal", true);
+                        player.getEquipment().refresh(cape.getEquipSlot());
+                        player.getAppearance().generateAppearenceData();
+                        player.message("You switch to the TokHaar-Kal.");
+                        return;
+                    }
                     if (capeId == 20767) SkillCapeCustomizer.startCustomizing(player, capeId);
                     if (capeId == 20769 || capeId == 20771) {// add wilderness
                         // block after
@@ -1887,6 +1918,8 @@ public class ButtonHandler {
                 if (slotId > 27) return;
                 final Item item = player.getInventory().getItem(slotId);
                 if (item == null || item.getId() != slotId2) return;
+                if (player.isDeveloperMode())
+                    player.message("Click item " + item.getId() + ", option: " + packetId);
                 if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                     InventoryOptionsHandler.handleItemOption1(player, slotId, item, 1);//correct
                 } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET) {

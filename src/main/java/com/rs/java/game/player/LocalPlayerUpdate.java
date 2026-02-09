@@ -362,8 +362,6 @@ public final class LocalPlayerUpdate {
 			applyForceTalkMask(p, data);
 		if (p.getTint() != null)
 			applyTint(p, data);//correct 0x200_000
-		System.out.println("=== DEBUG: appendUpdateBlock for " + p.getDisplayName() + " ===");
-		System.out.println("Has updateMask: " + (p.getTint() != null));
 		//missing 0x80_000
 	}
 

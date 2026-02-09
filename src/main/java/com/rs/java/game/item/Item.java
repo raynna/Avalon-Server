@@ -9,6 +9,7 @@ import java.util.Objects;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.ItemsEquipIds;
 import com.rs.java.game.item.meta.ItemMetadata;
+import com.rs.java.game.player.content.dungeoneering.rooms.SpawnRandomNpcsEvent;
 import com.rs.kotlin.Rscm;
 
 /**
@@ -129,6 +130,10 @@ public class Item implements Serializable {
 	 */
 	public void setId(int id) {
 		this.id = (short) id;
+	}
+
+	public void changeId(String item, boolean preserveMetadata) {
+		changeId(Rscm.lookup(item), preserveMetadata);
 	}
 
 	public void changeId(int newId, boolean preserveMetadata) {

@@ -14,6 +14,9 @@ public final class EconomyPrices {
 		else if (defs.isLended())
 			itemId = defs.getLendId();
 		else if (!ItemConstants.isTradeable(new Item(itemId, 1))) {
+			if (defs.getValue() > defs.getPrice()) {
+				return defs.getValue();
+			}
 			return defs.getPrice();
 		}
 		else if (itemId == 995)

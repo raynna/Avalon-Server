@@ -337,6 +337,8 @@ public class ItemConstants {
 		if (item.getMetadata() != null) {
 			return false;
 		}
+		if (item.isAnyOf("item.tokhaar_defender", "item.tokhaar_defender_g", "item.infernal_cape", "item.infernal_cape_particle", "item.tokhaar_kal", "item.tokhaar_kal_particles"))
+			return false;
 		if (defs.contains("training"))
 			return false;
 		if (defs.contains("super antifire"))

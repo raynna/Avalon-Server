@@ -57,20 +57,21 @@ public final class ServerChannelHandler extends SimpleChannelHandler {
 
 	@Override
 	public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
-		Logger.log("NET", "Channel connected: " + e.getChannel());
 		Session session = new Session(e.getChannel());
 		ctx.setAttachment(session);
+		if (!session.getIP().startsWith("127.") || session.getIP().equals("127.0.0.1")) {
+			Logger.log("NET", "Channel connected: " + e.getChannel());
+		}
 	}
 	@Override
 	public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
-		Logger.log("NET", "Channel disconnected: " + e.getChannel());
-
 		Object attachment = ctx.getAttachment();
 		if (!(attachment instanceof Session session))
 			return;
-
-		Logger.log("NET", "Session closed for IP=" + session.getIP());
-
+		if (!session.getIP().startsWith("127.") || session.getIP().equals("127.0.0.1")) {
+			Logger.log("NET", "Channel disconnected: " + e.getChannel());
+			Logger.log("NET", "Session closed for IP=" + session.getIP());
+		}
 		try {
 			Player p = null;
 
@@ -86,7 +87,8 @@ public final class ServerChannelHandler extends SimpleChannelHandler {
 				Logger.log("NET", "Finishing player: " + p.getUsername());
 				p.finish();
 			} else {
-				Logger.log("NET", "No player found for session IP=" + session.getIP());
+				if (!session.getIP().startsWith("127.") || session.getIP().equals("127.0.0.1"))
+					Logger.log("NET", "No player found for session IP=" + session.getIP());
 			}
 		} catch (Throwable t) {
 			Logger.handle(t);

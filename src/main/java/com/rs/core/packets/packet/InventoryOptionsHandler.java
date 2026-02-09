@@ -1212,6 +1212,30 @@ public class InventoryOptionsHandler {
             player.getInventory().refresh();
             return;
         }
+        if (item.isItem("item.infernal_cape")) {
+            item.changeId("item.infernal_cape_particle", true);
+            player.getInventory().refresh(slotId);
+            player.message("You switch to the Infernal cape (i).");
+            return;
+        }
+        if (item.isItem("item.infernal_cape_particle")) {
+            item.changeId("item.infernal_cape", true);
+            player.getInventory().refresh(slotId);
+            player.message("You switch to the Infernal cape.");
+            return;
+        }
+        if (item.isItem("item.tokhaar_kal")) {
+            item.changeId("item.tokhaar_kal_particles", true);
+            player.getInventory().refresh(slotId);
+            player.message("You switch to the TokHaar-Kal (i).");
+            return;
+        }
+        if (item.isItem("item.tokhaar_kal_particles")) {
+            item.changeId("item.tokhaar_kal", true);
+            player.getInventory().refresh(slotId);
+            player.message("You switch to the TokHaar-Kal.");
+            return;
+        }
         if (itemId == 1921) {
             player.getInventory().getItems().set(slotId, new Item(1923));
             player.getInventory().refresh();
