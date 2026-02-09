@@ -508,7 +508,9 @@ object SpellHandler {
                         return@repeat
                     }
                 }
-
+                if (player.controlerManager.controler != null) {
+                    player.controlerManager.controler.magicTeleported(0)
+                }
                 player.nextWorldTile = teleTile
                 player.animate(Animation(if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) -1 else 8941))
                 player.gfx(Graphics(if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) -1 else 1577))
@@ -517,7 +519,6 @@ object SpellHandler {
                 player.direction = 6
                 player.unfreeze()
                 player.interfaceManager.closeChatBoxInterface()
-                player.controlerManager.forceStop()
                 stop()
             }
         }, delay, 0)

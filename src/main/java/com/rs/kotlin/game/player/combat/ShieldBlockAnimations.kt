@@ -29,6 +29,9 @@ object ShieldBlockAnimations {
         if (itemName.contains("shield", ignoreCase = true)) {
             return SHIELD_BLOCK_ANIMATION
         }
+        if (itemName.contains(" ward", ignoreCase = true)) {
+            return SHIELD_BLOCK_ANIMATION
+        }
         return null
     }
 }

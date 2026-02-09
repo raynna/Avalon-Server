@@ -16,6 +16,8 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 
+import java.util.List;
+
 public class GodWars extends Controller {
 
 	public static final int EMPTY_SECTOR = -1, BANDOS = 0, ARMADYL = 1, SARADOMIN = 2, ZAMORAK = 3, ZAROS = 4;
@@ -53,12 +55,46 @@ public class GodWars extends Controller {
 			player.setNextWorldTile(Settings.START_PLAYER_LOCATION);
 			return true;
 		}
-		this.killCount = (int[]) this.getArguments()[0];
-		this.lastPrayerRecharge = (long) this.getArguments()[1];
-		this.sector = (int) this.getArguments()[2];
+
+		Object kc = this.getArguments()[0];
+
+		if (kc instanceof int[]) {
+			this.killCount = (int[]) kc;
+
+		} else if (kc instanceof List) {
+			List<?> list = (List<?>) kc;
+			this.killCount = new int[list.size()];
+
+			for (int i = 0; i < list.size(); i++) {
+				Object value = list.get(i);
+
+				if (value instanceof Number) {
+					this.killCount[i] = ((Number) value).intValue();
+				} else {
+					this.killCount[i] = 0;
+				}
+			}
+
+		} else {
+			this.killCount = new int[5];
+		}
+
+		Object prayerArg = this.getArguments()[1];
+
+		if (prayerArg instanceof Number)
+			this.lastPrayerRecharge = ((Number) prayerArg).longValue();
+		else
+			this.lastPrayerRecharge = 0L;
+		Object sectorArg = this.getArguments()[2];
+
+		if (sectorArg instanceof Number)
+			this.sector = ((Number) sectorArg).intValue();
+		else
+			this.sector = EMPTY_SECTOR;
 		sendInterfaces();
-		return false; // so doesnt remove script
+		return false;
 	}
+
 
 	@Override
 	public boolean processObjectClick1(final WorldObject object) {

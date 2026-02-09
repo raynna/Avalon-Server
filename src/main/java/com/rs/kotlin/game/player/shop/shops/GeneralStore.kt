@@ -10,8 +10,17 @@ object GeneralStore : GameShop {
         isGlobal = true
         isGeneralStore = true
 
-        generalStoreItem("item.chisel", baseStock = 10)
-        generalStoreItem("item.spade", baseStock = 10)
-        generalStoreItem("item.shears", baseStock = 10)
+        generalStoreItem("item.empty_pot", baseStock = 5)
+        generalStoreItem("item.empty_jug", baseStock = 2)
+        generalStoreItem("item.shears", baseStock = 2)
+        generalStoreItem("item.empty_bucket", baseStock = 3)
+        generalStoreItem("item.bowl", baseStock = 2)
+        generalStoreItem("item.cake_tin", baseStock = 2)
+        generalStoreItem("item.tinderbox", baseStock = 2)
+        generalStoreItem("item.chisel", baseStock = 2)
+        generalStoreItem("item.hammer", baseStock = 5)
+        generalStoreItem("item.knife", baseStock = 1)
+        generalStoreItem("item.newcomer_map", baseStock = 5)
+        generalStoreItem("item.security_book", baseStock = 5)
     }
 }

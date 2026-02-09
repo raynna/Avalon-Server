@@ -15,6 +15,7 @@ import com.rs.java.game.item.meta.RunePouchMetaData;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.game.player.actions.combat.lunarspells.BakePie;
 import com.rs.java.game.player.actions.combat.lunarspells.BoostPotionShare;
 import com.rs.java.game.player.actions.combat.lunarspells.CureGroup;
@@ -43,6 +44,7 @@ import com.rs.java.game.player.controllers.FightKiln;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 
 public class LunarMagicks {
 
@@ -732,65 +734,109 @@ public class LunarMagicks {
         }
         removeRunes(player);
     }
-
-    public final static void sendLunarTeleportSpell(Player player, double xp, WorldTile tile) {
-        sendTeleportSpell(player, 9606, -2, 1685, 1684, xp, tile, 5, true);
+    public static void sendLunarTeleportSpell(Player player, double xp, WorldTile tile) {
+        sendLunarTeleportSpell(player, 9606, 1685, 1684, xp, tile, 5, true);
     }
 
-    public final static boolean sendTeleportSpell(final Player player, int upEmoteId, final int downEmoteId,
-                                                  int upGraphicId, final int downGraphicId, final double xp, final WorldTile tile, int delay,
-                                                  final boolean randomize) {
+    public static void sendLunarTeleportSpell(
+            final Player player,
+            int upEmoteId,
+            int upGraphicId,
+            int downGraphicId,
+            double xp,
+            final WorldTile tile,
+            int delay,
+            boolean randomize
+    ) {
+        // Controller restrictions
         if (player.getControlerManager().getControler() instanceof FfaZone
                 || player.getControlerManager().getControler() instanceof CrucibleController
                 || player.getControlerManager().getControler() instanceof FightKiln
                 || player.getControlerManager().getControler() instanceof FightCaves) {
             player.getPackets().sendGameMessage("You cannot teleport out of here.");
-            return false;
+            return;
         }
+
         if (player.isTeleportBlocked()) {
-            player.message("You are been teleport blocked!");
-            return false;
+            player.getPackets().sendGameMessage("You are teleport blocked!");
+            return;
         }
+
         if (!player.getControlerManager().processMagicTeleport(tile))
-            return false;
+            return;
+
+        // Tick + state handling (matches Kotlin)
+        int totalDelay = delay + 2;
+        player.getTickManager().addTicks(TickManager.TickKeys.TELEPORTING_TICK, totalDelay);
+        player.lock(delay);
         player.stopAll();
-        if (xp != 0)
-            player.getSkills().addXp(Skills.MAGIC, xp);
-        removeRunes(player);
-        player.lock(3 + delay);
+        player.resetReceivedHits();
+
+        if (xp > 0)
+            player.getSkills().addXpDelayed(Skills.MAGIC, xp);
+
         if (upEmoteId != -1)
             player.animate(new Animation(upEmoteId));
+
         if (upGraphicId != -1)
             player.gfx(new Graphics(upGraphicId));
-        player.getPackets().sendSound(5527, 0, 2);
-        WorldTasksManager.schedule(new WorldTask() {
 
+        player.getPackets().sendSound(5527, 0, 2);
+
+        WorldTasksManager.schedule(new WorldTask() {
             @Override
             public void run() {
+
+                // House teleport
+                if (tile.getX() == 3222 && tile.getY() == 3222) {
+                    player.setFreezeDelay(0);
+                    player.getInterfaceManager().closeChatBoxInterface();
+                    player.getControlerManager().forceStop();
+                    player.getHouse().enterMyHouse();
+                    stop();
+                    return;
+                }
+
                 WorldTile teleTile = tile;
+
+                // Randomization
                 if (randomize) {
-                    for (int trycount = 0; trycount < 10; trycount++) {
-                        teleTile = new WorldTile(tile, 2);
-                        if (World.canMoveNPC(tile.getPlane(), teleTile.getX(), teleTile.getY(), player.getSize()))
+                    for (int i = 0; i < 10; i++) {
+                        int dx = Utils.random(-1, 1);
+                        int dy = Utils.random(-1, 1);
+                        WorldTile test = new WorldTile(
+                                tile.getX() + dx,
+                                tile.getY() + dy,
+                                tile.getPlane()
+                        );
+                        if (World.canMoveNPC(
+                                test.getPlane(),
+                                test.getX(),
+                                test.getY(),
+                                player.getSize())) {
+                            teleTile = test;
                             break;
-                        teleTile = tile;
+                        }
                     }
                 }
+
+                // Controller callback
+                if (player.getControlerManager().getControler() != null)
+                    player.getControlerManager().getControler().magicTeleported(0);
+
                 player.setNextWorldTile(teleTile);
-                player.animate(new Animation(downEmoteId));
-                if (downGraphicId != -1)
-                    player.gfx(new Graphics(downGraphicId));
+
+                player.gfx(new Graphics(downGraphicId));
+
                 player.getPackets().sendSound(5524, 0, 2);
-                player.setNextFaceWorldTile(new WorldTile(teleTile.getX(), teleTile.getY() - 1, teleTile.getPlane()));
+                player.setNextFaceWorldTile(
+                        new WorldTile(teleTile.getX(), teleTile.getY() - 1, teleTile.getPlane())
+                );
                 player.setDirection(6);
-                for (Hit hit : player.getNextHits())
-                    hit.setDamage(-2);
                 player.setFreezeDelay(0);
                 player.getInterfaceManager().closeChatBoxInterface();
                 stop();
             }
         }, delay, 0);
-        return true;
     }
-
 }

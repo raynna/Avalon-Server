@@ -40,7 +40,7 @@ object GoblinLvl5DropTable {
                 drop("item.hammer", weight = 9)
                 drop("item.goblin_book", weight = 2)
                 drop("item.grapes", weight = 1)
-                drop("item.cape", weight = 1)
+                drop("item.red_cape", weight = 1)
                 drop("item.tin_ore", weight = 1)
             }
 
