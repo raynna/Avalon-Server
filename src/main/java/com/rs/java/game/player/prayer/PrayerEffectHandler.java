@@ -48,7 +48,6 @@ public class PrayerEffectHandler {
                 multiplier = 0.0;
             }
         }
-        hit.setDamage((int) (hit.getDamage() * multiplier));
         if (defender instanceof Player player) {
             if (protectionPrayer instanceof AncientPrayer && protectionPrayer.isDeflectPrayer() && player.getPrayer().isPrayerActive(protectionPrayer)) {
                 AncientPrayer deflectPrayer = (AncientPrayer) protectionPrayer;
@@ -60,6 +59,7 @@ public class PrayerEffectHandler {
                 }
             }
         }
+        hit.setDamage((int) (hit.getDamage() * multiplier));
     }
 
     private static void handleDeflectHit(Entity defender, Entity attacker, Hit hit, AncientPrayer deflectPrayer) {
