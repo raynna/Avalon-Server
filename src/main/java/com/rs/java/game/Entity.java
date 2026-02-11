@@ -1530,6 +1530,10 @@ public abstract class Entity extends WorldTile {
         animate(new Animation(animationId));
     }
 
+    public void animateWithDelay(int animationId, int delay) {
+        animate(new Animation(animationId, delay));
+    }
+
     public void animate(String animation) {
         animate(new Animation(animation));
     }

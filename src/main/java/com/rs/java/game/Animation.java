@@ -5,7 +5,7 @@ import com.rs.kotlin.Rscm;
 public final class Animation {
 
 	private int[] ids;
-	private int speed;
+	private int delay;
 
 	public Animation(int id) {
 		this(id, 0);
@@ -23,20 +23,20 @@ public final class Animation {
 		this(Rscm.lookup(normalizeAnimationKey(animation)), 0);
 	}
 
-	public Animation(int id, int speed) {
-		this(id, id, id, id, speed); 
+	public Animation(int id, int delay) {
+		this(id, id, id, id, delay);
 	} 
 
-	public Animation(int id1, int id2, int id3, int id4, int speed) {
+	public Animation(int id1, int id2, int id3, int id4, int delay) {
 		this.ids = new int[] { id1, id2, id3, id4 };
-		this.speed = speed;
+		this.delay = delay;
 	}
 
 	public int[] getIds() {
 		return ids;
 	}
 
-	public int getSpeed() {
-		return speed;
+	public int getDelay() {
+		return delay;
 	}
 }

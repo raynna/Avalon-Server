@@ -85,6 +85,9 @@ fun CombatContext.multiHit(
         )
         PendingHit(hit, target, delay)
     }
+    if (usingSpecial) {
+        target.animate(CombatUtils.getBlockAnimation(target as Player))
+    }
     combat.delayHits(*pending.toTypedArray())
     return pending.map { it.hit }
 }
@@ -138,7 +141,7 @@ fun CombatContext.registerHit(
     hitLook = hitLook
 )
 
-fun CombatContext.registerDamage(
+fun CombatContext.guaranteedHit(
     combatType: CombatType = CombatType.MELEE,
     damageMultiplier: Double = 1.0,
     hitLook: Hit.HitLook? = null,

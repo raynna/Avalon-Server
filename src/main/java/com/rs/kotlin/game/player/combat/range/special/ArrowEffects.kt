@@ -1,21 +1,11 @@
 package com.rs.kotlin.game.player.combat.range.special
 
 import com.rs.java.game.Graphics
-import com.rs.java.game.Hit
 import com.rs.java.game.Hit.HitLook
-import com.rs.java.game.item.Item
-import com.rs.java.game.npc.NPC
-import com.rs.java.game.npc.combat.DragonFire
-import com.rs.java.game.player.Skills
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.CombatType
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.SpecialEffect
-import com.rs.kotlin.game.player.combat.special.hits
-import com.rs.kotlin.game.player.combat.special.registerDamage
-import com.rs.kotlin.game.player.combat.special.rollRanged
-import kotlin.math.floor
-import kotlin.math.min
 
 object ArrowEffects {
 

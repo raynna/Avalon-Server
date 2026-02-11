@@ -210,9 +210,6 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         attacker.packets.sendGameMessage(message)
     }
 
-
-
-
     override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
         super.onHit(attacker, defender, hit)
         val currentAmmo = RangeData.getCurrentAmmo(attacker)
@@ -342,7 +339,9 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             attacker,
             defender,
             startHeightOffset = heightOffset
-        )
+        ) {
+            defender.animate(CombatUtils.getBlockAnimation(defender as Player))
+        }
     }
 
 

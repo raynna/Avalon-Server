@@ -272,7 +272,7 @@ public final class LocalNPCUpdate {
 		if (n.getNextAnimation() == null) return;
 		for (int id : n.getNextAnimation().getIds())
 			data.writeBigSmart(id);
-		data.writeByte(n.getNextAnimation().getSpeed());
+		data.writeByte(n.getNextAnimation().getDelay());
 	}
 
 	private void applyGraphicsMask4(NPC n, OutputStream data) {

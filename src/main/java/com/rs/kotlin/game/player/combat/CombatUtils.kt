@@ -1,5 +1,6 @@
 package com.rs.kotlin.game.player.combat
 
+import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.melee.StandardMelee
@@ -50,9 +51,10 @@ object CombatUtils {
 
         val shieldId = player.equipment.getShieldId()
         if (shieldId != -1) {
-            val shieldName = player.equipment.getItem(shieldId)?.definitions?.name
+            println("shieldId: $shieldId")
+            val shieldName = player.equipment.getItem(Equipment.SLOT_SHIELD.toInt())?.definitions?.name
                 ?.lowercase() ?: ""
-
+             println("name contains shield: $shieldName ${shieldName.contains("shield")}")
             if (shieldName.contains("shield")) {
                 return Rscm.lookup("sound.shield_block")
             }
@@ -60,7 +62,7 @@ object CombatUtils {
 
         val bodyId = player.equipment.getChestId()
         if (bodyId != -1) {
-            val bodyName = player.equipment.getItem(bodyId)?.definitions?.name
+            val bodyName = player.equipment.getItem(Equipment.SLOT_CHEST.toInt())?.definitions?.name
                 ?.lowercase() ?: ""
 
             return when {

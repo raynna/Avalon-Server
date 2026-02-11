@@ -507,7 +507,7 @@ public final class LocalPlayerUpdate {
 	private void applyAnimationMask(Player p, OutputStream data) {
 		for (int id : p.getNextAnimation().getIds())
 			data.writeBigSmart(id);
-		data.writeByte(p.getNextAnimation().getSpeed());
+		data.writeByte(p.getNextAnimation().getDelay());
 	}
 
 	private void applyAppearanceMask(Player p, OutputStream data) {

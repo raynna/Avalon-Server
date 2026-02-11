@@ -10,7 +10,7 @@ import com.rs.kotlin.game.player.combat.CombatType
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.SpecialEffect
 import com.rs.kotlin.game.player.combat.special.hits
-import com.rs.kotlin.game.player.combat.special.registerDamage
+import com.rs.kotlin.game.player.combat.special.guaranteedHit
 import com.rs.kotlin.game.player.combat.special.rollRanged
 import kotlin.math.floor
 import kotlin.math.min
@@ -63,7 +63,7 @@ object BoltEffects {
                 return@SpecialEffect false
 
             val boost = if (guaranteed) 1.26 else 1.15
-            val hit = context.registerDamage(
+            val hit = context.guaranteedHit(
                 combatType = CombatType.RANGED,
                 damageMultiplier = boost
             )

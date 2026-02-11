@@ -89,7 +89,7 @@ interface CombatStyle {
         if (defender is Player) {
             if (this is RangedStyle || this is MagicStyle) {
                 defender.animate(CombatUtils.getBlockAnimation(defender))
-                defender.playSound(CombatUtils.getBlockSound(defender), 20, 1)
+                defender.playSound(CombatUtils.getBlockSound(defender), 1)
             }
             defender.chargeManager.processHit(hit)
 

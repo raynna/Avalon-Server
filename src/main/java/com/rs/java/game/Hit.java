@@ -198,4 +198,11 @@ public class Hit {
 		return copy;
 	}
 
+	public Hit copyWithDelay(int newDelay) {
+		Hit copy = new Hit(this.source, this.damage, this.maxHit, this.look, newDelay, this.landed);
+		copy.critical = this.critical;
+		copy.soaking = this.soaking;
+		return copy;
+	}
+
 }
