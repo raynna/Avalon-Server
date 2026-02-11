@@ -127,6 +127,16 @@ public class Hit {
 		return this;
 	}
 
+	private boolean deflectSuccessful;
+
+	public boolean isDeflectSuccessful() {
+		return deflectSuccessful;
+	}
+
+	public void setDeflectSuccessful(boolean deflectSuccessful) {
+		this.deflectSuccessful = deflectSuccessful;
+	}
+
 	public int getDamage() {
 		return damage;
 	}

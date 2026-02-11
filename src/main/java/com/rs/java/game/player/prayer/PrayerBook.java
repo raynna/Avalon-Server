@@ -62,6 +62,7 @@ public class PrayerBook implements Serializable {
     public void initializePrayerBook() {
         if (player != null && player.isActive()) {
             refresh();
+            refreshPrayerPoints();
             resetLeechBonuses();
         }
     }
@@ -951,7 +952,8 @@ public class PrayerBook implements Serializable {
     }
 
     public void refreshPrayerPoints() {
-        player.getVarsManager().forceSendVarBit(9816, prayerPoints);
+        player.getVarsManager().sendVarBit(9816, 0);
+        player.getVarsManager().sendVarBit(9816, prayerPoints);
     }
 
     private EnumSet<? extends Prayer> getActivePrayerSet() {

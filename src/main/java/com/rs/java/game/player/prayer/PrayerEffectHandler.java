@@ -20,7 +20,7 @@ import static com.rs.java.game.Hit.HitLook;
 
 public class PrayerEffectHandler {
 
-    public static void handleProtectionEffects(Entity source, Entity target, Hit hit) {
+    public static void handleProtectionReduction(Entity source, Entity target, Hit hit) {
         if (target instanceof Player defender) {
             Prayer protectionPrayer = getProtectionPrayer(defender, hit.getLook());
             if (protectionPrayer != null && protectionPrayer.isProtectionPrayer() && defender.getPrayer().isActive(protectionPrayer)) {
@@ -29,37 +29,45 @@ public class PrayerEffectHandler {
         }
     }
 
-    private static void handleActualProtectionPrayer(Entity attacker, Entity defender, Hit hit, Prayer protectionPrayer) {
-        double reduction = 1.0 - protectionPrayer.getDamageReduction(); //0.4 reduction = 0.6 left, 40% reduced from hit
-
-        if (attacker instanceof NPC npc) {//if attacker is npc, we default it to 100% protection instead
-            if (npc.getProtectionPrayerEffectiveness() != 1.0) {//but if npc protectioneffectiveness isnt 1.0, we override to its scale there, for example
-                reduction = npc.getProtectionPrayerEffectiveness();//corp has set to 0.33, while then reduces hit by 66%, but can hit up to 33% of the hit even on prayer
-            } else {
-                reduction = 0.0;//if no protective effectiveness is set, we then have reduction to be 100%
-            }
-        }
-        hit.setDamage((int) (hit.getDamage() * reduction));
-        if (defender instanceof Player player) {
-            if (protectionPrayer instanceof AncientPrayer && protectionPrayer.isDeflectPrayer() && player.getPrayer().isPrayerActive(protectionPrayer)) {
-                handleDeflectEffect(defender, attacker, hit, (AncientPrayer) protectionPrayer);
+    public static void handleDeflect(Entity attacker, Entity defender, Hit hit) {
+        if (defender instanceof Player target) {
+            Prayer protectionPrayer = getProtectionPrayer(target, hit.getLook());
+            if (protectionPrayer instanceof AncientPrayer && protectionPrayer.isDeflectPrayer() && target.getPrayer().isPrayerActive(protectionPrayer)) {
+                handleDeflectHit(target, attacker, hit, (AncientPrayer) protectionPrayer);
             }
         }
     }
 
-    private static void handleDeflectEffect(Entity defender, Entity attacker, Hit hit, AncientPrayer deflectPrayer) {
-        if (Utils.randomDouble() >= deflectPrayer.getReflectChance()) return;
+    private static void handleActualProtectionPrayer(Entity attacker, Entity defender, Hit hit, Prayer protectionPrayer) {
+        double multiplier = 1.0 - protectionPrayer.getDamageReduction(); //protect prayers set to 0.4, 1.0 - 0.4 = 0.6 reduction,
+
+        if (attacker instanceof NPC npc) {
+            if (npc.getProtectionPrayerEffectiveness() != 1.0) {
+                multiplier = 1.0 - npc.getProtectionPrayerEffectiveness();//corp etc 0.33 effectiveness
+            } else {
+                multiplier = 0.0;
+            }
+        }
+        hit.setDamage((int) (hit.getDamage() * multiplier));
+        if (defender instanceof Player player) {
+            if (protectionPrayer instanceof AncientPrayer && protectionPrayer.isDeflectPrayer() && player.getPrayer().isPrayerActive(protectionPrayer)) {
+                AncientPrayer deflectPrayer = (AncientPrayer) protectionPrayer;
+                boolean success = Utils.randomDouble() < deflectPrayer.getReflectChance() && hit.getDamage() > 0;
+                hit.setDeflectSuccessful(success);
+                if (success) {
+                    defender.gfx(deflectPrayer.getHitGraphics());
+                    defender.animate(deflectPrayer.getAnimation());
+                }
+            }
+        }
+    }
+
+    private static void handleDeflectHit(Entity defender, Entity attacker, Hit hit, AncientPrayer deflectPrayer) {
+        if (!hit.isDeflectSuccessful()) return;
 
         int reflectDamage = (int) (hit.getDamage() * deflectPrayer.getReflectAmount());
         if (reflectDamage > 0) {
-            attacker.applyHit(new Hit(defender, reflectDamage, HitLook.REFLECTED_DAMAGE));
-            defender.gfx(deflectPrayer.getHitGraphics());
-            WorldTasksManager.schedule(new WorldTask() {
-                @Override
-                public void run() {
-                    defender.animate(deflectPrayer.getAnimation());
-                }
-            });
+            attacker.applyHit(new Hit(defender, reflectDamage, HitLook.REFLECTED_DAMAGE));//this should be sent on hit, not incomming hit
         }
     }
 

@@ -41,18 +41,6 @@ interface CombatStyle {
 
     fun outgoingHit(attacker: Player, defender: Entity, pending: PendingHit) {
         val hit = pending.hit
-        PrayerEffectHandler.handleProtectionEffects(attacker, defender, hit)//protection prayers first
-        EquipmentEffects.applyOutgoing(attacker, defender, hit, this)//divine, keris applied second
-        if (defender is Player) {
-            EquipmentEffects.applyIncoming(defender, hit, this)//divine, keris applied second
-        }
-        SoakDamage.handleAbsorb(attacker, defender, hit)//soak applied last, after all effect reductions
-        attacker.chargeManager.processOutgoingHit()
-        PrayerEffectHandler.handleOffensiveEffects(
-            attacker,
-            defender,
-            hit
-        )
         if (defender is Player) {
             if (this is MeleeStyle) {
                 defender.animate(CombatUtils.getBlockAnimation(defender))
@@ -76,8 +64,19 @@ interface CombatStyle {
                     }
                 })
             }
-
         }
+        PrayerEffectHandler.handleProtectionReduction(attacker, defender, hit)//protection prayers first
+        EquipmentEffects.applyOutgoing(attacker, defender, hit, this)//divine, keris applied second
+        if (defender is Player) {
+            EquipmentEffects.applyIncoming(defender, hit, this)//divine, keris applied second
+        }
+        SoakDamage.handleAbsorb(attacker, defender, hit)//soak applied last, after all effect reductions
+        attacker.chargeManager.processOutgoingHit()
+        PrayerEffectHandler.handleOffensiveEffects(
+            attacker,
+            defender,
+            hit
+        )
         defender.handleIncommingHit(hit);
     }
 
@@ -85,7 +84,8 @@ interface CombatStyle {
         if (hit.graphic != null) {
             defender.gfx(hit.graphic)
         }
-        defender.handleHit(hit);
+        defender.handleHit(hit)
+        PrayerEffectHandler.handleDeflect(attacker, defender, hit)
         if (defender is Player) {
             if (this is RangedStyle || this is MagicStyle) {
                 defender.animate(CombatUtils.getBlockAnimation(defender))

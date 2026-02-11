@@ -2944,8 +2944,6 @@ public class Player extends Entity {
         equipment.init();
         skills.init();
         combatDefinitions.init();
-        refreshHitPoints();
-        prayer.onLogin();
         getPoison().refresh();
         getPackets().sendVar(281, 1000);
         getPackets().sendVar(1160, -1);
@@ -2974,6 +2972,8 @@ public class Player extends Entity {
             getVarsManager().sendVarBit(pair.getKey(), 0);
             getVarsManager().sendVarBit(pair.getKey(), pair.getValue());
         }
+        refreshHitPoints();
+        prayer.onLogin();
         getSkills().switchXPPopup(true);
         getSkills().switchXPPopup(true);
         if (machineInformation != null)
@@ -3042,6 +3042,7 @@ public class Player extends Entity {
         refreshSpawnedObjects();
         getTickManager().rebuildOverlay();
         PvpManager.onLogin(this);
+        getVarsManager().sendVarBit(9816, prayer.getPrayerPoints());
         List<Area> areas = AreaManager.getAll(getTile());
         for (Area area : areas) {
             area.onMoved(this);

@@ -1,29 +1,22 @@
 package com.rs.java.game.npc.combat;
 
-import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.Entity;
 import com.rs.java.game.ForceTalk;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.Hit;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.World;
-import com.rs.java.game.item.Item;
-import com.rs.java.game.item.itemdegrading.ItemDegrade;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.*;
 import com.rs.java.game.player.prayer.PrayerEffectHandler;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.game.npc.combatdata.AttackMethod;
-import com.rs.kotlin.game.npc.combatdata.AttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.player.combat.CombatAction;
 import com.rs.kotlin.game.player.combat.CombatStyle;
 import com.rs.kotlin.game.player.combat.EntityUtils;
-import com.rs.kotlin.game.world.projectile.ProjectileManager;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
 public abstract class CombatScript {
@@ -63,7 +56,7 @@ public abstract class CombatScript {
             player.handleIncommingHit(hit);
 
         if (target instanceof Player playerTarget) {
-            PrayerEffectHandler.handleProtectionEffects(npc, playerTarget, hit);
+            PrayerEffectHandler.handleProtectionReduction(npc, playerTarget, hit);
             PvpManager.onPlayerDamagedByNpc(playerTarget);
         }
 
@@ -119,6 +112,7 @@ public abstract class CombatScript {
         if (target instanceof Player defender) {
             defender.getChargeManager().processHit(hit);
             CombatStyle.handleRingOfRecoil(npc, defender, hit);
+            PrayerEffectHandler.handleDeflect(npc, defender, hit);
         }
 
         handleVengHit(target, hit);

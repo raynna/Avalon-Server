@@ -1517,10 +1517,9 @@ public abstract class Entity extends WorldTile {
     }
 
     public void animateNoCheck(Animation nextAnimation) {
-        if (this.nextAnimation != null) {
-            this.forceAnimation = true;
-        }
         this.nextAnimation = nextAnimation;
+        if (nextAnimation != null && nextAnimation.getIds()[0] >= 0)
+            lastAnimationEnd = Utils.currentTimeMillis() + AnimationDefinitions.getAnimationDefinitions(nextAnimation.getIds()[0]).getEmoteTime();
     }
 
     public void setNextAnimation(int id) {
