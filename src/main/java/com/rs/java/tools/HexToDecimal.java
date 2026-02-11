@@ -33,7 +33,7 @@ public final class HexToDecimal {
     // Example usage
     public static void main(String[] args) {
         System.out.println(convert("00a9")); // 169
-        System.out.println(convert("00ff")); // 255
-        System.out.println(convert("01c4")); // 452
+        System.out.println(convert("00ab")); // 255
+        System.out.println(convert("0001")); // 452
     }
 }

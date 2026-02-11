@@ -9365,6 +9365,64 @@
     "categories": [],
     "assignedBy": []
   },
+  "667": {
+    "id": 667,
+    "name": "Chronozon",
+    "members": true,
+    "combatLevel": 170,
+    "attackLevel": 173,
+    "strengthLevel": 172,
+    "defenceLevel": 173,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 60,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[9 April]] [[2002]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "Chronozon the blood demon.",
+    "attributes": [
+      "demon"
+    ],
+    "xpBonus": -97.5,
+    "maxHit": {
+      "default": 18
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "674": {
     "id": 674,
     "name": "Foreman",
@@ -20437,6 +20495,174 @@
       "mazchna"
     ]
   },
+  "1710": {
+    "id": 1710,
+    "name": "H.A.M. Guard",
+    "members": true,
+    "combatLevel": 12,
+    "attackLevel": 8,
+    "strengthLevel": 12,
+    "defenceLevel": 8,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 15,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[22 February]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A guard for the \u0027Humans Against Monsters\u0027 group.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1711": {
+    "id": 1711,
+    "name": "H.A.M. Guard",
+    "members": true,
+    "combatLevel": 18,
+    "attackLevel": 14,
+    "strengthLevel": 18,
+    "defenceLevel": 12,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[22 February]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A guard for the \u0027Humans Against Monsters\u0027 group.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1712": {
+    "id": 1712,
+    "name": "H.A.M. Guard",
+    "members": true,
+    "combatLevel": 18,
+    "attackLevel": 14,
+    "strengthLevel": 18,
+    "defenceLevel": 12,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[22 February]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A guard for the \u0027Humans Against Monsters\u0027 group.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "1751": {
     "id": 1751,
     "name": "Terrorbird",
@@ -23005,6 +23231,294 @@
       "mazchna"
     ]
   },
+  "2073": {
+    "id": 2073,
+    "name": "Cave goblin guard",
+    "members": true,
+    "combatLevel": 24,
+    "attackLevel": 22,
+    "strengthLevel": 16,
+    "defenceLevel": 22,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 26,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 12,
+      "standard": 12,
+      "heavy": 12
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He protects the miners.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 26,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2074": {
+    "id": 2074,
+    "name": "Cave goblin guard",
+    "members": true,
+    "combatLevel": 24,
+    "attackLevel": 22,
+    "strengthLevel": 16,
+    "defenceLevel": 22,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 26,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 19
+    },
+    "magicDefence": {
+      "magic": -3
+    },
+    "rangedDefence": {
+      "light": 12,
+      "standard": 12,
+      "heavy": 12
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "He protects the miners.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 50,
+    "slayerXp": 26,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2075": {
+    "id": 2075,
+    "name": "Cave goblin miner",
+    "members": true,
+    "combatLevel": 11,
+    "attackLevel": 10,
+    "strengthLevel": 12,
+    "defenceLevel": 7,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 10,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 10,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2076": {
+    "id": 2076,
+    "name": "Cave goblin miner",
+    "members": true,
+    "combatLevel": 11,
+    "attackLevel": 10,
+    "strengthLevel": 12,
+    "defenceLevel": 7,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 10,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 10,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2078": {
+    "id": 2078,
+    "name": "Cave goblin miner",
+    "members": true,
+    "combatLevel": 11,
+    "attackLevel": 10,
+    "strengthLevel": 12,
+    "defenceLevel": 7,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 10,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 10,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
   "2091": {
     "id": 2091,
     "name": "Giant rat",
@@ -23588,6 +24102,65 @@
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []
+  },
+  "2547": {
+    "id": 2547,
+    "name": "Chaos druid",
+    "members": true,
+    "combatLevel": 13,
+    "attackLevel": 8,
+    "strengthLevel": 8,
+    "defenceLevel": 12,
+    "magicLevel": 10,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A crazy, evil druid.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "[[melee]]": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 20,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
   },
   "2591": {
     "id": 2591,
@@ -51374,6 +51947,569 @@
       "vannaka"
     ]
   },
+  "7105": {
+    "id": 7105,
+    "name": "Chaos druid",
+    "members": true,
+    "combatLevel": 13,
+    "attackLevel": 8,
+    "strengthLevel": 8,
+    "defenceLevel": 12,
+    "magicLevel": 10,
+    "rangedLevel": 1,
+    "constitutionLevel": 20,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A crazy, evil druid.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "[[melee]]": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 20,
+    "categories": [],
+    "assignedBy": [
+      "krystilia"
+    ]
+  },
+  "7106": {
+    "id": 7106,
+    "name": "Thug",
+    "members": true,
+    "combatLevel": 10,
+    "attackLevel": 7,
+    "strengthLevel": 5,
+    "defenceLevel": 9,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 18,
+    "attackBonus": 5,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 2,
+      "slash": 3,
+      "crush": 3
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Low on brains, high on aggression.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "7107": {
+    "id": 7107,
+    "name": "Thug",
+    "members": true,
+    "combatLevel": 10,
+    "attackLevel": 7,
+    "strengthLevel": 5,
+    "defenceLevel": 9,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 18,
+    "attackBonus": 5,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 2,
+      "slash": 3,
+      "crush": 3
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Low on brains, high on aggression.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "7108": {
+    "id": 7108,
+    "name": "Thug",
+    "members": true,
+    "combatLevel": 10,
+    "attackLevel": 7,
+    "strengthLevel": 5,
+    "defenceLevel": 9,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 18,
+    "attackBonus": 5,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 2,
+      "slash": 3,
+      "crush": 3
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Low on brains, high on aggression.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "7109": {
+    "id": 7109,
+    "name": "Thug",
+    "members": true,
+    "combatLevel": 10,
+    "attackLevel": 7,
+    "strengthLevel": 5,
+    "defenceLevel": 9,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 18,
+    "attackBonus": 5,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 2,
+      "slash": 3,
+      "crush": 3
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Low on brains, high on aggression.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "7110": {
+    "id": 7110,
+    "name": "Thug",
+    "members": true,
+    "combatLevel": 10,
+    "attackLevel": 7,
+    "strengthLevel": 5,
+    "defenceLevel": 9,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 18,
+    "attackBonus": 5,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 2,
+      "slash": 3,
+      "crush": 3
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Low on brains, high on aggression.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "7111": {
+    "id": 7111,
+    "name": "Thug",
+    "members": true,
+    "combatLevel": 10,
+    "attackLevel": 7,
+    "strengthLevel": 5,
+    "defenceLevel": 9,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 18,
+    "attackBonus": 5,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 2,
+      "slash": 3,
+      "crush": 3
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Low on brains, high on aggression.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "7112": {
+    "id": 7112,
+    "name": "Thug",
+    "members": true,
+    "combatLevel": 10,
+    "attackLevel": 7,
+    "strengthLevel": 5,
+    "defenceLevel": 9,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 18,
+    "attackBonus": 5,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 2,
+      "slash": 3,
+      "crush": 3
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Low on brains, high on aggression.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "7113": {
+    "id": 7113,
+    "name": "Thug",
+    "members": true,
+    "combatLevel": 10,
+    "attackLevel": 7,
+    "strengthLevel": 5,
+    "defenceLevel": 9,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 18,
+    "attackBonus": 5,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 2,
+      "slash": 3,
+      "crush": 3
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Low on brains, high on aggression.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "7114": {
+    "id": 7114,
+    "name": "Thug",
+    "members": true,
+    "combatLevel": 10,
+    "attackLevel": 7,
+    "strengthLevel": 5,
+    "defenceLevel": 9,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 18,
+    "attackBonus": 5,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 2,
+      "slash": 3,
+      "crush": 3
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[27 February]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Low on brains, high on aggression.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "7528": {
     "id": 7528,
     "name": "Khazard Guard",
@@ -53529,6 +54665,186 @@
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []
+  },
+  "8312": {
+    "id": 8312,
+    "name": "Elite Dark Warrior",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 80,
+    "strengthLevel": 80,
+    "defenceLevel": 80,
+    "magicLevel": 40,
+    "rangedLevel": 25,
+    "constitutionLevel": 80,
+    "attackBonus": 80,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 15,
+      "slash": 20,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": -10
+    },
+    "rangedDefence": {
+      "light": 40,
+      "standard": 30,
+      "heavy": 15
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[10 July]] [[2024]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An elite dark warrior with lots of combat experience.",
+    "attributes": [
+      ""
+    ],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      ""
+    ]
+  },
+  "8316": {
+    "id": 8316,
+    "name": "Elite Dark Ranger",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 25,
+    "strengthLevel": 25,
+    "defenceLevel": 80,
+    "magicLevel": 40,
+    "rangedLevel": 80,
+    "constitutionLevel": 80,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 80,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 5,
+      "slash": 0,
+      "crush": 20
+    },
+    "magicDefence": {
+      "magic": 60
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 5,
+      "heavy": 15
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[10 July]] [[2024]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An elite dark ranger with lots of combat experience.",
+    "attributes": [
+      ""
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      ""
+    ]
+  },
+  "8320": {
+    "id": 8320,
+    "name": "Elite Dark Mage",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 25,
+    "strengthLevel": 25,
+    "defenceLevel": 80,
+    "magicLevel": 80,
+    "rangedLevel": 25,
+    "constitutionLevel": 80,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 80,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 5,
+      "slash": 10,
+      "crush": 15
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 5,
+      "standard": 0,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[10 July]] [[2024]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An elite dark mage with lots of combat experience.",
+    "attributes": [
+      ""
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      ""
+    ]
   },
   "8324": {
     "id": 8324,

@@ -229,7 +229,7 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = Weapon.itemIds("item.dragon_scimitar"),
+            itemId = Weapon.itemIds("item.dragon_scimitar", "item.infernal_scimitar"),
             name = "Dragon scimitar",
             weaponStyle = WeaponStyle.SCIMITAR,
             sounds = mapOf(
@@ -268,7 +268,7 @@ object StandardMelee : MeleeData() {
         MeleeWeapon(
             itemId = Item.getIds(
                 "item.dragon_dagger", "item.dragon_dagger_p",
-                "item.dragon_dagger_p+", "item.dragon_dagger_p++"
+                "item.dragon_dagger_p+", "item.dragon_dagger_p++", "item.infernal_dagger"
             ),
             name = "Dragon dagger",
             weaponStyle = WeaponStyle.DAGGER,

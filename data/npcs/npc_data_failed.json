@@ -159,6 +159,38 @@
     "lastSeen": "2026-01-17T22:40:36.775447200Z",
     "attempts": 1
   },
+  "1822": {
+    "npcId": 1822,
+    "npcName": "Cave goblin",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-11T00:01:35.774223Z",
+    "lastSeen": "2026-02-11T00:01:35.774223Z",
+    "attempts": 1
+  },
+  "1823": {
+    "npcId": 1823,
+    "npcName": "Cave goblin",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-11T00:01:35.906941500Z",
+    "lastSeen": "2026-02-11T00:01:35.906941500Z",
+    "attempts": 1
+  },
+  "1824": {
+    "npcId": 1824,
+    "npcName": "Cave goblin",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-11T00:01:36.033442600Z",
+    "lastSeen": "2026-02-11T00:01:36.033442600Z",
+    "attempts": 1
+  },
+  "1825": {
+    "npcId": 1825,
+    "npcName": "Cave goblin",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-11T00:01:36.168062Z",
+    "lastSeen": "2026-02-11T00:01:36.168062Z",
+    "attempts": 1
+  },
   "1879": {
     "npcId": 1879,
     "npcName": "null",
