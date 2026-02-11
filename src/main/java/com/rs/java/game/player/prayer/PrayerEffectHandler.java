@@ -31,10 +31,7 @@ public class PrayerEffectHandler {
 
     public static void handleDeflect(Entity attacker, Entity defender, Hit hit) {
         if (defender instanceof Player target) {
-            Prayer protectionPrayer = getProtectionPrayer(target, hit.getLook());
-            if (protectionPrayer instanceof AncientPrayer && protectionPrayer.isDeflectPrayer() && target.getPrayer().isPrayerActive(protectionPrayer)) {
-                handleDeflectHit(target, attacker, hit, (AncientPrayer) protectionPrayer);
-            }
+            handleDeflectHit(target, attacker, hit);
         }
     }
 
@@ -53,6 +50,8 @@ public class PrayerEffectHandler {
                 AncientPrayer deflectPrayer = (AncientPrayer) protectionPrayer;
                 boolean success = Utils.randomDouble() < deflectPrayer.getReflectChance() && hit.getDamage() > 0;
                 hit.setDeflectSuccessful(success);
+                int reflectDamage = (int) (hit.getDamage() * deflectPrayer.getReflectAmount());
+                hit.setDeflectDamage(reflectDamage);
                 if (success) {
                     defender.gfx(deflectPrayer.getHitGraphics());
                     defender.animate(deflectPrayer.getAnimation());
@@ -62,10 +61,13 @@ public class PrayerEffectHandler {
         hit.setDamage((int) (hit.getDamage() * multiplier));
     }
 
-    private static void handleDeflectHit(Entity defender, Entity attacker, Hit hit, AncientPrayer deflectPrayer) {
-        if (!hit.isDeflectSuccessful()) return;
+    private static void handleDeflectHit(Entity defender, Entity attacker, Hit hit) {
+        if (!hit.isDeflectSuccessful()) {
+            hit.setDeflectDamage(0);
+            return;
+        }
 
-        int reflectDamage = (int) (hit.getDamage() * deflectPrayer.getReflectAmount());
+        int reflectDamage = hit.getDeflectDamage();
         if (reflectDamage > 0) {
             attacker.applyHit(new Hit(defender, reflectDamage, HitLook.REFLECTED_DAMAGE));//this should be sent on hit, not incomming hit
         }

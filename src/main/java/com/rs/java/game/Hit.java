@@ -128,6 +128,7 @@ public class Hit {
 	}
 
 	private boolean deflectSuccessful;
+	private int deflectDamage;
 
 	public boolean isDeflectSuccessful() {
 		return deflectSuccessful;
@@ -135,6 +136,14 @@ public class Hit {
 
 	public void setDeflectSuccessful(boolean deflectSuccessful) {
 		this.deflectSuccessful = deflectSuccessful;
+	}
+
+	public int getDeflectDamage() {
+		return deflectDamage;
+	}
+
+	public void setDeflectDamage(int damage) {
+		this.deflectDamage = damage;
 	}
 
 	public int getDamage() {
