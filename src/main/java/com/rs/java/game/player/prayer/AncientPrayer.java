@@ -14,7 +14,7 @@ public enum AncientPrayer implements Prayer {
         }
         @Override public boolean isProtectionPrayer() { return true; }
         @Override public boolean isDeflectPrayer() { return true; }
-        @Override public double getDamageReduction() { return 0.6; }
+        @Override public double getDamageReduction() { return 0.4; }
         @Override public double getReflectChance() { return 0.5; }
         @Override public double getReflectAmount() { return 0.1; }
         @Override public Graphics getHitGraphics() { return new Graphics(Rscm.lookup("graphic.curses_deflect_magic")); }
@@ -27,7 +27,7 @@ public enum AncientPrayer implements Prayer {
         }
         @Override public boolean isProtectionPrayer() { return true; }
         @Override public boolean isDeflectPrayer() { return true; }
-        @Override public double getDamageReduction() { return 0.6; }
+        @Override public double getDamageReduction() { return 0.4; }
         @Override public double getReflectChance() { return 0.5; }
         @Override public double getReflectAmount() { return 0.1; }
         @Override public Graphics getHitGraphics() { return new Graphics(Rscm.lookup("graphic.curses_deflect_ranged")); }
@@ -40,7 +40,7 @@ public enum AncientPrayer implements Prayer {
         }
         @Override public boolean isProtectionPrayer() { return true; }
         @Override public boolean isDeflectPrayer() { return true; }
-        @Override public double getDamageReduction() { return 0.6; }
+        @Override public double getDamageReduction() { return 0.4; }
         @Override public double getReflectChance() { return 0.5; }
         @Override public double getReflectAmount() { return 0.1; }
         @Override public Graphics getHitGraphics() { return new Graphics(Rscm.lookup("graphic.curses_deflect_melee")); }

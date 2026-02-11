@@ -1374,6 +1374,6 @@ public class NPC extends Entity implements Serializable {
 
     @Override
     public double getProtectionPrayerEffectiveness() {
-        return 0.0;
+        return 1.0;
     }
 }

@@ -30,13 +30,13 @@ public class PrayerEffectHandler {
     }
 
     private static void handleActualProtectionPrayer(Entity attacker, Entity defender, Hit hit, Prayer protectionPrayer) {
-        double reduction = 1.0 - protectionPrayer.getDamageReduction();
+        double reduction = 1.0 - protectionPrayer.getDamageReduction(); //0.4 reduction = 0.6 left, 40% reduced from hit
 
-        if (attacker instanceof NPC npc) {
-            if (npc.getProtectionPrayerEffectiveness() != 1.0) {
-                reduction *= npc.getProtectionPrayerEffectiveness();
+        if (attacker instanceof NPC npc) {//if attacker is npc, we default it to 100% protection instead
+            if (npc.getProtectionPrayerEffectiveness() != 1.0) {//but if npc protectioneffectiveness isnt 1.0, we override to its scale there, for example
+                reduction = npc.getProtectionPrayerEffectiveness();//corp has set to 0.33, while then reduces hit by 66%, but can hit up to 33% of the hit even on prayer
             } else {
-                reduction = 0.0;
+                reduction = 0.0;//if no protective effectiveness is set, we then have reduction to be 100%
             }
         }
         hit.setDamage((int) (hit.getDamage() * reduction));
