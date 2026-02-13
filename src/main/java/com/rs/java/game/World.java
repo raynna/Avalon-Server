@@ -1303,7 +1303,7 @@ public final class World {
     }
 
 
-    public static void spawnTempGroundObject(final WorldObject object, final int replaceId, long time,
+    public static void spawnTempGroundObject(final WorldObject object, final int replaceId, int ticks,
                                              final boolean removeClip) {
         spawnObject(object);
         WorldTasksManager.schedule(new WorldTask() {
@@ -1312,7 +1312,7 @@ public final class World {
                 removeObject(object);
                 GroundItems.addGroundItem(new Item(replaceId), object, null, false, 60);
             }
-        }, secondsToTicks((int)(time / 1000)));
+        }, ticks);
     }
 
 
