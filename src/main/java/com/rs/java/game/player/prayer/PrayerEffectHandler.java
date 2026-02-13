@@ -126,7 +126,7 @@ public class PrayerEffectHandler {
                 target.playSound(8113);
                 ProjectileManager.sendSimple(Projectile.SOULSPLIT, soulSplit.getProjectile().getId(), target, attacker);
             }
-        }, ticks - 1);
+        }, ticks);
     }
 
     private static boolean isValidForSoulSplitEffect(Player attacker, Entity target) {

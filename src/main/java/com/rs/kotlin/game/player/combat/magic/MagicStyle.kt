@@ -24,7 +24,6 @@ import com.rs.kotlin.game.player.combat.special.getMultiAttackTargets
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 import kotlin.math.ceil
-import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 
@@ -263,7 +262,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         spell: Spell,
         manual: Boolean
     ) {
-        val hit = registerHit(attacker, defender, combatType = CombatType.MAGIC, spellId = spell.id)
+        val hit = hitRoll(CombatType.MAGIC, attacker, defender).spell(spell.id).roll()
         val splash = hit.damage == 0
         val endGraphic = if (!splash) spell.endGraphic else Graphics(-1)
 
@@ -333,11 +332,12 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
         attacker.temporaryAttributes()["CASTED_SPELL"] = spell
 
+
         delayHits(
             PendingHit(
                 hit,
                 defender,
-                if (spell.chargeBoost) 1 else (impactTicks - 1).coerceAtLeast(0)
+                if (spell.chargeBoost) 1 else (impactTicks).coerceAtLeast(0)
             )
         )
 
@@ -386,7 +386,7 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
         spell.attackSound.takeIf { it != -1 }?.let { attacker.playSound(it, 1) }
         for (t in targets) {
-            val hit = registerHit(attacker, t, combatType = CombatType.MAGIC, spellId = spell.id)
+            val hit = hitRoll(CombatType.MAGIC, attacker, t).spell(spell.id).roll()
             val splash = hit.damage == 0
             var endGraphic = if (!splash) spell.endGraphic else Graphics(-1)
             if (hit.damage > 0) {

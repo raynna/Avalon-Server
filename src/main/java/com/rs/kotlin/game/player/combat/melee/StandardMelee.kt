@@ -3,18 +3,17 @@ package com.rs.kotlin.game.player.combat.melee
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.core.thread.WorldThread
 import com.rs.java.game.Animation
-import com.rs.java.game.Entity
-import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
+import com.rs.java.game.Hit.HitLook
 import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
-import com.rs.java.game.player.content.Tint
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
+import com.rs.kotlin.game.player.combat.damage.CombatHitRoll
 import com.rs.kotlin.game.player.combat.effects.AncientGodswordEffect
 import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
@@ -51,9 +50,10 @@ object StandardMelee : MeleeData() {
                 if (Utils.roll(1, 3)) {
                     context.defender.addFreezeDelay(16, false);
                     context.defender.gfx("graphic.entangle", 100)
-                    context.forcedHit(delay = 1)
+                    context.addHit(CombatType.MELEE).delay(1).look(HitLook.REGULAR_DAMAGE)
+                        .roll(CombatHitRoll.GUARANTEED)
                 } else {
-                    context.meleeHit()
+                    context.addHit(CombatType.MELEE).roll()
                 }
                 true
             }
@@ -117,21 +117,18 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.vestas_longsword_special")
                     context.attacker.playSound("sound.dragon_longsword_special", 1)
-                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).baseMaxHit
-                    val roll = context.rollMelee()
-                    var damage = ((0.2 * maxHit).toInt()..(1.2 * maxHit).toInt()).random()
-                    if (context.defender is NPC && context.defender.id == 4474)
-                        damage = (1.2 * maxHit).toInt()
-                    context.hits {
-                        val hit = Hit(context.attacker, damage, Hit.HitLook.MELEE_DAMAGE);
-                        if (hit.checkCritical(damage, maxHit))
-                            hit.setCriticalMark()
-                        if (roll.damage > 0) {
-                            addHit(context.defender, hit)
-                        } else {
-                            addHit(context.defender, Hit(context.attacker, 0, Hit.HitLook.MELEE_DAMAGE));
-                        }
-                    }
+                    context.addHit(CombatType.MELEE)
+                        .accuracy(1.75)
+                        .damageFromMaxHit { maxHit ->
+                            if (context.defender is NPC && context.defender.id == 4474) {
+                                val max = (1.2 * maxHit).toInt()
+                                max..max
+                            } else {
+                                val min = (0.2 * maxHit).toInt()
+                                val max = (1.2 * maxHit).toInt()
+                                min..max
+                            }
+                        }.roll()
                 }
             )
         ),
@@ -159,33 +156,38 @@ object StandardMelee : MeleeData() {
                     context.attacker.gfx("graphic.korasi_special_attack_start")
                     context.attacker.playSound("sound.saradomin_sword_special", 1)
                     context.attacker.playSound("sound.armadyl_godsword_special", 1)
-                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).baseMaxHit
-
                     val isMultiCombat = context.defender.isAtMultiArea
 
-                    val firstHitDamage = if (isMultiCombat) {
-                        (0..((1.5 * maxHit).toInt())).random()
-                    } else if (context.defender is NPC && context.defender.id == 4474) {
-                        (1.5 * maxHit).toInt()
-                    } else {
-                        ((0.5 * maxHit).toInt()..(1.5 * maxHit).toInt()).random()
-                    }
+                    val primaryHit = context.addHit(CombatType.MELEE)
+                        .look(HitLook.MAGIC_DAMAGE)
+                        .damageFromMaxHit { maxHit ->
+                            when {
+                                context.defender is NPC && context.defender.id == 4474 -> {
+                                    val max = (1.5 * maxHit).toInt()
+                                    max..max
+                                }
 
-                    val firstHit = Hit(context.attacker, firstHitDamage, Hit.HitLook.MAGIC_DAMAGE)
-                    if (firstHit.checkCritical(firstHitDamage, maxHit))
-                        firstHit.critical = true
-                    context.hits {
-                        addHit(context.defender, firstHit)
-                        context.defender.delayGfx(Graphics("graphic.korasi_special_attack_end"), 1)
-                        if (isMultiCombat) {
-                            val extraTargets = context.getMultiAttackTargets(maxDistance = 1, maxTargets = 2)
-                            val damages = listOf(firstHitDamage / 2, firstHitDamage / 4)
+                                isMultiCombat -> {
+                                    0..((1.5 * maxHit).toInt())
+                                }
 
-                            for ((index, target) in extraTargets.withIndex()) {
-                                if (index >= damages.size) break
-                                target.gfx("graphic.korasi_special_attack_end")
-                                addHit(target, firstHit.copyWithDamage(damages[index]), delay = 0)
+                                else -> {
+                                    val min = (0.5 * maxHit).toInt()
+                                    val max = (1.5 * maxHit).toInt()
+                                    min..max
+                                }
                             }
+                        }
+                        .roll(CombatHitRoll.GUARANTEED)
+
+                    if (isMultiCombat && primaryHit.damage > 0) {
+                        val targets = context.getMultiAttackTargets(1, 2)
+                        val splits = listOf(primaryHit.damage / 2, primaryHit.damage / 4)
+
+                        for ((i, target) in targets.withIndex()) {
+                            if (i >= splits.size) break
+                            target.gfx("graphic.korasi_special_attack_end")
+                            context.addDerivedHit(primaryHit, target, splits[i])
                         }
                     }
                 }
@@ -218,8 +220,8 @@ object StandardMelee : MeleeData() {
                     context.defender.gfx("graphic.abyssal_whip_special", 100)
                     context.attacker.playSound("sound.whip_special", 1)
                     //TODO GET SOUND
-                    val hit = context.meleeHit()
-                    if (hit[0].damage > 0) {
+                    val hit2 = context.addHit(CombatType.MELEE).accuracy(1.25).roll(CombatHitRoll.NORMAL)
+                    if (hit2.damage > 0) {
                         if (context.defender is Player) {
                             context.attacker.transferRunEnergy(context.defender)
                             context.defender.message("You feel drained!")
@@ -252,8 +254,8 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.dragon_scimitar_special")
                     context.defender.gfx("graphic.dragon_scimitar_special", 100)
                     context.attacker.playSound("sound.dragon_scimitar_special", 1)
-                    val hit = context.meleeHit()
-                    if (hit[0].damage > 0) {
+                    val hit = context.addHit(CombatType.MELEE).accuracy(1.25).roll(CombatHitRoll.NORMAL)
+                    if (hit.damage > 0) {
                         if (context.defender is Player) {
                             context.defender.prayer.closeProtectionPrayers()
                             context.defender.tickManager.addTicks(
@@ -296,8 +298,9 @@ object StandardMelee : MeleeData() {
                     context.attacker.gfx("graphic.dragon_dagger_special", 100)
                     context.attacker.playSound("sound.dragon_dagger_special", 0, 1)
                     context.attacker.playSound("sound.dragon_dagger_special", 15, 1)
-                    context.meleeHit()
-                    context.meleeHit(delay = if (context.defender is NPC) 1 else 0)
+                    context.addHit(CombatType.MELEE).accuracy(1.15).damageMultiplier(1.15).roll(CombatHitRoll.NORMAL)
+                    context.addHit(CombatType.MELEE).accuracy(1.15).damageMultiplier(1.15)
+                        .delay(if (context.defender is NPC) 1 else 0).roll(CombatHitRoll.NORMAL)
                 }
             )
         ),
@@ -351,7 +354,7 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.dragon_mace_special")
                     context.attacker.gfx("graphic.dragon_mace_special", 100)
                     context.attacker.playSound("sound.dragon_mace_special", 1)
-                    context.meleeHit()
+                    context.addHit(CombatType.MELEE).accuracy(1.25).damageMultiplier(1.50).roll(CombatHitRoll.NORMAL)
                 }
             )
         ),
@@ -383,7 +386,7 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.dragon_mace_special")
                     context.attacker.gfx("graphic.dragon_mace_special", 100)
                     context.attacker.playSound("sound.dragon_mace_special", 1)
-                    context.meleeHit()
+                    context.addHit(CombatType.MELEE).accuracy(1.50).damageMultiplier(1.20).roll(CombatHitRoll.NORMAL)
                 }
             )
         ),
@@ -406,7 +409,7 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.granite_maul_special_attack")
                     context.attacker.gfx("graphic.granite_maul_special", 100)
                     context.attacker.playSound("sound.granite_maul_special", 1)
-                    context.meleeHit()
+                    context.addHit(CombatType.MELEE).roll()
                 }
             )
         ),
@@ -424,15 +427,11 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate(Animation("animation.torag_hammer_attack"))
                     context.attacker.playSound("sound.torag_attack", 1)
 
-                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).baseMaxHit
-                    val maxHit1 = (maxHit + 1) / 2
-                    val maxHit2 = (maxHit / 2)
-                    val firstHit = context.rollMelee()
-                    val secondHit = context.rollMelee()
-                    context.hits {
-                        nextHit(baseHit = firstHit, maxHit = maxHit1)
-                        nextHit(baseHit = secondHit, maxHit = maxHit2)
-                    }
+                    val firstHit = hitRoll(CombatType.MELEE, context.attacker, context.defender).roll().maxHit
+                    val maxHit1 = (firstHit + 1) / 2
+                    val maxHit2 = (firstHit / 2)
+                    context.addHit(CombatType.MELEE).maxHit(maxHit1).roll()
+                    context.addHit(CombatType.MELEE).maxHit(maxHit2).roll()
                     true
                 }
             )
@@ -465,16 +464,8 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate(10518)
                     context.attacker.gfx(1853)
-                    context.hits {
-                        val magicHit = magic(
-                            spellId = 39,
-                            delay = context.combat.getHitDelay(),
-                            damageMultiplier = 1.5,
-                            accuracyMultiplier = 1.5
-                        )
-
-                    }
-
+                    context.addHit(CombatType.MAGIC).spell(39).delay(context.combat.getHitDelay()).damageMultiplier(1.5)
+                        .accuracy(1.5)
                 }
             )
         ),
@@ -494,16 +485,8 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate(10518)
                     context.attacker.gfx(1853)
-                    context.hits {
-                        val magicHit = magic(
-                            baseDamage = 39,
-                            delay = context.combat.getHitDelay(),
-                            damageMultiplier = 1.5,
-                            accuracyMultiplier = 1.5
-                        )
-
-                    }
-
+                    context.addHit(CombatType.MAGIC).delay(context.combat.getHitDelay()).spell(39).damageMultiplier(1.5)
+                        .accuracy(1.5).roll()
                 }
             )
         ),
@@ -653,10 +636,12 @@ object StandardMelee : MeleeData() {
             )
         ),
         MeleeWeapon(
-            itemId = Item.getIds("item.bronze_halberd", "item.iron_halberd",
+            itemId = Item.getIds(
+                "item.bronze_halberd", "item.iron_halberd",
                 "item.steel_halberd", "item.black_halberd",
                 "item.mithril_halberd", "item.adamant_halberd",
-                "item.rune_halberd", "item.noxious_halberd"),
+                "item.rune_halberd", "item.noxious_halberd"
+            ),
             name = "Halberd",
             weaponStyle = WeaponStyle.HALBERD,
             attackRange = 1,
@@ -685,9 +670,9 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_halberd_special")
                     context.attacker.playSound("sound.dragon_halberd_special", 1)
-                    context.meleeHit()
+                    context.addHit(CombatType.MELEE).accuracy(1.1).damageMultiplier(1.1).roll()
                     if (context.defender.size > 1)
-                        context.meleeHit()
+                        context.addHit(CombatType.MELEE).accuracy(1.1).damageMultiplier(1.1).roll()
                 }
             )
         ),
@@ -713,7 +698,7 @@ object StandardMelee : MeleeData() {
                     context.attacker.gfx("graphic.barrelchest_anchor_special")
                     context.attacker.playSound("sound.barrelchest_special_sound", 0, 1)
                     context.hits {
-                        val hit = melee(delay = 1)
+                        val hit = context.addHit(CombatType.MELEE).accuracy(2.0).damageMultiplier(1.1).delay(1).roll()
                         val defender = context.defender
                         if (hit.damage > 0) {
                             val drainOrderPlayers = listOf(
@@ -776,13 +761,13 @@ object StandardMelee : MeleeData() {
                     context.attacker.gfx("graphic.saradomin_sword_special_start")
                     context.attacker.playSound("sound.saradomin_sword_special", 1)
                     context.hits {
-                        val meleeHit = melee(delay = 0)
+                        val meleeHit = context.addHit(CombatType.MELEE).damageMultiplier(1.1).roll()
                         context.defender.gfx("graphic.saradomin_sword_special_end")
                         var randomHit =
                             if (context.defender is NPC && context.defender.id == 4474) {
                                 (150)
                             } else if (meleeHit.damage > 0) {
-                                    (50..150).random()
+                                (50..150).random()
                             } else 0
                         if (context.defender is Player) {
                             if (context.defender.prayer.isMageProtecting) {
@@ -819,7 +804,7 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.armadyl_godsword_special")
                     context.attacker.gfx("graphic.armadyl_godsword_special")
-                    context.meleeHit()
+                    context.addHit(CombatType.MELEE).accuracy(2.0).damageMultiplier(1.375).roll()
                 }
             )
         ),
@@ -846,19 +831,17 @@ object StandardMelee : MeleeData() {
                     WorldTasksManager.schedule(1) {
                         context.attacker.animate(1884)
                     }
-                    context.hits {
-                        val hit = melee()
+                    val hit = context.addHit(CombatType.MELEE).accuracy(2.0).damageMultiplier(1.10).roll()
 
-                        if (hit.damage > 0) {
-                            val effect = AncientGodswordEffect(
-                                attacker = context.attacker,
-                                defender = context.defender,
-                                hitDamage = hit.damage,
-                                startTick = WorldThread.WORLD_TICK,
-                                durationTicks = 8
-                            )
-                            context.attacker.addPendingEffect(effect);
-                        }
+                    if (hit.damage > 0) {
+                        val effect = AncientGodswordEffect(
+                            attacker = context.attacker,
+                            defender = context.defender,
+                            hitDamage = hit.damage,
+                            startTick = WorldThread.WORLD_TICK,
+                            durationTicks = 8
+                        )
+                        context.attacker.addPendingEffect(effect);
                     }
                 }
             )
@@ -887,7 +870,7 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.saradomin_godsword_special")
                     context.attacker.gfx("graphic.saradomin_godsword_special")
                     context.hits {
-                        val hit = melee()
+                        val hit = context.addHit(CombatType.MELEE).accuracy(2.0).damageMultiplier(1.10).roll()
 
                         if (hit.damage > 0) {
                             val potentialDmg = hit.damage
@@ -932,41 +915,39 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.bandos_godsword_special")
                     context.attacker.gfx("graphic.bandos_godsword_special")
-                    context.hits {
-                        val hit = melee()
-                        val defender = context.defender
-                        if (hit.damage > 0) {
-                            val drainOrderPlayers = listOf(
-                                Skills.DEFENCE, Skills.STRENGTH,
-                                Skills.ATTACK, Skills.MAGIC, Skills.RANGE
-                            )
-                            val drainOrderNpcs = listOf(
-                                "defence", "strength", "prayer",
-                                "attack", "magic", "ranged"
-                            )
+                    val hit = context.addHit(CombatType.MELEE).accuracy(2.0).damageMultiplier(1.21).roll()
+                    val defender = context.defender
+                    if (hit.damage > 0) {
+                        val drainOrderPlayers = listOf(
+                            Skills.DEFENCE, Skills.STRENGTH,
+                            Skills.ATTACK, Skills.MAGIC, Skills.RANGE
+                        )
+                        val drainOrderNpcs = listOf(
+                            "defence", "strength", "prayer",
+                            "attack", "magic", "ranged"
+                        )
 
-                            var remainingDrain = hit.damage / 10
+                        var remainingDrain = hit.damage / 10
 
-                            if (defender is Player) {
-                                for (skill in drainOrderPlayers) {
-                                    if (remainingDrain <= 0) break
-                                    val current = defender.skills.getLevel(skill)
-                                    if (current <= 0) continue
+                        if (defender is Player) {
+                            for (skill in drainOrderPlayers) {
+                                if (remainingDrain <= 0) break
+                                val current = defender.skills.getLevel(skill)
+                                if (current <= 0) continue
 
-                                    val drainAmount = minOf(current, remainingDrain)
-                                    defender.skills.drainLevel(skill, drainAmount)
-                                    remainingDrain -= drainAmount
-                                }
-                            } else if (defender is NPC) {
-                                for (skill in drainOrderNpcs) {
-                                    if (remainingDrain <= 0) break
-                                    val current = defender.combatData.getCurrentStat(skill)
-                                    if (current <= 0) continue
+                                val drainAmount = minOf(current, remainingDrain)
+                                defender.skills.drainLevel(skill, drainAmount)
+                                remainingDrain -= drainAmount
+                            }
+                        } else if (defender is NPC) {
+                            for (skill in drainOrderNpcs) {
+                                if (remainingDrain <= 0) break
+                                val current = defender.combatData.getCurrentStat(skill)
+                                if (current <= 0) continue
 
-                                    val drainAmount = minOf(current, remainingDrain)
-                                    defender.combatData.drain(skill, drainAmount)
-                                    remainingDrain -= drainAmount
-                                }
+                                val drainAmount = minOf(current, remainingDrain)
+                                defender.combatData.drain(skill, drainAmount)
+                                remainingDrain -= drainAmount
                             }
                         }
                     }
@@ -997,7 +978,7 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.zamorak_godsword_special")
                     context.attacker.gfx("graphic.zamorak_godsword_start")
                     context.hits {
-                        val hit = melee()
+                        val hit = context.addHit(CombatType.MELEE).damageMultiplier(1.1).accuracy(2.0).roll()
                         if (hit.damage > 0) {
                             context.defender.gfx("graphic.zamorak_godsword_target")
                             context.defender.tickManager.addTicks(TickManager.TickKeys.FREEZE_IMMUNE_TICKS, 37)
@@ -1088,21 +1069,38 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
-                "item.bronze_spear", "item.iron_spear",
-                "item.steel_spear", "item.black_spear",
-                "item.mithril_spear", "item.adamant_spear",
-                "item.rune_spear", "item.corrupt_dragon_spear",
-                "item.novite_spear", "item.novite_spear_b",
-                "item.bathus_spear", "item.bathus_spear_b",
-                "item.marmaros_spear", "item.marmaros_spear_b",
-                "item.kratonite_spear", "item.kratonite_spear_b",
-                "item.fractite_spear", "item.fractite_spear_b",
-                "item.zephyrium_spear", "item.zephyrium_spear_b",
-                "item.argonite_spear", "item.argonite_spear_b",
-                "item.katagon_spear", "item.katagon_spear_b",
-                "item.gorgonite_spear", "item.gorgonite_spear_b",
-                "item.promethium_spear", "item.promethium_spear_b",
-                "item.primal_spear", "item.primal_spear_b", "item.corrupt_vesta_s_spear", "item.corrupt_vesta_s_spear_deg"
+                "item.bronze_spear",
+                "item.iron_spear",
+                "item.steel_spear",
+                "item.black_spear",
+                "item.mithril_spear",
+                "item.adamant_spear",
+                "item.rune_spear",
+                "item.corrupt_dragon_spear",
+                "item.novite_spear",
+                "item.novite_spear_b",
+                "item.bathus_spear",
+                "item.bathus_spear_b",
+                "item.marmaros_spear",
+                "item.marmaros_spear_b",
+                "item.kratonite_spear",
+                "item.kratonite_spear_b",
+                "item.fractite_spear",
+                "item.fractite_spear_b",
+                "item.zephyrium_spear",
+                "item.zephyrium_spear_b",
+                "item.argonite_spear",
+                "item.argonite_spear_b",
+                "item.katagon_spear",
+                "item.katagon_spear_b",
+                "item.gorgonite_spear",
+                "item.gorgonite_spear_b",
+                "item.promethium_spear",
+                "item.promethium_spear_b",
+                "item.primal_spear",
+                "item.primal_spear_b",
+                "item.corrupt_vesta_s_spear",
+                "item.corrupt_vesta_s_spear_deg"
             ),
             name = "Spear",
             weaponStyle = WeaponStyle.SPEAR,
@@ -1355,26 +1353,24 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.darklight_special")
                     context.attacker.gfx("graphic.darklight_special")
                     context.attacker.playSound("sound.sword_slash", 1)
-                    context.hits {
-                        val hit = melee()
-                        if (hit.damage > 0) {
-                            val defender = context.defender
-                            if (defender is NPC) {
-                                val isDemon = defender.name.contains("demon", ignoreCase = true)
-                                val drainPercent = if (isDemon) 0.10 else 0.05
+                    val hit = context.addHit(CombatType.MELEE).accuracy(2.0).roll()
+                    if (hit.damage > 0) {
+                        val defender = context.defender
+                        if (defender is NPC) {
+                            val isDemon = defender.name.contains("demon", ignoreCase = true)
+                            val drainPercent = if (isDemon) 0.10 else 0.05
 
-                                listOf("attack", "strength", "defence").forEach { skill ->
-                                    val baseLevel = defender.combatData.getBaseStat(skill)
-                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
-                                    defender.combatData.drain(skill, drainAmount)
-                                }
-                            } else if (defender is Player) {
-                                val drainPercent = 0.05
-                                listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
-                                    val baseLevel = defender.skills.getLevelForXp(skill)
-                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
-                                    defender.skills.drainLevel(skill, drainAmount)
-                                }
+                            listOf("attack", "strength", "defence").forEach { skill ->
+                                val baseLevel = defender.combatData.getBaseStat(skill)
+                                val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                defender.combatData.drain(skill, drainAmount)
+                            }
+                        } else if (defender is Player) {
+                            val drainPercent = 0.05
+                            listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
+                                val baseLevel = defender.skills.getLevelForXp(skill)
+                                val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                defender.skills.drainLevel(skill, drainAmount)
                             }
                         }
                     }
@@ -1403,26 +1399,24 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.darklight_special")
                     context.attacker.gfx("graphic.darklight_special")
                     context.attacker.playSound("sound.sword_slash", 1)
-                    context.hits {
-                        val hit = melee()
-                        if (hit.damage > 0) {
-                            val defender = context.defender
-                            if (defender is NPC) {
-                                val isDemon = defender.name.contains("demon", ignoreCase = true)
-                                val drainPercent = if (isDemon) 0.15 else 0.05
+                    val hit = context.addHit(CombatType.MELEE).accuracy(2.0).roll()
+                    if (hit.damage > 0) {
+                        val defender = context.defender
+                        if (defender is NPC) {
+                            val isDemon = defender.name.contains("demon", ignoreCase = true)
+                            val drainPercent = if (isDemon) 0.15 else 0.05
 
-                                listOf("attack", "strength", "defence").forEach { skill ->
-                                    val baseLevel = defender.combatData.getBaseStat(skill)
-                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
-                                    defender.combatData.drain(skill, drainAmount)
-                                }
-                            } else if (defender is Player) {
-                                val drainPercent = 0.05
-                                listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
-                                    val baseLevel = defender.skills.getLevelForXp(skill)
-                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
-                                    defender.skills.drainLevel(skill, drainAmount)
-                                }
+                            listOf("attack", "strength", "defence").forEach { skill ->
+                                val baseLevel = defender.combatData.getBaseStat(skill)
+                                val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                defender.combatData.drain(skill, drainAmount)
+                            }
+                        } else if (defender is Player) {
+                            val drainPercent = 0.05
+                            listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
+                                val baseLevel = defender.skills.getLevelForXp(skill)
+                                val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                defender.skills.drainLevel(skill, drainAmount)
                             }
                         }
                     }
@@ -1450,36 +1444,34 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.statius_warhammer_special")
                     context.attacker.gfx("graphic.statius_warhammer_special")
                     context.attacker.playSound("sound.hammer", 1)
-                    val maxHit = CombatCalculations.calculateMeleeMaxHit(context.attacker, context.defender).baseMaxHit
-                    val roll = context.rollMelee();
-                    var damage = ((0.25 * maxHit).toInt()..(1.25 * maxHit).toInt()).random()
-                    if (context.defender is NPC && context.defender.id == 4474)
-                        damage = (1.25 * maxHit).toInt()
-                    context.hits {
-                        val hit = Hit(context.attacker, damage, Hit.HitLook.MELEE_DAMAGE)
-                        if (hit.checkCritical(damage, maxHit))
-                            hit.setCriticalMark()
-                        if (roll.damage > 0) {
-                            val defender = context.defender
-                            addHit(context.defender, hit)
-                            if (defender is NPC) {
-                                val drainPercent = 0.30
-
-                                listOf("defence").forEach { skill ->
-                                    val baseLevel = defender.combatData.getBaseStat(skill)
-                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
-                                    defender.combatData.drain(skill, drainAmount)
-                                }
-                            } else if (defender is Player) {
-                                val drainPercent = 0.30
-                                listOf(Skills.DEFENCE).forEach { skill ->
-                                    val baseLevel = defender.skills.getLevelForXp(skill)
-                                    val drainAmount = (baseLevel * drainPercent).toInt() + 1
-                                    defender.skills.drainLevel(skill, drainAmount)
-                                }
+                    val hit = context.addHit(CombatType.MELEE)
+                        .damageFromMaxHit { maxHit ->
+                            if (context.defender is NPC && context.defender.id == 4474) {
+                                val max = (1.25 * maxHit).toInt()
+                                max..max
+                            } else {
+                                val min = (0.25 * maxHit).toInt()
+                                val max = (1.25 * maxHit).toInt()
+                                min..max
                             }
-                        } else {
-                            addHit(context.defender, Hit(context.attacker, 0, Hit.HitLook.MELEE_DAMAGE));
+                        }.roll()
+                    if (hit.damage > 0) {
+                        val defender = context.defender
+                        if (defender is NPC) {
+                            val drainPercent = 0.30
+
+                            listOf("defence").forEach { skill ->
+                                val baseLevel = defender.combatData.getBaseStat(skill)
+                                val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                defender.combatData.drain(skill, drainAmount)
+                            }
+                        } else if (defender is Player) {
+                            val drainPercent = 0.30
+                            listOf(Skills.DEFENCE).forEach { skill ->
+                                val baseLevel = defender.skills.getLevelForXp(skill)
+                                val drainAmount = (baseLevel * drainPercent).toInt() + 1
+                                defender.skills.drainLevel(skill, drainAmount)
+                            }
                         }
                     }
                 }
@@ -1546,15 +1538,17 @@ object StandardMelee : MeleeData() {
                     context.attacker.animate("animation.dragon_longsword_special")
                     context.attacker.gfx("graphic.dragon_longsword_special", 100)
                     context.attacker.playSound("sound.dragon_longsword_special", 1)
-                    context.meleeHit()
+                    context.addHit(CombatType.MELEE).accuracy(1.25).damageMultiplier(1.25).roll()
                 }
             )
         ),
 
         MeleeWeapon(
-            itemId = Item.getIds("item.viggora_s_chainmace", "item.viggora_s_chainmace_u",
+            itemId = Item.getIds(
+                "item.viggora_s_chainmace", "item.viggora_s_chainmace_u",
                 "item.verac_s_flail", "item.verac_s_flail_100", "item.verac_s_flail_75",
-                "item.verac_s_flail_50", "item.verac_s_flail_25", "item.verac_s_flail_0"),
+                "item.verac_s_flail_50", "item.verac_s_flail_25", "item.verac_s_flail_0"
+            ),
             name = "Flail",
             weaponStyle = WeaponStyle.MACE,
             blockAnimationId = Animation.getId("animation.flail_block"),
@@ -1665,11 +1659,21 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     val attacker = context.attacker
                     val defender = context.defender
-                    attacker.animate(CombatUtils.getAnimation(context.weaponId, context.attackStyle, attacker.combatDefinitions.attackStyle))
+                    attacker.animate(
+                        CombatUtils.getAnimation(
+                            context.weaponId,
+                            context.attackStyle,
+                            attacker.combatDefinitions.attackStyle
+                        )
+                    )
                     val targets = context.getScytheTargets()
-                    if (defender.size == 1 && (defender is NPC && !defender.name.contains("dummy", ignoreCase = true))) {
+                    if (defender.size == 1 && (defender is NPC && !defender.name.contains(
+                            "dummy",
+                            ignoreCase = true
+                        ))
+                    ) {
                         for (victim in targets) {
-                            context.meleeHit(target = victim)
+                            context.addHit(CombatType.MELEE, victim).roll()
                         }
                     } else {
                         context.applyScytheHits(defender)
@@ -1724,10 +1728,10 @@ object StandardMelee : MeleeData() {
                 execute = { context ->
                     context.attacker.animate("animation.dragon_2h_special")
                     context.attacker.gfx("graphic.dragon_2h_special")
-                    context.meleeHit()
+                    context.addHit(CombatType.MELEE).accuracy(1.15).damageMultiplier(1.1).roll()
                     val targets = context.getMultiAttackTargets(1, 8)
                     for (target in targets) {
-                        context.meleeHit(target = target, delay = 1)
+                        context.addHit(CombatType.MELEE, target).delay(1).accuracy(1.15).damageMultiplier(1.1).roll()
                     }
                 }
             ),

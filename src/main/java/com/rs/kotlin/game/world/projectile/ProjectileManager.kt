@@ -8,6 +8,7 @@ import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.Rscm
+import com.rs.kotlin.game.player.combat.CombatUtils
 import kotlin.math.max
 
 object ProjectileManager {
@@ -47,8 +48,19 @@ object ProjectileManager {
     }
 
     @JvmStatic
-    fun sendSimple(projectile: Projectile, gfxId: Int, attacker: Entity, defender: Entity): Int {
-        return send(projectile, gfxId, attacker, defender)
+    fun sendSimple(
+        projectile: Projectile,
+        gfxId: Int,
+        attacker: Entity,
+        defender: Entity
+    ): Int {
+        return send(
+            projectile = projectile,
+            gfxId = gfxId,
+            attacker = attacker,
+            defender = defender,
+            blockAnimation = false
+        )
     }
 
     @JvmStatic
@@ -156,6 +168,7 @@ object ProjectileManager {
         defender: Entity,
         heightOffset: Int = 0,
         hitGraphic: Graphics? = null,
+        blockAnimation: Boolean = true,
         speedAdjustment: Int = 0,
         onLanded: (() -> Unit)? = null
     ): Int {
@@ -166,6 +179,7 @@ object ProjectileManager {
             defender = defender,
             startHeightOffset = heightOffset,
             hitGraphic = hitGraphic,
+            blockAnimation = blockAnimation,
             speedAdjustment = speedAdjustment,
             onLanded = onLanded
         )
@@ -247,6 +261,7 @@ object ProjectileManager {
         startTimeOffset: Int = 0,
         hitGraphic: Graphics? = null,
         hitSound: Int = -1,
+        blockAnimation: Boolean = true,
         speedAdjustment: Int = 0,
         displacement: Int = 0,
         onLanded: (() -> Unit)? = null
@@ -265,7 +280,7 @@ object ProjectileManager {
 
         val endCycle = type.endTime(distance)
         val tickScale = if (attacker is NPC) 0 else 15
-        val impactTicks = (endCycle + tickScale) / 30
+        val impactTicks = (endCycle) / 30
 
         val startTile = if (projectile == Projectile.ICE_BARRAGE) {
             defender.worldTile
@@ -284,6 +299,14 @@ object ProjectileManager {
             endTime = endCycle
         )
         val resolveDefender = resolveEntity(defender)
+        val def = resolveDefender()
+        if (blockAnimation) {
+            if (def != null && def is Player) {
+                val anim = CombatUtils.getBlockAnimation(def)
+                def.animateWithDelay(anim, endCycle)
+            }
+        }
+
         if (hitGraphic != null) {
             val def = resolveDefender()
             hitGraphic.let {
@@ -330,7 +353,10 @@ object ProjectileManager {
         )
 
         for (player in World.getPlayers()) {
-            if (player == null || !player.hasStarted() || player.hasFinished() || (attacker != null && player.isOutOfRegion(attacker))) continue
+            if (player == null || !player.hasStarted() || player.hasFinished() || (attacker != null && player.isOutOfRegion(
+                    attacker
+                ))
+            ) continue
             player.queueProjectile(queued)
         }
 
@@ -369,6 +395,7 @@ object ProjectileManager {
                 val name = defender.username
                 { World.getPlayerByDisplayName(name) }
             }
+
             else -> {
                 val idx = defender.index
                 val plane = defender.plane

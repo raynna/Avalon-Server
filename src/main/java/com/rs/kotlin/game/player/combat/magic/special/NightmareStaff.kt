@@ -4,10 +4,11 @@ import com.rs.java.game.Graphics
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
+import com.rs.kotlin.game.player.combat.CombatType
 import com.rs.kotlin.game.player.combat.magic.WeaponSpellRegistry
 import com.rs.kotlin.game.player.combat.special.CombatContext
+import com.rs.kotlin.game.player.combat.special.addHit
 import com.rs.kotlin.game.player.combat.special.hits
-import com.rs.kotlin.game.player.combat.special.rollMagic
 import kotlin.math.floor
 import kotlin.math.min
 
@@ -26,20 +27,27 @@ object NightmareStaff : WeaponSpellRegistry.Provider {
     fun special(context: CombatContext) {
         val attacker = context.attacker
         val defender = context.defender
+
         attacker.animate(15448)
-        val maxHit = calculateImmolateMaxHit(attacker) * 10
-        val hit = context.rollMagic(baseDamage = maxHit).apply {
-            max(820)
-        }
+
+        val base = calculateImmolateMaxHit(attacker) * 10
+
+        val hit = context
+            .addHit(CombatType.MAGIC)
+            .baseDamage(base)
+            .maxHit(820)
+            .roll()
+
         context.hits {
-            if (hit.landed) {
-                hit.graphic = Graphics(78)
+            hit.graphic = if (hit.damage > 0) {
+                Graphics(78)
             } else {
-                hit.graphic = Graphics(85)
+                Graphics(85)
             }
             addHit(defender, hit, hit.look, context.combat.getHitDelay())
         }
     }
+
 
     /**
      * Max hit formula for volatile staff special (Immolate).

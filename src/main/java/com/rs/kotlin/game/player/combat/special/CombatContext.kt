@@ -8,7 +8,12 @@ import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
+import com.rs.kotlin.game.player.combat.damage.CombatHitRoll
+import com.rs.kotlin.game.player.combat.damage.HitBuilder
+import com.rs.kotlin.game.player.combat.damage.HitRequest
+import com.rs.kotlin.game.player.combat.damage.HitRoller
 import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.damage.ProcHitBuilder
 import com.rs.kotlin.game.player.combat.range.RangedAmmo
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
@@ -27,219 +32,83 @@ data class CombatContext(
     val guaranteedBoltEffect: Boolean = false
 )
 
-private fun CombatContext.resolveMultipliers(
-    accuracyMultiplier: Double,
-    damageMultiplier: Double
-): Pair<Double, Double> {
-    val accMul = if (usingSpecial && weapon.special != null) {
-        weapon.special!!.accuracyMultiplier
-    } else accuracyMultiplier
-
-    val dmgMul = if (usingSpecial && weapon.special != null) {
-        weapon.special!!.damageMultiplier
-    } else damageMultiplier
-
-    return accMul to dmgMul
+fun CombatContext.addHit(type: CombatType, target: Entity = defender): HitBuilder {
+    return HitBuilder(this, type, target)
 }
 
-fun CombatContext.rollHit(
-    type: CombatType,
-    accuracyMultiplier: Double = 1.0,
-    damageMultiplier: Double = 1.0,
-    hitLook: Hit.HitLook? = null,
-    baseDamage: Int = -1,
-    spellId: Int = -1,
-    target: Entity = defender
-): Hit {
-    val (accMul, dmgMul) = resolveMultipliers(accuracyMultiplier, damageMultiplier)
-    return registerHit(
-        combatType = type,
-        accuracyMultiplier = accMul,
-        damageMultiplier = dmgMul,
-        hitLook = hitLook,
-        baseDamage = baseDamage,
-        spellId = spellId,
-        target = target
-    )
+fun hitRoll(type: CombatType, attacker: Player, target: Entity): HitRoller {
+    return HitRoller(attacker, target, type)
+}
+
+fun CombatContext.procHit(target: Entity = defender): ProcHitBuilder {
+    return ProcHitBuilder(this, target)
+}
+
+fun CombatContext.procHit(attacker: Player, target: Entity = defender): ProcHitBuilder {
+    return ProcHitBuilder(this, target)
 }
 
 fun CombatContext.multiHit(
-    type: CombatType,
-    hits: Int = 1,
-    delay: Int = 0,
-    accuracyMultiplier: Double = 1.0,
-    damageMultiplier: Double = 1.0,
-    hitLook: Hit.HitLook? = null,
-    spellId: Int = -1,
-    target: Entity = defender
-): List<Hit> {
-    val (accMul, dmgMul) = resolveMultipliers(accuracyMultiplier, damageMultiplier)
-    val pending = (0 until hits).map {
-        val hit = registerHit(
-            combatType = type,
-            accuracyMultiplier = accMul,
-            damageMultiplier = dmgMul,
-            hitLook = hitLook,
-            spellId = spellId,
-            target = target
-        )
-        PendingHit(hit, target, delay)
+    targets: List<Entity>,
+    build: (target: Entity) -> HitBuilder
+) {
+    for (target in targets) {
+        build(target).roll(CombatHitRoll.NORMAL)
     }
-    if (usingSpecial) {
-        target.animate(CombatUtils.getBlockAnimation(target as Player))
-    }
-    combat.delayHits(*pending.toTypedArray())
-    return pending.map { it.hit }
 }
 
-
-fun CombatContext.rollMelee(acc: Double = 1.0, dmg: Double = 1.0, look: Hit.HitLook? = null) =
-    rollHit(CombatType.MELEE, acc, dmg, look)
-
-fun CombatContext.rollRanged(acc: Double = 1.0, dmg: Double = 1.0, look: Hit.HitLook? = null) =
-    rollHit(CombatType.RANGED, acc, dmg, look)
-
-fun CombatContext.rollMagic(
-    acc: Double = 1.0,
-    dmg: Double = 1.0,
-    look: Hit.HitLook? = null,
-    baseDamage: Int = -1,
-    spellId: Int = -1
-) = rollHit(CombatType.MAGIC, acc, dmg, look, baseDamage, spellId)
-
-fun CombatContext.createHit(
+fun CombatContext.addDerivedHit(
+    source: Hit,
+    target: Entity,
     damage: Int,
-    combatType: CombatType = CombatType.MELEE,
-    hitLook: Hit.HitLook? = null,
-    target: Entity = defender
-): Hit = combat.addHit(
-    damage = damage,
-    attacker = attacker,
-    defender = target,
-    combatType = combatType,
-    hitLook = hitLook
-)
+    delay: Int = 0
+): Hit {
+    val derived = source.copyWithDamage(damage)
+    combat.delayHits(PendingHit(derived, target, delay))
+    return derived
+}
 
-fun CombatContext.registerHit(
-    combatType: CombatType = CombatType.MELEE,
-    accuracyMultiplier: Double = 1.0,
-    damageMultiplier: Double = 1.0,
-    hitLook: Hit.HitLook? = null,
-    baseDamage: Int = -1,
-    spellId: Int = -1,
-    target: Entity = defender
-): Hit = combat.registerHit(
-    attacker = attacker,
-    defender = target,
-    combatType = combatType,
-    attackStyle = attackStyle,
-    weapon = weapon,
-    baseDamage = baseDamage,
-    spellId = spellId,
-    accuracyMultiplier = accuracyMultiplier,
-    damageMultiplier = damageMultiplier,
-    hitLook = hitLook
-)
 
-fun CombatContext.guaranteedHit(
-    combatType: CombatType = CombatType.MELEE,
-    damageMultiplier: Double = 1.0,
-    hitLook: Hit.HitLook? = null,
-    spellId: Int = -1,
-    target: Entity = defender
-): Hit = combat.registerDamage(
-    attacker = attacker,
-    defender = target,
-    combatType = combatType,
-    attackStyle = attackStyle,
-    weapon = weapon,
-    spellId = spellId,
-    damageMultiplier = damageMultiplier,
-    hitLook = hitLook
-)
 
-fun CombatContext.repeatHits(
-    count: Int, combatType: CombatType = CombatType.MELEE, delays: List<Int> = List(count) { 0 }
+fun CombatContext.applyBleed(
+    baseHit: Hit,
+    bleedPercent: Double = 0.75,
+    maxTickDamage: Int = 50,
+    initialDelay: Int = 1,
+    tickInterval: Int = 1
 ) {
-    val special = weapon.special!!
-    val pendingHits = (0 until count).map { i ->
-        PendingHit(
-            registerHit(
-                combatType = combatType,
-                accuracyMultiplier = special.accuracyMultiplier,
-                damageMultiplier = special.damageMultiplier
-            ), defender, delays[i]
+    if (baseHit.damage <= 0) return
+
+    var remaining = (baseHit.damage * bleedPercent).toInt()
+    var delay = initialDelay
+
+    while (remaining > 0) {
+        val tickDamage = minOf(maxTickDamage, remaining)
+        remaining -= tickDamage
+
+        combat.delayHits(
+            PendingHit(
+                Hit(
+                    attacker,
+                    tickDamage,
+                    Hit.HitLook.REGULAR_DAMAGE // or BLEED_DAMAGE
+                ),
+                defender,
+                delay
+            )
         )
+
+        delay += tickInterval
     }
-    combat.delayHits(*pendingHits.toTypedArray())
 }
-
-fun CombatContext.repeatHits(
-    combatType: CombatType = CombatType.MELEE,
-    delays: List<Int>,
-    damageMultipliers: List<Double> = List(delays.size) { weapon.special!!.damageMultiplier },
-    accuracyMultipliers: List<Double> = List(delays.size) { weapon.special!!.accuracyMultiplier }
-) {
-    require(delays.size == damageMultipliers.size && delays.size == accuracyMultipliers.size) {
-        "All lists must be the same size"
-    }
-    val pendingHits = delays.indices.map { i ->
-        PendingHit(
-            registerHit(
-                combatType = combatType,
-                accuracyMultiplier = accuracyMultipliers[i],
-                damageMultiplier = damageMultipliers[i]
-            ), defender, delays[i]
-        )
-    }
-    combat.delayHits(*pendingHits.toTypedArray())
-}
-
-fun CombatContext.forcedHit(
-    damageMultiplier: Double = 1.0,
-    combatType: CombatType = CombatType.MELEE,
-    hitLook: Hit.HitLook = Hit.HitLook.REGULAR_DAMAGE,
-    baseDamage: Int? = 0,
-    delay: Int = 0,
-    hits: Int = 1
-): List<Hit> {
-
-    val pendingHits = (0 until hits).map {
-        val hit = when (combatType) {
-            CombatType.MELEE -> CombatCalculations.calculateMeleeMaxHit(attacker, defender, damageMultiplier)
-            CombatType.RANGED -> CombatCalculations.calculateRangedMaxHit(attacker, defender, damageMultiplier)
-            CombatType.MAGIC -> {
-                requireNotNull(baseDamage) { "Spell required for magic attack" }
-                CombatCalculations.calculateMagicMaxHit(attacker, defender, baseDamage)
-            }
-        }
-        hit.look = hitLook
-        if (hit.look == Hit.HitLook.REGULAR_DAMAGE && hit.isCriticalHit) {
-            hit.critical = false;
-        }
-        PendingHit(hit, defender, delay)
-    }
-
-    combat.delayHits(*pendingHits.toTypedArray())
-    return pendingHits.map { it.hit }
-}
-
-fun CombatContext.meleeHit(target: Entity = defender, hits: Int = 1, delay: Int = 0, acc: Double = 1.0, dmg: Double = 1.0, look: Hit.HitLook? = null) =
-    multiHit(CombatType.MELEE, hits, delay, acc, dmg, look, target = target)
-
-fun CombatContext.rangedHit(target: Entity = defender, hits: Int = 1, delay: Int = 0, acc: Double = 1.0, dmg: Double = 1.0, look: Hit.HitLook? = null) =
-    multiHit(CombatType.RANGED, hits, delay, acc, dmg, look, target = target)
-
-fun CombatContext.magicHit(target: Entity = defender, hits: Int = 1, delay: Int = 0, acc: Double = 1.0, dmg: Double = 1.0, look: Hit.HitLook? = null, spellId: Int = -1) =
-    multiHit(CombatType.MAGIC, hits, delay, acc, dmg, look, spellId, target = target)
 
 fun CombatContext.getDragonClawsHits(swings: Int = 4): List<Hit> {
-    val hits = MutableList(swings) { rollMelee() }//roll for accuracy & damage
+    val hits = MutableList(swings) { hitRoll(CombatType.MELEE, attacker, defender).roll() }//roll for accuracy & damage
     val firstHitIndex = hits.indexOfFirst { it.damage > 0 }
     hits.forEach { it.critical = false }
-    val hit = CombatCalculations.calculateMeleeMaxHit(attacker, defender)
-    val maxHit = hit.maxHit
-    val baseMax = hit.baseMaxHit
+    val maxValues = CombatCalculations.getMeleeMaxHit(attacker, defender)
+    val maxHit = maxValues.max
+    val baseMax = maxValues.base
     if (firstHitIndex == -1) {//all misses
         if (Math.random() < 2.0 / 3.0) {
             val patterns = listOf(
@@ -295,7 +164,7 @@ fun CombatContext.applyScytheHits(victim: Entity) {
     val scytheHits = mutableListOf<Hit>()
 
     hits {
-        var hit = rollMelee()
+        var hit = addHit(CombatType.MELEE).roll()
         hit = nextHit(baseHit = hit)
         scytheHits += hit
 
@@ -313,8 +182,8 @@ fun CombatContext.applyScytheHits(victim: Entity) {
     if (scytheHits.isNotEmpty()) {
         val firstNonZero = scytheHits.firstOrNull { it.damage > 0 }
         if (firstNonZero != null) {
-            val maxCheck = CombatCalculations.calculateMeleeMaxHit(attacker, victim)
-            if (firstNonZero.checkCritical(firstNonZero.damage, maxCheck.baseMaxHit)) {
+            val maxCheck = CombatCalculations.getMeleeMaxHit(attacker, victim)
+            if (firstNonZero.checkCritical(firstNonZero.damage, maxCheck.base)) {
                 for (i in scytheHits.indexOf(firstNonZero) until scytheHits.size) {
                     scytheHits[i].critical = true
                 }
@@ -393,12 +262,7 @@ fun fireChain(
         DamageScaleMode.PER_BOUNCE ->
             Math.pow(settings.damageMultiplier, bounceIndex.toDouble())
     }
-
-    val hit = context.registerHit(
-        combatType = calcType,
-        target = target,
-        damageMultiplier = damageMultiplier
-    )
+    val hit = hitRoll(calcType, context.attacker, target).damageMultiplier(damageMultiplier).roll()
 
     hit.look = when (displayType) {
         CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
@@ -522,9 +386,6 @@ fun fireChain(
     )
 }
 
-
-
-
 fun CombatContext.findChainTargets(
     source: Entity,
     rootTarget: Entity,
@@ -604,8 +465,6 @@ fun CombatContext.findChainTargets(
         }
     }
 }
-
-
 
 fun canChainReach(source: Entity, target: Entity, maxDistance: Int): Boolean {
     if (!source.clipedProjectile(target, false))
@@ -800,30 +659,10 @@ fun CombatContext.getMultiAttackTargets(
 }
 
 
-
-
 class SpecialHitBuilder(private val context: CombatContext) {
     private val hits = mutableListOf<PendingHit>()
     private val special = context.weapon.special
     private val effect = context.weapon.effect
-
-
-    fun addHit(
-        defender: Entity = context.defender,
-        damage: Int,
-        look: Hit.HitLook? = null,
-        type: CombatType = CombatType.MELEE,
-        delay: Int = 0
-    ): Hit {
-        val resolvedHitLook = look ?: when (type) {
-            CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
-            CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
-            CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
-        }
-        val hit = Hit(context.attacker, damage, resolvedHitLook)
-        hits += PendingHit(hit, defender, delay)
-        return hit
-    }
 
     fun addHit(
         defender: Entity = context.defender,
@@ -837,87 +676,10 @@ class SpecialHitBuilder(private val context: CombatContext) {
         return hit
     }
 
-    fun createHit(
-        type: CombatType = CombatType.MELEE,
-        damageMultiplier: Double = 1.0,
-        accuracyMultiplier: Double = 1.0,
-        delay: Int = 0,
-        baseDamage: Int = -1,
-        spellId: Int = -1
-    ): Hit {
-        val accMultiplier = special?.takeIf { context.usingSpecial && it.accuracyMultiplier > 1.0 }?.accuracyMultiplier
-            ?: accuracyMultiplier
-
-        val dmgMultiplier = special?.takeIf { context.usingSpecial && it.damageMultiplier > 1.0 }?.damageMultiplier
-            ?: damageMultiplier
-
-        val h = context.registerHit(
-            combatType = type, baseDamage = baseDamage, spellId = spellId, accuracyMultiplier = accMultiplier, damageMultiplier = dmgMultiplier
-        )
-        hits += PendingHit(h, context.defender, delay)
-        return h
-    }
-
-    fun melee(
-        damageMultiplier: Double = special?.damageMultiplier ?: 1.0,
-        accuracyMultiplier: Double = special?.accuracyMultiplier ?: 1.0,
-        delay: Int = 0
-    ) = createHit(CombatType.MELEE, damageMultiplier, accuracyMultiplier, delay)
-
-    fun ranged(
-        damageMultiplier: Double = 1.0,
-        accuracyMultiplier: Double = 1.0,
-        delay: Int = 0
-    ) = createHit(CombatType.RANGED, damageMultiplier, accuracyMultiplier, delay)
-
-    fun magic(
-        damageMultiplier: Double = 1.0,
-        accuracyMultiplier: Double = 1.0,
-        delay: Int = 0,
-        spellId: Int = -1,
-        baseDamage: Int = -1
-    ) = createHit(CombatType.MAGIC, spellId = spellId, baseDamage = baseDamage, damageMultiplier = damageMultiplier, accuracyMultiplier =  accuracyMultiplier, delay = delay)
-
-
-
-    fun CombatContext.applyBleed(
-        baseHit: Hit,
-        bleedPercent: Double = 0.75,
-        maxTickDamage: Int = 50,
-        initialDelay: Int = 1,
-        tickInterval: Int = 1
-    ) {
-        if (baseHit.damage <= 0) return
-
-        var remainingBleed = (baseHit.damage * bleedPercent).toInt()
-        var delay = initialDelay
-
-        while (remainingBleed > 0) {
-            val tickDamage = minOf(maxTickDamage, remainingBleed)
-            remainingBleed -= tickDamage
-
-            this.hits {
-                nextHit(Hit(baseHit.source, tickDamage, baseHit.look), delay = delay + tickInterval)
-            }
-            delay += tickInterval
-        }
-    }
-
-
     fun nextHit(
         baseHit: Hit, scale: Double = 1.0, delay: Int = 0
     ): Hit {
         val newHit = Hit(baseHit.source, (baseHit.damage * scale).toInt(), baseHit.look)
-        hits += PendingHit(newHit, context.defender, delay)
-        return newHit
-    }
-
-    fun nextHit(
-        baseHit: Hit, maxHit: Int, delay: Int = 0
-    ): Hit {
-        val newHit = baseHit.copyWithDamage(Utils.random(maxHit))
-        if (!newHit.landed)
-            newHit.damage = 0
         hits += PendingHit(newHit, context.defender, delay)
         return newHit
     }

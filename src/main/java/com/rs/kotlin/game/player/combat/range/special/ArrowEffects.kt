@@ -6,6 +6,9 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.CombatType
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.SpecialEffect
+import com.rs.kotlin.game.player.combat.special.addHit
+import com.rs.kotlin.game.world.projectile.Projectile
+import com.rs.kotlin.game.world.projectile.ProjectileManager
 
 object ArrowEffects {
 
@@ -16,32 +19,18 @@ object ArrowEffects {
             context.ammo?.endGfx = null
 
             if (!Utils.roll(1, chance)) return@SpecialEffect false
-            val rangedHit = context.combat.registerHit(attacker = context.attacker,
-                defender = context.defender,
-                attackStyle = context.attackStyle,
-                weapon = context.weapon,
-                combatType = CombatType.RANGED)
-            val magicHit = context.combat.registerHit(
-                attacker = context.attacker,
-                defender = context.defender,
-                attackStyle = context.attackStyle,
-                weapon = context.weapon,
-                combatType = CombatType.RANGED,
-                hitLook = HitLook.MAGIC_DAMAGE,
-                damageMultiplier = 0.2
-            )
+            val projectileDelay = ProjectileManager.send(Projectile.ARROW,
+                context.component5()?.projectileId ?: 27, context.attacker, context.defender)
+            val range = context.addHit(CombatType.RANGED).delay(projectileDelay).roll()
+            val magic = context.addHit(CombatType.RANGED).delay(projectileDelay + 1).look(HitLook.MAGIC_DAMAGE).maxHit((range.maxHit * 0.2).toInt()).roll()
 
-            if (magicHit.damage == 0) {
+
+            if (magic.damage == 0) {
                 context.ammo?.endGfx = Graphics(85, 100)
             } else {
                 context.ammo?.endGfx = Graphics(129)
-                magicHit.setCriticalMark()
+                magic.setCriticalMark()
             }
-            context.combat.delayHits(
-                PendingHit(rangedHit, context.defender, context.combat.getHitDelay()),
-                PendingHit(magicHit, context.defender, context.combat.getHitDelay() + 1)
-            )
-
             true
         }
     )
@@ -53,32 +42,16 @@ object ArrowEffects {
             context.ammo?.endGfx = null
 
             if (!Utils.roll(1, chance)) return@SpecialEffect false
-            val rangedHit = context.combat.registerHit(attacker = context.attacker,
-                defender = context.defender,
-                attackStyle = context.attackStyle,
-                weapon = context.weapon,
-                combatType = CombatType.RANGED)
-            val magicHit = context.combat.registerHit(
-                attacker = context.attacker,
-                defender = context.defender,
-                attackStyle = context.attackStyle,
-                weapon = context.weapon,
-                combatType = CombatType.RANGED,
-                hitLook = HitLook.MAGIC_DAMAGE,
-                damageMultiplier = 0.2
-            )
-
-            if (magicHit.damage == 0) {
+            val projectileDelay = ProjectileManager.send(Projectile.ARROW,
+                context.component5()?.projectileId ?: 27, context.attacker, context.defender)
+            val range = context.addHit(CombatType.RANGED).delay(projectileDelay).roll()
+            val magic = context.addHit(CombatType.RANGED).delay(projectileDelay + 1).look(HitLook.MAGIC_DAMAGE).maxHit((range.maxHit * 0.2).toInt()).roll()
+            if (magic.damage == 0) {
                 context.ammo?.endGfx = Graphics(85, 100)
             } else {
                 context.ammo?.endGfx = Graphics(128)
-                magicHit.setCriticalMark()
+                magic.setCriticalMark()
             }
-            context.combat.delayHits(
-                PendingHit(rangedHit, context.defender, context.combat.getHitDelay()),
-                PendingHit(magicHit, context.defender, context.combat.getHitDelay() + 1)
-            )
-
             true
         }
     )
@@ -90,32 +63,16 @@ object ArrowEffects {
             context.ammo?.endGfx = null
 
             if (!Utils.roll(1, chance)) return@SpecialEffect false
-            val rangedHit = context.combat.registerHit(attacker = context.attacker,
-                defender = context.defender,
-                attackStyle = context.attackStyle,
-                weapon = context.weapon,
-                combatType = CombatType.RANGED)
-            val magicHit = context.combat.registerHit(
-                attacker = context.attacker,
-                defender = context.defender,
-                attackStyle = context.attackStyle,
-                weapon = context.weapon,
-                combatType = CombatType.RANGED,
-                hitLook = HitLook.MAGIC_DAMAGE,
-                damageMultiplier = 0.2
-            )
-
-            if (magicHit.damage == 0) {
+            val projectileDelay = ProjectileManager.send(Projectile.ARROW,
+                context.component5()?.projectileId ?: 27, context.attacker, context.defender)
+            val range = context.addHit(CombatType.RANGED).delay(projectileDelay).roll()
+            val magic = context.addHit(CombatType.RANGED).delay(projectileDelay + 1).look(HitLook.MAGIC_DAMAGE).maxHit((range.maxHit * 0.2).toInt()).roll()
+            if (magic.damage == 0) {
                 context.ammo?.endGfx = Graphics(85, 100)
             } else {
                 context.ammo?.endGfx = Graphics(127)
-                magicHit.setCriticalMark()
+                magic.setCriticalMark()
             }
-            context.combat.delayHits(
-                PendingHit(rangedHit, context.defender, context.combat.getHitDelay()),
-                PendingHit(magicHit, context.defender, context.combat.getHitDelay() + 1)
-            )
-
             true
         }
     )

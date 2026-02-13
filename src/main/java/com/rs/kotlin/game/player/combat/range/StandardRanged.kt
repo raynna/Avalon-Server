@@ -356,7 +356,7 @@ object StandardRanged : RangeData() {
                 execute = { context ->
 
                     context.attacker.animate(Animation(4230))
-                    context.attacker.playSound(2546,  1)
+                    context.attacker.playSound(2546, 1)
                     val ticks = ProjectileManager.send(
                         Projectile.BOLT, 328,
                         context.attacker,
@@ -372,13 +372,7 @@ object StandardRanged : RangeData() {
                     } else false
 
                     if (!boltApplied) {
-                        context.hits {
-                            ranged(
-                                accuracyMultiplier = 2.0,
-                                damageMultiplier = 1.1,
-                                delay = ticks - 1
-                            )
-                        }
+                        context.addHit(CombatType.RANGED).delay(ticks).accuracy(2.0).damageMultiplier(1.1).roll()
                     }
                 }
             )
@@ -417,18 +411,14 @@ object StandardRanged : RangeData() {
                     val attacker = context.attacker
                     val defender = context.defender
                     attacker.animate("animation.sagaie_attack")
-                    val ticks = ProjectileManager.send(Projectile.SAGAIE, "graphic.sagaie_projectile", attacker, defender)
-                    val rangedHit = context.rollRanged()
-                    context.hits {
-                        if (rangedHit.damage > 0) {
-                            val distance = Utils.getDistance(attacker, defender)
-                            val boost = 20 * (min(5, distance))
-                            val boostedHit = rangedHit.copyWithDamage(rangedHit.damage + boost)
-                            nextHit(boostedHit, delay = ticks - 1)
-                        } else {
-                            nextHit(Hit(attacker, 0, rangedHit.look), delay = ticks - 1)
-                        }
-                    }
+                    val ticks =
+                        ProjectileManager.send(Projectile.SAGAIE, "graphic.sagaie_projectile", attacker, defender, blockAnimation = true)
+                    val distance = Utils.getDistance(attacker, defender)
+                    val boost = 20 * min(5, distance)
+                    context.addHit(CombatType.RANGED)
+                        .delay(ticks)
+                        .bonus { hit -> if (hit.damage > 0) hit.damage += boost }
+                        .roll()
                     true
                 }
             )
@@ -489,10 +479,14 @@ object StandardRanged : RangeData() {
                 execute = { context ->
                     context.attacker.animate("animation.bow_attack")
                     context.attacker.gfx("graphic.ice_arrow_start", 100)
-                    val ticks = ProjectileManager.send(Projectile.ARROW, "graphic.ice_arrow_projectile", context.attacker, context.defender)
-                    context.hits {
-                        ranged(delay = ticks - 1)
-                    }
+                    val ticks = ProjectileManager.send(
+                        Projectile.ARROW,
+                        "graphic.ice_arrow_projectile",
+                        context.attacker,
+                        context.defender,
+                        blockAnimation = true
+                    )
+                    context.addHit(CombatType.RANGED).delay(ticks).roll()
                     true
                 }
             )
@@ -518,10 +512,14 @@ object StandardRanged : RangeData() {
                 execute = { context ->
                     context.attacker.animate("animation.bow_attack")
                     context.attacker.gfx("graphic.crystal_bow_start", 100)
-                    val ticks = ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
-                    context.hits {
-                        ranged(delay = ticks - 1)
-                    }
+                    val ticks = ProjectileManager.send(
+                        Projectile.ARROW,
+                        "graphic.crystal_bow_projectile",
+                        context.attacker,
+                        context.defender,
+                        blockAnimation = true
+                    )
+                    context.addHit(CombatType.RANGED).delay(ticks).roll()
                     true
                 }
             )
@@ -540,12 +538,16 @@ object StandardRanged : RangeData() {
                 damageMultiplier = 1.5,
                 execute = { context ->
                     context.attacker.animate(Animation(426))
-                    val ticks = ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
-                    context.hits {
-                        val rangedHit = ranged(delay = ticks - 1)
-                        if (rangedHit.damage > 0) {
-                            context.attacker.applyHeal(rangedHit.copyWithDamage(rangedHit.damage))
-                        }
+                    val ticks = ProjectileManager.send(
+                        Projectile.ARROW,
+                        "graphic.crystal_bow_projectile",
+                        context.attacker,
+                        context.defender,
+                        blockAnimation = true
+                    )
+                    val hit = context.addHit(CombatType.RANGED).delay(ticks).roll()
+                    if (hit.damage > 0) {
+                        context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
                     }
                 }
             )
@@ -564,12 +566,16 @@ object StandardRanged : RangeData() {
                 damageMultiplier = 1.5,
                 execute = { context ->
                     context.attacker.animate(Animation(426))
-                    val ticks = ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
-                    context.hits {
-                        val rangedHit = ranged(delay = ticks - 1)
-                        if (rangedHit.damage > 0) {
-                            context.attacker.applyHeal(rangedHit.copyWithDamage(rangedHit.damage))
-                        }
+                    val ticks = ProjectileManager.send(
+                        Projectile.ARROW,
+                        "graphic.crystal_bow_projectile",
+                        context.attacker,
+                        context.defender,
+                        blockAnimation = true
+                    )
+                    val hit = context.addHit(CombatType.RANGED).delay(ticks).roll()
+                    if (hit.damage > 0) {
+                        context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
                     }
                 }
             )
@@ -588,12 +594,16 @@ object StandardRanged : RangeData() {
                 damageMultiplier = 1.5,
                 execute = { context ->
                     context.attacker.animate(Animation(426))
-                    val ticks = ProjectileManager.send(Projectile.ARROW, "graphic.crystal_bow_projectile", context.attacker, context.defender)
-                    context.hits {
-                        val rangedHit = ranged(delay = ticks - 1)
-                        if (rangedHit.damage > 0) {
-                            context.attacker.applyHeal(rangedHit.copyWithDamage(rangedHit.damage))
-                        }
+                    val ticks = ProjectileManager.send(
+                        Projectile.ARROW,
+                        "graphic.crystal_bow_projectile",
+                        context.attacker,
+                        context.defender,
+                        blockAnimation = true
+                    )
+                    val hit = context.addHit(CombatType.RANGED).delay(ticks).roll()
+                    if (hit.damage > 0) {
+                        context.attacker.applyHeal(hit.copyWithDamage(hit.damage))
                     }
                 }
             )
@@ -614,7 +624,7 @@ object StandardRanged : RangeData() {
                 execute = { context ->
                     context.attacker.animate(Animation(1074))
                     context.attacker.gfx(Graphics(256, 100))
-                    context.attacker.playSound(2545,  1)
+                    context.attacker.playSound(2545, 1)
                     val ticks = ProjectileManager.send(
                         Projectile.ARROW,
                         249,
@@ -624,6 +634,7 @@ object StandardRanged : RangeData() {
                         arcOffset = 5,
                         speedAdjustment = -1,
                         startTimeOffset = -5,
+                        blockAnimation = true
                     )
                     val ticks2 = ProjectileManager.send(
                         Projectile.ARROW,
@@ -634,13 +645,13 @@ object StandardRanged : RangeData() {
                         arcOffset = 5,
                         speedAdjustment = -1,
                         startTimeOffset = 10,
+                        blockAnimation = true
                     )
-                    context.hits {
-                        val distance = Utils.getDistance(context.attacker, context.defender)
-                        val (firstDelay, secondDelay) = context.combat.getDoubleHitDelays(distance)
-                        ranged(delay = ticks - 1)
-                        ranged(delay = ticks2 - 1)
-                    }
+
+                    val distance = Utils.getDistance(context.attacker, context.defender)
+                    val (firstDelay, secondDelay) = context.combat.getDoubleHitDelays(distance)
+                    context.addHit(CombatType.RANGED).delay(ticks).roll()
+                    context.addHit(CombatType.RANGED).delay(ticks2).roll()
                 }
             )
         ),
@@ -665,8 +676,8 @@ object StandardRanged : RangeData() {
                     val endGraphic = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1100 else 1103
                     val soundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3733 else 3736
                     val hitSoundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3731 else 3732
-                    context.attacker.playSound(soundId,  1)
-                    context.attacker.playSound(soundId,  30,1)
+                    context.attacker.playSound(soundId, 1)
+                    context.attacker.playSound(soundId, 30, 1)
                     ProjectileManager.send(
                         Projectile.DRAGON_ARROW,
                         arrowProjectile,
@@ -686,18 +697,33 @@ object StandardRanged : RangeData() {
                         hitGraphic = Graphics(endGraphic, 100),
                         hitSound = hitSoundId
                     )
-                    context.hits {
-                        val distance = Utils.getDistance(context.attacker, context.defender)
-                        val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
-                        val minDamage = (if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 80 else 50)
-                        val multiplier = (if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1.5 else 1.3)
+                    val distance = Utils.getDistance(context.attacker, context.defender)
+                    val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
+                    val minDamage = (if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 80 else 50)
+                    val multiplier = (if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1.5 else 1.3)
+                    context.addHit(CombatType.RANGED)
+                        .delay(firstDelay)
+                        .damageMultiplier(multiplier)
+                        .bonus { hit ->
+                            if (hit.damage > 0) {
+                                hit.damage = hit.damage
+                                    .coerceAtLeast(minDamage)
+                                    .coerceAtMost(480)
+                            }
+                        }
+                        .roll()
 
-                        val firstHit = ranged(delay = firstDelay, damageMultiplier = multiplier)
-                        val secondHit = ranged(delay = secondDelay, damageMultiplier = multiplier)
-
-                        firstHit.damage = min(max(firstHit.damage, minDamage), 480)
-                        secondHit.damage = min(max(secondHit.damage, minDamage), 480)
-                    }
+                    context.addHit(CombatType.RANGED)
+                        .delay(secondDelay)
+                        .damageMultiplier(multiplier)
+                        .bonus { hit ->
+                            if (hit.damage > 0) {
+                                hit.damage = hit.damage
+                                    .coerceAtLeast(minDamage)
+                                    .coerceAtMost(480)
+                            }
+                        }
+                        .roll()
                 }
             ),
             effect = SpecialEffect(
@@ -721,12 +747,10 @@ object StandardRanged : RangeData() {
                         startTimeOffset = 5,
                         speedAdjustment = 5,
                     )
-                    context.hits {
-                        val distance = Utils.getDistance(context.attacker, context.defender)
-                        val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
-                        ranged(delay = firstDelay)
-                        ranged(delay = secondDelay)
-                    }
+                    val distance = Utils.getDistance(context.attacker, context.defender)
+                    val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
+                    context.addHit(CombatType.RANGED).delay(firstDelay).roll()
+                    context.addHit(CombatType.RANGED).delay(secondDelay).roll()
                     true
                 }
             )
@@ -752,8 +776,8 @@ object StandardRanged : RangeData() {
                     context.attacker.animate(Animation(12153))
                     context.attacker.gfx(Graphics(2138))
                     context.attacker.delayGfx(Graphics(2141), 2);
-                    context.attacker.playSound(7206,  0,1)
-                    context.attacker.playSound(7206,  60,1)
+                    context.attacker.playSound(7206, 0, 1)
+                    context.attacker.playSound(7206, 60, 1)
                     ProjectileManager.send(
                         Projectile.HAND_CANNON,
                         2143,
@@ -767,12 +791,10 @@ object StandardRanged : RangeData() {
                         context.defender,
                         startTimeOffset = 25,
                     )
-                    context.hits {
-                        val distance = Utils.getDistance(context.attacker, context.defender)
-                        val (firstDelay, secondDelay) = context.combat.getDoubleHitDelays(distance)
-                        ranged(delay = firstDelay)
-                        ranged(delay = secondDelay)
-                    }
+                    val distance = Utils.getDistance(context.attacker, context.defender)
+                    val (firstDelay, secondDelay) = context.combat.getDoubleHitDelays(distance)
+                    context.addHit(CombatType.RANGED).accuracy(2.0).delay(firstDelay).roll()
+                    context.addHit(CombatType.RANGED).accuracy(2.0).delay(secondDelay).roll()
                 }
             )
         ),
@@ -880,7 +902,12 @@ object StandardRanged : RangeData() {
          * Darts
          */
         RangedWeapon(
-            itemId = Item.getIds("item.bronze_dart", "item.bronze_dart_p", "item.bronze_dart_p_2", "item.bronze_dart_p_3"),
+            itemId = Item.getIds(
+                "item.bronze_dart",
+                "item.bronze_dart_p",
+                "item.bronze_dart_p_2",
+                "item.bronze_dart_p_3"
+            ),
             name = "Bronze dart",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 3,
@@ -920,7 +947,12 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.DART
         ),
         RangedWeapon(
-            itemId = Item.getIds("item.mithril_dart", "item.mithril_dart_p", "item.mithril_dart_p_2", "item.mithril_dart_p_3"),
+            itemId = Item.getIds(
+                "item.mithril_dart",
+                "item.mithril_dart_p",
+                "item.mithril_dart_p_2",
+                "item.mithril_dart_p_3"
+            ),
             name = "Mithril dart",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 3,
@@ -930,7 +962,12 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.DART
         ),
         RangedWeapon(
-            itemId = Item.getIds("item.adamant_dart", "item.adamant_dart_p", "item.adamant_dart_p_2", "item.adamant_dart_p_3"),
+            itemId = Item.getIds(
+                "item.adamant_dart",
+                "item.adamant_dart_p",
+                "item.adamant_dart_p_2",
+                "item.adamant_dart_p_3"
+            ),
             name = "Adamant dart",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 3,
@@ -950,7 +987,12 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.DART
         ),
         RangedWeapon(
-            itemId = Item.getIds("item.dragon_dart", "item.dragon_dart_p", "item.dragon_dart_p_2", "item.dragon_dart_p_3"),
+            itemId = Item.getIds(
+                "item.dragon_dart",
+                "item.dragon_dart_p",
+                "item.dragon_dart_p_2",
+                "item.dragon_dart_p_3"
+            ),
             name = "Dragon dart",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 3,
@@ -1059,11 +1101,13 @@ object StandardRanged : RangeData() {
                 execute = { context ->
                     context.attacker.animate("animation.morrigans_throwing_axe_attack")
                     context.attacker.gfx("graphic.morrigans_throwing_axe_start")
-                    val impact = ProjectileManager.send(Projectile.MORRIGAN_THROWING_AXE, "graphic.morrigans_throwing_axe_projectile", context.attacker, context.defender)
-                    context.hits {
-                        val rangedHit = ranged(delay = impact - 1)
-                        rangedHit.damage = (rangedHit.damage * 0.6).toInt()
-                    }
+                    val impact = ProjectileManager.send(
+                        Projectile.MORRIGAN_THROWING_AXE,
+                        "graphic.morrigans_throwing_axe_projectile",
+                        context.attacker,
+                        context.defender
+                    )
+                    context.addHit(CombatType.RANGED).delay(impact).damageMultiplier(0.6).roll()
                 }
             )
         ),
@@ -1093,7 +1137,12 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.JAVELIN
         ),
         RangedWeapon(
-            itemId = Item.getIds("item.iron_javelin", "item.iron_javelin_p", "item.iron_javelin_p_2", "item.iron_javelin_p_3"),
+            itemId = Item.getIds(
+                "item.iron_javelin",
+                "item.iron_javelin_p",
+                "item.iron_javelin_p_2",
+                "item.iron_javelin_p_3"
+            ),
             name = "Iron javelin",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 5,
@@ -1103,7 +1152,12 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.JAVELIN
         ),
         RangedWeapon(
-            itemId = Item.getIds("item.steel_javelin", "item.steel_javelin_p", "item.steel_javelin_p_2", "item.steel_javelin_p_3"),
+            itemId = Item.getIds(
+                "item.steel_javelin",
+                "item.steel_javelin_p",
+                "item.steel_javelin_p_2",
+                "item.steel_javelin_p_3"
+            ),
             name = "Steel javelin",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 5,
@@ -1113,7 +1167,12 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.JAVELIN
         ),
         RangedWeapon(
-            itemId = Item.getIds("item.mithril_javelin", "item.mithril_javelin_p", "item.mithril_javelin_p_2", "item.mithril_javelin_p_3"),
+            itemId = Item.getIds(
+                "item.mithril_javelin",
+                "item.mithril_javelin_p",
+                "item.mithril_javelin_p_2",
+                "item.mithril_javelin_p_3"
+            ),
             name = "Mithril javelin",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 5,
@@ -1123,7 +1182,12 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.JAVELIN
         ),
         RangedWeapon(
-            itemId = Item.getIds("item.adamant_javelin", "item.adamant_javelin_p", "item.adamant_javelin_p_2", "item.adamant_javelin_p_3"),
+            itemId = Item.getIds(
+                "item.adamant_javelin",
+                "item.adamant_javelin_p",
+                "item.adamant_javelin_p_2",
+                "item.adamant_javelin_p_3"
+            ),
             name = "Adamant javelin",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 5,
@@ -1133,7 +1197,12 @@ object StandardRanged : RangeData() {
             ammoType = AmmoType.JAVELIN
         ),
         RangedWeapon(
-            itemId = Item.getIds("item.rune_javelin", "item.rune_javelin_p", "item.rune_javelin_p_2", "item.rune_javelin_p_3"),
+            itemId = Item.getIds(
+                "item.rune_javelin",
+                "item.rune_javelin_p",
+                "item.rune_javelin_p_2",
+                "item.rune_javelin_p_3"
+            ),
             name = "Rune javelin",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 5,
@@ -1145,7 +1214,12 @@ object StandardRanged : RangeData() {
 
 
         RangedWeapon(
-            itemId = Item.getIds("item.morrigan_s_javelin", "item.morrigan_s_javelin_p", "item.morrigan_s_javelin_p+", "item.morrigan_s_javelin_p++"),
+            itemId = Item.getIds(
+                "item.morrigan_s_javelin",
+                "item.morrigan_s_javelin_p",
+                "item.morrigan_s_javelin_p+",
+                "item.morrigan_s_javelin_p++"
+            ),
             name = "Morrigan's Javelin",
             weaponStyle = WeaponStyle.THROWING,
             attackRange = 5,
@@ -1158,12 +1232,21 @@ object StandardRanged : RangeData() {
                 execute = { context ->
                     context.attacker.animate("animation.morrigans_javelin_attack")
                     context.attacker.gfx("graphic.morrigans_javelin_start")
-                    val impact = ProjectileManager.send(Projectile.ARROW, "graphic.morrigans_javelin_projectile", context.attacker, context.defender)
-                    context.hits {
-                        val rangedHit = ranged(accuracyMultiplier = 1.5, delay = impact - 1)
-                        if (rangedHit.damage > 0) {
-                            context.applyBleed(baseHit = rangedHit, bleedPercent = .75, maxTickDamage =50, initialDelay = impact, tickInterval = 2)
-                        }
+                    val impact = ProjectileManager.send(
+                        Projectile.ARROW,
+                        "graphic.morrigans_javelin_projectile",
+                        context.attacker,
+                        context.defender
+                    )
+                    val hit = context.addHit(CombatType.RANGED).accuracy(1.5).delay(impact).roll()
+                    if (hit.damage > 0) {
+                        context.applyBleed(
+                            baseHit = hit,
+                            bleedPercent = .75,
+                            maxTickDamage = 50,
+                            initialDelay = impact,
+                            tickInterval = 2
+                        )
                     }
                 }
             )
@@ -1179,7 +1262,8 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.graphic("graphic.morrigans_javelin_projectile"),
         ),
 
-        RangedWeapon(itemId = Item.getIds("item.toktz_xil_ul"),
+        RangedWeapon(
+            itemId = Item.getIds("item.toktz_xil_ul"),
             name = "Toktz_xil_ul",
             weaponStyle = WeaponStyle.THROWING,
             animationId = Rscm.animation("animation.toktz_xil_ul_attack"),
@@ -1558,7 +1642,13 @@ object StandardRanged : RangeData() {
         ),
         // Bolts
         RangedAmmo(
-            itemId = Item.getIds("item.bronze_bolts", "item.bronze_bolts_p", "item.bronze_bolts_p+", "item.bronze_bolts_p++", "item.opal_bolts"),
+            itemId = Item.getIds(
+                "item.bronze_bolts",
+                "item.bronze_bolts_p",
+                "item.bronze_bolts_p+",
+                "item.bronze_bolts_p++",
+                "item.opal_bolts"
+            ),
             name = "Bronze bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.BRONZE_BOLT,
@@ -1586,7 +1676,12 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
         ),
         RangedAmmo(
-            itemId = Item.getIds("item.steel_bolts", "item.steel_bolts_p", "item.steel_bolts_p_2", "item.steel_bolts_p_3"),
+            itemId = Item.getIds(
+                "item.steel_bolts",
+                "item.steel_bolts_p",
+                "item.steel_bolts_p_2",
+                "item.steel_bolts_p_3"
+            ),
             name = "Steel bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.STEEL_BOLT,
@@ -1595,7 +1690,12 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
         ),
         RangedAmmo(
-            itemId = Item.getIds("item.black_bolts", "item.black_bolts_p", "item.black_bolts_p_2", "item.black_bolts_p_3"),
+            itemId = Item.getIds(
+                "item.black_bolts",
+                "item.black_bolts_p",
+                "item.black_bolts_p_2",
+                "item.black_bolts_p_3"
+            ),
             name = "Black bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.BLACK_BOLT,
@@ -1604,7 +1704,12 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
         ),
         RangedAmmo(
-            itemId = Item.getIds("item.mithril_bolts", "item.mithril_bolts_p", "item.mithril_bolts_p_2", "item.mithril_bolts_p_3"),
+            itemId = Item.getIds(
+                "item.mithril_bolts",
+                "item.mithril_bolts_p",
+                "item.mithril_bolts_p_2",
+                "item.mithril_bolts_p_3"
+            ),
             name = "Mithril bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.MITHRIL_BOLT,
@@ -1613,8 +1718,10 @@ object StandardRanged : RangeData() {
             projectileId = Rscm.lookup("graphic.bolt_projectile"),
         ),
         RangedAmmo(
-            itemId = Item.getIds("item.adamant_bolts", "item.adamant_bolts_p", "item.adamant_bolts_p_2", "item.adamant_bolts_p_3",
-                "item.ruby_bolts", "item.diamond_bolts"),
+            itemId = Item.getIds(
+                "item.adamant_bolts", "item.adamant_bolts_p", "item.adamant_bolts_p_2", "item.adamant_bolts_p_3",
+                "item.ruby_bolts", "item.diamond_bolts"
+            ),
             name = "Adamant bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.ADAMANT_BOLT,
@@ -1672,7 +1779,14 @@ object StandardRanged : RangeData() {
             specialEffect = BoltEffects.ONYX
         ),
         RangedAmmo(
-            itemId = Item.getIds("item.dragon_bolts", "item.ruby_dragon_bolts", "item.diamond_dragon_bolts", "item.dragonstone_dragon_bolts", "item.onyx_dragon_bolts", "item.opal_dragon_bolts"),
+            itemId = Item.getIds(
+                "item.dragon_bolts",
+                "item.ruby_dragon_bolts",
+                "item.diamond_dragon_bolts",
+                "item.dragonstone_dragon_bolts",
+                "item.onyx_dragon_bolts",
+                "item.opal_dragon_bolts"
+            ),
             name = "Dragon bolts",
             ammoType = AmmoType.BOLT,
             ammoTier = AmmoTier.DRAGON_BOLT,

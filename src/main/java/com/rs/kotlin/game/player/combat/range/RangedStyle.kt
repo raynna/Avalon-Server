@@ -16,8 +16,7 @@ import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.range.special.SwiftGloves
 import com.rs.kotlin.game.player.combat.special.CombatContext
-import com.rs.kotlin.game.player.combat.special.rangedHit
-import com.rs.kotlin.game.player.combat.special.rollRanged
+import com.rs.kotlin.game.player.combat.special.addHit
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 import kotlin.math.min
@@ -154,9 +153,9 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         } else if ((currentAmmo != null) && (currentAmmo.startGfx != null)) {
            attacker.gfx(currentAmmo.startGfx)
         }
-        val impactTicks = sendProjectile()
         if (executeAmmoEffect(combatContext)) return
-        combatContext.rangedHit(delay = (impactTicks - 1).coerceAtLeast(0))
+        val impactTicks = sendProjectile()
+        combatContext.addHit(CombatType.RANGED).delay((impactTicks).coerceAtLeast(0)).roll()
         consumeAmmo()
     }
 
@@ -166,24 +165,13 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
         val first = hits.first()
         val firstHit = first.hit
-
         val qualifies = firstHit.damage >= (firstHit.maxHit * 0.66).toInt() || firstHit.damage == 0
         if (!qualifies) return
         consumeAmmo()
         sendSwiftProjectile()
         val weapon = Weapon.getRangedWeapon(attacker) ?: return
         val ammo = RangeData.getCurrentAmmo(attacker)
-        val swiftHit = CombatContext(
-            combat = this,
-            attacker = attacker,
-            defender = defender,
-            attackStyle = WeaponStyle.getWeaponStyle(attacker),
-            attackBonusType = WeaponStyle.getAttackBonusType(attacker),
-            weapon = weapon,
-            weaponId = attacker.equipment.weaponId,
-            ammo =  ammo,
-            usingSpecial = false
-        ).rollRanged()
+        val swiftHit = hitRoll(CombatType.RANGED, attacker, defender).roll()
 
         hits += PendingHit(
             hit = swiftHit,
@@ -332,16 +320,13 @@ class RangedStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             AmmoType.CANNON -> Projectile.HAND_CANNON
             else -> Projectile.ARROW
         }
-
         return ProjectileManager.send(
             projectileType,
             projectileId,
             attacker,
             defender,
             startHeightOffset = heightOffset
-        ) {
-            defender.animate(CombatUtils.getBlockAnimation(defender as Player))
-        }
+        )
     }
 
 

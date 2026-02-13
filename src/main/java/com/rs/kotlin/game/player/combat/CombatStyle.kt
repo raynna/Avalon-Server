@@ -14,6 +14,7 @@ import com.rs.java.game.player.Skills
 import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.NewPoison
+import com.rs.kotlin.game.player.combat.damage.HitRoller
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.damage.SoakDamage
 import com.rs.kotlin.game.player.combat.effects.EquipmentEffects
@@ -87,10 +88,10 @@ interface CombatStyle {
         defender.handleHit(hit)
         PrayerEffectHandler.handleDeflect(attacker, defender, hit)
         if (defender is Player) {
-            if (this is RangedStyle || this is MagicStyle) {
+            /*if (this is RangedStyle || this is MagicStyle) {
                 defender.animate(CombatUtils.getBlockAnimation(defender))
                 defender.playSound(CombatUtils.getBlockSound(defender), 1)
-            }
+            }*/
             defender.chargeManager.processHit(hit)
 
             handleRingOfRecoil(attacker, defender, hit)
@@ -210,7 +211,7 @@ interface CombatStyle {
     }
 
 
-    fun addHit(
+    fun hitRoll(
         damage: Int,
         attacker: Player,
         defender: Entity,
@@ -229,87 +230,8 @@ interface CombatStyle {
         return hit
     }
 
-    fun registerDamage(
-        attacker: Player,
-        defender: Entity,
-        combatType: CombatType,
-        attackStyle: AttackStyle = AttackStyle.ACCURATE,
-        weapon: Weapon? = null,
-        spellId: Int = -1,
-        damageMultiplier: Double = 1.0,
-        hitLook: Hit.HitLook? = null
-    ): Hit {
-        val resolvedHitLook = hitLook ?: when (combatType) {
-            CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
-            CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
-            CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
-        }
-        val hit = when (combatType) {
-            CombatType.MELEE -> CombatCalculations.calculateMeleeMaxHit(attacker, defender, damageMultiplier)
-            CombatType.RANGED -> CombatCalculations.calculateRangedMaxHit(attacker, defender, damageMultiplier)
-            CombatType.MAGIC -> {
-                requireNotNull(spellId) { "Spell required for magic attack" }
-                CombatCalculations.calculateMagicMaxHit(attacker, defender, spellId)
-            }
-        }
-        hit.look = resolvedHitLook
-        if (hit.isCriticalHit && !hit.isCombatLook) {
-            hit.critical = false
-        }
-        return hit
-    }
-
-    fun registerHit(
-        attacker: Player,
-        defender: Entity,
-        combatType: CombatType,
-        attackStyle: AttackStyle = AttackStyle.ACCURATE,
-        weapon: Weapon? = null,
-        spellId: Int = -1,
-        baseDamage: Int = -1,
-        accuracyMultiplier: Double = 1.0,
-        damageMultiplier: Double = 1.0,
-        hitLook: Hit.HitLook? = null
-    ): Hit {
-        val resolvedHitLook = hitLook ?: when (combatType) {
-            CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
-            CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
-            CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
-        }
-
-        val landed = when (combatType) {
-            CombatType.MELEE -> {
-                requireNotNull(weapon) { "Weapon required for melee attack" }
-                CombatCalculations.calculateMeleeAccuracy(attacker, defender, accuracyMultiplier)
-            }
-
-            CombatType.RANGED -> {
-                requireNotNull(weapon) { "Weapon required for ranged attack" }
-                CombatCalculations.calculateRangedAccuracy(attacker, defender, accuracyMultiplier)
-            }
-
-            CombatType.MAGIC -> CombatCalculations.calculateMagicAccuracy(attacker, defender, accuracyMultiplier)
-        }
-
-        val hit = if (landed) {
-            when (combatType) {
-                CombatType.MELEE -> CombatCalculations.calculateMeleeMaxHit(attacker, defender, damageMultiplier)
-                CombatType.RANGED -> CombatCalculations.calculateRangedMaxHit(attacker, defender, damageMultiplier)
-                CombatType.MAGIC -> {
-                    CombatCalculations.calculateMagicMaxHit(attacker, defender, baseDamage, spellId, damageMultiplier)
-                }
-            }
-        } else {
-            Hit(attacker, 0, resolvedHitLook)
-        }
-        hit.look = resolvedHitLook
-        if (!landed) {
-            hit.landed = false
-        }
-        if (hit.isCriticalHit && !hit.isCombatLook) {
-            hit.critical = false
-        }
-        return hit
+    fun hitRoll(type: CombatType, attacker: Player, target: Entity): HitRoller {
+        return HitRoller(attacker, target, type)
     }
 
     fun executeEffect(combatContext: CombatContext): Boolean {

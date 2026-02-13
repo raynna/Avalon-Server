@@ -9,7 +9,7 @@ import com.rs.java.game.player.TickManager
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.CombatContext
-import com.rs.kotlin.game.player.combat.special.meleeHit
+import com.rs.kotlin.game.player.combat.special.addHit
 import kotlin.math.min
 
 class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
@@ -75,15 +75,15 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             return
         attacker.animate(CombatUtils.getAnimation(attacker))
         attacker.playSound(CombatUtils.getSound(attacker), 1)
-        val hit = combatContext.meleeHit(delay = getHitDelay())
+        val hit = combatContext.addHit(CombatType.MELEE).delay(getHitDelay()).roll()
         if (attacker.developerMode) {
             attacker.message("[Melee Attack] -> " +
                 "Weapon: ${currentWeapon.name}, " +
                 "WeaponStyle: ${attackStyle.name}, " +
                 "WeaponBonusStyle: ${attackBonusType.name}, " +
                 "WeaponType: ${currentWeapon.weaponStyle.name}, " +
-                "MaxHit: ${hit[0].maxHit}, " +
-                "Hit: ${hit[0].damage}")
+                "MaxHit: ${hit.maxHit}, " +
+                "Hit: ${hit.damage}")
         }
     }
 

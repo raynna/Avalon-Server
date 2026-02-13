@@ -1,7 +1,6 @@
 package com.rs.kotlin.game.player.combat
 
 import com.rs.java.game.Entity
-import com.rs.java.game.Hit
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
@@ -9,6 +8,7 @@ import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.damage.CombatMultipliers
+import com.rs.kotlin.game.player.combat.damage.MaxHit
 import com.rs.kotlin.game.player.combat.magic.MagicStyle
 import com.rs.kotlin.game.player.combat.magic.Spell
 import com.rs.kotlin.game.player.combat.magic.Spellbook
@@ -19,8 +19,6 @@ import com.rs.kotlin.game.player.equipment.EquipmentSets
 import com.rs.kotlin.game.player.equipment.EquipmentSets.getDharokMultiplier
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
-import kotlin.math.max
-import kotlin.math.min
 
 object CombatCalculations {
 
@@ -29,7 +27,7 @@ object CombatCalculations {
     }
 
     interface MaxHitCalculator {
-        fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): Hit
+        fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): MaxHit
     }
 
     private fun computeHitChance(attack: Int, defence: Int): Double {
@@ -104,7 +102,7 @@ object CombatCalculations {
             return computeHitChance(attackRoll.toInt(), defenceRoll.toInt())
         }
 
-        override fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double): Hit {
+        override fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double): MaxHit {
 
             val styleBonus = getStrengthStyleBonus(player)
 
@@ -121,7 +119,7 @@ object CombatCalculations {
 
             val baseDamage = 0.5 + ((effectiveStrength * (strengthBonus + 640)) / 640) * multipliers.damage
             val baseMaxHit = baseDamage.toInt()
-            val maxHit = (baseMaxHit * specialMultiplier).toInt()
+            var maxHit = (baseMaxHit * specialMultiplier).toInt()
 
             var finalDamage = Utils.random(maxHit)
             finalDamage = ceilToNextTen(player, finalDamage)
@@ -132,29 +130,21 @@ object CombatCalculations {
             }
             if (target is NPC) {
                 if (target.capDamage != -1 && finalDamage > target.capDamage) {
-                    finalDamage = target.capDamage
-                    finalMaxHit = target.capDamage
+                    maxHit = target.capDamage
                 }
             }
-            val hit = Hit(player, finalDamage, finalMaxHit, Hit.HitLook.MELEE_DAMAGE)
-            hit.baseMaxHit = baseMaxHit
-            hit.maxHit = finalMaxHit
-            val isCritical = finalDamage >= floor(baseMaxHit * 0.99)
-            if (isCritical) {
-                hit.setCriticalMark()
-            }
-
             if (player.developerMode) {
                 player.message(
                     "[Combat Damage] -> " +
                             "BaseMax: $baseMaxHit, " +
-                            "MaxHit: $maxHit, " +
-                            "FinalDamage: ${hit.damage}, " +
-                            "Critical?: $isCritical"
+                            "MaxHit: $maxHit, "
                 )
             }
 
-            return hit
+            return MaxHit(
+                base = baseMaxHit,
+                max = maxHit
+            )
         }
     }
 
@@ -214,7 +204,7 @@ object CombatCalculations {
             return computeHitChance(attackRoll.toInt(), defenceRoll.toInt())
         }
 
-        override fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double): Hit {
+        override fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double): MaxHit {
 
             val rangedLvl = player.skills.getLevel(Skills.RANGE).toDouble()
             val prayerBonus = player.prayer.rangedMultiplier
@@ -237,38 +227,27 @@ object CombatCalculations {
 
             var maxHit = (baseMaxHit * specialMultiplier).toInt()
             maxHit = ceilToNextTen(player, maxHit)
-            var finalDamage = Utils.random(maxHit)
-            finalDamage = ceilToNextTen(player, finalDamage)
-            if (twistedBowMax > 0 && finalDamage > twistedBowMax) {
-                finalDamage = twistedBowMax
-            }
-            if (target is NPC && target.id == 4474) {
-                finalDamage = maxHit
+            if (twistedBowMax in 1..<maxHit) {
+                maxHit = twistedBowMax
             }
             if (target is NPC) {
-                if (target.capDamage != -1 && finalDamage > target.capDamage) {
-                    finalDamage = target.capDamage
+                if (target.capDamage != -1 && maxHit > target.capDamage) {
                     maxHit = target.capDamage
                 }
-            }
-            val hit = Hit(player, finalDamage, maxHit, Hit.HitLook.RANGE_DAMAGE)
-            hit.baseMaxHit = baseMaxHit
-            val isCritical = finalDamage >= floor(baseMaxHit * 0.99)
-            if (isCritical) {
-                hit.setCriticalMark()
             }
 
             if (player.developerMode) {
                 player.message(
                     "Ranged Damage Calculation -> " +
                             "BaseMax: $baseMaxHit, " +
-                            "MaxHit: $maxHit, " +
-                            "FinalDamage: ${hit.damage}, " +
-                            "Critical?: $isCritical"
+                            "MaxHit: $maxHit, "
                 )
             }
 
-            return hit
+            return MaxHit(
+                baseMaxHit,
+                maxHit,
+            )
         }
 
 
@@ -325,7 +304,7 @@ object CombatCalculations {
             baseDamage: Int = -1,
             spellId: Int = -1,
             specialMultiplier: Double = 1.0
-        ): Hit {
+        ): MaxHit {
 
             val spell = Spellbook.getSpellById(player, spellId)
 
@@ -368,29 +347,19 @@ object CombatCalculations {
 
             val baseMaxHit = floor(base * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage).toInt()
 
-            val rolledBaseDamage = Utils.random(min, baseMaxHit)
-
-            var finalDamage = (rolledBaseDamage * specialMultiplier).toInt()
-            finalDamage = ceilToNextTen(player, finalDamage)
-            var finalMaxHit = (baseMaxHit * specialMultiplier).toInt()
-            finalMaxHit = ceilToNextTen(player, finalMaxHit)
-            if (target is NPC && target.id == 4474) {
-                finalDamage = finalMaxHit
-            }
+            var maxHit = (baseMaxHit * specialMultiplier).toInt()
+            maxHit = ceilToNextTen(player, maxHit)
             if (target is NPC) {
-                if (target.capDamage != -1 && finalDamage > target.capDamage) {
-                    finalDamage = target.capDamage
-                    finalMaxHit = target.capDamage
+                if (target.capDamage != -1 && maxHit > target.capDamage) {
+                    maxHit = target.capDamage
                 }
             }
-            val hit = Hit(player, finalDamage, finalMaxHit, Hit.HitLook.MAGIC_DAMAGE)
-            hit.baseMaxHit = baseMaxHit
-            val isCritical = finalDamage >= floor(baseMaxHit * 0.99)
-            if (isCritical) {
-                hit.setCriticalMark()
-            }
 
-            return hit
+            return MaxHit(
+                baseMaxHit,
+                maxHit,
+                min
+            )
         }
 
 
@@ -437,6 +406,28 @@ object CombatCalculations {
     fun getHitChance(
         player: Player,
         target: Entity,
+        type: CombatType,
+        accuracyMultiplier: Double = 1.0
+    ): Double {
+        if (target is NPC && target.name.contains("dummy", ignoreCase = true))
+            return 1.0
+
+        return when (type) {
+            CombatType.MELEE ->
+                MeleeCombat.getHitChance(player, target, accuracyMultiplier)
+
+            CombatType.RANGED ->
+                RangedCombat.getHitChance(player, target, accuracyMultiplier)
+
+            CombatType.MAGIC ->
+                MagicCombat.getHitChance(player, target, accuracyMultiplier)
+        }
+    }
+
+
+    fun getHitChance(
+        player: Player,
+        target: Entity,
         combatStyle: CombatStyle,
         accuracyMultiplier: Double = 1.0
     ): Double {
@@ -459,13 +450,13 @@ object CombatCalculations {
     fun calculateMagicAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean =
         ThreadLocalRandom.current().nextDouble() < MagicCombat.getHitChance(player, target, accuracyMultiplier)
 
-    fun calculateMeleeMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): Hit =
+    fun getMeleeMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): MaxHit =
         MeleeCombat.calculateMaxHit(player, target, specialMultiplier)
 
-    fun calculateRangedMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): Hit =
+    fun getRangedMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): MaxHit =
         RangedCombat.calculateMaxHit(player, target, specialMultiplier)
 
-    fun calculateMagicMaxHit(player: Player, target: Entity, baseDamage: Int = -1, spellId: Int = -1, specialMultiplier: Double = 1.0): Hit =
+    fun getMagicMaxHit(player: Player, target: Entity, baseDamage: Int = -1, spellId: Int = -1, specialMultiplier: Double = 1.0): MaxHit =
         MagicCombat.calculateMaxHit(player, target, baseDamage = baseDamage, spellId = spellId, specialMultiplier)
 
     private fun getBaseStrengthLevel(player: Player): Int {

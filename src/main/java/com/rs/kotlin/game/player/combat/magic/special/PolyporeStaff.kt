@@ -73,7 +73,7 @@ object PolyporeStaff : WeaponSpellRegistry.Provider {
 
         attacker.animate(15448)
         attacker.gfx(Graphics(2034))
-        val hit = style.registerHit(attacker, defender, CombatType.MAGIC, spellId = 1000)
+        val hit = style.hitRoll(CombatType.MAGIC, attacker, defender).spell(1000).roll()
         val splash = hit.damage == 0
         val endGfx = if (!splash) Graphics(2036, 100) else Graphics(85, 100)
 
