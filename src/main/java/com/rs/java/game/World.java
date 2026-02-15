@@ -180,8 +180,6 @@ public final class World {
         spawnNPC(6654, new WorldTile(3060, 3339, 0), -1, true);
         NPC suak = getNPC(6654);
 
-        int seconds = 36000;
-
         WorldTasksManager.schedule(new WorldTask() {
             @Override
             public void run() {
@@ -190,21 +188,21 @@ public final class World {
                 if (suak != null) {
                     suak.setNextForceTalk(new ForceTalk("Smith " + artisanBonusExp));
                 }
-                WorldTasksManager.schedule(this, secondsToTicks(seconds));
+                WorldTasksManager.schedule(this, 60000);
             }
         }, 0);
     }
 
 
     public static void executeAfterLoadRegion(final int regionId, final Runnable event) {
-        executeAfterLoadRegion(regionId, 0, event);
+        executeAfterLoadRegion(regionId, 1, event);
     }
 
-    public static void executeAfterLoadRegion(final int regionId, long startTime, final Runnable event) {
-        executeAfterLoadRegion(regionId, startTime, 10000, event);
+    public static void executeAfterLoadRegion(final int regionId, int ticks, final Runnable event) {
+        executeAfterLoadRegion(regionId, ticks, 10000, event);
     }
 
-    public static void executeAfterLoadRegion(final int regionId, long startDelayMs, final long expireTime, final Runnable event) {
+    public static void executeAfterLoadRegion(final int regionId, int ticks, final long expireTime, final Runnable event) {
         final long start = Utils.currentTimeMillis();
         getRegion(regionId, true);
 
@@ -212,12 +210,12 @@ public final class World {
             @Override
             public void run() {
                 if (!isRegionLoaded(regionId) && Utils.currentTimeMillis() - start < expireTime) {
-                    WorldTasksManager.schedule(this, secondsToTicks(1));
+                    WorldTasksManager.schedule(this, 2);
                     return;
                 }
                 event.run();
             }
-        }, secondsToTicks((int)(startDelayMs / 1000)));
+        }, ticks);
     }
 
     public static void executeAfterLoadRegion(final int fromRegionX, final int fromRegionY, final int toRegionX,
@@ -261,7 +259,7 @@ public final class World {
             @Override
             public void run() {
                 shootingStar = new ShootingStar();
-                WorldTasksManager.schedule(this, secondsToTicks(1800)); // 30 minutes
+                WorldTasksManager.schedule(this, 3000); // 30 minutes
             }
         }, 0);
     }
@@ -271,7 +269,7 @@ public final class World {
             public void run() {
                 OwnedObjectManager.processAll();
             }
-        }, secondsToTicks(1));
+        }, 2);
     }
 
     private static void addRestoreShopItemsTask() {
@@ -283,9 +281,9 @@ public final class World {
                 } catch (Throwable e) {
                     Logger.handle(e);
                 }
-                WorldTasksManager.schedule(this, secondsToTicks(5));
+                WorldTasksManager.schedule(this, 9);
             }
-        }, secondsToTicks(5));
+        }, 9);
     }
 
     private static void addDegradeShopItemsTask() {
@@ -297,9 +295,9 @@ public final class World {
                 } catch (Throwable e) {
                     Logger.handle(e);
                 }
-                WorldTasksManager.schedule(this, secondsToTicks(90));
+                WorldTasksManager.schedule(this, 150);
             }
-        }, secondsToTicks(90));
+        }, 150);
     }
 
 
@@ -334,9 +332,9 @@ public final class World {
                 } catch (Throwable e) {
                     Logger.handle(e);
                 }
-                WorldTasksManager.schedule(this, secondsToTicks(300));
+                WorldTasksManager.schedule(this, 500);
             }
-        }, secondsToTicks(300));
+        }, 500);
     }
 
 
@@ -1201,7 +1199,7 @@ public final class World {
         }, Math.max(0, restoreTicks - 1));
     }
 
-    public static void spawnTempGroundObject(final WorldObject object, final int replaceId, long timeMs) {
+    public static void spawnTempGroundObject(final WorldObject object, final int replaceId, int ticks) {
         spawnObject(object);
 
         WorldTasksManager.schedule(new WorldTask() {
@@ -1210,7 +1208,7 @@ public final class World {
                 removeObject(object);
                 GroundItems.addGroundItem(new Item(replaceId), object, null, false, 60);
             }
-        }, secondsToTicks((int)(timeMs / 1000)));
+        }, ticks);
     }
 
 
@@ -1272,7 +1270,7 @@ public final class World {
                 object.getYInRegion(), removeClip);
     }
 
-    public static void spawnObjectTemporaryNewItem(final WorldObject object, int time, int newId) {
+    public static void spawnObjectTemporaryNewItem(final WorldObject object, int ticks, int newId) {
         WorldObject newObject = new WorldObject(newId, object.getType(), object.getRotation(),
                 object.getX(), object.getY(), object.getPlane());
 
@@ -1285,7 +1283,7 @@ public final class World {
                     return;
                 spawnObject(newObject);
             }
-        }, secondsToTicks(time));
+        }, ticks);
     }
 
 
@@ -1303,7 +1301,7 @@ public final class World {
     }
 
 
-    public static void spawnTempGroundObject(final WorldObject object, final int replaceId, long time,
+    public static void spawnTempGroundObject(final WorldObject object, final int replaceId, int ticks,
                                              final boolean removeClip) {
         spawnObject(object);
         WorldTasksManager.schedule(new WorldTask() {
@@ -1312,13 +1310,7 @@ public final class World {
                 removeObject(object);
                 GroundItems.addGroundItem(new Item(replaceId), object, null, false, 60);
             }
-        }, secondsToTicks((int)(time / 1000)));
-    }
-
-
-    public static int secondsToTicks(int seconds) {
-        return Math.max(1, (int) Math.ceil((seconds * 1000d) / Settings.WORLD_CYCLE_TIME));
-
+        }, ticks);
     }
 
     public static void sendObjectAnimation(WorldObject object, Animation animation) {
