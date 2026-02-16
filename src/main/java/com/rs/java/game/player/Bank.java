@@ -15,6 +15,7 @@ import com.rs.java.game.item.meta.MetaDataType;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
+import com.rs.java.game.player.content.presets.PresetManager;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.interfaces.PresetInterface;
@@ -63,6 +64,7 @@ public class Bank implements Serializable {
 
             case 15 -> switchInsertItems();
             case 128 -> PresetInterface.INSTANCE.open(player, true);
+            case 131 -> player.getPresetManager().loadPrevious();
 
             case 17 -> {
                 player.getPackets().sendCSVarInteger(190, 1);

@@ -50,6 +50,8 @@ object PresetInterface {
     private const val SECURITY_YES = 295
     private const val SECURITY_NO = 297
 
+    private const val BACK_TO_BANK = 208
+
     private const val PRAYERBOOK_SPRITE = 42
     private const val PRAYERBOOK_BUTTON = 31
     private const val PRAYERBOOK_TEXT = 32
@@ -95,6 +97,7 @@ object PresetInterface {
         renderPresetList(player)
         renderCurrentSetup(player)
         applyCloseBehavior(player)
+        player.packets.sendHideIComponent(INTERFACE_ID, BACK_TO_BANK, !bank)
     }
 
     private fun applyCloseBehavior(player: Player) {
@@ -207,6 +210,12 @@ object PresetInterface {
 
             FAMILIAR_BUTTON, FAMILIAR_TEXT -> {
                 renderMetaTexts(player, getSelectedPreset(player))
+                return
+            }
+            BACK_TO_BANK -> {
+                player.temporaryAttributtes.remove(ATTR_OPENED_FROM_BANK)
+                player.setCloseInterfacesEvent(null)
+                player.bank.openBank()
                 return
             }
         }

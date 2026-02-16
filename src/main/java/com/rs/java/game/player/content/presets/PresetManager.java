@@ -38,6 +38,8 @@ public final class PresetManager implements Serializable {
         return 28;
     }
 
+    private String lastLoadedPreset;
+
     public void reset() {
         PRESET_SETUPS.clear();
         Msg.info(player, "All of your sets have been cleared. You now have " + getMaxSize() + " available slots.");
@@ -373,6 +375,22 @@ public final class PresetManager implements Serializable {
         player.getSkills().switchXPPopup(true);
         CommandRegistry.execute(player, "heal");
         Msg.info(player, "Loaded setup: " + name + ".");
+        lastLoadedPreset = name;
+    }
+
+    public void loadPrevious() {
+        if (lastLoadedPreset == null || lastLoadedPreset.isEmpty()) {
+            Msg.warn(player, "You have not loaded a preset yet.");
+            return;
+        }
+
+        if (!PRESET_SETUPS.containsKey(lastLoadedPreset)) {
+            Msg.warn(player, "Your previous preset no longer exists.");
+            lastLoadedPreset = null;
+            return;
+        }
+
+        loadPreset(lastLoadedPreset, null, false);
     }
 
     public void copyPreset(Player p2) {

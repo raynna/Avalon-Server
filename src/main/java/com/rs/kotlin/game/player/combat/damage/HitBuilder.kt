@@ -167,8 +167,6 @@ class HitBuilder(
             }
         }
 
-        println("MaxValues: min: ${maxHit.min}, max: ${maxHit.max}, base: ${maxHit.base}")
-        println("Hit: ${hit.damage}")
         val critThreshold = (maxHit.base * 0.99).toInt()
         if (hit.damage >= critThreshold) {
             hit.setCriticalMark()
