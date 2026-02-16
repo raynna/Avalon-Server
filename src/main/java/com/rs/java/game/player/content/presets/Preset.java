@@ -12,10 +12,10 @@ public final class Preset implements Serializable {
 	private static final long serialVersionUID = 1385575955598546603L;
 
 	private final Item[] inventory, equipment;
-	private final boolean curses;
-	private final byte spellBook;
+	private boolean curses;
+	private byte spellBook;
 	private String name;
-	private final int[] levels;
+	private int[] levels;
 	private final Item[] runes;
 	private final Summoning.Pouch familiarPouch;
 
@@ -87,8 +87,16 @@ public final class Preset implements Serializable {
 	}
 
 	public int[] getLevels() {
+		if (levels.length < 8) {
+			int[] upgraded = new int[8];
+			System.arraycopy(levels, 0, upgraded, 0, levels.length);
+			upgraded[7] = 1;
+			levels = upgraded;
+		}
 		return levels;
 	}
+
+
 
 	public int getId(final Player player) {
 		int i = 0;
@@ -100,5 +108,24 @@ public final class Preset implements Serializable {
 		}
 		throw new RuntimeException("failed to locate preset");
 	}
+
+	public void switchPrayerBook() {
+		this.curses = !this.curses;
+	}
+
+	public void switchSpellBook() {
+		switch (this.spellBook) {
+			case 0: // Modern
+				this.spellBook = 1; // Ancient
+				break;
+			case 1: // Ancient
+				this.spellBook = 2; // Lunar
+				break;
+			default: // Lunar or anything else
+				this.spellBook = 0; // Modern
+				break;
+		}
+	}
+
 
 }

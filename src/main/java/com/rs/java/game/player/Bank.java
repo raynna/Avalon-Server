@@ -17,6 +17,7 @@ import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.interfaces.PresetInterface;
 
 public class Bank implements Serializable {
 
@@ -61,6 +62,7 @@ public class Bank implements Serializable {
         switch (componentId) {
 
             case 15 -> switchInsertItems();
+            case 128 -> PresetInterface.INSTANCE.open(player, true);
 
             case 17 -> {
                 player.getPackets().sendCSVarInteger(190, 1);

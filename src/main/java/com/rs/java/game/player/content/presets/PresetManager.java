@@ -75,9 +75,29 @@ public final class PresetManager implements Serializable {
                 runes = player.getRunePouch().getContainerItems();
         Familiar familiar = player.getFamiliar();
         Summoning.Pouch pouch = (familiar != null && familiar.getPouch() != null) ? familiar.getPouch() : null;
+        int[] levels = new int[8];
+
+        levels[0] = player.getSkills().getLevelForXp(0);  // Attack
+        levels[1] = player.getSkills().getLevelForXp(1);  // Defence
+        levels[2] = player.getSkills().getLevelForXp(2);  // Strength
+        levels[3] = player.getSkills().getLevelForXp(3);  // Hitpoints
+        levels[4] = player.getSkills().getLevelForXp(4);  // Range
+        levels[5] = player.getSkills().getLevelForXp(5);  // Prayer
+        levels[6] = player.getSkills().getLevelForXp(6);  // Magic
+        levels[7] = player.getSkills().getLevelForXp(23); // Summoning
+        System.out.println("=== SAVING PRESET: " + name + " ===");
+        System.out.println("Attack: " + levels[0]);
+        System.out.println("Defence: " + levels[1]);
+        System.out.println("Strength: " + levels[2]);
+        System.out.println("Hitpoints: " + levels[3]);
+        System.out.println("Range: " + levels[4]);
+        System.out.println("Prayer: " + levels[5]);
+        System.out.println("Magic: " + levels[6]);
+        System.out.println("Summoning: " + levels[7]);
+        System.out.println("=================================");
         PRESET_SETUPS.put(name,
                 new Preset(name, inventory, equipment, player.getPrayer().isAncientCurses(),
-                        player.getCombatDefinitions().spellBook, toIntArray(Arrays.copyOf(player.getSkills().getLevels(), 7)), runes, pouch));
+                        player.getCombatDefinitions().spellBook, levels, runes, pouch));
         Msg.success(player, "You've successfully stored the set " + name + ".");
     }
 
@@ -252,11 +272,32 @@ public final class PresetManager implements Serializable {
 
         if (Settings.ECONOMY_MODE != Settings.FULL_ECONOMY) {
             int[] levels = set.getLevels();
-            if (levels != null && levels.length >= 7) {
-                for (int i = 0; i < 7; i++) {
-                    player.getSkills().set(i, levels[i]);
-                    player.getSkills().setXp(i, Skills.getXPForLevel(levels[i]));
-                    player.getSkills().refresh(i);
+            System.out.println("=== LOADING PRESET: " + name + " ===");
+            for (int i = 0; i < levels.length; i++) {
+                System.out.println("levels[" + i + "] = " + levels[i]);
+            }
+            System.out.println("=================================");
+            if (levels != null && levels.length >= 8) {
+
+                int[] skillMap = {
+                        Skills.ATTACK,
+                        Skills.DEFENCE,
+                        Skills.STRENGTH,
+                        Skills.HITPOINTS,
+                        Skills.RANGE,
+                        Skills.PRAYER,
+                        Skills.MAGIC,
+                        Skills.SUMMONING
+                };
+
+                for (int i = 0; i < skillMap.length; i++) {
+
+                    int skillId = skillMap[i];
+                    int level = levels[i];
+
+                    player.getSkills().set(skillId, level);
+                    player.getSkills().setXp(skillId, Skills.getXPForLevel(level));
+                    player.getSkills().refresh(skillId);
                 }
             }
         }

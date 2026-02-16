@@ -181,7 +181,7 @@ public class TaskManager implements Serializable {
 		// taskStages.remove(task);
 		player.queue().enqueue(() -> {
 			player.getInterfaceManager().sendOverlay(3050, false);
-			player.getPackets().sendTextOnComponent(3050, 6, Utils.wrapItemName(Utils.formatString(task.toString()), 18));
+			player.getPackets().sendTextOnComponent(3050, 6, Utils.wrapString(Utils.formatString(task.toString()), 18));
 			player.getPackets().sendRunScript(10003);
 		});
 		player.queue().enqueue(4, () -> {

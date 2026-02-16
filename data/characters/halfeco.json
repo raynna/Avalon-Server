@@ -15,7 +15,7 @@
     "lifes": 0
   },
   "pouch": {},
-  "appearence": {
+  "appearance": {
     "title": -1,
     "lookI": [
       7,
@@ -1127,7 +1127,7 @@
   "strongHoldSecurityFloor3": false,
   "strongHoldSecurityFloor4": false,
   "connectedClanChannel": false,
-  "lastLoggedIn": 1769970577129,
+  "lastLoggedIn": 1771201087311,
   "petManager": {
     "petDetails": {},
     "npcId": 0,
@@ -1274,7 +1274,7 @@
   "farmingManager": {
     "growthMultiplier": 1000.0,
     "spots": [],
-    "globalTickCounter": 11,
+    "globalTickCounter": 24,
     "playerGrowthOffset": 191
   },
   "controlerManager": {},
@@ -2566,7 +2566,7 @@
   "clanChatSetup": 0,
   "guestChatSetup": 0,
   "skullDelay": 0,
-  "skullId": 0,
+  "skullId": 5,
   "poisonImmune": 0,
   "fireImmune": 0,
   "antiFire": 0,
@@ -2732,8 +2732,8 @@
   },
   "squealOfFortune": {
     "version": 1,
-    "lastDailySpinsGiveaway": 1769970570347,
-    "dailySpins": 6,
+    "lastDailySpinsGiveaway": 1771201079609,
+    "dailySpins": 7,
     "earnedSpins": 0,
     "boughtSpins": 0,
     "rewardSlot": -1,
@@ -2832,6 +2832,6 @@
     "entityName": "halfeco"
   },
   "x": 3093,
-  "y": 3491,
+  "y": 3493,
   "plane": 0
 }

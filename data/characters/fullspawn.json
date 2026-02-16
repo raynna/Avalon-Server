@@ -19,7 +19,7 @@
     "lifes": 0
   },
   "pouch": {},
-  "appearence": {
+  "appearance": {
     "title": -1,
     "lookI": [
       7,
@@ -49,7 +49,7 @@
     "items": {
       "data": [
         {
-          "id": 4749,
+          "id": 10386,
           "amount": 1
         },
         {
@@ -57,27 +57,27 @@
           "amount": 1
         },
         {
-          "id": 1712,
-          "amount": 1
-        },
-        {
-          "id": 2503,
-          "amount": 1
-        },
-        {
-          "id": 4751,
-          "amount": 1
-        },
-        {
-          "id": 20072,
-          "amount": 1
-        },
-        {
           "id": 6570,
           "amount": 1
         },
         {
-          "id": 5698,
+          "id": 10551,
+          "amount": 1
+        },
+        {
+          "id": 10388,
+          "amount": 1
+        },
+        {
+          "id": 8850,
+          "amount": 1
+        },
+        {
+          "id": 1093,
+          "amount": 1
+        },
+        {
+          "id": 11694,
           "amount": 1
         },
         {
@@ -89,6 +89,10 @@
           "amount": 1
         },
         {
+          "id": 15272,
+          "amount": 1
+        },
+        {
           "id": 3024,
           "amount": 1
         },
@@ -97,11 +101,7 @@
           "amount": 1
         },
         {
-          "id": 3144,
-          "amount": 1
-        },
-        {
-          "id": 3144,
+          "id": 15272,
           "amount": 1
         },
         {
@@ -154,7 +154,7 @@
         },
         {
           "id": 12437,
-          "amount": 50
+          "amount": 24
         },
         {
           "id": 24510,
@@ -163,9 +163,9 @@
             "type": 1,
             "data": {
               "runes": {
-                "560": 400,
-                "565": 200,
-                "555": 600
+                "560": 392,
+                "565": 196,
+                "555": 588
               }
             }
           }
@@ -178,7 +178,7 @@
     "items": {
       "data": [
         {
-          "id": 10828,
+          "id": 3751,
           "amount": 1
         },
         {
@@ -186,24 +186,24 @@
           "amount": 1
         },
         {
-          "id": 18335,
+          "id": 1712,
           "amount": 1
         },
         {
-          "id": 4675,
+          "id": 15486,
           "amount": 1
         },
         {
-          "id": 4712,
+          "id": 4091,
           "amount": 1
         },
         {
-          "id": 3842,
+          "id": 13734,
           "amount": 1
         },
         null,
         {
-          "id": 4714,
+          "id": 4093,
           "amount": 1
         },
         null,
@@ -212,7 +212,7 @@
           "amount": 1
         },
         {
-          "id": 11732,
+          "id": 3105,
           "amount": 1
         },
         null,
@@ -247,11 +247,11 @@
         },
         {
           "id": 3751,
-          "amount": 143
+          "amount": 147
         },
         {
           "id": 10828,
-          "amount": 121
+          "amount": 122
         },
         {
           "id": 3122,
@@ -287,11 +287,11 @@
         },
         {
           "id": 1333,
-          "amount": 101
+          "amount": 105
         },
         {
           "id": 4587,
-          "amount": 113
+          "amount": 115
         },
         {
           "id": 1305,
@@ -303,7 +303,7 @@
         },
         {
           "id": 5698,
-          "amount": 148
+          "amount": 151
         },
         {
           "id": 1377,
@@ -351,7 +351,7 @@
         },
         {
           "id": 1093,
-          "amount": 126
+          "amount": 130
         },
         {
           "id": 9678,
@@ -363,31 +363,31 @@
         },
         {
           "id": 10386,
-          "amount": 44
+          "amount": 48
         },
         {
           "id": 4151,
-          "amount": 54
+          "amount": 57
         },
         {
           "id": 6570,
-          "amount": 53
+          "amount": 58
         },
         {
           "id": 10551,
-          "amount": 40
+          "amount": 44
         },
         {
           "id": 10388,
-          "amount": 44
+          "amount": 48
         },
         {
           "id": 8850,
-          "amount": 44
+          "amount": 48
         },
         {
           "id": 11694,
-          "amount": 31
+          "amount": 33
         },
         {
           "id": 2440,
@@ -399,7 +399,7 @@
         },
         {
           "id": 3024,
-          "amount": 192
+          "amount": 202
         },
         {
           "id": 391,
@@ -407,39 +407,39 @@
         },
         {
           "id": 6685,
-          "amount": 194
+          "amount": 204
         },
         {
           "id": 12437,
-          "amount": 4271
+          "amount": 4421
         },
         {
           "id": 2412,
-          "amount": 90
+          "amount": 95
         },
         {
           "id": 13734,
-          "amount": 44
-        },
-        {
-          "id": 7462,
-          "amount": 87
-        },
-        {
-          "id": 3105,
           "amount": 48
         },
         {
+          "id": 7462,
+          "amount": 92
+        },
+        {
+          "id": 3105,
+          "amount": 56
+        },
+        {
           "id": 15220,
-          "amount": 105
+          "amount": 110
         },
         {
           "id": 6585,
-          "amount": 62
+          "amount": 64
         },
         {
           "id": 18335,
-          "amount": 76
+          "amount": 79
         },
         {
           "id": 23659,
@@ -455,7 +455,7 @@
         },
         {
           "id": 15486,
-          "amount": 52
+          "amount": 54
         },
         {
           "id": 6914,
@@ -467,11 +467,11 @@
         },
         {
           "id": 1712,
-          "amount": 25
+          "amount": 28
         },
         {
           "id": 15272,
-          "amount": 903
+          "amount": 959
         },
         {
           "id": 4736,
@@ -483,15 +483,15 @@
         },
         {
           "id": 20072,
-          "amount": 55
+          "amount": 56
         },
         {
           "id": 3144,
-          "amount": 109
+          "amount": 111
         },
         {
           "id": 4712,
-          "amount": 26
+          "amount": 27
         },
         {
           "id": 6889,
@@ -499,11 +499,11 @@
         },
         {
           "id": 4714,
-          "amount": 26
+          "amount": 27
         },
         {
           "id": 11732,
-          "amount": 26
+          "amount": 27
         },
         {
           "id": 4718,
@@ -523,11 +523,11 @@
         },
         {
           "id": 8013,
-          "amount": 2000
+          "amount": 2225
         },
         {
           "id": 9739,
-          "amount": 54
+          "amount": 59
         },
         {
           "id": 21371,
@@ -599,15 +599,15 @@
         },
         {
           "id": 4749,
-          "amount": 8
+          "amount": 9
         },
         {
           "id": 4751,
-          "amount": 8
+          "amount": 9
         },
         {
           "id": 3842,
-          "amount": 13
+          "amount": 14
         },
         {
           "id": 2444,
@@ -631,7 +631,7 @@
         },
         {
           "id": 1725,
-          "amount": 5
+          "amount": 9
         },
         {
           "id": 22361,
@@ -715,7 +715,7 @@
         },
         {
           "id": 544,
-          "amount": 3
+          "amount": 7
         },
         {
           "id": 7459,
@@ -758,43 +758,43 @@
         },
         {
           "id": 1319,
-          "amount": 1
+          "amount": 5
         },
         {
           "id": 2667,
-          "amount": 1
+          "amount": 5
         },
         {
           "id": 2661,
-          "amount": 1
+          "amount": 5
         },
         {
           "id": 373,
-          "amount": 18
+          "amount": 90
         },
         {
           "id": 113,
-          "amount": 1
+          "amount": 5
         },
         {
           "id": 2665,
-          "amount": 1
+          "amount": 5
         },
         {
           "id": 2663,
-          "amount": 1
+          "amount": 5
         },
         {
           "id": 2301,
-          "amount": 2
+          "amount": 10
         },
         {
           "id": 9756,
-          "amount": 1
+          "amount": 5
         },
         {
           "id": 853,
-          "amount": 1
+          "amount": 5
         },
         {
           "id": 13911,
@@ -920,6 +920,98 @@
         {
           "id": 24608,
           "amount": 998
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24203,
+          "amount": 1,
+          "metadata": {
+            "type": 5,
+            "data": {
+              "spellId": 23,
+              "charges": 250
+            }
+          }
+        },
+        {
+          "id": 24510,
+          "amount": 1,
+          "metadata": {
+            "type": 1,
+            "data": {
+              "runes": {
+                "560": 400,
+                "565": 200,
+                "555": 600
+              }
+            }
+          }
+        },
+        {
+          "id": 24203,
+          "amount": 1,
+          "metadata": {
+            "type": 5,
+            "data": {
+              "spellId": 23,
+              "charges": 250
+            }
+          }
         }
       ],
       [
@@ -929,7 +1021,7 @@
         },
         {
           "id": 2503,
-          "amount": 113
+          "amount": 114
         },
         {
           "id": 2491,
@@ -937,11 +1029,11 @@
         },
         {
           "id": 1169,
-          "amount": 103
+          "amount": 107
         },
         {
           "id": 1065,
-          "amount": 101
+          "amount": 105
         },
         {
           "id": 1135,
@@ -961,7 +1053,7 @@
         },
         {
           "id": 890,
-          "amount": 5100
+          "amount": 5500
         },
         {
           "id": 9243,
@@ -985,7 +1077,7 @@
         },
         {
           "id": 1099,
-          "amount": 101
+          "amount": 105
         },
         {
           "id": 6324,
@@ -1007,7 +1099,7 @@
       [
         {
           "id": 4675,
-          "amount": 123
+          "amount": 124
         },
         {
           "id": 4089,
@@ -1051,7 +1143,7 @@
         },
         {
           "id": 4091,
-          "amount": 126
+          "amount": 130
         },
         {
           "id": 14497,
@@ -1091,7 +1183,7 @@
         },
         {
           "id": 4093,
-          "amount": 126
+          "amount": 130
         },
         {
           "id": 14501,
@@ -1138,6 +1230,13 @@
   },
   "skills": {
     "level": [
+      75,
+      45,
+      99,
+      99,
+      99,
+      99,
+      106,
       99,
       99,
       99,
@@ -1155,16 +1254,16 @@
       99,
       99,
       99,
-      99,
-      99,
-      99,
-      99,
-      99,
-      99,
-      97,
       99
     ],
     "xp": [
+      1210917.0,
+      61512.0,
+      1.3034431E7,
+      1.3034705E7,
+      1.3034431E7,
+      1.3034431E7,
+      1.3034699E7,
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
@@ -1181,18 +1280,11 @@
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034831E7,
+      1.30345432E7,
       1.3034431E7
     ],
     "xpTracks": [
-      1.307824917200002E7,
+      1.307959937200002E7,
       0.0,
       0.0
     ],
@@ -1465,10 +1557,11 @@
         "levels": [
           40,
           40,
-          70,
+          99,
           99,
           99,
           43,
+          99,
           99
         ],
         "runes": [
@@ -1653,6 +1746,7 @@
         "spellBook": 1,
         "name": "kbd",
         "levels": [
+          99,
           99,
           99,
           99,
@@ -1857,6 +1951,7 @@
           99,
           99,
           99,
+          99,
           99
         ],
         "runes": [
@@ -2048,6 +2143,7 @@
           99,
           99,
           99,
+          99,
           99
         ],
         "runes": [
@@ -2233,6 +2329,7 @@
         "spellBook": 1,
         "name": "maxmax",
         "levels": [
+          99,
           99,
           99,
           99,
@@ -2442,6 +2539,7 @@
           99,
           99,
           99,
+          99,
           99
         ],
         "runes": [
@@ -2641,6 +2739,7 @@
           99,
           99,
           77,
+          99,
           99
         ],
         "runes": [
@@ -2822,6 +2921,7 @@
           99,
           99,
           52,
+          99,
           99
         ],
         "runes": [
@@ -3009,6 +3109,7 @@
         "spellBook": 2,
         "name": "void melee",
         "levels": [
+          99,
           99,
           99,
           99,
@@ -3222,6 +3323,7 @@
           99,
           99,
           99,
+          99,
           99
         ],
         "runes": [
@@ -3364,6 +3466,7 @@
         "spellBook": 1,
         "name": "max strength",
         "levels": [
+          99,
           99,
           99,
           99,
@@ -3558,6 +3661,7 @@
         "spellBook": 1,
         "name": "void tribrid",
         "levels": [
+          99,
           99,
           99,
           99,
@@ -3764,7 +3868,8 @@
         "name": "75/45 max",
         "levels": [
           75,
-          45,
+          56,
+          99,
           99,
           99,
           99,
@@ -3974,6 +4079,7 @@
           99,
           99,
           99,
+          99,
           99
         ],
         "runes": [
@@ -4159,6 +4265,7 @@
         "spellBook": 1,
         "name": "main hybrid",
         "levels": [
+          99,
           99,
           99,
           99,
@@ -4356,6 +4463,7 @@
           99,
           99,
           99,
+          99,
           99
         ],
         "runes": [
@@ -4394,7 +4502,7 @@
   },
   "staffCharges": {},
   "combatDefinitions": {
-    "attackStyle": 1,
+    "attackStyle": 0,
     "specialAttackPercentage": 100,
     "autoRetaliate": false,
     "sortSpellBook": 1,
@@ -4808,7 +4916,7 @@
   "strongHoldSecurityFloor3": false,
   "strongHoldSecurityFloor4": false,
   "connectedClanChannel": false,
-  "lastLoggedIn": 1769908617400,
+  "lastLoggedIn": 1771201225732,
   "petManager": {
     "petDetails": {},
     "npcId": 0,
@@ -4955,7 +5063,7 @@
   "farmingManager": {
     "growthMultiplier": 1000.0,
     "spots": [],
-    "globalTickCounter": 1563,
+    "globalTickCounter": 3158,
     "playerGrowthOffset": 82
   },
   "controlerManager": {},
@@ -6239,7 +6347,7 @@
       null
     ]
   },
-  "runEnergy": 100,
+  "runEnergy": 99,
   "allowChatEffects": true,
   "mouseButtons": true,
   "privateChatSetup": 1,
@@ -6247,7 +6355,7 @@
   "clanChatSetup": 9,
   "guestChatSetup": 4,
   "skullDelay": 0,
-  "skullId": 0,
+  "skullId": 5,
   "poisonImmune": 0,
   "fireImmune": 0,
   "antiFire": 0,
@@ -6382,7 +6490,6 @@
     ],
     "alwaysStackable": false
   },
-  "familiarPouch": "WOLPERTINGER",
   "frozenKeyCharges": 0,
   "member": false,
   "memberTill": 0,
@@ -6409,7 +6516,7 @@
   },
   "squealOfFortune": {
     "version": 1,
-    "lastDailySpinsGiveaway": 1769908325873,
+    "lastDailySpinsGiveaway": 1771201089984,
     "dailySpins": 8,
     "earnedSpins": 3,
     "boughtSpins": 0,
@@ -6507,10 +6614,14 @@
   "stringKey": {},
   "tickTimers": {},
   "tickManager": {
-    "tickTimers": {},
+    "tickTimers": {
+      "LAST_INTERACTION_TARGET": 9,
+      "LAST_ATTACK_TICK": 13,
+      "GRANITE_MAUL_TIMER": 2
+    },
     "entityName": "fullspawn"
   },
-  "x": 3093,
+  "x": 3094,
   "y": 3495,
   "plane": 0
 }

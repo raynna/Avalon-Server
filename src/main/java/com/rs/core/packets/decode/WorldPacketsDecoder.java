@@ -75,6 +75,7 @@ import com.rs.kotlin.game.player.combat.magic.*;
 import com.rs.kotlin.game.player.command.CommandRegistry;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
 import com.rs.kotlin.game.player.interfaces.DropSearch;
+import com.rs.kotlin.game.player.interfaces.PresetInterface;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
 /**
@@ -1723,6 +1724,47 @@ public final class WorldPacketsDecoder extends Decoder {
                         !player.getInterfaceManager().containsInterface(11));
             return;
         }
+        if (player.getTemporaryAttributtes().get("PRESET_EDIT_SKILL") != null) {
+
+            Integer skillId = (Integer) player.getTemporaryAttributtes().remove("PRESET_EDIT_SKILL");
+
+            int level;
+
+            try {
+                level = value;
+            } catch (Exception e) {
+                player.message("Invalid number.");
+                return;
+            }
+
+            if (level < 1) level = 1;
+            if (level > 99) level = 99;
+
+            Preset preset = PresetInterface.INSTANCE.getSelectedPreset(player);
+            if (preset == null)
+                return;
+
+            int[] levels = preset.getLevels();
+            int index = -1;
+
+            switch (skillId) {
+                case 0: index = 0; break; // Attack
+                case 1: index = 1; break; // Defence
+                case 2: index = 2; break; // Strength
+                case 3: index = 3; break; // Hitpoints
+                case 4: index = 4; break; // Range
+                case 5: index = 5; break; // Prayer
+                case 6: index = 6; break; // Magic
+                case 23: index = 7; break; // Summoning
+            }
+
+            if (index != -1) {
+                levels[index] = level;
+            }
+
+            PresetInterface.INSTANCE.selectPresetByName(player, preset.getName());
+        }
+
 
         // Dungeoneering smithing (934)
         if (player.getInterfaceManager().containsInterface(934)
@@ -2372,12 +2414,57 @@ public final class WorldPacketsDecoder extends Decoder {
             player.temporaryAttribute().remove("CUSTOM_TITLE_SET");
             player.temporaryAttribute().remove("TITLE_ORDER_SET");
             return;
+        } else if (player.temporaryAttribute().get("PRESET_SAVE_PROMPT") == Boolean.TRUE) {
+            player.temporaryAttribute().remove("PRESET_SAVE_PROMPT");
+            player.getPresetManager().savePreset(value);
+            boolean fromBank = Boolean.TRUE.equals(
+                    player.getTemporaryAttributtes().get("preset_opened_from_bank")
+            );
+
+            PresetInterface.INSTANCE.open(player, fromBank);
+            PresetInterface.INSTANCE.selectPresetByName(player, value);
         } else if (player.temporaryAttribute().get("SAVESETUP") == Boolean.TRUE) {
             player.temporaryAttribute().remove("SAVESETUP");
             player.getPresetManager().savePreset(value);
             GearTab.refresh(player);
             return;
-        } else if (player.temporaryAttribute().get("RENAME_SETUP") == Boolean.TRUE) {
+        } if (player.getTemporaryAttributtes().get("preset_rename_target") != null) {
+
+            String oldName = (String) player.getTemporaryAttributtes().remove("preset_rename_target");
+            String newName = value;
+
+            if (newName.trim().isEmpty()) {
+                player.message("Invalid name.");
+                return;
+            }
+
+            newName = newName.toLowerCase();
+
+            if (player.getPresetManager().PRESET_SETUPS.containsKey(newName)) {
+                player.message("A preset with that name already exists.");
+                return;
+            }
+
+            Preset preset = player.getPresetManager().PRESET_SETUPS.remove(oldName.toLowerCase());
+
+            if (preset == null) {
+                player.message("Preset not found.");
+                return;
+            }
+
+            preset.setName(newName);
+            player.getPresetManager().PRESET_SETUPS.put(newName, preset);
+
+            player.message("Preset renamed to " + newName + ".");
+
+            boolean fromBank = Boolean.TRUE.equals(
+                    player.getTemporaryAttributtes().get("preset_opened_from_bank")
+            );
+
+            PresetInterface.INSTANCE.open(player, fromBank);
+            PresetInterface.INSTANCE.selectPresetByName(player, newName);
+            return;
+    } else if (player.temporaryAttribute().get("RENAME_SETUP") == Boolean.TRUE) {
             player.temporaryAttribute().remove("RENAME_SETUP");
             Integer selectedGear = (Integer) player.getTemporaryAttributtes().get("SELECTED_RENAME");
             if (selectedGear != null) {

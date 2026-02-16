@@ -77,7 +77,7 @@ public final class Utils {
 		return tile;
 	}
 
-	public static String wrapItemName(String name, int maxLineLength) {
+	public static String wrapString(String name, int maxLineLength) {
 		if (name.length() <= maxLineLength) {
 			return name;
 		}
@@ -1110,6 +1110,21 @@ public final class Utils {
 			}
 		}
 		return newName.toString();
+	}
+
+	public static String capitalizeFirst(String input) {
+		if (input == null) {
+			return null;
+		}
+
+		input = input.trim();
+		if (input.isEmpty()) {
+			return input;
+		}
+
+		input = input.toLowerCase();
+
+		return input.substring(0, 1).toUpperCase() + input.substring(1);
 	}
 
 	public static <T> T randomWeighted(Object... data) {

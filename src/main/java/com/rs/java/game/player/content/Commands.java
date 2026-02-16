@@ -13,6 +13,7 @@ import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.java.game.*;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.item.Item;
+import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
 import com.rs.java.game.npc.NPC;
@@ -35,6 +36,7 @@ import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
+import com.rs.kotlin.game.player.interfaces.PresetInterface;
 
 public final class Commands {
 
@@ -497,6 +499,7 @@ public final class Commands {
         registerCommand("removeironman", Commands::removeIronman, CommandCategory.DEVELOPER, "Removes your ironman ranks.");
         registerCommand("removedonator", Commands::removeDonator, CommandCategory.DEVELOPER, "Removes your donator ranks.");
         registerCommand("drops", Commands::showDrops, CommandCategory.DEVELOPER, "Shows drops interface");
+        registerCommand("testpreset", Commands::testPreset, CommandCategory.DEVELOPER, "Shows drops interface");
     }
 
     private static void registerCommand(String name, Command command, CommandCategory category, String description) {
@@ -2488,6 +2491,12 @@ public final class Commands {
 
     private static boolean showDrops(Player player, String[] cmd) {
         DropInterface.INSTANCE.open(player, true);
+        return true;
+    }
+
+
+    private static boolean testPreset(Player player, String[] cmd) {
+        PresetInterface.INSTANCE.open(player, false);
         return true;
     }
 

@@ -493,7 +493,7 @@ class LogCategory implements Serializable {
                     player.getInterfaceManager().sendOverlay(3051, false);
                     player.getPackets().sendTextOnComponent(
                             3051, 6,
-                            Utils.wrapItemName(value.getName(), 18));
+                            Utils.wrapString(value.getName(), 18));
                     player.getPackets().sendRunScript(10000);
                 });
                 player.queue().enqueue(4, () -> player.getPackets().sendRunScript(10002));
