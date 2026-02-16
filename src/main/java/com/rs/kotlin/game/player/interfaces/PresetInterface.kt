@@ -456,6 +456,10 @@ object PresetInterface {
     }
 
     private fun handleSave(player: Player) {
+        if (player.presetManager.PRESET_SETUPS.size - 1 >= MAX_VISIBLE_PRESETS) {
+            warn(player,"You can't have more than $MAX_VISIBLE_PRESETS presets.")
+            return
+        }
         player.temporaryAttributtes.remove(ATTR_CONFIRM_DELETE)
         player.temporaryAttributtes.remove(ATTR_CONFIRM_OVERWRITE)
 

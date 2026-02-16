@@ -301,23 +301,6 @@ public final class Launcher {
 		System.gc();
 
 		try {
-			String javaBin = System.getProperty("java.home") + "/bin/java";
-			String classpath = "bin;data/libs/netty-3.5.2.Final.jar;data/libs/RuneTopListV2.jar;data/libs/FileStore.jar;data/lib/GTLVote.jar;data/lib/mysql2.jar";
-			String mainClass = "com.rs.Launcher";
-
-			ProcessBuilder builder = new ProcessBuilder(
-					javaBin,
-					"-XX:-OmitStackTraceInFastThrow",
-					"-Xms1024m",
-					"-cp",
-					classpath,
-					mainClass,
-					"false",
-					"false",
-					"false"
-			);
-
-			builder.start();
 			System.exit(0);
 		} catch (Throwable e) {
 			Logger.handle(e);

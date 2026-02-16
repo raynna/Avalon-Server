@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.24"
     application
     java
+	id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "com.rs"
@@ -59,3 +60,9 @@ tasks.withType<JavaCompile> {
 kotlin {
     jvmToolchain(21)
 }
+
+tasks.shadowJar {
+    archiveClassifier.set("") // removes "-all" suffix
+    mergeServiceFiles()
+}
+
