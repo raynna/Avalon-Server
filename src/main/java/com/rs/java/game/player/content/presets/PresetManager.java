@@ -85,16 +85,6 @@ public final class PresetManager implements Serializable {
         levels[5] = player.getSkills().getLevelForXp(5);  // Prayer
         levels[6] = player.getSkills().getLevelForXp(6);  // Magic
         levels[7] = player.getSkills().getLevelForXp(23); // Summoning
-        System.out.println("=== SAVING PRESET: " + name + " ===");
-        System.out.println("Attack: " + levels[0]);
-        System.out.println("Defence: " + levels[1]);
-        System.out.println("Strength: " + levels[2]);
-        System.out.println("Hitpoints: " + levels[3]);
-        System.out.println("Range: " + levels[4]);
-        System.out.println("Prayer: " + levels[5]);
-        System.out.println("Magic: " + levels[6]);
-        System.out.println("Summoning: " + levels[7]);
-        System.out.println("=================================");
         PRESET_SETUPS.put(name,
                 new Preset(name, inventory, equipment, player.getPrayer().isAncientCurses(),
                         player.getCombatDefinitions().spellBook, levels, runes, pouch));
@@ -272,11 +262,6 @@ public final class PresetManager implements Serializable {
 
         if (Settings.ECONOMY_MODE != Settings.FULL_ECONOMY) {
             int[] levels = set.getLevels();
-            System.out.println("=== LOADING PRESET: " + name + " ===");
-            for (int i = 0; i < levels.length; i++) {
-                System.out.println("levels[" + i + "] = " + levels[i]);
-            }
-            System.out.println("=================================");
             if (levels != null && levels.length >= 8) {
 
                 int[] skillMap = {

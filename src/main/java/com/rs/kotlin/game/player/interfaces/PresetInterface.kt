@@ -7,10 +7,11 @@ import com.rs.java.game.player.Skills
 import com.rs.java.game.player.actions.skills.summoning.Summoning
 import com.rs.java.game.player.content.presets.Preset
 import com.rs.java.utils.Utils
+import com.rs.kotlin.game.world.util.Msg.warn
 
 object PresetInterface {
 
-    private const val INTERFACE_ID = 3053
+    const val INTERFACE_ID = 3053
 
     private const val VIEWING_TITLE = 299
 
@@ -174,6 +175,10 @@ object PresetInterface {
             }
 
             PRAYERBOOK_BUTTON, PRAYERBOOK_TEXT -> {
+                if (player.inPkingArea()) {
+                    warn(player, "You can't switch prayerbook in player killing areas.")
+                    return
+                }
                 val preset = getSelectedPreset(player)
                 if (preset == null) {
                     player.prayer.setPrayerBook(!player.prayer.isAncientCurses)
@@ -185,6 +190,10 @@ object PresetInterface {
             }
 
             SPELLBOOK_BUTTON, SPELLBOOK_TEXT -> {
+                if (player.inPkingArea()) {
+                    warn(player, "You can't switch spellbook in player killing areas.")
+                    return
+                }
                 val preset = getSelectedPreset(player)
                 if (preset == null) {
                     val spellBook = player.getCombatDefinitions().spellBook.toInt()
@@ -205,7 +214,6 @@ object PresetInterface {
             val levelComponent = baseComponent
 
             if (componentId == levelComponent) {
-                println("Clicked skillId: $skillId")
                 handleLevelEdit(player, skillId)
                 return
             }
@@ -235,7 +243,10 @@ object PresetInterface {
 
 
     private fun handleLevelEdit(player: Player, skillId: Int) {
-
+        if (player.inPkingArea()) {
+            warn(player, "You can't change levels in player killing areas.")
+            return
+        }
         val preset = getSelectedPreset(player)
         if (preset == null) {
             player.packets.sendGameMessage("Select a preset first.")
@@ -402,7 +413,6 @@ object PresetInterface {
             Skills.MAGIC to 6,
             Skills.SUMMONING to 7
         )
-        println("=== RENDERING PRESET ===")
         for ((skillId, baseComponent) in SKILL_COMPONENTS) {
 
             val index = skillIndexMap[skillId]
@@ -412,7 +422,6 @@ object PresetInterface {
             } else {
                 player.skills.getLevelForXp(skillId)
             }
-            println("SkillId: $skillId -> index: $index -> level: $level")
             player.packets.sendTextOnComponent(
                 INTERFACE_ID,
                 baseComponent + 3,
@@ -521,7 +530,6 @@ object PresetInterface {
     private fun renderMetaTexts(player: Player, preset: Preset?) {
 
         val curses = preset?.isAncientCurses ?: player.prayer.isAncientCurses
-        println("curses: $curses")
         val spellBook = preset?.spellBook?.toInt() ?: player.combatDefinitions.spellBook.toInt()
         val pouch = preset?.familiar ?: player.familiar?.pouch
         val prayerText = if (curses) "Curses" else "Regular"

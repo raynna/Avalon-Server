@@ -57,7 +57,7 @@
           "amount": 1
         },
         {
-          "id": 6570,
+          "id": 2412,
           "amount": 1
         },
         {
@@ -77,7 +77,7 @@
           "amount": 1
         },
         {
-          "id": 11694,
+          "id": 3751,
           "amount": 1
         },
         {
@@ -89,7 +89,7 @@
           "amount": 1
         },
         {
-          "id": 15272,
+          "id": 11694,
           "amount": 1
         },
         {
@@ -154,7 +154,7 @@
         },
         {
           "id": 12437,
-          "amount": 24
+          "amount": 23
         },
         {
           "id": 24510,
@@ -163,9 +163,9 @@
             "type": 1,
             "data": {
               "runes": {
-                "560": 392,
-                "565": 196,
-                "555": 588
+                "560": 376,
+                "565": 188,
+                "555": 564
               }
             }
           }
@@ -177,12 +177,9 @@
   "equipment": {
     "items": {
       "data": [
+        null,
         {
-          "id": 3751,
-          "amount": 1
-        },
-        {
-          "id": 2412,
+          "id": 6570,
           "amount": 1
         },
         {
@@ -1236,7 +1233,7 @@
       99,
       99,
       99,
-      106,
+      105,
       99,
       99,
       99,
@@ -1253,19 +1250,17 @@
       99,
       99,
       99,
-      99,
+      98,
       99
     ],
     "xp": [
       1210917.0,
       61512.0,
-      1.3034431E7,
-      1.3034705E7,
-      1.3034431E7,
-      1.3034431E7,
-      1.3034699E7,
+      1.3035028E7,
+      1.303518E7,
       1.3034431E7,
       1.3034431E7,
+      1.3035377E7,
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
@@ -1280,11 +1275,13 @@
       1.3034431E7,
       1.3034431E7,
       1.3034431E7,
-      1.30345432E7,
+      1.3034431E7,
+      1.3034431E7,
+      1.3034555399999999E7,
       1.3034431E7
     ],
     "xpTracks": [
-      1.307959937200002E7,
+      1.308136157200002E7,
       0.0,
       0.0
     ],
@@ -5063,7 +5060,7 @@
   "farmingManager": {
     "growthMultiplier": 1000.0,
     "spots": [],
-    "globalTickCounter": 3158,
+    "globalTickCounter": 3258,
     "playerGrowthOffset": 82
   },
   "controlerManager": {},
@@ -6347,7 +6344,7 @@
       null
     ]
   },
-  "runEnergy": 99,
+  "runEnergy": 100,
   "allowChatEffects": true,
   "mouseButtons": true,
   "privateChatSetup": 1,
@@ -6614,14 +6611,10 @@
   "stringKey": {},
   "tickTimers": {},
   "tickManager": {
-    "tickTimers": {
-      "LAST_INTERACTION_TARGET": 9,
-      "LAST_ATTACK_TICK": 13,
-      "GRANITE_MAUL_TIMER": 2
-    },
+    "tickTimers": {},
     "entityName": "fullspawn"
   },
   "x": 3094,
-  "y": 3495,
+  "y": 3493,
   "plane": 0
 }

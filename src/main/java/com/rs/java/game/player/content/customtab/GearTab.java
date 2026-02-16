@@ -7,6 +7,7 @@ import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.presets.Preset;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.interfaces.PresetInterface;
 
 public class GearTab extends CustomTab {
 
@@ -52,8 +53,8 @@ public class GearTab extends CustomTab {
 		player.getTemporaryAttributtes().remove("SELECTEDGEAR");
 		player.getPackets().sendHideIComponent(3002, BACK_BUTTON, true);
 		player.getPackets().sendHideIComponent(3002, FORWARD_BUTTON, true);
-		player.getPackets().sendHideIComponent(3002, BLUE_STAR_COMP, true);
-		player.getPackets().sendIComponentSprite(3002, BLUE_STAR_COMP, "sprite.leave_door");// 9747
+		player.getPackets().sendHideIComponent(3002, BLUE_STAR_COMP, false);
+		player.getPackets().sendIComponentSprite(3002, BLUE_STAR_COMP, "sprite.helm_and_shield");// 9747
 		player.getPackets().sendHideIComponent(3002, GREEN_STAR_COMP, false);
 		//player.getPackets().sendIComponentSprite(3002, RED_STAR_COMP, EQUIPMENT_SPRITE);
 		player.getPackets().sendIComponentSprite(3002, RED_STAR_COMP, "sprite.add_to_bag");
@@ -102,10 +103,7 @@ public class GearTab extends CustomTab {
 		if (p2 == null && name != null)
 			p2 = AccountCreation.loadPlayer(otherName);
 		if (compId == 62) {
-			if (p2 != null)
-				open(player, null);
-			else
-				SettingsTab.open(player);
+			PresetInterface.INSTANCE.open(player, false);
 			return;
 		}
 		Integer selectedGear = (Integer) player.getTemporaryAttributtes().get("SELECTEDGEAR");
@@ -169,6 +167,9 @@ public class GearTab extends CustomTab {
 						open(player, null);
 						player.getTemporaryAttributtes().remove("SELECTEDGEAR");
 						player.getTemporaryAttributtes().remove("CONFIRM_OVERWRITE");
+						if (player.getInterfaceManager().containsInterface(PresetInterface.INTERFACE_ID)) {
+							PresetInterface.INSTANCE.selectPresetByName(player, keyToOverwrite);
+						}
 						return;
 					} else {
 						player.getPackets().sendGameMessage("Could not find the preset to overwrite.");
@@ -199,6 +200,9 @@ public class GearTab extends CustomTab {
 							open(player, null);
 							player.getTemporaryAttributtes().remove("SELECTEDGEAR");
 							player.getTemporaryAttributtes().remove("CONFIRM_DELETE");
+							if (player.getInterfaceManager().containsInterface(PresetInterface.INTERFACE_ID)) {
+								PresetInterface.INSTANCE.open(player, false);
+							}
 							return;
 						}
 					}
@@ -247,6 +251,9 @@ public class GearTab extends CustomTab {
 						player.getPackets().sendIComponentSprite(3002, PURPLE_STAR_COMP, "sprite.out_of_bag");
 						player.getPackets().sendIComponentSprite(3002, YELLOW_STAR_COMP, "sprite.remove_note");
 						removeAttributtes(player);
+						if (player.getInterfaceManager().containsInterface(PresetInterface.INTERFACE_ID)) {
+							PresetInterface.INSTANCE.selectPresetByName(player, gear.getKey());
+						}
 					}
 				}
 				i++;

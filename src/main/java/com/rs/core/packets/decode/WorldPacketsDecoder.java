@@ -78,6 +78,8 @@ import com.rs.kotlin.game.player.interfaces.DropSearch;
 import com.rs.kotlin.game.player.interfaces.PresetInterface;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
+import static com.rs.kotlin.game.world.util.Msg.warn;
+
 /**
  * Refactored for readability & maintainability while preserving public API,
  * method names, constants and behavior.
@@ -1736,6 +1738,10 @@ public final class WorldPacketsDecoder extends Decoder {
                 player.message("Invalid number.");
                 return;
             }
+            if (player.inPkingArea()) {
+                warn(player, "You can't change levels in player killing areas.");
+                return;
+            }
 
             if (level < 1) level = 1;
             if (level > 99) level = 99;
@@ -2484,6 +2490,9 @@ public final class WorldPacketsDecoder extends Decoder {
                     player.getTemporaryAttributtes().remove("SELECTED_RENAME");
                     player.getPackets().sendGameMessage("Preset \"" + keyToRename + "\" renamed to \"" + value + "\".");
                     GearTab.refresh(player);
+                    if (player.getInterfaceManager().containsInterface(PresetInterface.INTERFACE_ID)) {
+                        PresetInterface.INSTANCE.selectPresetByName(player, value);
+                    }
                 } else {
                     player.getPackets().sendGameMessage("Could not find the preset to rename.");
                 }

@@ -11,6 +11,7 @@ import com.rs.java.game.player.content.Skulls;
 import com.rs.java.utils.HexColours.Colour;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
+import com.rs.kotlin.game.player.interfaces.PresetInterface;
 
 public class JournalTab extends CustomTab {
 
@@ -104,6 +105,17 @@ public class JournalTab extends CustomTab {
 			@Override
 			public String text(Player p) {
 				return "Collection log - <col=04BB3B>Click here";
+			}
+		},
+		PRESETS(9) {
+			@Override
+			public void usage(Player p) {
+				PresetInterface.INSTANCE.open(p, false);
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Presets - <col=04BB3B>Click here";
 			}
 		},
 
