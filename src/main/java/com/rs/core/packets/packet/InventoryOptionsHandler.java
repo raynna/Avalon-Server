@@ -1348,8 +1348,8 @@ public class InventoryOptionsHandler {
                 player.message("Your dragonfire shield is already empty.");
             } else {
                 player.message("You empty your dragonfire shield charges.");
-                player.getInventory().deleteItem(slotId, 1);
-                player.getInventory().addItem(new Item(11284));
+                shield.changeId("item.dragonfire_shield_uncharged", false);
+                player.inventory.refresh(slotId);
             }
         } else if (itemId == 1440)
             Talisman.locate(player, 3306, 3474);

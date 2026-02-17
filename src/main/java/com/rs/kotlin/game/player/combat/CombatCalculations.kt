@@ -38,8 +38,6 @@ object CombatCalculations {
         }
     }
 
-    private fun floorToInt(value: Double): Int = floor(value).toInt()
-
     private object MeleeCombat : AccuracyCalculator, MaxHitCalculator {
         override fun getHitChance(player: Player, target: Entity, accuracyMultiplier: Double): Double {
             if (target is NPC && target.name.contains("dummy", ignoreCase = true))
@@ -59,7 +57,6 @@ object CombatCalculations {
             val effectiveAttack = floor((baseAttack + styleBonus + 8) * voidBonus)
 
             val attackRoll = effectiveAttack * (attackBonus + 64) * multipliers.accuracy * accuracyMultiplier
-
             /*
             * Defence Calculation
             */

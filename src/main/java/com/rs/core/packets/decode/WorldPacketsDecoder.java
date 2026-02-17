@@ -948,6 +948,10 @@ public final class WorldPacketsDecoder extends Decoder {
                 player.getPackets().sendGameMessage("The other player is busy.");
                 return;
             }
+            if (player.getTemporaryAttributtes().remove("claninvite") != null) {
+                ClansManager.viewInvite(player, p2);
+                return;
+            }
             if (p2.temporaryAttribute().get("TradeTarget") == player) {
                 p2.temporaryAttribute().remove("TradeTarget");
                 player.getTrade().openTrade(p2);
@@ -2422,6 +2426,13 @@ public final class WorldPacketsDecoder extends Decoder {
             return;
         } else if (player.temporaryAttribute().get("PRESET_SAVE_PROMPT") == Boolean.TRUE) {
             player.temporaryAttribute().remove("PRESET_SAVE_PROMPT");
+            String[] invalid = {">", "<"};
+            for (String s : invalid) {
+                if (value.toLowerCase().contains(s)) {
+                    player.getDialogueManager().startDialogue("SimpleMessage", "You cannot use < or > in preset names.");
+                    return;
+                }
+            }
             player.getPresetManager().savePreset(value);
             boolean fromBank = Boolean.TRUE.equals(
                     player.getTemporaryAttributtes().get("preset_opened_from_bank")
@@ -2435,8 +2446,14 @@ public final class WorldPacketsDecoder extends Decoder {
             GearTab.refresh(player);
             return;
         } if (player.getTemporaryAttributtes().get("preset_rename_target") != null) {
-
             String oldName = (String) player.getTemporaryAttributtes().remove("preset_rename_target");
+            String[] invalid = {">", "<"};
+            for (String s : invalid) {
+                if (value.toLowerCase().contains(s)) {
+                    player.getDialogueManager().startDialogue("SimpleMessage", "You cannot use < or > in preset names.");
+                    return;
+                }
+            }
             String newName = value;
 
             if (newName.trim().isEmpty()) {

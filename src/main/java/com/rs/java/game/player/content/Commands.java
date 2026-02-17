@@ -3408,7 +3408,6 @@ public final class Commands {
                     p1.getBank().addItem(equipment, true);
                 }
             }
-
             p1.getAppearance().generateAppearenceData();
         }
 
@@ -3417,6 +3416,7 @@ public final class Commands {
         party.setDifficulty(party.getTeam().size());
         party.setSize(DungeonConstants.SMALL_DUNGEON);
         party.setKeyShare(true);
+        party.setLeader(player);
         player.getDungManager().enterDungeon(false, true);
         player.message("Started dungeon test with all online players.");
         return true;

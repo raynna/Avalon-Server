@@ -2,7 +2,6 @@ package com.rs.java.game.npc.combat;
 
 import com.rs.java.game.Entity;
 import com.rs.java.game.npc.NPC;
-import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.utils.Utils;
@@ -19,10 +18,9 @@ public class NpcCombatCalculations {
             if (attackStyle == NpcAttackStyle.MAGIC || attackStyle == NpcAttackStyle.RANGED)
                 return true;
         }
-        double attackRoll = calculateAttackRoll(npc, attackStyle, data);
-        double defenceRoll = calculateDefenceRoll(npc, attackStyle, target);
-        boolean hitChance = calculateHitProbability(attackRoll, defenceRoll);
-        return hitChance;
+        int attackRoll = calculateAttackRoll(npc, attackStyle, data);
+        int defenceRoll = calculateDefenceRoll(attackStyle, target);
+        return calculateHitProbability(attackRoll, defenceRoll);
     }
 
     public static int getRandomMaxHit(NPC npc, int maxHit, NpcAttackStyle attackStyle, Entity target) {
@@ -32,8 +30,21 @@ public class NpcCombatCalculations {
             if (attackStyle == NpcAttackStyle.MAGIC || attackStyle == NpcAttackStyle.RANGED)
                 return Utils.getRandom(finalMaxHit);
         }
-        double attackRoll = calculateAttackRoll(npc, attackStyle, data);
-        double defenceRoll = calculateDefenceRoll(npc, attackStyle, target);
+        int attackRoll = calculateAttackRoll(npc, attackStyle, data);
+        int defenceRoll = calculateDefenceRoll(attackStyle, target);
+        System.out.println("attackRoll: " + attackRoll + ", defenceRoll: " + defenceRoll);
+        if (target instanceof Player player) {
+            double hitChance = calculateHitChance(attackRoll, defenceRoll);
+            double percent = hitChance * 100.0;
+
+            System.out.println("========== NPC Combat Debug ==========");
+            System.out.println("NPC: " + npc.getName());
+            System.out.println("Attack Style: " + attackStyle);
+            System.out.println("Attack Roll: " + String.format("%,d", attackRoll));
+            System.out.println("Defence Roll: " + String.format("%,d", defenceRoll));
+            System.out.println("Hit Chance: " + String.format("%.2f", percent) + "%");
+            System.out.println("======================================");
+        }
         boolean hitChance = calculateHitProbability(attackRoll, defenceRoll);
         if (!hitChance) {
             return 0;
@@ -50,7 +61,7 @@ public class NpcCombatCalculations {
         return damage;
     }
 
-    private static double calculateAttackRoll(NPC npc, NpcAttackStyle style, CombatData data) {
+    private static int calculateAttackRoll(NPC npc, NpcAttackStyle style, CombatData data) {
         if (data == null) return npc.getCombatLevel();
 
         switch (style) {
@@ -77,9 +88,9 @@ public class NpcCombatCalculations {
         return effectiveLevel * (bonus + 64);
     }
 
-    private static double calculateDefenceRoll(NPC npc, NpcAttackStyle style, Entity target) {
+    private static int calculateDefenceRoll(NpcAttackStyle style, Entity target) {
         if (target instanceof Player player) {
-            return calculatePlayerDefenceRoll(player, style, npc);
+            return calculatePlayerDefenceRoll(player, style);
         }
         if (target instanceof NPC targetNpc) {
             return calculateNpcDefenceRoll(targetNpc, style);
@@ -87,13 +98,13 @@ public class NpcCombatCalculations {
         return 1;
     }
 
-    private static double calculatePlayerDefenceRoll(Player player, NpcAttackStyle style, NPC npc) {
+    private static int calculatePlayerDefenceRoll(Player player, NpcAttackStyle style) {
         int[] playerBonuses = player.getCombatDefinitions().getBonuses();
 
         switch (style) {
             case MAGIC, MAGICAL_MELEE -> {
-                int magicDef = (int) (player.getSkills().getLevel(Skills.DEFENCE) * 0.3
-                                        + player.getSkills().getLevel(Skills.MAGIC) * 0.7 * player.getPrayer().getMagicMultiplier());
+                int magicDef = (int) ((player.getSkills().getLevel(Skills.DEFENCE) * 0.3
+                                                                        + player.getSkills().getLevel(Skills.MAGIC) * 0.7) * player.getPrayer().getMagicMultiplier());
                 return effectiveDefRoll(magicDef, playerBonuses[BonusType.MagicDefence.getIndex()]);
             }
             case RANGED -> {
@@ -101,22 +112,22 @@ public class NpcCombatCalculations {
                 return effectiveDefRoll(def, playerBonuses[BonusType.RangeDefence.getIndex()]);
             }
             default -> {
-                int meleeDefBonus = getPlayerMeleeDefenceBonus(player, npc);
+                int meleeDefBonus = getPlayerMeleeDefenceBonus(player, style);
                 int def = (int) (player.getSkills().getLevel(Skills.DEFENCE) * player.getPrayer().getDefenceMultiplier());
                 return effectiveDefRoll(def, meleeDefBonus);
             }
         }
     }
 
-    private static int getPlayerMeleeDefenceBonus(Player player, NPC npc) {
-        NpcAttackStyle type = NpcAttackStyle.fromList(npc.getCombatData().attackStyles);
+    private static int getPlayerMeleeDefenceBonus(Player player, NpcAttackStyle style) {
         int[] bonuses = player.getCombatDefinitions().getBonuses();
-        return switch (type) {
+        return switch (style) {
             case STAB -> bonuses[BonusType.StabDefence.getIndex()];
             case SLASH -> bonuses[BonusType.SlashDefence.getIndex()];
             default -> bonuses[BonusType.CrushDefence.getIndex()];
         };
     }
+
 
     private static int calculateNpcDefenceRoll(NPC targetNpc, NpcAttackStyle style) {
         CombatData data = targetNpc.getCombatData();
@@ -134,21 +145,24 @@ public class NpcCombatCalculations {
     }
 
     private static int effectiveDefRoll(int level, int bonus) {
-        int effective = level + 8;
+        int effective = level + 9;
         return effective * (bonus + 64);
     }
 
-    private static boolean calculateHitProbability(double attackRoll, double defenceRoll) {
-        double random = Math.random();
-
-        double probability;
+    private static double calculateHitChance(int attackRoll, int defenceRoll) {
         if (attackRoll > defenceRoll) {
-            probability = 1.0 - (defenceRoll + 2.0) / (2.0 * (attackRoll + 1.0));
+            return 1.0 - (defenceRoll + 2.0) / (2.0 * (attackRoll + 1.0));
         } else {
-            probability = attackRoll / (2.0 * (defenceRoll + 1.0));
+            return attackRoll / (2.0 * (defenceRoll + 1.0));
         }
-        return random < probability;
     }
+
+    private static boolean calculateHitProbability(int attackRoll, int defenceRoll) {
+        double hitChance = calculateHitChance(attackRoll, defenceRoll);
+        return Utils.randomDouble() < hitChance;
+    }
+
+
 
     private static int ceilToNextTenIfEnabled(Entity target, int damage) {
         if (!(target instanceof Player player))

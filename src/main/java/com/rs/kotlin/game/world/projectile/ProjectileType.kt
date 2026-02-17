@@ -30,9 +30,6 @@ data class ProjectileType(
         lengthAdjustment
     )
 
-    fun endTime(distance: Int): Int =
-        startTime + lengthAdjustment + (distance * multiplier)
-
     fun resolve(
         arcOffset: Int = 0,
         startHeightOffset: Int = 0,

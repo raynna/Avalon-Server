@@ -11,6 +11,7 @@ import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
+import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.NewPoison
@@ -113,9 +114,20 @@ interface CombatStyle {
             defender.newPoison.roll(attacker, NewPoison.WeaponType.MELEE, poisonSeverity)
         }
         if (defender is NPC) {
-            if (!defender.isUnderCombat || defender.canBeAttackedByAutoRelatie()) {
+            val currentTarget = defender.combat.target
+
+            if (currentTarget != null && currentTarget != attacker) {
+                val lastAttackTickActive = currentTarget.tickManager
+                    .isActive(TickManager.TickKeys.LAST_ATTACK_TICK)
+
+                if (!lastAttackTickActive) {
+                    defender.setTarget(attacker)
+                }
+            } else {
                 defender.setTarget(attacker)
             }
+        }
+        if (defender is NPC) {
             val combatDefinitions = defender.combatDefinitions
             if (combatDefinitions != null) {
                 if (combatDefinitions.defendSound != -1) {

@@ -23,7 +23,7 @@ object PresetInterface {
     private const val INVENTORY_CONTAINER = 203
     private const val INVENTORY_KEY = 100
 
-    private const val MAX_VISIBLE_PRESETS = 22
+    private const val MAX_VISIBLE_PRESETS = 20
 
     private const val ATTR_SELECTED = "preset_selected_index"
     private const val ATTR_CONFIRM_DELETE = "preset_confirm_delete"
@@ -363,7 +363,7 @@ object PresetInterface {
             INVENTORY_KEY,
             4,
             7,
-            "Reset"
+            "Add to bank"
         )
 
         player.packets.sendUnlockOptions(
@@ -467,23 +467,6 @@ object PresetInterface {
         player.packets.sendRunScript(109, "Enter setup name: ")
     }
 
-    private fun updateSaveButtonText(player: Player, index: Int) {
-
-        val presets = player.presetManager.PRESET_SETUPS.values.toList()
-
-        val text = when {
-            index < 0 -> "Save"
-            presets.getOrNull(index) != null -> "Edit"
-            else -> "Save"
-        }
-
-        player.packets.sendTextOnComponent(
-            INTERFACE_ID,
-            SAVE_BUTTON,
-            text
-        )
-    }
-
     private fun renderEmptyPreview(player: Player) {
 
         clearEquipment(player)
@@ -508,7 +491,7 @@ object PresetInterface {
         player.packets.sendTextOnComponent(INTERFACE_ID, PRAYERBOOK_TEXT, "Regular")
         player.packets.sendTextOnComponent(INTERFACE_ID, SPELLBOOK_TEXT, "Modern")
         player.packets.sendTextOnComponent(INTERFACE_ID, FAMILIAR_TEXT, "None")
-        updateSaveButtonText(player, -1)
+        updateActionButtons(player, -1)
         updateTitle(player, "Viewing: Empty Preset")
     }
 

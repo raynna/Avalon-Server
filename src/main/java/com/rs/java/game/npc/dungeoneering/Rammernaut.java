@@ -44,15 +44,15 @@ public class Rammernaut extends DungeonBoss {
 
 	public void applyStunHit(final Entity entity, int maxHit) {
 		entity.applyHit(new Hit(this, Utils.random(maxHit) + 1, HitLook.REGULAR_DAMAGE));
-		entity.addFreezeDelay(1200, true);
+		entity.addFreezeDelay(6, true);
 		if (entity instanceof Player) {
 			Player player = (Player) entity;
 			player.stopAll();
 			player.getPackets().sendGameMessage("You've been stunned.");
-			player.addFreezeDelay(1200, true);
+			player.addFreezeDelay(6, true);
 			if (player.getPrayer().hasActivePrayers()) {
 				player.getPackets().sendGameMessage("Your prayers have been disabled.");
-				player.setPrayerDelay(7000);// Five seconds
+				player.setPrayerDelay(8);// Five seconds
 			}
 			final NPC npc = this;
 			WorldTasksManager.schedule(new WorldTask() {

@@ -279,7 +279,7 @@ object ProjectileManager {
         val distance = Utils.getDistance(attacker, defender)
 
         val endCycle = type.endTime(distance)
-        val tickScale = if (attacker is NPC) 0 else 15
+        val tickScale = if (attacker is NPC) 0 else 15//unused
         val impactTicks = (endCycle) / 30
 
         val startTile = if (projectile == Projectile.ICE_BARRAGE) {
@@ -324,7 +324,7 @@ object ProjectileManager {
                 override fun run() {
                     onLanded.invoke()
                 }
-            }, max(0, impactTicks - 1))
+            }, max(0, impactTicks))
         }
         return impactTicks
     }

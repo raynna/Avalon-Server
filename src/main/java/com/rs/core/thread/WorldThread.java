@@ -39,7 +39,6 @@ public final class WorldThread extends Thread {
             long cycleStart = Utils.currentTimeMillis();
             WorldTasksManager.processTasks();
             AutomaticGroundItem.processGameTick();
-
             for (Player player : World.getPlayers()) {
                 try {
                     if (player == null || !player.hasStarted() || player.hasFinished())
@@ -58,7 +57,6 @@ public final class WorldThread extends Thread {
                     Logger.handle(e);
                 }
             }
-
             for (Player player : World.getPlayers()) {
                 try {
                     if (player == null || !player.hasStarted() || player.hasFinished())
@@ -68,6 +66,7 @@ public final class WorldThread extends Thread {
                     Logger.handle(e);
                 }
             }
+
             for (Player player : World.getPlayers()) {
                 try {
                     if (player == null || !player.hasStarted() || player.hasFinished())

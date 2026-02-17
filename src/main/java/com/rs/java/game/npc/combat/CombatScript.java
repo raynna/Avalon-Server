@@ -144,59 +144,41 @@ public abstract class CombatScript {
         if (hit.getDamage() == 0 && npc.getId() == 9172) {
             target.gfx(new Graphics(2122));
         }
-    }
-
-    public static void delayHit(NPC npc, Entity target, int delay, Hit... hits) {
+        if (target instanceof Player player) {
+            if (player.familiarAutoAttack && player.getFamiliar() != null
+                    && !player.getFamiliar().getCombat().hasTarget()
+                    && player.isAtMultiArea()) {
+                player.getFamiliar().setTarget(npc);
+            }
+        } else {
+            NPC n = (NPC) target;
+            if (!n.isUnderCombat() || n.canBeAttackedByAutoRelatie())
+                n.setTarget(npc);
+        }
         if (target instanceof Player player) {
             if (player.getCombatDefinitions().isAutoRelatie()
                     && !player.hasWalkSteps()) {
+                WorldTasksManager.schedule(1, () -> {
+                    if (player.isDead() || npc.isDead() || player.isLocked())
+                        return;
 
-                WorldTasksManager.schedule(new WorldTask() {
-                    @Override
-                    public void run() {
-                        if (player.isDead() || npc.isDead() || player.isLocked())
-                            return;
+                    if (player.getActionManager().getAction() != null)
+                        return;
 
-                        if (player.getActionManager().getAction() != null)
-                            return;
+                    player.closeInterfaces();
 
-                        player.closeInterfaces();
-
-                        int retaliateDelay =
-                                EntityUtils.getAutoRetaliateDelay(player, npc);
-
-                        int currentDelay =
-                                player.getActionManager().getActionDelay();
-
-                        int finalDelay = Math.max(currentDelay, retaliateDelay);
-
-                        player.getActionManager().setAction(new CombatAction(npc));
-                        player.getActionManager().setActionDelay(finalDelay);
-                    }
-                }, 1);
+                    player.getActionManager().setAction(new CombatAction(npc));
+                });
             }
         }
+    }
 
-
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                if (target instanceof Player player) {
-                    if (player.familiarAutoAttack && player.getFamiliar() != null
-                            && !player.getFamiliar().getCombat().hasTarget()
-                            && player.isAtMultiArea()) {
-                        player.getFamiliar().setTarget(npc);
-                    }
-                } else {
-                    NPC n = (NPC) target;
-                    if (!n.isUnderCombat() || n.canBeAttackedByAutoRelatie())
-                        n.setTarget(npc);
-                }
-                for (Hit hit : hits) {
-                    applyRegisteredHit(npc, target, hit);
-                }
+    public static void delayHit(NPC npc, Entity target, int ticks, Hit... hits) {
+        WorldTasksManager.schedule(ticks + 1, () -> {
+            for (Hit hit : hits) {
+                applyRegisteredHit(npc, target, hit);
             }
-        }, delay);
+        });
     }
 
     public static void sendSoulSplit(final Hit hit, final NPC npc, final Entity target) {

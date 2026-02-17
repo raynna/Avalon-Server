@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.world.projectile
 
-import com.rs.java.utils.Utils
 import com.rs.kotlin.game.world.util.RollableInt
 
 object ProjectileRegistry {
@@ -43,6 +42,7 @@ object ProjectileRegistry {
 
         //NPCS
         register(Projectile.DRAGONFIRE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15, displacement = 128))
+        register(Projectile.CHAOS_ELEMENTAL, ProjectileType(startHeight = 40, endHeight = 36, startTime = 31, multiplier = 10, arc = 15, displacement = 0))
         register(Projectile.GENERAL_GRAARDOR, ProjectileType(startHeight = 0, endHeight = 0, startTime = 31, multiplier = 5, arc = RollableInt.Range(10, 25), displacement = 50, lengthAdjustment = 34))
         register(Projectile.KRIL_TSUTSAROTH, ProjectileType(startHeight = 0, endHeight = 0, startTime = 31, multiplier = 5, arc = RollableInt.Range(10, 25), displacement = 50, lengthAdjustment = 34))
         register(Projectile.KREE_ARRA, ProjectileType(startHeight = 0, endHeight = 0, startTime = 31, multiplier = 5, arc = RollableInt.Range(10, 25), displacement = 50, lengthAdjustment = 34))
