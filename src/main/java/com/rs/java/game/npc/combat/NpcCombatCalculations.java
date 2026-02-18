@@ -32,19 +32,6 @@ public class NpcCombatCalculations {
         }
         int attackRoll = calculateAttackRoll(npc, attackStyle, data);
         int defenceRoll = calculateDefenceRoll(attackStyle, target);
-        System.out.println("attackRoll: " + attackRoll + ", defenceRoll: " + defenceRoll);
-        if (target instanceof Player player) {
-            double hitChance = calculateHitChance(attackRoll, defenceRoll);
-            double percent = hitChance * 100.0;
-
-            System.out.println("========== NPC Combat Debug ==========");
-            System.out.println("NPC: " + npc.getName());
-            System.out.println("Attack Style: " + attackStyle);
-            System.out.println("Attack Roll: " + String.format("%,d", attackRoll));
-            System.out.println("Defence Roll: " + String.format("%,d", defenceRoll));
-            System.out.println("Hit Chance: " + String.format("%.2f", percent) + "%");
-            System.out.println("======================================");
-        }
         boolean hitChance = calculateHitProbability(attackRoll, defenceRoll);
         if (!hitChance) {
             return 0;

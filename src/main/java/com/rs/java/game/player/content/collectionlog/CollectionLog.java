@@ -76,6 +76,9 @@ public class CollectionLog implements Serializable {
         writeCollectedItems();
         writeDetails();
         sendComponentOps();
+        /*WorldTasksManager.schedule(1, () -> {
+            player.getPackets().sendRunScript(6255);
+        });*/
     }
 
 
@@ -114,7 +117,9 @@ public class CollectionLog implements Serializable {
 
         if(previousCategory != category) {
             tabId = 0;
+            player.getPackets().sendRunScript(10008);
             writeCategory();
+            player.getPackets().sendRunScript(10008);
         }
     }
 
@@ -131,6 +136,7 @@ public class CollectionLog implements Serializable {
         for(int i = 0; i < CategoryType.values().length; i++) {
             player.getPackets().sendIComponentSprite(ID, CAT_SPRITE_START + i*3, category == CategoryType.values()[i] ? 952 : 953);
         }
+        player.getPackets().sendRunScript(6248);
     }
 
     private void writeDetails() {
@@ -251,12 +257,6 @@ public class CollectionLog implements Serializable {
             }
         }
         player.getPackets().sendItems(GHOST_CONTAINER_KEY, ghosts);
-        WorldTasksManager.schedule(new WorldTask() {
-            @Override
-            public void run() {
-                player.getPackets().sendRunScript(6255);
-            }
-        });
 
     }
 

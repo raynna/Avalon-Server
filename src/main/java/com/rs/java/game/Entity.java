@@ -1305,6 +1305,42 @@ public abstract class Entity extends WorldTile {
         }
     }
 
+    public void moveRandom(int radius) {
+        List<WorldTile> possibleTiles = new ArrayList<>();
+
+        int baseX = getX();
+        int baseY = getY();
+        int plane = getPlane();
+
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = -radius; dy <= radius; dy++) {
+
+                int x = baseX + dx;
+                int y = baseY + dy;
+
+                if (dx == 0 && dy == 0)
+                    continue;
+
+                WorldTile destination = new WorldTile(x, y, plane);
+
+                if (!World.checkWalkStep(plane, baseX, baseY,
+                        Utils.getMoveDirection(dx, dy), 1))
+                    continue;
+
+                if (!clipedProjectile(destination, false))
+                    continue;
+
+                possibleTiles.add(destination);
+            }
+        }
+
+        if (!possibleTiles.isEmpty()) {
+            WorldTile chosen = possibleTiles.get(Utils.random(possibleTiles.size()));
+            setNextWorldTile(chosen);
+        }
+    }
+
+
     public void drainStat(int bonusIndex, int amount) {
         drainStat(-1, bonusIndex, amount, null);
     }

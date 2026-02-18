@@ -1,6 +1,7 @@
 package com.rs.java.game.npc.combat.impl;
 
 import com.rs.java.game.*;
+import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.player.Player;
@@ -93,9 +94,10 @@ public class ChaosElementalCombat extends CombatScript {
 				target.gfx(SPECIAL_HIT);
 				if (player.getInventory().hasFreeSlots()) {
 					int slot = Utils.random(10);
-					if (player.getEquipment().getItem(slot) != null) {
+					Item item = player.getEquipment().getItem(slot);
+					if (item != null) {
+						player.message("The Chaos Elemental has disarmed your " + item.getName() + ".");
 						ButtonHandler.sendTakeOff(player, slot, -1);
-						player.message("The Chaos Elemental has disarmed your item (slot " + slot + ").");
 					}
 				}
 			}
@@ -112,21 +114,7 @@ public class ChaosElementalCombat extends CombatScript {
 			target.gfx(SPECIAL_HIT);
 			npc.animate(TELEPORT_ANIMATION);
 
-			int radius = 6;
-
-			for (int i = 0; i < 20; i++) {
-
-				int x = npc.getX() + Utils.random(-radius, radius);
-				int y = npc.getY() + Utils.random(-radius, radius);
-				int plane = npc.getPlane();
-
-				WorldTile destination = new WorldTile(x, y, plane);
-				if (!npc.clipedProjectile(destination, false))
-					continue;
-
-				target.setNextWorldTile(destination);
-				return;
-			}
+			target.moveRandom(6);
 		});
 	}
 

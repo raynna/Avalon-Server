@@ -48,6 +48,7 @@ public class CollectionLogBuilder {
         cat.init("Dagannoth Rex", getNPCDrops("npc.dagannoth_rex_lv303"));
         cat.init("Dagannoth Prime", getNPCDrops("npc.dagannoth_prime_lv303"));
         cat.init("Dagannoth Supreme", getNPCDrops("npc.dagannoth_supreme_lv303"));
+        cat.init("Chaos Elemental", getNPCDrops("npc.chaos_elemental_lv305"));
     }
 
 

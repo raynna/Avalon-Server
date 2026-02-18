@@ -59,6 +59,7 @@ public class KreeArraCombat extends CombatScript {
             Hit rangeHit = npc.rangedHit(t, 710);
             ProjectileManager.send(Projectile.KREE_ARRA, RANGE_PROJECTILE, npc, t, () -> {
                 applyRegisteredHit(npc, target, rangeHit);
+                target.moveRandom(1);
                 for (int c = 0; c < 10; c++) {
                     int dir = Utils.random(Utils.DIRECTION_DELTA_X.length);
                     if (World.checkWalkStep(target.getPlane(), target.getX(), target.getY(), dir, 1)) {
