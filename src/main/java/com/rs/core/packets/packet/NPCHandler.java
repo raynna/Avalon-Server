@@ -93,7 +93,7 @@ public class NPCHandler {
         } else {
             player.getPackets().sendGameMessage("It's " + player.grammar(npc) + " " + npc.getName() + ".");
         }
-        if (player.isDeveloperMode()) {
+        /*if (player.isDeveloperMode()) {
             NPCDefinitions.loadAll();
             try {
                 dumpAllObjectDefinitions();
@@ -116,6 +116,10 @@ public class NPCHandler {
             } catch (Exception error) {
                 System.out.println(error.toString());
             }
+        }*/
+        if (player.developerMode) {
+            player.message(npc.getName() + " (" + npc.getId() + "), x: " + npc.getX() + ", y: " + npc.getY() + ", z: " + npc.getPlane());
+
         }
 
         if (!WikiApi.hasData(npc.getId())) {

@@ -55,6 +55,14 @@
     "lastSeen": "2026-02-07T18:58:12.236551100Z",
     "attempts": 1
   },
+  "553": {
+    "npcId": 553,
+    "npcName": "Banker",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-18T20:55:10.883906400Z",
+    "lastSeen": "2026-02-18T20:55:10.883906400Z",
+    "attempts": 1
+  },
   "637": {
     "npcId": 637,
     "npcName": "null",
@@ -373,6 +381,14 @@
     "reason": "\u0027wikitext\u0027 not found in JSON",
     "firstSeen": "2026-01-27T14:28:25.774547800Z",
     "lastSeen": "2026-01-27T14:28:25.774547800Z",
+    "attempts": 1
+  },
+  "6537": {
+    "npcId": 6537,
+    "npcName": "Mandrith",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-18T20:30:52.056045800Z",
+    "lastSeen": "2026-02-18T20:30:52.056045800Z",
     "attempts": 1
   },
   "6753": {

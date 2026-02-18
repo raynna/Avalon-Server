@@ -92,6 +92,10 @@ public class NPC extends Entity implements Serializable {
     private boolean noDistanceCheck;
     private boolean intelligentRouteFinder;
 
+    private int retreatDX;
+    private int retreatDY;
+    private boolean retreating = false;
+
     // npc masks
     private transient SecondaryBar nextSecondaryBar;
     private transient Transformation nextTransformation;
@@ -375,6 +379,19 @@ public class NPC extends Entity implements Serializable {
         if (getId() == 1282) {
             setName("Sell Items");
         }
+        if (getId() == 2759 && getX() == 3096 && getY() == 3493) {
+            faceWorldTile(this, "west");
+        }
+        if (getId() == 553 && getX() == 3096 && getY() == 3491) {
+            faceWorldTile(this, "west");
+        }
+        if (getId() == 553 && getX() == 3096 && getY() == 3489) {
+            faceWorldTile(this, "west");
+        }
+        if (getId() == 6537) {
+            setName("Pvp store");
+            faceWorldTile(this, "east");
+        }
         if (getId() == 45) {
             setName("Bank");
             setRandomWalk(0);
@@ -414,6 +431,7 @@ public class NPC extends Entity implements Serializable {
         if (getId() == 7891) {
             setName("Dummy");
             setRandomWalk(0);
+            setNextFaceWorldTile(new WorldTile(3093, 3489, 0));
         }
         if (getId() == 960) {
             setName("Healer");
@@ -422,7 +440,7 @@ public class NPC extends Entity implements Serializable {
         }
         if (getId() == 4474) {
             setName("Max Hit Dummy");
-            setRandomWalk(1);
+            setNextFaceWorldTile(new WorldTile(3093, 3489, 0));
         }
     }
 
@@ -445,6 +463,7 @@ public class NPC extends Entity implements Serializable {
         if (routeEvent != null && routeEvent.processEvent(this))
             routeEvent = null;
         loadNPCSettings();
+
         if (!combat.process()) {
             if (!isForceWalking()) {
                 if (!cantInteract) {
@@ -999,6 +1018,67 @@ public class NPC extends Entity implements Serializable {
         setForceWalk(respawnTile);
     }
 
+    public void forceRetreatStep(Entity target) {
+
+        if (target == null || target.hasFinished() || target.isDead())
+            return;
+
+        int npcX = getX();
+        int npcY = getY();
+        int size = getSize();
+        int plane = getPlane();
+
+        int currentDistance = Utils.getDistance(npcX, npcY, target.getX(), target.getY());
+
+        int bestX = npcX;
+        int bestY = npcY;
+        int bestScore = Integer.MIN_VALUE;
+
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+
+                if (dx == 0 && dy == 0)
+                    continue;
+
+                if (!World.checkWalkStep(plane, npcX, npcY, dx, dy, size))
+                    continue;
+
+                int checkX = npcX + dx;
+                int checkY = npcY + dy;
+
+                int newDistance = Utils.getDistance(checkX, checkY, target.getX(), target.getY());
+
+                int score;
+
+                if (newDistance > currentDistance)
+                    score = 40;
+                else if (newDistance == currentDistance)
+                    score = 30;
+                else if (newDistance == currentDistance - 1)
+                    score = 20;
+                else
+                    score = 10;
+
+                if (dx != 0 && dy != 0)
+                    score -= 3;
+
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestX = checkX;
+                    bestY = checkY;
+                }
+            }
+        }
+
+        if (bestX != npcX || bestY != npcY) {
+            addWalkSteps(bestX, bestY, 1, true);
+        }
+    }
+
+
+
+
     public void setForceWalk(WorldTile tile) {
         resetWalkSteps();
         forceWalk = tile;
@@ -1375,5 +1455,29 @@ public class NPC extends Entity implements Serializable {
     @Override
     public double getProtectionPrayerEffectiveness() {
         return 1.0;
+    }
+
+    public boolean isRetreating() {
+        return retreating;
+    }
+
+    public void setRetreating(boolean retreating) {
+        this.retreating = retreating;
+    }
+
+    public int getRetreatDY() {
+        return retreatDY;
+    }
+
+    public void setRetreatDY(int retreatDY) {
+        this.retreatDY = retreatDY;
+    }
+
+    public int getRetreatDX() {
+        return retreatDX;
+    }
+
+    public void setRetreatDX(int retreatDX) {
+        this.retreatDX = retreatDX;
     }
 }

@@ -46,7 +46,7 @@ public final class NPCCombat {
     private static final int MAX_FAR_ATTACK_DISTANCE = 16;
     private static final int NEX_FORCE_MOVEMENT_ANIMATION = 17408;
 
-    private static final boolean DEBUG_COMBAT = false;
+    private static final boolean DEBUG_COMBAT = true;
 
     private void debug(String msg) {
         if (!DEBUG_COMBAT) return;
@@ -174,6 +174,17 @@ public final class NPCCombat {
         Entity target = this.target;
         if (npc instanceof Familiar && target instanceof NPC && ((NPC) target).isCantInteract())
             return false;
+        int viewDistance = 16;
+
+        if (target != null && npc.isForceWalking()) {
+            int dx = Math.abs(target.getX() - npc.getX());
+            int dy = Math.abs(target.getY() - npc.getY());
+
+            if (dx > viewDistance || dy > viewDistance) {
+                hardResetCombat();
+                return false;
+            }
+        }
         if (!isTargetValid(target)) {
             debug("checkAll: target no longer valid → REMOVED");
             removeTarget();
@@ -189,13 +200,18 @@ public final class NPCCombat {
         if (isWithinRespawnRange() && npc.isForceWalking()) {
             debug("checkAll: reset forcewalk");
             npc.resetForcewalk();
+            npc.setRetreating(false);
         }
-
         if (!isWithinRespawnRange()) {
-            debug("checkAll: OUTSIDE respawn range → force walking home");
-            combatDelay = 1;
-            npc.forceWalkRespawnTile();
-            npc.setNextFaceEntity(target);
+            debug("checkAll: OUTSIDE respawn range → ENTER RETREAT");
+            Entity lastTarget = target;
+
+            npc.resetWalkSteps();
+            npc.setRetreating(true);
+
+            if (lastTarget != null) {
+                npc.forceRetreatStep(lastTarget);
+            }
             return true;
         }
 
@@ -208,6 +224,22 @@ public final class NPCCombat {
         handleFollow(target);
         return true;
     }
+
+    private void hardResetCombat() {
+        removeTarget();
+        npc.resetWalkSteps();
+        npc.setNextFaceEntity(null);
+        npc.setRetreating(true);
+    }
+
+    private void resetCombatToSpawn() {
+        removeTarget();
+        npc.setNextFaceEntity(null);
+        npc.resetWalkSteps();
+        npc.resetForcewalk();
+        npc.setRetreating(false);
+    }
+
 
 
     private boolean canAttackTarget(Entity target) {
@@ -231,6 +263,13 @@ public final class NPCCombat {
         // Distance from respawn tile
         int npcDistX = npc.getX() - npc.getRespawnTile().getX();
         int npcDistY = npc.getY() - npc.getRespawnTile().getY();
+        // Distance from spawn to target
+        int tgtDistX = target.getX() - npc.getRespawnTile().getX();
+        int tgtDistY = target.getY() - npc.getRespawnTile().getY();
+
+        boolean targetInRange = !(tgtDistX > size + maxDistance || tgtDistX < -1 - maxDistance
+                || tgtDistY > size + maxDistance || tgtDistY < -1 - maxDistance);
+
 
         // If NPC has a defined MapArea, enforce area rules
         if (!(npc instanceof Familiar)) {
@@ -248,7 +287,7 @@ public final class NPCCombat {
         boolean npcInRange = !(npcDistX > size + maxDistance || npcDistX < -1 - maxDistance
                 || npcDistY > size + maxDistance || npcDistY < -1 - maxDistance);
 
-        return npcInRange;
+        return npcInRange && targetInRange;
     }
 
 
@@ -369,7 +408,7 @@ public final class NPCCombat {
                 target.getX(), target.getY(), targetSize,
                 maxAttackDistance
         );
-
+        npc.resetWalkSteps();
         if (!npc.hasWalkSteps()) {
             if (!inAttackRange || !npc.clipedProjectile(target, maxAttackDistance == 0 && !forceCheckClipAsRange(target))) {
                 if (npc.isIntelligentRouteFinder()) {

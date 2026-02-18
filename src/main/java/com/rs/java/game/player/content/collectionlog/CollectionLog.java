@@ -117,7 +117,6 @@ public class CollectionLog implements Serializable {
 
         if(previousCategory != category) {
             tabId = 0;
-            player.getPackets().sendRunScript(10008);
             writeCategory();
             player.getPackets().sendRunScript(10008);
         }
