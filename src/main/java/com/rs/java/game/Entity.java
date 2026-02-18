@@ -333,6 +333,10 @@ public abstract class Entity extends WorldTile {
             resetReceivedHits();
             return;
         }
+        if (this instanceof NPC) {
+            if (isDead())
+                return;
+        }
         if (this instanceof Player) {
             if (hit.getDamage() < 0)
                 return;

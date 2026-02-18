@@ -176,15 +176,11 @@ public final class NPCCombat {
             return false;
         int viewDistance = 16;
 
-        if (target != null && npc.isForceWalking()) {
-            int dx = Math.abs(target.getX() - npc.getX());
-            int dy = Math.abs(target.getY() - npc.getY());
-
-            if (dx > viewDistance || dy > viewDistance) {
-                hardResetCombat();
-                return false;
-            }
+        if (Utils.getDistance(npc, target) > viewDistance) {
+            hardResetCombat();
+            return false;
         }
+
         if (!isTargetValid(target)) {
             debug("checkAll: target no longer valid → REMOVED");
             removeTarget();
@@ -258,7 +254,7 @@ public final class NPCCombat {
         int size = npc.getSize();
         int maxDistance = npc.getForceTargetDistance() > 0
                 ? npc.getForceTargetDistance()
-                : npc.getCombatDefinitions().getMaxDistFromSpawn() == -1 ? 64 : npc.getCombatDefinitions().getMaxDistFromSpawn();
+                : npc.getCombatDefinitions().getMaxDistFromSpawn() == -1 ? 16 : npc.getCombatDefinitions().getMaxDistFromSpawn();
 
         // Distance from respawn tile
         int npcDistX = npc.getX() - npc.getRespawnTile().getX();

@@ -1028,53 +1028,30 @@ public class NPC extends Entity implements Serializable {
         int size = getSize();
         int plane = getPlane();
 
-        int currentDistance = Utils.getDistance(npcX, npcY, target.getX(), target.getY());
+        int dx = Integer.compare(npcX, target.getX());
+        int dy = Integer.compare(npcY, target.getY());
 
-        int bestX = npcX;
-        int bestY = npcY;
-        int bestScore = Integer.MIN_VALUE;
+        if (dx != 0 && dy != 0 &&
+                World.checkWalkStep(plane, npcX, npcY, dx, dy, size)) {
 
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-
-                if (dx == 0 && dy == 0)
-                    continue;
-
-                if (!World.checkWalkStep(plane, npcX, npcY, dx, dy, size))
-                    continue;
-
-                int checkX = npcX + dx;
-                int checkY = npcY + dy;
-
-                int newDistance = Utils.getDistance(checkX, checkY, target.getX(), target.getY());
-
-                int score;
-
-                if (newDistance > currentDistance)
-                    score = 40;
-                else if (newDistance == currentDistance)
-                    score = 30;
-                else if (newDistance == currentDistance - 1)
-                    score = 20;
-                else
-                    score = 10;
-
-                if (dx != 0 && dy != 0)
-                    score -= 3;
-
-
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestX = checkX;
-                    bestY = checkY;
-                }
-            }
+            addWalkSteps(npcX + dx, npcY + dy, 2, true);
+            return;
         }
 
-        if (bestX != npcX || bestY != npcY) {
-            addWalkSteps(bestX, bestY, 1, true);
+        if (dx != 0 &&
+                World.checkWalkStep(plane, npcX, npcY, dx, 0, size)) {
+
+            addWalkSteps(npcX + dx, npcY, 2, true);
+            return;
+        }
+
+        if (dy != 0 &&
+                World.checkWalkStep(plane, npcX, npcY, 0, dy, size)) {
+
+            addWalkSteps(npcX, npcY + dy, 2, true);
         }
     }
+
 
 
 
