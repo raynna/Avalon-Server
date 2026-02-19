@@ -2,10 +2,12 @@ package com.rs.kotlin.game.player.combat.melee
 
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.Entity
+import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager
+import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.CombatContext
@@ -108,6 +110,16 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
             }
         }
         attackStyle.xpMode.distributeXp(attacker, defender, attackStyle, totalDamage);
+    }
+
+    override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
+        super.onHit(attacker, defender, hit)
+        val weaponName = ItemDefinitions.getItemDefinitions(attacker.getEquipment().weaponId).getName()
+        val poisonSeverity = NewPoison.getPoisonSeverity(weaponName)
+
+        if (poisonSeverity != -1) {
+            defender.newPoison.roll(attacker, NewPoison.WeaponType.MELEE, poisonSeverity)
+        }
     }
 
     override fun onStop(interrupted: Boolean) {

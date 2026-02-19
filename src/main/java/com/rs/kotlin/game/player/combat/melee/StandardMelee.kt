@@ -201,7 +201,7 @@ object StandardMelee : MeleeData() {
                 "item.abyssal_whip_7", "item.abyssal_whip_8",
                 "item.abyssal_vine_whip", "item.abyssal_vine_whip_2",
                 "item.abyssal_vine_whip_3", "item.abyssal_vine_whip_4",
-                "item.abyssal_vine_whip_5"
+                "item.abyssal_vine_whip_5", "item.abyssal_whip_osrs", "item.abyssal_tentacle"
             ),
             name = "Abyssal whip",
             weaponStyle = WeaponStyle.WHIP,
@@ -309,7 +309,7 @@ object StandardMelee : MeleeData() {
                 "item.bronze_mace", "item.iron_mace",
                 "item.steel_mace", "item.black_mace",
                 "item.mithril_mace", "item.adamant_mace",
-                "item.rune_mace", "item.void_knight_mace", "item.tzhaar_ket_em",
+                "item.rune_mace", "item.void_knight_mace", "item.tzhaar_ket_em", "item.inquisitor_s_mace",
             ),
             name = "Maces",
             weaponStyle = WeaponStyle.MACE,
@@ -1425,7 +1425,7 @@ object StandardMelee : MeleeData() {
         ),
         MeleeWeapon(
             itemId = Item.getIds(
-                "item.statius_s_warhammer", "item.statius_warhammer_deg",
+                "item.statius_s_warhammer", "item.statius_warhammer_deg", "item.dragon_warhammer",
             ),
             name = "Statius' Warhammer",
             weaponStyle = WeaponStyle.HAMMER,

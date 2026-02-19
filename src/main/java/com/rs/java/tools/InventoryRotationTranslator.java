@@ -2,9 +2,9 @@ package com.rs.java.tools;
 
 public class InventoryRotationTranslator {
 
-    private static final int osrsX = 567;
-    private static final int osrsY = 1120;
-    private static final int osrsZ = 1923;
+    private static final int osrsX = 1510;
+    private static final int osrsY = 1785;
+    private static final int osrsZ = 821;
 
     private static int convertInvX(int osrsX, int osrsZ) {
         return (int)(osrsX * 0.6 + osrsZ * 0.12);

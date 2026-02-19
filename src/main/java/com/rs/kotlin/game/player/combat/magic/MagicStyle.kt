@@ -1,5 +1,6 @@
 package com.rs.kotlin.game.player.combat.magic
 
+import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
@@ -12,6 +13,7 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
+import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.magic.special.GreaterRunicStaffWeapon
@@ -23,6 +25,7 @@ import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.getMultiAttackTargets
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
+import kotlin.coroutines.CoroutineContext
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -245,6 +248,9 @@ class MagicStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 if (blockTime != null && blockTime != -1) {
                     defender.teleportBlock(blockTime)
                 }
+            }
+            if (currentSpell.element == ElementType.Smoke) {
+                defender.newPoison.roll(attacker, NewPoison.WeaponType.SMOKE_SPELL, -1)
             }
             if (currentSpell.endGraphic.id != -1 && currentSpell.projectileId == -1 && currentSpell.projectileIds.isEmpty()) {
                 defender.gfx(currentSpell.endGraphic)

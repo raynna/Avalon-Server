@@ -107,12 +107,6 @@ interface CombatStyle {
                 attacker.applyHit(Hit(defender, (hit.damage * 0.75).toInt(), Hit.HitLook.REGULAR_DAMAGE));
             }
         }
-        val weaponName = ItemDefinitions.getItemDefinitions(attacker.getEquipment().weaponId).getName()
-        val poisonSeverity = NewPoison.getPoisonSeverity(weaponName)
-
-        if (poisonSeverity != -1) {
-            defender.newPoison.roll(attacker, NewPoison.WeaponType.MELEE, poisonSeverity)
-        }
         if (defender is NPC) {
             val currentTarget = defender.combat.target
 

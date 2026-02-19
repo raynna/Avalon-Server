@@ -20,6 +20,7 @@ class NewPoison(@Transient private var entity: Entity) {
     companion object {
         fun getPoisonSeverity(name: String): Int {
             return when {
+                name.contains("abyssal tentacle", ignoreCase = true) -> 10
                 name.contains("(p++)", ignoreCase = true) -> 30
                 name.contains("(p+)", ignoreCase = true)  -> 25
                 name.contains("(p)", ignoreCase = true)   -> 20
@@ -33,7 +34,7 @@ class NewPoison(@Transient private var entity: Entity) {
     }
 
     enum class WeaponType {
-        MELEE, RANGED, SMOKE_SPELL, EMERALD_BOLT
+        MELEE, RANGED, SMOKE_SPELL, EMERALD_BOLT, ABYSSAL_TENTACLE
     }
 
 
@@ -45,7 +46,7 @@ class NewPoison(@Transient private var entity: Entity) {
         if (entity is Player && (this.entity as Player).tickTimers[POISON_IMMUNE]?.let { it > 0 } == true) return
 
         val chance = when (weaponType) {
-            WeaponType.MELEE -> 1.0 / 4.0
+            WeaponType.MELEE, WeaponType.ABYSSAL_TENTACLE -> 1.0 / 4.0
             WeaponType.RANGED -> 1.0 / 8.0
             WeaponType.SMOKE_SPELL, WeaponType.EMERALD_BOLT -> 1.0
         }
@@ -53,6 +54,7 @@ class NewPoison(@Transient private var entity: Entity) {
         if (random > chance) return
         val severity = when (weaponType) {
             WeaponType.RANGED -> baseSeverity - 14
+            WeaponType.SMOKE_SPELL -> 20
             else -> baseSeverity
         }.coerceAtLeast(1)
         this.poisonedBy = poisonedBy
