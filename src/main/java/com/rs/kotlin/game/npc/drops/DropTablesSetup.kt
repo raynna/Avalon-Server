@@ -90,6 +90,7 @@ object DropTablesSetup {
         )
 
         registerNpcGroupDropTable(BansheeTable.table, "npc_group.banshee_lv23")
+        registerNpcGroupDropTable(HellhoundTable.table, "npc_group.hellhound_lv122")
 
         registerNpcGroupDropTable(AbyssalDemonTable.table,
             "npc_group.abyssal_demon",
@@ -133,6 +134,28 @@ object DropTablesSetup {
             "npc_group.cyclops_lv56",
             "npc_group.cyclops_lv76"
         )
+
+        /**
+         * Revenants
+         */
+        registerNpcGroupDropTable(RevenantDropTable.table,
+            "npc_group.revenant_imp_lv7",
+            "npc_group.revenant_goblin_lv15",
+            "npc_group.revenant_goblin_lv22",
+            "npc_group.revenant_goblin_lv30",
+            "npc_group.revenant_goblin_lv37",
+            "npc_group.revenant_icefiend_lv45",
+            "npc_group.revenant_pyrefiend_lv52",
+            "npc_group.revenant_hobgoblin_lv60",
+            "npc_group.revenant_vampyre_lv68",
+            "npc_group.revenant_werewolf_lv75",
+            "npc_group.revenant_cyclops_lv82",
+            "npc_group.revenant_hellhound_lv90",
+            "npc_group.revenant_demon_lv98",
+            "npc_group.revenant_ork_lv105",
+            "npc_group.revenant_dark_beast_lv120",
+            "npc_group.revenant_knight_lv126",
+            "npc_group.revenant_dragon_lv135")
 
         /**
          * Kalphites

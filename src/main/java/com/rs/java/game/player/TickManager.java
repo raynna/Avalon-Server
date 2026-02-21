@@ -13,7 +13,9 @@ import java.util.stream.Collectors;
 
 public class TickManager {
 
-    private final Map<TickKeys, Integer> tickTimers = new HashMap<>();
+    private transient Map<TickKeys, Integer> tickTimers = new HashMap<>();
+    private Map<TickKeys, Integer> persistentTimers = new HashMap<>();
+
     private transient Map<TickKeys, Runnable> tickCallbacks = new HashMap<>();
     private transient Entity entity;
     private String entityName;
@@ -21,6 +23,20 @@ public class TickManager {
 
     public void init() {
         this.tickCallbacks = new HashMap<>();
+        this.persistentTimers = new HashMap<>();
+        ensureInit();
+    }
+
+    private void ensureInit() {
+        if (tickTimers == null) {
+            tickTimers = new HashMap<>();
+        }
+        if (persistentTimers == null) {
+            persistentTimers = new HashMap<>();
+        }
+        if (tickCallbacks == null) {
+            tickCallbacks = new HashMap<>();
+        }
     }
 
     public TickManager(Entity entity) {
@@ -64,6 +80,7 @@ public class TickManager {
 
     public void addTicks(TickKeys key, int ticks, Runnable callback) {
         tickTimers.put(key, ticks);
+        syncPersistent(key, ticks);
         if (callback != null) {
             tickCallbacks.put(key, callback);
         }
@@ -86,6 +103,7 @@ public class TickManager {
     public void addSeconds(TickKeys key, int seconds, Runnable callback) {
         int ticks = (int) Math.ceil(seconds / 0.6);
         tickTimers.put(key, ticks);
+        syncPersistent(key, ticks);
         if (callback != null) {
             tickCallbacks.put(key, callback);
         }
@@ -100,6 +118,7 @@ public class TickManager {
     public void addMinutes(TickKeys key, int minutes, Runnable callback) {
         int ticks = (int) Math.ceil((minutes * 60) / 0.6);
         tickTimers.put(key, ticks);
+        syncPersistent(key, ticks);
         if (callback != null) {
             tickCallbacks.put(key, callback);
         }
@@ -114,16 +133,39 @@ public class TickManager {
             TICK_TO_OVERLAY.entrySet().stream()
                     .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
 
+    public Map<TickKeys, Integer> getPersistentTimers() {
+        return tickTimers.entrySet().stream()
+                .filter(e -> e.getKey().isPersistent())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    private void syncPersistent(TickKeys key, int ticks) {
+        if (key.isPersistent()) {
+            persistentTimers.put(key, ticks);
+        }
+    }
+
+    private void removePersistent(TickKeys key) {
+        if (key.isPersistent()) {
+            persistentTimers.remove(key);
+        }
+    }
+
 
     public void tick() {
         Iterator<Map.Entry<TickKeys, Integer>> it = tickTimers.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<TickKeys, Integer> entry = it.next();
             int ticksLeft = entry.getValue() - 1;
-            if (ticksLeft >= 1000000)//avoid infinite timers to run
+            if (ticksLeft >= 1000000) {
+                TickKeys key = entry.getKey();
                 it.remove();
+                removePersistent(key);
+            }
             if (ticksLeft <= 0) {
+                TickKeys key = entry.getKey();
                 it.remove();
+                removePersistent(key);
 
                 Runnable callback = tickCallbacks.remove(entry.getKey());
                 if (callback != null) {
@@ -142,6 +184,7 @@ public class TickManager {
     public void remove(TickKeys key) {
         tickTimers.remove(key);
         tickCallbacks.remove(key);
+        removePersistent(key);
     }
 
     /**
@@ -151,6 +194,7 @@ public class TickManager {
     public void reset() {
         tickTimers.clear();
         tickCallbacks.clear();
+        persistentTimers.clear();
     }
 
     public boolean isActive(TickKeys key) {
@@ -208,22 +252,28 @@ public class TickManager {
          * Potion timers
          */
 
-        OVERLOAD_TICKS(50, 0),
-        RENEWAL_TICKS(51, 0),
-        POISON_IMMUNE_TICKS(52, 0),
-        ANTI_FIRE_TICKS(53, 0),
-        SUPER_ANTI_FIRE_TICKS(54, 0),
-        PRAYER_RENEWAL_TICKS(55, 0),
+        OVERLOAD_TICKS(50, 0, true),
+        RENEWAL_TICKS(51, 0, true),
+        POISON_IMMUNE_TICKS(52, 0, true),
+        ANTI_FIRE_TICKS(53, 0, true),
+        SUPER_ANTI_FIRE_TICKS(54, 0, true),
+        PRAYER_RENEWAL_TICKS(55, 0, true),
 
         DISRUPTION_SHIELD(11, 0),
         TELEPORT_BLOCK(11, 0),
         TELEPORT_BLOCK_IMMUNITY(12, 0);
         private final int uid;
         private final int defaultValue;
+        private final boolean persistent;
 
-        TickKeys(int uid, int defaultValue) {
+        TickKeys(int uid, int defaultValue, boolean persistent) {
             this.uid = uid;
             this.defaultValue = defaultValue;
+            this.persistent = persistent;
+        }
+
+        TickKeys(int uid, int defualtValue) {
+            this(uid, defualtValue, false);
         }
 
         public int getUID() {
@@ -233,5 +283,10 @@ public class TickManager {
         public int getDefaultValue() {
             return defaultValue;
         }
+
+        public boolean isPersistent() {
+            return persistent;
+        }
+
     }
 }

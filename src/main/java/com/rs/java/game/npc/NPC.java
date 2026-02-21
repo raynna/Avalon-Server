@@ -987,8 +987,18 @@ public class NPC extends Entity implements Serializable {
     @Override
     public void setAttackedBy(Entity target) {
         super.setAttackedBy(target);
-        if (target == combat.getTarget() && !(combat.getTarget() instanceof Familiar))
+
+        if (target == null)
+            return;
+
+        Entity combatTarget = combat.getTarget();
+
+        if (combatTarget != null &&
+                target == combatTarget &&
+                !(combatTarget instanceof Familiar)) {
+
             lastAttackedByTarget = Utils.currentTimeMillis();
+        }
     }
 
     public boolean canBeAttackedByAutoRelatie() {
@@ -1434,6 +1444,10 @@ public class NPC extends Entity implements Serializable {
         return 1.0;
     }
 
+    public boolean handleNPCClick(Player player) {
+        return false;
+    }
+
     public boolean isRetreating() {
         return retreating;
     }
@@ -1456,5 +1470,22 @@ public class NPC extends Entity implements Serializable {
 
     public void setRetreatDX(int retreatDX) {
         this.retreatDX = retreatDX;
+    }
+
+    public void resetCombat() {
+
+        if (combat != null) {
+            combat.removeTarget();
+            combat.reset();
+        }
+
+        setAttackedBy(null);
+        setAttackedByDelay(0);
+
+        resetWalkSteps();
+
+        setNextFaceEntity(null);
+
+        retreating = false;
     }
 }

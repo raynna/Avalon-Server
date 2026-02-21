@@ -12,7 +12,7 @@ class CombatMultipliers {
     }
 
     enum class Type {
-        SLAYER, UNDEAD, DEMON, DRAGON, REGULAR
+        SLAYER, UNDEAD, DEMON, DRAGON, REGULAR, WILDY
     }
 
     enum class BoostEquipment(
@@ -46,6 +46,21 @@ class CombatMultipliers {
             Item.getId("item.dragon_hunter_lance"),
             Style.MELEE, Type.DRAGON,
             0.25, 0.25, stack = true
+        ),
+        VIGGORAS_CHAINMACE(
+            Item.getId("item.viggora_s_chainmace"),
+            Style.MELEE, Type.WILDY,
+            0.50, 0.50, stack = true
+        ),
+        CRAWS_BOW(
+            Item.getId("item.craw_s_bow"),
+            Style.RANGE, Type.WILDY,
+            0.50, 0.50, stack = true
+        ),
+        THAMMARONS_SCEPTRE_(
+            Item.getId("item.thammaron_s_sceptre"),
+            Style.MAGIC, Type.WILDY,
+            0.50, 0.50, stack = true
         );
 
         companion object {
@@ -75,6 +90,7 @@ class CombatMultipliers {
                 val isUndead = UNDEAD_NPCS.any { target.definitions.name.contains(it, ignoreCase = true) }
                 val isDemon = DEMON_NPCS.any { target.definitions.name.contains(it, ignoreCase = true) }
                 val isDragon = DRAGON_NPCS.any { target.definitions.name.contains(it, ignoreCase = true) }
+                val isWildy = player.inPkingArea()
 
                 val equippedBoosts = player.equipment.items.itemsCopy
                     .mapNotNull { it?.id }
@@ -89,6 +105,7 @@ class CombatMultipliers {
                         Type.DEMON -> maxHitDummy || isDemon
                         Type.DRAGON -> maxHitDummy || isDragon
                         Type.REGULAR -> maxHitDummy
+                        Type.WILDY -> maxHitDummy || isWildy
                     }
                     if (applies) {
                         if (boost.stack) {

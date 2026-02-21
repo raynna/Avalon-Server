@@ -2,6 +2,7 @@ package com.rs.java.game.player.content.collectionlog;
 
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.drops.tables.BarrowsChestTable;
+import com.rs.kotlin.game.npc.drops.tables.RevenantDropTable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -65,6 +66,8 @@ public class CollectionLogBuilder {
     private static void buildOthers(LogCategory cat) {
         cat.init("Cyclops", getItems("item.bronze_defender", "item.iron_defender", "item.steel_defender", "item.black_defender", "item.mithril_defender", "item.adamant_defender", "item.rune_defender", "item.dragon_defender"));
         cat.init("Dragons", getItems("item.dragon_plateskirt", "item.dragon_platelegs", "item.draconic_visage"));
+        cat.init("Revenants",
+                DropTableUtils.getTableDrops(RevenantDropTable.INSTANCE.getTable()));
     }
 
     private static Integer[] getNPCDrops(int npcId) {

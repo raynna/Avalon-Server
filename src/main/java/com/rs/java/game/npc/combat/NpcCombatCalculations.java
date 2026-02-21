@@ -146,7 +146,8 @@ public class NpcCombatCalculations {
 
     private static boolean calculateHitProbability(int attackRoll, int defenceRoll) {
         double hitChance = calculateHitChance(attackRoll, defenceRoll);
-        return Utils.randomDouble() < hitChance;
+        double random = Utils.randomDouble();
+        return random < hitChance;
     }
 
 

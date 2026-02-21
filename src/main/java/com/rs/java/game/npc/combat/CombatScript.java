@@ -32,7 +32,6 @@ public abstract class CombatScript {
     public abstract int attack(NPC npc, Entity target);
 
     public static void hit(int delay, NPC attacker, Entity defender, NpcAttackStyle style) {
-        Hit hit = attacker.meleeHit(defender, attacker.getMaxHit());
         HitLook look;
         switch (style) {
             case STAB: case SLASH: case CRUSH:
@@ -47,6 +46,8 @@ public abstract class CombatScript {
             default:
                 look = HitLook.REGULAR_DAMAGE;
         }
+        Hit hit = attacker.meleeHit(defender, attacker.getMaxHit());
+        hit.setLook(look);
         delayHit(attacker, defender, delay, hit);
     }
 

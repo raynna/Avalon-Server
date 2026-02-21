@@ -2,6 +2,7 @@ package com.rs.kotlin.game.world.projectile
 
 enum class Projectile {
     STANDARD_MAGIC,
+    STANDARD_MAGIC_FAST,
     STANDARD_MAGIC_INSTANT,
     ARROW,
     INSTANT_ARROW,

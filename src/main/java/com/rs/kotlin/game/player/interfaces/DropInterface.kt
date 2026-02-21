@@ -423,7 +423,7 @@ object DropInterface {
 
             row += ROW_STRIDE
         }
-        refreshScrollbar(player, drops.size)
+        //refreshScrollbar(player, drops.size)
     }
 
     fun selectItem(player: Player, itemId: Int, autoSelect: Boolean) {
@@ -557,7 +557,7 @@ object DropInterface {
             if (needsScroll) contentHeight else 264
         )
 
-        player.packets.sendRunScript(10006)
+        //player.packets.sendRunScript(10006)
     }
 
     private fun updateTitle(player: Player, line1: String, line2: String? = null) {

@@ -360,7 +360,12 @@ public class ItemDegrade {
 		 * Ringofrecoil
 		 */
 		
-		RING_OF_RECOIL(new Item(2550), null, DegradeType.HITS, 400)
+		RING_OF_RECOIL(new Item("item.ring_of_recoil"), null, DegradeType.HITS, 400),
+		FORINTHRY_BRACELET_5(new Item("item.forinthry_brace_5"), new Item("item.forinthry_brace_4"), DegradeType.IN_COMBAT, new DegradeTime(TimeUnit.MINUTES, 1)),
+		FORINTHRY_BRACELET_4(new Item("item.forinthry_brace_4"), new Item("item.forinthry_brace_3"), DegradeType.IN_COMBAT, new DegradeTime(TimeUnit.MINUTES, 1)),
+		FORINTHRY_BRACELET_3(new Item("item.forinthry_brace_3"), new Item("item.forinthry_brace_2"), DegradeType.IN_COMBAT, new DegradeTime(TimeUnit.MINUTES, 1)),
+		FORINTHRY_BRACELET_2(new Item("item.forinthry_brace_2"), new Item("item.forinthry_brace_1"), DegradeType.IN_COMBAT, new DegradeTime(TimeUnit.MINUTES, 1)),
+		FORINTHRY_BRACELET_1(new Item("item.forinthry_brace_1"), null, DegradeType.IN_COMBAT, new DegradeTime(TimeUnit.MINUTES, 1)),
 
 		;
 

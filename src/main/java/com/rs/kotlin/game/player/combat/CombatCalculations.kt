@@ -51,7 +51,6 @@ object CombatCalculations {
             val equipmentSet = EquipmentSets.getSet(player)
             val voidBonus = EquipmentSets.getAccuracyMultiplier(player, equipmentSet, CombatMultipliers.Style.MELEE)
             val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MELEE)
-
             val baseAttack = getBaseAttackLevel(player)
 
             val effectiveAttack = floor((baseAttack + styleBonus + 8) * voidBonus)

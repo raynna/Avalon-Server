@@ -16035,6 +16035,64 @@
     "categories": [],
     "assignedBy": []
   },
+  "1264": {
+    "id": 1264,
+    "name": "Saradomin wizard",
+    "members": true,
+    "combatLevel": 108,
+    "attackLevel": 100,
+    "strengthLevel": 80,
+    "defenceLevel": 80,
+    "magicLevel": 80,
+    "rangedLevel": 1,
+    "constitutionLevel": 120,
+    "attackBonus": 40,
+    "strengthBonus": 40,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 30
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 October]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A follower of Saradomin.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "[[melee]]": 14,
+      "[[magic]]": 20
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "1265": {
     "id": 1265,
     "name": "Rock Crab",
@@ -56911,6 +56969,798 @@
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []
+  },
+  "13465": {
+    "id": 13465,
+    "name": "Revenant imp",
+    "members": true,
+    "combatLevel": 7,
+    "attackLevel": 5,
+    "strengthLevel": 5,
+    "defenceLevel": 4,
+    "magicLevel": 9,
+    "rangedLevel": 5,
+    "constitutionLevel": 10,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 5,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "The ghost of an imp slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 33,
+    "slayerXp": 10,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "13466": {
+    "id": 13466,
+    "name": "Revenant goblin",
+    "members": true,
+    "combatLevel": 15,
+    "attackLevel": 13,
+    "strengthLevel": 14,
+    "defenceLevel": 14,
+    "magicLevel": 12,
+    "rangedLevel": 15,
+    "constitutionLevel": 14,
+    "attackBonus": 6,
+    "strengthBonus": 8,
+    "magicBonus": 37,
+    "magicStrengthBonus": 12,
+    "rangedBonus": 21,
+    "rangedStrengthBonus": 12,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 28,
+      "crush": 31
+    },
+    "magicDefence": {
+      "magic": 1
+    },
+    "rangedDefence": {
+      "light": 31,
+      "standard": 31,
+      "heavy": 31
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "The ghost of a goblin slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 83,
+    "slayerXp": 14,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "13468": {
+    "id": 13468,
+    "name": "Revenant goblin",
+    "members": true,
+    "combatLevel": 15,
+    "attackLevel": 13,
+    "strengthLevel": 14,
+    "defenceLevel": 14,
+    "magicLevel": 12,
+    "rangedLevel": 15,
+    "constitutionLevel": 14,
+    "attackBonus": 6,
+    "strengthBonus": 8,
+    "magicBonus": 37,
+    "magicStrengthBonus": 12,
+    "rangedBonus": 21,
+    "rangedStrengthBonus": 12,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 28,
+      "crush": 31
+    },
+    "magicDefence": {
+      "magic": 1
+    },
+    "rangedDefence": {
+      "light": 31,
+      "standard": 31,
+      "heavy": 31
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "The ghost of a goblin slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 83,
+    "slayerXp": 14,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "13469": {
+    "id": 13469,
+    "name": "Revenant goblin",
+    "members": true,
+    "combatLevel": 15,
+    "attackLevel": 13,
+    "strengthLevel": 14,
+    "defenceLevel": 14,
+    "magicLevel": 12,
+    "rangedLevel": 15,
+    "constitutionLevel": 14,
+    "attackBonus": 6,
+    "strengthBonus": 8,
+    "magicBonus": 37,
+    "magicStrengthBonus": 12,
+    "rangedBonus": 21,
+    "rangedStrengthBonus": 12,
+    "meleeDefence": {
+      "stab": 25,
+      "slash": 28,
+      "crush": 31
+    },
+    "magicDefence": {
+      "magic": 1
+    },
+    "rangedDefence": {
+      "light": 31,
+      "standard": 31,
+      "heavy": 31
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "The ghost of a goblin slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 83,
+    "slayerXp": 14,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "13471": {
+    "id": 13471,
+    "name": "Revenant pyrefiend",
+    "members": true,
+    "combatLevel": 52,
+    "attackLevel": 60,
+    "strengthLevel": 40,
+    "defenceLevel": 33,
+    "magicLevel": 67,
+    "rangedLevel": 40,
+    "constitutionLevel": 48,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 45,
+      "slash": 40,
+      "crush": 50
+    },
+    "magicDefence": {
+      "magic": 15
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "The ghost of a pyrefiend slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 60,
+    "slayerXp": 48,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "13472": {
+    "id": 13472,
+    "name": "Revenant hobgoblin",
+    "members": true,
+    "combatLevel": 60,
+    "attackLevel": 50,
+    "strengthLevel": 50,
+    "defenceLevel": 41,
+    "magicLevel": 55,
+    "rangedLevel": 60,
+    "constitutionLevel": 72,
+    "attackBonus": 20,
+    "strengthBonus": 24,
+    "magicBonus": 5,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 25,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 65,
+      "slash": 60,
+      "crush": 68
+    },
+    "magicDefence": {
+      "magic": 30
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 50,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "The ghost of a hobgoblin slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 73,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "13476": {
+    "id": 13476,
+    "name": "Revenant hellhound",
+    "members": true,
+    "combatLevel": 90,
+    "attackLevel": 76,
+    "strengthLevel": 80,
+    "defenceLevel": 80,
+    "magicLevel": 104,
+    "rangedLevel": 80,
+    "constitutionLevel": 80,
+    "attackBonus": 38,
+    "strengthBonus": 40,
+    "magicBonus": 30,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 98,
+      "slash": 140,
+      "crush": 142
+    },
+    "magicDefence": {
+      "magic": 62
+    },
+    "rangedDefence": {
+      "light": 110,
+      "standard": 140,
+      "heavy": 140
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "The ghost of a hellhound slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "default": 14
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 50,
+    "slayerXp": 86,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "13477": {
+    "id": 13477,
+    "name": "Revenant demon",
+    "members": true,
+    "combatLevel": 98,
+    "attackLevel": 83,
+    "strengthLevel": 76,
+    "defenceLevel": 80,
+    "magicLevel": 120,
+    "rangedLevel": 80,
+    "constitutionLevel": 80,
+    "attackBonus": 30,
+    "strengthBonus": 50,
+    "magicBonus": 50,
+    "magicStrengthBonus": 24,
+    "rangedBonus": 40,
+    "rangedStrengthBonus": 30,
+    "meleeDefence": {
+      "stab": 124,
+      "slash": 118,
+      "crush": 130
+    },
+    "magicDefence": {
+      "magic": 85
+    },
+    "rangedDefence": {
+      "light": 90,
+      "standard": 90,
+      "heavy": 90
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "The ghost of a demon slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "default": 15
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 50,
+    "slayerXp": 86,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "13478": {
+    "id": 13478,
+    "name": "Revenant ork",
+    "members": true,
+    "combatLevel": 105,
+    "attackLevel": 99,
+    "strengthLevel": 100,
+    "defenceLevel": 60,
+    "magicLevel": 110,
+    "rangedLevel": 130,
+    "constitutionLevel": 105,
+    "attackBonus": 60,
+    "strengthBonus": 55,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 50,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 118,
+      "slash": 150,
+      "crush": 146
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 148,
+      "standard": 148,
+      "heavy": 118
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "The ghost of an ork slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 10.0,
+    "maxHit": {
+      "default": 20
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 27,
+    "slayerXp": 115,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "13479": {
+    "id": 13479,
+    "name": "Revenant dark beast",
+    "members": true,
+    "combatLevel": 120,
+    "attackLevel": 93,
+    "strengthLevel": 110,
+    "defenceLevel": 80,
+    "magicLevel": 130,
+    "rangedLevel": 135,
+    "constitutionLevel": 140,
+    "attackBonus": 65,
+    "strengthBonus": 60,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 45,
+    "rangedStrengthBonus": 45,
+    "meleeDefence": {
+      "stab": 113,
+      "slash": 152,
+      "crush": 155
+    },
+    "magicDefence": {
+      "magic": 70
+    },
+    "rangedDefence": {
+      "light": 158,
+      "standard": 158,
+      "heavy": 118
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "The ghost of a dark beast slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 12.5,
+    "maxHit": {
+      "default": 23
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 27,
+    "slayerXp": 157,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "13480": {
+    "id": 13480,
+    "name": "Revenant knight",
+    "members": true,
+    "combatLevel": 126,
+    "attackLevel": 100,
+    "strengthLevel": 119,
+    "defenceLevel": 80,
+    "magicLevel": 146,
+    "rangedLevel": 146,
+    "constitutionLevel": 143,
+    "attackBonus": 69,
+    "strengthBonus": 71,
+    "magicBonus": 55,
+    "magicStrengthBonus": 30,
+    "rangedBonus": 55,
+    "rangedStrengthBonus": 45,
+    "meleeDefence": {
+      "stab": 145,
+      "slash": 200,
+      "crush": 180
+    },
+    "magicDefence": {
+      "magic": 95
+    },
+    "rangedDefence": {
+      "light": 190,
+      "standard": 190,
+      "heavy": 150
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "The ghost of a knight slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 17.5,
+    "maxHit": {
+      "default": 27
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 20,
+    "slayerXp": 168,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "13481": {
+    "id": 13481,
+    "name": "Revenant dragon",
+    "members": true,
+    "combatLevel": 135,
+    "attackLevel": 106,
+    "strengthLevel": 126,
+    "defenceLevel": 87,
+    "magicLevel": 150,
+    "rangedLevel": 151,
+    "constitutionLevel": 155,
+    "attackBonus": 72,
+    "strengthBonus": 78,
+    "magicBonus": 61,
+    "magicStrengthBonus": 35,
+    "rangedBonus": 60,
+    "rangedStrengthBonus": 51,
+    "meleeDefence": {
+      "stab": 143,
+      "slash": 206,
+      "crush": 188
+    },
+    "magicDefence": {
+      "magic": 101
+    },
+    "rangedDefence": {
+      "light": 197,
+      "standard": 197,
+      "heavy": 157
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 November]] [[2017]]",
+    "aliases": [],
+    "size": "5",
+    "examine": "The ghost of a dragon slain long ago.",
+    "attributes": [
+      "undead",
+      "spectral"
+    ],
+    "xpBonus": 20.0,
+    "maxHit": {
+      "default": 30
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]",
+      "[[Ranged]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 20,
+    "slayerXp": 186,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
   },
   "14072": {
     "id": 14072,

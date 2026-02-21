@@ -146,6 +146,25 @@ object ProjectileManager {
     fun send(
         projectile: Projectile,
         gfxId: Int,
+        displacement: Int,
+        attacker: Entity,
+        defender: Entity,
+        onLanded: Runnable? = null
+    ): Int {
+        return send(
+            projectile = projectile,
+            gfxId = gfxId,
+            displacement = displacement,
+            attacker = attacker,
+            defender = defender,
+            onLanded = { onLanded?.run() }
+        )
+    }
+
+    @JvmStatic
+    fun send(
+        projectile: Projectile,
+        gfxId: Int,
         hitGraphic: Graphics,
         attacker: Entity,
         defender: Entity,

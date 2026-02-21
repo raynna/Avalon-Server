@@ -502,7 +502,9 @@ object StandardRanged : RangeData() {
                 "item.crystal_bow_4_10",
                 "item.crystal_bow_3_10",
                 "item.crystal_bow_2_10",
-                "item.crystal_bow_1_10"
+                "item.crystal_bow_1_10",
+                "item.craw_s_bow_u",
+                "item.craw_s_bow"
             ),
             name = "Crystal bow",
             weaponStyle = WeaponStyle.SHORTBOW,

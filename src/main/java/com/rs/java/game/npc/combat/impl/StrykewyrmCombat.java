@@ -5,7 +5,6 @@ import com.rs.java.game.Entity;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.Hit;
 import com.rs.java.game.Hit.HitLook;
-import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
@@ -13,90 +12,159 @@ import com.rs.java.game.player.Player;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
-
-import static com.rs.java.game.npc.combat.NpcCombatCalculations.getRandomMaxHit;
+import com.rs.kotlin.game.world.projectile.Projectile;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 public class StrykewyrmCombat extends CombatScript {
 
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { 9463, 9465, 9467 };
+		return new Object[]{9463, 9465, 9467};
+	}
+
+	private enum StrykewyrmAttack {
+		MELEE,
+		MAGIC,
+		BURY
 	}
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		final NpcCombatDefinition defs = npc.getCombatDefinitions();
-		int attackStyle = Utils.getRandom(4);
-		if (attackStyle == 0 || attackStyle == 1) { // melee
-			int size = npc.getSize();
-			if (!Utils.isOnRange(npc.getX(), npc.getY(), size, target.getX(), target.getY(), target.getSize(), 0))
-				attackStyle = 2 + Utils.random(2);
-			else {
-				npc.animate(new Animation(defs.getAttackAnim()));
-				delayHit(npc, target, 0,
-                        getMeleeHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)));
-				return npc.getAttackSpeed();
-			}
+
+		NpcCombatDefinition defs = npc.getCombatDefinitions();
+
+		StrykewyrmAttack attack = selectAttack(npc, target);
+
+		switch (attack) {
+
+			case MELEE:
+				performMelee(npc, target, defs);
+				break;
+
+			case MAGIC:
+				performMagic(npc, target, defs);
+				break;
+
+			case BURY:
+				performBury(npc, target);
+				break;
 		}
-		if (attackStyle == 2 || attackStyle == 3) { // mage
-			npc.animate(new Animation(12794));
-			final Hit hit = getMagicHit(npc, getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.MAGIC, target));
-			delayHit(npc, target, 1, hit);
-			World.sendSlowBowProjectile(npc, target, defs.getAttackProjectile());
-			if (npc.getId() == 9463) {
-				WorldTasksManager.schedule(new WorldTask() {
-					@Override
-					public void run() {
-						if (Utils.getRandom(10) == 0 && !target.isFrozen()) {
-							target.setFreezeDelay(3000);
+
+		return npc.getAttackSpeed();
+	}
+
+	private StrykewyrmAttack selectAttack(NPC npc, Entity target) {
+
+		boolean inMelee = npc.isWithinMeleeRange(target);
+		if (npc.temporaryAttribute().containsKey("strykewyrm_bury_cd")) {
+			return inMelee ? StrykewyrmAttack.MELEE : StrykewyrmAttack.MAGIC;
+		}
+		if (inMelee) {
+			return Utils.randomWeighted(
+					StrykewyrmAttack.MELEE, 45,
+					StrykewyrmAttack.MAGIC, 45,
+					StrykewyrmAttack.BURY, 10
+			);
+		}
+
+		return Utils.randomWeighted(
+				StrykewyrmAttack.MAGIC, 90,
+				StrykewyrmAttack.BURY, 10
+		);
+	}
+
+	private void performMelee(NPC npc, Entity target, NpcCombatDefinition defs) {
+
+		npc.animate(new Animation(defs.getAttackAnim()));
+
+		Hit hit = npc.meleeHit(target, defs.getMaxHit());
+		delayHit(npc, target, 0, hit);
+	}
+
+	private void performMagic(NPC npc, Entity target, NpcCombatDefinition defs) {
+
+		npc.animate(new Animation(12794));
+
+		Hit hit = npc.magicHit(target, defs.getMaxHit());
+
+		ProjectileManager.send(
+				Projectile.STANDARD_MAGIC_FAST,
+				defs.getAttackProjectile(),
+				npc,
+				target,
+				() -> {
+					applyRegisteredHit(npc, target, hit);
+					if (npc.getId() == 9463) {
+						if (Utils.roll(1, 10) && !target.isFrozen()) {
+							target.setFreezeDelay(5);
 							target.gfx(new Graphics(369));
-							if (target instanceof Player) {
-								Player targetPlayer = (Player) target;
-								targetPlayer.stopAll();
+							if (target instanceof Player player) {
+								player.stopAll();
 							}
-						} else if (hit.getDamage() != 0)
-							target.gfx(new Graphics(2315));
+							return;
+						}
+						target.gfx(new Graphics(2315));
 					}
-				}, 1);
-			}
-		} else if (attackStyle == 4) { // bury
-			final WorldTile tile = new WorldTile(target);
-			tile.moveLocation(-1, -1, 0);
-			npc.animate(new Animation(12796));
-			npc.setCantInteract(true);
-			npc.getCombat().removeTarget();
-			npc.setAttackedByDelay(10000);
-			final int id = npc.getId();
-			WorldTasksManager.schedule(new WorldTask() {
+				}
+		);
+	}
 
-				int count;
 
-				@Override
-				public void run() {
-					if (count == 0) {
-						npc.transformIntoNPC(id - 1);
+	private void performBury(final NPC npc, final Entity target) {
+		npc.temporaryAttribute().put("strykewyrm_bury_cd", true);
+		final WorldTile tile = new WorldTile(target);
+		tile.moveLocation(-1, -1, 0);
+
+		npc.animate(new Animation(12796));
+		npc.setCantInteract(true);
+
+		npc.resetCombat();
+		npc.setAttackedByDelay(16);
+
+		final int combatId = npc.getId();
+		final int digId = combatId - 1;
+
+		WorldTasksManager.schedule(new WorldTask() {
+
+			int stage = 0;
+
+			@Override
+			public void run() {
+				if (stage > 0 && stage != 4 && stage != 5) {
+					if (npc.isWithinMeleeRange(target)) {
+						stage = 4;
+					}
+				}
+				switch (stage) {
+					case 0:
+						npc.transformIntoNPC(digId);
 						npc.setForceWalk(tile);
-						count++;
-					} else if (count == 1) {
-						npc.transformIntoNPC(id);
+						break;
+
+					case 4:
+						npc.transformIntoNPC(combatId);
 						npc.animate(new Animation(12795));
-						int distanceX = target.getX() - npc.getX();
-						int distanceY = target.getY() - npc.getY();
-						int size = npc.getSize();
-						if (distanceX < size && distanceX > -1 && distanceY < size && distanceY > -1)
-							delayHit(npc, target, 0, new Hit(npc, 300, HitLook.REGULAR_DAMAGE));
-						count++;
-					} else if (count == 2) {
+
+						if (npc.isWithinMeleeRange(target)) {
+							delayHit(npc, target, 0,
+									new Hit(npc, 300, HitLook.REGULAR_DAMAGE));
+						}
+						break;
+
+					case 5:
 						npc.getCombat().setCombatDelay(npc.getAttackSpeed());
 						npc.setTarget(target);
 						npc.setCantInteract(false);
+						npc.getCombat().addAttackDelay(4);
+						WorldTasksManager.schedule(12, () -> npc.temporaryAttribute().remove("strykewyrm_bury_cd"));
 						stop();
-					}
+						return;
 				}
-			}, 1, 1);
-		}
-		return npc.getAttackSpeed();
+
+				stage++;
+			}
+
+		}, 1, 1);
 	}
 }

@@ -423,6 +423,8 @@ public class NPCHandler {
                 return;
             if (player.getTreasureTrailsManager().useNPC(npc))
                 return;
+            if (npc.handleNPCClick(player))
+                return;
             if (CityEventHandler.handleNPCClick(player, npc, npc.getId()))
                 return;
             FishingSpots spot = FishingSpots.forId(npc.getId() | 1 << 24);

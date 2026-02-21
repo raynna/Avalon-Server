@@ -711,6 +711,30 @@
     "lastSeen": "2026-01-21T11:01:27.879227300Z",
     "attempts": 1
   },
+  "9462": {
+    "npcId": 9462,
+    "npcName": "Mound",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-02-20T12:18:07.054300100Z",
+    "lastSeen": "2026-02-20T12:18:07.054300100Z",
+    "attempts": 1
+  },
+  "9466": {
+    "npcId": 9466,
+    "npcName": "Mound",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-02-20T12:19:10.059241400Z",
+    "lastSeen": "2026-02-20T12:19:10.059241400Z",
+    "attempts": 1
+  },
+  "9467": {
+    "npcId": 9467,
+    "npcName": "Jungle strykewyrm",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-20T12:35:00.301099600Z",
+    "lastSeen": "2026-02-20T12:35:00.301099600Z",
+    "attempts": 1
+  },
   "9720": {
     "npcId": 9720,
     "npcName": "Lobster",
@@ -725,6 +749,30 @@
     "reason": "No Infobox Monster found",
     "firstSeen": "2026-01-23T21:42:34.515614900Z",
     "lastSeen": "2026-01-23T21:42:34.515614900Z",
+    "attempts": 1
+  },
+  "13470": {
+    "npcId": 13470,
+    "npcName": "Revenant icefiend",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-02-20T20:27:11.454390300Z",
+    "lastSeen": "2026-02-20T20:27:11.454390300Z",
+    "attempts": 1
+  },
+  "13473": {
+    "npcId": 13473,
+    "npcName": "Revenant vampyre",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-02-20T20:27:11.680785500Z",
+    "lastSeen": "2026-02-20T20:27:11.680785500Z",
+    "attempts": 1
+  },
+  "13474": {
+    "npcId": 13474,
+    "npcName": "Revenant werewolf",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-02-20T20:27:11.736898800Z",
+    "lastSeen": "2026-02-20T20:27:11.736898800Z",
     "attempts": 1
   },
   "13820": {

@@ -21,18 +21,19 @@ public class AquaniteCombat extends CombatScript {
 	public int attack(NPC npc, Entity target) {
 		npc.animate(npc.getAttackAnimation());
 		npc.gfx(npc.getAttackGfx());
-		ProjectileManager.sendSimple(Projectile.ELEMENTAL_SPELL, npc.getProjectileId(), npc, target);
 
 		Hit mageHit = npc.magicHit(target, npc.getMaxHit());
-		if (target instanceof Player p2) {
-            if (Utils.random(10) == 0) {
-			if (p2.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || p2.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
-				p2.getPrayer().closeAllPrayers();
-				p2.message("The creature's attack turns off your " + (p2.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC) ? "Deflect from Magic" : "Protect from Magic") +" prayer!");
+		ProjectileManager.send(Projectile.STANDARD_MAGIC_FAST, npc.getProjectileId(), npc, target, () -> {
+			applyRegisteredHit(npc, target, mageHit);
+			if (target instanceof Player p2) {
+				if (Utils.roll(1, 10)) {
+					if (p2.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MAGIC) || p2.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC)) {
+						p2.getPrayer().closeAllPrayers();
+						p2.message("The creature's attack turns off your " + (p2.getPrayer().isActive(AncientPrayer.DEFLECT_MAGIC) ? "Deflect from Magic" : "Protect from Magic") +" prayer!");
+					}
 				}
 			}
-		}
-		delayHit(npc, target, npc.getHitDelay(npc, target), mageHit);
+		});
 		return npc.getAttackSpeed();
 	}
 

@@ -2998,7 +2998,7 @@ public class Player extends Entity {
         }
         getSkills().switchXPPopup(true);
         getSkills().switchXPPopup(true);
-        squealOfFortune.giveDailySpins();
+        //squealOfFortune.giveDailySpins();
         controlerManager.login();
         if (familiarPouch != null) {
             if (familiar != null) {

@@ -895,7 +895,11 @@ public abstract class Entity extends WorldTile {
     }
 
     public void setAttackedBy(Entity e) {
-        temporaryAttribute().put("attackedBy", e);
+        if (e == null) {
+            temporaryAttribute().remove("attackedBy");
+        } else {
+            temporaryAttribute().put("attackedBy", e);
+        }
     }
 
     public Entity getAttackedBy() {

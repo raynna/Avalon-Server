@@ -321,10 +321,10 @@ object StandardMelee : MeleeData() {
                 StyleKey(AttackStyle.DEFENSIVE, 3) to Rscm.lookup("sound.mace_crush"),
             ),
             animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.mace_crush"),
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.old_mace_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.old_mace_crush"),
                 StyleKey(AttackStyle.CONTROLLED, 2) to Animation.getId("animation.mace_stab"),
-                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.mace_crush"),
+                StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.old_mace_crush"),
             )
         ),
         MeleeWeapon(
@@ -1326,9 +1326,9 @@ object StandardMelee : MeleeData() {
             blockAnimationId = Animation.getId("animation.warhammer_block"),
             soundId = Rscm.lookup("sound.hammer"),
             animations = mapOf(
-                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.warhammer_crush"),
-                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.warhammer_crush"),
-                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.warhammer_crush"),
+                StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.old_mace_crush"),
+                StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.old_mace_crush"),
+                StyleKey(AttackStyle.DEFENSIVE, 2) to Animation.getId("animation.old_mace_crush"),
             ),
         ),
         MeleeWeapon(

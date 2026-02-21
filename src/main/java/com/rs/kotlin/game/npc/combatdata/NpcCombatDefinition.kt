@@ -30,7 +30,7 @@ data class NpcCombatDefinition(
     val aggressivenessType: AggressivenessType = AggressivenessType.PASSIVE,
     val aggroDistance: Int = -1,
     val deAggroDistance: Int = -1,
-    val maxDistFromSpawn: Int = 12
+    val maxDistFromSpawn: Int = 16
 ) {
     override fun toString(): String {
         return buildString {

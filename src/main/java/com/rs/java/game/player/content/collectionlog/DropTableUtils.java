@@ -15,4 +15,13 @@ public class DropTableUtils {
         return table.getAllItemIdsForCollectionLog()
                 .toArray(new Integer[0]);
     }
+
+    public static Integer[] getTableDrops(DropTable table) {
+
+        if (table == null)
+            return new Integer[0];
+
+        return table.getAllItemIdsForCollectionLog()
+                .toArray(new Integer[0]);
+    }
 }

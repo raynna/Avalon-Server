@@ -38,6 +38,10 @@ public final class NPCCombat {
         this.attackDelay = attackDelay;
     }
 
+    public void addAttackDelay(int attackDelay) {
+        this.attackDelay += attackDelay;
+    }
+
     public NPCCombat(NPC npc) {
         this.npc = npc;
     }
@@ -46,7 +50,7 @@ public final class NPCCombat {
     private static final int MAX_FAR_ATTACK_DISTANCE = 16;
     private static final int NEX_FORCE_MOVEMENT_ANIMATION = 17408;
 
-    private static final boolean DEBUG_COMBAT = true;
+    private static final boolean DEBUG_COMBAT = false;
 
     private void debug(String msg) {
         if (!DEBUG_COMBAT) return;
@@ -171,53 +175,48 @@ public final class NPCCombat {
     }
 
     public boolean checkAll() {
-        Entity target = this.target;
-        if (npc instanceof Familiar && target instanceof NPC && ((NPC) target).isCantInteract())
-            return false;
-        int viewDistance = 16;
+        Entity t = this.target;
 
-        if (Utils.getDistance(npc, target) > viewDistance) {
+        // 1) ALWAYS validate first
+        if (!isTargetValid(t)) {
+            debug("checkAll: target invalid");
+            removeTarget();
+            return false;
+        }
+
+        // 3) Other checks
+        if (npc instanceof Familiar && t instanceof NPC && ((NPC) t).isCantInteract())
+            return false;
+
+        if (!canAttackTarget(t)) {
+            debug("checkAll: cannot attack target");
+            removeTarget();
+            return false;
+        }
+        if (isTargetTooFar()) {
             hardResetCombat();
-            return false;
+            return true;
         }
-
-        if (!isTargetValid(target)) {
-            debug("checkAll: target no longer valid → REMOVED");
-            removeTarget();
-            return false;
-        }
-
-        if (!canAttackTarget(target)) {
-            debug("checkAll: canAttackTarget = false → REMOVED");
-            removeTarget();
-            return false;
-        }
-
-        if (isWithinRespawnRange() && npc.isForceWalking()) {
-            debug("checkAll: reset forcewalk");
-            npc.resetForcewalk();
-            npc.setRetreating(false);
-        }
-        if (!isWithinRespawnRange()) {
-            debug("checkAll: OUTSIDE respawn range → ENTER RETREAT");
-            Entity lastTarget = target;
-
+        if (!isNpcWithinAttackArea()) {
             npc.resetWalkSteps();
             npc.setRetreating(true);
-
-            if (lastTarget != null) {
-                npc.forceRetreatStep(lastTarget);
+            npc.forceRetreatStep(target);
+            return true;
+        }
+        if (npc.isRetreating()) {
+            if (isTargetWithinAttackArea(target)) {
+                npc.resetWalkSteps();
+                npc.setRetreating(false);
+            } else {
+                npc.forceRetreatStep(target);
             }
             return true;
         }
 
-        if (handleCollisionMovement(target)) {
-            debug("checkAll: collision movement handled");
+        if (handleCollisionMovement(t))
             return true;
-        }
 
-        debug("checkAll: normal follow");
-        handleFollow(target);
+        handleFollow(t);
         return true;
     }
 
@@ -250,42 +249,42 @@ public final class NPCCombat {
         return true;
     }
 
-    private boolean isWithinRespawnRange() {
+    private boolean isTargetWithinAttackArea(Entity target) {
+        int maxDistance = npc.getForceTargetDistance() > 0
+                ? npc.getForceTargetDistance()
+                : npc.getCombatDefinitions().getMaxDistFromSpawn() == -1
+                ? 16
+                : npc.getCombatDefinitions().getMaxDistFromSpawn();
+
+        return Utils.isOnRange(
+                npc.getRespawnTile().getX(),
+                npc.getRespawnTile().getY(),
+                1, // spawn is 1x1 reference
+                target.getX(),
+                target.getY(),
+                target.getSize(),
+                maxDistance
+        );
+    }
+
+    private boolean isNpcWithinAttackArea() {
         int size = npc.getSize();
         int maxDistance = npc.getForceTargetDistance() > 0
                 ? npc.getForceTargetDistance()
-                : npc.getCombatDefinitions().getMaxDistFromSpawn() == -1 ? 16 : npc.getCombatDefinitions().getMaxDistFromSpawn();
-
-        // Distance from respawn tile
+                : npc.getCombatDefinitions().getMaxDistFromSpawn() > 0 ? npc.getCombatDefinitions().getMaxDistFromSpawn() : 16;
         int npcDistX = npc.getX() - npc.getRespawnTile().getX();
         int npcDistY = npc.getY() - npc.getRespawnTile().getY();
-        // Distance from spawn to target
-        int tgtDistX = target.getX() - npc.getRespawnTile().getX();
-        int tgtDistY = target.getY() - npc.getRespawnTile().getY();
+        if (!(npc instanceof Familiar) && npc.getMapAreaNameHash() != -1) {
+            boolean npcInside = MapAreas.isAtArea(npc.getMapAreaNameHash(), npc);
 
-        boolean targetInRange = !(tgtDistX > size + maxDistance || tgtDistX < -1 - maxDistance
-                || tgtDistY > size + maxDistance || tgtDistY < -1 - maxDistance);
-
-
-        // If NPC has a defined MapArea, enforce area rules
-        if (!(npc instanceof Familiar)) {
-            if (npc.getMapAreaNameHash() != -1) {
-                boolean npcInside = MapAreas.isAtArea(npc.getMapAreaNameHash(), npc);
-                boolean tgtInside = MapAreas.isAtArea(npc.getMapAreaNameHash(), target);
-
-                if (!npcInside) return false; // NPC wandered outside
-                if (!npc.canBeAttackFromOutOfArea() && !tgtInside) return false; // Target outside and not allowed
-                return true;
-            }
+            if (!npcInside) return false;
+            if (!npc.canBeAttackFromOutOfArea()) return false;
+            return true;
         }
 
-        // Fallback: distance-based leash
-        boolean npcInRange = !(npcDistX > size + maxDistance || npcDistX < -1 - maxDistance
+        return !(npcDistX > size + maxDistance || npcDistX < -1 - maxDistance
                 || npcDistY > size + maxDistance || npcDistY < -1 - maxDistance);
-
-        return npcInRange && targetInRange;
     }
-
 
     private boolean handleCollisionMovement(Entity target) {
         int size = npc.getSize();
@@ -362,7 +361,13 @@ public final class NPCCombat {
         return false;
     }
 
+    private int getDistance() {
+        return Utils.getDistance(npc, target);
+    }
 
+    private boolean isTargetTooFar() {
+        return getDistance() > (npc.getForceTargetDistance() > 0 ? npc.getForceTargetDistance() : 16);
+    }
 
     private void handleFollow(Entity target) {
         if (npc.isCantFollowUnderCombat()) {
@@ -375,25 +380,8 @@ public final class NPCCombat {
         int size = npc.getSize();
         int targetSize = target.getSize();
 
-        int attackRange = defs.getAttackRange() != -1 ? defs.getAttackRange() : 7;
+        int attackRange = defs.getAttackRange() > 0 ? defs.getAttackRange() : 7;
         int maxAttackDistance = npc.isForceFollowClose() ? 0 : (attackStyle == AttackStyle.MELEE ? 0 : attackRange);
-
-        // Allow following up to chase distance (forceTargetDistance or default agro leash)
-        int chaseDistance = npc.getForceTargetDistance() > 0
-                ? npc.getForceTargetDistance()
-                : npc.getCombatDefinitions().getMaxDistFromSpawn() == -1 ? 16 : npc.getCombatDefinitions().getMaxDistFromSpawn();
-
-        // Always attempt to follow target if inside chase distance
-        boolean inChaseRange = Utils.isOnRange(
-                npc.getX(), npc.getY(), size,
-                target.getX(), target.getY(), targetSize,
-                chaseDistance
-        );
-
-        if (!inChaseRange) {
-            removeTarget();
-            return;
-        }
         if (npc.isFrozen() || npc.isLocked()) {
             return;
         }
@@ -439,12 +427,16 @@ public final class NPCCombat {
 
     public boolean hasTarget() { return this.target != null; }
 
-    public void setTarget(Entity target) {
-        this.target = target;
-        npc.setNextFaceEntity(target);
-        if (!checkAll()) {
+    public void setTarget(Entity t) {
+        if (t == null || t.isDead() || t.hasFinished()) {
             removeTarget();
             return;
+        }
+        this.target = t;
+        npc.setNextFaceEntity(t);
+
+        if (!checkAll()) {
+            removeTarget();
         }
     }
 

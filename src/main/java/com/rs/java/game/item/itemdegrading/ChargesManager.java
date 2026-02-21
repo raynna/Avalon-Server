@@ -232,7 +232,6 @@ public class ChargesManager implements Serializable {
 		}
 
 
-		// Charges reached 0
 		Item newItem = degradeData.getDegradedItem() != null ? degradeData.getDegradedItem() : degradeData.getBrokenItem();
 		if (newItem == null) {
 			if (definitions.getName().contains("(deg)")) {
@@ -243,7 +242,10 @@ public class ChargesManager implements Serializable {
 			player.message("Your " + definitions.getName() + " turned into dust.");
 			player.getEquipment().getItems().set(slot, null);
 		} else {
-			player.message("Your " + definitions.getName() + " degraded.");
+			if (definitions.getName().contains("("))
+				player.message("Your " + definitions.getName() + " has lost a charge.");
+			else
+				player.message("Your " + definitions.getName() + " degraded.");
 			Item copy = newItem.clone();
 			player.getEquipment().getItems().set(slot, copy);
 		}

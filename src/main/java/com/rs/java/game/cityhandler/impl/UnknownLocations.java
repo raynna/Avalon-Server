@@ -30,10 +30,6 @@ public class UnknownLocations implements CityEvent {
 	 * Each NPC Eventually.. has to be handled into the correct WorldTile.
 	 */
 
-	int[] strykeWyrms = {
-			9462, 9464, 9466
-	};
-
 	@Override
 	public boolean init() {
 		registerNPC(14, this);
@@ -61,23 +57,11 @@ public class UnknownLocations implements CityEvent {
 		registerNPC(9711, this);
 		registerNPC(15517, this);
 		registerNPC(15518, this);
-		for(int registerStrykeWyrms = 0; registerStrykeWyrms < strykeWyrms.length;registerStrykeWyrms++) {
-			registerNPC(strykeWyrms[registerStrykeWyrms], this);
-		}
 		return registerNPC(15451, this);
 	}
 
 	@Override
 	public boolean handleNPCClick(final Player player, final NPC npc) {
-
-		/**
-		 * Stryke Wyrms
-		 */
-		for(int wyrms = 0; wyrms < strykeWyrms.length;wyrms++) {
-			if(npc.getId() == strykeWyrms[wyrms]) {
-				Strykewyrm.handleStomping(player, npc);
-			}
-		}
 		switch(npc.getId()) {
 
 		/**

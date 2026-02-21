@@ -806,8 +806,10 @@ public final class Utils {
 	 * @return the distance
 	 */
 	public static int getDistance(WorldTile t1, WorldTile t2) {
+		if (t1 == null || t2 == null) return Integer.MAX_VALUE;
 		return getDistance(t1.getX(), t1.getY(), t2.getX(), t2.getY());
 	}
+
 
 	/**
 	 * Gets the distance.
