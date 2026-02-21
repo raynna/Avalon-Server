@@ -112,7 +112,6 @@ public final class NPCCombat {
 
         if (!canReachTarget(target, maxDistance)) {
             debug("combatAttack: cannot reach target (LOS or distance)");
-            attackDelay = 1;
             return true;
         }
 
@@ -297,10 +296,8 @@ public final class NPCCombat {
                 && !target.hasWalkSteps()) {
 
             if (npc.isFrozen() || npc.isLocked()) {
-                attackDelay = Math.max(attackDelay, 1);
                 return true;
             }
-            attackDelay = Math.max(attackDelay, 1);
             if (!npc.hasWalkSteps()) {
                 npc.resetWalkSteps();
                 return attemptWalkAroundTarget(target, size);
@@ -316,7 +313,6 @@ public final class NPCCombat {
                 && size == 1) {
             npc.resetWalkSteps();
             if (npc.isFrozen() || npc.isLocked()) {
-                attackDelay = Math.max(attackDelay, 1);
                 return true;
             }
             if (!npc.addWalkSteps(target.getX(), npc.getY(), 1))

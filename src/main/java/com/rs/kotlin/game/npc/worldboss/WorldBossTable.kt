@@ -14,8 +14,8 @@ object WorldBossTable {
             listOf(
                 "statius_s_platebody", "statius_s_platelegs", "statius_s_full_helm",
                 "vesta_s_chainbody", "vesta_s_plateskirt", "vesta_s_longsword", "vesta_s_spear",
-                "zuriel_s_robe_top", "zuriel_s_robe_bottom", "zuriel_s_staff",
-                "morrigan_s_leather_body", "morrigan_s_leather_chaps"
+                "zuriel_s_hood", "zuriel_s_robe_top", "zuriel_s_robe_bottom", "zuriel_s_staff",
+                "morrigan_s_coif", "morrigan_s_leather_body", "morrigan_s_leather_chaps"
             ).forEach { drop("item.$it", numerator = 1, denominator = 256) }
 
             listOf(
@@ -26,9 +26,11 @@ object WorldBossTable {
                 "corrupt_vesta_s_plateskirt",
                 "corrupt_vesta_s_longsword",
                 "corrupt_vesta_s_spear",
+                "corrupt_zuriel_s_hood",
                 "corrupt_zuriel_s_robe_top",
                 "corrupt_zuriel_s_robe_bottom",
                 "corrupt_zuriel_s_staff",
+                "corrupt_morrigan_s_coif",
                 "corrupt_morrigan_s_leather_body",
                 "corrupt_morrigan_s_leather_chaps"
             ).forEach { drop("item.$it", numerator = 1, denominator = 129) }

@@ -50,6 +50,20 @@ public class CollectionLogBuilder {
         cat.init("Dagannoth Prime", getNPCDrops("npc.dagannoth_prime_lv303"));
         cat.init("Dagannoth Supreme", getNPCDrops("npc.dagannoth_supreme_lv303"));
         cat.init("Chaos Elemental", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test1", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test2", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test3", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test4", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test5", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test6", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test7", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test8", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test9", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test10", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test11", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test12", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test13", getNPCDrops("npc.chaos_elemental_lv305"));
+        cat.init("test14", getNPCDrops("npc.chaos_elemental_lv305"));
     }
 
 

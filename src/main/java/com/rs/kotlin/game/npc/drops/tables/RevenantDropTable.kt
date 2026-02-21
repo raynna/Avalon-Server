@@ -1,5 +1,7 @@
 package com.rs.kotlin.game.npc.drops.tables
 
+import com.rs.core.cache.defintions.ItemDefinitions
+import com.rs.java.game.item.Item
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.MonsterCategory
 import com.rs.kotlin.game.npc.drops.dropTable
@@ -16,26 +18,40 @@ object RevenantDropTable {
             drop("item.thammaron_s_sceptre_u", numerator = 1, denominator = 6000)
             drop("item.viggora_s_chainmace_u", numerator = 1, denominator = 6000)
             listOf(
-                "statius_s_platebody", "statius_s_platelegs", "statius_s_full_helm",
-                "vesta_s_chainbody", "vesta_s_plateskirt", "vesta_s_longsword", "vesta_s_spear",
-                "zuriel_s_robe_top", "zuriel_s_robe_bottom", "zuriel_s_staff",
-                "morrigan_s_leather_body", "morrigan_s_leather_chaps"
-            ).forEach { drop("item.$it", numerator = 1, denominator = 3000) }
+                "item.statius_s_full_helm", "item.statius_s_platebody", "item.statius_s_platelegs",
+                "item.vesta_s_chainbody", "item.vesta_s_plateskirt", "item.vesta_s_longsword", "item.vesta_s_spear",
+                "item.zuriel_s_hood", "item.zuriel_s_robe_top", "item.zuriel_s_robe_bottom", "item.zuriel_s_staff",
+                "item.morrigan_s_coif", "item.morrigan_s_leather_body", "item.morrigan_s_leather_chaps", "item.morrigan_s_javelin", "item.morrigan_s_throwing_axe"
+            ).forEach { key ->
+
+                val id = Item.getId(key)
+                val defs = ItemDefinitions.getItemDefinitions(id)
+
+                val amount = if (defs.isStackable) {
+                    25..50
+                } else {
+                    1..1
+                }
+
+                drop(key, amount = amount, numerator = 1, denominator = 3000)
+            }
 
             listOf(
-                "corrupt_statius_s_platebody",
-                "corrupt_statius_s_platelegs",
-                "corrupt_statius_s_full_helm",
-                "corrupt_vesta_s_chainbody",
-                "corrupt_vesta_s_plateskirt",
-                "corrupt_vesta_s_longsword",
-                "corrupt_vesta_s_spear",
-                "corrupt_zuriel_s_robe_top",
-                "corrupt_zuriel_s_robe_bottom",
-                "corrupt_zuriel_s_staff",
-                "corrupt_morrigan_s_leather_body",
-                "corrupt_morrigan_s_leather_chaps"
-            ).forEach { drop("item.$it", numerator = 1, denominator = 1500) }
+                "item.corrupt_statius_s_platebody",
+                "item.corrupt_statius_s_platelegs",
+                "item.corrupt_statius_s_full_helm",
+                "item.corrupt_vesta_s_chainbody",
+                "item.corrupt_vesta_s_plateskirt",
+                "item.corrupt_vesta_s_longsword",
+                "item.corrupt_vesta_s_spear",
+                "item.corrupt_zuriel_s_hood",
+                "item.corrupt_zuriel_s_robe_top",
+                "item.corrupt_zuriel_s_robe_bottom",
+                "item.corrupt_zuriel_s_staff",
+                "item.corrupt_morrigan_s_coif",
+                "item.corrupt_morrigan_s_leather_body",
+                "item.corrupt_morrigan_s_leather_chaps"
+            ).forEach { drop(it, numerator = 1, denominator = 1500) }
             listOf(
                 "item.broken_statue_headdress",
                 "item.bronzed_dragon_claw",

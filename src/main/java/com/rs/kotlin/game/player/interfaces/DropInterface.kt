@@ -551,11 +551,8 @@ object DropInterface {
         val contentHeight = rows * 35
         val needsScroll = contentHeight > 264
 
-        player.packets.sendHideIComponent(INTERFACE_ID, 913, !needsScroll)
-
         player.packets.sendCSVarInteger(350,
-            if (needsScroll) contentHeight else 264
-        )
+            if (needsScroll) contentHeight else 225)
 
         //player.packets.sendRunScript(10006)
     }
