@@ -1089,7 +1089,7 @@ public class House implements Serializable {
 			challengeMode = 0;
 		}
 		dungeonTraps.clear();
-		World.executeAfterLoadRegion(region.getRegionId(), 2400, new Runnable() {
+		World.executeAfterLoadRegion(region.getRegionId(), 4, new Runnable() {
 
 			@Override
 			public void run() {
