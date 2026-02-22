@@ -9,7 +9,7 @@ A RuneScape private server framework, based on client build 718, loading a 727 c
 
 Place the contents of the cache zip into the /data/cache/ directory.
 
-[Cache](https://mega.nz/file/dFhE1LCQ#Gu1v5y9o6THT6wwqfp9ud8MLubyeEKBmEb3wRj6JyXk)
+[Cache](https://mega.nz/file/ddQTzTob#Ol3q3gNoSg6Gen18SPoK_Vtl_9yDr93y2VuGpPrZBE4)
 
 [Client](https://github.com/raynna/Avalon-Runelite)
 
