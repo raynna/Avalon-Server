@@ -49,6 +49,7 @@ import com.rs.java.game.player.content.customtab.AchievementsTab;
 import com.rs.java.game.player.prayer.*;
 import com.rs.java.game.player.Ranks.Rank;
 import com.rs.java.game.player.queue.PlayerActionQueue;
+import com.rs.java.utils.*;
 import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.KillCountContainer;
 import com.rs.kotlin.game.player.AccountCreation;
@@ -96,13 +97,7 @@ import com.rs.core.networking.Session;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.core.packets.encode.WorldPacketsEncoder;
-import com.rs.java.utils.EconomyPrices;
-import com.rs.java.utils.HexColours;
 import com.rs.java.utils.HexColours.Colour;
-import com.rs.java.utils.IsaacKeyPair;
-import com.rs.java.utils.Logger;
-import com.rs.java.utils.MachineInformation;
-import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.combat.CombatAction;
 import com.rs.kotlin.game.player.combat.CombatStyle;
 import com.rs.kotlin.game.player.combat.Weapon;
@@ -3307,6 +3302,7 @@ public class Player extends Entity {
         timerOverlay.clearAll(this);
         TicketSystem.destroyChatOnLogOut(this);
         AntiBot.getInstance().destroy(this);
+        DisplayNames.applyPendingUsername(this);
         realFinish();
         getPackets().sendLogout(lobby);
     }
@@ -6436,6 +6432,18 @@ public class Player extends Entity {
         this.wealthDirty = wealthDirty;
     }
 
+    private String pendingUsername;
 
+    public String getPendingUsername() {
+        return pendingUsername;
+    }
+
+    public void setPendingUsername(String pendingUsername) {
+        this.pendingUsername = pendingUsername;
+    }
+
+    public boolean hasPendingUsername() {
+        return pendingUsername != null && !pendingUsername.isEmpty();
+    }
 
 }

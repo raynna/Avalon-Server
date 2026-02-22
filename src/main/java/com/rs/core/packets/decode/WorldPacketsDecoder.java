@@ -1009,10 +1009,7 @@ public final class WorldPacketsDecoder extends Decoder {
             player.setRun(true);
         player.stopAll();
 
-        // Clan invite flow (same behavior as original)
-        if (player.getTemporaryAttributtes().remove("claninvite") != null) {
-            ClansManager.viewInvite(player, p2);
-        }
+        ClansManager.viewInvite(player, p2);
     }
 
     private static void handleAttackNpc(Player player, InputStream stream) {
@@ -2602,7 +2599,7 @@ public final class WorldPacketsDecoder extends Decoder {
             player.getPackets().sendGameMessage("Your password has been changed successfully.");
             return;
         } else if (player.temporaryAttribute().remove("SETUSERNAME") != null) {
-            DisplayNames.setUsername(player, value);
+            DisplayNames.queueUsernameChange(player, value);
             JournalTab.open(player);
             return;
         }

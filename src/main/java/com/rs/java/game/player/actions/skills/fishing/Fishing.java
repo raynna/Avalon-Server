@@ -292,7 +292,7 @@ public class Fishing extends Action {
 			if (player.getInventory().hasFreeSlots())
 				player.getInventory().addItem(fish);
 			else
-				GroundItems.updateGroundItem(fish, player, player);
+				GroundItems.updateGroundItem(fish, player.getLocation(), player);
 			totalXp *= 2;
 		}
 		player.getSkills().addSkillingXp(Skills.FISHING, totalXp, multiplier);

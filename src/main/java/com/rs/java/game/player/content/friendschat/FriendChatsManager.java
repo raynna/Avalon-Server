@@ -134,16 +134,22 @@ public class FriendChatsManager {
 		return null;
 	}
 
+	public Player resolvePlayer(String input) {
+		if (input == null) return null;
+
+		String key = Utils.formatPlayerNameForProtocol(input);
+		Player p = World.getPlayer(key);
+		if (p != null) return p;
+
+		return World.getPlayerByDisplayName(input);
+	}
+
 	public void kickPlayerFromChat(Player player, String username) {
-		String name = "";
-		for (char character : username.toCharArray()) {
-			name += Utils.containsInvalidCharacter(character) ? " " : character;
-		}
+		Player kicked = resolvePlayer(username);
 		synchronized (this) {
 			int rank = getRank(player.getRights(), player.getUsername());
 			if (rank < getWhoCanKickOnChat())
 				return;
-			Player kicked = getPlayerByDisplayName(name);
 			String formatedName = Utils.formatPlayerNameForDisplay(player.getUsername());
 			String displayName = player.getDisplayName();
 			int rights = player.getRights();
@@ -152,7 +158,7 @@ public class FriendChatsManager {
 					continue;
 				if (players.contains(p2.getDisplayName()))
 					p2.getPackets().receiveFriendChatMessage(formatedName, displayName, rights, settings.getChatName(),
-							"[Attempting to kick/ban " + name + " from this Friends Chat.]");
+							"[Attempting to kick/ban " + kicked.getUsername() + " from this Friends Chat.]");
 			}
 			if (kicked == null) {
 				player.getPackets().sendGameMessage("This player is not this channel.");
@@ -340,7 +346,7 @@ public class FriendChatsManager {
 	public void refreshChannel() {
 		synchronized (this) {
 			OutputStream stream = new OutputStream();
-			stream.writeString(Utils.formatPlayerNameForDisplay(ownerDisplayName)+ " - <col=ffc800>" + getPlayers().size() + "/200");
+			stream.writeString(Utils.formatPlayerNameForDisplay(ownerDisplayName)+ "-<col=ffc800>" + getPlayers().size() + "/200");
 			String ownerName = Utils.formatPlayerNameForDisplay(owner);
 			stream.writeByte(getOwnerDisplayName().equals(ownerName) ? 0 : 1);
 			String channelName = getChannelName();
@@ -479,48 +485,61 @@ public class FriendChatsManager {
 		synchronized (cachedFriendChats) {
 			if (player.getCurrentFriendChat() != null)
 				return;
+
 			if (!silent)
 				player.getPackets().sendGameMessage("Attempting to join channel...");
 
-			String formatedName = Utils.formatPlayerNameForProtocol(ownerName);
-			FriendChatsManager chat = cachedFriendChats.get(formatedName);
+			// Canonical key for ALL cache operations
+			String ownerKey = Utils.formatPlayerNameForProtocol(ownerName);
+
+			FriendChatsManager chat = cachedFriendChats.get(ownerKey);
 
 			if (chat == null) {
-				Player owner = World.getPlayerByDisplayName(ownerName);
+
+				// IMPORTANT: lookup owner by *protocol username*, not display name
+				Player owner = World.getPlayer(ownerKey); // <- if you have this method
 				if (owner == null) {
-					if (!AccountCreation.exists(formatedName)) {
+					if (!AccountCreation.exists(ownerKey)) {
 						player.getPackets().sendGameMessage("The channel you tried to join does not exist.");
 						return;
 					}
-					owner = AccountCreation.loadPlayer(formatedName);
+					owner = AccountCreation.loadPlayer(ownerKey);
 					if (owner == null) {
 						player.getPackets().sendGameMessage("The channel you tried to join does not exist.");
 						return;
 					}
-					owner.setUsername(formatedName);
+					owner.setUsername(ownerKey); // ensure username is canonical
 				}
+
 				FriendsIgnores settings = owner.getFriendsIgnores();
 				if (!settings.hasFriendChat()) {
 					player.getPackets().sendGameMessage("The channel you tried to join does not exist.");
 					return;
 				}
-				if (!player.getUsername().equals(ownerName) && !settings.hasRankToJoin(player.getUsername())
-						&& !player.isDeveloper()) {
-					player.getPackets()
-							.sendGameMessage("You do not have a enough rank to join this friends chat channel.");
+
+				// Compare canonical usernames, NOT display casing
+				String playerKey = Utils.formatPlayerNameForProtocol(player.getUsername());
+				if (!playerKey.equals(ownerKey) && !settings.hasRankToJoin(player.getUsername()) && !player.isDeveloper()) {
+					player.getPackets().sendGameMessage(
+							"You do not have a enough rank to join this friends chat channel.");
 					return;
 				}
+
 				if (owner.getFriendsIgnores().getIgnores().contains(player.getUsername())) {
 					player.message("You are not allowed to join this user's channel.");
 					return;
 				}
-				chat = new FriendChatsManager(owner);
-				cachedFriendChats.put(chat.owner, chat);
-				chat.joinChatNoCheck(player, silent ? true : false);
-			} else
-				chat.joinChat(player, silent ? true : false);
-		}
 
+				chat = new FriendChatsManager(owner);
+
+				cachedFriendChats.put(ownerKey, chat);
+
+				chat.joinChatNoCheck(player, silent);
+
+			} else {
+				chat.joinChat(player, silent);
+			}
+		}
 	}
 
 	/**

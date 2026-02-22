@@ -469,7 +469,7 @@ public abstract class Familiar extends NPC implements Serializable {
 					owner.getInventory().addItem(Summoning.getScrollId(pouch.getRealPouchId()), owner.storedScrolls);
 				else
 					GroundItems.updateGroundItem(new Item(Summoning.getScrollId(pouch.getRealPouchId()), owner.storedScrolls),
-							new WorldTile(owner), owner);
+							owner.getFamiliar().getTile(), owner);
 				owner.storedScrolls = 0;
 			}
 			if (bob != null)

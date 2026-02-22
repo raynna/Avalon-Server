@@ -6,7 +6,7 @@ import com.rs.kotlin.game.npc.drops.dropTable
 
 object BlackDragonDropTable {
 
-    val blackDragonTable = dropTable(rareDropTable = true, rolls = 1) {
+    val table = dropTable(rareDropTable = true, rolls = 1) {
         alwaysDrops {
             drop("item.dragon_bones")
             drop("item.black_dragonhide");

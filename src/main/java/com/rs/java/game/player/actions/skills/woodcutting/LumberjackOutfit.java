@@ -78,7 +78,7 @@ public class LumberjackOutfit {
 		if (player.getInventory().hasFreeSlots())
 			player.getInventory().addItem(piece.getItemId(), 1);
 		else
-			GroundItems.updateGroundItem(new Item(piece.getItemId()), player, player);
+			GroundItems.updateGroundItem(new Item(piece.getItemId()), player.getLocation(), player);
 		return true;
 	}
 }

@@ -141,7 +141,19 @@ public class JournalTab extends CustomTab {
 				return "Current username: <col=FFFFFF>" + (p.getUsername());
 			}
 		},
-		PASSWORD(12) {
+		DISPLAYNAME(12) {
+			@Override
+			public void usage(Player p) {
+				p.temporaryAttribute().put("setdisplay", Boolean.TRUE);
+				p.getPackets().sendInputNameScript("Enter the display name you wish to change to:");
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Current Display Name: <col=FFFFFF>" + (p.getDisplayName());
+			}
+		},
+		PASSWORD(13) {
 			@Override
 			public void usage(Player p) {
 				p.temporaryAttribute().put("VERIFY_PASSWORD", Boolean.TRUE);
@@ -153,7 +165,7 @@ public class JournalTab extends CustomTab {
 				return "Change password<col=FFFFFF> - Click here";
 			}
 		},
-		PLAYERRANK(13) {
+		PLAYERRANK(14) {
 			@Override
 			public void usage(Player p) {
 				p.setNextForceTalk(new ForceTalk(
@@ -171,7 +183,7 @@ public class JournalTab extends CustomTab {
 						+ ">";
 			}
 		},
-		PLAYERRANK2(14) {
+		PLAYERRANK2(15) {
 			@Override
 			public void usage(Player p) {
 				boolean donator = p.getPlayerRank().isDonator();
@@ -188,7 +200,7 @@ public class JournalTab extends CustomTab {
 								: Colour.RED.getHex() +  "I'm not a donator");
 			}
 		},
-		PLAYERTITLE(15) {
+		PLAYERTITLE(16) {
 			@Override
 			public void usage(Player p) {
 				p.temporaryAttribute().remove("TITLE_COLOR_SET");
@@ -206,7 +218,7 @@ public class JournalTab extends CustomTab {
 				}
 			}
 		},
-		PKINGCATEGORY(16) {
+		PKINGCATEGORY(17) {
 			@Override
 			public void usage(Player p) {
 			}
@@ -216,7 +228,7 @@ public class JournalTab extends CustomTab {
 				return "<col="+ Colour.YELLOW.getHex() + "<u>Pking";
 			}
 		},
-		RISKWEALTH(17) {
+		RISKWEALTH(18) {
 			@Override
 			public void usage(Player p) {
 				p.getPackets().sendGameMessage("My current risk is: " + Utils.formatAmount(Skulls.getRiskedWealth(p)) + ".");
@@ -228,7 +240,7 @@ public class JournalTab extends CustomTab {
 				return "Current risk: <col=04BB3B>" +  Utils.formatAmount(Skulls.getRiskedWealth(p)) + ".";
 			}
 		},
-		EP(18) {
+		EP(19) {
 			@Override
 			public void usage(Player p) {
 				p.getPackets().sendGameMessage("My current Ep is: " + p.getEP() + ".");
@@ -241,7 +253,7 @@ public class JournalTab extends CustomTab {
 						+ p.getEP() + "%";
 			}
 		},
-		KILLS(19) {
+		KILLS(20) {
 			@Override
 			public void usage(Player p) {
 				p.getPackets().sendGameMessage("My killcount is: " + p.getPlayerKillcount() + ".");
@@ -253,7 +265,7 @@ public class JournalTab extends CustomTab {
 				return "Kills: <col=04BB3B>" + p.getPlayerKillcount();
 			}
 		},
-		DEATHS(20) {
+		DEATHS(21) {
 			@Override
 			public void usage(Player p) {
 				p.getPackets().sendGameMessage("My deathcount is: " + p.getDeathCount() + ".");
@@ -265,7 +277,7 @@ public class JournalTab extends CustomTab {
 				return "Deaths: <col=04BB3B>" + p.getDeathCount();
 			}
 		},
-		KDR(21) {
+		KDR(22) {
 			@Override
 			public void usage(Player p) {
 				double kill = p.getPlayerKillcount();
@@ -284,7 +296,7 @@ public class JournalTab extends CustomTab {
 				return "K/D Ratio: <col=04BB3B>" + new DecimalFormat("0.00").format(dr);
 			}
 		},
-		PLAYERXP(22) {
+		PLAYERXP(23) {
 			@Override
 			public void usage(Player p) {
 				p.getPackets().sendGameMessage("Your bonus experience is " + p.getBonusExp() + ".");
@@ -299,7 +311,7 @@ public class JournalTab extends CustomTab {
 		},
 
 
-		SLAYERTASK(23) {
+		SLAYERTASK(28) {
 			@Override
 			public void usage(Player p) {
 				p.getPackets().sendGameMessage(p.getSlayerTask() == null ? "I don't have a slayer task."
@@ -315,7 +327,7 @@ public class JournalTab extends CustomTab {
 			}
 		},
 
-		TASKLOCATION(24) {
+		TASKLOCATION(29) {
 			@Override
 			public void usage(Player p) {
 				if (p.getSlayerTaskTip() != null)

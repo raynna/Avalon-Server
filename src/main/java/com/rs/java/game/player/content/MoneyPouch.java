@@ -260,7 +260,7 @@ public class MoneyPouch implements Serializable {
 				}
 				amount -= spaceLeft;
 				if (amount > 0) {
-					GroundItems.updateGroundItem(new Item(995, amount), player, player);
+					GroundItems.updateGroundItem(new Item(995, amount), player.getLocation(), player);
 				}
 			} else {
 				player.getInventory().addItem(new Item(995, amount));

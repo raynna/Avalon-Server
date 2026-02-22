@@ -3,17 +3,11 @@ package com.rs.core.packets.decode;
 import com.rs.Settings;
 import com.rs.core.cache.Cache;
 import com.rs.java.game.World;
+import com.rs.java.utils.*;
 import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.Player;
 import com.rs.core.packets.InputStream;
 import com.rs.core.networking.Session;
-import com.rs.java.utils.AntiFlood;
-import com.rs.java.utils.Credentials;
-import com.rs.java.utils.Encrypt;
-import com.rs.java.utils.IsaacKeyPair;
-import com.rs.java.utils.Logger;
-import com.rs.java.utils.MachineInformation;
-import com.rs.java.utils.Utils;
 
 public final class LoginPacketsDecoder extends Decoder {
 
@@ -150,6 +144,10 @@ public final class LoginPacketsDecoder extends Decoder {
 					session.getLoginPackets().sendClientPacket(9);
 					return;
 				}
+				if (!AccountCreation.exists(username) && DisplayNames.isReserved(username)) {
+					session.getLoginPackets().sendClientPacket(1);
+					return;
+				}
 				Player player;
 				if (!AccountCreation.exists(username)) {
 					player = new Player(password);
@@ -278,6 +276,11 @@ public final class LoginPacketsDecoder extends Decoder {
 			session.getLoginPackets().sendClientPacket(9);
 			return;
 		}
+		if (!AccountCreation.exists(username) && DisplayNames.isReserved(username)) {
+			session.getLoginPackets().sendClientPacket(13);
+			return;
+		}
+
 		Player player;
 		if (!AccountCreation.exists(username)) {
 			Logger.log(this, "account: " + username + " doesnt exist, creating new account.");

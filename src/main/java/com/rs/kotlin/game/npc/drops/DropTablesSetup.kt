@@ -74,8 +74,12 @@ object DropTablesSetup {
          * Dragons
          **/
 
-        registerNpcGroupDropTable(GreenDragonDropTable.greenDragonTable, "npc_group.green_dragon_lv79")
-        registerNpcGroupDropTable(BlackDragonDropTable.blackDragonTable, "npc_group.black_dragon_lv227")
+        registerNpcGroupDropTable(GreenDragonDropTable.table, "npc_group.green_dragon_lv79")
+        registerNpcGroupDropTable(BlueDragonDropTable.table, "npc_group.blue_dragon_lv111")
+        registerNpcGroupDropTable(RedDragonDropTable.table, "npc_group.red_dragon_lv152")
+        registerNpcGroupDropTable(BlackDragonDropTable.table, "npc_group.black_dragon_lv227")
+        registerNpcGroupDropTable(BrutalGreenDragonDropTable.table, "npc_group.brutal_green_dragon_lv227")
+        registerNpcGroupDropTable(MithrilDragonDropTable.table, "npc_group.mithril_dragon_lv304")
 
         /**
          * Slayer Monsters

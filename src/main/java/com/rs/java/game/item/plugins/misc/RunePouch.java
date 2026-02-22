@@ -46,7 +46,7 @@ public class RunePouch extends ItemPlugin {
             case "open":
                 openRunePouch(player, slotId);
                 return true;
-            case "withdraw-all":
+            case "empty":
                 withdrawAll(player, slotId);
                 return true;
         }
@@ -98,9 +98,8 @@ public class RunePouch extends ItemPlugin {
             for (Map.Entry<Integer, Integer> entry : pouchMeta.getRunes().entrySet()) {
                 int runeId = entry.getKey();
                 int amount = entry.getValue();
-                if (amount > 0) {
-                    GroundItems.updateGroundItem(new Item(runeId, amount), player.getLocation(), player);
-                }
+                Item rune = new Item(runeId, amount);
+                GroundItems.updateGroundItem(rune, player.getLocation(), player);
             }
             player.getRunePouch().reset();
             player.getPackets().sendGameMessage("All your runes in your rune pouch were dropped on the floor.");

@@ -7,6 +7,7 @@ import com.rs.java.game.player.Player
 import com.rs.kotlin.game.npc.drops.DropTable
 import com.rs.kotlin.game.npc.drops.DropTableRegistry
 import com.rs.kotlin.game.npc.drops.DropTableSource
+import com.rs.kotlin.game.npc.drops.DropType
 
 /**
  * Drop Viewer Interface
@@ -419,7 +420,11 @@ object DropInterface {
             player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_LABEL, "Amount:")
             player.packets.sendTextOnComponent(INTERFACE_ID, row + CHANCE_LABEL, "Chance:")
             player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_VALUE, (drop.amount ?: 1..1).toDisplayString())
-            player.packets.sendTextOnComponent(INTERFACE_ID, row + CHANCE_VALUE, drop.rarity)
+            player.packets.sendTextOnComponent(
+                INTERFACE_ID,
+                row + CHANCE_VALUE,
+                colourForDrop(drop)
+            )
 
             row += ROW_STRIDE
         }
@@ -580,6 +585,62 @@ object DropInterface {
         player.packets.sendHideIComponent(INTERFACE_ID, row + AMOUNT_VALUE, false)
         player.packets.sendHideIComponent(INTERFACE_ID, row + CHANCE_LABEL, false)
         player.packets.sendHideIComponent(INTERFACE_ID, row + CHANCE_VALUE, false)
+    }
+
+    private fun extractDenominator(rarity: String): Double? {
+        if (!rarity.startsWith("1/")) return null
+        return rarity.substringAfter("1/").toDoubleOrNull()
+    }
+
+    private const val COL_ALWAYS = "66ccff"
+    private const val COL_GREEN  = "00c000"
+    private const val COL_YELLOW = "ffff00"
+    private const val COL_ORANGE = "ff8200"
+    private const val COL_RED    = "ff0000"
+
+    private fun wrapCol(hex: String, text: String) = "<col=$hex>$text</col>"
+
+    private fun colourByDenom(text: String, denom: Int): String = when {
+        denom <= 20  -> wrapCol(COL_GREEN, text)   // common
+        denom <= 64  -> wrapCol(COL_YELLOW, text)  // uncommon
+        denom <= 512 -> wrapCol(COL_ORANGE, text)  // rare
+        else           -> wrapCol(COL_RED, text)     // very rare
+    }
+
+    private fun colourForDrop(drop: DropDisplay): String {
+        val rarity = drop.rarityText
+
+        return when (drop.type) {
+            DropType.ALWAYS ->
+                wrapCol(COL_ALWAYS, rarity)
+            DropType.CHARM -> {
+
+                val percent = drop.percentage ?: return wrapCol(COL_YELLOW, rarity)
+
+                when {
+                    percent >= 5.0 ->
+                        wrapCol(COL_GREEN, rarity)
+
+                    percent >= 1.5 ->
+                        wrapCol(COL_YELLOW, rarity)
+
+                    percent >= 0.5 ->
+                        wrapCol(COL_ORANGE, rarity)
+
+                    else ->
+                        wrapCol(COL_RED, rarity)
+                }
+            }
+            DropType.MAIN,
+            DropType.MINOR,
+            DropType.SPECIAL,
+            DropType.PREROLL,
+            DropType.TERTIARY ->
+                colourByDenom(rarity, drop.baseDenominator)
+
+            else ->
+                wrapCol(COL_YELLOW, rarity)
+        }
     }
 
     private fun wrap(name: String, max: Int = 18): String {

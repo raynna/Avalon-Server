@@ -31,6 +31,7 @@ public class CollectionLog implements Serializable {
 
     private static final int MAX_TABS = 53;
     private static final int TAB_COMPONENT_HEIGHT = 25;
+    private static final int TAB_CONTAINER_HEIGHT = 245;
 
     private static final int COLLECTED_ITEM_CONTAINER = 213;
     private static final int GHOST_ITEM_CONTAINER = 45;
@@ -83,7 +84,7 @@ public class CollectionLog implements Serializable {
             else
                 tabs.add(s);
         int scrollHeight = (int) (tabs.size() * Math.ceil((double) TAB_COMPONENT_HEIGHT / 2));
-        player.getPackets().sendCSVarInteger(350, Math.max(scrollHeight - TAB_COMPONENT_HEIGHT, 245));
+        player.getPackets().sendCSVarInteger(350, Math.max(scrollHeight - TAB_COMPONENT_HEIGHT, TAB_CONTAINER_HEIGHT));
         /*WorldTasksManager.schedule(1, () -> {
             player.getPackets().sendRunScript(6255);
         });*/
@@ -132,7 +133,7 @@ public class CollectionLog implements Serializable {
                 else
                     tabs.add(s);
             int scrollHeight = (int) (tabs.size() * Math.ceil((double) TAB_COMPONENT_HEIGHT / 2));
-            player.getPackets().sendCSVarInteger(350, Math.max(scrollHeight - TAB_COMPONENT_HEIGHT, 245));
+            player.getPackets().sendCSVarInteger(350, Math.max(scrollHeight - TAB_COMPONENT_HEIGHT, TAB_CONTAINER_HEIGHT));
             //player.getPackets().sendRunScript(10008);
         }
     }

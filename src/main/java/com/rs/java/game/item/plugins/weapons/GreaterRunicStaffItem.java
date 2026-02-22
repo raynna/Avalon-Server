@@ -75,10 +75,11 @@ public class GreaterRunicStaffItem extends ItemPlugin {
                 if (s != null) {
                     for (Item rune : s.getRune()) {
                         int totalAmount = rune.getAmount() * meta.getCharges();
+                        Item runes = rune.copy();
                         if (totalAmount > 0) {
                             GroundItems.updateGroundItem(
-                                    new Item(rune.getId(), totalAmount),
-                                    player,
+                                    runes,
+                                    player.getLocation(),
                                     player
                             );
                         }

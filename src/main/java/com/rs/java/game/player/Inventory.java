@@ -339,7 +339,7 @@ public final class Inventory implements Serializable {
 			if (item == null)
 				continue;
 			if (addToGround)
-				GroundItems.updateGroundItem(item, new WorldTile(player), player);
+				GroundItems.updateGroundItem(item, player.getLocation(), player);
 			deleteItem(item);
 		}
 		player.getPackets().sendSound(4500, 0, 1);

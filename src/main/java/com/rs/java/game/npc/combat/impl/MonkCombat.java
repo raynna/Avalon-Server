@@ -21,7 +21,9 @@ public class MonkCombat extends CombatScript {
 	public int attack(final NPC npc, final Entity target) {
 		if (Utils.roll(1, 3) && npc.getHitpoints() < npc.getMaxHitpoints()) {
 			npc.heal(20);
-			npc.animate(805);
+			npc.animate(709);
+			npc.gfx(84);
+			npc.playSound(166, 1);
 			return npc.getAttackSpeed();
 		}
 		npc.animate(npc.getAttackAnimation());

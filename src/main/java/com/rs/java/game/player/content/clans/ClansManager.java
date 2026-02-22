@@ -5,15 +5,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 import com.rs.core.cache.defintions.ClientScriptMap;
-import com.rs.core.thread.CoresManager;
+import com.rs.core.packets.OutputStream;
 import com.rs.java.game.World;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.QuickChatMessage;
-import com.rs.core.packets.OutputStream;
 import com.rs.java.utils.SerializableFilesManager;
 import com.rs.java.utils.Utils;
 
@@ -21,11 +20,12 @@ public class ClansManager {
 
 	private Clan clan;
 	private ArrayList<String> channelPlayers;
-	private ArrayList<String> membersOnline;
+	private ArrayList<String> membersOnline; // members connected to clan
 	private HashMap<String, Long> bannedChannelPlayers;
 	private byte[] clanSettingsDataBlock;
 	private byte[] clanChannelDataBlock;
-	private int nextUpdateNumber;
+	private int nextUpdateNumber; // increases every time a change is done on
+	private Map<Integer, Object> clanVars;
 
 	private static HashMap<String, ClansManager> cachedClans;
 
@@ -33,16 +33,27 @@ public class ClansManager {
 		cachedClans = new HashMap<String, ClansManager>();
 	}
 
+	private static String key(Player p) {
+		return Utils.formatPlayerNameForProtocol(p.getUsername());
+	}
+	private static String key(String username) {
+		return Utils.formatPlayerNameForProtocol(username);
+	}
+
+	private static Player onlinePlayer(String protocolName) {
+		return World.getPlayer(protocolName);
+	}
+
 	public static void viewClanmateDetails(Player player, ClanMember member) {
-		player.getPackets().sendGlobalVar(1500, member.getRank());
-		player.getPackets().sendGlobalVar(1501, member.getJob());
-		player.getPackets().sendGlobalVar(1564, 0);
-		player.getPackets().sendGlobalVar(1565, member.isBanFromKeep() ? 1 : 0);
-		player.getPackets().sendGlobalVar(1566, member.isBanFromCitadel() ? 1 : 0);
-		player.getPackets().sendGlobalVar(1567, member.isBanFromIsland() ? 1 : 0);
-		player.getPackets().sendGlobalVar(1568, member.firstWeek() ? 1 : 0);
-		player.getPackets().sendGlobalString(347, Utils.formatPlayerNameForDisplay(member.getUsername()));
-		player.getPackets().sendRunScript(4319);
+		player.getPackets().sendCSVarInteger(1500, member.getRank());
+		player.getPackets().sendCSVarInteger(1501, member.getJob());
+		player.getPackets().sendCSVarInteger(1564, 0);
+		player.getPackets().sendCSVarInteger(1565, member.isBanFromKeep() ? 1 : 0);
+		player.getPackets().sendCSVarInteger(1566, member.isBanFromCitadel() ? 1 : 0);
+		player.getPackets().sendCSVarInteger(1567, member.isBanFromIsland() ? 1 : 0);
+		player.getPackets().sendCSVarInteger(1568, member.firstWeek() ? 1 : 0);
+		player.getPackets().sendCSVarString(347, Utils.formatPlayerNameForDisplay(member.getUsername()));
+		player.getPackets().sendExecuteScript(4319);
 	}
 
 	public static void unlockBanList(Player player) {
@@ -54,6 +65,7 @@ public class ClansManager {
 		this.channelPlayers = new ArrayList<String>();
 		this.membersOnline = new ArrayList<String>();
 		this.bannedChannelPlayers = new HashMap<String, Long>();
+		this.clanVars = new HashMap<Integer, Object>();
 		generateClanSettingsDataBlock();
 		generateClanChannelDataBlock();
 	}
@@ -66,19 +78,19 @@ public class ClansManager {
 		if (member == null)
 			return;
 		viewClanmateDetails(player, member);
-		player.temporaryAttribute().remove("editclanmaterank");
-		player.temporaryAttribute().remove("editclanmatejob");
+		player.getTemporaryAttributtes().remove("editclanmaterank");
+		player.getTemporaryAttributtes().remove("editclanmatejob");
 		if (manager.hasRankToEditSettings(player))
-			player.temporaryAttribute().put("editclanmatedetails", member);
+			player.getTemporaryAttributtes().put("editclanmatedetails", member);
 		else
-			player.temporaryAttribute().remove("editclanmatedetails");
+			player.getTemporaryAttributtes().remove("editclanmatedetails");
 	}
 
 	public static void kickClanmate(Player player) {
 		ClansManager manager = player.getClanManager();
 		if (manager == null)
 			return;
-		ClanMember member = (ClanMember) player.temporaryAttribute().remove("editclanmatedetails");
+		ClanMember member = (ClanMember) player.getTemporaryAttributtes().remove("editclanmatedetails");
 		if (member == null) // means u not owner
 			return;
 		if (member.getUsername().equals(player.getUsername())) {
@@ -93,34 +105,29 @@ public class ClansManager {
 	}
 
 	public static void leaveClan(Player player) {
-		if (player.getClanManager() == null) {
-			player.getPackets().sendGameMessage("You're not in a clan.");
+		if (player.getClanManager() == null)
 			return;
-		}
 		player.getDialogueManager().startDialogue("LeaveClan");
 	}
 
-	public void leaveClanCompletly(Player player) {
-		synchronized (cachedClans) {
-			synchronized (this) {
-				ClansManager manager = player.getClanManager();
-				if (manager == null)
-					return;
-				ClanMember mate = manager.getMemberByUsername(player.getUsername());
-				if (mate == null)
-					return;
-				SerializableFilesManager.deleteClan(clan);
-				manager.kickPlayer(mate);
-			}
-		}
+	public static void leaveClanCompletly(Player player) {
+		ClansManager manager = player.getClanManager();
+		if (manager == null)
+			return;
+		ClanMember mate = manager.getMemberByUsername(player.getUsername());
+		if (mate == null)
+			return;
+		manager.kickPlayer(mate);
 	}
 
 	public void kickAllChannelPlayers() {
 		synchronized (this) {
-			for (String names : new ArrayList<String>(channelPlayers)) {
-				Player player = World.getPlayerByDisplayName(names);
-				if (player != null)
-					disconnect(player, !membersOnline.contains(names));
+			for (String k : new ArrayList<>(channelPlayers)) {
+				Player p = onlinePlayer(k);
+				if (p == null) continue;
+
+				boolean isMember = membersOnline.contains(k);
+				disconnect(p, !isMember); // guestClan = !isMember
 			}
 		}
 	}
@@ -131,10 +138,9 @@ public class ClansManager {
 				clan.getMembers().remove(mate);
 				Player player = World.getPlayer(mate.getUsername());
 				if (player != null) {
-					player.setClanName(null); // automaticaly sets to null when
-					// logins if logged out
-					player.getClanManager().disconnect(player, false);
-					player.setNextClanMemberUpdate("i");
+					player.setClanName(null);
+					if (player.getClanManager() != null) //somehow it happened
+						player.getClanManager().disconnect(player, false);
 					player.getPackets().sendGameMessage("You're no longer part of a clan.");
 				}
 				if (clan.getMembers().isEmpty()) {
@@ -148,13 +154,11 @@ public class ClansManager {
 							clan.setClanLeaderUsername(newLeader);
 							generateClanChannelDataBlock();
 							refreshClanChannel();
-							sendGlobalMessage("<col=7E2217>" + Utils.formatPlayerNameForDisplay(newLeader.getUsername())
-									+ " has been appointed as new leader!");
+							sendGlobalMessage("<col=7E2217>" + Utils.formatPlayerNameForDisplay(newLeader.getUsername()) + " has been appointed as new leader!");
 						}
 					}
 					generateClanSettingsDataBlock();
 					refreshClanSettings();
-
 				}
 			}
 		}
@@ -164,11 +168,11 @@ public class ClansManager {
 		ClansManager manager = player.getClanManager();
 		if (manager == null)
 			return;
-		ClanMember member = (ClanMember) player.temporaryAttribute().get("editclanmatedetails");
+		ClanMember member = (ClanMember) player.getTemporaryAttributtes().get("editclanmatedetails");
 		if (member == null) // means u not owner
 			return;
-		Integer rank = (Integer) player.temporaryAttribute().remove("editclanmaterank");
-		Integer job = (Integer) player.temporaryAttribute().remove("editclanmatejob");
+		Integer rank = (Integer) player.getTemporaryAttributtes().remove("editclanmaterank");
+		Integer job = (Integer) player.getTemporaryAttributtes().remove("editclanmatejob");
 		if (rank == null && job == null)
 			return;
 		synchronized (manager) {
@@ -181,18 +185,17 @@ public class ClansManager {
 				}
 				newLeader.setRank(Clan.LEADER);
 				manager.clan.setClanLeaderUsername(newLeader);
-				manager.sendGlobalMessage("<col=7E2217>" + Utils.formatPlayerNameForDisplay(newLeader.getUsername())
-						+ " has been appointed as new leader!");
+				manager.sendGlobalMessage("<col=7E2217>" + Utils.formatPlayerNameForDisplay(newLeader.getUsername()) + " has been appointed as new leader!");
 			}
 			if (rank != null) {
 				member.setRank(rank);
-				player.getPackets().sendGlobalVar(1500, rank);
+				player.getPackets().sendCSVarInteger(1500, rank);
 				manager.generateClanChannelDataBlock();
 				manager.refreshClanChannel();
 			}
 			if (job != null) {
 				member.setJob(job);
-				player.getPackets().sendGlobalVar(1501, job);
+				player.getPackets().sendCSVarInteger(1501, job);
 			}
 			manager.generateClanSettingsDataBlock();
 			manager.refreshClanSettings();
@@ -201,11 +204,10 @@ public class ClansManager {
 
 	public void sendGlobalMessage(String message) {
 		synchronized (this) {
-			for (Player player : World.getPlayers()) {
-				if (player == null)
-					continue;
-				if (membersOnline.contains(player.getDisplayName()))
-					player.getPackets().sendGameMessage(message);
+			for (String k : membersOnline) {
+				Player p = onlinePlayer(k);
+				if (p == null) continue;
+				p.getPackets().sendGameMessage(message);
 			}
 		}
 	}
@@ -291,7 +293,7 @@ public class ClansManager {
 	}
 
 	public static void openSetMottifColor(Player player, int part) {
-		player.temporaryAttribute().put("MottifCustomize", part);
+		player.getTemporaryAttributtes().put("MottifCustomize", part);
 		player.getInterfaceManager().sendInterface(1106);
 	}
 
@@ -299,7 +301,7 @@ public class ClansManager {
 		ClansManager manager = player.getClanManager();
 		if (manager == null)
 			return;
-		Integer part = (Integer) player.temporaryAttribute().remove("MottifCustomize");
+		Integer part = (Integer) player.getTemporaryAttributtes().remove("MottifCustomize");
 		if (part == null)
 			return;
 		manager.setMottifColor(player, color, part);
@@ -317,24 +319,16 @@ public class ClansManager {
 
 	public void refreshAllMembersAppearence() {
 		synchronized (this) {
-			for (Player player : World.getPlayers()) {
-				if (player == null)
-					continue;
-				if (membersOnline.contains(player.getDisplayName()))
-					player.getAppearance().generateAppearenceData();
+			for (String k : membersOnline) {
+				Player p = onlinePlayer(k);
+				if (p == null) continue;
+				p.getAppearance().generateAppearenceData();
 			}
 		}
 	}
 
-	public void refreshAllMapDots() {
-		synchronized (this) {
-			for (Player player : World.getPlayers()) {
-				if (player == null)
-					continue;
-				if (membersOnline.contains(player.getDisplayName()))
-					player.setNextClanMemberUpdate("i");
-			}
-		}
+	public boolean isMemberOnline(Player player) {
+		return membersOnline.contains(key(player));
 	}
 
 	public static void setClanMottifTextureInterface(Player player, boolean top, int slot) {
@@ -520,89 +514,32 @@ public class ClansManager {
 		}
 	}
 
-	public void sendCCGiveaway(final Player player, boolean reroll, boolean message) {
-		if (message)
-			sendRollMessage(player,
-					new String("[Giveaway] " + (reroll ? "Could not find a winner, rerolling.." : "Rolling..")));
-		CoresManager.getSlowExecutor().schedule(new Runnable() {
-
-			@Override
-			public void run() {
-				if (membersOnline.size() < 3) {
-					sendRollMessage(player, new String("Not enough players in clan chat to host giveaway."));
-					return;
-				}
-				sendRollMessage(player, new String("[Giveaway] " + "Picking a random winner.."));
-				CoresManager.getSlowExecutor().schedule(new Runnable() {
-
-					@Override
-					public void run() {
-						Player winner = null;
-						int winnerIndex = Utils.getRandom(membersOnline.size() - 1);
-						int index = 0;
-						for (Player player : World.getPlayers()) {
-							if (player == null)
-								continue;
-							if (membersOnline.contains(player.getDisplayName())) {
-								if (winnerIndex == index) {
-									winner = player;
-									if (membersOnline.size() < 3)
-										return;
-									if (hasRankToEditSettings(winner) || winner == player) {
-										sendCCGiveaway(player, true, true);
-										return;
-									}
-									break;
-								}
-							}
-						}
-						sendRollMessage(player, new String("[Giveaway] Winner is.. " + winner.getDisplayName() + "."));
-						winner.getPackets().sendGameMessage("Congratulations! You won the clanchat giveaway hosted by "
-								+ player.getDisplayName() + ".");
-					}
-				}, 2000, TimeUnit.MILLISECONDS);
-			}
-		}, 2000, TimeUnit.MILLISECONDS);
-	}
-
-	public void sendRollMessage(Player player, String message) {
-		String displayName = player.getDisplayName();
-		int rights = player.getRights();
-		for (Player p2 : World.getPlayers()) {
-			if (p2 == null)
-				continue;
-			if (channelPlayers.contains(p2.getDisplayName())) {
-				p2.getPackets().receiveClanChatMessage(membersOnline.contains(p2.getDisplayName()), displayName, rights,
-						message);
-			}
-		}
-	}
-
 	public void sendMessage(Player player, String message) {
 		synchronized (this) {
 			String displayName = player.getDisplayName();
-			String fixed = Utils.fixChatMessage(message);
 			int rights = player.getRights();
-			for (Player p2 : World.getPlayers()) {
-				if (p2 == null)
-					continue;
-				if (channelPlayers.contains(p2.getDisplayName())) {
-					p2.getPackets().receiveClanChatMessage(membersOnline.contains(p2.getDisplayName()), displayName,
-							rights, fixed);
-				}
+			for (String k : channelPlayers) {
+				Player p2 = onlinePlayer(k);
+				if (p2 == null) continue;
+				p2.getPackets().receiveClanChatMessage(membersOnline.contains(k), displayName, rights, message);
 			}
 		}
 	}
 
-	public Player getPlayerByDisplayName(String username) {
-		synchronized (this) {
-			String formatedUsername = Utils.formatPlayerNameForProtocol(username);
-			for (Player p2 : World.getPlayers()) {
-				if (p2 == null)
-					continue;
-				if (p2.getUsername().equals(formatedUsername) || p2.getDisplayName().equalsIgnoreCase(username))
-					return p2;
-			}
+	public Player getPlayerByDisplayName(String usernameOrDisplay) {
+		String proto = key(usernameOrDisplay);
+
+		Player direct = onlinePlayer(proto);
+		if (direct != null && channelPlayers.contains(proto))
+			return direct;
+
+		// fallback: scan channel for display name match
+		for (String k : channelPlayers) {
+			Player p = onlinePlayer(k);
+			if (p == null) continue;
+
+			if (p.getDisplayName().equalsIgnoreCase(usernameOrDisplay))
+				return p;
 		}
 		return null;
 	}
@@ -620,7 +557,7 @@ public class ClansManager {
 			}
 			if (getMemberByUsername(kicked.getUsername()) != null)
 				return;
-			bannedChannelPlayers.put(kicked.getUsername(), Utils.currentTimeMillis());
+			bannedChannelPlayers.put(key(kicked), Utils.currentTimeMillis());
 			disconnect(kicked, true);
 			kicked.getPackets().sendGameMessage("You have been kicked from the guest clan chat channel.");
 			player.getPackets().sendGameMessage("You have kicked " + kicked.getUsername() + " from clan chat channel.");
@@ -632,12 +569,17 @@ public class ClansManager {
 		synchronized (this) {
 			String displayName = player.getDisplayName();
 			int rights = player.getRights();
-			for (Player p2 : World.getPlayers()) {
-				if (p2 == null)
-					continue;
-				if (channelPlayers.contains(p2.getDisplayName()))
-					p2.getPackets().receiveClanChatQuickMessage(membersOnline.contains(p2.getDisplayName()),
-							displayName, rights, message);
+
+			for (String k : channelPlayers) {
+				Player p2 = onlinePlayer(k);
+				if (p2 == null) continue;
+
+				p2.getPackets().receiveClanChatQuickMessage(
+						membersOnline.contains(k),
+						displayName,
+						rights,
+						message
+				);
 			}
 		}
 	}
@@ -680,24 +622,28 @@ public class ClansManager {
 
 	public void generateClanChannelDataBlock() {
 		OutputStream stream = new OutputStream();
-		stream.writeByte(0x2); // read name as string, 0x1 for long
-		stream.writeLong(4062231702422979939L); // uid
+		stream.writeByte(0x2);
+		stream.writeLong(4062231702422979939L);
 		stream.writeLong(nextUpdateNumber);
 		stream.writeString(clan.getClanName());
-		stream.writeByte(0); // unused
+		stream.writeByte(0);
 		stream.writeByte(clan.getMinimumRankForKick());
-		stream.writeByte(clan.isGuestsInChatCanTalk() ? -1 : 0); // getMinimumRankForChat
-		// maybe
-		stream.writeShort(channelPlayers.size());
-		for (Player player : World.getPlayers()) {
-			if (player == null)
-				continue;
-			if (channelPlayers.contains(player.getDisplayName())) {
-				stream.writeString(player.getDisplayName());
-				stream.writeByte(getRank(player));
-				stream.writeShort(1); // worldId
-			}
+		stream.writeByte(clan.isGuestsInChatCanTalk() ? -1 : 0);
+
+		// Build a real online list
+		ArrayList<Player> online = new ArrayList<>();
+		for (String k : channelPlayers) {
+			Player p = onlinePlayer(k);
+			if (p != null) online.add(p);
 		}
+
+		stream.writeShort(online.size());
+		for (Player p : online) {
+			stream.writeString(p.getDisplayName());
+			stream.writeByte(getRank(p));
+			stream.writeShort(1); // worldId if you want real: Settings.WORLD_ID etc
+		}
+
 		clanChannelDataBlock = new byte[stream.getOffset()];
 		stream.setOffset(0);
 		stream.getBytes(clanChannelDataBlock, 0, clanChannelDataBlock.length);
@@ -734,52 +680,43 @@ public class ClansManager {
 			stream.writeString(bannedUser);
 		}
 		if (version >= 3) {
-			int count = 2;
-			if (clan.getTimeZone() != 0)
-				count++;
-			if (clan.getMotto() != null)
-				count++;
-			if (clan.getThreadId() != null)
-				count++;
-			if (clan.isRecruiting() || clan.isClanTime() || clan.getWorldId() != 0 || clan.getClanFlag() != 0)
-				count++;
-			if (clan.getMottifTop() != 0 || clan.getMottifBottom() != 0)
-				count++;
-			stream.writeShort(count); // configsCount
-			if (clan.getTimeZone() != 0) {
-				stream.writeInt(0 | 0 << 30);
-				stream.writeInt(clan.getTimeZone());
+			setClanVars();
+			stream.writeShort(clanVars.size());
+			for (int var : clanVars.keySet()) {
+				Object value = clanVars.get(var);
+				int type = value instanceof String ? 2 : value instanceof Long ? 1 : 0;
+				stream.writeInt(var | type << 30);
+				if (type == 2)
+					stream.writeString((String) value);
+				else if (type == 1)
+					stream.writeLong((long) value);
+				else
+					stream.writeInt((int) value);
 			}
-			if (clan.getMotto() != null) {
-				stream.writeInt(1 | 2 << 30);
-				stream.writeString(clan.getMotto());
-			}
-			if (clan.getThreadId() != null) {
-				stream.writeInt(2 | 1 << 30);
-				stream.writeLong(convertToLong(clan.getThreadId()));
-			}
-			if (clan.isRecruiting() || clan.isClanTime() || clan.getWorldId() != 0 || clan.getClanFlag() != 0) {
-				stream.writeInt(3 | 0 << 30);
-				stream.writeInt((clan.isRecruiting() ? 1 : 0) | (clan.isClanTime() ? 1 : 0) << 1
-						| clan.getWorldId() << 2 | clan.getClanFlag() << 10);
-			}
-			if (clan.getMottifTop() != 0 || clan.getMottifBottom() != 0) {
-				stream.writeInt(13 | 0 << 30);
-				stream.writeInt(clan.getMottifTop() | clan.getMottifBottom() << 16);
-			}
-			stream.writeInt(16 | 0 << 30);
-			stream.writeInt(clan.getMottifColors()[0] | clan.getMottifColors()[1] << 16);
-			stream.writeInt(18 | 0 << 30);
-			stream.writeInt(clan.getMottifColors()[2] | clan.getMottifColors()[3] << 16);
 		}
 		clanSettingsDataBlock = new byte[stream.getOffset()];
 		stream.setOffset(0);
 		stream.getBytes(clanSettingsDataBlock, 0, clanSettingsDataBlock.length);
 	}
 
-	public static final char[] VALID_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
-			'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
-			'z' };
+	private void setClanVars() {
+		clanVars.clear();
+		if (clan.getTimeZone() != 0)
+			clanVars.put(0, clan.getTimeZone());
+		if (clan.getMotto() != null)
+			clanVars.put(1, clan.getMotto());
+		if (clan.getThreadId() != null)
+			clanVars.put(2, convertToLong(clan.getThreadId()));
+		if (clan.isRecruiting() || clan.isClanTime() || clan.getWorldId() != 0 || clan.getClanFlag() != 0)
+			clanVars.put(3, (clan.isRecruiting() ? 1 : 0) | (clan.isClanTime() ? 1 : 0) << 1 | clan.getWorldId() << 2 | clan.getClanFlag() << 10);
+		if (clan.getMottifTop() != 0 || clan.getMottifBottom() != 0)
+			clanVars.put(13, clan.getMottifTop() | clan.getMottifBottom() << 16);
+		clanVars.put(16, clan.getMottifColors()[0] | clan.getMottifColors()[1] << 16);
+		clanVars.put(18, clan.getMottifColors()[2] | clan.getMottifColors()[3] << 16);
+	}
+
+	public static final char[] VALID_CHARS =
+			{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
 	public static int getCharacterIndex(int c) {
 		for (int i = 0; i < VALID_CHARS.length; i++)
@@ -808,37 +745,38 @@ public class ClansManager {
 
 	public void refreshClanSettings() {
 		synchronized (this) {
-			for (Player player : World.getPlayers()) {
-				if (player == null)
-					continue;
-				if (membersOnline.contains(player.getDisplayName()))
-					player.getPackets().sendClanSettings(this, true);
+			for (String k : membersOnline) {
+				Player p = onlinePlayer(k);
+				if (p == null) continue;
+				p.getPackets().sendClanSettings(this, true);
 			}
 		}
 	}
 
 	public void refreshClanChannel() {
 		synchronized (this) {
-			for (Player player : World.getPlayers()) {
-				if (player == null)
-					continue;
-				if (channelPlayers.contains(player.getDisplayName()))
-					player.getPackets().sendClanChannel(this, membersOnline.contains(player.getDisplayName()));
+			for (String k : channelPlayers) {
+				Player p = onlinePlayer(k);
+				if (p == null) continue;
+				boolean myClan = membersOnline.contains(k);
+				p.getPackets().sendClanChannel(this, myClan);
 			}
+			channelPlayers.removeIf(k -> onlinePlayer(k) == null);
+			membersOnline.removeIf(k -> onlinePlayer(k) == null);
 		}
 	}
 
 	public void connect(Player player, boolean guestClan) {
 		synchronized (this) {
+			String k = key(player);
 			if (!guestClan) {
-				membersOnline.add(player.getDisplayName());
+				if (!membersOnline.contains(k))
+					membersOnline.add(k);
 				player.getPackets().sendClanSettings(this, true);
 			}
 			if (guestClan || player.isConnectedClanChannel())
 				connectChannel(player);
 			linkClan(player, guestClan);
-			refreshAllMapDots();
-			player.getAppearance().generateAppearenceData();
 		}
 	}
 
@@ -859,22 +797,20 @@ public class ClansManager {
 	public void disconnect(Player player, boolean guestClan) {
 		synchronized (cachedClans) {
 			synchronized (this) {
+				String k = key(player);
 				if (guestClan || player.isConnectedClanChannel())
 					disconnectChannel(player);
 				if (!guestClan)
-					membersOnline.remove(player.getDisplayName());
+					membersOnline.remove(k);
 				unlinkClan(player, guestClan);
-				player.setNextClanMemberUpdate("i");
-				refreshAllMapDots();
 				destroyIfEmpty();
-				player.getAppearance().generateAppearenceData();
 			}
 		}
 	}
 
 	/*
-	 * dont use this without synchronized (cachedClans) and synchronized (this) else
-	 * exept disconnect
+	 * dont use this without synchronized (cachedClans) and synchronized (this)
+	 * else exept disconnect
 	 */
 	private void destroyIfEmpty() {
 		if (empty()) {
@@ -885,22 +821,24 @@ public class ClansManager {
 
 	public void connectChannel(Player player) {
 		synchronized (this) {
-			channelPlayers.add(player.getDisplayName());
+			String k = key(player);
+			if (!channelPlayers.contains(k))
+				channelPlayers.add(k);
 			generateClanChannelDataBlock();
 			refreshClanChannel();
-			player.getAppearance().generateAppearenceData();
 		}
 	}
 
 	/*
 	 * only used by normal channel by itself
 	 */
-	public void disconnectChannel(Player player) {
+	private void disconnectChannel(Player player) {
 		synchronized (this) {
-			channelPlayers.remove(player.getDisplayName());
-			player.getPackets().sendClanChannel(null, membersOnline.contains(player.getDisplayName()));
+			String k = key(player);
+			channelPlayers.remove(k);
+			player.getPackets().sendClanChannel(null, membersOnline.contains(k));
 			generateClanChannelDataBlock();
-			player.getAppearance().generateAppearenceData();
+			refreshClanChannel();
 		}
 	}
 
@@ -915,23 +853,8 @@ public class ClansManager {
 		connectToClan(player, clanName, false);
 	}
 
-	public static String[] bannedWords = { "!", "#", "%", "&", "/", "(", ")", "=", "?", "`", "@", "$",
-			"{", "[", "]", "}", "fuck", "mod", "admin", "owner", "shit", "piss", "dick", "crap", " ass", "pussy", "sex",
-			"blowjob", "cunt", "dildo", "cock", "nig", "fag", "anus", "arse", "bastard", "bitch", "boner", "butt",
-			"clit", "choad", "chode", "cum", "dildo", "dyke", "jizz", "negro", "prick", "queer", "rimjob", "slut",
-			"vag", "whore", "wank", "bigdik", "develope" };
-
 	public static void createClan(Player player, String clanName) {
-		for (String s : bannedWords) {
-			if (clanName.toLowerCase().contains(s) && !player.isDeveloper()) {
-				player.getPackets().sendGameMessage("The clan name you tried contains banned words.");
-				return;
-			}
-		}
-		if (clanName.length() < 4 && !player.isDeveloper()) {
-			player.getPackets().sendGameMessage("A clan name needs to be at least 4 characters long.");
-			return;
-		}
+		clanName = Utils.formatPlayerNameForDisplay(clanName);
 		if (player.getClanManager() != null)
 			return;
 		synchronized (cachedClans) {
@@ -959,24 +882,24 @@ public class ClansManager {
 			manager.generateClanSettingsDataBlock();
 			manager.refreshClanSettings();
 			linkClanMember(player, manager.clan.getClanName());
-			player.getAppearance().generateAppearenceData();
 		}
 	}
 
 	public static boolean connectToClan(Player player, String clanName, boolean guest) {
-		// clanName = Utils.formatPlayerNameForDisplay(clanName);
+		clanName = Utils.formatPlayerNameForDisplay(clanName);
 		ClansManager manager = guest ? player.getGuestClanManager() : player.getClanManager();
-		if (manager != null
-				|| guest && player.getClanName() != null && clanName.equalsIgnoreCase(player.getClanName())) {
+		if (manager != null || guest && player.getClanName() != null && clanName.equalsIgnoreCase(player.getClanName())) // already
+			// connected
+			// to
+			// a
+			// clan
 			return false;
-		}
 		synchronized (cachedClans) {
 			manager = cachedClans.get(clanName); // grabs clan
 			boolean created = manager != null;
 			if (!created) { // not loaded
 				if (!SerializableFilesManager.containsClan(clanName)) {
-					player.getPackets().sendTextOnComponent(1110, 70,
-							"Could not find a clan named " + clanName + ". Please check the name and try again.");
+					player.getPackets().sendTextOnComponent(1110, 70, "Could not find a clan named " + clanName + ". Please check the name and try again.");
 					return false;
 				}
 				Clan clan = SerializableFilesManager.loadClan(clanName);
@@ -987,13 +910,13 @@ public class ClansManager {
 			} else {
 				synchronized (manager) {
 					if (guest) {
-						Long bannedSince = manager.bannedChannelPlayers.get(player.getUsername());
+						Long bannedSince = manager.bannedChannelPlayers.get(key(player));
 						if (bannedSince != null) {
 							if (bannedSince + 3600000 > Utils.currentTimeMillis()) {
 								player.getPackets().sendGameMessage("You have been banned from this channel.");
 								return false;
 							}
-							manager.bannedChannelPlayers.remove(player.getUsername());
+							manager.bannedChannelPlayers.remove(key(player));
 						}
 					}
 				}
@@ -1006,8 +929,7 @@ public class ClansManager {
 				if (guest) {
 					if (!manager.clan.isGuestsInChatCanEnter()) {
 						player.getPackets().sendGameMessage("This clan only allows clanmates to join their channel.");
-						player.getPackets().sendTextOnComponent(1110, 70,
-								"This clan only allows clanmates to join their channel.");
+						player.getPackets().sendTextOnComponent(1110, 70, "This clan only allows clanmates to join their channel.");
 						return false;
 					}
 					if (manager.getClan().getBannedUsers().contains(player.getUsername())) {
@@ -1018,7 +940,7 @@ public class ClansManager {
 				if (!created)
 					cachedClans.put(clanName, manager);
 				if (guest)
-					player.getPackets().sendRunScript(4453);
+					player.getPackets().sendExecuteScript(4453);
 				manager.connect(player, guest);
 				return true;
 			}
@@ -1030,8 +952,7 @@ public class ClansManager {
 			player.getPackets().sendGameMessage("You're not in a clan.");
 			return;
 		}
-		if (player.getInterfaceManager().containsScreenInter()
-				|| player.getInterfaceManager().containsInventoryInter()) {
+		if (player.getInterfaceManager().containsScreenInter() || player.getInterfaceManager().containsInventoryInter()) {
 			player.getPackets().sendGameMessage("Please close the interface you have open first.");
 			return;
 		}
@@ -1105,37 +1026,37 @@ public class ClansManager {
 	}
 
 	public static void selectPermissionTab(Player player, int tab) {
-		player.getPackets().sendRunScript(5136, tab);
+		player.getPackets().sendExecuteScript(5136, tab);
 	}
 
 	public static void selectPermissionRank(Player player, int selectedRank) {
-		player.getPackets().sendGlobalVar(1572, 1);
-		player.getPackets().sendGlobalVar(1574, 1);
-		player.getPackets().sendGlobalVar(1576, 1);
-		player.getPackets().sendGlobalVar(1577, 1);
-		player.getPackets().sendGlobalVar(1578, 1);
-		player.getPackets().sendGlobalVar(1579, 1);
-		player.getPackets().sendGlobalVar(1580, 1);
-		player.getPackets().sendGlobalVar(1581, 1);
-		player.getPackets().sendGlobalVar(1582, 1);
-		player.getPackets().sendGlobalVar(1583, 1);
-		player.getPackets().sendGlobalVar(1584, 1);
-		player.getPackets().sendGlobalVar(1585, 1);
-		player.getPackets().sendGlobalVar(1586, 1);
-		player.getPackets().sendGlobalVar(1587, 1);
-		player.getPackets().sendGlobalVar(1588, 1);
-		player.getPackets().sendGlobalVar(1589, 1);
+		player.getPackets().sendCSVarInteger(1572, 1);
+		player.getPackets().sendCSVarInteger(1574, 1);
+		player.getPackets().sendCSVarInteger(1576, 1);
+		player.getPackets().sendCSVarInteger(1577, 1);
+		player.getPackets().sendCSVarInteger(1578, 1);
+		player.getPackets().sendCSVarInteger(1579, 1);
+		player.getPackets().sendCSVarInteger(1580, 1);
+		player.getPackets().sendCSVarInteger(1581, 1);
+		player.getPackets().sendCSVarInteger(1582, 1);
+		player.getPackets().sendCSVarInteger(1583, 1);
+		player.getPackets().sendCSVarInteger(1584, 1);
+		player.getPackets().sendCSVarInteger(1585, 1);
+		player.getPackets().sendCSVarInteger(1586, 1);
+		player.getPackets().sendCSVarInteger(1587, 1);
+		player.getPackets().sendCSVarInteger(1588, 1);
+		player.getPackets().sendCSVarInteger(1589, 1);
 
-		player.getPackets().sendGlobalVar(1649, 1);
+		player.getPackets().sendCSVarInteger(1649, 1);
 
-		player.getPackets().sendGlobalVar(1590, 1);
-		player.getPackets().sendGlobalVar(1569, selectedRank); // selects
+		player.getPackets().sendCSVarInteger(1590, 1);
+		player.getPackets().sendCSVarInteger(1569, selectedRank); // selects
 		// rank
-		player.getPackets().sendGlobalVar(1571, 1);
-		player.getPackets().sendGlobalVar(1570, 1);
-		player.getPackets().sendGlobalVar(1573, 1);
-		player.getPackets().sendGlobalVar(1575, 1);
-		player.getPackets().sendGlobalVar(1792, 1);
+		player.getPackets().sendCSVarInteger(1571, 1);
+		player.getPackets().sendCSVarInteger(1570, 1);
+		player.getPackets().sendCSVarInteger(1573, 1);
+		player.getPackets().sendCSVarInteger(1575, 1);
+		player.getPackets().sendCSVarInteger(1792, 1);
 
 	}
 
@@ -1147,10 +1068,6 @@ public class ClansManager {
 		player.getInterfaceManager().sendInterface(1096);
 		showClanSettingsClanMates(player);
 		selectPermissionTab(player, 1);
-		for (int i = 114; i <= 120; i++)
-			player.getPackets().sendHideIComponent(1096, i, true);
-		for (int i = 380; i <= 387; i++)
-			player.getPackets().sendHideIComponent(1096, i, true);
 		player.getPackets().sendTextOnComponent(1096, 373, "Permissions are currently disabled and setted to default.");
 		player.getPackets().sendHideIComponent(1096, 202, false); // disable
 		// acess to
@@ -1188,10 +1105,9 @@ public class ClansManager {
 		if (player.getGuestClanManager() != null)
 			player.getGuestClanManager().disconnect(player, true);
 		else {
-			player.temporaryAttribute().put("joinguestclan", Boolean.TRUE);
+			player.getTemporaryAttributtes().put("joinguestclan", Boolean.TRUE);
 			player.getPackets().sendInputNameScript("Please enter the name of the clan to chat in:");
-			player.getPackets().sendTextOnComponent(1110, 70,
-					"Please enter the name of the clan whose Clan chat you wish to join as a guest. <br><br>To talk as a guest, start  your<br>line<br>of chat with ///");
+			player.getPackets().sendTextOnComponent(1110, 70, "Please enter the name of the clan whose Clan chat you wish to join as a guest. <br><br>To talk as a guest, start  your<br>line<br>of chat with ///");
 
 		}
 	}
@@ -1206,7 +1122,7 @@ public class ClansManager {
 			player.getPackets().sendGameMessage("You must be a clan admin to do that.");
 			return;
 		}
-		player.temporaryAttribute().put("banclanplayer", Boolean.TRUE);
+		player.getTemporaryAttributtes().put("banclanplayer", Boolean.TRUE);
 		player.getPackets().sendInputNameScript("Enter the name of the play you wish to ban:");
 	}
 
@@ -1251,7 +1167,7 @@ public class ClansManager {
 			player.getPackets().sendGameMessage("You must be a clan admin to do that.");
 			return;
 		}
-		player.temporaryAttribute().put("unbanclanplayer", Boolean.TRUE);
+		player.getTemporaryAttributtes().put("unbanclanplayer", Boolean.TRUE);
 		player.getPackets().sendInputNameScript("Enter the name of the play you wish to unban:");
 	}
 
@@ -1297,28 +1213,34 @@ public class ClansManager {
 				generateClanSettingsDataBlock();
 				refreshClanSettings();
 			} else
-				player.getPackets().sendGameMessage("An error was encountered while applying trying to unban " + name
-						+ ". No player of that name could be found.");
+				player.getPackets().sendGameMessage("An error was encountered while applying trying to unban " + name + ". No player of that name could be found.");
 		}
 	}
 
 	public static void joinClanChatChannel(Player player) {
+		ClansManager cm = player.getClanManager();
 		if (player.getClanManager() == null) {
+			player.getPackets().sendGameMessage("You must be a member of a clan in order to join their channel.");
 			player.getDialogueManager().startDialogue("ClanCreateD");
 			return;
 		}
-		if (player.isConnectedClanChannel()) {
+		String k = Utils.formatPlayerNameForProtocol(player.getUsername());
+		boolean inChannel = cm.channelPlayers.contains(k);
+		if (inChannel) {
+			cm.disconnectChannel(player);
 			player.setConnectedClanChannel(false);
-			player.getClanManager().disconnectChannel(player);
 		} else {
+			cm.connectChannel(player);
 			player.setConnectedClanChannel(true);
-			player.getClanManager().connectChannel(player);
 		}
 	}
 
-	public static void viewInvite(final Player player, Player p2) {
-		if (player.temporaryAttribute().remove("claninvite") != null)
+	public static boolean viewInvite(final Player player, Player p2) {
+		if (player.getTemporaryAttributtes().remove("claninvite") != null) {
 			player.getDialogueManager().startDialogue("ClanInvite", p2);
+			return true;
+		}
+		return false;
 	}
 
 	public static void invite(Player player, Player p2) {
@@ -1338,6 +1260,7 @@ public class ClansManager {
 			}
 			if (manager.clan.getMembers().size() >= Clan.MAX_MEMBERS) {
 				player.getPackets().sendGameMessage("Clans can't have over 500 members.");
+				return;
 			}
 		}
 		if (p2.getClanManager() != null) {
@@ -1350,6 +1273,6 @@ public class ClansManager {
 		}
 		player.getPackets().sendGameMessage("Sending " + p2.getDisplayName() + " a invitation...");
 		p2.getPackets().sendClanInviteMessage(player);
-		p2.temporaryAttribute().put("claninvite", Boolean.TRUE);
+		p2.getTemporaryAttributtes().put("claninvite", Boolean.TRUE);
 	}
 }

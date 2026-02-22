@@ -5,9 +5,11 @@ import com.rs.kotlin.game.npc.drops.DropType
 data class DropDisplay(
     val itemId: Int,
     val amount: IntRange,
-    val rarity: String,
-    val type: DropType
-
+    val rarityText: String,
+    val type: DropType,
+    val baseDenominator: Int,
+    val weight: Int? = 0,
+    val percentage: Double? = null,
 )
 
 fun IntRange.toDisplayString(): String {

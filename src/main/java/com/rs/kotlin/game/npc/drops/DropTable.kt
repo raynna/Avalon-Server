@@ -64,14 +64,41 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
                     it.itemId,
                     it.amount,
                     "Always",
-                    DropType.ALWAYS
+                    DropType.ALWAYS,
+                    1
                 )
             )
+        }
+        // ------------------ CHARMS ------------------
+// ------------------ CHARMS ------------------
+        val charms = charmTable
+        if (charms != null) {
+
+            for (charm in charms.getEntries()) {
+
+                if (charm.percent <= 0.0) continue
+
+                val percentText =
+                    if (charm.percent % 1.0 == 0.0)
+                        "${charm.percent.toInt()}%"
+                    else
+                        "%.2f%%".format(charm.percent)
+                list.add(
+                    DropDisplay(
+                        charm.itemId,
+                        charm.amount..charm.amount,
+                        percentText,
+                        DropType.CHARM,
+                        0,
+                        percentage = charm.percent
+                    )
+                )
+            }
         }
 
         // PREROLL
         preRollDrops.forEach { entry ->
-
+            val base = entry.denominator
             val boosted = entry.denominator / multiplier
 
             if (entry.displayItems != null) {
@@ -81,7 +108,8 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
                             itemId,
                             entry.amount,
                             "1/$boosted",
-                            DropType.PREROLL
+                            DropType.PREROLL,
+                            base
                         )
                     )
                 }
@@ -93,7 +121,8 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
                     entry.itemId ?: -1,
                     entry.amount,
                     "1/$boosted",
-                    DropType.PREROLL
+                    DropType.PREROLL,
+                    base
                 )
             )
         }
@@ -110,7 +139,9 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
                     it.itemId,
                     it.amount,
                     "1/${"%.2f".format(denom)}",
-                    DropType.MAIN
+                    DropType.MAIN,
+                    denom.toInt(),
+                    it.weight
                 )
             )
         }
@@ -124,7 +155,9 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
                     it.itemId,
                     it.amount,
                     "1/${"%.2f".format(denom)}",
-                    DropType.MINOR
+                    DropType.MINOR,
+                    denom.toInt(),
+                    it.weight
                 )
             )
         }
@@ -157,7 +190,8 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
                         herb.itemId,
                         cfg.amount,
                         "1/${"%.2f".format(denom)}",
-                        DropType.PREROLL
+                        DropType.PREROLL,
+                        denom.toInt()
                     )
                 )
             }
@@ -175,13 +209,16 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
                     it.itemId,
                     it.amount,
                     "1/${"%.2f".format(denom)}",
-                    DropType.SPECIAL
+                    DropType.SPECIAL,
+                    denom.toInt(),
+                    it.weight
                 )
             )
         }
 
         // TERTIARY
         tertiaryDrops.forEach {
+            val base = it.denominator
             val boosted =
                 (it.denominator / multiplier)
                     .toInt()
@@ -192,7 +229,8 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
                     it.itemId,
                     it.amount,
                     "1/$boosted",
-                    DropType.TERTIARY
+                    DropType.TERTIARY,
+                    base
                 )
             )
         }
