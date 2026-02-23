@@ -5183,16 +5183,17 @@ public class Player extends Entity {
         return (minutes > 0 ? minutesMessage : secondsMessage);
     }
 
-    public void setPrayerDelay(long prayDelay) {
-        temporaryAttribute().put("PrayerBlocked", prayDelay + Utils.currentTimeMillis());
+
+
+    public void setPrayerDelay(int ticks) {
+        tickManager.addTicks(
+                TickManager.TickKeys.DISABLED_PROTECTION_PRAYER_TICK,
+                ticks);
         prayer.closeAllPrayers();
     }
 
-    public long getPrayerDelay() {
-        Long prayblock = (Long) temporaryAttribute().get("PrayerBlocked");
-        if (prayblock == null)
-            return 0;
-        return prayblock;
+    public int getPrayerDelay() {
+        return tickManager.getTicksLeft(TickManager.TickKeys.DISABLED_PROTECTION_PRAYER_TICK);
     }
 
     public Familiar getFamiliar() {

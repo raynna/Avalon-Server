@@ -7,7 +7,7 @@ import com.rs.kotlin.game.npc.drops.dropTable
 
 object GreenDragonDropTable {
 
-    val table = dropTable(rareDropTable = true,  herbTable = HerbTableConfig(numerator = 15, denominator = 128), rolls = 1) {
+    val table = dropTable(rareDropTable = true,  herbTables = HerbTableConfig(numerator = 15, denominator = 128), rolls = 1) {
         alwaysDrops {
             drop("item.dragon_bones")
             drop("item.green_dragonhide");

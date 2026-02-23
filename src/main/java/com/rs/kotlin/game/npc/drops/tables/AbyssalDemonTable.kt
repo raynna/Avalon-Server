@@ -9,7 +9,7 @@ object AbyssalDemonTable {
 
     val table = dropTable(
         category = MonsterCategory.SLAYER,
-        herbTable = HerbTableConfig(numerator = 19, denominator = 128),
+        herbTables = HerbTableConfig(numerator = 19, denominator = 128),
         rareDropTable = true,
         rolls = 1) {
 

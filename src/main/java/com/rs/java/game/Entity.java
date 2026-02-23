@@ -105,6 +105,9 @@ public abstract class Entity extends WorldTile {
     public transient int morriganHits;
     public transient int vineHits;
 
+    public transient Animation pendingBlockAnim;
+    private transient long pendingBlockSendAtMs = -1;     // remaining client cycles until it should start
+
     // creates Entity and saved classes
     public Entity(WorldTile tile) {
         super(tile);
@@ -1239,6 +1242,7 @@ public abstract class Entity extends WorldTile {
         processPendingEffects();
         processReceivedHits();
         processReceivedDamage();
+        processPendingAnimation();
         Iterator<Map.Entry<Keys.IntKey, Integer>> it = tickTimers.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<Keys.IntKey, Integer> entry = it.next();
@@ -1544,20 +1548,28 @@ public abstract class Entity extends WorldTile {
     }
 
     public void animate(Animation animation) {
-        AnimationDefinitions newAnimation = AnimationDefinitions.getAnimationDefinitions(animation.getIds()[0]);
         if (animation == null) {
             this.nextAnimation = new Animation(-1);
+            return;
         }
-        if (this.nextAnimation != null && animation != null) {
-            AnimationDefinitions nextAnim = AnimationDefinitions.getAnimationDefinitions(this.nextAnimation.getIds()[0]);
-            if (newAnimation.getPriority() >= nextAnim.getPriority()) {
+
+        AnimationDefinitions newAnimation =
+                AnimationDefinitions.getAnimationDefinitions(animation.getIds()[0]);
+
+        if (this.nextAnimation != null) {
+            AnimationDefinitions nextAnim =
+                    AnimationDefinitions.getAnimationDefinitions(this.nextAnimation.getIds()[0]);
+            if (newAnimation.getPriority() > nextAnim.getPriority()) {
                 this.nextAnimation = animation;
             }
         } else {
             this.nextAnimation = animation;
         }
-        if (nextAnimation != null && nextAnimation.getIds()[0] >= 0)
-            lastAnimationEnd = Utils.currentTimeMillis() + AnimationDefinitions.getAnimationDefinitions(nextAnimation.getIds()[0]).getEmoteTime();
+
+        if (nextAnimation != null && nextAnimation.getIds()[0] >= 0) {
+            lastAnimationEnd = Utils.currentTimeMillis()
+                    + AnimationDefinitions.getAnimationDefinitions(nextAnimation.getIds()[0]).getEmoteTime();
+        }
     }
 
     public void animateNoCheck(Animation nextAnimation) {
@@ -1574,8 +1586,33 @@ public abstract class Entity extends WorldTile {
         animate(new Animation(animationId));
     }
 
-    public void animateWithDelay(int animationId, int delay) {
-        animate(new Animation(animationId, delay));
+    public void queueAnim(Animation blockAnim) {
+        if (blockAnim == null) return;
+
+        int delayCycles = Math.max(0, Math.min(255, blockAnim.getDelay()));
+        long dueAt = Utils.currentTimeMillis() + delayCycles * 20L;
+
+        pendingBlockAnim = blockAnim;
+        pendingBlockSendAtMs = dueAt;
+    }
+
+    private void processPendingAnimation() {
+        if (pendingBlockAnim == null) return;
+
+        long now = Utils.currentTimeMillis();
+        long remainingMs = pendingBlockSendAtMs - now;
+
+        int remainingCycles = (int) ((remainingMs + 19L) / 20L);
+        if (remainingCycles < 0) remainingCycles = 0;
+        if (remainingCycles > 255) remainingCycles = 255;
+
+        if (nextAnimation != null) {
+            return;
+        }
+        pendingBlockAnim.setDelay(remainingCycles);
+        animate(pendingBlockAnim);
+        pendingBlockAnim = null;
+        pendingBlockSendAtMs = -1;
     }
 
     public void animate(String animation) {
@@ -1592,6 +1629,11 @@ public abstract class Entity extends WorldTile {
     public Animation getNextAnimation() {
         return nextAnimation;
     }
+
+    private int lastAnimationIdSent = -1;
+
+    public int getLastAnimationIdSent() { return lastAnimationIdSent; }
+    public void setLastAnimationIdSent(int id) { lastAnimationIdSent = id; }
 
     public void gfx(String graphic) {
         gfx(new Graphics(graphic));

@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.rs.kotlin.game.world.projectile
 
 import com.rs.core.tasks.WorldTask
@@ -12,39 +14,41 @@ import com.rs.kotlin.game.player.combat.CombatUtils
 import kotlin.math.max
 
 object ProjectileManager {
-
     @JvmStatic
     fun sendToTile(
         projectile: Projectile,
         gfxId: Int,
         startTile: WorldTile,
         endTile: WorldTile,
-        onLanded: Runnable? = null
+        onLanded: Runnable? = null,
     ) {
         val type = ProjectileRegistry.get(projectile)?.resolve() ?: return
         val distance = Utils.getDistance(startTile.x, startTile.y, endTile.x, endTile.y)
         val endTime = type.endTime(distance)
-        val impactCycles = queueProjectileAndGetImpactCycles(
-            attacker = null,
-            defender = null,
-            startTile = startTile,
-            endTile = endTile,
-            gfx = gfxId,
-            type = type,
-            creatorSize = 0,
-            endTime = endTime
-        )
+        val impactCycles =
+            queueProjectileAndGetImpactCycles(
+                attacker = null,
+                defender = null,
+                startTile = startTile,
+                endTile = endTile,
+                gfx = gfxId,
+                type = type,
+                creatorSize = 0,
+                endTime = endTime,
+            )
 
         onLanded ?: return
 
         val impactTicks = impactCycles / 30
 
-        WorldTasksManager.schedule(object : WorldTask() {
-            override fun run() {
-                onLanded.run()
-            }
-        }, impactTicks)
-
+        WorldTasksManager.schedule(
+            object : WorldTask() {
+                override fun run() {
+                    onLanded.run()
+                }
+            },
+            impactTicks,
+        )
     }
 
     @JvmStatic
@@ -52,16 +56,15 @@ object ProjectileManager {
         projectile: Projectile,
         gfxId: Int,
         attacker: Entity,
-        defender: Entity
-    ): Int {
-        return send(
+        defender: Entity,
+    ): Int =
+        send(
             projectile = projectile,
             gfxId = gfxId,
             attacker = attacker,
             defender = defender,
-            blockAnimation = false
+            blockAnimation = false,
         )
-    }
 
     @JvmStatic
     fun sendWithGraphic(
@@ -69,16 +72,15 @@ object ProjectileManager {
         gfxId: Int,
         attacker: Entity,
         defender: Entity,
-        hitGraphic: Graphics
-    ): Int {
-        return send(
+        hitGraphic: Graphics,
+    ): Int =
+        send(
             projectile = projectile,
             gfxId = gfxId,
             attacker = attacker,
             defender = defender,
-            hitGraphic = hitGraphic
+            hitGraphic = hitGraphic,
         )
-    }
 
     @JvmStatic
     fun send(
@@ -88,8 +90,8 @@ object ProjectileManager {
         defender: Entity,
         hitGraphic: Graphics,
         hitSound: Int,
-    ): Int {
-        return send(
+    ): Int =
+        send(
             projectile = projectile,
             gfxId = gfxId,
             attacker = attacker,
@@ -101,10 +103,8 @@ object ProjectileManager {
             hitSound = hitSound,
             speedAdjustment = 0,
             displacement = 0,
-            onLanded = null
+            onLanded = null,
         )
-    }
-
 
     @JvmStatic
     fun send(
@@ -113,17 +113,16 @@ object ProjectileManager {
         attacker: Entity,
         defender: Entity,
         displacementOffset: Int,
-        onLanded: Runnable? = null
-    ): Int {
-        return send(
+        onLanded: Runnable? = null,
+    ): Int =
+        send(
             projectile = projectile,
             gfxId = gfxId,
             attacker = attacker,
             defender = defender,
             displacement = displacementOffset,
-            onLanded = { onLanded?.run() }
+            onLanded = { onLanded?.run() },
         )
-    }
 
     @JvmStatic
     fun send(
@@ -131,16 +130,15 @@ object ProjectileManager {
         gfxId: Int,
         attacker: Entity,
         defender: Entity,
-        onLanded: Runnable? = null
-    ): Int {
-        return send(
+        onLanded: Runnable? = null,
+    ): Int =
+        send(
             projectile = projectile,
             gfxId = gfxId,
             attacker = attacker,
             defender = defender,
-            onLanded = { onLanded?.run() }
+            onLanded = { onLanded?.run() },
         )
-    }
 
     @JvmStatic
     fun send(
@@ -149,17 +147,16 @@ object ProjectileManager {
         displacement: Int,
         attacker: Entity,
         defender: Entity,
-        onLanded: Runnable? = null
-    ): Int {
-        return send(
+        onLanded: Runnable? = null,
+    ): Int =
+        send(
             projectile = projectile,
             gfxId = gfxId,
             displacement = displacement,
             attacker = attacker,
             defender = defender,
-            onLanded = { onLanded?.run() }
+            onLanded = { onLanded?.run() },
         )
-    }
 
     @JvmStatic
     fun send(
@@ -168,17 +165,16 @@ object ProjectileManager {
         hitGraphic: Graphics,
         attacker: Entity,
         defender: Entity,
-        onLanded: Runnable? = null
-    ): Int {
-        return send(
+        onLanded: Runnable? = null,
+    ): Int =
+        send(
             projectile = projectile,
             gfxId = gfxId,
             hitGraphic = hitGraphic,
             attacker = attacker,
             defender = defender,
-            onLanded = { onLanded?.run() }
+            onLanded = { onLanded?.run() },
         )
-    }
 
     fun send(
         projectile: Projectile,
@@ -189,9 +185,9 @@ object ProjectileManager {
         hitGraphic: Graphics? = null,
         blockAnimation: Boolean = true,
         speedAdjustment: Int = 0,
-        onLanded: (() -> Unit)? = null
-    ): Int {
-        return send(
+        onLanded: (() -> Unit)? = null,
+    ): Int =
+        send(
             projectile = projectile,
             gfxId = Rscm.graphic(gfx),
             attacker = attacker,
@@ -200,13 +196,12 @@ object ProjectileManager {
             hitGraphic = hitGraphic,
             blockAnimation = blockAnimation,
             speedAdjustment = speedAdjustment,
-            onLanded = onLanded
+            onLanded = onLanded,
         )
-    }
 
     data class ProjectileResult(
         val impactTicks: Int,
-        val remainderCycles: Int
+        val remainderCycles: Int,
     )
 
     fun sendResult(
@@ -218,17 +213,16 @@ object ProjectileManager {
         heightOffset: Int = 0,
         delayOffset: Int = 0,
         hitGraphic: Graphics? = null,
-        onLanded: ((Int) -> Unit)? = null
+        onLanded: ((Int) -> Unit)? = null,
     ): ProjectileResult {
-
         val baseType = ProjectileRegistry.get(projectile) ?: return ProjectileResult(0, 0)
 
-        val type = baseType.resolve(
-            startHeightOffset = heightOffset,
-            arcOffset = angleOffset,
-            startTimeOffset = delayOffset
-        )
-
+        val type =
+            baseType.resolve(
+                startHeightOffset = heightOffset,
+                arcOffset = angleOffset,
+                startTimeOffset = delayOffset,
+            )
 
         val distance = Utils.getDistance(attacker, defender)
 
@@ -247,7 +241,7 @@ object ProjectileManager {
             gfx = gfxId,
             type = type,
             creatorSize = attacker.size,
-            endTime = endCycle
+            endTime = endCycle,
         )
 
         val resolveDefender = resolveEntity(defender)
@@ -255,20 +249,23 @@ object ProjectileManager {
             val def = resolveDefender()
             hitGraphic.let {
                 val rotation = calculateRotation(startTile, endTile)
-                if (def == null || def.hasFinished() || def.plane != endTile.plane)
+                if (def == null || def.hasFinished() || def.plane != endTile.plane) {
                     return@let
+                }
                 def.gfx(it.id, endCycle, 100, rotation)
             }
         }
-        WorldTasksManager.schedule(object : WorldTask() {
-            override fun run() {
-                onLanded?.invoke(remainderCycles)
-            }
-        }, max(0, impactTicks))
+        WorldTasksManager.schedule(
+            object : WorldTask() {
+                override fun run() {
+                    onLanded?.invoke(remainderCycles)
+                }
+            },
+            max(0, impactTicks),
+        )
 
         return ProjectileResult(impactTicks, remainderCycles)
     }
-
 
     fun send(
         projectile: Projectile,
@@ -283,29 +280,30 @@ object ProjectileManager {
         blockAnimation: Boolean = true,
         speedAdjustment: Int = 0,
         displacement: Int = 0,
-        onLanded: (() -> Unit)? = null
+        onLanded: (() -> Unit)? = null,
     ): Int {
-
         val baseType = ProjectileRegistry.get(projectile) ?: return 1
-        val type = baseType.resolve(
-            startHeightOffset = startHeightOffset,
-            arcOffset = arcOffset,
-            startTimeOffset = startTimeOffset,
-            displacementOffset = displacement,
-            speedAdjustment = speedAdjustment
-        )
+        val type =
+            baseType.resolve(
+                startHeightOffset = startHeightOffset,
+                arcOffset = arcOffset,
+                startTimeOffset = startTimeOffset,
+                displacementOffset = displacement,
+                speedAdjustment = speedAdjustment,
+            )
 
         val distance = Utils.getDistance(attacker, defender)
 
         val endCycle = type.endTime(distance)
-        val tickScale = if (attacker is NPC) 0 else 15//unused
+        val tickScale = if (attacker is NPC) 0 else 15 // unused
         val impactTicks = (endCycle) / 30
 
-        val startTile = if (projectile == Projectile.ICE_BARRAGE) {
-            defender.worldTile
-        } else {
-            attacker.centerTile
-        }
+        val startTile =
+            if (projectile == Projectile.ICE_BARRAGE) {
+                defender.worldTile
+            } else {
+                attacker.centerTile
+            }
         val endTile = defender.worldTile
         queueProjectileAndGetImpactCycles(
             attacker = attacker,
@@ -315,14 +313,14 @@ object ProjectileManager {
             gfx = gfxId,
             type = type,
             creatorSize = attacker.size,
-            endTime = endCycle
+            endTime = endCycle,
         )
         val resolveDefender = resolveEntity(defender)
         val def = resolveDefender()
         if (blockAnimation) {
             if (def != null && def is Player) {
-                val anim = CombatUtils.getBlockAnimation(def)
-                def.animateWithDelay(anim, endCycle)
+                val animationId = CombatUtils.getBlockAnimation(def)
+                def.queueAnim(Animation(animationId, endCycle))
             }
         }
 
@@ -330,8 +328,9 @@ object ProjectileManager {
             val def = resolveDefender()
             hitGraphic.let {
                 val rotation = calculateRotation(startTile, endTile)
-                if (def == null || def.hasFinished() || def.plane != endTile.plane)
+                if (def == null || def.hasFinished() || def.plane != endTile.plane) {
                     return@let
+                }
                 def.gfx(it.id, endCycle, it.height, rotation)
             }
             hitSound.let {
@@ -339,11 +338,14 @@ object ProjectileManager {
             }
         }
         if (onLanded != null) {
-            WorldTasksManager.schedule(object : WorldTask() {
-                override fun run() {
-                    onLanded.invoke()
-                }
-            }, max(0, impactTicks))
+            WorldTasksManager.schedule(
+                object : WorldTask() {
+                    override fun run() {
+                        onLanded.invoke()
+                    }
+                },
+                max(0, impactTicks),
+            )
         }
         return impactTicks
     }
@@ -356,26 +358,32 @@ object ProjectileManager {
         gfx: Int,
         type: ResolvedProjectileType,
         creatorSize: Int,
-        endTime: Int
+        endTime: Int,
     ): Int {
         val distance = Utils.getDistance(startTile, endTile)
-        val queued = QueuedProjectile(
-            attacker = attacker,
-            defender = defender,
-            startTile = startTile,
-            endTile = endTile,
-            spotanim = gfx,
-            type = type,
-            creatorSize = creatorSize,
-            sendCycle = WorldThread.getLastCycleTime().toInt(),
-            endTime = endTime
-        )
+        val queued =
+            QueuedProjectile(
+                attacker = attacker,
+                defender = defender,
+                startTile = startTile,
+                endTile = endTile,
+                spotanim = gfx,
+                type = type,
+                creatorSize = creatorSize,
+                sendCycle = WorldThread.getLastCycleTime().toInt(),
+                endTime = endTime,
+            )
 
         for (player in World.getPlayers()) {
-            if (player == null || !player.hasStarted() || player.hasFinished() || (attacker != null && player.isOutOfRegion(
-                    attacker
-                ))
-            ) continue
+            if (player == null || !player.hasStarted() || player.hasFinished() || (
+                    attacker != null &&
+                        player.isOutOfRegion(
+                            attacker,
+                        )
+                )
+            ) {
+                continue
+            }
             player.queueProjectile(queued)
         }
 
@@ -383,7 +391,10 @@ object ProjectileManager {
     }
 
     @JvmStatic
-    fun flushProjectile(player: Player, proj: QueuedProjectile) {
+    fun flushProjectile(
+        player: Player,
+        proj: QueuedProjectile,
+    ) {
         val start = proj.startTile!!
         val end = proj.endTile!!
 
@@ -392,11 +403,12 @@ object ProjectileManager {
         stream.writeByte((start.xInChunk shl 3) or start.yInChunk)
         stream.writeByte(end.x - start.x)
         stream.writeByte(end.y - start.y)
-        val targetEntity = when (proj.defender) {
-            null -> 0
-            is Player -> -(proj.defender.index + 1)
-            else -> proj.defender.index + 1
-        }
+        val targetEntity =
+            when (proj.defender) {
+                null -> 0
+                is Player -> -(proj.defender.index + 1)
+                else -> proj.defender.index + 1
+            }
         stream.writeShort(targetEntity)
         stream.writeShort(proj.spotanim)
         stream.writeByte(proj.type.startHeight)
@@ -408,8 +420,8 @@ object ProjectileManager {
         player.session.write(stream)
     }
 
-    private fun resolveEntity(defender: Entity): () -> Entity? {
-        return when (defender) {
+    private fun resolveEntity(defender: Entity): () -> Entity? =
+        when (defender) {
             is Player -> {
                 val name = defender.username
                 { World.getPlayerByDisplayName(name) }
@@ -425,7 +437,6 @@ object ProjectileManager {
                 }
             }
         }
-    }
 
     private fun cyclesToTicksFloor(cycles: Int): Int {
         if (cycles <= 0) return 0
@@ -435,7 +446,7 @@ object ProjectileManager {
     fun calculateRotation(
         start: WorldTile,
         end: WorldTile,
-        facing: Int
+        facing: Int,
     ): Int {
         val dx = end.x - start.x
         val dy = end.y - start.y
@@ -453,8 +464,10 @@ object ProjectileManager {
         return rot
     }
 
-
-    fun calculateRotation(startTile: WorldTile, endTile: WorldTile): Int {
+    fun calculateRotation(
+        startTile: WorldTile,
+        endTile: WorldTile,
+    ): Int {
         val dx = endTile.x - startTile.x
         val dy = endTile.y - startTile.y
         return when {

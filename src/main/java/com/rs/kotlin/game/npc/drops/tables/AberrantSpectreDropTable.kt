@@ -3,13 +3,16 @@ package com.rs.kotlin.game.npc.drops.tables
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.MonsterCategory
 import com.rs.kotlin.game.npc.drops.HerbTableConfig
+import com.rs.kotlin.game.npc.drops.SeedTableConfig
+import com.rs.kotlin.game.npc.drops.SeedTableType
 import com.rs.kotlin.game.npc.drops.dropTable
 
 object AberrantSpectreDropTable {
 
     val table = dropTable(
         category = MonsterCategory.SLAYER,
-        herbTable = HerbTableConfig(amount = 1..3, numerator = 78, denominator = 128),
+        herbTables = HerbTableConfig(amount = 1..3, numerator = 78, denominator = 128),
+        seedTable = SeedTableConfig(SeedTableType.RARE, amount = 1..1, numerator = 19, denominator = 128),
         rareDropTable = true,
         rolls = 1) {
 

@@ -1,192 +1,101 @@
 package com.rs.java.game.npc.combat.impl;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
-import com.rs.java.game.item.Item;
+import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
+import com.rs.java.game.npc.combat.DragonFire;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.prayer.AncientPrayer;
-import com.rs.java.game.player.prayer.NormalPrayer;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.Rscm;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
-import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
+import com.rs.kotlin.game.world.projectile.Projectile;
+import com.rs.kotlin.game.world.projectile.ProjectileManager;
 
 public class MithrilDragonCombat extends CombatScript {
+
+	private static final int DRAGON_HEADBUTT_ANIMATION = 13158, DRAGONFIRE_ANIMATION = 13160, DRAGONFIRE_BREATH_ANIMATION = 13164;
+	private static final int DRAGONFIRE_GFX = 1, DRAGONFIRE_NORMAL_PROJECTILE = 393;
+	private static final int MAGIC_PROJECTILE = 2706;
+	private static final int RANGE_PROJECTILE = 12;
+	private final static int FIREBREATH_SOUND = Rscm.INSTANCE.sound("sound.dragonfire_breath");
 
 	@Override
 	public Object[] getKeys() {
 		return new Object[] { "Mithril dragon" };
 	}
 
-	/**
-	 * If in melee distance it should hit melee mostly, close range d-fire,
-	 * mage, and range OCCASIONALLY If out of melee range it will auto range,
-	 * mage, and longrange d fire | In rs its short range but honestly long
-	 * range would look alot better
-	 */
+	enum MithrilDragonAttack { MELEE, MAGIC, RANGE, DRAGONFIRE, DRAGON_BREATH }
+
 	@Override
 	public int attack(NPC npc, Entity target) {
-		final NpcCombatDefinition defs = npc.getCombatDefinitions();
-		int damage = 0;
-		boolean withinMeleeDist = npc.withinDistance(target, 2);
-
-		if (withinMeleeDist) {
-			switch (Utils.getRandom(5)) {
-			case 0:// Melee - Putting 3x melee so the odds of it hitting a melee
-					// attk is 3:5 like rs
-			case 1:// Melee
-			case 2:// Melee
-				npc.animate(new Animation(14247));
-				delayHit(npc, target, 0,
-                        getMeleeHit(npc, NpcCombatCalculations.getRandomMaxHit(npc, defs.getMaxHit(), NpcAttackStyle.CRUSH, target)));
-				break;
-			case 3:// Close range dragonfire ratio is about 1:5
-				damage = Utils.getRandom(650);
-				npc.animate(new Animation(14246));
-				npc.gfx(new Graphics(2465));
-				final Player player = target instanceof Player ? (Player) target : null;
-				if (player.getEquipment().getShieldId() == 11283 || player.getEquipment().getShieldId() == 11284
-						|| player.getEquipment().getShieldId() == 1540) {
-					damage *= 0.1;
-					player.getPackets().sendGameMessage("Your shield aborsbs most of the dragon fire!");
-				} else if (player.getAntifire() > Utils.currentTimeMillis()) {
-					damage *= 0.1;
-					player.getPackets()
-							.sendGameMessage("Your potion protects you from some of the heat of the dragon's breath!");
-				} else if (player.getSuperAntifire() > Utils.currentTimeMillis()) {
-					damage *= 0.1;
-					player.getPackets()
-							.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-				} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES)) {
-					damage *= 0.1;
-					player.getPackets()
-							.sendGameMessage("Your prayer protects you from some of the heat of the dragon's breath!");
-				} else if (player.getEquipment().getShieldId() != 11283 && player.getEquipment().getShieldId() != 11284
-						&& player.getEquipment().getShieldId() != 1540
-						&& player.getSuperAntifire() < Utils.currentTimeMillis()
-						&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES)
-						&& !player.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES))
-					player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
-				delayHit(npc, target, 1, getRegularHit(npc, damage));
-				if (player.getEquipment().getShieldId() == 11283) {
-					if (player.getDfsCharges() < 50) {
-						player.animate(new Animation(6695));
-						player.gfx(new Graphics(1164, 1, 100));
-						player.setDfsCharges(player.getDfsCharges() + 1);
-						player.addDFSDefence();
-						player.getPackets().sendGameMessage("Your dragonfire shield absorbs the dragon breath");
-					}
-				}
-				if (player.getEquipment().getShieldId() == 11284) {
-					if (player.getDfsCharges() < 50) {
-						player.getEquipment().getItems().set(5, new Item(11283));
-						player.getAppearance().generateAppearenceData();
-						player.animate(new Animation(6695));
-						player.gfx(new Graphics(1164, 1, 100));
-						player.setDfsCharges(player.getDfsCharges() + 1);
-						player.addDFSDefence();
-						player.getPackets().sendGameMessage("Your dragonfire shield absorbs the dragon breath");
-					}
-				}
-				break;
-			case 4:// Ranged Attack 1:5
-				damage = Utils.getRandom(250);
-				npc.animate(new Animation(14252));
-				World.sendFastBowProjectile(npc, target, 12);
-				delayHit(npc, target, 1, getRangeHit(npc, damage));
-				break;
-			case 5:// Magical Attack 1:5
-				damage = Utils.getRandom(250);
-				npc.animate(new Animation(14252));
-				World.sendProjectile(npc, target, 2706, 28, 18, 50, 50, 0);
-				delayHit(npc, target, 1, getMagicHit(npc, damage));
-				break;
-			}
-			return npc.getAttackSpeed();
-
+		MithrilDragonAttack attack;
+		boolean inMelee = npc.isWithinMeleeRange(target);
+		if (inMelee) {
+			attack = Utils.randomOf(MithrilDragonAttack.MELEE, MithrilDragonAttack.DRAGON_BREATH, MithrilDragonAttack.MAGIC, MithrilDragonAttack.RANGE);
 		} else {
+			attack = Utils.randomOf(MithrilDragonAttack.MAGIC, MithrilDragonAttack.RANGE, MithrilDragonAttack.DRAGONFIRE);
+		}
+		switch (attack) {
+			case MELEE -> performMeleeAttack(npc, target);
+			case DRAGON_BREATH -> performDragonfireBreath(npc, target);
+			case DRAGONFIRE -> performDragonfireAttack(npc, target);
+			case RANGE -> performRangeAttack(npc, target);
+			case MAGIC -> performMagicAttack(npc, target);
+		}
+		return npc.getAttackSpeed();
+	}
 
-			switch (Utils.getRandom(3)) {
-			/**
-			 * When long dist the ratios are about 3:5 range - 1:5 dfire/mage
-			 * The mith arrow is not same one in rs that drags use as the mage
-			 * attk aswell but it looks fine so w/e
-			 */
-			case 0: // Range
-				damage = Utils.getRandom(250);
-				npc.animate(new Animation(14252));
-				World.sendFastBowProjectile(npc, target, 12);
-				delayHit(npc, target, 1, getRangeHit(npc, damage));
-				break;
-			case 1: // Longrange Dfire
-				damage = Utils.getRandom(650);
-				npc.animate(new Animation(14246));
-				npc.gfx(new Graphics(2465));
-				final Player player = target instanceof Player ? (Player) target : null;
-				if (player.getEquipment().getShieldId() == 11283 || player.getEquipment().getShieldId() == 11284
-						|| player.getEquipment().getShieldId() == 1540) {
-					damage *= 0.1;
-					player.getPackets().sendGameMessage("Your shield aborsbs most of the dragon fire!");
-				} else if (player.getAntifire() > Utils.currentTimeMillis()) {
-					damage *= 0.1;
-					player.getPackets()
-							.sendGameMessage("Your potion protects you from some of the heat of the dragon's breath!");
-				} else if (player.getSuperAntifire() > Utils.currentTimeMillis()) {
-					damage *= 0.1;
-					player.getPackets()
-							.sendGameMessage("Your potion fully protects you from the heat of the dragon's breath.");
-				} else if (player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES) || player.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES)) {
-					damage *= 0.1;
-					player.getPackets()
-							.sendGameMessage("Your prayer protects you from some of the heat of the dragon's breath!");
-				} else if (player.getEquipment().getShieldId() != 11283 && player.getEquipment().getShieldId() != 11284
-						&& player.getEquipment().getShieldId() != 1540
-						&& player.getSuperAntifire() < Utils.currentTimeMillis()
-						&& player.getAntifire() < Utils.currentTimeMillis() && !player.getPrayer().isActive(NormalPrayer.PROTECT_FROM_MISSILES)
-						&& !player.getPrayer().isActive(AncientPrayer.DEFLECT_MISSILES))
-					player.getPackets().sendGameMessage("You are hit by the dragon's fiery breath!", true);
-				delayHit(npc, target, 1, getRegularHit(npc, damage));
-				if (player.getEquipment().getShieldId() == 11283) {
-					if (player.getDfsCharges() < 50) {
-						player.animate(new Animation(6695));
-						player.gfx(new Graphics(1164, 1, 100));
-						player.setDfsCharges(player.getDfsCharges() + 1);
-						player.addDFSDefence();
-						player.getPackets().sendGameMessage("Your dragonfire shield absorbs the dragon breath");
-					}
-				}
-				if (player.getEquipment().getShieldId() == 11284) {
-					player.getEquipment().getItems().set(5, new Item(11283));
-					player.getAppearance().generateAppearenceData();
-					if (player.getDfsCharges() < 50) {
-						player.animate(new Animation(6695));
-						player.gfx(new Graphics(1164, 1, 100));
-						player.setDfsCharges(player.getDfsCharges() + 1);
-						player.addDFSDefence();
-						player.getPackets().sendGameMessage("Your dragonfire shield absorbs the dragon breath");
-					}
-				}
-				break;
-			case 2: // Mage Hit
-				damage = Utils.getRandom(250);
-				npc.animate(new Animation(14252));
-				World.sendProjectile(npc, target, 2706, 28, 18, 50, 50, 0);
-				delayHit(npc, target, 1, getMagicHit(npc, damage));
-				break;
-			case 3: // Range
-				damage = Utils.getRandom(250);
-				npc.animate(new Animation(14252));
-				World.sendFastBowProjectile(npc, target, 12);
-				delayHit(npc, target, 1, getRangeHit(npc, damage));
-				break;
-			}
-			return npc.getAttackSpeed();
+	private void performMeleeAttack(NPC npc, Entity target) {
+		npc.animate(DRAGON_HEADBUTT_ANIMATION);
+		int attackSound = npc.getCombatDefinitions().getAttackSound();
+		if (attackSound != -1)
+			npc.playSound(attackSound, 1);
+		Hit meleeAttack = npc.meleeHit(target, 280);
+		delayHit(npc, target, 0, meleeAttack);
+	}
+
+	private void performDragonfireBreath(NPC npc, Entity target) {
+		if (!(target instanceof Player player)) {
+			return;
 		}
 
+		npc.animate(new Animation(DRAGONFIRE_BREATH_ANIMATION));
+		npc.gfx(DRAGONFIRE_GFX, 100);
+		npc.playSound(FIREBREATH_SOUND, 1);
+
+		boolean accuracyRoll = NpcCombatCalculations.getAccuracyRoll(npc, NpcAttackStyle.MAGIC, target);
+		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, accuracyRoll, DragonFire.DragonType.METALLIC);
+
+		Hit dragonfire = npc.regularHit(target, mitigatedDamage);
+		delayHit(npc, player, 1, dragonfire);
+		DragonFire.handleDragonfireShield(player);
+	}
+
+	private void performDragonfireAttack(NPC npc, Entity target) {
+		if (!(target instanceof Player player)) return;
+		npc.animate(new Animation(DRAGONFIRE_ANIMATION));
+		npc.playSound(FIREBREATH_SOUND, 1);
+		boolean accuracyCheck = NpcCombatCalculations.getAccuracyRoll(npc, NpcAttackStyle.MAGIC, target);
+		int mitigated = DragonFire.applyDragonfireMitigation(player, accuracyCheck, DragonFire.DragonType.METALLIC);
+
+		Hit dragonfire = npc.regularHit(target, mitigated);
+		ProjectileManager.send(Projectile.DRAGONFIRE, DRAGONFIRE_NORMAL_PROJECTILE, npc, target, () -> {
+			applyRegisteredHit(npc, target, dragonfire);
+			DragonFire.handleDragonfireShield(player);
+		});
+	}
+
+	private void performRangeAttack(NPC npc, Entity target) {
+		npc.animate(DRAGONFIRE_ANIMATION);
+		Hit rangeHit = npc.rangedHit(target, 180);
+		ProjectileManager.send(Projectile.ELEMENTAL_SPELL, RANGE_PROJECTILE, 32, npc, target, () -> applyRegisteredHit(npc, target, rangeHit));
+	}
+
+	private void performMagicAttack(NPC npc, Entity target) {
+		npc.animate(DRAGONFIRE_ANIMATION);
+		Hit magicHit = npc.magicHit(target, 180);
+		ProjectileManager.send(Projectile.ELEMENTAL_SPELL, MAGIC_PROJECTILE, 32, npc, target, () -> applyRegisteredHit(npc, target, magicHit));
 	}
 
 }

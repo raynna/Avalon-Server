@@ -411,9 +411,12 @@ public final class NPCCombat {
         } else {
             anim = Combat.getDefenceEmote(target);
         }
-
-        if (anim > 0)
-            target.setNextAnimation(anim);
+        int pendingId = -1;
+        if (target.pendingBlockAnim != null) {
+            pendingId = target.pendingBlockAnim.getIds()[0];
+        }
+        if (anim > 0 && pendingId != anim)
+            target.animate(anim);
     }
 
 

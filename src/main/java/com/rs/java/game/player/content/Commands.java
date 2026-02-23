@@ -814,9 +814,9 @@ public final class Commands {
         }
 
         Map<Integer, Integer> dropCounts = new HashMap<>();
-
+        int combatLevel = NPCDefinitions.getNPCDefinitions(npcId).combatLevel;
         for (int i = 0; i < times; i++) {
-            List<Drop> drops = table.rollDrops(player);
+            List<Drop> drops = table.rollDrops(player, combatLevel);
             for (Drop drop : drops) {
                 if (drop == null) continue;
                 dropCounts.merge(drop.itemId, drop.amount, Integer::sum);

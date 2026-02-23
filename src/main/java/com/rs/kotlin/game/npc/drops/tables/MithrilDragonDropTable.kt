@@ -9,7 +9,7 @@ object MithrilDragonDropTable {
 
     val table = dropTable(rareDropTable = true,
         rolls = 1,
-        herbTable = HerbTableConfig(1..1, 15, 128)) {
+        herbTables = HerbTableConfig(1..1, 15, 128)) {
         alwaysDrops {
             drop("item.dragon_bones")
             drop("item.mithril_bar", amount = 3)

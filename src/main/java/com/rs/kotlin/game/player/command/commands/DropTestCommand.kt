@@ -1,6 +1,7 @@
 package com.rs.kotlin.game.player.command.commands
 
 import com.rs.Settings
+import com.rs.core.cache.defintions.NPCDefinitions
 import com.rs.java.game.item.Item
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Ranks
@@ -38,8 +39,9 @@ class DropTestCommand : Command {
 
         val dropCounts: MutableMap<Int, Int> = HashMap()
         table.writeRatesToFile(Settings.DROP_MULTIPLIER)
+        val combatLevel = NPCDefinitions.getNPCDefinitions(npcId).combatLevel
         for (i in 0..<times) {
-            val drops = table.rollDrops(player, Settings.DROP_MULTIPLIER)
+            val drops = table.rollDrops(player, combatLevel, Settings.DROP_MULTIPLIER)
             for (drop in drops) {
                 if (drop == null) continue
                 dropCounts.merge(drop.itemId, drop.amount) { a: Int?, b: Int? ->
@@ -93,7 +95,7 @@ class DropTestCommand : Command {
                     .setPreRollDenominator(denom)
 
                 val drops =
-                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player, Settings.DROP_MULTIPLIER)
+                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player, 0,Settings.DROP_MULTIPLIER)
 
                 for (drop in drops) {
                     dropCounts.merge(drop.itemId, drop.amount, Int::plus)

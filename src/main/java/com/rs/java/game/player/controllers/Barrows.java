@@ -164,7 +164,7 @@ public final class Barrows extends Controller {
                     .setPreRollDenominator(denom);
 
             List<Drop> drops =
-                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player, Settings.DROP_MULTIPLIER);
+                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player, 0, Settings.DROP_MULTIPLIER);
 
             for (Drop d : drops) {
                 rewards.add(new Item(d.itemId, d.amount));

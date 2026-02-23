@@ -33,15 +33,28 @@ import kotlin.math.ceil
 import kotlin.math.max
 
 interface CombatStyle {
-    fun canAttack(attacker: Player, defender: Entity): Boolean
+    fun canAttack(
+        attacker: Player,
+        defender: Entity,
+    ): Boolean
+
     fun getAttackSpeed(): Int
+
     fun getHitDelay(): Int
+
     fun getAttackDistance(): Int
+
     fun attack()
+
     fun onStop(interrupted: Boolean)
+
     fun delayHits(vararg hits: PendingHit)
 
-    fun outgoingHit(attacker: Player, defender: Entity, pending: PendingHit) {
+    fun outgoingHit(
+        attacker: Player,
+        defender: Entity,
+        pending: PendingHit,
+    ) {
         val hit = pending.hit
         if (defender is Player) {
             if (this is MeleeStyle) {
@@ -51,38 +64,45 @@ interface CombatStyle {
             defender.chargeManager.processIncommingHit()
             if (defender.combatDefinitions.isAutoRelatie) {
                 if (defender.actionManager.action != null) return
-                WorldTasksManager.schedule(object : WorldTask() {
-                    override fun run() {
-                        if (defender.isDead || attacker.isDead || defender.isLocked) return
-                        val style = CombatAction.getCombatStyle(defender, attacker)
-                        val retaliateDelay = (style.getAttackSpeed() + 1) / 2
+                WorldTasksManager.schedule(
+                    object : WorldTask() {
+                        override fun run() {
+                            if (defender.isDead || attacker.isDead || defender.isLocked) return
+                            val style = CombatAction.getCombatStyle(defender, attacker)
+                            val retaliateDelay = (style.getAttackSpeed() + 1) / 2
 
-                        val currentDelay = defender.actionManager.actionDelay
-                        val finalDelay = max(currentDelay, retaliateDelay)
+                            val currentDelay = defender.actionManager.actionDelay
+                            val finalDelay = max(currentDelay, retaliateDelay)
 
-                        defender.actionManager.setAction(CombatAction(attacker))
-                        if (defender.actionManager.actionDelay > 0)
-                            defender.actionManager.actionDelay = finalDelay
-                    }
-                })
+                            defender.actionManager.setAction(CombatAction(attacker))
+                            if (defender.actionManager.actionDelay > 0) {
+                                defender.actionManager.actionDelay = finalDelay
+                            }
+                        }
+                    },
+                )
             }
         }
-        PrayerEffectHandler.handleProtectionReduction(attacker, defender, hit)//protection prayers first
-        EquipmentEffects.applyOutgoing(attacker, defender, hit, this)//divine, keris applied second
+        PrayerEffectHandler.handleProtectionReduction(attacker, defender, hit) // protection prayers first
+        EquipmentEffects.applyOutgoing(attacker, defender, hit, this) // divine, keris applied second
         if (defender is Player) {
-            EquipmentEffects.applyIncoming(defender, hit, this)//divine, keris applied second
+            EquipmentEffects.applyIncoming(defender, hit, this) // divine, keris applied second
         }
-        SoakDamage.handleAbsorb(attacker, defender, hit)//soak applied last, after all effect reductions
+        SoakDamage.handleAbsorb(attacker, defender, hit) // soak applied last, after all effect reductions
         attacker.chargeManager.processOutgoingHit()
         PrayerEffectHandler.handleOffensiveEffects(
             attacker,
             defender,
-            hit
+            hit,
         )
-        defender.handleIncommingHit(hit);
+        defender.handleIncommingHit(hit)
     }
 
-    fun onHit(attacker: Player, defender: Entity, hit: Hit) {
+    fun onHit(
+        attacker: Player,
+        defender: Entity,
+        hit: Hit,
+    ) {
         if (hit.graphic != null) {
             defender.gfx(hit.graphic)
         }
@@ -101,18 +121,21 @@ interface CombatStyle {
                 if (hitType != Hit.HitLook.MELEE_DAMAGE &&
                     hitType != Hit.HitLook.RANGE_DAMAGE &&
                     hitType != Hit.HitLook.MAGIC_DAMAGE
-                ) return
+                ) {
+                    return
+                }
                 defender.setVengeance(false)
                 defender.nextForceTalk = ForceTalk("Taste vengeance!")
-                attacker.applyHit(Hit(defender, (hit.damage * 0.75).toInt(), Hit.HitLook.REGULAR_DAMAGE));
+                attacker.applyHit(Hit(defender, (hit.damage * 0.75).toInt(), Hit.HitLook.REGULAR_DAMAGE))
             }
         }
         if (defender is NPC) {
             val currentTarget = defender.combat.target
 
             if (currentTarget != null && currentTarget != attacker) {
-                val lastAttackTickActive = currentTarget.tickManager
-                    .isActive(TickManager.TickKeys.LAST_ATTACK_TICK)
+                val lastAttackTickActive =
+                    currentTarget.tickManager
+                        .isActive(TickManager.TickKeys.LAST_ATTACK_TICK)
 
                 if (!lastAttackTickActive) {
                     defender.setTarget(attacker)
@@ -135,28 +158,35 @@ interface CombatStyle {
                 if (attacker.prayer.prayerPoints < attacker.skills.getLevelForXp(Skills.PRAYER) * 10) {
                     attacker.prayer.restorePrayer(attacker.skills.getLevelForXp(Skills.PRAYER) * 10)
                 }
-                if (attacker.combatDefinitions.specialAttackPercentage < 100)
+                if (attacker.combatDefinitions.specialAttackPercentage < 100) {
                     attacker.combatDefinitions.increaseSpecialAttack(100)
+                }
             }
         }
     }
 
-
     companion object {
-
         @JvmStatic
-        fun handleRingOfRecoil(attacker: Entity, defender: Player, hit: Hit) {
+        fun handleRingOfRecoil(
+            attacker: Entity,
+            defender: Player,
+            hit: Hit,
+        ) {
             val RING_OF_RECOIL_ID = 2550
             val MAX_RECOIL_CHARGES = 500
             val MAX_RECOIL_DAMAGE = 40
 
             if (hit.damage <= 0) return
 
-            if (hit.look !in listOf(
+            if (hit.look !in
+                listOf(
                     Hit.HitLook.MELEE_DAMAGE,
                     Hit.HitLook.RANGE_DAMAGE,
-                    Hit.HitLook.MAGIC_DAMAGE
-                )) return
+                    Hit.HitLook.MAGIC_DAMAGE,
+                )
+            ) {
+                return
+            }
 
             val ring = defender.equipment.getItem(Equipment.SLOT_RING.toInt())
             if (ring == null || ring.id != RING_OF_RECOIL_ID) return
@@ -187,19 +217,25 @@ interface CombatStyle {
         }
     }
 
-    fun scheduleHit(delay: Int, action: () -> Unit) {
-        WorldTasksManager.schedule(object : WorldTask() {
-            override fun run() {
-                action()
-            }
-        }, delay)
+    fun scheduleHit(
+        delay: Int,
+        action: () -> Unit,
+    ) {
+        WorldTasksManager.schedule(
+            object : WorldTask() {
+                override fun run() {
+                    action()
+                }
+            },
+            delay,
+        )
     }
 
     fun getHitChance(
         attacker: Player,
         defender: Entity,
         accuracyMultiplier: Double = 1.0,
-        combatContext: CombatContext? = null
+        combatContext: CombatContext? = null,
     ): Double {
         var finalMultiplier = accuracyMultiplier
 
@@ -216,19 +252,19 @@ interface CombatStyle {
         return CombatCalculations.getHitChance(attacker, defender, this, finalMultiplier)
     }
 
-
     fun hitRoll(
         damage: Int,
         attacker: Player,
         defender: Entity,
         combatType: CombatType,
-        hitLook: Hit.HitLook? = null
+        hitLook: Hit.HitLook? = null,
     ): Hit {
-        val resolvedHitLook = hitLook ?: when (combatType) {
-            CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
-            CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
-            CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
-        }
+        val resolvedHitLook =
+            hitLook ?: when (combatType) {
+                CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
+                CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
+                CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
+            }
         val hit = Hit(attacker, damage, resolvedHitLook)
         if (hit.isCriticalHit && !hit.isCombatLook) {
             hit.critical = false
@@ -236,21 +272,24 @@ interface CombatStyle {
         return hit
     }
 
-    fun hitRoll(type: CombatType, attacker: Player, target: Entity): HitRoller {
-        return HitRoller(attacker, target, type)
-    }
+    fun hitRoll(
+        type: CombatType,
+        attacker: Player,
+        target: Entity,
+    ): HitRoller = HitRoller(attacker, target, type)
 
     fun executeEffect(combatContext: CombatContext): Boolean {
         combatContext.weapon.effect?.let { effect ->
-            CombatUtils.getAnimation(
-                combatContext.weaponId,
-                combatContext.attackStyle,
-                combatContext.attacker.combatDefinitions.attackStyle
-            ).let { combatContext.attacker.animate(it) }
+            CombatUtils
+                .getAnimation(
+                    combatContext.weaponId,
+                    combatContext.attackStyle,
+                    combatContext.attacker.combatDefinitions.attackStyle,
+                ).let { combatContext.attacker.animate(it) }
             effect.execute(combatContext)
-            return true;
+            return true
         }
-        return false;
+        return false
     }
 
     fun executeAmmoEffect(combatContext: CombatContext): Boolean {
@@ -259,12 +298,16 @@ interface CombatStyle {
         val weapon = combatContext.weapon
 
         if (weapon is RangedWeapon) {
-            if (weapon.ammoType in listOf(
+            if (weapon.ammoType in
+                listOf(
                     AmmoType.THROWING,
                     AmmoType.DART,
                     AmmoType.JAVELIN,
-                    AmmoType.THROWNAXE
-                )) return false
+                    AmmoType.THROWNAXE,
+                )
+            ) {
+                return false
+            }
             if (weapon.ammoType != ammo.ammoType) return false
             if (weapon.allowedAmmoIds != null && !weapon.allowedAmmoIds.contains(ammo.itemId.first())) return false
         }
@@ -272,29 +315,30 @@ interface CombatStyle {
         return effect.execute(combatContext)
     }
 
-
-
-
     fun isRangedWeapon(player: Player): Boolean {
         val weaponId = player.equipment.getWeaponId()
-        val ranged = RangeData.getWeaponByItemId(weaponId);
+        val ranged = RangeData.getWeaponByItemId(weaponId)
         return ranged != null
     }
 
-
-    fun executeSpecialAttack(player: Player, target: Entity? = null): Boolean {
+    fun executeSpecialAttack(
+        player: Player,
+        target: Entity? = null,
+    ): Boolean {
         val weapon = Weapon.getWeapon(player.equipment.weaponId) ?: return false
         val ammo = RangeData.getAmmoByItemId(player.equipment.ammoId)
         val special = weapon.special ?: return false
-        if (!player.combatDefinitions.isUsingSpecialAttack)
+        if (!player.combatDefinitions.isUsingSpecialAttack) {
             return false
+        }
         if (special !is SpecialAttack.Combat && player.combatDefinitions.spellId > 0) {
             return false
         }
-        var specialCost = when {
-            NightmareStaff.hasWeapon(player) -> 55
-            else -> special.energyCost
-        }
+        var specialCost =
+            when {
+                NightmareStaff.hasWeapon(player) -> 55
+                else -> special.energyCost
+            }
         if (player.getEquipment().containsOneItem(Item.getId("item.ring_of_vigour"))) {
             specialCost = (specialCost * 0.9).toInt()
         }
@@ -313,16 +357,17 @@ interface CombatStyle {
                 val actualTarget = target ?: player.temporaryTarget ?: return false
                 val style =
                     if (isRangedWeapon(player)) RangedStyle(player, actualTarget) else MeleeStyle(player, actualTarget)
-                val combatContext = CombatContext(
-                    combat = style,
-                    attacker = player,
-                    defender = actualTarget,
-                    weapon = weapon,
-                    weaponId = player.equipment.weaponId,
-                    attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
-                    attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
-                    usingSpecial = true,
-                )
+                val combatContext =
+                    CombatContext(
+                        combat = style,
+                        attacker = player,
+                        defender = actualTarget,
+                        weapon = weapon,
+                        weaponId = player.equipment.weaponId,
+                        attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
+                        attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
+                        usingSpecial = true,
+                    )
                 special.execute(combatContext)
             }
 
@@ -338,26 +383,28 @@ interface CombatStyle {
                     return false
                 }
 
-                val style = when {
-                    NightmareStaff.hasWeapon(player) ||
+                val style =
+                    when {
+                        NightmareStaff.hasWeapon(player) ||
                             ObliterationWeapon.hasWeapon(player) -> MagicStyle(player, target)
 
-                    isRangedWeapon(player) -> RangedStyle(player, target)
+                        isRangedWeapon(player) -> RangedStyle(player, target)
 
-                    else -> MeleeStyle(player, target)
-                }
+                        else -> MeleeStyle(player, target)
+                    }
 
-                val combatContext = CombatContext(
-                    combat = style,
-                    attacker = player,
-                    defender = target,
-                    weapon = weapon,
-                    ammo = ammo,
-                    weaponId = player.equipment.weaponId,
-                    attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
-                    attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
-                    usingSpecial = true,
-                )
+                val combatContext =
+                    CombatContext(
+                        combat = style,
+                        attacker = player,
+                        defender = target,
+                        weapon = weapon,
+                        ammo = ammo,
+                        weaponId = player.equipment.weaponId,
+                        attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
+                        attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
+                        usingSpecial = true,
+                    )
 
                 if (NightmareStaff.hasWeapon(player)) {
                     NightmareStaff.special(combatContext)
@@ -372,16 +419,17 @@ interface CombatStyle {
                 val actualTarget = target ?: player.temporaryTarget ?: return false
                 val style =
                     if (isRangedWeapon(player)) RangedStyle(player, actualTarget) else MeleeStyle(player, actualTarget)
-                val combatContext = CombatContext(
-                    combat = style,
-                    attacker = player,
-                    defender = actualTarget,
-                    weapon = weapon,
-                    weaponId = player.equipment.weaponId,
-                    attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
-                    attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
-                    usingSpecial = true,
-                )
+                val combatContext =
+                    CombatContext(
+                        combat = style,
+                        attacker = player,
+                        defender = actualTarget,
+                        weapon = weapon,
+                        weaponId = player.equipment.weaponId,
+                        attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
+                        attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
+                        usingSpecial = true,
+                    )
                 special.execute(combatContext)
             }
         }
@@ -402,11 +450,12 @@ interface CombatStyle {
         return firstDelay to secondDelay
     }
 
-    fun getAutoRetaliateDelay(defender: Player, attacker: Entity): Int {
+    fun getAutoRetaliateDelay(
+        defender: Player,
+        attacker: Entity,
+    ): Int {
         val style = CombatAction.getCombatStyle(defender, attacker)
         val speed = style.getAttackSpeed()
         return (speed + 1) / 2
     }
-
-
 }

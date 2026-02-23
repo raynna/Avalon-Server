@@ -26,13 +26,11 @@ class RareDropTableEntry : DropEntry(-1, 1..1) {
         add(-2, 1..1, 4, 64) // Super rare table
     }
 
-    // Helper to add drops by item name
     private fun add(item: String, amount: IntRange, numerator: Int, denominator: Int) {
         val itemId = Rscm.lookup(item)
         entries.add(RareDrop(itemId, amount, numerator, denominator))
     }
 
-    // Helper to add drops by explicit itemId (like -2 for super rare table)
     private fun add(itemId: Int, amount: IntRange, numerator: Int, denominator: Int) {
         entries.add(RareDrop(itemId, amount, numerator, denominator))
     }

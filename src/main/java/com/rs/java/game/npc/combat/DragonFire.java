@@ -10,6 +10,7 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.Rscm;
 import kotlin.Pair;
 
 
@@ -20,7 +21,7 @@ import kotlin.Pair;
 
 public class DragonFire {
 
-    private static final int[] DRAGON_SHIELDS = {11283, 11284, 1540};
+    private static final int[] DRAGON_SHIELDS = {11283, 11284, 1540, };
     private static final int DRAGONFIRE_ABSORB_ANIMATION = 6695;
     private static final int DRAGONFIRE_ABSORB_GFX = 1164;
 
@@ -220,23 +221,23 @@ public class DragonFire {
      * Handles absorbing a dragonfire attack with a Dragonfire shield, incrementing charges.
      */
     public static void handleDragonfireShield(Player player) {
-        if (!player.getEquipment().containsOneItem(11283, 11284)) return;
-
         Item shield = player.getEquipment().getItem(Equipment.SLOT_SHIELD);
         if (shield == null) return;
-
+        if (!shield.isAnyOf("item.dragonfire_shield_uncharged", "item.dragonfire_shield_charged", "item.dragonfire_ward_uncharged", "item.dragonfire_ward_charged"))
+            return;
         ItemMetadata meta = shield.getMetadata();
-
         if (meta == null) {
-            if (shield.isItem("item.dragonfire_shield_charged")) {
-                shield.setMetadata(new DragonFireShieldMetaData(0));
-            }
-            if (shield.isItem("item.dragonfire_shield_uncharged")) {
-                shield.setId(Item.getId("item.dragonfire_shield_charged"));
-                shield.setMetadata(new DragonFireShieldMetaData(0));
-                player.getEquipment().refresh(Equipment.SLOT_SHIELD);
-                player.getAppearance().generateAppearenceData();
-            }
+            shield.setMetadata(new DragonFireShieldMetaData(0));
+        }
+        if (shield.isItem("item.dragonfire_shield_uncharged")) {
+            shield.changeId(Item.getId("item.dragonfire_shield_charged"), true);
+            player.getEquipment().refresh(Equipment.SLOT_SHIELD);
+            player.getAppearance().generateAppearenceData();
+        }
+        if (shield.isItem("item.dragonfire_ward_uncharged")) {
+            shield.changeId(Item.getId("item.dragonfire_ward_charged"), true);
+            player.getEquipment().refresh(Equipment.SLOT_SHIELD);
+            player.getAppearance().generateAppearenceData();
         }
 
         if (shield.getMetadata() instanceof DragonFireShieldMetaData dfsMeta) {
@@ -254,6 +255,11 @@ public class DragonFire {
      * Checks if the player is wearing any dragonfire shield.
      */
     public static boolean hasDragonShield(Player player) {
+        Item shield = player.getEquipment().getItem(Equipment.SLOT_SHIELD);
+        if (shield != null) {
+            if (shield.isAnyOf("item.anti_dragon_shield", "item.dragonfire_shield_uncharged", "item.dragonfire_shield_charged", "item.dragonfire_ward_uncharged", "item.dragonfire_ward_charged"))
+                return true;
+        }
         int shieldId = player.getEquipment().getShieldId();
         for (int id : DRAGON_SHIELDS) {
             if (shieldId == id) return true;

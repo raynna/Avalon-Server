@@ -9,5 +9,6 @@ enum class DropSource {
     TERTIARY,
     CHARM,
     GEM,
-    HERB
+    HERB,
+    SEED
 }

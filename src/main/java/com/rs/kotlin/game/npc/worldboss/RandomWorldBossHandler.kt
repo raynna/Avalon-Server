@@ -411,7 +411,7 @@ object RandomWorldBossHandler {
         val pct = (damage * 100 / maxHp)
         player.message(Msg.info("You dealt $damage ($pct%) damage and earned loot!"))
 
-        val drops = WorldBossTable.regular.rollDrops(player, boss.dropRateMultiplier)
+        val drops = WorldBossTable.regular.rollDrops(player, boss.combatLevel, boss.dropRateMultiplier)
         for (drop in drops) {
             val item = Item(drop.itemId, drop.amount)
             if (item.isItem("item.magic_chest")) {
@@ -435,7 +435,7 @@ object RandomWorldBossHandler {
 
     @JvmStatic
     fun openChest(chest: Item, slot: Int, player: Player) {
-        val drops = WorldBossTable.chest.rollDrops(player)
+        val drops = WorldBossTable.chest.rollDrops(player, 0)
         for (drop in drops) {
             val item = Item(drop.itemId, drop.amount)
             if (!player.inventory.canHold(item, item.amount)) {

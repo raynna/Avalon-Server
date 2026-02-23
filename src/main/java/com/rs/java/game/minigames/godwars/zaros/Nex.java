@@ -283,15 +283,15 @@ public final class Nex extends NPC {
 		return lastVirus;
 	}
 
-	public void sendVirusAttack(ArrayList<Entity> hitedEntitys, ArrayList<Entity> possibleTargets, Entity infected) {
+	public void sendVirusAttack(ArrayList<Entity> hitEntities, ArrayList<Entity> possibleTargets, Entity infected) {
 		for (Entity t : possibleTargets) {
-			if (hitedEntitys.contains(t))
+			if (hitEntities.contains(t))
 				continue;
 			if (Utils.getDistance(t.getX(), t.getY(), infected.getX(), infected.getY()) <= 1) {
 				t.setNextForceTalk(new ForceTalk("*Cough*"));
 				t.applyHit(new Hit(this, Utils.getRandom(100), HitLook.REGULAR_DAMAGE));
-				hitedEntitys.add(t);
-				sendVirusAttack(hitedEntitys, possibleTargets, infected);
+				hitEntities.add(t);
+				sendVirusAttack(hitEntities, possibleTargets, infected);
 			}
 		}
 		playSound(3296, 2);

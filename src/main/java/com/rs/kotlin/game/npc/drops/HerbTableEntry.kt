@@ -26,27 +26,34 @@ class HerbTableEntry : DropEntry(-1, 1..1) {
 
     private fun add(item: String, amount: IntRange = 1..1, weight: Int = 1) {
         val itemId = Rscm.lookup(item)
-        table.add(WeightedDropEntry(itemId, amount, weight))
+        table.add(ItemWeightedEntry(itemId, amount, weight))
     }
 
     override fun roll(player: Player): Drop? {
-        val entries = if (player.hasRingOfWealth()) {
-            table.mutableEntries().filter { it.itemId != -1 }
+
+        val entries = table.mutableEntries()
+
+        val filtered = if (player.hasRingOfWealth()) {
+            entries.filterIsInstance<ItemWeightedEntry>()
         } else {
-            table.mutableEntries()
+            entries
         }
 
-        val tempTable = WeightedTable()
-        tempTable.setSize(tableSizeOrDefault())
-        entries.forEach { tempTable.add(it) }
+        if (filtered.isEmpty()) return null
 
-        return tempTable.roll(player, source = DropSource.HERB)?.takeIf { it.itemId != -1 }
+        val tempTable = WeightedTable()
+        tempTable.setSize(128)
+
+        filtered.forEach { tempTable.add(it) }
+
+        return tempTable.roll(player, source = DropSource.HERB)
     }
 
     private fun tableSizeOrDefault() = 128
 
-    fun getEntries(): List<WeightedDropEntry> {
+    fun getEntries(): List<ItemWeightedEntry> {
         return table.mutableEntries()
+            .filterIsInstance<ItemWeightedEntry>()
     }
 
 }

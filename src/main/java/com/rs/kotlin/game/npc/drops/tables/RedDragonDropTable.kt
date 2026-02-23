@@ -9,7 +9,7 @@ object RedDragonDropTable {
 
     val table = dropTable(rareDropTable = true,
         rolls = 1,
-        herbTable = HerbTableConfig(1..1, 2, 128)) {
+        herbTables = HerbTableConfig(1..1, 2, 128)) {
         alwaysDrops {
             drop("item.dragon_bones")
             drop("item.red_dragonhide");

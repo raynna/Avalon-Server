@@ -4,7 +4,8 @@ import com.rs.java.game.player.Player
 import java.util.concurrent.ThreadLocalRandom
 
 class WeightedTable {
-    private val entries = mutableListOf<WeightedDropEntry>()
+
+    private val entries = mutableListOf<WeightedEntry>()
 
     private var tableSize: Int = 0
 
@@ -12,7 +13,7 @@ class WeightedTable {
         tableSize = size
     }
 
-    fun add(entry: WeightedDropEntry) {
+    fun add(entry: WeightedEntry) {
         entries.add(entry)
     }
 
@@ -21,18 +22,14 @@ class WeightedTable {
     fun roll(player: Player, source: DropSource): Drop? {
 
         val validEntries = entries.filter { it.weight > 0 }
-
-        if (validEntries.isEmpty()) {
-            return null
-        }
+        if (validEntries.isEmpty()) return null
 
         val totalWeight = validEntries.sumOf { it.weight }
+        if (totalWeight <= 0) return null
 
-        if (totalWeight <= 0) {
-            return null
-        }
         val rand = ThreadLocalRandom.current().nextInt(totalWeight)
         var acc = 0
+
         for (entry in validEntries) {
             acc += entry.weight
             if (rand < acc) {
@@ -43,7 +40,5 @@ class WeightedTable {
         return null
     }
 
-
-    fun mutableEntries(): MutableList<WeightedDropEntry> = entries
+    fun mutableEntries(): MutableList<WeightedEntry> = entries
 }
-

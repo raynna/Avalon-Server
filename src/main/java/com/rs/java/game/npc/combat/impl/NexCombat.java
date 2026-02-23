@@ -10,6 +10,7 @@ import com.rs.java.game.minigames.godwars.zaros.Nex;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.content.Tint;
 import com.rs.java.game.player.cutscenes.NexCutScene;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
@@ -35,22 +36,17 @@ public class NexCombat extends CombatScript {
 		final NpcCombatDefinition defs = npc.getCombatDefinitions();
 		final Nex nex = (Nex) npc;
 
-		// Add melee attack counter and timeout mechanism
 		if (nex.isFollowTarget()) {
-			// Increment melee attack counter
 			nex.incrementMeleeAttackCount();
 
-			// Check if we should switch back to ranged/magic
-			// Switch after 3-4 melee attacks OR if melee has been active for too long
 			boolean shouldSwitch = nex.getMeleeAttackCount() >= (3 + Utils.getRandom(2)) ||
-					(System.currentTimeMillis() - nex.getLastSwitchTime() > 15000); // 15 second timeout
+					(System.currentTimeMillis() - nex.getLastSwitchTime() > 15000);
 
 			if (shouldSwitch) {
 				nex.setFollowTarget(false);
 				nex.resetMeleeAttackCount();
 				nex.setLastSwitchTime(System.currentTimeMillis());
 			} else {
-				// Continue with melee combat logic
 				nex.setForceFollowClose(true);
 
 				if (nex.getAttacksStage() == 0) {
@@ -63,7 +59,7 @@ public class NexCombat extends CombatScript {
 						return npc.getAttackSpeed();
 					}
 				}
-				if (Utils.getRandom(nex.getStage() == 4 ? 25 : 50) == 0) {
+				if (Utils.roll(1, nex.getStage() == 4 ? 25 : 50)) {
 					npc.setNextForceTalk(new ForceTalk("There is..."));
 					nex.playSound(3294, 2);
 					npc.setCantInteract(true);
@@ -126,12 +122,11 @@ public class NexCombat extends CombatScript {
 
 		// Random chance to switch to melee mode
 		// This adds the "fails for too long" fallback you mentioned
-		if (Utils.getRandom(6) == 0) { // ~16.7% chance to switch per attack
+		if (Utils.roll(1, 6)) {
 			nex.setFollowTarget(true);
 			return npc.getAttackSpeed(); // Will do melee on next attack
 		}
-
-		if (Utils.getRandom(15) == 0) {
+		if (Utils.roll(1, 15)) {
 			int distance = 0;
 			Entity settedTarget = null;
 			for (Entity t : npc.getPossibleTargets()) {
@@ -158,7 +153,7 @@ public class NexCombat extends CombatScript {
 						player.setNextWorldTile(nex);
 						player.getPackets()
 								.sendGameMessage("You've been injured and you can't use protective curses!");
-						player.setPrayerDelay(Utils.getRandom(20000) + 5);
+						player.setPrayerDelay(8);
 						player.getPackets().sendGameMessage("You're stunned.");
 					}
 				});
@@ -186,7 +181,7 @@ public class NexCombat extends CombatScript {
 				npc.gfx(new Graphics(1217));
 				return npc.getAttackSpeed();
 			}
-			if (!nex.isTrapsSettedUp() && Utils.getRandom(2) == 0) {
+			if (!nex.isTrapsSettedUp() && Utils.roll(1, 3)) {
 				nex.setTrapsSettedUp(true);
 				npc.setNextForceTalk(new ForceTalk("Fear the Shadow!"));
 				nex.playSound(3314, 2);
@@ -230,7 +225,6 @@ public class NexCombat extends CombatScript {
 				int distance = Utils.getDistance(t.getX(), t.getY(), npc.getX(), npc.getY());
 				if (distance <= 10) {
 					int damage = 800 - (distance * 800 / 11);
-					World.sendElementalProjectile(npc, t, 380);
 					Hit rangeHit = npc.rangedHit(t, damage);
 					ProjectileManager.send(Projectile.ELEMENTAL_SPELL, 380, npc, t, () -> {
 						applyRegisteredHit(npc, t, rangeHit);
@@ -240,19 +234,15 @@ public class NexCombat extends CombatScript {
 			}
 			return npc.getAttackSpeed();
 		} else if (nex.getAttacksStage() == 2) {
-			if (Utils.getRandom(4) == 0 && target instanceof Player) {
+			if (Utils.getRandom(4) == 0 && target instanceof Player player) {
 				npc.setNextForceTalk(new ForceTalk("I demand a blood sacrifice!"));
 				nex.playSound(3293, 2);
-				final Player player = (Player) target;
-				player.getAppearance().setGlowRed(true);
+                player.setTint(new Tint(0, npc.getAttackSpeed() * 30, 0, 6, 28, 112));
 				player.getPackets().sendGameMessage("Nex has marked you as a sacrifice, RUN!");
-				final int x = player.getX();
-				final int y = player.getY();
 				WorldTasksManager.schedule(new WorldTask() {
 					@Override
 					public void run() {
-						player.getAppearance().setGlowRed(false);
-						if (x == player.getX() && y == player.getY()) {
+						if (Utils.getDistance(npc, player) < 5) {
 							player.getPackets().sendGameMessage(
 									"You didn't make it far enough in time - Nex fires a punishing attack!");
 							npc.animate(new Animation(6987));
@@ -273,7 +263,7 @@ public class NexCombat extends CombatScript {
 				return npc.getAttackSpeed() * 2;
 			}
 			if (nex.getLastSiphon() < Utils.currentTimeMillis() && npc.getHitpoints() <= 18000
-					&& Utils.getRandom(2) == 0) {
+					&& Utils.roll(1, 3)) {
 				nex.setLastSiphon(Utils.currentTimeMillis() + 30000);
 				nex.killBloodReavers();
 				npc.setNextForceTalk(new ForceTalk("A siphon will solve this!"));

@@ -58,6 +58,7 @@ class SuperRareTableEntry : DropEntry(-1, 1..1) {
         for (entry in entriesToRoll) {
             val roll = ThreadLocalRandom.current().nextInt(entry.denominator)
             if (roll < entry.numerator) {
+                if (entry.itemId <= 0) continue;
                 val amount = if (entry.amount.first == entry.amount.last)
                     entry.amount.first
                 else

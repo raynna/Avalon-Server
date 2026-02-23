@@ -3,6 +3,7 @@ package com.rs.java.game.player;
 import java.security.MessageDigest;
 
 import com.rs.Settings;
+import com.rs.core.thread.WorldThread;
 import com.rs.java.game.Hit;
 import com.rs.java.game.World;
 import com.rs.core.packets.OutputStream;
@@ -505,6 +506,7 @@ public final class LocalPlayerUpdate {
 	}
 
 	private void applyAnimationMask(Player p, OutputStream data) {
+		if (p.getNextAnimation() == null) return;
 		for (int id : p.getNextAnimation().getIds())
 			data.writeBigSmart(id);
 		data.writeByte(p.getNextAnimation().getDelay());

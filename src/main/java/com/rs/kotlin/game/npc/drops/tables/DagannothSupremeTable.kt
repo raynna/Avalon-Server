@@ -2,11 +2,17 @@ package com.rs.kotlin.game.npc.drops.tables
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.MonsterCategory
+import com.rs.kotlin.game.npc.drops.SeedTableConfig
+import com.rs.kotlin.game.npc.drops.SeedTableType
 import com.rs.kotlin.game.npc.drops.dropTable
 
 object DagannothSupremeTable {
 
-    val table = dropTable(category = MonsterCategory.BOSS, rareDropTable = true, rolls = 1) {
+    val table = dropTable(
+        category = MonsterCategory.BOSS,
+        seedTable = SeedTableConfig(SeedTableType.RARE, numerator = 7, denominator = 128),
+        rareDropTable = true,
+        rolls = 1) {
 
         alwaysDrops {
             drop("item.dagannoth_bones")

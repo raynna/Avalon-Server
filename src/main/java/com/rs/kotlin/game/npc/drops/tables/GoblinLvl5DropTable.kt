@@ -7,7 +7,7 @@ import com.rs.kotlin.game.npc.drops.dropTable
 object GoblinLvl5DropTable {
 
     val table =
-        dropTable(herbTable = HerbTableConfig(numerator = 2), rolls = 1) {
+        dropTable(herbTables = HerbTableConfig(numerator = 2), rolls = 1) {
 
             alwaysDrops {
                 drop("item.bones")

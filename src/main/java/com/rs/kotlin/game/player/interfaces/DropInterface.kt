@@ -587,11 +587,6 @@ object DropInterface {
         player.packets.sendHideIComponent(INTERFACE_ID, row + CHANCE_VALUE, false)
     }
 
-    private fun extractDenominator(rarity: String): Double? {
-        if (!rarity.startsWith("1/")) return null
-        return rarity.substringAfter("1/").toDoubleOrNull()
-    }
-
     private const val COL_ALWAYS = "66ccff"
     private const val COL_GREEN  = "00c000"
     private const val COL_YELLOW = "ffff00"

@@ -9,7 +9,6 @@ import com.rs.kotlin.game.npc.drops.tables.*
 import com.rs.kotlin.game.npc.worldboss.WorldBossTable
 
 object DropTablesSetup {
-
     lateinit var rareDropTable: RareDropTableEntry
         private set
     lateinit var gemDropTable: GemTableEntry
@@ -18,10 +17,11 @@ object DropTablesSetup {
         private set
     lateinit var herbDropTable: HerbTableEntry
         private set
+    lateinit var seedDropTable: SeedTableEntry
+        private set
 
     @JvmStatic
     fun setup() {
-
         /**
          * Shared Sub Tables
          **/
@@ -30,6 +30,7 @@ object DropTablesSetup {
         gemDropTable = GemTableEntry()
         superRareTable = SuperRareTableEntry()
         herbDropTable = HerbTableEntry()
+        seedDropTable = SeedTableEntry()
 
         /**
          * Special / Global Tables
@@ -40,7 +41,7 @@ object DropTablesSetup {
         registerObjectTable(
             name = "Barrows",
             objectId = 10284,
-            BarrowsChestTable.BARROWS_CHEST_TABLE
+            BarrowsChestTable.BARROWS_CHEST_TABLE,
         )
 
         /**
@@ -60,6 +61,7 @@ object DropTablesSetup {
         registerNpcKeyDropTable(KingBlackDragonDropTable.kingBlackDragonTable, "npc.king_black_dragon_lv276")
         registerNpcKeyDropTable(ChaosElementalDropTable.table, "npc.chaos_elemental_lv305")
 
+        registerNpcGroupDropTable(TormentedDemonDropTable.table, "npc_group.tormented_demon_lv450")
         registerNpcGroupDropTable(KalphiteQueenDropTable.table, "npc_group.kalphite_queen_lv333")
 
         /**
@@ -85,29 +87,32 @@ object DropTablesSetup {
          * Slayer Monsters
          **/
 
-        registerNpcGroupDropTable(CrawlingHandTable.table,
+        registerNpcGroupDropTable(
+            CrawlingHandTable.table,
             "npc_group.crawling_hand",
             "npc_group.crawling_hand_lv7",
             "npc_group.crawling_hand_lv8",
             "npc_group.crawling_hand_lv11",
-            "npc_group.crawling_hand_lv12"
+            "npc_group.crawling_hand_lv12",
         )
 
         registerNpcGroupDropTable(BansheeTable.table, "npc_group.banshee_lv23")
         registerNpcGroupDropTable(HellhoundTable.table, "npc_group.hellhound_lv122")
 
-        registerNpcGroupDropTable(AbyssalDemonTable.table,
+        registerNpcGroupDropTable(
+            AbyssalDemonTable.table,
             "npc_group.abyssal_demon",
-            "npc_group.abyssal_demon_lv124"
+            "npc_group.abyssal_demon_lv124",
         )
 
-        registerNpcKeyDropTable(DarkBeastTable.darkBeasts, "npc.dark_beast_lv182")
+        registerNpcKeyDropTable(DarkBeastTable.table, "npc.dark_beast_lv182")
         registerNpcGroupDropTable(GargoyleDropTable.table, "npc_group.gargoyle_lv111")
         registerNpcGroupDropTable(NechryaelDropTable.table, "npc_group.nechryael_lv115")
 
-        registerNpcGroupDropTable(BloodveldDropTable.table,
+        registerNpcGroupDropTable(
+            BloodveldDropTable.table,
             "npc_group.bloodveld_lv76",
-            "npc_group.bloodveld_lv81"
+            "npc_group.bloodveld_lv81",
         )
 
         registerNpcGroupDropTable(InfernalMageDropTable.table, "npc_group.infernal_mage_lv66")
@@ -117,12 +122,14 @@ object DropTablesSetup {
          * Low-Level Monsters
          **/
 
-        registerNpcGroupDropTable(GoblinDropTable.table,
+        registerNpcGroupDropTable(
+            GoblinDropTable.table,
             "npc_group.goblin_lv1",
-            "npc_group.goblin_lv2"
+            "npc_group.goblin_lv2",
         )
 
-        registerNpcGroupDropTable(GoblinLvl5DropTable.table,
+        registerNpcGroupDropTable(
+            GoblinLvl5DropTable.table,
             "npc_group.goblin_lv5",
             "npc_group.goblin_lv11",
             "npc_group.goblin_lv12",
@@ -130,19 +137,21 @@ object DropTablesSetup {
             "npc_group.goblin_lv15",
             "npc_group.goblin_lv16",
             "npc_group.goblin_lv17",
-            "npc_group.goblin_lv25"
+            "npc_group.goblin_lv25",
         )
 
         registerNpcGroupDropTable(RockCrabTable.table, "npc_group.rock_crab_lv13")
-        registerNpcGroupDropTable(CyclopsDropTable.table,
+        registerNpcGroupDropTable(
+            CyclopsDropTable.table,
             "npc_group.cyclops_lv56",
-            "npc_group.cyclops_lv76"
+            "npc_group.cyclops_lv76",
         )
 
         /**
          * Revenants
          */
-        registerNpcGroupDropTable(RevenantDropTable.table,
+        registerNpcGroupDropTable(
+            RevenantDropTable.table,
             "npc_group.revenant_imp_lv7",
             "npc_group.revenant_goblin_lv15",
             "npc_group.revenant_goblin_lv22",
@@ -159,7 +168,8 @@ object DropTablesSetup {
             "npc_group.revenant_ork_lv105",
             "npc_group.revenant_dark_beast_lv120",
             "npc_group.revenant_knight_lv126",
-            "npc_group.revenant_dragon_lv135")
+            "npc_group.revenant_dragon_lv135",
+        )
 
         /**
          * Kalphites

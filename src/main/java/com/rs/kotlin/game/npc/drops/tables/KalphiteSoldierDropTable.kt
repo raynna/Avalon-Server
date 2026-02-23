@@ -6,7 +6,7 @@ import com.rs.kotlin.game.npc.drops.dropTable
 
 object KalphiteSoldierDropTable {
 
-    val table = dropTable(herbTable = HerbTableConfig(numerator = 1, denominator = 128),
+    val table = dropTable(herbTables = HerbTableConfig(numerator = 1, denominator = 128),
         rareDropTable = true,
         rolls = 1) {
 

@@ -6,6 +6,9 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.HerbTableConfig
+import com.rs.kotlin.game.npc.drops.SeedTableConfig
+import com.rs.kotlin.game.npc.drops.SeedTableEntry
+import com.rs.kotlin.game.npc.drops.SeedTableType
 import com.rs.kotlin.game.npc.drops.dropTable
 
 object CyclopsDropTable {
@@ -40,7 +43,8 @@ object CyclopsDropTable {
     }
 
     val table = dropTable(
-        herbTable = HerbTableConfig(numerator = 3, denominator = 100),
+        herbTables = HerbTableConfig(numerator = 3, denominator = 100),
+        seedTable = SeedTableConfig(SeedTableType.UNCOMMON, numerator = 1, denominator = 100),
         rareDropTable = true,
         rolls = 1) {
 

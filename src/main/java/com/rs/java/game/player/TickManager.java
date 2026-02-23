@@ -22,8 +22,6 @@ public class TickManager {
 
 
     public void init() {
-        this.tickCallbacks = new HashMap<>();
-        this.persistentTimers = new HashMap<>();
         ensureInit();
     }
 

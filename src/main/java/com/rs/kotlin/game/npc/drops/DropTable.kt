@@ -1,6 +1,7 @@
 package com.rs.kotlin.game.npc.drops
 
 import com.rs.core.cache.defintions.ItemDefinitions
+import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.MonsterCategory
@@ -14,20 +15,67 @@ fun dropTable(
     rolls: Int = 1,
     name: String = "DropTable",
     category: MonsterCategory = MonsterCategory.REGULAR,
-    herbTable: HerbTableConfig? = null,
+    herbTables: HerbTableConfig,
+    seedTable: SeedTableConfig? = null,
+    rareDropTable: Boolean = false,
+    block: DropTable.() -> Unit
+): DropTable = dropTable(
+    rolls,
+    name,
+    category,
+    herbTables = listOf(herbTables),
+    seedTable,
+    rareDropTable,
+    block
+)
+
+fun dropTable(
+    rolls: Int = 1,
+    name: String = "DropTable",
+    category: MonsterCategory = MonsterCategory.REGULAR,
+    herbTables: List<HerbTableConfig> = emptyList(),
+    seedTable: SeedTableConfig? = null,
     rareDropTable: Boolean = false,
     block: DropTable.() -> Unit
 ): DropTable = DropTable(rolls, name, category).apply {
-    herbTableConfig = herbTable
-    if (herbTable != null) herbTable { player, drops ->
-        val roll = ThreadLocalRandom.current().nextInt(herbTable.denominator)
-        if (roll < herbTable.numerator) {
-            herbDropTable.roll(player)?.let { baseDrop ->
-                val rolledAmount = herbTable.amount.random()
-                drops.add(baseDrop.copy(amount = rolledAmount))
+    herbTableConfigs = herbTables
+
+    if (herbTables.isNotEmpty()) {
+        herbTables.forEach { cfg ->
+            herbTable { player, drops ->
+
+                val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
+
+                if (roll < cfg.numerator) {
+                    herbDropTable.roll(player)?.let { baseDrop ->
+                        val rolledAmount = cfg.amount.random()
+                        drops.add(baseDrop.copy(amount = rolledAmount))
+                    }
+                }
+
+                false
             }
-            true
-        } else false
+        }
+    }
+    seedTableConfig = seedTable
+    if (seedTable != null) seedTable { player, combatLevel, drops ->
+
+        val roll = ThreadLocalRandom.current().nextInt(seedTable.denominator)
+        if (roll >= seedTable.numerator) return@seedTable false
+
+        val result = DropTablesSetup.seedDropTable.roll(
+            seedTable.table,
+            player,
+            combatLevel
+        )
+
+        result?.let {
+            val finalAmount = seedTable.amount.random()
+            drops.add(it.copy(amount = finalAmount))
+            return@seedTable true
+        }
+
+        false
     }
 
     if (rareDropTable) gemTable { player, drops ->
@@ -48,15 +96,56 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
     private var charmTable: SummoningCharms? = null
 
     private var gemTableRoller: ((Player, MutableList<Drop>) -> Boolean)? = null
-    private var herbTableRoller: ((Player, MutableList<Drop>) -> Boolean)? = null
-    var herbTableConfig: HerbTableConfig? = null
+    private val herbTableRollers = mutableListOf<(Player, MutableList<Drop>) -> Boolean>()
+    var herbTableConfigs: List<HerbTableConfig>? = null
+    private var seedTableRoller: ((Player, Int, MutableList<Drop>) -> Boolean)? = null
+    var seedTableConfig: SeedTableConfig? = null
     private var currentContext: DropType? = null
+    private var currentWeightedTable: WeightedTable? = null
 
     override fun toString(): String = "DropTable(name='$name')"
 
     fun getAllDropsForDisplay(multiplier: Double = 1.0): List<DropDisplay> {
-        val list = mutableListOf<DropDisplay>()
 
+        val list = mutableListOf<DropDisplay>()
+        fun addWeightedTableDisplays(
+            table: WeightedTable,
+            dropType: DropType,
+            parentChance: Double = 1.0
+        ) {
+            val entries = table.mutableEntries()
+            val total = entries.sumOf { it.weight }.toDouble()
+            if (total <= 0.0) return
+
+            for (entry in entries) {
+                when (entry) {
+                    is ItemWeightedEntry -> {
+                        val chance = parentChance * (entry.weight / total)
+                        val denom = (1.0 / chance).coerceAtLeast(1.0).toInt()
+
+                        list.add(
+                            DropDisplay(
+                                entry.itemId,
+                                entry.amount,
+                                "1/$denom",
+                                dropType,
+                                denom,
+                                entry.weight
+                            )
+                        )
+                    }
+
+                    is NestedTableEntry -> {
+                        val chanceToEnter = parentChance * (entry.weight / total)
+                        addWeightedTableDisplays(entry.table, dropType, chanceToEnter)
+                    }
+
+                    else -> {
+                        // If you add more entry types later, ignore safely
+                    }
+                }
+            }
+        }
         // ALWAYS
         alwaysDrops.forEach {
             list.add(
@@ -69,8 +158,166 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
                 )
             )
         }
-        // ------------------ CHARMS ------------------
-// ------------------ CHARMS ------------------
+
+        // PREROLL
+        preRollDrops.forEach { entry ->
+            val base = entry.denominator
+            val boosted = (entry.denominator / multiplier)
+                .toInt()
+                .coerceAtLeast(1)
+
+            if (entry.displayItems != null) {
+                entry.displayItems.forEach { itemId ->
+                    list.add(
+                        DropDisplay(
+                            itemId,
+                            entry.amount,
+                            "1/${boosted}",
+                            DropType.PREROLL,
+                            base
+                        )
+                    )
+                }
+                return@forEach
+            }
+
+            list.add(
+                DropDisplay(
+                    entry.itemId ?: -1,
+                    entry.amount,
+                    "1/$boosted",
+                    DropType.PREROLL,
+                    base
+                )
+            )
+        }
+
+
+        addWeightedTableDisplays(mainDrops, DropType.MAIN)
+        addWeightedTableDisplays(minorDrops, DropType.MINOR)
+        addWeightedTableDisplays(specialDrops, DropType.SPECIAL)
+
+        herbTableConfigs?.forEach { cfg ->
+
+            val tableEntries = herbDropTable.getEntries()
+            val totalWeight = tableEntries.sumOf { it.weight }.toDouble()
+
+            tableEntries.forEach { herb ->
+
+                // chance to land herb table
+                val tableChance =
+                    (cfg.numerator.toDouble() / cfg.denominator.toDouble())
+
+                // chance of this herb inside table
+                val herbChance =
+                    herb.weight.toDouble() / totalWeight
+
+                // combined chance
+                val combinedChance =
+                    tableChance * herbChance
+
+                val denom =
+                    (1.0 / combinedChance)
+                        .coerceAtLeast(1.0).toInt()
+
+                list.add(
+                    DropDisplay(
+                        herb.itemId,
+                        cfg.amount,
+                        "1/$denom",
+                        DropType.PREROLL,
+                        denom
+                    )
+                )
+            }
+        }
+
+        seedTableConfig?.let { cfg ->
+
+            val tableChance =
+                cfg.numerator.toDouble() / cfg.denominator.toDouble()
+
+            when (cfg.table) {
+
+                SeedTableType.GENERAL -> {
+
+                    // Only display summary line
+                    list.add(
+                        DropDisplay(
+                            -1,
+                            cfg.amount,
+                            "General seed table",
+                            DropType.PREROLL,
+                            cfg.denominator
+                        )
+                    )
+                }
+
+                SeedTableType.RARE,
+                SeedTableType.UNCOMMON,
+                SeedTableType.TREE_HERB -> {
+
+                    val entries = when (cfg.table) {
+                        SeedTableType.RARE ->
+                            DropTablesSetup.seedDropTable.getRareEntries()
+
+                        SeedTableType.UNCOMMON ->
+                            DropTablesSetup.seedDropTable.getUncommonEntries()
+
+                        SeedTableType.TREE_HERB ->
+                            DropTablesSetup.seedDropTable.getTreeHerbEntries()
+
+                        else -> emptyList()
+                    }
+
+                    val totalWeight =
+                        entries.sumOf { it.weight }.toDouble()
+
+                    entries.forEach { entry ->
+
+                        val seedChance =
+                            entry.weight.toDouble() / totalWeight
+
+                        val combinedChance =
+                            tableChance * seedChance
+
+                        val denom =
+                            (1.0 / combinedChance)
+                                .coerceAtLeast(1.0).toInt()
+
+                        list.add(
+                            DropDisplay(
+                                entry.itemId,
+                                cfg.amount,
+                                "1/$denom",
+                                DropType.PREROLL,
+                                denom
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
+        // TERTIARY
+        tertiaryDrops.forEach {
+            val base = it.denominator
+            val boosted =
+                (it.denominator / multiplier)
+                    .toInt()
+                    .coerceAtLeast(1)
+
+            list.add(
+                DropDisplay(
+                    it.itemId,
+                    it.amount,
+                    "1/$boosted",
+                    DropType.TERTIARY,
+                    base
+                )
+            )
+        }
+
         val charms = charmTable
         if (charms != null) {
 
@@ -96,145 +343,6 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
             }
         }
 
-        // PREROLL
-        preRollDrops.forEach { entry ->
-            val base = entry.denominator
-            val boosted = entry.denominator / multiplier
-
-            if (entry.displayItems != null) {
-                entry.displayItems.forEach { itemId ->
-                    list.add(
-                        DropDisplay(
-                            itemId,
-                            entry.amount,
-                            "1/$boosted",
-                            DropType.PREROLL,
-                            base
-                        )
-                    )
-                }
-                return@forEach
-            }
-
-            list.add(
-                DropDisplay(
-                    entry.itemId ?: -1,
-                    entry.amount,
-                    "1/$boosted",
-                    DropType.PREROLL,
-                    base
-                )
-            )
-        }
-
-
-
-        val totalWeight = mainDrops.mutableEntries().sumOf { it.weight }.toDouble()
-
-        mainDrops.mutableEntries().forEach {
-            val denom = (totalWeight / it.weight)
-
-            list.add(
-                DropDisplay(
-                    it.itemId,
-                    it.amount,
-                    "1/${"%.2f".format(denom)}",
-                    DropType.MAIN,
-                    denom.toInt(),
-                    it.weight
-                )
-            )
-        }
-
-        val minorWeight = minorDrops.mutableEntries().sumOf { it.weight }.toDouble()
-
-        minorDrops.mutableEntries().forEach {
-            val denom = (minorWeight / it.weight)
-            list.add(
-                DropDisplay(
-                    it.itemId,
-                    it.amount,
-                    "1/${"%.2f".format(denom)}",
-                    DropType.MINOR,
-                    denom.toInt(),
-                    it.weight
-                )
-            )
-        }
-
-        herbTableConfig?.let { cfg ->
-
-            val tableEntries = herbDropTable.getEntries()
-            val totalWeight = tableEntries.sumOf { it.weight }.toDouble()
-
-            tableEntries.forEach { herb ->
-
-                // chance to land herb table
-                val tableChance =
-                    (cfg.numerator.toDouble() / cfg.denominator.toDouble())
-
-                // chance of this herb inside table
-                val herbChance =
-                    herb.weight.toDouble() / totalWeight
-
-                // combined chance
-                val combinedChance =
-                    tableChance * herbChance
-
-                val denom =
-                    (1.0 / combinedChance)
-                        .coerceAtLeast(1.0)
-
-                list.add(
-                    DropDisplay(
-                        herb.itemId,
-                        cfg.amount,
-                        "1/${"%.2f".format(denom)}",
-                        DropType.PREROLL,
-                        denom.toInt()
-                    )
-                )
-            }
-        }
-
-
-        // SPECIAL
-        val specialWeight = specialDrops.mutableEntries().sumOf { it.weight }.toDouble()
-
-        specialDrops.mutableEntries().forEach {
-            val denom = (specialWeight / it.weight)
-
-            list.add(
-                DropDisplay(
-                    it.itemId,
-                    it.amount,
-                    "1/${"%.2f".format(denom)}",
-                    DropType.SPECIAL,
-                    denom.toInt(),
-                    it.weight
-                )
-            )
-        }
-
-        // TERTIARY
-        tertiaryDrops.forEach {
-            val base = it.denominator
-            val boosted =
-                (it.denominator / multiplier)
-                    .toInt()
-                    .coerceAtLeast(1)
-
-            list.add(
-                DropDisplay(
-                    it.itemId,
-                    it.amount,
-                    "1/$boosted",
-                    DropType.TERTIARY,
-                    base
-                )
-            )
-        }
-
         return list
     }
 
@@ -244,7 +352,6 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
 
         preRollDrops.forEach { it.itemId.let(set::add) }
         tertiaryDrops.forEach { set.add(it.itemId) }
-        specialDrops.mutableEntries().forEach { set.add(it.itemId) }
 
         return set
     }
@@ -263,24 +370,39 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
     }
 
 
-    fun mainDrops(size: Int, block: MutableList<WeightedDropEntry>.() -> Unit) {
+    fun mainDrops(size: Int, block: MutableList<WeightedEntry>.() -> Unit) {
         currentContext = DropType.MAIN
         mainDrops.setSize(size)
+
+        val prev = currentWeightedTable
+        currentWeightedTable = null // main uses default
         mainDrops.mutableEntries().block()
+        currentWeightedTable = prev
+
         currentContext = null
     }
 
-    fun minorDrops(size: Int, block: MutableList<WeightedDropEntry>.() -> Unit) {
+    fun minorDrops(size: Int, block: MutableList<WeightedEntry>.() -> Unit) {
         currentContext = DropType.MINOR
         minorDrops.setSize(size)
+
+        val prev = currentWeightedTable
+        currentWeightedTable = null
         minorDrops.mutableEntries().block()
+        currentWeightedTable = prev
+
         currentContext = null
     }
 
-    fun specialDrops(size: Int, block: MutableList<WeightedDropEntry>.() -> Unit) {
+    fun specialDrops(size: Int, block: MutableList<WeightedEntry>.() -> Unit) {
         currentContext = DropType.SPECIAL
         specialDrops.setSize(size)
+
+        val prev = currentWeightedTable
+        currentWeightedTable = null
         specialDrops.mutableEntries().block()
+        currentWeightedTable = prev
+
         currentContext = null
     }
 
@@ -303,7 +425,11 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
     }
 
     fun herbTable(block: (Player, MutableList<Drop>) -> Boolean) {
-        herbTableRoller = block
+        herbTableRollers += block
+    }
+
+    fun seedTable(block: (Player, Int, MutableList<Drop>) -> Boolean) {
+        seedTableRoller = block
     }
 
     // ------------------ Drop DSL ------------------
@@ -334,23 +460,65 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
         )
     }
 
+    fun MutableList<WeightedEntry>.nestedTable(
+        size: Int,
+        block: MutableList<WeightedEntry>.() -> Unit
+    ) {
+        val nested = WeightedTable().apply { setSize(size) }
+
+
+        val prev = currentWeightedTable
+        currentWeightedTable = nested
+        nested.mutableEntries().block()
+        currentWeightedTable = prev
+
+        nested.mutableEntries().forEach { entry ->
+            this.add(entry)
+        }
+    }
+
 
     fun DropTable.drop(
         item: String,
         amount: IntRange = 1..1,
-        weight: Int = 1,                 // new weight for main/special
-        numerator: Int = 1,              // still used for tertiary/pre-roll
+        weight: Int = 1,
+        numerator: Int = 1,
         denominator: Int = 4,
         condition: ((Player) -> Boolean)? = null,
         customLogic: ((Player, Drop?) -> Unit)? = null
     ) {
         val ctx = currentContext ?: error("Cannot call drop() outside a drop type scope")
+
         when (ctx) {
             DropType.ALWAYS -> addDrop(ctx, Rscm.lookup(item), amount, condition, customLogic)
-            DropType.PREROLL -> { preRollDrops.add(PreRollDropEntry(Rscm.lookup(item), amount, numerator, denominator, condition)) }
-            DropType.MAIN -> mainDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
-            DropType.MINOR -> minorDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
-            DropType.SPECIAL -> specialDrops.add(WeightedDropEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
+
+            DropType.PREROLL -> {
+                preRollDrops.add(
+                    PreRollDropEntry(
+                        Rscm.lookup(item),
+                        amount,
+                        numerator,
+                        denominator,
+                        condition
+                    )
+                )
+            }
+
+            DropType.MAIN -> {
+                val table = currentWeightedTable ?: mainDrops
+                table.add(ItemWeightedEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
+            }
+
+            DropType.MINOR -> {
+                val table = currentWeightedTable ?: minorDrops
+                table.add(ItemWeightedEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
+            }
+
+            DropType.SPECIAL -> {
+                val table = currentWeightedTable ?: specialDrops
+                table.add(ItemWeightedEntry(Rscm.lookup(item), amount, weight, condition, customLogic))
+            }
+
             DropType.TERTIARY -> {
                 if (numerator <= 0 || denominator <= 0) {
                     System.err.println("Invalid tertiary drop rate for item $item")
@@ -358,6 +526,7 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
                 }
                 tertiaryDrops.add(TertiaryDropEntry(Rscm.lookup(item), amount, numerator, denominator, condition))
             }
+
             DropType.CHARM -> throw UnsupportedOperationException("Use charmDrops { } block for charms")
         }
     }
@@ -374,11 +543,12 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
         }
     }
 
-    fun rollDrops(player: Player): List<Drop> {
-        return rollDrops(player, 1.0)
+    fun rollDrops(player: Player, combatLevel: Int): List<Drop> {
+        return rollDrops(player, combatLevel, 1.0)
     }
 
-    fun rollDrops(player: Player, multiplier: Double = 1.0): List<Drop> {
+    fun rollDrops(player: Player, combatLevel: Int, multiplier: Double = 1.0): List<Drop> {
+
         val drops = mutableListOf<Drop>()
 
         alwaysDrops.forEach { it.roll(player)?.let(drops::add) }
@@ -393,7 +563,10 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
             }
         }
         gemTableRoller?.let { if (it(player, drops)) return drops }
-        herbTableRoller?.let { if (it(player, drops)) return drops }
+        herbTableRollers.forEach { it(player, drops) }
+        seedTableRoller?.let {
+            if (it(player, combatLevel, drops)) return drops
+        }
         if (!preRollHit) {
             repeat(rolls) {
                 if (gemTableRoller?.invoke(player, drops) == true) return@repeat
@@ -416,12 +589,22 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
 
     fun allDrops(): List<DropEntry> {
         val list = mutableListOf<DropEntry>()
-
         list.addAll(alwaysDrops)
         list.addAll(preRollDrops)
-        list.addAll(mainDrops.mutableEntries())
-        list.addAll(specialDrops.mutableEntries())
         list.addAll(tertiaryDrops)
+
+        fun flatten(table: WeightedTable) {
+            for (e in table.mutableEntries()) {
+                when (e) {
+                    is ItemWeightedEntry -> list.add(DropEntry(e.itemId, e.amount))
+                    is NestedTableEntry -> flatten(e.table)
+                }
+            }
+        }
+
+        flatten(mainDrops)
+        flatten(minorDrops)
+        flatten(specialDrops)
 
         return list
     }
@@ -435,6 +618,7 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
         alwaysDrops.size + preRollDrops.size + mainDrops.size() + tertiaryDrops.size + specialDrops.size()
 
     fun exportRatesToJson(multiplier: Double): String {
+
         val sb = StringBuilder()
 
         sb.append("{\n")
@@ -480,55 +664,57 @@ class DropTable(private val rolls: Int = 1, var name: String = "DropTable", val 
         }
         sb.append("],\n")
 
-        // ---------------- MAIN ----------------
-        sb.append("\"mainDrops\":[\n")
+        // ---------------- MAIN / MINOR / SPECIAL ----------------
+        fun appendWeightedTable(
+            table: WeightedTable,
+            parentChance: Double = 1.0
+        ) {
+            val entries = table.mutableEntries()
+            val total = entries.sumOf { it.weight }.toDouble()
+            if (total <= 0.0) return
 
-        val totalWeight = mainDrops.mutableEntries().sumOf { it.weight }.toDouble()
+            for (entry in entries) {
+                when (entry) {
 
-        mainDrops.mutableEntries().forEachIndexed { i, e ->
+                    is ItemWeightedEntry -> {
+                        val chance = parentChance * (entry.weight / total)
+                        val denom = (1.0 / chance).coerceAtLeast(1.0)
 
-            val originalDenom = totalWeight / e.weight
-            sb.append(
-                "{" +
-                        "\"itemId\":${e.itemId}," +
-                        "\"name\":\"${ItemDefinitions.getItemDefinitions(e.itemId).name}\"," +
-                        "\"amount\":\"${e.amount}\"," +
-                        "\"weight\":${e.weight}," +
-                        "\"originalRate\":\"1/${"%.2f".format(originalDenom)}\"" +
-                        "}"
-            )
+                        sb.append(
+                            "{" +
+                                    "\"itemId\":${entry.itemId}," +
+                                    "\"name\":\"${ItemDefinitions.getItemDefinitions(entry.itemId).name}\"," +
+                                    "\"amount\":\"${entry.amount}\"," +
+                                    "\"rate\":\"1/${"%.2f".format(denom)}\"" +
+                                    "},\n"
+                        )
+                    }
 
-
-            if (i < mainDrops.mutableEntries().size - 1) sb.append(",")
-            sb.append("\n")
+                    is NestedTableEntry -> {
+                        val nestedChance = parentChance * (entry.weight / total)
+                        appendWeightedTable(entry.table, nestedChance)
+                    }
+                }
+            }
         }
 
-        sb.append("],\n")
+        sb.append("\"mainDrops\":[\n")
+        appendWeightedTable(mainDrops)
+        if (sb.endsWith(",\n")) sb.setLength(sb.length - 2)
+        sb.append("\n],\n")
 
         sb.append("\"minorDrops\":[\n")
+        appendWeightedTable(minorDrops)
+        if (sb.endsWith(",\n")) sb.setLength(sb.length - 2)
+        sb.append("\n],\n")
 
-        val minorWeight = minorDrops.mutableEntries().sumOf { it.weight }.toDouble()
-
-        minorDrops.mutableEntries().forEachIndexed { i, e ->
-            val originalDenom = minorWeight / e.weight
-            sb.append(
-                "{" +
-                        "\"itemId\":${e.itemId}," +
-                        "\"name\":\"${ItemDefinitions.getItemDefinitions(e.itemId).name}\"," +
-                        "\"amount\":\"${e.amount}\"," +
-                        "\"weight\":${e.weight}," +
-                        "\"originalRate\":\"1/${"%.2f".format(originalDenom)}\"" +
-                        "}"
-            )
-            if (i < minorDrops.mutableEntries().size - 1) sb.append(",")
-            sb.append("\n")
-        }
-
-        sb.append("],\n")
+        sb.append("\"specialDrops\":[\n")
+        appendWeightedTable(specialDrops)
+        if (sb.endsWith(",\n")) sb.setLength(sb.length - 2)
+        sb.append("\n],\n")
 
         // ---------------- TERTIARY ----------------
         sb.append("\"tertiaryDrops\":[\n")
-
         tertiaryDrops.forEachIndexed { i, e ->
 
             val boosted =

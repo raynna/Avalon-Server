@@ -14,9 +14,9 @@ object RevenantDropTable {
         rolls = 1) {
 
         preRollDrops {
-            drop("item.craw_s_bow_u", numerator = 1, denominator = 6000)
-            drop("item.thammaron_s_sceptre_u", numerator = 1, denominator = 6000)
-            drop("item.viggora_s_chainmace_u", numerator = 1, denominator = 6000)
+            drop("item.craw_s_bow", numerator = 1, denominator = 6000)
+            drop("item.thammaron_s_sceptre", numerator = 1, denominator = 6000)
+            drop("item.viggora_s_chainmace", numerator = 1, denominator = 6000)
             listOf(
                 "item.statius_s_full_helm", "item.statius_s_platebody", "item.statius_s_platelegs",
                 "item.vesta_s_chainbody", "item.vesta_s_plateskirt", "item.vesta_s_longsword", "item.vesta_s_spear",

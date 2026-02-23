@@ -71,7 +71,7 @@ object PvpManager {
         val ep = killer.ep
         val chance = ep / 100.0
         if (Math.random() > chance) return
-        val drops = EpTable.main.rollDrops(killer)
+        val drops = EpTable.main.rollDrops(killer, 0)
         for (drop in drops) {
             val item = Item(drop.itemId, drop.amount)
             GroundItems.updateGroundItem(item, deadPlayer.tile, killer, 60, 1)
