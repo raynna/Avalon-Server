@@ -120,7 +120,7 @@ public final class Settings {
 	public static double BONUS_EXP_WEEK_MULTIPLIER = 1.0;
 	public static double BONUS_POINTS_WEEK_MULTIPLIER = 1.0;
 	public static boolean DOUBLE_DROP = false;
-	public static double DROP_MULTIPLIER = 1.0;
+	public static double DROP_MULTIPLIER = 5.0;
 	public static boolean DEBUG_DROP_MATH = true;
 
 

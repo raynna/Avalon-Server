@@ -28,17 +28,16 @@ object KuraskDropTable {
                 drop("item.bones")
             }
 
+            preRollDrops {
+                drop("item.leaf_bladed_sword", numerator = 1, denominator = 384) { collectionLog = true }
+                drop("item.mystic_robe_top_light", numerator = 1, denominator = 512) { collectionLog = true }
+            }
+
             mainDrops(124) {
                 drop("item.mithril_kiteshield", weight = 3)
                 drop("item.rune_longsword", weight = 3)
                 drop("item.adamant_platebody", weight = 3)
                 drop("item.rune_hatchet", weight = 3)
-                nestedTable(1, 384) {
-                    drop("item.leaf_bladed_sword")
-                }
-                nestedTable(1, 512) {
-                    drop("item.mystic_robe_top_light")
-                }
                 drop("item.nature_rune", amount = 10, weight = 10)
                 drop("item.nature_rune", amount = 15, weight = 7)
                 drop("item.nature_rune", amount = 30, weight = 4)

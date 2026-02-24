@@ -346,9 +346,6 @@ class DropTable(
 
                     is NestedTableEntry -> {
                         val chanceToEnter = parentChance * (entry.weight / total)
-                        println(
-                            "Entering nested table: parentChance=$parentChance weight=${entry.weight} total=$total result=$chanceToEnter",
-                        )
                         addWeightedTableDisplays(entry.table, dropType, chanceToEnter)
                     }
 
