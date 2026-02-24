@@ -55,7 +55,7 @@ object KingBlackDragonDropTable {
                     "item.scroll_box_elite",
                     numerator = 1,
                     denominator = 450,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
                 )
                 drop("item.kbd_heads", numerator = 1, denominator = 128) { collectionLog = true }
                 drop("item.draconic_visage", 1, numerator = 1, denominator = 5000) {

@@ -4,7 +4,6 @@ import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.drops.dropTable
 
 object GoblinDropTable {
-
     val table =
         dropTable(rolls = 1) {
 
@@ -19,7 +18,8 @@ object GoblinDropTable {
                 blue(amount = 1, percent = 0.0537)
             }
 
-            mainDrops(128) {//item: Any, amount: Int = 1, weight: Int = 1, denominator: Int = 4
+            mainDrops(128) {
+                // item: Any, amount: Int = 1, weight: Int = 1, denominator: Int = 4
                 drop("item.bronze_spear", weight = 4)
                 drop("item.bronze_sq_shield", weight = 3)
                 drop("item.water_rune", amount = 6, weight = 6)
@@ -43,7 +43,7 @@ object GoblinDropTable {
             preRollDrops {
                 drop(
                     "item.goblin_skull",
-                    condition = { player -> false }//TODO RAG AND BONE MAN QUEST
+                    condition = { player -> false }, // TODO RAG AND BONE MAN QUEST
                 )
             }
 
@@ -52,21 +52,22 @@ object GoblinDropTable {
                     "item.scroll_box_easy",
                     numerator = 1,
                     denominator = 128,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.EASY) })
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.EASY) },
+                )
                 drop(
                     "item.sling",
                     numerator = 1,
-                    denominator = 128
+                    denominator = 128,
                 )
                 drop(
                     "item.staff_of_air",
                     numerator = 1,
-                    denominator = 128
+                    denominator = 128,
                 )
                 drop(
                     "item.goblin_champion_scroll",
                     numerator = 1,
-                    denominator = 5000
+                    denominator = 5000,
                 )
             }
         }.apply { name = "Goblin" }

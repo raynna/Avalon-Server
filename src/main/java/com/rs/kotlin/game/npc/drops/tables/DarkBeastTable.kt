@@ -63,25 +63,25 @@ object DarkBeastTable {
                     "item.scroll_box_hard",
                     numerator = 1,
                     denominator = 128,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
                 )
                 drop(
                     "item.scroll_box_elite",
                     numerator = 1,
                     denominator = 1200,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
                 )
                 drop(
                     "item.long_bone",
                     numerator = 1,
                     denominator = 400,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
                 ) { collectionLog = true }
                 drop(
                     "item.curved_bone",
                     numerator = 1,
                     denominator = 5012,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
                 ) { collectionLog = true }
             }
 

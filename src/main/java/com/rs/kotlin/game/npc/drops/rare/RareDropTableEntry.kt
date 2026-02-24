@@ -3,6 +3,7 @@ package com.rs.kotlin.game.npc.drops.rare
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.Drop
+import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.DropEntry
 import com.rs.kotlin.game.npc.drops.DropSource
 import com.rs.kotlin.game.npc.drops.DropTablesSetup
@@ -65,12 +66,12 @@ class RareDropTableEntry : DropEntry(-1, 1..1) {
         table.add(ItemWeightedEntry(marker, 1..1, weight))
     }
 
-    override fun roll(player: Player): Drop? {
-        val result = table.roll(player, source = DropSource.RARE) ?: return null
+    override fun roll(context: DropContext): Drop? {
+        val result = table.roll(context.copy(dropSource = DropSource.RARE)) ?: return null
 
         return when (result.itemId) {
-            GEM_TABLE_MARKER -> DropTablesSetup.gemDropTable.roll(player)
-            MEGA_RARE_MARKER -> DropTablesSetup.megaRareTable.roll(player)
+            GEM_TABLE_MARKER -> DropTablesSetup.gemDropTable.roll(context)
+            MEGA_RARE_MARKER -> DropTablesSetup.megaRareTable.roll(context)
             else -> result
         }
     }

@@ -127,7 +127,7 @@ object WorldBossTable {
         }
 
     val chest =
-        dropTable(category = TableCategory.OTHER, rolls = 1) {
+        dropTable(sourceAction = "opening", category = TableCategory.OTHER, rolls = 1) {
             alwaysDrops {
                 drop("item.coins", amount = 500_000..1_500_000)
                 drop("item.pvp_token", amount = 1_000..3_000) { collectionLog = true }

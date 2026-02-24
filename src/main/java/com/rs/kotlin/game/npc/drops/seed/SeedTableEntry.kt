@@ -3,6 +3,7 @@ package com.rs.kotlin.game.npc.drops.seed
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.Drop
+import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.DropEntry
 import com.rs.kotlin.game.npc.drops.DropSource
 import com.rs.kotlin.game.npc.drops.ItemWeightedEntry
@@ -179,29 +180,32 @@ class SeedTableEntry : DropEntry(-1, 1..1) {
 
     fun roll(
         type: SeedTableType,
-        player: Player,
+        context: DropContext,
         combatLevel: Int,
-    ): Drop? =
-        when (type) {
+    ): Drop? {
+        val seedContext = context.copy(dropSource = DropSource.SEED)
+
+        return when (type) {
             SeedTableType.GENERAL -> {
-                rollGeneral(player, combatLevel)
+                rollGeneral(seedContext, combatLevel)
             }
 
             SeedTableType.RARE -> {
-                rareTable.roll(player, source = DropSource.SEED)
+                rareTable.roll(seedContext)
             }
 
             SeedTableType.UNCOMMON -> {
-                uncommonTable.roll(player, source = DropSource.SEED)
+                uncommonTable.roll(seedContext)
             }
 
             SeedTableType.TREE_HERB -> {
-                treeHerbTable.roll(player, source = DropSource.SEED)
+                treeHerbTable.roll(seedContext)
             }
         }
+    }
 
     private fun rollGeneral(
-        player: Player,
+        context: DropContext,
         combatLevel: Int,
     ): Drop? {
         val combatCalc = combatLevel * 10
@@ -214,7 +218,9 @@ class SeedTableEntry : DropEntry(-1, 1..1) {
                 roll >= it.min && roll < it.max
             } ?: return null
 
-        return sub.table.roll(player, source = DropSource.SEED)
+        val seedContext = context.copy(dropSource = DropSource.SEED)
+
+        return sub.table.roll(seedContext)
     }
 
     private fun weighted(

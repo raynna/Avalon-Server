@@ -82,7 +82,7 @@ object KreeArraDropTable {
                     "item.scroll_box_elite",
                     numerator = 1,
                     denominator = 250,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
                 )
             }
         }.apply { name = "Kree'arra" }

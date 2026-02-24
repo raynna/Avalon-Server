@@ -3,6 +3,7 @@ package com.rs.kotlin.game.npc.drops.rare
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.Drop
+import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.DropEntry
 import com.rs.kotlin.game.npc.drops.DropSource
 import com.rs.kotlin.game.npc.drops.ItemWeightedEntry
@@ -48,11 +49,11 @@ class MegaRareTableEntry : DropEntry(-1, 1..1) {
         table.add(ItemWeightedEntry(marker, 1..1, weight))
     }
 
-    override fun roll(player: Player): Drop? {
+    override fun roll(context: DropContext): Drop? {
         val entries = table.mutableEntries()
 
         val filtered =
-            if (player.hasRingOfWealth()) {
+            if (context.player.hasRingOfWealth()) {
                 entries.filterNot {
                     it is ItemWeightedEntry && it.itemId == NOTHING_MARKER
                 }
@@ -67,7 +68,7 @@ class MegaRareTableEntry : DropEntry(-1, 1..1) {
         filtered.forEach { temp.add(it) }
 
         val result =
-            temp.roll(player, source = DropSource.MEGARARE)
+            temp.roll(context.copy(dropSource = DropSource.MEGARARE))
                 ?: return null
 
         return if (result.itemId == NOTHING_MARKER) null else result

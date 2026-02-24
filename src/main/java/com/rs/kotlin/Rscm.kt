@@ -1,21 +1,38 @@
-package com.rs.kotlin;
+package com.rs.kotlin
 
 import com.rs.java.game.WorldTile
 import java.nio.file.Path
 import kotlin.io.path.*
 
 object Rscm {
-
     fun item(name: String) = lookup(name)
+
     fun graphic(name: String) = lookup(name)
+
     fun animation(name: String) = lookup(name)
+
     fun sound(name: String) = lookup(name)
 
     sealed class RscmEntry {
-        data class Id(val value: Int) : RscmEntry()
-        data class Location(val x: Int, val y: Int, val plane: Int) : RscmEntry()
-        data class Tile(val x: Int, val y: Int, val plane: Int) : RscmEntry()
-        data class IdList(val values: List<Int>) : RscmEntry()
+        data class Id(
+            val value: Int,
+        ) : RscmEntry()
+
+        data class Location(
+            val x: Int,
+            val y: Int,
+            val plane: Int,
+        ) : RscmEntry()
+
+        data class Tile(
+            val x: Int,
+            val y: Int,
+            val plane: Int,
+        ) : RscmEntry()
+
+        data class IdList(
+            val values: List<Int>,
+        ) : RscmEntry()
     }
 
     private lateinit var mappings: Map<String, Map<String, RscmEntry>>
@@ -43,10 +60,16 @@ object Rscm {
         for ((type, entries) in mappings) {
             for ((name, entry) in entries) {
                 when (entry) {
-                    is RscmEntry.Id -> reverseMap[entry.value] = "$type.$name"
-                    is RscmEntry.IdList -> entry.values.forEach { id ->
-                        reverseMap[id] = "$type.$name"
+                    is RscmEntry.Id -> {
+                        reverseMap[entry.value] = "$type.$name"
                     }
+
+                    is RscmEntry.IdList -> {
+                        entry.values.forEach { id ->
+                            reverseMap[id] = "$type.$name"
+                        }
+                    }
+
                     else -> {} // ignore locations and tiles
                 }
             }
@@ -56,13 +79,15 @@ object Rscm {
 
     @JvmStatic
     fun lookupLocation(name: String): WorldTile {
-        val (type, ref) = name.split('.').let {
-            require(it.size == 2) { "Invalid format: '$name'. Use 'type.name'" }
-            it
-        }
+        val (type, ref) =
+            name.split('.').let {
+                require(it.size == 2) { "Invalid format: '$name'. Use 'type.name'" }
+                it
+            }
 
-        val entry = mappings[type]?.get(ref)
-            ?: error("Mapping '$ref' not found in $type.")
+        val entry =
+            mappings[type]?.get(ref)
+                ?: error("Mapping '$ref' not found in $type.")
 
         return when (entry) {
             is RscmEntry.Location -> WorldTile(entry.x, entry.y, entry.plane)
@@ -78,15 +103,17 @@ object Rscm {
             error("[Rscm] Invalid format: '$name'. Use 'type.name' (e.g. 'npc.goblin_lv2').")
         }
         val (type, ref) = parts
-        val entry = mappings[type]?.get(ref)
-            ?: error("Mapping '$ref' not found in $type mappings.")
+        val entry =
+            mappings[type]?.get(ref)
+                ?: error("Mapping '$ref' not found in $type mappings.")
 
-        val result = when (entry) {
-            is RscmEntry.IdList -> entry.values
-            else -> error("Mapping '$ref' in $type is not an IdList.")
-        }
+        val result =
+            when (entry) {
+                is RscmEntry.IdList -> entry.values
+                else -> error("Mapping '$ref' in $type is not an IdList.")
+            }
 
-        //println("[Rscm] lookupList '$name' returned IDs: $result")
+        // println("[Rscm] lookupList '$name' returned IDs: $result")
         return result
     }
 
@@ -99,8 +126,9 @@ object Rscm {
         }
 
         val (type, ref) = parts
-        val entry = mappings[type]?.get(ref)
-            ?: error("Mapping '$ref' not found in $type mappings.")
+        val entry =
+            mappings[type]?.get(ref)
+                ?: error("Mapping '$ref' not found in $type mappings.")
 
         return when (entry) {
             is RscmEntry.Id -> entry.value
@@ -109,49 +137,52 @@ object Rscm {
     }
 
     @JvmStatic
-    fun reverseLookup(id: Int): String? {
-        return reverseMappings[id]
-    }
+    fun reverseLookup(id: Int): String? = reverseMappings[id]
 
     private fun load(file: Path): Map<String, RscmEntry> {
         val locationRegex = Regex("""^(?<NAME>.+)=(?<X>\d+),(?<Y>\d+),(?<PLANE>\d+)$""")
         val idRegex = Regex("""^(?<NAME>.+)=(?<ID>\d+)$""")
         val idListRegex = Regex("""^(?<NAME>.+)=\[(?<IDS>[\d,\s]+)]$""")
 
-        return file.readLines().mapIndexedNotNull { index, line ->
-            val trimmedLine = line.trim()
+        return file
+            .readLines()
+            .mapIndexedNotNull { index, line ->
+                val trimmedLine = line.trim()
 
-            if (trimmedLine.isEmpty() || trimmedLine.startsWith("#")) {
-                return@mapIndexedNotNull null
-            }
+                if (trimmedLine.isEmpty() || trimmedLine.startsWith("#")) {
+                    return@mapIndexedNotNull null
+                }
 
-            when {
-                locationRegex.matches(trimmedLine) -> {
-                    val match = locationRegex.find(trimmedLine)!!
-                    val name = match.groups["NAME"]!!.value.trim()
-                    val x = match.groups["X"]!!.value.toInt()
-                    val y = match.groups["Y"]!!.value.toInt()
-                    val plane = match.groups["PLANE"]!!.value.toInt()
-                    name to RscmEntry.Location(x, y, plane)
+                when {
+                    locationRegex.matches(trimmedLine) -> {
+                        val match = locationRegex.find(trimmedLine)!!
+                        val name = match.groups["NAME"]!!.value.trim()
+                        val x = match.groups["X"]!!.value.toInt()
+                        val y = match.groups["Y"]!!.value.toInt()
+                        val plane = match.groups["PLANE"]!!.value.toInt()
+                        name to RscmEntry.Location(x, y, plane)
+                    }
+
+                    idRegex.matches(trimmedLine) -> {
+                        val match = idRegex.find(trimmedLine)!!
+                        val name = match.groups["NAME"]!!.value.trim()
+                        val id = match.groups["ID"]!!.value.toInt()
+                        name to RscmEntry.Id(id)
+                    }
+
+                    idListRegex.matches(trimmedLine) -> {
+                        val match = idListRegex.find(trimmedLine)!!
+                        val name = match.groups["NAME"]!!.value.trim()
+                        val idsString = match.groups["IDS"]!!.value
+                        val ids = idsString.split(",").map { it.trim().toInt() }
+                        name to RscmEntry.IdList(ids)
+                    }
+
+                    else -> {
+                        println("[Rscm] Ignored invalid line #${index + 1}: \"$line\"")
+                        null
+                    }
                 }
-                idRegex.matches(trimmedLine) -> {
-                    val match = idRegex.find(trimmedLine)!!
-                    val name = match.groups["NAME"]!!.value.trim()
-                    val id = match.groups["ID"]!!.value.toInt()
-                    name to RscmEntry.Id(id)
-                }
-                idListRegex.matches(trimmedLine) -> {
-                    val match = idListRegex.find(trimmedLine)!!
-                    val name = match.groups["NAME"]!!.value.trim()
-                    val idsString = match.groups["IDS"]!!.value
-                    val ids = idsString.split(",").map { it.trim().toInt() }
-                    name to RscmEntry.IdList(ids)
-                }
-                else -> {
-                    println("[Rscm] Ignored invalid line #${index + 1}: \"$line\"")
-                    null
-                }
-            }
-        }.toMap()
+            }.toMap()
     }
 }

@@ -3,6 +3,7 @@ package com.rs.kotlin.game.npc.drops.rare
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.Drop
+import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.DropEntry
 import com.rs.kotlin.game.npc.drops.DropSource
 import com.rs.kotlin.game.npc.drops.DropTablesSetup
@@ -64,11 +65,11 @@ class GodwarsGemTableEntry : DropEntry(-1, 1..1) {
         table.add(ItemWeightedEntry(marker, 1..1, weight))
     }
 
-    override fun roll(player: Player): Drop? {
+    override fun roll(context: DropContext): Drop? {
         val entries = table.mutableEntries()
 
         val filtered =
-            if (player.hasRingOfWealth()) {
+            if (context.player.hasRingOfWealth()) {
                 entries.filterNot { it is ItemWeightedEntry && it.itemId == NOTHING_MARKER }
             } else {
                 entries
@@ -80,7 +81,7 @@ class GodwarsGemTableEntry : DropEntry(-1, 1..1) {
         temp.setSize(128)
         filtered.forEach { temp.add(it) }
 
-        val result = temp.roll(player, source = DropSource.GEM) ?: return null
+        val result = temp.roll(context.copy(dropSource = DropSource.GEM)) ?: return null
 
         return when (result.itemId) {
             NOTHING_MARKER -> {
@@ -88,7 +89,9 @@ class GodwarsGemTableEntry : DropEntry(-1, 1..1) {
             }
 
             MEGA_RARE_MARKER -> {
-                DropTablesSetup.megaRareTable.roll(player)
+                DropTablesSetup.megaRareTable.roll(
+                    context.copy(dropSource = DropSource.MEGARARE),
+                )
             }
 
             else -> {

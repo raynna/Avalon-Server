@@ -23,10 +23,16 @@ import com.rs.kotlin.game.world.util.Msg
 import java.io.File
 import java.util.concurrent.ThreadLocalRandom
 
+fun either(vararg keys: String): String {
+    require(keys.isNotEmpty())
+    return keys[ThreadLocalRandom.current().nextInt(keys.size)]
+}
+
 fun dropTable(
     rolls: Int = 1,
     name: String = "DropTable",
     category: TableCategory = TableCategory.REGULAR,
+    sourceAction: String = "killing",
     herbTables: HerbTableConfig,
     seedTable: SeedTableConfig? = null,
     rareTable: RareTableConfig? = null,
@@ -39,6 +45,7 @@ fun dropTable(
         rolls,
         name,
         category,
+        sourceAction,
         herbTables = listOf(herbTables),
         seedTable,
         rareTable,
@@ -52,6 +59,7 @@ fun dropTable(
     rolls: Int = 1,
     name: String = "DropTable",
     category: TableCategory = TableCategory.REGULAR,
+    sourceAction: String = "killing",
     herbTables: List<HerbTableConfig> = emptyList(),
     seedTable: SeedTableConfig? = null,
     rareTable: RareTableConfig? = null,
@@ -60,58 +68,71 @@ fun dropTable(
     godwarsGemTable: GemTableConfig? = null,
     block: DropTable.() -> Unit,
 ): DropTable =
-    DropTable(rolls, name, category).apply {
+    DropTable(rolls, name, category, sourceAction).apply {
         godwarsRareTable?.let { cfg ->
-            rareTableConfig = cfg
-            rareTableRoller = { player, drops ->
+            godwarsRareTableConfig = cfg
+            rareTableRoller = { context, drops ->
+
                 val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
                 if (roll >= cfg.numerator) {
                     false
                 } else {
-                    godwarsRareDropTable.roll(player)?.let {
-                        addAndProcessDrop(player, drops, it)
-                        true
-                    } ?: false
+                    val rareContext = context.copy(dropSource = DropSource.RARE)
+
+                    godwarsRareDropTable
+                        .roll(rareContext)
+                        ?.let {
+                            addAndProcessDrop(context.player, drops, it)
+                            true
+                        } ?: false
                 }
             }
         }
+        // ---------- RARE TABLE ----------
         rareTable?.let { cfg ->
             rareTableConfig = cfg
-            rareTableRoller = { player, drops ->
+            rareTableRoller = { context, drops ->
+
                 val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
                 if (roll >= cfg.numerator) {
                     false
                 } else {
-                    rareDropTable.roll(player)?.let {
-                        addAndProcessDrop(player, drops, it)
-                        true
-                    } ?: false
+                    val rareContext = context.copy(dropSource = DropSource.RARE)
+
+                    rareDropTable
+                        .roll(rareContext)
+                        ?.let {
+                            addAndProcessDrop(context.player, drops, it)
+                            true
+                        } ?: false
                 }
             }
         }
         gemTable?.let { cfg ->
             gemTableConfig = cfg
-            gemTableRoller = { player, drops ->
+            gemTableRoller = { context, drops ->
                 val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
                 if (roll >= cfg.numerator) {
                     false
                 } else {
-                    gemDropTable.roll(player)?.let {
-                        addAndProcessDrop(player, drops, it)
+                    val gemContext = context.copy(dropSource = DropSource.RARE)
+                    gemDropTable.roll(gemContext)?.let {
+                        addAndProcessDrop(context.player, drops, it)
                         true
                     } ?: false
                 }
             }
         }
         godwarsGemTable?.let { cfg ->
-            gemTableConfig = cfg
-            gemTableRoller = { player, drops ->
+            godwarsGemTableConfig = cfg
+            gemTableRoller = { context, drops ->
                 val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
                 if (roll >= cfg.numerator) {
                     false
                 } else {
-                    godwarsGemDropTable.roll(player)?.let {
-                        addAndProcessDrop(player, drops, it)
+                    val gemContext = context.copy(dropSource = DropSource.RARE)
+                    godwarsGemDropTable.roll(gemContext)?.let {
+                        addAndProcessDrop(context.player, drops, it)
                         true
                     } ?: false
                 }
@@ -121,15 +142,16 @@ fun dropTable(
 
         if (herbTables.isNotEmpty()) {
             herbTables.forEach { cfg ->
-                herbTable { player, drops ->
+                herbTable { context, drops ->
 
                     val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
 
                     if (roll < cfg.numerator) {
-                        herbDropTable.roll(player)?.let { baseDrop ->
+                        val herbContext = context.copy(dropSource = DropSource.HERB)
+                        herbDropTable.roll(herbContext)?.let { baseDrop ->
                             val rolledAmount = cfg.amount.random()
                             val newDrop = baseDrop.copy(amount = rolledAmount)
-                            addAndProcessDrop(player, drops, newDrop)
+                            addAndProcessDrop(context.player, drops, newDrop)
                         }
                     }
 
@@ -139,25 +161,27 @@ fun dropTable(
         }
         seedTableConfig = seedTable
         if (seedTable != null) {
-            seedTable { player, combatLevel, drops ->
+            seedTable { context, combatLevel, drops ->
 
                 val roll = ThreadLocalRandom.current().nextInt(seedTable.denominator)
-                if (roll >= seedTable.numerator) return@seedTable false
+                if (roll >= seedTable.numerator) {
+                    false
+                } else {
+                    val seedContext = context.copy(dropSource = DropSource.SEED)
 
-                val result =
-                    DropTablesSetup.seedDropTable.roll(
-                        seedTable.table,
-                        player,
-                        combatLevel,
-                    )
+                    val result =
+                        DropTablesSetup.seedDropTable.roll(
+                            seedTable.table,
+                            seedContext,
+                            combatLevel,
+                        )
 
-                result?.let {
-                    val finalAmount = seedTable.amount.random()
-                    drops.add(it.copy(amount = finalAmount))
-                    return@seedTable true
+                    result?.let {
+                        val finalAmount = seedTable.amount.random()
+                        drops.add(it.copy(amount = finalAmount))
+                        true
+                    } ?: false
                 }
-
-                false
             }
         }
 
@@ -168,6 +192,7 @@ class DropTable(
     private val rolls: Int = 1,
     var name: String = "DropTable",
     val category: TableCategory = TableCategory.REGULAR,
+    var sourceAction: String = "killing",
     var collectionGroup: String? = null,
 ) {
     private val alwaysDrops = mutableListOf<DropEntry>()
@@ -178,16 +203,18 @@ class DropTable(
     private val specialDrops = WeightedTable()
     private var charmTable: SummoningCharms? = null
 
-    private val herbTableRollers = mutableListOf<(Player, MutableList<Drop>) -> Boolean>()
-    var rareTableRoller: ((Player, MutableList<Drop>) -> Boolean)? = null
-    var gemTableRoller: ((Player, MutableList<Drop>) -> Boolean)? = null
+    private val herbTableRollers = mutableListOf<(DropContext, MutableList<Drop>) -> Boolean>()
+    var rareTableRoller: ((DropContext, MutableList<Drop>) -> Boolean)? = null
+    var gemTableRoller: ((DropContext, MutableList<Drop>) -> Boolean)? = null
+    private var seedTableRoller: ((DropContext, Int, MutableList<Drop>) -> Boolean)? = null
+
     var herbTableConfigs: List<HerbTableConfig>? = null
     var rareTableConfig: RareTableConfig? = null
     var godwarsRareTableConfig: RareTableConfig? = null
     var gemTableConfig: GemTableConfig? = null
     var godwarsGemTableConfig: GemTableConfig? = null
-    private var seedTableRoller: ((Player, Int, MutableList<Drop>) -> Boolean)? = null
     var seedTableConfig: SeedTableConfig? = null
+
     private var currentContext: DropType? = null
     private var currentWeightedTable: WeightedTable? = null
 
@@ -202,7 +229,7 @@ class DropTable(
             parentChance: Double = 1.0,
         ) {
             val entries = table.mutableEntries()
-            val total = entries.sumOf { it.weight }.toDouble()
+            val total = table.tableSize().toDouble()
             val nothingWeight =
                 entries
                     .filterIsInstance<ItemWeightedEntry>()
@@ -319,6 +346,9 @@ class DropTable(
 
                     is NestedTableEntry -> {
                         val chanceToEnter = parentChance * (entry.weight / total)
+                        println(
+                            "Entering nested table: parentChance=$parentChance weight=${entry.weight} total=$total result=$chanceToEnter",
+                        )
                         addWeightedTableDisplays(entry.table, dropType, chanceToEnter)
                     }
 
@@ -428,7 +458,7 @@ class DropTable(
                             -1,
                             cfg.amount,
                             "General seed table",
-                            DropType.PREROLL,
+                            DropType.MAIN,
                             cfg.denominator,
                         ),
                     )
@@ -478,7 +508,7 @@ class DropTable(
                                 entry.itemId,
                                 cfg.amount,
                                 "1/$denom",
-                                DropType.PREROLL,
+                                DropType.MAIN,
                                 denom,
                             ),
                         )
@@ -735,15 +765,15 @@ class DropTable(
         currentContext = null
     }
 
-    fun gemTable(block: (Player, MutableList<Drop>) -> Boolean) {
+    fun gemTable(block: (DropContext, MutableList<Drop>) -> Boolean) {
         gemTableRoller = block
     }
 
-    fun herbTable(block: (Player, MutableList<Drop>) -> Boolean) {
+    fun herbTable(block: (DropContext, MutableList<Drop>) -> Boolean) {
         herbTableRollers += block
     }
 
-    fun seedTable(block: (Player, Int, MutableList<Drop>) -> Boolean) {
+    fun seedTable(block: (DropContext, Int, MutableList<Drop>) -> Boolean) {
         seedTableRoller = block
     }
 
@@ -752,8 +782,8 @@ class DropTable(
         numerator: Int = 1,
         denominator: Int = 4,
         amount: IntRange = 1..1,
-        condition: ((Player) -> Boolean)? = null,
-        dynamicItem: (Player) -> Int?,
+        condition: ((DropContext) -> Boolean)? = null,
+        dynamicItem: (DropContext) -> Int?,
         displayItems: List<String>? = null,
         meta: (DropMetadata.() -> Unit)? = null,
     ) {
@@ -778,6 +808,7 @@ class DropTable(
     }
 
     fun MutableList<WeightedEntry>.nestedTable(
+        weight: Int,
         size: Int,
         block: MutableList<WeightedEntry>.() -> Unit,
     ) {
@@ -788,9 +819,7 @@ class DropTable(
         nested.mutableEntries().block()
         currentWeightedTable = prev
 
-        nested.mutableEntries().forEach { entry ->
-            this.add(entry)
-        }
+        this.add(NestedTableEntry(nested, weight))
     }
 
     fun DropTable.drop(
@@ -799,7 +828,7 @@ class DropTable(
         weight: Int = 1,
         numerator: Int = 1,
         denominator: Int = 4,
-        condition: ((Player) -> Boolean)? = null,
+        condition: ((DropContext) -> Boolean)? = null,
         customLogic: ((Player, Drop?) -> Unit)? = null,
         meta: (DropMetadata.() -> Unit)? = null,
     ) {
@@ -863,7 +892,7 @@ class DropTable(
         weight: Int = 1,
         numerator: Int = 1,
         denominator: Int = 4,
-        condition: ((Player) -> Boolean)? = null,
+        condition: ((DropContext) -> Boolean)? = null,
         customLogic: ((Player, Drop?) -> Unit)? = null,
         meta: (DropMetadata.() -> Unit)? = null,
     ) = drop(item, amount..amount, weight, numerator, denominator, condition, customLogic, meta)
@@ -872,11 +901,19 @@ class DropTable(
         context: DropType,
         item: Int,
         amount: IntRange,
-        condition: ((Player) -> Boolean)? = null,
+        condition: ((DropContext) -> Boolean)? = null,
         customLogic: ((Player, Drop?) -> Unit)? = null,
         metadata: DropMetadata = DropMetadata(),
     ) {
-        val entry = DropEntry(item, amount, always = context == DropType.ALWAYS, condition = condition, metadata = metadata)
+        val entry =
+            DropEntry(
+                itemId = item,
+                amount = amount,
+                always = context == DropType.ALWAYS,
+                condition = condition,
+                metadata = metadata,
+            )
+
         when (context) {
             DropType.ALWAYS -> alwaysDrops.add(entry)
             else -> error("Cannot addDrop to context $context")
@@ -908,7 +945,13 @@ class DropTable(
         }
 
         if (meta.announce) {
-            Msg.newsRare("${player.displayName} received ${ItemDefinitions.getItemDefinitions(drop.itemId).name}!")
+            val itemName = ItemDefinitions.getItemDefinitions(drop.itemId).name
+            val sourceName = drop.context.sourceName
+            val action = drop.context.sourceAction
+
+            Msg.newsRare(
+                "${player.displayName} received $itemName from $action $sourceName!",
+            )
         }
     }
 
@@ -924,9 +967,17 @@ class DropTable(
     ): List<Drop> {
         val drops = mutableListOf<Drop>()
 
+        val baseContext =
+            DropContext(
+                player = player,
+                sourceName = name,
+                sourceAction = sourceAction,
+                tableCategory = category,
+                dropSource = DropSource.MAIN,
+            )
         // ALWAYS
         alwaysDrops.forEach {
-            it.roll(player)?.let { drop ->
+            it.roll(baseContext)?.let { drop ->
                 addAndProcessDrop(player, drops, drop)
             }
         }
@@ -934,7 +985,7 @@ class DropTable(
         // PREROLL
         var preRollHit = false
         for (entry in preRollDrops) {
-            val drop = entry.roll(player, multiplier)
+            val drop = entry.roll(baseContext, multiplier)
             if (drop != null) {
                 addAndProcessDrop(player, drops, drop)
                 preRollHit = true
@@ -942,55 +993,50 @@ class DropTable(
             }
         }
 
-        // RARE TABLE
+        // RARE
         rareTableRoller?.let {
-            if (it(player, drops)) return drops
+            if (it(baseContext, drops)) return drops
         }
 
-        // GEM TABLE
+        // GEM
         gemTableRoller?.let {
-            if (it(player, drops)) return drops
+            if (it(baseContext, drops)) return drops
         }
 
-        // HERB TABLE
-        herbTableRollers.forEach { it(player, drops) }
+        // HERB
+        herbTableRollers.forEach {
+            it(baseContext, drops)
+        }
 
         // SEED TABLE
         seedTableRoller?.let {
-            if (it(player, combatLevel, drops)) return drops
+            if (it(baseContext, combatLevel, drops)) return drops
         }
 
         // MAIN ROLLS
         if (!preRollHit) {
             repeat(rolls) {
-                if (gemTableRoller?.invoke(player, drops) == true) return@repeat
+                mainDrops
+                    .roll(baseContext.copy(dropSource = DropSource.MAIN))
+                    ?.let { addAndProcessDrop(player, drops, it) }
 
-                mainDrops.roll(player, source = DropSource.MAIN)?.let {
-                    addAndProcessDrop(player, drops, it)
-                }
-
-                minorDrops.roll(player, source = DropSource.MINOR)?.let {
-                    addAndProcessDrop(player, drops, it)
-                }
+                minorDrops
+                    .roll(baseContext.copy(dropSource = DropSource.MINOR))
+                    ?.let { addAndProcessDrop(player, drops, it) }
             }
         }
 
-        // SPECIAL
-        if (specialDrops.size() > 0) {
-            specialDrops.roll(player, source = DropSource.SPECIAL)?.let {
-                addAndProcessDrop(player, drops, it)
-            }
-        }
+        specialDrops
+            .roll(baseContext.copy(dropSource = DropSource.SPECIAL))
+            ?.let { addAndProcessDrop(player, drops, it) }
 
         // TERTIARY
-        tertiaryDrops.forEach {
-            it.roll(player, multiplier)?.let { drop ->
-                addAndProcessDrop(player, drops, drop)
-            }
-        }
+        specialDrops
+            .roll(baseContext.copy(dropSource = DropSource.SPECIAL))
+            ?.let { addAndProcessDrop(player, drops, it) }
 
         // CHARMS
-        charmTable?.roll()?.let {
+        charmTable?.roll(baseContext)?.let {
             addAndProcessDrop(player, drops, it)
         }
 
@@ -1036,142 +1082,269 @@ class DropTable(
 
     fun totalDropCount(): Int = alwaysDrops.size + preRollDrops.size + mainDrops.size() + tertiaryDrops.size + specialDrops.size()
 
+    private fun appendWeightedTableDebug(
+        sb: StringBuilder,
+        table: WeightedTable,
+        tableLabel: String,
+        path: String,
+        depth: Int,
+        parentChance: Double = 1.0,
+    ) {
+        val entries = table.mutableEntries()
+
+        val configuredSize = table.tableSize
+        val computedSum = entries.sumOf { it.weight }
+        val effectiveTotal = if (configuredSize > 0) configuredSize else computedSum
+
+        if (effectiveTotal <= 0) return
+
+        val implicitNothingWeight = (effectiveTotal - computedSum).coerceAtLeast(0)
+        val implicitNothingChance =
+            if (implicitNothingWeight > 0) {
+                implicitNothingWeight.toDouble() / effectiveTotal.toDouble()
+            } else {
+                0.0
+            }
+
+        // --- TABLE HEADER DEBUG OBJECT ---
+        sb.append(
+            """
+            {
+                "kind":"table",
+                "label":"${jsonEscape(tableLabel)}",
+                "path":"${jsonEscape(path)}",
+                "depth":$depth,
+                "configuredSize":$configuredSize,
+                "computedWeightSum":$computedSum,
+                "effectiveTotalUsed":$effectiveTotal,
+                "implicitNothingWeight":$implicitNothingWeight,
+                "implicitNothingChance":${"%.12f".format(implicitNothingChance)},
+                "parentChance":${"%.12f".format(parentChance)}
+            },
+            """.trimIndent(),
+        )
+
+        // --- ENTRY LOOP ---
+        for ((index, entry) in entries.withIndex()) {
+            val entryWeight = entry.weight
+            if (entryWeight <= 0) continue
+
+            val entryChanceInTable = entryWeight.toDouble() / effectiveTotal.toDouble()
+            val combinedChance = parentChance * entryChanceInTable
+            val combinedDenom =
+                if (combinedChance > 0) {
+                    1.0 / combinedChance
+                } else {
+                    Double.POSITIVE_INFINITY
+                }
+
+            when (entry) {
+                is ItemWeightedEntry -> {
+                    val itemName =
+                        try {
+                            ItemDefinitions.getItemDefinitions(entry.itemId).name
+                        } catch (e: Exception) {
+                            "Unknown"
+                        }
+
+                    sb.append(
+                        """
+                        {
+                            "kind":"entry",
+                            "entryType":"ITEM",
+                            "index":$index,
+                            "path":"${jsonEscape(path)}",
+                            "depth":$depth,
+                            "itemId":${entry.itemId},
+                            "itemName":"${jsonEscape(itemName)}",
+                            "amount":"${jsonEscape(entry.amount.toString())}",
+                            "weight":$entryWeight,
+                            "entryChanceInTable":${"%.12f".format(entryChanceInTable)},
+                            "combinedChance":${"%.12f".format(combinedChance)},
+                            "combinedDenom":${"%.6f".format(combinedDenom)}
+                        },
+                        """.trimIndent(),
+                    )
+                }
+
+                is PackageWeightedEntry -> {
+                    sb.append(
+                        """
+                        {
+                            "kind":"entry",
+                            "entryType":"PACKAGE",
+                            "index":$index,
+                            "path":"${jsonEscape(path)}",
+                            "depth":$depth,
+                            "weight":$entryWeight,
+                            "entryChanceInTable":${"%.12f".format(entryChanceInTable)},
+                            "combinedChance":${"%.12f".format(combinedChance)},
+                            "combinedDenom":${"%.6f".format(combinedDenom)}
+                        },
+                        """.trimIndent(),
+                    )
+
+                    entry.displayDrops.forEach { dd ->
+
+                        val itemName =
+                            try {
+                                ItemDefinitions.getItemDefinitions(dd.itemId).name
+                            } catch (e: Exception) {
+                                "Unknown"
+                            }
+
+                        sb.append(
+                            """
+                            {
+                                "kind":"entry",
+                                "entryType":"PACKAGE_ITEM",
+                                "index":$index,
+                                "path":"${jsonEscape(path)}",
+                                "depth":$depth,
+                                "itemId":${dd.itemId},
+                                "itemName":"${jsonEscape(itemName)}",
+                                "amount":"${jsonEscape(dd.amount.toString())}",
+                                "combinedChance":${"%.12f".format(combinedChance)},
+                                "combinedDenom":${"%.6f".format(combinedDenom)}
+                            },
+                            """.trimIndent(),
+                        )
+                    }
+                }
+
+                is NestedTableEntry -> {
+                    sb.append(
+                        """
+                        {
+                            "kind":"entry",
+                            "entryType":"NESTED",
+                            "index":$index,
+                            "path":"${jsonEscape(path)}",
+                            "depth":$depth,
+                            "weight":$entryWeight,
+                            "entryChanceInTable":${"%.12f".format(entryChanceInTable)},
+                            "combinedChance":${"%.12f".format(combinedChance)},
+                            "combinedDenom":${"%.6f".format(combinedDenom)}
+                        },
+                        """.trimIndent(),
+                    )
+
+                    appendWeightedTableDebug(
+                        sb = sb,
+                        table = entry.table,
+                        tableLabel = "NestedTable",
+                        path = "$path > nested#$index",
+                        depth = depth + 1,
+                        parentChance = combinedChance,
+                    )
+                }
+            }
+        }
+
+        // --- IMPLICIT NOTHING DEBUG ---
+        if (implicitNothingWeight > 0) {
+            val combinedChance = parentChance * implicitNothingChance
+            val combinedDenom =
+                if (combinedChance > 0) {
+                    1.0 / combinedChance
+                } else {
+                    Double.POSITIVE_INFINITY
+                }
+
+            sb.append(
+                """
+                {
+                    "kind":"entry",
+                    "entryType":"IMPLICIT_NOTHING",
+                    "path":"${jsonEscape(path)}",
+                    "depth":$depth,
+                    "weight":$implicitNothingWeight,
+                    "combinedChance":${"%.12f".format(combinedChance)},
+                    "combinedDenom":${"%.6f".format(combinedDenom)}
+                },
+                """.trimIndent(),
+            )
+        }
+    }
+
+    private fun jsonEscape(s: String): String =
+        buildString(s.length + 8) {
+            for (c in s) {
+                when (c) {
+                    '\\' -> append("\\\\")
+                    '"' -> append("\\\"")
+                    '\n' -> append("\\n")
+                    '\r' -> append("\\r")
+                    '\t' -> append("\\t")
+                    else -> append(c)
+                }
+            }
+        }
+
     fun exportRatesToJson(multiplier: Double): String {
         val sb = StringBuilder()
 
         sb.append("{\n")
-        sb.append("\"name\":\"$name\",\n")
+        sb.append("\"name\":\"${jsonEscape(name)}\",\n")
         sb.append("\"multiplier\":$multiplier,\n")
 
-        // ---------------- ALWAYS ----------------
+        // ---------- ALWAYS ----------
         sb.append("\"alwaysDrops\":[\n")
         alwaysDrops.forEachIndexed { i, e ->
             sb.append(
-                "{" +
-                    "\"itemId\":${e.itemId}," +
-                    "\"name\":\"${ItemDefinitions.getItemDefinitions(e.itemId).name}\"," +
-                    "\"amount\":\"${e.amount}\"" +
-                    "}",
+                """
+                {
+                    "itemId":${e.itemId},
+                    "name":"${jsonEscape(ItemDefinitions.getItemDefinitions(e.itemId).name)}",
+                    "amount":"${jsonEscape(e.amount.toString())}"
+                }
+                """.trimIndent(),
             )
             if (i < alwaysDrops.size - 1) sb.append(",")
             sb.append("\n")
         }
         sb.append("],\n")
 
-        // ---------------- PREROLL ----------------
-        sb.append("\"preRollDrops\":[\n")
-        preRollDrops.forEachIndexed { i, e ->
-
-            val boostedDenom =
-                (e.denominator / multiplier)
-                    .toInt()
-                    .coerceAtLeast(1)
-
-            sb.append(
-                "{" +
-                    "\"itemId\":${e.itemId}," +
-                    "\"name\":\"${ItemDefinitions.getItemDefinitions(e.itemId).name}\"," +
-                    "\"amount\":\"${e.amount}\"," +
-                    "\"originalRate\":\"${e.numerator}/${e.denominator}\"," +
-                    "\"boostedRate\":\"1/$boostedDenom\"" +
-                    "}",
-            )
-
-            if (i < preRollDrops.size - 1) sb.append(",")
-            sb.append("\n")
-        }
-        sb.append("],\n")
-
-        // ---------------- MAIN / MINOR / SPECIAL ----------------
-        fun appendWeightedTable(
-            table: WeightedTable,
-            parentChance: Double = 1.0,
-        ) {
-            val entries = table.mutableEntries()
-            val total = entries.sumOf { it.weight }.toDouble()
-            if (total <= 0.0) return
-
-            for (entry in entries) {
-                when (entry) {
-                    is PackageWeightedEntry -> {
-                        val chance = parentChance * (entry.weight / total)
-                        val denom = (1.0 / chance).coerceAtLeast(1.0)
-
-                        entry.displayDrops.forEach { dd ->
-                            sb.append(
-                                "{" +
-                                    "\"itemId\":${dd.itemId}," +
-                                    "\"name\":\"${ItemDefinitions.getItemDefinitions(dd.itemId).name}\"," +
-                                    "\"amount\":\"${dd.amount}\"," +
-                                    "\"rate\":\"1/${"%.2f".format(denom)}\"" +
-                                    "},\n",
-                            )
-                        }
-                    }
-
-                    is ItemWeightedEntry -> {
-                        val chance = parentChance * (entry.weight / total)
-                        val denom = (1.0 / chance).coerceAtLeast(1.0)
-
-                        sb.append(
-                            "{" +
-                                "\"itemId\":${entry.itemId}," +
-                                "\"name\":\"${ItemDefinitions.getItemDefinitions(entry.itemId).name}\"," +
-                                "\"amount\":\"${entry.amount}\"," +
-                                "\"rate\":\"1/${"%.2f".format(denom)}\"" +
-                                "},\n",
-                        )
-                    }
-
-                    is NestedTableEntry -> {
-                        val nestedChance = parentChance * (entry.weight / total)
-                        appendWeightedTable(entry.table, nestedChance)
-                    }
-                }
-            }
-        }
-
+        // ---------- MAIN ----------
         sb.append("\"mainDrops\":[\n")
-        appendWeightedTable(mainDrops)
+        appendWeightedTableDebug(
+            sb = sb,
+            table = mainDrops,
+            tableLabel = "MainDrops",
+            path = "main",
+            depth = 0,
+            parentChance = 1.0,
+        )
         if (sb.endsWith(",\n")) sb.setLength(sb.length - 2)
         sb.append("\n],\n")
 
+        // ---------- MINOR ----------
         sb.append("\"minorDrops\":[\n")
-        appendWeightedTable(minorDrops)
+        appendWeightedTableDebug(
+            sb = sb,
+            table = minorDrops,
+            tableLabel = "MinorDrops",
+            path = "minor",
+            depth = 0,
+            parentChance = 1.0,
+        )
         if (sb.endsWith(",\n")) sb.setLength(sb.length - 2)
         sb.append("\n],\n")
 
+        // ---------- SPECIAL ----------
         sb.append("\"specialDrops\":[\n")
-        appendWeightedTable(specialDrops)
+        appendWeightedTableDebug(
+            sb = sb,
+            table = specialDrops,
+            tableLabel = "SpecialDrops",
+            path = "special",
+            depth = 0,
+            parentChance = 1.0,
+        )
         if (sb.endsWith(",\n")) sb.setLength(sb.length - 2)
-        sb.append("\n],\n")
+        sb.append("\n]\n")
 
-        // ---------------- TERTIARY ----------------
-        sb.append("\"tertiaryDrops\":[\n")
-        tertiaryDrops.forEachIndexed { i, e ->
-
-            val boosted =
-                (e.denominator / multiplier)
-                    .toInt()
-                    .coerceAtLeast(1)
-
-            sb.append(
-                "{" +
-                    "\"itemId\":${e.itemId}," +
-                    "\"name\":\"${ItemDefinitions.getItemDefinitions(e.itemId).name}\"," +
-                    "\"amount\":\"${e.amount}\"," +
-                    "\"originalRate\":\"1/${e.denominator}\"," +
-                    "\"boostedRate\":\"1/$boosted\"" +
-                    "}",
-            )
-
-            if (i < tertiaryDrops.size - 1) sb.append(",")
-            sb.append("\n")
-        }
-
-        sb.append("]\n")
         sb.append("}")
-
         return sb.toString()
     }
 

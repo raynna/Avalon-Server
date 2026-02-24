@@ -6,18 +6,25 @@ class ItemWeightedEntry(
     val itemId: Int,
     val amount: IntRange,
     override val weight: Int = 1,
-    private val condition: ((Player) -> Boolean)? = null,
+    private val condition: ((DropContext) -> Boolean)? = null,
     private val customLogic: ((Player, Drop?) -> Unit)? = null,
     val metadata: DropMetadata = DropMetadata(),
 ) : WeightedEntry {
-    override fun roll(
-        player: Player,
-        source: DropSource,
-    ): Drop? {
-        if (condition != null && !condition.invoke(player)) return null
+    override fun roll(context: DropContext): Drop? {
+        if (condition != null && !condition.invoke(context)) {
+            return null
+        }
 
-        val drop = Drop(itemId, amount.random(), source = source)
-        customLogic?.invoke(player, drop)
+        val drop =
+            Drop(
+                itemId = itemId,
+                amount = amount.random(),
+                context = context,
+                metadata = metadata,
+            )
+
+        customLogic?.invoke(context.player, drop)
+
         return drop
     }
 }

@@ -21,21 +21,14 @@ import com.rs.kotlin.game.npc.drops.tables.*
 import com.rs.kotlin.game.npc.worldboss.WorldBossTable
 
 object DropTablesSetup {
-    lateinit var gemDropTable: GemTableEntry
-        private set
-    lateinit var rareDropTable: RareDropTableEntry
-        private set
-    lateinit var megaRareTable: MegaRareTableEntry
-        private set
-    lateinit var herbDropTable: HerbTableEntry
-        private set
-    lateinit var seedDropTable: SeedTableEntry
-        private set
+    val rareDropTable by lazy { RareDropTableEntry() }
+    val gemDropTable by lazy { GemTableEntry() }
+    val megaRareTable by lazy { MegaRareTableEntry() }
+    val herbDropTable by lazy { HerbTableEntry() }
+    val seedDropTable by lazy { SeedTableEntry() }
 
-    lateinit var godwarsGemDropTable: GodwarsGemTableEntry
-        private set
-    lateinit var godwarsRareDropTable: GodwarsRareTableEntry
-        private set
+    val godwarsRareDropTable by lazy { GodwarsRareTableEntry() }
+    val godwarsGemDropTable by lazy { GodwarsGemTableEntry() }
 
     @Suppress("ktlint:standard:kdoc")
     @JvmStatic
@@ -43,12 +36,6 @@ object DropTablesSetup {
         /**
          * Shared Sub Tables
          **/
-
-        rareDropTable = RareDropTableEntry()
-        gemDropTable = GemTableEntry()
-        megaRareTable = MegaRareTableEntry()
-        herbDropTable = HerbTableEntry()
-        seedDropTable = SeedTableEntry()
 
         /**
          * Special / Global Tables
@@ -128,6 +115,7 @@ object DropTablesSetup {
         )
 
         registerNpcKeyDropTable(DarkBeastTable.table, "npc.dark_beast_lv182")
+        registerNpcGroupDropTable(KuraskDropTable.table, "npc_group.kurask_lv106")
         registerNpcGroupDropTable(GargoyleDropTable.table, "npc_group.gargoyle_lv111")
         registerNpcGroupDropTable(NechryaelDropTable.table, "npc_group.nechryael_lv115")
 
@@ -202,12 +190,12 @@ object DropTablesSetup {
         registerNpcGroupDropTable(KalphiteWorkerDropTable.table, "npc_group.kalphite_worker_lv28")
 
         DropTableRegistry.logDropTableSizes()
-        DropTableRegistry
+        /*DropTableRegistry
             .getAllSources()
             .mapNotNull { DropTableRegistry.getTableForSource(it) }
             .distinct()
             .forEach { table ->
                 registerNamedTable(table.name, table)
-            }
+            }*/
     }
 }

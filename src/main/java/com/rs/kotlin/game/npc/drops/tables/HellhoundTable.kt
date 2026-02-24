@@ -29,7 +29,7 @@ object HellhoundTable {
                     "item.scroll_box_hard",
                     numerator = 1,
                     denominator = 64,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.EASY) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.EASY) },
                 )
             }
         }.apply { name = "Hellhound" }

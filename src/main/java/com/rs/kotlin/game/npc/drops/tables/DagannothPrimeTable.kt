@@ -62,13 +62,13 @@ object DagannothPrimeTable {
                     "item.scroll_box_hard",
                     numerator = 1,
                     denominator = 42,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
                 )
                 drop(
                     "item.scroll_box_elite",
                     numerator = 1,
                     denominator = 750,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
                 )
             }
         }.apply { name = "Dagannoth Prime" }

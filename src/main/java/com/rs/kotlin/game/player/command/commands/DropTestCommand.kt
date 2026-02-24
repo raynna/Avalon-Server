@@ -74,7 +74,6 @@ class DropTestCommand : Command {
 
         for ((itemId, totalAmount) in dropCounts) {
             player.getBank().addItem(itemId, totalAmount, true)
-            player.collectionLog.addItem(Item(itemId, totalAmount))
         }
         player.message("Simulated $times kills of NPC ID $npcId. Drops deposited to bank.")
     }

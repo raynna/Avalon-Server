@@ -3,6 +3,7 @@ package com.rs.kotlin.game.npc.drops.tables
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.TableCategory
+import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.dropTable
 
 object BarrowsChestTable {
@@ -22,7 +23,8 @@ object BarrowsChestTable {
     private val ALL_BARROWS_ITEMS: List<String> =
         BROTHER_ITEMS.values.flatten()
 
-    private fun rollBarrowsItem(player: Player): Int? {
+    private fun rollBarrowsItem(context: DropContext): Int? {
+        val player = context.player
         val used =
             player.temporaryAttribute()["barrows_used"] as? MutableSet<Int>
                 ?: mutableSetOf<Int>().also {
@@ -55,6 +57,7 @@ object BarrowsChestTable {
     @JvmField
     val BARROWS_CHEST_TABLE =
         dropTable(
+            sourceAction = "opening",
             category = TableCategory.MINIGAME,
         ) {
 
@@ -62,8 +65,8 @@ object BarrowsChestTable {
                 drop(
                     numerator = 1,
                     denominator = 102,
-                    dynamicItem = { player ->
-                        rollBarrowsItem(player)
+                    dynamicItem = { ctx ->
+                        rollBarrowsItem(ctx)
                     },
                     displayItems = ALL_BARROWS_ITEMS,
                 ) {

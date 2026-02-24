@@ -58,7 +58,7 @@ object MithrilDragonDropTable {
                     "item.scroll_box_elite",
                     numerator = 1,
                     denominator = 350,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
                 )
                 drop(
                     "item.draconic_visage",

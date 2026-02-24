@@ -5,7 +5,7 @@ import com.rs.kotlin.Rscm
 
 class PackageBuilder {
     internal val displayDrops = mutableListOf<PackageDisplayDrop>()
-    internal val factories = mutableListOf<(Player, DropSource) -> Drop>()
+    internal val factories = mutableListOf<(DropContext) -> Drop>()
 
     fun drop(
         item: String,
@@ -15,7 +15,7 @@ class PackageBuilder {
         val id = Rscm.lookup(item)
         val md = DropMetadata().apply { meta?.invoke(this) }
 
-        // for UI/export/collection scan
+        // For UI/export/collection scan
         displayDrops +=
             PackageDisplayDrop(
                 itemId = id,
@@ -23,26 +23,27 @@ class PackageBuilder {
                 metadata = md,
             )
 
-        // for actual rolling
-        factories += { _, source ->
+        // For actual rolling
+        factories += { context ->
             Drop(
                 itemId = id,
                 amount = amount.random(),
-                source = source,
+                context = context,
                 metadata = md,
             )
         }
     }
 
-    internal fun build(
-        player: Player,
-        source: DropSource,
-    ): List<Drop> = factories.map { it(player, source) }
+    fun dropMany(vararg entries: Pair<String, Int>) {
+        for ((key, amt) in entries) drop(key, amt..amt)
+    }
+
+    internal fun build(context: DropContext): List<Drop> = factories.map { it(context) }
 }
 
 fun MutableList<WeightedEntry>.packageDrop(
     weight: Int,
-    condition: ((Player) -> Boolean)? = null,
+    condition: ((DropContext) -> Boolean)? = null,
     block: PackageBuilder.() -> Unit,
 ) {
     val b = PackageBuilder().apply(block)
@@ -50,9 +51,9 @@ fun MutableList<WeightedEntry>.packageDrop(
     add(
         PackageWeightedEntry(
             weight = weight,
-            displayDrops = b.displayDrops.toList(), // ✅ important
+            displayDrops = b.displayDrops.toList(),
             condition = condition,
-            build = { player, source -> b.build(player, source) },
+            build = { context -> b.build(context) },
         ),
     )
 }

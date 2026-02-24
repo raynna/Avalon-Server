@@ -838,7 +838,7 @@ public class NPC extends Entity implements Serializable {
                             + Utils.getFormattedNumber(item.getDefinitions().getTipitPrice() * item.getAmount(), ',')
                             + " coins.)");
                     sendLootBeam(item, luckyPlayer, this);
-                } else if (drop.getSource() == DropSource.PREROLL || drop.getSource() == DropSource.TERTIARY) {
+                } else if (drop.getContext().getDropSource() == DropSource.PREROLL || drop.getContext().getDropSource() == DropSource.TERTIARY) {
                     sendLootBeam(item, luckyPlayer, this);
                 } else if (EconomyPrices.getPrice(item.getId()) >= 1_000_000) {
                     sendLootBeam(item, luckyPlayer, this);
@@ -922,7 +922,7 @@ public class NPC extends Entity implements Serializable {
                             + Utils.getFormattedNumber(i.getDefinitions().getTipitPrice() * i.getAmount(), ',')
                             + " coins.)");
                     sendLootBeam(item, player, this);
-                } else if (drop.getSource() == DropSource.PREROLL || drop.getSource() == DropSource.TERTIARY) {
+                } else if (drop.getContext().getDropSource() == DropSource.PREROLL || drop.getContext().getDropSource() == DropSource.TERTIARY) {
                     sendLootBeam(item, player, this);
                 } else if (EconomyPrices.getPrice(item.getId()) >= 1_000_000) {
                     sendLootBeam(item, player, this);

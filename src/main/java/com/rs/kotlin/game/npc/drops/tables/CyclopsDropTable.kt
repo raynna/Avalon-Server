@@ -5,6 +5,7 @@ import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.Rscm
+import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.config.GemTableConfig
 import com.rs.kotlin.game.npc.drops.config.HerbTableConfig
 import com.rs.kotlin.game.npc.drops.config.SeedTableConfig
@@ -25,7 +26,8 @@ object CyclopsDropTable {
             "item.dragon_defender",
         )
 
-    private fun nextDefender(player: Player): Int? {
+    private fun nextDefender(context: DropContext): Int? {
+        val player = context.player
         for (tier in DEFENDER_TIERS) {
             val itemId = Rscm.item(tier)
             if (player.controlerManager.controler !is WarriorsGuild) {
@@ -94,7 +96,7 @@ object CyclopsDropTable {
                     "item.scroll_box_hard",
                     numerator = 1,
                     denominator = 512,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
                 )
                 drop(
                     "item.long_bone",

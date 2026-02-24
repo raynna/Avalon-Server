@@ -54,7 +54,7 @@ object GargoyleDropTable {
                     "item.scroll_box_hard",
                     numerator = 1,
                     denominator = 128,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
                 )
             }
         }.apply { name = "Gargoyle" }

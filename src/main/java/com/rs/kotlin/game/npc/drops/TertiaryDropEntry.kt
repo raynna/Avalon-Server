@@ -8,26 +8,28 @@ open class TertiaryDropEntry(
     amount: IntRange,
     private val numerator: Int,
     val denominator: Int,
-    private val condition: ((Player) -> Boolean)? = null,
+    private val condition: ((DropContext) -> Boolean)? = null,
     metadata: DropMetadata = DropMetadata(),
-) : DropEntry(itemId, amount, always = false, condition = condition, metadata = metadata) {
+) : DropEntry(
+        itemId,
+        amount,
+        always = false,
+        condition = null, // handled here instead
+        metadata = metadata,
+    ) {
     init {
         require(numerator in 1..denominator) {
-            "Invalid weight: $numerator/$denominator"
+            "Invalid rate: $numerator/$denominator"
         }
     }
 
-    override fun rollAmount(): Int =
-        ThreadLocalRandom
-            .current()
-            .nextInt(amount.first, amount.last + 1)
+    override fun rollAmount(): Int = ThreadLocalRandom.current().nextInt(amount.first, amount.last + 1)
 
-    /** Boosted roll */
     fun roll(
-        player: Player,
+        context: DropContext,
         multiplier: Double,
     ): Drop? {
-        if (condition != null && !condition.invoke(player)) {
+        if (condition?.invoke(context) == false) {
             return null
         }
 
@@ -41,13 +43,22 @@ open class TertiaryDropEntry(
                 .current()
                 .nextInt(effectiveDenominator)
 
-        if (roll < numerator) {
-            return Drop(itemId, rollAmount(), source = DropSource.TERTIARY)
+        if (roll >= numerator) {
+            return null
         }
 
-        return null
+        val tertiaryContext =
+            context.copy(dropSource = DropSource.TERTIARY)
+
+        return Drop(
+            itemId = itemId,
+            amount = rollAmount(),
+            context = tertiaryContext,
+            isAlways = false,
+            metadata = metadata,
+        )
     }
 
-    /** Backwards compatible */
-    override fun roll(player: Player): Drop? = roll(player, 1.0)
+    /** Non-boosted */
+    override fun roll(context: DropContext): Drop? = roll(context, 1.0)
 }

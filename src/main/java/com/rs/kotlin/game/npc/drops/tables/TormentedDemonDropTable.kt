@@ -29,7 +29,7 @@ object TormentedDemonDropTable {
                 drop("item.ruined_dragon_armour_shard", numerator = 1, denominator = 256) { collectionLog = true }
                 drop("item.dragon_crossbow", numerator = 1, denominator = 256) { collectionLog = true }
             }
-            mainDrops(48) {
+            mainDrops(51) {
                 drop("item.rune_platebody", weight = 4)
                 drop("item.dragon_dagger", weight = 3)
                 drop("item.battlestaff_noted", weight = 3)
@@ -43,15 +43,11 @@ object TormentedDemonDropTable {
                 drop("item.prayer_potion_4", amount = 1, 1)
                 drop("item.prayer_potion_2", amount = 1, 1)
 
-                drop("item.magic_shortbow_u_noted", amount = 1, 29)
                 drop("item.infernal_ashes", amount = 2..3, 2)
                 drop("item.fire_orb_noted", amount = 5..7, 2)
                 drop("item.dragon_arrowheads", amount = 30..40, 1)
 
-                nestedTable(255) {
-                    drop("item.magic_longbow_u", weight = 1)
-                }
-                nestedTable(408) {
+                nestedTable(weight = 6, size = 48) {
                     drop("item.grimy_kwuarm", weight = 10)
                     drop("item.grimy_dwarf_weed", weight = 8)
                     drop("item.grimy_cadantine", weight = 8)
@@ -61,13 +57,18 @@ object TormentedDemonDropTable {
                     drop("item.grimy_snapdragon", weight = 4)
                     drop("item.grimy_torstol", weight = 3)
                 }
+
+                nestedTable(weight = 6, size = 30) {
+                    drop("item.magic_shortbow_u_noted", weight = 29)
+                    drop("item.magic_longbow_u", weight = 1)
+                }
             }
             tertiaryDrops {
                 drop(
                     "item.scroll_box_elite",
                     numerator = 1,
                     denominator = 128,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
                 )
             }
         }.apply { name = "Tormented demon" }

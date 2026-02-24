@@ -1,30 +1,26 @@
 package com.rs.kotlin.game.npc.drops
 
-import com.rs.java.game.player.Player
-
 class PackageWeightedEntry(
     override val weight: Int,
-    val displayDrops: List<PackageDisplayDrop> = emptyList(), // <-- for UI/export/scan
-    private val condition: ((Player) -> Boolean)? = null,
-    private val build: (Player, DropSource) -> List<Drop>,
+    val displayDrops: List<PackageDisplayDrop> = emptyList(),
+    private val condition: ((DropContext) -> Boolean)? = null,
+    private val build: (DropContext) -> List<Drop>,
 ) : WeightedEntry {
-    override fun roll(
-        player: Player,
-        source: DropSource,
-    ): Drop? {
+    override fun roll(context: DropContext): Drop? {
         if (weight <= 0) return null
-        if (condition?.invoke(player) == false) return null
+        if (condition?.invoke(context) == false) return null
 
-        val list = build(player, source)
-        if (list.isEmpty()) return null
+        val drops = build(context)
+        if (drops.isEmpty()) return null
 
-        // Chain them: head -> extraDrop -> extraDrop ...
-        val head = list.first()
+        val head = drops.first()
         var cur = head
-        for (i in 1 until list.size) {
-            cur.extraDrop = list[i]
-            cur = list[i]
+
+        for (i in 1 until drops.size) {
+            cur.extraDrop = drops[i]
+            cur = drops[i]
         }
+
         return head
     }
 }

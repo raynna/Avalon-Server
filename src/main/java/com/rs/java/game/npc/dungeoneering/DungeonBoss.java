@@ -47,8 +47,8 @@ public class DungeonBoss extends DungeonNPC {
 			luckyPlayer.getPackets().sendGameMessage("Null drops");
 
 		} else {
-			for (Drop drops : droppedItems.rollDrops(luckyPlayer, 0)) {
-				Drop drop = new Drop(drops.itemId, drops.amount);
+			List<Drop> rolled = droppedItems.rollDrops(luckyPlayer, getCombatLevel());
+			for (Drop drop : rolled) {
 				sendDrop(luckyPlayer, drop);
 			}
 			return;

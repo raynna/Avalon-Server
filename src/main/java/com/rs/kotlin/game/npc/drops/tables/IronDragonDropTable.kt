@@ -48,7 +48,7 @@ object IronDragonDropTable {
                     "item.scroll_box_hard",
                     numerator = 1,
                     denominator = 128,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
                 )
                 drop("item.draconic_visage", numerator = 1, denominator = 10000) {
                     collectionLog = true

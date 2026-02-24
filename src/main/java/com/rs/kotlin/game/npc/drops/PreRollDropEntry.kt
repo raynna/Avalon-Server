@@ -8,15 +8,15 @@ class PreRollDropEntry(
     amount: IntRange,
     val numerator: Int,
     var denominator: Int,
-    val condition: ((Player) -> Boolean)? = null,
-    val dynamicItem: ((Player) -> Int?)? = null,
+    private val condition: ((DropContext) -> Boolean)? = null,
+    private val dynamicItem: ((DropContext) -> Int?)? = null,
     val displayItems: List<Int>? = null,
     metadata: DropMetadata = DropMetadata(),
 ) : DropEntry(
         itemId ?: -1,
         amount,
         always = false,
-        condition = condition,
+        condition = null, // handled here instead
         metadata = metadata,
     ) {
     init {
@@ -26,10 +26,10 @@ class PreRollDropEntry(
     }
 
     fun roll(
-        player: Player,
+        context: DropContext,
         multiplier: Double,
     ): Drop? {
-        if (condition?.invoke(player) == false) {
+        if (condition?.invoke(context) == false) {
             return null
         }
 
@@ -45,10 +45,19 @@ class PreRollDropEntry(
         }
 
         val finalItemId =
-            dynamicItem?.invoke(player)
+            dynamicItem?.invoke(context)
                 ?: itemId.takeIf { it != -1 }
                 ?: return null
 
-        return Drop(finalItemId, rollAmount(), source = DropSource.PREROLL)
+        val prerollContext =
+            context.copy(dropSource = DropSource.PREROLL)
+
+        return Drop(
+            itemId = finalItemId,
+            amount = rollAmount(),
+            context = prerollContext,
+            isAlways = false,
+            metadata = metadata,
+        )
     }
 }

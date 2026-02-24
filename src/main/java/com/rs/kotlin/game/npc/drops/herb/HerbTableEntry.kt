@@ -3,6 +3,7 @@ package com.rs.kotlin.game.npc.drops.herb
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.Drop
+import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.DropEntry
 import com.rs.kotlin.game.npc.drops.DropSource
 import com.rs.kotlin.game.npc.drops.ItemWeightedEntry
@@ -37,11 +38,11 @@ class HerbTableEntry : DropEntry(-1, 1..1) {
         table.add(ItemWeightedEntry(itemId, amount, weight))
     }
 
-    override fun roll(player: Player): Drop? {
+    override fun roll(context: DropContext): Drop? {
         val entries = table.mutableEntries()
 
         val filtered =
-            if (player.hasRingOfWealth()) {
+            if (context.player.hasRingOfWealth()) {
                 entries.filterIsInstance<ItemWeightedEntry>()
             } else {
                 entries
@@ -54,7 +55,11 @@ class HerbTableEntry : DropEntry(-1, 1..1) {
 
         filtered.forEach { tempTable.add(it) }
 
-        return tempTable.roll(player, source = DropSource.HERB)
+        return tempTable.roll(
+            context.copy(
+                dropSource = DropSource.HERB,
+            ),
+        )
     }
 
     private fun tableSizeOrDefault() = 128

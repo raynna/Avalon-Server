@@ -45,7 +45,7 @@ object RockCrabTable {
                     "item.scroll_box_easy",
                     numerator = 1,
                     denominator = 128,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.EASY) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.EASY) },
                 )
             }
         }.apply { name = "Rock Crab" }

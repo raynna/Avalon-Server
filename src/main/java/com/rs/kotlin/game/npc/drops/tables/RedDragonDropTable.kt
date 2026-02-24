@@ -44,13 +44,13 @@ object RedDragonDropTable {
                     "item.scroll_box_hard",
                     numerator = 1,
                     denominator = 128,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
+                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
                 )
                 drop(
                     "item.red_dragon_egg",
                     numerator = 1,
                     denominator = 200,
-                    condition = { player -> player.skills?.getLevelForXp(Skills.SUMMONING) == 99 },
+                    condition = { context -> context.player.skills?.getLevelForXp(Skills.SUMMONING) == 99 },
                 ) { collectionLog = true }
             }
 
