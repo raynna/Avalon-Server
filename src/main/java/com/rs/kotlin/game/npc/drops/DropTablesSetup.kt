@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.rs.kotlin.game.npc.drops
 
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerItemTable
@@ -5,21 +7,37 @@ import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerNamedTable
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerNpcGroupDropTable
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerNpcKeyDropTable
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.registerObjectTable
+import com.rs.kotlin.game.npc.drops.herb.HerbTableEntry
+import com.rs.kotlin.game.npc.drops.rare.GemDropTableViewer
+import com.rs.kotlin.game.npc.drops.rare.GemTableEntry
+import com.rs.kotlin.game.npc.drops.rare.GodwarsGemTableEntry
+import com.rs.kotlin.game.npc.drops.rare.GodwarsRareTableEntry
+import com.rs.kotlin.game.npc.drops.rare.MegaDropTableViewer
+import com.rs.kotlin.game.npc.drops.rare.MegaRareTableEntry
+import com.rs.kotlin.game.npc.drops.rare.RareDropTableEntry
+import com.rs.kotlin.game.npc.drops.rare.RareDropTableViewer
+import com.rs.kotlin.game.npc.drops.seed.SeedTableEntry
 import com.rs.kotlin.game.npc.drops.tables.*
 import com.rs.kotlin.game.npc.worldboss.WorldBossTable
 
 object DropTablesSetup {
-    lateinit var rareDropTable: RareDropTableEntry
-        private set
     lateinit var gemDropTable: GemTableEntry
         private set
-    lateinit var superRareTable: SuperRareTableEntry
+    lateinit var rareDropTable: RareDropTableEntry
+        private set
+    lateinit var megaRareTable: MegaRareTableEntry
         private set
     lateinit var herbDropTable: HerbTableEntry
         private set
     lateinit var seedDropTable: SeedTableEntry
         private set
 
+    lateinit var godwarsGemDropTable: GodwarsGemTableEntry
+        private set
+    lateinit var godwarsRareDropTable: GodwarsRareTableEntry
+        private set
+
+    @Suppress("ktlint:standard:kdoc")
     @JvmStatic
     fun setup() {
         /**
@@ -28,16 +46,19 @@ object DropTablesSetup {
 
         rareDropTable = RareDropTableEntry()
         gemDropTable = GemTableEntry()
-        superRareTable = SuperRareTableEntry()
+        megaRareTable = MegaRareTableEntry()
         herbDropTable = HerbTableEntry()
         seedDropTable = SeedTableEntry()
 
         /**
          * Special / Global Tables
          **/
-
+        registerNamedTable("Mega Table", MegaDropTableViewer.table)
+        registerNamedTable("Rare Table", RareDropTableViewer.table)
+        registerNamedTable("Gem Table", GemDropTableViewer.table)
         registerNamedTable("World Boss", WorldBossTable.regular)
         registerItemTable("item.magic_chest", WorldBossTable.chest)
+        registerObjectTable(name = "Crystal chest", objectId = 172, CrystalChestTable.table)
         registerObjectTable(
             name = "Barrows",
             objectId = 10284,
@@ -81,6 +102,7 @@ object DropTablesSetup {
         registerNpcGroupDropTable(RedDragonDropTable.table, "npc_group.red_dragon_lv152")
         registerNpcGroupDropTable(BlackDragonDropTable.table, "npc_group.black_dragon_lv227")
         registerNpcGroupDropTable(BrutalGreenDragonDropTable.table, "npc_group.brutal_green_dragon_lv227")
+        registerNpcGroupDropTable(IronDragonDropTable.table, "npc_group.iron_dragon_lv189")
         registerNpcGroupDropTable(MithrilDragonDropTable.table, "npc_group.mithril_dragon_lv304")
 
         /**
@@ -180,5 +202,12 @@ object DropTablesSetup {
         registerNpcGroupDropTable(KalphiteWorkerDropTable.table, "npc_group.kalphite_worker_lv28")
 
         DropTableRegistry.logDropTableSizes()
+        DropTableRegistry
+            .getAllSources()
+            .mapNotNull { DropTableRegistry.getTableForSource(it) }
+            .distinct()
+            .forEach { table ->
+                registerNamedTable(table.name, table)
+            }
     }
 }

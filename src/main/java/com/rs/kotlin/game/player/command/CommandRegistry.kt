@@ -47,10 +47,14 @@ object CommandRegistry {
         register("gfx", "graphic", command = GraphicCommand())
         register("npc", "spawnnpc", command = SpawnNpcCommand())
         register("tournament", "tourny", "jointournament", "jointourny", command = TournamentCommand())
+        register("reset", command = ResetCommand())
     }
 
     @JvmStatic
-    fun register(vararg names: String, command: Command) {
+    fun register(
+        vararg names: String,
+        command: Command,
+    ) {
         if (names.isEmpty()) return
 
         val primary = names[0].lowercase()
@@ -62,7 +66,10 @@ object CommandRegistry {
     }
 
     @JvmStatic
-    fun execute(player: Player, input: String): Boolean {
+    fun execute(
+        player: Player,
+        input: String,
+    ): Boolean {
         val parts = input.trim().split("\\s+".toRegex())
         if (parts.isEmpty()) return false
 
@@ -71,7 +78,7 @@ object CommandRegistry {
 
         val command = commands[name]
         if (command == null) {
-            //player.message("Unknown command: $name")
+            // player.message("Unknown command: $name")
             return false
         }
 
@@ -83,11 +90,10 @@ object CommandRegistry {
         return command.execute(player, args, name)
     }
 
-    fun getAllPrimary(): Map<String, Command> {
-        return primaryNames.entries.associate { (command, primaryName) ->
+    fun getAllPrimary(): Map<String, Command> =
+        primaryNames.entries.associate { (command, primaryName) ->
             primaryName to command
         }
-    }
 
     fun getAll(): Map<String, Command> = commands
 }

@@ -9,7 +9,7 @@ public enum CategoryType {
     SLAYER("Slayer", "Kills:"),
     CLUES("Clues", "Completed:"),
     MINIGAMES("Minigames", "Completions:"),
-    OTHERS("Others", null);
+    OTHERS("Others", "Kills:");
 
     String name, killString;
 

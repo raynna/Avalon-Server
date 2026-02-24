@@ -1,12 +1,12 @@
 package com.rs.kotlin.game.npc.drops.tables
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
+import com.rs.kotlin.game.npc.drops.config.GemTableConfig
 import com.rs.kotlin.game.npc.drops.dropTable
 
 object RockCrabTable {
-
     val table =
-        dropTable(rolls = 1, rareDropTable = true) {
+        dropTable(gemTable = GemTableConfig(1, 128)) {
 
             charmDrops {
                 gold(amount = 1, percent = 29.0)
@@ -45,7 +45,8 @@ object RockCrabTable {
                     "item.scroll_box_easy",
                     numerator = 1,
                     denominator = 128,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.EASY) })
+                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.EASY) },
+                )
             }
         }.apply { name = "Rock Crab" }
 }

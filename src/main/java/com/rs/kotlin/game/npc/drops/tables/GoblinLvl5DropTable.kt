@@ -1,13 +1,12 @@
 package com.rs.kotlin.game.npc.drops.tables
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
-import com.rs.kotlin.game.npc.drops.HerbTableConfig
+import com.rs.kotlin.game.npc.drops.config.HerbTableConfig
 import com.rs.kotlin.game.npc.drops.dropTable
 
 object GoblinLvl5DropTable {
-
     val table =
-        dropTable(herbTables = HerbTableConfig(numerator = 2), rolls = 1) {
+        dropTable(herbTables = HerbTableConfig(numerator = 2, 128)) {
 
             alwaysDrops {
                 drop("item.bones")
@@ -47,7 +46,7 @@ object GoblinLvl5DropTable {
             preRollDrops {
                 drop(
                     "item.goblin_skull",
-                    condition = { player -> false }//TODO RAG AND BONE MAN QUEST
+                    condition = { player -> false }, // TODO RAG AND BONE MAN QUEST
                 )
             }
 
@@ -56,21 +55,22 @@ object GoblinLvl5DropTable {
                     "item.scroll_box_easy",
                     numerator = 1,
                     denominator = 128,
-                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.EASY) })
+                    condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.EASY) },
+                )
                 drop(
                     "item.sling",
                     numerator = 1,
-                    denominator = 128
+                    denominator = 128,
                 )
                 drop(
                     "item.staff_of_air",
                     numerator = 1,
-                    denominator = 128
+                    denominator = 128,
                 )
                 drop(
                     "item.goblin_champion_scroll",
                     numerator = 1,
-                    denominator = 5000
+                    denominator = 5000,
                 )
             }
         }.apply { name = "Higher Level Goblin" }

@@ -1,0 +1,21 @@
+package com.rs.kotlin.game.npc.drops.rare
+
+import com.rs.kotlin.game.npc.drops.DropTablesSetup
+import com.rs.kotlin.game.npc.drops.dropTable
+
+object GodwarsGemDropTableViewer {
+    val table =
+        dropTable(
+            name = "Godwars Rare Drop Table",
+        ) {
+            mainDrops(128) {
+                val entries = DropTablesSetup.godwarsGemDropTable.getEntries()
+
+                for (entry in entries) {
+                    if (entry.itemId > 0) {
+                        add(entry)
+                    }
+                }
+            }
+        }
+}

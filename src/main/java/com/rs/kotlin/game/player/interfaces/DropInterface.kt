@@ -22,8 +22,9 @@ import com.rs.kotlin.game.npc.drops.DropType
  * - Dynamic title updates
  */
 object DropInterface {
-
     private const val INTERFACE_ID = 3005
+
+    private const val NOTHING_SPRITE = 11372
 
     private const val ROW_START = 73
     private const val ROW_END = 905
@@ -65,27 +66,34 @@ object DropInterface {
         player.temporaryAttributtes.remove("npc_find")
     }
 
+    private fun dropRateMult(): Double = if (Settings.DROP_MULTIPLIER > 1.0) Settings.DROP_MULTIPLIER else 1.0
 
-    private fun dropRateMult(): Double =
-        if (Settings.DROP_MULTIPLIER > 1.0) Settings.DROP_MULTIPLIER else 1.0
-
-    private fun tableFor(source: DropTableSource): DropTable? =
-        DropTableRegistry.getTableForSource(source)
+    private fun tableFor(source: DropTableSource): DropTable? = DropTableRegistry.getTableForSource(source)
 
     private fun sourceName(source: DropTableSource): String =
         when (source) {
-            is DropTableSource.Npc ->
+            is DropTableSource.Npc -> {
                 NPCDefinitions.getNPCDefinitions(source.id).name
-            is DropTableSource.Named ->
+            }
+
+            is DropTableSource.Named -> {
                 source.key.replaceFirstChar { it.uppercase() }
-            is DropTableSource.Item ->
+            }
+
+            is DropTableSource.Item -> {
                 ItemDefinitions.getItemDefinitions(source.id).name
-            is DropTableSource.Object ->
+            }
+
+            is DropTableSource.Object -> {
                 DropTableRegistry.getObjectAlias(source.id)
                     ?: "Object ${source.id}"
+            }
         }
 
-    fun open(player: Player, buildList: Boolean = true) {
+    fun open(
+        player: Player,
+        buildList: Boolean = true,
+    ) {
         player.temporaryAttributtes[ATTR_PAGE] = 0
         player.interfaceManager.sendInterface(INTERFACE_ID)
 
@@ -109,21 +117,21 @@ object DropInterface {
     }
 
     private fun buildInitialList(player: Player) {
-
         val results = mutableListOf<DropTableSource>()
         val seen = HashSet<String>()
 
         for (source in DropTableRegistry.getAllSources()) {
-
             val table = tableFor(source) ?: continue
 
-            if (table.getAllDropsForDisplay(dropRateMult()).isEmpty())
+            if (table.getAllDropsForDisplay(dropRateMult()).isEmpty()) {
                 continue
+            }
 
             val name = sourceName(source).lowercase()
 
-            if (seen.add(name))
+            if (seen.add(name)) {
                 results += source
+            }
         }
 
         results.sortBy { sourceName(it) }
@@ -132,8 +140,10 @@ object DropInterface {
         player.temporaryAttributtes[ATTR_PAGE] = 0
     }
 
-    fun openForSource(player: Player, source: DropTableSource) {
-
+    fun openForSource(
+        player: Player,
+        source: DropTableSource,
+    ) {
         player.temporaryAttributtes.remove(ATTR_CURRENT)
         player.temporaryAttributtes.remove(ATTR_CURRENT_NAME)
         player.temporaryAttributtes[ATTR_SOURCE_FILTER] =
@@ -149,9 +159,10 @@ object DropInterface {
         selectSource(player, source)
     }
 
-
-    fun openForItem(player: Player, itemId: Int) {
-
+    fun openForItem(
+        player: Player,
+        itemId: Int,
+    ) {
         player.temporaryAttributtes.remove(ATTR_CURRENT)
         player.temporaryAttributtes.remove(ATTR_CURRENT_NAME)
 
@@ -167,15 +178,14 @@ object DropInterface {
         }
 
         for (source in DropTableRegistry.getAllSources()) {
-
             val table = tableFor(source) ?: continue
 
             for (drop in table.getAllDropsForDisplay(dropRateMult())) {
                 if (drop.itemId == itemId) {
-
                     val key = sourceName(source).lowercase()
-                    if (seen.add(key))
+                    if (seen.add(key)) {
                         results += source
+                    }
 
                     break
                 }
@@ -196,10 +206,10 @@ object DropInterface {
         }
     }
 
-
-
-    fun openForObject(player: Player, objectId: Int) {
-
+    fun openForObject(
+        player: Player,
+        objectId: Int,
+    ) {
         val bound = DropTableRegistry.getSourceForObject(objectId)
 
         if (bound != null) {
@@ -211,6 +221,56 @@ object DropInterface {
         selectItem(player, objectId, true)
     }
 
+    private fun openMegaTableWithNpcList(player: Player) {
+        val rareSource = DropTableSource.Named("Mega Table")
+        val rareTable = tableFor(rareSource) ?: return
+
+        val sources = DropTableRegistry.getSourcesWithMegaTable()
+
+        player.temporaryAttributtes[ATTR_FOUND] = sources
+        player.temporaryAttributtes[ATTR_PAGE] = 0
+        player.temporaryAttributtes[ATTR_CURRENT] = rareSource
+        player.temporaryAttributtes[ATTR_CURRENT_NAME] = "Mega Table"
+
+        sendSourceList(player)
+        renderTable(player, rareTable)
+
+        updateTitle(player, "Viewing: Mega Table")
+    }
+
+    private fun openRareTableWithNpcList(player: Player) {
+        val rareSource = DropTableSource.Named("Rare Table")
+        val rareTable = tableFor(rareSource) ?: return
+
+        val sources = DropTableRegistry.getSourcesWithRareTable()
+
+        player.temporaryAttributtes[ATTR_FOUND] = sources
+        player.temporaryAttributtes[ATTR_PAGE] = 0
+        player.temporaryAttributtes[ATTR_CURRENT] = rareSource
+        player.temporaryAttributtes[ATTR_CURRENT_NAME] = "Rare Table"
+
+        sendSourceList(player)
+        renderTable(player, rareTable)
+
+        updateTitle(player, "Viewing: Rare Table")
+    }
+
+    private fun openGemTableWithNpcList(player: Player) {
+        val gemSource = DropTableSource.Named("Gem Table")
+        val gemTable = tableFor(gemSource) ?: return
+
+        val sources = DropTableRegistry.getSourcesWithGemTable()
+
+        player.temporaryAttributtes[ATTR_FOUND] = sources
+        player.temporaryAttributtes[ATTR_PAGE] = 0
+        player.temporaryAttributtes[ATTR_CURRENT] = gemSource
+        player.temporaryAttributtes[ATTR_CURRENT_NAME] = "Gem Table"
+
+        sendSourceList(player)
+        renderTable(player, gemTable)
+
+        updateTitle(player, "Viewing: Gem Table")
+    }
 
     private fun clearViewer(player: Player) {
         refreshScrollbar(player, 0)
@@ -231,11 +291,11 @@ object DropInterface {
         refreshScrollbar(player, 0)
     }
 
-
-    fun handleButtons(player: Player, componentId: Int) {
-
+    fun handleButtons(
+        player: Player,
+        componentId: Int,
+    ) {
         when (componentId) {
-
             SEARCHITEM_BUTTON -> {
                 player.packets.sendInputNameScript("Enter item name")
                 player.temporaryAttributtes["drop_find"] = true
@@ -255,7 +315,6 @@ object DropInterface {
             }
 
             PREVIOUS_BUTTON -> {
-
                 val page = player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
 
                 val hasFilter =
@@ -277,7 +336,6 @@ object DropInterface {
         }
 
         if (componentId in NPC_LIST_START..NPC_LIST_END) {
-
             val list =
                 player.temporaryAttributtes[ATTR_FOUND] as? List<DropTableSource>
                     ?: return
@@ -288,7 +346,7 @@ object DropInterface {
 
             val source = list.getOrNull(index) ?: return
 
-            //player.temporaryAttributtes.remove(ATTR_ITEM_FILTER)
+            // player.temporaryAttributtes.remove(ATTR_ITEM_FILTER)
 
             selectSource(player, source)
             updatePageButtons(player)
@@ -298,7 +356,6 @@ object DropInterface {
         if (componentId in ROW_START..ROW_END &&
             (componentId - ROW_START) % ROW_STRIDE == 0
         ) {
-
             val slot = (componentId - ROW_START) / ROW_STRIDE
 
             val source =
@@ -308,19 +365,49 @@ object DropInterface {
             val table = tableFor(source) ?: return
 
             val drop =
-                table.getAllDropsForDisplay(dropRateMult())
+                table
+                    .getAllDropsForDisplay(dropRateMult())
                     .getOrNull(slot)
                     ?: return
+            when (drop.type) {
+                DropType.MEGA_TABLE -> {
+                    val sources = DropTableRegistry.getSourcesWithGemTable()
 
-            selectItem(player, drop.itemId, false)
+                    player.temporaryAttributtes[ATTR_FOUND] = sources
+                    player.temporaryAttributtes[ATTR_PAGE] = 0
+                    openMegaTableWithNpcList(player)
+                    return
+                }
+
+                DropType.RARE_TABLE -> {
+                    val sources = DropTableRegistry.getSourcesWithRareTable()
+
+                    player.temporaryAttributtes[ATTR_FOUND] = sources
+                    player.temporaryAttributtes[ATTR_PAGE] = 0
+                    openRareTableWithNpcList(player)
+                    return
+                }
+
+                DropType.GEM_TABLE -> {
+                    val sources = DropTableRegistry.getSourcesWithRareTable()
+
+                    player.temporaryAttributtes[ATTR_FOUND] = sources
+                    player.temporaryAttributtes[ATTR_PAGE] = 0
+                    openGemTableWithNpcList(player)
+                    return
+                }
+
+                else -> {
+                    selectItem(player, drop.itemId, false)
+                }
+            }
         }
     }
 
-
     fun sendSourceList(player: Player) {
-
-        for (i in NPC_LIST_START..NPC_LIST_END)
+        for (i in NPC_LIST_START..NPC_LIST_END) {
             player.packets.sendTextOnComponent(INTERFACE_ID, i, "")
+        }
 
         val list =
             player.temporaryAttributtes[ATTR_FOUND] as? List<DropTableSource>
@@ -335,22 +422,23 @@ object DropInterface {
         val page = player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
 
         for (i in 0 until 13) {
-
             val index = i + page * 13
             if (index >= list.size) break
 
             player.packets.sendTextOnComponent(
                 INTERFACE_ID,
                 NPC_LIST_START + i,
-                sourceName(list[index])
+                sourceName(list[index]),
             )
         }
 
         updatePageButtons(player)
     }
 
-    fun selectSource(player: Player, source: DropTableSource) {
-
+    fun selectSource(
+        player: Player,
+        source: DropTableSource,
+    ) {
         val table = tableFor(source) ?: return
 
         player.temporaryAttributtes[ATTR_CURRENT] = source
@@ -363,33 +451,37 @@ object DropInterface {
             player.temporaryAttributtes[ATTR_SOURCE_FILTER] as? String
 
         when {
-            itemFilter != null ->
+            itemFilter != null -> {
                 updateTitle(
                     player,
                     "Viewing: ${sourceName(source)}",
-                    "Filtered by item: $itemFilter"
+                    "Filtered by item: $itemFilter",
                 )
+            }
 
-            sourceFilter != null ->
+            sourceFilter != null -> {
                 updateTitle(
                     player,
                     "Viewing: ${sourceName(source)}",
-                    "Filtered by: $sourceFilter"
+                    "Filtered by: $sourceFilter",
                 )
+            }
 
-            else ->
+            else -> {
                 updateTitle(
                     player,
-                    "Viewing: ${sourceName(source)}"
+                    "Viewing: ${sourceName(source)}",
                 )
+            }
         }
-
 
         renderTable(player, table)
     }
 
-    private fun renderTable(player: Player, table: DropTable) {
-
+    private fun renderTable(
+        player: Player,
+        table: DropTable,
+    ) {
         var row = ROW_START
         while (row <= ROW_END) {
             hideRow(player, row)
@@ -404,35 +496,70 @@ object DropInterface {
         row = ROW_START
 
         for (drop in drops.take(maxRows)) {
-
-            val def = ItemDefinitions.getItemDefinitions(drop.itemId)
+            val name =
+                when (drop.type) {
+                    DropType.MEGA_TABLE -> "Mega table"
+                    DropType.RARE_TABLE -> "Rare table"
+                    DropType.GEM_TABLE -> "Gem table"
+                    DropType.NOTHING -> "Nothing"
+                    else -> ItemDefinitions.getItemDefinitions(drop.itemId).name
+                }
 
             showRow(player, row)
 
-            player.packets.sendItemOnIComponent(
-                INTERFACE_ID,
-                row + ICON_OFFSET,
-                drop.itemId,
-                (drop.amount ?: 1..1).last
-            )
+            if (drop.type == DropType.NOTHING) {
+                player.packets.sendItemOnIComponent(
+                    INTERFACE_ID,
+                    row + ICON_OFFSET,
+                    -1,
+                    0,
+                )
 
-            player.packets.sendTextOnComponent(INTERFACE_ID, row + NAME_OFFSET, wrap(def.name))
-            player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_LABEL, "Amount:")
+                // Send sprite instead
+                player.packets.sendSpriteOnIComponent(
+                    INTERFACE_ID,
+                    row + ICON_OFFSET,
+                    NOTHING_SPRITE,
+                )
+            } else {
+                player.packets.sendItemOnIComponent(
+                    INTERFACE_ID,
+                    row + ICON_OFFSET,
+                    drop.itemId,
+                    (drop.amount ?: 1..1).last,
+                )
+            }
+
+            player.packets.sendTextOnComponent(INTERFACE_ID, row + NAME_OFFSET, wrap(name))
+            if (drop.type != DropType.MEGA_TABLE && drop.type != DropType.RARE_TABLE && drop.type != DropType.GEM_TABLE &&
+                drop.type != DropType.NOTHING
+            ) {
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_LABEL, "Amount:")
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_VALUE, (drop.amount ?: 1..1).toDisplayString())
+            } else {
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_LABEL, "")
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_VALUE, "")
+            }
+            if (drop.type == DropType.NOTHING) {
+                // player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_LABEL, "<br>" + wrap("Removed if wearing ring of wealth"))
+            }
             player.packets.sendTextOnComponent(INTERFACE_ID, row + CHANCE_LABEL, "Chance:")
-            player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_VALUE, (drop.amount ?: 1..1).toDisplayString())
             player.packets.sendTextOnComponent(
                 INTERFACE_ID,
                 row + CHANCE_VALUE,
-                colourForDrop(drop)
+                colourForDrop(drop, buildRarityText(drop)),
             )
 
             row += ROW_STRIDE
         }
-        //refreshScrollbar(player, drops.size)
+        // refreshScrollbar(player, drops.size)
     }
 
-    fun selectItem(player: Player, itemId: Int, autoSelect: Boolean) {
-
+    fun selectItem(
+        player: Player,
+        itemId: Int,
+        autoSelect: Boolean,
+    ) {
         val itemName = ItemDefinitions.getItemDefinitions(itemId).name
 
         updateTitle(player, "Viewing Sources", "Filtered by item: $itemName")
@@ -444,17 +571,15 @@ object DropInterface {
         val seen = HashSet<String>()
 
         for (source in DropTableRegistry.getAllSources()) {
-
             val table = tableFor(source) ?: continue
 
             for (drop in table.getAllDropsForDisplay(dropRateMult())) {
-
                 if (drop.itemId == itemId) {
-
                     val key = sourceName(source).lowercase()
 
-                    if (seen.add(key))
+                    if (seen.add(key)) {
                         results += source
+                    }
 
                     break
                 }
@@ -467,7 +592,6 @@ object DropInterface {
         sendSourceList(player)
 
         if (autoSelect) {
-
             val current =
                 player.temporaryAttributtes[ATTR_CURRENT] as? DropTableSource
 
@@ -478,9 +602,9 @@ object DropInterface {
     }
 
     private fun nextPage(player: Player) {
-
-        val list = player.temporaryAttributtes[ATTR_FOUND] as? List<*>
-            ?: return
+        val list =
+            player.temporaryAttributtes[ATTR_FOUND] as? List<*>
+                ?: return
 
         val page = player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
         val maxPage = (list.size + 12) / 13
@@ -492,7 +616,6 @@ object DropInterface {
     }
 
     private fun previousPage(player: Player) {
-
         val page = player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
         if (page <= 0) return
 
@@ -500,12 +623,14 @@ object DropInterface {
         sendSourceList(player)
     }
 
-    private fun updatePreviousButtonText(player: Player, text: String) {
+    private fun updatePreviousButtonText(
+        player: Player,
+        text: String,
+    ) {
         player.packets.sendTextOnComponent(INTERFACE_ID, PREVIOUS_BUTTON, text)
     }
 
     private fun updatePageButtons(player: Player) {
-
         val list =
             player.temporaryAttributtes[ATTR_FOUND] as? List<*>
 
@@ -527,12 +652,12 @@ object DropInterface {
         player.packets.sendHideIComponent(
             INTERFACE_ID,
             PREVIOUS_BUTTON,
-            page == 0 && !(hasFilter || inSearch || hasSelected)
+            page == 0 && !(hasFilter || inSearch || hasSelected),
         )
 
         updatePreviousButtonText(
             player,
-            if (canClear) "Clear" else "Previous"
+            if (canClear) "Clear" else "Previous",
         )
 
         if (list.isNullOrEmpty()) {
@@ -545,31 +670,39 @@ object DropInterface {
         player.packets.sendHideIComponent(
             INTERFACE_ID,
             NEXT_BUTTON,
-            page + 1 >= maxPage
+            page + 1 >= maxPage,
         )
     }
 
-
-
-    private fun refreshScrollbar(player: Player, rows: Int) {
-
+    private fun refreshScrollbar(
+        player: Player,
+        rows: Int,
+    ) {
         val contentHeight = rows * 35
         val needsScroll = contentHeight > 264
 
-        player.packets.sendCSVarInteger(350,
-            if (needsScroll) contentHeight else 225)
+        player.packets.sendCSVarInteger(
+            350,
+            if (needsScroll) contentHeight else 225,
+        )
 
-        //player.packets.sendRunScript(10006)
+        // player.packets.sendRunScript(10006)
     }
 
-    private fun updateTitle(player: Player, line1: String, line2: String? = null) {
-
+    private fun updateTitle(
+        player: Player,
+        line1: String,
+        line2: String? = null,
+    ) {
         val text = if (line2 == null) line1 else "$line1<br>$line2"
 
         player.packets.sendTextOnComponent(INTERFACE_ID, TITLE_COMPONENT, text)
     }
 
-    private fun hideRow(player: Player, row: Int) {
+    private fun hideRow(
+        player: Player,
+        row: Int,
+    ) {
         player.packets.sendHideIComponent(INTERFACE_ID, row + ICON_OFFSET, true)
         player.packets.sendHideIComponent(INTERFACE_ID, row + NAME_OFFSET, true)
         player.packets.sendHideIComponent(INTERFACE_ID, row + AMOUNT_LABEL, true)
@@ -578,7 +711,10 @@ object DropInterface {
         player.packets.sendHideIComponent(INTERFACE_ID, row + CHANCE_VALUE, true)
     }
 
-    private fun showRow(player: Player, row: Int) {
+    private fun showRow(
+        player: Player,
+        row: Int,
+    ) {
         player.packets.sendHideIComponent(INTERFACE_ID, row + ICON_OFFSET, false)
         player.packets.sendHideIComponent(INTERFACE_ID, row + NAME_OFFSET, false)
         player.packets.sendHideIComponent(INTERFACE_ID, row + AMOUNT_LABEL, false)
@@ -588,74 +724,138 @@ object DropInterface {
     }
 
     private const val COL_ALWAYS = "66ccff"
-    private const val COL_GREEN  = "00c000"
+    private const val COL_GREEN = "00c000"
     private const val COL_YELLOW = "ffff00"
     private const val COL_ORANGE = "ff8200"
-    private const val COL_RED    = "ff0000"
+    private const val COL_RED = "ff0000"
 
-    private fun wrapCol(hex: String, text: String) = "<col=$hex>$text</col>"
+    private fun wrapCol(
+        hex: String,
+        text: String,
+    ) = "<col=$hex>$text</col>"
 
-    private fun colourByDenom(text: String, denom: Int): String = when {
-        denom <= 20  -> wrapCol(COL_GREEN, text)   // common
-        denom <= 64  -> wrapCol(COL_YELLOW, text)  // uncommon
-        denom <= 512 -> wrapCol(COL_ORANGE, text)  // rare
-        else           -> wrapCol(COL_RED, text)     // very rare
+    private fun colourByDenom(
+        text: String,
+        denom: Int,
+    ): String =
+        when {
+            denom <= 20 -> wrapCol(COL_GREEN, text)
+
+            // common
+            denom <= 64 -> wrapCol(COL_YELLOW, text)
+
+            // uncommon
+            denom <= 512 -> wrapCol(COL_ORANGE, text)
+
+            // rare
+            else -> wrapCol(COL_RED, text) // very rare
+        }
+
+    private fun buildRarityText(drop: DropDisplay): String {
+        val base = drop.rarityText
+
+        val weight = drop.weight
+        val total = drop.totalWeight
+        val nothing = drop.nothingWeight
+
+        if (weight == null || total == null || nothing == null) {
+            return base
+        }
+
+        if (drop.type == DropType.NOTHING) {
+            return "$base;Never"
+        }
+
+        val adjustedTotal = total - nothing
+        val rowDenom = adjustedTotal / weight
+
+        return "$base;1/$rowDenom"
     }
 
-    private fun colourForDrop(drop: DropDisplay): String {
-        val rarity = drop.rarityText
-
+    private fun colourForDrop(
+        drop: DropDisplay,
+        rarity: String,
+    ): String {
         return when (drop.type) {
-            DropType.ALWAYS ->
+            DropType.ALWAYS -> {
                 wrapCol(COL_ALWAYS, rarity)
-            DropType.CHARM -> {
+            }
 
+            DropType.NOTHING -> {
+                wrapCol(COL_GREEN, rarity)
+            }
+
+            DropType.MEGA_TABLE, DropType.RARE_TABLE -> {
+                wrapCol(COL_ORANGE, rarity)
+            }
+
+            DropType.CHARM -> {
                 val percent = drop.percentage ?: return wrapCol(COL_YELLOW, rarity)
 
                 when {
-                    percent >= 5.0 ->
+                    percent >= 5.0 -> {
                         wrapCol(COL_GREEN, rarity)
+                    }
 
-                    percent >= 1.5 ->
+                    percent >= 1.5 -> {
                         wrapCol(COL_YELLOW, rarity)
+                    }
 
-                    percent >= 0.5 ->
+                    percent >= 0.5 -> {
                         wrapCol(COL_ORANGE, rarity)
+                    }
 
-                    else ->
+                    else -> {
                         wrapCol(COL_RED, rarity)
+                    }
                 }
             }
+
             DropType.MAIN,
             DropType.MINOR,
             DropType.SPECIAL,
             DropType.PREROLL,
-            DropType.TERTIARY ->
+            DropType.TERTIARY,
+            -> {
                 colourByDenom(rarity, drop.baseDenominator)
+            }
 
-            else ->
+            else -> {
                 wrapCol(COL_YELLOW, rarity)
+            }
         }
     }
 
-    private fun wrap(name: String, max: Int = 18): String {
-
+    private fun wrap(
+        name: String,
+        max: Int = 18,
+    ): String {
         if (name.length <= max) return name
 
         val words = name.split(" ")
-        val l1 = StringBuilder()
-        val l2 = StringBuilder()
 
-        for (w in words) {
-            if (l1.length + w.length + 1 <= max) {
-                if (l1.isNotEmpty()) l1.append(" ")
-                l1.append(w)
-            } else {
-                if (l2.isNotEmpty()) l2.append(" ")
-                l2.append(w)
-            }
+        val line1 = StringBuilder()
+        val line2 = StringBuilder()
+
+        for (word in words) {
+            val target =
+                if (
+                    line1.isEmpty() ||
+                    line1.length + 1 + word.length <= max
+                ) {
+                    line1
+                } else {
+                    line2
+                }
+
+            if (target.isNotEmpty()) target.append(" ")
+            target.append(word)
         }
 
-        return if (l2.isEmpty()) l1.toString() else "$l1<br>$l2"
+        return if (line2.isEmpty()) {
+            line1.toString()
+        } else {
+            "$line1<br>$line2"
+        }
     }
 }

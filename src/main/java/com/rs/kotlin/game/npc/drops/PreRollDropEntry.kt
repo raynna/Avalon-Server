@@ -10,18 +10,28 @@ class PreRollDropEntry(
     var denominator: Int,
     val condition: ((Player) -> Boolean)? = null,
     val dynamicItem: ((Player) -> Int?)? = null,
-    val displayItems: List<Int>? = null
-) : DropEntry(itemId ?: -1, amount) {
-
+    val displayItems: List<Int>? = null,
+    metadata: DropMetadata = DropMetadata(),
+) : DropEntry(
+        itemId ?: -1,
+        amount,
+        always = false,
+        condition = condition,
+        metadata = metadata,
+    ) {
     init {
         require(numerator in 1..denominator) {
             "Invalid preroll rate: $numerator/$denominator"
         }
     }
 
-    fun roll(player: Player, multiplier: Double): Drop? {
-        if (condition?.invoke(player) == false)
+    fun roll(
+        player: Player,
+        multiplier: Double,
+    ): Drop? {
+        if (condition?.invoke(player) == false) {
             return null
+        }
 
         val effectiveDenominator =
             (denominator / multiplier)
@@ -30,8 +40,9 @@ class PreRollDropEntry(
 
         val roll = ThreadLocalRandom.current().nextInt(effectiveDenominator)
 
-        if (roll >= numerator)
+        if (roll >= numerator) {
             return null
+        }
 
         val finalItemId =
             dynamicItem?.invoke(player)

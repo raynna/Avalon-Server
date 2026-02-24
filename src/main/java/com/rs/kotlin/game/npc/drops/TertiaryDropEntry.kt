@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.npc.drops
 
-import com.rs.Settings
 import com.rs.java.game.player.Player
 import java.util.concurrent.ThreadLocalRandom
 
@@ -9,22 +8,25 @@ open class TertiaryDropEntry(
     amount: IntRange,
     private val numerator: Int,
     val denominator: Int,
-    private val condition: ((Player) -> Boolean)? = null
-) : DropEntry(itemId, amount) {
-
+    private val condition: ((Player) -> Boolean)? = null,
+    metadata: DropMetadata = DropMetadata(),
+) : DropEntry(itemId, amount, always = false, condition = condition, metadata = metadata) {
     init {
         require(numerator in 1..denominator) {
             "Invalid weight: $numerator/$denominator"
         }
     }
 
-    override fun rollAmount(): Int {
-        return ThreadLocalRandom.current()
+    override fun rollAmount(): Int =
+        ThreadLocalRandom
+            .current()
             .nextInt(amount.first, amount.last + 1)
-    }
 
     /** Boosted roll */
-    fun roll(player: Player, multiplier: Double): Drop? {
+    fun roll(
+        player: Player,
+        multiplier: Double,
+    ): Drop? {
         if (condition != null && !condition.invoke(player)) {
             return null
         }
@@ -34,8 +36,10 @@ open class TertiaryDropEntry(
                 .toInt()
                 .coerceAtLeast(1)
 
-        val roll = ThreadLocalRandom.current()
-            .nextInt(effectiveDenominator)
+        val roll =
+            ThreadLocalRandom
+                .current()
+                .nextInt(effectiveDenominator)
 
         if (roll < numerator) {
             return Drop(itemId, rollAmount(), source = DropSource.TERTIARY)
@@ -45,7 +49,5 @@ open class TertiaryDropEntry(
     }
 
     /** Backwards compatible */
-    override fun roll(player: Player): Drop? {
-        return roll(player, 1.0)
-    }
+    override fun roll(player: Player): Drop? = roll(player, 1.0)
 }

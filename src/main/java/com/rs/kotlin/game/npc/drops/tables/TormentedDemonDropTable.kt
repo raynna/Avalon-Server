@@ -1,26 +1,33 @@
 package com.rs.kotlin.game.npc.drops.tables
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
-import com.rs.kotlin.game.npc.drops.SeedTableConfig
-import com.rs.kotlin.game.npc.drops.SeedTableType
+import com.rs.kotlin.game.npc.TableCategory
+import com.rs.kotlin.game.npc.drops.config.SeedTableConfig
 import com.rs.kotlin.game.npc.drops.dropTable
+import com.rs.kotlin.game.npc.drops.seed.SeedTableType
 
 object TormentedDemonDropTable {
     val table =
         dropTable(
+            category = TableCategory.BOSS,
             seedTable = SeedTableConfig(SeedTableType.TREE_HERB, numerator = 1, denominator = 51),
-            rolls = 1,
         ) {
             alwaysDrops {
                 drop("item.infernal_ashes")
             }
             preRollDrops {
-                drop("item.dragon_claws", numerator = 1, denominator = 512)
-                drop("item.emberlight", numerator = 1, denominator = 512)
-                drop("item.ruined_dragon_armour_slice", numerator = 1, denominator = 256)
-                drop("item.ruined_dragon_armour_lump", numerator = 1, denominator = 256)
-                drop("item.ruined_dragon_armour_shard", numerator = 1, denominator = 256)
-                drop("item.dragon_crossbow", numerator = 1, denominator = 256)
+                drop("item.dragon_claws", numerator = 1, denominator = 512) {
+                    collectionLog = true
+                    announce = true
+                }
+                drop("item.emberlight", numerator = 1, denominator = 512) {
+                    collectionLog = true
+                    announce = true
+                }
+                drop("item.ruined_dragon_armour_slice", numerator = 1, denominator = 256) { collectionLog = true }
+                drop("item.ruined_dragon_armour_lump", numerator = 1, denominator = 256) { collectionLog = true }
+                drop("item.ruined_dragon_armour_shard", numerator = 1, denominator = 256) { collectionLog = true }
+                drop("item.dragon_crossbow", numerator = 1, denominator = 256) { collectionLog = true }
             }
             mainDrops(48) {
                 drop("item.rune_platebody", weight = 4)

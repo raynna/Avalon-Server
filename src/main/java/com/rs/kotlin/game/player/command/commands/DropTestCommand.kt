@@ -15,7 +15,11 @@ class DropTestCommand : Command {
     override val description = "Test a npc drop & banks items"
     override val usage = "::droptest <id> <level>"
 
-    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
+    override fun execute(
+        player: Player,
+        args: List<String>,
+        trigger: String,
+    ): Boolean {
         val cmdArgs = CommandArguments(args)
         if (args[0].equals("barrows", true)) {
             val brothersKilled = args.getOrNull(1)?.toIntOrNull() ?: 6
@@ -30,7 +34,11 @@ class DropTestCommand : Command {
         return true
     }
 
-    fun dropTest(player: Player, npcId: Int, times: Int) {
+    fun dropTest(
+        player: Player,
+        npcId: Int,
+        times: Int,
+    ) {
         val table = getDropTableForNpc(npcId)
         if (table == null) {
             player.message("No drop table for NPC ID: $npcId")
@@ -41,13 +49,14 @@ class DropTestCommand : Command {
         table.writeRatesToFile(Settings.DROP_MULTIPLIER)
         val combatLevel = NPCDefinitions.getNPCDefinitions(npcId).combatLevel
         for (i in 0..<times) {
+            player.killcount.increment(npcId)
             val drops = table.rollDrops(player, combatLevel, Settings.DROP_MULTIPLIER)
             for (drop in drops) {
                 if (drop == null) continue
                 dropCounts.merge(drop.itemId, drop.amount) { a: Int?, b: Int? ->
                     Integer.sum(
                         a!!,
-                        b!!
+                        b!!,
                     )
                 }
 
@@ -56,7 +65,7 @@ class DropTestCommand : Command {
                     dropCounts.merge(extra.itemId, extra.amount) { a: Int?, b: Int? ->
                         Integer.sum(
                             a!!,
-                            b!!
+                            b!!,
                         )
                     }
                 }
@@ -67,27 +76,29 @@ class DropTestCommand : Command {
             player.getBank().addItem(itemId, totalAmount, true)
             player.collectionLog.addItem(Item(itemId, totalAmount))
         }
-
         player.message("Simulated $times kills of NPC ID $npcId. Drops deposited to bank.")
     }
 
-    fun barrowsDropTest(player: Player, brothersKilled: Int, times: Int) {
-
+    fun barrowsDropTest(
+        player: Player,
+        brothersKilled: Int,
+        times: Int,
+    ) {
         val dropCounts: MutableMap<Int, Int> = HashMap()
 
         repeat(times) {
             player.killcount.increment("barrows chest")
             // Fake killed brothers array
-            val killed = BooleanArray(6) { i ->
-                i < brothersKilled
-            }
+            val killed =
+                BooleanArray(6) { i ->
+                    i < brothersKilled
+                }
 
             player.killedBarrowBrothers = killed
 
             val rolls = 1 + brothersKilled
 
             repeat(rolls) {
-
                 val denom =
                     BarrowsChestTable.barrowsUniqueChance(brothersKilled)
 
@@ -95,7 +106,7 @@ class DropTestCommand : Command {
                     .setPreRollDenominator(denom)
 
                 val drops =
-                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player, 0,Settings.DROP_MULTIPLIER)
+                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player, 0, Settings.DROP_MULTIPLIER)
 
                 for (drop in drops) {
                     dropCounts.merge(drop.itemId, drop.amount, Int::plus)
@@ -117,8 +128,7 @@ class DropTestCommand : Command {
         BarrowsChestTable.BARROWS_CHEST_TABLE
             .writeRatesToFile(Settings.DROP_MULTIPLIER)
         player.message(
-            "Simulated $times Barrows chests with $brothersKilled brothers killed."
+            "Simulated $times Barrows chests with $brothersKilled brothers killed.",
         )
     }
-
 }

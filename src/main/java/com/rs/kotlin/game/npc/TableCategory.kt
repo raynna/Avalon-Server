@@ -1,9 +1,11 @@
 package com.rs.kotlin.game.npc
 
-enum class MonsterCategory {
+enum class TableCategory {
     REGULAR,
     BOSS,
+    CLUE,
     SLAYER,
+    DRAGON,
     MINIGAME,
-    OTHER
+    OTHER,
 }

@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.rs.java.game.player.content.collectionlog.CollectionLog.MASTER;
+
 public class CollectionLog implements Serializable {
     private static final long serialVersionUID = 4602692016264458065L;
 
@@ -84,7 +86,7 @@ public class CollectionLog implements Serializable {
             else
                 tabs.add(s);
         int scrollHeight = (int) (tabs.size() * Math.ceil((double) TAB_COMPONENT_HEIGHT / 2));
-        player.getPackets().sendCSVarInteger(350, Math.max(scrollHeight - TAB_COMPONENT_HEIGHT, TAB_CONTAINER_HEIGHT));
+        player.getPackets().sendCSVarInteger(350, Math.max(scrollHeight - TAB_COMPONENT_HEIGHT / 2, TAB_CONTAINER_HEIGHT));
         /*WorldTasksManager.schedule(1, () -> {
             player.getPackets().sendRunScript(6255);
         });*/
@@ -133,7 +135,7 @@ public class CollectionLog implements Serializable {
                 else
                     tabs.add(s);
             int scrollHeight = (int) (tabs.size() * Math.ceil((double) TAB_COMPONENT_HEIGHT / 2));
-            player.getPackets().sendCSVarInteger(350, Math.max(scrollHeight - TAB_COMPONENT_HEIGHT, TAB_CONTAINER_HEIGHT));
+            player.getPackets().sendCSVarInteger(350, Math.max(scrollHeight - TAB_COMPONENT_HEIGHT / 2, TAB_CONTAINER_HEIGHT));
             //player.getPackets().sendRunScript(10008);
         }
     }
@@ -155,7 +157,7 @@ public class CollectionLog implements Serializable {
     }
 
     private void writeDetails() {
-        if (tabs.isEmpty())
+        if (tabs.isEmpty() || tabId >= tabs.size())
             return;
         String key = tabs.get(tabId);
         String kills  = getKills(key);
@@ -163,6 +165,18 @@ public class CollectionLog implements Serializable {
         player.getPackets().sendTextOnComponent(ID, KILLS_STRING, kills == null ? "" : getKillString(key, kills));
         player.getPackets().sendTextOnComponent(ID, OBTAINED_STRING, getCompletion(category, key));
         player.getPackets().sendTextOnComponent(ID, BOSS_NAME_STRING, tabs.get(tabId));
+    }
+
+    private String getCountLabel(String tabName) {
+        String label = category.killString;
+
+        if (category == CategoryType.OTHERS) {
+            if (tabName.equalsIgnoreCase("Magic Chest") || tabName.equalsIgnoreCase("Magic chest")) {
+                return "Opened:";
+            }
+        }
+
+        return label;
     }
 
     /*
@@ -186,8 +200,9 @@ public class CollectionLog implements Serializable {
 
                 }
                 break;
-            //case OTHERS:
-            //  return null;
+            case OTHERS:
+                lookup = player.getKillcount().getByName(key);
+                return String.valueOf(lookup);
 		default:
 			break;
         }
@@ -199,7 +214,12 @@ public class CollectionLog implements Serializable {
         Map<Integer, Integer> lootTab = getCategory(category).obtainedDrops.get(key);
         Map<Integer, Integer> masterTab = MASTER.getCategory(category).obtainedDrops.get(key);
 
-        int completion = lootTab == null ? 0 : lootTab.size();
+        int completion = 0;
+        if (lootTab != null) {
+            for (int amt : lootTab.values()) {
+                if (amt > 0) completion++;
+            }
+        }
 
         String prefix = "";
         if(completion == masterTab.size())
@@ -221,7 +241,12 @@ public class CollectionLog implements Serializable {
     private boolean hasComplete(CategoryType type, String key) {
         Map<Integer, Integer> lootTab = getCategory(category).obtainedDrops.get(key);
         Map<Integer, Integer> masterTab = MASTER.getCategory(category).obtainedDrops.get(key);
-        int completion = lootTab == null ? 0 : lootTab.size();
+        int completion = 0;
+        if (lootTab != null) {
+            for (int amt : lootTab.values()) {
+                if (amt > 0) completion++;
+            }
+        }
 
         if (masterTab == null) return false;
 
@@ -255,6 +280,8 @@ public class CollectionLog implements Serializable {
 
 
     private void writeGhostItems() {
+        if (tabs.isEmpty() || tabId >= tabs.size())
+            return;
 
         ItemsContainer<Item> masterLog =
                 MASTER.getCategory(category)
@@ -278,6 +305,8 @@ public class CollectionLog implements Serializable {
 
 
     private void writeCollectedItems() {
+        if (tabs.isEmpty() || tabId >= tabs.size())
+            return;
         ItemsContainer<Item> masterLog =
                 MASTER.getCategory(category)
                         .getCollectionList(tabs.get(tabId));
@@ -364,9 +393,9 @@ public class CollectionLog implements Serializable {
     }
 
     public String getKillString(String tabName, String kills) {
-        if(category.killString == null)
-            return "";
-        return "<col=ff981f>" +tabName + " " + category.killString + " <col=FFFFFF>" + kills;
+        String label = getCountLabel(tabName);
+        if (label == null) return "";
+        return "<col=ff981f>" + tabName + " " + label + " <col=FFFFFF>" + kills;
     }
 
     
@@ -450,6 +479,50 @@ public class CollectionLog implements Serializable {
             }
         }
     }
+
+    public void resetAll() {
+        resetCategory(CategoryType.BOSSES);
+        resetCategory(CategoryType.SLAYER);
+        resetCategory(CategoryType.CLUES);
+        resetCategory(CategoryType.MINIGAMES);
+        resetCategory(CategoryType.OTHERS);
+    }
+
+    /** Reset a whole category (keeps tabs & item ids, sets amounts to 0). */
+    public void resetCategory(CategoryType type) {
+        LogCategory cat = this.getCategory(type);
+        if (cat == null) return;
+
+        for (Map.Entry<String, Map<Integer, Integer>> tabEntry : cat.getDrops().entrySet()) {
+            Map<Integer, Integer> lootTab = tabEntry.getValue();
+            if (lootTab == null) continue;
+
+            // zero all amounts but keep keys
+            for (Integer itemId : new ArrayList<>(lootTab.keySet())) {
+                lootTab.put(itemId, 0);
+            }
+        }
+    }
+
+    /**
+     * Reset a single tab in a category (tab name matched case-insensitively against MASTER).
+     * @return true if tab existed (or was created) and was reset.
+     */
+    public boolean resetTab(CategoryType type, String tabName) {
+        LogCategory cat = this.getCategory(type);
+        if (cat == null) return false;
+
+        String canonical = null;
+        for (String k : MASTER.getCategory(type).getDrops().keySet()) {
+            if (k.equalsIgnoreCase(tabName)) {
+                canonical = k;
+                break;
+            }
+        }
+        if (canonical == null) return false;
+        cat.getDrops().remove(canonical);
+        return true;
+    }
 }
 
 /**
@@ -475,7 +548,7 @@ class LogCategory implements Serializable {
      * Belongs to CollectionLog.MASTER
      */
     public boolean isMaster() {
-        return CollectionLog.MASTER.getCategory(categoryType) == this;
+        return MASTER.getCategory(categoryType) == this;
     }
 
     /**
@@ -577,22 +650,25 @@ class LogCategory implements Serializable {
         }
 
         if(lootTab == null) {
-            // player hasn't saved any items from this loot tab yet
             return con;
         }
 
         lootTab.forEach((item, amt) -> {
             if (isMaster())
                 con.add(new Item(item, 0, true, null));
-            else
-                con.add(new Item(item, amt));
-        });;
+            else {
+                if (amt > 0) {
+                    con.add(new Item(item, amt));
+                }
+            }
+        });
         return con;
     }
 
     public Map<String, Map<Integer, Integer>> getDrops() {
         return obtainedDrops;
     }
+
 }
 
 

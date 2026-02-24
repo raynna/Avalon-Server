@@ -1,10 +1,14 @@
-package com.rs.kotlin.game.npc.drops
+package com.rs.kotlin.game.npc.drops.herb
 
 import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
+import com.rs.kotlin.game.npc.drops.Drop
+import com.rs.kotlin.game.npc.drops.DropEntry
+import com.rs.kotlin.game.npc.drops.DropSource
+import com.rs.kotlin.game.npc.drops.ItemWeightedEntry
+import com.rs.kotlin.game.npc.drops.WeightedTable
 
 class HerbTableEntry : DropEntry(-1, 1..1) {
-
     private val table = WeightedTable()
 
     init {
@@ -24,20 +28,24 @@ class HerbTableEntry : DropEntry(-1, 1..1) {
         println("[DropSystem] Registered ${table.size()} Herb table drops.")
     }
 
-    private fun add(item: String, amount: IntRange = 1..1, weight: Int = 1) {
+    private fun add(
+        item: String,
+        amount: IntRange = 1..1,
+        weight: Int = 1,
+    ) {
         val itemId = Rscm.lookup(item)
         table.add(ItemWeightedEntry(itemId, amount, weight))
     }
 
     override fun roll(player: Player): Drop? {
-
         val entries = table.mutableEntries()
 
-        val filtered = if (player.hasRingOfWealth()) {
-            entries.filterIsInstance<ItemWeightedEntry>()
-        } else {
-            entries
-        }
+        val filtered =
+            if (player.hasRingOfWealth()) {
+                entries.filterIsInstance<ItemWeightedEntry>()
+            } else {
+                entries
+            }
 
         if (filtered.isEmpty()) return null
 
@@ -51,9 +59,8 @@ class HerbTableEntry : DropEntry(-1, 1..1) {
 
     private fun tableSizeOrDefault() = 128
 
-    fun getEntries(): List<ItemWeightedEntry> {
-        return table.mutableEntries()
+    fun getEntries(): List<ItemWeightedEntry> =
+        table
+            .mutableEntries()
             .filterIsInstance<ItemWeightedEntry>()
-    }
-
 }

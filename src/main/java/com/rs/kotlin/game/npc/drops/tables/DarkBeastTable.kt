@@ -1,16 +1,20 @@
 package com.rs.kotlin.game.npc.drops.tables
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
-import com.rs.kotlin.game.npc.MonsterCategory
-import com.rs.kotlin.game.npc.drops.HerbTableConfig
-import com.rs.kotlin.game.npc.drops.SeedTableConfig
-import com.rs.kotlin.game.npc.drops.SeedTableType
+import com.rs.kotlin.game.npc.TableCategory
+import com.rs.kotlin.game.npc.drops.config.GemTableConfig
+import com.rs.kotlin.game.npc.drops.config.HerbTableConfig
+import com.rs.kotlin.game.npc.drops.config.RareTableConfig
+import com.rs.kotlin.game.npc.drops.config.SeedTableConfig
 import com.rs.kotlin.game.npc.drops.dropTable
+import com.rs.kotlin.game.npc.drops.seed.SeedTableType
 
 object DarkBeastTable {
     val table =
         dropTable(
-            category = MonsterCategory.SLAYER,
+            category = TableCategory.SLAYER,
+            gemTable = GemTableConfig(3, 128),
+            rareTable = RareTableConfig(3, 128),
             herbTables =
                 listOf(
                     HerbTableConfig(amount = 1..1, numerator = 19, denominator = 128),
@@ -18,8 +22,6 @@ object DarkBeastTable {
                 ),
             seedTable =
                 SeedTableConfig(SeedTableType.RARE, amount = 1..1, numerator = 3, denominator = 128),
-            rareDropTable = true,
-            rolls = 1,
         ) {
 
             alwaysDrops {
@@ -27,7 +29,7 @@ object DarkBeastTable {
             }
 
             preRollDrops {
-                drop("item.dark_bow", numerator = 1, denominator = 512)
+                drop("item.dark_bow", numerator = 1, denominator = 512) { collectionLog = true }
             }
 
             mainDrops(128) {
@@ -74,13 +76,13 @@ object DarkBeastTable {
                     numerator = 1,
                     denominator = 400,
                     condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
-                )
+                ) { collectionLog = true }
                 drop(
                     "item.curved_bone",
                     numerator = 1,
                     denominator = 5012,
                     condition = { player -> !player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
-                )
+                ) { collectionLog = true }
             }
 
             charmDrops {

@@ -8,14 +8,15 @@ data class DropDisplay(
     val rarityText: String,
     val type: DropType,
     val baseDenominator: Int,
-    val weight: Int? = 0,
+    val weight: Int? = null,
+    val totalWeight: Int? = null,
+    val nothingWeight: Int? = null,
     val percentage: Double? = null,
 )
 
-fun IntRange.toDisplayString(): String {
-    return if (first == last) {
+fun IntRange.toDisplayString(): String =
+    if (first == last) {
         first.toString()
     } else {
         "$first-$last"
     }
-}
