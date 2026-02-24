@@ -96,32 +96,36 @@ public class SlidingTilesRoom extends PuzzleRoom {
 
 	public void shuffle() {
 		int type = manager.getParty().getFloorType();
+
+		freeIndex = 8;
+		solveIndex = 0;
+
 		shuffledNpcOrder = new int[9];
-		solveOrder = new int[8];
+
 		for (int i = 0; i < 8; i++) {
 			shuffledNpcOrder[i] = BASE_TILE[type] + i;
 		}
-		List<Integer> set = new ArrayList<Integer>();
-		boolean[] used = new boolean[9];
-		while (true) {
-			for (int i = 0; i < VALID_MOVES[freeIndex].length; i++) {
-				if (!used[VALID_MOVES[freeIndex][i]]) {
-					set.add(VALID_MOVES[freeIndex][i]);
-				}
-			}
-			if (set.isEmpty()) {
-				break;
-			}
-			Collections.shuffle(set);
-			int next = set.get(0);
-			set.clear();
-			used[freeIndex] = true;
-			solveOrder[solveIndex++] = freeIndex;
+		shuffledNpcOrder[8] = 0;
+
+		// perform 200 random valid blank moves (guaranteed solvable)
+		for (int i = 0; i < 200; i++) {
+			int[] moves = VALID_MOVES[freeIndex];
+			int next = moves[Utils.random(moves.length)];
+
 			shuffledNpcOrder[freeIndex] = shuffledNpcOrder[next];
 			shuffledNpcOrder[next] = 0;
-			freeIndex = next;
 
+			freeIndex = next;
 		}
+	}
+
+	private boolean isSolved() {
+		int type = manager.getParty().getFloorType();
+		for (int i = 0; i < 8; i++) {
+			if (shuffledNpcOrder[i] != BASE_TILE[type] + i)
+				return false;
+		}
+		return shuffledNpcOrder[8] == 0;
 	}
 
 	public static boolean handleSlidingBlock(Player player, NPC npc) {
@@ -141,27 +145,45 @@ public class SlidingTilesRoom extends PuzzleRoom {
 			for (int i = 0; i < puzzle.tiles.length; i++) {
 				if (puzzle.tiles[i] == npc) {
 					player.lock(1);
-					if (i == puzzle.solveOrder[puzzle.solveIndex - 1]) {
-						puzzle.solveIndex--;
-						if (puzzle.solveIndex == 0) {
-							puzzle.setComplete();
-							//players can keep clicking after it's done but will take damage
-							puzzle.solveIndex = 1;
-							puzzle.solveOrder[0] = -1;
+					boolean canMove = false;
+					for (int move : VALID_MOVES[i]) {
+						if (move == puzzle.freeIndex) {
+							canMove = true;
+							break;
 						}
-						int[] coords = DungeonManager.translate(TILE_COORDS[puzzle.freeIndex][0], TILE_COORDS[puzzle.freeIndex][1], 0, 2, 2, 0);
-						WorldTile base = puzzle.manager.getRoomBaseTile(puzzle.reference);
-						npc.addWalkSteps(base.getX() + coords[0], base.getY() + coords[1]);
-	
-						puzzle.tiles[puzzle.freeIndex] = puzzle.tiles[i];
-						puzzle.tiles[i] = null;
-						puzzle.freeIndex = i;
-						return true;
-					} else {
-						player.getPackets().sendGameMessage("You strain your powers of telekenesis, but the tile just doesn't want to go there.");
-						player.applyHit(new Hit(player, (int) (player.getMaxHitpoints() * .2), HitLook.REGULAR_DAMAGE));
+					}
+
+					if (!canMove) {
+						player.getPackets().sendGameMessage(
+								"You strain your powers of telekinesis, but the tile won't budge.");
+						player.applyHit(new Hit(player,
+								(int) (player.getMaxHitpoints() * .2),
+								HitLook.REGULAR_DAMAGE));
 						return true;
 					}
+
+					int[] coords = DungeonManager.translate(
+							TILE_COORDS[puzzle.freeIndex][0],
+							TILE_COORDS[puzzle.freeIndex][1],
+							0, 2, 2, 0);
+
+					WorldTile base = puzzle.manager.getRoomBaseTile(puzzle.reference);
+					npc.addWalkSteps(base.getX() + coords[0], base.getY() + coords[1]);
+
+					puzzle.tiles[puzzle.freeIndex] = puzzle.tiles[i];
+					puzzle.tiles[i] = null;
+
+					puzzle.shuffledNpcOrder[puzzle.freeIndex] =
+							puzzle.shuffledNpcOrder[i];
+					puzzle.shuffledNpcOrder[i] = 0;
+
+					puzzle.freeIndex = i;
+
+					if (puzzle.isSolved()) {
+						puzzle.setComplete();
+					}
+
+					return true;
 				}
 			}
 		}

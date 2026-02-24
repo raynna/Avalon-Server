@@ -114,7 +114,11 @@ public final class NPCCombat {
             debug("combatAttack: cannot reach target (LOS or distance)");
             return true;
         }
-
+        int attackResult = CombatScriptsHandler.specialAttack(npc, target);
+        if (attackResult <= 0) {
+            debug("combatAttack: script returned 0, no attack performed");
+            return true;
+        }
         debug("combatAttack: ATTACKING");
         attackDelay = npc.getAttackSpeed();
         target.setAttackedBy(npc);
@@ -122,7 +126,7 @@ public final class NPCCombat {
         target.setInCombat(16);
         target.setPjTimer(12);
 
-        return CombatScriptsHandler.specialAttack(npc, target) > 0;
+        return true;
     }
 
 

@@ -349,9 +349,7 @@ class DropTable(
                         addWeightedTableDisplays(entry.table, dropType, chanceToEnter)
                     }
 
-                    else -> {
-                        // If you add more entry types later, ignore safely
-                    }
+                    else -> {}
                 }
             }
         }
@@ -413,15 +411,12 @@ class DropTable(
 
             tableEntries.forEach { herb ->
 
-                // chance to land herb table
                 val tableChance =
                     (cfg.numerator.toDouble() / cfg.denominator.toDouble())
 
-                // chance of this herb inside table
                 val herbChance =
                     herb.weight.toDouble() / totalWeight
 
-                // combined chance
                 val combinedChance =
                     tableChance * herbChance
 
@@ -442,6 +437,7 @@ class DropTable(
             }
         }
 
+        // SEED
         seedTableConfig?.let { cfg ->
 
             val tableChance =
@@ -586,55 +582,6 @@ class DropTable(
                 )
             }
         }
-        // If this DropTable is the Rare Drop Table itself
-        /**if (name.equals("Rare Table", ignoreCase = true)) {
-         val entries = rareDropTable.getEntries()
-         val total = entries.sumOf { it.weight }.toDouble()
-
-         for (entry in entries) {
-         val chance = entry.weight / total
-         val denom = (1.0 / chance).toInt()
-
-         when (entry.itemId) {
-         RareDropTableEntry.GEM_TABLE_MARKER -> {
-         list.add(
-         DropDisplay(
-         itemId = Rscm.lookup("item.uncut_dragonstone"),
-         amount = 1..1,
-         rarityText = "1/$denom",
-         type = DropType.GEM_TABLE,
-         baseDenominator = denom,
-         ),
-         )
-         }
-
-         RareDropTableEntry.MEGA_RARE_MARKER -> {
-         list.add(
-         DropDisplay(
-         itemId = Rscm.lookup("item.shield_left_half"),
-         amount = 1..1,
-         rarityText = "1/$denom",
-         type = DropType.MEGA_TABLE,
-         baseDenominator = denom,
-         ),
-         )
-         }
-
-         else -> {
-         list.add(
-         DropDisplay(
-         entry.itemId,
-         entry.amount,
-         "1/$denom",
-         DropType.MAIN,
-         denom,
-         ),
-         )
-         }
-         }
-         }
-         }*/
-
         return list
     }
 

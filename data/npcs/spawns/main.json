@@ -5879,24 +5879,6 @@
   },
   {
     "tile": {
-      "plane": 1,
-      "x": 1712,
-      "y": 5312
-    },
-    "comment": "Mithril dragon",
-    "npcId": 5363
-  },
-  {
-    "tile": {
-      "plane": 1,
-      "x": 1712,
-      "y": 5312
-    },
-    "comment": "Mithril dragon",
-    "npcId": 5363
-  },
-  {
-    "tile": {
       "plane": 0,
       "x": 1688,
       "y": 5312
@@ -6816,8 +6798,17 @@
   {
     "tile": {
       "plane": 1,
+      "x": 1781,
+      "y": 5340
+    },
+    "comment": "Mithril dragon",
+    "npcId": 5363
+  },
+  {
+    "tile": {
+      "plane": 1,
       "x": 1782,
-      "y": 5341
+      "y": 5357
     },
     "comment": "Mithril dragon",
     "npcId": 5363

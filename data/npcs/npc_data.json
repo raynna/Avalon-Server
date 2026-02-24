@@ -29812,6 +29812,66 @@
       "mazchna"
     ]
   },
+  "3340": {
+    "id": 3340,
+    "name": "Giant Mole",
+    "members": true,
+    "combatLevel": 230,
+    "attackLevel": 200,
+    "strengthLevel": 200,
+    "defenceLevel": 200,
+    "magicLevel": 200,
+    "rangedLevel": 1,
+    "constitutionLevel": 200,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 60,
+      "slash": 80,
+      "crush": 100
+    },
+    "magicDefence": {
+      "magic": 80
+    },
+    "rangedDefence": {
+      "light": 60,
+      "standard": 60,
+      "heavy": 60
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 March]] [[2006]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "Holy Mole-y!",
+    "attributes": [],
+    "xpBonus": 7.5,
+    "maxHit": {
+      "default": 21
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 16,
+    "slayerXp": 215,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "3348": {
     "id": 3348,
     "name": "White Knight",

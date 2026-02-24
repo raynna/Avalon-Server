@@ -743,6 +743,14 @@
     "lastSeen": "2026-01-26T17:55:23.026818400Z",
     "attempts": 1
   },
+  "9782": {
+    "npcId": 9782,
+    "npcName": "Stomp",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-02-24T18:59:02.739095800Z",
+    "lastSeen": "2026-02-24T18:59:02.739095800Z",
+    "attempts": 1
+  },
   "13459": {
     "npcId": 13459,
     "npcName": "Ancient mage",

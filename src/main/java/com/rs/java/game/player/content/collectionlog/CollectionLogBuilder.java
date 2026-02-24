@@ -13,7 +13,7 @@ public class CollectionLogBuilder {
 
     public static void build(CollectionLog log) {
 
-        for (DropTable table : DropTableRegistry.getAllNamedTables().values()) {
+        for (DropTable table : DropTableRegistry.getAllTables()) {
 
             Set<Integer> items = table.getAllItemIdsForCollectionLog();
 

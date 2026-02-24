@@ -23,6 +23,10 @@ public class TickManager {
 
     public void init() {
         ensureInit();
+
+        if (entity instanceof Player) {
+            tickTimers.putAll(persistentTimers);
+        }
     }
 
     private void ensureInit() {
@@ -172,6 +176,7 @@ public class TickManager {
 
             } else {
                 entry.setValue(ticksLeft);
+                syncPersistent(entry.getKey(), ticksLeft);
             }
         }
     }

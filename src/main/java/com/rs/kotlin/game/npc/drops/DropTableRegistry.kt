@@ -13,6 +13,15 @@ object DropTableRegistry {
     private val objectAliases = mutableMapOf<Int, String>()
 
     @JvmStatic
+    fun getAllTables(): Set<DropTable> =
+        buildSet {
+            addAll(npcDropTables.values)
+            addAll(namedDropTables.values)
+            addAll(itemDropTables.values)
+            addAll(objectDropTables.values)
+        }
+
+    @JvmStatic
     fun registerObjectTable(
         name: String,
         key: String,

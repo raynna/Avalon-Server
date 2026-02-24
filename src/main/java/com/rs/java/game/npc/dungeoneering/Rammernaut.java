@@ -72,8 +72,8 @@ public class Rammernaut extends DungeonBoss {
 								tile = new WorldTile(entity);
 						}*///TODO 
 						entity.faceEntity(npc);
-						entity.animate(new Animation(10070));
-						entity.setNextForceMovement(new NewForceMovement(entity, 0, tile, 2, entity.getDirection()));
+						//entity.animate(new Animation(10070));
+					//	entity.setNextForceMovement(new NewForceMovement(entity, 0, tile, 2, entity.getDirection()));
 					} else if (ticks == 2) {
 						entity.setNextWorldTile(tile);
 						stop();

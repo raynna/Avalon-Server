@@ -27,17 +27,12 @@ public class LeatherDragonCombat extends CombatScript {
 	@Override
 	public Object[] getKeys() {
 		return new Object[] {
-				"Green dragon", "Blue dragon", "Red dragon", "Black dragon",
-				"Brutal green dragon", 742, 14548
+				"Green dragon", "Blue dragon", "Red dragon", "Black dragon", 742, 14548
 		};
 	}
 
 	@Override
 	public int attack(final NPC npc, final Entity target) {
-		boolean inMelee = npc.withinDistance(target, 1, npc.getSize());
-		if (!inMelee)
-			return 0;
-
 		DragonAttack attack = Utils.randomWeighted(
 				DragonAttack.MELEE, 75,
 				DragonAttack.FIREBREATH, 25
