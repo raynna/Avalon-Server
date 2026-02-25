@@ -6,14 +6,14 @@ import com.rs.kotlin.game.npc.drops.dropTable
 object WorldBossTable {
     val regular =
         dropTable(category = TableCategory.BOSS, rolls = 3) {
-            alwaysDrops {
+            always {
                 drop("item.coins", amount = 250000..500000)
                 drop("item.pvp_token", amount = 500..1_500) {
                     collectionLog = true
                 }
             }
 
-            preRollDrops {
+            prerollDenom {
                 listOf(
                     "statius_s_platebody",
                     "statius_s_platelegs",
@@ -57,7 +57,7 @@ object WorldBossTable {
                 }
             }
 
-            mainDrops(512) {
+            main(512) {
 
                 drop("item.saradomin_brew_4", amount = 3..5, weight = 55)
                 drop("item.super_restore_4", amount = 3..5, weight = 55)
@@ -128,11 +128,11 @@ object WorldBossTable {
 
     val chest =
         dropTable(sourceAction = "opening", category = TableCategory.OTHER, rolls = 1) {
-            alwaysDrops {
+            always {
                 drop("item.coins", amount = 500_000..1_500_000)
                 drop("item.pvp_token", amount = 1_000..3_000) { collectionLog = true }
             }
-            mainDrops(512) {
+            main(512) {
 
                 drop("item.abyssal_whip", weight = 8) { collectionLog = true }
                 drop("item.staff_of_light", weight = 8) { collectionLog = true }

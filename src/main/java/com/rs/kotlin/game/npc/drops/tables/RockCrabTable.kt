@@ -8,14 +8,14 @@ object RockCrabTable {
     val table =
         dropTable(gemTable = GemTableConfig(1, 128)) {
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 29.0)
                 green(amount = 1, percent = 0.905)
                 crimson(amount = 1, percent = 1.81)
                 blue(amount = 1, percent = 0.181)
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.bronze_pickaxe", weight = 6)
                 drop("item.iron_pickaxe", weight = 5)
                 drop("item.seaweed", amount = 1, weight = 4)
@@ -40,7 +40,7 @@ object RockCrabTable {
                 drop("item.casket", amount = 1, weight = 1)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_easy",
                     numerator = 1,

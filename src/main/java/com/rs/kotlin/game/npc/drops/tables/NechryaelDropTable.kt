@@ -17,18 +17,18 @@ object NechryaelDropTable {
             category = TableCategory.SLAYER,
         ) {
 
-            alwaysDrops {
+            always {
                 drop("item.infernal_ashes")
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 8.51)
                 green(amount = 1, percent = 4.25)
                 crimson(amount = 1, percent = 29.8)
                 blue(amount = 1, percent = 0.851)
             }
 
-            mainDrops(116) {
+            main(116) {
                 drop("item.adamant_platelegs", weight = 4)
                 drop("item.rune_2h_sword", weight = 4)
                 drop("item.rune_full_helm", weight = 3)
@@ -52,7 +52,7 @@ object NechryaelDropTable {
                 drop("item.tuna", weight = 3)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,

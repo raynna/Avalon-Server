@@ -14,11 +14,11 @@ object BlackDragonDropTable {
             rareTable = RareTableConfig(2, 128),
             gemTable = GemTableConfig(3, 128),
         ) {
-            alwaysDrops {
+            always {
                 drop("item.dragon_bones")
                 drop("item.black_dragonhide")
             }
-            mainDrops(128) {
+            main(128) {
                 drop("item.mithril_2h_sword", weight = 4)
                 drop("item.mithril_hatchet", weight = 3)
                 drop("item.mithril_battleaxe", weight = 3)
@@ -38,7 +38,7 @@ object BlackDragonDropTable {
                 drop("item.adamant_bar", weight = 3)
                 drop("item.chocolate_cake", weight = 3)
             }
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,
@@ -72,14 +72,14 @@ object BlackDragonDropTable {
                 drop("item.starved_ancient_effigy", 1, numerator = 1, denominator = 18000)
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 8.96)
                 green(amount = 1, percent = 26.9)
                 crimson(amount = 1, percent = 6.72)
                 blue(amount = 1, percent = 1.34)
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop(
                     "item.dragon_token",
                     condition = { player -> false }, // TODO RECIPE FOR DISASTER STEP

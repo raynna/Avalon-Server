@@ -12,11 +12,11 @@ object GreenDragonDropTable {
             gemTable = GemTableConfig(5, 128),
             herbTables = HerbTableConfig(numerator = 15, denominator = 128),
         ) {
-            alwaysDrops {
+            always {
                 drop("item.dragon_bones")
                 drop("item.green_dragonhide")
             }
-            mainDrops(128) {
+            main(128) {
                 drop("item.steel_platelegs", weight = 4)
                 drop("item.steel_battleaxe", weight = 3)
                 drop("item.mithril_hatchet", weight = 3)
@@ -39,7 +39,7 @@ object GreenDragonDropTable {
                 drop("item.bass", weight = 3)
                 drop("item.adamantite_ore", weight = 3)
             }
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,
@@ -56,7 +56,7 @@ object GreenDragonDropTable {
                 }
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 6.62)
                 green(amount = 1, percent = 16.6)
                 crimson(amount = 1, percent = 6.62)

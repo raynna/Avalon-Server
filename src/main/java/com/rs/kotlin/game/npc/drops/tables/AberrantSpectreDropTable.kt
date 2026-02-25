@@ -18,14 +18,14 @@ object AberrantSpectreDropTable {
             rolls = 1,
         ) {
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 12.0)
                 green(amount = 1, percent = 6.01)
                 crimson(amount = 1, percent = 4.01)
                 blue(amount = 1, percent = 4.81)
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.steel_hatchet", weight = 3)
                 drop("item.mithril_kiteshield", weight = 1)
                 drop("item.lava_battlestaff", weight = 1) {
@@ -40,7 +40,7 @@ object AberrantSpectreDropTable {
                 drop("item.coins", amount = 460, weight = 1)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,

@@ -14,18 +14,18 @@ object KrilTsutsarothDropTable {
             category = TableCategory.BOSS,
         ) {
 
-            alwaysDrops {
+            always {
                 drop("item.infernal_ashes")
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 10.1)
                 green(amount = 1, percent = 5.04)
                 crimson(amount = 1, percent = 10.1)
                 blue(amount = 1, percent = 16.1)
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.steam_battlestaff", numerator = 1, denominator = 127) { collectionLog = true }
                 drop("item.zamorakian_spear", numerator = 1, denominator = 127) {
                     collectionLog = true
@@ -40,7 +40,7 @@ object KrilTsutsarothDropTable {
                 drop("item.godsword_shard_3", numerator = 1, denominator = 762) { collectionLog = true }
             }
 
-            mainDrops(127) {
+            main(127) {
                 drop("item.adamant_arrow_p_3", amount = 295..300, weight = 8)
                 drop("item.rune_scimitar", weight = 8)
                 drop("item.adamant_platebody", weight = 8)
@@ -62,7 +62,7 @@ object KrilTsutsarothDropTable {
                 drop("item.wine_of_zamorak_noted", amount = 2..10, weight = 4)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop("item.long_bone", numerator = 1, denominator = 400) { collectionLog = true }
                 drop("item.curved_bone", numerator = 1, denominator = 5012) { collectionLog = true }
                 drop(

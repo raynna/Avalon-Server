@@ -14,19 +14,19 @@ object KreeArraDropTable {
             category = TableCategory.BOSS,
         ) {
 
-            alwaysDrops {
+            always {
                 drop("item.big_bones")
                 drop("item.feather", 1..16)
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 10.1)
                 green(amount = 1, percent = 5.04)
                 crimson(amount = 1, percent = 10.1)
                 blue(amount = 1, percent = 16.1)
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.armadyl_helmet", numerator = 1, denominator = 381) {
                     collectionLog = true
                     announce = true
@@ -48,7 +48,7 @@ object KreeArraDropTable {
                 drop("item.godsword_shard_3", numerator = 1, denominator = 762) { collectionLog = true }
             }
 
-            mainDrops(127) {
+            main(127) {
                 drop("item.black_d_hide_body", weight = 8)
                 drop("item.rune_crossbow", weight = 8)
 
@@ -67,7 +67,7 @@ object KreeArraDropTable {
                 drop("item.yew_seed", amount = 1, weight = 1)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.long_bone",
                     numerator = 1,

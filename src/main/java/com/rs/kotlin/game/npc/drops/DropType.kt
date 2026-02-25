@@ -12,4 +12,5 @@ enum class DropType {
     RARE_TABLE,
     MEGA_TABLE,
     GEM_TABLE,
+    SUB_TABLE,
 }

@@ -12,7 +12,7 @@ object ChaosElementalDropTable {
             rareTable = RareTableConfig(8, 128),
         ) {
 
-            minorDrops(5) {
+            minor(5) {
                 drop("item.rocktail", amount = 2, weight = 1)
                 drop("item.cooked_karambwan", amount = 3, weight = 1)
                 drop("item.super_restore_4", amount = 1, weight = 1)
@@ -20,7 +20,7 @@ object ChaosElementalDropTable {
                 drop("item.super_combat_potion_1", amount = 1, weight = 1)
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.dragon_pickaxe", numerator = 1, denominator = 256) {
                     collectionLog = true
                 }
@@ -71,7 +71,7 @@ object ChaosElementalDropTable {
                 }
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.rune_dart", amount = 100, weight = 5)
                 drop("item.rune_platelegs", weight = 4)
                 drop("item.rune_plateskirt", weight = 4)
@@ -113,7 +113,7 @@ object ChaosElementalDropTable {
                 drop("item.rocktail_noted", amount = 15..25, weight = 4)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.weapon_poison_++",
                     numerator = 10,

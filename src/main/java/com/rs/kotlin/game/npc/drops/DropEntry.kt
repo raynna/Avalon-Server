@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.npc.drops
 
-import com.rs.java.game.player.Player
 import java.util.concurrent.ThreadLocalRandom
 
 open class DropEntry

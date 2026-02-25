@@ -8,7 +8,7 @@ object RareDropTableViewer {
         dropTable(
             name = "Rare Table",
         ) {
-            mainDrops(128) {
+            main(128) {
                 val entries = DropTablesSetup.rareDropTable.getEntries()
 
                 for (entry in entries) {

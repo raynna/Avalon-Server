@@ -8,7 +8,7 @@ object GemDropTableViewer {
         dropTable(
             name = "Gem Table",
         ) {
-            mainDrops(128) {
+            main(128) {
                 val entries = DropTablesSetup.gemDropTable.getEntries()
 
                 for (entry in entries) {

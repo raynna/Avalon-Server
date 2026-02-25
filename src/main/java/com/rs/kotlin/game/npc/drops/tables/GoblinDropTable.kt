@@ -7,18 +7,18 @@ object GoblinDropTable {
     val table =
         dropTable(rolls = 1) {
 
-            alwaysDrops {
+            always {
                 drop("item.bones")
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 8.6)
                 green(amount = 1, percent = 0.269)
                 crimson(amount = 1, percent = 0.538)
                 blue(amount = 1, percent = 0.0537)
             }
 
-            mainDrops(128) {
+            main(128) {
                 // item: Any, amount: Int = 1, weight: Int = 1, denominator: Int = 4
                 drop("item.bronze_spear", weight = 4)
                 drop("item.bronze_sq_shield", weight = 3)
@@ -40,14 +40,14 @@ object GoblinDropTable {
                 drop("item.air_talisman", weight = 1)
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop(
                     "item.goblin_skull",
                     condition = { player -> false }, // TODO RAG AND BONE MAN QUEST
                 )
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_easy",
                     numerator = 1,

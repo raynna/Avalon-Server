@@ -55768,6 +55768,70 @@
       "vannaka"
     ]
   },
+  "10776": {
+    "id": 10776,
+    "name": "Iron dragon",
+    "members": true,
+    "combatLevel": 189,
+    "attackLevel": 165,
+    "strengthLevel": 165,
+    "defenceLevel": 165,
+    "magicLevel": 100,
+    "rangedLevel": 1,
+    "constitutionLevel": 165,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 70,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": 30
+    },
+    "rangedDefence": {
+      "light": 90,
+      "standard": 90,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "4",
+    "examine": "Its scales seem to be made of iron.",
+    "attributes": [
+      "dragon",
+      "fiery"
+    ],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "[[melee]]": 17,
+      "[[dragonfire]]": 50
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]",
+      "[[Dragonfire]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "11232": {
     "id": 11232,
     "name": "Goblin",

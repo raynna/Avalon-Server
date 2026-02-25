@@ -11,18 +11,18 @@ object CrawlingHandTable {
             category = TableCategory.SLAYER,
         ) {
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 9.85)
                 green(amount = 1, percent = 0.308)
                 crimson(amount = 1, percent = 0.616)
                 blue(amount = 1, percent = 0.0616)
             }
 
-            alwaysDrops {
+            always {
                 drop("item.bones")
             }
 
-            mainDrops(128) {
+            main(128) {
                 /** Gloves */
                 drop("item.leather_gloves", weight = 21)
                 drop("item.purple_gloves", weight = 2)
@@ -35,7 +35,7 @@ object CrawlingHandTable {
                 drop("item.emerald_ring", weight = 2)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.crawling_hand",
                     numerator = 1,

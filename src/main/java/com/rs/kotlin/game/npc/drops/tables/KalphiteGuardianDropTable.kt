@@ -13,14 +13,14 @@ object KalphiteGuardianDropTable {
             herbTables = HerbTableConfig(numerator = 23, denominator = 128),
         ) {
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 16.3)
                 green(amount = 1, percent = 8.13)
                 crimson(amount = 1, percent = 8.13)
                 blue(amount = 1, percent = 11.4)
             }
 
-            mainDrops(128) {
+            main(128) {
                 // Weapons & armours
                 drop("item.mithril_sword", weight = 4)
                 drop("item.steel_battleaxe", weight = 3)

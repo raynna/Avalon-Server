@@ -16,24 +16,24 @@ object AbyssalDemonTable {
             gemTable = GemTableConfig(numerator = 5, denominator = 128),
         ) {
 
-            alwaysDrops {
+            always {
                 drop("item.infernal_ashes")
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 8.96)
                 green(amount = 1, percent = 4.48)
                 crimson(amount = 1, percent = 31.4)
                 blue(amount = 1, percent = 0.896)
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.abyssal_whip", numerator = 1, denominator = 512) {
                     collectionLog = true
                 }
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.black_sword", weight = 4)
                 drop("item.steel_battleaxe", weight = 3)
                 drop("item.black_hatchet", weight = 2)
@@ -61,7 +61,7 @@ object AbyssalDemonTable {
                 drop("item.defence_potion_3", weight = 1)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,

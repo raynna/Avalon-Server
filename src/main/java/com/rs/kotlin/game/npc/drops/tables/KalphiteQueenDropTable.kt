@@ -12,14 +12,14 @@ object KalphiteQueenDropTable {
             category = TableCategory.BOSS,
         ) {
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 9.37)
                 green(amount = 1, percent = 20.7)
                 crimson(amount = 1, percent = 30.3)
                 blue(amount = 1, percent = 23.3)
             }
 
-            mainDrops(126) {
+            main(126) {
                 // Weapons & armour
                 drop("item.battlestaff_noted", amount = 10, weight = 5)
                 drop("item.rune_chainbody", weight = 4)
@@ -59,7 +59,7 @@ object KalphiteQueenDropTable {
                 drop("item.cactus_spine_noted", amount = 10, weight = 3)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop("item.dragon_chainbody", numerator = 1, denominator = 128) { collectionLog = true }
                 drop("item.dragon_2h_sword", numerator = 1, denominator = 128) { collectionLog = true }
                 drop("item.dragon_pickaxe", numerator = 1, denominator = 128) { collectionLog = true }

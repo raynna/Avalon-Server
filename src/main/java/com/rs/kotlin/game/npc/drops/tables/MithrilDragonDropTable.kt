@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.npc.drops.tables
 
-import com.rs.java.game.player.Skills
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.drops.config.GemTableConfig
 import com.rs.kotlin.game.npc.drops.config.HerbTableConfig
@@ -14,11 +13,11 @@ object MithrilDragonDropTable {
             rareTable = RareTableConfig(numerator = 1, denominator = 128),
             herbTables = HerbTableConfig(15, 128),
         ) {
-            alwaysDrops {
+            always {
                 drop("item.dragon_bones")
                 drop("item.mithril_bar", amount = 3)
             }
-            preRollDrops {
+            prerollDenom {
                 drop("item.dragon_full_helm", numerator = 1, denominator = 32768) {
                     collectionLog = true
                     announce = true
@@ -27,7 +26,7 @@ object MithrilDragonDropTable {
                     collectionLog = true
                 }
             }
-            mainDrops(128) {
+            main(128) {
                 drop("item.rune_battleaxe", weight = 8)
                 drop("item.rune_dart_p", amount = 14, weight = 7)
                 drop("item.rune_battleaxe", weight = 4)
@@ -53,7 +52,7 @@ object MithrilDragonDropTable {
                 drop("item.coins", amount = 876, weight = 7)
                 drop("item.rune_bar", amount = 2, weight = 3)
             }
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_elite",
                     numerator = 1,
@@ -70,7 +69,7 @@ object MithrilDragonDropTable {
                 }
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 4, percent = 19.8)
                 green(amount = 4, percent = 49.5)
                 crimson(amount = 4, percent = 19.8)

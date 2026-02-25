@@ -8,7 +8,7 @@ object GodwarsGemDropTableViewer {
         dropTable(
             name = "Godwars Rare Drop Table",
         ) {
-            mainDrops(128) {
+            main(128) {
                 val entries = DropTablesSetup.godwarsGemDropTable.getEntries()
 
                 for (entry in entries) {

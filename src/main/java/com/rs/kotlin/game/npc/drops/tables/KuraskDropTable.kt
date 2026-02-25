@@ -17,23 +17,23 @@ object KuraskDropTable {
             gemTable = GemTableConfig(numerator = 6, denominator = 124),
         ) {
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 8.98)
                 green(amount = 1, percent = 27.0)
                 crimson(amount = 1, percent = 6.74)
                 blue(amount = 1, percent = 1.35)
             }
 
-            alwaysDrops {
+            always {
                 drop("item.bones")
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.leaf_bladed_sword", numerator = 1, denominator = 384) { collectionLog = true }
                 drop("item.mystic_robe_top_light", numerator = 1, denominator = 512) { collectionLog = true }
             }
 
-            mainDrops(124) {
+            main(124) {
                 drop("item.mithril_kiteshield", weight = 3)
                 drop("item.rune_longsword", weight = 3)
                 drop("item.adamant_platebody", weight = 3)
@@ -50,7 +50,7 @@ object KuraskDropTable {
                 drop("item.coconut_noted", amount = 10, weight = 4)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,

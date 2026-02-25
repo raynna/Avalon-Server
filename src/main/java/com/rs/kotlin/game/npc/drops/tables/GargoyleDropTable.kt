@@ -12,19 +12,19 @@ object GargoyleDropTable {
             category = TableCategory.SLAYER,
         ) {
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 9.78)
                 green(amount = 1, percent = 4.89)
                 crimson(amount = 1, percent = 4.89)
                 blue(amount = 1, percent = 6.84)
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.granite_maul", numerator = 1, denominator = 256) { collectionLog = true }
                 drop("item.mystic_robe_top_dark", numerator = 1, denominator = 512) { collectionLog = true }
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.adamant_platelegs", weight = 4)
                 drop("item.rune_full_helm", weight = 3)
                 drop("item.rune_2h_sword", weight = 2)
@@ -49,7 +49,7 @@ object GargoyleDropTable {
                 drop("item.coins", amount = 10000, weight = 5)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,

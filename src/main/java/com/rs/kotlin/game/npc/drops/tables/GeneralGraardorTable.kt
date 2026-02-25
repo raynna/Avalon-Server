@@ -14,18 +14,18 @@ object GeneralGraardorTable {
             category = TableCategory.BOSS,
         ) {
 
-            alwaysDrops {
+            always {
                 drop("item.ourg_bones")
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 10.1)
                 green(amount = 1, percent = 5.04)
                 crimson(amount = 1, percent = 10.1)
                 blue(amount = 1, percent = 16.1)
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.bandos_chestplate", numerator = 1, denominator = 381) {
                     collectionLog = true
                     announce = true
@@ -47,7 +47,7 @@ object GeneralGraardorTable {
                 drop("item.godsword_shard_3", numerator = 1, denominator = 762) { collectionLog = true }
             }
 
-            mainDrops(127) {
+            main(127) {
                 drop("item.rune_longsword", weight = 8)
                 drop("item.rune_2h_sword", weight = 8)
                 drop("item.rune_platebody", weight = 8)
@@ -64,7 +64,7 @@ object GeneralGraardorTable {
                 drop("item.coins", amount = 20100..20600, weight = 1)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.long_bone",
                     numerator = 1,

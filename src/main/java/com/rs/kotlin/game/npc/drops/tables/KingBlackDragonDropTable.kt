@@ -13,11 +13,11 @@ object KingBlackDragonDropTable {
             rareTable = RareTableConfig(numerator = 8, denominator = 128),
             category = TableCategory.BOSS,
         ) {
-            alwaysDrops {
+            always {
                 drop("item.dragon_bones")
                 drop("item.black_dragonhide", 2)
             }
-            mainDrops(128) {
+            main(128) {
                 drop("item.rune_longsword", weight = 10)
                 drop("item.adamant_platebody", weight = 9)
                 drop("item.adamant_kiteshield", weight = 3)
@@ -39,7 +39,7 @@ object KingBlackDragonDropTable {
                 drop("item.runite_limbs", weight = 4)
                 drop("item.shark", amount = 4, weight = 4)
             }
-            preRollDrops {
+            prerollDenom {
                 drop("item.dragon_pickaxe", numerator = 1, denominator = 1000) { collectionLog = true }
                 drop("item.dragon_full_helm_ornament_kit_or", numerator = 1, denominator = 2000) { collectionLog = true }
                 drop("item.dragon_full_helm_ornament_kit_sp", numerator = 1, denominator = 2000) { collectionLog = true }
@@ -50,7 +50,7 @@ object KingBlackDragonDropTable {
                 drop("item.dragon_sq_shield_ornament_kit_or", numerator = 1, denominator = 2000) { collectionLog = true }
                 drop("item.dragon_sq_shield_ornament_kit_sp", numerator = 1, denominator = 2000) { collectionLog = true }
             }
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_elite",
                     numerator = 1,
@@ -65,7 +65,7 @@ object KingBlackDragonDropTable {
                 drop("item.starved_ancient_effigy", 1, numerator = 1, denominator = 6000)
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 4, percent = 7.9)
                 green(amount = 4, percent = 3.95)
                 crimson(amount = 4, percent = 63.2)

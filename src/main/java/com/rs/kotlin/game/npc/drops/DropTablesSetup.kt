@@ -45,6 +45,7 @@ object DropTablesSetup {
         registerNamedTable("Gem Table", GemDropTableViewer.table)
         registerNamedTable("World Boss", WorldBossTable.regular)
         registerItemTable("item.magic_chest", WorldBossTable.chest)
+        registerNamedTable("Hard clues", HardTreasureTrailTable.table)
         registerObjectTable(name = "Crystal chest", objectId = 172, CrystalChestTable.table)
         registerObjectTable(
             name = "Barrows",

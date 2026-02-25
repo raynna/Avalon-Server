@@ -12,11 +12,11 @@ object RedDragonDropTable {
             gemTable = GemTableConfig(5, 128),
             herbTables = HerbTableConfig(2, 128),
         ) {
-            alwaysDrops {
+            always {
                 drop("item.dragon_bones")
                 drop("item.red_dragonhide")
             }
-            mainDrops(128) {
+            main(128) {
                 drop("item.mithril_2h_sword", weight = 4)
                 drop("item.mithril_hatchet", weight = 3)
                 drop("item.mithril_battleaxe", weight = 3)
@@ -39,7 +39,7 @@ object RedDragonDropTable {
                 drop("item.chocolate_cake", amount = 3, weight = 3)
                 drop("item.adamant_bar_noted", amount = 1, weight = 1)
             }
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,
@@ -54,7 +54,7 @@ object RedDragonDropTable {
                 ) { collectionLog = true }
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 18.1)
                 green(amount = 1, percent = 45.2)
                 crimson(amount = 1, percent = 18.1)

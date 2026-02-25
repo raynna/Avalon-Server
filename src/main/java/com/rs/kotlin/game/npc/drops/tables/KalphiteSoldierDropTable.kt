@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.npc.drops.tables
 
-import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.drops.config.GemTableConfig
 import com.rs.kotlin.game.npc.drops.config.HerbTableConfig
 import com.rs.kotlin.game.npc.drops.dropTable
@@ -12,14 +11,14 @@ object KalphiteSoldierDropTable {
             herbTables = HerbTableConfig(numerator = 1, denominator = 128),
         ) {
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 9.26)
                 green(amount = 1, percent = 5.15)
                 crimson(amount = 1, percent = 7.53)
                 blue(amount = 1, percent = 6.95)
             }
 
-            mainDrops(128) {
+            main(128) {
                 // Weapons & armours
                 drop("item.steel_full_helm", weight = 4)
                 drop("item.steel_hatchet", weight = 4)

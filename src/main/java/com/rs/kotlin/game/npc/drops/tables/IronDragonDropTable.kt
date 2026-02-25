@@ -11,15 +11,15 @@ object IronDragonDropTable {
             rareTable = RareTableConfig(2, 128),
             gemTable = GemTableConfig(3, 128),
         ) {
-            alwaysDrops {
+            always {
                 drop("item.dragon_bones")
                 drop("item.iron_bar", amount = 5)
             }
-            preRollDrops {
+            prerollDenom {
                 drop("item.dragon_plateskirt", numerator = 1, denominator = 1024) { collectionLog = true }
                 drop("item.dragon_platelegs", numerator = 1, denominator = 1024) { collectionLog = true }
             }
-            mainDrops(128) {
+            main(128) {
                 drop("item.rune_dart_p", amount = 9, weight = 7)
                 drop("item.adamant_2h_sword", amount = 1, weight = 4)
                 drop("item.adamant_hatchet", amount = 1, weight = 3)
@@ -43,7 +43,7 @@ object IronDragonDropTable {
                 drop("item.adamant_bar", amount = 2, weight = 3)
                 drop("item.curry", amount = 1, weight = 3)
             }
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,
@@ -56,7 +56,7 @@ object IronDragonDropTable {
                 }
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 4, percent = 13.2)
                 green(amount = 4, percent = 33.0)
                 crimson(amount = 4, percent = 13.2)

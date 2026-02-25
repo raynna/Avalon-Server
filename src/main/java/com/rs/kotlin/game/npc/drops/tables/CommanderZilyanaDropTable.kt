@@ -14,18 +14,18 @@ object CommanderZilyanaDropTable {
             godwarsGemTable = GemTableConfig(2, 127),
         ) {
 
-            alwaysDrops {
+            always {
                 drop("item.bones")
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 10.1)
                 green(amount = 1, percent = 5.04)
                 crimson(amount = 1, percent = 10.1)
                 blue(amount = 1, percent = 16.1)
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.saradomin_sword", numerator = 1, denominator = 127) {
                     collectionLog = true
                     announce = true
@@ -39,7 +39,7 @@ object CommanderZilyanaDropTable {
                 drop("item.godsword_shard_3", numerator = 1, denominator = 762) { collectionLog = true }
             }
 
-            mainDrops(127) {
+            main(127) {
                 drop("item.adamant_platebody", weight = 8)
                 drop("item.rune_dart", amount = 35..40, weight = 8)
                 drop("item.rune_kiteshield", weight = 8)
@@ -59,7 +59,7 @@ object CommanderZilyanaDropTable {
                 drop("item.magic_seed", weight = 1)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_elite",
                     numerator = 1,

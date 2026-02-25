@@ -14,14 +14,14 @@ object BansheeTable {
             gemTable = GemTableConfig(numerator = 2, denominator = 128),
         ) {
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 2.02)
                 green(amount = 1, percent = 7.05)
                 crimson(amount = 1, percent = 1.01)
                 blue(amount = 1, percent = 0.202)
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.iron_mace", weight = 2)
                 drop("item.iron_dagger", weight = 2)
                 drop("item.iron_kiteshield", weight = 1)
@@ -43,7 +43,7 @@ object BansheeTable {
                 drop("item.eye_of_newt", weight = 1)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_easy",
                     numerator = 1,

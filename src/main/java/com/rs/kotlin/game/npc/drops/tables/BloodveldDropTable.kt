@@ -14,18 +14,18 @@ object BloodveldDropTable {
             gemTable = GemTableConfig(numerator = 1, denominator = 32),
         ) {
 
-            alwaysDrops {
+            always {
                 drop("item.bones")
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 9.1)
                 green(amount = 1, percent = 31.8)
                 crimson(amount = 1, percent = 4.55)
                 blue(amount = 1, percent = 0.91)
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.steel_hatchet", numerator = 4)
                 drop("item.steel_full_helm", weight = 4)
                 drop("item.steel_scimitar", weight = 2)
@@ -52,7 +52,7 @@ object BloodveldDropTable {
                 drop("item.gold_ore", weight = 2)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,

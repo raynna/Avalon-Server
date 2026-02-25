@@ -2,7 +2,6 @@ package com.rs.kotlin.game.npc.drops.tables
 
 import com.rs.java.game.minigames.warriorguild.WarriorsGuild
 import com.rs.java.game.player.Equipment
-import com.rs.java.game.player.Player
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.DropContext
@@ -10,7 +9,6 @@ import com.rs.kotlin.game.npc.drops.config.GemTableConfig
 import com.rs.kotlin.game.npc.drops.config.HerbTableConfig
 import com.rs.kotlin.game.npc.drops.config.SeedTableConfig
 import com.rs.kotlin.game.npc.drops.dropTable
-import com.rs.kotlin.game.npc.drops.seed.SeedTableEntry
 import com.rs.kotlin.game.npc.drops.seed.SeedTableType
 
 object CyclopsDropTable {
@@ -53,11 +51,11 @@ object CyclopsDropTable {
             gemTable = GemTableConfig(numerator = 2, denominator = 100),
         ) {
 
-            alwaysDrops {
+            always {
                 drop("item.big_bones")
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop(
                     numerator = 1,
                     denominator = 50,
@@ -66,7 +64,7 @@ object CyclopsDropTable {
                 ) { collectionLog = true }
             }
 
-            mainDrops(100) {
+            main(100) {
                 drop("item.black_knife", 4..13, weight = 16)
                 drop("item.steel_chainbody", weight = 2)
                 drop("item.iron_2h_sword", weight = 2)
@@ -91,7 +89,7 @@ object CyclopsDropTable {
                 drop("item.coins", amount = 5..204, weight = 10)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,

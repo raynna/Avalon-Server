@@ -14,18 +14,18 @@ object DagannothRexTable {
             category = TableCategory.BOSS,
         ) {
 
-            alwaysDrops {
+            always {
                 drop("item.dagannoth_bones")
                 drop("item.dagannoth_hide")
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.berserker_ring", numerator = 1, denominator = 128) { collectionLog = true }
                 drop("item.warrior_ring", numerator = 1, denominator = 128) { collectionLog = true }
                 drop("item.dragon_hatchet", numerator = 1, denominator = 128) { collectionLog = true }
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.steel_kiteshield", weight = 17)
                 drop("item.mithril_warhammer", weight = 11)
                 drop("item.adamant_hatchet", weight = 7)
@@ -59,7 +59,7 @@ object DagannothRexTable {
                 drop("item.shark", amount = 5, weight = 1)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,

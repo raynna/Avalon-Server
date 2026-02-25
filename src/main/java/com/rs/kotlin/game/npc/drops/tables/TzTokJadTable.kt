@@ -7,7 +7,7 @@ object TzTokJadTable {
     val table =
         dropTable(category = TableCategory.BOSS) {
 
-            alwaysDrops {
+            always {
                 drop("item.fire_cape") { collectionLog = true }
             }
         }.apply { name = "TzTok-Jad" }

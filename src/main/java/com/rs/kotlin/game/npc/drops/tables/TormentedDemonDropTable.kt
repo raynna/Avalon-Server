@@ -12,10 +12,10 @@ object TormentedDemonDropTable {
             category = TableCategory.BOSS,
             seedTable = SeedTableConfig(SeedTableType.TREE_HERB, numerator = 1, denominator = 51),
         ) {
-            alwaysDrops {
+            always {
                 drop("item.infernal_ashes")
             }
-            preRollDrops {
+            prerollDenom {
                 drop("item.dragon_claws", numerator = 1, denominator = 512) {
                     collectionLog = true
                     announce = true
@@ -29,7 +29,7 @@ object TormentedDemonDropTable {
                 drop("item.ruined_dragon_armour_shard", numerator = 1, denominator = 256) { collectionLog = true }
                 drop("item.dragon_crossbow", numerator = 1, denominator = 256) { collectionLog = true }
             }
-            mainDrops(51) {
+            main(51) {
                 drop("item.rune_platebody", weight = 4)
                 drop("item.dragon_dagger", weight = 3)
                 drop("item.battlestaff_noted", weight = 3)
@@ -63,7 +63,7 @@ object TormentedDemonDropTable {
                     drop("item.magic_longbow_u", weight = 1)
                 }
             }
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_elite",
                     numerator = 1,

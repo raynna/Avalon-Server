@@ -8,18 +8,18 @@ object GoblinLvl5DropTable {
     val table =
         dropTable(herbTables = HerbTableConfig(numerator = 2, 128)) {
 
-            alwaysDrops {
+            always {
                 drop("item.bones")
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 8.6)
                 green(amount = 1, percent = 0.269)
                 crimson(amount = 1, percent = 0.538)
                 blue(amount = 1, percent = 0.0537)
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.bronze_spear", weight = 9)
                 drop("item.bronze_hatchet", weight = 3)
                 drop("item.bronze_scimitar", weight = 1)
@@ -43,14 +43,14 @@ object GoblinLvl5DropTable {
                 drop("item.tin_ore", weight = 1)
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop(
                     "item.goblin_skull",
                     condition = { player -> false }, // TODO RAG AND BONE MAN QUEST
                 )
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_easy",
                     numerator = 1,

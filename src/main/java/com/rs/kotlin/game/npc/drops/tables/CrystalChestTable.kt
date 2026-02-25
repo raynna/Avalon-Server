@@ -13,11 +13,11 @@ object CrystalChestTable {
     val table =
         dropTable(sourceAction = "opening", category = TableCategory.OTHER) {
 
-            alwaysDrops {
+            always {
                 drop("item.uncut_dragonstone")
             }
 
-            mainDrops(128) {
+            main(128) {
                 add(
                     PackageWeightedEntry(
                         weight = 17,

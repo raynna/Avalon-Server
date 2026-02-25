@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.npc.drops.tables
 
-import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.TableCategory
 import com.rs.kotlin.game.npc.drops.DropContext
@@ -61,7 +60,7 @@ object BarrowsChestTable {
             category = TableCategory.MINIGAME,
         ) {
 
-            preRollDrops {
+            prerollDenom {
                 drop(
                     numerator = 1,
                     denominator = 102,
@@ -74,7 +73,7 @@ object BarrowsChestTable {
                 }
             }
 
-            mainDrops(size = 1012) {
+            main(size = 1012) {
 
                 drop("item.coins", amount = 2..774, weight = 380)
                 drop("item.mind_rune", amount = 253..336, weight = 125)
@@ -87,7 +86,7 @@ object BarrowsChestTable {
                 drop("item.dragon_helm", weight = 1)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop("item.scroll_box_elite", numerator = 1, denominator = 200)
             }
         }.apply {

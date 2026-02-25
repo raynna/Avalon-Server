@@ -8,7 +8,7 @@ object MegaDropTableViewer {
         dropTable(
             name = "Mega Table",
         ) {
-            mainDrops(128) {
+            main(128) {
                 val entries = DropTablesSetup.megaRareTable.getEntries()
 
                 for (entry in entries) {

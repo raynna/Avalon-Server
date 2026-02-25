@@ -9,7 +9,7 @@ object RevenantDropTable {
     val table =
         dropTable(category = TableCategory.OTHER) {
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.craw_s_bow", numerator = 1, denominator = 6000) {
                     collectionLog = true
                     announce = true
@@ -93,7 +93,7 @@ object RevenantDropTable {
                 ).forEach { drop(it, numerator = 1, denominator = 500) { collectionLog = true } }
             }
 
-            mainDrops(512) {
+            main(512) {
                 drop("item.battlestaff_noted", amount = 4, weight = 10)
                 drop("item.rune_full_helm", amount = 2, weight = 10)
                 drop("item.rune_platebody", amount = 2, weight = 10)
@@ -127,7 +127,7 @@ object RevenantDropTable {
                 drop("item.onyx_bolt_tips", amount = 3..6, weight = 15)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.forinthry_brace_5",
                     numerator = 1,

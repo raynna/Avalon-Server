@@ -7,24 +7,24 @@ object InfernalMageDropTable {
     val table =
         dropTable(category = TableCategory.SLAYER) {
 
-            alwaysDrops {
+            always {
                 drop("item.bones")
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 33.5)
                 green(amount = 1, percent = 2.39)
                 crimson(amount = 1, percent = 2.39)
                 blue(amount = 1, percent = 0.479)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop("item.mystic_boots_dark", numerator = 1, denominator = 512) { collectionLog = true }
                 drop("item.mystic_hat_dark", numerator = 1, denominator = 512) { collectionLog = true }
                 drop("item.lava_battlestaff", numerator = 1, denominator = 1000) { collectionLog = true }
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.staff", weight = 8)
                 drop("item.staff_of_fire", weight = 1)
 

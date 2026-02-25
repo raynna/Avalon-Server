@@ -18,18 +18,18 @@ object DagannothPrimeTable {
                 SeedTableConfig(SeedTableType.RARE, numerator = 7, denominator = 128),
         ) {
 
-            alwaysDrops {
+            always {
                 drop("item.dagannoth_bones")
                 drop("item.dagannoth_hide")
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.seers_ring", numerator = 1, denominator = 128) { collectionLog = true }
                 drop("item.dragon_hatchet", numerator = 1, denominator = 128) { collectionLog = true }
                 drop("item.mud_battlestaff", numerator = 1, denominator = 128) { collectionLog = true }
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.earth_battlestaff", weight = 10)
                 drop("item.water_battlestaff", weight = 5)
                 drop("item.air_battlestaff", weight = 4)
@@ -57,7 +57,7 @@ object DagannothPrimeTable {
                 drop("item.coins", amount = 500..1109, weight = 3)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,

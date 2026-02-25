@@ -24,15 +24,15 @@ object DarkBeastTable {
                 SeedTableConfig(SeedTableType.RARE, amount = 1..1, numerator = 3, denominator = 128),
         ) {
 
-            alwaysDrops {
+            always {
                 drop("item.big_bones")
             }
 
-            preRollDrops {
+            prerollDenom {
                 drop("item.dark_bow", numerator = 1, denominator = 512) { collectionLog = true }
             }
 
-            mainDrops(128) {
+            main(128) {
                 drop("item.black_battleaxe", weight = 6)
                 drop("item.adamant_sq_shield", weight = 1)
                 drop("item.rune_chainbody", weight = 1)
@@ -58,7 +58,7 @@ object DarkBeastTable {
                 drop("item.shark", amount = 2, weight = 1)
             }
 
-            tertiaryDrops {
+            tertiary {
                 drop(
                     "item.scroll_box_hard",
                     numerator = 1,
@@ -85,7 +85,7 @@ object DarkBeastTable {
                 ) { collectionLog = true }
             }
 
-            charmDrops {
+            charm {
                 gold(amount = 1, percent = 8.4)
                 green(amount = 1, percent = 4.2)
                 crimson(amount = 1, percent = 8.4)
