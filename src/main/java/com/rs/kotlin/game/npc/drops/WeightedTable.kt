@@ -1,17 +1,26 @@
 package com.rs.kotlin.game.npc.drops
 
-import com.rs.java.game.player.Player
 import java.util.concurrent.ThreadLocalRandom
 
 class WeightedTable {
     private val entries = mutableListOf<WeightedEntry>()
 
-    var tableSize: Int = 0
+    private var explicitSize: Int? = null
 
-    fun tableSize(): Int = if (tableSize > 0) tableSize else entries.sumOf { it.weight }
+    private var nothingWeight: Int = 0
+
+    val totalWeight: Int
+        get() = entries.asSequence().filter { it.weight > 0 }.sumOf { it.weight }
+
+    val tableSize: Int
+        get() = explicitSize ?: (totalWeight + nothingWeight)
 
     fun setSize(size: Int) {
-        tableSize = size
+        explicitSize = size
+    }
+
+    fun setNothingWeight(weight: Int) {
+        nothingWeight = weight.coerceAtLeast(0)
     }
 
     fun add(entry: WeightedEntry) {
@@ -25,22 +34,17 @@ class WeightedTable {
         if (validEntries.isEmpty()) return null
 
         val explicitWeight = validEntries.sumOf { it.weight }
-        val total = if (tableSize > 0) tableSize else explicitWeight
+        val total = tableSize
 
         val rand = ThreadLocalRandom.current().nextInt(total)
 
-        if (rand >= explicitWeight) {
-            return null // implicit nothing
-        }
+        if (rand >= explicitWeight) return null // implicit nothing
 
         var acc = 0
         for (entry in validEntries) {
             acc += entry.weight
-            if (rand < acc) {
-                return entry.roll(context)
-            }
+            if (rand < acc) return entry.roll(context)
         }
-
         return null
     }
 

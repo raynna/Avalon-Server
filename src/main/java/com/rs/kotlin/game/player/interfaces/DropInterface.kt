@@ -53,6 +53,13 @@ object DropInterface {
     private const val ATTR_CURRENT_NAME = "current_drop_name"
     private const val ATTR_IN_SEARCH = "drop_viewer_in_search"
     private const val ATTR_SOURCE_FILTER = "drop_viewer_source_filter"
+    private const val ATTR_TABLE_STACK = "drop_viewer_table_stack"
+    private const val ATTR_CURRENT_DROPS = "drop_viewer_current_drops"
+
+    private data class TableFrame(
+        val title: String,
+        val drops: List<DropDisplay>,
+    )
 
     private fun resetState(player: Player) {
         player.temporaryAttributtes[ATTR_PAGE] = 0
@@ -315,10 +322,22 @@ object DropInterface {
             }
 
             PREVIOUS_BUTTON -> {
+                val stack =
+                    player.temporaryAttributtes[ATTR_TABLE_STACK] as? MutableList<TableFrame>
+
+                if (stack != null && stack.isNotEmpty()) {
+                    val prev = stack.removeLast()
+                    player.temporaryAttributtes[ATTR_CURRENT_DROPS] = prev.drops
+                    updateTitle(player, "Viewing: ${prev.title}")
+                    renderDrops(player, prev.drops)
+                    return
+                }
+
                 val page = player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
 
                 val hasFilter =
-                    player.temporaryAttributtes.containsKey(ATTR_ITEM_FILTER) || player.temporaryAttributtes.containsKey(ATTR_SOURCE_FILTER)
+                    player.temporaryAttributtes.containsKey(ATTR_ITEM_FILTER) ||
+                        player.temporaryAttributtes.containsKey(ATTR_SOURCE_FILTER)
 
                 val inSearch =
                     player.temporaryAttributtes.containsKey(ATTR_IN_SEARCH)
@@ -341,12 +360,8 @@ object DropInterface {
                     ?: return
 
             val page = player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
-
             val index = componentId - NPC_LIST_START + page * 13
-
             val source = list.getOrNull(index) ?: return
-
-            // player.temporaryAttributtes.remove(ATTR_ITEM_FILTER)
 
             selectSource(player, source)
             updatePageButtons(player)
@@ -362,17 +377,50 @@ object DropInterface {
                 player.temporaryAttributtes[ATTR_CURRENT] as? DropTableSource
                     ?: return
 
-            val table = tableFor(source) ?: return
+            val root = tableFor(source) ?: return
 
-            val drop =
-                table
-                    .getAllDropsForDisplay(dropRateMult())
-                    .getOrNull(slot)
-                    ?: return
+            val currentDrops =
+                player.temporaryAttributtes[ATTR_CURRENT_DROPS] as? List<DropDisplay>
+                    ?: root.getAllDropsForDisplay(dropRateMult()).also {
+                        player.temporaryAttributtes[ATTR_CURRENT_DROPS] = it
+                    }
+
+            val drop = currentDrops.getOrNull(slot) ?: return
+
             when (drop.type) {
+                DropType.SUB_TABLE -> {
+                    val subTable = drop.tableReference ?: return
+
+                    val stack =
+                        (player.temporaryAttributtes[ATTR_TABLE_STACK] as? MutableList<TableFrame>)
+                            ?: mutableListOf<TableFrame>().also { player.temporaryAttributtes[ATTR_TABLE_STACK] = it }
+
+                    val currentTitle =
+                        player.temporaryAttributtes[ATTR_CURRENT_NAME] as? String ?: "Drop Viewer"
+
+                    stack.add(
+                        TableFrame(
+                            title = currentTitle,
+                            drops = currentDrops,
+                        ),
+                    )
+
+                    val subDrops =
+                        root.getWeightedTableDropsForDisplay(
+                            table = subTable,
+                            dropType = DropType.MAIN,
+                            parentChance = drop.parentChance ?: 1.0,
+                            expandNested = true,
+                        )
+
+                    player.temporaryAttributtes[ATTR_CURRENT_DROPS] = subDrops
+                    updateTitle(player, "Viewing: ${drop.tableName ?: "Category"}")
+                    renderDrops(player, subDrops)
+                    return
+                }
+
                 DropType.MEGA_TABLE -> {
                     val sources = DropTableRegistry.getSourcesWithGemTable()
-
                     player.temporaryAttributtes[ATTR_FOUND] = sources
                     player.temporaryAttributtes[ATTR_PAGE] = 0
                     openMegaTableWithNpcList(player)
@@ -381,7 +429,6 @@ object DropInterface {
 
                 DropType.RARE_TABLE -> {
                     val sources = DropTableRegistry.getSourcesWithRareTable()
-
                     player.temporaryAttributtes[ATTR_FOUND] = sources
                     player.temporaryAttributtes[ATTR_PAGE] = 0
                     openRareTableWithNpcList(player)
@@ -390,7 +437,6 @@ object DropInterface {
 
                 DropType.GEM_TABLE -> {
                     val sources = DropTableRegistry.getSourcesWithRareTable()
-
                     player.temporaryAttributtes[ATTR_FOUND] = sources
                     player.temporaryAttributtes[ATTR_PAGE] = 0
                     openGemTableWithNpcList(player)
@@ -399,6 +445,7 @@ object DropInterface {
 
                 else -> {
                     selectItem(player, drop.itemId, false)
+                    return
                 }
             }
         }
@@ -474,8 +521,12 @@ object DropInterface {
                 )
             }
         }
+        val drops = table.getAllDropsForDisplay(dropRateMult())
 
-        renderTable(player, table)
+        player.temporaryAttributtes[ATTR_TABLE_STACK] = mutableListOf<TableFrame>()
+        player.temporaryAttributtes[ATTR_CURRENT_DROPS] = drops
+
+        renderDrops(player, drops)
     }
 
     private fun renderTable(
@@ -487,10 +538,10 @@ object DropInterface {
             hideRow(player, row)
             row += ROW_STRIDE
         }
-
+        player.temporaryAttributtes[ATTR_TABLE_STACK] = mutableListOf<TableFrame>()
         val drops =
             table.getAllDropsForDisplay(dropRateMult())
-
+        player.temporaryAttributtes[ATTR_CURRENT_DROPS] = drops
         val maxRows = ((ROW_END - ROW_START) / ROW_STRIDE) + 1
         refreshScrollbar(player, drops.size)
         row = ROW_START
@@ -498,6 +549,7 @@ object DropInterface {
         for (drop in drops.take(maxRows)) {
             val name =
                 when (drop.type) {
+                    DropType.SUB_TABLE -> drop.tableName ?: "Category"
                     DropType.MEGA_TABLE -> "Mega table"
                     DropType.RARE_TABLE -> "Rare table"
                     DropType.GEM_TABLE -> "Gem table"
@@ -506,7 +558,34 @@ object DropInterface {
                 }
 
             showRow(player, row)
+            if (drop.type == DropType.SUB_TABLE) {
+                if (drop.itemId > 0) {
+                    player.packets.sendItemOnIComponent(
+                        INTERFACE_ID,
+                        row + ICON_OFFSET,
+                        drop.itemId,
+                        1,
+                    )
+                } else {
+                    player.packets.sendItemOnIComponent(
+                        INTERFACE_ID,
+                        row + ICON_OFFSET,
+                        -1,
+                        0,
+                    )
+                }
 
+                player.packets.sendTextOnComponent(
+                    INTERFACE_ID,
+                    row + NAME_OFFSET,
+                    "<col=ffffff><b>${drop.tableName}</b></col>",
+                )
+
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_LABEL, "")
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_VALUE, "")
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + CHANCE_LABEL, "")
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + CHANCE_VALUE, "")
+            }
             if (drop.type == DropType.NOTHING) {
                 player.packets.sendItemOnIComponent(
                     INTERFACE_ID,
@@ -515,7 +594,6 @@ object DropInterface {
                     0,
                 )
 
-                // Send sprite instead
                 player.packets.sendSpriteOnIComponent(
                     INTERFACE_ID,
                     row + ICON_OFFSET,
@@ -553,6 +631,110 @@ object DropInterface {
             row += ROW_STRIDE
         }
         // refreshScrollbar(player, drops.size)
+    }
+
+    private fun renderDrops(
+        player: Player,
+        drops: List<DropDisplay>,
+    ) {
+        var row = ROW_START
+        while (row <= ROW_END) {
+            hideRow(player, row)
+            row += ROW_STRIDE
+        }
+
+        val maxRows = ((ROW_END - ROW_START) / ROW_STRIDE) + 1
+        refreshScrollbar(player, drops.size)
+        row = ROW_START
+
+        for (drop in drops.take(maxRows)) {
+            val name =
+                when (drop.type) {
+                    DropType.SUB_TABLE -> drop.tableName ?: "Category"
+                    DropType.MEGA_TABLE -> "Mega table"
+                    DropType.RARE_TABLE -> "Rare table"
+                    DropType.GEM_TABLE -> "Gem table"
+                    DropType.NOTHING -> "Nothing"
+                    else -> ItemDefinitions.getItemDefinitions(drop.itemId).name
+                }
+
+            showRow(player, row)
+
+            if (drop.type == DropType.SUB_TABLE) {
+                if (drop.itemId > 0) {
+                    player.packets.sendItemOnIComponent(
+                        INTERFACE_ID,
+                        row + ICON_OFFSET,
+                        drop.itemId,
+                        1,
+                    )
+                } else {
+                    player.packets.sendItemOnIComponent(
+                        INTERFACE_ID,
+                        row + ICON_OFFSET,
+                        -1,
+                        0,
+                    )
+                }
+
+                player.packets.sendTextOnComponent(
+                    INTERFACE_ID,
+                    row + NAME_OFFSET,
+                    "<col=ffffff><b>${drop.tableName}</b></col>",
+                )
+
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_LABEL, "")
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_VALUE, "")
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + CHANCE_LABEL, "")
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + CHANCE_VALUE, "")
+            }
+
+            if (drop.type == DropType.NOTHING) {
+                player.packets.sendItemOnIComponent(
+                    INTERFACE_ID,
+                    row + ICON_OFFSET,
+                    -1,
+                    0,
+                )
+
+                player.packets.sendSpriteOnIComponent(
+                    INTERFACE_ID,
+                    row + ICON_OFFSET,
+                    NOTHING_SPRITE,
+                )
+            } else {
+                player.packets.sendItemOnIComponent(
+                    INTERFACE_ID,
+                    row + ICON_OFFSET,
+                    drop.itemId,
+                    (drop.amount).last,
+                )
+            }
+
+            player.packets.sendTextOnComponent(INTERFACE_ID, row + NAME_OFFSET, wrap(name))
+
+            if (
+                drop.type != DropType.MEGA_TABLE &&
+                drop.type != DropType.RARE_TABLE &&
+                drop.type != DropType.GEM_TABLE &&
+                drop.type != DropType.NOTHING
+            ) {
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_LABEL, "Amount:")
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_VALUE, drop.amount.toDisplayString())
+            } else {
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_LABEL, "")
+                player.packets.sendTextOnComponent(INTERFACE_ID, row + AMOUNT_VALUE, "")
+            }
+
+            player.packets.sendTextOnComponent(INTERFACE_ID, row + CHANCE_LABEL, "Chance:")
+            player.packets.sendTextOnComponent(
+                INTERFACE_ID,
+                row + CHANCE_VALUE,
+                colourForDrop(drop, buildRarityText(drop)),
+            )
+
+            row += ROW_STRIDE
+        }
     }
 
     fun selectItem(
@@ -789,6 +971,15 @@ object DropInterface {
                 wrapCol(COL_ORANGE, rarity)
             }
 
+            DropType.SUB_TABLE -> {
+                val realDenom =
+                    rarity
+                        .substringAfter("1/")
+                        .substringBefore(";")
+                        .toIntOrNull() ?: drop.baseDenominator
+                colourByDenom(rarity, realDenom)
+            }
+
             DropType.CHARM -> {
                 val percent = drop.percentage ?: return wrapCol(COL_YELLOW, rarity)
 
@@ -817,7 +1008,8 @@ object DropInterface {
             DropType.PREROLL,
             DropType.TERTIARY,
             -> {
-                colourByDenom(rarity, drop.baseDenominator)
+                val realDenom = rarity.substringAfter("1/").substringBefore(";").toIntOrNull() ?: drop.baseDenominator
+                colourByDenom(rarity, realDenom)
             }
 
             else -> {

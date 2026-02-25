@@ -196,6 +196,7 @@ class DropTable(
 ) {
     private val alwaysDrops = mutableListOf<DropEntry>()
     private val preRollDenom = mutableListOf<PreRollDropEntry>()
+    private val preRollTables = mutableListOf<PreRollTableEntry>()
     private val tertiaryDrops = mutableListOf<TertiaryDropEntry>()
     val mainDrops = WeightedTable()
     val preRollWeight = WeightedTable()
@@ -220,16 +221,188 @@ class DropTable(
 
     override fun toString(): String = "DropTable(name='$name')"
 
-    fun getAllDropsForDisplay(multiplier: Double = 1.0): List<DropDisplay> {
+    fun getWeightedTableDropsForDisplay(
+        table: WeightedTable,
+        dropType: DropType,
+        parentChance: Double = 1.0,
+        expandNested: Boolean = true,
+    ): List<DropDisplay> {
         val list = mutableListOf<DropDisplay>()
+
+        fun addWeightedTableDisplays(
+            t: WeightedTable,
+            dt: DropType,
+            parent: Double,
+        ) {
+            val entries = t.mutableEntries()
+            val total = t.tableSize.toDouble()
+            if (total <= 0.0) return
+
+            val nothingWeight =
+                entries
+                    .filterIsInstance<ItemWeightedEntry>()
+                    .firstOrNull { it.itemId == GemTableEntry.NOTHING_MARKER }
+                    ?.weight ?: 0
+
+            for (entry in entries) {
+                if (entry.weight <= 0) continue
+
+                when (entry) {
+                    is PackageWeightedEntry -> {
+                        val chance = parent * (entry.weight / total)
+                        val denom = (1.0 / chance).coerceAtLeast(1.0).toInt()
+
+                        if (entry.displayDrops.isEmpty()) {
+                            list.add(
+                                DropDisplay(
+                                    itemId = -1,
+                                    amount = 1..1,
+                                    rarityText = "1/$denom",
+                                    type = DropType.NOTHING,
+                                    baseDenominator = denom,
+                                    weight = entry.weight,
+                                    totalWeight = total.toInt(),
+                                    nothingWeight = nothingWeight,
+                                ),
+                            )
+                        } else {
+                            entry.displayDrops.forEach { dd ->
+                                list.add(
+                                    DropDisplay(
+                                        itemId = dd.itemId,
+                                        amount = dd.amount,
+                                        rarityText = "1/$denom",
+                                        type = dt,
+                                        baseDenominator = denom,
+                                        weight = entry.weight,
+                                        totalWeight = total.toInt(),
+                                        nothingWeight = nothingWeight,
+                                    ),
+                                )
+                            }
+                        }
+                    }
+
+                    is ItemWeightedEntry -> {
+                        val chance = parent * (entry.weight / total)
+                        val denom = (1.0 / chance).coerceAtLeast(1.0).toInt()
+
+                        val adjustedTotal =
+                            if (nothingWeight > 0 && entry.itemId != GemTableEntry.NOTHING_MARKER) {
+                                total - nothingWeight
+                            } else {
+                                null
+                            }
+
+                        when (entry.itemId) {
+                            GemTableEntry.NOTHING_MARKER -> {
+                                list.add(
+                                    DropDisplay(
+                                        itemId = -1,
+                                        amount = entry.amount,
+                                        rarityText = "1/$denom",
+                                        type = DropType.NOTHING,
+                                        baseDenominator = denom,
+                                        weight = entry.weight,
+                                        totalWeight = total.toInt(),
+                                        nothingWeight = nothingWeight,
+                                    ),
+                                )
+                            }
+
+                            RareDropTableEntry.GEM_TABLE_MARKER -> {
+                                list.add(
+                                    DropDisplay(
+                                        itemId = Rscm.lookup("item.uncut_dragonstone"),
+                                        amount = 1..1,
+                                        rarityText = "1/$denom",
+                                        type = DropType.GEM_TABLE,
+                                        baseDenominator = denom,
+                                        weight = entry.weight,
+                                        totalWeight = total.toInt(),
+                                        nothingWeight = if (adjustedTotal != null) nothingWeight else null,
+                                    ),
+                                )
+                            }
+
+                            RareDropTableEntry.MEGA_RARE_MARKER -> {
+                                list.add(
+                                    DropDisplay(
+                                        itemId = Rscm.lookup("item.shield_left_half"),
+                                        amount = 1..1,
+                                        rarityText = "1/$denom",
+                                        type = DropType.MEGA_TABLE,
+                                        baseDenominator = denom,
+                                        weight = entry.weight,
+                                        totalWeight = total.toInt(),
+                                        nothingWeight = if (adjustedTotal != null) nothingWeight else null,
+                                    ),
+                                )
+                            }
+
+                            else -> {
+                                list.add(
+                                    DropDisplay(
+                                        itemId = entry.itemId,
+                                        amount = entry.amount,
+                                        rarityText = "1/$denom",
+                                        type = dt,
+                                        baseDenominator = denom,
+                                        weight = entry.weight,
+                                        totalWeight = total.toInt(),
+                                        nothingWeight = if (adjustedTotal != null) nothingWeight else null,
+                                    ),
+                                )
+                            }
+                        }
+                    }
+
+                    is NestedTableEntry -> {
+                        val chanceToEnter = parent * (entry.weight / total)
+
+                        if (expandNested) {
+                            // ✅ "Show all items": recurse into the nested table
+                            addWeightedTableDisplays(entry.table, dt, chanceToEnter)
+                        } else {
+                            // ✅ "Show categories": show the nested table row (clickable) instead of expanding
+                            val denom =
+                                if (chanceToEnter > 0) (1.0 / chanceToEnter).toInt() else 0
+
+                            list.add(
+                                DropDisplay(
+                                    itemId = entry.displayItemId ?: -1,
+                                    amount = 1..1,
+                                    rarityText = if (denom > 0) "1/$denom" else "",
+                                    type = DropType.SUB_TABLE,
+                                    baseDenominator = denom,
+                                    tableName = entry.displayName,
+                                    tableReference = entry.table,
+                                    parentChance = chanceToEnter,
+                                    expandNested = false,
+                                ),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        addWeightedTableDisplays(table, dropType, parentChance)
+        return list
+    }
+
+    fun getAllDropsForDisplay(multiplier: Double = 1.0): List<DropDisplay> {
+        var list = mutableListOf<DropDisplay>()
 
         fun addWeightedTableDisplays(
             table: WeightedTable,
             dropType: DropType,
             parentChance: Double = 1.0,
+            depth: Int = 0,
+            expandNested: Boolean = true,
         ) {
             val entries = table.mutableEntries()
-            val configuredSize = table.tableSize()
+            val configuredSize = table.tableSize
             val computedSum = entries.sumOf { it.weight }
             val total = if (configuredSize > 0) configuredSize.toDouble() else computedSum.toDouble()
             val nothingWeight =
@@ -348,22 +521,87 @@ class DropTable(
 
                     is NestedTableEntry -> {
                         val chanceToEnter = parentChance * (entry.weight / total)
-                        val denom = (1.0 / chanceToEnter).coerceAtLeast(1.0).toInt()
 
+                        val denom =
+                            if (chanceToEnter > 0) {
+                                (1.0 / chanceToEnter).toInt()
+                            } else {
+                                0
+                            }
+
+                        // If this entry should be shown as a category
                         if (entry.displayAsTable) {
+                            // 1️⃣ Show THIS table
                             list.add(
                                 DropDisplay(
-                                    itemId = -1, // or some icon
+                                    itemId = entry.displayItemId ?: -1,
                                     amount = 1..1,
-                                    rarityText = "1/$denom",
+                                    rarityText = if (denom > 0) "1/$denom" else "",
                                     type = DropType.SUB_TABLE,
                                     baseDenominator = denom,
-                                    tableReference = entry.table,
                                     tableName = entry.displayName,
+                                    tableReference = entry.table,
+                                    parentChance = chanceToEnter,
                                 ),
                             )
+
+                            // 2️⃣ Recursively search for deeper displayAsTable tables
+                            fun collectSubTables(
+                                table: WeightedTable,
+                                parentChance: Double,
+                            ) {
+                                val entries = table.mutableEntries()
+                                val configuredSize = table.tableSize
+                                val computedSum = entries.sumOf { it.weight }
+                                val totalInner =
+                                    if (configuredSize > 0) {
+                                        configuredSize.toDouble()
+                                    } else {
+                                        computedSum.toDouble()
+                                    }
+
+                                for (child in entries) {
+                                    if (child is NestedTableEntry) {
+                                        val childChance =
+                                            parentChance * (child.weight / totalInner)
+
+                                        val childDenom =
+                                            if (childChance > 0) {
+                                                (1.0 / childChance).toInt()
+                                            } else {
+                                                0
+                                            }
+
+                                        if (child.displayAsTable) {
+                                            list.add(
+                                                DropDisplay(
+                                                    itemId = child.displayItemId ?: -1,
+                                                    amount = 1..1,
+                                                    rarityText = if (childDenom > 0) "1/$childDenom" else "",
+                                                    type = DropType.SUB_TABLE,
+                                                    baseDenominator = childDenom,
+                                                    tableName = child.displayName,
+                                                    tableReference = child.table,
+                                                    parentChance = childChance,
+                                                    expandNested = false,
+                                                ),
+                                            )
+                                        }
+
+                                        // Keep digging
+                                        collectSubTables(child.table, childChance)
+                                    }
+                                }
+                            }
+
+                            collectSubTables(entry.table, chanceToEnter)
                         } else {
-                            addWeightedTableDisplays(entry.table, dropType, chanceToEnter)
+                            // Not a category → flatten normally
+                            addWeightedTableDisplays(
+                                entry.table,
+                                dropType,
+                                chanceToEnter,
+                            )
                         }
                     }
 
@@ -417,8 +655,93 @@ class DropTable(
                 ),
             )
         }
+        // PREROLL TABLES
+        preRollTables.forEach { entry ->
+
+            val baseChance = entry.numerator.toDouble() / entry.denominator.toDouble()
+            val chanceToEnter = baseChance
+
+            val denom =
+                if (chanceToEnter > 0) {
+                    (1.0 / chanceToEnter).toInt()
+                } else {
+                    0
+                }
+
+            if (entry.displayAsTable) {
+                // 1️⃣ Show THIS table
+                list.add(
+                    DropDisplay(
+                        itemId = entry.displayItemId ?: -1,
+                        amount = 1..1,
+                        rarityText = if (denom > 0) "1/$denom" else "",
+                        type = DropType.SUB_TABLE,
+                        baseDenominator = denom,
+                        tableName = entry.displayName,
+                        tableReference = entry.table,
+                        parentChance = chanceToEnter,
+                        expandNested = false,
+                    ),
+                )
+
+                fun collectSubTables(
+                    table: WeightedTable,
+                    parentChance: Double,
+                ) {
+                    val entries = table.mutableEntries()
+                    val configuredSize = table.tableSize
+                    val computedSum = entries.sumOf { it.weight }
+                    val totalInner =
+                        if (configuredSize > 0) {
+                            configuredSize.toDouble()
+                        } else {
+                            computedSum.toDouble()
+                        }
+
+                    for (child in entries) {
+                        if (child is NestedTableEntry) {
+                            val childChance =
+                                parentChance * (child.weight / totalInner)
+
+                            val childDenom =
+                                if (childChance > 0) {
+                                    (1.0 / childChance).toInt()
+                                } else {
+                                    0
+                                }
+
+                            if (child.displayAsTable) {
+                                list.add(
+                                    DropDisplay(
+                                        itemId = child.displayItemId ?: -1,
+                                        amount = 1..1,
+                                        rarityText = if (childDenom > 0) "1/$childDenom" else "",
+                                        type = DropType.SUB_TABLE,
+                                        baseDenominator = childDenom,
+                                        tableName = child.displayName,
+                                        tableReference = child.table,
+                                        parentChance = childChance,
+                                        expandNested = false,
+                                    ),
+                                )
+                            }
+
+                            collectSubTables(child.table, childChance)
+                        }
+                    }
+                }
+
+                collectSubTables(entry.table, chanceToEnter)
+            } else {
+                addWeightedTableDisplays(
+                    entry.table,
+                    DropType.PREROLL,
+                    chanceToEnter,
+                )
+            }
+        }
         addWeightedTableDisplays(preRollWeight, DropType.PREROLL)
-        val preRollTotal = preRollWeight.tableSize().toDouble()
+        val preRollTotal = preRollWeight.tableSize.toDouble()
         val preRollSum = preRollWeight.mutableEntries().sumOf { it.weight }.toDouble()
 
         val preRollHitChance =
@@ -471,7 +794,6 @@ class DropTable(
 
             when (cfg.table) {
                 SeedTableType.GENERAL -> {
-                    // Only display summary line
                     list.add(
                         DropDisplay(
                             -1,
@@ -564,7 +886,7 @@ class DropTable(
                     itemId = Rscm.lookup("item.uncut_dragonstone"),
                     amount = 1..1,
                     rarityText = "1/$denom",
-                    type = DropType.GEM_TABLE, // or DropType.GEM_TABLE
+                    type = DropType.GEM_TABLE,
                     baseDenominator = denom,
                 ),
             )
@@ -663,7 +985,6 @@ class DropTable(
         return set
     }
 
-    // ------------------ Scopes ------------------
     fun always(block: MutableList<DropEntry>.() -> Unit) {
         currentContext = DropType.ALWAYS
         alwaysDrops.block()
@@ -676,21 +997,9 @@ class DropTable(
         currentContext = null
     }
 
-    fun preroll(
-        size: Int? = null,
-        block: MutableList<WeightedEntry>.() -> Unit,
-    ) {
+    fun preroll(block: MutableList<PreRollTableEntry>.() -> Unit) {
         currentContext = DropType.PREROLL
-
-        if (size != null) {
-            preRollWeight.setSize(size)
-        }
-
-        val prev = currentWeightedTable
-        currentWeightedTable = preRollWeight
-        preRollWeight.mutableEntries().block()
-        currentWeightedTable = prev
-
+        preRollTables.block()
         currentContext = null
     }
 
@@ -797,16 +1106,56 @@ class DropTable(
         )
     }
 
+    @JvmName("tablePreRollByWeight")
+    fun MutableList<PreRollTableEntry>.table(
+        table: WeightedTable,
+        weight: Int,
+        asSubTable: Boolean = false,
+        name: String? = null,
+        icon: String? = null,
+    ) {
+        add(
+            PreRollTableEntry(
+                table = table,
+                numerator = 1,
+                denominator = weight,
+                displayAsTable = asSubTable,
+                displayName = name,
+                displayItemId = icon?.let { Rscm.lookup(it) },
+            ),
+        )
+    }
+
+    @JvmName("tablePreRollByFraction")
+    fun MutableList<PreRollTableEntry>.table(
+        table: WeightedTable,
+        numerator: Int,
+        denominator: Int,
+        asSubTable: Boolean = false,
+        name: String? = null,
+        icon: String? = null,
+    ) {
+        add(
+            PreRollTableEntry(
+                table = table,
+                numerator = numerator,
+                denominator = denominator,
+                displayAsTable = asSubTable,
+                displayName = name,
+                displayItemId = icon?.let { Rscm.lookup(it) },
+            ),
+        )
+    }
+
     fun weightedTable(
         total: Int? = null,
         block: WeightedTableBuilder.() -> Unit,
     ): WeightedTable {
         val table = WeightedTable()
+        WeightedTableBuilder(table).apply(block)
         if (total != null) {
             table.setSize(total)
         }
-
-        WeightedTableBuilder(table).apply(block)
         return table
     }
 
@@ -815,6 +1164,7 @@ class DropTable(
         weight: Int,
         asSubTable: Boolean = false,
         name: String? = null,
+        icon: String? = null,
     ) {
         add(
             NestedTableEntry(
@@ -822,6 +1172,7 @@ class DropTable(
                 weight,
                 displayAsTable = asSubTable,
                 displayName = name,
+                displayItemId = icon?.let { Rscm.lookup(it) },
             ),
         )
     }
@@ -1010,12 +1361,14 @@ class DropTable(
         // PREROLL
         var preRollHit = false
 
-        preRollWeight
-            .roll(baseContext.copy(dropSource = DropSource.PREROLL))
-            ?.let {
-                addAndProcessDrop(player, drops, it)
+        for (entry in preRollTables) {
+            val drop = entry.roll(multiplier, baseContext)
+            if (drop != null) {
+                addAndProcessDrop(player, drops, drop)
                 preRollHit = true
+                break
             }
+        }
 
         if (!preRollHit) {
             for (entry in preRollDenom) {
@@ -1142,7 +1495,6 @@ class DropTable(
                 0.0
             }
 
-        // --- TABLE HEADER DEBUG OBJECT ---
         sb.append(
             """
             {
@@ -1160,7 +1512,6 @@ class DropTable(
             """.trimIndent(),
         )
 
-        // --- ENTRY LOOP ---
         for ((index, entry) in entries.withIndex()) {
             val entryWeight = entry.weight
             if (entryWeight <= 0) continue
@@ -1277,7 +1628,6 @@ class DropTable(
             }
         }
 
-        // --- IMPLICIT NOTHING DEBUG ---
         if (implicitNothingWeight > 0) {
             val combinedChance = parentChance * implicitNothingChance
             val combinedDenom =
