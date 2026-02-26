@@ -125,6 +125,13 @@ object DropTablesSetup {
         registerNpcGroupDropTable(MithrilDragonDropTable.table, "npc_group.mithril_dragon_lv304")
 
         /**
+         * Demons
+         */
+        registerNpcGroupDropTable(LesserDemonDropTable.table, "npc_group.lesser_demon_lv82")
+        registerNpcGroupDropTable(GreaterDemonDropTable.table, "npc_group.greater_demon_lv92")
+        registerNpcGroupDropTable(BlackDemonDropTable.table, "npc_group.black_demon_lv172")
+
+        /**
          * Slayer Monsters
          **/
 
@@ -180,6 +187,36 @@ object DropTablesSetup {
             "npc_group.goblin_lv16",
             "npc_group.goblin_lv17",
             "npc_group.goblin_lv25",
+        )
+
+        registerNpcKeyDropTable(
+            SkeletonUnarmedDropTable.table,
+            "npc.skeleton_lv22",
+            "npc.skeleton_lv22_5332",
+            "npc.skeleton_lv22_5333",
+            "npc.skeleton_lv22_5334",
+            "npc.skeleton_lv60",
+            "npc.skeleton_lv60_5365",
+            "npc.skeleton_lv60_5366",
+            "npc.skeleton_lv68",
+        )
+        registerNpcKeyDropTable(
+            SkeletonArmedDropTable.table,
+            "npc.skeleton_lv25",
+            "npc.skeleton_lv25_5338",
+            "npc.skeleton_lv25_5337",
+            "npc.skeleton_lv25_5339",
+            "npc.skeleton_lv25_5340",
+            "npc.skeleton_lv45",
+            "npc.skeleton_lv85",
+            "npc.skeleton_lv85_5367",
+            "npc.skeleton_lv85_5368",
+        )
+        registerNpcGroupDropTable(
+            AnkouDropTable.table,
+            "npc_group.ankou_lv75",
+            "npc_group.ankou_lv82",
+            "npc_group.ankou_lv86",
         )
 
         registerNpcGroupDropTable(RockCrabTable.table, "npc_group.rock_crab_lv13")

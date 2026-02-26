@@ -329,8 +329,8 @@ object DropInterface {
                     val prev = stack.removeLast()
                     player.temporaryAttributtes[ATTR_CURRENT_DROPS] = prev.drops
                     updateTitle(player, "Viewing: ${prev.title}")
-                    renderDrops(player, prev.drops)
                     updatePageButtons(player)
+                    renderDrops(player, prev.drops)
                     return
                 }
 
@@ -416,8 +416,8 @@ object DropInterface {
 
                     player.temporaryAttributtes[ATTR_CURRENT_DROPS] = subDrops
                     updateTitle(player, "Viewing: ${drop.tableName ?: "Category"}")
-                    renderDrops(player, subDrops)
                     updatePageButtons(player)
+                    renderDrops(player, subDrops)
                     return
                 }
 

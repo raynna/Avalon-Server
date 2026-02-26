@@ -682,6 +682,7 @@ public class Bank implements Serializable {
     }
 
     public void openBank() {
+        player.resetWalkSteps();
         lastContainerCopy = null;
         refreshViewingTab();
         refreshTabs();

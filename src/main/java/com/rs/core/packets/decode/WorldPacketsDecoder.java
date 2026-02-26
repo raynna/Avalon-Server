@@ -168,6 +168,7 @@ public final class WorldPacketsDecoder extends Decoder {
     private static final int GRAND_EXCHANGE_ITEM_SELECT_PACKET = 71;
     private static final int TELEKINETIC_GRAB_SPELL_PACKET = 69;
     private static final int WORLD_LIST_UPDATE = 87;
+    private static final int CUSTOM_PACKET161 = 161;
     private static final int DEVELOPER_PACKET = 162;
 
     static {
@@ -587,8 +588,13 @@ public final class WorldPacketsDecoder extends Decoder {
 
             case KEY_TYPED_PACKET:
                 int key = stream.readByte();
-                if (key == 13)
+
+
+                if (key == 13) {
                     player.closeInterfaces();
+                    return;
+                }
+
                 return;
 
             case NPC_EXAMINE_PACKET:
@@ -703,7 +709,7 @@ public final class WorldPacketsDecoder extends Decoder {
                         || packetId == NPC_CLICK2_PACKET || packetId == NPC_CLICK3_PACKET || packetId == NPC_CLICK4_PACKET
                         || packetId == OBJECT_CLICK1_PACKET || packetId == SWITCH_INTERFACE_ITEM_PACKET
                         || packetId == OBJECT_CLICK2_PACKET || packetId == OBJECT_CLICK3_PACKET
-                        || packetId == OBJECT_CLICK4_PACKET || packetId == OBJECT_CLICK5_PACKET
+                        || packetId == OBJECT_CLICK4_PACKET || packetId == OBJECT_CLICK5_PACKET || packetId == KEY_TYPED_PACKET
                         || packetId == INTERFACE_ON_OBJECT || packetId == TELEKINETIC_GRAB_SPELL_PACKET
                         || packetId == DEVELOPER_PACKET || packetId == EQUIPMENT_REMOVE_PACKET) {
                     player.addLogicPacketToQueue(new LogicPacket(packetId, length, stream, true));
@@ -1755,14 +1761,30 @@ public final class WorldPacketsDecoder extends Decoder {
             int index = -1;
 
             switch (skillId) {
-                case 0: index = 0; break; // Attack
-                case 1: index = 1; break; // Defence
-                case 2: index = 2; break; // Strength
-                case 3: index = 3; break; // Hitpoints
-                case 4: index = 4; break; // Range
-                case 5: index = 5; break; // Prayer
-                case 6: index = 6; break; // Magic
-                case 23: index = 7; break; // Summoning
+                case 0:
+                    index = 0;
+                    break; // Attack
+                case 1:
+                    index = 1;
+                    break; // Defence
+                case 2:
+                    index = 2;
+                    break; // Strength
+                case 3:
+                    index = 3;
+                    break; // Hitpoints
+                case 4:
+                    index = 4;
+                    break; // Range
+                case 5:
+                    index = 5;
+                    break; // Prayer
+                case 6:
+                    index = 6;
+                    break; // Magic
+                case 23:
+                    index = 7;
+                    break; // Summoning
             }
 
             if (index != -1) {
@@ -2442,7 +2464,8 @@ public final class WorldPacketsDecoder extends Decoder {
             player.getPresetManager().savePreset(value);
             GearTab.refresh(player);
             return;
-        } if (player.getTemporaryAttributtes().get("preset_rename_target") != null) {
+        }
+        if (player.getTemporaryAttributtes().get("preset_rename_target") != null) {
             String oldName = (String) player.getTemporaryAttributtes().remove("preset_rename_target");
             String[] invalid = {">", "<"};
             for (String s : invalid) {
@@ -2484,7 +2507,7 @@ public final class WorldPacketsDecoder extends Decoder {
             PresetInterface.INSTANCE.open(player, fromBank);
             PresetInterface.INSTANCE.selectPresetByName(player, newName);
             return;
-    } else if (player.temporaryAttribute().get("RENAME_SETUP") == Boolean.TRUE) {
+        } else if (player.temporaryAttribute().get("RENAME_SETUP") == Boolean.TRUE) {
             player.temporaryAttribute().remove("RENAME_SETUP");
             Integer selectedGear = (Integer) player.getTemporaryAttributtes().get("SELECTED_RENAME");
             if (selectedGear != null) {

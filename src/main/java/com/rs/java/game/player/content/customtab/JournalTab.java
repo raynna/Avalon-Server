@@ -327,7 +327,7 @@ public class JournalTab extends CustomTab {
 			}
 		},
 
-		TASKLOCATION(29) {
+		TASKLOCATION(31) {
 			@Override
 			public void usage(Player p) {
 				if (p.getSlayerTaskTip() != null)
@@ -337,7 +337,7 @@ public class JournalTab extends CustomTab {
 			@Override
 			public String text(Player p) {
 				return (p.getSlayerTaskTip() == null ? ""
-						: "<u><br><br><br>Locations:<br><col=04BB3B>"
+						: "<u>Locations:<br><col=04BB3B>"
 								+ p.getSlayerTaskTip().replace(" and ", "<br><col=04BB3B>")
 										.replace(", ", "<br><col=04BB3B>").replace(".", ""));
 			}

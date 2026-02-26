@@ -2715,13 +2715,12 @@ public class Player extends Entity {
                 skullList.put(player, skullList.get(player).intValue() - 1);
             }
         }
-        if (getControlerManager().getControler() instanceof EdgevillePvPController) {
-            if (!EdgevillePvPController.isAtPvP(this) && !EdgevillePvPController.isAtBank(this)) {
-                getControlerManager().getControler().forceClose();
-            }
+        Controller controller = getControlerManager().getControler();
+        if (WildernessController.isAtWild(getLocation()) && !(controller instanceof WildernessController)) {
+            controlerManager.startControler("WildernessController");
         }
-        if (EdgevillePvPController.isAtPvP(this) && !(getControlerManager().getControler() instanceof EdgevillePvPController)) {
-            getControlerManager().startControler("EdgevillePvPControler");
+        if (!WildernessController.isAtWild(getLocation()) && controller instanceof WildernessController) {
+            controlerManager.forceStop();
         }
         if (isInClanwarsLobby() && !(getControlerManager().getControler() instanceof RequestController))
             getControlerManager().startControler("clan_wars_request");
