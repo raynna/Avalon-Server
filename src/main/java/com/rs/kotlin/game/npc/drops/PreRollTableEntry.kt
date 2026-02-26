@@ -9,6 +9,7 @@ class PreRollTableEntry(
     val displayAsTable: Boolean = false,
     val displayName: String? = null,
     val displayItemId: Int? = null,
+    var metadata: DropMetadata = DropMetadata(),
 ) {
     init {
         require(numerator in 1..denominator) {
@@ -17,15 +18,18 @@ class PreRollTableEntry(
     }
 
     fun roll(
-        multiplier: Double,
         context: DropContext,
+        multiplier: Double,
     ): Drop? {
         val effectiveDenominator =
             (denominator / multiplier).toInt().coerceAtLeast(1)
 
         val roll = ThreadLocalRandom.current().nextInt(effectiveDenominator)
         if (roll >= numerator) return null
-
+        val drop = table.roll(context.copy(dropSource = DropSource.PREROLL))
+        drop?.let {
+            it.metadata = metadata
+        }
         return table.roll(context.copy(dropSource = DropSource.PREROLL))
     }
 }

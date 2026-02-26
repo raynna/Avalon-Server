@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.npc.drops.tables
+package com.rs.kotlin.game.npc.drops.tables.slayer
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.TableCategory
@@ -66,13 +66,21 @@ object AbyssalDemonTable {
                     "item.scroll_box_hard",
                     numerator = 1,
                     denominator = 128,
-                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
+                    condition = { context ->
+                        !context.player.treasureTrailsManager.hasClueScrollByLevel(
+                            TreasureTrailsManager.HARD,
+                        )
+                    },
                 )
                 drop(
                     "item.scroll_box_elite",
                     numerator = 1,
                     denominator = 1200,
-                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
+                    condition = { context ->
+                        !context.player.treasureTrailsManager.hasClueScrollByLevel(
+                            TreasureTrailsManager.ELITE,
+                        )
+                    },
                 )
                 drop(
                     "item.abyssal_head",

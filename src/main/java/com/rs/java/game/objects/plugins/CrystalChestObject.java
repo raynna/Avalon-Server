@@ -7,12 +7,8 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.content.CrystalChest;
-import com.rs.core.tasks.WorldTask;
-import com.rs.core.tasks.WorldTasksManager;
 import com.rs.kotlin.game.npc.drops.Drop;
-import com.rs.kotlin.game.npc.drops.tables.CrystalChestTable;
-import org.jetbrains.annotations.NotNull;
+import com.rs.kotlin.game.npc.drops.tables.object.CrystalChestTable;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.npc.drops.tables
+package com.rs.kotlin.game.npc.drops.tables.slayer
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.TableCategory
@@ -48,7 +48,11 @@ object BansheeTable {
                     "item.scroll_box_easy",
                     numerator = 1,
                     denominator = 128,
-                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.EASY) },
+                    condition = { context ->
+                        !context.player.treasureTrailsManager.hasClueScrollByLevel(
+                            TreasureTrailsManager.EASY,
+                        )
+                    },
                 )
             }
         }.apply { name = "Banshee" }

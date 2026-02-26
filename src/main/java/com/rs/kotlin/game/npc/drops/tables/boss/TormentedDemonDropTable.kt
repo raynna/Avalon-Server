@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.npc.drops.tables
+package com.rs.kotlin.game.npc.drops.tables.boss
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.TableCategory
@@ -15,19 +15,34 @@ object TormentedDemonDropTable {
             always {
                 drop("item.infernal_ashes")
             }
-            prerollDenom {
+
+            val bows =
+                weightedTable {
+                    add("item.magic_shortbow_u_noted", weight = 29)
+                    add("item.magic_longbow_u", weight = 1)
+                }
+            val herbs =
+                weightedTable {
+                    add("item.grimy_kwuarm", weight = 10)
+                    add("item.grimy_dwarf_weed", weight = 8)
+                    add("item.grimy_cadantine", weight = 8)
+                    add("item.grimy_lantadyme", weight = 6)
+                    add("item.grimy_avantoe", weight = 5)
+                    add("item.grimy_ranarr", weight = 4)
+                    add("item.grimy_snapdragon", weight = 4)
+                    add("item.grimy_torstol", weight = 3)
+                }
+            prerollDenom(meta = { collectionLog = true }) {
                 drop("item.dragon_claws", numerator = 1, denominator = 512) {
-                    collectionLog = true
                     announce = true
                 }
                 drop("item.emberlight", numerator = 1, denominator = 512) {
-                    collectionLog = true
                     announce = true
                 }
-                drop("item.ruined_dragon_armour_slice", numerator = 1, denominator = 256) { collectionLog = true }
-                drop("item.ruined_dragon_armour_lump", numerator = 1, denominator = 256) { collectionLog = true }
-                drop("item.ruined_dragon_armour_shard", numerator = 1, denominator = 256) { collectionLog = true }
-                drop("item.dragon_crossbow", numerator = 1, denominator = 256) { collectionLog = true }
+                drop("item.ruined_dragon_armour_slice", numerator = 1, denominator = 256)
+                drop("item.ruined_dragon_armour_lump", numerator = 1, denominator = 256)
+                drop("item.ruined_dragon_armour_shard", numerator = 1, denominator = 256)
+                drop("item.dragon_crossbow", numerator = 1, denominator = 256)
             }
             main(51) {
                 drop("item.rune_platebody", weight = 4)
@@ -46,22 +61,8 @@ object TormentedDemonDropTable {
                 drop("item.infernal_ashes", amount = 2..3, 2)
                 drop("item.fire_orb_noted", amount = 5..7, 2)
                 drop("item.dragon_arrowheads", amount = 30..40, 1)
-
-                nestedTable(weight = 6, size = 48) {
-                    drop("item.grimy_kwuarm", weight = 10)
-                    drop("item.grimy_dwarf_weed", weight = 8)
-                    drop("item.grimy_cadantine", weight = 8)
-                    drop("item.grimy_lantadyme", weight = 6)
-                    drop("item.grimy_avantoe", weight = 5)
-                    drop("item.grimy_ranarr", weight = 4)
-                    drop("item.grimy_snapdragon", weight = 4)
-                    drop("item.grimy_torstol", weight = 3)
-                }
-
-                nestedTable(weight = 6, size = 30) {
-                    drop("item.magic_shortbow_u_noted", weight = 29)
-                    drop("item.magic_longbow_u", weight = 1)
-                }
+                table(herbs, 6)
+                table(bows, 6)
             }
             tertiary {
                 drop(

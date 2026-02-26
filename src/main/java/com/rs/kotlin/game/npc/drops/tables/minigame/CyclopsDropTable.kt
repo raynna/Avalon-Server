@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.npc.drops.tables
+package com.rs.kotlin.game.npc.drops.tables.minigame
 
 import com.rs.java.game.minigames.warriorguild.WarriorsGuild
 import com.rs.java.game.player.Equipment
@@ -94,7 +94,11 @@ object CyclopsDropTable {
                     "item.scroll_box_hard",
                     numerator = 1,
                     denominator = 512,
-                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.HARD) },
+                    condition = { context ->
+                        !context.player.treasureTrailsManager.hasClueScrollByLevel(
+                            TreasureTrailsManager.HARD,
+                        )
+                    },
                 )
                 drop(
                     "item.long_bone",

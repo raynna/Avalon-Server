@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.npc.drops.tables
+package com.rs.kotlin.game.npc.drops.tables.boss
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.TableCategory
@@ -39,16 +39,16 @@ object KingBlackDragonDropTable {
                 drop("item.runite_limbs", weight = 4)
                 drop("item.shark", amount = 4, weight = 4)
             }
-            prerollDenom {
-                drop("item.dragon_pickaxe", numerator = 1, denominator = 1000) { collectionLog = true }
-                drop("item.dragon_full_helm_ornament_kit_or", numerator = 1, denominator = 2000) { collectionLog = true }
-                drop("item.dragon_full_helm_ornament_kit_sp", numerator = 1, denominator = 2000) { collectionLog = true }
-                drop("item.dragon_platebody_ornament_kit_or", numerator = 1, denominator = 2000) { collectionLog = true }
-                drop("item.dragon_platebody_ornament_kit_sp", numerator = 1, denominator = 2000) { collectionLog = true }
-                drop("item.dragon_platelegs_skirt_ornament_kit_or", numerator = 1, denominator = 2000) { collectionLog = true }
-                drop("item.dragon_platelegs_skirt_ornament_kit_sp", numerator = 1, denominator = 2000) { collectionLog = true }
-                drop("item.dragon_sq_shield_ornament_kit_or", numerator = 1, denominator = 2000) { collectionLog = true }
-                drop("item.dragon_sq_shield_ornament_kit_sp", numerator = 1, denominator = 2000) { collectionLog = true }
+            prerollDenom(meta = { collectionLog = true }) {
+                drop("item.dragon_pickaxe", numerator = 1, denominator = 1000)
+                drop("item.dragon_full_helm_ornament_kit_or", numerator = 1, denominator = 2000)
+                drop("item.dragon_full_helm_ornament_kit_sp", numerator = 1, denominator = 2000)
+                drop("item.dragon_platebody_ornament_kit_or", numerator = 1, denominator = 2000)
+                drop("item.dragon_platebody_ornament_kit_sp", numerator = 1, denominator = 2000)
+                drop("item.dragon_platelegs_skirt_ornament_kit_or", numerator = 1, denominator = 2000)
+                drop("item.dragon_platelegs_skirt_ornament_kit_sp", numerator = 1, denominator = 2000)
+                drop("item.dragon_sq_shield_ornament_kit_or", numerator = 1, denominator = 2000)
+                drop("item.dragon_sq_shield_ornament_kit_sp", numerator = 1, denominator = 2000)
             }
             tertiary {
                 drop(

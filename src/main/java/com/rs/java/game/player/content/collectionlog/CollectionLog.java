@@ -455,6 +455,18 @@ public class CollectionLog implements Serializable {
             }
         }
 
+        for (Map.Entry<String, Map<Integer, Integer>> entry :
+                MASTER.getClues().getDrops().entrySet()) {
+
+            String slayerName = entry.getKey();
+            Map<Integer, Integer> masterTab = entry.getValue();
+
+            if (masterTab.containsKey(item.getId())) {
+                add(CategoryType.CLUES, slayerName, item, !shown);
+                shown = true;
+            }
+        }
+
         // Add to Other
         for (Map.Entry<String, Map<Integer, Integer>> entry :
                 MASTER.getOthers().getDrops().entrySet()) {

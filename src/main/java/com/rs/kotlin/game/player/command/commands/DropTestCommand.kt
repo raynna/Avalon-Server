@@ -6,7 +6,7 @@ import com.rs.java.game.item.Item
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Ranks
 import com.rs.kotlin.game.npc.drops.DropTableRegistry.getDropTableForNpc
-import com.rs.kotlin.game.npc.drops.tables.BarrowsChestTable
+import com.rs.kotlin.game.npc.drops.tables.minigame.BarrowsChestTable
 import com.rs.kotlin.game.player.command.Command
 import com.rs.kotlin.game.player.command.CommandArguments
 

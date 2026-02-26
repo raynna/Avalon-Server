@@ -23,7 +23,7 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.drops.Drop;
-import com.rs.kotlin.game.npc.drops.tables.BarrowsChestTable;
+import com.rs.kotlin.game.npc.drops.tables.minigame.BarrowsChestTable;
 
 public final class Barrows extends Controller {
 
@@ -164,7 +164,7 @@ public final class Barrows extends Controller {
                     .setPreRollDenominator(denom);
 
             List<Drop> drops =
-                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player, 0, Settings.DROP_MULTIPLIER);
+                    BarrowsChestTable.BARROWS_CHEST_TABLE.rollDrops(player, 0, Settings.DROP_MULTIPLIER, null);
 
             for (Drop d : drops) {
                 rewards.add(new Item(d.itemId, d.amount));

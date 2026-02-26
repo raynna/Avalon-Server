@@ -1,9 +1,10 @@
-package com.rs.kotlin.game.npc.drops.tables
+package com.rs.kotlin.game.npc.drops.tables.minigame
 
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.TableCategory
 import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.dropTable
+import kotlin.collections.iterator
 
 object BarrowsChestTable {
     @JvmStatic

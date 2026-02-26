@@ -9,7 +9,7 @@ open class DropEntry
         @JvmField var amount: IntRange,
         protected var always: Boolean = false,
         private val condition: ((DropContext) -> Boolean)? = null,
-        val metadata: DropMetadata = DropMetadata(),
+        var metadata: DropMetadata = DropMetadata(),
     ) {
         private var extraDropEntry: DropEntry? = null
 

@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.npc.drops.tables
+package com.rs.kotlin.game.npc.drops.tables.slayer
 
 import com.rs.kotlin.game.npc.TableCategory
 import com.rs.kotlin.game.npc.drops.config.GemTableConfig

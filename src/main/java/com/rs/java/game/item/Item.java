@@ -76,7 +76,7 @@ public class Item implements Serializable {
 	}
 
 	public String getNameKey() {
-		return Rscm.reverseLookup(id);
+		return Rscm.reverseItemLookup(id);
 	}
 
 	// -------------------- Constructors (mostly unchanged) --------------------

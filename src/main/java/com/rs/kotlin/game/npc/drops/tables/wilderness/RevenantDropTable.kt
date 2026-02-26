@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.npc.drops.tables
+package com.rs.kotlin.game.npc.drops.tables.wilderness
 
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.item.Item

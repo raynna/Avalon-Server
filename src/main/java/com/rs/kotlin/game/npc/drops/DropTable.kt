@@ -27,6 +27,15 @@ fun either(vararg keys: String): String {
     return keys[ThreadLocalRandom.current().nextInt(keys.size)]
 }
 
+fun sharedWeightedTable(
+    meta: (DropMetadata.() -> Unit)? = null,
+    block: WeightedTableBuilder.() -> Unit,
+): WeightedTable {
+    val table = WeightedTable()
+    WeightedTableBuilder(table, meta).apply(block)
+    return table
+}
+
 fun dropTable(
     rolls: Int = 1,
     name: String = "DropTable",
@@ -933,28 +942,51 @@ class DropTable(
         return list
     }
 
+    fun DropTable.registerCollectionFrom(table: WeightedTable) {
+        fun scan(t: WeightedTable) {
+            t.mutableEntries().forEach { entry ->
+                when (entry) {
+                    is ItemWeightedEntry -> {
+                        val itemName = Rscm.reverseItemLookup(entry.itemId) ?: return@forEach
+                        println("Looking up item with id ${entry.itemId}: $itemName")
+                        if (itemName.startsWith("item.")) {
+                            println("Registering item: $itemName")
+                            always {
+                                drop(itemName) { collectionLog = true }
+                            }
+                        } else {
+                            println("[Rscm] Item with id ${entry.itemId} could not be found or is not a valid item.")
+                        }
+                    }
+
+                    is NestedTableEntry -> {
+                        scan(entry.table) // Recursively scan nested tables
+                    }
+
+                    is PackageWeightedEntry -> {
+                        entry.displayDrops.forEach { dd ->
+                            val itemName = Rscm.reverseItemLookup(dd.itemId) ?: return@forEach
+                            println("Looking up item with id ${dd.itemId}: $itemName")
+                            if (itemName.startsWith("item.")) {
+                                println("Registering item: $itemName")
+                                always {
+                                    drop(itemName) { collectionLog = true }
+                                }
+                            } else {
+                                println("[Rscm] Item with id ${dd.itemId} could not be found or is not a valid item.")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Begin scanning the table
+        scan(table)
+    }
+
     fun getAllItemIdsForCollectionLog(): Set<Int> {
         val set = mutableSetOf<Int>()
-
-        alwaysDrops.forEach {
-            if (it.metadata.collectionLog) set.add(it.itemId)
-        }
-
-        preRollDenom.forEach { entry ->
-            if (!entry.metadata.collectionLog) return@forEach
-
-            val display = entry.displayItems
-            if (!display.isNullOrEmpty()) {
-                set.addAll(display)
-                return@forEach
-            }
-
-            set.add(entry.itemId)
-        }
-
-        tertiaryDrops.forEach {
-            if (it.metadata.collectionLog) set.add(it.itemId)
-        }
 
         fun scanTable(table: WeightedTable) {
             table.mutableEntries().forEach { entry ->
@@ -977,11 +1009,33 @@ class DropTable(
                 }
             }
         }
+        alwaysDrops.forEach {
+            if (it.metadata.collectionLog) set.add(it.itemId)
+        }
 
+        preRollDenom.forEach { entry ->
+            if (!entry.metadata.collectionLog) return@forEach
+
+            val display = entry.displayItems
+            if (!display.isNullOrEmpty()) {
+                set.addAll(display)
+                return@forEach
+            }
+
+            set.add(entry.itemId)
+        }
+
+        preRollTables.forEach { entry ->
+            scanTable(entry.table)
+        }
         scanTable(mainDrops)
         scanTable(minorDrops)
         scanTable(specialDrops)
-
+        tertiaryDrops.forEach {
+            if (it.metadata.collectionLog) {
+                set.add(it.itemId)
+            }
+        }
         return set
     }
 
@@ -991,14 +1045,32 @@ class DropTable(
         currentContext = null
     }
 
-    fun prerollDenom(block: MutableList<PreRollDropEntry>.() -> Unit) {
+    fun prerollDenom(
+        meta: (DropMetadata.() -> Unit)? = null,
+        block: MutableList<PreRollDropEntry>.() -> Unit,
+    ) {
         currentContext = DropType.PREROLL
+        if (meta != null) {
+            val metadata = DropMetadata().apply { meta() }
+            preRollDenom.forEach { entry ->
+                entry.metadata = metadata // Apply the metadata to each PreRollTableEntry
+            }
+        }
         preRollDenom.block()
         currentContext = null
     }
 
-    fun preroll(block: MutableList<PreRollTableEntry>.() -> Unit) {
+    fun preroll(
+        meta: (DropMetadata.() -> Unit)? = null,
+        block: MutableList<PreRollTableEntry>.() -> Unit,
+    ) {
         currentContext = DropType.PREROLL
+        if (meta != null) {
+            val metadata = DropMetadata().apply { meta() }
+            preRollTables.forEach { entry ->
+                entry.metadata = metadata // Apply the metadata to each PreRollTableEntry
+            }
+        }
         preRollTables.block()
         currentContext = null
     }
@@ -1147,12 +1219,27 @@ class DropTable(
         )
     }
 
+    fun WeightedTableBuilder.packageDrop(
+        weight: Int,
+        block: PackageBuilder.() -> Unit,
+    ) {
+        val builder = PackageBuilder().apply(block)
+        table.add(
+            PackageWeightedEntry(
+                weight = weight,
+                displayDrops = builder.displayDrops,
+                build = { ctx -> builder.build(ctx) },
+            ),
+        )
+    }
+
     fun weightedTable(
         total: Int? = null,
+        meta: (DropMetadata.() -> Unit)? = null,
         block: WeightedTableBuilder.() -> Unit,
     ): WeightedTable {
         val table = WeightedTable()
-        WeightedTableBuilder(table).apply(block)
+        WeightedTableBuilder(table, meta).apply(block)
         if (total != null) {
             table.setSize(total)
         }
@@ -1334,13 +1421,16 @@ class DropTable(
     fun rollDrops(
         player: Player,
         combatLevel: Int,
-    ): List<Drop> = rollDrops(player, combatLevel, 1.0)
+    ): List<Drop> = rollDrops(player, combatLevel, multiplier = 1.0, rollsOverride = null)
 
     fun rollDrops(
         player: Player,
         combatLevel: Int,
         multiplier: Double = 1.0,
+        rollsOverride: Int? = null,
     ): List<Drop> {
+        val debug = true // <-- toggle here
+
         val drops = mutableListOf<Drop>()
 
         val baseContext =
@@ -1351,82 +1441,163 @@ class DropTable(
                 tableCategory = category,
                 dropSource = DropSource.MAIN,
             )
+
+        val attempts = (rollsOverride ?: rolls).coerceAtLeast(1)
+
+        if (debug) {
+            println("========== DROP DEBUG START ==========")
+            println("Table: $name")
+            println("Attempts: $attempts")
+            println("Multiplier: $multiplier")
+        }
+
         // ALWAYS
-        alwaysDrops.forEach {
-            it.roll(baseContext)?.let { drop ->
-                addAndProcessDrop(player, drops, drop)
-            }
+        alwaysDrops.forEach { entry ->
+            val drop = entry.roll(baseContext)
+            if (debug) println("[ALWAYS] -> ${drop?.itemId}")
+            drop?.let { addAndProcessDrop(player, drops, it) }
         }
 
-        // PREROLL
-        var preRollHit = false
+        repeat(attempts) { attemptIndex ->
 
-        for (entry in preRollTables) {
-            val drop = entry.roll(multiplier, baseContext)
-            if (drop != null) {
-                addAndProcessDrop(player, drops, drop)
-                preRollHit = true
-                break
-            }
-        }
+            if (debug) println("\n--- Attempt ${attemptIndex + 1} ---")
 
-        if (!preRollHit) {
-            for (entry in preRollDenom) {
+            var preRollHit = false
+
+            // PREROLL TABLES
+            for ((index, entry) in preRollTables.withIndex()) {
+                if (debug) {
+                    println(
+                        "[PREROLL TABLE] Entry $index | rate=${entry.numerator}/${entry.denominator}",
+                    )
+                }
+
                 val drop = entry.roll(baseContext, multiplier)
+
                 if (drop != null) {
+                    if (debug) {
+                        println("  -> HIT! Item=${drop.itemId} Amount=${drop.amount}")
+                    }
                     addAndProcessDrop(player, drops, drop)
                     preRollHit = true
                     break
+                } else {
+                    if (debug) println("  -> Miss")
                 }
             }
-        }
 
-        // RARE
-        rareTableRoller?.let {
-            if (it(baseContext, drops)) return drops
-        }
+            // PREROLL DENOM
+            if (!preRollHit) {
+                for ((index, entry) in preRollDenom.withIndex()) {
+                    if (debug) {
+                        println(
+                            "[PREROLL DENOM] Entry $index | rate=${entry.numerator}/${entry.denominator}",
+                        )
+                    }
 
-        // GEM
-        gemTableRoller?.let {
-            if (it(baseContext, drops)) return drops
-        }
+                    val drop = entry.roll(baseContext, multiplier)
 
-        // HERB
-        herbTableRollers.forEach {
-            it(baseContext, drops)
-        }
+                    if (drop != null) {
+                        if (debug) {
+                            println("  -> HIT! Item=${drop.itemId} Amount=${drop.amount}")
+                        }
+                        addAndProcessDrop(player, drops, drop)
+                        preRollHit = true
+                        break
+                    } else {
+                        if (debug) println("  -> Miss")
+                    }
+                }
+            }
 
-        // SEED TABLE
-        seedTableRoller?.let {
-            if (it(baseContext, combatLevel, drops)) return drops
-        }
+            if (debug) println("PreRollHit: $preRollHit")
 
-        // MAIN ROLLS
-        if (!preRollHit) {
-            repeat(rolls) {
-                mainDrops
-                    .roll(baseContext.copy(dropSource = DropSource.MAIN))
-                    ?.let { addAndProcessDrop(player, drops, it) }
+            // RARE TABLE
+            rareTableRoller?.let {
+                val before = drops.size
+                it(baseContext, drops)
+                val after = drops.size
+                if (debug && after > before) {
+                    println("[RARE TABLE] Added ${after - before} drops")
+                }
+            }
 
-                minorDrops
-                    .roll(baseContext.copy(dropSource = DropSource.MINOR))
-                    ?.let { addAndProcessDrop(player, drops, it) }
+            // GEM TABLE
+            gemTableRoller?.let {
+                val before = drops.size
+                it(baseContext, drops)
+                val after = drops.size
+                if (debug && after > before) {
+                    println("[GEM TABLE] Added ${after - before} drops")
+                }
+            }
+
+            // HERB
+            herbTableRollers.forEachIndexed { index, roller ->
+                val before = drops.size
+                roller(baseContext, drops)
+                val after = drops.size
+                if (debug && after > before) {
+                    println("[HERB $index] Added ${after - before} drops")
+                }
+            }
+
+            // SEED
+            seedTableRoller?.let {
+                val before = drops.size
+                it(baseContext, combatLevel, drops)
+                val after = drops.size
+                if (debug && after > before) {
+                    println("[SEED] Added ${after - before} drops")
+                }
+            }
+
+            // MAIN
+            if (!preRollHit) {
+                val mainDrop =
+                    mainDrops.roll(baseContext.copy(dropSource = DropSource.MAIN))
+
+                if (debug) {
+                    println("[MAIN] -> ${mainDrop?.itemId}")
+                }
+
+                mainDrop?.let { addAndProcessDrop(player, drops, it) }
+
+                val minorDrop =
+                    minorDrops.roll(baseContext.copy(dropSource = DropSource.MINOR))
+
+                if (debug) {
+                    println("[MINOR] -> ${minorDrop?.itemId}")
+                }
+
+                minorDrop?.let { addAndProcessDrop(player, drops, it) }
             }
         }
 
-        specialDrops
-            .roll(baseContext.copy(dropSource = DropSource.SPECIAL))
-            ?.let { addAndProcessDrop(player, drops, it) }
+        // SPECIAL
+        val specialDrop =
+            specialDrops.roll(baseContext.copy(dropSource = DropSource.SPECIAL))
+
+        if (debug) println("\n[SPECIAL] -> ${specialDrop?.itemId}")
+        specialDrop?.let { addAndProcessDrop(player, drops, it) }
 
         // TERTIARY
-        tertiaryDrops.forEach { entry ->
-            entry.roll(baseContext.copy(dropSource = DropSource.TERTIARY))?.let { drop ->
-                addAndProcessDrop(player, drops, drop)
-            }
+        tertiaryDrops.forEachIndexed { index, entry ->
+            val drop =
+                entry.roll(baseContext.copy(dropSource = DropSource.TERTIARY))
+            if (debug) println("[TERTIARY $index] -> ${drop?.itemId}")
+            drop?.let { addAndProcessDrop(player, drops, it) }
         }
-        // CHARMS
-        charmTable?.roll(baseContext)?.let {
-            addAndProcessDrop(player, drops, it)
+
+        charmTable?.let {
+            val drop = it.roll(baseContext)
+            if (debug) println("[CHARM] -> ${drop?.itemId}")
+            drop?.let { addAndProcessDrop(player, drops, it) }
+        }
+
+        if (debug) {
+            println("\nFinal Drop Count: ${drops.size}")
+            println("========== DROP DEBUG END ==========\n")
         }
 
         return drops

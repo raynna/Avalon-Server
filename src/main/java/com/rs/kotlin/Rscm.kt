@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.rs.kotlin
 
 import com.rs.java.game.WorldTile
@@ -36,7 +38,8 @@ object Rscm {
     }
 
     private lateinit var mappings: Map<String, Map<String, RscmEntry>>
-    private lateinit var reverseMappings: Map<Int, String>
+    private lateinit var reverseItemMappings: Map<Int, String>
+    private lateinit var reverseNpcMappings: Map<Int, String>
 
     @JvmStatic
     @OptIn(ExperimentalPathApi::class)
@@ -52,21 +55,24 @@ object Rscm {
                     put(file.nameWithoutExtension, results)
                 }
             }
-        this.reverseMappings = buildReverseMappings()
+        this.reverseItemMappings = buildReverseItemMappings()
+        this.reverseNpcMappings = buildReverseNpcMappings()
     }
 
-    private fun buildReverseMappings(): Map<Int, String> {
-        val reverseMap = mutableMapOf<Int, String>()
+    private fun buildReverseItemMappings(): Map<Int, String> {
+        val reverseItemMap = mutableMapOf<Int, String>()
         for ((type, entries) in mappings) {
+            if (type != "item") continue // Skip if it's not related to items
+
             for ((name, entry) in entries) {
                 when (entry) {
                     is RscmEntry.Id -> {
-                        reverseMap[entry.value] = "$type.$name"
+                        reverseItemMap[entry.value] = "$type.$name"
                     }
 
                     is RscmEntry.IdList -> {
                         entry.values.forEach { id ->
-                            reverseMap[id] = "$type.$name"
+                            reverseItemMap[id] = "$type.$name"
                         }
                     }
 
@@ -74,7 +80,31 @@ object Rscm {
                 }
             }
         }
-        return reverseMap
+        return reverseItemMap
+    }
+
+    private fun buildReverseNpcMappings(): Map<Int, String> {
+        val reverseNpcMap = mutableMapOf<Int, String>()
+        for ((type, entries) in mappings) {
+            if (type != "npc" && type != "npcgroup") continue // Skip if it's not related to NPCs
+
+            for ((name, entry) in entries) {
+                when (entry) {
+                    is RscmEntry.Id -> {
+                        reverseNpcMap[entry.value] = "$type.$name"
+                    }
+
+                    is RscmEntry.IdList -> {
+                        entry.values.forEach { id ->
+                            reverseNpcMap[id] = "$type.$name"
+                        }
+                    }
+
+                    else -> {} // ignore locations and tiles
+                }
+            }
+        }
+        return reverseNpcMap
     }
 
     @JvmStatic
@@ -113,7 +143,6 @@ object Rscm {
                 else -> error("Mapping '$ref' in $type is not an IdList.")
             }
 
-        // println("[Rscm] lookupList '$name' returned IDs: $result")
         return result
     }
 
@@ -137,7 +166,10 @@ object Rscm {
     }
 
     @JvmStatic
-    fun reverseLookup(id: Int): String? = reverseMappings[id]
+    fun reverseNpcLookup(id: Int): String? = reverseNpcMappings[id]
+
+    @JvmStatic
+    fun reverseItemLookup(id: Int): String? = reverseItemMappings[id]
 
     private fun load(file: Path): Map<String, RscmEntry> {
         val locationRegex = Regex("""^(?<NAME>.+)=(?<X>\d+),(?<Y>\d+),(?<PLANE>\d+)$""")

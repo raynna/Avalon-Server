@@ -18,6 +18,35 @@ import com.rs.kotlin.game.npc.drops.rare.RareDropTableEntry
 import com.rs.kotlin.game.npc.drops.rare.RareDropTableViewer
 import com.rs.kotlin.game.npc.drops.seed.SeedTableEntry
 import com.rs.kotlin.game.npc.drops.tables.*
+import com.rs.kotlin.game.npc.drops.tables.boss.ChaosElementalDropTable
+import com.rs.kotlin.game.npc.drops.tables.boss.CommanderZilyanaDropTable
+import com.rs.kotlin.game.npc.drops.tables.boss.DagannothPrimeTable
+import com.rs.kotlin.game.npc.drops.tables.boss.DagannothRexTable
+import com.rs.kotlin.game.npc.drops.tables.boss.DagannothSupremeTable
+import com.rs.kotlin.game.npc.drops.tables.boss.GeneralGraardorTable
+import com.rs.kotlin.game.npc.drops.tables.boss.KalphiteQueenDropTable
+import com.rs.kotlin.game.npc.drops.tables.boss.KingBlackDragonDropTable
+import com.rs.kotlin.game.npc.drops.tables.boss.KreeArraDropTable
+import com.rs.kotlin.game.npc.drops.tables.boss.KrilTsutsarothDropTable
+import com.rs.kotlin.game.npc.drops.tables.boss.TormentedDemonDropTable
+import com.rs.kotlin.game.npc.drops.tables.boss.TzTokJadTable
+import com.rs.kotlin.game.npc.drops.tables.cluescroll.HardTreasureTrailTable
+import com.rs.kotlin.game.npc.drops.tables.cluescroll.MediumTreasureTrailTable
+import com.rs.kotlin.game.npc.drops.tables.cluescroll.SharedClueScroll
+import com.rs.kotlin.game.npc.drops.tables.minigame.BarrowsChestTable
+import com.rs.kotlin.game.npc.drops.tables.minigame.CyclopsDropTable
+import com.rs.kotlin.game.npc.drops.tables.`object`.CrystalChestTable
+import com.rs.kotlin.game.npc.drops.tables.slayer.AberrantSpectreDropTable
+import com.rs.kotlin.game.npc.drops.tables.slayer.AbyssalDemonTable
+import com.rs.kotlin.game.npc.drops.tables.slayer.BansheeTable
+import com.rs.kotlin.game.npc.drops.tables.slayer.BloodveldDropTable
+import com.rs.kotlin.game.npc.drops.tables.slayer.CrawlingHandTable
+import com.rs.kotlin.game.npc.drops.tables.slayer.DarkBeastTable
+import com.rs.kotlin.game.npc.drops.tables.slayer.GargoyleDropTable
+import com.rs.kotlin.game.npc.drops.tables.slayer.InfernalMageDropTable
+import com.rs.kotlin.game.npc.drops.tables.slayer.KuraskDropTable
+import com.rs.kotlin.game.npc.drops.tables.slayer.NechryaelDropTable
+import com.rs.kotlin.game.npc.drops.tables.wilderness.RevenantDropTable
 import com.rs.kotlin.game.npc.worldboss.WorldBossTable
 
 object DropTablesSetup {
@@ -46,6 +75,8 @@ object DropTablesSetup {
         registerNamedTable("World Boss", WorldBossTable.regular)
         registerItemTable("item.magic_chest", WorldBossTable.chest)
         registerNamedTable("Hard clues", HardTreasureTrailTable.table)
+        registerNamedTable("Medium clues", MediumTreasureTrailTable.table)
+        registerNamedTable("Shared clue scroll", SharedClueScroll.table)
         registerObjectTable(name = "Crystal chest", objectId = 172, CrystalChestTable.table)
         registerObjectTable(
             name = "Barrows",

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rs.Settings;
 import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.java.game.ForceTalk;
 import com.rs.java.game.Graphics;
@@ -25,6 +26,9 @@ import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Utils;
 import com.rs.java.utils.HexColours.Colour;
+import com.rs.kotlin.game.npc.drops.Drop;
+import com.rs.kotlin.game.npc.drops.tables.cluescroll.HardTreasureTrailTable;
+import com.rs.kotlin.game.npc.drops.tables.cluescroll.MediumTreasureTrailTable;
 
 public class TreasureTrailsManager implements Serializable {
 
@@ -696,12 +700,26 @@ public class TreasureTrailsManager implements Serializable {
 		case 0:
 			EasyRewards.generateRewards(player);
 			break;
-		case 1:
-			MediumRewards.generateRewards(player);
-			break;
-		case 2:
-			HardRewards.generateRewards(player);
-			break;
+			case 1: {
+				List<Drop> drops = MediumTreasureTrailTable.INSTANCE
+						.getTable()
+						.rollDrops(player, 0, 1.0, Utils.random(3, 5));
+				for (Drop drop : drops) {
+					if (drop == null) continue;
+					player.getClueScrollRewards().add(new Item(drop.itemId, drop.amount));
+				}
+				break;
+			}
+			case 2: {
+				List<Drop> drops = HardTreasureTrailTable.INSTANCE
+						.getTable()
+						.rollDrops(player, 0, 1.0, Utils.random(3, 5));
+				for (Drop drop : drops) {
+					if (drop == null) continue;
+					player.getClueScrollRewards().add(new Item(drop.itemId, drop.amount));
+				}
+				break;
+			}
 		case 3:
 			if (player.dropTesting) {
 				for (int i = 0; i < player.dropTestingAmount; i++)
@@ -719,6 +737,7 @@ public class TreasureTrailsManager implements Serializable {
 		for (Item item : player.getClueScrollRewards().toArray()) {
 			if (item == null)
 				continue;
+			player.getCollectionLog().addItem(item);
 			totalValue += EconomyPrices.getPrice(item.getId()) * item.getAmount();
 			String name = item.getDefinitions().getName().toLowerCase();
 			if (name.contains("third") || name.contains("ranger") || name.contains("robin") || name.contains("gilded")
@@ -753,33 +772,29 @@ public class TreasureTrailsManager implements Serializable {
 			player.getPackets().sendGameMessage("<col=ff0000>Complete 100 treasure trails.");
 			player.getAdventureLog().addActivity("I completed completionist cape requirement; Complete 100 treasure trails");
 		}
-		player.setCloseInterfacesEvent(new Runnable() {
+		player.setCloseInterfacesEvent(() -> {
+            for (Item item : player.getClueScrollRewards().toArray()) {
+                if (item == null)
+                    continue;
+                if (player.dropTesting) {
+                    player.getBank().addItem(item, true);
+                    continue;
+                } else {
+                    if (player.getInventory().hasFreeSlots())
+                        player.getInventory().addItem(item);
+                    else {
+                        if (player.getInventory().containsItem(item.getId(), 1)
+                                && item.getDefinitions().isStackable())
+                            player.getInventory().addItem(item);
+                        else
+                            player.getBank().addItem(item, true);
+                            //World.updateGroundItem(item, player.getLastWorldTile(), player, 60, 0);
+                    }
+                }
 
-			@Override
-			public void run() {
-				for (Item item : player.getClueScrollRewards().toArray()) {
-					if (item == null)
-						continue;
-					if (player.dropTesting) {
-						player.getBank().addItem(item, true);
-						continue;
-					} else {
-						if (player.getInventory().hasFreeSlots())
-							player.getInventory().addItem(item);
-						else {
-							if (player.getInventory().containsItem(item.getId(), 1)
-									&& item.getDefinitions().isStackable())
-								player.getInventory().addItem(item);
-							else
-								player.getBank().addItem(item, true);
-								//World.updateGroundItem(item, player.getLastWorldTile(), player, 60, 0);
-						}
-					}
-
-				}
-				player.setClueScrollRewards(new ItemsContainer<Item>(10, true));
-			}
-		});
+            }
+            player.setClueScrollRewards(new ItemsContainer<Item>(10, true));
+        });
 	}
 	
 	private static int CHART = 2576;

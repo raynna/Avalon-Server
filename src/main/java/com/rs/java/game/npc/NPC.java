@@ -707,7 +707,7 @@ public class NPC extends Entity implements Serializable {
             if (Settings.DEBUG_DROP_MATH) {
                 table.writeRatesToFile(getDropRateMultiplier());
             }
-            return table.rollDrops(player, getCombatLevel(), getDropRateMultiplier());
+            return table.rollDrops(player, getCombatLevel(), getDropRateMultiplier(), null);
         }
 
         player.message("Missing droptable for npc: " + this.getName() + "(" + this.getId() + ")");

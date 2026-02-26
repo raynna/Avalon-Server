@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.npc.drops.tables
+package com.rs.kotlin.game.npc.drops.tables.boss
 
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
 import com.rs.kotlin.game.npc.TableCategory
@@ -64,7 +64,11 @@ object CommanderZilyanaDropTable {
                     "item.scroll_box_elite",
                     numerator = 1,
                     denominator = 250,
-                    condition = { context -> !context.player.treasureTrailsManager.hasClueScrollByLevel(TreasureTrailsManager.ELITE) },
+                    condition = { context ->
+                        !context.player.treasureTrailsManager.hasClueScrollByLevel(
+                            TreasureTrailsManager.ELITE,
+                        )
+                    },
                 )
             }
         }.apply { name = "Commander Zilyana" }

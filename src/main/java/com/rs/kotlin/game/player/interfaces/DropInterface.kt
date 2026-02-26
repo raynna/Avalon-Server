@@ -934,24 +934,39 @@ object DropInterface {
         }
 
     private fun buildRarityText(drop: DropDisplay): String {
-        val base = drop.rarityText
+        val rawBase = drop.rarityText
+        val formattedBase =
+            if (rawBase.startsWith("1/")) {
+                val denom =
+                    rawBase
+                        .substringAfter("1/")
+                        .replace(",", "") // safety
+                        .toIntOrNull()
 
+                if (denom != null) {
+                    "1/${denom.formatChance()}"
+                } else {
+                    rawBase
+                }
+            } else {
+                rawBase
+            }
         val weight = drop.weight
         val total = drop.totalWeight
         val nothing = drop.nothingWeight
 
         if (weight == null || total == null || nothing == null) {
-            return base
+            return formattedBase
         }
 
         if (drop.type == DropType.NOTHING) {
-            return "$base;Never"
+            return "$formattedBase;Never"
         }
 
         val adjustedTotal = total - nothing
         val rowDenom = adjustedTotal / weight
-
-        return "$base;1/$rowDenom"
+        // here, formatBase string to add , isntead of 10000, it become 10,000
+        return "$formattedBase;1/${rowDenom.formatChance()}"
     }
 
     private fun colourForDrop(
@@ -1050,4 +1065,6 @@ object DropInterface {
             "$line1<br>$line2"
         }
     }
+
+    private fun Int.formatChance(): String = "%,d".format(this)
 }

@@ -1,4 +1,4 @@
-package com.rs.kotlin.game.npc.drops.tables
+package com.rs.kotlin.game.npc.drops.tables.`object`
 
 import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.TableCategory
