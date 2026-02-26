@@ -325,11 +325,12 @@ object DropInterface {
                 val stack =
                     player.temporaryAttributtes[ATTR_TABLE_STACK] as? MutableList<TableFrame>
 
-                if (stack != null && stack.isNotEmpty()) {
+                if (!stack.isNullOrEmpty()) {
                     val prev = stack.removeLast()
                     player.temporaryAttributtes[ATTR_CURRENT_DROPS] = prev.drops
                     updateTitle(player, "Viewing: ${prev.title}")
                     renderDrops(player, prev.drops)
+                    updatePageButtons(player)
                     return
                 }
 
@@ -416,6 +417,7 @@ object DropInterface {
                     player.temporaryAttributtes[ATTR_CURRENT_DROPS] = subDrops
                     updateTitle(player, "Viewing: ${drop.tableName ?: "Category"}")
                     renderDrops(player, subDrops)
+                    updatePageButtons(player)
                     return
                 }
 
@@ -424,6 +426,7 @@ object DropInterface {
                     player.temporaryAttributtes[ATTR_FOUND] = sources
                     player.temporaryAttributtes[ATTR_PAGE] = 0
                     openMegaTableWithNpcList(player)
+                    updatePageButtons(player)
                     return
                 }
 
@@ -432,6 +435,7 @@ object DropInterface {
                     player.temporaryAttributtes[ATTR_FOUND] = sources
                     player.temporaryAttributtes[ATTR_PAGE] = 0
                     openRareTableWithNpcList(player)
+                    updatePageButtons(player)
                     return
                 }
 
@@ -440,6 +444,7 @@ object DropInterface {
                     player.temporaryAttributtes[ATTR_FOUND] = sources
                     player.temporaryAttributtes[ATTR_PAGE] = 0
                     openGemTableWithNpcList(player)
+                    updatePageButtons(player)
                     return
                 }
 
@@ -813,47 +818,53 @@ object DropInterface {
     }
 
     private fun updatePageButtons(player: Player) {
-        val list =
-            player.temporaryAttributtes[ATTR_FOUND] as? List<*>
-
-        val page =
-            player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
+        val list = player.temporaryAttributtes[ATTR_FOUND] as? List<*>
+        val page = player.temporaryAttributtes[ATTR_PAGE] as? Int ?: 0
 
         val hasFilter =
-            player.temporaryAttributtes.containsKey(ATTR_ITEM_FILTER) || player.temporaryAttributtes.containsKey(ATTR_SOURCE_FILTER)
+            player.temporaryAttributtes.containsKey(ATTR_ITEM_FILTER) ||
+                player.temporaryAttributtes.containsKey(ATTR_SOURCE_FILTER)
+        val inSearch = player.temporaryAttributtes.containsKey(ATTR_IN_SEARCH)
+        val hasSelected = player.temporaryAttributtes.containsKey(ATTR_CURRENT)
 
-        val inSearch =
-            player.temporaryAttributtes.containsKey(ATTR_IN_SEARCH)
+        // Check if we're in a subtable (has stack entries)
+        val stack = player.temporaryAttributtes[ATTR_TABLE_STACK] as? MutableList<TableFrame>
+        val inSubTable = !stack.isNullOrEmpty()
 
-        val hasSelected =
-            player.temporaryAttributtes.containsKey(ATTR_CURRENT)
+        val canClear = page == 0 && (hasFilter || inSearch || hasSelected || list.isNullOrEmpty())
 
-        val canClear =
-            page == 0 && (hasFilter || inSearch || hasSelected || list.isNullOrEmpty())
-
+        // Hide previous button if at root level with no filters/selections
         player.packets.sendHideIComponent(
             INTERFACE_ID,
             PREVIOUS_BUTTON,
-            page == 0 && !(hasFilter || inSearch || hasSelected),
+            page == 0 && !(hasFilter || inSearch || hasSelected) && !inSubTable,
         )
 
+        // Update previous button text based on context
         updatePreviousButtonText(
             player,
-            if (canClear) "Clear" else "Previous",
+            when {
+                inSubTable -> "Go Back"
+                canClear -> "Clear"
+                else -> "Previous"
+            },
         )
 
-        if (list.isNullOrEmpty()) {
+        // Hide next button if:
+        // - In subtable (shouldn't have next page navigation)
+        // - Or at last page of list
+        if (inSubTable) {
             player.packets.sendHideIComponent(INTERFACE_ID, NEXT_BUTTON, true)
-            return
+        } else if (list.isNullOrEmpty()) {
+            player.packets.sendHideIComponent(INTERFACE_ID, NEXT_BUTTON, true)
+        } else {
+            val maxPage = (list.size + 12) / 13
+            player.packets.sendHideIComponent(
+                INTERFACE_ID,
+                NEXT_BUTTON,
+                page + 1 >= maxPage,
+            )
         }
-
-        val maxPage = (list.size + 12) / 13
-
-        player.packets.sendHideIComponent(
-            INTERFACE_ID,
-            NEXT_BUTTON,
-            page + 1 >= maxPage,
-        )
     }
 
     private fun refreshScrollbar(
