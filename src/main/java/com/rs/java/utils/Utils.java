@@ -1183,7 +1183,8 @@ public final class Utils {
 
 	public static boolean roll(int numerator, int denominator) {
 		if (denominator <= 0 || numerator <= 0) return false;
-		return getRandom(denominator) < numerator;
+		int random = getRandom(denominator);
+		return random < numerator;
 	}
 
 	public static boolean randomBoolean() {

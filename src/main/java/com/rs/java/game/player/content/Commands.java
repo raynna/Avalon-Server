@@ -2120,6 +2120,7 @@ public final class Commands {
 
             player.animate(new Animation(animId));
             player.gfx(new Graphics(gfxId, 0, height));
+            player.message(player.getNextGraphics1().getId() + ", " + player.getNextGraphics1().getHeight() + ", " + player.getNextGraphics1().getDelay());
         } catch (NumberFormatException e) {
             player.message("Invalid parameters.");
         }

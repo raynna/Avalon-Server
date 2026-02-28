@@ -26,17 +26,17 @@ public final class Woodcutting extends Action {
 
     public enum TreeDefinitions {
 
-        NORMAL(1, 25, 1511, 10, 4, 8, 100), // TODO
+        NORMAL(1, 25, 1511, 10, 4, 8, 1), // TODO
 
-        EVERGREEN(1, 25, 1511, 10, 4, 8, 0),
+        EVERGREEN(1, 25, 1511, 10, 4, 8, 1),
 
-        DEAD(1, 25, 1511, 10, 4, 8, 0),
+        DEAD(1, 25, 1511, 10, 4, 8, 1),
 
-        SWAMP(1, 25, 1511, 10, 4, 8, 0),
+        SWAMP(1, 25, 1511, 10, 4, 8, 1),
 
-        ACHEY(1, 25, 2862, 10, 4, 8, 0),
+        ACHEY(1, 25, 2862, 10, 4, 8, 1),
 
-        VINES(34, 1, 5555, 10, 4, 60, 0),
+        VINES(34, 1, 5555, 10, 4, 60, 1),
 
         OAK(15, 37.5, 1521, 15, 8, 15, 15), // TODO
 
@@ -484,9 +484,10 @@ public final class Woodcutting extends Action {
     public int processWithDelay(Player player) {
         addLog(player);
         player.animate(new Animation(usingBeaver ? 1 : emoteId));
+        boolean removeTree = definitions.getRandomLifeProbability() == 0 || Utils.roll(1, definitions.getRandomLifeProbability());
         if (!usedDeplateAurora && (1 + Math.random()) < player.getAuraManager().getChanceNotDepleteMN_WC()) {
             usedDeplateAurora = true;
-        } else if (Utils.getRandom(definitions.getRandomLifeProbability()) == 0) {
+        } else if (removeTree) {
             int time = definitions.respawnDelay;
             if (definitions == TreeDefinitions.VINES) {
                 handleVines(player);

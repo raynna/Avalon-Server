@@ -18,7 +18,7 @@ public final class MapArchiveKeys {
 	private final static String PACKED_PATH = System.getProperty("user.dir") + "/data/map/archiveKeys/packed.mcx";
 	private final static String UNPACKED_PATH = System.getProperty("user.dir") + "/data/map/archiveKeys/unpacked/";
 
-	public static final int[] getMapKeys(int regionId) {
+	public static int[] getMapKeys(int regionId) {
 		return keys.get(regionId);
 	}
 

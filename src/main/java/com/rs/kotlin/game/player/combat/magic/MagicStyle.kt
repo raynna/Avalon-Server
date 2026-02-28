@@ -2,6 +2,7 @@ package com.rs.kotlin.game.player.combat.magic
 
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
+import com.rs.java.game.Animation
 import com.rs.java.game.Entity
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
@@ -297,7 +298,6 @@ class MagicStyle(
                 return
             }
         }
-
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
         spell.attackSound.takeIf { it != -1 }?.let { attacker.playSound(it, 1) }
@@ -485,7 +485,8 @@ class MagicStyle(
                 listOf(defender)
             }
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
-        spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
+        spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it.id, it.height) }
+
         spell.attackSound.takeIf { it != -1 }?.let { attacker.playSound(it, 1) }
         for (t in targets) {
             val hit = hitRoll(CombatType.MAGIC, attacker, t).spell(spell.id).roll()
