@@ -28,7 +28,7 @@ public class GlobalObjectAddition {
         /**
          * Border in Edgeville Bank
         */
-        objects.add(new WorldObject(24397, 0, 2, 3095, 3489, 0));
+        /*objects.add(new WorldObject(24397, 0, 2, 3095, 3489, 0));
         objects.add(new WorldObject(24397, 0, 2, 3095, 3490, 0));
         objects.add(new WorldObject(24397, 0, 2, 3095, 3491, 0));
         objects.add(new WorldObject(24397, 0, 2, 3095, 3492, 0));
@@ -36,7 +36,7 @@ public class GlobalObjectAddition {
         objects.add(new WorldObject(24397, 0, 2, 3095, 3494, 0));
         objects.add(new WorldObject(24397, 0, 3, 3098, 3495, 0));
         objects.add(new WorldObject(24397, 0, 3, 3097, 3495, 0));
-        objects.add(new WorldObject(24397, 0, 3, 3096, 3495, 0));
+        objects.add(new WorldObject(24397, 0, 3, 3096, 3495, 0));*/
 
     }
 

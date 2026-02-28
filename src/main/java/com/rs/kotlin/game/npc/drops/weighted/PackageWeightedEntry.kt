@@ -1,4 +1,9 @@
-package com.rs.kotlin.game.npc.drops
+package com.rs.kotlin.game.npc.drops.weighted
+
+import com.rs.kotlin.game.npc.drops.Drop
+import com.rs.kotlin.game.npc.drops.DropContext
+import com.rs.kotlin.game.npc.drops.PackageDisplayDrop
+import com.rs.kotlin.game.npc.drops.weighted.WeightedEntry
 
 class PackageWeightedEntry(
     override val weight: Int,

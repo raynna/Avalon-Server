@@ -50756,6 +50756,67 @@
       "spria"
     ]
   },
+  "6296": {
+    "id": 6296,
+    "name": "Warped tortoise",
+    "members": true,
+    "combatLevel": 121,
+    "attackLevel": 78,
+    "strengthLevel": 106,
+    "defenceLevel": 78,
+    "magicLevel": 50,
+    "rangedLevel": 0,
+    "constitutionLevel": 200,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 60,
+      "standard": 60,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "3",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 12
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 200,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "6346": {
     "id": 6346,
     "name": "Pirate",

@@ -16,6 +16,7 @@ enum class Projectile {
     INSTANT_THROWNAXE,
     CHINCHOMPA,
     ELEMENTAL_SPELL,
+    ELEMENTAL_SPELL_DUAL,
     ANCIENT_SPELL,
     MIASMIC_SPELL,
     BLOOD_SPELL,
@@ -36,7 +37,7 @@ enum class Projectile {
     SPREAD_ALL_SLOW,
     CHAIN_ARROW,
 
-    //NPCS
+    // NPCS
     DRAGONFIRE,
     CHAOS_ELEMENTAL,
     GENERAL_GRAARDOR,

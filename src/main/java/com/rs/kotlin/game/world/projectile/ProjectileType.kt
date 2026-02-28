@@ -11,7 +11,6 @@ data class ProjectileType(
     val multiplier: Int = 5,
     val lengthAdjustment: Int = 0,
 ) {
-
     constructor(
         startHeight: Int,
         endHeight: Int,
@@ -27,7 +26,7 @@ data class ProjectileType(
         RollableInt.Fixed(arc),
         displacement,
         multiplier,
-        lengthAdjustment
+        lengthAdjustment,
     )
 
     fun resolve(
@@ -35,9 +34,8 @@ data class ProjectileType(
         startHeightOffset: Int = 0,
         startTimeOffset: Int = 0,
         displacementOffset: Int = 0,
-        speedAdjustment: Int = 0
+        multiplierOffset: Int = 0,
     ): ResolvedProjectileType {
-
         val rolledArc = arc.roll()
 
         return ResolvedProjectileType(
@@ -46,8 +44,8 @@ data class ProjectileType(
             startTime = startTime + startTimeOffset,
             arc = (rolledArc + arcOffset).coerceIn(0, 255),
             displacement = displacement + displacementOffset,
-            multiplier = multiplier + speedAdjustment,
-            lengthAdjustment = lengthAdjustment
+            multiplier = multiplier + multiplierOffset,
+            lengthAdjustment = lengthAdjustment,
         )
     }
 }

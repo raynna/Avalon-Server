@@ -75,7 +75,11 @@ emerald_bolt_effect=2919
 pearl_bolt_effect=2920
 #other
 potion_boost_end=2607
+#magicsounds
+trident=178
+cast_vengeance=2907
 
+#song notes 3698
 #range sounds
 hand_cannon_attack=7206
 bow_attack=2702

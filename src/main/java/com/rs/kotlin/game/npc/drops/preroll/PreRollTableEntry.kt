@@ -1,5 +1,10 @@
-package com.rs.kotlin.game.npc.drops
+package com.rs.kotlin.game.npc.drops.preroll
 
+import com.rs.kotlin.game.npc.drops.Drop
+import com.rs.kotlin.game.npc.drops.DropContext
+import com.rs.kotlin.game.npc.drops.DropMetadata
+import com.rs.kotlin.game.npc.drops.DropSource
+import com.rs.kotlin.game.npc.drops.weighted.WeightedTable
 import java.util.concurrent.ThreadLocalRandom
 
 class PreRollTableEntry(

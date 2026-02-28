@@ -292,10 +292,30 @@ public final class NPCCombat {
     private boolean handleCollisionMovement(Entity target) {
         int size = npc.getSize();
         int targetSize = target.getSize();
+
         if (npc.isCantFollowUnderCombat()) {
             attackDelay = Math.max(attackDelay, 1);
             return true;
         }
+
+        // Check for diagonal position with player
+        if (target instanceof Player &&
+                npc.getCombatDefinitions().getAttackStyle() == AttackStyle.MELEE &&
+                targetSize == 1 && size == 1 &&
+                Math.abs(npc.getX() - target.getX()) == 1 &&
+                Math.abs(npc.getY() - target.getY()) == 1) {
+
+            Player player = (Player) target;
+
+            // If player is about to move, let them move first
+            if (player.hasWalkSteps() ||
+                    (player.getActionManager().getAction() != null &&
+                            player.getActionManager().getAction().getClass().getSimpleName().contains("CombatAction"))) {
+                debug("handleCollisionMovement: Player in diagonal will move, waiting");
+                return true;
+            }
+        }
+
         if (Utils.colides(npc.getX(), npc.getY(), size, target.getX(), target.getY(), targetSize)
                 && !target.hasWalkSteps()) {
 
@@ -315,6 +335,18 @@ public final class NPCCombat {
                 && Math.abs(npc.getY() - target.getY()) == 1
                 && !target.hasWalkSteps()
                 && size == 1) {
+
+            // Check if player is about to move before we try to move
+            if (target instanceof Player) {
+                Player player = (Player) target;
+                if (player.hasWalkSteps() ||
+                        (player.getActionManager().getAction() != null &&
+                                player.getActionManager().getAction().getClass().getSimpleName().contains("CombatAction"))) {
+                    System.out.println("handleCollisionMovement: Player will move, not adjusting");
+                    return true;
+                }
+            }
+
             npc.resetWalkSteps();
             if (npc.isFrozen() || npc.isLocked()) {
                 return true;
@@ -361,6 +393,30 @@ public final class NPCCombat {
         return false;
     }
 
+    private boolean isPlayerAboutToMoveIntoDiagonal(Entity target) {
+        if (!(target instanceof Player player)) {
+            return false;
+        }
+
+        int dx = Math.abs(npc.getX() - target.getX());
+        int dy = Math.abs(npc.getY() - target.getY());
+        boolean isDiagonal = dx == 1 && dy == 1;
+
+        if (!isDiagonal) {
+            return false;
+        }
+
+        if (player.isFrozen()) {
+            return false;
+        }
+
+        boolean playerHasWalkSteps = player.hasWalkSteps();
+        boolean playerInCombat = player.getActionManager().getAction() != null &&
+                player.getActionManager().getAction().getClass().getSimpleName().contains("CombatAction");
+
+        return playerHasWalkSteps || playerInCombat;
+    }
+
     private int getDistance() {
         return Utils.getDistance(npc, target);
     }
@@ -383,6 +439,11 @@ public final class NPCCombat {
         int attackRange = defs.getAttackRange() > 0 ? defs.getAttackRange() : 7;
         int maxAttackDistance = npc.isForceFollowClose() ? 0 : (attackStyle == AttackStyle.MELEE ? 0 : attackRange);
         if (npc.isFrozen() || npc.isLocked()) {
+            return;
+        }
+        if (isPlayerAboutToMoveIntoDiagonal(target)) {
+            System.out.println("handleFollow: Player about to move into diagonal, waiting");
+            npc.resetWalkSteps();
             return;
         }
 

@@ -1,7 +1,8 @@
 package com.rs.kotlin.game.npc.drops
 
-import com.rs.java.game.player.Player
 import com.rs.kotlin.Rscm
+import com.rs.kotlin.game.npc.drops.weighted.PackageWeightedEntry
+import com.rs.kotlin.game.npc.drops.weighted.WeightedEntry
 
 class PackageBuilder {
     internal val displayDrops = mutableListOf<PackageDisplayDrop>()
@@ -15,7 +16,6 @@ class PackageBuilder {
         val id = Rscm.lookup(item)
         val md = DropMetadata().apply { meta?.invoke(this) }
 
-        // For UI/export/collection scan
         displayDrops +=
             PackageDisplayDrop(
                 itemId = id,

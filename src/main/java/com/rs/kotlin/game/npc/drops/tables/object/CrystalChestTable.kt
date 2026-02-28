@@ -4,10 +4,10 @@ import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.TableCategory
 import com.rs.kotlin.game.npc.drops.Drop
 import com.rs.kotlin.game.npc.drops.PackageDisplayDrop
-import com.rs.kotlin.game.npc.drops.PackageWeightedEntry
 import com.rs.kotlin.game.npc.drops.dropTable
 import com.rs.kotlin.game.npc.drops.either
 import com.rs.kotlin.game.npc.drops.packageDrop
+import com.rs.kotlin.game.npc.drops.weighted.PackageWeightedEntry
 
 object CrystalChestTable {
     val table =

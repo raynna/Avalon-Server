@@ -6,8 +6,8 @@ import com.rs.kotlin.game.npc.drops.Drop
 import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.DropEntry
 import com.rs.kotlin.game.npc.drops.DropSource
-import com.rs.kotlin.game.npc.drops.ItemWeightedEntry
-import com.rs.kotlin.game.npc.drops.WeightedTable
+import com.rs.kotlin.game.npc.drops.weighted.ItemWeightedEntry
+import com.rs.kotlin.game.npc.drops.weighted.WeightedTable
 
 class MegaRareTableEntry : DropEntry(-1, 1..1) {
     private val table = WeightedTable()

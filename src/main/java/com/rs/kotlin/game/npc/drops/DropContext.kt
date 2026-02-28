@@ -9,4 +9,5 @@ data class DropContext(
     val sourceAction: String,
     val tableCategory: TableCategory,
     val dropSource: DropSource,
+    val receivedDrop: Boolean,
 )

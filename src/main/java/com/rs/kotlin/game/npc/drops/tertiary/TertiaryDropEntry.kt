@@ -1,6 +1,10 @@
-package com.rs.kotlin.game.npc.drops
+package com.rs.kotlin.game.npc.drops.tertiary
 
-import com.rs.java.game.player.Player
+import com.rs.kotlin.game.npc.drops.Drop
+import com.rs.kotlin.game.npc.drops.DropContext
+import com.rs.kotlin.game.npc.drops.DropEntry
+import com.rs.kotlin.game.npc.drops.DropMetadata
+import com.rs.kotlin.game.npc.drops.DropSource
 import java.util.concurrent.ThreadLocalRandom
 
 open class TertiaryDropEntry(

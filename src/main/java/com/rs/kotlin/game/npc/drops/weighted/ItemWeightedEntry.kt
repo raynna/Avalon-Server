@@ -1,6 +1,10 @@
-package com.rs.kotlin.game.npc.drops
+package com.rs.kotlin.game.npc.drops.weighted
 
 import com.rs.java.game.player.Player
+import com.rs.kotlin.game.npc.drops.Drop
+import com.rs.kotlin.game.npc.drops.DropContext
+import com.rs.kotlin.game.npc.drops.DropMetadata
+import com.rs.kotlin.game.npc.drops.weighted.WeightedEntry
 
 class ItemWeightedEntry(
     val itemId: Int,

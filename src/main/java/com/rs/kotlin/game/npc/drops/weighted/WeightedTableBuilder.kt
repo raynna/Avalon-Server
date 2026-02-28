@@ -1,6 +1,9 @@
-package com.rs.kotlin.game.npc.drops
+package com.rs.kotlin.game.npc.drops.weighted
 
 import com.rs.kotlin.Rscm
+import com.rs.kotlin.game.npc.drops.DropMetadata
+import com.rs.kotlin.game.npc.drops.NestedTableEntry
+import com.rs.kotlin.game.npc.drops.weighted.WeightedTable
 
 class WeightedTableBuilder(
     val table: WeightedTable,

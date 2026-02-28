@@ -219,6 +219,15 @@ object DropTablesSetup {
             "npc_group.ankou_lv86",
         )
 
+        registerNpcGroupDropTable(
+            IceWarriorDropTable.table,
+            "npc_group.ice_warrior_lv57",
+        )
+        registerNpcGroupDropTable(
+            IceGiantDropTable.table,
+            "npc_group.ice_giant_lv53",
+        )
+
         registerNpcGroupDropTable(RockCrabTable.table, "npc_group.rock_crab_lv13")
         registerNpcGroupDropTable(
             CyclopsDropTable.table,

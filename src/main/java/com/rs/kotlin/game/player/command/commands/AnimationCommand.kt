@@ -34,8 +34,16 @@ class AnimationCommand : Command {
             return true
         }
         if (definitions.handledSounds != null) {
-            println("sounds ${definitions.handledSounds.contentDeepToString()}")
-            // player.message("sounds: " + definitions.handledSounds.contentDeepToString())
+            val converted: Array<IntArray?> =
+                definitions.handledSounds
+                    .map { inner ->
+                        inner
+                            ?.map { value ->
+                                value shr 8
+                            }?.toIntArray()
+                    }.toTypedArray()
+
+            println("sounds (decoded) ${converted.contentDeepToString()}")
         }
         player.animate(animationId)
         println("Animation ID: $animationId")

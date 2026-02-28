@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.rs.kotlin.game.player.command
 
 import com.rs.java.game.player.Player
@@ -48,6 +50,7 @@ object CommandRegistry {
         register("npc", "spawnnpc", command = SpawnNpcCommand())
         register("tournament", "tourny", "jointournament", "jointourny", command = TournamentCommand())
         register("reset", command = ResetCommand())
+        register("checkmap", "mapcommand", "map", command = MapFilesCommand())
     }
 
     @JvmStatic

@@ -15,6 +15,131 @@ import kotlin.math.max
 
 object ProjectileManager {
     @JvmStatic
+    @JvmOverloads
+    fun create(
+        projectile: Projectile,
+        gfxId: Int,
+        attacker: Entity,
+        defender: Entity,
+        arcOffset: Int = 0,
+        startHeightOffset: Int = 0,
+        startTimeOffset: Int = 0,
+        displacement: Int = 0,
+        multiplierOffset: Int = 0,
+        hitGraphic: Graphics? = null,
+        hitSound: Int = -1,
+        blockAnimation: Boolean = true,
+        onLanded: Runnable? = null,
+    ): ProjectileRequest =
+        ProjectileRequest(
+            projectile = projectile,
+            gfxId = gfxId,
+            attacker = attacker,
+            defender = defender,
+            arcOffset = arcOffset,
+            startHeightOffset = startHeightOffset,
+            startTimeOffset = startTimeOffset,
+            displacement = displacement,
+            multiplierOffset = multiplierOffset,
+            hitGraphic = hitGraphic,
+            hitSound = hitSound,
+            blockAnimation = blockAnimation,
+            onLanded = { onLanded?.run() },
+        )
+
+    @JvmStatic
+    fun send(request: ProjectileRequest): Int {
+        val baseType =
+            request.projectileType
+                ?: ProjectileRegistry.get(request.projectile)
+                ?: return 1
+
+        val type =
+            baseType.resolve(
+                startHeightOffset = request.startHeightOffset,
+                arcOffset = request.arcOffset,
+                startTimeOffset = request.startTimeOffset,
+                displacementOffset = request.displacement,
+                multiplierOffset = request.multiplierOffset,
+            )
+
+        val distance = Utils.getDistance(request.attacker, request.defender)
+        val endCycle = type.endTime(distance)
+        val impactTicks = endCycle / 30
+
+        val startTile =
+            if (request.projectile == Projectile.ICE_BARRAGE) {
+                request.defender.worldTile
+            } else {
+                request.attacker.centerTile
+            }
+
+        val endTile = request.defender.worldTile
+
+        queueProjectileAndGetImpactCycles(
+            attacker = request.attacker,
+            defender = request.defender,
+            startTile = startTile,
+            endTile = endTile,
+            gfx = request.gfxId,
+            type = type,
+            creatorSize = request.attacker.size,
+            endTime = endCycle,
+        )
+
+        handleBlockAnimation(request, endCycle)
+        handleHitGraphic(request, startTile, endTile, endCycle)
+        scheduleLandingCallback(request, impactTicks)
+
+        return impactTicks
+    }
+
+    private fun handleBlockAnimation(
+        request: ProjectileRequest,
+        endCycle: Int,
+    ) {
+        if (!request.blockAnimation) return
+        val defender = resolveEntity(request.defender)() as? Player ?: return
+        val animId = CombatUtils.getBlockAnimation(defender)
+        defender.queueAnim(Animation(animId, endCycle))
+    }
+
+    private fun handleHitGraphic(
+        request: ProjectileRequest,
+        startTile: WorldTile,
+        endTile: WorldTile,
+        endCycle: Int,
+    ) {
+        val def = resolveEntity(request.defender)() ?: return
+        val gfx = request.hitGraphic ?: return
+
+        if (def.hasFinished() || def.plane != endTile.plane) return
+
+        val rotation = calculateRotation(startTile, endTile)
+        def.gfx(gfx.id, endCycle, gfx.height, rotation)
+
+        if (request.hitSound >= 0) {
+            def.playSound(request.hitSound, endCycle, 1)
+        }
+    }
+
+    private fun scheduleLandingCallback(
+        request: ProjectileRequest,
+        impactTicks: Int,
+    ) {
+        request.onLanded ?: return
+
+        WorldTasksManager.schedule(
+            object : WorldTask() {
+                override fun run() {
+                    request.onLanded.run()
+                }
+            },
+            impactTicks.coerceAtLeast(0),
+        )
+    }
+
+    @JvmStatic
     fun sendToTile(
         projectile: Projectile,
         gfxId: Int,
@@ -289,7 +414,7 @@ object ProjectileManager {
                 arcOffset = arcOffset,
                 startTimeOffset = startTimeOffset,
                 displacementOffset = displacement,
-                speedAdjustment = speedAdjustment,
+                multiplierOffset = speedAdjustment,
             )
 
         val distance = Utils.getDistance(attacker, defender)

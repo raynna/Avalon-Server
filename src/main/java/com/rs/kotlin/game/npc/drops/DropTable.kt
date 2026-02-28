@@ -14,9 +14,17 @@ import com.rs.kotlin.game.npc.drops.config.GemTableConfig
 import com.rs.kotlin.game.npc.drops.config.HerbTableConfig
 import com.rs.kotlin.game.npc.drops.config.RareTableConfig
 import com.rs.kotlin.game.npc.drops.config.SeedTableConfig
+import com.rs.kotlin.game.npc.drops.preroll.PreRollDropEntry
+import com.rs.kotlin.game.npc.drops.preroll.PreRollTableEntry
 import com.rs.kotlin.game.npc.drops.rare.GemTableEntry
 import com.rs.kotlin.game.npc.drops.rare.RareDropTableEntry
 import com.rs.kotlin.game.npc.drops.seed.SeedTableType
+import com.rs.kotlin.game.npc.drops.tertiary.TertiaryDropEntry
+import com.rs.kotlin.game.npc.drops.weighted.ItemWeightedEntry
+import com.rs.kotlin.game.npc.drops.weighted.PackageWeightedEntry
+import com.rs.kotlin.game.npc.drops.weighted.WeightedEntry
+import com.rs.kotlin.game.npc.drops.weighted.WeightedTable
+import com.rs.kotlin.game.npc.drops.weighted.WeightedTableBuilder
 import com.rs.kotlin.game.player.interfaces.DropDisplay
 import com.rs.kotlin.game.world.util.Msg
 import java.io.File
@@ -77,122 +85,12 @@ fun dropTable(
     block: DropTable.() -> Unit,
 ): DropTable =
     DropTable(rolls, name, category, sourceAction).apply {
-        godwarsRareTable?.let { cfg ->
-            godwarsRareTableConfig = cfg
-            rareTableRoller = { context, drops ->
-
-                val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
-                if (roll >= cfg.numerator) {
-                    false
-                } else {
-                    val rareContext = context.copy(dropSource = DropSource.RARE)
-
-                    godwarsRareDropTable
-                        .roll(rareContext)
-                        ?.let {
-                            addAndProcessDrop(context.player, drops, it)
-                            true
-                        } ?: false
-                }
-            }
-        }
-        // ---------- RARE TABLE ----------
-        rareTable?.let { cfg ->
-            rareTableConfig = cfg
-            rareTableRoller = { context, drops ->
-
-                val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
-                if (roll >= cfg.numerator) {
-                    false
-                } else {
-                    val rareContext = context.copy(dropSource = DropSource.RARE)
-
-                    rareDropTable
-                        .roll(rareContext)
-                        ?.let {
-                            addAndProcessDrop(context.player, drops, it)
-                            true
-                        } ?: false
-                }
-            }
-        }
-        gemTable?.let { cfg ->
-            gemTableConfig = cfg
-            gemTableRoller = { context, drops ->
-                val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
-                if (roll >= cfg.numerator) {
-                    false
-                } else {
-                    val gemContext = context.copy(dropSource = DropSource.RARE)
-                    gemDropTable.roll(gemContext)?.let {
-                        addAndProcessDrop(context.player, drops, it)
-                        true
-                    } ?: false
-                }
-            }
-        }
-        godwarsGemTable?.let { cfg ->
-            godwarsGemTableConfig = cfg
-            gemTableRoller = { context, drops ->
-                val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
-                if (roll >= cfg.numerator) {
-                    false
-                } else {
-                    val gemContext = context.copy(dropSource = DropSource.RARE)
-                    godwarsGemDropTable.roll(gemContext)?.let {
-                        addAndProcessDrop(context.player, drops, it)
-                        true
-                    } ?: false
-                }
-            }
-        }
         herbTableConfigs = herbTables
-
-        if (herbTables.isNotEmpty()) {
-            herbTables.forEach { cfg ->
-                herb { context, drops ->
-
-                    val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
-
-                    if (roll < cfg.numerator) {
-                        val herbContext = context.copy(dropSource = DropSource.HERB)
-                        herbDropTable.roll(herbContext)?.let { baseDrop ->
-                            val rolledAmount = cfg.amount.random()
-                            val newDrop = baseDrop.copy(amount = rolledAmount)
-                            addAndProcessDrop(context.player, drops, newDrop)
-                        }
-                    }
-
-                    false
-                }
-            }
-        }
         seedTableConfig = seedTable
-        if (seedTable != null) {
-            seed { context, combatLevel, drops ->
-
-                val roll = ThreadLocalRandom.current().nextInt(seedTable.denominator)
-                if (roll >= seedTable.numerator) {
-                    false
-                } else {
-                    val seedContext = context.copy(dropSource = DropSource.SEED)
-
-                    val result =
-                        DropTablesSetup.seedDropTable.roll(
-                            seedTable.table,
-                            seedContext,
-                            combatLevel,
-                        )
-
-                    result?.let {
-                        val finalAmount = seedTable.amount.random()
-                        drops.add(it.copy(amount = finalAmount))
-                        true
-                    } ?: false
-                }
-            }
-        }
-
+        gemTableConfig = gemTable
+        rareTableConfig = rareTable
+        godwarsGemTableConfig = godwarsGemTable
+        godwarsRareTableConfig = godwarsRareTable
         block()
     }
 
@@ -212,11 +110,6 @@ class DropTable(
     private val minorDrops = WeightedTable()
     private val specialDrops = WeightedTable()
     private var charmTable: SummoningCharms? = null
-
-    private val herbTableRollers = mutableListOf<(DropContext, MutableList<Drop>) -> Boolean>()
-    var rareTableRoller: ((DropContext, MutableList<Drop>) -> Boolean)? = null
-    var gemTableRoller: ((DropContext, MutableList<Drop>) -> Boolean)? = null
-    private var seedTableRoller: ((DropContext, Int, MutableList<Drop>) -> Boolean)? = null
 
     var herbTableConfigs: List<HerbTableConfig>? = null
     var rareTableConfig: RareTableConfig? = null
@@ -1127,18 +1020,6 @@ class DropTable(
         currentContext = null
     }
 
-    fun gem(block: (DropContext, MutableList<Drop>) -> Boolean) {
-        gemTableRoller = block
-    }
-
-    fun herb(block: (DropContext, MutableList<Drop>) -> Boolean) {
-        herbTableRollers += block
-    }
-
-    fun seed(block: (DropContext, Int, MutableList<Drop>) -> Boolean) {
-        seedTableRoller = block
-    }
-
     // ------------------ Drop DSL ------------------
     fun DropTable.drop(
         numerator: Int = 1,
@@ -1329,7 +1210,16 @@ class DropTable(
                     System.err.println("Invalid tertiary drop rate for item $item")
                     return
                 }
-                tertiaryDrops.add(TertiaryDropEntry(Rscm.lookup(item), amount, numerator, denominator, condition, metadata))
+                tertiaryDrops.add(
+                    TertiaryDropEntry(
+                        Rscm.lookup(item),
+                        amount,
+                        numerator,
+                        denominator,
+                        condition,
+                        metadata,
+                    ),
+                )
             }
 
             DropType.CHARM -> {
@@ -1429,6 +1319,7 @@ class DropTable(
                 sourceAction = sourceAction,
                 tableCategory = category,
                 dropSource = DropSource.MAIN,
+                receivedDrop = false,
             )
 
         val attempts = (rollsOverride ?: rolls).coerceAtLeast(1)
@@ -1466,20 +1357,59 @@ class DropTable(
                 }
             }
 
-            // RARE TABLE
-            rareTableRoller?.let { it(baseContext, drops) }
+            rareTableConfig?.let { cfg ->
+                val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
+                if (roll < cfg.numerator) {
+                    val rareContext = baseContext.copy(dropSource = DropSource.RARE)
+                    rareDropTable.roll(rareContext)?.let { baseDrop ->
+                        addAndProcessDrop(player, drops, baseDrop)
+                        preRollHit = true
+                    }
+                }
+            }
 
-            // GEM TABLE
-            gemTableRoller?.let { it(baseContext, drops) }
+            // GEM TABLE (from gemTableConfig)
+            gemTableConfig?.let { cfg ->
+                val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
+                if (roll < cfg.numerator) {
+                    val gemContext = baseContext.copy(dropSource = DropSource.RARE)
+                    gemDropTable.roll(gemContext)?.let { baseDrop ->
+                        addAndProcessDrop(player, drops, baseDrop)
+                        preRollHit = true
+                    }
+                }
+            }
 
             // HERB
-            herbTableRollers.forEach { roller -> roller(baseContext, drops) }
+            herbTableConfigs?.forEach { cfg ->
+                val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
+                if (roll < cfg.numerator) {
+                    val herbContext = baseContext.copy(dropSource = DropSource.HERB)
+                    herbDropTable.roll(herbContext)?.let { baseDrop ->
+                        val rolledAmount = cfg.amount.random()
+                        val drop = baseDrop.copy(amount = rolledAmount)
+                        addAndProcessDrop(player, drops, drop)
+                        preRollHit = true
+                    }
+                }
+            }
 
-            // SEED
-            seedTableRoller?.let { it(baseContext, combatLevel, drops) }
+            seedTableConfig?.let { cfg ->
+                val roll = ThreadLocalRandom.current().nextInt(cfg.denominator)
+                if (roll < cfg.numerator) {
+                    val seedContext = baseContext.copy(dropSource = DropSource.SEED)
+                    val result = DropTablesSetup.seedDropTable.roll(cfg.table, seedContext, combatLevel)
+                    result?.let {
+                        val finalAmount = cfg.amount.random()
+                        addAndProcessDrop(player, drops, it.copy(amount = finalAmount))
+                        preRollHit = true
+                    }
+                }
+            }
 
             // MAIN
             if (!preRollHit) {
+                println("main roll")
                 val mainDrop =
                     mainDrops.roll(baseContext.copy(dropSource = DropSource.MAIN))
 

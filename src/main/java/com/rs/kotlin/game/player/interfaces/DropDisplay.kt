@@ -2,7 +2,7 @@ package com.rs.kotlin.game.player.interfaces
 
 import com.rs.kotlin.game.npc.drops.DropTable
 import com.rs.kotlin.game.npc.drops.DropType
-import com.rs.kotlin.game.npc.drops.WeightedTable
+import com.rs.kotlin.game.npc.drops.weighted.WeightedTable
 
 data class DropDisplay(
     val itemId: Int,

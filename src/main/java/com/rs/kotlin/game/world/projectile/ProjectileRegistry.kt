@@ -23,8 +23,12 @@ object ProjectileRegistry {
         register(Projectile.SAP, ProjectileType(startHeight = 40, endHeight = 36, startTime = 31, multiplier = 8, arc = 11))
         register(Projectile.LEECH, ProjectileType(startHeight = 40, endHeight = 36, startTime = 31, multiplier = 8, arc = 11))
         register(Projectile.SOULSPLIT, ProjectileType(startHeight = 10, endHeight = 10, startTime = 31, multiplier = 10, arc = 15))
-        register(Projectile.CANNON, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15))
-        register(Projectile.ELEMENTAL_SPELL, ProjectileType(startHeight = 43, endHeight = 31, startTime = 51, arc = 11, displacement = 64))
+        register(Projectile.CANNON, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 0))
+        register(Projectile.ELEMENTAL_SPELL, ProjectileType(startHeight = 21, endHeight = 31, startTime = 51, arc = 15, displacement = 32))
+        register(
+            Projectile.ELEMENTAL_SPELL_DUAL,
+            ProjectileType(startHeight = 43, endHeight = 31, startTime = 51, arc = 21, displacement = 32),
+        )
         register(Projectile.CRUMBLE_UNDEAD, ProjectileType(startHeight = 31, endHeight = 31, startTime = 46, arc = 11, displacement = 64))
         register(Projectile.STANDARD_MAGIC, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 11))
         register(

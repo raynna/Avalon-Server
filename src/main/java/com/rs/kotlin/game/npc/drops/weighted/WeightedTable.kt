@@ -1,5 +1,8 @@
-package com.rs.kotlin.game.npc.drops
+package com.rs.kotlin.game.npc.drops.weighted
 
+import com.rs.kotlin.game.npc.drops.Drop
+import com.rs.kotlin.game.npc.drops.DropContext
+import com.rs.kotlin.game.npc.drops.weighted.WeightedEntry
 import java.util.concurrent.ThreadLocalRandom
 
 class WeightedTable {
@@ -38,7 +41,7 @@ class WeightedTable {
 
         val rand = ThreadLocalRandom.current().nextInt(total)
 
-        if (rand >= explicitWeight) return null // implicit nothing
+        if (rand >= explicitWeight) return null
 
         var acc = 0
         for (entry in validEntries) {
