@@ -15,7 +15,7 @@ public class MapPacker {
     private static final String CACHE_PATH  = "data/cache/";
     private static final String PACK_FOLDER = "data/map/toPack/";
 
-    private static final int REGION_X = 48;
+    private static final int REGION_X = 49;
     private static final int REGION_Y = 54;
 
     public static void main(String[] args) throws IOException {

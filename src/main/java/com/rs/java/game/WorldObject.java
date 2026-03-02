@@ -2,6 +2,9 @@ package com.rs.java.game;
 
 import com.rs.core.cache.defintions.ObjectDefinitions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @SuppressWarnings("serial")
 public class WorldObject extends WorldTile {
 
@@ -11,6 +14,7 @@ public class WorldObject extends WorldTile {
 	private int life;
 	private int lastX;
 	private int lastY;
+	private Map<String, Object> metadata;
 	
 	public WorldObject(int id, int type, int rotation, WorldTile tile) {
 		super(tile.getX(), tile.getY(), tile.getPlane());
@@ -119,5 +123,32 @@ public class WorldObject extends WorldTile {
 
 	public void setLastY(int lastY) {
 		this.lastY = lastY;
+	}
+
+	public void setMeta(String key, Object value) {
+		if (metadata == null)
+			metadata = new HashMap<>();
+		metadata.put(key, value);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getMeta(String key) {
+		if (metadata == null)
+			return null;
+		return (T) metadata.get(key);
+	}
+
+	public boolean hasMeta(String key) {
+		return metadata != null && metadata.containsKey(key);
+	}
+
+	public void removeMeta(String key) {
+		if (metadata != null)
+			metadata.remove(key);
+	}
+
+	public void clearMeta() {
+		if (metadata != null)
+			metadata.clear();
 	}
 }

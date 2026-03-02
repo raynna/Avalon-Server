@@ -11,7 +11,7 @@ public class MapCopyTool {
     private static final int MAPS_INDEX = 5;
 
     private static final String SOURCE_CACHE = "data/634/cache/";
-    private static final String DEST_CACHE   = "data/cache/";
+    private static final String DEST_CACHE   = "data/742/";
 
     private static final int REGION_ID = 12598;
 
@@ -26,10 +26,10 @@ public class MapCopyTool {
         String landName = "l" + regionX + "_" + regionY;
 
         int[] keys = new int[] {//ge xteas from 634
-                504856351,
-                446930567,
-                -1265381907,
-                -565095951
+                6023912,
+                -1398996940,
+                -1850857481,
+                -1428087612
         };
 
         System.out.println("Copying region: " + regionX + "," + regionY);
@@ -60,19 +60,8 @@ public class MapCopyTool {
                 return;
             }
 
-            var mapSector = source.index(MAPS_INDEX).readArchiveSector(mapArchiveId);
-            var landSector = source.index(MAPS_INDEX).readArchiveSector(landArchiveId);
-
-            System.out.println("Map sector null? " + (mapSector == null));
-            System.out.println("Land sector null? " + (landSector == null));
-
-            if (mapSector == null || landSector == null) {
-                System.out.println("Sector read failed.");
-                return;
-            }
-
-            byte[] mapData = mapSector.getData();
-            byte[] landData = landSector.getData();
+            byte[] mapData = source.data(MAPS_INDEX, mapArchiveId);
+            byte[] landData = source.data(MAPS_INDEX, landArchiveId, 0, keys);
 
             System.out.println("Map data length: " + (mapData == null ? "NULL" : mapData.length));
             System.out.println("Land data length: " + (landData == null ? "NULL" : landData.length));
@@ -92,8 +81,6 @@ public class MapCopyTool {
             System.out.println("Region copied successfully.");
             var a = idx.archive("l49_54", keys);
             System.out.println("dest land containsData=" + (a != null && a.containsData()));
-            dest.index(MAPS_INDEX).remove("l49_54");
-            dest.update();
         } finally {
             source.close();
             dest.close();

@@ -29,28 +29,30 @@ data class CombatContext(
     val attackBonusType: AttackBonusType,
     val hit: Hit? = null,
     val usingSpecial: Boolean = false,
-    val guaranteedBoltEffect: Boolean = false
+    val guaranteedBoltEffect: Boolean = false,
 )
 
-fun CombatContext.addHit(type: CombatType, target: Entity = defender): HitBuilder {
-    return HitBuilder(this, type, target)
-}
+fun CombatContext.addHit(
+    type: CombatType,
+    target: Entity = defender,
+): HitBuilder = HitBuilder(this, type, target)
 
-fun hitRoll(type: CombatType, attacker: Player, target: Entity): HitRoller {
-    return HitRoller(attacker, target, type)
-}
+fun hitRoll(
+    type: CombatType,
+    attacker: Player,
+    target: Entity,
+): HitRoller = HitRoller(attacker, target, type)
 
-fun CombatContext.procHit(target: Entity = defender): ProcHitBuilder {
-    return ProcHitBuilder(this, target)
-}
+fun CombatContext.procHit(target: Entity = defender): ProcHitBuilder = ProcHitBuilder(this, target)
 
-fun CombatContext.procHit(attacker: Player, target: Entity = defender): ProcHitBuilder {
-    return ProcHitBuilder(this, target)
-}
+fun CombatContext.procHit(
+    attacker: Player,
+    target: Entity = defender,
+): ProcHitBuilder = ProcHitBuilder(this, target)
 
 fun CombatContext.multiHit(
     targets: List<Entity>,
-    build: (target: Entity) -> HitBuilder
+    build: (target: Entity) -> HitBuilder,
 ) {
     for (target in targets) {
         build(target).roll(CombatHitRoll.NORMAL)
@@ -61,21 +63,19 @@ fun CombatContext.addDerivedHit(
     source: Hit,
     target: Entity,
     damage: Int,
-    delay: Int = 0
+    delay: Int = 0,
 ): Hit {
     val derived = source.copyWithDamage(damage)
     combat.delayHits(PendingHit(derived, target, delay))
     return derived
 }
 
-
-
 fun CombatContext.applyBleed(
     baseHit: Hit,
     bleedPercent: Double = 0.75,
     maxTickDamage: Int = 50,
     initialDelay: Int = 1,
-    tickInterval: Int = 1
+    tickInterval: Int = 1,
 ) {
     if (baseHit.damage <= 0) return
 
@@ -91,11 +91,11 @@ fun CombatContext.applyBleed(
                 Hit(
                     attacker,
                     tickDamage,
-                    Hit.HitLook.REGULAR_DAMAGE // or BLEED_DAMAGE
+                    Hit.HitLook.REGULAR_DAMAGE, // or BLEED_DAMAGE
                 ),
                 defender,
-                delay
-            )
+                delay,
+            ),
         )
 
         delay += tickInterval
@@ -103,52 +103,55 @@ fun CombatContext.applyBleed(
 }
 
 fun CombatContext.getDragonClawsHits(swings: Int = 4): List<Hit> {
-    val hits = MutableList(swings) { hitRoll(CombatType.MELEE, attacker, defender).roll() }//roll for accuracy & damage
+    val hits = MutableList(swings) { hitRoll(CombatType.MELEE, attacker, defender).roll() } // roll for accuracy & damage
     val firstHitIndex = hits.indexOfFirst { it.damage > 0 }
     hits.forEach { it.critical = false }
     val maxValues = CombatCalculations.getMeleeMaxHit(attacker, defender)
     val maxHit = maxValues.max
     val baseMax = maxValues.base
-    if (firstHitIndex == -1) {//all misses
+    if (firstHitIndex == -1) { // all misses
         if (Math.random() < 2.0 / 3.0) {
-            val patterns = listOf(
-                intArrayOf(9, 9, 0, 0),//randomise 1-9 for each pattern where damage isnt 0
-                intArrayOf(0, 0, 9, 9),
-                intArrayOf(9, 0, 9, 0),
-                intArrayOf(0, 9, 0, 9)
-            )
+            val patterns =
+                listOf(
+                    intArrayOf(9, 9, 0, 0), // randomise 1-9 for each pattern where damage isnt 0
+                    intArrayOf(0, 0, 9, 9),
+                    intArrayOf(9, 0, 9, 0),
+                    intArrayOf(0, 9, 0, 9),
+                )
             val pattern = patterns.random()
             hits.forEachIndexed { i, h ->
                 h.damage = if (pattern[i] > 0) Utils.random(1, pattern[i]) else 0
             }
         }
-    } else {//not a full miss
+    } else { // not a full miss
         when (firstHitIndex) {
             0 -> {
-                val first = if (defender is NPC && defender.id == 4474) maxHit - 1 else ((maxHit / 2).. maxHit - 1).random()
-                hits[0].damage = first//if maxHit 400 = 200-400
-                hits[1].damage = (hits[0].damage + 1) / 2//half of above
-                hits[2].damage = (hits[1].damage + 1) / 2//halv of above
-                hits[3].damage = hits[2].damage + 1//same as above
+                val first = if (defender is NPC && defender.id == 4474) maxHit - 1 else ((maxHit / 2)..maxHit - 1).random()
+                hits[0].damage = first // if maxHit 400 = 200-400
+                hits[1].damage = (hits[0].damage + 1) / 2 // half of above
+                hits[2].damage = (hits[1].damage + 1) / 2 // halv of above
+                hits[3].damage = hits[2].damage + 1 // same as above
             }
+
             1 -> {
                 val second = ((maxHit * 3 / 8)..(maxHit * 7 / 8)).random()
-                hits[1].damage = second//if maxHit 400 = 150-350
-                hits[2].damage = (hits[1].damage + 1) / 2//half of above
-                hits[3].damage = hits[2].damage//same as above
+                hits[1].damage = second // if maxHit 400 = 150-350
+                hits[2].damage = (hits[1].damage + 1) / 2 // half of above
+                hits[3].damage = hits[2].damage // same as above
             }
+
             2 -> {
                 val third = ((maxHit / 4)..(maxHit * 3 / 4)).random()
-                hits[2].damage = third//if maxHit 400 = 100-300
-                hits[3].damage = hits[2].damage//same as above
+                hits[2].damage = third // if maxHit 400 = 100-300
+                hits[3].damage = hits[2].damage // same as above
             }
 
             3 -> {
                 val fourth = ((maxHit / 4)..(maxHit * 5 / 4)).random()
-                hits[3].damage = fourth//if maxHit 400 = 100-500
+                hits[3].damage = fourth // if maxHit 400 = 100-500
             }
         }
-        val firstNonZero = hits[firstHitIndex]//set critical marks based of first hit in success rolls
+        val firstNonZero = hits[firstHitIndex] // set critical marks based of first hit in success rolls
         if (firstNonZero.checkCritical(firstNonZero.damage, baseMax)) {
             for (i in firstHitIndex until hits.size) {
                 hits[i].critical = true
@@ -165,7 +168,7 @@ fun CombatContext.applyScytheHits(victim: Entity) {
 
     hits {
         var hit = addHit(CombatType.MELEE).roll()
-        hit = nextHit(baseHit = hit)
+        // hit = nextHit(baseHit = hit)
         scytheHits += hit
 
         if (victim.size > 1 || (victim is NPC && victim.name.contains("dummy", ignoreCase = true))) {
@@ -200,7 +203,7 @@ fun CombatContext.startChainAttack(
     projectileId: Int = -1,
     endGraphicsId: Int = -1,
     additionalTargets: Int,
-    bounceRange: Int
+    bounceRange: Int,
 ) {
     val deathSpreadUsed = mutableSetOf<Entity>()
 
@@ -223,12 +226,9 @@ fun CombatContext.startChainAttack(
         bounceRange = bounceRange,
         chainMode = settings.chainMode,
         isFirstHit = true,
-        bounceIndex = 0
+        bounceIndex = 0,
     )
 }
-
-
-
 
 fun fireChain(
     context: CombatContext,
@@ -246,96 +246,116 @@ fun fireChain(
     bounceRange: Int,
     chainMode: ChainMode,
     isFirstHit: Boolean,
-    bounceIndex: Int
+    bounceIndex: Int,
+    startTimeOffset: Int = 0,
 ) {
-
     if (deathSpreadUsed.size > 500) return
 
     val calcType = settings.firstCombatType
     val displayType =
-        if (isFirstHit) settings.firstCombatType
-        else settings.spreadCombatType
+        if (isFirstHit) {
+            settings.firstCombatType
+        } else {
+            settings.spreadCombatType
+        }
 
-    val damageMultiplier = when (settings.damageScaleMode) {
-        DamageScaleMode.ABSOLUTE ->
-            if (isFirstHit) 1.0 else settings.damageMultiplier
-        DamageScaleMode.PER_BOUNCE ->
-            Math.pow(settings.damageMultiplier, bounceIndex.toDouble())
-    }
-    val hit = hitRoll(calcType, context.attacker, target).damageMultiplier(damageMultiplier).roll()
+    val damageMultiplier =
+        when (settings.damageScaleMode) {
+            DamageScaleMode.ABSOLUTE -> {
+                if (isFirstHit) 1.0 else settings.damageMultiplier
+            }
 
-    hit.look = when (displayType) {
-        CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
-        CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
-        CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
-    }
+            DamageScaleMode.PER_BOUNCE -> {
+                Math.pow(settings.damageMultiplier, bounceIndex.toDouble())
+            }
+        }
+
+    val hit =
+        hitRoll(calcType, context.attacker, target)
+            .damageMultiplier(damageMultiplier)
+            .roll()
+
+    hit.look =
+        when (displayType) {
+            CombatType.MELEE -> Hit.HitLook.MELEE_DAMAGE
+            CombatType.RANGED -> Hit.HitLook.RANGE_DAMAGE
+            CombatType.MAGIC -> Hit.HitLook.MAGIC_DAMAGE
+        }
 
     val useProjectile = if (isFirstHit) projectile else settings.projectile
     val useProjectileId = if (isFirstHit) projectileId else settings.projectileId
 
-    fun continueChain(remainder: Int) {
-        if (bouncesLeft <= 0) return
-
-        val pickedThisSpread = mutableSetOf<Entity>()
-
-        val nextTargets = context.findChainTargets(
-            source = target,
-            rootTarget = rootTarget,
-            previousTarget = previousTarget,
-            pickedThisSpread = pickedThisSpread,
-            bounceRange = bounceRange,
-            chainMode = chainMode,
-            maxPicks = bouncesLeft,
-            excludeRoot = isFirstHit
-        )
-
-        nextTargets.forEach { next ->
-            fireChain(
-                context = context,
-                settings = settings,
-                source = target,
-                target = next,
-                previousTarget = target,
-                rootTarget = rootTarget,
-                projectile = settings.projectile,
-                projectileId = settings.projectileId,
-                endGraphicsId = endGraphicsId,
-                deathSpreadUsed = deathSpreadUsed,
-                bouncesLeft = if (chainMode == ChainMode.SPREAD_ALL) 0 else bouncesLeft - 1,
-                deathSpreadAmount = deathSpreadAmount,
-                bounceRange = bounceRange,
-                chainMode = chainMode,
-                isFirstHit = false,
-                bounceIndex = bounceIndex + 1
-            )
-        }
-    }
-
     val result =
         if (isFirstHit && calcType == CombatType.MELEE) {
-            continueChain(0)
             ProjectileManager.ProjectileResult(0, 0)
-        } else ProjectileManager.sendResult(
-            projectile = useProjectile,
-            gfxId = useProjectileId,
-            attacker = source,
-            defender = target,
-            delayOffset = 0,
-            hitGraphic = if (settings.projectileEnd != -1) Graphics(settings.projectileEnd) else null
-        ) { remainder ->
-            continueChain(remainder)
+        } else {
+            ProjectileManager.sendResult(
+                projectile = useProjectile,
+                gfxId = useProjectileId,
+                attacker = source,
+                defender = target,
+                delayOffset = startTimeOffset,
+                hitGraphic =
+                    if (settings.projectileEnd != -1) {
+                        Graphics(settings.projectileEnd)
+                    } else {
+                        null
+                    },
+            )
         }
 
-    val impactTicks = result.impactTicks
+    val impactTicks = result.impactTicks.coerceAtLeast(0)
 
     context.combat.delayHits(
         PendingHit(
             hit,
             target,
-            (impactTicks - 1).coerceAtLeast(0)
+            impactTicks,
         ) {
-
             if (hit.damage <= 0) return@PendingHit
+
+            if (bouncesLeft > 0) {
+                val pickedThisSpread = mutableSetOf<Entity>()
+
+                val nextTargets =
+                    context.findChainTargets(
+                        source = target,
+                        rootTarget = rootTarget,
+                        previousTarget = previousTarget,
+                        pickedThisSpread = pickedThisSpread,
+                        bounceRange = bounceRange,
+                        chainMode = chainMode,
+                        maxPicks = bouncesLeft,
+                        excludeRoot = false,
+                    )
+
+                nextTargets.forEach { next ->
+                    fireChain(
+                        context = context,
+                        settings = settings,
+                        source = target,
+                        target = next,
+                        previousTarget = target,
+                        rootTarget = rootTarget,
+                        projectile = settings.projectile,
+                        projectileId = settings.projectileId,
+                        endGraphicsId = endGraphicsId,
+                        deathSpreadUsed = deathSpreadUsed,
+                        bouncesLeft =
+                            if (chainMode == ChainMode.SPREAD_ALL) {
+                                0
+                            } else {
+                                bouncesLeft - 1
+                            },
+                        deathSpreadAmount = deathSpreadAmount,
+                        bounceRange = bounceRange,
+                        chainMode = chainMode,
+                        isFirstHit = false,
+                        bounceIndex = bounceIndex + 1,
+                        startTimeOffset = 0,
+                    )
+                }
+            }
 
             val died = hit.damage >= target.hitpoints
 
@@ -345,21 +365,21 @@ fun fireChain(
                 settings.deathSpread &&
                 target !in deathSpreadUsed
             ) {
-
                 deathSpreadUsed += target
 
                 val pickedThisDeathSpread = mutableSetOf<Entity>()
 
-                val deathTargets = context.findChainTargets(
-                    source = target,
-                    rootTarget = rootTarget,
-                    previousTarget = previousTarget,
-                    pickedThisSpread = pickedThisDeathSpread,
-                    bounceRange = bounceRange,
-                    chainMode = chainMode,
-                    maxPicks = deathSpreadAmount,
-                    excludeRoot = false
-                )
+                val deathTargets =
+                    context.findChainTargets(
+                        source = target,
+                        rootTarget = rootTarget,
+                        previousTarget = previousTarget,
+                        pickedThisSpread = pickedThisDeathSpread,
+                        bounceRange = bounceRange,
+                        chainMode = chainMode,
+                        maxPicks = deathSpreadAmount,
+                        excludeRoot = false,
+                    )
 
                 deathTargets.forEach { next ->
                     fireChain(
@@ -369,20 +389,26 @@ fun fireChain(
                         target = next,
                         previousTarget = target,
                         rootTarget = rootTarget,
-                        projectile = useProjectile,
-                        projectileId = useProjectileId,
+                        projectile = settings.projectile,
+                        projectileId = settings.projectileId,
                         endGraphicsId = settings.projectileEnd,
                         deathSpreadUsed = deathSpreadUsed,
-                        bouncesLeft = if (chainMode == ChainMode.SPREAD_ALL) 0 else deathSpreadAmount - 1,
+                        bouncesLeft =
+                            if (chainMode == ChainMode.SPREAD_ALL) {
+                                0
+                            } else {
+                                deathSpreadAmount - 1
+                            },
                         deathSpreadAmount = deathSpreadAmount,
                         bounceRange = bounceRange,
                         chainMode = chainMode,
                         isFirstHit = false,
-                        bounceIndex = bounceIndex + 1
+                        bounceIndex = bounceIndex + 1,
+                        startTimeOffset = 0,
                     )
                 }
             }
-        }
+        },
     )
 }
 
@@ -394,15 +420,13 @@ fun CombatContext.findChainTargets(
     bounceRange: Int,
     chainMode: ChainMode,
     maxPicks: Int,
-    excludeRoot: Boolean
+    excludeRoot: Boolean,
 ): List<Entity> {
-
     val attacker = this.attacker
     val candidates = mutableListOf<Pair<Entity, Int>>()
 
     for (dx in -bounceRange..bounceRange) {
         for (dy in -bounceRange..bounceRange) {
-
             val distSq = dx * dx + dy * dy
             if (distSq > bounceRange * bounceRange) continue
 
@@ -429,7 +453,6 @@ fun CombatContext.findChainTargets(
     if (candidates.isEmpty()) return emptyList()
 
     return when (chainMode) {
-
         ChainMode.NEAREST -> {
             val chosen = candidates.minBy { it.second }.first
             pickedThisSpread += chosen
@@ -443,7 +466,8 @@ fun CombatContext.findChainTargets(
         }
 
         ChainMode.ORDERED -> {
-            candidates.sortedBy { it.second }
+            candidates
+                .sortedBy { it.second }
                 .map { it.first }
                 .filter { pickedThisSpread.add(it) }
                 .take(maxPicks)
@@ -466,23 +490,26 @@ fun CombatContext.findChainTargets(
     }
 }
 
-fun canChainReach(source: Entity, target: Entity, maxDistance: Int): Boolean {
-    if (!source.clipedProjectile(target, false))
+fun canChainReach(
+    source: Entity,
+    target: Entity,
+    maxDistance: Int,
+): Boolean {
+    if (!source.clipedProjectile(target, false)) {
         return false
+    }
 
     val size = source.size
     val dx = target.x - source.x
     val dy = target.y - source.y
 
     return dx <= size + maxDistance &&
-            dx >= -1 - maxDistance &&
-            dy <= size + maxDistance &&
-            dy >= -1 - maxDistance
+        dx >= -1 - maxDistance &&
+        dy <= size + maxDistance &&
+        dy >= -1 - maxDistance
 }
 
-fun CombatContext.getScytheTargets(
-    maxTargets: Int = 3
-): List<Entity> {
+fun CombatContext.getScytheTargets(maxTargets: Int = 3): List<Entity> {
     val attacker = this.attacker
     val target = this.defender
     val possibleTargets = mutableListOf<Entity>()
@@ -492,98 +519,123 @@ fun CombatContext.getScytheTargets(
     val rawDir = attacker.direction
     val dir = (rawDir / 2048) and 0x7
 
-    val arcTiles = when (dir) {
-        0 -> listOf( // South
-            baseTile.transform(0, -1, 0),
-            baseTile.transform(-1, -1, 0),
-            baseTile.transform(1, -1, 0)
-        )
-        1 -> listOf( // South-West
-            baseTile.transform(-1, -1, 0),
-            baseTile.transform(-1, 0, 0),
-            baseTile.transform(0, -1, 0)
-        )
-        2 -> listOf( // West
-            baseTile.transform(-1, 0, 0),
-            baseTile.transform(-1, -1, 0),
-            baseTile.transform(-1, 1, 0)
-        )
-        3 -> listOf( // North-West
-            baseTile.transform(-1, 1, 0),
-            baseTile.transform(-1, 0, 0),
-            baseTile.transform(0, 1, 0)
-        )
-        4 -> listOf( // North
-            baseTile.transform(0, 1, 0),
-            baseTile.transform(-1, 1, 0),
-            baseTile.transform(1, 1, 0)
-        )
-        5 -> listOf( // North-East
-            baseTile.transform(1, 1, 0),
-            baseTile.transform(1, 0, 0),
-            baseTile.transform(0, 1, 0)
-        )
-        6 -> listOf( // East
-            baseTile.transform(1, 0, 0),
-            baseTile.transform(1, -1, 0),
-            baseTile.transform(1, 1, 0)
-        )
-        7 -> listOf( // South-East
-            baseTile.transform(1, -1, 0),
-            baseTile.transform(0, -1, 0),
-            baseTile.transform(1, 0, 0)
-        )
-        else -> emptyList()
-    }
+    val arcTiles =
+        when (dir) {
+            0 -> {
+                listOf( // South
+                    baseTile.transform(0, -1, 0),
+                    baseTile.transform(-1, -1, 0),
+                    baseTile.transform(1, -1, 0),
+                )
+            }
 
+            1 -> {
+                listOf( // South-West
+                    baseTile.transform(-1, -1, 0),
+                    baseTile.transform(-1, 0, 0),
+                    baseTile.transform(0, -1, 0),
+                )
+            }
 
-    //println("[DEBUG] ArcTiles=$arcTiles")
+            2 -> {
+                listOf( // West
+                    baseTile.transform(-1, 0, 0),
+                    baseTile.transform(-1, -1, 0),
+                    baseTile.transform(-1, 1, 0),
+                )
+            }
+
+            3 -> {
+                listOf( // North-West
+                    baseTile.transform(-1, 1, 0),
+                    baseTile.transform(-1, 0, 0),
+                    baseTile.transform(0, 1, 0),
+                )
+            }
+
+            4 -> {
+                listOf( // North
+                    baseTile.transform(0, 1, 0),
+                    baseTile.transform(-1, 1, 0),
+                    baseTile.transform(1, 1, 0),
+                )
+            }
+
+            5 -> {
+                listOf( // North-East
+                    baseTile.transform(1, 1, 0),
+                    baseTile.transform(1, 0, 0),
+                    baseTile.transform(0, 1, 0),
+                )
+            }
+
+            6 -> {
+                listOf( // East
+                    baseTile.transform(1, 0, 0),
+                    baseTile.transform(1, -1, 0),
+                    baseTile.transform(1, 1, 0),
+                )
+            }
+
+            7 -> {
+                listOf( // South-East
+                    baseTile.transform(1, -1, 0),
+                    baseTile.transform(0, -1, 0),
+                    baseTile.transform(1, 0, 0),
+                )
+            }
+
+            else -> {
+                emptyList()
+            }
+        }
+
+    // println("[DEBUG] ArcTiles=$arcTiles")
 
     for (tile in arcTiles) {
         if (possibleTargets.size >= maxTargets) break
 
         val entitiesHere = World.getEntitiesAt(tile)
-        //println("[DEBUG] Checking tile=$tile entities=${entitiesHere.size}")
+        // println("[DEBUG] Checking tile=$tile entities=${entitiesHere.size}")
 
         for (entity in entitiesHere) {
-            //println("[DEBUG] Candidate entity=${entity} at $tile")
+            // println("[DEBUG] Candidate entity=${entity} at $tile")
 
             if (entity == attacker) {
-                //println("[DEBUG] Reject: is attacker")
+                // println("[DEBUG] Reject: is attacker")
                 continue
             }
             if (entity == target) {
-                //println("[DEBUG] Reject: is main target")
+                // println("[DEBUG] Reject: is main target")
                 continue
             }
             if (entity.isDead || entity.hasFinished()) {
-                //println("[DEBUG] Reject: dead/finished")
+                // println("[DEBUG] Reject: dead/finished")
                 continue
             }
             if (!attacker.controlerManager.canHit(entity)) {
-                //println("[DEBUG] Reject: cannot hit")
+                // println("[DEBUG] Reject: cannot hit")
                 continue
             }
             if (!entity.isAtMultiArea && !entity.isForceMultiArea) {
-                //println("[DEBUG] Reject: not in multi area")
+                // println("[DEBUG] Reject: not in multi area")
                 continue
             }
 
-            //println("[DEBUG] ACCEPT entity=${entity}")
+            // println("[DEBUG] ACCEPT entity=${entity}")
             possibleTargets.add(entity)
             if (possibleTargets.size >= maxTargets) break
         }
     }
 
-    //println("[DEBUG] Final targets=${possibleTargets.map { it.toString() }}")
+    // println("[DEBUG] Final targets=${possibleTargets.map { it.toString() }}")
     return possibleTargets
 }
 
 fun CombatContext.getMultiAttackTargets(
     maxDistance: Int,
-    maxTargets: Int
+    maxTargets: Int,
 ): List<Entity> {
-
     val possibleTargets = mutableListOf<Entity>()
     val attacker = this.attacker
     val target = this.defender
@@ -601,7 +653,6 @@ fun CombatContext.getMultiAttackTargets(
         val region = World.getRegion(regionId) ?: continue
 
         when (target) {
-
             is Player -> {
                 val playerIndexes = region.playerIndexes ?: continue
 
@@ -618,12 +669,15 @@ fun CombatContext.getMultiAttackTargets(
                         !p2.isAtMultiArea ||
                         !p2.withinDistance(target, maxDistance) ||
                         !attacker.controlerManager.canHit(p2)
-                    ) continue
+                    ) {
+                        continue
+                    }
 
                     possibleTargets.add(p2)
 
-                    if (possibleTargets.size >= maxTargets)
+                    if (possibleTargets.size >= maxTargets) {
                         break@regionLoop
+                    }
                 }
             }
 
@@ -642,24 +696,30 @@ fun CombatContext.getMultiAttackTargets(
                         !n.withinDistance(target, maxDistance) ||
                         !n.definitions.hasAttackOption() ||
                         !attacker.controlerManager.canHit(n)
-                    ) continue
+                    ) {
+                        continue
+                    }
 
                     possibleTargets.add(n)
 
-                    if (possibleTargets.size >= maxTargets)
+                    if (possibleTargets.size >= maxTargets) {
                         break@regionLoop
+                    }
                 }
             }
 
-            else -> break@regionLoop
+            else -> {
+                break@regionLoop
+            }
         }
     }
 
     return possibleTargets
 }
 
-
-class SpecialHitBuilder(private val context: CombatContext) {
+class SpecialHitBuilder(
+    private val context: CombatContext,
+) {
     private val hits = mutableListOf<PendingHit>()
     private val special = context.weapon.special
     private val effect = context.weapon.effect
@@ -668,7 +728,7 @@ class SpecialHitBuilder(private val context: CombatContext) {
         defender: Entity = context.defender,
         hit: Hit,
         look: Hit.HitLook? = null,
-        delay: Int = 0
+        delay: Int = 0,
     ): Hit {
         val resolvedHitLook = look ?: hit.look
         hit.look = resolvedHitLook
@@ -677,7 +737,9 @@ class SpecialHitBuilder(private val context: CombatContext) {
     }
 
     fun nextHit(
-        baseHit: Hit, scale: Double = 1.0, delay: Int = 0
+        baseHit: Hit,
+        scale: Double = 1.0,
+        delay: Int = 0,
     ): Hit {
         val newHit = Hit(baseHit.source, (baseHit.damage * scale).toInt(), baseHit.look)
         hits += PendingHit(newHit, context.defender, delay)
@@ -692,6 +754,3 @@ fun CombatContext.hits(block: SpecialHitBuilder.() -> Unit) {
     builder.block()
     combat.delayHits(*builder.build().toTypedArray())
 }
-
-
-
