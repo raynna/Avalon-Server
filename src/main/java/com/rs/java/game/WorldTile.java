@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 import com.rs.Settings;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 public class WorldTile implements Serializable {
 

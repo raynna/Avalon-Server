@@ -15,7 +15,6 @@ import com.rs.java.game.player.actions.skills.construction.impl.ConveyorBeltHopp
 import com.rs.java.game.player.actions.skills.construction.impl.CutPlank;
 import com.rs.java.game.player.actions.skills.construction.impl.PlanksTake;
 import com.rs.java.game.player.actions.skills.construction.impl.StackOfLogs;
-import com.rs.java.game.player.actions.skills.woodcutting.LumberjackOutfit;
 import com.rs.java.game.player.controllers.Controller;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.java.utils.Utils;
@@ -438,8 +437,8 @@ public class SawmillController extends Controller {
 	}
 
 	private void refreshConveyorAnimation() {
-		int delayz = LumberjackOutfit.hasAllPieces(player) ? 3 : 5;
-		if (WorldThread.getLastCycleTime() > lastLogAnimation + delayz) {
+		int delay = 5;
+		if (WorldThread.getLastCycleTime() > lastLogAnimation + delay) {
 			lastLogAnimation = WorldThread.getLastCycleTime();
 			World.sendObjectAnimation(player, CONVEYOR_BELT, new Animation(12394));
 			World.sendObjectAnimation(player, CONVEYOR_BELT, new Animation(12395));

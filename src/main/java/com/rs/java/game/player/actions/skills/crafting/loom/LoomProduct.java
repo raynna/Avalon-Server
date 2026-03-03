@@ -1,7 +1,7 @@
 package com.rs.java.game.player.actions.skills.crafting.loom;
 
 import com.rs.java.game.player.actions.skills.crafting.leather.ReqItem;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 public final class LoomProduct {
 

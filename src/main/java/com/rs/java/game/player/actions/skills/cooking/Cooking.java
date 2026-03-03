@@ -11,8 +11,8 @@ import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 public class Cooking extends Action {
 
@@ -455,7 +455,7 @@ public class Cooking extends Action {
 				player.getSkills().addXp(Skills.COOKING, cook.getXp());
 			}
 			if (cook.getRawItem().getId() == 327)
-				player.getTaskManager().checkComplete(Tasks.COOK_SARDINE);
+				player.getTaskManager().progress(Task.COOK_SARDINE);
 		}
 		if (amount > 0) {
 			player.getPackets().sendGameMessage(

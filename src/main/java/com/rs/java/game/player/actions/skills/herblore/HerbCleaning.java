@@ -3,9 +3,9 @@ package com.rs.java.game.player.actions.skills.herblore;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 public class HerbCleaning {
 
@@ -109,7 +109,7 @@ public class HerbCleaning {
 				player.getInventory().refresh(slotId);
 				player.getSkills().addXp(Skills.HERBLORE, herb.getExperience());
 				if (herb.getCleanId() == 261) {
-					player.getTaskManager().checkComplete(Tasks.CLEAN_AVANTOE);
+					player.getTaskManager().progress(Task.CLEAN_AVANTOE);
 				}
 			}
 

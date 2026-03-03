@@ -7,9 +7,9 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.agility.Agility;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 public class GnomeAgility {
 
@@ -170,7 +170,7 @@ public class GnomeAgility {
 					player.animate(new Animation(2924));
 					player.setNextWorldTile(toTile);
 					player.getSkills().addXp(Skills.AGILITY, 605);
-					player.getTaskManager().checkComplete(Tasks.GNOME_AGILITY_ADVANCED);
+					player.getTaskManager().progress(Task.GNOME_AGILITY_ADVANCED);
 					stop();
 				}
 
@@ -340,7 +340,7 @@ public class GnomeAgility {
 					if (getGnomeStage(player) == 5) {
 						removeGnomeStage(player);
 						player.getSkills().addXp(Skills.AGILITY, 39);
-						player.getTaskManager().checkComplete(Tasks.GNOME_AGILITY);
+						player.getTaskManager().progress(Task.GNOME_AGILITY);
 					} else
 						player.getSkills().addXp(Skills.AGILITY, 7.5);
 					stop();

@@ -8,9 +8,9 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.agility.Agility;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 /**
  * 
@@ -311,7 +311,7 @@ public class BarbarianOutpostAgility {
 				else if (stage == 4) {
 					removeStage(player);
 					player.getSkills().addXp(Skills.AGILITY, 46.2);
-					player.getTaskManager().checkComplete(Tasks.BARBARIAN_AGILITY);
+					player.getTaskManager().progress(Task.BARBARIAN_AGILITY);
 				}
 			}
 

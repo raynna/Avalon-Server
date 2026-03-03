@@ -296,7 +296,7 @@ public class CompletionistStand extends Dialogue {
 				player.getPackets().sendGameMessage(player.getSkills().getSkillName(24));
 			}
 		}
-		if (!player.getTaskManager().hasCompletedAllTasks())
+		if (!player.getTaskManager().completedAllTasks())
 			player.message("You must have completed all Tasks.");
 		if (!player.isCompletedFightKiln())
 			player.getPackets().sendGameMessage("You must have completed the Fight kiln.");

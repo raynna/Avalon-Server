@@ -11,9 +11,9 @@ import com.rs.java.game.item.ground.GroundItems
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.worldboss.RandomWorldBossHandler.IDLE_TIMEOUT_MS
 import com.rs.kotlin.game.world.util.Msg
+import com.rs.kotlin.rscm.Rscm
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import kotlin.math.max

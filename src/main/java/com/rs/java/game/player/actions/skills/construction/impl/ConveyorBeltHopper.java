@@ -4,8 +4,8 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.actions.skills.woodcutting.LumberjackOutfit;
 import com.rs.java.game.player.controllers.construction.SawmillController;
+import com.rs.kotlin.game.player.skills.woodcutting.LumberjackOutfit;
 
 public class ConveyorBeltHopper extends Action {
 
@@ -40,16 +40,12 @@ public class ConveyorBeltHopper extends Action {
 	public int processWithDelay(Player player) {
 		player.animate(new Animation(12398));
 		player.getInventory().deleteItem(new Item(1511));
-		if (LumberjackOutfit.addPiece(player)) {
-			return -1;
-		}
 		sawmill.addPlank();
-		setActionDelay(player, LumberjackOutfit.hasAllPieces(player) ? 1 : 3);
 		return amount-- == 1 ? -1 : 1;
 	}
 
 	@Override
 	public void stop(Player player) {
-		setActionDelay(player, LumberjackOutfit.hasAllPieces(player) ? 1 : 3);
+		setActionDelay(player, 3);
 	}
 }

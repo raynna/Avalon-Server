@@ -1,13 +1,13 @@
 package com.rs.kotlin.game.npc.drops.rare
 
 import com.rs.java.game.player.Player
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.Drop
 import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.DropEntry
 import com.rs.kotlin.game.npc.drops.DropSource
 import com.rs.kotlin.game.npc.drops.weighted.ItemWeightedEntry
 import com.rs.kotlin.game.npc.drops.weighted.WeightedTable
+import com.rs.kotlin.rscm.Rscm
 
 class MegaRareTableEntry : DropEntry(-1, 1..1) {
     private val table = WeightedTable()

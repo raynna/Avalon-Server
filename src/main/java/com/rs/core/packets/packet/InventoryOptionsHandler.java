@@ -59,7 +59,6 @@ import com.rs.java.game.player.actions.skills.prayer.Burying.Bone;
 import com.rs.java.game.player.actions.skills.runecrafting.Talisman;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.actions.skills.summoning.Summoning.Pouch;
-import com.rs.java.game.player.actions.skills.woodcutting.BirdNest;
 import com.rs.java.game.player.content.AncientEffigies;
 import com.rs.java.game.player.content.ArmourSets;
 import com.rs.java.game.player.content.ArmourSets.Sets;
@@ -91,6 +90,7 @@ import com.rs.java.utils.HexColours.Colour;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.worldboss.RandomWorldBossHandler;
+import com.rs.kotlin.game.player.skills.woodcutting.BirdNests;
 import com.rs.kotlin.game.world.activity.BarrowsAreaKt;
 
 public class InventoryOptionsHandler {
@@ -170,7 +170,7 @@ public class InventoryOptionsHandler {
             return;
         if (Pots.pot(player, item, slotId))
             return;
-        if (BirdNest.searchNest(player, itemId, slotId))
+        if (BirdNests.searchNest(player, item, slotId))
             return;
         if (itemId == 13663) {
             int amount = player.getInventory().getAmountOf(itemId);

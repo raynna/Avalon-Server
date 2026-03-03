@@ -37,6 +37,9 @@ enum class Projectile {
     SPREAD_ALL_SLOW,
     CHAIN_ARROW,
 
+    // SPECIAL
+    INFERNO_ADZE,
+
     // NPCS
     DRAGONFIRE,
     CHAOS_ELEMENTAL,

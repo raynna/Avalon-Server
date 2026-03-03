@@ -4,7 +4,7 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 public enum AncientPrayer implements Prayer {
 

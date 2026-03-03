@@ -3,13 +3,13 @@ package com.rs.kotlin.game.npc.drops.tables.minigame
 import com.rs.java.game.minigames.warriorguild.WarriorsGuild
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.config.GemTableConfig
 import com.rs.kotlin.game.npc.drops.config.HerbTableConfig
 import com.rs.kotlin.game.npc.drops.config.SeedTableConfig
 import com.rs.kotlin.game.npc.drops.dropTable
 import com.rs.kotlin.game.npc.drops.seed.SeedTableType
+import com.rs.kotlin.rscm.Rscm
 
 object CyclopsDropTable {
     private val DEFENDER_TIERS =

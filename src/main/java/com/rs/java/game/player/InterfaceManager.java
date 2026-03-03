@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.rs.Settings;
 import com.rs.java.game.player.content.clans.ClansManager;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 public class InterfaceManager {
 

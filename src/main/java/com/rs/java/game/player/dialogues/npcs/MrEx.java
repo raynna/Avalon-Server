@@ -3,9 +3,8 @@ package com.rs.java.game.player.dialogues.npcs;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.java.game.Keys;
-import com.rs.java.game.player.VariableKeys;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.game.player.dialogues.Dialogue;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 public class MrEx extends Dialogue {
 
@@ -85,7 +84,7 @@ public class MrEx extends Dialogue {
 			} else {
 				stageName = "FirstTimeStage5";
 				player.set(Keys.BooleanKey.TALKED_TO_MR_EX, true);
-				player.getTaskManager().checkComplete(Tasks.CLAIM_WILDSTALKER_HELMET);
+				player.getTaskManager().progress(Task.CLAIM_WILDSTALKER_HELMET);
 				player.getInventory().addItem(20801, 1);
 				sendEntityDialogue(SEND_ITEM_DIALOGUE, new String[] { ItemDefinitions.getItemDefinitions(20801).name,
 						"Mr Ex gives you an armoured helmet." }, IS_ITEM, 20801, -1);

@@ -1,7 +1,7 @@
 package com.rs.java.game.player.teleportation;
 
 import com.rs.java.game.WorldTile;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 //TODO: Add Guild teleports page & options
 public class Teleports {

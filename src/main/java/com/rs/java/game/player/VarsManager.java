@@ -2,7 +2,7 @@ package com.rs.java.game.player;
 
 import com.rs.core.cache.Cache;
 import com.rs.core.cache.defintions.VarBitDefinitions;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 public class VarsManager {
 

@@ -6,21 +6,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.ObjectDefinitions;
 import com.rs.java.game.Animation;
+import com.rs.java.game.WorldObject;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
 import com.rs.java.game.player.actions.WaterFilling;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.HatchetDefinitions;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.TreeDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.skills.woodcutting.AxeDefinition;
+import com.rs.kotlin.game.player.skills.woodcutting.TreeDefinition;
+import com.rs.kotlin.game.player.skills.woodcutting.Woodcutting;
 
 public class FarmingManager implements Serializable {
 
@@ -459,7 +460,7 @@ public class FarmingManager implements Serializable {
                                 if (spot.reachedMaxStage() && !spot.hasChecked())
                                     checkHealth(spot);
                                 else if (spot.reachedMaxStage() && !spot.isEmpty())
-                                    collectTreeProducts(spot, TreeDefinitions.valueOf(spot.productInfo.name().toUpperCase()));
+                                    collectTreeProducts(spot, TreeDefinition.valueOf(spot.productInfo.name().toUpperCase()));
                                 else if (spot.reachedMaxStage() && spot.isEmpty())
                                     startHarvestingAction(spot);
                                 else if (spot.isDead())
@@ -472,7 +473,7 @@ public class FarmingManager implements Serializable {
                                 else if (spot.reachedMaxStage() && !spot.hasEmptyHarvestAmount())
                                     startPickingAction(spot);
                                 else if (spot.reachedMaxStage() && !spot.isEmpty())
-                                    collectTreeProducts(spot, TreeDefinitions.FRUIT_TREES);
+                                    collectTreeProducts(spot, TreeDefinition.FRUIT_TREES);
                                 else if (spot.reachedMaxStage() && spot.isEmpty() || spot.isDead())
                                     clearFarmingPatch(spot);
                                 else if (spot.isDiseased())
@@ -922,100 +923,27 @@ public class FarmingManager implements Serializable {
         return true;
     }
 
-    private void collectTreeProducts(final FarmingSpot spot, final TreeDefinitions definitions) {
-        player.getActionManager().setAction(new Action() {
+    private void collectTreeProducts(final FarmingSpot spot, final TreeDefinition definition) {
 
-            private HatchetDefinitions hatchet;
+        if (spot == null || spot.isEmpty() || spot.isRegenerating())
+            return;
 
-            @Override
-            public boolean start(Player player) {
-                if (!checkAll(player))
-                    return false;
-                player.getPackets().sendGameMessage("You swing your hatchet at the tree...", true);
-                setActionDelay(player, getWoodcuttingDelay(player));
-                return true;
-            }
+        WorldObject tree = new WorldObject(
+                spot.spotInfo.objectId,
+                10,
+                0,
+                player.getX(),
+                player.getY(),
+                player.getPlane()
+        );
 
-            private int getWoodcuttingDelay(Player player) {
-                int summoningBonus = player.getFamiliar() != null ? (player.getFamiliar().getId() == 6808 || player.getFamiliar().getId() == 6807) ? 10 : 0 : 0;
-                int wcTimer = definitions.getLogBaseTime() - (player.getSkills().getLevel(8) + summoningBonus) - Utils.random(hatchet.getAxeTime());
-                if (wcTimer < 1 + definitions.getLogRandomTime())
-                    wcTimer = 1 + Utils.random(definitions.getLogRandomTime());
-                wcTimer /= player.getAuraManager().getWoodcuttingAccurayMultiplier();
-                return wcTimer;
-            }
-
-            private boolean checkAll(Player player) {
-                for (HatchetDefinitions def : HatchetDefinitions.values()) {
-                    if (player.getInventory().containsItemToolBelt(def.getItemId()) || player.getEquipment().getWeaponId() == def.getItemId()) {
-                        hatchet = def;
-                        if (player.getSkills().getLevel(Skills.WOODCUTTING) < hatchet.getLevelRequried()) {
-                            hatchet = null;
-                            break;
-                        }
-                    }
-                }
-                if (hatchet == null) {
-                    player.getPackets().sendGameMessage("You dont have the required level to use that axe or you don't have a hatchet.");
-                    return false;
-                }
-                if (!hasWoodcuttingLevel(player))
-                    return false;
-                if (!player.getInventory().hasFreeSlots()) {
-                    player.getPackets().sendGameMessage("Not enough space in your inventory.");
-                    return false;
-                }
-                return true;
-            }
-
-            private boolean hasWoodcuttingLevel(Player player) {
-                if (definitions.getLevel() > player.getSkills().getLevel(8)) {
-                    player.getPackets().sendGameMessage("You need a woodcutting level of " + definitions.getLevel() + " to chop down this tree.");
-                    return false;
-                }
-                return true;
-            }
-
-            @Override
-            public boolean process(Player player) {
-                player.animate(new Animation(hatchet.getEmoteId()));
-                return checkTree(player);
-            }
-
-            private boolean usedDeplateAurora;
-
-            @Override
-            public int processWithDelay(Player player) {
-                if (!usedDeplateAurora && (1 + Math.random()) < player.getAuraManager().getChanceNotDepleteMN_WC()) {
-                    usedDeplateAurora = true;
-                } else if (Utils.random(definitions.getRandomLifeProbability()) == 0) {
-                    int time = definitions.getRespawnDelay();
-                    spot.setEmpty(true);
-                    spot.refresh();
-                    // Convert seconds to ticks for regeneration
-                    int respawnTicks = (time * 100) / 60;
-                    // Trees should use multiplier
-                    spot.setRegenerationTick(spot.scale(respawnTicks, true));
-                    player.animate(new Animation(-1));
-                    return -1;
-                }
-                if (!player.getInventory().hasFreeSlots()) {
-                    player.animate(new Animation(-1));
-                    player.getPackets().sendGameMessage("Not enough space in your inventory.");
-                    return -1;
-                }
-                return getWoodcuttingDelay(player);
-            }
-
-            private boolean checkTree(Player player) {
-                return spot != null && !spot.isEmpty() && !spot.isRegenerating();
-            }
-
-            @Override
-            public void stop(Player player) {
-                setActionDelay(player, 3);
-            }
-        });
+        player.getActionManager().setAction(
+                new Woodcutting(
+                        player,
+                        tree,
+                        definition
+                )
+        );
     }
 
     private void fillCompostBin(final FarmingSpot spot, final Item item) {

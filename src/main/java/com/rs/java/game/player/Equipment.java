@@ -8,7 +8,7 @@ import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.item.meta.MetaDataType;
 import com.rs.java.game.player.actions.skills.firemaking.Bonfire;
 import com.rs.java.utils.ItemExamines;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 public final class Equipment implements Serializable {
 

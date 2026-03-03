@@ -1,6 +1,6 @@
 package com.rs.kotlin.game.player.shop
 
-import com.rs.kotlin.Rscm
+import com.rs.kotlin.rscm.Rscm
 
 class ShopDsl {
     data class ShopItem(
@@ -26,24 +26,26 @@ class ShopDsl {
             title = dsl.title,
             currency = dsl.currency,
             items = dsl.items,
-            isGlobal = dsl.isGlobal
+            isGlobal = dsl.isGlobal,
         )
     }
 
     /** Utility: resolve either an itemId directly or an item.name */
-    private fun resolveItemId(input: Any): Int {
-        return when (input) {
+    private fun resolveItemId(input: Any): Int =
+        when (input) {
             is Int -> input
-            is String -> Rscm.lookup(input) // e.g. "item.abyssal_whip"
+
+            is String -> Rscm.lookup(input)
+
+            // e.g. "item.abyssal_whip"
             else -> throw IllegalArgumentException("Unsupported item reference: $input")
         }
-    }
 
     fun generalStoreItem(
         itemRef: Any,
         baseStock: Int,
         restockRate: Int = 1,
-        price: Int? = null
+        price: Int? = null,
     ) {
         val itemId = resolveItemId(itemRef)
         items.add(
@@ -54,25 +56,35 @@ class ShopDsl {
                 maxStock = baseStock * 2, // optional cap
                 restockRate = restockRate,
                 price = price,
-                unlimitedStock = false
-            )
+                unlimitedStock = false,
+            ),
         )
     }
 
-
-    fun item(itemRef: Any, currentStock: Int = 1, price: Int? = null) {
+    fun item(
+        itemRef: Any,
+        currentStock: Int = 1,
+        price: Int? = null,
+    ) {
         val itemId = resolveItemId(itemRef)
         items.add(
             ShopItem(
                 itemId = itemId,
                 currentStock = currentStock,
                 maxStock = currentStock,
-                price = price
-            )
+                price = price,
+            ),
         )
     }
 
-    fun item(itemRef: Any, currentStock: Int = 1, maxStock: Int = -1, restockRate: Int = 1, price: Int? = null, unlimitedStock: Boolean? = true) {
+    fun item(
+        itemRef: Any,
+        currentStock: Int = 1,
+        maxStock: Int = -1,
+        restockRate: Int = 1,
+        price: Int? = null,
+        unlimitedStock: Boolean? = true,
+    ) {
         val itemId = resolveItemId(itemRef)
         items.add(
             ShopItem(
@@ -81,12 +93,18 @@ class ShopDsl {
                 maxStock = maxStock,
                 restockRate = restockRate,
                 price = price,
-                unlimitedStock = unlimitedStock
-            )
+                unlimitedStock = unlimitedStock,
+            ),
         )
     }
 
-    fun item(itemRef: Any, currentStock: Int = 1, maxStock: Int = -1, restockRate: Int = 1, price: Int? = null) {
+    fun item(
+        itemRef: Any,
+        currentStock: Int = 1,
+        maxStock: Int = -1,
+        restockRate: Int = 1,
+        price: Int? = null,
+    ) {
         val itemId = resolveItemId(itemRef)
         items.add(
             ShopItem(
@@ -94,8 +112,8 @@ class ShopDsl {
                 currentStock = currentStock,
                 maxStock = maxStock,
                 restockRate = restockRate,
-                price = price
-            )
+                price = price,
+            ),
         )
     }
 
@@ -108,8 +126,8 @@ class ShopDsl {
                     currentStock = 1,
                     maxStock = -1,
                     restockRate = 1,
-                    price = null
-                )
+                    price = null,
+                ),
             )
         }
     }

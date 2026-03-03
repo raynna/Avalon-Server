@@ -2,6 +2,7 @@ package com.rs.java.game.player.dialogues.npcs;
 
 import com.rs.Settings;
 import com.rs.java.game.player.dialogues.Dialogue;
+import com.rs.kotlin.game.player.tasksystem.Difficulty;
 
 /**
  *
@@ -47,7 +48,7 @@ public class ExplorerJack extends Dialogue {
 				stage = 1;
 				break;
 			case OPTION_3:
-				if (player.getTaskManager().hasCompletedTasks("easy")) {
+				if (player.getTaskManager().completedAll(Difficulty.EASY)) {
 					player.getTaskManager().claimRewards();
 					sendNPCDialogue(npc, Happy, "Here you go! They are well deserved.");
 				} else {

@@ -1,8 +1,8 @@
 package com.rs.kotlin.game.npc.drops
 
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.weighted.PackageWeightedEntry
 import com.rs.kotlin.game.npc.drops.weighted.WeightedEntry
+import com.rs.kotlin.rscm.Rscm
 
 class PackageBuilder {
     internal val displayDrops = mutableListOf<PackageDisplayDrop>()

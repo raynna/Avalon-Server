@@ -10,11 +10,10 @@ import com.rs.java.game.World;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.HatchetDefinitions;
 import com.rs.java.game.player.content.dungeoneering.rooms.PuzzleRoom;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.player.skills.woodcutting.AxeDefinition;
 
 public class FlowerRootsRoom extends PuzzleRoom {
 
@@ -130,7 +129,7 @@ public class FlowerRootsRoom extends PuzzleRoom {
 							player.getPackets().sendGameMessage("You need a woodcutting level of " + getRequirement(Skills.WOODCUTTING) + " to chop down this plant.");
 							return false;
 						}
-						HatchetDefinitions defs = Woodcutting.getHatchet(player);
+						AxeDefinition defs = AxeDefinition.Companion.getBestAxe(player);
 						if (defs == null) {
 							player.getPackets().sendGameMessage("You do not have a hatchet or do not have the required level to use the hatchet.");
 							return false;
@@ -140,7 +139,7 @@ public class FlowerRootsRoom extends PuzzleRoom {
 							return false;
 						}
 						plants[coords[0]][coords[1]].locked = true;
-						player.animate(new Animation(defs.getEmoteId()));
+						player.animate(new Animation(defs.getAnimation()));
 						player.lock(4);
 						for (Player team : manager.getParty().getTeam()) {
 							team.getPackets().sendObjectAnimation(object, new Animation(SMALL_FLOWER_DESPAWN));

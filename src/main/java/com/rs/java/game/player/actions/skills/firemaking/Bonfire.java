@@ -12,10 +12,10 @@ import com.rs.java.game.npc.others.FireSpirit;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 public class Bonfire extends Action {
 
@@ -117,11 +117,11 @@ public class Bonfire extends Action {
 		player.gfx(new Graphics(log.gfxId));
 		player.getPackets().sendGameMessage("You add a log to the fire.", true);
 		if (log == Log.MAPLE)
-			player.getTaskManager().checkComplete(Tasks.LIGHT_MAPLE_LOG);
+			player.getTaskManager().progress(Task.LIGHT_MAPLE_LOG);
 		if (log == Log.YEWS)
-			player.getTaskManager().checkComplete(Tasks.LIGHT_YEW_LOGS);
+			player.getTaskManager().progress(Task.LIGHT_YEW_LOGS);
 		if (log == Log.MAGIC)
-			player.getTaskManager().checkComplete(Tasks.LIGHT_MAGIC_LOG);
+			player.getTaskManager().progress(Task.LIGHT_MAGIC_LOG);
 		if (count++ == 4 && player.getLastBonfire() == 0) {
 			player.setLastBonfire(log.boostTime * 100);
 			int percentage = (int) (getBonfireBoostMultiplier(player) * 100 - 100);

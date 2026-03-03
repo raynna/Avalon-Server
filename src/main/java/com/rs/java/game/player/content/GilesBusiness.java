@@ -16,7 +16,7 @@ public class GilesBusiness {
 
 	private static int getPrices(Player player, int itemId) {
 		ItemDefinitions defs = ItemDefinitions.getItemDefinitions(itemId);
-		return (player.getTaskManager().hasCompletedAllTasks()
+		return (player.getTaskManager().completedAllTasks()
 				? defs.getTipitPrice() * player.getInventory().getFreeSlots() - 50000
 				: defs.getTipitPrice() * player.getInventory().getFreeSlots() + 50000);
 	}
@@ -44,9 +44,9 @@ public class GilesBusiness {
 			if (item.isNoted()) {
 				if (player.hasMoney(getPrices(player, itemId))) {
 					player.getPackets().sendFilteredGameMessage(true,
-							player.getTaskManager().hasCompletedAllTasks()
+							player.getTaskManager().completedAllTasks()
 									? "Giles lets you pay " + (Utils.getFormattedNumber(getPrices(player, itemId), ','))
-											+ " GP, since you completed all Rains' tasks."
+											+ " GP, since you completed all Avalon's tasks."
 									: "Giles smiles while he unnotes " + player.getInventory().getFreeSlots() + " "
 											+ item.getName());
 					player.getMoneyPouch().removeMoneyMisc(getPrices(player, itemId));

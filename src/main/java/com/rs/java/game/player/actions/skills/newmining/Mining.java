@@ -11,8 +11,8 @@ import com.rs.java.game.player.actions.Action;
 import com.rs.java.game.player.actions.skills.newmining.GoldenMiningOutfit.Pieces;
 import com.rs.java.game.player.actions.skills.newmining.Ores.OreStore;
 import com.rs.java.game.player.actions.skills.newmining.Pickaxes.PickaxeStore;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 public class Mining extends Action {
 
@@ -287,15 +287,15 @@ public class Mining extends Action {
 			}
 		}
 		totalXp *= getMiningBoost(player);
-		player.getSkills().addSkillingXp(Skills.MINING, totalXp, getMiningBoost(player));
+		player.getSkills().addXp(Skills.MINING, totalXp);
 		if (realOre.oreId == 438 || realOre.oreId == 436)
-			player.getTaskManager().checkComplete(Tasks.MINE_COPPER_AND_TIN);
+			player.getTaskManager().progress(Task.MINE_COPPER_AND_TIN);
 		if (realOre.oreId == 447)
-			player.getTaskManager().checkComplete(Tasks.MINE_MITHRIL_ORE);
+			player.getTaskManager().progress(Task.MINE_MITHRIL_ORE);
 		if (realOre.oreId == 449)
-			player.getTaskManager().checkComplete(Tasks.MINE_ADAMANT_ORE);
+			player.getTaskManager().progress(Task.MINE_ADAMANT_ORE);
 		if (realOre.oreId == 451)
-			player.getTaskManager().checkComplete(Tasks.MINE_RUNITE_ORE);
+			player.getTaskManager().progress(Task.MINE_RUNITE_ORE);
 	}
 
 	@Override

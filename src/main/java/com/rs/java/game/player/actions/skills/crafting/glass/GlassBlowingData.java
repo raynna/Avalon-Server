@@ -1,6 +1,6 @@
 package com.rs.java.game.player.actions.skills.crafting.glass;
 
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 import com.rs.java.game.player.actions.skills.crafting.leather.ReqItem;
 
 public enum GlassBlowingData {

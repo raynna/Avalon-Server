@@ -15,7 +15,7 @@ import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.TickManager;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.world.activity.pvpgame.tournament.TournamentRules;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 

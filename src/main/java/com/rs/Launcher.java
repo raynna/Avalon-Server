@@ -22,7 +22,8 @@ import com.rs.java.game.npc.NpcPluginLoader;
 import com.rs.java.game.npc.combat.CombatScriptsHandler;
 import com.rs.java.game.player.content.collectionlog.CollectionLog;
 import com.rs.json.JsonNpcCombatDefinitions;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
+import com.rs.kotlin.rscm.RscmGenerator;
 import com.rs.kotlin.game.data.npc.JsonNpcSpawns;
 import com.rs.kotlin.game.npc.worldboss.RandomWorldBossHandler;
 import com.rs.kotlin.game.npc.drops.DropTablesSetup;
@@ -153,6 +154,7 @@ public final class Launcher {
 		RandomWorldBossHandler.start();
 		TournamentScheduler.INSTANCE.start();
 		FriendChatsManager.init();
+		//RscmGenerator.INSTANCE.generateGroupedItemRscm();
     }
 
 	private static void addCleanMemoryTask() {

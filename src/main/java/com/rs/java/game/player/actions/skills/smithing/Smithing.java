@@ -9,8 +9,8 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 /**
  * 
@@ -192,13 +192,13 @@ public class Smithing extends Action {
 				ForgingInterface.getForgedAmount(bar.getItems()[index].getId()));
 		player.getSkills().addXp(Skills.SMITHING, getExperience(player));
 		if (bar.getItems()[index].getId() == 1117)
-				player.getTaskManager().checkComplete(Tasks.SMITH_BRONZE_PLATEBODY);
+				player.getTaskManager().progress(Task.SMITH_BRONZE_PLATEBODY);
 		if (bar.getItems()[index].getId() == 1329)
-				player.getTaskManager().checkComplete(Tasks.SMITH_MITHRIL_SCIMITAR);
+				player.getTaskManager().progress(Task.SMITH_MITHRIL_SCIMITAR);
 		if (bar.getItems()[index].getId() == 1287)
-				player.getTaskManager().checkComplete(Tasks.SMITH_ADAMANT_SWORD);
+				player.getTaskManager().progress(Task.SMITH_ADAMANT_SWORD);
 		if (bar.getItems()[index].getId() == 1123)
-				player.getTaskManager().checkComplete(Tasks.SMITH_ADAMANT_PLATEBODY);
+				player.getTaskManager().progress(Task.SMITH_ADAMANT_PLATEBODY);
 		if (ticks > 0) {
 			return 3;
 		}

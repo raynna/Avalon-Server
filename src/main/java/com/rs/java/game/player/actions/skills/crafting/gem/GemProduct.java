@@ -1,6 +1,6 @@
 package com.rs.java.game.player.actions.skills.crafting.gem;
 
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 public final class GemProduct {
 

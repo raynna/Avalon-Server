@@ -1,8 +1,9 @@
 package com.rs.kotlin.game.npc.drops
 
 import com.rs.core.cache.defintions.NPCDefinitions
-import com.rs.kotlin.Rscm
+import com.rs.java.game.player.Player
 import com.rs.kotlin.game.npc.TableCategory
+import com.rs.kotlin.rscm.Rscm
 
 object DropTableRegistry {
     private val npcDropTables = mutableMapOf<Int, DropTable>()
@@ -20,6 +21,18 @@ object DropTableRegistry {
             addAll(itemDropTables.values)
             addAll(objectDropTables.values)
         }
+
+    @JvmStatic
+    fun rollItemTable(
+        player: Player,
+        itemId: Int,
+        multiplier: Double = 1.0,
+    ): List<Drop> {
+        val source = getSourceForItem(itemId) ?: return emptyList()
+        val table = getTableForSource(source) ?: return emptyList()
+
+        return table.rollDrops(player, 0, multiplier)
+    }
 
     @JvmStatic
     fun registerObjectTable(

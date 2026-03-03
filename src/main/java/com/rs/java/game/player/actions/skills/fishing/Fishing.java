@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.rs.java.game.Animation;
-import com.rs.java.game.World;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ground.GroundItems;
@@ -14,8 +13,8 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
 import com.rs.java.game.player.actions.skills.fishing.FishingOutfit.Pieces;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 /**
  * 
@@ -295,15 +294,15 @@ public class Fishing extends Action {
 				GroundItems.updateGroundItem(fish, player.getLocation(), player);
 			totalXp *= 2;
 		}
-		player.getSkills().addSkillingXp(Skills.FISHING, totalXp, multiplier);
+		player.getSkills().addXp(Skills.FISHING, totalXp);
         int rngEvent = Utils.getRandom(6000);
         if (rngEvent == 0) {
         	CombatEventNPC.startRandomEvent(player, Skills.FISHING);
         }
 		if (fish.getId() == 317)
-			player.getTaskManager().checkComplete(Tasks.FISH_SHRIMP);
+			player.getTaskManager().progress(Task.FISH_SHRIMP);
 		if (fish.getId() == 383)
-			player.getTaskManager().checkComplete(Tasks.FISH_SHARK);
+			player.getTaskManager().progress(Task.FISH_SHARK);
 		if (player.getFamiliar() != null) {
 			if (Utils.getRandom(50) == 0 && getSpecialFamiliarBonus(player.getFamiliar().getId()) > 0) {
 				player.getInventory().addItem(new Item(BONUS_FISH[Utils.random(BONUS_FISH.length)]));

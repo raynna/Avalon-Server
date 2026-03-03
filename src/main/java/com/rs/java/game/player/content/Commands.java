@@ -993,7 +993,7 @@ public final class Commands {
                 player.getSkills().set(skillId, level);
                 player.getSkills().setXp(skillId, Skills.getXPForLevel(level));
             } else {
-                player.getSkills().addXpNoBonus(skillId, Skills.getXPForLevel(level) - player.getSkills().getXp(skillId));
+                player.getSkills().addXp(skillId, Skills.getXPForLevel(level) - player.getSkills().getXp(skillId));
             }
 
             player.getAppearance().generateAppearenceData();

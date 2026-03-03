@@ -9,14 +9,12 @@ import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.content.Skulls.checkSkulls
 import com.rs.java.game.player.controllers.WildernessController
 import com.rs.java.utils.HexColours
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.world.util.Msg
+import com.rs.kotlin.rscm.Rscm
 import java.util.*
 import kotlin.math.abs
 
-
 object PvpManager {
-
     private const val INTERFACE_ID = 3043
     private const val COMP_LEVEL_RANGE = 3
     private const val COMP_EP = 4
@@ -35,17 +33,21 @@ object PvpManager {
     private val wasInRawSafe = WeakHashMap<Player, Boolean>()
 
     private fun now() = System.currentTimeMillis()
+
     private fun isRawSafe(p: Player) = SafeZoneService.isAtSafezone(p)
+
     private fun hasGrace(p: Player) = now() < (safeGraceUntil[p] ?: 0L)
+
     private fun isEffectivelySafeForSelf(p: Player): Boolean = isRawSafe(p) && !hasGrace(p)
 
     @JvmStatic
-    fun isInDangerous(player: Player): Boolean {
-        return !isEffectivelySafeForSelf(player)
-    }
+    fun isInDangerous(player: Player): Boolean = !isEffectivelySafeForSelf(player)
 
     @JvmStatic
-    fun onPlayerDamagedByPlayer(victim: Player, attacker: Player) {
+    fun onPlayerDamagedByPlayer(
+        victim: Player,
+        attacker: Player,
+    ) {
         val t = now()
         lastPvpHitAt[victim] = t
         if (!attacker.skullList.containsKey(victim)) {
@@ -61,9 +63,13 @@ object PvpManager {
     }
 
     @JvmStatic
-    fun onDeath(deadPlayer: Player, killer: Player) {
-        if (deadPlayer == killer)
-            return;
+    fun onDeath(
+        deadPlayer: Player,
+        killer: Player,
+    ) {
+        if (deadPlayer == killer) {
+            return
+        }
         lastPvpHitAt.remove(deadPlayer)
         lastPvpHitAt.remove(killer)
         safeGraceUntil.remove(deadPlayer)
@@ -79,7 +85,7 @@ object PvpManager {
 
             val price = item.definitions.tipitPrice
             when {
-                price in 1_000_000 .. 9_999_999 -> Msg.world(Msg.RED, "${killer.displayName} has received ${item.name} from a PvP kill!")
+                price in 1_000_000..9_999_999 -> Msg.world(Msg.RED, "${killer.displayName} has received ${item.name} from a PvP kill!")
                 price >= 10_000_000 -> Msg.world(Msg.PURPLE, "${killer.displayName} has received ${item.name} from a PvP kill!")
             }
         }
@@ -98,9 +104,7 @@ object PvpManager {
         }
     }
 
-    private fun inPvpGame(player: Player): Boolean {
-        return player.inTournament()
-    }
+    private fun inPvpGame(player: Player): Boolean = player.inTournament()
 
     @JvmStatic
     fun onLogin(player: Player) {
@@ -151,7 +155,10 @@ object PvpManager {
     }
 
     @JvmStatic
-    fun canPlayerAttack(attacker: Player, target: Entity): Boolean {
+    fun canPlayerAttack(
+        attacker: Player,
+        target: Entity,
+    ): Boolean {
         if (!enabled) return false
         if (target is NPC) return true
         if (target !is Player) return true
@@ -169,7 +176,7 @@ object PvpManager {
         return true
     }
 
-    private const val EP_IDLE_TICK_CHANCE = 0.003   // 1% chance per tick just for being in danger
+    private const val EP_IDLE_TICK_CHANCE = 0.003 // 1% chance per tick just for being in danger
     private const val EP_COMBAT_TICK_CHANCE = 0.02 // 5% chance per combat tick
     private const val EP_GAIN_MIN = 1
     private const val EP_GAIN_MAX = 3
@@ -191,16 +198,17 @@ object PvpManager {
         }
     }
 
-    private fun isAttacking(player: Player): Boolean {
-        return player.tickManager.isActive(TickManager.TickKeys.LAST_ATTACK_TICK)
-    }
+    private fun isAttacking(player: Player): Boolean = player.tickManager.isActive(TickManager.TickKeys.LAST_ATTACK_TICK)
 
     private fun isInCombat(player: Player): Boolean {
         val lastHit = lastPvpHitAt[player] ?: return false
         return now() - lastHit <= RECENT_HIT_WINDOW_MS
     }
 
-    private fun increaseEp(player: Player, amount: Int) {
+    private fun increaseEp(
+        player: Player,
+        amount: Int,
+    ) {
         val oldEp = player.ep
         val newEp = (oldEp + amount).coerceAtMost(EP_MAX)
         if (newEp > oldEp) {
@@ -209,7 +217,10 @@ object PvpManager {
         }
     }
 
-    private fun canFightAcrossSafezones(a: Player, b: Player): Boolean { // NEW
+    private fun canFightAcrossSafezones(
+        a: Player,
+        b: Player,
+    ): Boolean { // NEW
         val aInSafe = isRawSafe(a)
         val bInSafe = isRawSafe(b)
         if (!(aInSafe || bInSafe)) return true
@@ -219,7 +230,10 @@ object PvpManager {
         return aGrace || bGrace
     }
 
-    fun canHit(attacker: Player, target: Entity): Boolean {
+    fun canHit(
+        attacker: Player,
+        target: Entity,
+    ): Boolean {
         if (target !is Player) return true
         val diff = abs(attacker.skills.combatLevel - target.skills.combatLevel)
         return diff <= levelRange
@@ -229,8 +243,10 @@ object PvpManager {
         checkSkulls(player, player.isAtPvP)
     }
 
-
-    private fun sendPvpInterface(player: Player, safeForSelf: Boolean) {
+    private fun sendPvpInterface(
+        player: Player,
+        safeForSelf: Boolean,
+    ) {
         ensureInterfaceOpen(player)
 
         if (hasGrace(player) && isRawSafe(player)) {
@@ -240,36 +256,40 @@ object PvpManager {
             player.packets.sendIComponentSprite(INTERFACE_ID, COMP_SPRITE, SPRITE_DANGER)
             player.packets.sendTextOnComponent(INTERFACE_ID, COMP_LEVEL_RANGE, text)
             player.packets.sendTextOnComponent(INTERFACE_ID, COMP_EP, "")
-
         } else {
             val levelRangeText = buildLevelRangeText(player)
             player.packets.sendTextOnComponent(INTERFACE_ID, COMP_LEVEL_RANGE, levelRangeText)
 
             val ep = player.ep
-            val colour = when {
-                ep >= 70 -> HexColours.Colour.GREEN.hex
-                ep in 25..69 -> HexColours.Colour.YELLOW.hex
-                else -> HexColours.Colour.RED.hex
-            }
-            player.packets.sendTextOnComponent(INTERFACE_ID, COMP_EP, "EP: $colour${ep}%")
+            val colour =
+                when {
+                    ep >= 70 -> HexColours.Colour.GREEN.hex
+                    ep in 25..69 -> HexColours.Colour.YELLOW.hex
+                    else -> HexColours.Colour.RED.hex
+                }
+            player.packets.sendTextOnComponent(INTERFACE_ID, COMP_EP, "EP: $colour$ep%")
         }
 
         player.packets.sendSpriteOnIComponent(
             INTERFACE_ID,
             COMP_SPRITE,
-            if (safeForSelf && !hasGrace(player) && isRawSafe(player) ) SPRITE_SAFE else SPRITE_DANGER
+            if (safeForSelf && !hasGrace(player) && isRawSafe(player)) SPRITE_SAFE else SPRITE_DANGER,
         )
 
         showKDRInter(player)
     }
-
 
     private fun showKDRInter(player: Player) {
         if (player.toggles("KDRINTER", false)) {
             val kills = player.playerKillcount
             val deaths = player.deathCount
             val ratioText = if (deaths == 0) kills.toString() else String.format("%.2f", kills.toDouble() / deaths)
-            if (!player.interfaceManager.containsInterface("interface.kdr_interface")) player.interfaceManager.sendTab("tab.kdr_tab", "interface.kdr_interface")
+            if (!player.interfaceManager.containsInterface(
+                    "interface.kdr_interface",
+                )
+            ) {
+                player.interfaceManager.sendTab("tab.kdr_tab", "interface.kdr_interface")
+            }
             player.packets.sendTextOnComponent("interface.kdr_interface", 2, "Kills: $kills")
             player.packets.sendTextOnComponent("interface.kdr_interface", 3, "Deaths: $deaths")
             player.packets.sendTextOnComponent("interface.kdr_interface", 4, "Ratio: $ratioText")
@@ -294,8 +314,9 @@ object PvpManager {
 
     private fun ensureInterfaceOpen(player: Player) {
         val tabId = if (player.interfaceManager.isResizableScreen) Rscm.lookup("tab.pvp_tab_resizeable") else Rscm.lookup("tab.pvp_tab")
-        if (!player.interfaceManager.containsInterface(INTERFACE_ID))
+        if (!player.interfaceManager.containsInterface(INTERFACE_ID)) {
             player.interfaceManager.sendTab(tabId, INTERFACE_ID)
+        }
     }
 
     private fun closeInterface(player: Player) {
@@ -316,7 +337,10 @@ object PvpManager {
         }
     }
 
-    private fun refreshAttackOption(player: Player, canAttackHere: Boolean) {
+    private fun refreshAttackOption(
+        player: Player,
+        canAttackHere: Boolean,
+    ) {
         player.packets.sendPlayerOption(if (canAttackHere) "Attack" else "null", 1, false)
     }
 }

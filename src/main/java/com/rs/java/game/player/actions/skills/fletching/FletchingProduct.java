@@ -1,6 +1,6 @@
 package com.rs.java.game.player.actions.skills.fletching;
 
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 public class FletchingProduct {
     private final Object productId;

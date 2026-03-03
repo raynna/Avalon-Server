@@ -2,7 +2,7 @@ package com.rs.java.game.player.actions.skills.fletching;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.item.Item;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 import java.util.HashMap;
 import java.util.Map;

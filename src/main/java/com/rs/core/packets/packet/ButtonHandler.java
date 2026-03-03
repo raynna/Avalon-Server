@@ -59,7 +59,7 @@ import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.java.utils.ItemExamines;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 import com.rs.kotlin.game.player.combat.special.SpecialAttack;
 import com.rs.kotlin.game.player.equipment.BonusType;

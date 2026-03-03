@@ -2,7 +2,7 @@ package com.rs.java.game.player.prayer;
 
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 public enum NormalPrayer implements Prayer {
         THICK_SKIN(0, 1, 1, 1, "Thick Skin") {

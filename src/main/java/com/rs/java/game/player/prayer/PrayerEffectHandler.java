@@ -8,7 +8,7 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.game.player.Skills;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.world.projectile.Projectile;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 

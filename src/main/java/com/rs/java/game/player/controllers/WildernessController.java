@@ -13,7 +13,7 @@ import com.rs.java.game.player.content.Pots;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
 import com.rs.kotlin.game.world.pvp.PvpManager;

@@ -4,10 +4,10 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.HatchetDefinitions;
 import com.rs.java.game.player.content.CarrierTravel.Carrier;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.player.skills.woodcutting.AxeDefinition;
 
 /*
  * Credits goes to Matrix 3
@@ -22,7 +22,7 @@ public class Canoes {
 	public static boolean chopCanoeTree(Player player, final int configIndex) {
 		player.getActionManager().setAction(new Action() {
 
-			private HatchetDefinitions hatchet;
+			private AxeDefinition hatchet;
 			private boolean isComplete;
 
 			@Override
@@ -33,18 +33,18 @@ public class Canoes {
 			}
 
 			private boolean checkAll(Player player) {
-				for (HatchetDefinitions def : HatchetDefinitions.values()) {
+				for (AxeDefinition def : AxeDefinition.getEntries()) {
 					if (player.getInventory().containsItemToolBelt(def.getItemId())
 							|| player.getEquipment().getWeaponId() == def.getItemId()) {
 						hatchet = def;
-						if (player.getSkills().getLevel(Skills.WOODCUTTING) < hatchet.getLevelRequried()) {
+						if (player.getSkills().getLevel(Skills.WOODCUTTING) < hatchet.getLevelRequired()) {
 							hatchet = null;
 							break;
 						}
 					}
 				}
 				if (hatchet == null) {
-					hatchet = HatchetDefinitions.BRONZE;
+					hatchet = AxeDefinition.BRONZE;
 					player.getPackets()
 							.sendGameMessage("A nearby overseer hands you a bronze hatchet to temporarily use.");
 				}
@@ -58,7 +58,7 @@ public class Canoes {
 
 			@Override
 			public boolean process(Player player) {
-				player.animate(new Animation(hatchet.getEmoteId()));
+				player.animate(new Animation(hatchet.getAnimation()));
 				return !isComplete;
 			}
 
@@ -96,19 +96,19 @@ public class Canoes {
 	public static void createShapedCanoe(final Player player) {
 		final int selectedCanoe = (int) player.getTemporaryAttributtes().get("selected_canoe");
 		player.closeInterfaces();
-		HatchetDefinitions hatchet = null;
-		for (HatchetDefinitions def : HatchetDefinitions.values()) {
+		AxeDefinition hatchet = null;
+		for (AxeDefinition def : AxeDefinition.getEntries()) {
 			if (player.getInventory().containsItemToolBelt(def.getItemId())
 					|| player.getEquipment().getWeaponId() == def.getItemId()) {
 				hatchet = def;
-				if (player.getSkills().getLevel(Skills.WOODCUTTING) < hatchet.getLevelRequried()) {
+				if (player.getSkills().getLevel(Skills.WOODCUTTING) < hatchet.getLevelRequired()) {
 					hatchet = null;
 					break;
 				}
 			}
 		}
 		if (hatchet == null)
-			hatchet = HatchetDefinitions.BRONZE;
+			hatchet = AxeDefinition.BRONZE;
 		player.animate(new Animation(hatchet.ordinal() + 11594));
 		player.lock();
 		WorldTasksManager.schedule(new WorldTask() {

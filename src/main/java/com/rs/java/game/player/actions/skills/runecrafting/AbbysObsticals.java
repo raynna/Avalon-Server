@@ -11,11 +11,11 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.mining.MiningBase;
 import com.rs.java.game.player.actions.skills.mining.MiningBase.PickAxeDefinitions;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.HatchetDefinitions;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.skills.woodcutting.AxeDefinition;
+import com.rs.kotlin.game.player.skills.woodcutting.Woodcutting;
 
 public class AbbysObsticals {
 
@@ -76,7 +76,7 @@ public class AbbysObsticals {
 
 	public static void clearTendrills(final Player player,
 			final WorldObject object, final WorldTile tile) {
-		final HatchetDefinitions defintions = Woodcutting.getHatchet(player);
+		final AxeDefinition defintions = AxeDefinition.Companion.getBestAxe(player);
 		if (defintions == null) {
 			player.getPackets()
 					.sendGameMessage(
@@ -94,7 +94,7 @@ public class AbbysObsticals {
 					player.faceObject(object);
 				else if (ticks == 2) {
 					player.animate(new Animation(defintions
-							.getEmoteId()));
+							.getAnimation()));
 				} else if (ticks == 3) {
 					if (!isSuccessFul(player, Skills.WOODCUTTING)) {
 						player.unlock();

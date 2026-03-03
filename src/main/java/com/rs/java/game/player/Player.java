@@ -50,7 +50,10 @@ import com.rs.java.game.player.prayer.*;
 import com.rs.java.game.player.Ranks.Rank;
 import com.rs.java.game.player.queue.PlayerActionQueue;
 import com.rs.java.utils.*;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.player.skills.mining.GoldenMiningOutfit;
+import com.rs.kotlin.game.player.skills.woodcutting.LumberjackOutfit;
+import com.rs.kotlin.game.player.tasksystem.TaskManager;
+import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.npc.KillCountContainer;
 import com.rs.kotlin.game.player.AccountCreation;
 import com.rs.java.game.player.actions.skills.construction.House;
@@ -71,14 +74,12 @@ import com.rs.java.game.player.content.presets.PresetManager;
 import com.rs.java.game.player.content.quest.QuestList.Quests;
 import com.rs.java.game.player.content.quest.QuestManager;
 import com.rs.java.game.player.content.randomevent.AntiBot;
-import com.rs.java.game.player.content.tasksystem.TaskManager;
 import com.rs.java.game.player.content.treasuretrails.TreasureTrailsManager;
 import com.rs.java.game.player.content.unlockables.UnlockableItems;
 import com.rs.java.game.player.controllers.Controller;
 import com.rs.java.game.player.controllers.CorpBeastController;
 import com.rs.java.game.player.controllers.CrucibleController;
 import com.rs.java.game.player.controllers.DTController;
-import com.rs.java.game.player.controllers.EdgevillePvPController;
 import com.rs.java.game.player.controllers.FightCaves;
 import com.rs.java.game.player.controllers.FightKiln;
 import com.rs.java.game.player.controllers.GodWars;
@@ -2088,18 +2089,77 @@ public class Player extends Entity {
         return points;
     }
 
+    private double getLevelScalingMultiplier(int skill) {
+        int level = getSkills().getLevelForXp(skill);
+
+        double min = Settings.SKILLING_XP_RATE;   // Level 1
+        double max = 10.0;  // Level 99
+
+        return min + ((level - 1) / 98.0) * (max - min);
+    }
+
     public double getBonusExp() {
-        double exp = 1.0;
+        double multiplier = 1.0;
         for (Rank rank : getPlayerRank().getRank()) {
             if (rank == null)
                 continue;
-            exp += (rank.getXpBoost() - 1.0);
+            multiplier += (rank.getXpBoost() - 1.0);
         }
+
         if (isMember())
-            exp += 0.50;
+            multiplier += 0.50;
+
         if (getAuraManager().usingWisdom())
-            exp += 0.25;
-        return exp;
+            multiplier += 0.25;
+        if (Settings.BONUS_EXP_WEEK_MULTIPLIER > 1.0)
+            multiplier += Settings.BONUS_EXP_WEEK_MULTIPLIER;
+        return multiplier;
+    }
+
+    public double getXpMultiplier(int skill) {
+        double multiplier = 1.0;
+
+        multiplier *= getLevelScalingMultiplier(skill);
+
+        // Rank boosts
+        for (Rank rank : getPlayerRank().getRank()) {
+            if (rank != null)
+                multiplier += (rank.getXpBoost() - 1.0);
+        }
+
+        if (isMember())
+            multiplier += 0.50;
+
+        if (getAuraManager().usingWisdom())
+            multiplier += 0.25;
+
+        return multiplier;
+    }
+
+    double getBonusMultiplier(int skill) {
+
+        double multiplier = 1.0;
+
+        // Bonus XP week
+        if (Settings.BONUS_EXP_WEEK_MULTIPLIER > 1.0)
+            multiplier *= Settings.BONUS_EXP_WEEK_MULTIPLIER;
+
+        // Outfit bonus
+        double outfitBonus = getSkillOutfitBoost(skill);
+        multiplier *= (1.0 + outfitBonus);
+
+        return multiplier;
+    }
+
+    private double getSkillOutfitBoost(int skill) {
+        switch (skill) {
+            case Skills.WOODCUTTING:
+                return LumberjackOutfit.INSTANCE.xpBonus(this);
+            case Skills.MINING:
+                return GoldenMiningOutfit.INSTANCE.xpBonus(this);
+            default:
+                return 0.0;
+        }
     }
 
     public void sendFriendsOnline() {
@@ -2253,13 +2313,13 @@ public class Player extends Entity {
     }
 
     public boolean hasCompletionistRequirements() {
-        if (getSkills().getLevelForXp(Skills.ATTACK) >= 99 && getSkills().getLevelForXp(Skills.STRENGTH) >= 99 && getSkills().getLevelForXp(Skills.DEFENCE) >= 99 && getSkills().getLevelForXp(Skills.HITPOINTS) >= 99 && getSkills().getLevelForXp(Skills.RANGE) >= 99 && getSkills().getLevelForXp(Skills.MAGIC) >= 99 && getSkills().getLevelForXp(Skills.RUNECRAFTING) >= 99 && getSkills().getLevelForXp(Skills.FISHING) >= 99 && getSkills().getLevelForXp(Skills.AGILITY) >= 99 && getSkills().getLevelForXp(Skills.COOKING) >= 99 && getSkills().getLevelForXp(Skills.PRAYER) >= 99 && getSkills().getLevelForXp(Skills.THIEVING) >= 99 && getSkills().getLevelForXp(Skills.MINING) >= 99 && getSkills().getLevelForXp(Skills.SMITHING) >= 99 && getSkills().getLevelForXp(Skills.SUMMONING) >= 99 && getSkills().getLevelForXp(Skills.SLAYER) >= 99 && getSkills().getLevelForXp(Skills.CRAFTING) >= 99 && getSkills().getLevelForXp(Skills.WOODCUTTING) >= 99 && getSkills().getLevelForXp(Skills.FIREMAKING) >= 99 && getSkills().getLevelForXp(Skills.FLETCHING) >= 99 && getSkills().getLevelForXp(Skills.HERBLORE) >= 99 && getSkills().getLevelForXp(Skills.DUNGEONEERING) >= 120 && isCompletedFightKiln() && isCompletedFightCaves() && getTaskManager().hasCompletedAllTasks())
+        if (getSkills().getLevelForXp(Skills.ATTACK) >= 99 && getSkills().getLevelForXp(Skills.STRENGTH) >= 99 && getSkills().getLevelForXp(Skills.DEFENCE) >= 99 && getSkills().getLevelForXp(Skills.HITPOINTS) >= 99 && getSkills().getLevelForXp(Skills.RANGE) >= 99 && getSkills().getLevelForXp(Skills.MAGIC) >= 99 && getSkills().getLevelForXp(Skills.RUNECRAFTING) >= 99 && getSkills().getLevelForXp(Skills.FISHING) >= 99 && getSkills().getLevelForXp(Skills.AGILITY) >= 99 && getSkills().getLevelForXp(Skills.COOKING) >= 99 && getSkills().getLevelForXp(Skills.PRAYER) >= 99 && getSkills().getLevelForXp(Skills.THIEVING) >= 99 && getSkills().getLevelForXp(Skills.MINING) >= 99 && getSkills().getLevelForXp(Skills.SMITHING) >= 99 && getSkills().getLevelForXp(Skills.SUMMONING) >= 99 && getSkills().getLevelForXp(Skills.SLAYER) >= 99 && getSkills().getLevelForXp(Skills.CRAFTING) >= 99 && getSkills().getLevelForXp(Skills.WOODCUTTING) >= 99 && getSkills().getLevelForXp(Skills.FIREMAKING) >= 99 && getSkills().getLevelForXp(Skills.FLETCHING) >= 99 && getSkills().getLevelForXp(Skills.HERBLORE) >= 99 && getSkills().getLevelForXp(Skills.DUNGEONEERING) >= 120 && isCompletedFightKiln() && isCompletedFightCaves() && getTaskManager().completedAllTasks())
             return true;
         return false;
     }
 
     public boolean hasTrimCompReqs() {
-        if (getSkills().getLevelForXp(Skills.ATTACK) >= 99 && getSkills().getLevelForXp(Skills.STRENGTH) >= 99 && getSkills().getLevelForXp(Skills.DEFENCE) >= 99 && getSkills().getLevelForXp(Skills.HITPOINTS) >= 99 && getSkills().getLevelForXp(Skills.RANGE) >= 99 && getSkills().getLevelForXp(Skills.MAGIC) >= 99 && getSkills().getLevelForXp(Skills.RUNECRAFTING) >= 99 && getSkills().getLevelForXp(Skills.FISHING) >= 99 && getSkills().getLevelForXp(Skills.AGILITY) >= 99 && getSkills().getLevelForXp(Skills.COOKING) >= 99 && getSkills().getLevelForXp(Skills.PRAYER) >= 99 && getSkills().getLevelForXp(Skills.THIEVING) >= 99 && getSkills().getLevelForXp(Skills.MINING) >= 99 && getSkills().getLevelForXp(Skills.SMITHING) >= 99 && getSkills().getLevelForXp(Skills.SUMMONING) >= 99 && getSkills().getLevelForXp(Skills.SLAYER) >= 99 && getSkills().getLevelForXp(Skills.CRAFTING) >= 99 && getSkills().getLevelForXp(Skills.WOODCUTTING) >= 99 && getSkills().getLevelForXp(Skills.FIREMAKING) >= 99 && getSkills().getLevelForXp(Skills.FLETCHING) >= 99 && getSkills().getLevelForXp(Skills.HERBLORE) >= 99 && getSkills().getLevelForXp(Skills.DUNGEONEERING) >= 120 && isCompletedFightKiln() && isCompletedFightCaves() && getSlayerManager().getCompletedTasks() >= 50 && getTaskManager().hasCompletedAllTasks())
+        if (getSkills().getLevelForXp(Skills.ATTACK) >= 99 && getSkills().getLevelForXp(Skills.STRENGTH) >= 99 && getSkills().getLevelForXp(Skills.DEFENCE) >= 99 && getSkills().getLevelForXp(Skills.HITPOINTS) >= 99 && getSkills().getLevelForXp(Skills.RANGE) >= 99 && getSkills().getLevelForXp(Skills.MAGIC) >= 99 && getSkills().getLevelForXp(Skills.RUNECRAFTING) >= 99 && getSkills().getLevelForXp(Skills.FISHING) >= 99 && getSkills().getLevelForXp(Skills.AGILITY) >= 99 && getSkills().getLevelForXp(Skills.COOKING) >= 99 && getSkills().getLevelForXp(Skills.PRAYER) >= 99 && getSkills().getLevelForXp(Skills.THIEVING) >= 99 && getSkills().getLevelForXp(Skills.MINING) >= 99 && getSkills().getLevelForXp(Skills.SMITHING) >= 99 && getSkills().getLevelForXp(Skills.SUMMONING) >= 99 && getSkills().getLevelForXp(Skills.SLAYER) >= 99 && getSkills().getLevelForXp(Skills.CRAFTING) >= 99 && getSkills().getLevelForXp(Skills.WOODCUTTING) >= 99 && getSkills().getLevelForXp(Skills.FIREMAKING) >= 99 && getSkills().getLevelForXp(Skills.FLETCHING) >= 99 && getSkills().getLevelForXp(Skills.HERBLORE) >= 99 && getSkills().getLevelForXp(Skills.DUNGEONEERING) >= 120 && isCompletedFightKiln() && isCompletedFightCaves() && getSlayerManager().getCompletedTasks() >= 50 && getTaskManager().completedAllTasks())
             return true;
         return false;
     }

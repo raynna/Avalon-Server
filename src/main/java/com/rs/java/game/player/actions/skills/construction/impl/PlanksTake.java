@@ -4,7 +4,6 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.actions.skills.woodcutting.LumberjackOutfit;
 import com.rs.java.game.player.controllers.construction.SawmillController;
 
 public class PlanksTake extends Action {
@@ -38,7 +37,6 @@ public class PlanksTake extends Action {
 	@Override
 	public int processWithDelay(Player player) {
 		player.animate(new Animation(8908));
-		LumberjackOutfit.addPiece(player);
 		player.getInventory().addItem(new Item(960));
 		sawmill.removePlank();
 		return amount-- == 1 ? -1 : 1;
@@ -46,6 +44,6 @@ public class PlanksTake extends Action {
 
 	@Override
 	public void stop(Player player) {
-		setActionDelay(player, LumberjackOutfit.hasAllPieces(player) ? 1 : 3);
+		setActionDelay(player, 3);
 	}
 }

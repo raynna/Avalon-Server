@@ -9,8 +9,8 @@ import com.rs.java.game.*
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.CombatUtils
+import com.rs.kotlin.rscm.Rscm
 import kotlin.math.max
 
 object ProjectileManager {
@@ -172,7 +172,7 @@ object ProjectileManager {
                     onLanded.run()
                 }
             },
-            impactTicks,
+            impactTicks - 1,
         )
     }
 

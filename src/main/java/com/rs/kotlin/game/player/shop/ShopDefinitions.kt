@@ -21,34 +21,43 @@ class ShopDefinition(
     val currency: CurrencyType,
     val items: MutableList<ShopDsl.ShopItem>,
     val isGlobal: Boolean = true,
-    val isGeneralStore: Boolean = false
-
+    val isGeneralStore: Boolean = false,
 ) {
-
-    fun getBuyPrice(itemId: Int, shopItem: ShopDsl.ShopItem?): Int {
-        return when {
-            isGeneralStore ->
+    fun getBuyPrice(
+        itemId: Int,
+        shopItem: ShopDsl.ShopItem?,
+    ): Int =
+        when {
+            isGeneralStore -> {
                 ItemDefinitions.getItemDefinitions(itemId).price
+            }
 
-            shopItem?.price != null ->
+            shopItem?.price != null -> {
                 shopItem.price
+            }
 
-            else ->
+            else -> {
                 EconomyPrices.getPrice(itemId)
+            }
         }
-    }
 
-    fun getSellPrice(itemId: Int, shopItem: ShopDsl.ShopItem?): Int {
-        return when {
-            isGeneralStore ->
-                ItemDefinitions.getItemDefinitions(itemId).price
+    fun getSellPrice(
+        itemId: Int,
+        shopItem: ShopDsl.ShopItem?,
+    ): Int =
+        when {
+            isGeneralStore -> {
+                (ItemDefinitions.getItemDefinitions(itemId).lowAlchPrice)
+            }
 
-            shopItem?.price != null -> (shopItem.price * 0.66).toInt()
+            shopItem?.price != null -> {
+                (shopItem.price * 0.66).toInt()
+            }
 
-            else ->
+            else -> {
                 (EconomyPrices.getPrice(itemId) * 0.66).toInt()
+            }
         }
-    }
 
     fun removeIfDepleted(item: ShopDsl.ShopItem): Boolean {
         if (isGeneralStore && item.baseStock == 0 && item.currentStock <= 0) {
@@ -58,18 +67,25 @@ class ShopDefinition(
         return false
     }
 
-    fun increaseStock(itemId: Int, amount: Int) {
+    fun increaseStock(
+        itemId: Int,
+        amount: Int,
+    ) {
         val item = items.find { it.itemId == itemId } ?: return
 
         if (item.unlimitedStock == true) return
 
-        item.currentStock = when {
-            item.maxStock == -1 -> item.currentStock + amount
-            else -> minOf(item.maxStock, item.currentStock + amount)
-        }
+        item.currentStock =
+            when {
+                item.maxStock == -1 -> item.currentStock + amount
+                else -> minOf(item.maxStock, item.currentStock + amount)
+            }
     }
 
-    fun addGeneralStoreItem(itemId: Int, amount: Int) {
+    fun addGeneralStoreItem(
+        itemId: Int,
+        amount: Int,
+    ) {
         val existing = items.find { it.itemId == itemId }
         if (existing != null) {
             increaseStock(itemId, amount)
@@ -84,8 +100,8 @@ class ShopDefinition(
                 restockRate = 1,
                 price = null,
                 unlimitedStock = false,
-                baseStock = 0
-            )
+                baseStock = 0,
+            ),
         )
     }
 
@@ -95,10 +111,11 @@ class ShopDefinition(
         for (item in items.toList()) {
             when {
                 item.currentStock < item.baseStock -> {
-                    item.currentStock = minOf(
-                        item.baseStock,
-                        item.currentStock + item.restockRate
-                    )
+                    item.currentStock =
+                        minOf(
+                            item.baseStock,
+                            item.currentStock + item.restockRate,
+                        )
                 }
 
                 isGeneralStore && item.currentStock > item.baseStock -> {

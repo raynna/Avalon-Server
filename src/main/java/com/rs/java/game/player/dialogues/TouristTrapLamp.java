@@ -15,19 +15,19 @@ public class TouristTrapLamp extends Dialogue {
 			if (componentId == OPTION_1) {
 				end();
 				player.getInventory().deleteItem(2528, 1);
-				player.getSkills().addXpNoBonus(Skills.AGILITY, 4350);
+				player.getSkills().addXp(Skills.AGILITY, 4350, false);
 			} else if (componentId == OPTION_2) {
 				end();
 				player.getInventory().deleteItem(2528, 1);
-				player.getSkills().addXpNoBonus(Skills.FLETCHING, 4350);
+				player.getSkills().addXp(Skills.FLETCHING, 4350, false);
 			} else if (componentId == OPTION_3) {
 				end();
 				player.getInventory().deleteItem(2528, 1);
-				player.getSkills().addXpNoBonus(Skills.THIEVING, 4350);
+				player.getSkills().addXp(Skills.THIEVING, 4350, false);
 			} else if (componentId == OPTION_4) {
 				end();
 				player.getInventory().deleteItem(2528, 1);
-				player.getSkills().addXpNoBonus(Skills.SMITHING, 4350);
+				player.getSkills().addXp(Skills.SMITHING, 4350, false);
 			}
 		}
 

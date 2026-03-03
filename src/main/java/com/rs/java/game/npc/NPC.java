@@ -27,7 +27,8 @@ import com.rs.java.game.npc.combat.NpcCombatCalculations;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.TickManager;
 import com.rs.json.JsonNpcCombatDefinitions;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.game.player.tasksystem.Task;
+import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.npc.combatdata.*;
 import com.rs.kotlin.game.npc.drops.DropSource;
 import com.rs.kotlin.game.npc.drops.DropTable;
@@ -40,7 +41,6 @@ import com.rs.java.game.player.actions.skills.herblore.HerbCleaning;
 import com.rs.java.game.player.actions.skills.prayer.Burying;
 import com.rs.java.game.player.actions.skills.slayer.SlayerManager;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.game.player.controllers.DungeonController;
 import com.rs.java.game.player.controllers.WildernessController;
 import com.rs.java.game.route.RouteFinder;
@@ -725,7 +725,7 @@ public class NPC extends Entity implements Serializable {
             manager.checkCompletedTask(getDamageReceived(killer), 0);
         killer.getKillcount().increment(getId());
         if (getId() == 1615) {
-            killer.getTaskManager().checkComplete(Tasks.KILL_ABYSSAL_DEMON);
+            killer.getTaskManager().progress(Task.KILL_ABYSSAL_DEMON);
         }
         if (killer.isAtWild() && killer.getControlerManager().getControler() instanceof WildernessController)
             addAvalonPoints(killer, this, true);

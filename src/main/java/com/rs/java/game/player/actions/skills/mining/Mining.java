@@ -9,8 +9,8 @@ import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.npc.CombatEventNPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 public class Mining extends MiningBase {
 
@@ -213,13 +213,13 @@ public class Mining extends MiningBase {
 				player.getSkills().addXp(Skills.MINING, totalXp);
 			}
 			if (definitions.getOreId() == 436 || definitions.getOreId() == 438)
-				player.getTaskManager().checkComplete(Tasks.MINE_COPPER_AND_TIN);
+				player.getTaskManager().progress(Task.MINE_COPPER_AND_TIN);
 			if (definitions.getOreId() == 447)
-				player.getTaskManager().checkComplete(Tasks.MINE_MITHRIL_ORE);
+				player.getTaskManager().progress(Task.MINE_MITHRIL_ORE);
 			if (definitions.getOreId() == 449)
-				player.getTaskManager().checkComplete(Tasks.MINE_ADAMANT_ORE);
+				player.getTaskManager().progress(Task.MINE_ADAMANT_ORE);
 			if (definitions.getOreId() == 451)
-				player.getTaskManager().checkComplete(Tasks.MINE_RUNITE_ORE);
+				player.getTaskManager().progress(Task.MINE_RUNITE_ORE);
 		}
 	}
 

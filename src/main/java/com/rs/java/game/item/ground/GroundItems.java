@@ -13,6 +13,9 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.content.ItemConstants;
 import com.rs.java.utils.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Consolidated GroundItems handler (merged from World + previous GroundItems).
  *
@@ -582,5 +585,80 @@ public final class GroundItems {
                 && !player.hasFinished()
                 && player.getPlane() == item.getTile().getPlane()
                 && player.withinDistance(item.getTile(), 64);
+    }
+
+    public static void dropItemNearRandom(Item item, WorldTile center, Player owner, int radius) {
+
+        WorldTile tile = findRandomFreeTileNear(center, radius);
+
+        if (tile == null) {
+            tile = center;
+        }
+
+        updateGroundItem(item, tile, owner);
+    }
+
+    public static void dropItemNear(Item item, WorldTile center, Player owner, int radius) {
+
+        WorldTile tile = findFreeTileNear(center, radius);
+
+        if (tile == null) {
+            tile = center;
+        }
+
+        updateGroundItem(item, tile, owner);
+    }
+
+    public static WorldTile findRandomFreeTileNear(WorldTile center, int radius) {
+
+        int plane = center.getPlane();
+        int baseX = center.getX();
+        int baseY = center.getY();
+
+        List<WorldTile> validTiles = new ArrayList<>();
+
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = -radius; dy <= radius; dy++) {
+
+                int x = baseX + dx;
+                int y = baseY + dy;
+
+                if (World.isTileFree(plane, x, y, 1)) {
+                    validTiles.add(new WorldTile(x, y, plane));
+                }
+            }
+        }
+
+        if (validTiles.isEmpty()) {
+            return null;
+        }
+
+        return validTiles.get(Utils.random(validTiles.size()));
+    }
+
+    public static WorldTile findFreeTileNear(WorldTile center, int radius) {
+
+        int plane = center.getPlane();
+        int baseX = center.getX();
+        int baseY = center.getY();
+
+        if (World.isTileFree(plane, baseX, baseY, 1)) {
+            return center;
+        }
+
+        for (int r = 1; r <= radius; r++) {
+            for (int dx = -r; dx <= r; dx++) {
+                for (int dy = -r; dy <= r; dy++) {
+
+                    int x = baseX + dx;
+                    int y = baseY + dy;
+
+                    if (World.isTileFree(plane, x, y, 1)) {
+                        return new WorldTile(x, y, plane);
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

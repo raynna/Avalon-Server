@@ -3,8 +3,8 @@ package com.rs.kotlin.game.player.combat.magic
 import com.rs.java.game.Graphics
 import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Player
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.world.projectile.Projectile
+import com.rs.kotlin.rscm.Rscm
 
 abstract class Spellbook(
     val id: Int,

@@ -1,7 +1,7 @@
 package com.rs.kotlin.game.npc.drops
 
 import com.rs.java.game.player.Player
-import com.rs.kotlin.Rscm
+import com.rs.kotlin.rscm.Rscm
 import kotlin.random.Random
 
 class SummoningCharms(

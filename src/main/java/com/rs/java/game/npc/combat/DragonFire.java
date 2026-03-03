@@ -10,7 +10,6 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
 import kotlin.Pair;
 
 

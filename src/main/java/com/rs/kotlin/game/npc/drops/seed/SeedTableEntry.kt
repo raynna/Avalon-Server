@@ -1,13 +1,13 @@
 package com.rs.kotlin.game.npc.drops.seed
 
 import com.rs.java.game.player.Player
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.drops.Drop
 import com.rs.kotlin.game.npc.drops.DropContext
 import com.rs.kotlin.game.npc.drops.DropEntry
 import com.rs.kotlin.game.npc.drops.DropSource
 import com.rs.kotlin.game.npc.drops.weighted.ItemWeightedEntry
 import com.rs.kotlin.game.npc.drops.weighted.WeightedTable
+import com.rs.kotlin.rscm.Rscm
 import java.util.concurrent.ThreadLocalRandom
 
 class SeedTableEntry : DropEntry(-1, 1..1) {

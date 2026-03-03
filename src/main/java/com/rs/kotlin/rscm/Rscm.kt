@@ -1,10 +1,15 @@
-@file:Suppress("ktlint:standard:no-wildcard-imports")
-
-package com.rs.kotlin
+package com.rs.kotlin.rscm
 
 import com.rs.java.game.WorldTile
 import java.nio.file.Path
-import kotlin.io.path.*
+import kotlin.collections.iterator
+import kotlin.io.path.ExperimentalPathApi
+import kotlin.io.path.Path
+import kotlin.io.path.extension
+import kotlin.io.path.nameWithoutExtension
+import kotlin.io.path.readLines
+import kotlin.io.path.walk
+import kotlin.text.get
 
 object Rscm {
     fun item(name: String) = lookup(name)
@@ -40,6 +45,7 @@ object Rscm {
     private lateinit var mappings: Map<String, Map<String, RscmEntry>>
     private lateinit var reverseItemMappings: Map<Int, String>
     private lateinit var reverseNpcMappings: Map<Int, String>
+    private lateinit var reverseObjectMappings: Map<Int, String>
 
     @JvmStatic
     @OptIn(ExperimentalPathApi::class)
@@ -57,6 +63,26 @@ object Rscm {
             }
         this.reverseItemMappings = buildReverseItemMappings()
         this.reverseNpcMappings = buildReverseNpcMappings()
+        this.reverseObjectMappings = buildReverseObjectMappings()
+    }
+
+    fun resolve(ref: String): List<Int> {
+        val parts = ref.split('.')
+        require(parts.size == 2) {
+            "[Rscm] Invalid reference format: '$ref'. Use 'type.name'"
+        }
+
+        val (type, name) = parts
+
+        val entry =
+            mappings[type]?.get(name)
+                ?: error("[Rscm] Mapping '$name' not found in $type")
+
+        return when (entry) {
+            is RscmEntry.Id -> listOf(entry.value)
+            is RscmEntry.IdList -> entry.values
+            else -> error("[Rscm] Mapping '$name' in $type is not ID-based")
+        }
     }
 
     private fun buildReverseItemMappings(): Map<Int, String> {
@@ -82,6 +108,33 @@ object Rscm {
         }
         return reverseItemMap
     }
+
+    private fun buildReverseObjectMappings(): Map<Int, String> {
+        val reverse = mutableMapOf<Int, String>()
+
+        for ((type, entries) in mappings) {
+            if (type != "object" && type != "object_group") continue
+
+            for ((name, entry) in entries) {
+                when (entry) {
+                    is RscmEntry.Id -> {
+                        reverse[entry.value] = "$type.$name"
+                    }
+
+                    is RscmEntry.IdList -> {
+                        entry.values.forEach {
+                            reverse[it] = "$type.$name"
+                        }
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+        return reverse
+    }
+
+    fun reverseObjectLookup(id: Int): String? = reverseObjectMappings[id]
 
     private fun buildReverseNpcMappings(): Map<Int, String> {
         val reverseNpcMap = mutableMapOf<Int, String>()

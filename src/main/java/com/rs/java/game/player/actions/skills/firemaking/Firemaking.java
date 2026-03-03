@@ -15,12 +15,12 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
 import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.game.player.controllers.DungeonController;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.packet.InventoryOptionsHandler;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 /**
  * 
@@ -249,11 +249,11 @@ public class Firemaking extends Action {
 				player.getSkills().addXp(Skills.FIREMAKING, increasedExperience(player, fire.getExperience()));
 				player.setNextFaceWorldTile(tile);
 				if (fire == Fire.MAPLE)
-					player.getTaskManager().checkComplete(Tasks.LIGHT_MAPLE_LOG);
+					player.getTaskManager().progress(Task.LIGHT_MAPLE_LOG);
 				if (fire == Fire.YEW)
-					player.getTaskManager().checkComplete(Tasks.LIGHT_YEW_LOGS);
+					player.getTaskManager().progress(Task.LIGHT_YEW_LOGS);
 				if (fire == Fire.MAGIC)
-					player.getTaskManager().checkComplete(Tasks.LIGHT_MAGIC_LOG);
+					player.getTaskManager().progress(Task.LIGHT_MAGIC_LOG);
 			}
 		}, 1);
 		player.temporaryAttribute().put("Fire", Utils.currentTimeMillis() + 1800);

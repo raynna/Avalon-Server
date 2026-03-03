@@ -13,12 +13,12 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.CombatHitRoll
 import com.rs.kotlin.game.player.combat.effects.AncientGodswordEffect
 import com.rs.kotlin.game.player.combat.special.*
 import com.rs.kotlin.game.world.projectile.Projectile
+import com.rs.kotlin.rscm.Rscm
 
 object StandardMelee : MeleeData() {
     fun getDefaultWeapon(): MeleeWeapon = UNARMED
@@ -128,7 +128,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 25,
-                        accuracyMultiplier = 1.75,
                         execute = { context ->
                             context.attacker.animate("animation.vestas_longsword_special")
                             context.attacker.playSound("sound.dragon_longsword_special", 1)
@@ -245,7 +244,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 50,
-                        accuracyMultiplier = 1.25,
                         execute = { context ->
                             // TODO USING WHIP AS A TEST WEAPON ATM
                             context.attacker.animate("animation.abyssal_whip_special")
@@ -284,7 +282,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 55,
-                        accuracyMultiplier = 1.25,
                         execute = { context ->
                             context.attacker.animate("animation.dragon_scimitar_special")
                             context.defender.gfx("graphic.dragon_scimitar_special", 100)
@@ -333,8 +330,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 25,
-                        accuracyMultiplier = 1.15,
-                        damageMultiplier = 1.15,
                         execute = { context ->
                             context.attacker.animate("animation.dragon_dagger_special")
                             context.attacker.gfx("graphic.dragon_dagger_special", 100)
@@ -411,8 +406,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 25,
-                        accuracyMultiplier = 1.25,
-                        damageMultiplier = 1.50,
                         execute = { context ->
                             context.attacker.animate("animation.dragon_mace_special")
                             context.attacker.gfx("graphic.dragon_mace_special", 100)
@@ -451,8 +444,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 50,
-                        accuracyMultiplier = 1.50,
-                        damageMultiplier = 1.20,
                         execute = { context ->
                             context.attacker.animate("animation.dragon_mace_special")
                             context.attacker.gfx("graphic.dragon_mace_special", 100)
@@ -780,8 +771,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 30,
-                        accuracyMultiplier = 1.1,
-                        damageMultiplier = 1.1,
                         execute = { context ->
                             context.attacker.animate("animation.dragon_halberd_special")
                             context.attacker.playSound("sound.dragon_halberd_special", 1)
@@ -817,8 +806,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 50,
-                        accuracyMultiplier = 2.0,
-                        damageMultiplier = 1.1,
                         execute = { context ->
                             context.attacker.animate("animation.barrelchest_anchor_special")
                             context.attacker.gfx("graphic.barrelchest_anchor_special")
@@ -897,7 +884,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 100,
-                        damageMultiplier = 1.1,
                         execute = { context ->
                             context.attacker.animate("animation.saradomin_sword_special")
                             context.attacker.gfx("graphic.saradomin_sword_special_start")
@@ -946,8 +932,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 50,
-                        accuracyMultiplier = 2.0,
-                        damageMultiplier = 1.375,
                         execute = { context ->
                             context.attacker.animate("animation.armadyl_godsword_special")
                             context.attacker.gfx("graphic.armadyl_godsword_special")
@@ -978,8 +962,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 50,
-                        accuracyMultiplier = 2.0,
-                        damageMultiplier = 1.10,
                         execute = { context ->
                             context.attacker.animate(1882)
                             WorldTasksManager.schedule(1) {
@@ -1027,8 +1009,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 50,
-                        accuracyMultiplier = 2.0,
-                        damageMultiplier = 1.10,
                         execute = { context ->
                             context.attacker.animate("animation.saradomin_godsword_special")
                             context.attacker.gfx("graphic.saradomin_godsword_special")
@@ -1083,8 +1063,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 50,
-                        accuracyMultiplier = 2.0,
-                        damageMultiplier = 1.21,
                         execute = { context ->
                             context.attacker.animate("animation.bandos_godsword_special")
                             context.attacker.gfx("graphic.bandos_godsword_special")
@@ -1162,8 +1140,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 50,
-                        accuracyMultiplier = 2.0,
-                        damageMultiplier = 1.1,
                         execute = { context ->
                             context.attacker.animate("animation.zamorak_godsword_special")
                             context.attacker.gfx("graphic.zamorak_godsword_start")
@@ -1630,8 +1606,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 50,
-                        accuracyMultiplier = 2.0,
-                        damageMultiplier = 1.0,
                         execute = { context ->
                             context.attacker.animate("animation.darklight_special")
                             context.attacker.gfx("graphic.darklight_special")
@@ -1680,8 +1654,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 50,
-                        accuracyMultiplier = 2.0,
-                        damageMultiplier = 1.0,
                         execute = { context ->
                             context.attacker.animate("animation.darklight_special")
                             context.attacker.gfx("graphic.darklight_special")
@@ -1730,8 +1702,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 50,
-                        accuracyMultiplier = 1.0,
-                        damageMultiplier = 1.0,
                         execute = { context ->
                             context.attacker.animate("animation.statius_warhammer_special")
                             context.attacker.gfx("graphic.statius_warhammer_special")
@@ -1844,8 +1814,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 25,
-                        accuracyMultiplier = 1.25,
-                        damageMultiplier = 1.25,
                         execute = { context ->
                             context.attacker.animate("animation.dragon_longsword_special")
                             context.attacker.gfx("graphic.dragon_longsword_special", 100)
@@ -2102,8 +2070,6 @@ object StandardMelee : MeleeData() {
                 special =
                     SpecialAttack.Combat(
                         energyCost = 100,
-                        accuracyMultiplier = 1.15,
-                        damageMultiplier = 1.1,
                         execute = { context ->
                             context.attacker.animate("animation.dragon_2h_special")
                             context.attacker.gfx("graphic.dragon_2h_special")

@@ -6,7 +6,7 @@ import com.rs.java.game.player.Inventory;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 public class Fletching extends Action {
 
@@ -197,13 +197,13 @@ public class Fletching extends Action {
 
     private void checkTasks(Player player, int productId) {
         if (productId == 50)
-            player.getTaskManager().checkComplete(Tasks.FLETCH_SHORTBOW);
+            player.getTaskManager().progress(Task.FLETCH_SHORTBOW);
         if (productId == 62)
-            player.getTaskManager().checkComplete(Tasks.FLETCH_MAPLE_LONGBOW);
+            player.getTaskManager().progress(Task.FLETCH_MAPLE_LONGBOW);
         if (productId == 68)
-            player.getTaskManager().checkComplete(Tasks.FLETCH_YEW_SHORTBOW);
+            player.getTaskManager().progress(Task.FLETCH_YEW_SHORTBOW);
         if (productId == 70)
-            player.getTaskManager().checkComplete(Tasks.FLETCH_MAGIC_LONGBOW);
+            player.getTaskManager().progress(Task.FLETCH_MAGIC_LONGBOW);
     }
 
     @Override

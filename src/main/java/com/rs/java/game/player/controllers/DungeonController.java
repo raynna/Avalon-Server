@@ -45,9 +45,6 @@ import com.rs.java.game.player.actions.skills.prayer.Burying.Bone;
 import com.rs.java.game.player.actions.skills.smithing.DungeoneeringSmelting.SmeltingBar;
 import com.rs.java.game.player.actions.skills.smithing.DungeoneeringSmithing;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.HatchetDefinitions;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.TreeDefinitions;
 import com.rs.java.game.player.content.Foods.Food;
 import com.rs.java.game.player.content.dungeoneering.Door;
 import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
@@ -71,6 +68,9 @@ import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.skills.woodcutting.AxeDefinition;
+import com.rs.kotlin.game.player.skills.woodcutting.TreeDefinition;
+import com.rs.kotlin.game.player.skills.woodcutting.Woodcutting;
 
 public class DungeonController extends Controller {
 
@@ -420,13 +420,13 @@ public class DungeonController extends Controller {
 			}
 			openAnim = defs.getAnimationId();
 		} else if (s.getSkillId() == Skills.WOODCUTTING) {
-			HatchetDefinitions defs = Woodcutting.getHatchet(player);
+			AxeDefinition defs = AxeDefinition.Companion.getBestAxe(player);
 			if (defs == null) {
 				player.getPackets().sendGameMessage(
 						"You do not have a hatchet or do not have the required level to use the hatchet.");
 				return;
 			}
-			openAnim = defs.getEmoteId();
+			openAnim = defs.getAnimation();
 		}
 		final boolean fail = Utils.random(100) <= 10;
 		// TODO player.setCantWalk(true);
@@ -793,34 +793,34 @@ public class DungeonController extends Controller {
 			DungeoneeringFarming.initHarvest(player, Harvest.SPIRITBLOOM, object);
 			return false;
 		case "tangle gum tree":
-			player.getActionManager().setAction(new Woodcutting(object, TreeDefinitions.TANGLE_GUM_VINE));
+			player.getActionManager().setAction(new Woodcutting(player, object, TreeDefinition.NORMAL));//TODO
 			return false;
 		case "seeping elm tree":
-			player.getActionManager().setAction(new Woodcutting(object, TreeDefinitions.SEEPING_ELM_TREE));
+			player.getActionManager().setAction(new Woodcutting(player, object, TreeDefinition.NORMAL));
 			return false;
 		case "blood spindle tree":
-			player.getActionManager().setAction(new Woodcutting(object, TreeDefinitions.BLOOD_SPINDLE_TREE));
+			player.getActionManager().setAction(new Woodcutting(player, object, TreeDefinition.NORMAL));
 			return false;
 		case "utuku tree":
-			player.getActionManager().setAction(new Woodcutting(object, TreeDefinitions.UTUKU_TREE));
+			player.getActionManager().setAction(new Woodcutting(player, object, TreeDefinition.NORMAL));
 			return false;
 		case "spinebeam tree":
-			player.getActionManager().setAction(new Woodcutting(object, TreeDefinitions.SPINEBEAM_TREE));
+			player.getActionManager().setAction(new Woodcutting(player, object, TreeDefinition.NORMAL));
 			return false;
 		case "bovistrangler tree":
-			player.getActionManager().setAction(new Woodcutting(object, TreeDefinitions.BOVISTRANGLER_TREE));
+			player.getActionManager().setAction(new Woodcutting(player, object, TreeDefinition.NORMAL));
 			return false;
 		case "thigat tree":
-			player.getActionManager().setAction(new Woodcutting(object, TreeDefinitions.THIGAT_TREE));
+			player.getActionManager().setAction(new Woodcutting(player, object, TreeDefinition.NORMAL));
 			return false;
 		case "corpsethorn tree":
-			player.getActionManager().setAction(new Woodcutting(object, TreeDefinitions.CORPESTHORN_TREE));
+			player.getActionManager().setAction(new Woodcutting(player, object, TreeDefinition.NORMAL));
 			return false;
 		case "entgallow tree":
-			player.getActionManager().setAction(new Woodcutting(object, TreeDefinitions.ENTGALLOW_TREE));
+			player.getActionManager().setAction(new Woodcutting(player, object, TreeDefinition.NORMAL));
 			return false;
 		case "grave creeper tree":
-			player.getActionManager().setAction(new Woodcutting(object, TreeDefinitions.GRAVE_CREEPER_TREE));
+			player.getActionManager().setAction(new Woodcutting(player, object, TreeDefinition.NORMAL));
 			return false;
 		case "novite ore":
 			player.getActionManager().setAction(new DungeoneeringMining(object, DungeoneeringRocks.NOVITE_ORE));

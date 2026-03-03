@@ -51,7 +51,7 @@ import com.rs.java.utils.IPBanL;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.npc.combatdata.CombatDataParser;
 import com.rs.kotlin.game.world.area.Area;
 import com.rs.kotlin.game.world.area.AreaManager;
@@ -612,6 +612,36 @@ public final class World {
                 if (!isFloorFree(plane, tileX, tileY) || !isWallsFree(plane, tileX, tileY))
                     return false;
         return true;
+    }
+
+    public static WorldTile getRandomFreeTileAround(
+            WorldTile center,
+            int minRadius,
+            int maxRadius,
+            int size,
+            int maxAttempts
+    ) {
+        for (int i = 0; i < maxAttempts; i++) {
+
+            int radius = Utils.random(maxRadius - minRadius) + minRadius;
+            double angle = Math.random() * (Math.PI * 2);
+
+            int offsetX = (int) Math.round(Math.cos(angle) * radius);
+            int offsetY = (int) Math.round(Math.sin(angle) * radius);
+
+            if (offsetX == 0 && offsetY == 0)
+                continue;
+
+            int targetX = center.getX() + offsetX;
+            int targetY = center.getY() + offsetY;
+            int plane = center.getPlane();
+
+            if (World.isTileFree(plane, targetX, targetY, size)) {
+                return new WorldTile(targetX, targetY, plane);
+            }
+        }
+
+        return center;
     }
 
     public static boolean isFloorFree(int plane, int x, int y) {

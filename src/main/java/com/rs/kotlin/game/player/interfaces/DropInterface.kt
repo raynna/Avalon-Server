@@ -4,10 +4,13 @@ import com.rs.Settings
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.core.cache.defintions.NPCDefinitions
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.content.collectionlog.CollectionLog
 import com.rs.kotlin.game.npc.drops.DropTable
 import com.rs.kotlin.game.npc.drops.DropTableRegistry
 import com.rs.kotlin.game.npc.drops.DropTableSource
 import com.rs.kotlin.game.npc.drops.DropType
+import kotlin.math.ceil
+import kotlin.math.max
 
 /**
  * Drop Viewer Interface
@@ -129,7 +132,7 @@ object DropInterface {
 
         for (source in DropTableRegistry.getAllSources()) {
             val table = tableFor(source) ?: continue
-
+            if (!table.visibleInViewer) continue
             if (table.getAllDropsForDisplay(dropRateMult()).isEmpty()) {
                 continue
             }
@@ -871,15 +874,8 @@ object DropInterface {
         player: Player,
         rows: Int,
     ) {
-        val contentHeight = rows * 35
-        val needsScroll = contentHeight > 264
-
-        player.packets.sendCSVarInteger(
-            350,
-            if (needsScroll) contentHeight else 225,
-        )
-
-        // player.packets.sendRunScript(10006)
+        val scrollHeight = (rows * ceil(35.toDouble())).toInt()
+        player.packets.sendCSVarInteger(350, max(scrollHeight, 225))
     }
 
     private fun updateTitle(
@@ -946,6 +942,9 @@ object DropInterface {
 
     private fun buildRarityText(drop: DropDisplay): String {
         val rawBase = drop.rarityText
+        if (drop.baseDenominator == 1) {
+            return wrapCol(COL_ALWAYS, "Always")
+        }
         val formattedBase =
             if (rawBase.startsWith("1/")) {
                 val denom =

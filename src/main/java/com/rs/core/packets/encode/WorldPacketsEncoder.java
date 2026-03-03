@@ -1,7 +1,7 @@
 package com.rs.core.packets.encode;
 
 import com.rs.discord.DiscordAnnouncer;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 

@@ -2,7 +2,7 @@ package com.rs.java.game.item;
 
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

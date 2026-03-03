@@ -14,7 +14,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 import kotlin.Pair;
 
 public final class Skills implements Serializable {
@@ -323,11 +323,6 @@ public final class Skills implements Serializable {
         return formula;
     }
 
-    public int getXPForSkill(int skill) {
-        skill += player.getSkills().getXp(skill);
-        return skill;
-    }
-
     public int getTargetIdByComponentId(int componentId) {
         switch (componentId) {
             case 150: // Attack
@@ -380,63 +375,6 @@ public final class Skills implements Serializable {
                 return 23;
             case 120: // Dungeoneering
                 return 24;
-            default:
-                return -1;
-        }
-    }
-
-    public int getSkillIdByTargetId(int targetId) {
-        switch (targetId) {
-            case 0: // Attack
-                return ATTACK;
-            case 1: // Strength
-                return STRENGTH;
-            case 2: // Range
-                return RANGE;
-            case 3: // Magic
-                return MAGIC;
-            case 4: // Defence
-                return DEFENCE;
-            case 5: // Constitution
-                return HITPOINTS;
-            case 6: // Prayer
-                return PRAYER;
-            case 7: // Agility
-                return AGILITY;
-            case 8: // Herblore
-                return HERBLORE;
-            case 9: // Thieving
-                return THIEVING;
-            case 10: // Crafting
-                return CRAFTING;
-            case 11: // Runecrafting
-                return RUNECRAFTING;
-            case 12: // Mining
-                return MINING;
-            case 13: // Smithing
-                return SMITHING;
-            case 14: // Fishing
-                return FISHING;
-            case 15: // Cooking
-                return COOKING;
-            case 16: // Firemaking
-                return FIREMAKING;
-            case 17: // Woodcutting
-                return WOODCUTTING;
-            case 18: // Fletching
-                return FLETCHING;
-            case 19: // Slayer
-                return SLAYER;
-            case 20: // Farming
-                return FARMING;
-            case 21: // Construction
-                return CONSTRUCTION;
-            case 22: // Hunter
-                return HUNTER;
-            case 23: // Summoning
-                return SUMMONING;
-            case 24: // Dungeoneering
-                return DUNGEONEERING;
             default:
                 return -1;
         }
@@ -871,321 +809,186 @@ public final class Skills implements Serializable {
         }
     }
 
-    public double addLampXP(int skill, double exp) {
-        int oldTotal = getTotalLevel(player);
-        double oldExp = xp[skill];
-        int Lamp_XP = 5;
-        player.getControlerManager().trackXP(skill, (int) exp);
-        if (player.isXpLocked())
-            return 0;
-        exp *= Lamp_XP;
+    private void sendBonusXpVar(int skill, double bonusExp) {
+        if (player.getXpMultiplier(skill) <= 1.0) {
+            player.getVarsManager().sendVar(2044, 0);
+            return;
+        }
+
+        boolean isCombat =
+                skill >= Skills.ATTACK &&
+                        skill <= Skills.MAGIC &&
+                        skill != Skills.PRAYER;
+
+        boolean blockedInPvp =
+                player.getTemporaryTarget() != null &&
+                        player.inPkingArea() &&
+                        !(player.getTemporaryTarget() instanceof NPC);
+
+        if (isCombat && blockedInPvp) {
+            player.getVarsManager().sendVar(2044, 0);
+            return;
+        }
+        double multiplier = isCombat ? 40 : 10;
+        player.getVarsManager().sendVar(2044, (int) (bonusExp * multiplier));
+    }
+
+    public void addXp(int skill, double amount) {
+        addXp(skill, amount, true);
+    }
+
+    public void addXp(int skill, double amount, boolean applyMultipliers) {
+        if (amount < 1 || xp[skill] >= MAXIMUM_EXP)
+            return;
+
+        int oldTotalLevel = getTotalLevel(player);
+        double oldXp = xp[skill];
         int oldLevel = getLevelForXp(skill);
         int oldCombat = getCombatLevelWithSummoning();
-        xp[skill] += exp;
-        if (xp[skill] > MAXIMUM_EXP)
-            xp[skill] = MAXIMUM_EXP;
-        for (int i = 0; i < trackSkills.length; i++) {
-            if (trackSkills[i]) {
-                if (trackSkillsIds[i] == 30
-                        || (trackSkillsIds[i] == 29
-                        && (skill == Skills.ATTACK || skill == Skills.DEFENCE || skill == Skills.STRENGTH
-                        || skill == Skills.MAGIC || skill == Skills.RANGE || skill == Skills.HITPOINTS))
-                        || trackSkillsIds[i] == getCounterSkill(skill)) {
-                    xpTracks[i] += exp;
-                    refreshCounterXp(i);
-                }
-            }
-        }
-        if (xp[skill] >= MAXIMUM_EXP) {
-            xp[skill] = MAXIMUM_EXP;
-        }
-        int newLevel = getLevelForXp(skill);
-        int levelDifference = newLevel - oldLevel;
-        checkXpMilestones(player, skill, oldExp);
-        if (newLevel > oldLevel) {
-            level[skill] += levelDifference;
-            player.getDialogueManager().startDialogue("LevelUp", skill);
-            DiscordAnnouncer.announceLevelUp(
-                    player.getDisplayName(),
-                    Skills.SKILL_NAME[skill],
-                    newLevel
-            );
-            sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
-            sendLevelAttributtes(player, skill, oldLevel, newLevel);
-            if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {
-                player.getAppearance().generateAppearenceData();
-                if (skill == HITPOINTS)
-                    player.heal(levelDifference * 10);
-                else if (skill == PRAYER)
-                    player.getPrayer().restorePrayer(levelDifference * 10);
-            }
-            refresh(skill);
-        }
-        return exp;
-    }
 
-    public void addXpNoBonus(int skill, double exp) {
-        if (exp < 1)
-            return;
-        int oldTotal = getTotalLevel(player);
-        double oldExp = xp[skill];
-        player.getControlerManager().trackXP(skill, (int) exp);
-        int oldLevel = getLevelForXp(skill);
-        int oldCombat = getCombatLevelWithSummoning();
-        xp[skill] += exp;
-        if (xp[skill] > MAXIMUM_EXP)
-            xp[skill] = MAXIMUM_EXP;
-        for (int i = 0; i < trackSkills.length; i++) {
-            if (trackSkills[i]) {
-                if (trackSkillsIds[i] == 30
-                        || (trackSkillsIds[i] == 29
-                        && (skill == Skills.ATTACK || skill == Skills.DEFENCE || skill == Skills.STRENGTH
-                        || skill == Skills.MAGIC || skill == Skills.RANGE || skill == Skills.HITPOINTS))
-                        || trackSkillsIds[i] == getCounterSkill(skill)) {
-                    xpTracks[i] += exp;
-                    refreshCounterXp(i);
-                }
-            }
-        }
+        // 1️⃣ Apply base rate (combat/skilling)
+        double baseXp = applyBaseRate(skill, amount);
 
-        if (xp[skill] >= MAXIMUM_EXP) {
-            xp[skill] = MAXIMUM_EXP;
-            return;
-        }
-        int newLevel = getLevelForXp(skill);
-        int levelDiff = newLevel - oldLevel;
-        checkXpMilestones(player, skill, oldExp);
-        if (newLevel > oldLevel) {
-            level[skill] += levelDiff;
-            player.getDialogueManager().startDialogue("LevelUp", skill);
-            DiscordAnnouncer.announceLevelUp(
-                    player.getDisplayName(),
-                    Skills.SKILL_NAME[skill],
-                    newLevel
-            );
-            sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
-            sendLevelAttributtes(player, skill, oldLevel, newLevel);
-            if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {
-                player.getAppearance().generateAppearenceData();
-                if (skill == HITPOINTS)
-                    player.heal(levelDiff * 10);
-                else if (skill == PRAYER)
-                    player.getPrayer().restorePrayer(levelDiff * 10);
-            }
-            // player.getQuestManager().checkCompleted();
-        }
-        refresh(skill);
-    }
+        double finalXp = baseXp;
+        double bonusXp = 0;
 
-    public void addSkillingXp(int skill, double exp, double multiplier) {
-        if (exp < 1)
-            return;
-        int oldTotal = getTotalLevel(player);
-        double oldExp = xp[skill];
-        if (getXp(skill) >= 200000000) {
-            exp *= 1;
-        } else {
-            if (skill == Skills.SUMMONING) {
-                exp *= Settings.SUMMONING_XP_RATE;
-            } else if (skill == Skills.DUNGEONEERING) {
-                exp *= 50;
-            } else if (skill == Skills.PRAYER) {
-                exp *= 10;
-            }
-            exp *= Settings.SKILLING_XP_RATE;
-        }
-        double bonusExp = 0;
-        exp *= player.getBonusExp();
-        if (Settings.BONUS_EXP_WEEK_MULTIPLIER > 1) {
-            bonusExp = exp * Settings.BONUS_EXP_WEEK_MULTIPLIER - exp;
-            exp *= Settings.BONUS_EXP_WEEK_MULTIPLIER;
-        } else
-            bonusExp = exp * multiplier - exp;
-        player.getVarsManager().sendVar(2044, bonusExp > 1 ? (int) (bonusExp * 10) : 0);
-        if (player.getAssist().isAssisted()) {
-            AssistManager.giveXP(player, skill, exp);
-            return;
-        }
-        player.getControlerManager().trackXP(skill, (int) exp);
-        int oldLevel = getLevelForXp(skill);
-        int oldCombat = getCombatLevelWithSummoning();
-        xp[skill] += exp;
-        for (int i = 0; i < trackSkills.length; i++) {
-            if (trackSkills[i]) {
-                if (trackSkillsIds[i] == 30
-                        || (trackSkillsIds[i] == 29
-                        && (skill == Skills.ATTACK || skill == Skills.DEFENCE || skill == Skills.STRENGTH
-                        || skill == Skills.MAGIC || skill == Skills.RANGE || skill == Skills.HITPOINTS))
-                        || trackSkillsIds[i] == getCounterSkill(skill)) {
-                    xpTracks[i] += exp;
-                    refreshCounterXp(i);
-                }
-            }
-        }
-        int newLevel = getLevelForXp(skill);
-        int levelDiff = newLevel - oldLevel;
-        checkXpMilestones(player, skill, oldExp);
-        if (newLevel > oldLevel) {
-            level[skill] += levelDiff;
-            player.getDialogueManager().startDialogue("LevelUp", skill);
-            DiscordAnnouncer.announceLevelUp(
-                    player.getDisplayName(),
-                    Skills.SKILL_NAME[skill],
-                    newLevel
-            );
-            sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
-            sendLevelAttributtes(player, skill, oldLevel, newLevel);
-            if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {
-                player.getAppearance().generateAppearenceData();
-                if (skill == HITPOINTS)
-                    player.heal(levelDiff * 10);
-                else if (skill == PRAYER)
-                    player.getPrayer().restorePrayer(levelDiff * 10);
-            }
-        }
-        refresh(skill);
-    }
+        if (applyMultipliers) {
 
-/*    private Map<Integer, Double> xpMap = new HashMap<>();
+            // 2️⃣ Permanent multipliers (level scaling, ranks, member, aura)
+            double permanentMultiplier = player.getXpMultiplier(skill);
+            double scaledXp = baseXp * permanentMultiplier;
 
-    public void addXp(int skill, double exp) {
-        if (exp < 1) return;
-        xpMap.put(skill, xpMap.getOrDefault(skill, 0.0) + exp);
-    }
+            // 3️⃣ Bonus multipliers (weekend, outfit)
+            double bonusMultiplier = player.getBonusMultiplier(skill);
+            finalXp = scaledXp * bonusMultiplier;
 
-    public void process() {
-        if (xpMap.isEmpty()) return;
-        for (Map.Entry<Integer, Double> entry : xpMap.entrySet()) {
-            final int skill = entry.getKey();
-            final double exp = entry.getValue();
-            updateXp(skill, exp);
-        }
-        xpMap.clear();
-    }*/
+            // Only the BONUS portion should be shown
+            bonusXp = finalXp - scaledXp;
 
-    private transient final ConcurrentHashMap<Integer, Double> pendingXp = new ConcurrentHashMap<>();
-    private transient final ReentrantLock xpUpdateLock = new ReentrantLock();
-    private transient final AtomicBoolean xpUpdateScheduled = new AtomicBoolean(false);
+            sendBonusXpVar(skill, bonusXp);
 
-    public void addXpDelayed(final int skill, final double xp) {
-        if (xp < 1) return;
-
-        pendingXp.merge(skill, xp, (oldVal, newVal) -> oldVal + newVal);
-
-        if (xpUpdateScheduled.compareAndSet(false, true)) {
-            CoresManager.getSlowExecutor().schedule(() -> {
-                xpUpdateLock.lock();
-                try {
-                    ConcurrentHashMap<Integer, Double> copy = new ConcurrentHashMap<>(pendingXp);
-                    pendingXp.clear();
-                    xpUpdateScheduled.set(false);
-
-                    for (Integer skillId : copy.keySet()) {
-                        double amount = copy.get(skillId);
-                        addXp(skillId, amount);
-                    }
-                } finally {
-                    xpUpdateLock.unlock();
-                }
-            }, 60, TimeUnit.MILLISECONDS);
-        }
-    }
-
-
-    public void addXp(int skill, double exp) {
-        if (exp < 1)
-            return;
-        int oldTotal = getTotalLevel(player);
-        double oldExp = xp[skill];
-        boolean isOneXpPerHit = player.toggles("ONEXPPERHIT", false);
-        if (getXp(skill) >= 200000000) {
-            exp *= 1;
-        } else {
-            if ((skill >= Skills.ATTACK && skill <= Skills.RANGE) || skill == Skills.MAGIC) {
-                if (isOneXpPerHit)
-                    exp *= 1;
-                else if (player.getTemporaryTarget() instanceof NPC npc && (npc.getId() == Rscm.lookup("npc.melee_dummy") || npc.getId() == Rscm.lookup("npc.magic_dummy")))
-                    exp *= 1;
-                else if (player.inPkingArea()
-                        && !(player.getTemporaryTarget() instanceof NPC))
-                    exp *= 1;
-                else if (player.getTemporaryTarget() != null && player.inPkingArea()
-                        && (player.getTemporaryTarget() instanceof NPC))
-                    exp *= Settings.COMBAT_XP_RATE;
-                else
-                    exp *= Settings.COMBAT_XP_RATE;
-            } else if (skill == Skills.SUMMONING) {
-                exp *= Settings.SUMMONING_XP_RATE;
-            } else if (skill == Skills.DUNGEONEERING) {
-                exp *= 50;
-            } else if (skill == Skills.PRAYER) {
-                exp *= 10;
-            } else {
-                exp *= Settings.SKILLING_XP_RATE;
-            }
-            exp *= 1;
-        }
-        double normalExp = exp;
-        double bonusExp = normalExp * Settings.BONUS_EXP_WEEK_MULTIPLIER - normalExp;
-        exp *= player.getBonusExp();
-        exp *= Settings.BONUS_EXP_WEEK_MULTIPLIER;
-        if (Settings.BONUS_EXP_WEEK_MULTIPLIER > 1) {
-            if (skill >= 0 && skill <= 6 && skill != 5) {
-                if (player.getTemporaryTarget() != null && player.inPkingArea()
-                        && !(player.getTemporaryTarget() instanceof NPC)) {
-                    player.getVarsManager().sendVar(2044, 0);
-                } else
-                    player.getVarsManager().sendVar(2044, (int) (bonusExp * 40));
-            } else
-                player.getVarsManager().sendVar(2044, (int) (bonusExp * 10));
         } else {
             player.getVarsManager().sendVar(2044, 0);
         }
+
         if (player.getAssist().isAssisted()) {
-            AssistManager.giveXP(player, skill, exp);
+            AssistManager.giveXP(player, skill, finalXp);
             return;
         }
-        player.getControlerManager().trackXP(skill, (int) exp);
-        int oldCombat = getCombatLevelWithSummoning();
-        int oldLevel = getLevelForXp(skill);
-        xp[skill] += exp;
-        for (int i = 0; i < trackSkills.length; i++) {
-            if (trackSkills[i]) {
-                if (trackSkillsIds[i] == 30
-                        || (trackSkillsIds[i] == 29
-                        && (skill == Skills.ATTACK || skill == Skills.DEFENCE || skill == Skills.STRENGTH
-                        || skill == Skills.MAGIC || skill == Skills.RANGE || skill == Skills.HITPOINTS))
-                        || trackSkillsIds[i] == getCounterSkill(skill)) {
-                    xpTracks[i] += exp;
-                    refreshCounterXp(i);
-                }
-            }
-        }
+
+        applyXp(skill, finalXp);
+        updateXpTrackers(skill, finalXp);
+
         int newLevel = getLevelForXp(skill);
-        int levelDiff = newLevel - oldLevel;
-        checkXpMilestones(player, skill, oldExp);
-        if (newLevel > oldLevel) {
-            level[skill] += levelDiff;
-            player.getDialogueManager().startDialogue("LevelUp", skill);
-            DiscordAnnouncer.announceLevelUp(
-                    player.getDisplayName(),
-                    Skills.SKILL_NAME[skill],
-                    newLevel
-            );
-            sendMilestoneNews(oldTotal, oldExp, oldLevel, oldCombat, skill);
-            sendLevelAttributtes(player, skill, oldLevel, newLevel);
-            if (skill == SUMMONING || (skill >= ATTACK && skill <= MAGIC)) {
-                player.getAppearance().generateAppearenceData();
-                if (skill == HITPOINTS)
-                    player.heal(levelDiff * 10);
-                else if (skill == PRAYER)
-                    player.getPrayer().restorePrayer(levelDiff * 10);
-            }
-        }
+        handleLevelUp(skill, oldLevel, newLevel, oldTotalLevel, oldXp, oldCombat);
+
         refresh(skill);
     }
 
+    private double applyBaseRate(int skill, double amount) {
+        if (xp[skill] >= MAXIMUM_EXP)
+            return amount;
 
+        boolean isCombat =
+                (skill >= Skills.ATTACK && skill <= Skills.RANGE)
+                        || skill == Skills.MAGIC;
+
+        if (isCombat)
+            return applyCombatRate(skill, amount);
+        return amount;
+    }
+
+    private double applyMultipliers(int skill, double baseXp) {
+        double playerMultiplier = player.getXpMultiplier(skill);
+        return baseXp * playerMultiplier;
+    }
+
+    private void handleLevelUp(
+            int skill,
+            int oldLevel,
+            int newLevel,
+            int oldTotal,
+            double oldXp,
+            int oldCombat
+    ) {
+        if (newLevel <= oldLevel)
+            return;
+
+        int gained = newLevel - oldLevel;
+        level[skill] += gained;
+
+        player.getDialogueManager().startDialogue("LevelUp", skill);
+
+        DiscordAnnouncer.announceLevelUp(
+                player.getDisplayName(),
+                Skills.SKILL_NAME[skill],
+                newLevel
+        );
+
+        sendMilestoneNews(oldTotal, oldXp, oldLevel, oldCombat, skill);
+        sendLevelAttributtes(player, skill, oldLevel, newLevel);
+
+        if (skill == Skills.SUMMONING || isCombatSkill(skill)) {
+            player.getAppearance().generateAppearenceData();
+
+            if (skill == Skills.HITPOINTS)
+                player.heal(gained * 10);
+            else if (skill == Skills.PRAYER)
+                player.getPrayer().restorePrayer(gained * 10);
+        }
+    }
+
+    private void applyXp(int skill, double amount) {
+        xp[skill] += amount;
+        if (xp[skill] > MAXIMUM_EXP)
+            xp[skill] = MAXIMUM_EXP;
+
+        player.getControlerManager().trackXP(skill, (int) amount);
+    }
+
+    private void updateXpTrackers(int skill, double amount) {
+        for (int i = 0; i < trackSkills.length; i++) {
+            if (!trackSkills[i])
+                continue;
+
+            boolean matches =
+                    trackSkillsIds[i] == 30 ||
+                            (trackSkillsIds[i] == 29 && isCombatSkill(skill)) ||
+                            trackSkillsIds[i] == getCounterSkill(skill);
+
+            if (matches) {
+                xpTracks[i] += amount;
+                refreshCounterXp(i);
+            }
+        }
+    }
+
+    private boolean isCombatSkill(int skill) {
+        return skill == Skills.ATTACK ||
+                skill == Skills.DEFENCE ||
+                skill == Skills.STRENGTH ||
+                skill == Skills.MAGIC ||
+                skill == Skills.RANGE ||
+                skill == Skills.HITPOINTS;
+    }
+
+    private double applyCombatRate(int skill, double amount) {
+        if (player.toggles("ONEXPPERHIT", false))
+            return amount;
+
+        if (player.getTemporaryTarget() instanceof NPC npc) {
+            int dummyMelee = Rscm.lookup("npc.melee_dummy");
+            int dummyMagic = Rscm.lookup("npc.magic_dummy");
+
+            if (npc.getId() == dummyMelee || npc.getId() == dummyMagic)
+                return amount;
+        }
+
+        if (player.inPkingArea() && !(player.getTemporaryTarget() instanceof NPC))
+            return amount;
+
+        return amount * Settings.COMBAT_XP_RATE;
+    }
 
     public void sendLevelAttributtes(Player player, int skillId, int oldLevel, int newLevel) {
         player.temporaryAttribute().put("LEVELUP[" + skillId + "]:GAINEDLEVELS", getGainedLevels(player, skillId) + (oldLevel - newLevel));

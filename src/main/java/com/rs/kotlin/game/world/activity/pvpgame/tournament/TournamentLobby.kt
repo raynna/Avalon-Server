@@ -8,24 +8,26 @@ import com.rs.java.game.WorldTile
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.content.presets.Preset
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.world.activity.pvpgame.PvPGameManager
 import com.rs.kotlin.game.world.activity.pvpgame.activePvPGame
 import com.rs.kotlin.game.world.activity.pvpgame.showResult
 import com.rs.kotlin.game.world.util.Msg
+import com.rs.kotlin.rscm.Rscm
 
-class TournamentLobby(private val instance: TournamentInstance) {
-
+class TournamentLobby(
+    private val instance: TournamentInstance,
+) {
     private val tournamentPreset = TournamentPresetDefaults.random()
 
     fun getTournamentPreset(): Preset = tournamentPreset.preset
+
     fun getRules(): TournamentRules = tournamentPreset.rules
 
     private val participants = mutableSetOf<Player>()
     private val waitingPlayers = mutableListOf<Player>()
 
     private var joinPhase = true
-    private var ticksRemaining = 500//500 original
+    private var ticksRemaining = 500 // 500 original
 
     private var bestOfThree: Boolean = false
     private val finalScores = mutableMapOf<Player, Int>()
@@ -34,57 +36,61 @@ class TournamentLobby(private val instance: TournamentInstance) {
         Msg.world(
             Msg.GREEN,
             icon = 22,
-            "[Tournament] Loadout: ${tournamentPreset.preset.name}"
+            "[Tournament] Loadout: ${tournamentPreset.preset.name}",
         )
 
         DiscordAnnouncer.announce(
             "Tournament",
-            "Loadout: ${tournamentPreset.preset.name}"
+            "Loadout: ${tournamentPreset.preset.name}",
         )
         var lastAnnounced = -1
-        WorldTasksManager.schedule(object : WorldTask() {
-            override fun run() {
-                ticksRemaining--
-                val secondsRemaining = (ticksRemaining * 600) / 1000
-                if (secondsRemaining != lastAnnounced) {
-                    when (secondsRemaining) {
-                        180 -> {
-                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Fighting will begin in 3 minutes!")
-                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Loadout: ${tournamentPreset.preset.name}")
-                            DiscordAnnouncer.announce("Tournament", "Fighting will begin in 3 minutes!")
-                        }
+        WorldTasksManager.schedule(
+            object : WorldTask() {
+                override fun run() {
+                    ticksRemaining--
+                    val secondsRemaining = (ticksRemaining * 600) / 1000
+                    if (secondsRemaining != lastAnnounced) {
+                        when (secondsRemaining) {
+                            180 -> {
+                                Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Fighting will begin in 3 minutes!")
+                                Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Loadout: ${tournamentPreset.preset.name}")
+                                DiscordAnnouncer.announce("Tournament", "Fighting will begin in 3 minutes!")
+                            }
 
-                        120 -> {
-                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Fighting will begin in 2 minutes!")
-                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Loadout: ${tournamentPreset.preset.name}")
-                            DiscordAnnouncer.announce("Tournament", "Fighting will begin in 2 minutes!")
-                        }
+                            120 -> {
+                                Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Fighting will begin in 2 minutes!")
+                                Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Loadout: ${tournamentPreset.preset.name}")
+                                DiscordAnnouncer.announce("Tournament", "Fighting will begin in 2 minutes!")
+                            }
 
-                        60 -> {
-                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Fighting will begin in 1 minute!")
-                            Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Loadout: ${tournamentPreset.preset.name}")
-                            DiscordAnnouncer.announce("Tournament", "Fighting will begin in 1 minute!")
+                            60 -> {
+                                Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Fighting will begin in 1 minute!")
+                                Msg.world(Msg.GREEN, icon = 22, "[Tournament]: Loadout: ${tournamentPreset.preset.name}")
+                                DiscordAnnouncer.announce("Tournament", "Fighting will begin in 1 minute!")
+                            }
+                        }
+                        lastAnnounced = secondsRemaining
+                    }
+                    if (ticksRemaining <= 0) {
+                        joinPhase = false
+                        if (waitingPlayers.size >= 2) {
+                            scheduleNextMatch(true)
+                            stop()
+                        } else {
+                            val allPlayers = participants.toList()
+                            for (p in allPlayers) {
+                                TournamentRecovery.restore(p)
+                                p.message("The tournament didn't have enough players to start, you've been sent back home.")
+                            }
+                            instance.end(null)
+                            stop()
                         }
                     }
-                    lastAnnounced = secondsRemaining
                 }
-                if (ticksRemaining <= 0) {
-                    joinPhase = false
-                    if (waitingPlayers.size >= 2) {
-                        scheduleNextMatch(true)
-                        stop()
-                    } else {
-                        val allPlayers = participants.toList()
-                        for (p in allPlayers) {
-                            TournamentRecovery.restore(p)
-                            p.message("The tournament didn't have enough players to start, you've been sent back home.")
-                        }
-                        instance.end(null)
-                        stop()
-                    }
-                }
-            }
-        }, 0, 0)
+            },
+            0,
+            0,
+        )
     }
 
     fun addPlayer(player: Player) {
@@ -122,11 +128,12 @@ class TournamentLobby(private val instance: TournamentInstance) {
         val minutes = secondsRemaining / 60
         val seconds = secondsRemaining % 60
 
-        val timeStr = when {
-            minutes > 0 && seconds > 0 -> "$minutes minute${if (minutes > 1) "s" else ""} and $seconds second${if (seconds > 1) "s" else ""}"
-            minutes > 0 -> "$minutes minute${if (minutes > 1) "s" else ""}"
-            else -> "$seconds second${if (seconds > 1) "s" else ""}"
-        }
+        val timeStr =
+            when {
+                minutes > 0 && seconds > 0 -> "$minutes minute${if (minutes > 1) "s" else ""} and $seconds second${if (seconds > 1) "s" else ""}"
+                minutes > 0 -> "$minutes minute${if (minutes > 1) "s" else ""}"
+                else -> "$seconds second${if (seconds > 1) "s" else ""}"
+            }
 
         player.message("You joined the ${tournamentPreset.preset.name} tournament lobby. The first match begins in $timeStr!")
         refreshInterface(ticksRemaining)
@@ -148,7 +155,10 @@ class TournamentLobby(private val instance: TournamentInstance) {
         player.getCombatDefinitions().resetSpecialAttack()
     }
 
-    fun onLeave(player: Player, restore: Boolean = true) {
+    fun onLeave(
+        player: Player,
+        restore: Boolean = true,
+    ) {
         val game = player.activePvPGame
         if (game is TournamentGame) {
             forfeit(player)
@@ -167,7 +177,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
     fun forfeit(player: Player) {
         val game = player.activePvPGame
         if (game is TournamentGame) {
-            game.handleForfeit(player)  // you'll add this
+            game.handleForfeit(player) // you'll add this
             return
         }
         waitingPlayers.remove(player)
@@ -184,7 +194,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
             if (!p.interfaceManager.containsInterface(265)) {
                 p.interfaceManager.sendOverlay(265, p.interfaceManager.hasRezizableScreen())
             }
-            p.packets.sendGlobalVar(271, 2)//set text to participants on left side
+            p.packets.sendGlobalVar(271, 2) // set text to participants on left side
             p.packets.sendGlobalVar(262, waitingPlayers.size)
             p.packets.sendGlobalVar(261, participants.size)
             p.packets.sendGlobalVar(260, 0)
@@ -196,40 +206,43 @@ class TournamentLobby(private val instance: TournamentInstance) {
         }
     }
 
-
     fun scheduleNextMatch(instant: Boolean) {
-        WorldTasksManager.schedule(object : WorldTask() {
-            var ticks = if (instant) 0 else 25//15 seconds
-            override fun run() {
-                refreshInterface(ticks)
-                if (waitingPlayers.size < 2) {
-                    stop(); return
+        WorldTasksManager.schedule(
+            object : WorldTask() {
+                var ticks = if (instant) 0 else 25 // 15 seconds
+
+                override fun run() {
+                    refreshInterface(ticks)
+                    if (waitingPlayers.size < 2) {
+                        stop()
+                        return
+                    }
+                    if (--ticks <= 0) {
+                        startMatch()
+                        stop()
+                    }
                 }
-                if (--ticks <= 0) {
-                    startMatch()
-                    stop()
-                }
-            }
-        }, 0, 0)
+            },
+            0,
+            0,
+        )
     }
 
     private fun startMatch() {
-
         println("[TOURNAMENT] startMatch called. waiting=${waitingPlayers.map { it.username }}")
 
         if (waitingPlayers.size < 2) return
 
         val (p1, p2) = waitingPlayers.shuffled().take(2)
         if (waitingPlayers.size == 2 && !bestOfThree) {
-
             println("[TOURNAMENT] FINAL MATCH ACTIVATED: ${p1.username} vs ${p2.username}")
 
             bestOfThree = true
             finalScores[p1] = 0
             finalScores[p2] = 0
 
-            Msg.warn(p1,"Final match is best of 3!")
-            Msg.warn(p2,"Final match is best of 3!")
+            Msg.warn(p1, "Final match is best of 3!")
+            Msg.warn(p2, "Final match is best of 3!")
         }
 
         waitingPlayers.removeAll(listOf(p1, p2))
@@ -239,12 +252,13 @@ class TournamentLobby(private val instance: TournamentInstance) {
         game.start()
     }
 
-
-    fun recordResult(winner: Player, loser: Player) {
+    fun recordResult(
+        winner: Player,
+        loser: Player,
+    ) {
         if (!participants.contains(winner)) return
 
         if (bestOfThree) {
-
             finalScores[winner] = (finalScores[winner] ?: 0) + 1
 
             val scoreW = finalScores[winner] ?: 0
@@ -269,7 +283,7 @@ class TournamentLobby(private val instance: TournamentInstance) {
 
             waitingPlayers.add(winner)
             waitingPlayers.add(loser)
-            loser.interfaceManager.sendOverlay(265, false)//just to refresh interface
+            loser.interfaceManager.sendOverlay(265, false) // just to refresh interface
             winner.interfaceManager.sendOverlay(265, false)
 
             scheduleNextMatch(false)
@@ -291,7 +305,6 @@ class TournamentLobby(private val instance: TournamentInstance) {
             scheduleNextMatch(false)
         }
     }
-
 
     fun finishTournament(champion: Player) {
         champion.message("Congratulations! You are the Tournament Champion!")
@@ -344,10 +357,11 @@ class TournamentLobby(private val instance: TournamentInstance) {
         TournamentRecovery.restore(player)
     }
 
-
-
     fun getLobby1Tile() = instance.getLobby1()
+
     fun getLobby2Tile() = instance.getLobby2()
+
     fun getFirstSpawn() = instance.getFirstSpawn()
+
     fun getSecondSpawn() = instance.getSecondSpawn()
 }

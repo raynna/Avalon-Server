@@ -1,7 +1,7 @@
 package com.rs.kotlin.game.player.combat
 
 import com.rs.core.cache.defintions.ItemDefinitions
-import com.rs.kotlin.Rscm
+import com.rs.kotlin.rscm.Rscm
 
 object ShieldBlockAnimations {
     const val DEFAULT_BLOCK_ANIM = 424
@@ -11,12 +11,15 @@ object ShieldBlockAnimations {
     private val shieldAnimationMap: Map<Int, Int>
 
     init {
-        val groups = listOf(
-            listOf(Rscm.lookup("item.toktz_ket_xil")) to SHIELD_BLOCK_ANIMATION,
-        )
-        shieldAnimationMap = groups.flatMap { (ids, anim) ->
-            ids.map { id -> id to anim }
-        }.toMap()
+        val groups =
+            listOf(
+                listOf(Rscm.lookup("item.toktz_ket_xil")) to SHIELD_BLOCK_ANIMATION,
+            )
+        shieldAnimationMap =
+            groups
+                .flatMap { (ids, anim) ->
+                    ids.map { id -> id to anim }
+                }.toMap()
     }
 
     fun getBlockAnimationFor(shieldId: Int): Int? {

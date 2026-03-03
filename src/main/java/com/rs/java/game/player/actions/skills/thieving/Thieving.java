@@ -13,11 +13,11 @@ import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.thieving.BlackIbisOutfit.Pieces;
 import com.rs.java.game.player.content.AxeHut;
 import com.rs.java.game.player.content.PirateHut;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 //import com.rs.java.game.player.content.agility.PirateHut;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 /**
  * Handles the Thieving Skill
@@ -147,22 +147,22 @@ public class Thieving {
                             return;
                         if (stall.getObjectId() == 34384) {
                             player.getMoneyPouch().addMoney(5000, false);
-                            player.getTaskManager().checkComplete(Tasks.STEAL_FROM_BAKERS_STALL);
+                            player.getTaskManager().progress(Task.STEAL_FROM_BAKERS_STALL);
                         }
                         if (stall.getObjectId() == 34383) {
                             player.getMoneyPouch().addMoney(7500, false);
-                            player.getTaskManager().checkComplete(Tasks.STEAL_FROM_SILK_STALL);
+                            player.getTaskManager().progress(Task.STEAL_FROM_SILK_STALL);
                         }
                         if (stall.getObjectId() == 34385) {
                             player.getMoneyPouch().addMoney(10000, false);
-                            player.getTaskManager().checkComplete(Tasks.STEAL_FROM_GEM_STALL);
+                            player.getTaskManager().progress(Task.STEAL_FROM_GEM_STALL);
                         }
                         BlackIbisOutfit.addPiece(player);
                         player.getInventory().addItem(stall.getItem(Utils.getRandom(stall.item.length - 1)),
                                 Utils.random(1, stall.getAmount()));
                         double totalXp = stall.getExperience();
                         totalXp *= getThievingBoost(player);
-                        player.getSkills().addSkillingXp(Skills.THIEVING, totalXp, getThievingBoost(player));
+                        player.getSkills().addXp(Skills.THIEVING, totalXp);
                         checkGuards(player);
                         WorldObject emptyStall = new WorldObject(stall.getReplaceObject(), object.getType(), object.getRotation(), object);
                         World.replaceObjectTemporary(object, emptyStall, stall.getTime());

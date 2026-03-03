@@ -3,7 +3,6 @@ package com.rs.kotlin.game.npc.drops
 import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.item.Item
 import com.rs.java.game.player.Player
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.npc.TableCategory
 import com.rs.kotlin.game.npc.drops.DropTablesSetup.gemDropTable
 import com.rs.kotlin.game.npc.drops.DropTablesSetup.godwarsGemDropTable
@@ -27,8 +26,10 @@ import com.rs.kotlin.game.npc.drops.weighted.WeightedTable
 import com.rs.kotlin.game.npc.drops.weighted.WeightedTableBuilder
 import com.rs.kotlin.game.player.interfaces.DropDisplay
 import com.rs.kotlin.game.world.util.Msg
+import com.rs.kotlin.rscm.Rscm
 import java.io.File
 import java.util.concurrent.ThreadLocalRandom
+import kotlin.math.round
 
 fun either(vararg keys: String): String {
     require(keys.isNotEmpty())
@@ -100,6 +101,8 @@ class DropTable(
     val category: TableCategory = TableCategory.REGULAR,
     var sourceAction: String = "killing",
     var collectionGroup: String? = null,
+    var visibleInViewer: Boolean = true,
+    var ignoreParentChanceForDisplay: Boolean = false,
 ) {
     private val alwaysDrops = mutableListOf<DropEntry>()
     private val preRollDenom = mutableListOf<PreRollDropEntry>()
@@ -152,7 +155,7 @@ class DropTable(
                 when (entry) {
                     is PackageWeightedEntry -> {
                         val chance = parent * (entry.weight / total)
-                        val denom = (1.0 / chance).coerceAtLeast(1.0).toInt()
+                        val denom = round(1.0 / chance).coerceAtLeast(1.0).toInt()
 
                         if (entry.displayDrops.isEmpty()) {
                             list.add(
@@ -187,7 +190,7 @@ class DropTable(
 
                     is ItemWeightedEntry -> {
                         val chance = parent * (entry.weight / total)
-                        val denom = (1.0 / chance).coerceAtLeast(1.0).toInt()
+                        val denom = round(1.0 / chance).coerceAtLeast(1.0).toInt()
 
                         val adjustedTotal =
                             if (nothingWeight > 0 && entry.itemId != GemTableEntry.NOTHING_MARKER) {
@@ -268,7 +271,7 @@ class DropTable(
                         } else {
                             // ✅ "Show categories": show the nested table row (clickable) instead of expanding
                             val denom =
-                                if (chanceToEnter > 0) (1.0 / chanceToEnter).toInt() else 0
+                                if (chanceToEnter > 0) round(1.0 / chanceToEnter).toInt() else 0
 
                             list.add(
                                 DropDisplay(
@@ -289,7 +292,7 @@ class DropTable(
             }
         }
 
-        addWeightedTableDisplays(table, dropType, parentChance)
+        addWeightedTableDisplays(table, dropType, if (ignoreParentChanceForDisplay) 1.0 else parentChance)
         return list
     }
 
@@ -319,7 +322,7 @@ class DropTable(
                 when (entry) {
                     is PackageWeightedEntry -> {
                         val chance = parentChance * (entry.weight / total)
-                        val denom = (1.0 / chance).coerceAtLeast(1.0).toInt()
+                        val denom = round(1.0 / chance).coerceAtLeast(1.0).toInt()
 
                         if (entry.displayDrops.isEmpty()) {
                             list.add(
@@ -352,7 +355,7 @@ class DropTable(
 
                     is ItemWeightedEntry -> {
                         val chance = parentChance * (entry.weight / total)
-                        val denom = (1.0 / chance).coerceAtLeast(1.0).toInt()
+                        val denom = round(1.0 / chance).coerceAtLeast(1.0).toInt()
 
                         val adjustedTotal =
                             if (nothingWeight > 0 && entry.itemId != GemTableEntry.NOTHING_MARKER) {
@@ -426,7 +429,7 @@ class DropTable(
 
                         val denom =
                             if (chanceToEnter > 0) {
-                                (1.0 / chanceToEnter).toInt()
+                                round(1.0 / chanceToEnter).toInt()
                             } else {
                                 0
                             }
@@ -469,7 +472,7 @@ class DropTable(
 
                                         val childDenom =
                                             if (childChance > 0) {
-                                                (1.0 / childChance).toInt()
+                                                round(1.0 / childChance).toInt()
                                             } else {
                                                 0
                                             }
@@ -528,7 +531,7 @@ class DropTable(
         preRollDenom.forEach { entry ->
             val base = entry.denominator
             val boosted =
-                (entry.denominator / multiplier)
+                round(entry.denominator / multiplier)
                     .toInt()
                     .coerceAtLeast(1)
 
@@ -565,7 +568,7 @@ class DropTable(
 
             val denom =
                 if (chanceToEnter > 0) {
-                    (1.0 / chanceToEnter).toInt()
+                    round(1.0 / chanceToEnter).toInt()
                 } else {
                     0
                 }
@@ -607,7 +610,7 @@ class DropTable(
 
                             val childDenom =
                                 if (childChance > 0) {
-                                    (1.0 / childChance).toInt()
+                                    round(1.0 / childChance).toInt()
                                 } else {
                                     0
                                 }
@@ -647,7 +650,7 @@ class DropTable(
         val preRollSum = preRollWeight.mutableEntries().sumOf { it.weight }.toDouble()
 
         val preRollHitChance =
-            if (preRollTotal > 0) preRollSum / preRollTotal else 0.0
+            if (preRollTotal > 0) round(preRollSum / preRollTotal) else 0.0
 
         val mainGateMultiplier = 1.0 - preRollHitChance
         addWeightedTableDisplays(mainDrops, DropType.MAIN, parentChance = mainGateMultiplier)
@@ -671,7 +674,7 @@ class DropTable(
                     tableChance * herbChance
 
                 val denom =
-                    (1.0 / combinedChance)
+                    round(1.0 / combinedChance)
                         .coerceAtLeast(1.0)
                         .toInt()
 
@@ -741,7 +744,7 @@ class DropTable(
                             tableChance * seedChance
 
                         val denom =
-                            (1.0 / combinedChance)
+                            round(1.0 / combinedChance)
                                 .coerceAtLeast(1.0)
                                 .toInt()
 
@@ -763,7 +766,7 @@ class DropTable(
         tertiaryDrops.forEach {
             val base = it.denominator
             val boosted =
-                (it.denominator / multiplier)
+                round(it.denominator / multiplier)
                     .toInt()
                     .coerceAtLeast(1)
 
@@ -780,7 +783,7 @@ class DropTable(
 
         gemTableConfig?.let { cfg ->
             val chance = cfg.numerator.toDouble() / cfg.denominator
-            val denom = (1.0 / chance).toInt()
+            val denom = round(1.0 / chance).toInt()
 
             list.add(
                 DropDisplay(
@@ -795,7 +798,7 @@ class DropTable(
 
         rareTableConfig?.let { cfg ->
             val chance = cfg.numerator.toDouble() / cfg.denominator
-            val denom = (1.0 / chance).toInt()
+            val denom = round(1.0 / chance).toInt()
 
             list.add(
                 DropDisplay(
@@ -1127,8 +1130,8 @@ class DropTable(
     ) {
         add(
             NestedTableEntry(
-                table,
-                weight,
+                table = table,
+                weight = weight,
                 displayAsTable = asSubTable,
                 displayName = name,
                 displayItemId = icon?.let { Rscm.lookup(it) },

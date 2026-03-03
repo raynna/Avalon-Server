@@ -65,6 +65,12 @@ object ProjectileRegistry {
             ),
         )
 
+        // SPECIAL
+        register(
+            Projectile.INFERNO_ADZE,
+            ProjectileType(startHeight = 40, endHeight = 0, multiplier = 25, startTime = 0, arc = 15, displacement = 64),
+        )
+
         // NPCS
         register(Projectile.DRAGONFIRE, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 15, displacement = 128))
         register(

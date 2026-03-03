@@ -9,8 +9,7 @@ import java.util.Objects;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.ItemsEquipIds;
 import com.rs.java.game.item.meta.ItemMetadata;
-import com.rs.java.game.player.content.dungeoneering.rooms.SpawnRandomNpcsEvent;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 
 /**
  * Represents a single item.
@@ -73,6 +72,15 @@ public class Item implements Serializable {
 
 	public boolean isAnyOf(String... itemNames) {
 		return isItem(this.id, itemNames);
+	}
+
+	public boolean isAnyOf(Object... items) {
+		for (Object obj : items) {
+			if (resolveId(obj) == this.id) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String getNameKey() {

@@ -212,8 +212,8 @@ public class DwarfMultiCannon {
 					nearestN.handleIncommingHit(hit);
 					player.addCannonBalls(-1);
 					if (player.toggles("ONEXPPERHIT", false))
-						player.getSkills().addXpNoBonus(Skills.RANGE,
-								(player.getVarsManager().getBitValue(1485) == 1 ? Math.round(damage) / 10 : damage));
+						player.getSkills().addXp(Skills.RANGE,
+								(player.getVarsManager().getBitValue(1485) == 1 ? (double) damage / 10 : damage));
 					else
 						player.getSkills().addXp(Skills.RANGE, damage / 5);
 					if (Utils.getRandom(100) < 25) {
@@ -227,10 +227,10 @@ public class DwarfMultiCannon {
 						if (player.getCannonBalls() > 0)
 							player.addCannonBalls(-1);
 						if (player.toggles("ONEXPPERHIT", false))
-							player.getSkills().addXpNoBonus(Skills.RANGE,
-									(player.getVarsManager().getBitValue(1485) == 1 ? Math.round(damage) / 10 : damage));
+							player.getSkills().addXp(Skills.RANGE,
+									(player.getVarsManager().getBitValue(1485) == 1 ? (double) damage / 10 : damage));
 						else
-							player.getSkills().addXp(Skills.RANGE, damage / 5);
+							player.getSkills().addXp(Skills.RANGE, (double) damage / 5);
 					}
 					nearestN.setTarget(player);
 					if (nearestN instanceof Familiar)

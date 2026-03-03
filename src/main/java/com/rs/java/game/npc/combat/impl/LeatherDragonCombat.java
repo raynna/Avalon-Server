@@ -7,12 +7,10 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
 import com.rs.java.game.npc.combat.DragonFire;
 import com.rs.java.game.npc.combat.NpcCombatCalculations;
-import com.rs.java.game.player.CombatDefinitions;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.npc.combatdata.NpcAttackStyle;
-import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 
 public class LeatherDragonCombat extends CombatScript {
 

@@ -8,7 +8,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 /**
  *
@@ -427,11 +427,11 @@ public class Herblore extends Action {
             }
         } else {
             if (new Item(ingredients.getRewards()[slot]).getId() == 121)
-                player.getTaskManager().checkComplete(Tasks.MAKE_ATTACK_POTION);
+                player.getTaskManager().progress(Task.MAKE_ATTACK_POTION);
             if (new Item(ingredients.getRewards()[slot]).getId() == 169)
-                player.getTaskManager().checkComplete(Tasks.MAKE_RANGING_POTION);
+                player.getTaskManager().progress(Task.MAKE_RANGING_POTION);
             if (new Item(ingredients.getRewards()[slot]).getId() == 15313)
-                player.getTaskManager().checkComplete(Tasks.MAKE_EXTREME_STRENGTH);
+                player.getTaskManager().progress(Task.MAKE_EXTREME_STRENGTH);
             player.message("You mix the " + node.getDefinitions().getName().toLowerCase() + " into your potion.", true);
         }
         player.getInventory().removeItems(new Item(node.getId(), 1),

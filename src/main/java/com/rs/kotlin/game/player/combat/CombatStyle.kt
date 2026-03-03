@@ -13,7 +13,6 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.prayer.PrayerEffectHandler
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.damage.HitRoller
 import com.rs.kotlin.game.player.combat.damage.PendingHit
@@ -29,6 +28,7 @@ import com.rs.kotlin.game.player.combat.range.RangedStyle
 import com.rs.kotlin.game.player.combat.range.RangedWeapon
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.SpecialAttack
+import com.rs.kotlin.rscm.Rscm
 import kotlin.math.ceil
 import kotlin.math.max
 

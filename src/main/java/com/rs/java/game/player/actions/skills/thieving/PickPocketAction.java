@@ -138,7 +138,7 @@ public class PickPocketAction extends Action {
 			player.getPackets().sendGameMessage("" + getMessage(player));
 			double totalXp = npcData.getExperience();
 			totalXp *= Thieving.getThievingBoost(player);
-			player.getSkills().addSkillingXp(Skills.THIEVING, totalXp, Thieving.getThievingBoost(player));
+			player.getSkills().addXp(Skills.THIEVING, totalXp);
 			BlackIbisOutfit.addPiece(player);
 			for (int i = 0; i <= index; i++) {
 				Item item = npcData.getLoot()[Utils.random(npcData.getLoot().length)];

@@ -48,6 +48,9 @@ import com.rs.kotlin.game.npc.drops.tables.slayer.KuraskDropTable
 import com.rs.kotlin.game.npc.drops.tables.slayer.NechryaelDropTable
 import com.rs.kotlin.game.npc.drops.tables.wilderness.RevenantDropTable
 import com.rs.kotlin.game.npc.worldboss.WorldBossTable
+import com.rs.kotlin.game.player.skills.mining.GemRock
+import com.rs.kotlin.game.player.skills.mining.MiningGemPreRoll
+import com.rs.kotlin.game.player.skills.woodcutting.BirdNests
 
 object DropTablesSetup {
     val rareDropTable by lazy { RareDropTableEntry() }
@@ -69,11 +72,21 @@ object DropTablesSetup {
         /**
          * Special / Global Tables
          **/
+        registerNamedTable("Gem rock", GemRock().gemTable)
+        registerNamedTable("Gem Roll", MiningGemPreRoll.table)
         registerNamedTable("Mega Table", MegaDropTableViewer.table)
         registerNamedTable("Rare Table", RareDropTableViewer.table)
         registerNamedTable("Gem Table", GemDropTableViewer.table)
         registerNamedTable("World Boss", WorldBossTable.regular)
         registerItemTable("item.magic_chest", WorldBossTable.chest)
+        registerNamedTable("Bird's Nest", BirdNests.birdNestsViewer)
+        registerItemTable("item.bird_s_nest_red_egg", BirdNests.redEgg)
+        registerItemTable("item.bird_s_nest_green_egg", BirdNests.greenEgg)
+        registerItemTable("item.bird_s_nest_blue_egg", BirdNests.blueEgg)
+        registerItemTable("item.bird_s_nest_seeds", BirdNests.seedTable)
+        registerItemTable("item.bird_s_nest_ring", BirdNests.ringTable)
+        registerItemTable("item.bird_s_nest_wysen", BirdNests.wysen)
+        registerItemTable("item.bird_s_nest_raven_egg", BirdNests.ravenEgg)
         registerNamedTable("Hard clues", HardTreasureTrailTable.table)
         registerNamedTable("Medium clues", MediumTreasureTrailTable.table)
         registerNamedTable("Shared clue scroll", SharedClueScroll.table)

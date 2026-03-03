@@ -507,9 +507,9 @@ public class House implements Serializable {
 		WorldTasksManager.schedule(new WorldTask() {
 			@Override
 			public void run() {
-				player.getSkills().addSkillingXp(Skills.CONSTRUCTION, piece.getXP() * getConstructionBoost(player), getConstructionBoost(player));
+				player.getSkills().addXp(Skills.CONSTRUCTION, piece.getXP());
 				if (build.isWater()) {
-					player.getSkills().addSkillingXp(Skills.FARMING, piece.getXP() * getConstructionBoost(player), getConstructionBoost(player));
+					player.getSkills().addXp(Skills.FARMING, piece.getXP());
 				}
 				refreshObject(room, oref, false);
 				ConstructorsOutfit.addPiece(player);

@@ -9,8 +9,8 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.slayer.Slayer.SlayerMaster;
 import com.rs.java.game.player.actions.skills.slayer.Slayer.SlayerTask;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 public class SlayerManager implements Serializable {
 
@@ -66,7 +66,7 @@ public class SlayerManager implements Serializable {
 		} else
 			pointsIncreased += currentMaster.getPointsRange()[0];
 		slayerPoints += pointsIncreased;
-		player.getTaskManager().checkComplete(Tasks.COMPLETE_SLAYER_TASK);
+		player.getTaskManager().progress(Task.COMPLETE_SLAYER_TASK);
 		player.getPackets().sendGameMessage("You have completed in total of " + completedTasks
 				+ " slayer tasks and recieved " + pointsIncreased + " slayer points.");
 	}

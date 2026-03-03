@@ -4,8 +4,8 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.WorldTile;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.summoning.Summoning.Pouch;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting;
-import com.rs.java.game.player.actions.skills.woodcutting.Woodcutting.TreeDefinitions;
+import com.rs.kotlin.game.player.skills.woodcutting.TreeDefinition;
+import com.rs.kotlin.game.player.skills.woodcutting.Woodcutting;
 
 public class Beaver extends Familiar {
 
@@ -46,7 +46,7 @@ public class Beaver extends Familiar {
 	@Override
 	public boolean submitSpecial(Object context) {
 		WorldObject object = (WorldObject) context;
-		getOwner().getActionManager().setAction(new Woodcutting(object, TreeDefinitions.NORMAL));
+		//TODO special for beaver
 		return true;
 	}
 }

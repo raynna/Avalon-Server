@@ -1,6 +1,6 @@
 package com.rs.kotlin.game.npc.drops
 
-import com.rs.kotlin.Rscm
+import com.rs.kotlin.rscm.Rscm
 
 data class PackageDisplayDrop(
     val itemId: Int,

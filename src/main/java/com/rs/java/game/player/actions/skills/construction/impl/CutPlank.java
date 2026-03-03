@@ -6,7 +6,6 @@ import com.rs.java.game.item.ItemId;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.actions.skills.woodcutting.LumberjackOutfit;
 import com.rs.java.game.player.controllers.construction.SawmillController;
 
 
@@ -52,9 +51,6 @@ public class CutPlank extends Action {
 		player.getSkills().addXp(Skills.WOODCUTTING,
 				crystalSaw ? XP[type] * 2 : XP[type]);
 		player.getInventory().deleteItem(new Item(960, 1));
-		if (LumberjackOutfit.addPiece(player)) {
-			return -1;
-		}
 		switch (type) {
 		case 0:
 			sawmill.addPlank(0, 1);
@@ -76,6 +72,6 @@ public class CutPlank extends Action {
 
 	@Override
 	public void stop(Player player) {
-		setActionDelay(player, LumberjackOutfit.hasAllPieces(player) ? 1 : 3);
+		setActionDelay(player, 3);
 	}
 }

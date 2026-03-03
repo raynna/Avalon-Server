@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.rs.Settings;
 import com.rs.core.cache.defintions.ClientScriptMap;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.NPCDefinitions;
@@ -17,8 +16,9 @@ import com.rs.java.game.minigames.clanwars.ClanWars.Rules;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.tasksystem.Task;
+import com.rs.kotlin.game.player.tasksystem.TaskManager;
 
 /**
  * 
@@ -71,7 +71,7 @@ public class Summoning {
 			return false;
 		}
 		if (npc.getName().toLowerCase().contains("unicorn"))
-			player.getTaskManager().checkComplete(Tasks.SUMMON_UNICORN_STALLION);
+			player.getTaskManager().progress(Task.SUMMON_UNICORN_STALLION);
 		player.getInventory().deleteItem(pouch.getRealPouchId(), 1);
 		player.getSkills().drainSummoning(pouch.getSummoningCost());
 		player.setFamiliar(npc);

@@ -5,7 +5,7 @@ import com.rs.java.game.Animation;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 public class GemCutting extends Action {
 
@@ -61,13 +61,13 @@ public class GemCutting extends Action {
                 ItemDefinitions.getItemDefinitions(product.getUncut()).getName().toLowerCase() + ".", true);
 
         if (product.getUncut() == 1623)
-            player.getTaskManager().checkComplete(Tasks.CUT_UNCUT_SAPPHIRE);
+            player.getTaskManager().progress(Task.CUT_UNCUT_SAPPHIRE);
         if (product.getUncut() == 1617)
-            player.getTaskManager().checkComplete(Tasks.CUT_UNCUT_DIAMOND);
+            player.getTaskManager().progress(Task.CUT_UNCUT_DIAMOND);
         if (product.getUncut() == 1631)
-            player.getTaskManager().checkComplete(Tasks.CUT_UNCUT_DRAGONSTONE);
+            player.getTaskManager().progress(Task.CUT_UNCUT_DRAGONSTONE);
         if (product.getUncut() == 6571)
-            player.getTaskManager().checkComplete(Tasks.CUT_UNCUT_ONYX);
+            player.getTaskManager().progress(Task.CUT_UNCUT_ONYX);
 
         return quantity > 0 ? 1 : -1;
     }

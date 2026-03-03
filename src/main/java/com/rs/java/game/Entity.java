@@ -29,7 +29,7 @@ import com.rs.java.game.route.strategy.ObjectStrategy;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.Rscm;
+import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.player.NewPoison;
 import com.rs.kotlin.game.player.PendingEffect;
 import com.rs.kotlin.game.player.combat.damage.DamageScaler;

@@ -2,9 +2,9 @@ package com.rs.kotlin.game.player.combat
 
 import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
-import com.rs.kotlin.Rscm
 import com.rs.kotlin.game.player.combat.melee.StandardMelee
 import com.rs.kotlin.game.player.combat.range.RangeData
+import com.rs.kotlin.rscm.Rscm
 
 object CombatUtils {
     private const val DEFAULT_ANIMATION = 422

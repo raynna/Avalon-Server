@@ -6,7 +6,7 @@ import com.rs.java.game.Graphics;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.runecrafting.RunecraftingOutfit.Pieces;
-import com.rs.java.game.player.content.tasksystem.TaskManager.Tasks;
+import com.rs.kotlin.game.player.tasksystem.Task;
 
 public class Runecrafting {
 
@@ -163,7 +163,7 @@ public class Runecrafting {
 		}
 		double totalXp = exp * runes;
 		totalXp *= getRunecraftingBoost(player);
-		player.getSkills().addSkillingXp(Skills.RUNECRAFTING, totalXp, getRunecraftingBoost(player));
+		player.getSkills().addXp(Skills.RUNECRAFTING, totalXp);
 		player.gfx(new Graphics(186));
 		player.animate(new Animation(791));
 		player.lock(1);
@@ -172,9 +172,9 @@ public class Runecrafting {
 			RunecraftingOutfit.addPiece(player, level);
 		}
 		if (runeId == 556)
-			player.getTaskManager().checkComplete(Tasks.CRAFT_AIR_RUNE, runes);
+			player.getTaskManager().progress(Task.CRAFT_AIR_RUNE, runes);
 		if (runeId == 565)
-			player.getTaskManager().checkComplete(Tasks.CRAFT_BLOOD_RUNE, runes);
+			player.getTaskManager().progress(Task.CRAFT_BLOOD_RUNE, runes);
 		player.getPackets().sendGameMessage("You bind the temple's power into "
 				+ ItemDefinitions.getItemDefinitions(runeId).getName().toLowerCase() + "s.");
 	}
