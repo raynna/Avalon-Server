@@ -4,19 +4,28 @@ import com.rs.java.game.player.actions.combat.modernspells.ChargeOrb;
 import com.rs.java.game.player.content.SkillsDialogue;
 import com.rs.java.game.player.content.SkillsDialogue.ItemNameFilter;
 import com.rs.java.game.player.dialogues.Dialogue;
+import com.rs.kotlin.game.player.combat.magic.Spell;
 
 public class ChargeOrbD extends Dialogue {
 
 	private int itemId;
+	private Spell spell;
 
 	@Override
 	public void start() {
-		this.itemId = (int) parameters[0];
-		final int[] PRODUCTS = { itemId };
-		SkillsDialogue.sendSkillsDialogue(player, SkillsDialogue.MAKE,
-				"Choose how many you wish to make,<br>then click on the item to begin.", 28, PRODUCTS,
-				new ItemNameFilter() {
 
+		this.spell = (Spell) parameters[0];
+		this.itemId = (int) parameters[1];
+
+		final int[] PRODUCTS = { itemId };
+
+		SkillsDialogue.sendSkillsDialogue(
+				player,
+				SkillsDialogue.MAKE,
+				"Choose how many you wish to make,<br>then click on the item to begin.",
+				28,
+				PRODUCTS,
+				new ItemNameFilter() {
 					@Override
 					public String rename(String name) {
 						return name;
@@ -24,19 +33,15 @@ public class ChargeOrbD extends Dialogue {
 				});
 	}
 
-	/*
-	 * @Override public void start() { this.gem = (Gem) parameters[0];
-	 * SkillsDialogue .sendSkillsDialogue( player, SkillsDialogue.CUT,
-	 * "Choose how many you wish to cut,<br>then click on the item to begin.",
-	 * player.getInventory().getItems() .getNumberOf(gem.getUncut()), new int[]
-	 * { gem.getUncut() }, null);
-	 * 
-	 * }
-	 */
-
 	@Override
 	public void run(int interfaceId, int componentId) {
-		player.getActionManager().setAction(new ChargeOrb(itemId, SkillsDialogue.getQuantity(player)));
+
+		int quantity = SkillsDialogue.getQuantity(player);
+
+		player.getActionManager().setAction(
+				new ChargeOrb(spell, itemId, quantity)
+		);
+
 		end();
 	}
 
@@ -44,5 +49,4 @@ public class ChargeOrbD extends Dialogue {
 	public void finish() {
 
 	}
-
 }

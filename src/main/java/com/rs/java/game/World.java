@@ -142,8 +142,8 @@ public final class World {
 
     public static int getPlayersInPVP() {
         int result = 0;
-        for (Player players : World.getPlayers())
-            if ((players.getControlerManager().getControler() instanceof EdgevillePvPController)) {
+        for (Player player : World.getPlayers())
+            if (player.inPkingArea()) {
                 result++;
             }
         return result;

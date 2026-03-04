@@ -85,7 +85,7 @@ import static com.rs.kotlin.game.world.util.Msg.warn;
 public final class WorldPacketsDecoder extends Decoder {
 
     public static final int EQUIPMENT_REMOVE_PACKET = 216;
-    private static final byte[] PACKET_SIZES = new byte[104];
+    private static final byte[] PACKET_SIZES = new byte[256];
 
     private static final int WALKING_PACKET = 8;
     private static final int MINI_WALKING_PACKET = 58;

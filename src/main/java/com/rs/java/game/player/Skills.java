@@ -10,6 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.rs.Settings;
 import com.rs.core.thread.CoresManager;
 import com.rs.discord.DiscordAnnouncer;
+import com.rs.java.game.Entity;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.utils.HexColours;
@@ -849,20 +850,31 @@ public final class Skills implements Serializable {
         // 1️⃣ Apply base rate (combat/skilling)
         double baseXp = applyBaseRate(skill, amount);
 
+        boolean isCombat =
+                (skill >= Skills.ATTACK && skill <= Skills.RANGE)
+                        || skill == Skills.MAGIC;
+
+        if (player.toggles("ONEXPPERHIT", false) && isCombat) {
+            applyMultipliers = false;
+        }
+        Entity temporaryTarget = player.getTemporaryTarget();
+        if (temporaryTarget != null && isCombat) {
+            if (temporaryTarget == player || temporaryTarget instanceof NPC && ((NPC) temporaryTarget).getName().toLowerCase().contains("dummy")) {
+                applyMultipliers = false;
+            }
+        }
+
         double finalXp = baseXp;
         double bonusXp = 0;
 
         if (applyMultipliers) {
 
-            // 2️⃣ Permanent multipliers (level scaling, ranks, member, aura)
             double permanentMultiplier = player.getXpMultiplier(skill);
             double scaledXp = baseXp * permanentMultiplier;
 
-            // 3️⃣ Bonus multipliers (weekend, outfit)
             double bonusMultiplier = player.getBonusMultiplier(skill);
             finalXp = scaledXp * bonusMultiplier;
 
-            // Only the BONUS portion should be shown
             bonusXp = finalXp - scaledXp;
 
             sendBonusXpVar(skill, bonusXp);

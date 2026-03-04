@@ -63,12 +63,12 @@ public class JournalTab extends CustomTab {
 		WILDYCOUNT(5) {
 			@Override
 			public void usage(Player p) {
-				p.getPackets().sendGameMessage("Players in the Wilderness: " + World.getPlayersInWilderness() + ".");
+				p.getPackets().sendGameMessage("Players in Pvp: " + World.getPlayersInPVP() + ".");
 			}
 
 			@Override
 			public String text(Player p) {
-				return "Players in Wilderness: <col=04BB3B>" + World.getPlayersInWilderness();
+				return "Players in Pvp: <col=04BB3B>" + World.getPlayersInPVP();
 			}
 		},
 		PLAYERXP(6) {

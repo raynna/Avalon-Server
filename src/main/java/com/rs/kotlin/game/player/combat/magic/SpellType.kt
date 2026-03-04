@@ -7,23 +7,32 @@ import com.rs.kotlin.game.world.projectile.Projectile
 
 sealed class SpellType {
     object Combat : SpellType()
+
     object Teleport : SpellType()
+
     object Instant : SpellType()
+
     object Item : SpellType()
-    object Object : SpellType()
+
+    class Object(
+        val objectIds: Set<Int>,
+        val orbItemId: Int,
+    ) : SpellType()
+
     object FloorItem : SpellType()
+
     object Target : SpellType()
 
     companion object {
-        val ALL_TYPES = listOf(
-            Combat,
-            Teleport,
-            Instant,
-            Item,
-            Object,
-            FloorItem,
-            Target
-        )
+        val ALL_TYPES =
+            listOf(
+                Combat,
+                Teleport,
+                Instant,
+                Item,
+                FloorItem,
+                Target,
+            )
     }
 }
 
@@ -31,15 +40,16 @@ data class RuneRequirement(
     val id: Int,
     val amount: Int,
     val canBeInfinite: Boolean = false,
-    val compositeRunes: List<Int> = emptyList()
+    val compositeRunes: List<Int> = emptyList(),
 )
 
 data class StaffRequirement(
-    val anyOf: List<Int> = emptyList()
+    val anyOf: List<Int> = emptyList(),
 )
+
 data class ItemRequirement(
     val anyOf: List<Int> = emptyList(),
-    val allOf: List<Int> = emptyList()
+    val allOf: List<Int> = emptyList(),
 )
 
 data class Spell(
@@ -70,14 +80,14 @@ data class Spell(
     val builtInWeapon: Boolean = false,
     val chargeCost: Int = 0,
     val canCastWithWeapon: ((Player) -> Boolean)? = null,
-    val onConsumeCharge: ((Player) -> Unit)? = null
+    val onConsumeCharge: ((Player) -> Unit)? = null,
 ) {
-    fun isElemental(): Boolean {
-        return element in listOf(
-            ElementType.Air,
-            ElementType.Water,
-            ElementType.Earth,
-            ElementType.Fire
-        )
-    }
+    fun isElemental(): Boolean =
+        element in
+            listOf(
+                ElementType.Air,
+                ElementType.Water,
+                ElementType.Earth,
+                ElementType.Fire,
+            )
 }

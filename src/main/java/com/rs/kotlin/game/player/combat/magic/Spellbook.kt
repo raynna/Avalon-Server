@@ -40,6 +40,8 @@ abstract class Spellbook(
 
     private val spellMap by lazy { spells.associateBy { it.id } }
 
+    fun getRunesFor(spellId: Int): List<RuneRequirement> = spellMap[spellId]?.runes ?: emptyList()
+
     fun getSpell(spellId: Int): Spell? = spellMap[spellId]
 }
 
@@ -1764,7 +1766,11 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 name = "Charge Water Orb",
                 level = 56,
                 xp = 66.0,
-                type = SpellType.Object,
+                type =
+                    SpellType.Object(
+                        objectIds = setOf(2151),
+                        orbItemId = 571,
+                    ),
                 runes =
                     listOf(
                         RuneRequirement(RuneDefinitions.Runes.WATER, 30),
@@ -1776,7 +1782,11 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 name = "Charge Earth Orb",
                 level = 60,
                 xp = 70.0,
-                type = SpellType.Object,
+                type =
+                    SpellType.Object(
+                        objectIds = setOf(2154),
+                        orbItemId = 575,
+                    ),
                 runes =
                     listOf(
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 30),
@@ -1788,7 +1798,11 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 name = "Charge Fire Orb",
                 level = 63,
                 xp = 73.0,
-                type = SpellType.Object,
+                type =
+                    SpellType.Object(
+                        objectIds = setOf(2153),
+                        orbItemId = 569,
+                    ),
                 runes =
                     listOf(
                         RuneRequirement(RuneDefinitions.Runes.FIRE, 30),
@@ -1800,7 +1814,11 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 name = "Charge Air Orb",
                 level = 66,
                 xp = 76.0,
-                type = SpellType.Object,
+                type =
+                    SpellType.Object(
+                        objectIds = setOf(2152),
+                        orbItemId = 573,
+                    ),
                 runes =
                     listOf(
                         RuneRequirement(RuneDefinitions.Runes.AIR, 30),

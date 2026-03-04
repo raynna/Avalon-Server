@@ -106,9 +106,6 @@ class MagicStyle(
                     return false
                 }
             }
-            if (!SpellHandler.checkAndRemoveRunes(attacker, currentSpell)) {
-                return false
-            }
         }
         return true
     }
@@ -298,6 +295,9 @@ class MagicStyle(
                 return
             }
         }
+        if (!SpellHandler.checkAndRemoveRunes(attacker, spell)) {
+            return
+        }
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it) }
         spell.attackSound.takeIf { it != -1 }?.let { attacker.playSound(it, 1) }
@@ -484,6 +484,9 @@ class MagicStyle(
             } else {
                 listOf(defender)
             }
+        if (!SpellHandler.checkAndRemoveRunes(attacker, spell)) {
+            return
+        }
         spell.animationId.takeIf { it != -1 }?.let { attacker.animate(it) }
         spell.graphicId.takeIf { it.id != -1 }?.let { attacker.gfx(it.id, it.height) }
 

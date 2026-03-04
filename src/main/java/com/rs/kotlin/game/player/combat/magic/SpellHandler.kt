@@ -2,15 +2,12 @@
 
 package com.rs.kotlin.game.player.combat.magic
 
-import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.*
 import com.rs.java.game.item.FloorItem
-import com.rs.java.game.item.Item
 import com.rs.java.game.item.ground.GroundItems
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData
-import com.rs.java.game.item.meta.RunePouchMetaData
 import com.rs.java.game.minigames.clanwars.FfaZone
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Equipment
@@ -19,7 +16,6 @@ import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.actions.combat.modernspells.Alchemy
 import com.rs.java.game.player.actions.combat.modernspells.BonesTo
-import com.rs.java.game.player.actions.combat.modernspells.Charge
 import com.rs.java.game.player.actions.combat.modernspells.ChargeOrb
 import com.rs.java.game.player.actions.combat.modernspells.SuperHeat
 import com.rs.java.game.player.actions.skills.crafting.Enchanting
@@ -31,7 +27,6 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.CombatAction
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
-import kotlin.math.floor
 
 object SpellHandler {
     @JvmStatic
@@ -67,20 +62,16 @@ object SpellHandler {
     ) {
         val spell = getSpellForPlayer(player, spellId) ?: return
         if (!canCast(player, spell)) return
-
         when (spell.type) {
             SpellType.Combat -> {
-                if (!checkAndRemoveRunes(player, spell)) return
                 handleCombatSpell(player, spell, autocast)
             }
 
             SpellType.Teleport -> {
-                if (!checkAndRemoveRunes(player, spell)) return
                 handleTeleportSpell(player, spell)
             }
 
             SpellType.Instant -> {
-                if (!checkAndRemoveRunes(player, spell)) return
                 castInstant(player, spell)
             }
 
@@ -89,16 +80,14 @@ object SpellHandler {
             }
 
             SpellType.FloorItem -> {
-                if (!checkAndRemoveRunes(player, spell)) return
                 handleTelegrabSpell(player, spell)
             }
 
-            SpellType.Object -> {
+            is SpellType.Object -> {
                 handleOrbChargingSpell(player, spell)
             }
 
             SpellType.Target -> {
-                if (!checkAndRemoveRunes(player, spell)) return
                 handleTeleportOtherSpell(player, spell)
             }
         }
@@ -135,14 +124,15 @@ object SpellHandler {
             }
 
             spell.name.contains("superheat", ignoreCase = true) -> {
-                if (SuperHeat.cast(player, spell.xp, itemId, slotId) && hasRequiredRunes(player, spell)) {
-                    checkAndRemoveRunes(player, spell)
+                if (!RuneService.hasRunes(player, spell.runes)) return
+                if (SuperHeat.cast(player, spell.xp, itemId, slotId)) {
+                    RuneService.consumeRunes(player, spell.runes)
                     return
                 }
             }
 
             else -> {
-                handleTransformationSpell(player, spell)
+                player.message("Unhandled ${spell.name}")
             }
         }
     }
@@ -283,177 +273,6 @@ object SpellHandler {
         return true
     }
 
-    fun hasRequiredRunes(
-        player: Player,
-        spell: Spell,
-    ): Boolean {
-        for (requirement in spell.runes) {
-            if (requirement.canBeInfinite && hasInfiniteRune(player, requirement.id)) {
-                continue
-            }
-
-            val runeId =
-                requirement.compositeRunes.firstOrNull { compositeId ->
-                    hasRune(player, compositeId, requirement.amount)
-                } ?: requirement.id
-
-            if (!hasRune(player, runeId, requirement.amount)) {
-                player.packets.sendGameMessage(
-                    "You don't have enough ${ItemDefinitions.getItemDefinitions(runeId).name} to cast this spell.",
-                )
-                return false
-            }
-        }
-
-        return true
-    }
-
-    fun checkAndRemoveRunes(
-        player: Player,
-        spell: Spell,
-    ): Boolean {
-        val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt())
-        if (weapon?.metadata is GreaterRunicStaffMetaData) {
-            val data = weapon.metadata as GreaterRunicStaffMetaData
-            if (spell.id == data.spellId && data.charges > 0) {
-                data.removeCharges(1)
-                return true
-            }
-        }
-
-        val runesToRemove = mutableListOf<Item>()
-
-        for (requirement in spell.runes) {
-            if (requirement.canBeInfinite && hasInfiniteRune(player, requirement.id)) {
-                continue
-            }
-
-            val runeId =
-                requirement.compositeRunes.firstOrNull { compositeId ->
-                    hasRune(player, compositeId, requirement.amount)
-                } ?: requirement.id
-
-            if (!hasRune(player, runeId, requirement.amount)) {
-                player.packets.sendGameMessage(
-                    "You don't have enough ${ItemDefinitions.getItemDefinitions(runeId).name} to cast this spell.",
-                )
-                player.combatDefinitions.resetSpells(true)
-                return false
-            }
-
-            runesToRemove.add(Item(runeId, requirement.amount))
-        }
-        if (spell.type == SpellType.Combat) {
-            if (staffOfLightEffect(player)) {
-                val isKodai = weapon.isAnyOf("item.kodai_wand")
-                player.packets.sendGameMessage("Your spell draws its power completely from your " + if (isKodai) "wand." else "staff.")
-                return true
-            }
-        }
-
-        runesToRemove.forEach { rune ->
-            var removed = false
-
-            for (item in player.inventory.items.toArray()) {
-                if (item == null || item.id != Item.getId("item.rune_pouch")) continue
-
-                val meta = item.metadata
-                if (meta is RunePouchMetaData) {
-                    val pouchRunes = meta.getRunesToArray()
-                    for (pouchRune in pouchRunes) {
-                        if (pouchRune.id == rune.id && pouchRune.amount >= rune.amount) {
-                            pouchRune.amount -= rune.amount
-                            meta.updateRunes(pouchRunes)
-                            removed = true
-                            break
-                        }
-                    }
-                }
-
-                if (removed) break
-            }
-
-            if (!removed) {
-                player.inventory.deleteItem(rune.id, rune.amount)
-            }
-        }
-        player.inventory.refresh()
-
-        return true
-    }
-
-    private fun hasInfiniteRune(
-        player: Player,
-        runeId: Int,
-    ): Boolean {
-        val weaponName = ItemDefinitions.getItemDefinitions(player.equipment.weaponId).name.lowercase()
-        val shieldName = ItemDefinitions.getItemDefinitions(player.equipment.shieldId).name.lowercase()
-
-        return when (runeId) {
-            RuneDefinitions.Runes.FIRE -> {
-                weaponName.contains("fire") ||
-                    weaponName.contains("lava") ||
-                    weaponName.contains("steam") ||
-                    weaponName.contains("smoke") ||
-                    shieldName.contains("tome of fire")
-            }
-
-            RuneDefinitions.Runes.WATER -> {
-                weaponName.contains("water") ||
-                    weaponName.contains("mud") ||
-                    weaponName.contains("steam") ||
-                    weaponName.contains("mist") ||
-                    shieldName.contains("tome of frost")
-            }
-
-            RuneDefinitions.Runes.EARTH -> {
-                weaponName.contains("earth") ||
-                    weaponName.contains("lava") ||
-                    weaponName.contains("mud") ||
-                    weaponName.contains("dust")
-            }
-
-            RuneDefinitions.Runes.AIR -> {
-                weaponName.contains("air") ||
-                    weaponName.contains("mist") ||
-                    weaponName.contains("smoke") ||
-                    weaponName.contains("dust") ||
-                    player.equipment.weaponId == 21777
-            }
-
-            else -> {
-                false
-            }
-        }
-    }
-
-    @JvmStatic
-    private fun hasRune(
-        player: Player,
-        runeId: Int,
-        amount: Int,
-    ): Boolean {
-        if (hasRunePouch(player)) {
-            for (item in player.inventory.items.toArray()) {
-                if (item == null || item.id != Item.getId("item.rune_pouch")) continue
-
-                val meta = item.metadata
-                if (meta is RunePouchMetaData) {
-                    val runes = meta.runes
-                    val countInPouch = runes[runeId] ?: 0
-                    if (countInPouch >= amount) {
-                        return true
-                    }
-                }
-            }
-        }
-
-        // Check inventory as fallback
-        return player.inventory.getNumberOf(runeId) >= amount
-    }
-
-    private fun hasRunePouch(player: Player): Boolean = player.inventory.containsOneItem(RuneDefinitions.RUNE_POUCH)
-
     private fun staffOfLightEffect(player: Player): Boolean {
         val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return false
         return when {
@@ -475,6 +294,40 @@ object SpellHandler {
                 false
             }
         }
+    }
+
+    fun checkAndRemoveRunes(
+        player: Player,
+        spell: Spell,
+    ): Boolean {
+        val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt())
+
+        if (weapon?.metadata is GreaterRunicStaffMetaData) {
+            val data = weapon.metadata as GreaterRunicStaffMetaData
+
+            if (spell.id == data.spellId && data.charges > 0) {
+                data.removeCharges(1)
+                return true
+            }
+        }
+
+        if (!RuneService.hasRunes(player, spell.runes)) {
+            player.combatDefinitions.resetSpells(true)
+            return false
+        }
+
+        if (spell.type == SpellType.Combat && staffOfLightEffect(player)) {
+            val isKodai = weapon?.isAnyOf("item.kodai_wand") ?: false
+            player.packets.sendGameMessage(
+                "Your spell draws its power completely from your " +
+                    if (isKodai) "wand." else "staff.",
+            )
+            return true
+        }
+
+        RuneService.consumeRunes(player, spell.runes)
+
+        return true
     }
 
     private fun handleCombatSpell(
@@ -514,12 +367,14 @@ object SpellHandler {
         itemId: Int,
         slotId: Int,
     ) {
-        if (!checkAndRemoveRunes(player, spell)) return
-
+        if (!RuneService.hasRunes(player, spell.runes)) {
+            return
+        }
         val fireStaff = player.equipment.weaponId in listOf(1387, 1393, 1401, 3053, 3054)
         val isHighAlchemy = spell.name.contains("High", true)
-
-        Alchemy.castSpell(player, itemId, slotId, fireStaff, !isHighAlchemy)
+        if (Alchemy.castSpell(player, itemId, slotId, fireStaff, !isHighAlchemy)) {
+            RuneService.consumeRunes(player, spell.runes)
+        }
     }
 
     private fun handleEnchantSpell(
@@ -528,8 +383,6 @@ object SpellHandler {
         itemId: Int,
         slotId: Int,
     ) {
-        if (!checkAndRemoveRunes(player, spell)) return
-
         val enchantLevel =
             when (spell.id) {
                 29 -> 1
@@ -544,75 +397,39 @@ object SpellHandler {
         Enchanting.startEnchant(player, itemId, slotId, enchantLevel, spell.xp)
     }
 
-    private fun handleTransformationSpell(
-        player: Player,
-        spell: Spell,
-    ) {
-        when (spell.name) {
-            "Bones to Bananas", "Bones to Peaches" -> {
-                if (BonesTo.cast(player, spell.xp, spell.name.contains("Peaches"))) {
-                    checkAndRemoveRunes(player, spell)
-                }
-            }
-
-            "Charge" -> {
-                if (Charge.castSpell(player)) {
-                    checkAndRemoveRunes(player, spell)
-                }
-            }
-        }
-    }
-
     private fun handleOrbChargingSpell(
         player: Player,
         spell: Spell,
     ) {
         val objectId = player.temporaryAttribute()["spell_objectid"] as? Int ?: return
-        player.temporaryAttribute()["spell_runes"] =
-            arrayOf(
-                Item(RuneDefinitions.Runes.COSMIC, 3),
-                Item(spell.runes.first().id, 30),
-            )
+
+        val type = spell.type as? SpellType.Object ?: return
+
+        if (objectId !in type.objectIds) {
+            player.message("Nothing interesting happens.")
+            return
+        }
+
         if (!player.inventory.containsItem("item.unpowered_orb")) {
             player.message("You need an unpowered orb to charge.")
             return
         }
-        when (spell.id) {
-            74 -> {
-                if (objectId == 2152) {
-                    ChargeOrb.charge(player, 573)
-                    return
-                }
-            }
 
-            60 -> {
-                if (objectId == 2151) {
-                    ChargeOrb.charge(player, 571)
-                    return
-                }
-            }
-
-            64 -> {
-                if (objectId == 2154) {
-                    ChargeOrb.charge(player, 575)
-                    return
-                }
-            }
-
-            71 -> {
-                if (objectId == 2153) {
-                    ChargeOrb.charge(player, 569)
-                    return
-                }
-            }
-        }
-        player.message("Nothing interesting happens.")
+        player.dialogueManager.startDialogue(
+            "ChargeOrbD",
+            spell,
+            type.orbItemId,
+        )
     }
 
     private fun handleTelegrabSpell(
         player: Player,
         spell: Spell,
     ) {
+        if (!RuneService.hasRunes(player, spell.runes)) {
+            return
+        }
+        RuneService.consumeRunes(player, spell.runes)
         val attrs = player.temporaryAttribute()
         val floorItem = attrs["spell_flooritem"] as? FloorItem ?: return
 
@@ -687,6 +504,10 @@ object SpellHandler {
         }
         if (!player.controlerManager.processMagicTeleport(tile)) {
             return
+        }
+        if (spell != null) {
+            if (!RuneService.hasRunes(player, spell.runes)) return
+            RuneService.consumeRunes(player, spell.runes)
         }
 
         val delay = if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) 6 else 4

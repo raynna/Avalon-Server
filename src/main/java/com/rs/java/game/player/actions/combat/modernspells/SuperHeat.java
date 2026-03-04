@@ -102,7 +102,6 @@ public class SuperHeat {
 					player.getInventory().deleteItem(ores.getReqs().getId(), ores.getReqs().getAmount());
 				}
 				player.castSpellDelay(3);
-				player.lock(1);
 				Item base = new Item(ores.getBaseId());
 				player.getInventory().deleteItem(slotId, base);
 				player.getInventory().addItem(ores.getNewId(), 1);
@@ -110,6 +109,7 @@ public class SuperHeat {
 				player.getSkills().addXp(Skills.SMITHING, ores.getXp());
 				player.animate(new Animation(722));
 				player.gfx(new Graphics(148, 0, 100));
+				player.lock(1);
 				return true;
 			}
 		}
