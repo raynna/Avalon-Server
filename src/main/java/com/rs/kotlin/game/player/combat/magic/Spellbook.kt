@@ -30,18 +30,17 @@ abstract class Spellbook(
             spellId: Int,
         ): Spell? =
             when (player.combatDefinitions.getSpellBook()) {
-                MODERN_ID -> MODERN.spells.find { it.id == spellId }
-                ANCIENT_ID -> ANCIENT.spells.find { it.id == spellId }
+                MODERN_ID -> MODERN.getSpell(spellId)
+                ANCIENT_ID -> ANCIENT.getSpell(spellId)
                 else -> null
-            } ?: run {
-                // println("Warning: Spell id $spellId not found in player's active spellbook")
-                null
             }
     }
 
     abstract val spells: List<Spell>
 
-    fun getSpell(spellId: Int): Spell? = spells.find { it.id == spellId }
+    private val spellMap by lazy { spells.associateBy { it.id } }
+
+    fun getSpell(spellId: Int): Spell? = spellMap[spellId]
 }
 
 object AncientMagicks : Spellbook(ANCIENT_ID) {

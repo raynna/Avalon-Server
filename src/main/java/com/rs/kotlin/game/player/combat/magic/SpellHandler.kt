@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.rs.kotlin.game.player.combat.magic
 
 import com.rs.core.cache.defintions.ItemDefinitions
@@ -6,6 +8,7 @@ import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.*
 import com.rs.java.game.item.FloorItem
 import com.rs.java.game.item.Item
+import com.rs.java.game.item.ground.GroundItems
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData
 import com.rs.java.game.item.meta.RunePouchMetaData
 import com.rs.java.game.minigames.clanwars.FfaZone
@@ -18,6 +21,7 @@ import com.rs.java.game.player.actions.combat.modernspells.Alchemy
 import com.rs.java.game.player.actions.combat.modernspells.BonesTo
 import com.rs.java.game.player.actions.combat.modernspells.Charge
 import com.rs.java.game.player.actions.combat.modernspells.ChargeOrb
+import com.rs.java.game.player.actions.combat.modernspells.SuperHeat
 import com.rs.java.game.player.actions.skills.crafting.Enchanting
 import com.rs.java.game.player.controllers.CrucibleController
 import com.rs.java.game.player.controllers.EdgevillePvPController
@@ -25,6 +29,9 @@ import com.rs.java.game.player.controllers.FightCaves
 import com.rs.java.game.player.controllers.FightKiln
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.CombatAction
+import com.rs.kotlin.game.world.projectile.Projectile
+import com.rs.kotlin.game.world.projectile.ProjectileManager
+import kotlin.math.floor
 
 object SpellHandler {
     @JvmStatic
@@ -60,22 +67,40 @@ object SpellHandler {
     ) {
         val spell = getSpellForPlayer(player, spellId) ?: return
         if (!canCast(player, spell)) return
-        if (spell.type != SpellType.Combat) {
-            if (!checkAndRemoveRunes(player, spell)) return
-        }
-        if (spell.type == SpellType.Object) {
-            if (spell.name.equals("Charge Water Orb", ignoreCase = true)) {
+
+        when (spell.type) {
+            SpellType.Combat -> {
+                if (!checkAndRemoveRunes(player, spell)) return
+                handleCombatSpell(player, spell, autocast)
+            }
+
+            SpellType.Teleport -> {
+                if (!checkAndRemoveRunes(player, spell)) return
+                handleTeleportSpell(player, spell)
+            }
+
+            SpellType.Instant -> {
+                if (!checkAndRemoveRunes(player, spell)) return
+                castInstant(player, spell)
+            }
+
+            SpellType.Item -> {
+                handleItemSpell(player, spell)
+            }
+
+            SpellType.FloorItem -> {
+                if (!checkAndRemoveRunes(player, spell)) return
+                handleTelegrabSpell(player, spell)
+            }
+
+            SpellType.Object -> {
                 handleOrbChargingSpell(player, spell)
             }
-        }
-        when (spell.type) {
-            is SpellType.Combat -> handleCombatSpell(player, spell, autocast)
-            is SpellType.Teleport -> handleTeleportSpell(player, spell)
-            SpellType.FloorItem -> TODO()
-            SpellType.Instant -> castInstant(player, spell)
-            SpellType.Item -> TODO()
-            SpellType.Object -> TODO()
-            SpellType.Target -> TODO()
+
+            SpellType.Target -> {
+                if (!checkAndRemoveRunes(player, spell)) return
+                handleTeleportOtherSpell(player, spell)
+            }
         }
     }
 
@@ -92,19 +117,58 @@ object SpellHandler {
         cast(player, spellId, false)
     }
 
+    private fun handleItemSpell(
+        player: Player,
+        spell: Spell,
+    ) {
+        val attrs = player.temporaryAttribute()
+        val itemId = attrs["spell_itemid"] as? Int ?: return
+        val slotId = attrs["spell_slotid"] as? Int ?: return
+
+        when {
+            spell.name.contains("alchemy", true) -> {
+                handleAlchemySpell(player, spell, itemId, slotId)
+            }
+
+            spell.name.contains("enchant", true) -> {
+                handleEnchantSpell(player, spell, itemId, slotId)
+            }
+
+            spell.name.contains("superheat", ignoreCase = true) -> {
+                if (SuperHeat.cast(player, spell.xp, itemId, slotId) && hasRequiredRunes(player, spell)) {
+                    checkAndRemoveRunes(player, spell)
+                    return
+                }
+            }
+
+            else -> {
+                handleTransformationSpell(player, spell)
+            }
+        }
+    }
+
     private fun castInstant(
         player: Player,
         spell: Spell,
     ) {
-        player.message("cast Instant: " + spell.name.toLowerCase())
-        if (spell.name.equals("charge", ignoreCase = true)) {
-            player.animate(811)
-            player.tickManager.addMinutes(TickManager.TickKeys.CHARGE_SPELL, 2)
-            player.message("You are now feeling the power of the charge spell.")
-        }
-        if (spell.name.contains("enchant", ignoreCase = true)) {
-            player.stopAll()
-            player.interfaceManager.sendInterface(432)
+        player.message("cast Instant: " + spell.name)
+        when (spell.name) {
+            "Bones to Bananas", "Bones to Peaches" -> {
+                if (BonesTo.cast(player, spell.xp, spell.name.contains("Peaches"))) {
+                    checkAndRemoveRunes(player, spell)
+                }
+            }
+
+            "Charge" -> {
+                player.animate(811)
+                player.tickManager.addMinutes(TickManager.TickKeys.CHARGE_SPELL, 2)
+                player.message("You are now feeling the power of the charge spell.")
+            }
+
+            "Enchant Crossbow bolt" -> {
+                player.stopAll()
+                player.interfaceManager.sendInterface(432)
+            }
         }
     }
 
@@ -219,6 +283,31 @@ object SpellHandler {
         return true
     }
 
+    fun hasRequiredRunes(
+        player: Player,
+        spell: Spell,
+    ): Boolean {
+        for (requirement in spell.runes) {
+            if (requirement.canBeInfinite && hasInfiniteRune(player, requirement.id)) {
+                continue
+            }
+
+            val runeId =
+                requirement.compositeRunes.firstOrNull { compositeId ->
+                    hasRune(player, compositeId, requirement.amount)
+                } ?: requirement.id
+
+            if (!hasRune(player, runeId, requirement.amount)) {
+                player.packets.sendGameMessage(
+                    "You don't have enough ${ItemDefinitions.getItemDefinitions(runeId).name} to cast this spell.",
+                )
+                return false
+            }
+        }
+
+        return true
+    }
+
     fun checkAndRemoveRunes(
         player: Player,
         spell: Spell,
@@ -275,7 +364,6 @@ object SpellHandler {
                         if (pouchRune.id == rune.id && pouchRune.amount >= rune.amount) {
                             pouchRune.amount -= rune.amount
                             meta.updateRunes(pouchRunes)
-                            player.inventory.refresh()
                             removed = true
                             break
                         }
@@ -287,9 +375,9 @@ object SpellHandler {
 
             if (!removed) {
                 player.inventory.deleteItem(rune.id, rune.amount)
-                player.inventory.refresh()
             }
         }
+        player.inventory.refresh()
 
         return true
     }
@@ -423,24 +511,24 @@ object SpellHandler {
     private fun handleAlchemySpell(
         player: Player,
         spell: Spell,
+        itemId: Int,
+        slotId: Int,
     ) {
-        val itemId = player.temporaryAttribute()["spell_itemid"] as? Int ?: return
-        val slotId = player.temporaryAttribute()["spell_slotid"] as? Int ?: return
+        if (!checkAndRemoveRunes(player, spell)) return
 
         val fireStaff = player.equipment.weaponId in listOf(1387, 1393, 1401, 3053, 3054)
-        val isHighAlchemy = spell.name.contains("High", ignoreCase = true)
+        val isHighAlchemy = spell.name.contains("High", true)
 
-        if (Alchemy.castSpell(player, itemId, slotId, fireStaff, !isHighAlchemy)) {
-            checkAndRemoveRunes(player, spell)
-        }
+        Alchemy.castSpell(player, itemId, slotId, fireStaff, !isHighAlchemy)
     }
 
     private fun handleEnchantSpell(
         player: Player,
         spell: Spell,
+        itemId: Int,
+        slotId: Int,
     ) {
-        val itemId = player.temporaryAttribute()["spell_itemid"] as? Int ?: return
-        val slotId = player.temporaryAttribute()["spell_slotid"] as? Int ?: return
+        if (!checkAndRemoveRunes(player, spell)) return
 
         val enchantLevel =
             when (spell.id) {
@@ -450,12 +538,10 @@ object SpellHandler {
                 61 -> 4
                 76 -> 5
                 88 -> 6
-                else -> 0
+                else -> return
             }
 
-        if (Enchanting.startEnchant(player, itemId, slotId, enchantLevel, spell.xp)) {
-            checkAndRemoveRunes(player, spell)
-        }
+        Enchanting.startEnchant(player, itemId, slotId, enchantLevel, spell.xp)
     }
 
     private fun handleTransformationSpell(
@@ -482,22 +568,79 @@ object SpellHandler {
         spell: Spell,
     ) {
         val objectId = player.temporaryAttribute()["spell_objectid"] as? Int ?: return
-
-        when (spell.name) {
-            "Air Orb" -> if (objectId == 2152) ChargeOrb.charge(player, 573)
-            "Water Orb" -> if (objectId == 2151) ChargeOrb.charge(player, 571)
-            "Earth Orb" -> if (objectId == 2154) ChargeOrb.charge(player, 575)
-            "Fire Orb" -> if (objectId == 2153) ChargeOrb.charge(player, 569)
+        player.temporaryAttribute()["spell_runes"] =
+            arrayOf(
+                Item(RuneDefinitions.Runes.COSMIC, 3),
+                Item(spell.runes.first().id, 30),
+            )
+        if (!player.inventory.containsItem("item.unpowered_orb")) {
+            player.message("You need an unpowered orb to charge.")
+            return
         }
+        when (spell.id) {
+            74 -> {
+                if (objectId == 2152) {
+                    ChargeOrb.charge(player, 573)
+                    return
+                }
+            }
+
+            60 -> {
+                if (objectId == 2151) {
+                    ChargeOrb.charge(player, 571)
+                    return
+                }
+            }
+
+            64 -> {
+                if (objectId == 2154) {
+                    ChargeOrb.charge(player, 575)
+                    return
+                }
+            }
+
+            71 -> {
+                if (objectId == 2153) {
+                    ChargeOrb.charge(player, 569)
+                    return
+                }
+            }
+        }
+        player.message("Nothing interesting happens.")
     }
 
-    @Suppress("UNUSED_PARAMETER", "UNUSED_VARIABLE")
     private fun handleTelegrabSpell(
         player: Player,
         spell: Spell,
     ) {
-        val _floorItem = player.temporaryAttribute()["spell_flooritem"] as? FloorItem ?: return
-        player.message("Telegrab handler works")
+        val attrs = player.temporaryAttribute()
+        val floorItem = attrs["spell_flooritem"] as? FloorItem ?: return
+
+        val tile = floorItem.tile
+        val itemId = floorItem.id
+
+        player.faceWorldTile(tile)
+        player.animate(Animation(711))
+        player.gfx(142, 50)
+
+        ProjectileManager.sendToTile(Projectile.TELEGRAB, 143, player, tile) {
+            val region = World.getRegion(tile.regionId)
+            val currentItem = region.getGroundItem(itemId, tile, player)
+
+            if (currentItem == null || currentItem.isRemoved) {
+                player.message("Too late!")
+                return@sendToTile
+            }
+
+            if (!player.inventory.hasFreeSlots()) {
+                player.message("You don't have enough inventory space.")
+                return@sendToTile
+            }
+
+            World.sendGraphics(player, Graphics(144), tile)
+
+            GroundItems.removeGroundItem(player, currentItem)
+        }
     }
 
     @Suppress("UNUSED_PARAMETER")

@@ -5,7 +5,6 @@ import com.rs.java.game.WorldObject;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.crafting.PotterWheel;
-import com.rs.java.game.player.actions.skills.crafting.PotterWheel.Products;
 import com.rs.java.game.player.content.SkillsDialogue;
 import com.rs.java.game.player.content.SkillsDialogue.ItemNameFilter;
 import com.rs.java.game.player.dialogues.Dialogue;
@@ -18,9 +17,9 @@ public class PotterWheelD extends Dialogue {
 	@Override
 	public void start() {
 		object = (WorldObject) parameters[0];
-		int[] ids = new int[Products.values().length];
+		int[] ids = new int[PotterWheel.Products.getEntries().size()];
 		for (int i = 0; i < ids.length; i++)
-			ids[i] = Products.values()[i].getProducedItem().getId();
+			ids[i] = PotterWheel.Products.getEntries().get(i).getProducedItem().getId();
 		SkillsDialogue.sendSkillsDialogue(player, SkillsDialogue.MAKE,
 				"Choose how many you wish to make,<br>then click on the item to begin.", 28, ids,
 				new ItemNameFilter() {
@@ -28,7 +27,7 @@ public class PotterWheelD extends Dialogue {
 
 					@Override
 					public String rename(String name) {
-						Products prod = Products.values()[count++];
+						PotterWheel.Products prod = PotterWheel.Products.getEntries().get(count++);
 						if (player.getSkills().getLevel(Skills.CRAFTING) < prod.getLevelRequired())
 							name = "<col=ff0000>" + name + "<br><col=ff0000>Level " + prod.getLevelRequired();
 						else
@@ -39,7 +38,7 @@ public class PotterWheelD extends Dialogue {
 				});
 	}
 
-	public String itemMessage(Products products, Item item, String itemName) {
+	public String itemMessage(PotterWheel.Products products, Item item, String itemName) {
 		String itemReq = ItemDefinitions.getItemDefinitions(products.getItemsRequired().getId()).getName()
 				.toLowerCase();
 		return itemName + "<br>("

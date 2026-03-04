@@ -1,156 +1,118 @@
-package com.rs.java.game.player.actions.skills.crafting;
+package com.rs.java.game.player.actions.skills.crafting
 
-import java.util.HashMap;
-import java.util.Map;
+import com.rs.java.game.Animation
+import com.rs.java.game.item.Item
+import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
+import com.rs.java.game.player.actions.Action
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.item.Item;
-import com.rs.java.game.player.Player;
-import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.Action;
+class MilestoneCapes(
+    slotId: Int,
+    private var ticks: Int,
+) : Action() {
+    private val prod: MilestoneProducts? = MilestoneProducts.forId(slotId)
 
-public class MilestoneCapes extends Action {
+    override fun start(player: Player): Boolean {
+        val product = prod ?: return false
 
-	public enum Products {
+        val levelReq = product.levelRequired
 
-		MILESTONE_CAPE_10(10, 10, new Item(1759, 1), new Item(20754), 0),
+        for (i in 0 until 25) {
+            if (player.skills.getLevelForXp(i) < levelReq) {
+                player.packets.sendGameMessage(
+                    "You need a level of at least $levelReq in all skills to create ${product.producedItem.definitions.name}",
+                )
+                return false
+            }
+        }
 
-		MILESTONE_CAPE_20(20, 20, new Item(1759, 2), new Item(20755), 1),
+        val req = product.itemsRequired
 
-		MILESTONE_CAPE_30(30, 30, new Item(1759, 3), new Item(20756), 2),
+        if (!player.inventory.containsItem(req.id, req.amount)) {
+            player.packets.sendGameMessage(
+                "You need atleast ${req.amount} ${req.definitions.name} to create a ${product.producedItem.definitions.name}.",
+            )
+            return false
+        }
 
-		MILESTONE_CAPE_40(40, 40, new Item(1759, 4), new Item(20757), 3),
+        return true
+    }
 
-		MILESTONE_CAPE_50(50, 50, new Item(1759, 5), new Item(20758), 4),
+    override fun process(player: Player): Boolean {
+        val product = prod ?: return false
+        val levelReq = product.levelRequired
 
-		MILESTONE_CAPE_60(60, 60, new Item(1759, 6), new Item(20759), 5),
+        for (i in 0 until 25) {
+            if (player.skills.getLevelForXp(i) < levelReq) {
+                player.packets.sendGameMessage(
+                    "You need a level of at least $levelReq in all skills to create ${product.producedItem.definitions.name}",
+                )
+                return false
+            }
+        }
 
-		MILESTONE_CAPE_70(70, 70, new Item(1759, 7), new Item(20760), 6),
+        val req = product.itemsRequired
 
-		MILESTONE_CAPE_80(80, 80, new Item(1759, 8), new Item(20761), 7),
+        if (!player.inventory.containsItem(req.id, req.amount)) {
+            player.packets.sendGameMessage(
+                "You need ${req.definitions.name} to create a ${product.producedItem.definitions.name}.",
+            )
+            return false
+        }
 
-		MILESTONE_CAPE_90(90, 90, new Item(1759, 9), new Item(20762), 8);
+        return true
+    }
 
-		private static Map<Integer, Products> prods = new HashMap<Integer, Products>();
+    override fun processWithDelay(player: Player): Int {
+        val product = prod ?: return -1
 
-		public static Products forId(int buttonId) {
-			return prods.get(buttonId);
-		}
+        ticks--
 
-		static {
-			for (Products prod : Products.values()) {
-				prods.put(prod.getButtonId(), prod);
-			}
-		}
+        player.animate(Animation(896))
 
-		private int levelRequired;
-		private double experience;
-		private Item itemsRequired;
-		private int buttonId;
-		private Item producedItem;
+        if (product.experience > 0) {
+            player.skills.addXp(Skills.CRAFTING, product.experience)
+        }
 
-		private Products(int levelRequired, double experience, Item itemsRequired, Item producedItem, int buttonId) {
-			this.levelRequired = levelRequired;
-			this.experience = experience;
-			this.itemsRequired = itemsRequired;
-			this.producedItem = producedItem;
-			this.buttonId = buttonId;
-		}
+        val req = product.itemsRequired
 
-		public Item getItemsRequired() {
-			return itemsRequired;
-		}
+        player.inventory.deleteItem(req.id, req.amount)
+        player.inventory.addItem(product.producedItem)
 
-		public int getLevelRequired() {
-			return levelRequired;
-		}
+        player.packets.sendGameMessage(
+            "You make a ${product.producedItem.definitions.name.lowercase()}.",
+            true,
+        )
 
-		public Item getProducedItem() {
-			return producedItem;
-		}
+        return if (ticks > 0) 1 else -1
+    }
 
-		public double getExperience() {
-			return experience;
-		}
+    override fun stop(player: Player) {
+        setActionDelay(player, 3)
+    }
 
-		public int getButtonId() {
-			return buttonId;
-		}
-	}
+    enum class MilestoneProducts(
+        val levelRequired: Int,
+        val experience: Double,
+        val itemsRequired: Item,
+        val producedItem: Item,
+        val buttonId: Int,
+    ) {
+        MILESTONE_CAPE_10(10, 10.0, Item(1759, 1), Item(20754), 0),
+        MILESTONE_CAPE_20(20, 20.0, Item(1759, 2), Item(20755), 1),
+        MILESTONE_CAPE_30(30, 30.0, Item(1759, 3), Item(20756), 2),
+        MILESTONE_CAPE_40(40, 40.0, Item(1759, 4), Item(20757), 3),
+        MILESTONE_CAPE_50(50, 50.0, Item(1759, 5), Item(20758), 4),
+        MILESTONE_CAPE_60(60, 60.0, Item(1759, 6), Item(20759), 5),
+        MILESTONE_CAPE_70(70, 70.0, Item(1759, 7), Item(20760), 6),
+        MILESTONE_CAPE_80(80, 80.0, Item(1759, 8), Item(20761), 7),
+        MILESTONE_CAPE_90(90, 90.0, Item(1759, 9), Item(20762), 8),
+        ;
 
-	public Products prod;
-	public int ticks;
+        companion object {
+            private val lookup = entries.associateBy { it.buttonId }
 
-	public MilestoneCapes(int slotId, int ticks) {
-		this.prod = Products.forId(slotId);
-		this.ticks = ticks;
-	}
-
-	@Override
-	public boolean start(Player player) {
-		if (prod == null || player == null) {
-			player.message("null");
-			return false;
-		}
-		int levelReq = prod.getLevelRequired();
-		for (int i = 0; i < 25; i++) {
-			if (player.getSkills().getLevelForXp(i) < levelReq) {
-				player.getPackets().sendGameMessage("You need a level of at least " + prod.getLevelRequired()
-						+ " in all skills to create " + prod.getProducedItem().getDefinitions().getName());
-				return false;
-			}
-		}
-		if (!player.getInventory().containsItem(prod.getItemsRequired().getId(),
-				prod.getItemsRequired().getAmount())) {
-			player.getPackets()
-					.sendGameMessage("You need atleast " + prod.getItemsRequired().getAmount() + " "
-							+ prod.getItemsRequired().getDefinitions().getName() + " to create a "
-							+ prod.getProducedItem().getDefinitions().getName() + ".");
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean process(Player player) {
-		if (prod == null || player == null) {
-			return false;
-		}
-		int levelReq = prod.getLevelRequired();
-		for (int i = 0; i < 25; i++) {
-			if (player.getSkills().getLevelForXp(i) < levelReq) {
-				player.getPackets().sendGameMessage("You need a level of at least " + prod.getLevelRequired()
-						+ " in all skills to create " + prod.getProducedItem().getDefinitions().getName());
-				return false;
-			}
-		}
-		if (!player.getInventory().containsItem(prod.getItemsRequired().getId(),
-				prod.getItemsRequired().getAmount())) {
-			player.getPackets().sendGameMessage("You need " + prod.getItemsRequired().getDefinitions().getName()
-					+ " to create a " + prod.getProducedItem().getDefinitions().getName() + ".");
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public int processWithDelay(Player player) {
-		ticks--;
-		player.animate(new Animation(896));
-		if (prod.getExperience() > 0)
-			player.getSkills().addXp(Skills.CRAFTING, prod.getExperience());
-		player.getInventory().deleteItem(prod.getItemsRequired().getId(), prod.getItemsRequired().getAmount());
-		player.getInventory().addItem(prod.getProducedItem());
-		player.getPackets().sendGameMessage(
-				"You make a " + prod.getProducedItem().getDefinitions().getName().toLowerCase() + ".", true);
-		if (ticks > 0) {
-			return 1;
-		}
-		return -1;
-	}
-
-	@Override
-	public void stop(Player player) {
-		this.setActionDelay(player, 3);
-	}
+            fun forId(buttonId: Int): MilestoneProducts? = lookup[buttonId]
+        }
+    }
 }

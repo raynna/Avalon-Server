@@ -3,10 +3,10 @@ package com.rs.java.game.player.dialogues.skilling;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.actions.skills.crafting.ReqItem;
 import com.rs.java.game.player.actions.skills.crafting.loom.Loom;
 import com.rs.java.game.player.actions.skills.crafting.loom.LoomData;
 import com.rs.java.game.player.actions.skills.crafting.loom.LoomProduct;
-import com.rs.java.game.player.actions.skills.crafting.leather.ReqItem;
 import com.rs.java.game.player.content.SkillsDialogue;
 import com.rs.java.game.player.content.SkillsDialogue.ItemNameFilter;
 import com.rs.java.game.player.dialogues.Dialogue;
@@ -15,7 +15,7 @@ import com.rs.java.utils.HexColours;
 public class LoomD extends Dialogue {
 
 	private WorldObject object;
-	private final LoomData[] data = LoomData.values();
+	private final LoomData[] data = LoomData.getEntries().toArray(new LoomData[0]);
 
 	@Override
 	public void start() {

@@ -1,44 +1,31 @@
-package com.rs.java.game.player.actions.skills.crafting.gem;
+package com.rs.java.game.player.actions.skills.crafting.gem
 
-import com.rs.java.game.item.Item;
+import com.rs.java.game.item.Item
+import com.rs.kotlin.rscm.RscmResolver
 
-public enum GemData {
+enum class GemData(
+    val product: GemProduct,
+) {
+    OPAL(GemProduct("item.uncut_opal", "item.opal", 15.0, 1, 886)),
+    JADE(GemProduct("item.uncut_jade", "item.jade", 20.0, 13, 886)),
+    RED_TOPAZ(GemProduct("item.uncut_red_topaz", "item.red_topaz", 25.0, 16, 887)),
+    SAPPHIRE(GemProduct("item.uncut_sapphire", "item.sapphire", 50.0, 20, 888)),
+    EMERALD(GemProduct("item.uncut_emerald", "item.emerald", 67.0, 27, 889)),
+    RUBY(GemProduct("item.uncut_ruby", "item.ruby", 85.0, 34, 887)),
+    DIAMOND(GemProduct("item.uncut_diamond", "item.diamond", 107.5, 43, 890)),
+    DRAGONSTONE(GemProduct("item.uncut_dragonstone", "item.dragonstone", 137.5, 55, 885)),
+    ONYX(GemProduct("item.uncut_onyx", "item.onyx", 167.5, 67, 2717)),
+    ;
 
-    OPAL(product("item.uncut_opal", "item.opal", 15, 1, 886)),
-    JADE(product("item.uncut_jade", "item.jade", 20, 13, 886)),
-    RED_TOPAZ(product("item.uncut_red_topaz", "item.red_topaz", 25, 16, 887)),
-    SAPPHIRE(product("item.uncut_sapphire", "item.sapphire", 50, 20, 888)),
-    EMERALD(product("item.uncut_emerald", "item.emerald", 67, 27, 889)),
-    RUBY(product("item.uncut_ruby", "item.ruby", 85, 34, 887)),
-    DIAMOND(product("item.uncut_diamond", "item.diamond", 107.5, 43, 890)),
-    DRAGONSTONE(product("item.uncut_dragonstone", "item.dragonstone", 137.5, 55, 885)),
-    ONYX(product("item.uncut_onyx", "item.onyx", 167.5, 67, 2717));
+    companion object {
+        private val lookup =
+            RscmResolver.buildObjectIdMap(entries) { listOf(it.product.uncut) }
 
-    private final GemProduct product;
+        fun forUncut(id: Int): GemData? = lookup[id]
 
-    GemData(GemProduct product) {
-        this.product = product;
-    }
-
-    public GemProduct getProduct() {
-        return product;
-    }
-
-    private static GemProduct product(Object uncut, Object cut, double xp, int lvl, int anim) {
-        return new GemProduct(uncut, cut, xp, lvl, anim);
-    }
-
-    public static GemData forUncut(int id) {
-        for (GemData g : values())
-            if (g.product.getUncut() == id)
-                return g;
-        return null;
-    }
-
-    public static GemData getGem(Item a, Item b) {
-        GemData g = GemData.forUncut(a.getId());
-        if (g == null)
-            g = GemData.forUncut(b.getId());
-        return g;
+        fun getGem(
+            a: Item,
+            b: Item,
+        ): GemData? = forUncut(a.id) ?: forUncut(b.id)
     }
 }

@@ -1,11 +1,9 @@
 package com.rs.java.game.player.dialogues.skilling;
 
-import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.skills.crafting.LeatherCrafting;
+import com.rs.java.game.player.actions.skills.crafting.leather.LeatherCrafting;
 import com.rs.java.game.player.actions.skills.crafting.leather.LeatherData;
 import com.rs.java.game.player.actions.skills.crafting.leather.LeatherProduct;
-import com.rs.java.game.player.actions.skills.crafting.leather.ReqItem;
 import com.rs.java.game.player.content.SkillsDialogue;
 import com.rs.java.game.player.content.SkillsDialogue.ItemNameFilter;
 import com.rs.java.game.player.dialogues.Dialogue;

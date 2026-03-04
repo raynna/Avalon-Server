@@ -34,7 +34,7 @@ import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.HomeTeleport;
 import com.rs.java.game.player.actions.WaterFilling;
 import com.rs.java.game.player.actions.combat.Magic;
-import com.rs.java.game.player.actions.skills.crafting.LeatherCrafting;
+import com.rs.java.game.player.actions.skills.crafting.leather.LeatherCrafting;
 import com.rs.java.game.player.actions.skills.crafting.leather.LeatherData;
 import com.rs.java.game.player.actions.skills.mining.DungeoneeringMining;
 import com.rs.java.game.player.actions.skills.mining.DungeoneeringMining.DungeoneeringRocks;
@@ -1040,7 +1040,7 @@ public class DungeonController extends Controller {
 		// needle check
 		if (itemUsed.getId() == LeatherCrafting.DUNG_NEEDLE || usedWith.getId() == LeatherCrafting.DUNG_NEEDLE) {
 
-			LeatherData data = LeatherCrafting.getLeatherData(itemUsed, usedWith);
+			LeatherData data = LeatherCrafting.Companion.getLeatherData(itemUsed, usedWith);
 
 			if (data != null) {
 				player.getDialogueManager().startDialogue("LeatherCraftingD", data);
@@ -1135,7 +1135,7 @@ public class DungeonController extends Controller {
 				if (item == null || item.getId() != slotId2)
 					return false;
 				if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
-					LeatherData data = LeatherCrafting.getLeatherData(item, item);
+					LeatherData data = LeatherCrafting.Companion.getLeatherData(item, item);
 					if (data != null) {
 						player.getDialogueManager().startDialogue("LeatherCraftingD", data);
 						return false;

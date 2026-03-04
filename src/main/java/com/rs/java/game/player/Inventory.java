@@ -489,6 +489,10 @@ public final class Inventory implements Serializable {
 		return true;
 	}
 
+	public boolean containsItem(String name) {
+		return containsItem(name, 1);
+	}
+
 	public boolean containsItem(String name, int amount) {
 		return items.contains(new Item(Item.getId(name), amount));
 	}

@@ -1,78 +1,77 @@
-package com.rs.java.game.player.actions.skills.crafting.glass;
+package com.rs.java.game.player.actions.skills.crafting.glass
 
-import com.rs.core.cache.defintions.ItemDefinitions;
-import com.rs.java.game.Animation;
-import com.rs.java.game.player.Player;
-import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.actions.skills.crafting.leather.ReqItem;
+import com.rs.core.cache.defintions.ItemDefinitions
+import com.rs.java.game.Animation
+import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
+import com.rs.java.game.player.actions.Action
+import com.rs.kotlin.rscm.Rscm
 
-public class GlassBlowing extends Action {
+class GlassBlowing(
+    data: GlassBlowingData,
+    option: Int,
+    private var quantity: Int,
+) : Action() {
+    private val product: GlassProduct = data.products[option]
 
-    public static final int GLASSBLOWING_PIPE = 1785;
-    private static final int BLOW_ANIMATION = 884;
+    private val baseId: Int =
+        data.baseRef as? Int ?: Rscm.lookup(data.baseRef as String)
 
-    private final GlassBlowingData data;
-    private final GlassProduct product;
-    private int quantity;
+    private val productId: Int =
+        product.idRef as? Int ?: Rscm.lookup(product.idRef as String)
 
-    public GlassBlowing(GlassBlowingData data, int option, int quantity) {
-        this.data = data;
-        this.product = data.getProducts()[option];
-        this.quantity = quantity;
-    }
+    override fun start(player: Player): Boolean = check(player)
 
-    @Override
-    public boolean start(Player player) {
-        return check(player);
-    }
-
-    private boolean check(Player player) {
+    private fun check(player: Player): Boolean {
         if (!player.hasTool(GLASSBLOWING_PIPE)) {
-            player.message("You need a glassblowing pipe to do that.");
-            return false;
+            player.message("You need a glassblowing pipe to do that.")
+            return false
         }
 
-        if (player.getSkills().getLevel(Skills.CRAFTING) < product.getLevel()) {
-            player.message("You need a Crafting level of " + product.getLevel() + ".");
-            return false;
+        if (player.skills.getLevel(Skills.CRAFTING) < product.level) {
+            player.message("You need a Crafting level of ${product.level}.")
+            return false
         }
 
-        if (!player.getInventory().containsItem(data.getBase(), 1)) {
-            String name = ItemDefinitions.getItemDefinitions(data.getBase()).getName();
-            player.message("You need some " + name + " to do that.");
-            return false;
+        if (!player.inventory.containsItem(baseId, 1)) {
+            val name = ItemDefinitions.getItemDefinitions(baseId).name
+            player.message("You need some $name to do that.")
+            return false
         }
 
-        return true;
+        return true
     }
 
-    @Override
-    public boolean process(Player player) {
+    override fun process(player: Player): Boolean {
+        if (quantity <= 0) {
+            return false
+        }
 
-        if (quantity <= 0)
-            return false;
+        if (!check(player)) {
+            return false
+        }
 
-        if (!check(player))
-            return false;
-
-        player.animate(BLOW_ANIMATION);
-        return true;
+        player.animate(Animation(BLOW_ANIMATION))
+        return true
     }
 
-    @Override
-    public int processWithDelay(Player player) {
-        quantity--;
+    override fun processWithDelay(player: Player): Int {
+        quantity--
 
-        player.getInventory().deleteItem(data.getBase(), 1);
-        player.getInventory().addItem(product.getId(), 1);
-        player.getSkills().addXp(Skills.CRAFTING, product.getXp());
+        player.inventory.deleteItem(baseId, 1)
+        player.inventory.addItem(productId, 1)
 
-        return 3;
+        player.skills.addXp(Skills.CRAFTING, product.xp)
+
+        return 3
     }
 
-    @Override
-    public void stop(Player player) {
-        setActionDelay(player, 3);
+    override fun stop(player: Player) {
+        setActionDelay(player, 3)
+    }
+
+    companion object {
+        const val GLASSBLOWING_PIPE = 1785
+        private const val BLOW_ANIMATION = 884
     }
 }

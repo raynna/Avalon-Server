@@ -39,6 +39,7 @@ enum class Projectile {
 
     // SPECIAL
     INFERNO_ADZE,
+    TELEGRAB,
 
     // NPCS
     DRAGONFIRE,

@@ -1,79 +1,67 @@
-package com.rs.java.game.player.actions.skills.crafting.gem;
+package com.rs.java.game.player.actions.skills.crafting.gem
 
-import com.rs.core.cache.defintions.ItemDefinitions;
-import com.rs.java.game.Animation;
-import com.rs.java.game.player.Player;
-import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.Action;
-import com.rs.kotlin.game.player.tasksystem.Task;
+import com.rs.core.cache.defintions.ItemDefinitions
+import com.rs.java.game.Animation
+import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
+import com.rs.java.game.player.actions.Action
+import com.rs.kotlin.game.player.tasksystem.Task
 
-public class GemCutting extends Action {
+class GemCutting(
+    private val product: GemProduct,
+    private var quantity: Int,
+) : Action() {
+    override fun start(player: Player): Boolean = check(player)
 
-    private GemProduct product;
-    private int quantity;
-
-    public GemCutting(GemProduct product, int quantity) {
-        this.product = product;
-        this.quantity = quantity;
-    }
-
-    @Override
-    public boolean start(Player player) {
-        return check(player);
-    }
-
-    private boolean check(Player player) {
+    private fun check(player: Player): Boolean {
         if (!player.hasTool("item.chisel")) {
-            player.message("You need a chisel to cut this item.");
-            return false;
-        }
-        if (player.getSkills().getLevel(Skills.CRAFTING) < product.getLevel()) {
-            player.message("You need a Crafting level of " + product.getLevel() + " to cut this gem.");
-            return false;
+            player.message("You need a chisel to cut this item.")
+            return false
         }
 
-        if (!player.getInventory().containsItem(product.getUncut(), 1)) {
-            String name = ItemDefinitions.getItemDefinitions(product.getUncut()).getName().toLowerCase();
-            player.message("You have run out of " + name + ".");
-            return false;
+        if (player.skills.getLevel(Skills.CRAFTING) < product.level) {
+            player.message("You need a Crafting level of ${product.level} to cut this gem.")
+            return false
         }
 
-        return true;
+        if (!player.inventory.containsItem(product.getUncut(), 1)) {
+            val name =
+                ItemDefinitions.getItemDefinitions(product.getUncut()).name.lowercase()
+            player.message("You have run out of $name.")
+            return false
+        }
+
+        return true
     }
 
-    @Override
-    public boolean process(Player player) {
-        return quantity > 0 && check(player);
+    override fun process(player: Player): Boolean = quantity > 0 && check(player)
+
+    override fun processWithDelay(player: Player): Int {
+        quantity--
+
+        player.animate(Animation(product.animation))
+
+        player.inventory.deleteItem(product.getUncut(), 1)
+        player.inventory.addItem(product.getCut(), 1)
+
+        player.skills.addXp(Skills.CRAFTING, product.xp)
+
+        val name =
+            ItemDefinitions.getItemDefinitions(product.getUncut()).name.lowercase()
+
+        player.message("You cut the $name.", true)
+
+        when (product.getUncut()) {
+            1623 -> player.taskManager.progress(Task.CUT_UNCUT_SAPPHIRE)
+            1617 -> player.taskManager.progress(Task.CUT_UNCUT_DIAMOND)
+            1631 -> player.taskManager.progress(Task.CUT_UNCUT_DRAGONSTONE)
+            6571 -> player.taskManager.progress(Task.CUT_UNCUT_ONYX)
+        }
+
+        return if (quantity > 0) 1 else -1
     }
 
-    @Override
-    public int processWithDelay(Player player) {
-        quantity--;
-
-        player.animate(new Animation(product.getAnimation()));
-
-        player.getInventory().deleteItem(product.getUncut(), 1);
-
-        player.getInventory().addItem(product.getCut(), 1);
-        player.getSkills().addXp(Skills.CRAFTING, product.getXp());
-
-        player.message("You cut the " +
-                ItemDefinitions.getItemDefinitions(product.getUncut()).getName().toLowerCase() + ".", true);
-
-        if (product.getUncut() == 1623)
-            player.getTaskManager().progress(Task.CUT_UNCUT_SAPPHIRE);
-        if (product.getUncut() == 1617)
-            player.getTaskManager().progress(Task.CUT_UNCUT_DIAMOND);
-        if (product.getUncut() == 1631)
-            player.getTaskManager().progress(Task.CUT_UNCUT_DRAGONSTONE);
-        if (product.getUncut() == 6571)
-            player.getTaskManager().progress(Task.CUT_UNCUT_ONYX);
-
-        return quantity > 0 ? 1 : -1;
-    }
-
-    @Override
-    public void stop(Player player) {
-        setActionDelay(player, 3);
+    override fun stop(player: Player) {
+        setActionDelay(player, 3)
     }
 }

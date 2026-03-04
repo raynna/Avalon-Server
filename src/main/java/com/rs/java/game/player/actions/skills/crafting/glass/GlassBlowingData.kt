@@ -1,57 +1,50 @@
-package com.rs.java.game.player.actions.skills.crafting.glass;
+package com.rs.java.game.player.actions.skills.crafting.glass
 
-import com.rs.kotlin.rscm.Rscm;
-import com.rs.java.game.player.actions.skills.crafting.leather.ReqItem;
+import com.rs.kotlin.rscm.RscmResolver
 
-public enum GlassBlowingData {
-
+enum class GlassBlowingData(
+    val baseRef: Any,
+    val products: Array<GlassProduct>,
+) {
     MOLTEN_GLASS(
-            "item.molten_glass",
+        "item.molten_glass",
+        arrayOf(
+            GlassProduct("item.beer_glass", 1, 17.5),
+            GlassProduct("item.candle_lantern", 4, 19.0),
+            GlassProduct("item.oil_lamp", 12, 25.0),
+            GlassProduct("item.vial", 33, 35.0),
+            GlassProduct("item.fishbowl", 42, 42.5),
+            GlassProduct("item.unpowered_orb", 46, 52.5),
+            GlassProduct("item.lantern_lens", 49, 55.0),
+            GlassProduct("item.empty_light_orb", 87, 70.0),
+        ),
+    ),
+    ;
 
-            product("item.beer_glass", 1, 17.5),
-            product("item.candle_lantern", 4, 19),
-            product("item.oil_lamp", 12, 25),
-            product("item.vial", 33, 35),
-            product("item.fishbowl", 42, 42.5),
-            product("item.unpowered_orb", 46, 52.5),
-            product("item.lantern_lens", 49, 55),
-            product("item.empty_light_orb", 87, 70)
-    );
+    companion object {
+        private const val GLASSBLOWING_PIPE = 1785
 
-    private final Object base;
-    private final GlassProduct[] products;
+        private val baseLookup =
+            RscmResolver.buildObjectIdMap(entries) { listOf(it.baseRef) }
 
-    GlassBlowingData(Object base, GlassProduct... products) {
-        this.base = base;
-        this.products = products;
-    }
+        private val productLookup =
+            RscmResolver.buildObjectIdMap(
+                entries.flatMap { it.products.toList() },
+            ) { listOf(it.idRef) }
 
-    private static GlassProduct product(Object id, int lvl, double xp, ReqItem... req) {
-        return new GlassProduct(id, lvl, xp, req);
-    }
+        fun resolveBase(id: Int): GlassBlowingData? = baseLookup[id]
 
-    public int getBase() {
-        if (base instanceof Integer)
-            return (Integer) base;
-        return Rscm.lookup((String) base);
-    }
+        fun resolveProduct(id: Int): GlassProduct? = productLookup[id]
 
-    public static GlassBlowingData getGlassData(int id1, int id2) {
+        fun getGlassData(
+            id1: Int,
+            id2: Int,
+        ): GlassBlowingData? {
+            val data = resolveBase(id1) ?: resolveBase(id2) ?: return null
 
-        int pipe = 1785; // glassblowing pipe
-        int molten = Rscm.lookup("item.molten_glass");
+            val hasPipe = id1 == GLASSBLOWING_PIPE || id2 == GLASSBLOWING_PIPE
 
-        boolean hasPipe = id1 == pipe || id2 == pipe;
-        boolean hasMolten = id1 == molten || id2 == molten;
-
-        if (hasPipe && hasMolten)
-            return MOLTEN_GLASS;
-
-        return null;
-    }
-
-
-    public GlassProduct[] getProducts() {
-        return products;
+            return if (hasPipe) data else null
+        }
     }
 }

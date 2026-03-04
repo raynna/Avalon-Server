@@ -1,141 +1,106 @@
-package com.rs.java.game.player.actions.skills.crafting;
+package com.rs.java.game.player.actions.skills.crafting
 
-import java.util.HashMap;
-import java.util.Map;
+import com.rs.java.game.Animation
+import com.rs.java.game.WorldObject
+import com.rs.java.game.item.Item
+import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
+import com.rs.java.game.player.actions.Action
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.WorldObject;
-import com.rs.java.game.item.Item;
-import com.rs.java.game.player.Player;
-import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.Action;
+class PotterWheel(
+    slotId: Int,
+    private val wheel: WorldObject,
+    private var ticks: Int,
+) : Action() {
+    private val prod: Products? = Products.forId(slotId)
 
-public class PotterWheel extends Action {
+    override fun start(player: Player): Boolean {
+        val product = prod ?: return false
 
-	public enum Products {
-		
-		POT(1, 6, new Item(1761), new Item(1787), 0),
-		
-		PIE_DISH(7, 15, new Item(1761), new Item(1789), 1),
+        if (player.skills.getLevel(Skills.CRAFTING) < product.levelRequired) {
+            player.packets.sendGameMessage(
+                "You need a Crafting level of at least ${product.levelRequired} to create ${product.producedItem.definitions.name}",
+            )
+            return false
+        }
 
-		BOWL(8, 18, new Item(1761), new Item(1791), 2);
+        val req = product.itemsRequired
 
-		private static Map<Integer, Products> prods = new HashMap<Integer, Products>();
+        if (!player.inventory.containsItem(req.id, req.amount)) {
+            player.packets.sendGameMessage(
+                "You need atleast ${req.amount} ${req.definitions.name} to create a ${product.producedItem.definitions.name}.",
+            )
+            return false
+        }
 
-		public static Products forId(int buttonId) {
-			return prods.get(buttonId);
-		}
+        return true
+    }
 
-		static {
-			for (Products prod : Products.values()) {
-				prods.put(prod.getButtonId(), prod);
-			}
-		}
+    override fun process(player: Player): Boolean {
+        val product = prod ?: return false
 
-		private int levelRequired;
-		private double experience;
-		private Item itemsRequired;
-		private int buttonId;
-		private Item producedItem;
+        if (player.skills.getLevel(Skills.CRAFTING) < product.levelRequired) {
+            player.packets.sendGameMessage(
+                "You need a Crafting level of at least ${product.levelRequired} to create ${product.producedItem.definitions.name}",
+            )
+            return false
+        }
 
-		private Products(int levelRequired, double experience, Item itemsRequired, Item producedItem, int buttonId) {
-			this.levelRequired = levelRequired;
-			this.experience = experience;
-			this.itemsRequired = itemsRequired;
-			this.producedItem = producedItem;
-			this.buttonId = buttonId;
-		}
+        val req = product.itemsRequired
 
-		public Item getItemsRequired() {
-			return itemsRequired;
-		}
+        if (!player.inventory.containsItem(req.id, req.amount)) {
+            player.packets.sendGameMessage(
+                "You need ${req.definitions.name} to create a ${product.producedItem.definitions.name}.",
+            )
+            return false
+        }
 
-		public int getLevelRequired() {
-			return levelRequired;
-		}
+        player.faceObject(wheel)
+        return true
+    }
 
-		public Item getProducedItem() {
-			return producedItem;
-		}
+    override fun processWithDelay(player: Player): Int {
+        val product = prod ?: return -1
 
-		public double getExperience() {
-			return experience;
-		}
+        ticks--
 
-		public int getButtonId() {
-			return buttonId;
-		}
-	}
+        player.animate(Animation(896))
 
-	public Products prod;
-	public WorldObject object;
-	public int ticks;
+        player.skills.addXp(Skills.CRAFTING, product.experience)
 
-	public PotterWheel(int slotId, WorldObject object, int ticks) {
-		this.object = object;
-		this.prod = Products.forId(slotId);
-		this.ticks = ticks;
-	}
+        val req = product.itemsRequired
 
-	@Override
-	public boolean start(Player player) {
-		if (prod == null || player == null || object == null) {
-			player.message("null");
-			return false;
-		}
-		if (player.getSkills().getLevel(Skills.CRAFTING) < prod.getLevelRequired()) {
-			player.getPackets().sendGameMessage("You need a Crafting level of at least " + prod.getLevelRequired()
-					+ " to create " + prod.getProducedItem().getDefinitions().getName());
-			return false;
-		}
-		if (!player.getInventory().containsItem(prod.getItemsRequired().getId(),
-				prod.getItemsRequired().getAmount())) {
-			player.getPackets()
-					.sendGameMessage("You need atleast " + prod.getItemsRequired().getAmount() + " "
-							+ prod.getItemsRequired().getDefinitions().getName() + " to create a "
-							+ prod.getProducedItem().getDefinitions().getName() + ".");
-			return false;
-		}
-		return true;
-	}
+        player.inventory.deleteItem(req.id, req.amount)
+        player.inventory.addItem(product.producedItem)
 
-	@Override
-	public boolean process(Player player) {
-		if (prod == null || player == null || object == null) {
-			return false;
-		}
-		if (player.getSkills().getLevel(Skills.CRAFTING) < prod.getLevelRequired()) {
-			player.getPackets().sendGameMessage("You need a Crafting level of at least " + prod.getLevelRequired()
-					+ " to create " + prod.getProducedItem().getDefinitions().getName());
-			return false;
-		}
-		if (!player.getInventory().containsItem(prod.getItemsRequired().getId(),
-				prod.getItemsRequired().getAmount())) {
-			player.getPackets().sendGameMessage("You need " + prod.getItemsRequired().getDefinitions().getName()
-					+ " to create a " + prod.getProducedItem().getDefinitions().getName() + ".");
-			return false;
-		}
-		player.faceObject(object);
-		return true;
-	}
+        player.packets.sendGameMessage(
+            "You make a ${product.producedItem.definitions.name.lowercase()}.",
+            true,
+        )
 
-	@Override
-	public int processWithDelay(Player player) {
-		ticks--;
-		player.animate(new Animation(896));
-		player.getSkills().addXp(Skills.CRAFTING, prod.getExperience());
-		player.getInventory().deleteItem(prod.getItemsRequired().getId(), prod.getItemsRequired().getAmount());
-		player.getInventory().addItem(prod.getProducedItem());
-		player.getPackets().sendGameMessage(
-				"You make a " + prod.getProducedItem().getDefinitions().getName().toLowerCase() + ".", true);
-		if (ticks > 0) {
-			return 1;
-		}
-		return -1;
-	}
+        return if (ticks > 0) 1 else -1
+    }
 
-	@Override
-	public void stop(Player player) {
-		this.setActionDelay(player, 3);
-	}
+    override fun stop(player: Player) {
+        setActionDelay(player, 3)
+    }
+
+    enum class Products(
+        val levelRequired: Int,
+        val experience: Double,
+        val itemsRequired: Item,
+        val producedItem: Item,
+        val buttonId: Int,
+    ) {
+        POT(1, 6.0, Item(1761), Item(1787), 0),
+        PIE_DISH(7, 15.0, Item(1761), Item(1789), 1),
+        BOWL(8, 18.0, Item(1761), Item(1791), 2),
+        ;
+
+        companion object {
+            private val lookup = entries.associateBy { it.buttonId }
+
+            fun forId(buttonId: Int): Products? = lookup[buttonId]
+        }
+    }
 }

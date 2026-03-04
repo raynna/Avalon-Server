@@ -41,7 +41,7 @@ import com.rs.java.game.player.actions.combat.LunarMagicks.RSLunarSpellStore;
 import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking.Cook;
-import com.rs.java.game.player.actions.skills.crafting.LeatherCrafting;
+import com.rs.java.game.player.actions.skills.crafting.leather.LeatherCrafting;
 import com.rs.java.game.player.actions.skills.crafting.gem.GemData;
 import com.rs.java.game.player.actions.skills.crafting.glass.GlassBlowingData;
 import com.rs.java.game.player.actions.skills.crafting.leather.LeatherData;
@@ -90,6 +90,7 @@ import com.rs.java.utils.HexColours.Colour;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.npc.worldboss.RandomWorldBossHandler;
+import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 import com.rs.kotlin.game.player.skills.woodcutting.BirdNests;
 import com.rs.kotlin.game.world.activity.BarrowsAreaKt;
 
@@ -351,7 +352,7 @@ public class InventoryOptionsHandler {
             player.getDialogueManager().startDialogue("DiceBag", itemId);
             return;
         }
-        LeatherData leatherData = LeatherCrafting.getLeatherData(itemId);
+        LeatherData leatherData = LeatherCrafting.Companion.getLeatherData(itemId);
         if (leatherData != null) {
             if (!player.hasTool("item.needle") && !player.hasTool("item.needle_2")) {
                 player.message("You need a needle to craft leather.");
@@ -360,7 +361,7 @@ public class InventoryOptionsHandler {
             player.getDialogueManager().startDialogue("LeatherCraftingD", leatherData);
             return;
         }
-        GemData gem = GemData.forUncut(itemId);
+        GemData gem = GemData.Companion.forUncut(itemId);
         if (gem != null) {
             player.getDialogueManager().startDialogue("GemCuttingD", gem);
         }
@@ -629,15 +630,9 @@ public class InventoryOptionsHandler {
         if (interfaceId == 192 && interfaceId2 == Inventory.INVENTORY_INTERFACE) {
             player.getTemporaryAttributtes().put("spell_itemid", itemUsedWithId);
             player.getTemporaryAttributtes().put("spell_slotid", toSlot);
-            /*RSSpellStore modern = RSSpellStore.getSpell(compId);
-            if (modern != null) {
-                if (!ModernMagicks.hasRequirement(player, spellId, false, false)) {
-                    return;
-                }
-            } else {
-                player.message("Nothing interesting happens.");
-                return;
-            }*/
+
+            SpellHandler.INSTANCE.castOnItem(player, compId, itemUsedWithId, toSlot);
+            return;
         } else if (interfaceId == 430 && interfaceId2 == Inventory.INVENTORY_INTERFACE) {
             player.getTemporaryAttributtes().put("spell_itemid", itemUsedWithId);
             player.getTemporaryAttributtes().put("spell_slotid", toSlot);
@@ -695,12 +690,12 @@ public class InventoryOptionsHandler {
                 return;
             if (Firemaking.isFiremaking(player, itemUsed, usedWith))
                 return;
-            GlassBlowingData glass = GlassBlowingData.getGlassData(usedWith.getId(), itemUsed.getId());
+            GlassBlowingData glass = GlassBlowingData.Companion.getGlassData(usedWith.getId(), itemUsed.getId());
             if (glass != null) {
                 player.getDialogueManager().startDialogue("GlassBlowingD", glass);
                 return;
             }
-            LeatherData leatherData = LeatherCrafting.getLeatherData(usedWith, itemUsed);
+            LeatherData leatherData = LeatherCrafting.Companion.getLeatherData(usedWith, itemUsed);
             if (leatherData != null) {
                 player.getDialogueManager().startDialogue("LeatherCraftingD", leatherData);
                 return;

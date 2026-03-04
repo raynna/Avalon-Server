@@ -1868,6 +1868,10 @@ public abstract class Entity extends WorldTile {
         setNextFaceWorldTile(new WorldTile(x, y, h));
     }
 
+    public void faceWorldTile(WorldTile tile) {
+        setNextFaceWorldTile(tile);
+    }
+
     public void faceWorldTile(NPC npc, String direction) {
         switch (direction) {
             case "south":

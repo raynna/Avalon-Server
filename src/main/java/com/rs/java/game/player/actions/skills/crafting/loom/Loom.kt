@@ -1,103 +1,96 @@
-package com.rs.java.game.player.actions.skills.crafting.loom;
+package com.rs.java.game.player.actions.skills.crafting.loom
 
+import com.rs.core.cache.defintions.ItemDefinitions
+import com.rs.java.game.WorldObject
+import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
+import com.rs.java.game.player.actions.Action
 
-import com.rs.core.cache.defintions.ItemDefinitions;
-import com.rs.java.game.WorldObject;
-import com.rs.java.game.player.Player;
-import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.Action;
-import com.rs.java.game.player.actions.skills.crafting.leather.ReqItem;
+class Loom(
+    slotId: Int,
+    private val loom: WorldObject,
+    private var ticks: Int,
+) : Action() {
+    private val product: LoomProduct = LoomData.entries[slotId].product
 
-public class Loom extends Action {
+    override fun start(player: Player): Boolean = check(player)
 
-	private final LoomProduct product;
-	private final WorldObject object;
-	private int ticks;
+    private fun check(player: Player): Boolean {
+        if (player.skills.getLevel(Skills.CRAFTING) < product.level) {
+            player.message("You need a Crafting level of at least ${product.level}.")
+            return false
+        }
 
-	public Loom(int slotId, WorldObject object, int ticks) {
-		this.product = LoomData.values()[slotId].getProduct();
-		this.object = object;
-		this.ticks = ticks;
-	}
+        val missing = StringBuilder()
 
-	@Override
-	public boolean start(Player player) {
-		return check(player);
-	}
+        for (req in product.requirements) {
+            val have = player.inventory.getAmountOf(req.getId())
 
-	private boolean check(Player player) {
+            if (have < req.amount) {
+                if (missing.isNotEmpty()) {
+                    missing.append(", ")
+                }
 
-		if (product == null) return false;
+                missing
+                    .append(req.amount)
+                    .append(" ")
+                    .append(ItemDefinitions.getItemDefinitions(req.getId()).name)
+            }
+        }
 
-		if (player.getSkills().getLevel(Skills.CRAFTING) < product.getLevel()) {
-			player.message("You need a Crafting level of at least " + product.getLevel() + ".");
-			return false;
-		}
+        if (missing.isNotEmpty()) {
+            player.message("You need: $missing.")
+            return false
+        }
 
-		StringBuilder missing = new StringBuilder();
+        return true
+    }
 
-		for (ReqItem req : product.getRequirements()) {
-			int have = player.getInventory().getAmountOf(req.getId());
-			if (have < req.getAmount()) {
-				if (!missing.isEmpty()) missing.append(", ");
-				missing.append(req.getAmount()).append(" ")
-						.append(ItemDefinitions.getItemDefinitions(req.getId()).getName());
-			}
-		}
+    override fun process(player: Player): Boolean {
+        if (ticks <= 0) {
+            return false
+        }
 
-		if (!missing.isEmpty()) {
-			player.message("You need: " + missing + ".");
-			return false;
-		}
+        if (player.skills.getLevel(Skills.CRAFTING) < product.level) {
+            player.message("You need a Crafting level of at least ${product.level} to continue spinning.")
+            return false
+        }
 
-		return true;
-	}
+        for (req in product.requirements) {
+            if (!player.inventory.containsItem(req.getId(), req.amount)) {
+                val name = ItemDefinitions.getItemDefinitions(req.getId()).name
+                player.message("You have run out of $name.")
+                return false
+            }
+        }
 
-	@Override
-	public boolean process(Player player) {
+        player.faceObject(loom)
+        return true
+    }
 
-		if (ticks <= 0)
-			return false;
+    override fun processWithDelay(player: Player): Int {
+        ticks--
 
-		if (player.getSkills().getLevel(Skills.CRAFTING) < product.getLevel()) {
-			player.message("You need a Crafting level of at least " + product.getLevel() + " to continue spinning.");
-			return false;
-		}
+        player.animate(896)
 
-		for (ReqItem req : product.getRequirements()) {
-			if (!player.getInventory().containsItem(req.getId(), req.getAmount())) {
-				String name = ItemDefinitions.getItemDefinitions(req.getId()).getName();
-				player.message("You have run out of " + name + ".");
-				return false;
-			}
-		}
+        for (req in product.requirements) {
+            player.inventory.deleteItem(req.getId(), req.amount)
+        }
 
-		player.faceObject(object);
-		return true;
-	}
+        player.inventory.addItem(product.getId(), 1)
 
-	@Override
-	public int processWithDelay(Player player) {
-		ticks--;
+        if (product.xp > 0) {
+            player.skills.addXp(Skills.CRAFTING, product.xp)
+        }
 
-		player.animate(896);
+        val name = ItemDefinitions.getItemDefinitions(product.getId()).name.lowercase()
 
-		for (ReqItem req : product.getRequirements())
-			player.getInventory().deleteItem(req.getId(), req.getAmount());
+        player.message("You make a $name.", true)
 
-		player.getInventory().addItem(product.getId(), 1);
+        return if (ticks > 0) 1 else -1
+    }
 
-		if (product.getXp() > 0)
-			player.getSkills().addXp(Skills.CRAFTING, product.getXp());
-
-		player.message("You make a " +
-				ItemDefinitions.getItemDefinitions(product.getId()).getName().toLowerCase() + ".", true);
-
-		return ticks > 0 ? 1 : -1;
-	}
-
-	@Override
-	public void stop(Player player) {
-		setActionDelay(player, 3);
-	}
+    override fun stop(player: Player) {
+        setActionDelay(player, 3)
+    }
 }

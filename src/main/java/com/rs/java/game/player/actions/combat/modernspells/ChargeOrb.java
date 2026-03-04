@@ -67,9 +67,9 @@ public class ChargeOrb extends Action {
 		}
 		Orbs orb = getOrb(getItemId());
 		if (orb != null) {
-			if (player.getSkills().getLevel(Skills.CRAFTING) < orb.getLevelRequired()) {
+			if (player.getSkills().getLevel(Skills.MAGIC) < orb.getLevelRequired()) {
 				player.getPackets().sendGameMessage(
-						"You need at least a level of " + orb.getLevelRequired() + " crafting to charge this orb.");
+						"You need at least a level of " + orb.getLevelRequired() + " magic to charge this orb.");
 				return false;
 			}
 		}
@@ -80,7 +80,7 @@ public class ChargeOrb extends Action {
 		// int itemId = -1;
 		if (player.getTemporaryAttributtes().get("spell_itemid") != null)
 			itemId = (int) player.getTemporaryAttributtes().get("spell_itemid");
-		player.getDialogueManager().startDialogue("AirOrbD", itemId);
+		player.getDialogueManager().startDialogue("ChargeOrbD", itemId);
 	}
 
 	@Override
@@ -98,6 +98,10 @@ public class ChargeOrb extends Action {
 			player.getPackets().sendGameMessage("You don't have required items to charge this orb.");
 			return false;
 		}
+		if (!player.inventory.containsItem("item.unpowered_orb")) {
+			player.message("You need an unpowered orb to charge.");
+			return false;
+		}
 		return checkAll(player);
 	}
 
@@ -110,21 +114,30 @@ public class ChargeOrb extends Action {
 	}
 
 	public static boolean hasRunes(Player player) {
-		for (Item item : (Item[]) player.getTemporaryAttributtes().get("spell_runes")) {
+		Item[] runes = (Item[]) player.getTemporaryAttributtes().get("spell_runes");
+
+		if (runes == null)
+			return false;
+
+		for (Item item : runes) {
 			if (item == null)
 				continue;
 			if (!player.getInventory().containsItem(item.getId(), item.getAmount()))
 				return false;
 		}
-		return true;
 
+		return true;
 	}
 
 	@Override
 	public int processWithDelay(Player player) {
 		Orbs orb = getOrb(getItemId());
 		if (orb != null) {
-			for (Item item : (Item[]) player.getTemporaryAttributtes().get("spell_runes")) {
+			Item[] runes = (Item[]) player.getTemporaryAttributtes().get("spell_runes");
+			if (runes == null)
+				return -1;
+
+			for (Item item : runes) {
 				if (item == null)
 					continue;
 				player.getInventory().deleteItem(item.getId(), item.getAmount());
@@ -132,6 +145,7 @@ public class ChargeOrb extends Action {
 			player.getSkills().addXp(Skills.CRAFTING, orb.getExperience());
 			if (player.getTemporaryAttributtes().get("spell_xp") != null)
 			player.getSkills().addXp(Skills.MAGIC, (double) player.getTemporaryAttributtes().get("spell_xp"));
+			player.getInventory().deleteItem("item.unpowered_orb", 1);
 			player.getInventory().addItem(orb.getNewId(), 1);
 			player.getPackets().sendGameMessage("You charge the unpowered orb into an "
 					+ ItemDefinitions.getItemDefinitions(orb.getNewId()).getName() + ".", true);

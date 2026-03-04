@@ -19,19 +19,19 @@ public class SuperHeat {
 
 		TIN_ORE(TIN, new Item(COPPER, 1), BRONZE_BAR, 6.25, 1),
 
-		IRON_ORE(IRON, IRON_BAR, 12.5, 20),
+		IRON_ORE(IRON, IRON_BAR, 12.5, 15),
 
 		SILVER_ORE(SILVER, SILVER_BAR, 13.67, 20),
 
-		COAL_ORE(COAL, new Item(IRON, 2), STEEL_BAR, 17.5, 10),
+		COAL_ORE(COAL, new Item(IRON, 2), STEEL_BAR, 17.5, 15),
 		
-		GOLD_ORE(GOLD, GOLD_BAR, 22.5, 10),
+		GOLD_ORE(GOLD, GOLD_BAR, 22.5, 40),
 
-		MITHIRL_ORE(MITHRIL, new Item(COAL, 4), MITHRIL_BAR, 30, 10),
+		MITHIRL_ORE(MITHRIL, new Item(COAL, 4), MITHRIL_BAR, 30, 50),
 
-		ADAMANT_ORE(ADAMANT, new Item(COAL, 6), ADAMANT_BAR, 37.5, 10),
+		ADAMANT_ORE(ADAMANT, new Item(COAL, 6), ADAMANT_BAR, 37.5, 70),
 
-		RUNE_ORE(RUNE, new Item(COAL, 8), RUNE_BAR, 50, 10);
+		RUNE_ORE(RUNE, new Item(COAL, 8), RUNE_BAR, 50, 85);
 
 		private int baseId;
 		private int newId;

@@ -625,17 +625,19 @@ public class Region {
 
 		for (FloorItem item : groundItems) {
 
-			if (item.isRemoved())
+			if (item == null || item.isRemoved())
 				continue;
 
-			// id + tile must match
-			if (item.getId() != id || !tile.matches(item.getTile()))
+			if (item.getId() != id)
 				continue;
 
-			// Owner & invisibility rules
+			if (!tile.matches(item.getTile()))
+				continue;
+
 			if (item.hasOwner() && item.isInvisible()) {
 				if (player == null)
 					continue;
+
 				if (!item.getOwner().getUsername()
 						.equalsIgnoreCase(player.getUsername()))
 					continue;

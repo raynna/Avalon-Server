@@ -6,10 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import com.rs.Settings;
-import com.rs.core.thread.CoresManager;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.World;
@@ -166,7 +164,7 @@ public final class WorldPacketsDecoder extends Decoder {
     private static final int COLOR_ID_PACKET = 97;
     private static final int REPORT_ABUSE_PACKET = 11;
     private static final int GRAND_EXCHANGE_ITEM_SELECT_PACKET = 71;
-    private static final int TELEKINETIC_GRAB_SPELL_PACKET = 69;
+    private static final int INTERFACE_ON_FLOORITEM_PACKET = 69;
     private static final int WORLD_LIST_UPDATE = 87;
     private static final int CUSTOM_PACKET161 = 161;
     private static final int DEVELOPER_PACKET = 162;
@@ -426,8 +424,8 @@ public final class WorldPacketsDecoder extends Decoder {
             return;
         }
 
-        if (packetId == TELEKINETIC_GRAB_SPELL_PACKET) {
-            handleTelekineticGrab(player, stream);
+        if (packetId == INTERFACE_ON_FLOORITEM_PACKET) {
+            handleSpellOnFloorItem(player, stream);
             return;
         }
 
@@ -710,7 +708,7 @@ public final class WorldPacketsDecoder extends Decoder {
                         || packetId == OBJECT_CLICK1_PACKET || packetId == SWITCH_INTERFACE_ITEM_PACKET
                         || packetId == OBJECT_CLICK2_PACKET || packetId == OBJECT_CLICK3_PACKET
                         || packetId == OBJECT_CLICK4_PACKET || packetId == OBJECT_CLICK5_PACKET || packetId == KEY_TYPED_PACKET
-                        || packetId == INTERFACE_ON_OBJECT || packetId == TELEKINETIC_GRAB_SPELL_PACKET
+                        || packetId == INTERFACE_ON_OBJECT || packetId == INTERFACE_ON_FLOORITEM_PACKET
                         || packetId == DEVELOPER_PACKET || packetId == EQUIPMENT_REMOVE_PACKET) {
                     player.addLogicPacketToQueue(new LogicPacket(packetId, length, stream, true));
                 }
@@ -828,6 +826,14 @@ public final class WorldPacketsDecoder extends Decoder {
             player.setRun(true);
 
         switch (interfaceId) {
+            case 192:
+                player.setRouteEvent(new RouteEvent(object, () -> {
+                    player.faceObject(object);
+
+                    SpellHandler.INSTANCE.castOnObject(player, componentId, objectId);
+
+                }));
+                break;
             case 430: // Lunar spellbook
                 player.setRouteEvent(new RouteEvent(object, () -> {
                     player.faceObject(object);
@@ -1062,75 +1068,46 @@ public final class WorldPacketsDecoder extends Decoder {
         player.getActionManager().setAction(new CombatAction(npc));
     }
 
-    private static void handleTelekineticGrab(Player player, InputStream stream) {
+    private static void handleSpellOnFloorItem(Player player, InputStream stream) {
         if (!basicPlayerActiveAndLoaded(player) || player.isLocked())
             return;
 
-        if (player.isLocked())
-            return;
+        boolean forceRun = stream.readUnsignedByte() == 1;
 
-        int xCoord = stream.readShort();
-        int yCoord = stream.readShort();
-        stream.readShortLE128(); // unknown
-        stream.readIntV2();      // unknown
-        stream.readShortLE();    // unknown
-        boolean forceRun = stream.readByte() == 1;
-        int itemId = stream.readShortLE();
+        int anInt8906 = stream.readShortLE128();
+        int x = stream.readShortLE128();
+        int y = stream.readShort128();
+        int interfaceHash = stream.readIntLE();
+        int walkType = stream.readShort128();
+        int itemId = stream.readShortLE128();
+
+        int interfaceId  = interfaceHash >>> 16;
+        int spellCompId  = interfaceHash & 0xFFFF;
 
         if (forceRun) player.setRun(true);
 
-        final WorldTile tile = new WorldTile(xCoord, yCoord, player.getPlane());
-        final int regionId = tile.getRegionId();
+        // Debug (keep this until it’s stable)
+        System.out.println("=== SPELL ON FLOOR ITEM ===");
+        System.out.println("interfaceId=" + interfaceId + ", spellCompId=" + spellCompId);
+        System.out.println("itemId=" + itemId + ", x=" + x + ", y=" + y + ", walkType=" + walkType + ", anInt8906=" + anInt8906);
+
+        if (interfaceId != 192) {
+            // Not modern spellbook; ignore or route other spellbooks here
+            return;
+        }
+
+        WorldTile tile = new WorldTile(x, y, player.getPlane());
+        int regionId = tile.getRegionId();
         if (!player.getMapRegionsIds().contains(regionId))
             return;
 
-        final FloorItem item = World.getRegion(regionId).getGroundItem(itemId, tile, player);
-        if (item == null)
+        FloorItem floorItem = World.getRegion(regionId).getGroundItem(itemId, tile, player);
+        if (floorItem == null)
             return;
 
         player.stopAll(false);
 
-        if (player.getSkills().getLevel(Skills.MAGIC) < 33) {
-            player.getPackets().sendGameMessage("You do not have the required level to cast this spell.");
-            return;
-        }
-
-        boolean staffOfAir = player.getEquipment().getWeaponId() == 1381
-                || player.getEquipment().getWeaponId() == 1397
-                || player.getEquipment().getWeaponId() == 1405;
-
-        // Rune check
-        if (staffOfAir) {
-            if (!player.getInventory().containsItem(563, 1)) {
-                player.getPackets().sendGameMessage("You do not have the required runes to cast this spell.");
-                return;
-            }
-        } else {
-            if (!player.getInventory().containsItem(563, 1) || !player.getInventory().containsItem(556, 1)) {
-                player.getPackets().sendGameMessage("You do not have the required runes to cast this spell.");
-                return;
-            }
-        }
-
-        player.setNextFaceWorldTile(tile);
-        player.animate(new Animation(711));
-        player.getSkills().addXp(Skills.MAGIC, 10);
-        player.getInventory().deleteItem(563, 1);
-        World.sendProjectileToTile(player, new WorldTile(xCoord, yCoord, player.getPlane()), 142);
-
-        CoresManager.getSlowExecutor().schedule(() -> {
-            World.sendGraphics(player, new Graphics(144), tile);
-            if (World.getRegion(regionId).getGroundItem(itemId, tile, player) == null) {
-                player.getPackets().sendGameMessage("Oops! - To late!");
-                return;
-            }
-            if (!player.getInventory().hasFreeSlots()) {
-                player.getPackets().sendGameMessage("You don't have enough inventory space.");
-                return;
-            }
-            player.getInventory().addItem(item.getId(), item.getAmount());
-            GroundItems.removeGroundItem(player, item);
-        }, 2, TimeUnit.SECONDS);
+        SpellHandler.INSTANCE.castOnFloorItem(player, spellCompId, floorItem);
     }
 
     private static void handleInterfaceOnPlayer(Player player, InputStream stream) {

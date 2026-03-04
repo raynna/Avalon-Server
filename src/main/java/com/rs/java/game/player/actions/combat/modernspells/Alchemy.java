@@ -1,5 +1,6 @@
 package com.rs.java.game.player.actions.combat.modernspells;
 
+import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.item.Item;
@@ -8,31 +9,46 @@ import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.content.ItemConstants;
 
 public class Alchemy {
-	
+
 	public static boolean castSpell(Player player, int itemId, int slotId, boolean fireStaff, boolean lowAlch) {
-		if (player.isLocked() || !player.getInventory().containsOneItem(itemId) || player.hasSpellDelay()) {
+
+		if (player.isLocked() || player.hasSpellDelay())
 			return false;
-		}
-		Item alchedItem = new Item(itemId);
-		if (!ItemConstants.isTradeable(new Item(itemId))) {
+
+		if (!player.getInventory().containsItem(itemId, 1))
+			return false;
+		Item item = player.getInventory().getItem(slotId);
+		if (!ItemConstants.isTradeable(item)) {
 			player.getPackets().sendGameMessage("You cannot cast an alchemy spell on untradeables.");
 			return false;
 		}
+
 		if (itemId == 995) {
 			player.getPackets().sendGameMessage("You cannot cast an alchemy spell on coins.");
 			return false;
 		}
-		player.castSpellDelay(3);
-		player.setNextAnimationNoPriority(new Animation(fireStaff ? 9633 : 713), player);
+
+		ItemDefinitions defs = ItemDefinitions.getItemDefinitions(itemId);
+
+		if (defs.isNoted())
+			defs = ItemDefinitions.getItemDefinitions(defs.getCertId());
+
+		player.animate(fireStaff ? 9633 : 713);
 		player.gfx(new Graphics(fireStaff ? 1693 : 113));
+
+		player.castSpellDelay(3);
+
 		player.getInventory().deleteItem(slotId, new Item(itemId));
-		if (alchedItem.getDefinitions().isNoted())
-			alchedItem = new Item(alchedItem.getDefinitions().getCertId());
-		player.getMoneyPouch().addMoney(lowAlch ? alchedItem.getDefinitions().getLowAlchPrice() : alchedItem.getDefinitions().getHighAlchPrice(), false);
-		player.getInventory().refresh();
+
+		int coins = lowAlch ? defs.getLowAlchPrice() : defs.getHighAlchPrice();
+		player.getMoneyPouch().addMoney(coins, false);
+
 		player.getPackets().sendGlobalVar(168, 7);
+
 		player.getSkills().addXp(Skills.MAGIC, lowAlch ? 31 : 65);
+
 		player.lock(1);
+
 		return true;
 	}
 

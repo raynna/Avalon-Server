@@ -3,10 +3,10 @@ package com.rs.java.game.player.dialogues.skilling;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.WorldObject;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.skills.crafting.spinningwheel.SpinningWheel;
-import com.rs.java.game.player.actions.skills.crafting.leather.ReqItem;
+import com.rs.java.game.player.actions.skills.crafting.ReqItem;
 import com.rs.java.game.player.actions.skills.crafting.spinningwheel.SpinningData;
 import com.rs.java.game.player.actions.skills.crafting.spinningwheel.SpinningProduct;
+import com.rs.java.game.player.actions.skills.crafting.spinningwheel.SpinningWheel;
 import com.rs.java.game.player.content.SkillsDialogue;
 import com.rs.java.game.player.content.SkillsDialogue.ItemNameFilter;
 import com.rs.java.game.player.dialogues.Dialogue;
@@ -16,7 +16,7 @@ import com.rs.java.utils.Utils;
 public class SpinningWheelD extends Dialogue {
 
 	private WorldObject object;
-	private SpinningData[] data = SpinningData.values();
+	private SpinningData[] data = SpinningData.getEntries().toArray(new SpinningData[0]);
 
 	@Override
 	public void start() {

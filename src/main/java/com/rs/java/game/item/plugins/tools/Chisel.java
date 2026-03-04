@@ -6,7 +6,6 @@ import com.rs.java.game.item.ItemPlugin;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.crafting.gem.GemData;
 import com.rs.java.game.player.actions.skills.fletching.*;
-import com.rs.java.game.player.actions.skills.fletching.Fletching.*;
 
 public class Chisel extends ItemPlugin {
 
@@ -17,9 +16,9 @@ public class Chisel extends ItemPlugin {
 
     @Override
     public boolean processItemOnItem(Player player, Item item, Item item2, int fromSlot, int toSlot) {
-        GemData gem = GemData.forUncut(item.getId());
+        GemData gem = GemData.Companion.forUncut(item.getId());
         if (gem == null)
-            gem = GemData.forUncut(item2.getId());
+            gem = GemData.Companion.forUncut(item2.getId());
 
         if (gem != null) {
             player.getDialogueManager().startDialogue("GemCuttingD", gem);

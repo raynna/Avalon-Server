@@ -1,30 +1,51 @@
-package com.rs.java.game.player.actions.skills.crafting.loom;
+package com.rs.java.game.player.actions.skills.crafting.loom
 
-import com.rs.java.game.player.actions.skills.crafting.leather.ReqItem;
+import com.rs.java.game.player.actions.skills.crafting.ReqItem
 
-public enum LoomData {
+enum class LoomData(
+    val product: LoomProduct,
+) {
+    SACK(
+        LoomProduct(
+            "item.empty_sack",
+            21,
+            38.0,
+            ReqItem.item("item.jute_fibre", 4),
+        ),
+    ),
 
-    SACK(product("item.empty_sack", 21, 38, req("item.jute_fibre", 4))),
-    BASKET(product("item.basket", 36, 56, req("item.jute_fibre", 6))),
-    CLOTH(product("item.cloth", 1, 1.2, req("item.ball_of_wool", 2))),
-    SEAWEED_NET(product("item.empty_seaweed_net", 52, -1, req("item.seaweed", 5))),
-    MILESTONE_CAPE(product("item.milestone_cape_10", 1, -1));
+    BASKET(
+        LoomProduct(
+            "item.basket",
+            36,
+            56.0,
+            ReqItem.item("item.jute_fibre", 6),
+        ),
+    ),
 
-    private final LoomProduct product;
+    CLOTH(
+        LoomProduct(
+            "item.cloth",
+            1,
+            1.2,
+            ReqItem.item("item.ball_of_wool", 2),
+        ),
+    ),
 
-    LoomData(LoomProduct product) {
-        this.product = product;
-    }
+    SEAWEED_NET(
+        LoomProduct(
+            "item.empty_seaweed_net",
+            52,
+            -1.0,
+            ReqItem.item("item.seaweed", 5),
+        ),
+    ),
 
-    public LoomProduct getProduct() {
-        return product;
-    }
-
-    private static LoomProduct product(Object id, int lvl, double xp, ReqItem... req) {
-        return new LoomProduct(id, lvl, xp, req);
-    }
-
-    private static ReqItem req(Object id, int amount) {
-        return ReqItem.item(id, amount);
-    }
+    MILESTONE_CAPE(
+        LoomProduct(
+            "item.milestone_cape_10",
+            1,
+            -1.0,
+        ),
+    ),
 }
