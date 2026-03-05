@@ -349,9 +349,16 @@ public final class WorldPacketsDecoder extends Decoder {
                 return;
             }
 
-            int startData = stream.getOffset();
-            processPackets(packetId, stream, length);
-            stream.setOffset(startData + length);
+            byte[] data = new byte[length];
+            stream.readBytes(data);
+
+            if (shouldQueue(packetId)) {
+                player.addLogicPacketToQueue(new LogicPacket(packetId, data, true));
+                continue;
+            }
+
+            InputStream packetStream = new InputStream(data);
+            processPackets(packetId, packetStream, length);
         }
 
     }
@@ -696,23 +703,64 @@ public final class WorldPacketsDecoder extends Decoder {
                 else
                     GrandExchange.priceCheckItem(player, itemId);
                 return;
+            case 2://unknown packet
+            case 7://unknown packet
+            case 8://unknown packet
+            case 13://unknown packet
+            case 15://unknown packet
+            case 93://unknown packet
+            case 101://unknown packet
+            case 223://unknown packet
+            case 224://unknown packet
+                int pos = stream.getOffset();
+                stream.setOffset(pos);
+                return;
 
             default:
-                if (packetId == PING_PACKET || packetId == WALKING_PACKET || packetId == MINI_WALKING_PACKET
-                        || packetId == ITEM_TAKE_PACKET || packetId == EXAMINE_FLOORITEM_PACKET
-                        || packetId == PLAYER_OPTION_2_PACKET || packetId == PLAYER_OPTION_4_PACKET
-                        || packetId == PLAYER_OPTION_6_PACKET || packetId == PLAYER_OPTION_5_PACKET
-                        || packetId == PLAYER_OPTION_9_PACKET || packetId == PLAYER_OPTION_1_PACKET || packetId == ATTACK_NPC
-                        || packetId == INTERFACE_ON_PLAYER || packetId == INTERFACE_ON_NPC || packetId == NPC_CLICK1_PACKET
-                        || packetId == NPC_CLICK2_PACKET || packetId == NPC_CLICK3_PACKET || packetId == NPC_CLICK4_PACKET
-                        || packetId == OBJECT_CLICK1_PACKET || packetId == SWITCH_INTERFACE_ITEM_PACKET
-                        || packetId == OBJECT_CLICK2_PACKET || packetId == OBJECT_CLICK3_PACKET
-                        || packetId == OBJECT_CLICK4_PACKET || packetId == OBJECT_CLICK5_PACKET || packetId == KEY_TYPED_PACKET
-                        || packetId == INTERFACE_ON_OBJECT || packetId == INTERFACE_ON_FLOORITEM_PACKET
-                        || packetId == DEVELOPER_PACKET || packetId == EQUIPMENT_REMOVE_PACKET) {
-                    player.addLogicPacketToQueue(new LogicPacket(packetId, length, stream, true));
+                pos = stream.getOffset();
+
+                System.out.println("Unhandled packet -> id=" + packetId + " length=" + length);
+
+                StringBuilder hex = new StringBuilder();
+                for (int i = 0; i < length; i++) {
+                    hex.append(String.format("%02X ", stream.readUnsignedByte()));
                 }
+
+                System.out.println("Data: " + hex.toString());
+                stream.setOffset(pos);
+                break;
         }
+    }
+
+    private static boolean shouldQueue(int packetId) {
+        return packetId == PING_PACKET
+                || packetId == WALKING_PACKET
+                || packetId == MINI_WALKING_PACKET
+                || packetId == ITEM_TAKE_PACKET
+                || packetId == EXAMINE_FLOORITEM_PACKET
+                || packetId == PLAYER_OPTION_2_PACKET
+                || packetId == PLAYER_OPTION_4_PACKET
+                || packetId == PLAYER_OPTION_6_PACKET
+                || packetId == PLAYER_OPTION_5_PACKET
+                || packetId == PLAYER_OPTION_9_PACKET
+                || packetId == PLAYER_OPTION_1_PACKET
+                || packetId == ATTACK_NPC
+                || packetId == INTERFACE_ON_PLAYER
+                || packetId == INTERFACE_ON_NPC
+                || packetId == NPC_CLICK1_PACKET
+                || packetId == NPC_CLICK2_PACKET
+                || packetId == NPC_CLICK3_PACKET
+                || packetId == NPC_CLICK4_PACKET
+                || packetId == OBJECT_CLICK1_PACKET
+                || packetId == OBJECT_CLICK2_PACKET
+                || packetId == OBJECT_CLICK3_PACKET
+                || packetId == OBJECT_CLICK4_PACKET
+                || packetId == OBJECT_CLICK5_PACKET
+                || packetId == KEY_TYPED_PACKET
+                || packetId == INTERFACE_ON_OBJECT
+                || packetId == INTERFACE_ON_FLOORITEM_PACKET
+                || packetId == DEVELOPER_PACKET
+                || packetId == EQUIPMENT_REMOVE_PACKET;
     }
 
     private static boolean basicPlayerActiveAndLoaded(Player p) {
@@ -1081,8 +1129,8 @@ public final class WorldPacketsDecoder extends Decoder {
         int walkType = stream.readShort128();
         int itemId = stream.readShortLE128();
 
-        int interfaceId  = interfaceHash >>> 16;
-        int spellCompId  = interfaceHash & 0xFFFF;
+        int interfaceId = interfaceHash >>> 16;
+        int spellCompId = interfaceHash & 0xFFFF;
 
         if (forceRun) player.setRun(true);
 

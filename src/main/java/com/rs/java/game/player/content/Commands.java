@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.rs.Settings;
+import com.rs.core.cache.defintions.ClientScriptMap;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.java.game.*;
@@ -500,6 +501,8 @@ public final class Commands {
         registerCommand("removedonator", Commands::removeDonator, CommandCategory.DEVELOPER, "Removes your donator ranks.");
         registerCommand("drops", Commands::showDrops, CommandCategory.DEVELOPER, "Shows drops interface");
         registerCommand("testpreset", Commands::testPreset, CommandCategory.DEVELOPER, "Shows drops interface");
+        registerCommand("dumpenum", Commands::dumpEnumCommand, CommandCategory.DEVELOPER,
+                "Dump a ClientScriptMap enum to JSON. Usage: ::dumpenum [id]");
     }
 
     private static void registerCommand(String name, Command command, CommandCategory category, String description) {
@@ -2498,6 +2501,57 @@ public final class Commands {
 
     private static boolean testPreset(Player player, String[] cmd) {
         PresetInterface.INSTANCE.open(player, false);
+        return true;
+    }
+
+    private static boolean dumpEnumCommand(Player player, String[] cmd) {
+        try {
+
+            java.io.File dir = new java.io.File("data/enum_dumps");
+            if (!dir.exists())
+                dir.mkdirs();
+
+            int dumped = 0;
+
+            for (int id = 0; id < 10000; id++) {
+
+                ClientScriptMap map = ClientScriptMap.getMap(id);
+
+                if (map == null || map.getValues() == null || map.getValues().isEmpty())
+                    continue;
+
+                java.io.FileWriter writer =
+                        new java.io.FileWriter("data/enum_dumps/" + id + ".json");
+
+                writer.write("{\n");
+
+                boolean first = true;
+
+                for (Long key : map.getValues().keySet()) {
+
+                    if (!first)
+                        writer.write(",\n");
+
+                    Object value = map.getValue(key);
+
+                    writer.write("  \"" + key + "\": \"" + value + "\"");
+
+                    first = false;
+                }
+
+                writer.write("\n}");
+                writer.close();
+
+                dumped++;
+            }
+
+            player.message("Dumped " + dumped + " enums to data/enum_dumps/");
+
+        } catch (Exception e) {
+            player.message("Error dumping enums.");
+            e.printStackTrace();
+        }
+
         return true;
     }
 

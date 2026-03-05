@@ -211,6 +211,15 @@ public class Player extends Entity {
     public transient CombatStyle combatStyle;
 
     private transient QueuedInstantCombat<SpecialAttack> activeInstantSpecial = null;
+    private transient SpecialAttack.Instant queuedInstantSpecial;
+
+    public void setQueuedInstantSpecial(SpecialAttack.Instant special) {
+        this.queuedInstantSpecial = special;
+    }
+
+    public SpecialAttack.Instant getQueuedInstantSpecial() {
+        return queuedInstantSpecial;
+    }
 
     public void setActiveInstantSpecial(CombatContext context, SpecialAttack special) {
         activeInstantSpecial = new QueuedInstantCombat<>(context, special);
@@ -2488,101 +2497,73 @@ public class Player extends Entity {
     public transient int miscTick = 0;
     public transient int prayerTick = 0;
 
+    public void processQueuedInstantSpecial() {
+
+        if (queuedInstantSpecial == null)
+            return;
+
+        if (isDead()) {
+            queuedInstantSpecial = null;
+            return;
+        }
+
+        if (combatDefinitions.getSpecialAttackPercentage() < queuedInstantSpecial.getEnergyCost()) {
+            queuedInstantSpecial = null;
+            return;
+        }
+
+        queuedInstantSpecial.getExecute().invoke(this);
+        combatDefinitions.decreaseSpecialAttack(queuedInstantSpecial.getEnergyCost());
+
+        queuedInstantSpecial = null;
+    }
+
     public void processActiveInstantSpecial() {
+
         if (isDead()) {
             clearAllQueuedSpecialAttacks();
             return;
         }
-        if (combatDefinitions.usingSpecialAttack && getActiveInstantSpecial() == null && tickManager.isActive(TickManager.TickKeys.GRANITE_MAUL_TIMER)) {
 
-            Weapon weapon = Weapon.Companion.getWeapon(equipment.getWeaponId());
+        Weapon weapon = Weapon.Companion.getWeapon(equipment.getWeaponId());
 
-            if (weapon != null && weapon.getSpecial() instanceof SpecialAttack.InstantCombat) {
+        /*
+         * Auto-load instant special (Granite Maul behaviour)
+         */
+        if (weapon != null
+                && weapon.getSpecial() instanceof SpecialAttack.InstantCombat
+                && combatDefinitions.usingSpecialAttack
+                && getActiveInstantSpecial() == null
+                && tickManager.isActive(TickManager.TickKeys.GRANITE_MAUL_TIMER)) {
 
-                Entity target = getTemporaryTarget();
-                if (isDead()) {
-                    clearAllQueuedSpecialAttacks();
-                    return;
-                }
-                if (target != null) {
-                    if (target.isDead()) {
-                        clearAllQueuedSpecialAttacks();
-                        return;
-                    }
-                    CombatStyle style = Weapon.isRangedWeapon(this)
-                            ? new RangedStyle(this, target)
-                            : new MeleeStyle(this, target);
+            Entity target = getTemporaryTarget();
 
-                    CombatContext ctx = new CombatContext(
-                            this,
-                            target,
-                            weapon,
-                            equipment.getWeaponId(),
-                            null,
-                            style,
-                            weapon.getWeaponStyle().getStyleSet().styleAt(combatDefinitions.getAttackStyle()),
-                            weapon.getWeaponStyle().getStyleSet().bonusAt(combatDefinitions.getAttackStyle()),
-                            null,
-                            true,
-                            false
-                    );
-                    setActiveInstantSpecial(ctx, weapon.getSpecial());
-                }
+            if (target == null || target.isDead() || target.hasFinished()) {
+                clearAllQueuedSpecialAttacks();
+                return;
             }
-        }
 
-        QueuedInstantCombat<? extends SpecialAttack> activeSpecial = getActiveInstantSpecial();
-        if (activeSpecial == null)
-            return;
-        if (equipment.getWeaponId() != activeSpecial.context.getWeaponId()) {
-            clearAllQueuedSpecialAttacks();
-            return;
-        }
-        if (!combatDefinitions.usingSpecialAttack)
-            return;
+            CombatStyle style = Weapon.isRangedWeapon(this)
+                    ? new RangedStyle(this, target)
+                    : new MeleeStyle(this, target);
 
-        SpecialAttack special = activeSpecial.special;
-        boolean isInstantRange = special instanceof SpecialAttack.InstantRangeCombat;
-        if (equipment.getWeaponId() != activeSpecial.context.getWeaponId()) {
-            clearActiveInstantSpecial();
-            return;
-        }
-        if (!(special instanceof SpecialAttack.InstantCombat
-                || special instanceof SpecialAttack.InstantRangeCombat))
-            return;
+            CombatContext ctx = new CombatContext(
+                    this,
+                    target,
+                    weapon,
+                    equipment.getWeaponId(),
+                    null,
+                    style,
+                    weapon.getWeaponStyle().getStyleSet().styleAt(combatDefinitions.getAttackStyle()),
+                    weapon.getWeaponStyle().getStyleSet().bonusAt(combatDefinitions.getAttackStyle()),
+                    null,
+                    true,
+                    false
+            );
 
-        Entity defender = activeInstantSpecial.context.getDefender();
-        CombatStyle style = activeInstantSpecial.context.getCombat();
-
-        if (shouldAdjustDiagonal(this, defender, style.getAttackDistance())) {
-            if (isInstantRange) {
-                calcFollow(defender, getRun() ? 2 : 1, true, true);
-            }
-            return;
+            setActiveInstantSpecial(ctx, weapon.getSpecial());
         }
-
-        if (isOutOfRange(defender, style.getAttackDistance())) {
-            if (isInstantRange) {
-                calcFollow(defender, getRun() ? 2 : 1, true, true);
-            }
-            return;
-        }
-        if (isInstantRange) {
-            resetWalkSteps();
-        }
-
-        faceEntity(activeInstantSpecial.context.getDefender());
-        activeSpecial.execute();
-        combatDefinitions.decreaseSpecialAttack(special.getEnergyCost());
-        tickManager.addTicks(TickManager.TickKeys.LAST_ATTACK_TICK, 10);
-        activeInstantSpecial.context.getDefender().getTickManager().addTicks(TickManager.TickKeys.LAST_ATTACKED_TICK, 10);
-        activeInstantSpecial.context.getDefender().getTickManager().addTicks(TickManager.TickKeys.PJ_TIMER, 12);
-        //combatDefinitions.switchUsingSpecialAttack(); // consume toggle
-        if (special instanceof SpecialAttack.InstantRangeCombat)
-            stopAll(false, true, true);
-        clearActiveInstantSpecial();
     }
-
 
     public void processQueuedInstantSpecials() {
         if (getTemporaryTarget() == null || queuedInstantCombats.isEmpty())
@@ -2643,6 +2624,16 @@ public class Player extends Entity {
         }
     }
 
+    public void specDbg(String msg) {
+        // Toggle this on/off quickly
+        if (!Settings.DEBUG) return;
+
+        // Optional: only for your account
+        // if (!getUsername().equalsIgnoreCase("YourName")) return;
+
+        System.out.println("[SPECDBG t=" + WorldThread.getCycleIndex() + " " + getUsername() + "] " + msg);
+    }
+
     private transient ConcurrentLinkedQueue<QueuedProjectile> projectileQueue = new ConcurrentLinkedQueue<>();
 
     public void queueProjectile(QueuedProjectile proj) {
@@ -2671,6 +2662,7 @@ public class Player extends Entity {
         if (routeEvent != null && routeEvent.processEvent(this))
             routeEvent = null;
         super.processEntity();
+        processQueuedInstantSpecial();
         processQueuedInstantSpecials();
         processActiveInstantSpecial();
         actionManager.processPostMovement();

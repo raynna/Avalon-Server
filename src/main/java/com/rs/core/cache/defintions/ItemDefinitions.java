@@ -1,11 +1,6 @@
 package com.rs.core.cache.defintions;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -97,12 +92,13 @@ ItemDefinitions {
     //967 - absorb melee
     //968 - absorb range
     //969 - absorb magic
-    //972 - infinite air
-    //973 - infinite water
-    //974 - infinite earth
-    //975 - infinte fire
-    //1397 - elementalrune //maybe not since ancient staff has value 0
+    //972 - infinite air? staff_of_air=1
+    //973 - infinite water? staff_of_water=1
+    //974 - infinite earth? staff_of_earth=1
+    //975 - infinte fire? staff_of_fire=1
     //2195 - unknown - mudrune:value=32,airrune:value=32, staffoflight:value=18
+    //1397 - air_rune=1, water_rune=1, staff_of_air=1,
+    //2195 - air_rune=32, water_rune=32, earth_rune=32, fire_rune=32, lava_rune=32, death_rune=32, staff_of_air=18, staff_of_light=18,
 
     public static ItemDefinitions[] getItemDefinitions() {
         return itemsDefinitions;
@@ -289,6 +285,7 @@ ItemDefinitions {
         setDefaultsVariableValues();
         setDefaultOptions();
         loadItemDefinitions();
+        dumpParams();
     }
 
     public boolean isLoaded() {
@@ -540,6 +537,41 @@ ItemDefinitions {
             return 1426;//i prefer the older chaotic non render anim
         }
         return getDataFromClientScript(644, 1426);
+    }
+
+    public void dumpParams() {
+        if (clientScriptData == null)
+            return;
+
+        try {
+            File dir = new File("item_param_dumps");
+            if (!dir.exists())
+                dir.mkdirs();
+
+            FileWriter writer = new FileWriter("item_param_dumps/" + id + ".json");
+
+            writer.write("{\n");
+
+            boolean first = true;
+
+            for (int key : clientScriptData.keySet()) {
+
+                if (!first)
+                    writer.write(",\n");
+
+                Object value = clientScriptData.get(key);
+
+                writer.write("  \"" + key + "\": \"" + value + "\"");
+
+                first = false;
+            }
+
+            writer.write("\n}");
+            writer.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public int getAttackSpeed() {

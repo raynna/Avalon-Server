@@ -8,11 +8,10 @@ public class LogicPacket {
 	private final byte[] data;
 	private final boolean network; // source flag
 
-	public LogicPacket(int id, int size, InputStream stream, boolean network) {
+	public LogicPacket(int id, byte[] data, boolean network) {
 		this.id = id;
 		this.network = network;
-		this.data = new byte[size];
-		stream.getBytes(data, 0, size);
+		this.data = data;
 	}
 
 	public int getId() {

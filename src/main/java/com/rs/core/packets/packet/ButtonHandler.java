@@ -59,6 +59,7 @@ import com.rs.core.packets.decode.WorldPacketsDecoder;
 import com.rs.java.utils.ItemExamines;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.combat.Weapon;
 import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 import com.rs.kotlin.game.player.combat.special.SpecialAttack;
@@ -2526,18 +2527,29 @@ public class ButtonHandler {
     }
 
     public static void registerEquip(Player player, int slotId) {
-        if (player.getSwitchItemCache().contains(slotId)) return;
+        if (player.getSwitchItemCache().contains(slotId))
+            return;
+
         player.lastItemSwitchTick = WorldThread.getCycleIndex();
         player.stopAll(false, false, true);
+
         if (player.getInventory().getItem(slotId).getEquipSlot() == Equipment.SLOT_WEAPON) {
+
             player.predictedWeaponSwitch = player.getInventory().getItem(slotId).getId();
-            if (player.lastSpecClickTick != player.lastItemSwitchTick && player.getCombatDefinitions().isUsingSpecialAttack()) {
+
+            if (!player.itemSwitch &&
+                    player.lastSpecClickTick < player.lastItemSwitchTick &&
+                    player.getCombatDefinitions().isUsingSpecialAttack()) {
+
                 player.combatDefinitions.switchUsingSpecialAttack();
-                player.clearAllQueuedSpecialAttacks();
-                //player.getQueuedInstantCombats().clear();
+
+                if (player.predictedWeaponSwitch != 4153 && player.predictedWeaponSwitch != 13883)
+                    player.clearAllQueuedSpecialAttacks();
             }
+
             player.itemSwitch = true;
         }
+
         player.getSwitchItemCache().add(slotId);
     }
 
@@ -2593,8 +2605,17 @@ public class ButtonHandler {
         }
         Item currentlyEquipped = player.getEquipment().getItem(equipmentSlot);
         if (currentlyEquipped.getEquipSlot() == Equipment.SLOT_WEAPON) {
+
             player.itemSwitch = false;
-            //player.getQueuedInstantCombats().clear();
+
+            if (player.getCombatDefinitions().isUsingSpecialAttack()) {
+
+                Weapon weapon = Weapon.Companion.getWeapon(player.getEquipment().getWeaponId());
+
+                if (weapon != null && (weapon.getSpecial() instanceof SpecialAttack.InstantCombat || weapon.getSpecial() instanceof SpecialAttack.InstantRangeCombat)) {
+                    SpecialAttack.submitSpecialRequestFromEquip(player);
+                }
+            }
         }
         refreshEquipBonuses(player);
         return true;

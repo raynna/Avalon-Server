@@ -13,14 +13,13 @@ public class QueuedInstantCombat<T extends SpecialAttack> {
     }
 
     public void execute() {
-        if (special instanceof SpecialAttack.InstantCombat) {
-            ((SpecialAttack.InstantCombat) special).getExecute().invoke(context);
-        } else if (special instanceof SpecialAttack.InstantRangeCombat) {
-            ((SpecialAttack.InstantRangeCombat) special).getExecute().invoke(context);
-        } else if (special instanceof SpecialAttack.Combat) {
-            ((SpecialAttack.Combat) special).getExecute().invoke(context);
-        } else {
-            throw new IllegalStateException("Unsupported special type for QueuedInstantCombat");
+
+        switch (special) {
+            case SpecialAttack.Instant instant -> instant.getExecute();
+            case SpecialAttack.InstantCombat instantCombat -> instantCombat.getExecute().invoke(context);
+            case SpecialAttack.InstantRangeCombat instantRangeCombat -> instantRangeCombat.getExecute().invoke(context);
+            case SpecialAttack.Combat combat -> combat.getExecute().invoke(context);
+            case null, default -> throw new IllegalStateException("Unsupported special type for QueuedInstantCombat");
         }
     }
 }

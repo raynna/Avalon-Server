@@ -22,32 +22,52 @@ import com.rs.kotlin.game.world.pvp.PvpManager
 import kotlin.math.abs
 
 class CombatAction(
-    private val target: Entity
+    private val target: Entity,
 ) : Action() {
-
     companion object {
         @JvmStatic
-        fun getCombatStyle(player: Player, target: Entity): CombatStyle {
+        fun getCombatStyle(
+            player: Player,
+            target: Entity,
+        ): CombatStyle {
             val spellId = player.getCombatDefinitions().spellId
             return when {
-                NightmareStaff.hasWeapon(player) && player.combatDefinitions.isUsingSpecialAttack -> MagicStyle(
-                    player,
-                    target
-                )
+                NightmareStaff.hasWeapon(player) && player.combatDefinitions.isUsingSpecialAttack -> {
+                    MagicStyle(
+                        player,
+                        target,
+                    )
+                }
 
-                ObliterationWeapon.hasWeapon(player) && player.combatDefinitions.isUsingSpecialAttack -> MagicStyle(
-                    player,
-                    target
-                );
-                spellId != 0 -> MagicStyle(player, target)
-                GreaterRunicStaffWeapon.hasWeapon(player) && GreaterRunicStaffWeapon.getSpellId(player) != -1 -> MagicStyle(
-                    player,
-                    target
-                )
+                ObliterationWeapon.hasWeapon(player) && player.combatDefinitions.isUsingSpecialAttack -> {
+                    MagicStyle(
+                        player,
+                        target,
+                    )
+                }
 
-                PolyporeStaff.hasWeapon(player) -> MagicStyle(player, target)
-                isRangedWeapon(player) -> RangedStyle(player, target)
-                else -> MeleeStyle(player, target)
+                spellId != 0 -> {
+                    MagicStyle(player, target)
+                }
+
+                GreaterRunicStaffWeapon.hasWeapon(player) && GreaterRunicStaffWeapon.getSpellId(player) != -1 -> {
+                    MagicStyle(
+                        player,
+                        target,
+                    )
+                }
+
+                PolyporeStaff.hasWeapon(player) -> {
+                    MagicStyle(player, target)
+                }
+
+                isRangedWeapon(player) -> {
+                    RangedStyle(player, target)
+                }
+
+                else -> {
+                    MeleeStyle(player, target)
+                }
             }
         }
 
@@ -60,7 +80,7 @@ class CombatAction(
     }
 
     enum class CombatPhase {
-        HIT
+        HIT,
     }
 
     private var lastTargetX = -1
@@ -82,10 +102,10 @@ class CombatAction(
         player.setNextFaceEntity(target)
         player.resetWalkSteps()
         player.tickManager.addTicks(TickManager.TickKeys.LAST_INTERACTION_TARGET, 10)
-        player.temporaryTarget = target;
+        player.temporaryTarget = target
         player.healthOverlay.sendOverlay(player, target)
 
-        val requiredDistance = getAdjustedFollowDistance(target);
+        val requiredDistance = getAdjustedFollowDistance(target)
         if (player.isOutOfRange(target, requiredDistance)) {
             player.calcFollow(target, if (player.run) 2 else 1, true, true)
         }
@@ -109,9 +129,50 @@ class CombatAction(
             stop(player)
             return false
         }
+        val activeInstantSpecial = player.activeInstantSpecial
+        if (activeInstantSpecial != null) {
+            val special = activeInstantSpecial.special
+
+            if (special is SpecialAttack.InstantRangeCombat) {
+                if (!check(player, target)) {
+                    return false
+                }
+
+                val style = activeInstantSpecial.context.combat
+                val dist = style.getAttackDistance()
+
+                if (player.isOutOfRange(target, dist)) {
+                    player.calcFollow(target, if (player.run) 2 else 1, true, true)
+                    return true
+                }
+
+                if (shouldAdjustDiagonal(player, target)) {
+                    player.calcFollow(target, if (player.run) 2 else 1, true, true)
+                    return true
+                }
+
+                player.faceEntity(activeInstantSpecial.context.defender)
+
+                special.execute(activeInstantSpecial.context)
+
+                player.combatDefinitions.decreaseSpecialAttack(special.energyCost)
+
+                player.clearActiveInstantSpecial()
+
+                player.setLastAttackTimer(16)
+                player.setGraniteMaulTimer(5)
+
+                target.setInCombat(16)
+                target.setPjTimer(12)
+
+                player.stopAll(false, true, true)
+
+                return true
+            }
+        }
         if (player.temporaryTarget == null || player.temporaryTarget == target) {
             player.healthOverlay.updateHealthOverlay(player, target, true)
-            player.temporaryTarget = target;
+            player.temporaryTarget = target
         }
         updateStyle(player)
 
@@ -142,12 +203,17 @@ class CombatAction(
                     continue
                 }
                 if (queued.special is SpecialAttack.InstantCombat) {
-                    if (!check(player, target))
+                    if (!check(player, target)) {
                         return false
+                    }
                     player.faceEntity(queued.context.defender)
                     player.combatDefinitions.decreaseSpecialAttack(queued.special.energyCost)
                     queued.special.execute(queued.context)
                     player.queuedInstantCombats.remove(queued)
+                    player.setLastAttackTimer(16)
+                    player.setGraniteMaulTimer(5)
+                    target.setInCombat(16)
+                    target.setPjTimer(12)
                 }
             }
             player.stopAll(false, true, true)
@@ -168,7 +234,7 @@ class CombatAction(
         }*/
 
         player.combatStyle = style
-        val requiredDistance = getAdjustedFollowDistance(target);
+        val requiredDistance = getAdjustedFollowDistance(target)
         if (player.isOutOfRange(target, requiredDistance)) {
             player.resetWalkSteps()
             player.calcFollow(target, if (player.run) 2 else 1, true, true)
@@ -190,7 +256,7 @@ class CombatAction(
         updateStyle(player)
         val requiredDistance = getAdjustedAttackRange(player, target)
         if (player.isOutOfRange(target, requiredDistance)) {
-                return 0
+            return 0
         }
 
         if (player.isCollidingWithTarget(target)) {
@@ -212,8 +278,9 @@ class CombatAction(
 
         return when (phase) {
             CombatPhase.HIT -> {
-                if (!check(player, target))
+                if (!check(player, target)) {
                     return -1
+                }
                 if (validateAttack(player, target)) {
                     target.attackedBy = player
 
@@ -236,28 +303,36 @@ class CombatAction(
 
     override fun stop(player: Player) {
         stopFollowTask(player)
-        player.resetWalkSteps();
+        player.resetWalkSteps()
         player.setNextFaceEntity(null)
         if (::style.isInitialized) {
             style.onStop(true)
         }
     }
 
-    private fun check(player: Player, target: Entity): Boolean {
-        if (target.isDead || target.hasFinished())
+    private fun check(
+        player: Player,
+        target: Entity,
+    ): Boolean {
+        if (target.isDead || target.hasFinished()) {
             return false
-        if (target is NPC && target.isCantInteract)
+        }
+        if (target is NPC && target.isCantInteract) {
             return false
+        }
         if (!style.canAttack(player, target)) {
             return false
         }
-        if (!player.controlerManager.canHit(target) || !player.controlerManager.keepCombating(target) || !player.controlerManager.canAttack(
-                target
+        if (!player.controlerManager.canHit(target) || !player.controlerManager.keepCombating(target) ||
+            !player.controlerManager.canAttack(
+                target,
             )
-        )
+        ) {
             return false
-        if (!PvpManager.canPlayerAttack(player, target))
+        }
+        if (!PvpManager.canPlayerAttack(player, target)) {
             return false
+        }
         if (!target.isAtMultiArea) {
             if (player.isPjBlocked && player.attackedBy != target) {
                 player.message("You are already in combat.")
@@ -265,14 +340,15 @@ class CombatAction(
             }
             if (target.isPjBlocked && target.attackedBy != player) {
                 if (target is NPC) {
-                    if (target.id == 4474 || target.id == 7891)
+                    if (target.id == 4474 || target.id == 7891) {
                         return true
+                    }
                 }
                 player.message("That " + (if (target is Player) "player" else "npc") + " is already in combat.")
                 return false
             }
         }
-        return true;
+        return true
     }
 
     private fun ensureFollowTask(player: Player) {
@@ -281,80 +357,82 @@ class CombatAction(
             return
         }*/
 
-        val requiredDistance = getAdjustedFollowDistance(target);
+        val requiredDistance = getAdjustedFollowDistance(target)
         val size = player.size
 
-        followTask = object : WorldTask() {
-            override fun run() {
-                if (player.isDead || player.isLocked || target.isDead || target.hasFinished() || !player.isActive) {
-                    stop()
-                    return
-                }
-                if (player.isOutOfRegion(target)) {
-                    stop()
-                    return
-                }
-                if (player.actionManager.action == null) {
-                    stopFollowTask(player)
-                    stop()
-                    return
-                }
-                updateStyle(player)
-                val requiredDistance = getAdjustedFollowDistance(target)
-                if (player.isCollidingWithTarget(target)) {
-                    if (player.isFrozen) {
-                        player.resetWalkSteps()
-                        player.packets.sendGameMessage("A magical force prevents you from moving.")
-                        stopFollowTask(player)
-                        return
-                    }
-                    if (handleCollisionMovement(player, target, size)) {
+        followTask =
+            object : WorldTask() {
+                override fun run() {
+                    if (player.isDead || player.isLocked || target.isDead || target.hasFinished() || !player.isActive) {
                         stop()
-                    }
-                    return
-                }
-                if (shouldAdjustDiagonal(player, target)) {
-                    val targetShouldAdjustDiagonal =
-                        if (target is Player) shouldAdjustDiagonal(target, player) else false
-                    val targetHasPriority = hasMovementPriority(target as? Player ?: player, player)
-
-                    if (targetShouldAdjustDiagonal && targetHasPriority) {
-                        player.resetWalkSteps()
                         return
                     }
-                    if (player.isFrozen) {
-                        player.packets.sendGameMessage("A magical force prevents you from moving.")
+                    if (player.isOutOfRegion(target)) {
+                        stop()
+                        return
+                    }
+                    if (player.actionManager.action == null) {
                         stopFollowTask(player)
+                        stop()
                         return
                     }
-                    player.calcFollow(target, if (player.run) 2 else 1, true, true)
-                    return
-                }
-                player.resetWalkSteps()
-                if (player.isOutOfRange(target, requiredDistance)) {
-                    val moved = lastTargetX != target.x || lastTargetY != target.y
-                    lastTargetX = target.x
-                    lastTargetY = target.y
-                    player.resetWalkSteps()
-                    if (moved || (!player.hasWalkSteps() && player.actionManager.action != null)) {
+                    updateStyle(player)
+                    val requiredDistance = getAdjustedFollowDistance(target)
+                    if (player.isCollidingWithTarget(target)) {
+                        if (player.isFrozen) {
+                            player.resetWalkSteps()
+                            player.packets.sendGameMessage("A magical force prevents you from moving.")
+                            stopFollowTask(player)
+                            return
+                        }
+                        if (handleCollisionMovement(player, target, size)) {
+                            stop()
+                        }
+                        return
+                    }
+                    if (shouldAdjustDiagonal(player, target)) {
+                        val targetShouldAdjustDiagonal =
+                            if (target is Player) shouldAdjustDiagonal(target, player) else false
+                        val targetHasPriority = hasMovementPriority(target as? Player ?: player, player)
+
+                        if (targetShouldAdjustDiagonal && targetHasPriority) {
+                            player.resetWalkSteps()
+                            return
+                        }
+                        if (player.isFrozen) {
+                            player.packets.sendGameMessage("A magical force prevents you from moving.")
+                            stopFollowTask(player)
+                            return
+                        }
                         player.calcFollow(target, if (player.run) 2 else 1, true, true)
                         return
                     }
+                    player.resetWalkSteps()
+                    if (player.isOutOfRange(target, requiredDistance)) {
+                        val moved = lastTargetX != target.x || lastTargetY != target.y
+                        lastTargetX = target.x
+                        lastTargetY = target.y
+                        player.resetWalkSteps()
+                        if (moved || (!player.hasWalkSteps() && player.actionManager.action != null)) {
+                            player.calcFollow(target, if (player.run) 2 else 1, true, true)
+                            return
+                        }
+                    }
                 }
             }
-        }
         WorldTasksManager.schedule(followTask, 0, 0)
     }
 
     private fun stopFollowTask(player: Player) {
-        //player.resetWalkSteps()
+        // player.resetWalkSteps()
         followTask?.stop()
         followTask = null
     }
 
-    private fun validateAttack(player: Player, target: Entity): Boolean {
-        return !target.isDead && player.isActive
-    }
+    private fun validateAttack(
+        player: Player,
+        target: Entity,
+    ): Boolean = !target.isDead && player.isActive
 
     fun reset() {
         phase = CombatPhase.HIT
@@ -369,7 +447,10 @@ class CombatAction(
         return baseDistance
     }
 
-    private fun getAdjustedAttackRange(player: Player, target: Entity): Int {
+    private fun getAdjustedAttackRange(
+        player: Player,
+        target: Entity,
+    ): Int {
         var base = style.getAttackDistance()
 
         if (target.hasWalkSteps() && target is Player) {
@@ -381,14 +462,17 @@ class CombatAction(
         return base
     }
 
-
     private fun isRangedWeapon(player: Player): Boolean {
         val weaponId = player.equipment.getWeaponId()
-        val ranged = RangeData.getWeaponByItemId(weaponId);
+        val ranged = RangeData.getWeaponByItemId(weaponId)
         return ranged != null
     }
 
-    private fun handleCollisionMovement(player: Player, target: Entity, size: Int): Boolean {
+    private fun handleCollisionMovement(
+        player: Player,
+        target: Entity,
+        size: Int,
+    ): Boolean {
         if (player.isFrozen) {
             player.message("A magical force prevents you from moving.")
             return false
@@ -398,46 +482,57 @@ class CombatAction(
             { player.addWalkSteps(target.x + target.size, player.y) },
             { player.addWalkSteps(target.x - size, player.y) },
             { player.addWalkSteps(player.x, target.y + target.size) },
-            { player.addWalkSteps(player.x, target.y - size) }
+            { player.addWalkSteps(player.x, target.y - size) },
         ).any { it() }
     }
 
-    private fun Player.isCollidingWithTarget(target: Entity): Boolean {
-        return Utils.colides(this.x, this.y, this.size, target.x, target.y, target.size) &&
-                !target.hasWalkSteps()
-    }
+    private fun Player.isCollidingWithTarget(target: Entity): Boolean =
+        Utils.colides(this.x, this.y, this.size, target.x, target.y, target.size) &&
+            !target.hasWalkSteps()
 
-    private fun Player.isDiagonalMeleeBlocked(target: Entity, style: CombatStyle): Boolean {
+    private fun Player.isDiagonalMeleeBlocked(
+        target: Entity,
+        style: CombatStyle,
+    ): Boolean {
         val dx = abs(this.x - target.x)
         val dy = abs(this.y - target.y)
         val attackDistance = style.getAttackDistance()
 
         return this.combatDefinitions.spellId <= 0 &&
-                this.equipment.weaponId != 24203 &&
-                target.size == 1 &&
-                dx == 1 && dy == 1 &&
-                attackDistance < 1
+            this.equipment.weaponId != 24203 &&
+            target.size == 1 &&
+            dx == 1 && dy == 1 &&
+            attackDistance < 1
     }
 
-    private fun shouldAdjustDiagonal(target: Player, player: Player): Boolean {
+    private fun shouldAdjustDiagonal(
+        target: Player,
+        player: Player,
+    ): Boolean {
         val attackDistance = style.getAttackDistance()
         return player.size == 1 &&
-                abs(target.x - player.x) == 1 &&
-                abs(target.y - player.y) == 1 &&
-                !player.hasWalkSteps() &&
-                attackDistance < 1
+            abs(target.x - player.x) == 1 &&
+            abs(target.y - player.y) == 1 &&
+            !player.hasWalkSteps() &&
+            attackDistance < 1
     }
 
-    private fun shouldAdjustDiagonal(player: Player, target: Entity): Boolean {
+    private fun shouldAdjustDiagonal(
+        player: Player,
+        target: Entity,
+    ): Boolean {
         val attackDistance = style.getAttackDistance()
         return target.size == 1 &&
-                abs(player.x - target.x) == 1 &&
-                abs(player.y - target.y) == 1 &&
-                !target.hasWalkSteps() &&
-                attackDistance < 1
+            abs(player.x - target.x) == 1 &&
+            abs(player.y - target.y) == 1 &&
+            !target.hasWalkSteps() &&
+            attackDistance < 1
     }
 
-    private fun hasMovementPriority(player: Player, target: Entity): Boolean {
+    private fun hasMovementPriority(
+        player: Player,
+        target: Entity,
+    ): Boolean {
         if (target !is Player) return true // NPCs always yield to players
         return player.index < target.index
     }
@@ -447,7 +542,7 @@ class CombatAction(
         val changed = !::style.isInitialized || newStyle::class != style::class
 
         if (changed) {
-            //player.resetWalkSteps()
+            // player.resetWalkSteps()
             followTask?.stop()
             followTask = null
         }
