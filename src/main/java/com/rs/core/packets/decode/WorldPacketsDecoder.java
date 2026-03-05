@@ -799,6 +799,7 @@ public final class WorldPacketsDecoder extends Decoder {
         if (steps > 25)
             steps = 25;
         player.stopAll();
+        player.resetWalkSteps();
         player.setNextFaceEntity(null);
         if (forceRun)
             player.setRun(true);

@@ -57,7 +57,7 @@ public abstract class Entity extends WorldTile {
     private transient int nextRunDirection;
     private transient WorldTile nextFaceWorldTile;
     private transient boolean teleported;
-    private transient ConcurrentLinkedQueue<Object[]> walkSteps;// called by
+    private transient ConcurrentLinkedQueue<WalkStep> walkSteps;// called by
 
     private transient List<PendingEffect> pendingEffects;
     // more
@@ -127,7 +127,7 @@ public abstract class Entity extends WorldTile {
     public final void initEntity() {
         hashCode = hashCodeGenerator.getAndIncrement();
         mapRegionsIds = new CopyOnWriteArrayList<Integer>();
-        walkSteps = new ConcurrentLinkedQueue<Object[]>();
+        walkSteps = new ConcurrentLinkedQueue<WalkStep>();
         receivedHits = new ConcurrentLinkedQueue<Hit>();
         receivedDamage = new ConcurrentHashMap<Entity, Integer>();
         temporaryAttributes = new ConcurrentHashMap<>();
@@ -553,12 +553,12 @@ public abstract class Entity extends WorldTile {
         if (this instanceof Player && ((Player) this).getRunEnergy() <= 0)
             setRun(false);
         for (int stepCount = 0; stepCount < (run ? 2 : 1); stepCount++) {
-            Object[] nextStep = getNextWalkStep();
+            WalkStep nextStep = getNextWalkStep();
             if (nextStep == null)
                 break;
 
-            int dir = (int) nextStep[0];
-            boolean check = (boolean) nextStep[3];
+            int dir = nextStep.dir;
+            boolean check = nextStep.check;
             if (check && (!World.checkWalkStep(getPlane(), getX(), getY(), dir, getSize())) || (this instanceof NPC && !canWalkNPC(getX() + Utils.DIRECTION_DELTA_X[dir], getY() + Utils.DIRECTION_DELTA_Y[dir]))) {
                 resetWalkSteps();
                 break;
@@ -605,20 +605,6 @@ public abstract class Entity extends WorldTile {
     }
 
 
-    private Object[] previewWalkStep(int index) {
-        if (walkSteps == null || walkSteps.isEmpty())
-            return null;
-
-        int i = 0;
-        for (Object[] step : walkSteps) {
-            if (i++ == index)
-                return step;
-        }
-        return null;
-    }
-
-
-
     public void updateAngle(WorldTile base, int sizeX, int sizeY) {
         WorldTile from = nextWorldTile != null ? nextWorldTile : this;
         int srcX = (from.getX() * 512) + (getSize() * 256);
@@ -628,13 +614,6 @@ public abstract class Entity extends WorldTile {
         int deltaX = srcX - dstX;
         int deltaY = srcY - dstY;
         direction = deltaX != 0 || deltaY != 0 ? (int) (Math.atan2((double) deltaX, (double) deltaY) * 2607.5945876176133) & 0x3FFF : 0;
-    }
-
-    private Object[] previewNextWalkStep() {
-        Object[] step = walkSteps.peek();
-        if (step == null)
-            return null;
-        return step;
     }
 
     @Override
@@ -768,13 +747,6 @@ public abstract class Entity extends WorldTile {
             if (lastTile[0] == destX && lastTile[1] == destY)
                 return true;
         }
-    }
-
-    private int getPreviewNextWalkStep() {
-        Object[] step = walkSteps.poll();
-        if (step == null)
-            return -1;
-        return (int) step[0];
     }
 
     public boolean canWalkNPC(int toX, int toY) {
@@ -1112,11 +1084,13 @@ public abstract class Entity extends WorldTile {
     }
 
     public int[] getLastWalkTile() {
-        Object[] objects = walkSteps.toArray();
-        if (objects.length == 0)
+        WalkStep[] steps = walkSteps.toArray(new WalkStep[0]);
+
+        if (steps.length == 0)
             return new int[]{getX(), getY()};
-        Object step[] = (Object[]) objects[objects.length - 1];
-        return new int[]{(int) step[1], (int) step[2]};
+
+        WalkStep step = steps[steps.length - 1];
+        return new int[]{step.x, step.y};
     }
 
     public boolean addWalkStep(int nextX, int nextY, int lastX, int lastY, boolean check) {
@@ -1129,11 +1103,11 @@ public abstract class Entity extends WorldTile {
             if (!((Player) this).getControlerManager().addWalkStep(lastX, lastY, nextX, nextY))
                 return false;
         }
-        walkSteps.add(new Object[]{dir, nextX, nextY, check});
+        walkSteps.add(new WalkStep(dir, nextX, nextY, check));
         return true;
     }
 
-    public ConcurrentLinkedQueue<Object[]> getWalkSteps() {
+    public ConcurrentLinkedQueue<WalkStep> getWalkSteps() {
         return walkSteps;
     }
 
@@ -1141,11 +1115,8 @@ public abstract class Entity extends WorldTile {
         walkSteps.clear();
     }
 
-    private Object[] getNextWalkStep() {
-        Object[] step = walkSteps.poll();
-        if (step == null)
-            return null;
-        return step;
+    private WalkStep getNextWalkStep() {
+        return walkSteps.poll();
     }
 
     public boolean restoreHitPoints() {
