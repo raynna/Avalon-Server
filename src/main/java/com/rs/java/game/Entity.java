@@ -556,8 +556,10 @@ public abstract class Entity extends WorldTile {
             Object[] nextStep = getNextWalkStep();
             if (nextStep == null)
                 break;
+
             int dir = (int) nextStep[0];
-            if ((!World.checkWalkStep(getPlane(), getX(), getY(), dir, getSize())) || (this instanceof NPC && !canWalkNPC(getX() + Utils.DIRECTION_DELTA_X[dir], getY() + Utils.DIRECTION_DELTA_Y[dir]))) {
+            boolean check = (boolean) nextStep[3];
+            if (check && (!World.checkWalkStep(getPlane(), getX(), getY(), dir, getSize())) || (this instanceof NPC && !canWalkNPC(getX() + Utils.DIRECTION_DELTA_X[dir], getY() + Utils.DIRECTION_DELTA_Y[dir]))) {
                 resetWalkSteps();
                 break;
             }

@@ -60,6 +60,7 @@ import com.rs.java.utils.ItemExamines;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.combat.Weapon;
+import com.rs.kotlin.game.player.transportation.FairyRings;
 import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.player.combat.magic.SpellHandler;
 import com.rs.kotlin.game.player.combat.special.SpecialAttack;
@@ -108,6 +109,8 @@ public class ButtonHandler {
             player.getCreationKiln().handleButton(componentId, packetId);
             return;
         }
+        if (FairyRings.Companion.handleButtons(player, interfaceId, componentId))
+            return;
         if (interfaceId == 3005) {
             DropInterface.INSTANCE.handleButtons(player, componentId);
             return;

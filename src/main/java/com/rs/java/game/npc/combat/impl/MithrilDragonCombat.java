@@ -16,7 +16,9 @@ public class MithrilDragonCombat extends CombatScript {
 
 	private static final int DRAGON_HEADBUTT_ANIMATION = 13158, DRAGONFIRE_ANIMATION = 13160, DRAGONFIRE_BREATH_ANIMATION = 13164;
 	private static final int DRAGONFIRE_GFX = 1, DRAGONFIRE_NORMAL_PROJECTILE = 393;
-	private static final int MAGIC_PROJECTILE = 2706;
+	private static final int MAGIC_PROJECTILE = 500;
+	private static final int MAGIC_START_GFX = 501;
+	private static final int MAGIC_HIT_GFX = 502;
 	private static final int RANGE_PROJECTILE = 12;
 	private final static int FIREBREATH_SOUND = Rscm.INSTANCE.sound("sound.dragonfire_breath");
 
@@ -94,8 +96,15 @@ public class MithrilDragonCombat extends CombatScript {
 
 	private void performMagicAttack(NPC npc, Entity target) {
 		npc.animate(DRAGONFIRE_ANIMATION);
+		npc.gfx(MAGIC_START_GFX);
 		Hit magicHit = npc.magicHit(target, 180);
-		ProjectileManager.send(Projectile.ELEMENTAL_SPELL, MAGIC_PROJECTILE, 32, npc, target, () -> applyRegisteredHit(npc, target, magicHit));
+		ProjectileManager.send(Projectile.ELEMENTAL_SPELL, MAGIC_PROJECTILE, 32, npc, target, () -> {
+			applyRegisteredHit(npc, target, magicHit);
+			if (magicHit.getDamage() > 0) {
+				target.gfx(new Graphics(MAGIC_HIT_GFX, 100));
+			}
+		});
+
 	}
 
 }

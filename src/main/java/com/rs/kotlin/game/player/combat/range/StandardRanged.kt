@@ -653,6 +653,7 @@ object StandardRanged : RangeData() {
                         execute = { context ->
                             context.attacker.animate(Animation(1074))
                             context.attacker.gfx(Graphics(256, 100))
+                            context.attacker.gfx(Graphics(256, 30, 100, 0))
                             context.attacker.playSound(2545, 1)
                             val ticks =
                                 ProjectileManager.send(

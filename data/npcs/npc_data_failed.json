@@ -295,6 +295,22 @@
     "lastSeen": "2026-01-29T23:22:13.320043500Z",
     "attempts": 1
   },
+  "3344": {
+    "npcId": 3344,
+    "npcName": "Fungi",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-05T16:49:47.365238500Z",
+    "lastSeen": "2026-03-05T16:49:47.365238500Z",
+    "attempts": 1
+  },
+  "3345": {
+    "npcId": 3345,
+    "npcName": "Fungi",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-05T16:49:46.244694500Z",
+    "lastSeen": "2026-03-05T16:49:46.244694500Z",
+    "attempts": 1
+  },
   "3624": {
     "npcId": 3624,
     "npcName": "null",

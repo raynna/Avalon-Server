@@ -4709,6 +4709,66 @@
       "vannaka"
     ]
   },
+  "126": {
+    "id": 126,
+    "name": "Otherworldly being",
+    "members": true,
+    "combatLevel": 64,
+    "attackLevel": 56,
+    "strengthLevel": 56,
+    "defenceLevel": 46,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 66,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 15,
+      "slash": 10,
+      "crush": 20
+    },
+    "magicDefence": {
+      "magic": -5
+    },
+    "rangedDefence": {
+      "light": 15,
+      "standard": 15,
+      "heavy": 15
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[25 March]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Is he invisible or just a set of floating clothing?",
+    "attributes": [
+      "spectral"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 7
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 20,
+    "slayerXp": 66,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
   "127": {
     "id": 127,
     "name": "Magic axe",
@@ -17281,6 +17341,470 @@
       "duradel"
     ]
   },
+  "1441": {
+    "id": 1441,
+    "name": "Kruk",
+    "members": true,
+    "combatLevel": 207,
+    "attackLevel": 130,
+    "strengthLevel": 130,
+    "defenceLevel": 150,
+    "magicLevel": 130,
+    "rangedLevel": 170,
+    "constitutionLevel": 210,
+    "attackBonus": 160,
+    "strengthBonus": 90,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 150,
+    "rangedStrengthBonus": 70,
+    "meleeDefence": {
+      "stab": 100,
+      "slash": 100,
+      "crush": 100
+    },
+    "magicDefence": {
+      "magic": 250
+    },
+    "rangedDefence": {
+      "light": 100,
+      "standard": 100,
+      "heavy": 100
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": true,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[6 December]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A large ninja monkey wielding two scimitars.",
+    "attributes": [],
+    "xpBonus": 25.0,
+    "maxHit": {
+      "melee": 33,
+      "ranged": 37
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]",
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1447": {
+    "id": 1447,
+    "name": "Padulah",
+    "members": true,
+    "combatLevel": 149,
+    "attackLevel": 130,
+    "strengthLevel": 130,
+    "defenceLevel": 130,
+    "magicLevel": 130,
+    "rangedLevel": 1,
+    "constitutionLevel": 130,
+    "attackBonus": 50,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[6 December]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A scimitar wielding ninja monkey. He looks like he is guarding something.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 20
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1456": {
+    "id": 1456,
+    "name": "Monkey Archer",
+    "members": true,
+    "combatLevel": 86,
+    "attackLevel": 80,
+    "strengthLevel": 80,
+    "defenceLevel": 80,
+    "magicLevel": 1,
+    "rangedLevel": 110,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[6 December]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 20
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 50,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "1457": {
+    "id": 1457,
+    "name": "Monkey Archer",
+    "members": true,
+    "combatLevel": 86,
+    "attackLevel": 80,
+    "strengthLevel": 80,
+    "defenceLevel": 80,
+    "magicLevel": 1,
+    "rangedLevel": 110,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[6 December]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 20
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 50,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "1458": {
+    "id": 1458,
+    "name": "Monkey Archer",
+    "members": true,
+    "combatLevel": 86,
+    "attackLevel": 80,
+    "strengthLevel": 80,
+    "defenceLevel": 80,
+    "magicLevel": 1,
+    "rangedLevel": 110,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[6 December]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 20
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 50,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "1459": {
+    "id": 1459,
+    "name": "Monkey Guard",
+    "members": true,
+    "combatLevel": 167,
+    "attackLevel": 130,
+    "strengthLevel": 130,
+    "defenceLevel": 200,
+    "magicLevel": 130,
+    "rangedLevel": 1,
+    "constitutionLevel": 130,
+    "attackBonus": 50,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[6 December]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A huge brutish gorilla armoured with dangerous looking vambraces.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 14
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 133,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "1460": {
+    "id": 1460,
+    "name": "Monkey Guard",
+    "members": true,
+    "combatLevel": 167,
+    "attackLevel": 130,
+    "strengthLevel": 130,
+    "defenceLevel": 200,
+    "magicLevel": 130,
+    "rangedLevel": 1,
+    "constitutionLevel": 130,
+    "attackBonus": 50,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[6 December]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A huge brutish gorilla armoured with dangerous looking vambraces.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 14
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 133,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "1473": {
+    "id": 1473,
+    "name": "Spider",
+    "members": false,
+    "combatLevel": 1,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 2,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 2,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia"
+    ]
+  },
   "1475": {
     "id": 1475,
     "name": "Bird",
@@ -17393,6 +17917,64 @@
     "assignedBy": [
       "turael",
       "spria"
+    ]
+  },
+  "1477": {
+    "id": 1477,
+    "name": "Scorpion",
+    "members": false,
+    "combatLevel": 38,
+    "attackLevel": 50,
+    "strengthLevel": 50,
+    "defenceLevel": 10,
+    "magicLevel": 10,
+    "rangedLevel": 1,
+    "constitutionLevel": 15,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 15
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 15,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
     ]
   },
   "1478": {
@@ -23756,6 +24338,175 @@
     "categories": [],
     "assignedBy": []
   },
+  "2263": {
+    "id": 2263,
+    "name": "Abyssal leech",
+    "members": true,
+    "combatLevel": 41,
+    "attackLevel": 95,
+    "strengthLevel": 5,
+    "defenceLevel": 25,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 10,
+    "attackBonus": 100,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 100
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 June]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A blood-drinking denizen of the Abyss.",
+    "attributes": [],
+    "xpBonus": -75.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 2,
+    "respawnTicks": 5,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2264": {
+    "id": 2264,
+    "name": "Abyssal guardian",
+    "members": true,
+    "combatLevel": 59,
+    "attackLevel": 30,
+    "strengthLevel": 90,
+    "defenceLevel": 30,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 15,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 70,
+      "slash": 70,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": 150
+    },
+    "rangedDefence": {
+      "light": 70,
+      "standard": 70,
+      "heavy": 70
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 June]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "It seems to have eyes in the back of its head...",
+    "attributes": [],
+    "xpBonus": -75.0,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 5,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2265": {
+    "id": 2265,
+    "name": "Abyssal walker",
+    "members": true,
+    "combatLevel": 81,
+    "attackLevel": 5,
+    "strengthLevel": 100,
+    "defenceLevel": 95,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 95,
+    "attackBonus": 5,
+    "strengthBonus": 10,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 75,
+      "slash": 75,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 75
+    },
+    "rangedDefence": {
+      "light": 75,
+      "standard": 75,
+      "heavy": 75
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 June]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Apparently walks the Abyss.",
+    "attributes": [],
+    "xpBonus": -75.0,
+    "maxHit": {
+      "default": 13
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 5,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "2359": {
     "id": 2359,
     "name": "Elf warrior",
@@ -26931,6 +27682,63 @@
       "duradel"
     ]
   },
+  "3202": {
+    "id": 3202,
+    "name": "Killerwatt",
+    "members": true,
+    "combatLevel": 55,
+    "attackLevel": 50,
+    "strengthLevel": 50,
+    "defenceLevel": 40,
+    "magicLevel": 67,
+    "rangedLevel": 67,
+    "constitutionLevel": 51,
+    "attackBonus": 30,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 10,
+      "slash": 10,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 20
+    },
+    "rangedDefence": {
+      "light": -10,
+      "standard": -10,
+      "heavy": -10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[20 February]] [[2006]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "[[ranged]]": 8,
+      "[[melee]]": 6,
+      "[[ranged]]; without [[insulated boots]]": 15
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 2,
+    "respawnTicks": 25,
+    "slayerXp": 51,
+    "categories": [],
+    "assignedBy": [
+      "mazchna"
+    ]
+  },
   "3219": {
     "id": 3219,
     "name": "Dwarf",
@@ -29873,6 +30681,63 @@
       "spria",
       "krystilia",
       "mazchna"
+    ]
+  },
+  "3309": {
+    "id": 3309,
+    "name": "Cow",
+    "members": false,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 8,
+    "attackBonus": -15,
+    "strengthBonus": -15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -21,
+      "slash": -21,
+      "crush": -21
+    },
+    "magicDefence": {
+      "magic": -21
+    },
+    "rangedDefence": {
+      "light": -21,
+      "standard": -21,
+      "heavy": -21
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 8,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
     ]
   },
   "3340": {
