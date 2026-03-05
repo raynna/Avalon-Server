@@ -3,7 +3,6 @@ package com.rs.kotlin.game.player.combat.special
 import com.rs.core.thread.WorldThread
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.TickManager.TickKeys
-import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.CombatAction
 import com.rs.kotlin.game.player.combat.Weapon
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
@@ -11,7 +10,6 @@ import com.rs.kotlin.game.player.combat.range.RangedStyle
 
 sealed class SpecialAttack(
     val energyCost: Int,
-    open val hybrid: Boolean = false,
     open val accuracyMultiplier: Double = 1.0,
     open val damageMultiplier: Double = 1.0,
 ) {
@@ -179,10 +177,7 @@ sealed class SpecialAttack(
                         return
                     }
                     player.addQueuedSpecialAttack(ctx, special)
-
-                    if (timerActive) {
-                    }
-
+                    // player.actionManager.setAction(CombatAction(target))//just incase i want it to autotarget when queue specials aswell
                     return
                 }
             }
