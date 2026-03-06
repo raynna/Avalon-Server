@@ -153,6 +153,18 @@ object ProjectileRegistry {
                 lengthAdjustment = 34,
             ),
         )
+        register(
+            Projectile.JAD_MAGE,
+            ProjectileType(
+                startHeight = 90,
+                endHeight = 36,
+                startTime = 21,
+                multiplier = 6,
+                arc = 15,
+                displacement = 0,
+                lengthAdjustment = 0,
+            ),
+        )
     }
 
     private fun register(

@@ -1488,4 +1488,64 @@ public class NPC extends Entity implements Serializable {
 
         retreating = false;
     }
+
+    private String normalizeNpcKey(String name) {
+        return name.startsWith("npc.") ? name : "npc." + name;
+    }
+
+    private int resolveId(Object obj) {
+        if (obj instanceof Integer id)
+            return id;
+        if (obj instanceof String name)
+            return Rscm.lookup(normalizeNpcKey(name));
+
+        throw new IllegalArgumentException("Npc must be Integer or String, got: " + obj.getClass());
+    }
+
+    public boolean isNpc(Object... npcs) {
+        int id = getId();
+        String name = getDefinitions().name.toLowerCase();
+        for (Object obj : npcs) {
+            if (obj instanceof Integer npcId) {
+                if (npcId == id)
+                    return true;
+            }
+            else if (obj instanceof String str) {
+                str = str.toLowerCase();
+                if (str.startsWith("npc.")) {
+                    if (Rscm.lookup(str) == id)
+                        return true;
+                }
+                else if (str.startsWith("npc_group.")) {
+                    if (Rscm.lookupList(str).contains(id))
+                        return true;
+                }
+                else if (name.contains(str)) {
+                    return true;
+                }
+            }
+            else {
+                throw new IllegalArgumentException(
+                        "Npc must be Integer or String, got: " + obj.getClass()
+                );
+            }
+        }
+        return false;
+    }
+
+    public boolean isNpc(int id, Object... npcs) {
+        for (Object obj : npcs) {
+            if (resolveId(obj) == id)
+                return true;
+        }
+        return false;
+    }
+
+    public int getId(String name) {
+        return Rscm.lookup(normalizeNpcKey(name));
+    }
+
+    public String getNameKey(int id) {
+        return Rscm.reverseNpcLookup(id);
+    }
 }

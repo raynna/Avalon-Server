@@ -97,78 +97,90 @@ public class RouteEvent {
 		}
 	}
 
-	public boolean processEvent(final Player player) {
+
+	public boolean checkInteraction(Player player) {
+
+		if (player.hasWalkSteps())
+			return false;
+
+		RouteStrategy[] strategies = generateStrategies();
+		if (last == null || !match(strategies, last))
+			return false;
+
+		for (int i = 0; i < strategies.length; i++) {
+
+			RouteStrategy strategy = strategies[i];
+
+			int steps = RouteFinder.findRoute(
+					RouteFinder.WALK_ROUTEFINDER,
+					player.getX(),
+					player.getY(),
+					player.getPlane(),
+					player.getSize(),
+					strategy,
+					i == (strategies.length - 1)
+			);
+
+			if (steps == -1)
+				continue;
+
+			if ((!RouteFinder.lastIsAlternative() && steps <= 0) || alternative) {
+
+				if (alternative)
+					player.getPackets().sendResetMinimapFlag();
+
+				if (player.getNextFaceEntity() != -1)
+					player.setNextFaceEntity(null);
+
+				event.run();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public boolean processEvent(Player player) {
 		if (!simpleCheck(player)) {
-			player.getPackets().sendGameMessage("You can't reach that.");
-			player.getPackets().sendResetMinimapFlag();
 			return true;
 		}
-		if (player.isLocked())
-			return true;
 		RouteStrategy[] strategies = generateStrategies();
 		if (strategies == null)
 			return false;
-		else if (last != null && match(strategies, last) && player.hasWalkSteps())
+
+		if (last != null && match(strategies, last) && player.hasWalkSteps())
 			return false;
-		else if (last != null && match(strategies, last) && !player.hasWalkSteps()) {
-			for (int i = 0; i < strategies.length; i++) {
-				RouteStrategy strategy = strategies[i];
-				int steps = RouteFinder.findRoute(RouteFinder.WALK_ROUTEFINDER, player.getX(), player.getY(),
-						player.getPlane(), player.getSize(), strategy, i == (strategies.length - 1));
-				if (steps == -1)
-					continue;
-				if ((!RouteFinder.lastIsAlternative() && steps <= 0) || alternative) {
-					if (alternative)
-						player.getPackets().sendResetMinimapFlag();
-					if (player.getNextFaceEntity() != -1)
-						player.setNextFaceEntity(null);
-					event.run();
-					return true;
-				}
+
+		last = strategies;
+		for (RouteStrategy strategy : strategies) {
+
+			int steps = RouteFinder.findRoute(
+					RouteFinder.WALK_ROUTEFINDER,
+					player.getX(), player.getY(),
+					player.getPlane(),
+					player.getSize(),
+					strategy,
+					true
+			);
+
+			if (steps == -1)
+				continue;
+
+			// movement setup
+			int[] bufferX = RouteFinder.getLastPathBufferX();
+			int[] bufferY = RouteFinder.getLastPathBufferY();
+
+			player.resetWalkSteps();
+
+			for (int step = steps - 1; step >= 0; step--) {
+				if (!player.addWalkSteps(bufferX[step], bufferY[step], 25, true))
+					break;
 			}
 
-			player.getPackets().sendGameMessage("You can't reach that.");
-			player.getPackets().sendResetMinimapFlag();
-			return true;
-		} else {
-			last = strategies;
-
-			for (int i = 0; i < strategies.length; i++) {
-				RouteStrategy strategy = strategies[i];
-				int steps = RouteFinder.findRoute(RouteFinder.WALK_ROUTEFINDER, player.getX(), player.getY(),
-						player.getPlane(), player.getSize(), strategy, i == (strategies.length - 1));
-				if (steps == -1)
-					continue;
-				if ((!RouteFinder.lastIsAlternative() && steps <= 0)) {
-					if (alternative)
-						player.getPackets().sendResetMinimapFlag();
-					if (player.getNextFaceEntity() != -1)
-						player.setNextFaceEntity(null);
-					event.run();
-					return true;
-				}
-				int[] bufferX = RouteFinder.getLastPathBufferX();
-				int[] bufferY = RouteFinder.getLastPathBufferY();
-
-				WorldTile last = new WorldTile(bufferX[0], bufferY[0], player.getPlane());
-				player.resetWalkSteps();
-				player.setNextFaceWorldTile(new WorldTile(last.getX(), last.getY(), last.getPlane()));
-				player.getPackets().sendMinimapFlag(
-						last.getLocalX(player.getLastLoadedMapRegionTile(), player.getMapSize()),
-						last.getLocalY(player.getLastLoadedMapRegionTile(), player.getMapSize()));
-				if (player.isFrozen())
-					return false;
-				for (int step = steps - 1; step >= 0; step--) {
-					if (!player.addWalkSteps(bufferX[step], bufferY[step], 25, true))
-						break;
-				}
-				return false;
-			}
-
-			player.getPackets().sendGameMessage("You can't reach that.");
-			player.getPackets().sendResetMinimapFlag();
-			return true;
+			return false;
 		}
+
+		return true;
 	}
 
 	private boolean simpleCheck(Player player) {
@@ -230,6 +242,49 @@ public class RouteEvent {
 			if (!a1[i].equals(a2[i]))
 				return false;
 		return true;
+	}
+
+	private static boolean canInteract(Player player, int targetX, int targetY, int plane, int npcSize,
+									   boolean allowDiagonal, int reach) {
+		if (player.getPlane() != plane)
+			return false;
+
+		int dx = Math.abs(player.getX() - targetX);
+		int dy = Math.abs(player.getY() - targetY);
+
+		// Too far
+		if (dx > reach || dy > reach)
+			return false;
+
+		// For 1x1, diagonal adjacency is the main offender (dx==1 && dy==1)
+		if (!allowDiagonal && npcSize == 1 && dx == 1 && dy == 1)
+			return false;
+
+		// Otherwise: withinDistance-style (square range)
+		return true;
+	}
+
+	private static WorldTile getNpcNextTile(NPC npc) {
+		if (!npc.hasWalkSteps())
+			return new WorldTile(npc.getX(), npc.getY(), npc.getPlane());
+
+		int dir = npc.getNextWalkDirection(); // <-- if your base uses a different name, change this
+		if (dir < 0)
+			return new WorldTile(npc.getX(), npc.getY(), npc.getPlane());
+
+		int nextX = npc.getX() + Utils.DIRECTION_DELTA_X[dir];
+		int nextY = npc.getY() + Utils.DIRECTION_DELTA_Y[dir];
+		return new WorldTile(nextX, nextY, npc.getPlane());
+	}
+
+	public boolean isEntityTarget() {
+		return object instanceof Entity;
+	}
+
+	public boolean isTileTarget() {
+		return object instanceof WorldObject
+				|| object instanceof FloorItem
+				|| object instanceof WorldTile;
 	}
 
 }

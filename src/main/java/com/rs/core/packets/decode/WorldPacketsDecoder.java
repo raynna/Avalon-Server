@@ -756,7 +756,6 @@ public final class WorldPacketsDecoder extends Decoder {
                 || packetId == OBJECT_CLICK3_PACKET
                 || packetId == OBJECT_CLICK4_PACKET
                 || packetId == OBJECT_CLICK5_PACKET
-                || packetId == KEY_TYPED_PACKET
                 || packetId == INTERFACE_ON_OBJECT
                 || packetId == INTERFACE_ON_FLOORITEM_PACKET
                 || packetId == DEVELOPER_PACKET

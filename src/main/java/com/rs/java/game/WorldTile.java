@@ -166,6 +166,19 @@ public class WorldTile implements Serializable {
 		return withinDistance(tile, distance, 1);
 	}
 
+	public boolean isOrthogonallyAdjacent(WorldTile tile, int reach) {
+		if (tile.getPlane() != getPlane())
+			return false;
+
+		int dx = Math.abs(getX() - tile.getX());
+		int dy = Math.abs(getY() - tile.getY());
+
+		if (dx != 0 && dy != 0)
+			return false;
+
+		return dx <= reach && dy <= reach && (dx + dy) > 0;
+	}
+
 	public boolean withinDistance(WorldTile tile, int distance, int size) {
 		if (tile.plane != plane)
 			return false;

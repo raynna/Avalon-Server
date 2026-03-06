@@ -50,4 +50,5 @@ enum class Projectile {
     COMMANDER_ZILYANA,
     CORPOREAL_BEAST_ATTACK,
     CORPOREAL_BEAST_AOE,
+    JAD_MAGE,
 }

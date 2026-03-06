@@ -2657,11 +2657,18 @@ public class Player extends Entity {
         processEquip();
         processUnequip();
         actionManager.processPreMovement();
-        if (coordsEvent != null && coordsEvent.processEvent(this))
-            coordsEvent = null;
-        if (routeEvent != null && routeEvent.processEvent(this))
+        RouteEvent event = routeEvent;
+        if (event != null && event.isTileTarget() && event.checkInteraction(this))
             routeEvent = null;
+        event = routeEvent;
+        if (event != null)
+            event.processEvent(this);
+
         super.processEntity();
+
+        event = routeEvent;
+        if (event != null && event.isEntityTarget() && event.checkInteraction(this))
+            routeEvent = null;
         processQueuedInstantSpecial();
         processQueuedInstantSpecials();
         processActiveInstantSpecial();
