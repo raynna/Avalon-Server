@@ -1,6 +1,5 @@
 package com.rs.kotlin.game.player.combat
 
-import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
@@ -13,7 +12,6 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
 import com.rs.java.game.player.prayer.PrayerEffectHandler
-import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.damage.HitRoller
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.damage.SoakDamage
@@ -27,6 +25,7 @@ import com.rs.kotlin.game.player.combat.range.RangeData
 import com.rs.kotlin.game.player.combat.range.RangedStyle
 import com.rs.kotlin.game.player.combat.range.RangedWeapon
 import com.rs.kotlin.game.player.combat.special.CombatContext
+import com.rs.kotlin.game.player.combat.special.EffectResult
 import com.rs.kotlin.game.player.combat.special.SpecialAttack
 import com.rs.kotlin.rscm.Rscm
 import kotlin.math.ceil
@@ -278,23 +277,25 @@ interface CombatStyle {
         target: Entity,
     ): HitRoller = HitRoller(attacker, target, type)
 
-    fun executeEffect(combatContext: CombatContext): Boolean {
-        combatContext.weapon.effect?.let { effect ->
-            CombatUtils
-                .getAnimation(
-                    combatContext.weaponId,
-                    combatContext.attackStyle,
-                    combatContext.attacker.combatDefinitions.attackStyle,
-                ).let { combatContext.attacker.animate(it) }
-            effect.execute(combatContext)
-            return true
+    fun executeEffect(context: CombatContext): EffectResult {
+        val effect = context.weapon.effect ?: return EffectResult.CONTINUE
+
+        val result = effect.execute(context)
+
+        if (result == EffectResult.COMPLETE) {
+            context.attacker.animate(
+                CombatUtils.getAnimation(
+                    context.weaponId,
+                    context.attackStyle,
+                    context.attacker.combatDefinitions.attackStyle,
+                ),
+            )
         }
-        return false
+        return result
     }
 
-    fun executeAmmoEffect(combatContext: CombatContext): Boolean {
-        val ammo = combatContext.ammo ?: return false
-
+    fun executeAmmoEffect(combatContext: CombatContext): EffectResult {
+        val ammo = combatContext.ammo ?: return EffectResult.CONTINUE
         val weapon = combatContext.weapon
 
         if (weapon is RangedWeapon) {
@@ -306,12 +307,20 @@ interface CombatStyle {
                     AmmoType.THROWNAXE,
                 )
             ) {
-                return false
+                return EffectResult.CONTINUE
             }
-            if (weapon.ammoType != ammo.ammoType) return false
-            if (weapon.allowedAmmoIds != null && !weapon.allowedAmmoIds.contains(ammo.itemId.first())) return false
+
+            if (weapon.ammoType != ammo.ammoType) return EffectResult.CONTINUE
+
+            if (weapon.allowedAmmoIds != null &&
+                !weapon.allowedAmmoIds.contains(ammo.itemId.first())
+            ) {
+                return EffectResult.CONTINUE
+            }
         }
-        val effect = ammo.specialEffect ?: return false
+
+        val effect = ammo.specialEffect ?: return EffectResult.CONTINUE
+
         return effect.execute(combatContext)
     }
 
@@ -321,27 +330,32 @@ interface CombatStyle {
         return ranged != null
     }
 
-    fun executeSpecialAttack(
-        player: Player,
-        target: Entity? = null,
-    ): Boolean {
-        val weapon = Weapon.getWeapon(player.equipment.weaponId) ?: return false
-        val ammo = RangeData.getAmmoByItemId(player.equipment.ammoId)
+    fun executeSpecialAttack(context: CombatContext): Boolean {
+        val player = context.attacker
+        val target = context.defender
+        val weapon = context.weapon
+        val ammo = context.ammo
+
         val special = weapon.special ?: return false
+
         if (!player.combatDefinitions.isUsingSpecialAttack) {
             return false
         }
+
         if (special !is SpecialAttack.Combat && player.combatDefinitions.spellId > 0) {
             return false
         }
+
         var specialCost =
             when {
                 NightmareStaff.hasWeapon(player) -> 55
                 else -> special.energyCost
             }
+
         if (player.getEquipment().containsOneItem(Item.getId("item.ring_of_vigour"))) {
             specialCost = (specialCost * 0.9).toInt()
         }
+
         if (player.combatDefinitions.specialAttackPercentage < specialCost) {
             player.message("You don't have enough special attack energy.")
             player.combatDefinitions.switchUsingSpecialAttack()
@@ -354,26 +368,10 @@ interface CombatStyle {
             }
 
             is SpecialAttack.InstantCombat -> {
-                val actualTarget = target ?: player.temporaryTarget ?: return false
-                val style =
-                    if (isRangedWeapon(player)) RangedStyle(player, actualTarget) else MeleeStyle(player, actualTarget)
-                val combatContext =
-                    CombatContext(
-                        combat = style,
-                        attacker = player,
-                        defender = actualTarget,
-                        weapon = weapon,
-                        weaponId = player.equipment.weaponId,
-                        attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
-                        attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
-                        usingSpecial = true,
-                    )
-                special.execute(combatContext)
+                special.execute(context)
             }
 
             is SpecialAttack.Combat -> {
-                if (target == null) return false
-
                 val spellActive = player.combatDefinitions.spellId > 0
 
                 if (spellActive &&
@@ -383,54 +381,17 @@ interface CombatStyle {
                     return false
                 }
 
-                val style =
-                    when {
-                        NightmareStaff.hasWeapon(player) ||
-                            ObliterationWeapon.hasWeapon(player) -> MagicStyle(player, target)
-
-                        isRangedWeapon(player) -> RangedStyle(player, target)
-
-                        else -> MeleeStyle(player, target)
-                    }
-
-                val combatContext =
-                    CombatContext(
-                        combat = style,
-                        attacker = player,
-                        defender = target,
-                        weapon = weapon,
-                        ammo = ammo,
-                        weaponId = player.equipment.weaponId,
-                        attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
-                        attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
-                        usingSpecial = true,
-                    )
-
                 if (NightmareStaff.hasWeapon(player)) {
-                    NightmareStaff.special(combatContext)
+                    NightmareStaff.special(context)
                     player.combatDefinitions.decreaseSpecialAttack(specialCost)
                     return true
                 }
 
-                special.execute(combatContext)
+                special.execute(context)
             }
 
             is SpecialAttack.InstantRangeCombat -> {
-                val actualTarget = target ?: player.temporaryTarget ?: return false
-                val style =
-                    if (isRangedWeapon(player)) RangedStyle(player, actualTarget) else MeleeStyle(player, actualTarget)
-                val combatContext =
-                    CombatContext(
-                        combat = style,
-                        attacker = player,
-                        defender = actualTarget,
-                        weapon = weapon,
-                        weaponId = player.equipment.weaponId,
-                        attackStyle = weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)!!,
-                        attackBonusType = weapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)!!,
-                        usingSpecial = true,
-                    )
-                special.execute(combatContext)
+                special.execute(context)
             }
         }
 

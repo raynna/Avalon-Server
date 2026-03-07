@@ -64,7 +64,7 @@ object StandardMelee : MeleeData() {
                         } else {
                             context.addHit(CombatType.MELEE).roll()
                         }
-                        true
+                        EffectResult.COMPLETE
                     },
                 ),
         )
@@ -506,7 +506,7 @@ object StandardMelee : MeleeData() {
                             val maxHit2 = (firstHit / 2)
                             context.addHit(CombatType.MELEE).maxHit(maxHit1).roll()
                             context.addHit(CombatType.MELEE).maxHit(maxHit2).roll()
-                            true
+                            EffectResult.COMPLETE
                         },
                     ),
             ),
@@ -1251,7 +1251,7 @@ object StandardMelee : MeleeData() {
                                 additionalTargets = 2,
                                 bounceRange = 6,
                             )
-                            true
+                            EffectResult.COMPLETE
                         },
                     ),
             ),
@@ -2006,7 +2006,7 @@ object StandardMelee : MeleeData() {
                             } else {
                                 context.applyScytheHits(defender)
                             }
-                            true
+                            EffectResult.COMPLETE
                         },
                     ),
             ),

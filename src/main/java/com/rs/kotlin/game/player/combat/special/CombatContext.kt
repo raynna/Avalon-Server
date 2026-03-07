@@ -10,7 +10,6 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.CombatHitRoll
 import com.rs.kotlin.game.player.combat.damage.HitBuilder
-import com.rs.kotlin.game.player.combat.damage.HitRequest
 import com.rs.kotlin.game.player.combat.damage.HitRoller
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.damage.ProcHitBuilder
@@ -25,12 +24,45 @@ data class CombatContext(
     val weaponId: Int,
     val ammo: RangedAmmo? = null,
     val combat: CombatStyle,
-    val attackStyle: AttackStyle,
-    val attackBonusType: AttackBonusType,
+    val attackStyle: AttackStyle = AttackStyle.ACCURATE,
+    val attackBonusType: AttackBonusType = AttackBonusType.CRUSH,
     val hit: Hit? = null,
-    val usingSpecial: Boolean = false,
+    var usingSpecial: Boolean = false,
     val guaranteedBoltEffect: Boolean = false,
-)
+    var ammoConsumed: Int = 1,
+    val spellId: Int = -1,
+) {
+    companion object {
+        @JvmStatic
+        fun createDefault(
+            attacker: Player,
+            defender: Entity,
+            weapon: Weapon,
+            combat: CombatStyle,
+            weaponId: Int,
+            ammo: RangedAmmo? = null,
+            usingSpecial: Boolean = false,
+        ): CombatContext {
+            val styleIndex = attacker.combatDefinitions.attackStyle
+            val styleSet = weapon.weaponStyle.styleSet
+
+            return CombatContext(
+                attacker = attacker,
+                defender = defender,
+                weapon = weapon,
+                weaponId = weaponId,
+                ammo = ammo,
+                combat = combat,
+                attackStyle = styleSet.styleAt(styleIndex)!!,
+                attackBonusType = styleSet.bonusAt(styleIndex)!!,
+                hit = null,
+                usingSpecial = usingSpecial,
+                guaranteedBoltEffect = false,
+                ammoConsumed = 1,
+            )
+        }
+    }
+}
 
 fun CombatContext.addHit(
     type: CombatType,

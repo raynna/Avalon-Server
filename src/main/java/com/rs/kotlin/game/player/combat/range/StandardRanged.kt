@@ -2,8 +2,8 @@ package com.rs.kotlin.game.player.combat.range
 
 import com.rs.java.game.Animation
 import com.rs.java.game.Graphics
-import com.rs.java.game.Hit
 import com.rs.java.game.item.Item
+import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.range.special.ArrowEffects
@@ -14,7 +14,6 @@ import com.rs.kotlin.game.player.combat.special.ChainSettings
 import com.rs.kotlin.game.world.projectile.Projectile
 import com.rs.kotlin.game.world.projectile.ProjectileManager
 import com.rs.kotlin.rscm.Rscm
-import kotlin.math.max
 import kotlin.math.min
 
 /** Range Attack distances
@@ -356,6 +355,7 @@ object StandardRanged : RangeData() {
 
                             context.attacker.animate(Animation(4230))
                             context.attacker.playSound(2546, 1)
+
                             val ticks =
                                 ProjectileManager.send(
                                     Projectile.BOLT,
@@ -366,23 +366,30 @@ object StandardRanged : RangeData() {
 
                             val ammoHasEffect = context.ammo?.specialEffect != null
 
-                            val boltApplied =
-                                if (ammoHasEffect) {
+                            if (ammoHasEffect) {
+                                when (
                                     context.combat.executeAmmoEffect(
                                         context.copy(guaranteedBoltEffect = true),
                                     )
-                                } else {
-                                    false
-                                }
+                                ) {
+                                    EffectResult.CANCEL -> {
+                                        return@Combat
+                                    }
 
-                            if (!boltApplied) {
-                                context
-                                    .addHit(CombatType.RANGED)
-                                    .delay(ticks)
-                                    .accuracy(2.0)
-                                    .damageMultiplier(1.1)
-                                    .roll()
+                                    EffectResult.COMPLETE -> {
+                                        return@Combat
+                                    }
+
+                                    EffectResult.CONTINUE -> {}
+                                }
                             }
+
+                            context
+                                .addHit(CombatType.RANGED)
+                                .delay(ticks)
+                                .accuracy(2.0)
+                                .damageMultiplier(1.1)
+                                .roll()
                         },
                     ),
             ),
@@ -436,7 +443,54 @@ object StandardRanged : RangeData() {
                                 .delay(ticks)
                                 .bonus { hit -> if (hit.damage > 0) hit.damage += boost }
                                 .roll()
-                            true
+                            EffectResult.COMPLETE
+                        },
+                    ),
+            ),
+            RangedWeapon(
+                itemId = Item.getIds("item.bolas"),
+                name = "Bolas",
+                weaponStyle = WeaponStyle.THROWING,
+                attackRange = 8,
+                animationId = 3128,
+                projectileId = 468,
+                ammoType = AmmoType.THROWING,
+                effect =
+                    SpecialEffect(
+                        execute = { context ->
+                            val attacker = context.attacker
+                            val defender = context.defender
+                            val immune = defender.isFrozen || defender.isFreezeImmune
+                            if (immune) {
+                                attacker.message("That enemy is already affected by bind effect.")
+                                return@SpecialEffect EffectResult.CANCEL
+                            }
+                            val landed = (
+                                Math.random() <
+                                    CombatCalculations.getHitChance(
+                                        attacker,
+                                        defender,
+                                        CombatType.RANGED,
+                                        1.0,
+                                    )
+                            )
+                            ProjectileManager.send(
+                                Projectile.THROWNAXE,
+                                468,
+                                attacker,
+                                defender,
+                                hitGraphic = Graphics(469, 0, 96),
+                                onLanded = {
+                                    if (landed) {
+                                        var freezeTicks = 20
+                                        if (defender is Player && defender.prayer.isMageProtecting) {
+                                            freezeTicks = 10
+                                        }
+                                        defender.freeze(freezeTicks)
+                                    }
+                                },
+                            )
+                            EffectResult.COMPLETE
                         },
                     ),
             ),
@@ -475,7 +529,7 @@ object StandardRanged : RangeData() {
                             delay = context.combat.getHitDelay()
                         )
                     }*/
-                            true
+                            EffectResult.CONTINUE
                         },
                     ),
             ),
@@ -509,7 +563,7 @@ object StandardRanged : RangeData() {
                                     blockAnimation = true,
                                 )
                             context.addHit(CombatType.RANGED).delay(ticks).roll()
-                            true
+                            EffectResult.CONTINUE
                         },
                     ),
             ),
@@ -547,7 +601,7 @@ object StandardRanged : RangeData() {
                                     blockAnimation = true,
                                 )
                             context.addHit(CombatType.RANGED).delay(ticks).roll()
-                            true
+                            EffectResult.CONTINUE
                         },
                     ),
             ),
@@ -651,16 +705,19 @@ object StandardRanged : RangeData() {
                     SpecialAttack.Combat(
                         energyCost = 55,
                         execute = { context ->
-                            context.attacker.animate(Animation(1074))
-                            context.attacker.gfx(Graphics(256, 100))
-                            context.attacker.gfx(Graphics(256, 30, 100, 0))
-                            context.attacker.playSound(2545, 1)
+                            val attacker = context.attacker
+                            val defender = context.defender
+                            context.ammoConsumed = 2
+                            attacker.animate(Animation(1074))
+                            attacker.gfx(Graphics(256, 100))
+                            attacker.gfx(Graphics(256, 30, 100, 0))
+                            attacker.playSound(2545, 1)
                             val ticks =
                                 ProjectileManager.send(
                                     Projectile.ARROW,
                                     249,
-                                    context.attacker,
-                                    context.defender,
+                                    attacker,
+                                    defender,
                                     startHeightOffset = 0,
                                     arcOffset = 5,
                                     speedAdjustment = -1,
@@ -671,8 +728,8 @@ object StandardRanged : RangeData() {
                                 ProjectileManager.send(
                                     Projectile.ARROW,
                                     249,
-                                    context.attacker,
-                                    context.defender,
+                                    attacker,
+                                    defender,
                                     startHeightOffset = 0,
                                     arcOffset = 5,
                                     speedAdjustment = -1,
@@ -680,7 +737,7 @@ object StandardRanged : RangeData() {
                                     blockAnimation = true,
                                 )
 
-                            val distance = Utils.getDistance(context.attacker, context.defender)
+                            val distance = Utils.getDistance(attacker, defender)
                             val (firstDelay, secondDelay) = context.combat.getDoubleHitDelays(distance)
                             context.addHit(CombatType.RANGED).delay(ticks).roll()
                             context.addHit(CombatType.RANGED).delay(ticks2).roll()
@@ -707,33 +764,36 @@ object StandardRanged : RangeData() {
                     SpecialAttack.Combat(
                         energyCost = 65,
                         execute = { context ->
-                            context.attacker.animate("animation.bow_attack")
+                            val attacker = context.attacker
+                            val defender = context.defender
                             val arrowProjectile = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1099 else 1102
                             val endGraphic = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1100 else 1103
                             val soundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3733 else 3736
                             val hitSoundId = if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 3731 else 3732
-                            context.attacker.playSound(soundId, 1)
-                            context.attacker.playSound(soundId, 30, 1)
+                            context.ammoConsumed = 2
+                            attacker.animate("animation.bow_attack")
+                            attacker.playSound(soundId, 1)
+                            attacker.playSound(soundId, 30, 1)
                             ProjectileManager.send(
                                 Projectile.DRAGON_ARROW,
                                 arrowProjectile,
-                                context.attacker,
-                                context.defender,
+                                attacker,
+                                defender,
                                 hitGraphic = Graphics(endGraphic, 100),
                                 hitSound = hitSoundId,
                             )
                             ProjectileManager.send(
                                 Projectile.DRAGON_ARROW,
                                 arrowProjectile,
-                                context.attacker,
-                                context.defender,
+                                attacker,
+                                defender,
                                 arcOffset = 10,
                                 startTimeOffset = 5,
                                 speedAdjustment = 5,
                                 hitGraphic = Graphics(endGraphic, 100),
                                 hitSound = hitSoundId,
                             )
-                            val distance = Utils.getDistance(context.attacker, context.defender)
+                            val distance = Utils.getDistance(attacker, defender)
                             val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
                             val minDamage = (if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 80 else 50)
                             val multiplier = (if (context.ammo?.ammoTier == AmmoTier.DRAGON_ARROW) 1.5 else 1.3)
@@ -767,30 +827,33 @@ object StandardRanged : RangeData() {
                 effect =
                     SpecialEffect(
                         execute = { context ->
-                            context.attacker.animate("animation.bow_attack")
+                            val attacker = context.attacker
+                            val defender = context.defender
                             val startGfx = context.ammo?.doubleGfx
-                            context.attacker.gfx(startGfx)
+                            context.ammoConsumed = 2
+                            attacker.animate("animation.bow_attack")
+                            attacker.gfx(startGfx)
                             val projectile = context.ammo?.projectileId!!
                             ProjectileManager.send(
                                 Projectile.DRAGON_ARROW,
                                 projectile,
-                                context.attacker,
-                                context.defender,
+                                attacker,
+                                defender,
                             )
                             ProjectileManager.send(
                                 Projectile.DRAGON_ARROW,
                                 projectile,
-                                context.attacker,
-                                context.defender,
+                                attacker,
+                                defender,
                                 arcOffset = 10,
                                 startTimeOffset = 5,
                                 speedAdjustment = 5,
                             )
-                            val distance = Utils.getDistance(context.attacker, context.defender)
+                            val distance = Utils.getDistance(attacker, defender)
                             val (firstDelay, secondDelay) = context.combat.getDarkBowHitDelays(distance)
                             context.addHit(CombatType.RANGED).delay(firstDelay).roll()
                             context.addHit(CombatType.RANGED).delay(secondDelay).roll()
-                            true
+                            EffectResult.COMPLETE
                         },
                     ),
             ),

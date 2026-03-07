@@ -39,7 +39,7 @@ public class WorldTasksManager {
 		});
 	}
 
-	public static void schedule(int delay, int period, Runnable runnable) {
+	public static void schedule(int ticks, int count, Runnable runnable) {
 		if (runnable == null)
 			return;
 
@@ -48,7 +48,7 @@ public class WorldTasksManager {
 			public void run() {
 				runnable.run();
 			}
-		}, delay, period);
+		}, ticks, count);
 	}
 
 	public static void schedule(int ticks, Runnable runnable) {
@@ -77,16 +77,16 @@ public class WorldTasksManager {
 
 
 
-	public static void schedule(WorldTask task, int delayCount, int periodCount) {
-		if (task == null || delayCount < 0 || periodCount < 0)
+	public static void schedule(WorldTask task, int ticks, int count) {
+		if (task == null || ticks < 0 || count < 0)
 			return;
-		tasks.add(new WorldTaskInformation(task, delayCount, periodCount));
+		tasks.add(new WorldTaskInformation(task, ticks, count));
 	}
 
-	public static void schedule(WorldTask task, int delayCount) {
-		if (task == null || delayCount < 0)
+	public static void schedule(WorldTask task, int ticks) {
+		if (task == null || ticks < 0)
 			return;
-		tasks.add(new WorldTaskInformation(task, delayCount, -1));
+		tasks.add(new WorldTaskInformation(task, ticks, -1));
 	}
 
 	public static void schedule(WorldTask task) {

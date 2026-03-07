@@ -153,15 +153,23 @@ class MagicStyle(
         }
 
     override fun attack() {
-        if (executeSpecialAttack(attacker, defender)) {
-            return
-        }
         var spellId = attacker.combatDefinitions.spellId
         val manual = isManualCast(spellId)
         if (manual) {
             spellId -= MIN_SPELL_ID
         }
-
+        val combatContext =
+            CombatContext(
+                combat = this,
+                attacker = attacker,
+                defender = defender,
+                weapon = getCurrentWeapon(),
+                weaponId = getCurrentWeaponId(attacker),
+                spellId = spellId,
+            )
+        if (executeSpecialAttack(combatContext)) {
+            return
+        }
         var currentSpell =
             when (attacker.combatDefinitions.getSpellBook()) {
                 AncientMagicks.id -> AncientMagicks.getSpell(spellId)

@@ -21,27 +21,41 @@ import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
 
 object CombatCalculations {
-
     interface AccuracyCalculator {
-        fun getHitChance(player: Player, target: Entity, accuracyMultiplier: Double): Double
+        fun getHitChance(
+            player: Player,
+            target: Entity,
+            accuracyMultiplier: Double,
+        ): Double
     }
 
     interface MaxHitCalculator {
-        fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): MaxHit
+        fun calculateMaxHit(
+            player: Player,
+            target: Entity,
+            specialMultiplier: Double = 1.0,
+        ): MaxHit
     }
 
-    private fun computeHitChance(attack: Int, defence: Int): Double {
-        return if (attack > defence) {
+    private fun computeHitChance(
+        attack: Int,
+        defence: Int,
+    ): Double =
+        if (attack > defence) {
             1.0 - (defence + 2.0) / (2.0 * (attack + 1.0))
         } else {
             attack.toDouble() / (2.0 * (defence + 1.0))
         }
-    }
 
     private object MeleeCombat : AccuracyCalculator, MaxHitCalculator {
-        override fun getHitChance(player: Player, target: Entity, accuracyMultiplier: Double): Double {
-            if (target is NPC && target.name.contains("dummy", ignoreCase = true))
+        override fun getHitChance(
+            player: Player,
+            target: Entity,
+            accuracyMultiplier: Double,
+        ): Double {
+            if (target is NPC && target.name.contains("dummy", ignoreCase = true)) {
                 return 1.0
+            }
             /*
              * Attack Calculation DONE
              */
@@ -57,49 +71,61 @@ object CombatCalculations {
 
             val attackRoll = effectiveAttack * (attackBonus + 64) * multipliers.accuracy * accuracyMultiplier
             /*
-            * Defence Calculation
-            */
+             * Defence Calculation
+             */
 
             val defenceLevel = getDefenceLevel(target)
             val defenceBonus = getDefenceBonus(player, target, null)
             var targetStyleBonus = 0
-            val defenceRoll = if (target is Player) {
-                targetStyleBonus = getDefenceStyleBonus(target)
-                val prayerBonus = target.prayer.defenceMultiplier
+            val defenceRoll =
+                if (target is Player) {
+                    targetStyleBonus = getDefenceStyleBonus(target)
+                    val prayerBonus = target.prayer.defenceMultiplier
 
-                var effectiveDefence = target.skills.getLevel(Skills.DEFENCE) * prayerBonus
-                effectiveDefence += targetStyleBonus + 8
+                    var effectiveDefence = target.skills.getLevel(Skills.DEFENCE) * prayerBonus
+                    effectiveDefence += targetStyleBonus + 8
 
-                val defenceRoll = effectiveDefence * (defenceBonus + 64)
-                defenceRoll
-            } else {
-                (getDefenceLevel(target) + 9) * (defenceBonus + 64)
-            }
+                    val defenceRoll = effectiveDefence * (defenceBonus + 64)
+                    defenceRoll
+                } else {
+                    (getDefenceLevel(target) + 9) * (defenceBonus + 64)
+                }
             if (player.developerMode) {
                 player.message(
                     "[Combat Accuracy][Attack] - " +
-                            "attackLevel: ${baseAttack}, " +
-                            "attackBonus: $attackBonus, " +
-                            "styleBonus: $styleBonus, " +
-                            "effectiveAttack: $effectiveAttack, " +
-                            "attackRoll: $attackRoll, " +
-                            ""
+                        "attackLevel: $baseAttack, " +
+                        "attackBonus: $attackBonus, " +
+                        "styleBonus: $styleBonus, " +
+                        "effectiveAttack: $effectiveAttack, " +
+                        "attackRoll: $attackRoll, " +
+                        "",
                 )
                 player.message(
-                    "[Combat Accuracy][Defence] - Target: "
-                            + (if (target is NPC) "${target.name}, " else if (target is Player) "${target.username}, " else "") +
-                            "defenceLevel: $defenceLevel, " +
-                            "defenceBonus: $defenceBonus, " +
-                            "targetStyleBonus: $targetStyleBonus, " +
-                            "defenceRoll: $defenceRoll, " +
-                            ""
+                    "[Combat Accuracy][Defence] - Target: " +
+                        (
+                            if (target is NPC) {
+                                "${target.name}, "
+                            } else if (target is Player) {
+                                "${target.username}, "
+                            } else {
+                                ""
+                            }
+                        ) +
+                        "defenceLevel: $defenceLevel, " +
+                        "defenceBonus: $defenceBonus, " +
+                        "targetStyleBonus: $targetStyleBonus, " +
+                        "defenceRoll: $defenceRoll, " +
+                        "",
                 )
             }
             return computeHitChance(attackRoll.toInt(), defenceRoll.toInt())
         }
 
-        override fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double): MaxHit {
-
+        override fun calculateMaxHit(
+            player: Player,
+            target: Entity,
+            specialMultiplier: Double,
+        ): MaxHit {
             val styleBonus = getStrengthStyleBonus(player)
 
             val equipmentSet = EquipmentSets.getSet(player)
@@ -132,25 +158,30 @@ object CombatCalculations {
             if (player.developerMode) {
                 player.message(
                     "[Combat Damage] -> " +
-                            "BaseMax: $baseMaxHit, " +
-                            "MaxHit: $maxHit, "
+                        "BaseMax: $baseMaxHit, " +
+                        "MaxHit: $maxHit, ",
                 )
             }
 
             return MaxHit(
                 base = baseMaxHit,
-                max = maxHit
+                max = maxHit,
             )
         }
     }
 
     private object RangedCombat : AccuracyCalculator, MaxHitCalculator {
-        override fun getHitChance(player: Player, target: Entity, accuracyMultiplier: Double): Double {
-            if (target is NPC && target.name.contains("dummy", ignoreCase = true))
+        override fun getHitChance(
+            player: Player,
+            target: Entity,
+            accuracyMultiplier: Double,
+        ): Double {
+            if (target is NPC && target.name.contains("dummy", ignoreCase = true)) {
                 return 1.0
+            }
             /*
-            * Range attack Calculation DONE
-            */
+             * Range attack Calculation DONE
+             */
             val bonusType = getAttackBonusIndex(player)
             val rangeBonus = player.combatDefinitions.bonuses[bonusType]
             val styleBonus = getAttackStyleBonus(player)
@@ -164,8 +195,8 @@ object CombatCalculations {
             effectiveAttack *= void * twistedBowAccuracy
             val attackRoll = effectiveAttack * (rangeBonus + 64) * multipliers.accuracy * accuracyMultiplier
             /*
-            * Range Defence Calculation
-            */
+             * Range Defence Calculation
+             */
             var defenceBonus = 0
             if (target is Player) {
                 defenceBonus = target.combatDefinitions.bonuses[BonusType.RangeDefence.index]
@@ -174,34 +205,36 @@ object CombatCalculations {
                 defenceBonus = target.combatData.rangedDefence.standard
             }
 
-            val defenceRoll = if (target is Player) {
-                val styleBonus = getDefenceStyleBonus(target)
-                val prayerBonus = target.prayer.defenceMultiplier
+            val defenceRoll =
+                if (target is Player) {
+                    val styleBonus = getDefenceStyleBonus(target)
+                    val prayerBonus = target.prayer.defenceMultiplier
 
-                var effectiveDefence = target.skills.getLevel(Skills.DEFENCE) * prayerBonus
-                effectiveDefence += styleBonus + 8
+                    var effectiveDefence = target.skills.getLevel(Skills.DEFENCE) * prayerBonus
+                    effectiveDefence += styleBonus + 8
 
-                val defenceRoll = effectiveDefence * (defenceBonus + 64)
-                defenceRoll
-            } else {
-                ((getDefenceLevel(target) + 9) * (defenceBonus + 64))//DONE
-            }
-            if (player.developerMode) {
-                player.message(
-                    "[Combat Accuracy] - " +
-                            "bonusType: ${bonusType}, " +
-                            "AttackBonus: $rangeBonus, " +
-                            "DefenceBonus: $defenceBonus, " +
-                            "Attack: $attackRoll, " +
-                            "Defence: $defenceRoll, " +
-                            ""
-                )
-            }
+                    val defenceRoll = effectiveDefence * (defenceBonus + 64)
+                    defenceRoll
+                } else {
+                    ((getDefenceLevel(target) + 9) * (defenceBonus + 64)) // DONE
+                }
+            player.message(
+                "[Combat Accuracy] - " +
+                    "bonusType: $bonusType, " +
+                    "AttackBonus: $rangeBonus, " +
+                    "DefenceBonus: $defenceBonus, " +
+                    "Attack: $attackRoll, " +
+                    "Defence: $defenceRoll, " +
+                    "",
+            )
             return computeHitChance(attackRoll.toInt(), defenceRoll.toInt())
         }
 
-        override fun calculateMaxHit(player: Player, target: Entity, specialMultiplier: Double): MaxHit {
-
+        override fun calculateMaxHit(
+            player: Player,
+            target: Entity,
+            specialMultiplier: Double,
+        ): MaxHit {
             val rangedLvl = player.skills.getLevel(Skills.RANGE).toDouble()
             val prayerBonus = player.prayer.rangedMultiplier
             val styleBonus = getStrengthStyleBonus(player)
@@ -235,8 +268,8 @@ object CombatCalculations {
             if (player.developerMode) {
                 player.message(
                     "Ranged Damage Calculation -> " +
-                            "BaseMax: $baseMaxHit, " +
-                            "MaxHit: $maxHit, "
+                        "BaseMax: $baseMaxHit, " +
+                        "MaxHit: $maxHit, ",
                 )
             }
 
@@ -246,8 +279,10 @@ object CombatCalculations {
             )
         }
 
-
-        fun getTwistedBowBoost(player: Player, target: Entity): Triple<Double, Double, Int> {
+        fun getTwistedBowBoost(
+            player: Player,
+            target: Entity,
+        ): Triple<Double, Double, Int> {
             if (target !is NPC) return Triple(1.0, 1.0, 0)
 
             val weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON.toInt())
@@ -273,25 +308,28 @@ object CombatCalculations {
         }
     }
 
-
     private object MagicCombat : AccuracyCalculator {
+        override fun getHitChance(
+            player: Player,
+            target: Entity,
+            accuracyMultiplier: Double,
+        ): Double {
+            if (target is NPC && target.name.contains("dummy", ignoreCase = true)) {
+                return 1.0
+            }
+            val magicBonus = player.combatDefinitions.bonuses[BonusType.MagicAttack.index]
+            val equipmentSet = EquipmentSets.getSet(player)
+            val void = EquipmentSets.getAccuracyMultiplier(player, equipmentSet, CombatMultipliers.Style.MAGIC)
+            val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MAGIC)
 
-       override fun getHitChance(player: Player, target: Entity, accuracyMultiplier: Double): Double {
-           if (target is NPC && target.name.contains("dummy", ignoreCase = true))
-               return 1.0
-           val magicBonus = player.combatDefinitions.bonuses[BonusType.MagicAttack.index]
-           val equipmentSet = EquipmentSets.getSet(player)
-           val void = EquipmentSets.getAccuracyMultiplier(player, equipmentSet, CombatMultipliers.Style.MAGIC)
-           val multipliers = CombatMultipliers.getMultipliers(player, target, CombatMultipliers.Style.MAGIC)
+            var effectiveMagic = player.skills.getLevel(Skills.MAGIC) * player.prayer.magicMultiplier
+            effectiveMagic += 9 // TODO STYLE ACCURACY FOR POLYPORE
+            effectiveMagic *= void
+            val attackRoll = effectiveMagic * (magicBonus + 64) * multipliers.accuracy * accuracyMultiplier
 
-           var effectiveMagic = player.skills.getLevel(Skills.MAGIC) * player.prayer.magicMultiplier
-           effectiveMagic += 9//TODO STYLE ACCURACY FOR POLYPORE
-           effectiveMagic *= void
-           val attackRoll = effectiveMagic * (magicBonus + 64) * multipliers.accuracy * accuracyMultiplier
-
-           val (defenceBonus, effectiveDefenceLevel) = getEffectiveMagicDefence(target)
-           val defenceRoll = effectiveDefenceLevel * (defenceBonus + 64)
-           return computeHitChance(attackRoll.toInt(), defenceRoll)
+            val (defenceBonus, effectiveDefenceLevel) = getEffectiveMagicDefence(target)
+            val defenceRoll = effectiveDefenceLevel * (defenceBonus + 64)
+            return computeHitChance(attackRoll.toInt(), defenceRoll)
         }
 
         fun calculateMaxHit(
@@ -299,36 +337,51 @@ object CombatCalculations {
             target: Entity,
             baseDamage: Int = -1,
             spellId: Int = -1,
-            specialMultiplier: Double = 1.0
+            specialMultiplier: Double = 1.0,
         ): MaxHit {
-
             val spell = Spellbook.getSpellById(player, spellId)
 
-            val min = when {
-                spellId == 99 -> 160
-                else -> 0
-            }
+            val min =
+                when {
+                    spellId == 99 -> 160
+                    else -> 0
+                }
 
-            val base = when {
-                spell != null && spell.chargeBoost -> {
-                    val b = spell.damage
-                    if (player.tickManager.isActive(TickManager.TickKeys.CHARGE_SPELL)) b + 100 else b
+            val base =
+                when {
+                    spell != null && spell.chargeBoost -> {
+                        val b = spell.damage
+                        if (player.tickManager.isActive(TickManager.TickKeys.CHARGE_SPELL)) b + 100 else b
+                    }
+
+                    spellId == 1000 -> {
+                        (5 * player.skills.getLevel(Skills.MAGIC)) - 180
+                    }
+
+                    spellId == 56 -> {
+                        val magicLevel = player.skills.getLevelForXp(Skills.MAGIC)
+                        (floor(magicLevel * 0.10).toInt() + 10) * 10
+                    }
+
+                    spellId == 99 -> {
+                        val magicLevel = player.skills.getLevelForXp(Skills.MAGIC)
+                        val baseVal = 160 + (magicLevel - 77) * 4
+                        val boost = (magicLevel - 77) * 4
+                        baseVal + boost
+                    }
+
+                    baseDamage > 0 -> {
+                        baseDamage
+                    }
+
+                    spell != null && spell.damage > 0 -> {
+                        spell.damage
+                    }
+
+                    else -> {
+                        0
+                    }
                 }
-                spellId == 1000 -> (5 * player.skills.getLevel(Skills.MAGIC)) - 180
-                spellId == 56 -> {
-                    val magicLevel = player.skills.getLevelForXp(Skills.MAGIC)
-                    (floor(magicLevel * 0.10).toInt() + 10) * 10
-                }
-                spellId == 99 -> {
-                    val magicLevel = player.skills.getLevelForXp(Skills.MAGIC)
-                    val baseVal = 160 + (magicLevel - 77) * 4
-                    val boost = (magicLevel - 77) * 4
-                    baseVal + boost
-                }
-                baseDamage > 0 -> baseDamage
-                spell != null && spell.damage > 0 -> spell.damage
-                else -> 0
-            }
 
             val magicDamageBonus = player.combatDefinitions.bonuses[BonusType.MagicDamage.index].toDouble()
             val magicStrengthMultiplier = 1.0 + magicDamageBonus / 100.0
@@ -354,10 +407,9 @@ object CombatCalculations {
             return MaxHit(
                 baseMaxHit,
                 maxHit,
-                min
+                min,
             )
         }
-
 
         private fun getMagicLevelMultiplier(player: Player): Double {
             val currentLevel = player.skills.getLevel(Skills.MAGIC).toDouble()
@@ -373,8 +425,8 @@ object CombatCalculations {
             return normalScaling * boostedScaling
         }
 
-        private fun getEffectiveMagicDefence(target: Entity): Pair<Int, Int> {
-            return when (target) {
+        private fun getEffectiveMagicDefence(target: Entity): Pair<Int, Int> =
+            when (target) {
                 is Player -> {
                     val defenceBonus = target.combatDefinitions.bonuses[BonusType.MagicDefence.index]
                     val defencePrayerMultiplier = target.prayer.defenceMultiplier
@@ -394,7 +446,33 @@ object CombatCalculations {
                     Pair(defenceBonus, effectiveDefence)
                 }
 
-                else -> Pair(0, 0)
+                else -> {
+                    Pair(0, 0)
+                }
+            }
+    }
+
+    fun getHitChance(
+        player: Player,
+        target: Entity,
+        type: CombatType,
+        accuracyMultiplier: Double = 1.0,
+    ): Double {
+        if (target is NPC && target.name.contains("dummy", ignoreCase = true)) {
+            return 1.0
+        }
+
+        return when (type) {
+            CombatType.MELEE -> {
+                MeleeCombat.getHitChance(player, target, accuracyMultiplier)
+            }
+
+            CombatType.RANGED -> {
+                RangedCombat.getHitChance(player, target, accuracyMultiplier)
+            }
+
+            CombatType.MAGIC -> {
+                MagicCombat.getHitChance(player, target, accuracyMultiplier)
             }
         }
     }
@@ -402,58 +480,68 @@ object CombatCalculations {
     fun getHitChance(
         player: Player,
         target: Entity,
-        type: CombatType,
-        accuracyMultiplier: Double = 1.0
+        combatStyle: CombatStyle,
+        accuracyMultiplier: Double = 1.0,
     ): Double {
-        if (target is NPC && target.name.contains("dummy", ignoreCase = true))
+        if (target is NPC && target.name.contains("dummy", ignoreCase = true)) {
             return 1.0
-
-        return when (type) {
-            CombatType.MELEE ->
+        }
+        return when (combatStyle) {
+            is MeleeStyle -> {
                 MeleeCombat.getHitChance(player, target, accuracyMultiplier)
+            }
 
-            CombatType.RANGED ->
+            is RangedStyle -> {
                 RangedCombat.getHitChance(player, target, accuracyMultiplier)
+            }
 
-            CombatType.MAGIC ->
+            is MagicStyle -> {
                 MagicCombat.getHitChance(player, target, accuracyMultiplier)
+            }
+
+            else -> {
+                0.0
+            }
         }
     }
 
-
-    fun getHitChance(
+    fun calculateMeleeAccuracy(
         player: Player,
         target: Entity,
-        combatStyle: CombatStyle,
-        accuracyMultiplier: Double = 1.0
-    ): Double {
-        if (target is NPC && target.name.contains("dummy", ignoreCase = true))
-            return 1.0
-        return when (combatStyle) {
-            is MeleeStyle -> MeleeCombat.getHitChance(player, target, accuracyMultiplier)
-            is RangedStyle -> RangedCombat.getHitChance(player, target, accuracyMultiplier)
-            is MagicStyle -> MagicCombat.getHitChance(player, target, accuracyMultiplier)
-            else -> {0.0}
-        }
-    }
+        accuracyMultiplier: Double,
+    ): Boolean = ThreadLocalRandom.current().nextDouble() < MeleeCombat.getHitChance(player, target, accuracyMultiplier)
 
-    fun calculateMeleeAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean =
-        ThreadLocalRandom.current().nextDouble() < MeleeCombat.getHitChance(player, target, accuracyMultiplier)
+    fun calculateRangedAccuracy(
+        player: Player,
+        target: Entity,
+        accuracyMultiplier: Double,
+    ): Boolean = ThreadLocalRandom.current().nextDouble() < RangedCombat.getHitChance(player, target, accuracyMultiplier)
 
-    fun calculateRangedAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean =
-        ThreadLocalRandom.current().nextDouble() < RangedCombat.getHitChance(player, target, accuracyMultiplier)
+    fun calculateMagicAccuracy(
+        player: Player,
+        target: Entity,
+        accuracyMultiplier: Double,
+    ): Boolean = ThreadLocalRandom.current().nextDouble() < MagicCombat.getHitChance(player, target, accuracyMultiplier)
 
-    fun calculateMagicAccuracy(player: Player, target: Entity, accuracyMultiplier: Double): Boolean =
-        ThreadLocalRandom.current().nextDouble() < MagicCombat.getHitChance(player, target, accuracyMultiplier)
+    fun getMeleeMaxHit(
+        player: Player,
+        target: Entity,
+        specialMultiplier: Double = 1.0,
+    ): MaxHit = MeleeCombat.calculateMaxHit(player, target, specialMultiplier)
 
-    fun getMeleeMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): MaxHit =
-        MeleeCombat.calculateMaxHit(player, target, specialMultiplier)
+    fun getRangedMaxHit(
+        player: Player,
+        target: Entity,
+        specialMultiplier: Double = 1.0,
+    ): MaxHit = RangedCombat.calculateMaxHit(player, target, specialMultiplier)
 
-    fun getRangedMaxHit(player: Player, target: Entity, specialMultiplier: Double = 1.0): MaxHit =
-        RangedCombat.calculateMaxHit(player, target, specialMultiplier)
-
-    fun getMagicMaxHit(player: Player, target: Entity, baseDamage: Int = -1, spellId: Int = -1, specialMultiplier: Double = 1.0): MaxHit =
-        MagicCombat.calculateMaxHit(player, target, baseDamage = baseDamage, spellId = spellId, specialMultiplier)
+    fun getMagicMaxHit(
+        player: Player,
+        target: Entity,
+        baseDamage: Int = -1,
+        spellId: Int = -1,
+        specialMultiplier: Double = 1.0,
+    ): MaxHit = MagicCombat.calculateMaxHit(player, target, baseDamage = baseDamage, spellId = spellId, specialMultiplier)
 
     private fun getBaseStrengthLevel(player: Player): Int {
         val strength = floor(player.skills.getLevel(Skills.STRENGTH) * player.prayer.strengthMultiplier)
@@ -466,101 +554,123 @@ object CombatCalculations {
     }
 
     private fun getDefenceLevel(target: Entity): Int {
-        val level = (when (target) {
-            is NPC -> {
-                var defenceLevel = target.combatData.defenceLevel
-                if (defenceLevel <= 0) {
-                    defenceLevel = target.combatLevel
+        val level = (
+            when (target) {
+                is NPC -> {
+                    var defenceLevel = target.combatData.defenceLevel
+                    if (defenceLevel <= 0) {
+                        defenceLevel = target.combatLevel
+                    }
+                    defenceLevel
                 }
-                defenceLevel
-            }
 
-            is Player -> target.skills.getLevel(Skills.DEFENCE)
-            else -> 0
-        })
+                is Player -> {
+                    target.skills.getLevel(Skills.DEFENCE)
+                }
+
+                else -> {
+                    0
+                }
+            }
+        )
         return level
     }
 
     private fun getAttackStyleBonus(player: Player): Int {
         val weapon = Weapon.getWeapon(player.equipment.weaponId)
-        val bonus = when (weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)) {
-            AttackStyle.ACCURATE_RANGE -> 3
-            AttackStyle.ACCURATE -> 3
-            AttackStyle.CONTROLLED -> 1
-            else -> 0
-        }
+        val bonus =
+            when (weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)) {
+                AttackStyle.ACCURATE_RANGE -> 3
+                AttackStyle.ACCURATE -> 3
+                AttackStyle.CONTROLLED -> 1
+                else -> 0
+            }
         return bonus
     }
 
     private fun getStrengthStyleBonus(player: Player): Int {
         val weapon = Weapon.getWeapon(player.equipment.weaponId)
-        val bonus = when (weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)) {
-            AttackStyle.ACCURATE_RANGE -> 3
-            AttackStyle.AGGRESSIVE -> 3
-            AttackStyle.CONTROLLED -> 1
-            else -> 0
-        }
+        val bonus =
+            when (weapon.weaponStyle.styleSet.styleAt(player.combatDefinitions.attackStyle)) {
+                AttackStyle.ACCURATE_RANGE -> 3
+                AttackStyle.AGGRESSIVE -> 3
+                AttackStyle.CONTROLLED -> 1
+                else -> 0
+            }
         return bonus
     }
 
     private fun getDefenceStyleBonus(target: Player): Int {
         val targetWeapon = Weapon.getWeapon(target.equipment.weaponId)
-        val bonus = when (targetWeapon.weaponStyle.styleSet.styleAt(target.combatDefinitions.attackStyle)) {
-            AttackStyle.DEFENSIVE -> 3
-            AttackStyle.LONGRANGE -> 3
-            AttackStyle.CONTROLLED -> 1
-            else -> 0
-        }
+        val bonus =
+            when (targetWeapon.weaponStyle.styleSet.styleAt(target.combatDefinitions.attackStyle)) {
+                AttackStyle.DEFENSIVE -> 3
+                AttackStyle.LONGRANGE -> 3
+                AttackStyle.CONTROLLED -> 1
+                else -> 0
+            }
         return bonus
     }
 
     private fun getAttackBonusIndex(player: Player): Int {
         val targetWeapon = Weapon.getWeapon(player.equipment.weaponId)
         val bonusStyle = targetWeapon.weaponStyle.styleSet.bonusAt(player.combatDefinitions.attackStyle)
-        val bonus = when (bonusStyle) {
-            AttackBonusType.STAB -> BonusType.StabAttack
-            AttackBonusType.SLASH -> BonusType.SlashAttack
-            AttackBonusType.CRUSH -> BonusType.CrushAttack
-            AttackBonusType.RANGE -> BonusType.RangeAttack
-            else -> BonusType.MagicAttack
-        }
+        val bonus =
+            when (bonusStyle) {
+                AttackBonusType.STAB -> BonusType.StabAttack
+                AttackBonusType.SLASH -> BonusType.SlashAttack
+                AttackBonusType.CRUSH -> BonusType.CrushAttack
+                AttackBonusType.RANGE -> BonusType.RangeAttack
+                else -> BonusType.MagicAttack
+            }
         return bonus.index
     }
 
-    private fun getDefenceBonus(player: Player, target: Entity, spell: Spell?): Int {
+    private fun getDefenceBonus(
+        player: Player,
+        target: Entity,
+        spell: Spell?,
+    ): Int {
         val attackStyle = player.combatDefinitions.attackStyle // This should return your AttackStyle enum
         val targetWeapon = Weapon.getWeapon(player.equipment.weaponId)
-        val bonusStyle = targetWeapon.weaponStyle.styleSet.bonusAt(attackStyle)// should be your AttackStyle enum
+        val bonusStyle = targetWeapon.weaponStyle.styleSet.bonusAt(attackStyle) // should be your AttackStyle enum
 
         return when (target) {
             is Player -> {
-                val playerBonusType = when (bonusStyle) {
-                    AttackBonusType.STAB -> BonusType.StabDefence
-                    AttackBonusType.SLASH -> BonusType.SlashDefence
-                    AttackBonusType.CRUSH -> BonusType.CrushDefence
-                    AttackBonusType.RANGE -> BonusType.RangeDefence
-                    else -> BonusType.MagicDefence
-                }
+                val playerBonusType =
+                    when (bonusStyle) {
+                        AttackBonusType.STAB -> BonusType.StabDefence
+                        AttackBonusType.SLASH -> BonusType.SlashDefence
+                        AttackBonusType.CRUSH -> BonusType.CrushDefence
+                        AttackBonusType.RANGE -> BonusType.RangeDefence
+                        else -> BonusType.MagicDefence
+                    }
                 target.combatDefinitions.bonuses[playerBonusType.index]
             }
 
             is NPC -> {
                 val npcData = target.combatData
-                val defence = when (bonusStyle) {
-                    AttackBonusType.STAB -> npcData.meleeDefence.stab
-                    AttackBonusType.SLASH -> npcData.meleeDefence.slash
-                    AttackBonusType.CRUSH -> npcData.meleeDefence.crush
-                    AttackBonusType.RANGE -> npcData.rangedDefence.standard
-                    else -> npcData.magicDefence.magic
-                }
+                val defence =
+                    when (bonusStyle) {
+                        AttackBonusType.STAB -> npcData.meleeDefence.stab
+                        AttackBonusType.SLASH -> npcData.meleeDefence.slash
+                        AttackBonusType.CRUSH -> npcData.meleeDefence.crush
+                        AttackBonusType.RANGE -> npcData.rangedDefence.standard
+                        else -> npcData.magicDefence.magic
+                    }
                 if (defence > 0) defence else target.combatLevel / 3
             }
 
-            else -> 0
+            else -> {
+                0
+            }
         }
     }
 
-    fun ceilToNextTen(player: Player?, damage: Int): Int {
+    fun ceilToNextTen(
+        player: Player?,
+        damage: Int,
+    ): Int {
         if (player == null) return damage
         if (player.varsManager.getBitValue(1485) == 0) return damage
         if (damage <= 0) return damage

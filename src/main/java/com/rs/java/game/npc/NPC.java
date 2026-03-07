@@ -1512,12 +1512,12 @@ public class NPC extends Entity implements Serializable {
             }
             else if (obj instanceof String str) {
                 str = str.toLowerCase();
-                if (str.startsWith("npc.")) {
-                    if (Rscm.lookup(str) == id)
+                if (str.startsWith("npc_group.")) {
+                    if (Rscm.lookupList(str).contains(id))
                         return true;
                 }
-                else if (str.startsWith("npc_group.")) {
-                    if (Rscm.lookupList(str).contains(id))
+                else if (str.startsWith("npc.")) {
+                    if (Rscm.lookup(str) == id)
                         return true;
                 }
                 else if (name.contains(str)) {

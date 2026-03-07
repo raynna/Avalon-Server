@@ -2546,22 +2546,8 @@ public class Player extends Entity {
             CombatStyle style = Weapon.isRangedWeapon(this)
                     ? new RangedStyle(this, target)
                     : new MeleeStyle(this, target);
-
-            CombatContext ctx = new CombatContext(
-                    this,
-                    target,
-                    weapon,
-                    equipment.getWeaponId(),
-                    null,
-                    style,
-                    weapon.getWeaponStyle().getStyleSet().styleAt(combatDefinitions.getAttackStyle()),
-                    weapon.getWeaponStyle().getStyleSet().bonusAt(combatDefinitions.getAttackStyle()),
-                    null,
-                    true,
-                    false
-            );
-
-            setActiveInstantSpecial(ctx, weapon.getSpecial());
+            CombatContext context = CombatContext.createDefault(this, target, weapon, style, equipment.getWeaponId(), null, false);
+            setActiveInstantSpecial(context, weapon.getSpecial());
         }
     }
 

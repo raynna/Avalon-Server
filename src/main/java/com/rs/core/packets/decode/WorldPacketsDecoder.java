@@ -703,17 +703,20 @@ public final class WorldPacketsDecoder extends Decoder {
                 else
                     GrandExchange.priceCheckItem(player, itemId);
                 return;
-            case 2://unknown packet
+            case 2://friends_packet
             case 7://unknown packet
             case 8://unknown packet
+            case 10://set_mouse_packet
             case 13://unknown packet
             case 15://unknown packet
+            case 39://game_pane_packet
             case 93://unknown packet
             case 101://unknown packet
             case 223://unknown packet
             case 224://unknown packet
                 int pos = stream.getOffset();
                 stream.setOffset(pos);
+                System.out.println("unknown packet " + packetId);
                 return;
 
             default:

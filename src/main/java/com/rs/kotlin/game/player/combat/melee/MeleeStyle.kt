@@ -11,12 +11,18 @@ import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.special.CombatContext
+import com.rs.kotlin.game.player.combat.special.EffectResult
 import com.rs.kotlin.game.player.combat.special.addHit
 import kotlin.math.min
 
-class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
-
-    override fun canAttack(attacker: Player, defender: Entity): Boolean {
+class MeleeStyle(
+    val attacker: Player,
+    val defender: Entity,
+) : CombatStyle {
+    override fun canAttack(
+        attacker: Player,
+        defender: Entity,
+    ): Boolean {
         if (defender is NPC) {
             if (defender.name.contains("aviansie", ignoreCase = true) || defender.isNpc("npc.kree_arra_lv580")) {
                 attacker.message("You can't use melee on flying enemies.")
@@ -38,11 +44,12 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         if (currentWeapon.attackSpeed != -1) {
             baseSpeed = currentWeapon.attackSpeed!!
         } else {
-            val definitions = ItemDefinitions.getItemDefinitions(attacker.equipment.weaponId);
+            val definitions = ItemDefinitions.getItemDefinitions(attacker.equipment.weaponId)
             baseSpeed = definitions.attackSpeed
         }
-        if (attacker.equipment.weaponId == Item.getId("item.auspicious_katana"))
-            baseSpeed = 4;
+        if (attacker.equipment.weaponId == Item.getId("item.auspicious_katana")) {
+            baseSpeed = 4
+        }
         var finalSpeed = baseSpeed + style.attackSpeedModifier
 
         if (attacker.tickManager.isActive(TickManager.TickKeys.MIASMIC_EFFECT)) {
@@ -53,7 +60,7 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
 
     override fun getHitDelay(): Int {
         val currentWeapon = Weapon.getCurrentWeapon(attacker)
-        return currentWeapon.attackDelay?:0
+        return currentWeapon.attackDelay ?: 0
     }
 
     override fun attack() {
@@ -61,31 +68,43 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
         val currentWeaponId = Weapon.getCurrentWeaponId(attacker)
         val attackStyle = WeaponStyle.getWeaponStyle(attacker)
         val attackBonusType = WeaponStyle.getAttackBonusType(attacker)
-        val combatContext = CombatContext(
-            combat = this,
-            attacker = attacker,
-            defender = defender,
-            weapon = currentWeapon,
-            weaponId = currentWeaponId,
-            attackStyle = attackStyle,
-            attackBonusType = attackBonusType,
-        )
-        if (executeSpecialAttack(attacker, defender)) {
+        val combatContext =
+            CombatContext(
+                combat = this,
+                attacker = attacker,
+                defender = defender,
+                weapon = currentWeapon,
+                weaponId = currentWeaponId,
+                attackStyle = attackStyle,
+                attackBonusType = attackBonusType,
+            )
+        if (executeSpecialAttack(combatContext)) {
             return
         }
-        if (executeEffect(combatContext))
-            return
+        when (executeEffect(combatContext.copy(usingSpecial = false))) {
+            EffectResult.CANCEL -> {
+                return
+            }
+
+            EffectResult.COMPLETE -> {
+                return
+            }
+
+            EffectResult.CONTINUE -> {}
+        }
         attacker.animate(CombatUtils.getAnimation(attacker))
         attacker.playSound(CombatUtils.getSound(attacker), 1)
         val hit = combatContext.addHit(CombatType.MELEE).delay(getHitDelay()).roll()
         if (attacker.developerMode) {
-            attacker.message("[Melee Attack] -> " +
-                "Weapon: ${currentWeapon.name}, " +
-                "WeaponStyle: ${attackStyle.name}, " +
-                "WeaponBonusStyle: ${attackBonusType.name}, " +
-                "WeaponType: ${currentWeapon.weaponStyle.name}, " +
-                "MaxHit: ${hit.maxHit}, " +
-                "Hit: ${hit.damage}")
+            attacker.message(
+                "[Melee Attack] -> " +
+                    "Weapon: ${currentWeapon.name}, " +
+                    "WeaponStyle: ${attackStyle.name}, " +
+                    "WeaponBonusStyle: ${attackBonusType.name}, " +
+                    "WeaponType: ${currentWeapon.weaponStyle.name}, " +
+                    "MaxHit: ${hit.maxHit}, " +
+                    "Hit: ${hit.damage}",
+            )
         }
     }
 
@@ -109,10 +128,14 @@ class MeleeStyle(val attacker: Player, val defender: Entity) : CombatStyle {
                 onHit(attacker, target, hit)
             }
         }
-        attackStyle.xpMode.distributeXp(attacker, defender, attackStyle, totalDamage);
+        attackStyle.xpMode.distributeXp(attacker, defender, attackStyle, totalDamage)
     }
 
-    override fun onHit(attacker: Player, defender: Entity, hit: Hit) {
+    override fun onHit(
+        attacker: Player,
+        defender: Entity,
+        hit: Hit,
+    ) {
         super.onHit(attacker, defender, hit)
         val weaponName = ItemDefinitions.getItemDefinitions(attacker.getEquipment().weaponId).getName()
         val poisonSeverity = NewPoison.getPoisonSeverity(weaponName)

@@ -3,10 +3,8 @@ package com.rs.java.game.npc.combat.impl;
 import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.combat.CombatScript;
-import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
-import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.world.projectile.ProjectileManager;
 import com.rs.kotlin.game.world.projectile.Projectile;
 
@@ -53,7 +51,7 @@ public class JadCombat extends CombatScript {
 		npc.animate(RANGE_ANIM);
 		npc.animate(RANGE_GFX);
 		WorldTasksManager.schedule(3, () -> {
-			Hit rangeHit = npc.rangedHit(target, npc.getMaxHit() - 2);
+			Hit rangeHit = npc.rangedHit(target, npc.getMaxHit());
 			delayHit(npc, target, 1, rangeHit);
 			target.gfx(new Graphics(3000));
 		});
@@ -63,7 +61,7 @@ public class JadCombat extends CombatScript {
 		npc.animate(MAGIC_ANIM);
 		npc.gfx(MAGIC_GFX);
 		WorldTasksManager.schedule(3, () -> {
-			Hit magicHit = npc.magicHit(target, npc.getMaxHit() - 2);
+			Hit magicHit = npc.magicHit(target, npc.getMaxHit());
 			ProjectileManager.send(Projectile.JAD_MAGE, MAGIC_PROJECTILE, npc, target, () -> {
 				applyRegisteredHit(npc, target, magicHit);
 			});
