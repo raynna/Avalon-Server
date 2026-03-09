@@ -6,7 +6,6 @@ import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.*
 import com.rs.java.game.item.FloorItem
-import com.rs.java.game.item.ground.GroundItems
 import com.rs.java.game.item.meta.GreaterRunicStaffMetaData
 import com.rs.java.game.minigames.clanwars.FfaZone
 import com.rs.java.game.npc.NPC
@@ -14,21 +13,25 @@ import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
-import com.rs.java.game.player.actions.combat.modernspells.Alchemy
-import com.rs.java.game.player.actions.combat.modernspells.BonesTo
-import com.rs.java.game.player.actions.combat.modernspells.ChargeOrb
-import com.rs.java.game.player.actions.combat.modernspells.SuperHeat
-import com.rs.java.game.player.actions.skills.crafting.Enchanting
 import com.rs.java.game.player.controllers.CrucibleController
 import com.rs.java.game.player.controllers.EdgevillePvPController
 import com.rs.java.game.player.controllers.FightCaves
 import com.rs.java.game.player.controllers.FightKiln
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.CombatAction
-import com.rs.kotlin.game.world.projectile.Projectile
-import com.rs.kotlin.game.world.projectile.ProjectileManager
+import com.rs.kotlin.game.player.combat.magic.ancient.AncientMagicks
+import com.rs.kotlin.game.player.combat.magic.dungeoneering.DungeoneeringMagicks
+import com.rs.kotlin.game.player.combat.magic.lunar.LunarMagicks
+import com.rs.kotlin.game.player.combat.magic.modern.ModernMagicks
 
 object SpellHandler {
+    private const val ATTR_TARGET = "spell_target"
+    private const val ATTR_ITEM_ID = "spell_itemid"
+    private const val ATTR_SLOT_ID = "spell_slotid"
+    private const val ATTR_OBJECT = "spell_object"
+    private const val ATTR_FLOOR_ITEM = "spell_flooritem"
+    private const val ATTR_TEMP_CAST_SPELL = "tempCastSpell"
+
     @JvmStatic
     fun selectCombatSpell(
         player: Player,
@@ -62,34 +65,85 @@ object SpellHandler {
     ) {
         val spell = getSpellForPlayer(player, spellId) ?: return
         if (!canCast(player, spell)) return
+
         when (spell.type) {
-            SpellType.Combat -> {
-                handleCombatSpell(player, spell, autocast)
+            SpellType.Combat -> handleCombatSpell(player, spell, autocast)
+            SpellType.Teleport -> handleTeleportSpell(player, spell)
+            is SpellType.ObjectSpecific -> handleObjectSpecificSpell(player, spell)
+            else -> executeBehaviourSpell(player, spell)
+        }
+    }
+
+    private fun executeBehaviourSpell(
+        player: Player,
+        spell: Spell,
+    ) {
+        val behaviour =
+            spell.behaviour ?: run {
+                player.message("Unhandled spell: ${spell.name}")
+                return
             }
 
-            SpellType.Teleport -> {
-                handleTeleportSpell(player, spell)
+        if (!checkAndRemoveRunes(player, spell)) return
+
+        try {
+            behaviour.cast(player, spell)
+        } finally {
+            clearSpellTargets(player)
+        }
+    }
+
+    private fun handleCombatSpell(
+        player: Player,
+        spell: Spell,
+        autocast: Boolean,
+    ) {
+        if (!autocast) {
+            player.temporaryAttribute()[ATTR_TEMP_CAST_SPELL] = spell.id
+        }
+
+        val target =
+            player.temporaryAttribute()[ATTR_TARGET] as? Entity ?: run {
+                player.message("Invalid spell target.")
+                return
             }
 
-            SpellType.Instant -> {
-                castInstant(player, spell)
-            }
+        player.actionManager.setAction(CombatAction(target))
+    }
 
-            SpellType.Item -> {
-                handleItemSpell(player, spell)
-            }
+    private fun handleTeleportSpell(
+        player: Player,
+        spell: Spell,
+    ) {
+        val location = spell.teleportLocation ?: return
+        sendTeleportSpell(
+            player,
+            if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) 9599 else 8939,
+            if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) 1681 else 1576,
+            spell,
+            location,
+        )
+    }
 
-            SpellType.FloorItem -> {
-                handleTelegrabSpell(player, spell)
-            }
+    private fun handleObjectSpecificSpell(
+        player: Player,
+        spell: Spell,
+    ) {
+        val worldObject = player.temporaryAttribute()[ATTR_OBJECT] as? WorldObject ?: return
+        val type = spell.type as? SpellType.ObjectSpecific ?: return
 
-            is SpellType.Object -> {
-                handleOrbChargingSpell(player, spell)
-            }
+        if (worldObject.id !in type.objectIds) {
+            player.message("Nothing interesting happens.")
+            return
+        }
 
-            SpellType.Target -> {
-                handleTeleportOtherSpell(player, spell)
-            }
+        if (!checkAndRemoveRunes(player, spell)) return
+
+        try {
+            spell.behaviour?.cast(player, spell)
+                ?: player.message("Unhandled spell: ${spell.name}")
+        } finally {
+            clearSpellTargets(player)
         }
     }
 
@@ -99,76 +153,18 @@ object SpellHandler {
         itemId: Int,
         slotId: Int,
     ) {
-        player.temporaryAttribute().apply {
-            put("spell_itemid", itemId)
-            put("spell_slotid", slotId)
-        }
-        cast(player, spellId, false)
-    }
-
-    private fun handleItemSpell(
-        player: Player,
-        spell: Spell,
-    ) {
-        val attrs = player.temporaryAttribute()
-        val itemId = attrs["spell_itemid"] as? Int ?: return
-        val slotId = attrs["spell_slotid"] as? Int ?: return
-
-        when {
-            spell.name.contains("alchemy", true) -> {
-                handleAlchemySpell(player, spell, itemId, slotId)
-            }
-
-            spell.name.contains("enchant", true) -> {
-                handleEnchantSpell(player, spell, itemId, slotId)
-            }
-
-            spell.name.contains("superheat", ignoreCase = true) -> {
-                if (!RuneService.hasRunes(player, spell.runes)) return
-                if (SuperHeat.cast(player, spell.xp, itemId, slotId)) {
-                    RuneService.consumeRunes(player, spell.runes)
-                    return
-                }
-            }
-
-            else -> {
-                player.message("Unhandled ${spell.name}")
-            }
-        }
-    }
-
-    private fun castInstant(
-        player: Player,
-        spell: Spell,
-    ) {
-        player.message("cast Instant: " + spell.name)
-        when (spell.name) {
-            "Bones to Bananas", "Bones to Peaches" -> {
-                if (BonesTo.cast(player, spell.xp, spell.name.contains("Peaches"))) {
-                    checkAndRemoveRunes(player, spell)
-                }
-            }
-
-            "Charge" -> {
-                player.animate(811)
-                player.tickManager.addMinutes(TickManager.TickKeys.CHARGE_SPELL, 2)
-                player.message("You are now feeling the power of the charge spell.")
-            }
-
-            "Enchant Crossbow bolt" -> {
-                player.stopAll()
-                player.interfaceManager.sendInterface(432)
-            }
-        }
+        player.temporaryAttribute()[ATTR_ITEM_ID] = itemId
+        player.temporaryAttribute()[ATTR_SLOT_ID] = slotId
+        cast(player, spellId)
     }
 
     fun castOnObject(
         player: Player,
         spellId: Int,
-        objectId: Int,
+        obj: WorldObject,
     ) {
-        player.temporaryAttribute()["spell_objectid"] = objectId
-        cast(player, spellId, false)
+        player.temporaryAttribute()[ATTR_OBJECT] = obj
+        cast(player, spellId)
     }
 
     fun castOnFloorItem(
@@ -176,8 +172,8 @@ object SpellHandler {
         spellId: Int,
         floorItem: FloorItem,
     ) {
-        player.temporaryAttribute()["spell_flooritem"] = floorItem
-        cast(player, spellId, false)
+        player.temporaryAttribute()[ATTR_FLOOR_ITEM] = floorItem
+        cast(player, spellId)
     }
 
     @JvmStatic
@@ -186,8 +182,8 @@ object SpellHandler {
         spellId: Int,
         target: Player,
     ) {
-        player.temporaryAttribute()["spell_target"] = target
-        cast(player, spellId, false)
+        player.temporaryAttribute()[ATTR_TARGET] = target
+        cast(player, spellId)
     }
 
     @JvmStatic
@@ -196,8 +192,8 @@ object SpellHandler {
         spellId: Int,
         target: NPC,
     ) {
-        player.temporaryAttribute()["spell_target"] = target
-        cast(player, spellId, false)
+        player.temporaryAttribute()[ATTR_TARGET] = target
+        cast(player, spellId)
     }
 
     fun getSpellForPlayer(
@@ -207,6 +203,8 @@ object SpellHandler {
         when (player.combatDefinitions.getSpellBook()) {
             AncientMagicks.id -> AncientMagicks.getSpell(spellId)
             ModernMagicks.id -> ModernMagicks.getSpell(spellId)
+            DungeoneeringMagicks.id -> DungeoneeringMagicks.getSpell(spellId)
+            LunarMagicks.id -> LunarMagicks.getSpell(spellId)
             else -> null
         }
 
@@ -225,6 +223,7 @@ object SpellHandler {
                 return false
             }
         }
+
         if (spell.type is SpellType.Instant) {
             if (spell.id == 83 && player.tickManager.isActive(TickManager.TickKeys.CHARGE_SPELL)) {
                 player.message(
@@ -242,30 +241,19 @@ object SpellHandler {
             if (staffReq.anyOf.isNotEmpty() &&
                 staffReq.anyOf.none { id -> player.equipment.weaponId == id }
             ) {
-                player.packets.sendGameMessage(
-                    "You don't have the required staff equipped to cast this spell.",
-                )
+                player.packets.sendGameMessage("You don't have the required staff equipped to cast this spell.")
                 return false
             }
         }
 
         spell.itemRequirement?.let { req ->
-
-            if (req.anyOf.isNotEmpty() &&
-                req.anyOf.none { player.equipment.containsOneItem(it) }
-            ) {
-                player.packets.sendGameMessage(
-                    "You don't have the required item to cast this spell.",
-                )
+            if (req.anyOf.isNotEmpty() && req.anyOf.none { player.equipment.containsOneItem(it) }) {
+                player.packets.sendGameMessage("You don't have the required item to cast this spell.")
                 return false
             }
 
-            if (req.allOf.isNotEmpty() &&
-                !req.allOf.all { player.equipment.containsOneItem(it) }
-            ) {
-                player.packets.sendGameMessage(
-                    "You don't have all required items to cast this spell.",
-                )
+            if (req.allOf.isNotEmpty() && !req.allOf.all { player.equipment.containsOneItem(it) }) {
+                player.packets.sendGameMessage("You don't have all required items to cast this spell.")
                 return false
             }
         }
@@ -276,9 +264,7 @@ object SpellHandler {
     private fun staffOfLightEffect(player: Player): Boolean {
         val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return false
         return when {
-            weapon.isAnyOf("item.kodai_wand") -> {
-                Utils.roll(3, 20)
-            }
+            weapon.isAnyOf("item.kodai_wand") -> Utils.roll(3, 20)
 
             weapon.isAnyOf(
                 "item.staff_of_light",
@@ -286,13 +272,9 @@ object SpellHandler {
                 "item.staff_of_light_blue",
                 "item.staff_of_light_green",
                 "item.staff_of_light_gold",
-            ) -> {
-                Utils.roll(1, 8)
-            }
+            ) -> Utils.roll(1, 8)
 
-            else -> {
-                false
-            }
+            else -> false
         }
     }
 
@@ -304,7 +286,6 @@ object SpellHandler {
 
         if (weapon?.metadata is GreaterRunicStaffMetaData) {
             val data = weapon.metadata as GreaterRunicStaffMetaData
-
             if (spell.id == data.spellId && data.charges > 0) {
                 data.removeCharges(1)
                 return true
@@ -319,154 +300,36 @@ object SpellHandler {
         if (spell.type == SpellType.Combat && staffOfLightEffect(player)) {
             val isKodai = weapon?.isAnyOf("item.kodai_wand") ?: false
             player.packets.sendGameMessage(
-                "Your spell draws its power completely from your " +
-                    if (isKodai) "wand." else "staff.",
+                "Your spell draws its power completely from your ${if (isKodai) "wand" else "staff"}.",
             )
             return true
         }
 
         RuneService.consumeRunes(player, spell.runes)
-
         return true
     }
 
-    private fun handleCombatSpell(
-        player: Player,
-        spell: Spell,
-        autocast: Boolean,
-    ) {
-        if (!autocast) {
-            player.temporaryAttribute()["tempCastSpell"] = spell.id
-        }
-        val target =
-            player.temporaryAttribute()["spell_target"] as? Entity ?: run {
-                player.message("Invalid spell target")
-                return
-            }
-        player.actionManager.setAction(CombatAction(target))
-    }
+    fun getTarget(player: Player): Entity? = player.temporaryAttribute()[ATTR_TARGET] as? Entity
 
-    private fun handleTeleportSpell(
-        player: Player,
-        spell: Spell,
-    ) {
-        spell.teleportLocation?.let { location ->
-            sendTeleportSpell(
-                player,
-                if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) 9599 else 8939,
-                if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) 1681 else 1576,
-                spell,
-                location,
-            )
-        }
-    }
+    fun getTargetPlayer(player: Player): Player? = player.temporaryAttribute()[ATTR_TARGET] as? Player
 
-    private fun handleAlchemySpell(
-        player: Player,
-        spell: Spell,
-        itemId: Int,
-        slotId: Int,
-    ) {
-        if (!RuneService.hasRunes(player, spell.runes)) {
-            return
-        }
-        val fireStaff = player.equipment.weaponId in listOf(1387, 1393, 1401, 3053, 3054)
-        val isHighAlchemy = spell.name.contains("High", true)
-        if (Alchemy.castSpell(player, itemId, slotId, fireStaff, !isHighAlchemy)) {
-            RuneService.consumeRunes(player, spell.runes)
-        }
-    }
+    fun getTargetNpc(player: Player): NPC? = player.temporaryAttribute()[ATTR_TARGET] as? NPC
 
-    private fun handleEnchantSpell(
-        player: Player,
-        spell: Spell,
-        itemId: Int,
-        slotId: Int,
-    ) {
-        val enchantLevel =
-            when (spell.id) {
-                29 -> 1
-                41 -> 2
-                53 -> 3
-                61 -> 4
-                76 -> 5
-                88 -> 6
-                else -> return
-            }
+    fun getTargetObject(player: Player): WorldObject? = player.temporaryAttribute()[ATTR_OBJECT] as? WorldObject
 
-        Enchanting.startEnchant(player, itemId, slotId, enchantLevel, spell.xp)
-    }
+    fun getTargetFloorItem(player: Player): FloorItem? = player.temporaryAttribute()[ATTR_FLOOR_ITEM] as? FloorItem
 
-    private fun handleOrbChargingSpell(
-        player: Player,
-        spell: Spell,
-    ) {
-        val objectId = player.temporaryAttribute()["spell_objectid"] as? Int ?: return
+    fun getTargetItemId(player: Player): Int? = player.temporaryAttribute()[ATTR_ITEM_ID] as? Int
 
-        val type = spell.type as? SpellType.Object ?: return
+    fun getTargetSlotId(player: Player): Int? = player.temporaryAttribute()[ATTR_SLOT_ID] as? Int
 
-        if (objectId !in type.objectIds) {
-            player.message("Nothing interesting happens.")
-            return
-        }
-
-        if (!player.inventory.containsItem("item.unpowered_orb")) {
-            player.message("You need an unpowered orb to charge.")
-            return
-        }
-
-        player.dialogueManager.startDialogue(
-            "ChargeOrbD",
-            spell,
-            type.orbItemId,
-        )
-    }
-
-    private fun handleTelegrabSpell(
-        player: Player,
-        spell: Spell,
-    ) {
-        if (!RuneService.hasRunes(player, spell.runes)) {
-            return
-        }
-        RuneService.consumeRunes(player, spell.runes)
+    private fun clearSpellTargets(player: Player) {
         val attrs = player.temporaryAttribute()
-        val floorItem = attrs["spell_flooritem"] as? FloorItem ?: return
-
-        val tile = floorItem.tile
-        val itemId = floorItem.id
-
-        player.faceWorldTile(tile)
-        player.animate(Animation(711))
-        player.gfx(142, 50)
-
-        ProjectileManager.sendToTile(Projectile.TELEGRAB, 143, player, tile) {
-            val region = World.getRegion(tile.regionId)
-            val currentItem = region.getGroundItem(itemId, tile, player)
-
-            if (currentItem == null || currentItem.isRemoved) {
-                player.message("Too late!")
-                return@sendToTile
-            }
-
-            if (!player.inventory.hasFreeSlots()) {
-                player.message("You don't have enough inventory space.")
-                return@sendToTile
-            }
-
-            World.sendGraphics(player, Graphics(144), tile)
-
-            GroundItems.removeGroundItem(player, currentItem)
-        }
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    private fun handleTeleportOtherSpell(
-        player: Player,
-        spell: Spell,
-    ) {
-        val target = player.temporaryAttribute()["spell_target"] as? Player ?: return
-        player.message("Teleport ${target.displayName} to ${spell.name}")
+        attrs.remove(ATTR_TARGET)
+        attrs.remove(ATTR_ITEM_ID)
+        attrs.remove(ATTR_SLOT_ID)
+        attrs.remove(ATTR_OBJECT)
+        attrs.remove(ATTR_FLOOR_ITEM)
     }
 
     fun sendTeleportSpell(
@@ -482,7 +345,6 @@ object SpellHandler {
         )
     }
 
-    @Suppress("UNUSED_VARIABLES")
     fun sendTeleportSpell(
         player: Player,
         upEmoteId: Int,
@@ -491,20 +353,22 @@ object SpellHandler {
         tile: WorldTile,
     ) {
         if (player.controlerManager.controler.let {
-                it is FfaZone || it is CrucibleController ||
-                    it is FightKiln || it is FightCaves
+                it is FfaZone || it is CrucibleController || it is FightKiln || it is FightCaves
             }
         ) {
             player.packets.sendGameMessage("You cannot teleport out of here.")
             return
         }
+
         if (player.isTeleportBlocked) {
             player.message("You are teleport blocked!")
             return
         }
+
         if (!player.controlerManager.processMagicTeleport(tile)) {
             return
         }
+
         if (spell != null) {
             if (!RuneService.hasRunes(player, spell.runes)) return
             RuneService.consumeRunes(player, spell.runes)
@@ -519,6 +383,7 @@ object SpellHandler {
         if (spell != null) {
             player.skills.addXp(Skills.MAGIC, spell.xp)
         }
+
         if (upEmoteId != -1) {
             player.animate(Animation(upEmoteId))
         }
@@ -532,7 +397,7 @@ object SpellHandler {
         WorldTasksManager.schedule(
             object : WorldTask() {
                 override fun run() {
-                    if (tile.x == 3222 && tile.y == 3222) { // House teleport
+                    if (tile.x == 3222 && tile.y == 3222) {
                         player.freeze(0)
                         player.interfaceManager.closeChatBoxInterface()
                         player.controlerManager.forceStop()
@@ -542,35 +407,29 @@ object SpellHandler {
                     }
 
                     var teleTile = tile
-                    if (spell != null) {
-                        if (spell.name.contains(
-                                "home",
-                                ignoreCase = true,
-                            ) && (EdgevillePvPController.isAtPvP(player) || EdgevillePvPController.isAtBank(player))
-                        ) {
-                            teleTile = WorldTile(85, 80, 0)
-                        }
+                    if (spell != null &&
+                        spell.name.contains("home", ignoreCase = true) &&
+                        (EdgevillePvPController.isAtPvP(player) || EdgevillePvPController.isAtBank(player))
+                    ) {
+                        teleTile = WorldTile(85, 80, 0)
                     }
-                    val baseTile = tile
 
+                    val baseTile = tile
                     repeat(10) {
                         val dx = Utils.random(-1, 1)
                         val dy = Utils.random(-1, 1)
-                        val testTile =
-                            WorldTile(
-                                baseTile.x + dx,
-                                baseTile.y + dy,
-                                baseTile.plane,
-                            )
+                        val testTile = WorldTile(baseTile.x + dx, baseTile.y + dy, baseTile.plane)
 
                         if (World.canMoveNPC(testTile.plane, testTile.x, testTile.y, player.size)) {
                             teleTile = testTile
                             return@repeat
                         }
                     }
+
                     if (player.controlerManager.controler != null) {
                         player.controlerManager.controler.magicTeleported(0)
                     }
+
                     player.nextWorldTile = teleTile
                     player.animate(Animation(if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) -1 else 8941))
                     player.gfx(Graphics(if (player.combatDefinitions.getSpellBook() == AncientMagicks.id) -1 else 1577))

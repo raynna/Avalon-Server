@@ -29,6 +29,8 @@ object ProjectileRegistry {
             Projectile.ELEMENTAL_SPELL_DUAL,
             ProjectileType(startHeight = 43, endHeight = 31, startTime = 51, arc = 21, displacement = 32),
         )
+        register(Projectile.STUN_SPELL, ProjectileType(startHeight = 31, endHeight = 31, startTime = 46, arc = 11, displacement = 64))
+        register(Projectile.BIND_SPELL, ProjectileType(startHeight = 31, endHeight = 31, startTime = 56, arc = 11, displacement = 64))
         register(Projectile.CRUMBLE_UNDEAD, ProjectileType(startHeight = 31, endHeight = 31, startTime = 46, arc = 11, displacement = 64))
         register(Projectile.STANDARD_MAGIC, ProjectileType(startHeight = 40, endHeight = 36, startTime = 41, arc = 11))
         register(

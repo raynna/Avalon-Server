@@ -1,8 +1,9 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.rs.kotlin.game.player.combat.magic
 
 import com.rs.core.tasks.WorldTask
 import com.rs.core.tasks.WorldTasksManager
-import com.rs.java.game.Animation
 import com.rs.java.game.Entity
 import com.rs.java.game.Graphics
 import com.rs.java.game.Hit
@@ -16,6 +17,9 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.NewPoison
 import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
+import com.rs.kotlin.game.player.combat.magic.ancient.AncientMagicks
+import com.rs.kotlin.game.player.combat.magic.dungeoneering.DungeoneeringMagicks
+import com.rs.kotlin.game.player.combat.magic.modern.ModernMagicks
 import com.rs.kotlin.game.player.combat.magic.special.GreaterRunicStaffWeapon
 import com.rs.kotlin.game.player.combat.magic.special.PolyporeStaff
 import com.rs.kotlin.game.player.combat.range.RangeData
@@ -35,10 +39,16 @@ class MagicStyle(
     val attacker: Player,
     val defender: Entity,
 ) : CombatStyle {
+    @Suppress("ktlint:standard:property-naming")
     private val NO_SPELL = 65535
+
+    @Suppress("ktlint:standard:property-naming")
     private val DEFAULT_SPELL = 65536
+
+    @Suppress("ktlint:standard:property-naming")
     private val MIN_SPELL_ID = 256
 
+    @Suppress("ktlint:standard:property-naming")
     private val SPLASH_GRAPHIC = 85
 
     override fun canAttack(
@@ -174,6 +184,7 @@ class MagicStyle(
             when (attacker.combatDefinitions.getSpellBook()) {
                 AncientMagicks.id -> AncientMagicks.getSpell(spellId)
                 ModernMagicks.id -> ModernMagicks.getSpell(spellId)
+                DungeoneeringMagicks.id -> DungeoneeringMagicks.getSpell(spellId)
                 else -> null
             }
 
@@ -207,6 +218,7 @@ class MagicStyle(
         when (attacker.combatDefinitions.getSpellBook()) {
             AncientMagicks.id -> handleAncientMagic(attacker, defender, currentSpell, manual)
             ModernMagicks.id -> handleModernMagic(attacker, defender, currentSpell, manual)
+            DungeoneeringMagicks.id -> handleModernMagic(attacker, defender, currentSpell, manual)
             else -> attacker.message("Unknown spellbook")
         }
     }
@@ -509,7 +521,7 @@ class MagicStyle(
                 }
                 if (spell.miasmic) {
                     if (!t.tickManager.isActive(TickManager.TickKeys.MIASMIC_EFFECT)) {
-                        t.tickManager.addSeconds(TickManager.TickKeys.MIASMIC_EFFECT, 12) // just to make sure all of them give 12 seconds, 48 is way to op
+                        t.tickManager.addSeconds(TickManager.TickKeys.MIASMIC_EFFECT, 12)
                     }
                 }
                 if (spell.bind != -1 && !t.isFreezeImmune) {

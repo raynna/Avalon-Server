@@ -31,6 +31,8 @@ enum class Projectile {
     IBAN_BLAST,
     STORM_OF_ARMADYL,
     TELEPORT_BLOCK,
+    STUN_SPELL,
+    BIND_SPELL,
     CRUMBLE_UNDEAD,
     SAGAIE,
     POLYPORE_STAFF,

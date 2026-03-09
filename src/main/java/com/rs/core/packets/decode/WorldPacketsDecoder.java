@@ -714,13 +714,11 @@ public final class WorldPacketsDecoder extends Decoder {
             case 101://unknown packet
             case 223://unknown packet
             case 224://unknown packet
-                int pos = stream.getOffset();
-                stream.setOffset(pos);
-                System.out.println("unknown packet " + packetId);
+                stream.setOffset(stream.getOffset());
                 return;
 
             default:
-                pos = stream.getOffset();
+                int pos = stream.getOffset();
 
                 System.out.println("Unhandled packet -> id=" + packetId + " length=" + length);
 
@@ -878,25 +876,11 @@ public final class WorldPacketsDecoder extends Decoder {
 
         switch (interfaceId) {
             case 192:
+            case 430:
                 player.setRouteEvent(new RouteEvent(object, () -> {
                     player.faceObject(object);
+                    SpellHandler.INSTANCE.castOnObject(player, componentId, object);
 
-                    SpellHandler.INSTANCE.castOnObject(player, componentId, objectId);
-
-                }));
-                break;
-            case 430: // Lunar spellbook
-                player.setRouteEvent(new RouteEvent(object, () -> {
-                    player.faceObject(object);
-                    LunarMagicks.RSLunarSpellStore s = LunarMagicks.RSLunarSpellStore.getSpell(componentId);
-                    if (s != null) {
-                        if (s.getSpellId() == 44)
-                            return;
-                        player.getTemporaryAttributtes().put("spell_objectid", objectId);
-                        if (!LunarMagicks.hasRequirement(player, componentId)) {
-                            return;
-                        }
-                    }
                 }));
                 break;
 
@@ -1186,7 +1170,7 @@ public final class WorldPacketsDecoder extends Decoder {
         final Player p2 = World.getPlayers().get(playerIndex);
         if (p2 == null || p2.isDead() || p2.hasFinished() || !player.getMapRegionsIds().contains(p2.getRegionId()))
             return;
-
+        player.message("interfaceid:" + interfaceId);
         switch (interfaceId) {
             case 1110: // Clan invite button
                 if (componentId == 87) {
@@ -1215,6 +1199,9 @@ public final class WorldPacketsDecoder extends Decoder {
                     player.getFamiliar().setTarget(p2);
                 }
                 break;
+            case 950: {
+                player.message("Component: " + componentId);
+            }
 
             case 430: { // Lunar spellbook on player
                 LunarMagicks.RSLunarSpellStore lunar = LunarMagicks.RSLunarSpellStore.getSpell(componentId);
@@ -1350,7 +1337,64 @@ public final class WorldPacketsDecoder extends Decoder {
                 }
                 break;
             }
+            case 950: { // Ancients on npc
+                Spell spell = Spellbook.getSpellById(player, componentId);
+                if (spell == null) return;
 
+                player.setNextFaceEntity(npc);
+                if (spell.getType() instanceof SpellType.Combat) {
+                    if (!npc.getDefinitions().hasAttackOption() && !(npc instanceof Familiar))
+                        return;
+
+                    if (npc.getId() == 23921) { // dummy
+                        player.getPackets().sendGameMessage("You can't use magic on a dummy.");
+                        return;
+                    }
+
+                    if (npc instanceof Familiar) {
+                        Familiar fam = (Familiar) npc;
+                        if (fam == player.getFamiliar()) {
+                            player.getPackets().sendGameMessage("You can't attack your own familiar.");
+                            return;
+                        }
+                        if (!fam.canAttack(player)) {
+                            if (!fam.isAtMultiArea()) {
+                                Player owner = fam.getOwner();
+                                player.setNextFaceEntity(owner);
+                                player.getTemporaryAttributtes().put("spell_target", owner);
+                                SpellHandler.castOnPlayer(player, spell.getId(), owner);
+                                return;
+                            }
+                            player.getPackets().sendGameMessage("You can't attack this npc.");
+                            return;
+                        }
+                    } else if (!npc.isForceMultiAttacked()) {
+                        if (player.isAtMultiArea() && !npc.isAtMultiArea()) {
+                            if (npc.getAttackedBy() != player && npc.isPjBlocked()) {
+                                player.getPackets().sendGameMessage("This npc is already in combat.");
+                                return;
+                            }
+                        }
+                        if (!npc.isAtMultiArea() && !player.isAtMultiArea()) {
+                            if (player.getAttackedBy() != npc && player.isPjBlocked()) {
+                                player.getPackets().sendGameMessage("You are already in combat.");
+                                return;
+                            }
+                            if (npc.getAttackedBy() != player && npc.isPjBlocked()) {
+                                player.getPackets().sendGameMessage("This npc is already in combat.");
+                                return;
+                            }
+                        }
+                    }
+
+                    if (!player.getControlerManager().canAttack(npc))
+                        return;
+                }
+
+                player.getTemporaryAttributtes().put("spell_target", npc);
+                SpellHandler.castOnNpc(player, spell.getId(), npc);
+                break;
+            }
             case 430: { // Lunar on npc
                 LunarMagicks.RSLunarSpellStore lunar = LunarMagicks.RSLunarSpellStore.getSpell(componentId);
                 if (lunar != null) {

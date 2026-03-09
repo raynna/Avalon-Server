@@ -77,7 +77,51 @@ public final class CombatDefinitions implements Serializable {
     }
 
     public int getSpellAutoCastConfigValue() {
-        if (dungeonneringSpellBook) return 0;
+        if (dungeonneringSpellBook) {
+            switch (autoCastSpell) {
+                case 25:
+                    return 103;
+                case 27:
+                    return 105;
+                case 28:
+                    return 107;
+                case 30:
+                    return 109;
+                case 32:
+                    return 111;
+                case 36:
+                    return 113;
+                case 37:
+                    return 115;
+                case 41:
+                    return 117;
+                case 42:
+                    return 119;
+                case 43:
+                    return 121;
+                case 45:
+                    return 123;
+                case 47:
+                    return 125;
+                case 48:
+                    return 127;
+                case 49:
+                    return 129;
+                case 54:
+                    return 131;
+                case 58:
+                    return 133;
+                case 61:
+                    return 135;
+                case 62:
+                    return 137;
+                case 63:
+                    return 139;
+                case 67: return 141;
+
+            }
+            return 0;
+        }
         if (spellBook == 0) {
             switch (autoCastSpell) {
                 case 98:

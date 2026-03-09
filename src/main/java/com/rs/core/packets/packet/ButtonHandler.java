@@ -764,6 +764,15 @@ public class ButtonHandler {
             } else if (componentId == 29) player.getFamiliar().takeBob();
         } else if (interfaceId == 916) {
             SkillsDialogue.handleSetQuantityButtons(player, componentId);
+        } else if (interfaceId == 950) {
+            if (componentId == 7) player.getCombatDefinitions().switchShowCombatSpells();
+            else if (componentId == 9) player.getCombatDefinitions().switchShowTeleportSkillSpells();
+            else if (componentId == 11) player.getCombatDefinitions().switchShowMiscallaneousSpells();
+            else if (componentId == 13) player.getCombatDefinitions().switchShowSkillSpells();
+            else if (componentId >= 15 && componentId <= 17)
+                player.getCombatDefinitions().setSortSpellBook(componentId - 9);
+            else if (componentId == 2) player.getCombatDefinitions().switchDefensiveCasting();
+            else SpellHandler.selectCombatSpell(player, componentId);
         } else if (interfaceId == 193) {
             if (componentId == 5) player.getCombatDefinitions().switchShowCombatSpells();
             else if (componentId == 7) player.getCombatDefinitions().switchShowTeleportSkillSpells();

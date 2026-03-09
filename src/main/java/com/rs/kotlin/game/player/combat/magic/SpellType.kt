@@ -14,9 +14,11 @@ sealed class SpellType {
 
     object Item : SpellType()
 
-    class Object(
+    object ObjectTarget : SpellType()
+
+    data class ObjectSpecific(
         val objectIds: Set<Int>,
-        val orbItemId: Int,
+        val orbItemId: Int? = null,
     ) : SpellType()
 
     object FloorItem : SpellType()
@@ -81,6 +83,7 @@ data class Spell(
     val chargeCost: Int = 0,
     val canCastWithWeapon: ((Player) -> Boolean)? = null,
     val onConsumeCharge: ((Player) -> Unit)? = null,
+    val behaviour: SpellBehaviour? = null,
 ) {
     fun isElemental(): Boolean =
         element in

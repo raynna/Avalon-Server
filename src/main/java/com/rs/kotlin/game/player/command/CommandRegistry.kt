@@ -51,6 +51,7 @@ object CommandRegistry {
         register("tournament", "tourny", "jointournament", "jointourny", command = TournamentCommand())
         register("reset", command = ResetCommand())
         register("checkmap", "mapcommand", "map", command = MapFilesCommand())
+        register("dungspells", "dungeoneeringspells", "dspells", command = DungeoneeringSpellBookCommand())
     }
 
     @JvmStatic

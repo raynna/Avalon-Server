@@ -19,6 +19,7 @@ object RuneDefinitions {
         const val BODY = 559
         const val COSMIC = 564
         const val ARMADYL = 21773
+        const val ASTRAL = 9075
 
         const val MUD = 4698
         const val MIST = 4695
