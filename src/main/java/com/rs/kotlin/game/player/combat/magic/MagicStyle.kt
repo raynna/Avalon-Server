@@ -19,6 +19,7 @@ import com.rs.kotlin.game.player.combat.*
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.magic.ancient.AncientMagicks
 import com.rs.kotlin.game.player.combat.magic.dungeoneering.DungeoneeringMagicks
+import com.rs.kotlin.game.player.combat.magic.lunar.spells.SpellbookSwapService
 import com.rs.kotlin.game.player.combat.magic.modern.ModernMagicks
 import com.rs.kotlin.game.player.combat.magic.special.GreaterRunicStaffWeapon
 import com.rs.kotlin.game.player.combat.magic.special.PolyporeStaff
@@ -238,6 +239,7 @@ class MagicStyle(
                 onHit(attacker, target, hit)
             }
         }
+        SpellbookSwapService.consumeSwap(attacker)
         addMagicExperience(totalDamage)
     }
 

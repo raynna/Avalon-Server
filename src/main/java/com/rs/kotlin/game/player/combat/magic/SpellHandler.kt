@@ -22,6 +22,7 @@ import com.rs.kotlin.game.player.combat.CombatAction
 import com.rs.kotlin.game.player.combat.magic.ancient.AncientMagicks
 import com.rs.kotlin.game.player.combat.magic.dungeoneering.DungeoneeringMagicks
 import com.rs.kotlin.game.player.combat.magic.lunar.LunarMagicks
+import com.rs.kotlin.game.player.combat.magic.lunar.spells.SpellbookSwapService
 import com.rs.kotlin.game.player.combat.magic.modern.ModernMagicks
 
 object SpellHandler {
@@ -37,6 +38,7 @@ object SpellHandler {
         player: Player,
         spellId: Int,
     ) {
+        player.message("spellId: " + spellId)
         val spell = getSpellForPlayer(player, spellId) ?: return
 
         if (spell.type !is SpellType.Combat) {
@@ -83,14 +85,14 @@ object SpellHandler {
                 player.message("Unhandled spell: ${spell.name}")
                 return
             }
-
-        if (!checkAndRemoveRunes(player, spell)) return
-
-        try {
-            behaviour.cast(player, spell)
-        } finally {
-            clearSpellTargets(player)
+        if (!RuneService.hasRunes(player, spell.runes)) return
+        val success = behaviour.cast(player, spell)
+        if (success) {
+            RuneService.consumeRunes(player, spell.runes)
+            player.skills.addXp(Skills.MAGIC, spell.xp)
+            SpellbookSwapService.consumeSwap(player)
         }
+        clearSpellTargets(player)
     }
 
     private fun handleCombatSpell(
@@ -208,7 +210,7 @@ object SpellHandler {
             else -> null
         }
 
-    private fun canCast(
+    fun canCast(
         player: Player,
         spell: Spell,
     ): Boolean {

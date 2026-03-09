@@ -3,6 +3,9 @@ package com.rs.java.game.player.actions.skills.runecrafting;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.Animation;
 import com.rs.java.game.Graphics;
+import com.rs.java.game.item.Item;
+import com.rs.java.game.item.meta.ItemMetadata;
+import com.rs.java.game.item.meta.RuneEssencePouchMetaData;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.skills.runecrafting.RunecraftingOutfit.Pieces;
@@ -129,6 +132,35 @@ public class Runecrafting {
 		}
 	}
 
+	static int drainEssenceFromPouches(Player player) {
+
+		int total = 0;
+
+		for (Item item : player.getInventory().getItems().getContainerItems()) {
+
+			if (item == null)
+				continue;
+
+			RuneEssencePouchType type = RuneEssencePouchType.forItem(item.getId());
+			if (type == null)
+				continue;
+
+			ItemMetadata metadata = item.getMetadata();
+
+			if (!(metadata instanceof RuneEssencePouchMetaData meta))
+				continue;
+
+			int amount = meta.getEssenceAmount();
+
+			if (amount > 0) {
+				total += amount;
+				meta.removeEssence(amount);
+			}
+		}
+
+		return total;
+	}
+
 	public static void craftRune(Player player, int runeId, int level, double exp, boolean pureEssence) {
 		int actualLevel = player.getSkills().getLevel(Skills.RUNECRAFTING);
 		if (actualLevel < level) {
@@ -136,8 +168,11 @@ public class Runecrafting {
 			return;
 		}
 		int runes = player.getInventory().getItems().getNumberOf(PURE_ESSENCE);
+
 		if (runes > 0)
 			player.getInventory().deleteItem(PURE_ESSENCE, runes);
+
+		runes += drainEssenceFromPouches(player);
 		if (!pureEssence) {
 			int normalEss = player.getInventory().getItems().getNumberOf(RUNE_ESSENCE);
 			if (normalEss > 0) {

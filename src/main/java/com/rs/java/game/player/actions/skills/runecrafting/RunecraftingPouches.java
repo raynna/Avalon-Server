@@ -1,63 +1,85 @@
 package com.rs.java.game.player.actions.skills.runecrafting;
 
+import com.rs.java.game.item.Item;
+import com.rs.java.game.item.meta.RuneEssencePouchMetaData;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 
 public class RunecraftingPouches extends Runecrafting {
 
-	public static final int[] POUCH_SIZE = { 3, 6, 9, 12 };
+	private static final int PURE_ESSENCE = 7936;
 
-	public final static int[] POUCH_REQ = { 1, 25, 50, 75 };
+	public static void fillPouch(Player player, Item pouch) {
 
-	public static void fillPouch(Player p, int i) {
-		if (i < 0)
+		RuneEssencePouchType type = RuneEssencePouchType.forItem(pouch.getId());
+		if (type == null)
 			return;
-		if (POUCH_REQ[i] > p.getSkills().getLevel(Skills.RUNECRAFTING)) {
-			p.getPackets().sendGameMessage("You need a runecrafting level of " + POUCH_REQ[i] + " to fill this pouch.",
-					false);
-			return;
-		}
-		int essenceToAdd = POUCH_SIZE[i] - p.getPouches()[i];
-		if (essenceToAdd > p.getInventory().getItems().getNumberOf(7936))
-			essenceToAdd = p.getInventory().getItems().getNumberOf(7936);
-		if (essenceToAdd > POUCH_SIZE[i] - p.getPouches()[i])
-			essenceToAdd = POUCH_SIZE[i] - p.getPouches()[i];
-		if (essenceToAdd > 0) {
-			p.getInventory().deleteItem(7936, essenceToAdd);
-			p.getPouches()[i] += essenceToAdd;
+
+		if (player.getSkills().getLevel(Skills.RUNECRAFTING) < type.getLevelReq()) {
+			player.getPackets().sendGameMessage(
+					"You need a runecrafting level of " + type.getLevelReq() + " to fill this pouch."
+			);
 			return;
 		}
-		if (!p.getInventory().containsOneItem(7936)) {
-			p.getPackets().sendGameMessage("You don't have any essence with you.", false);
+
+		RuneEssencePouchMetaData meta = (RuneEssencePouchMetaData) pouch.getMetadata();
+
+		if (meta == null) {
+			meta = new RuneEssencePouchMetaData(type.getCapacity());
+			pouch.setMetadata(meta);
+		}
+
+		int space = type.getCapacity() - meta.getEssenceAmount();
+		if (space <= 0) {
+			player.getPackets().sendGameMessage("Your pouch is full.");
 			return;
 		}
-		if (essenceToAdd == 0) {
-			p.getPackets().sendGameMessage("Your pouch is full.", false);
+
+		int inventoryEss = player.getInventory().getItems().getNumberOf(PURE_ESSENCE);
+		if (inventoryEss <= 0) {
+			player.getPackets().sendGameMessage("You don't have any essence with you.");
 			return;
 		}
+
+		int toAdd = Math.min(space, inventoryEss);
+
+		player.getInventory().deleteItem(PURE_ESSENCE, toAdd);
+		meta.addEssence(toAdd);
 	}
 
-	public static void emptyPouch(Player p, int i) {
-		if (i < 0)
+	public static void emptyPouch(Player player, Item pouch) {
+
+		RuneEssencePouchType type = RuneEssencePouchType.forItem(pouch.getId());
+		if (type == null)
 			return;
-		int toAdd = p.getPouches()[i];
-		if (toAdd > p.getInventory().getFreeSlots())
-			toAdd = p.getInventory().getFreeSlots();
-		if (toAdd > 0) {
-			p.getInventory().addItem(7936, toAdd);
-			p.getPouches()[i] -= toAdd;
+
+		RuneEssencePouchMetaData meta = (RuneEssencePouchMetaData) pouch.getMetadata();
+		if (meta == null || meta.getEssenceAmount() == 0) {
+			player.getPackets().sendGameMessage("Your pouch has no essence left in it.");
 			return;
 		}
-		if (toAdd == 0) {
-			p.getPackets().sendGameMessage("Your pouch has no essence left in it.", false);
+
+		int freeSlots = player.getInventory().getFreeSlots();
+		if (freeSlots == 0) {
+			player.getPackets().sendGameMessage("You don't have enough inventory space.");
 			return;
 		}
+
+		int toRemove = Math.min(meta.getEssenceAmount(), freeSlots);
+
+		player.getInventory().addItem(PURE_ESSENCE, toRemove);
+		meta.removeEssence(toRemove);
 	}
 
-	public static void checkPouch(Player p, int i) {
-		if (i < 0)
-			return;
-		p.getPackets().sendGameMessage("This pouch has " + p.getPouches()[i] + " essences in it.", false);
-	}
+	public static void checkPouch(Player player, Item pouch) {
 
+		RuneEssencePouchMetaData meta = (RuneEssencePouchMetaData) pouch.getMetadata();
+
+		int amount = meta == null ? 0 : meta.getEssenceAmount();
+		int maxAmount = meta == null ? 0 : meta.getMaxValue();
+
+		player.getPackets().sendGameMessage(
+				"This pouch has " + amount + "/"+ maxAmount +" essence in it."
+		);
+	}
 }

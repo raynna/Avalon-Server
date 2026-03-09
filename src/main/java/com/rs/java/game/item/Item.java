@@ -249,6 +249,16 @@ public class Item implements Serializable {
 				&& Objects.equals(this.metadata, other.metadata);
 	}
 
+	public boolean isStackable() {
+		ItemDefinitions definitions = ItemDefinitions.getItemDefinitions(id);
+		return definitions.isStackable();
+	}
+
+	public boolean isNoted() {
+		ItemDefinitions definitions = ItemDefinitions.getItemDefinitions(id);
+		return definitions.isNoted();
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, amount, metadata);

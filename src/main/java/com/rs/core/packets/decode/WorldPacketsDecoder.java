@@ -34,7 +34,6 @@ import com.rs.java.game.player.QuickChatMessage;
 import com.rs.java.game.player.RouteEvent;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.PlayerFollow;
-import com.rs.java.game.player.actions.combat.LunarMagicks;
 import com.rs.java.game.player.actions.skills.construction.House;
 import com.rs.java.game.player.actions.skills.construction.Sawmill;
 import com.rs.java.game.player.actions.skills.construction.Sawmill.Plank;
@@ -1203,19 +1202,36 @@ public final class WorldPacketsDecoder extends Decoder {
                 player.message("Component: " + componentId);
             }
 
-            case 430: { // Lunar spellbook on player
-                LunarMagicks.RSLunarSpellStore lunar = LunarMagicks.RSLunarSpellStore.getSpell(componentId);
-                if (lunar != null) {
-                    player.getTemporaryAttributtes().put("spell_target", p2);
-                    if (lunar.getSpellType() == LunarMagicks.NPC) {
-                        player.getPackets().sendGameMessage("You can only cast this spell on a npcs.");
+            case 430: {
+
+                Spell spell = Spellbook.getSpellById(player, componentId);
+                if (spell == null)
+                    return;
+
+                player.setNextFaceEntity(p2);
+
+                if (spell.getType() instanceof SpellType.Combat) {
+
+                    if (!player.getControlerManager().canAttack(p2))
+                        return;
+
+                    if (!player.isCanPvp() || !p2.isCanPvp()) {
+                        player.getPackets().sendGameMessage("You can only attack players in a player-vs-player area.");
                         return;
                     }
-                    if (!LunarMagicks.hasRequirement(player, componentId)) {
-                        player.getPackets().sendGameMessage("Nothing interesting happens.");
-                        return;
+
+                    if (player.isAtMultiArea() && !p2.isAtMultiArea()) {
+                        if (p2.getAttackedBy() != player && p2.isPjBlocked()) {
+                            player.getPackets().sendGameMessage("That player is already in combat.");
+                            return;
+                        }
                     }
                 }
+
+                player.getTemporaryAttributtes().put("spell_target", p2);
+
+                SpellHandler.castOnPlayer(player, spell.getId(), p2);
+
                 break;
             }
 
@@ -1337,7 +1353,7 @@ public final class WorldPacketsDecoder extends Decoder {
                 }
                 break;
             }
-            case 950: { // Ancients on npc
+            case 950, 193, 192, 430: { // Ancients on npc
                 Spell spell = Spellbook.getSpellById(player, componentId);
                 if (spell == null) return;
 
@@ -1347,139 +1363,6 @@ public final class WorldPacketsDecoder extends Decoder {
                         return;
 
                     if (npc.getId() == 23921) { // dummy
-                        player.getPackets().sendGameMessage("You can't use magic on a dummy.");
-                        return;
-                    }
-
-                    if (npc instanceof Familiar) {
-                        Familiar fam = (Familiar) npc;
-                        if (fam == player.getFamiliar()) {
-                            player.getPackets().sendGameMessage("You can't attack your own familiar.");
-                            return;
-                        }
-                        if (!fam.canAttack(player)) {
-                            if (!fam.isAtMultiArea()) {
-                                Player owner = fam.getOwner();
-                                player.setNextFaceEntity(owner);
-                                player.getTemporaryAttributtes().put("spell_target", owner);
-                                SpellHandler.castOnPlayer(player, spell.getId(), owner);
-                                return;
-                            }
-                            player.getPackets().sendGameMessage("You can't attack this npc.");
-                            return;
-                        }
-                    } else if (!npc.isForceMultiAttacked()) {
-                        if (player.isAtMultiArea() && !npc.isAtMultiArea()) {
-                            if (npc.getAttackedBy() != player && npc.isPjBlocked()) {
-                                player.getPackets().sendGameMessage("This npc is already in combat.");
-                                return;
-                            }
-                        }
-                        if (!npc.isAtMultiArea() && !player.isAtMultiArea()) {
-                            if (player.getAttackedBy() != npc && player.isPjBlocked()) {
-                                player.getPackets().sendGameMessage("You are already in combat.");
-                                return;
-                            }
-                            if (npc.getAttackedBy() != player && npc.isPjBlocked()) {
-                                player.getPackets().sendGameMessage("This npc is already in combat.");
-                                return;
-                            }
-                        }
-                    }
-
-                    if (!player.getControlerManager().canAttack(npc))
-                        return;
-                }
-
-                player.getTemporaryAttributtes().put("spell_target", npc);
-                SpellHandler.castOnNpc(player, spell.getId(), npc);
-                break;
-            }
-            case 430: { // Lunar on npc
-                LunarMagicks.RSLunarSpellStore lunar = LunarMagicks.RSLunarSpellStore.getSpell(componentId);
-                if (lunar != null) {
-                    player.getTemporaryAttributtes().put("spell_target", npc);
-                    if (lunar.getSpellType() == LunarMagicks.PLAYER) {
-                        player.getPackets().sendGameMessage("You can only cast this spell on players.");
-                        return;
-                    }
-                    if (!LunarMagicks.hasRequirement(player, componentId)) {
-                        player.getPackets().sendGameMessage("Nothing interesting happens.");
-                        return;
-                    }
-                }
-                break;
-            }
-
-            case 193: { // Ancients on npc
-                Spell spell = Spellbook.getSpellById(player, componentId);
-                if (spell == null) return;
-
-                player.setNextFaceEntity(npc);
-                if (spell.getType() instanceof SpellType.Combat) {
-                    if (!npc.getDefinitions().hasAttackOption() && !(npc instanceof Familiar))
-                        return;
-
-                    if (npc.getId() == 23921) { // dummy
-                        player.getPackets().sendGameMessage("You can't use magic on a dummy.");
-                        return;
-                    }
-
-                    if (npc instanceof Familiar) {
-                        Familiar fam = (Familiar) npc;
-                        if (fam == player.getFamiliar()) {
-                            player.getPackets().sendGameMessage("You can't attack your own familiar.");
-                            return;
-                        }
-                        if (!fam.canAttack(player)) {
-                            if (!fam.isAtMultiArea()) {
-                                Player owner = fam.getOwner();
-                                player.setNextFaceEntity(owner);
-                                player.getTemporaryAttributtes().put("spell_target", owner);
-                                SpellHandler.castOnPlayer(player, spell.getId(), owner);
-                                return;
-                            }
-                            player.getPackets().sendGameMessage("You can't attack this npc.");
-                            return;
-                        }
-                    } else if (!npc.isForceMultiAttacked()) {
-                        if (player.isAtMultiArea() && !npc.isAtMultiArea()) {
-                            if (npc.getAttackedBy() != player && npc.isPjBlocked()) {
-                                player.getPackets().sendGameMessage("This npc is already in combat.");
-                                return;
-                            }
-                        }
-                        if (!npc.isAtMultiArea() && !player.isAtMultiArea()) {
-                            if (player.getAttackedBy() != npc && player.isPjBlocked()) {
-                                player.getPackets().sendGameMessage("You are already in combat.");
-                                return;
-                            }
-                            if (npc.getAttackedBy() != player && npc.isPjBlocked()) {
-                                player.getPackets().sendGameMessage("This npc is already in combat.");
-                                return;
-                            }
-                        }
-                    }
-
-                    if (!player.getControlerManager().canAttack(npc))
-                        return;
-                }
-
-                player.getTemporaryAttributtes().put("spell_target", npc);
-                SpellHandler.castOnNpc(player, spell.getId(), npc);
-                break;
-            }
-
-            case 192: { // Moderns on npc
-                Spell spell = Spellbook.getSpellById(player, componentId);
-                if (spell == null) return;
-
-                player.setNextFaceEntity(npc);
-                if (spell.getType() instanceof SpellType.Combat) {
-                    if (!npc.getDefinitions().hasAttackOption())
-                        return;
-
-                    if (npc.getId() == 23921) {
                         player.getPackets().sendGameMessage("You can't use magic on a dummy.");
                         return;
                     }

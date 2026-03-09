@@ -1100,7 +1100,7 @@ public class Magic {
 			player.gfx(new Graphics(726, 0, 100));
 			player.animate(new Animation(4410));
 			player.setVengeance(true);
-			player.setVengeance(30000);
+			player.setVengeance(48);
 			player.getPackets().sendGameMessage("You cast a vengeance.");
 			break;
 		case 66: // vegeance group
@@ -1134,14 +1134,14 @@ public class Magic {
 					}
 					p2.gfx(new Graphics(725, 0, 100));
 					p2.setVengeance(true);
-					p2.setVengeance(30000);
+					p2.setVengeance(48);
 					p2.getPackets().sendGameMessage("You have the power of vengeance!");
 					affectedPeopleCount++;
 				}
 			}
 			player.getSkills().addXp(Skills.MAGIC, 120);
 			player.animate(new Animation(4411));
-			player.setVengeance(30000);
+			player.setVengeance(48);
 			player.getPackets().sendGameMessage("The spell affected " + affectedPeopleCount + " nearby people.");
 			break;
 		case 53:

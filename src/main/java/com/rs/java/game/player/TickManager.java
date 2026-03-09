@@ -264,7 +264,11 @@ public class TickManager {
 
         DISRUPTION_SHIELD(11, 0),
         TELEPORT_BLOCK(11, 0),
-        TELEPORT_BLOCK_IMMUNITY(12, 0);
+        TELEPORT_BLOCK_IMMUNITY(12, 0),
+        MAGIC_IMBUE(13, 0),
+        SPELL_BLOCKED(14, 0),
+        HEAL_GROUP_COOLDOWN(15, 0),
+        SPELLBOOK_SWAP(16, 0);
         private final int uid;
         private final int defaultValue;
         private final boolean persistent;

@@ -47,6 +47,14 @@
     "lastSeen": "2026-01-17T22:44:27.835842900Z",
     "attempts": 1
   },
+  "295": {
+    "npcId": 295,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-09T15:14:45.335796100Z",
+    "lastSeen": "2026-03-09T15:14:45.335796100Z",
+    "attempts": 1
+  },
   "528": {
     "npcId": 528,
     "npcName": "Shopkeeper",

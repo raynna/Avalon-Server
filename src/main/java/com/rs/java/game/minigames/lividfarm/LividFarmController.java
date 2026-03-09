@@ -12,17 +12,19 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.combat.LunarMagicks;
-import com.rs.java.game.player.actions.combat.LunarMagicks.RSLunarSpellStore;
-import com.rs.java.game.player.actions.combat.lunarspells.CurePlant;
-import com.rs.java.game.player.actions.combat.lunarspells.FertileSoil;
-import com.rs.java.game.player.actions.combat.lunarspells.PlankMake;
-import com.rs.java.game.player.actions.combat.lunarspells.StringJewellery;
 import com.rs.java.game.player.controllers.Controller;
 import com.rs.java.game.player.dialogues.Dialogue;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.combat.magic.lunar.spells.CurePlantService;
+import com.rs.kotlin.game.player.combat.magic.RuneService;
+import com.rs.kotlin.game.player.combat.magic.Spell;
+import com.rs.kotlin.game.player.combat.magic.SpellHandler;
+import com.rs.kotlin.game.player.combat.magic.Spellbook;
+import com.rs.kotlin.game.player.combat.magic.lunar.spells.FertileSoilService;
+import com.rs.kotlin.game.player.combat.magic.lunar.spells.PlankMakeService;
+import com.rs.kotlin.game.player.combat.magic.lunar.spells.StringJewelleryService;
 
 /**
  * @author Zed & -Andreas
@@ -70,18 +72,24 @@ public class LividFarmController extends Controller {
             player.message("You need to be on Lunar Magicks to do this.");
             return;
         }
-        RSLunarSpellStore spell = RSLunarSpellStore.CURE_PLANT;
-        if (LunarMagicks.simpleRequirementCheck(player, spell.getSpellId())) {
-            if (!success) {
-                LunarMagicks.removeRunes(player, spell.getRune());
-                player.getDialogueManager().startDialogue("SimpleNPCMessage", PAULINE, "Sorry, but that is the wrong flower type.");
-                return;
-            }
-            if (CurePlant.cast(player, spell.getXp(), object)) {
-                LunarMagicks.removeRunes(player);
-                player.getSkills().addXp(Skills.FARMING, 140.0);
-                player.getLivid().addProduce(20);
-            }
+        Spell spell = Spellbook.getSpellById(player, 55);
+        if (spell == null)
+            return;
+        if (!SpellHandler.INSTANCE.canCast(player, spell)) {
+            return;
+        }
+        if (!RuneService.INSTANCE.hasRunes(player, spell.getRunes())) {
+            return;
+        }
+        if (!success) {
+            player.getDialogueManager().startDialogue("SimpleNPCMessage", PAULINE, "Sorry, but that is the wrong flower type.");
+            return;
+        }
+
+        if (CurePlantService.INSTANCE.cast(player, object)) {
+            RuneService.INSTANCE.consumeRunes(player, spell.getRunes());
+            player.getSkills().addXp(Skills.FARMING, spell.getXp());
+            player.getLivid().addProduce(20);
         }
     }
 
@@ -91,18 +99,29 @@ public class LividFarmController extends Controller {
      *               experience
      */
     public void fertilisePatch(WorldObject object, Player player) {
-        if (player.getCombatDefinitions().getSpellBook() != 430) {
+
+        if (player.getCombatDefinitions().getSpellBook() != Spellbook.LUNAR_ID) {
             player.message("You need to be on Lunar Magicks to do this.");
             return;
         }
-        RSLunarSpellStore spell = RSLunarSpellStore.FERTILE_SOUL;
-        if (LunarMagicks.simpleRequirementCheck(player, spell.getSpellId())) {
-            if (FertileSoil.cast(player, spell.getXp(), object)) {
-                LunarMagicks.removeRunes(player);
-                flowers.put(object.getTile(), 1);
-                player.getSkills().addXp(Skills.FARMING, 140.0);
-                player.getLivid().addProduce(20);
-            }
+
+        Spell spell = Spellbook.getSpellById(player, 24);
+        if (spell == null)
+            return;
+
+        if (!SpellHandler.INSTANCE.canCast(player, spell))
+            return;
+
+        if (!RuneService.INSTANCE.hasRunes(player, spell.getRunes()))
+            return;
+
+        if (FertileSoilService.INSTANCE.cast(player, object)) {
+            RuneService.INSTANCE.consumeRunes(player, spell.getRunes());
+
+            flowers.put(object.getTile(), 1);
+
+            player.getSkills().addXp(Skills.FARMING, spell.getXp());
+            player.getLivid().addProduce(20);
         }
     }
 
@@ -124,15 +143,25 @@ public class LividFarmController extends Controller {
      */
 
     public static void makePlank(int slotId, Item item, Player player) {
-        if (player.getCombatDefinitions().getSpellBook() != 430) {
+
+        if (player.getCombatDefinitions().getSpellBook() != Spellbook.LUNAR_ID) {
             player.message("You need to be on Lunar Magicks to do this.");
             return;
         }
-        RSLunarSpellStore spell = RSLunarSpellStore.PLANK_MAKE;
-        if (LunarMagicks.simpleRequirementCheck(player, spell.getSpellId())) {
-            if (PlankMake.cast(player, spell.getXp(), item.getId(), slotId, true)) {
-                LunarMagicks.removeRunes(player);
-            }
+
+        Spell spell = Spellbook.getSpellById(player, 33); // Plank Make spell id
+        if (spell == null)
+            return;
+
+        if (!SpellHandler.INSTANCE.canCast(player, spell))
+            return;
+
+        if (!RuneService.INSTANCE.hasRunes(player, spell.getRunes()))
+            return;
+
+        if (PlankMakeService.INSTANCE.cast(player, item.getId(), slotId, true)) {
+            RuneService.INSTANCE.consumeRunes(player, spell.getRunes());
+            player.getSkills().addXp(Skills.MAGIC, spell.getXp());
         }
     }
 
@@ -141,16 +170,25 @@ public class LividFarmController extends Controller {
      */
 
     public static void makeBunch(Player player) {
-        if (player.getCombatDefinitions().getSpellBook() != 430) {
+
+        if (player.getCombatDefinitions().getSpellBook() != Spellbook.LUNAR_ID) {
             player.message("You need to be on Lunar Magicks to do this.");
             return;
         }
-        RSLunarSpellStore spell = RSLunarSpellStore.STRING_JEWELLERY;
-        if (LunarMagicks.simpleRequirementCheck(player, spell.getSpellId())) {
-            if (StringJewellery.cast(player, spell.getXp())) {
-                LunarMagicks.removeRunes(player);
-                player.getLivid().addProduce(20);
-            }
+
+        Spell spell = Spellbook.getSpellById(player, 45); // String Jewellery spell id
+        if (spell == null)
+            return;
+
+        if (!RuneService.INSTANCE.hasRunes(player, spell.getRunes())) {
+            player.message("You don't have the required runes.");
+            return;
+        }
+
+        if (StringJewelleryService.INSTANCE.cast(player)) {
+            RuneService.INSTANCE.consumeRunes(player, spell.getRunes());
+            player.getSkills().addXp(Skills.MAGIC, spell.getXp());
+            player.getLivid().addProduce(20);
         }
     }
 

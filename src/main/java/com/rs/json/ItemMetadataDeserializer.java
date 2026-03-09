@@ -63,6 +63,23 @@ public class ItemMetadataDeserializer implements JsonDeserializer<ItemMetadata> 
 
                 return rune;
 
+            case RUNE_ESSENCE_POUCH:
+                RuneEssencePouchMetaData pouch = new RuneEssencePouchMetaData(
+                        data.get("maxCapacity").getAsInt()
+                );
+
+                if (data.has("essenceAmount")) {
+                    pouch.setValue(data.get("essenceAmount").getAsInt());
+                }
+
+                if (data.has("degraded")) {
+                    if (data.get("degraded").getAsBoolean()) {
+                        pouch.degrade();
+                    }
+                }
+
+                return pouch;
+
             case DEGRADE_TICKS:
                 return new DegradeTicksMetaData(
                         data.get("charges").getAsInt(),

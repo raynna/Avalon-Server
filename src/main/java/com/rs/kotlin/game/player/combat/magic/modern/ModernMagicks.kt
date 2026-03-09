@@ -1181,6 +1181,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                         RuneRequirement(RuneDefinitions.Runes.WATER, 30),
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 3),
                     ),
+                behaviour = ModernBehaviours.chargeOrb,
             ),
             Spell(
                 id = 64,
@@ -1197,6 +1198,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 30),
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 3),
                     ),
+                behaviour = ModernBehaviours.chargeOrb,
             ),
             Spell(
                 id = 71,
@@ -1213,6 +1215,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                         RuneRequirement(RuneDefinitions.Runes.FIRE, 30),
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 3),
                     ),
+                behaviour = ModernBehaviours.chargeOrb,
             ),
             Spell(
                 id = 74,
@@ -1229,6 +1232,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                         RuneRequirement(RuneDefinitions.Runes.AIR, 30),
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 3),
                     ),
+                behaviour = ModernBehaviours.chargeOrb,
             ),
             Spell(
                 id = 83,
@@ -1242,6 +1246,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                         RuneRequirement(RuneDefinitions.Runes.BLOOD, 3),
                         RuneRequirement(RuneDefinitions.Runes.AIR, 3),
                     ),
+                behaviour = ModernBehaviours.charge,
             ),
         )
 }

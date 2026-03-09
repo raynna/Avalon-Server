@@ -36,8 +36,6 @@ import com.rs.java.game.player.Toolbelt;
 import com.rs.java.game.player.actions.BoxAction;
 import com.rs.java.game.player.actions.BoxAction.HunterEquipment;
 import com.rs.java.game.player.actions.ItemOnItem;
-import com.rs.java.game.player.actions.combat.LunarMagicks;
-import com.rs.java.game.player.actions.combat.LunarMagicks.RSLunarSpellStore;
 import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking;
 import com.rs.java.game.player.actions.skills.cooking.DoughCooking.Cook;
@@ -636,15 +634,8 @@ public class InventoryOptionsHandler {
         } else if (interfaceId == 430 && interfaceId2 == Inventory.INVENTORY_INTERFACE) {
             player.getTemporaryAttributtes().put("spell_itemid", itemUsedWithId);
             player.getTemporaryAttributtes().put("spell_slotid", toSlot);
-            RSLunarSpellStore lunar = RSLunarSpellStore.getSpell(compId);
-            if (lunar != null) {
-                if (!LunarMagicks.hasRequirement(player, spellId)) {
-                    return;
-                }
-            } else {
-                player.message("Nothing interesting happens.");
-                return;
-            }
+            SpellHandler.INSTANCE.castOnItem(player, compId, itemUsedWithId, toSlot);
+            return;
         } else if (interfaceId == 747 || interfaceId == 662 && (interfaceId2 == Inventory.INVENTORY_INTERFACE)) {
             if (!player.hasStarted() || !player.clientHasLoadedMapRegion() || player.isDead())
                 return;

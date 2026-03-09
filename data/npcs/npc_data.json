@@ -7643,6 +7643,58 @@
     "categories": [],
     "assignedBy": []
   },
+  "281": {
+    "id": 281,
+    "name": "Monk",
+    "members": false,
+    "combatLevel": 3,
+    "attackLevel": 2,
+    "strengthLevel": 2,
+    "defenceLevel": 3,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 5,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "282": {
     "id": 282,
     "name": "Thief",
@@ -9021,6 +9073,62 @@
     "categories": [],
     "assignedBy": []
   },
+  "478": {
+    "id": 478,
+    "name": "Khazard commander",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 50,
+    "strengthLevel": 45,
+    "defenceLevel": 50,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 July]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "It\u0027s one of General Khazard\u0027s commanders.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 150,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "479": {
     "id": 479,
     "name": "Gnome troop",
@@ -9184,6 +9292,66 @@
     "attackSpeedTicks": 4,
     "respawnTicks": 40,
     "slayerXp": 25,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "493": {
+    "id": 493,
+    "name": "Grave scorpion",
+    "members": true,
+    "combatLevel": 12,
+    "attackLevel": 11,
+    "strengthLevel": 12,
+    "defenceLevel": 14,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 7,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 3,
+      "crush": 3
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[17 March]] [[2003]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A vicious, little, stinging thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 7,
     "categories": [],
     "assignedBy": [
       "turael",
@@ -24282,6 +24450,391 @@
       "spria"
     ]
   },
+  "2245": {
+    "id": 2245,
+    "name": "Khazard trooper",
+    "members": true,
+    "combatLevel": 19,
+    "attackLevel": 17,
+    "strengthLevel": 18,
+    "defenceLevel": 12,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 9,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 33,
+      "slash": 34,
+      "crush": 29
+    },
+    "magicDefence": {
+      "magic": -7
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "It\u0027s one of General Khazard\u0027s warriors.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 100,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2246": {
+    "id": 2246,
+    "name": "Khazard trooper",
+    "members": true,
+    "combatLevel": 19,
+    "attackLevel": 17,
+    "strengthLevel": 18,
+    "defenceLevel": 12,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 22,
+    "attackBonus": 9,
+    "strengthBonus": 5,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 33,
+      "slash": 34,
+      "crush": 29
+    },
+    "magicDefence": {
+      "magic": -7
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "It\u0027s one of General Khazard\u0027s warriors.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 100,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2247": {
+    "id": 2247,
+    "name": "Gnome troop",
+    "members": true,
+    "combatLevel": 3,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 5,
+    "constitutionLevel": 3,
+    "attackBonus": 2,
+    "strengthBonus": 3,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 2,
+    "meleeDefence": {
+      "stab": 3,
+      "slash": 4,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 2
+    },
+    "rangedDefence": {
+      "light": 4,
+      "standard": 4,
+      "heavy": 4
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 July]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "It\u0027s a tree gnome trooper.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2248": {
+    "id": 2248,
+    "name": "Gnome troop",
+    "members": true,
+    "combatLevel": 3,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 5,
+    "constitutionLevel": 3,
+    "attackBonus": 2,
+    "strengthBonus": 3,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 2,
+    "meleeDefence": {
+      "stab": 3,
+      "slash": 4,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 2
+    },
+    "rangedDefence": {
+      "light": 4,
+      "standard": 4,
+      "heavy": 4
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 July]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "It\u0027s a tree gnome trooper.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2249": {
+    "id": 2249,
+    "name": "Gnome",
+    "members": true,
+    "combatLevel": 3,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 5,
+    "constitutionLevel": 3,
+    "attackBonus": -42,
+    "strengthBonus": -42,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 2,
+    "meleeDefence": {
+      "stab": -42,
+      "slash": -42,
+      "crush": -42
+    },
+    "magicDefence": {
+      "magic": -42
+    },
+    "rangedDefence": {
+      "light": -42,
+      "standard": -42,
+      "heavy": -42
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 July]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Like a mini man!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 60,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2250": {
+    "id": 2250,
+    "name": "Gnome",
+    "members": true,
+    "combatLevel": 1,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 3,
+    "attackBonus": -42,
+    "strengthBonus": -42,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -42,
+      "slash": -42,
+      "crush": -42
+    },
+    "magicDefence": {
+      "magic": -42
+    },
+    "rangedDefence": {
+      "light": -42,
+      "standard": -42,
+      "heavy": -42
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 July]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Like a mini man!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 60,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2251": {
+    "id": 2251,
+    "name": "Gnome",
+    "members": true,
+    "combatLevel": 3,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 5,
+    "constitutionLevel": 3,
+    "attackBonus": -42,
+    "strengthBonus": -42,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 2,
+    "meleeDefence": {
+      "stab": -42,
+      "slash": -42,
+      "crush": -42
+    },
+    "magicDefence": {
+      "magic": -42
+    },
+    "rangedDefence": {
+      "light": -42,
+      "standard": -42,
+      "heavy": -42
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 July]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Like a mini man!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]",
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 60,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "2256": {
     "id": 2256,
     "name": "Paladin",
@@ -24506,6 +25059,237 @@
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []
+  },
+  "2310": {
+    "id": 2310,
+    "name": "Cow calf",
+    "members": false,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 6,
+    "attackBonus": -20,
+    "strengthBonus": -20,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -26,
+      "slash": -26,
+      "crush": -26
+    },
+    "magicDefence": {
+      "magic": -26
+    },
+    "rangedDefence": {
+      "light": -26,
+      "standard": -26,
+      "heavy": -26
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 45,
+    "slayerXp": 6,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2313": {
+    "id": 2313,
+    "name": "Chicken",
+    "members": false,
+    "combatLevel": 1,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 3,
+    "attackBonus": -47,
+    "strengthBonus": -42,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -42,
+      "slash": -42,
+      "crush": -42
+    },
+    "magicDefence": {
+      "magic": -42
+    },
+    "rangedDefence": {
+      "light": -42,
+      "standard": -42,
+      "heavy": -42
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "Yep. Definitely a chicken.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 0
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 3,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2314": {
+    "id": 2314,
+    "name": "Chicken",
+    "members": false,
+    "combatLevel": 1,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 3,
+    "attackBonus": -47,
+    "strengthBonus": -42,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -42,
+      "slash": -42,
+      "crush": -42
+    },
+    "magicDefence": {
+      "magic": -42
+    },
+    "rangedDefence": {
+      "light": -42,
+      "standard": -42,
+      "heavy": -42
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "Yep. Definitely a chicken.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 0
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 3,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2315": {
+    "id": 2315,
+    "name": "Chicken",
+    "members": false,
+    "combatLevel": 1,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 3,
+    "attackBonus": -47,
+    "strengthBonus": -42,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -42,
+      "slash": -42,
+      "crush": -42
+    },
+    "magicDefence": {
+      "magic": -42
+    },
+    "rangedDefence": {
+      "light": -42,
+      "standard": -42,
+      "heavy": -42
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "Yep. Definitely a chicken.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 0
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 3,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
   },
   "2359": {
     "id": 2359,
@@ -26380,6 +27164,230 @@
       "turael",
       "spria"
     ]
+  },
+  "2709": {
+    "id": 2709,
+    "name": "Fire wizard",
+    "members": false,
+    "combatLevel": 13,
+    "attackLevel": 5,
+    "strengthLevel": 5,
+    "defenceLevel": 10,
+    "magicLevel": 10,
+    "rangedLevel": 0,
+    "constitutionLevel": 25,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 15
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 September]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Caution: HOT!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 4
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2710": {
+    "id": 2710,
+    "name": "Water wizard",
+    "members": false,
+    "combatLevel": 13,
+    "attackLevel": 5,
+    "strengthLevel": 5,
+    "defenceLevel": 10,
+    "magicLevel": 10,
+    "rangedLevel": 0,
+    "constitutionLevel": 25,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 15
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 September]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Hydro-power!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2711": {
+    "id": 2711,
+    "name": "Earth wizard",
+    "members": false,
+    "combatLevel": 13,
+    "attackLevel": 5,
+    "strengthLevel": 5,
+    "defenceLevel": 10,
+    "magicLevel": 10,
+    "rangedLevel": 0,
+    "constitutionLevel": 25,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 15
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 September]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "His hands are covered in mud. At least, I hope that\u0027s mud.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "2712": {
+    "id": 2712,
+    "name": "Air wizard",
+    "members": false,
+    "combatLevel": 13,
+    "attackLevel": 5,
+    "strengthLevel": 5,
+    "defenceLevel": 10,
+    "magicLevel": 10,
+    "rangedLevel": 0,
+    "constitutionLevel": 25,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 15
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 September]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "At least he looks solid enough to fight.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
   },
   "2745": {
     "id": 2745,
@@ -36679,6 +37687,426 @@
     "assignedBy": [
       "turael",
       "spria"
+    ]
+  },
+  "4527": {
+    "id": 4527,
+    "name": "Suqah",
+    "members": true,
+    "combatLevel": 111,
+    "attackLevel": 95,
+    "strengthLevel": 95,
+    "defenceLevel": 95,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 105,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 70,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": 90
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[24 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A strange creature unique to Lunar Isle.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "nieve",
+      "duradel"
+    ]
+  },
+  "4528": {
+    "id": 4528,
+    "name": "Suqah",
+    "members": true,
+    "combatLevel": 111,
+    "attackLevel": 95,
+    "strengthLevel": 95,
+    "defenceLevel": 95,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 105,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 70,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": 90
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[24 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A strange creature unique to Lunar Isle.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "nieve",
+      "duradel"
+    ]
+  },
+  "4529": {
+    "id": 4529,
+    "name": "Suqah",
+    "members": true,
+    "combatLevel": 111,
+    "attackLevel": 95,
+    "strengthLevel": 95,
+    "defenceLevel": 95,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 105,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 70,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": 90
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[24 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A strange creature unique to Lunar Isle.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "nieve",
+      "duradel"
+    ]
+  },
+  "4530": {
+    "id": 4530,
+    "name": "Suqah",
+    "members": true,
+    "combatLevel": 111,
+    "attackLevel": 95,
+    "strengthLevel": 95,
+    "defenceLevel": 95,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 105,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 70,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": 90
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[24 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A strange creature unique to Lunar Isle.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "nieve",
+      "duradel"
+    ]
+  },
+  "4531": {
+    "id": 4531,
+    "name": "Suqah",
+    "members": true,
+    "combatLevel": 111,
+    "attackLevel": 95,
+    "strengthLevel": 95,
+    "defenceLevel": 95,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 105,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 70,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": 90
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[24 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A strange creature unique to Lunar Isle.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "nieve",
+      "duradel"
+    ]
+  },
+  "4532": {
+    "id": 4532,
+    "name": "Suqah",
+    "members": true,
+    "combatLevel": 111,
+    "attackLevel": 95,
+    "strengthLevel": 95,
+    "defenceLevel": 95,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 105,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 70,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": 90
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[24 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A strange creature unique to Lunar Isle.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "nieve",
+      "duradel"
+    ]
+  },
+  "4533": {
+    "id": 4533,
+    "name": "Suqah",
+    "members": true,
+    "combatLevel": 111,
+    "attackLevel": 95,
+    "strengthLevel": 95,
+    "defenceLevel": 95,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 105,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 70,
+      "crush": 70
+    },
+    "magicDefence": {
+      "magic": 90
+    },
+    "rangedDefence": {
+      "light": 50,
+      "standard": 30,
+      "heavy": 50
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[24 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A strange creature unique to Lunar Isle.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]",
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": [
+      "nieve",
+      "duradel"
     ]
   },
   "4603": {
@@ -48204,6 +49632,183 @@
       "spria"
     ]
   },
+  "6109": {
+    "id": 6109,
+    "name": "Mounted terrorbird gnome",
+    "members": true,
+    "combatLevel": 49,
+    "attackLevel": 40,
+    "strengthLevel": 40,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 55,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 16,
+      "slash": 16,
+      "crush": 18
+    },
+    "magicDefence": {
+      "magic": 15
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[29 March]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "These gnomes know how to get around!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 55,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "6110": {
+    "id": 6110,
+    "name": "Mounted terrorbird gnome",
+    "members": true,
+    "combatLevel": 49,
+    "attackLevel": 40,
+    "strengthLevel": 40,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 55,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 16,
+      "slash": 16,
+      "crush": 18
+    },
+    "magicDefence": {
+      "magic": 15
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[29 March]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "These gnomes know how to get around!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 55,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "6111": {
+    "id": 6111,
+    "name": "Mounted terrorbird gnome",
+    "members": true,
+    "combatLevel": 49,
+    "attackLevel": 40,
+    "strengthLevel": 40,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 55,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 16,
+      "slash": 16,
+      "crush": 18
+    },
+    "magicDefence": {
+      "magic": 15
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[29 March]] [[2004]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "These gnomes know how to get around!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 55,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
   "6113": {
     "id": 6113,
     "name": "Duck",
@@ -53682,6 +55287,61 @@
     "categories": [],
     "assignedBy": []
   },
+  "7443": {
+    "id": 7443,
+    "name": "Highwayman",
+    "members": false,
+    "combatLevel": 5,
+    "attackLevel": 2,
+    "strengthLevel": 2,
+    "defenceLevel": 4,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 13,
+    "attackBonus": 6,
+    "strengthBonus": 7,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 3,
+      "crush": 2
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 2,
+      "standard": 2,
+      "heavy": 2
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "He holds up passers by.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "7528": {
     "id": 7528,
     "name": "Khazard Guard",
@@ -56323,6 +57983,64 @@
       "vannaka",
       "chaeldar",
       "konar"
+    ]
+  },
+  "8637": {
+    "id": 8637,
+    "name": "Goblin",
+    "members": false,
+    "combatLevel": 2,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 1,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 5,
+    "attackBonus": -21,
+    "strengthBonus": -15,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": -15,
+      "slash": -15,
+      "crush": -15
+    },
+    "magicDefence": {
+      "magic": -15
+    },
+    "rangedDefence": {
+      "light": -15,
+      "standard": -15,
+      "heavy": -15
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "examine": "An ugly green creature.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 2
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 5,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
     ]
   },
   "8645": {

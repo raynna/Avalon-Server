@@ -6,6 +6,7 @@ import com.rs.kotlin.game.player.combat.magic.RuneRequirement
 import com.rs.kotlin.game.player.combat.magic.Spell
 import com.rs.kotlin.game.player.combat.magic.SpellType
 import com.rs.kotlin.game.player.combat.magic.Spellbook
+import com.rs.kotlin.game.player.combat.magic.lunar.spells.HumidifyService
 
 object LunarMagicks : Spellbook(LUNAR_ID) {
     override val spells =
@@ -31,6 +32,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.FIRE, 5),
                         RuneRequirement(RuneDefinitions.Runes.WATER, 4),
                     ),
+                behaviour = LunarBehaviours.bakePie,
             ),
             Spell(
                 id = 55,
@@ -43,6 +45,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.ASTRAL, 1),
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 8),
                     ),
+                behaviour = LunarBehaviours.curePlant,
             ),
             Spell(
                 id = 28,
@@ -56,6 +59,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 1),
                         RuneRequirement(RuneDefinitions.Runes.MIND, 1),
                     ),
+                behaviour = LunarBehaviours.monsterExamine,
             ),
             Spell(
                 id = 26,
@@ -69,6 +73,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 1),
                         RuneRequirement(RuneDefinitions.Runes.AIR, 2),
                     ),
+                behaviour = LunarBehaviours.npcContact,
             ),
             Spell(
                 id = 23,
@@ -81,6 +86,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.ASTRAL, 1),
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 10),
                     ),
+                behaviour = LunarBehaviours.cureOther,
             ),
             Spell(
                 id = 29,
@@ -94,6 +100,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.WATER, 3),
                         RuneRequirement(RuneDefinitions.Runes.FIRE, 1),
                     ),
+                behaviour = LunarBehaviours.humidify,
             ),
             Spell(
                 id = 43,
@@ -148,6 +155,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.ASTRAL, 2),
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 2),
                     ),
+                behaviour = LunarBehaviours.cureMe,
             ),
             Spell(
                 id = 30,
@@ -160,6 +168,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.ASTRAL, 2),
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 2),
                     ),
+                behaviour = LunarBehaviours.hunterKit,
             ),
             Spell(
                 id = 67,
@@ -214,6 +223,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.ASTRAL, 2),
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 2),
                     ),
+                behaviour = LunarBehaviours.cureGroup,
             ),
             Spell(
                 id = 68,
@@ -227,6 +237,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 1),
                         RuneRequirement(RuneDefinitions.Runes.LAW, 1),
                     ),
+                behaviour = LunarBehaviours.repairRunePouch,
             ),
             Spell(
                 id = 22,
@@ -254,6 +265,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 2),
                         RuneRequirement(RuneDefinitions.Runes.BODY, 5),
                     ),
+                behaviour = LunarBehaviours.statSpy,
             ),
             Spell(
                 id = 69,
@@ -295,6 +307,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.FIRE, 6),
                         RuneRequirement(RuneDefinitions.Runes.AIR, 10),
                     ),
+                behaviour = LunarBehaviours.superGlassMake,
             ),
             Spell(
                 id = 70,
@@ -308,6 +321,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 2),
                         RuneRequirement(RuneDefinitions.Runes.NATURE, 3),
                     ),
+                // TODO find correct interface for remote farm:
             ),
             Spell(
                 id = 41,
@@ -349,6 +363,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 1),
                         RuneRequirement(RuneDefinitions.Runes.BODY, 5),
                     ),
+                behaviour = LunarBehaviours.dream,
             ),
             Spell(
                 id = 71,
@@ -362,6 +377,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 3),
                         RuneRequirement(RuneDefinitions.Runes.BODY, 5),
                     ),
+                // TODO find correct animations & mechanics
             ),
             Spell(
                 id = 45,
@@ -375,6 +391,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 10),
                         RuneRequirement(RuneDefinitions.Runes.WATER, 5),
                     ),
+                behaviour = LunarBehaviours.stringJewellery,
             ),
             Spell(
                 id = 50,
@@ -388,6 +405,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 10),
                         RuneRequirement(RuneDefinitions.Runes.WATER, 10),
                     ),
+                behaviour = LunarBehaviours.statRestoreShare,
             ),
             Spell(
                 id = 36,
@@ -401,6 +419,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.FIRE, 7),
                         RuneRequirement(RuneDefinitions.Runes.WATER, 7),
                     ),
+                behaviour = LunarBehaviours.magicImbue,
             ),
             Spell(
                 id = 72,
@@ -414,6 +433,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.FIRE, 2),
                         RuneRequirement(RuneDefinitions.Runes.BODY, 2),
                     ),
+                behaviour = LunarBehaviours.makeLeather,
             ),
             Spell(
                 id = 24,
@@ -427,6 +447,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.NATURE, 2),
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 15),
                     ),
+                behaviour = LunarBehaviours.fertileSoil,
             ),
             Spell(
                 id = 49,
@@ -440,6 +461,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 12),
                         RuneRequirement(RuneDefinitions.Runes.WATER, 10),
                     ),
+                behaviour = LunarBehaviours.boostPotionShare,
             ),
             Spell(
                 id = 40,
@@ -481,6 +503,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 15),
                         RuneRequirement(RuneDefinitions.Runes.NATURE, 1),
                     ),
+                behaviour = LunarBehaviours.plankMake,
             ),
             Spell(
                 id = 44,
@@ -508,6 +531,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 4),
                         // TODO: old system requires item 21778 x1 as well; new model needs a non-rune requirement type
                     ),
+                behaviour = LunarBehaviours.tuneBaneOre,
             ),
             Spell(
                 id = 61,
@@ -563,6 +587,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.BLOOD, 3),
                         RuneRequirement(RuneDefinitions.Runes.BODY, 10),
                     ),
+                behaviour = LunarBehaviours.disruptionShield,
             ),
             Spell(
                 id = 27,
@@ -576,6 +601,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.LAW, 2),
                         RuneRequirement(RuneDefinitions.Runes.NATURE, 1),
                     ),
+                behaviour = LunarBehaviours.energyTransfer,
             ),
             Spell(
                 id = 52,
@@ -589,6 +615,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.LAW, 3),
                         RuneRequirement(RuneDefinitions.Runes.BLOOD, 1),
                     ),
+                behaviour = LunarBehaviours.healOther,
             ),
             Spell(
                 id = 75,
@@ -630,6 +657,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.DEATH, 3),
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 10),
                     ),
+                behaviour = LunarBehaviours.vengeanceOther,
             ),
             Spell(
                 id = 37,
@@ -643,6 +671,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.DEATH, 2),
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 10),
                     ),
+                behaviour = LunarBehaviours.vengeance,
             ),
             Spell(
                 id = 74,
@@ -656,6 +685,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.DEATH, 3),
                         RuneRequirement(RuneDefinitions.Runes.EARTH, 11),
                     ),
+                behaviour = LunarBehaviours.vengeanceGroup,
             ),
             Spell(
                 id = 53,
@@ -669,6 +699,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.LAW, 3),
                         RuneRequirement(RuneDefinitions.Runes.BLOOD, 2),
                     ),
+                behaviour = LunarBehaviours.healGroup,
             ),
             Spell(
                 id = 34,
@@ -682,6 +713,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                         RuneRequirement(RuneDefinitions.Runes.COSMIC, 2),
                         RuneRequirement(RuneDefinitions.Runes.LAW, 1),
                     ),
+                behaviour = LunarBehaviours.spellbookSwap,
             ),
             Spell(
                 id = 77,
@@ -693,6 +725,7 @@ object LunarMagicks : Spellbook(LUNAR_ID) {
                     listOf(
                         RuneRequirement(RuneDefinitions.Runes.ASTRAL, 3),
                     ),
+                // TODO BEHAVIOR FOR THIS
             ),
         )
 }

@@ -2,46 +2,47 @@ package com.rs.java.game.player.dialogues;
 
 import com.rs.java.game.Animation;
 import com.rs.java.game.Graphics;
+import com.rs.java.game.player.Player;
+import com.rs.kotlin.game.player.combat.magic.lunar.spells.SpellbookSwapService;
 
 public class SpellbookSwap extends Dialogue {
 
 	@Override
 	public void start() {
-		stage = 1;
-		sendOptionsDialogue("Choose a SpellBook", "Ancient Spellbook", "Normal Spellbook");
+		sendOptionsDialogue(
+				"Choose a Spellbook",
+				"Ancient Spellbook",
+				"Modern Spellbook"
+		);
 	}
-
-	/**
-	 * Started dialogue portion Still need to generate method of automatic
-	 * switch back if time > 2 mins or spell is casted
-	 */
 
 	@Override
 	public void run(int interfaceId, int componentId) {
-		if (stage == 1) {
-			if (componentId == OPTION_1) {
-				player.lock(10);
-				player.gfx(new Graphics(1062));
-				player.animate(new Animation(6299));
-				player.getInventory().deleteItem(564, 2);
-				player.getInventory().deleteItem(563, 1);
-				player.getInventory().deleteItem(9075, 3);
+
+		switch (componentId) {
+
+			case OPTION_1 -> {
+				if (SpellbookSwapService.INSTANCE.swap(player, SpellbookSwapService.Spellbook.ANCIENT)) {
+					playSwapEffect(player);
+				}
 				end();
-			} else if (componentId == OPTION_2) {
-				player.lock(10);
-				player.gfx(new Graphics(1062));
-				player.animate(new Animation(6299));
-				player.getInventory().deleteItem(564, 2);
-				player.getInventory().deleteItem(563, 1);
-				player.getInventory().deleteItem(9075, 3);
+			}
+
+			case OPTION_2 -> {
+				if (SpellbookSwapService.INSTANCE.swap(player, SpellbookSwapService.Spellbook.MODERN)) {
+					playSwapEffect(player);
+				}
 				end();
 			}
 		}
 	}
 
-	@Override
-	public void finish() {
-
+	private void playSwapEffect(Player player) {
+		player.gfx(new Graphics(1062));
+		player.animate(new Animation(6299));
 	}
 
+	@Override
+	public void finish() {
+	}
 }

@@ -4,6 +4,7 @@ import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.Graphics;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
+import com.rs.java.game.player.TickManager;
 import com.rs.java.utils.Utils;
 
 public class CombinationRunes extends Runecrafting {
@@ -64,6 +65,8 @@ public class CombinationRunes extends Runecrafting {
 			return;
 		}
 		int pureEssence = player.getInventory().getItems().getNumberOf(PURE_ESSENCE);
+		pureEssence += drainEssenceFromPouches(player);
+
 		if (pureEssence == 0) {
 			player.message("You don't have pure essence.");
 			return;
@@ -73,17 +76,21 @@ public class CombinationRunes extends Runecrafting {
 					"You don't have any " + runeDef.getName() + "s.");
 			return;
 		}
-		int amount = pureEssence;
-		if (player.getInventory().getNumberOf(runeId) < pureEssence)
-			amount = player.getInventory().getNumberOf(runeId);
+		int runeAmount = player.getInventory().getNumberOf(runeId);
+		if (runeAmount == 0) {
+			player.message("You don't have any " + runeDef.getName() + "s.");
+			return;
+		}
+		int amount = Math.min(pureEssence, runeAmount);
 		player.gfx(new Graphics(186));
 		player.animate(CRAFT_ANIMATION);
 		player.lock(1);
-		Boolean magicImbue = (Boolean) player.getTemporaryAttributtes().get("LAST_IMBUE");
-		if (magicImbue == null || magicImbue == Boolean.FALSE)
+		boolean magicImbue = player.getTickManager().isActive(TickManager.TickKeys.MAGIC_IMBUE);
+		if (!magicImbue)
 			player.removeItem(talisman, 1);
 		player.removeItem(runeId, amount);
-		player.removeItem(PURE_ESSENCE, amount);
+		int invEss = player.getInventory().getItems().getNumberOf(PURE_ESSENCE);
+		player.removeItem(PURE_ESSENCE, Math.min(invEss, amount));
 		boolean hasBinding = player.getEquipment().getAmuletId() == 5521;
 		if (Utils.getRandomDouble(100) <= 50 && !hasBinding) {
 			player.message("You fail to craft "

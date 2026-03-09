@@ -6,5 +6,5 @@ fun interface SpellBehaviour {
     fun cast(
         player: Player,
         spell: Spell,
-    )
+    ): Boolean
 }

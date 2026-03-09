@@ -501,7 +501,7 @@ object RandomWorldBossHandler {
         val drops = WorldBossTable.chest.rollDrops(player, 0)
         for (drop in drops) {
             val item = Item(drop.itemId, drop.amount)
-            if (!player.inventory.canHold(item, item.amount)) {
+            if (!player.inventory.canHold(item)) {
                 player.message(Msg.warn("You don’t have enough inventory space to open the Magic Chest."))
                 return
             }

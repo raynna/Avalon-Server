@@ -802,7 +802,7 @@ public class ButtonHandler {
             else if (componentId >= 11 & componentId <= 13)
                 player.getCombatDefinitions().setSortSpellBook(componentId - 11);
             else if (componentId == 20) player.getCombatDefinitions().switchDefensiveCasting();
-            else LunarMagicks.hasRequirement(player, componentId);
+            else SpellHandler.selectCombatSpell(player, componentId);
         } else if (interfaceId == 982) {
             if (componentId == 5) player.getInterfaceManager().sendSettings();
             else if (componentId == 41) player.setPrivateChatSetup(player.getPrivateChatSetup() == 0 ? 1 : 0);

@@ -9,7 +9,8 @@ public enum MetaDataType {
     DEGRADE_TICKS(2),
     DEGRADE_HITS(3),
     POLYPORE(4),
-    GREATER_RUNIC(5);
+    GREATER_RUNIC(5),
+    RUNE_ESSENCE_POUCH(6);
 
     private final int id;
 
