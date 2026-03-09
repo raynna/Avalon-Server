@@ -41,7 +41,7 @@ sealed class SpellType {
 data class RuneRequirement(
     val id: Int,
     val amount: Int,
-    val canBeInfinite: Boolean = false,
+    val canBeInfinite: Boolean = true,
     val compositeRunes: List<Int> = emptyList(),
 )
 
