@@ -1908,6 +1908,66 @@
       "duradel"
     ]
   },
+  "58": {
+    "id": 58,
+    "name": "Shadow spider",
+    "members": true,
+    "combatLevel": 52,
+    "attackLevel": 44,
+    "strengthLevel": 42,
+    "defenceLevel": 44,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 55,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 20,
+      "slash": 15,
+      "crush": 10
+    },
+    "magicDefence": {
+      "magic": 15
+    },
+    "rangedDefence": {
+      "light": 15,
+      "standard": 15,
+      "heavy": 15
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[8 May]] [[2002]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Is it a spider or is it a shadow?",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 55,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia"
+    ]
+  },
   "59": {
     "id": 59,
     "name": "Giant spider",
@@ -5105,6 +5165,65 @@
     "assignedBy": [
       "turael",
       "spria"
+    ]
+  },
+  "141": {
+    "id": 141,
+    "name": "Big Wolf",
+    "members": true,
+    "combatLevel": 73,
+    "attackLevel": 60,
+    "strengthLevel": 61,
+    "defenceLevel": 62,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 74,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "Must be the pack leader.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 7
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 74,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
     ]
   },
   "143": {
@@ -18382,8 +18501,134 @@
       "mazchna"
     ]
   },
+  "1582": {
+    "id": 1582,
+    "name": "Fire giant",
+    "members": true,
+    "combatLevel": 86,
+    "attackLevel": 65,
+    "strengthLevel": 65,
+    "defenceLevel": 65,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 111,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "A very large elemental adversary.",
+    "attributes": [
+      "fiery"
+    ],
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 30,
+    "slayerXp": 111,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "1585": {
     "id": 1585,
+    "name": "Fire giant",
+    "members": true,
+    "combatLevel": 86,
+    "attackLevel": 65,
+    "strengthLevel": 65,
+    "defenceLevel": 65,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 111,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "A very large elemental adversary.",
+    "attributes": [
+      "fiery"
+    ],
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 30,
+    "slayerXp": 111,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "1586": {
+    "id": 1586,
     "name": "Fire giant",
     "members": true,
     "combatLevel": 86,
@@ -21008,8 +21253,182 @@
       "vannaka"
     ]
   },
+  "1644": {
+    "id": 1644,
+    "name": "Infernal Mage",
+    "members": true,
+    "combatLevel": 66,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 60,
+    "magicLevel": 75,
+    "rangedLevel": 1,
+    "constitutionLevel": 60,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 40
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An evil magic user.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 60,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
   "1645": {
     "id": 1645,
+    "name": "Infernal Mage",
+    "members": true,
+    "combatLevel": 66,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 60,
+    "magicLevel": 75,
+    "rangedLevel": 1,
+    "constitutionLevel": 60,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 40
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An evil magic user.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 60,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
+  "1646": {
+    "id": 1646,
+    "name": "Infernal Mage",
+    "members": true,
+    "combatLevel": 66,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 60,
+    "magicLevel": 75,
+    "rangedLevel": 1,
+    "constitutionLevel": 60,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 40
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An evil magic user.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 60,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
+  "1647": {
+    "id": 1647,
     "name": "Infernal Mage",
     "members": true,
     "combatLevel": 66,
@@ -23388,6 +23807,66 @@
       "mazchna"
     ]
   },
+  "1976": {
+    "id": 1976,
+    "name": "Shadow Hound",
+    "members": true,
+    "combatLevel": 63,
+    "attackLevel": 53,
+    "strengthLevel": 54,
+    "defenceLevel": 54,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 62,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[18 April]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Looks hungry!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 62,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
   "1993": {
     "id": 1993,
     "name": "Crocodile",
@@ -25529,6 +26008,65 @@
       "chaeldar",
       "nieve",
       "duradel"
+    ]
+  },
+  "2452": {
+    "id": 2452,
+    "name": "Giant Rock Crab",
+    "members": true,
+    "combatLevel": 137,
+    "attackLevel": 50,
+    "strengthLevel": 80,
+    "defenceLevel": 200,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 180,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 225,
+      "slash": 200,
+      "crush": 175
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 250,
+      "standard": 250,
+      "heavy": 80
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "No one likes crabs... especially really big ones!",
+    "attributes": [],
+    "xpBonus": 10.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 198,
+    "categories": [],
+    "assignedBy": [
+      "mazchna",
+      "vannaka",
+      "chaeldar"
     ]
   },
   "2454": {
@@ -28172,6 +28710,61 @@
       "nieve",
       "duradel"
     ]
+  },
+  "2889": {
+    "id": 2889,
+    "name": "Rock lobster",
+    "members": true,
+    "combatLevel": 127,
+    "attackLevel": 100,
+    "strengthLevel": 100,
+    "defenceLevel": 100,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 150,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 100,
+      "slash": 100,
+      "crush": 50
+    },
+    "magicDefence": {
+      "magic": 50
+    },
+    "rangedDefence": {
+      "light": 150,
+      "standard": 150,
+      "heavy": 90
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[7 November]] [[2005]]",
+    "aliases": [],
+    "size": "2",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 2,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
   },
   "2892": {
     "id": 2892,
@@ -31972,6 +32565,68 @@
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []
+  },
+  "3376": {
+    "id": 3376,
+    "name": "Baby black dragon",
+    "members": true,
+    "combatLevel": 83,
+    "attackLevel": 70,
+    "strengthLevel": 70,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 80,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 50,
+      "crush": 50
+    },
+    "magicDefence": {
+      "magic": 40
+    },
+    "rangedDefence": {
+      "light": 30,
+      "standard": 30,
+      "heavy": 5
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[15 March]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "Young but still dangerous.",
+    "attributes": [
+      "dragon"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 11
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 80,
+    "categories": [],
+    "assignedBy": [
+      "konar",
+      "nieve",
+      "duradel"
+    ]
   },
   "3406": {
     "id": 3406,
@@ -40367,6 +41022,62 @@
       "duradel"
     ]
   },
+  "4706": {
+    "id": 4706,
+    "name": "Moss giant",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 30,
+    "strengthLevel": 30,
+    "defenceLevel": 30,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 85,
+    "attackBonus": 33,
+    "strengthBonus": 31,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "2",
+    "examine": "His beard seems to have a life of its own.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 6,
+    "respawnTicks": 30,
+    "slayerXp": 85,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka"
+    ]
+  },
   "4774": {
     "id": 4774,
     "name": "Vampyre juvenile",
@@ -45770,6 +46481,244 @@
       "mazchna"
     ]
   },
+  "5386": {
+    "id": 5386,
+    "name": "Skeleton",
+    "members": false,
+    "combatLevel": 45,
+    "attackLevel": 32,
+    "strengthLevel": 35,
+    "defenceLevel": 36,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 59,
+    "attackBonus": 15,
+    "strengthBonus": 14,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 9,
+      "slash": 11,
+      "crush": -2
+    },
+    "magicDefence": {
+      "magic": 1
+    },
+    "rangedDefence": {
+      "light": 4,
+      "standard": 4,
+      "heavy": 4
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[23 September]] [[2001]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Could do with gaining a few pounds.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 60,
+    "slayerXp": 59,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "5393": {
+    "id": 5393,
+    "name": "Zombie",
+    "members": false,
+    "combatLevel": 24,
+    "attackLevel": 19,
+    "strengthLevel": 21,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 30,
+    "attackBonus": 5,
+    "strengthBonus": 7,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 9,
+      "slash": 8,
+      "crush": 12
+    },
+    "magicDefence": {
+      "magic": 10
+    },
+    "rangedDefence": {
+      "light": 11,
+      "standard": 11,
+      "heavy": 11
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 January]] [[2001]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "The walking dead.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 5,
+    "respawnTicks": 35,
+    "slayerXp": 30,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
+  "5413": {
+    "id": 5413,
+    "name": "Possessed pickaxe",
+    "members": true,
+    "combatLevel": 50,
+    "attackLevel": 40,
+    "strengthLevel": 55,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 40,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 15,
+      "slash": 10,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[21 December]] [[2004]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "How does it move of its own accord?",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "5414": {
+    "id": 5414,
+    "name": "Animated spade",
+    "members": true,
+    "combatLevel": 50,
+    "attackLevel": 40,
+    "strengthLevel": 55,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 40,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 15,
+      "slash": 10,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[22 January]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "How does it move of its own accord?",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 30,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "5422": {
     "id": 5422,
     "name": "Skeleton",
@@ -45831,6 +46780,129 @@
       "spria",
       "krystilia",
       "mazchna"
+    ]
+  },
+  "5522": {
+    "id": 5522,
+    "name": "Ice troll male",
+    "members": true,
+    "combatLevel": 82,
+    "attackLevel": 80,
+    "strengthLevel": 80,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 80,
+    "attackBonus": 60,
+    "strengthBonus": 60,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 60,
+      "crush": 30
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[6 February]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A male troll wielding a large club.",
+    "attributes": [],
+    "xpBonus": 5.0,
+    "maxHit": {
+      "default": 17
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 84,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "5523": {
+    "id": 5523,
+    "name": "Ice troll female",
+    "members": true,
+    "combatLevel": 82,
+    "attackLevel": 80,
+    "strengthLevel": 80,
+    "defenceLevel": 40,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 80,
+    "attackBonus": 60,
+    "strengthBonus": 60,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 30,
+      "slash": 60,
+      "crush": 30
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[6 February]] [[2007]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An ice troll with a bag of rocks.",
+    "attributes": [],
+    "xpBonus": 5.0,
+    "maxHit": {
+      "default": 17
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 84,
+    "categories": [],
+    "assignedBy": [
+      "vannaka",
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
     ]
   },
   "5750": {
@@ -53289,6 +54361,688 @@
       "spria"
     ]
   },
+  "6285": {
+    "id": 6285,
+    "name": "Warped terrorbird",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 60,
+    "strengthLevel": 90,
+    "defenceLevel": 20,
+    "magicLevel": 60,
+    "rangedLevel": 40,
+    "constitutionLevel": 150,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 62,
+      "heavy": 62
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 150,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6286": {
+    "id": 6286,
+    "name": "Warped terrorbird",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 60,
+    "strengthLevel": 90,
+    "defenceLevel": 20,
+    "magicLevel": 60,
+    "rangedLevel": 40,
+    "constitutionLevel": 150,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 62,
+      "heavy": 62
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 150,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6287": {
+    "id": 6287,
+    "name": "Warped terrorbird",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 60,
+    "strengthLevel": 90,
+    "defenceLevel": 20,
+    "magicLevel": 60,
+    "rangedLevel": 40,
+    "constitutionLevel": 150,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 62,
+      "heavy": 62
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 150,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6288": {
+    "id": 6288,
+    "name": "Warped terrorbird",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 60,
+    "strengthLevel": 90,
+    "defenceLevel": 20,
+    "magicLevel": 60,
+    "rangedLevel": 40,
+    "constitutionLevel": 150,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 62,
+      "heavy": 62
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 150,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6289": {
+    "id": 6289,
+    "name": "Warped terrorbird",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 60,
+    "strengthLevel": 90,
+    "defenceLevel": 20,
+    "magicLevel": 60,
+    "rangedLevel": 40,
+    "constitutionLevel": 150,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 62,
+      "heavy": 62
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 150,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6290": {
+    "id": 6290,
+    "name": "Warped terrorbird",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 60,
+    "strengthLevel": 90,
+    "defenceLevel": 20,
+    "magicLevel": 60,
+    "rangedLevel": 40,
+    "constitutionLevel": 150,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 62,
+      "heavy": 62
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 150,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6291": {
+    "id": 6291,
+    "name": "Warped terrorbird",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 60,
+    "strengthLevel": 90,
+    "defenceLevel": 20,
+    "magicLevel": 60,
+    "rangedLevel": 40,
+    "constitutionLevel": 150,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 62,
+      "heavy": 62
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 150,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6292": {
+    "id": 6292,
+    "name": "Warped terrorbird",
+    "members": true,
+    "combatLevel": 96,
+    "attackLevel": 60,
+    "strengthLevel": 90,
+    "defenceLevel": 20,
+    "magicLevel": 60,
+    "rangedLevel": 40,
+    "constitutionLevel": 150,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 62,
+      "heavy": 62
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 10
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 150,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6293": {
+    "id": 6293,
+    "name": "Warped terrorbird",
+    "members": true,
+    "combatLevel": 138,
+    "attackLevel": 80,
+    "strengthLevel": 150,
+    "defenceLevel": 60,
+    "magicLevel": 160,
+    "rangedLevel": 70,
+    "constitutionLevel": 200,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 62,
+      "heavy": 62
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 200,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6294": {
+    "id": 6294,
+    "name": "Warped terrorbird",
+    "members": true,
+    "combatLevel": 138,
+    "attackLevel": 80,
+    "strengthLevel": 150,
+    "defenceLevel": 60,
+    "magicLevel": 160,
+    "rangedLevel": 70,
+    "constitutionLevel": 200,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 62,
+      "heavy": 62
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 200,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "6295": {
+    "id": 6295,
+    "name": "Warped terrorbird",
+    "members": true,
+    "combatLevel": 138,
+    "attackLevel": 80,
+    "strengthLevel": 150,
+    "defenceLevel": 60,
+    "magicLevel": 160,
+    "rangedLevel": 70,
+    "constitutionLevel": 200,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 50,
+      "slash": 50,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 62,
+      "heavy": 62
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 September]] [[2023]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "What a horrible looking thing.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 16
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]",
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 200,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "konar",
+      "nieve",
+      "duradel"
+    ]
+  },
   "6296": {
     "id": 6296,
     "name": "Warped tortoise",
@@ -54001,6 +55755,274 @@
     "maxHit": {},
     "aggressive": true,
     "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6364": {
+    "id": 6364,
+    "name": "Zamorak warrior",
+    "members": true,
+    "combatLevel": 84,
+    "attackLevel": 85,
+    "strengthLevel": 70,
+    "defenceLevel": 90,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 45,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 October]] [[2016]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A warrior of Zamorak.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": true,
+    "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6365": {
+    "id": 6365,
+    "name": "Zamorak ranger",
+    "members": true,
+    "combatLevel": 81,
+    "attackLevel": 75,
+    "strengthLevel": 75,
+    "defenceLevel": 80,
+    "magicLevel": 1,
+    "rangedLevel": 80,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 October]] [[2016]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A ranger of Zamorak.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6366": {
+    "id": 6366,
+    "name": "Zamorak ranger",
+    "members": true,
+    "combatLevel": 82,
+    "attackLevel": 75,
+    "strengthLevel": 80,
+    "defenceLevel": 80,
+    "magicLevel": 1,
+    "rangedLevel": 80,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 October]] [[2016]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A ranger of Zamorak.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": true,
+    "attackStyles": [
+      "[[Ranged]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6367": {
+    "id": 6367,
+    "name": "Zamorak mage",
+    "members": true,
+    "combatLevel": 82,
+    "attackLevel": 75,
+    "strengthLevel": 80,
+    "defenceLevel": 80,
+    "magicLevel": 85,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 October]] [[2016]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A mage of Zamorak.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "6368": {
+    "id": 6368,
+    "name": "Zamorak mage",
+    "members": true,
+    "combatLevel": 82,
+    "attackLevel": 75,
+    "strengthLevel": 80,
+    "defenceLevel": 80,
+    "magicLevel": 85,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[13 October]] [[2016]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A mage of Zamorak.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {},
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magic]]"
+    ],
     "attackSpeedTicks": 4,
     "respawnTicks": 50,
     "slayerXp": 0,

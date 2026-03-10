@@ -2627,6 +2627,7 @@ public class Player extends Entity {
     }
 
     public void processProjectiles() {
+        if (projectileQueue == null || projectileQueue.isEmpty()) return;
         QueuedProjectile proj;
         while ((proj = projectileQueue.poll()) != null) {
             if (proj.getSendCycle() <= WorldThread.getLastCycleTime()) {
@@ -2753,11 +2754,11 @@ public class Player extends Entity {
             if (player == null || skullList.isEmpty())
                 continue;
             if (skullList.containsKey(player)) {
-                if (skullList.get(player).intValue() <= 1) {
+                if (skullList.get(player) <= 1) {
                     skullList.remove(player);
-                    return;
+                    continue;
                 }
-                skullList.put(player, skullList.get(player).intValue() - 1);
+                skullList.put(player, skullList.get(player) - 1);
             }
         }
         Controller controller = getControlerManager().getControler();

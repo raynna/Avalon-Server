@@ -255,6 +255,38 @@
     "lastSeen": "2026-01-27T14:26:23.160656900Z",
     "attempts": 1
   },
+  "1961": {
+    "npcId": 1961,
+    "npcName": "Mummy",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-10T22:45:09.561998Z",
+    "lastSeen": "2026-03-10T22:45:09.561998Z",
+    "attempts": 1
+  },
+  "1962": {
+    "npcId": 1962,
+    "npcName": "Mummy",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-10T22:45:09.701044100Z",
+    "lastSeen": "2026-03-10T22:45:09.701044100Z",
+    "attempts": 1
+  },
+  "1963": {
+    "npcId": 1963,
+    "npcName": "Mummy",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-10T22:45:09.835950900Z",
+    "lastSeen": "2026-03-10T22:45:09.835950900Z",
+    "attempts": 1
+  },
+  "1964": {
+    "npcId": 1964,
+    "npcName": "Mummy",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-10T22:45:09.898846800Z",
+    "lastSeen": "2026-03-10T22:45:09.898846800Z",
+    "attempts": 1
+  },
   "2241": {
     "npcId": 2241,
     "npcName": "Grand Exchange clerk",
@@ -557,6 +589,46 @@
     "reason": "No Infobox Monster found",
     "firstSeen": "2026-01-30T01:04:06.637008200Z",
     "lastSeen": "2026-01-30T01:04:06.637008200Z",
+    "attempts": 1
+  },
+  "7135": {
+    "npcId": 7135,
+    "npcName": "Ork legion",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-10T22:49:28.295275Z",
+    "lastSeen": "2026-03-10T22:49:28.295275Z",
+    "attempts": 1
+  },
+  "7137": {
+    "npcId": 7137,
+    "npcName": "Dagon\u0027hai Elite",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-10T22:50:39.767994800Z",
+    "lastSeen": "2026-03-10T22:50:39.767994800Z",
+    "attempts": 1
+  },
+  "7138": {
+    "npcId": 7138,
+    "npcName": "Dagon\u0027hai Monk",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-10T22:45:11.327183700Z",
+    "lastSeen": "2026-03-10T22:45:11.327183700Z",
+    "attempts": 1
+  },
+  "7139": {
+    "npcId": 7139,
+    "npcName": "Dagon\u0027hai Monk",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-10T22:45:11.383414400Z",
+    "lastSeen": "2026-03-10T22:45:11.383414400Z",
+    "attempts": 1
+  },
+  "7140": {
+    "npcId": 7140,
+    "npcName": "Dagon\u0027hai Monk",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-10T22:45:11.439432300Z",
+    "lastSeen": "2026-03-10T22:45:11.439432300Z",
     "attempts": 1
   },
   "7158": {

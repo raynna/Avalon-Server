@@ -138,6 +138,12 @@ public class NPC extends Entity implements Serializable {
     }
 
     public boolean isNpc(String name) {
+        name = name.toLowerCase();
+
+        if (name.startsWith("npc_group.")) {
+            return Rscm.lookupList(name).contains(id);
+        }
+
         String key = name.startsWith("npc.") ? name : "npc." + name;
         return id == Rscm.lookup(key);
     }

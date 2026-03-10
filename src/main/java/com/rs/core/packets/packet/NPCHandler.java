@@ -923,7 +923,7 @@ public class NPCHandler {
                 }
             }, true));
         }
-        if (npc.isNpc("npc_group.banker", "npc.jade", "npc.eniola", "npc.gundai", "npc_group.grand_exchange_clerk")) {
+        if (npc.isNpc("npc_group.banker", "npc_group.grand_exchange_clerk", "npc.jade", "npc.eniola", "npc.gundai")) {
             boolean isGeClerk = npc.isNpc("npc_group.grand_exchange_clerk");
             player.setRouteEvent(new RouteEvent(npc, () -> {
                 player.faceEntity(npc);

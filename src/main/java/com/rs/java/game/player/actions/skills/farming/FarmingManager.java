@@ -86,6 +86,10 @@ public class FarmingManager implements Serializable {
     }
 
     public void init() {
+        if (!(spots instanceof CopyOnWriteArrayList)) {
+            spots = new CopyOnWriteArrayList<>(spots);
+        }
+
         for (FarmingSpot spot : spots) {
             spot.manager = this;
             spot.refresh();
@@ -95,9 +99,14 @@ public class FarmingManager implements Serializable {
     public void process() {
         globalTickCounter++;
 
-        // Process all farming spots
-        for (FarmingSpot spot : spots) {
-            spot.process(globalTickCounter);
+        for (FarmingSpot spot : new CopyOnWriteArrayList<>(spots)) {
+            try {
+                if (spot != null) {
+                    spot.process(globalTickCounter);
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -1028,24 +1037,29 @@ public class FarmingManager implements Serializable {
     }
 
     private boolean[] isOrganicItem(int itemId) {
-        boolean[] bools = new boolean[2];
+        boolean[] result = new boolean[2];
+
         for (int organicId : COMPOST_ORGANIC) {
             if (itemId == organicId) {
-                bools[0] = true;
-                bools[1] = false;
+                result[0] = true;
+                result[1] = false;
+                return result;
             }
         }
+
         for (int organicId : SUPER_COMPOST_ORGANIC) {
             if (itemId == organicId) {
-                bools[0] = true;
-                bools[1] = false;
+                result[0] = true;
+                result[1] = true;
+                return result;
             }
         }
-        return bools;
+
+        return result;
     }
 
     public void resetSpots() {
-        spots.clear();
+        spots = new CopyOnWriteArrayList<>();
     }
 
     public void resetTreeTrunks() {
@@ -1399,7 +1413,9 @@ public class FarmingManager implements Serializable {
         }
 
         private void remove() {
-            manager.spots.remove(this);
+            if (manager != null && manager.spots != null) {
+                manager.spots.remove(this);
+            }
         }
 
         public void refresh() {

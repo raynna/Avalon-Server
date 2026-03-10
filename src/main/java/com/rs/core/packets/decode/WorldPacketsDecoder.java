@@ -324,7 +324,7 @@ public final class WorldPacketsDecoder extends Decoder {
                 if (Settings.DEBUG)
                     System.out.println("PacketId " + packetId + " has fake packet id.");
                 stream.setOffset(startOffset);
-                return;
+                break;
             }
 
             int length = PACKET_SIZES[packetId];
@@ -332,20 +332,20 @@ public final class WorldPacketsDecoder extends Decoder {
             if (length == -1) {
                 if (stream.getRemaining() < 1) {
                     stream.setOffset(startOffset);
-                    return;
+                    break;
                 }
                 length = stream.readUnsignedByte();
             } else if (length == -2) {
                 if (stream.getRemaining() < 2) {
                     stream.setOffset(startOffset);
-                    return;
+                    break;
                 }
                 length = stream.readUnsignedShort();
             }
 
             if (length > stream.getRemaining()) {
                 stream.setOffset(startOffset);
-                return;
+                break;
             }
 
             byte[] data = new byte[length];
@@ -353,6 +353,7 @@ public final class WorldPacketsDecoder extends Decoder {
 
             if (shouldQueue(packetId)) {
                 player.addLogicPacketToQueue(new LogicPacket(packetId, data, true));
+                player.setPacketsDecoderPing(Utils.currentTimeMillis());
                 continue;
             }
 
@@ -713,7 +714,7 @@ public final class WorldPacketsDecoder extends Decoder {
             case 101://unknown packet
             case 223://unknown packet
             case 224://unknown packet
-                stream.setOffset(stream.getOffset());
+                System.out.println("unknown packet: " + packetId);
                 return;
 
             default:

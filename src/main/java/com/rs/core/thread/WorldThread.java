@@ -111,13 +111,15 @@ public final class WorldThread extends Thread {
             }
             for (Player p : toCloseChannels) {
                 try {
-                    if (p.getSession() != null && p.getSession().getChannel() != null)
+                    if (p.getSession() != null && p.getSession().getChannel() != null) {
                         p.getSession().getChannel().close();
+                        System.out.println("Player loggged out due to ping timeout.");
+                    }
                 } catch (Exception e) {
                     Logger.handle(e);
                 }
             }
-
+            //System.out.println("processing thread.");
             LAST_CYCLE_CTM = Utils.currentTimeMillis();
             WORLD_TICK++;
             long elapsed = LAST_CYCLE_CTM - cycleStart;
