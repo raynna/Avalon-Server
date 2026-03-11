@@ -1,6 +1,7 @@
 package com.rs.java.game.minigames.warriorguild;
 
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.Animation;
@@ -36,7 +37,7 @@ public class WarriorsGuild extends Controller {
 	 * Initiate the "Warrior's Guild" timer task.
 	 */
 	public static void init() {
-		CoresManager.getFastExecutor().schedule(WarriorsGuild.timer = new WarriorTimer(), 600, 600);
+		CoresManager.getFastExecutor().schedule(WarriorsGuild.timer = new WarriorTimer(), 600, TimeUnit.MILLISECONDS);
 	}
 
 	/**

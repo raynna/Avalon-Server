@@ -1,6 +1,7 @@
 package com.rs.java.game.npc.dungeoneering;
 
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.Animation;
@@ -113,7 +114,7 @@ public final class NightGazerKhighorahk extends DungeonBoss {
 
 			}
 
-		}, 30000 - getManager().getParty().getSize() * 3000);
+		}, 30000 - getManager().getParty().getSize() * 3000, TimeUnit.MILLISECONDS);
 
 	}
 

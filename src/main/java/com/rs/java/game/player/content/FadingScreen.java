@@ -1,6 +1,7 @@
 package com.rs.java.game.player.content;
 
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.player.Player;
@@ -40,7 +41,7 @@ public final class FadingScreen {
 					}
 				}
 
-			}, leftTime);
+			}, leftTime, TimeUnit.MILLISECONDS);
 		} else
 			unfade(player, event);
 	}
@@ -61,7 +62,7 @@ public final class FadingScreen {
 							Logger.handle(e);
 						}
 					}
-				}, 2000);
+				}, 2000, TimeUnit.MILLISECONDS);
 			}
 
 		});

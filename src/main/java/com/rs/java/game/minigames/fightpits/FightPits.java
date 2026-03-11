@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import com.rs.Settings;
 import com.rs.core.thread.CoresManager;
@@ -238,7 +239,7 @@ public final class FightPits {
 			startedGame = false;
 		}
 		gameTask = new GameTask();
-		CoresManager.getFastExecutor().scheduleAtFixedRate(gameTask, end ? 60000 : 10000, 60000);
+		CoresManager.getFastExecutor().scheduleAtFixedRate(gameTask, end ? 60000 : 10000, 60000, TimeUnit.MILLISECONDS);
 
 	}
 

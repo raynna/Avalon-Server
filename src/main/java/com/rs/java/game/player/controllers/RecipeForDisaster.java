@@ -145,7 +145,7 @@ public class RecipeForDisaster extends Controller {
                             Logger.handle(t);
                         }
                     }
-                }, 6000);
+                }, 6000, TimeUnit.MILLISECONDS);
             }
         });
 	}
@@ -203,7 +203,7 @@ public class RecipeForDisaster extends Controller {
 					Logger.handle(e);
 				}
 			}
-		}, 600);
+		}, 600, TimeUnit.MILLISECONDS);
 	}
 
 	@Override

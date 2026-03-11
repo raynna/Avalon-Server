@@ -1434,12 +1434,25 @@ public class DungeonManager {
 	}
 
 	public void setRewardsTimer() {
-		CoresManager.fastExecutor.schedule(rewardsTimer = new RewardsTimer(), 1000, 5000);
+		CoresManager.fastExecutor.schedule(() -> {
+			WorldTasksManager.schedule(new WorldTask() {
+				@Override
+				public void run() {
+					rewardsTimer.run();
+				}
+			});
+		}, 1000, TimeUnit.MILLISECONDS);
 	}
 
 	public void setDestroyTimer() {
-		//cant be already instanced before anyway, afterall only isntances hwen party is 0 and remvoes if party not 0
-		CoresManager.fastExecutor.schedule(destroyTimer = new DestroyTimer(), 1000, 5000);
+		CoresManager.fastExecutor.schedule(() -> {
+			WorldTasksManager.schedule(new WorldTask() {
+				@Override
+				public void run() {
+					destroyTimer.run();
+				}
+			});
+		}, 2000, TimeUnit.MILLISECONDS);
 	}
 
 	public void setMark(Entity target, boolean mark) {

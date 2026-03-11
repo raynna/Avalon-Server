@@ -82,7 +82,7 @@ public class PestControl {
                 player.useStairs(-1, getWorldTile(35 - Utils.random(4), 54 - (Utils.random(3))), 1, 2);
                 player.getControlerManager().startControler("PestControlGame", instance);
             }
-            CoresManager.getFastExecutor().schedule(new PestGameTimer(), 1000, 1000);
+            CoresManager.getFastExecutor().schedule(new PestGameTimer(), 1000, TimeUnit.MILLISECONDS);
         });
 		return instance;
 	}

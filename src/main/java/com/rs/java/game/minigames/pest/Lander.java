@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.WorldTile;
@@ -74,7 +75,7 @@ public class Lander {
 
 	public void enterLander(Player player) {
 		if (lobby.size() == 0)
-			CoresManager.getFastExecutor().schedule(timer = new LobbyTimer(), 1000, 1000);
+			CoresManager.getFastExecutor().schedule(timer = new LobbyTimer(), 1000, TimeUnit.MILLISECONDS);
 		player.getControlerManager().startControler("PestControlLobby", landerRequirement.getId());
 		add(player);
 		player.useStairs(-1, landerRequirement.getWorldTile(), 1, 2, "You board the lander.");

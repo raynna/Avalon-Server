@@ -1,6 +1,7 @@
 package com.rs.java.game.player.dialogues;
 
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.WorldTile;
@@ -114,7 +115,7 @@ public class TokHaarHok extends Dialogue {
 							Logger.handle(e);
 						}
 					}
-				}, 3000);
+				}, 3000, TimeUnit.MILLISECONDS);
 				break;
 			case 0:
 				end();
@@ -171,7 +172,7 @@ public class TokHaarHok extends Dialogue {
 							Logger.handle(e);
 						}
 					}
-				}, 3000);
+				}, 3000, TimeUnit.MILLISECONDS);
 				break;
 			case 1:
 				end();
@@ -185,7 +186,7 @@ public class TokHaarHok extends Dialogue {
 							Logger.handle(e);
 						}
 					}
-				}, 3000);
+				}, 3000, TimeUnit.MILLISECONDS);
 				break;
 			}
 			break;

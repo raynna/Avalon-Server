@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.World;
@@ -125,7 +126,7 @@ public final class CastleWars {
 
 	public static void createPlayingGame() {
 		playingGame = new PlayingGame();
-		CoresManager.getFastExecutor().scheduleAtFixedRate(playingGame, 60000, 60000);
+		CoresManager.getFastExecutor().scheduleAtFixedRate(playingGame, 60000, 60000, TimeUnit.MILLISECONDS);
 		refreshAllPlayersTime();
 	}
 

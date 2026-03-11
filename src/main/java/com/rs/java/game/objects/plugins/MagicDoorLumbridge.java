@@ -1,6 +1,7 @@
 package com.rs.java.game.objects.plugins;
 
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import com.rs.core.thread.CoresManager;
 import com.rs.java.game.WorldObject;
@@ -34,7 +35,7 @@ public class MagicDoorLumbridge extends ObjectPlugin {
 					Magic.sendObjectTeleportSpell(player, false, new WorldTile(2452, 4473, 0));
 			}
 
-		}, 2000);
+		}, 2000, TimeUnit.MILLISECONDS);
 		return true;
 	}
 
