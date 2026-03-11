@@ -2374,8 +2374,29 @@ public class Player extends Entity {
     @Override
     public void loadMapRegions() {
         boolean wasAtDynamicRegion = isAtDynamicRegion();
+
+        // remove from previous regions
+        if (getMapRegionsIds() != null) {
+            for (int regionId : getMapRegionsIds()) {
+                Region region = World.getRegion(regionId);
+                if (region != null)
+                    region.removePlayerIndex(getIndex());
+            }
+        }
+
         super.loadMapRegions();
+
+        // add to new regions
+        if (getMapRegionsIds() != null) {
+            for (int regionId : getMapRegionsIds()) {
+                Region region = World.getRegion(regionId);
+                if (region != null)
+                    region.addPlayerIndex(getIndex());
+            }
+        }
+
         clientLoadedMapRegion = false;
+
         if (isAtDynamicRegion()) {
             getPackets().sendDynamicMapRegion(!started);
             if (!wasAtDynamicRegion)
@@ -2385,6 +2406,7 @@ public class Player extends Entity {
             if (wasAtDynamicRegion)
                 localNPCUpdate.reset();
         }
+
         forceNextMapLoadRefresh = false;
     }
 
@@ -2645,11 +2667,16 @@ public class Player extends Entity {
         processUnequip();
         actionManager.processPreMovement();
         RouteEvent event = routeEvent;
+
         if (event != null && event.isTileTarget() && event.checkInteraction(this))
             routeEvent = null;
+
         event = routeEvent;
-        if (event != null)
-            event.processEvent(this);
+        if (event != null) {
+            boolean finished = event.processEvent(this);
+            if (finished && !event.isEntityTarget())
+                routeEvent = null;
+        }
 
         super.processEntity();
 
