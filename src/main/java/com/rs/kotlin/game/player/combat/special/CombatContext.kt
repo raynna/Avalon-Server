@@ -668,85 +668,49 @@ fun CombatContext.getMultiAttackTargets(
     maxDistance: Int,
     maxTargets: Int,
 ): List<Entity> {
-    val possibleTargets = mutableListOf<Entity>()
     val attacker = this.attacker
     val target = this.defender
+    val targets = mutableListOf<Entity>()
+    val visited = HashSet<Entity>()
 
-    possibleTargets.add(target)
+    targets.add(target)
+    visited.add(target)
 
-    target.checkMultiArea()
-    if (!target.isAtMultiArea && !target.isForceMultiArea) {
-        return possibleTargets
-    }
+    for (dx in -maxDistance..maxDistance) {
+        for (dy in -maxDistance..maxDistance) {
+            val tile = target.tile.transform(dx, dy, 0)
 
-    val regions = target.mapRegionsIds
+            for (entity in World.getEntitiesAt(tile)) {
+                if (!visited.add(entity)) continue
+                if (entity == attacker) continue
+                if (entity == target) continue
+                if (entity.isDead || entity.hasFinished()) continue
+                if (!attacker.controlerManager.canHit(entity)) continue
+                if (!entity.isAtMultiArea && !entity.isForceMultiArea) continue
 
-    regionLoop@ for (regionId in regions) {
-        val region = World.getRegion(regionId) ?: continue
-
-        when (target) {
-            is Player -> {
-                val playerIndexes = region.playerIndexes ?: continue
-
-                for (playerIndex in playerIndexes) {
-                    val p2 = World.getPlayers()[playerIndex] ?: continue
-
-                    if (
-                        p2 == attacker ||
-                        p2 == target ||
-                        p2.isDead ||
-                        !p2.hasStarted() ||
-                        p2.hasFinished() ||
-                        !p2.canPvp ||
-                        !p2.isAtMultiArea ||
-                        !p2.withinDistance(target, maxDistance) ||
-                        !attacker.controlerManager.canHit(p2)
-                    ) {
-                        continue
+                when (entity) {
+                    is Player -> {
+                        if (!entity.canPvp) continue
+                        if (!entity.withinDistance(target, maxDistance)) continue
                     }
 
-                    possibleTargets.add(p2)
-
-                    if (possibleTargets.size >= maxTargets) {
-                        break@regionLoop
+                    is NPC -> {
+                        if (entity == attacker.familiar) continue
+                        if (!entity.definitions.hasAttackOption()) continue
+                        if (!entity.withinDistance(target, maxDistance)) continue
                     }
                 }
-            }
 
-            is NPC -> {
-                val npcIndexes = region.npCsIndexes ?: continue
+                targets.add(entity)
 
-                for (npcIndex in npcIndexes) {
-                    val n = World.getNPCByIndex(npcIndex) ?: continue
-
-                    if (
-                        n == target ||
-                        n == attacker.familiar ||
-                        n.isDead ||
-                        n.hasFinished() ||
-                        (!n.isAtMultiArea && !n.isForceMultiAttacked) ||
-                        !n.withinDistance(target, maxDistance) ||
-                        !n.definitions.hasAttackOption() ||
-                        !attacker.controlerManager.canHit(n)
-                    ) {
-                        continue
-                    }
-
-                    possibleTargets.add(n)
-
-                    if (possibleTargets.size >= maxTargets) {
-                        break@regionLoop
-                    }
+                if (targets.size >= maxTargets) {
+                    return targets
                 }
-            }
-
-            else -> {
-                break@regionLoop
             }
         }
     }
 
-    return possibleTargets
+    return targets
 }
 
 class SpecialHitBuilder(

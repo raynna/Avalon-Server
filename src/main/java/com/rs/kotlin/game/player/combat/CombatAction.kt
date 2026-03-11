@@ -107,10 +107,15 @@ class CombatAction(
 
         val requiredDistance = getAdjustedFollowDistance(target)
         if (player.isOutOfRange(target, requiredDistance)) {
-            player.calcFollow(target, if (player.run) 2 else 1, true, true)
+            if (!player.hasWalkSteps()) {
+                player.calcFollow(target, if (player.run) 2 else 1, true, true)
+            }
         }
+
         if (player.isDiagonalMeleeBlocked(target, style)) {
-            player.calcFollow(target, if (player.run) 2 else 1, true, true)
+            if (!player.hasWalkSteps()) {
+                player.calcFollow(target, if (player.run) 2 else 1, true, true)
+            }
         }
 
         if (player.isCollidingWithTarget(target)) {
@@ -407,12 +412,11 @@ class CombatAction(
                         player.calcFollow(target, if (player.run) 2 else 1, true, true)
                         return
                     }
-                    player.resetWalkSteps()
                     if (player.isOutOfRange(target, requiredDistance)) {
                         val moved = lastTargetX != target.x || lastTargetY != target.y
                         lastTargetX = target.x
                         lastTargetY = target.y
-                        player.resetWalkSteps()
+
                         if (moved || (!player.hasWalkSteps() && player.actionManager.action != null)) {
                             player.calcFollow(target, if (player.run) 2 else 1, true, true)
                             return

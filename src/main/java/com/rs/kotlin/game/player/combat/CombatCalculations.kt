@@ -100,23 +100,6 @@ object CombatCalculations {
                         "attackRoll: $attackRoll, " +
                         "",
                 )
-                player.message(
-                    "[Combat Accuracy][Defence] - Target: " +
-                        (
-                            if (target is NPC) {
-                                "${target.name}, "
-                            } else if (target is Player) {
-                                "${target.username}, "
-                            } else {
-                                ""
-                            }
-                        ) +
-                        "defenceLevel: $defenceLevel, " +
-                        "defenceBonus: $defenceBonus, " +
-                        "targetStyleBonus: $targetStyleBonus, " +
-                        "defenceRoll: $defenceRoll, " +
-                        "",
-                )
             }
             return computeHitChance(attackRoll.toInt(), defenceRoll.toInt())
         }
@@ -218,15 +201,6 @@ object CombatCalculations {
                 } else {
                     ((getDefenceLevel(target) + 9) * (defenceBonus + 64)) // DONE
                 }
-            player.message(
-                "[Combat Accuracy] - " +
-                    "bonusType: $bonusType, " +
-                    "AttackBonus: $rangeBonus, " +
-                    "DefenceBonus: $defenceBonus, " +
-                    "Attack: $attackRoll, " +
-                    "Defence: $defenceRoll, " +
-                    "",
-            )
             return computeHitChance(attackRoll.toInt(), defenceRoll.toInt())
         }
 
