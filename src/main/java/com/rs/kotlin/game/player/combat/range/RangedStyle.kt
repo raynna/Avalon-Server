@@ -196,6 +196,7 @@ class RangedStyle(
         if (hits.isEmpty()) return
 
         val first = hits.first()
+        if (first.target == attacker) return
         val firstHit = first.hit
         val qualifies = firstHit.damage >= (firstHit.maxHit * 0.66).toInt() || firstHit.damage == 0
         if (!qualifies) return
