@@ -129,8 +129,8 @@ public class PolyporeStaff extends ItemPlugin {
         int availableSpores = player.getInventory().getAmountOf(POLYPORE_SPORE_ID);
         int availableFireRunes = player.getInventory().getAmountOf(FIRE_RUNE_ID);
 
-        int maxFromSpores = availableSpores; // 1 per charge
-        int maxFromFireRunes = availableFireRunes / 5; // 5 per charge
+        int maxFromSpores = availableSpores;
+        int maxFromFireRunes = availableFireRunes / 5;
 
         int maxPossibleCharges = Math.min(maxFromSpores, maxFromFireRunes);
 
@@ -138,8 +138,8 @@ public class PolyporeStaff extends ItemPlugin {
     }
 
     private void performCharging(Player player, Item staff, PolyporeStaffMetaData data, int chargesToAdd) {
-        int sporesNeeded = chargesToAdd; // 1 per charge
-        int fireRunesNeeded = chargesToAdd * 5; // 5 per charge
+        int sporesNeeded = chargesToAdd;
+        int fireRunesNeeded = chargesToAdd * 5;
 
         player.getInventory().deleteItem(POLYPORE_SPORE_ID, sporesNeeded);
         player.getInventory().deleteItem(FIRE_RUNE_ID, fireRunesNeeded);

@@ -11,7 +11,7 @@ public class Chisel extends ItemPlugin {
 
     @Override
     public Object[] getKeys() {
-        return new Object[]{ItemId.CHISEL_1755};
+        return new Object[]{ "item_group.chisel"};
     }
 
     @Override

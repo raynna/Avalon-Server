@@ -1,7 +1,5 @@
 package com.rs.java.game.item.plugins.weapons;
 
-import com.rs.java.game.World;
-import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemPlugin;
 import com.rs.java.game.player.Player;
@@ -13,7 +11,7 @@ public class AbyssalVineWhip extends ItemPlugin {
 
     @Override
     public Object[] getKeys() {
-        return new Object[]{21371, 21369};
+        return new Object[]{"item_group.abyssal_vine_whip", "item.whip_vine"};
     }
 
     @Override
@@ -24,24 +22,23 @@ public class AbyssalVineWhip extends ItemPlugin {
                     player.getPackets().sendGameMessage("You don't have enough inventory space to split the abyssal vine whip.");
                     return true;
                 }
-                player.getInventory().replaceItem(4151, 1, slotId);
-                player.getInventory().addItem(21369, 1);
+                player.getInventory().replaceItem("item.abyssal_whip", 1, slotId);
+                player.getInventory().addItem("item.whip_vine", 1);
                 player.message("You split your abyssal vine whip.");
                 return true;
             case "drop":
-                if (item.getId() == 21369)
-                    return false;//script false, continues to regular drop method
+                if (item.isItem("item.whip_vine"))
+                    return false;
                 player.getInventory().dropItem(slotId, item, true);
-                //World.updateGroundItem(new Item(21369, 1), new WorldTile(player), player, player.inPkingArea() ? 0 : 60);
-                //World.updateGroundItem(new Item(4151, 1), new WorldTile(player), player, player.inPkingArea() ? 0 : 60);
                 return true;
         }
         return false;
     }
 
+
     @Override
     public boolean processItemOnItem(Player player, Item itemUsed, Item itemUsedWith, int fromSlot, int toSlot) {
-        if (!usingItems(4151, 21369, itemUsed, itemUsedWith)) {
+        if (!usingItems("item.abyssal_whip", "item.whip_vine", itemUsed, itemUsedWith)) {
             return false;
         }
         if (!player.getSkills().hasRequirements(
@@ -51,7 +48,7 @@ public class AbyssalVineWhip extends ItemPlugin {
                     " and a slayer level of " + SLAYER_LEVEL_REQUIREMENT + " in order to create abyssal vine whip.");
             return false;
         }
-        player.getInventory().replaceItem(21371, 1, toSlot);
+        player.getInventory().replaceItem("item.abyssal_vine_whip", 1, toSlot);
         player.getInventory().deleteItem(fromSlot, itemUsed);
         player.message("You attach vine whip with your abyssal whip to create an abyssal vine whip.");
         return true;

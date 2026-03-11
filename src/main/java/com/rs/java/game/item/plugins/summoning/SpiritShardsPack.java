@@ -6,40 +6,42 @@ import com.rs.java.game.player.Player;
 
 public class SpiritShardsPack extends ItemPlugin {
 
+	int SHARDS_PER_PACK = 5000;
+
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { 15262, 12183 };
+		return new Object[] { "item.spirit_shard_pack" };
 	}
 	@Override
 	public boolean processItem(Player player, Item item, int slotId, String option) {
 		switch (option) {
 			case "open":
-				if (player.getInventory().getNumberOf(item.getId()) > 1 && !player.getInventory().containsOneItem(12183) && !player.getInventory().hasFreeSlots()) {
+				if (player.getInventory().getNumberOf(item.getId()) > 1 && !player.getInventory().containsOneItemFlexible("item.spirit_shards") && !player.getInventory().hasFreeSlots()) {
 					player.message("You don't have enough inventory space to open this pack.");
 					return true;
 				}
-				if (player.getInventory().getNumberOf(15262) + 5000 < 0) {
+				if (player.getInventory().getNumberOf("item.spirit_shard_pack") + SHARDS_PER_PACK < 0) {
 					player.getPackets().sendGameMessage("You don't have enough inventory space to open this pack.");
 					return true;
 				}
 				player.getInventory().deleteItem(item.getId(), 1);
-				player.getInventory().addItem(12183, 5000);
+				player.getInventory().addItem("item.spirit_shards", SHARDS_PER_PACK);
 				return true;
 			case "open-all":
-				int packs = player.getInventory().getAmountOf(15262);
-				int amount = packs * 5000;
-				int shards = player.getInventory().getAmountOf(12183);
-				if (shards + 5000 == Integer.MAX_VALUE || (!player.getInventory().containsOneItem(12183) && !player.getInventory().hasFreeSlots() && packs > 1)) {
+				int packs = player.getInventory().getAmountOf("item.spirit_shard_pack");
+				int amount = packs * SHARDS_PER_PACK;
+				int shards = player.getInventory().getAmountOf("item.spirit_shards");
+				if (shards + SHARDS_PER_PACK == Integer.MAX_VALUE || (!player.getInventory().containsOneItemFlexible("item.spirit_shards") && !player.getInventory().hasFreeSlots() && packs > 1)) {
 					player.getPackets().sendGameMessage("You don't have enough inventory space to open any packs.");
 					return true;
 				}
 				if (shards + amount < 0) {
-					packs = (Integer.MAX_VALUE - shards) / 5000;
-					amount = packs * 5000;
+					packs = (Integer.MAX_VALUE - shards) / SHARDS_PER_PACK;
+					amount = packs * SHARDS_PER_PACK;
 					player.getPackets().sendGameMessage("You don't have enough inventory space to open all packs.");
 				}
-				player.getInventory().deleteItem(15262, packs);
-				player.getInventory().addItem(12183, amount);
+				player.getInventory().deleteItem("item.spirit_shard_pack", packs);
+				player.getInventory().addItem("item.spirit_shards", amount);
 				return true;
 		}
 		return false;

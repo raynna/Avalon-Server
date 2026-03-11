@@ -58,6 +58,45 @@ public class Item implements Serializable {
 		return id == getId(name);
 	}
 
+	public boolean isItem(Object... items) {
+		int id = getId();
+		String name = getName().toLowerCase();
+
+		for (Object obj : items) {
+
+			if (obj instanceof Integer itemId) {
+				if (itemId == id)
+					return true;
+			}
+
+			else if (obj instanceof String str) {
+				str = str.toLowerCase();
+
+				if (str.startsWith("item_group.")) {
+					if (Rscm.lookupList(str).contains(id))
+						return true;
+				}
+
+				else if (str.startsWith("item.")) {
+					if (Rscm.lookup(str) == id)
+						return true;
+				}
+
+				else if (name.contains(str)) {
+					return true;
+				}
+			}
+
+			else {
+				throw new IllegalArgumentException(
+						"Item key must be Integer or String, got: " + obj.getClass()
+				);
+			}
+		}
+
+		return false;
+	}
+
 	public static boolean isItem(int id, String name) {
 		return checkItemById(id, name);
 	}

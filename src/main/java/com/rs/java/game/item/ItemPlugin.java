@@ -2,6 +2,7 @@ package com.rs.java.game.item;
 
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Logger;
+import com.rs.kotlin.rscm.Rscm;
 
 public abstract class ItemPlugin {
 
@@ -68,6 +69,37 @@ public abstract class ItemPlugin {
             builder.append("Failed: '").append(optionName).append("' option is unhandled in plugin ").append(item.getName()).append("(").append(item.getId()).append(")");
         }
         Logger.log("ItemPlugin", builder);
+    }
+
+    private int resolveItem(Object ref) {
+
+        if (ref instanceof Integer id)
+            return id;
+
+        if (ref instanceof String key)
+            return Rscm.lookup(key);
+
+        throw new IllegalArgumentException(
+                "Item reference must be Integer or String, got: " + ref.getClass()
+        );
+    }
+
+    public boolean usingItems(Object ref1, Object ref2, Item... itemsNeeded) {
+
+        int id1 = resolveItem(ref1);
+        int id2 = resolveItem(ref2);
+
+        boolean containsId1 = false;
+        boolean containsId2 = false;
+
+        for (Item item : itemsNeeded) {
+            if (item.getId() == id1)
+                containsId1 = true;
+            else if (item.getId() == id2)
+                containsId2 = true;
+        }
+
+        return containsId1 && containsId2;
     }
 
     public boolean usingItems(int id1, int id2, Item... itemsNeeded) {

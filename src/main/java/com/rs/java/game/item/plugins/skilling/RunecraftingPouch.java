@@ -7,11 +7,13 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.skills.runecrafting.RunecraftingPouches;
 import com.rs.kotlin.rscm.Rscm;
 
+import java.util.Arrays;
+
 public class RunecraftingPouch extends ItemPlugin {
 
     @Override
     public Object[] getKeys() {
-        return new Object[] {Item.getIdsArray("item.small_pouch", "item.medium_pouch", "item.large_pouch", "item.giant_pouch") };
+        return new Object[] {"item.small_pouch", "item.medium_pouch", "item.large_pouch", "item.giant_pouch"};
     }
 
     @Override

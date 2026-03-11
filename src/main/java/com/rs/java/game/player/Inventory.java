@@ -460,6 +460,40 @@ public final class Inventory implements Serializable {
 		return items.getNumberOf(itemId);
 	}
 
+	public boolean containsOneItemFlexible(Object... itemsToCheck) {
+		for (Object obj : itemsToCheck) {
+
+			int itemId;
+
+			if (obj instanceof Integer id) {
+				itemId = id;
+			}
+
+			else if (obj instanceof String str) {
+				if (str.startsWith("item_group.")) {
+					for (int id : Rscm.lookupList(str)) {
+						if (items.getNumberOf(id) > 0)
+							return true;
+					}
+					continue;
+				} else {
+					itemId = Rscm.lookup(str);
+				}
+			}
+
+			else {
+				throw new IllegalArgumentException(
+						"Item must be Integer or String, got: " + obj.getClass()
+				);
+			}
+
+			if (items.getNumberOf(itemId) > 0)
+				return true;
+		}
+
+		return false;
+	}
+
 	public Item getItem(int slot) {
 		return items.get(slot);
 	}
@@ -800,6 +834,9 @@ public final class Inventory implements Serializable {
 		System.out.println("Output file: " + file.getAbsolutePath());
 	}
 
+	public void replaceItem(String itemKey, int amount, int slot) {
+		replaceItem(Rscm.lookup(itemKey), amount, slot);
+	}
 
 	public void replaceItem(int id, int amount, int slot) {
 		Item old = items.get(slot);

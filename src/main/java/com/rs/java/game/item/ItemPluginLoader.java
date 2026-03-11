@@ -13,25 +13,24 @@ import java.util.Set;
 
 public class ItemPluginLoader {
 
-    public static final HashMap<Object, ItemPlugin> cachedItemPlugins = new HashMap<Object, ItemPlugin>();
+    public static final Map<Object, ItemPlugin> cachedItemPlugins = new HashMap<Object, ItemPlugin>();
 
     public static ItemPlugin getPlugin(Item item) {
-        ItemPlugin plugin = cachedItemPlugins.getOrDefault(item.getId(), cachedItemPlugins.get(item.getName()));
-        if (plugin != null) {
-            //System.out.println("[ItemPluginLoader] "+item.getName()+"("+item.getId()+"): plugin was found by Id.");
+
+        ItemPlugin plugin = cachedItemPlugins.get(item.getId());
+        if (plugin != null)
             return plugin;
-        }
+
+        String name = item.getName().toLowerCase();
+
         for (Map.Entry<Object, ItemPlugin> entry : cachedItemPlugins.entrySet()) {
-            Object[] keys = entry.getValue().getKeys();
-            for (Object key : keys) {
-                if (key instanceof String && item.getName().toLowerCase().contains(((String) key).toLowerCase())) {
-                    plugin = entry.getValue();
-                    System.out.println("[ItemPluginLoader] " + item.getName() + "(" + item.getId() + "): Found plugin by name.");
-                    return plugin;
-                }
+            Object key = entry.getKey();
+
+            if (key instanceof String str && name.contains(str)) {
+                return entry.getValue();
             }
         }
-        //System.out.println("[ItemPluginLoader] "+item.getName()+"("+item.getId()+"): Found no plugin for this item.");
+
         return null;
     }
 
@@ -58,10 +57,28 @@ public class ItemPluginLoader {
                         continue;
                     }
                     for (Object key : plugin.getKeys()) {
-                        if (key instanceof String keyStr && keyStr.startsWith("item.")) {
-                            cachedItemPlugins.put(Rscm.lookup(keyStr), plugin);
-                        } else if (key instanceof Integer) {
-                            cachedItemPlugins.put(key, plugin);
+
+                        if (key instanceof Integer id) {
+                            cachedItemPlugins.put(id, plugin);
+                        }
+
+                        else if (key instanceof String keyStr) {
+
+                            if (keyStr.startsWith("item.")) {
+                                cachedItemPlugins.put(Rscm.lookup(keyStr), plugin);
+                            }
+
+                            else if (keyStr.startsWith("item_group.")) {
+                                for (int id : Rscm.lookupList(keyStr)) {
+                                    cachedItemPlugins.put(id, plugin);
+                                }
+                            }
+
+                            else {
+                                // fallback for name contains later
+                                cachedItemPlugins.put(keyStr.toLowerCase(), plugin);
+                            }
+
                         } else {
                             System.out.println("Invalid key for " + plugin.getClass().getName());
                         }
