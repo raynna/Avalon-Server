@@ -122,7 +122,7 @@ public class Firemaking extends Action {
 		}
 
 		public int getLife() {
-			return (life * 600);
+			return life;
 		}
 
 		public int getFireId() {
