@@ -53,4 +53,5 @@ enum class Projectile {
     CORPOREAL_BEAST_ATTACK,
     CORPOREAL_BEAST_AOE,
     JAD_MAGE,
+    KET_ZEK,
 }

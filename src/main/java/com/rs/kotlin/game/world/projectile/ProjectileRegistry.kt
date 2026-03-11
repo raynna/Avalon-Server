@@ -167,6 +167,18 @@ object ProjectileRegistry {
                 lengthAdjustment = 0,
             ),
         )
+        register(
+            Projectile.KET_ZEK,
+            ProjectileType(
+                startHeight = 100,
+                endHeight = 36,
+                startTime = 31,
+                multiplier = 5,
+                arc = 15,
+                displacement = 64,
+                lengthAdjustment = 34,
+            ),
+        )
     }
 
     private fun register(
