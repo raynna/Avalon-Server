@@ -563,7 +563,7 @@ object StandardRanged : RangeData() {
                                     blockAnimation = true,
                                 )
                             context.addHit(CombatType.RANGED).delay(ticks).roll()
-                            EffectResult.CONTINUE
+                            EffectResult.COMPLETE
                         },
                     ),
             ),
