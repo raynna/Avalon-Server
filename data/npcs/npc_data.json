@@ -4653,6 +4653,63 @@
       "spria"
     ]
   },
+  "120": {
+    "id": 120,
+    "name": "Dwarf",
+    "members": false,
+    "combatLevel": 20,
+    "attackLevel": 15,
+    "strengthLevel": 16,
+    "defenceLevel": 16,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 26,
+    "attackBonus": 5,
+    "strengthBonus": 7,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 10,
+      "standard": 10,
+      "heavy": 10
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 26,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
   "124": {
     "id": 124,
     "name": "Earth warrior",
@@ -21785,6 +21842,162 @@
       "mazchna"
     ]
   },
+  "1676": {
+    "id": 1676,
+    "name": "Experiment",
+    "members": true,
+    "combatLevel": 51,
+    "attackLevel": 40,
+    "strengthLevel": 50,
+    "defenceLevel": 50,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 40,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 January]] [[2005]]",
+    "aliases": [],
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 8,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1677": {
+    "id": 1677,
+    "name": "Experiment",
+    "members": true,
+    "combatLevel": 25,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 30,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 January]] [[2005]]",
+    "aliases": [],
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
+  "1678": {
+    "id": 1678,
+    "name": "Experiment",
+    "members": true,
+    "combatLevel": 25,
+    "attackLevel": 1,
+    "strengthLevel": 1,
+    "defenceLevel": 30,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 100,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 January]] [[2005]]",
+    "aliases": [],
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 1
+    },
+    "aggressive": false,
+    "attackStyles": [],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 0,
+    "categories": [],
+    "assignedBy": []
+  },
   "1710": {
     "id": 1710,
     "name": "H.A.M. Guard",
@@ -24923,6 +25136,419 @@
     "attackSpeedTicks": 4,
     "respawnTicks": 30,
     "slayerXp": 10,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2130": {
+    "id": 2130,
+    "name": "Black Guard",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 40,
+    "strengthLevel": 45,
+    "defenceLevel": 45,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 40,
+    "attackBonus": 30,
+    "strengthBonus": 30,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 40,
+      "slash": 40,
+      "crush": 40
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 40,
+      "standard": 40,
+      "heavy": 40
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A member of the Black Guard, a special division of the dwarven army.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 3,
+    "respawnTicks": 30,
+    "slayerXp": 40,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2131": {
+    "id": 2131,
+    "name": "Black Guard",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 40,
+    "strengthLevel": 45,
+    "defenceLevel": 45,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 40,
+    "attackBonus": 30,
+    "strengthBonus": 30,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 40,
+      "slash": 40,
+      "crush": 40
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 40,
+      "standard": 40,
+      "heavy": 40
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A member of the Black Guard, a special division of the dwarven army.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 3,
+    "respawnTicks": 30,
+    "slayerXp": 40,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2132": {
+    "id": 2132,
+    "name": "Black Guard",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 40,
+    "strengthLevel": 45,
+    "defenceLevel": 45,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 40,
+    "attackBonus": 30,
+    "strengthBonus": 30,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 40,
+      "slash": 40,
+      "crush": 40
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 40,
+      "standard": 40,
+      "heavy": 40
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A member of the Black Guard, a special division of the dwarven army.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 3,
+    "respawnTicks": 30,
+    "slayerXp": 40,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2133": {
+    "id": 2133,
+    "name": "Black Guard",
+    "members": true,
+    "combatLevel": 48,
+    "attackLevel": 40,
+    "strengthLevel": 45,
+    "defenceLevel": 45,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 40,
+    "attackBonus": 30,
+    "strengthBonus": 30,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 40,
+      "slash": 40,
+      "crush": 40
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 40,
+      "standard": 40,
+      "heavy": 40
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A member of the Black Guard, a special division of the dwarven army.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 3,
+    "respawnTicks": 30,
+    "slayerXp": 40,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2134": {
+    "id": 2134,
+    "name": "Black Guard Berserker",
+    "members": true,
+    "combatLevel": 66,
+    "attackLevel": 60,
+    "strengthLevel": 60,
+    "defenceLevel": 60,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 55,
+    "strengthBonus": 55,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 60,
+      "slash": 60,
+      "crush": 60
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 60,
+      "standard": 60,
+      "heavy": 60
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An elite member of the Black Guard.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 13
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 3,
+    "respawnTicks": 25,
+    "slayerXp": 50,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2135": {
+    "id": 2135,
+    "name": "Black Guard Berserker",
+    "members": true,
+    "combatLevel": 66,
+    "attackLevel": 60,
+    "strengthLevel": 60,
+    "defenceLevel": 60,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 55,
+    "strengthBonus": 55,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 60,
+      "slash": 60,
+      "crush": 60
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 60,
+      "standard": 60,
+      "heavy": 60
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An elite member of the Black Guard.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 13
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 3,
+    "respawnTicks": 25,
+    "slayerXp": 50,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria"
+    ]
+  },
+  "2136": {
+    "id": 2136,
+    "name": "Black Guard Berserker",
+    "members": true,
+    "combatLevel": 66,
+    "attackLevel": 60,
+    "strengthLevel": 60,
+    "defenceLevel": 60,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 55,
+    "strengthBonus": 55,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 60,
+      "slash": 60,
+      "crush": 60
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 60,
+      "standard": 60,
+      "heavy": 60
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[31 May]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "An elite member of the Black Guard.",
+    "attributes": [],
+    "xpBonus": 2.5,
+    "maxHit": {
+      "default": 13
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 3,
+    "respawnTicks": 25,
+    "slayerXp": 50,
     "categories": [],
     "assignedBy": [
       "turael",
@@ -34406,6 +35032,122 @@
       "mazchna"
     ]
   },
+  "3939": {
+    "id": 3939,
+    "name": "Sea Snake Young",
+    "members": true,
+    "combatLevel": 90,
+    "attackLevel": 90,
+    "strengthLevel": 70,
+    "defenceLevel": 70,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 85,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[22 May]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "Snake, snake, oh, it\u0027s a young snake...",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 8
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 85,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
+  "3940": {
+    "id": 3940,
+    "name": "Sea Snake Hatchling",
+    "members": true,
+    "combatLevel": 62,
+    "attackLevel": 60,
+    "strengthLevel": 55,
+    "defenceLevel": 50,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 50,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[22 May]] [[2006]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A baby sea snake. Snaaaaaaake!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 6
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 50,
+    "categories": [],
+    "assignedBy": [
+      "vannaka"
+    ]
+  },
   "4257": {
     "id": 4257,
     "name": "Guard",
@@ -35612,6 +36354,366 @@
     "assignedBy": [
       "mazchna",
       "vannaka"
+    ]
+  },
+  "4345": {
+    "id": 4345,
+    "name": "Albino bat",
+    "members": true,
+    "combatLevel": 52,
+    "attackLevel": 57,
+    "strengthLevel": 57,
+    "defenceLevel": 30,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 33,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "It\u0027s all white by me.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 7
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Stab]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 33,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
+    ]
+  },
+  "4353": {
+    "id": 4353,
+    "name": "Cave horror",
+    "members": true,
+    "combatLevel": 80,
+    "attackLevel": 80,
+    "strengthLevel": 77,
+    "defenceLevel": 62,
+    "magicLevel": 80,
+    "rangedLevel": 1,
+    "constitutionLevel": 55,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A horrible, emaciated ape like creature with beady red eyes.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 55,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "4354": {
+    "id": 4354,
+    "name": "Cave horror",
+    "members": true,
+    "combatLevel": 80,
+    "attackLevel": 80,
+    "strengthLevel": 77,
+    "defenceLevel": 62,
+    "magicLevel": 80,
+    "rangedLevel": 1,
+    "constitutionLevel": 55,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A horrible, emaciated ape like creature with beady red eyes.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 55,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "4355": {
+    "id": 4355,
+    "name": "Cave horror",
+    "members": true,
+    "combatLevel": 80,
+    "attackLevel": 80,
+    "strengthLevel": 77,
+    "defenceLevel": 62,
+    "magicLevel": 80,
+    "rangedLevel": 1,
+    "constitutionLevel": 55,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A horrible, emaciated ape like creature with beady red eyes.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 55,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "4356": {
+    "id": 4356,
+    "name": "Cave horror",
+    "members": true,
+    "combatLevel": 80,
+    "attackLevel": 80,
+    "strengthLevel": 77,
+    "defenceLevel": 62,
+    "magicLevel": 80,
+    "rangedLevel": 1,
+    "constitutionLevel": 55,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A horrible, emaciated ape like creature with beady red eyes.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 55,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "nieve",
+      "duradel"
+    ]
+  },
+  "4357": {
+    "id": 4357,
+    "name": "Cave horror",
+    "members": true,
+    "combatLevel": 80,
+    "attackLevel": 80,
+    "strengthLevel": 77,
+    "defenceLevel": 62,
+    "magicLevel": 80,
+    "rangedLevel": 1,
+    "constitutionLevel": 55,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 July]] [[2006]]",
+    "aliases": [],
+    "size": "2",
+    "examine": "A horrible, emaciated ape like creature with beady red eyes.",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 9
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 50,
+    "slayerXp": 55,
+    "categories": [],
+    "assignedBy": [
+      "chaeldar",
+      "nieve",
+      "duradel"
     ]
   },
   "4381": {
@@ -57363,6 +58465,126 @@
     "slayerXp": 0,
     "categories": [],
     "assignedBy": []
+  },
+  "7459": {
+    "id": 7459,
+    "name": "Jelly",
+    "members": true,
+    "combatLevel": 78,
+    "attackLevel": 45,
+    "strengthLevel": 45,
+    "defenceLevel": 120,
+    "magicLevel": 45,
+    "rangedLevel": 1,
+    "constitutionLevel": 75,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 75,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "konar"
+    ]
+  },
+  "7460": {
+    "id": 7460,
+    "name": "Jelly",
+    "members": true,
+    "combatLevel": 78,
+    "attackLevel": 45,
+    "strengthLevel": 45,
+    "defenceLevel": 120,
+    "magicLevel": 45,
+    "rangedLevel": 1,
+    "constitutionLevel": 75,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 0,
+      "slash": 0,
+      "crush": 0
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 0,
+      "standard": 0,
+      "heavy": 0
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[26 January]] [[2005]]",
+    "aliases": [],
+    "size": "1",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": false,
+    "attackStyles": [
+      "[[Magical melee]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 15,
+    "slayerXp": 75,
+    "categories": [],
+    "assignedBy": [
+      "krystilia",
+      "vannaka",
+      "chaeldar",
+      "konar"
+    ]
   },
   "7528": {
     "id": 7528,

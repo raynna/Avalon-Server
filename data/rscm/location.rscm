@@ -164,3 +164,38 @@ light_within_tree_agility_course=2024,4576,2
 giant_dwarf_end_cutscene_throne_room=2034,4528,2
 puppet_christmas_event=2008,4438,0
 warped_dungeon=1997,4216,1
+under_wizard_tower=3106,9571,0
+lumbridge_swamp_dungeon=3168,9571,0
+citharede_abbey_basement=3490,9566,0
+blood_altar_entrance=3561,9776,0
+werewolf_agility_training=3542,9913,0
+experiements_dungeon=3576,9928,0
+#defender of varrock
+dungeon_with_caged_killerwatt=3350,10013,0
+armoured_zombies=3342,9997,0
+temple_at_senntisten_orb_dungeon=2923,10384,0
+miscellania_dungeon=2514,10257,0
+#olafs quest
+skeleton_fremennik_dungeon=2709,10158,0
+brine_rats=2706,10134,0
+trollheim_prison=2835,10084,0
+edgars_cave=2894,10086,0
+draynor_manor_underground_levers=3109,9754,0
+draynor_sewers=3112,9681,0
+tutorial_island_dungeon_rats=3110,9512,0
+#unsure which quest
+desert_pyramid_dungeon=3079,9302,0
+shilo_village_quest_dungeon=2890,9285,0
+legends_quest_dungeon=2792,9328,0
+zogre_flesh_eaters_boss=2479,9444,0
+castle_wars_underground=2401,9504,0
+#klanks house
+underground_pass_dwarf_hideout=2318,9807,0
+fremennik_isles_boss_dungeon=2394,10288,1
+dungeon_with_ores=2407,10206,0
+cave_horrors=3746,9374,0
+recipe_for_disaster_underwater=2972,9510,0
+jogre_dungeon=2859,9524,0
+karamja_agility=2803,9591,3
+dramen_tree=2862,9736,0
+ice_queen=2867,9958,0

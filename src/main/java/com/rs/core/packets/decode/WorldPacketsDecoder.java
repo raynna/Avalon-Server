@@ -714,7 +714,7 @@ public final class WorldPacketsDecoder extends Decoder {
             case 101://unknown packet
             case 223://unknown packet
             case 224://unknown packet
-                System.out.println("unknown packet: " + packetId);
+                //System.out.println("unknown packet: " + packetId);
                 return;
 
             default:

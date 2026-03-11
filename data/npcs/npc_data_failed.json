@@ -759,6 +759,14 @@
     "lastSeen": "2026-01-14T21:17:20.590249500Z",
     "attempts": 1
   },
+  "8149": {
+    "npcId": 8149,
+    "npcName": "Armoured zombie",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-10T23:53:04.932046600Z",
+    "lastSeen": "2026-03-10T23:53:04.932046600Z",
+    "attempts": 1
+  },
   "8387": {
     "npcId": 8387,
     "npcName": "Undead troll",
@@ -805,6 +813,14 @@
     "reason": "\u0027wikitext\u0027 not found in JSON",
     "firstSeen": "2026-01-21T11:01:27.879227300Z",
     "lastSeen": "2026-01-21T11:01:27.879227300Z",
+    "attempts": 1
+  },
+  "8813": {
+    "npcId": 8813,
+    "npcName": "Trade floor guard",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-11T00:06:22.853249900Z",
+    "lastSeen": "2026-03-11T00:06:22.853249900Z",
     "attempts": 1
   },
   "9462": {

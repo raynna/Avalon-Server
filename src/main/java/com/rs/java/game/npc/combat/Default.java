@@ -24,16 +24,27 @@ public class Default extends CombatScript {
 		NpcCombatDefinition defs = npc.getCombatDefinitions();
 		CombatData data = npc.getCombatData();
 		AttackStyle definitionAttackStyle = defs.getAttackStyle();
-
 		switch (definitionAttackStyle) {
 			case AttackStyle.MELEE -> {
 				NpcAttackStyle attackStyle = NpcAttackStyle.fromList(npc.getCombatData().attackStyles);
+				if (attackStyle == null) {
+					System.out.println("[NPC COMBAT] Unhandled melee attack style for NPC: "
+							+ npc.getId() + " styles=" + data.attackStyles);
+					return npc.getAttackSpeed();
+				}
 				switch (attackStyle) {
+					case MAGICAL_MELEE -> {
+						Hit magicalMelee = npc.magicalMelee(target, npc.getMaxHit());
+						delayHit(npc, target, 0, magicalMelee);
+					}
 					case STAB, SLASH, CRUSH -> {
 						Hit meleeHit = npc.meleeHit(target, npc.getMaxHit(), attackStyle);
 						delayHit(npc, target, 0, meleeHit);
 					}
-
+					default -> {
+						System.out.println("[NPC COMBAT] Unhandled melee subtype: "
+								+ attackStyle + ", attackStyles: " + npc.getCombatData().attackStyles + ", npc=" + npc.getId());
+					}
 				}
 			}
 			case AttackStyle.RANGE -> {
@@ -56,6 +67,10 @@ public class Default extends CombatScript {
 				} else {
 					delayHit(npc, target, npc.getHitDelay(npc, target), mageHit);
 				}
+			}
+			default -> {
+				System.out.println("[NPC COMBAT] Unhandled attack style: "
+						+ definitionAttackStyle + ", styles: " + npc.getCombatData().attackStyles +", npc=" + npc.getId());
 			}
 		}
 
