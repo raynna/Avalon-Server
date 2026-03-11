@@ -39,15 +39,11 @@ object BoltEffects {
                 val damage = (defender.hitpoints * boost).toInt().coerceAtMost(cap)
                 val selfDamage = (attacker.hitpoints * 0.1).toInt()
                 val projectileDelay = ProjectileManager.send(Projectile.BOLT, 27, attacker, context.defender)
+                context.attacker.applyHit(Hit(context.attacker, selfDamage, HitLook.REGULAR_DAMAGE))
                 context
                     .procHit(attacker, defender)
                     .delay(projectileDelay)
                     .damage(damage)
-                    .apply()
-                context
-                    .procHit(attacker, attacker)
-                    .delay(projectileDelay)
-                    .damage(selfDamage)
                     .apply()
                 EffectResult.COMPLETE
             },
