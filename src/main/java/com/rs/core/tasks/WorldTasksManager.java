@@ -10,16 +10,41 @@ public class WorldTasksManager {
 			.synchronizedList(new LinkedList<WorldTaskInformation>());
 
 	public static void processTasks() {
-		for (WorldTaskInformation taskInformation : tasks.toArray(new WorldTaskInformation[tasks.size()])) {
+		if (tasks.size() > 100) {
+			System.out.println("[WorldTasks WARNING] task count=" + tasks.size());
+		}
+		for (WorldTaskInformation taskInformation :
+				tasks.toArray(new WorldTaskInformation[tasks.size()])) {
+
 			if (taskInformation.continueCount > 0) {
 				taskInformation.continueCount--;
 				continue;
 			}
-			taskInformation.task.run();
-			if (taskInformation.task.needRemove)
+
+			long start = System.currentTimeMillis();
+
+			try {
+				taskInformation.task.run();
+			} catch (Throwable e) {
+				System.err.println("WorldTask crashed: " + taskInformation.task.getClass().getName());
+				e.printStackTrace();
 				tasks.remove(taskInformation);
-			else
+				continue;
+			}
+
+			long took = System.currentTimeMillis() - start;
+
+			if (took > 200) { // only log slow tasks
+				System.out.println("[SlowWorldTask] " +
+						taskInformation.task.getClass().getName() +
+						" took " + took + " ms");
+			}
+
+			if (taskInformation.task.needRemove) {
+				tasks.remove(taskInformation);
+			} else {
 				taskInformation.continueCount = taskInformation.continueMaxCount;
+			}
 		}
 	}
 

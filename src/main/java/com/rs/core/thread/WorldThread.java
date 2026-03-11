@@ -37,22 +37,28 @@ public final class WorldThread extends Thread {
     public void run() {
         while (!CoresManager.shutdown) {
             long cycleStart = Utils.currentTimeMillis();
+            long start = System.currentTimeMillis();
             WorldTasksManager.processTasks();
-            AutomaticGroundItem.processGameTick();
-            for (NPC npc : World.getNPCs()) {
-                try {
-                    if (npc == null || npc.hasFinished())
-                        continue;
-                    npc.processEntity();
-                } catch (Throwable e) {
-                    Logger.handle(e);
-                }
+            long took = System.currentTimeMillis() - start;
+
+            if (took > 15) {
+                System.out.println("WorldTasksManager took " + took + " ms!");
             }
+            AutomaticGroundItem.processGameTick();
             for (Player player : World.getPlayers()) {
                 try {
                     if (player == null || !player.hasStarted() || player.hasFinished())
                         continue;
                     player.processEntity();
+                } catch (Throwable e) {
+                    Logger.handle(e);
+                }
+            }
+            for (NPC npc : World.getNPCs()) {
+                try {
+                    if (npc == null || npc.hasFinished())
+                        continue;
+                    npc.processEntity();
                 } catch (Throwable e) {
                     Logger.handle(e);
                 }
@@ -119,7 +125,6 @@ public final class WorldThread extends Thread {
                     Logger.handle(e);
                 }
             }
-            //System.out.println("processing thread.");
             LAST_CYCLE_CTM = Utils.currentTimeMillis();
             WORLD_TICK++;
             long elapsed = LAST_CYCLE_CTM - cycleStart;
