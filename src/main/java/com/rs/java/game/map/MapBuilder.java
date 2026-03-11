@@ -44,9 +44,13 @@ public final class MapBuilder {
 	}
 
 	public static void onLoginSafeTileCheck(Player player) {
+		if (player.getControlerManager().getControler() != null) {
+			return;
+		}
 		if (!regionExists(player.getRegionId())) {
 			player.setNextWorldTile(Settings.HOME_PLAYER_LOCATION);
 			player.message("Your previous location no longer exists. You've been sent home.");
+			player.unlock();
 		}
 	}
 

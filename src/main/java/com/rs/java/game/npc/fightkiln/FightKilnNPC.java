@@ -70,7 +70,7 @@ public class FightKilnNPC extends NPC {
 			public void run() {
 				if (loop == 0) {
 					animate(new Animation(defs.getDeathAnim()));
-				} else if (loop >= defs.getDeathDelay()) {
+				} else if (loop >= defs.getDeathDelay() - 4) {
 					reset();
 					finish();
 					controler.removeNPC();
@@ -80,20 +80,4 @@ public class FightKilnNPC extends NPC {
 			}
 		}, 0, 1);
 	}
-
-	@Override
-	public ArrayList<Entity> getPossibleTargets() {
-		ArrayList<Entity> possibleTarget = new ArrayList<Entity>(1);
-		List<Integer> playerIndexes = World.getRegion(getRegionId()).getPlayerIndexes();
-		if (playerIndexes != null) {
-			for (int npcIndex : playerIndexes) {
-				Player player = World.getPlayers().get(npcIndex);
-				if (player == null || player.isDead() || player.hasFinished() || !player.isActive())
-					continue;
-				possibleTarget.add(player);
-			}
-		}
-		return possibleTarget;
-	}
-
 }
