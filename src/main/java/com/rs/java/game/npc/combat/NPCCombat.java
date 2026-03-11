@@ -272,9 +272,13 @@ public final class NPCCombat {
 
     private boolean isNpcWithinAttackArea() {
         int size = npc.getSize();
+        if (npc.isNoDistanceCheck())
+            return true;
         int maxDistance = npc.getForceTargetDistance() > 0
                 ? npc.getForceTargetDistance()
-                : npc.getCombatDefinitions().getMaxDistFromSpawn() > 0 ? npc.getCombatDefinitions().getMaxDistFromSpawn() : 16;
+                : npc.getCombatDefinitions().getMaxDistFromSpawn() > 0
+                ? npc.getCombatDefinitions().getMaxDistFromSpawn()
+                : 16;
         int npcDistX = npc.getX() - npc.getRespawnTile().getX();
         int npcDistY = npc.getY() - npc.getRespawnTile().getY();
         if (!(npc instanceof Familiar) && npc.getMapAreaNameHash() != -1) {
@@ -422,7 +426,15 @@ public final class NPCCombat {
     }
 
     private boolean isTargetTooFar() {
-        return getDistance() > (npc.getForceTargetDistance() > 0 ? npc.getForceTargetDistance() : 16);
+
+        if (npc.isNoDistanceCheck())
+            return false;
+
+        int maxDistance = npc.getForceTargetDistance() > 0
+                ? npc.getForceTargetDistance()
+                : DEFAULT_AGRO_DISTANCE;
+
+        return getDistance() > maxDistance;
     }
 
     private void handleFollow(Entity target) {
@@ -456,11 +468,7 @@ public final class NPCCombat {
         npc.resetWalkSteps();
         if (!npc.hasWalkSteps()) {
             if (!inAttackRange || !npc.clipedProjectile(target, maxAttackDistance == 0 && !forceCheckClipAsRange(target))) {
-                if (npc.isIntelligentRouteFinder()) {
-                    npc.calcFollow(target, npc.getRun() ? 2 : 1, true, true);
-                } else {
-                    npc.addWalkStepsInteract(target.getX(), target.getY(), npc.getRun() ? 2 : 1, size, true);
-                }
+                npc.calcFollow(target, npc.getRun() ? 2 : 1, true, npc.isIntelligentRouteFinder());
             }
         }
     }

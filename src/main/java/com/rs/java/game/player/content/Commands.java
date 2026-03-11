@@ -173,6 +173,8 @@ public final class Commands {
                 "Mute player. Usage: ::mute [player]");
         registerCommand("unmute", Commands::unmuteCommand, CommandCategory.MODERATOR,
                 "Unmute player. Usage: ::unmute [player]");
+        registerCommand("unlock", Commands::unlockCommand, CommandCategory.MODERATOR,
+                "Unlock player. Usage: ::unlock [player]");
         registerCommand("kick", Commands::kickCommand, CommandCategory.MODERATOR,
                 "Kick player. Usage: ::kick [player]");
         registerCommand("forcekick", Commands::kickCommand, CommandCategory.MODERATOR,
@@ -1324,6 +1326,27 @@ public final class Commands {
         return true;
     }
 
+    private static boolean unlockCommand(Player player, String[] cmd) {
+        if (cmd.length < 2) {
+            player.message("Usage: ::unlock [player]");
+            return true;
+        }
+
+        String name = "";
+        for (int i = 1; i < cmd.length; i++)
+            name += cmd[i] + ((i == cmd.length - 1) ? "" : " ");
+
+        Player target = World.getPlayerByDisplayName(name);
+        if (!target.isLocked()) {
+            player.message(name + " is not locked.");
+        } else {
+            target.unlock();
+            player.message("You have unlocked: " + name + ".");
+        }
+        return true;
+    }
+
+
     private static boolean kickCommand(Player player, String[] cmd) {
         if (cmd.length < 2) {
             player.message("Usage: ::kick [player]");
@@ -1338,7 +1361,7 @@ public final class Commands {
         if (target == null) {
             player.message(name + " is not logged in.");
         } else {
-            if (target.isDeveloper()) {
+            if (target.isDeveloper() && target != player) {
                 player.message("Cannot kick a developer.");
                 return true;
             }

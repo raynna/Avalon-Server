@@ -205,19 +205,29 @@ public final class World {
     }
 
     public static void executeAfterLoadRegion(final int regionId, long startDelayMs, final long expireTime, final Runnable event) {
+
         final long start = Utils.currentTimeMillis();
         getRegion(regionId, true);
 
         WorldTasksManager.schedule(new WorldTask() {
+
             @Override
             public void run() {
-                if (!isRegionLoaded(regionId) && Utils.currentTimeMillis() - start < expireTime) {
-                    WorldTasksManager.schedule(this, secondsToTicks(1));
+
+                if (isRegionLoaded(regionId)) {
+                    event.run();
+                    stop();
                     return;
                 }
-                event.run();
+
+                if (Utils.currentTimeMillis() - start >= expireTime) {
+                    stop();
+                    return;
+                }
+
             }
-        }, secondsToTicks((int)(startDelayMs / 1000)));
+
+        }, secondsToTicks((int)(startDelayMs / 1000)), secondsToTicks(1));
     }
 
     public static void executeAfterLoadRegion(final int fromRegionX, final int fromRegionY, final int toRegionX,
@@ -248,7 +258,7 @@ public final class World {
                 }
             }
 
-        }, startTime, 600);
+        }, startTime, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -283,11 +293,9 @@ public final class World {
                 } catch (Throwable e) {
                     Logger.handle(e);
                 }
-                WorldTasksManager.schedule(this, secondsToTicks(5));
             }
-        }, secondsToTicks(5));
+        }, secondsToTicks(5), secondsToTicks(5));
     }
-
     private static void addDegradeShopItemsTask() {
         WorldTasksManager.schedule(new WorldTask() {
             @Override
@@ -297,9 +305,8 @@ public final class World {
                 } catch (Throwable e) {
                     Logger.handle(e);
                 }
-                WorldTasksManager.schedule(this, secondsToTicks(90));
             }
-        }, secondsToTicks(90));
+        }, secondsToTicks(90), secondsToTicks(90));
     }
 
 
@@ -334,9 +341,8 @@ public final class World {
                 } catch (Throwable e) {
                     Logger.handle(e);
                 }
-                WorldTasksManager.schedule(this, secondsToTicks(300));
             }
-        }, secondsToTicks(300));
+        }, secondsToTicks(300), secondsToTicks(300));
     }
 
 
@@ -383,11 +389,14 @@ public final class World {
 
     public static NPC spawnNPC(int id, WorldTile tile, int mapAreaNameHash, boolean canBeAttackFromOutOfArea,
                                boolean spawned) {
-        NPC n = null;
+        NPC n;
         HunterNPC hunterNPCs = HunterNPC.forId(id);
         if (hunterNPCs != null) {
             if (id == hunterNPCs.getNpcId())
                 n = new ItemHunterNPC(hunterNPCs, id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
+            else {
+                n = null;
+            }
         } else if (id >= 5533 && id <= 5558)
             n = new Elemental(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
         else if (id == 6078 || id == 6079 || id == 4292 || id == 4291 || id == 6080 || id == 6081)
@@ -469,13 +478,48 @@ public final class World {
         else
             n = new NPC(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
         if (n != null) {
-            boolean ok = true;
             if (!WikiApi.hasData(id) && n.getCombatLevel() > 0) {
-                ok = WikiApi.dumpData(id, n.getName(), n.getCombatLevel());
-            }
-            if (ok) {
-                CombatDataParser.reload();
-                n.setBonuses();
+
+                int npcId = id;
+                String npcName = n.getName();
+                int combatLevel = n.getCombatLevel();
+
+                new Thread(() -> {
+
+                    long start = System.currentTimeMillis();
+
+                    System.out.println("[WikiApi] Fetching data for NPC: " + npcName + " (" + npcId + ")");
+
+                    boolean ok = false;
+
+                    try {
+                        ok = WikiApi.dumpData(npcId, npcName, combatLevel);
+                    } catch (Throwable e) {
+                        System.err.println("[WikiApi ERROR] Failed fetching data for " + npcName);
+                        e.printStackTrace();
+                    }
+
+                    long took = System.currentTimeMillis() - start;
+
+                    if (took > 3000) {
+                        System.out.println("[WikiApi WARNING] Fetch took " + took + " ms for " + npcName);
+                    }
+
+                    if (ok) {
+                        System.out.println("[WikiApi] Reloading combat data for " + npcName);
+
+                        CombatDataParser.reload();
+
+                        WorldTasksManager.schedule(() -> {
+                            n.setBonuses();
+                            System.out.println("[WikiApi] NPC bonuses updated for " + npcName);
+                        });
+
+                    } else {
+                        System.out.println("[WikiApi] Failed to fetch wiki data for " + npcName);
+                    }
+
+                }, "WikiFetch-" + id).start();
             }
         }
         return n;

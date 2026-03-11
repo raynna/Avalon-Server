@@ -12,13 +12,8 @@ import com.rs.Settings;
 import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.core.thread.CoresManager;
-import com.rs.java.game.Entity;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.Hit;
+import com.rs.java.game.*;
 import com.rs.java.game.Hit.HitLook;
-import com.rs.java.game.SecondaryBar;
-import com.rs.java.game.World;
-import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.npc.combat.CombatScript;
@@ -174,7 +169,7 @@ public class NPC extends Entity implements Serializable {
         loadNPCSettings();
         checkMultiArea();
         if (!WikiApi.hasData(id) && combatLevel > 0) {
-            WikiApi.dumpData(id, name, combatLevel);
+            new Thread(() -> WikiApi.dumpData(id, name, combatLevel)).start();
         }
     }
 
@@ -202,7 +197,7 @@ public class NPC extends Entity implements Serializable {
         loadNPCSettings();
         checkMultiArea();
         if (!WikiApi.hasData(id) && combatLevel > 0) {
-            WikiApi.dumpData(id, name, combatLevel);
+            new Thread(() -> WikiApi.dumpData(id, name, combatLevel)).start();
         }
     }
 
@@ -1077,6 +1072,23 @@ public class NPC extends Entity implements Serializable {
         forceWalk = tile;
     }
 
+    public int getAggroDistance(Entity target) {
+        if (isNoDistanceCheck())
+            return 64;
+
+        if (forceAgressiveDistance > 0)
+            return forceAgressiveDistance;
+
+        if (this instanceof WorldBossNPC)
+            return 16;
+        if (target instanceof Player player) {
+            if (player.getControlerManager().getControler() instanceof DungeonController)
+                return 12;
+        }
+
+        return getCombatDefinitions().getAggroDistance();
+    }
+
     public boolean hasForceWalk() {
         return forceWalk != null;
     }
@@ -1086,31 +1098,48 @@ public class NPC extends Entity implements Serializable {
         ArrayList<Entity> possibleTarget = new ArrayList<Entity>();
         AttackStyle attackStyle = getCombatDefinitions().getAttackStyle();
         for (int regionId : getMapRegionsIds()) {
+            Region region = World.getRegion(regionId);
             if (checkPlayers) {
                 List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
                 if (playerIndexes != null) {
                     for (int playerIndex : playerIndexes) {
                         Player player = World.getPlayers().get(playerIndex);
-                        if (player == null || player.isDead() || player.hasFinished() || !player.isActive()
-                                || player.getAppearance().isHidden()
-                                || !Utils.isOnRange(getX(), getY(), size, player.getX(), player.getY(),
-                                player.getSize(),
-                                forceAgressiveDistance != 0 ? forceAgressiveDistance
-                                        : isNoDistanceCheck() ? 64
-                                        : this instanceof WorldBossNPC ? 16
-                                        : player.getControlerManager()
-                                        .getControler() instanceof DungeonController
-                                        ? 12
-                                        : getCombatDefinitions().getAggroDistance())
-                                || (!forceMultiAttacked && (!isAtMultiArea() || !player.isAtMultiArea())
+
+                        if (player == null) {
+                            continue;
+                        }
+
+                        if (player.isDead() || player.hasFinished() || !player.isActive()) {
+                            continue;
+                        }
+
+                        if (player.getAppearance().isHidden()) {
+                            continue;
+                        }
+
+                        int aggroDistance = getAggroDistance(player);
+                        int distance = Utils.getDistance(this, player);
+
+                        if (!Utils.isOnRange(getX(), getY(), size, player.getX(), player.getY(), player.getSize(), aggroDistance)) {
+                            continue;
+                        }
+
+                        if (!forceMultiAttacked && (!isAtMultiArea() || !player.isAtMultiArea())
                                 && (player.getAttackedBy() != this
-                                && (player.getTickManager().isActive(TickManager.TickKeys.PJ_TIMER))))
-                                || !clipedProjectile(player,
-                                (attackStyle != AttackStyle.RANGE
-                                        && attackStyle != AttackStyle.MAGIC))
-                                || !getDefinitions().hasAttackOption()
-                                || (!forceAgressive && !WildernessController.isAtWild(this)
-                                && player.getSkills().getCombatLevelWithSummoning() >= getCombatLevel() * 2)) {
+                                && player.getTickManager().isActive(TickManager.TickKeys.PJ_TIMER))) {
+                            continue;
+                        }
+
+                        if (!clipedProjectile(player, (attackStyle != AttackStyle.RANGE && attackStyle != AttackStyle.MAGIC))) {
+                            continue;
+                        }
+
+                        if (!getDefinitions().hasAttackOption()) {
+                            continue;
+                        }
+
+                        if (!forceAgressive && !WildernessController.isAtWild(this)
+                                && player.getSkills().getCombatLevelWithSummoning() >= getCombatLevel() * 2) {
                             continue;
                         }
                         possibleTarget.add(player);
