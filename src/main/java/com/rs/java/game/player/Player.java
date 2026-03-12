@@ -2412,20 +2412,16 @@ public class Player extends Entity {
 
     public void processLogicPackets() {
         int processed = 0;
-        final int MAX_INTERNAL_PER_TICK = 1000;
-
-        while (!logicPackets.isEmpty()) {
-            LogicPacket packet = logicPackets.peek();
+        final int MAX_PACKETS_PER_TICK = 200;
+        if (logicPackets.size() > 5000) {
+            System.out.println("WARNING: Packet queue size = " + logicPackets.size());
+        }
+        while (processed < MAX_PACKETS_PER_TICK) {
+            LogicPacket packet = logicPackets.poll();
             if (packet == null)
                 break;
 
-            if (!packet.isNetwork() && processed >= MAX_INTERNAL_PER_TICK)
-                break;
-
-            logicPackets.poll();
-
             WorldPacketsDecoder.decodeLogicPacket(this, packet);
-
             processed++;
         }
     }
