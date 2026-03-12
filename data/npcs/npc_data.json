@@ -61530,6 +61530,69 @@
     "categories": [],
     "assignedBy": []
   },
+  "7921": {
+    "id": 7921,
+    "name": "Skeleton",
+    "members": false,
+    "combatLevel": 21,
+    "attackLevel": 17,
+    "strengthLevel": 17,
+    "defenceLevel": 17,
+    "magicLevel": 1,
+    "rangedLevel": 1,
+    "constitutionLevel": 24,
+    "attackBonus": 0,
+    "strengthBonus": 0,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 5,
+      "slash": 5,
+      "crush": -5
+    },
+    "magicDefence": {
+      "magic": 0
+    },
+    "rangedDefence": {
+      "light": 5,
+      "standard": 5,
+      "heavy": 5
+    },
+    "immunities": {
+      "poison": false,
+      "venom": false,
+      "cannons": false,
+      "thralls": false,
+      "burn": false
+    },
+    "releaseDate": "[[4 January]] [[2001]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "Could do with gaining a few pounds.",
+    "attributes": [
+      "undead"
+    ],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 3
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Crush]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 35,
+    "slayerXp": 24,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "krystilia",
+      "mazchna"
+    ]
+  },
   "8133": {
     "id": 8133,
     "name": "Corporeal Beast",
@@ -62687,6 +62750,66 @@
     "categories": [],
     "assignedBy": [
       "vannaka"
+    ]
+  },
+  "9611": {
+    "id": 9611,
+    "name": "Skoblin",
+    "members": true,
+    "combatLevel": 29,
+    "attackLevel": 15,
+    "strengthLevel": 20,
+    "defenceLevel": 10,
+    "magicLevel": 10,
+    "rangedLevel": 1,
+    "constitutionLevel": 30,
+    "attackBonus": 30,
+    "strengthBonus": 36,
+    "magicBonus": 0,
+    "magicStrengthBonus": 0,
+    "rangedBonus": 0,
+    "rangedStrengthBonus": 0,
+    "meleeDefence": {
+      "stab": 10,
+      "slash": 10,
+      "crush": 5
+    },
+    "magicDefence": {
+      "magic": 5
+    },
+    "rangedDefence": {
+      "light": 20,
+      "standard": 20,
+      "heavy": 20
+    },
+    "immunities": {
+      "poison": true,
+      "venom": true,
+      "cannons": true,
+      "thralls": true,
+      "burn": false
+    },
+    "releaseDate": "[[9 February]] [[2022]]",
+    "aliases": [],
+    "size": "1",
+    "examine": "A skeletal goblin!",
+    "attributes": [],
+    "xpBonus": 0.0,
+    "maxHit": {
+      "default": 5
+    },
+    "aggressive": true,
+    "attackStyles": [
+      "[[Slash]]"
+    ],
+    "attackSpeedTicks": 4,
+    "respawnTicks": 25,
+    "slayerXp": 30,
+    "categories": [],
+    "assignedBy": [
+      "turael",
+      "spria",
+      "mazchna"
     ]
   },
   "10776": {

@@ -759,6 +759,126 @@
     "lastSeen": "2026-01-14T21:17:20.590249500Z",
     "attempts": 1
   },
+  "7913": {
+    "npcId": 7913,
+    "npcName": "Warped cockroach",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:46.867086900Z",
+    "lastSeen": "2026-03-12T02:50:46.867086900Z",
+    "attempts": 1
+  },
+  "7914": {
+    "npcId": 7914,
+    "npcName": "Corpse Spider",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.032019100Z",
+    "lastSeen": "2026-03-12T02:50:47.032019100Z",
+    "attempts": 1
+  },
+  "7915": {
+    "npcId": 7915,
+    "npcName": "Warped fly",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.204273300Z",
+    "lastSeen": "2026-03-12T02:50:47.204273300Z",
+    "attempts": 1
+  },
+  "7916": {
+    "npcId": 7916,
+    "npcName": "Crawling corpse torso",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.374200800Z",
+    "lastSeen": "2026-03-12T02:50:47.374200800Z",
+    "attempts": 1
+  },
+  "7917": {
+    "npcId": 7917,
+    "npcName": "Crawling corpse torso",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.431985400Z",
+    "lastSeen": "2026-03-12T02:50:47.431985400Z",
+    "attempts": 1
+  },
+  "7918": {
+    "npcId": 7918,
+    "npcName": "Crawling corpse torso",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.709310900Z",
+    "lastSeen": "2026-03-12T02:50:47.709310900Z",
+    "attempts": 1
+  },
+  "7919": {
+    "npcId": 7919,
+    "npcName": "Crawling corpse torso",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.823913700Z",
+    "lastSeen": "2026-03-12T02:50:47.823913700Z",
+    "attempts": 1
+  },
+  "7920": {
+    "npcId": 7920,
+    "npcName": "Warped rat",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.881720500Z",
+    "lastSeen": "2026-03-12T02:50:47.881720500Z",
+    "attempts": 1
+  },
+  "7922": {
+    "npcId": 7922,
+    "npcName": "Warped bat",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:48.131284Z",
+    "lastSeen": "2026-03-12T02:50:48.131284Z",
+    "attempts": 1
+  },
+  "7923": {
+    "npcId": 7923,
+    "npcName": "Corpse archer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:46.805789300Z",
+    "lastSeen": "2026-03-12T02:50:46.805789300Z",
+    "attempts": 1
+  },
+  "7924": {
+    "npcId": 7924,
+    "npcName": "Corpse archer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:46.977289900Z",
+    "lastSeen": "2026-03-12T02:50:46.977289900Z",
+    "attempts": 1
+  },
+  "7925": {
+    "npcId": 7925,
+    "npcName": "Corpse archer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:46.922791200Z",
+    "lastSeen": "2026-03-12T02:50:46.922791200Z",
+    "attempts": 1
+  },
+  "7926": {
+    "npcId": 7926,
+    "npcName": "Corpse archer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.090280900Z",
+    "lastSeen": "2026-03-12T02:50:47.090280900Z",
+    "attempts": 1
+  },
+  "7927": {
+    "npcId": 7927,
+    "npcName": "Corpse archer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.145201700Z",
+    "lastSeen": "2026-03-12T02:50:47.145201700Z",
+    "attempts": 1
+  },
+  "7928": {
+    "npcId": 7928,
+    "npcName": "Corpse archer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.261017300Z",
+    "lastSeen": "2026-03-12T02:50:47.261017300Z",
+    "attempts": 1
+  },
   "8149": {
     "npcId": 8149,
     "npcName": "Armoured zombie",
@@ -839,6 +959,30 @@
     "lastSeen": "2026-03-11T00:06:22.853249900Z",
     "attempts": 1
   },
+  "8832": {
+    "npcId": 8832,
+    "npcName": "Living rock protector",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:01:35.734549800Z",
+    "lastSeen": "2026-03-12T02:01:35.734549800Z",
+    "attempts": 1
+  },
+  "8833": {
+    "npcId": 8833,
+    "npcName": "Living rock striker",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:01:35.797299400Z",
+    "lastSeen": "2026-03-12T02:01:35.797299400Z",
+    "attempts": 1
+  },
+  "8834": {
+    "npcId": 8834,
+    "npcName": "Living rock patriarch",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:01:39.681663300Z",
+    "lastSeen": "2026-03-12T02:01:39.681663300Z",
+    "attempts": 1
+  },
   "9462": {
     "npcId": 9462,
     "npcName": "Mound",
@@ -861,6 +1005,118 @@
     "reason": "No Infobox Monster found",
     "firstSeen": "2026-02-20T12:35:00.301099600Z",
     "lastSeen": "2026-02-20T12:35:00.301099600Z",
+    "attempts": 1
+  },
+  "9607": {
+    "npcId": 9607,
+    "npcName": "Corpse archer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.317803Z",
+    "lastSeen": "2026-03-12T02:50:47.317803Z",
+    "attempts": 1
+  },
+  "9608": {
+    "npcId": 9608,
+    "npcName": "Corpse archer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.485073200Z",
+    "lastSeen": "2026-03-12T02:50:47.485073200Z",
+    "attempts": 1
+  },
+  "9609": {
+    "npcId": 9609,
+    "npcName": "Corpse archer",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.545726500Z",
+    "lastSeen": "2026-03-12T02:50:47.545726500Z",
+    "attempts": 1
+  },
+  "9612": {
+    "npcId": 9612,
+    "npcName": "Corpse mage",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.767929200Z",
+    "lastSeen": "2026-03-12T02:50:47.767929200Z",
+    "attempts": 1
+  },
+  "9613": {
+    "npcId": 9613,
+    "npcName": "Corpse mage",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:47.938321Z",
+    "lastSeen": "2026-03-12T02:50:47.938321Z",
+    "attempts": 1
+  },
+  "9614": {
+    "npcId": 9614,
+    "npcName": "Corpse mage",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:48.075337700Z",
+    "lastSeen": "2026-03-12T02:50:48.075337700Z",
+    "attempts": 1
+  },
+  "9615": {
+    "npcId": 9615,
+    "npcName": "Corpse mage",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:48.188172Z",
+    "lastSeen": "2026-03-12T02:50:48.188172Z",
+    "attempts": 1
+  },
+  "9616": {
+    "npcId": 9616,
+    "npcName": "Corpse mage",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:48.244050800Z",
+    "lastSeen": "2026-03-12T02:50:48.244050800Z",
+    "attempts": 1
+  },
+  "9617": {
+    "npcId": 9617,
+    "npcName": "Corpse mage",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:48.297216Z",
+    "lastSeen": "2026-03-12T02:50:48.297216Z",
+    "attempts": 1
+  },
+  "9618": {
+    "npcId": 9618,
+    "npcName": "Corpse mage",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:48.352753600Z",
+    "lastSeen": "2026-03-12T02:50:48.352753600Z",
+    "attempts": 1
+  },
+  "9619": {
+    "npcId": 9619,
+    "npcName": "Corpse mage",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:48.404916700Z",
+    "lastSeen": "2026-03-12T02:50:48.404916700Z",
+    "attempts": 1
+  },
+  "9620": {
+    "npcId": 9620,
+    "npcName": "Corpse mage",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:48.458327400Z",
+    "lastSeen": "2026-03-12T02:50:48.458327400Z",
+    "attempts": 1
+  },
+  "9621": {
+    "npcId": 9621,
+    "npcName": "Corpse mage",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:48.512849500Z",
+    "lastSeen": "2026-03-12T02:50:48.512849500Z",
+    "attempts": 1
+  },
+  "9622": {
+    "npcId": 9622,
+    "npcName": "Dragith Nurn",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:50:48.571690800Z",
+    "lastSeen": "2026-03-12T02:50:48.571690800Z",
     "attempts": 1
   },
   "9720": {
@@ -1101,6 +1357,38 @@
     "reason": "No Infobox Monster found",
     "firstSeen": "2026-01-27T14:30:21.333309Z",
     "lastSeen": "2026-01-27T14:30:21.333309Z",
+    "attempts": 1
+  },
+  "14688": {
+    "npcId": 14688,
+    "npcName": "Grifolapine",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:29:11.060349300Z",
+    "lastSeen": "2026-03-12T02:29:11.060349300Z",
+    "attempts": 1
+  },
+  "14690": {
+    "npcId": 14690,
+    "npcName": "Fungal mage",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:29:10.938816100Z",
+    "lastSeen": "2026-03-12T02:29:10.938816100Z",
+    "attempts": 1
+  },
+  "14696": {
+    "npcId": 14696,
+    "npcName": "Ganodermic beast",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-12T02:29:11.129817500Z",
+    "lastSeen": "2026-03-12T02:29:11.129817500Z",
+    "attempts": 1
+  },
+  "14700": {
+    "npcId": 14700,
+    "npcName": "Grifolaroo",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T02:29:11.004266400Z",
+    "lastSeen": "2026-03-12T02:29:11.004266400Z",
     "attempts": 1
   },
   "14926": {
