@@ -124,6 +124,8 @@ class DropTable(
     private var currentContext: DropType? = null
     private var currentWeightedTable: WeightedTable? = null
 
+    private var currentPreRollMetadata: DropMetadata? = null
+
     override fun toString(): String = "DropTable(name='$name')"
 
     fun getWeightedTableDropsForDisplay(
@@ -937,13 +939,11 @@ class DropTable(
         block: MutableList<PreRollDropEntry>.() -> Unit,
     ) {
         currentContext = DropType.PREROLL
-        if (meta != null) {
-            val metadata = DropMetadata().apply { meta() }
-            preRollDenom.forEach { entry ->
-                entry.metadata = metadata // Apply the metadata to each PreRollTableEntry
-            }
-        }
+        currentPreRollMetadata = meta?.let { DropMetadata().apply(it) }
+
         preRollDenom.block()
+
+        currentPreRollMetadata = null
         currentContext = null
     }
 
@@ -1038,7 +1038,11 @@ class DropTable(
         if (ctx != DropType.PREROLL) {
             error("dynamicItem drops are only supported in preRollDrops")
         }
-        val metadata = DropMetadata().apply { meta?.invoke(this) }
+        val metadata =
+            currentPreRollMetadata?.copy()
+                ?: DropMetadata()
+
+        meta?.invoke(metadata)
         preRollDenom.add(
             PreRollDropEntry(
                 itemId = null,
@@ -1171,9 +1175,10 @@ class DropTable(
         meta: (DropMetadata.() -> Unit)? = null,
     ) {
         val metadata =
-            DropMetadata().apply {
-                meta?.invoke(this)
-            }
+            currentPreRollMetadata?.copy()
+                ?: DropMetadata()
+
+        meta?.invoke(metadata)
         val ctx = currentContext ?: error("Cannot call drop() outside a drop type scope")
         when (ctx) {
             DropType.ALWAYS -> {
@@ -1412,7 +1417,6 @@ class DropTable(
 
             // MAIN
             if (!preRollHit) {
-                println("main roll")
                 val mainDrop =
                     mainDrops.roll(baseContext.copy(dropSource = DropSource.MAIN))
 

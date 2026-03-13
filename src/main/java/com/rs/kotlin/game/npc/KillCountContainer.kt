@@ -7,21 +7,28 @@ class KillCountContainer {
 
     fun increment(npcId: Int) {
         val name = NPCDefinitions.getNPCDefinitions(npcId)?.name ?: return
-        val key = normalize(name)
-
-        kills[key] = (kills[key] ?: 0) + 1
+        increment(name)
     }
 
     fun increment(name: String) {
-        val key = normalize(name)
-        kills[key] = (kills[key] ?: 0) + 1
+        val normalized = normalize(name)
+
+        add(normalized)
+
+        if (normalized.startsWith("revenant_")) {
+            add("revenants")
+        }
+        if (normalized.contains("demon")) {
+            add("demons")
+        }
+        if (normalized.contains("dragon")) {
+            add("dragons")
+        }
     }
 
     fun get(npcId: Int): Int {
         val name = NPCDefinitions.getNPCDefinitions(npcId)?.name ?: return 0
-        val key = normalize(name)
-
-        return kills[key] ?: 0
+        return getByName(name)
     }
 
     fun getByName(name: String): Int {
@@ -30,6 +37,10 @@ class KillCountContainer {
     }
 
     fun all(): Map<String, Int> = kills
+
+    private fun add(key: String) {
+        kills[key] = (kills[key] ?: 0) + 1
+    }
 
     fun normalize(name: String): String =
         name
@@ -41,14 +52,14 @@ class KillCountContainer {
         kills.clear()
     }
 
-    /** Remove a single killcount entry by npc name (raw, will be normalized). */
+    /** Remove a single killcount entry by npc name */
     fun reset(name: String) {
         kills.remove(normalize(name))
     }
 
-    /** Remove a single killcount entry by npc id. */
+    /** Remove a single killcount entry by npc id */
     fun reset(npcId: Int) {
         val name = NPCDefinitions.getNPCDefinitions(npcId)?.name ?: return
-        kills.remove(normalize(name))
+        reset(name)
     }
 }

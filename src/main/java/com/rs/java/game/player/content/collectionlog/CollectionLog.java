@@ -201,7 +201,7 @@ public class CollectionLog implements Serializable {
                 }
                 break;
             case OTHERS:
-                lookup = player.getKillcount().getByName(key);
+                lookup = player.getKillcount().getByName(key.toLowerCase());
                 return String.valueOf(lookup);
 		default:
 			break;

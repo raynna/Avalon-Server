@@ -6,19 +6,25 @@ import com.rs.kotlin.game.npc.drops.DropTableRegistry;
 
 import java.util.Set;
 
-/**
- * Builds MASTER collection log using DropTable metadata.
- */
 public class CollectionLogBuilder {
 
     public static void build(CollectionLog log) {
+
+        int totalTables = 0;
+        int bossTables = 0;
+        int slayerTables = 0;
+        int minigameTables = 0;
+        int otherTables = 0;
+        int clueTables = 0;
 
         for (DropTable table : DropTableRegistry.getAllTables()) {
 
             Set<Integer> items = table.getAllItemIdsForCollectionLog();
 
-            if (items == null || items.isEmpty())
+            if (items == null || items.isEmpty()) {
                 continue;
+            }
+            totalTables++;
 
             CategoryType type = mapCategory(table.getCategory());
 
@@ -26,9 +32,32 @@ public class CollectionLogBuilder {
                     ? table.getCollectionGroup()
                     : table.getName();
 
+            if (type == CategoryType.BOSSES) {
+                bossTables++;
+            }
+            if (type == CategoryType.MINIGAMES) {
+                minigameTables++;
+            }
+            if (type == CategoryType.OTHERS) {
+                otherTables++;
+            }
+            if (type == CategoryType.SLAYER) {
+                slayerTables++;
+            }
+            if (type == CategoryType.CLUES) {
+                clueTables++;
+            }
+
             log.getCategory(type)
                     .init(tabName, items.stream().mapToInt(i -> i).toArray());
         }
+
+        System.out.println("[CollectionLog] Total tables loaded: " + totalTables);
+        System.out.println("[CollectionLog] Boss tables loaded: " + bossTables);
+        System.out.println("[CollectionLog] Slayer tables loaded: " + slayerTables);
+        System.out.println("[CollectionLog] Clue tables loaded: " + clueTables);
+        System.out.println("[CollectionLog] Minigame tables loaded: " + minigameTables);
+        System.out.println("[CollectionLog] Other tables loaded: " + otherTables);
     }
 
     private static CategoryType mapCategory(TableCategory category) {
