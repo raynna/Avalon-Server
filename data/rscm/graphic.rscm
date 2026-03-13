@@ -207,16 +207,20 @@ anchor_special=1027
 saradomin_strike_hit=76
 guthix_claw_hit=77
 flames_of_zamorak_hit=78
+telegrab_start=142
+telegrab_projectile=143
+telegrab_hit=144
 
 stun=80
 splash=85
 iban_blast_start=87
 iban_blast_projectile=88
 iban_blast_hit=89
-
-bind=179
-snare=180
-entangle=181
+entangle_start=177
+entangle_projectile=178
+bind_hit=179
+snare_hit=180
+entangle_hit=181
 ice_rush_projectile=360
 ice_rush_hit=361
 ice_burst_projectile=362

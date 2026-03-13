@@ -983,6 +983,14 @@
     "lastSeen": "2026-03-12T02:01:39.681663300Z",
     "attempts": 1
   },
+  "8975": {
+    "npcId": 8975,
+    "npcName": "Spider Queen",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-12T23:26:11.706653400Z",
+    "lastSeen": "2026-03-12T23:26:11.706653400Z",
+    "attempts": 1
+  },
   "9462": {
     "npcId": 9462,
     "npcName": "Mound",
@@ -1351,6 +1359,14 @@
     "lastSeen": "2026-01-14T15:32:53.301991500Z",
     "attempts": 1
   },
+  "14301": {
+    "npcId": 14301,
+    "npcName": "Glacor",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-12T22:22:12.605292900Z",
+    "lastSeen": "2026-03-12T22:22:12.605292900Z",
+    "attempts": 1
+  },
   "14339": {
     "npcId": 14339,
     "npcName": "Armoured zombie",
@@ -1445,6 +1461,14 @@
     "reason": "No Infobox Monster found",
     "firstSeen": "2026-03-11T00:22:30.207854Z",
     "lastSeen": "2026-03-11T00:22:30.207854Z",
+    "attempts": 1
+  },
+  "15622": {
+    "npcId": 15622,
+    "npcName": "null",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-12T23:28:20.905666200Z",
+    "lastSeen": "2026-03-12T23:28:20.905666200Z",
     "attempts": 1
   }
 }
