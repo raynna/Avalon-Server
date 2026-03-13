@@ -649,7 +649,6 @@ public final class Inventory implements Serializable {
 			player.message(metaBuilder.toString());
 		}
 
-		System.out.println("We opened dropviewer based of openForItem " + item.getId());
 		player.getTemporaryAttributtes().remove("drop_viewer_item_filter");
 		player.getTemporaryAttributtes().remove("drop_viewer_in_search");
 
