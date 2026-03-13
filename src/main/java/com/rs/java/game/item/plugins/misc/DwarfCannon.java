@@ -9,14 +9,14 @@ public class DwarfCannon extends ItemPlugin {
 
     @Override
     public Object[] getKeys() {
-        return new Object[]{"item.cannon_base", "item.royale_cannon_base"};//TODO ADD ALL DWARF CANNON ITEMIDSS
+        return new Object[]{"item.cannon_base", "item.gold_cannon_base", "item.royale_cannon_base"};
     }
 
     @Override
     public boolean processItem(Player player, Item item, int slotId, String option) {
         switch (option) {
             case "set-up":
-                DwarfMultiCannon.setUp(player, item.isItem("item.cannon_base") ? 0 : item.getId() == 8 ? 1 : 2);
+                DwarfMultiCannon.setUp(player, item.isItem("item.cannon_base") ? 0 : item.isItem("item.gold_cannon_base") ? 1 : 2);
                 return true;
         }
         return false;
