@@ -230,7 +230,7 @@ object CombatCalculations {
 
             var maxHit = (baseMaxHit * specialMultiplier).toInt()
             maxHit = ceilToNextTen(player, maxHit)
-            if (twistedBowMax in 1..<maxHit) {
+            if (twistedBowMax >= maxHit) {
                 maxHit = twistedBowMax
             }
             if (target is NPC) {
