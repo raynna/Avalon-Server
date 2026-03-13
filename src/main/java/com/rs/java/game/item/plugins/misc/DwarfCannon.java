@@ -9,7 +9,7 @@ public class DwarfCannon extends ItemPlugin {
 
     @Override
     public Object[] getKeys() {
-        return new Object[]{"item.cannon_base", "", "item.royale_cannon_base"};//TODO ADD ALL DWARF CANNON ITEMIDSS
+        return new Object[]{"item.cannon_base", "item.royale_cannon_base"};//TODO ADD ALL DWARF CANNON ITEMIDSS
     }
 
     @Override
