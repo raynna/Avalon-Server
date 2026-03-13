@@ -55,7 +55,7 @@ object StandardMelee : MeleeData() {
                     execute = { context ->
                         if (Utils.roll(1, 3)) {
                             context.defender.addFreezeDelay(16, false)
-                            context.defender.gfx("graphic.entangle", 100)
+                            context.defender.gfx("graphic.entangle_hit", 100)
                             context
                                 .addHit(CombatType.MELEE)
                                 .delay(1)
