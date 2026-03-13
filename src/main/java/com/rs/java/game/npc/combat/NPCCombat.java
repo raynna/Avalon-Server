@@ -346,7 +346,6 @@ public final class NPCCombat {
                 if (player.hasWalkSteps() ||
                         (player.getActionManager().getAction() != null &&
                                 player.getActionManager().getAction().getClass().getSimpleName().contains("CombatAction"))) {
-                    System.out.println("handleCollisionMovement: Player will move, not adjusting");
                     return true;
                 }
             }
@@ -454,7 +453,6 @@ public final class NPCCombat {
             return;
         }
         if (isPlayerAboutToMoveIntoDiagonal(target)) {
-            System.out.println("handleFollow: Player about to move into diagonal, waiting");
             npc.resetWalkSteps();
             return;
         }
