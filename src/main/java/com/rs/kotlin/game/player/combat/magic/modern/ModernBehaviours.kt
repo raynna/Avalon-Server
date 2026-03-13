@@ -109,10 +109,10 @@ object ModernBehaviours {
                 return@SpellBehaviour false
             }
             player.faceWorldTile(tile)
-            player.animate(Animation(711))
-            player.gfx(142, 50)
+            player.animate("animation.telegrab")
+            player.gfx("graphic.telegrab_start", 50)
 
-            ProjectileManager.sendToTile(Projectile.TELEGRAB, 143, player, tile) {
+            ProjectileManager.sendToTile(Projectile.TELEGRAB, "graphic.telegrab_projectile", player, tile) {
                 val region = World.getRegion(tile.regionId)
                 val currentItem = region.getGroundItem(itemId, tile, player)
 
@@ -120,10 +120,8 @@ object ModernBehaviours {
                     player.message("Too late!")
                     return@sendToTile
                 }
-
-                World.sendGraphics(player, Graphics(144), tile)
+                World.sendGraphics(player, Graphics("graphic.telegrab_start"), tile)
                 GroundItems.removeGroundItem(player, currentItem)
-                player.skills.addXp(Skills.MAGIC, spell.xp)
             }
             true
         }
