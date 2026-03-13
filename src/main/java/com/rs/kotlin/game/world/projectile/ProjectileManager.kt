@@ -142,6 +142,17 @@ object ProjectileManager {
     @JvmStatic
     fun sendToTile(
         projectile: Projectile,
+        gfx: String,
+        startTile: WorldTile,
+        endTile: WorldTile,
+        onLanded: Runnable? = null,
+    ) {
+        sendToTile(projectile, Rscm.graphic(gfx), startTile, endTile, onLanded)
+    }
+
+    @JvmStatic
+    fun sendToTile(
+        projectile: Projectile,
         gfxId: Int,
         startTile: WorldTile,
         endTile: WorldTile,
