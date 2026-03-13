@@ -25,18 +25,16 @@ object CommanderZilyanaDropTable {
                 blue(amount = 1, percent = 16.1)
             }
 
-            prerollDenom {
+            prerollDenom(meta = { collectionLog = true }) {
                 drop("item.saradomin_sword", numerator = 1, denominator = 127) {
-                    collectionLog = true
                     announce = true
                 }
                 drop("item.saradomin_hilt", numerator = 1, denominator = 508) {
-                    collectionLog = true
                     announce = true
                 }
-                drop("item.godsword_shard_1", numerator = 1, denominator = 762) { collectionLog = true }
-                drop("item.godsword_shard_2", numerator = 1, denominator = 762) { collectionLog = true }
-                drop("item.godsword_shard_3", numerator = 1, denominator = 762) { collectionLog = true }
+                drop("item.godsword_shard_1", numerator = 1, denominator = 762)
+                drop("item.godsword_shard_2", numerator = 1, denominator = 762)
+                drop("item.godsword_shard_3", numerator = 1, denominator = 762)
             }
 
             main(127) {

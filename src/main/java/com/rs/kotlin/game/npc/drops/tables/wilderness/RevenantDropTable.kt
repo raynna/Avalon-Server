@@ -9,17 +9,14 @@ object RevenantDropTable {
     val table =
         dropTable(category = TableCategory.OTHER) {
 
-            prerollDenom {
+            prerollDenom(meta = { collectionLog = true }) {
                 drop("item.craw_s_bow", numerator = 1, denominator = 6000) {
-                    collectionLog = true
                     announce = true
                 }
                 drop("item.thammaron_s_sceptre", numerator = 1, denominator = 6000) {
-                    collectionLog = true
                     announce = true
                 }
                 drop("item.viggora_s_chainmace", numerator = 1, denominator = 6000) {
-                    collectionLog = true
                     announce = true
                 }
                 listOf(
@@ -52,7 +49,6 @@ object RevenantDropTable {
                         }
 
                     drop(key, amount = amount, numerator = 1, denominator = 3000) {
-                        collectionLog = true
                         announce = true
                     }
                 }
@@ -90,10 +86,11 @@ object RevenantDropTable {
                     "item.zamorak_medallion",
                     "item.saradomin_carving",
                     "item.armadyl_totem",
-                ).forEach { drop(it, numerator = 1, denominator = 500) { collectionLog = true } }
+                ).forEach { drop(it, numerator = 1, denominator = 500) }
             }
 
             main(512) {
+                drop("item.coins", amount = 1000..5000, weight = 126)
                 drop("item.battlestaff_noted", amount = 4, weight = 10)
                 drop("item.rune_full_helm", amount = 2, weight = 10)
                 drop("item.rune_platebody", amount = 2, weight = 10)

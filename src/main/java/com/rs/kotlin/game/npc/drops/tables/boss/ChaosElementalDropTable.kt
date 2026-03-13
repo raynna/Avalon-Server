@@ -20,10 +20,8 @@ object ChaosElementalDropTable {
                 drop("item.super_combat_potion_1", amount = 1, weight = 1)
             }
 
-            prerollDenom {
-                drop("item.dragon_pickaxe", numerator = 1, denominator = 256) {
-                    collectionLog = true
-                }
+            prerollDenom(meta = { collectionLog = true }) {
+                drop("item.dragon_pickaxe", numerator = 1, denominator = 256)
                 listOf(
                     "item.statius_s_full_helm",
                     "item.statius_s_platebody",
@@ -42,7 +40,6 @@ object ChaosElementalDropTable {
                     "item.morrigan_s_leather_chaps",
                 ).forEach {
                     drop(it, numerator = 1, denominator = 512) {
-                        collectionLog = true
                         announce = true
                     }
                 }
@@ -64,10 +61,7 @@ object ChaosElementalDropTable {
                     "item.corrupt_morrigan_s_leather_body",
                     "item.corrupt_morrigan_s_leather_chaps",
                 ).forEach {
-                    drop(it, numerator = 1, denominator = 256) {
-                        collectionLog = true
-                        announce = true
-                    }
+                    drop(it, numerator = 1, denominator = 256)
                 }
             }
 

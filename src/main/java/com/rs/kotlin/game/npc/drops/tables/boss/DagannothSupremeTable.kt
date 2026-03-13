@@ -22,10 +22,10 @@ object DagannothSupremeTable {
                 drop("item.dagannoth_hide")
             }
 
-            prerollDenom {
-                drop("item.archers_ring", numerator = 1, denominator = 128) { collectionLog = true }
-                drop("item.seercull", numerator = 1, denominator = 128) { collectionLog = true }
-                drop("item.dragon_hatchet", numerator = 1, denominator = 128) { collectionLog = true }
+            prerollDenom(meta = { collectionLog = true }) {
+                drop("item.archers_ring", numerator = 1, denominator = 128)
+                drop("item.seercull", numerator = 1, denominator = 128)
+                drop("item.dragon_hatchet", numerator = 1, denominator = 128)
             }
 
             main(128) {
