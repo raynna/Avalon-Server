@@ -9,15 +9,12 @@ public class DwarfCannon extends ObjectPlugin {
 
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { 6, 7, 8, 9 };
+		return new Object[] { "object.dwarf_multicannon", "object.gold_dwarf_multicannon", "object.royale_dwarf_multicannon"};
 	}
 
 	@Override
 	public boolean processObject(Player player, WorldObject object) {
-		if (object.getId() != 6)
-			DwarfMultiCannon.pickupCannon(player, object.getId() - 6, object, 0);
-		else
-			DwarfMultiCannon.fire(player, object);
+		DwarfMultiCannon.fire(player, object);
 		return true;
 	}
 
