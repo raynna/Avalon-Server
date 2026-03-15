@@ -50,7 +50,7 @@ public final class NPCCombat {
     private static final int MAX_FAR_ATTACK_DISTANCE = 16;
     private static final int NEX_FORCE_MOVEMENT_ANIMATION = 17408;
 
-    private static final boolean DEBUG_COMBAT = false;
+    private static final boolean DEBUG_COMBAT = true;
 
     private void debug(String msg) {
         if (!DEBUG_COMBAT) return;
@@ -197,16 +197,19 @@ public final class NPCCombat {
             return false;
         }
         if (isTargetTooFar()) {
+            debug("checkAll: target to far away");
             hardResetCombat();
             return true;
         }
         if (!isNpcWithinAttackArea()) {
+            debug("checkAll: npc isnt within attack area");
             npc.resetWalkSteps();
             npc.setRetreating(true);
             npc.forceRetreatStep(target);
             return true;
         }
         if (npc.isRetreating()) {
+            debug("checkAll: retreating");
             if (isTargetWithinAttackArea(target)) {
                 npc.resetWalkSteps();
                 npc.setRetreating(false);
@@ -431,7 +434,7 @@ public final class NPCCombat {
 
         int maxDistance = npc.getForceTargetDistance() > 0
                 ? npc.getForceTargetDistance()
-                : DEFAULT_AGRO_DISTANCE;
+                : MAX_FAR_ATTACK_DISTANCE;
 
         return getDistance() > maxDistance;
     }

@@ -19,6 +19,8 @@ import com.rs.kotlin.game.player.combat.CombatStyle;
 import com.rs.kotlin.game.player.combat.EntityUtils;
 import com.rs.kotlin.game.world.pvp.PvpManager;
 
+import java.util.function.Consumer;
+
 public abstract class CombatScript {
 
     /*
@@ -172,6 +174,17 @@ public abstract class CombatScript {
                 });
             }
         }
+    }
+
+    public static void delayHit(NPC npc, Entity target, int ticks, Consumer<Hit> onHit, Hit... hits) {
+        WorldTasksManager.schedule(ticks + 1, () -> {
+            for (Hit hit : hits) {
+                applyRegisteredHit(npc, target, hit);
+
+                if (onHit != null)
+                    onHit.accept(hit);
+            }
+        });
     }
 
     public static void delayHit(NPC npc, Entity target, int ticks, Hit... hits) {
