@@ -48,8 +48,8 @@ import com.rs.java.game.player.content.collectionlog.CollectionLog;
 import com.rs.java.game.player.content.customtab.AchievementsTab;
 import com.rs.java.game.player.prayer.*;
 import com.rs.java.game.player.Ranks.Rank;
-import com.rs.java.game.player.queue.PlayerActionQueue;
 import com.rs.java.utils.*;
+import com.rs.kotlin.game.player.queue.PlayerActionQueue;
 import com.rs.kotlin.game.player.skills.mining.GoldenMiningOutfit;
 import com.rs.kotlin.game.player.skills.woodcutting.LumberjackOutfit;
 import com.rs.kotlin.game.player.tasksystem.TaskManager;
@@ -143,13 +143,13 @@ public class Player extends Entity {
     public transient TimerOverlay timerOverlay = new TimerOverlay();
 
 
-    private transient PlayerActionQueue actionQueue = new PlayerActionQueue();
+    private transient com.rs.kotlin.game.player.queue.PlayerActionQueue actionQueue = new com.rs.kotlin.game.player.queue.PlayerActionQueue(this);
 
-    public PlayerActionQueue queue() {
+    public com.rs.kotlin.game.player.queue.PlayerActionQueue queue() {
         return actionQueue;
     }
 
-    public void queue(Consumer<PlayerActionQueue> block) {
+    public void queue(Consumer<com.rs.kotlin.game.player.queue.PlayerActionQueue> block) {
         block.accept(actionQueue);
     }
 
@@ -738,6 +738,9 @@ public class Player extends Entity {
      */
     private transient DialogueManager dialogueManager;
     private transient Dialogue dialogue;
+
+    private transient com.rs.kotlin.game.player.dialogue.DialogueManager newDialogueManager;
+    private transient com.rs.kotlin.game.player.dialogue.Dialogue newDialogue;
 
 
     /**
@@ -1519,6 +1522,7 @@ public class Player extends Entity {
         creationKiln = new CreationKiln(this);
         interfaceManager = new InterfaceManager(this);
         dialogueManager = new DialogueManager(this);
+        newDialogueManager = new com.rs.kotlin.game.player.dialogue.DialogueManager(this);
         hintIconsManager = new HintIconsManager(this);
         priceCheckManager = new PriceCheckManager(this);
         localPlayerUpdate = new LocalPlayerUpdate(this);
@@ -1576,7 +1580,7 @@ public class Player extends Entity {
         setDirection(Utils.getFaceDirection(0, -1));
         temporaryMovementType = -1;
         if (actionQueue == null)
-            actionQueue = new PlayerActionQueue();
+            actionQueue = new PlayerActionQueue(this);
         logicPackets = new ConcurrentLinkedQueue<>();
         switchItemCache = Collections.synchronizedList(new ArrayList<>());
 
@@ -2084,6 +2088,7 @@ public class Player extends Entity {
         if (interfaceManager.containsInventoryInter())
             interfaceManager.closeInventoryInterface();
         dialogueManager.finishDialogue();
+        newDialogueManager.close();
         if (closeInterfacesEvent != null) {
             closeInterfacesEvent.run();
             closeInterfacesEvent = null;
@@ -2658,7 +2663,8 @@ public class Player extends Entity {
 
     @Override
     public void processEntity() {
-        processLogicPackets();
+        queue().process();//this basically
+       // processLogicPackets();
         processEquip();
         processUnequip();
         actionManager.processPreMovement();
@@ -3804,6 +3810,14 @@ public class Player extends Entity {
 
     public Dialogue getDialogue() {
         return dialogue;
+    }
+
+    public com.rs.kotlin.game.player.dialogue.Dialogue getNewDialogue() {
+        return newDialogue;
+    }
+
+    public com.rs.kotlin.game.player.dialogue.DialogueManager getNewDialogueManager() {
+        return newDialogueManager;
     }
 
     public HunterImplings getHunterImplings() {
@@ -5116,20 +5130,28 @@ public class Player extends Entity {
     }
 
     public void sendPublicChatMessage(PublicChatMessage message) {
+
+        getPackets().sendPublicMessage(this, message);
+
+        Set<Player> sent = new HashSet<>();
+
         for (int regionId : getMapRegionsIds()) {
-            List<Integer> playersIndexes = World.getRegion(regionId).getPlayerIndexes();
-            if (playersIndexes == null)
-                continue;
-            for (Integer playerIndex : playersIndexes) {
-                Player p = World.getPlayers().get(playerIndex);
-                if (p == null || !p.hasStarted() || p.hasFinished() || p.getLocalPlayerUpdate().getLocalPlayers()[getIndex()] == null)
+            for (Player p : World.getLocalPlayers(regionId)) {
+
+                if (p == null || p == this)
                     continue;
+
+                if (!sent.add(p))
+                    continue;
+
+                if (!p.withinDistance(this, 16))
+                    continue;
+
+                if (p.getLocalPlayerUpdate().getLocalPlayers()[getIndex()] == null)
+                    continue;
+
                 p.getPackets().sendPublicMessage(this, message);
             }
-        }
-        if (Settings.discordEnabled) {
-            // Launcher.getDiscordBot().getChannelByName("server-ingame-chat")
-            //      .sendMessage(this.getDisplayName().toString() + ": " + message.getMessage().toString());
         }
     }
 
@@ -6514,5 +6536,7 @@ public class Player extends Entity {
     public boolean hasPendingUsername() {
         return pendingUsername != null && !pendingUsername.isEmpty();
     }
+
+
 
 }

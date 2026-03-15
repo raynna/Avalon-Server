@@ -2,28 +2,35 @@ package com.rs.java.game.player.queue;
 
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
+import com.rs.kotlin.game.player.queue.QueueType;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
 
 public final class PlayerActionQueue {
 
-    private final Queue<QueuedAction> queue = new ArrayDeque<>();
-    private boolean running = false;
+    private final Queue<QueuedAction> weakQueue = new ArrayDeque<>();
+    private final Queue<QueuedAction> strongQueue = new ArrayDeque<>();
+
+    private boolean running;
 
     public void enqueue(Runnable action) {
-        queue.add(new QueuedAction(action, 0));
+        weakQueue.add(new QueuedAction(action, 0));
         tryRunNext();
     }
 
     public void enqueue(int delay, Runnable action) {
-        queue.add(new QueuedAction(action, delay));
+        weakQueue.add(new QueuedAction(action, delay));
         tryRunNext();
     }
 
+    public void enqueueStrong(Runnable action) {
+        strongQueue.add(new QueuedAction(action, 0));
+        tryRunNext();
+    }
 
     public void enqueueDelay(int ticks) {
-        queue.add(new QueuedAction(null, ticks));
+        weakQueue.add(new QueuedAction(null, ticks));
         tryRunNext();
     }
 
@@ -31,7 +38,10 @@ public final class PlayerActionQueue {
         if (running)
             return;
 
-        QueuedAction next = queue.poll();
+        QueuedAction next = !strongQueue.isEmpty()
+                ? strongQueue.poll()
+                : weakQueue.poll();
+
         if (next == null)
             return;
 
@@ -41,24 +51,19 @@ public final class PlayerActionQueue {
             WorldTasksManager.schedule(new WorldTask() {
                 @Override
                 public void run() {
-                    if (next.action != null) {
-                        try {
-                            next.action.run();
-                        } catch (Throwable e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    running = false;
-                    tryRunNext();
+                    runAction(next);
                     stop();
                 }
             }, next.delay);
-            return;
+        } else {
+            runAction(next);
         }
+    }
 
+    private void runAction(QueuedAction action) {
         try {
-            if (next.action != null)
-                next.action.run();
+            if (action.action != null)
+                action.action.run();
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -67,12 +72,14 @@ public final class PlayerActionQueue {
         tryRunNext();
     }
 
-
-    public void clear() {
-        queue.clear();
-        running = false;
+    public void clearWeak() {
+        weakQueue.clear();
     }
 
-    private record QueuedAction(Runnable action, int delay) {
+    public void clearAll() {
+        weakQueue.clear();
+        strongQueue.clear();
     }
+
+    private record QueuedAction(Runnable action, int delay) {}
 }

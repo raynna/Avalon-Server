@@ -384,6 +384,7 @@ public final class WorldPacketsDecoder extends Decoder {
         final InputStream stream = new InputStream(packet.getData());
 
         if (packetId == WALKING_PACKET || packetId == MINI_WALKING_PACKET) {
+            player.queue().clearWeak();
             handleWalking(player, stream);
             return;
         }
@@ -805,7 +806,6 @@ public final class WorldPacketsDecoder extends Decoder {
             player.setRun(true);
         if (steps <= 0)
             return;
-
         int x = 0, y = 0;
         for (int step = 0; step < steps; step++) {
             x = baseX + stream.readUnsignedByte();
@@ -2604,13 +2604,35 @@ public final class WorldPacketsDecoder extends Decoder {
     }
 
     private static void handleDialogueContinue(Player player, InputStream stream) {
+
         int interfaceHash = stream.readInt();
         stream.readShort128(); // junk
+
         int interfaceId = interfaceHash >> 16;
-        if (Utils.getInterfaceDefinitionsSize() <= interfaceId) return;
-        if (!player.isActive() || !player.getInterfaceManager().containsInterface(interfaceId)) return;
+
+        if (Utils.getInterfaceDefinitionsSize() <= interfaceId)
+            return;
+
+        if (!player.isActive() || !player.getInterfaceManager().containsInterface(interfaceId))
+            return;
+
         int componentId = interfaceHash - (interfaceId << 16);
-        player.getDialogueManager().continueDialogue(interfaceId, componentId);
+
+        int option = switch (componentId) {
+            case 11 -> 1;
+            case 13 -> 2;
+            case 14 -> 3;
+            case 15 -> 4;
+            case 16 -> 5;
+            default -> -1;
+        };
+
+        if (option != -1) {
+            player.getNewDialogueManager().handleOption(option);
+            return;
+        }
+
+        player.getNewDialogueManager().handleContinue();
     }
 
     private static void handleIncomingAssist(Player player, InputStream stream) {
