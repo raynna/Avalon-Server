@@ -7,6 +7,7 @@ import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.queue.QueueType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -334,8 +335,9 @@ public class CollectionLog implements Serializable {
                 continue;
 
             Item owned = lookup.get(master.getId());
-            if (owned != null)
+            if (owned != null) {
                 real.set(i, new Item(owned));
+            }
         }
 
 
@@ -405,7 +407,7 @@ public class CollectionLog implements Serializable {
     		for (String name : log.getDrops().keySet()) {
     			if (name.equalsIgnoreCase(tab)) {
     				add(type, name, item, true);
-    				break;
+    				return;
     			}
     		}
     	}
@@ -417,66 +419,18 @@ public class CollectionLog implements Serializable {
 
     public void addItem(Item item) {
         boolean shown = false;
+        java.util.Set<String> processedTabs = new java.util.HashSet<>();
 
-        // Add to Minigames
-        for (Map.Entry<String, Map<Integer, Integer>> entry :
-                MASTER.getMinigames().getDrops().entrySet()) {
+        for (CategoryType type : CategoryType.values()) {
+            for (Map.Entry<String, Map<Integer, Integer>> entry :
+                    MASTER.getCategory(type).getDrops().entrySet()) {
 
-            String minigameName = entry.getKey();
-            Map<Integer, Integer> masterTab = entry.getValue();
+                String tabName = entry.getKey();
 
-            if (masterTab.containsKey(item.getId())) {
-                add(CategoryType.MINIGAMES, minigameName, item, !shown);
-                shown = true;
-            }
-        }
-        for (Map.Entry<String, Map<Integer, Integer>> entry :
-                MASTER.getBosses().getDrops().entrySet()) {
-
-            String bossName = entry.getKey();
-            Map<Integer, Integer> masterTab = entry.getValue();
-
-            if (masterTab.containsKey(item.getId())) {
-                add(CategoryType.BOSSES, bossName, item, !shown);
-                shown = true;
-            }
-        }
-
-        // Add to Slayer
-        for (Map.Entry<String, Map<Integer, Integer>> entry :
-                MASTER.getSlayers().getDrops().entrySet()) {
-
-            String slayerName = entry.getKey();
-            Map<Integer, Integer> masterTab = entry.getValue();
-
-            if (masterTab.containsKey(item.getId())) {
-                add(CategoryType.SLAYER, slayerName, item, !shown);
-                shown = true;
-            }
-        }
-
-        for (Map.Entry<String, Map<Integer, Integer>> entry :
-                MASTER.getClues().getDrops().entrySet()) {
-
-            String slayerName = entry.getKey();
-            Map<Integer, Integer> masterTab = entry.getValue();
-
-            if (masterTab.containsKey(item.getId())) {
-                add(CategoryType.CLUES, slayerName, item, !shown);
-                shown = true;
-            }
-        }
-
-        // Add to Other
-        for (Map.Entry<String, Map<Integer, Integer>> entry :
-                MASTER.getOthers().getDrops().entrySet()) {
-
-            String otherName = entry.getKey();
-            Map<Integer, Integer> masterTab = entry.getValue();
-
-            if (masterTab.containsKey(item.getId())) {
-                add(CategoryType.OTHERS, otherName, item, !shown);
-                shown = true;
+                if (entry.getValue().containsKey(item.getId()) && processedTabs.add(tabName)) {
+                    add(type, tabName, item, !shown);
+                    shown = true;
+                }
             }
         }
     }
@@ -588,16 +542,21 @@ class LogCategory implements Serializable {
                         "New item added to your collection log: <col=" +
                                 HexColours.Colour.RED.getHex() + value.getName()
                 );
-
-                player.queue().enqueue(0, () -> {
+                player.queue().enqueueSoft(() -> {
                     player.getInterfaceManager().sendOverlay(3051, false);
                     player.getPackets().sendTextOnComponent(
                             3051, 6,
                             Utils.wrapString(value.getName(), 18));
                     player.getPackets().sendRunScript(10000);
                 });
-                player.queue().enqueue(4, () -> player.getPackets().sendRunScript(10002));
-                player.queue().enqueueDelay(2);
+
+                player.queue().enqueueDelay(4, QueueType.SOFT);
+
+                player.queue().enqueueSoft(() ->
+                        player.getPackets().sendRunScript(10002)
+                );
+
+                player.queue().enqueueDelay(0, QueueType.SOFT);
             }
         }
     }
