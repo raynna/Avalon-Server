@@ -21,7 +21,36 @@ object BarrowsChestTable {
         )
 
     private val ALL_BARROWS_ITEMS: List<String> =
-        BROTHER_ITEMS.values.flatten()
+        listOf(
+            // Helms
+            "item.ahrim_s_hood",
+            "item.dharok_s_helm",
+            "item.guthan_s_helm",
+            "item.karil_s_coif",
+            "item.torag_s_helm",
+            "item.verac_s_helm",
+            // Tops
+            "item.ahrim_s_robe_top",
+            "item.dharok_s_platebody",
+            "item.guthan_s_platebody",
+            "item.karil_s_top",
+            "item.torag_s_platebody",
+            "item.verac_s_brassard",
+            // Legs
+            "item.ahrim_s_robe_skirt",
+            "item.dharok_s_platelegs",
+            "item.guthan_s_chainskirt",
+            "item.karil_s_skirt",
+            "item.torag_s_platelegs",
+            "item.verac_s_plateskirt",
+            // Weapons
+            "item.ahrim_s_staff",
+            "item.dharok_s_greataxe",
+            "item.guthan_s_warspear",
+            "item.karil_s_crossbow",
+            "item.torag_s_hammers",
+            "item.verac_s_flail",
+        )
 
     private fun rollBarrowsItem(context: DropContext): Int? {
         val player = context.player
