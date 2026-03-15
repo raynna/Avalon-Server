@@ -3,6 +3,7 @@ package com.rs.java.game.objects;
 import com.rs.java.game.WorldObject;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.rscm.Rscm;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -13,50 +14,94 @@ import java.util.Set;
 
 public class ObjectPluginLoader {
 
-	public static final HashMap<Object, ObjectPlugin> cachedObjectPlugins = new HashMap<Object, ObjectPlugin>();
+	public static final Map<Object, ObjectPlugin> cachedObjectPlugins = new HashMap<>();
 
 	public static ObjectPlugin getPlugin(WorldObject object) {
-		ObjectPlugin plugin = cachedObjectPlugins.getOrDefault(object.getId(), cachedObjectPlugins.get(object.getName()));
-		if (plugin != null) {
-			System.out.println("[ObjectPluginLoader] "+object.getName()+"("+object.getId()+"): plugin was found by Id.");
+
+		// Fast lookup by ID
+		ObjectPlugin plugin = cachedObjectPlugins.get(object.getId());
+		if (plugin != null)
 			return plugin;
+
+		// Name fallback
+		String name = object.getName().toLowerCase();
+
+		for (Map.Entry<Object, ObjectPlugin> entry : cachedObjectPlugins.entrySet()) {
+			Object key = entry.getKey();
+
+			if (key instanceof String str && name.contains(str)) {
+				return entry.getValue();
+			}
 		}
-        for (Map.Entry<Object, ObjectPlugin> entry : cachedObjectPlugins.entrySet()) {
-            Object[] keys = entry.getValue().getKeys();
-            for (Object key : keys) {
-                if (key instanceof String && object.getName().toLowerCase().contains(((String) key).toLowerCase())) {
-                    plugin = entry.getValue();
-                    System.out.println("[ObjectPluginLoader] " + object.getName() + "(" + object.getId() + "): Found plugin by name");
-                    return plugin;
-                }
-            }
-        }
-        System.out.println("[ObjectPluginLoader] "+object.getName()+"("+object.getId()+"): Found no plugin for this object.");
+
 		return null;
 	}
 
 	public static void init() {
 		try {
-			String[] pluginFolders = {"com.rs.java.game.objects.plugins"};
+
+			String pluginFolder = "com.rs.java.game.objects.plugins";
+
 			Set<Class<?>> processedClasses = new HashSet<>();
-			for (String pluginFolder : pluginFolders) {
-				Class<?>[] classes = Utils.getClasses(pluginFolder);
-				for (Class<?> c : classes) {
-					if (c.isAnonymousClass() || processedClasses.contains(c))
-						continue;
-					Object o = c.getDeclaredConstructor().newInstance();
-					if (!(o instanceof ObjectPlugin plugin))
-						continue;
-					for (Object key : plugin.getKeys())
-						cachedObjectPlugins.put(key, plugin);
-					processedClasses.add(c);
+
+			Class<?>[] classes = Utils.getClasses(pluginFolder);
+
+			for (Class<?> c : classes) {
+
+				if (c.isAnonymousClass() || processedClasses.contains(c))
+					continue;
+
+				Object o = c.getDeclaredConstructor().newInstance();
+
+				if (!(o instanceof ObjectPlugin plugin))
+					continue;
+
+				for (Object key : plugin.getKeys()) {
+
+					if (key instanceof Integer id) {
+
+						cachedObjectPlugins.put(id, plugin);
+
+					}
+					else if (key instanceof String keyStr) {
+
+						if (keyStr.startsWith("object.")) {
+
+							cachedObjectPlugins.put(Rscm.lookup(keyStr), plugin);
+
+						}
+						else if (keyStr.startsWith("object_group.")) {
+
+							for (int id : Rscm.lookupList(keyStr)) {
+								cachedObjectPlugins.put(id, plugin);
+							}
+
+						}
+						else {
+
+							// fallback for name contains
+							cachedObjectPlugins.put(keyStr.toLowerCase(), plugin);
+						}
+					}
+					else {
+
+						System.out.println("Invalid key for " + plugin.getClass().getName());
+					}
 				}
+
+				processedClasses.add(c);
 			}
+
 			System.out.println("[ObjectPluginLoader]: " + processedClasses.size() + " plugins were loaded.");
-		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException |
-                 ClassNotFoundException | IOException e) {
+
+		} catch (InstantiationException | IllegalAccessException |
+				 NoSuchMethodException | InvocationTargetException e) {
+
 			Logger.handle(e);
+
+		} catch (IOException | ClassNotFoundException e) {
+
+			throw new RuntimeException(e);
 		}
 	}
-
 }

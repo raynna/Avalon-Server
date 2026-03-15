@@ -3003,7 +3003,7 @@ door_2555=2555
 # Options: Open, Pick-lock
 door_2556=2556
 # Options: Open, Pick-lock
-door_2557=2557
+axe_hut_gate=2557
 # Options: Open, Pick-lock
 door_2558=2558
 # Options: Open, Pick-lock
@@ -7339,7 +7339,7 @@ pyramid_entrance_6547=6547
 # Options: Enter
 portal_6551=6551
 # Options: Pray-at
-altar_6552=6552
+ancient_altar=6552
 # Options: Open
 doorway_6553=6553
 # Options: Open

@@ -12,12 +12,7 @@ public class FightKilnEntrance extends ObjectPlugin {
 		return new Object[] { 68107 };
 	}
 
-	@Override
-	public int getDistance() {
-		return 0;
-	}
-
-	@Override
+    @Override
 	public boolean processObject(Player player, WorldObject object) {
 		FightKiln.enterFightKiln(player, false);
 		return true;

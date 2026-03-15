@@ -205,7 +205,7 @@ public class ObjectDefinitions {
     }
 
     public boolean containsOption(int i, String option) {
-        if (options == null || options[i] == null || options.length <= i)
+        if (options == null || options.length <= i || options[i] == null)
             return false;
         return options[i].equals(option);
     }

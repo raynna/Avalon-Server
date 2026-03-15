@@ -12,15 +12,10 @@ public class AxeHutGate extends ObjectPlugin {
 
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { 2557 };
+		return new Object[] {"object.axe_hut_gate" };
 	}
 
-	@Override
-	public int getDistance() {
-		return 0;
-	}
-	
-	@Override
+    @Override
 	public boolean processObject(Player player, WorldObject object) {
 		if (player.getY() == 3962) {
 			AxeHut.GateNorthOut(player, object);
@@ -42,9 +37,9 @@ public class AxeHutGate extends ObjectPlugin {
 					"You need atleast an level of 60 thieving to picklock this door.");
 			return false;
 		}
-		if (!player.getInventory().containsItem(1523, 1)) {
+		if (!player.getInventory().containsItem("item.lockpick", 1)) {
 			player.getDialogueManager().startDialogue("SimpleMessage",
-					"You need an Lockpick to picklock this gate.");
+					"You need a Lockpick to picklock this door.");
 			return false;
 		}
 		if (player.getY() == 3963) {
