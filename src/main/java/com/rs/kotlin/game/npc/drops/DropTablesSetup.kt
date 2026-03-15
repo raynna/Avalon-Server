@@ -136,6 +136,7 @@ object DropTablesSetup {
         registerNpcGroupDropTable(BrutalGreenDragonDropTable.table, "npc_group.brutal_green_dragon_lv227")
         registerNpcGroupDropTable(IronDragonDropTable.table, "npc_group.iron_dragon_lv189")
         registerNpcGroupDropTable(MithrilDragonDropTable.table, "npc_group.mithril_dragon_lv304")
+        registerNpcGroupDropTable(SkeletalWyvernDropTable.table, "npc_group.skeletal_wyvern_lv198")
 
         /**
          * Demons
