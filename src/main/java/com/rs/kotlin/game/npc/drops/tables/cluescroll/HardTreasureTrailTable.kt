@@ -17,7 +17,7 @@ object HardTreasureTrailTable {
                     }
                 }
             val thirdAge =
-                weightedTable {
+                weightedTable(meta = { collectionLog = true }) {
                     add("item.third_age_full_helmet")
                     add("item.third_age_platebody")
                     add("item.third_age_platelegs")
@@ -32,7 +32,7 @@ object HardTreasureTrailTable {
                     add("item.third_age_amulet")
                 }
             val gilded =
-                weightedTable {
+                weightedTable(meta = { collectionLog = true }) {
                     add("item.gilded_full_helm")
                     add("item.gilded_platebody")
                     add("item.gilded_platelegs")
@@ -52,7 +52,7 @@ object HardTreasureTrailTable {
                     table(gilded, weight = 5, asSubTable = true, name = "Gilded", icon = "item.gilded_platebody")
                 }
             val heraldic =
-                weightedTable {
+                weightedTable(meta = { collectionLog = true }) {
                     add("item.rune_helm_h1")
                     add("item.rune_helm_h2")
                     add("item.rune_helm_h3")
@@ -96,7 +96,7 @@ object HardTreasureTrailTable {
                     add("item.magic_shortbow")
                 }
             val rare =
-                weightedTable {
+                weightedTable(meta = { collectionLog = true }) {
                     add("item.amulet_of_glory_t4")
                     add("item.robin_hood_hat")
                     add("item.enchanted_hat")
@@ -195,50 +195,8 @@ object HardTreasureTrailTable {
                 }
             val bow =
                 weightedTable(10) {
-                    add("item.magic_composite_bow", weight = 1)
+                    add("item.magic_composite_bow", weight = 1) { collectionLog = true }
                     add("item.magic_longbow", weight = 9)
-                }
-            val sharedScrolls =
-                weightedTable {
-                    // unknown
-                    add("item.lumber_yard_teleport", amount = 5..15)
-                    add("item.nardah_teleport", amount = 5..15)
-                    add("item.bandit_camp_teleport", amount = 5..15)
-                }
-            val sharedPage =
-                weightedTable {
-                    add("item.zamorak_page_1")
-                    add("item.zamorak_page_2")
-                    add("item.zamorak_page_3")
-                    add("item.zamorak_page_4")
-                    add("item.saradomin_page_1")
-                    add("item.saradomin_page_2")
-                    add("item.saradomin_page_3")
-                    add("item.saradomin_page_4")
-                    add("item.guthix_page_1")
-                    add("item.guthix_page_2")
-                    add("item.guthix_page_3")
-                    add("item.guthix_page_4")
-                    add("item.ancient_page_1")
-                    add("item.ancient_page_2")
-                    add("item.ancient_page_3")
-                    add("item.ancient_page_4")
-                    add("item.armadyl_page_1")
-                    add("item.armadyl_page_2")
-                    add("item.armadyl_page_3")
-                    add("item.armadyl_page_4")
-                    add("item.bandos_page_1")
-                    add("item.bandos_page_2")
-                    add("item.bandos_page_3")
-                    add("item.bandos_page_4")
-                }
-            val sharedFirelighter =
-                weightedTable {
-                    add("item.red_firelighter")
-                    add("item.blue_firelighter")
-                    add("item.green_firelighter")
-                    add("item.white_firelighter")
-                    add("item.purple_firelighter")
                 }
             val runes =
                 weightedTable {
@@ -269,9 +227,9 @@ object HardTreasureTrailTable {
                     name = "Bows",
                     icon = "item.magic_composite_bow",
                 )
-                table(sharedFirelighter, numerator = 1, denominator = 27)
-                table(sharedScrolls, numerator = 1, denominator = 27)
-                table(sharedPage, numerator = 1, denominator = 27)
+                table(SharedClueScroll.firelighters, numerator = 1, denominator = 27)
+                table(SharedClueScroll.scrolls, numerator = 1, denominator = 27)
+                table(SharedClueScroll.pages, numerator = 1, denominator = 27)
             }
             main(17) {
                 drop("item.coins", amount = 1000..5000, weight = 3)
