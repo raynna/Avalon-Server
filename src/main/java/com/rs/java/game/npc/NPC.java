@@ -1,10 +1,7 @@
 package com.rs.java.game.npc;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -207,17 +204,11 @@ public class NPC extends Entity implements Serializable {
     }
 
     public void setBonuses() {
-        if (combatLevel != 0) {
-            combatData = CombatDataParser.getData(id);
-            if (combatData != null) {
-                return;
-            }
+        combatData = CombatDataParser.getData(id);
+        if (combatData != null) {
+            return;
         }
-        // If no predefined data, generate standard CombatData
         int level = getCombatLevel();
-
-        // Clamp level to reasonable max
-        if (level > 750) level = 750;
         if (id == 7891 || id == 4474) {
             combatData = new CombatData(
                     level,
@@ -232,10 +223,92 @@ public class NPC extends Entity implements Serializable {
                     new MagicDefence(0),
                     new RangedDefence(0, 0, 0),
                     new Immunities(false, false, false, false, false),
-                    new MaxHit(0, 0, 0, 0), true, List.of("Crush"), 4, 0, level
+                    new MaxHit(0, 0, 0, 0),
+                    true,
+                    List.of("Crush"),
+                    4,
+                    0,
+                    level
             );
             return;
         }
+
+        NpcCombatDefinition defs = getCombatDefinitions();
+        Map<String, Integer> levels = defs.getCombatLevels();
+
+        if (levels != null && !levels.isEmpty()) {
+
+            int attack = levels.getOrDefault("ATTACK", 1);
+            int strength = levels.getOrDefault("STRENGTH", attack);
+            int defence = levels.getOrDefault("DEFENSE", 1);
+            int magic = levels.getOrDefault("MAGE", 1);
+            int range = levels.getOrDefault("RANGE", 1);
+
+            int constitution = defs.getHitpoints();
+            MeleeDefence meleeDef;
+            MagicDefence magicDef;
+            RangedDefence rangeDef;
+
+            switch (defs.getAttackStyle()) {
+
+                case MELEE:
+                    meleeDef = new MeleeDefence(defence * 2, defence * 2, defence * 2);
+                    magicDef = new MagicDefence(defence / 2);
+                    rangeDef = new RangedDefence(defence, defence, defence);
+                    break;
+
+                case MAGIC:
+                    meleeDef = new MeleeDefence(defence, defence, defence);
+                    magicDef = new MagicDefence(defence * 2);
+                    rangeDef = new RangedDefence(defence / 2, defence / 2, defence / 2);
+                    break;
+
+                case RANGE:
+                    meleeDef = new MeleeDefence(defence / 2, defence / 2, defence / 2);
+                    magicDef = new MagicDefence(defence * 2);
+                    rangeDef = new RangedDefence(defence, defence, defence);
+                    break;
+
+                default:
+                    meleeDef = new MeleeDefence(defence, defence, defence);
+                    magicDef = new MagicDefence(defence);
+                    rangeDef = new RangedDefence(defence, defence, defence);
+                    break;
+            }
+
+            int maxHit = defs.getMaxHit();
+
+            combatData = new CombatData(
+                    level,
+                    attack,
+                    strength,
+                    defence,
+                    magic,
+                    range,
+                    constitution,
+                    attack,
+                    strength,
+                    magic,
+                    magic,
+                    range,
+                    range,
+                    meleeDef,
+                    magicDef,
+                    rangeDef,
+                    new Immunities(false, false, false, false, false),
+                    new MaxHit(maxHit, maxHit, maxHit, maxHit),
+                    defs.getAggressivenessType() == AggressivenessType.AGGRESSIVE,
+                    List.of(defs.getAttackStyle().name()),
+                    4,
+                    defs.getRespawnDelay(),
+                    level
+            );
+
+            return;
+        }
+
+        if (level > 750)
+            level = 750;
 
         int defenceLevel = level / 3;
         int meleeAttack = level - (level / 3);
@@ -252,7 +325,9 @@ public class NPC extends Entity implements Serializable {
                 magicAttack,
                 rangedAttack,
                 constitution,
-                0, 0, (int) Math.ceil(magicAttack * 0.75), 0, 0, 0,
+                0, 0,
+                (int) Math.ceil(magicAttack * 0.75),
+                0, 0, 0,
                 new MeleeDefence(defenceLevel * 2, defenceLevel * 2, defenceLevel * 2),
                 new MagicDefence((int) (defenceLevel * 1.5)),
                 new RangedDefence(defenceLevel * 2, defenceLevel * 2, defenceLevel * 2),
@@ -322,7 +397,6 @@ public class NPC extends Entity implements Serializable {
         }
 
         if (def == null) {
-            //Logger.log("CombatDef", "Missing combat def for id=" + getId() + " name=" + getName());
             def = new NpcCombatDefinition(
                     Collections.singletonList(getId()),
                     nListSafe(getName()),
@@ -1130,7 +1204,7 @@ public class NPC extends Entity implements Serializable {
                             continue;
                         }
 
-                        if (!clipedProjectile(player, (attackStyle != AttackStyle.RANGE && attackStyle != AttackStyle.MAGIC))) {
+                        if (!isNoDistanceCheck() && !clipedProjectile(player, (attackStyle != AttackStyle.RANGE && attackStyle != AttackStyle.MAGIC))) {
                             continue;
                         }
 

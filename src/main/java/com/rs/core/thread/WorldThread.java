@@ -49,7 +49,7 @@ public final class WorldThread extends Thread {
                 try {
                     if (player == null || !player.hasStarted() || player.hasFinished())
                         continue;
-                    player.processEntity();
+                    player.processLogicPackets();
                 } catch (Throwable e) {
                     Logger.handle(e);
                 }
@@ -59,6 +59,15 @@ public final class WorldThread extends Thread {
                     if (npc == null || npc.hasFinished())
                         continue;
                     npc.processEntity();
+                } catch (Throwable e) {
+                    Logger.handle(e);
+                }
+            }
+            for (Player player : World.getPlayers()) {
+                try {
+                    if (player == null || !player.hasStarted() || player.hasFinished())
+                        continue;
+                    player.processEntity();
                 } catch (Throwable e) {
                     Logger.handle(e);
                 }

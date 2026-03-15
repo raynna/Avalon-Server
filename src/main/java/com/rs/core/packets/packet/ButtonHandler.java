@@ -1156,7 +1156,6 @@ public class ButtonHandler {
                 });
             }
         } else if (interfaceId == 320) {
-            player.stopAll();
             if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) {
                 int lvlupSkill = -1;
                 int skillMenu = -1;
@@ -1414,26 +1413,31 @@ public class ButtonHandler {
                         break;
                 }
                 player.getPackets().sendHideIComponent(lvlupSkill != -1 ? "interface.levelup" : "interface.skillmenu", lvlupSkill != -1 ? 9 : 27, true);
-                player.getInterfaceManager().sendInterface(lvlupSkill != -1 ? "interface.levelup" : "interface.skillmenu");
-                if (lvlupSkill != -1) {
-                    LevelUp.switchFlash(player, lvlupSkill, false);
-                }
-                if (skillMenu != -1) {
-                    player.getTemporaryAttributtes().put("skillMenu", skillMenu);
-                }
-                int finalSkillId = skillId;
-                player.setCloseInterfacesEvent(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        player.getTemporaryAttributtes().remove("MILESTONE");
-                        player.getTemporaryAttributtes().remove("COMBATMILESTONE");
-                        player.getTemporaryAttributtes().remove("LEVELUP[" + finalSkillId + "]:GAINEDLEVELS");
-                        player.getVarsManager().sendVarBit(4727, -1);
-                        player.getVarsManager().sendVarBit(4728, -1);
-                        player.getVarsManager().sendVarBit(4730, 0);
-                        player.getVarsManager().sendVarBit(4731, 0);
+                int finalLvlupSkill = lvlupSkill;
+                int finalSkillMenu = skillMenu;
+                int finalSkillId1 = skillId;
+                player.queue().enqueueWeak(() -> {
+                    player.getInterfaceManager().sendInterface(finalLvlupSkill != -1 ? "interface.levelup" : "interface.skillmenu");
+                    if (finalLvlupSkill != -1) {
+                        LevelUp.switchFlash(player, finalLvlupSkill, false);
                     }
+                    if (finalSkillMenu != -1) {
+                        player.getTemporaryAttributtes().put("skillMenu", finalSkillMenu);
+                    }
+                    int finalSkillId = finalSkillId1;
+                    player.setCloseInterfacesEvent(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            player.getTemporaryAttributtes().remove("MILESTONE");
+                            player.getTemporaryAttributtes().remove("COMBATMILESTONE");
+                            player.getTemporaryAttributtes().remove("LEVELUP[" + finalSkillId + "]:GAINEDLEVELS");
+                            player.getVarsManager().sendVarBit(4727, -1);
+                            player.getVarsManager().sendVarBit(4728, -1);
+                            player.getVarsManager().sendVarBit(4730, 0);
+                            player.getVarsManager().sendVarBit(4731, 0);
+                        }
+                    });
                 });
             } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET || packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) {
                 int skillId = player.getSkills().getTargetIdByComponentId(componentId);

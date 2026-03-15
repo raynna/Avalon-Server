@@ -84,14 +84,22 @@ class TaskManager : Serializable {
     }
 
     private fun showCompletionOverlay(task: Task) {
-        player.queue().enqueue {
+        player.queue().enqueueNormal {
             player.interfaceManager.sendOverlay(3050, false)
-            player.packets.sendTextOnComponent(3050, 6, Utils.wrapString(Utils.formatString(task.toString()), 18))
+            player.packets.sendTextOnComponent(
+                3050,
+                6,
+                Utils.wrapString(Utils.formatString(task.toString()), 18),
+            )
             player.packets.sendRunScript(10003)
         }
-        player.queue().enqueue(4) {
+
+        player.queue().enqueueDelay(4)
+
+        player.queue().enqueueNormal {
             player.packets.sendRunScript(10005)
         }
+
         player.queue().enqueueDelay(2)
         player.packets.sendFilteredGameMessage(
             true,

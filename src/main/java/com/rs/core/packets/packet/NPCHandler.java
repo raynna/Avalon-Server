@@ -58,9 +58,13 @@ import com.rs.core.packets.InputStream;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.npc.combatdata.CombatData;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.npc.drops.DropTableRegistry;
 import com.rs.kotlin.game.npc.drops.DropTableSource;
+import com.rs.kotlin.game.player.dialogue.DialogueQueues;
+import com.rs.kotlin.game.player.dialogue.DialogueStarter;
+import com.rs.kotlin.game.player.dialogue.dialogues.BankerdialogueKt;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
 import com.rs.kotlin.game.player.shop.shops.GeneralStore;
 import com.rs.kotlin.tool.WikiApi;
@@ -128,6 +132,23 @@ public class NPCHandler {
         if (npc.getCombatData() == null) {
             npc.setBonuses();
         }
+            CombatData data = npc.getCombatData();
+            if (data != null) {
+                player.message("Attack: " + data.attackLevel
+                        + " | Strength: " + data.strengthLevel
+                        + " | Defence: " + data.defenceLevel);
+                player.message("Magic: " + data.magicLevel
+                        + " | Ranged: " + data.rangedLevel);
+                player.message("Bonuses -> Atk: " + data.attackBonus
+                        + " | Str: " + data.strengthBonus
+                        + " | Mage: " + data.magicBonus
+                        + " | Range: " + data.rangedBonus);
+                player.message("Defences -> Stab: " + data.meleeDefence.getStab()
+                        + " | Slash: " + data.meleeDefence.getSlash()
+                        + " | Crush: " + data.meleeDefence.getCrush());
+                player.message("Magic Def: " + data.magicDefence.getMagic()
+                        + " | Range Def: " + data.rangedDefence.getStandard());
+            }
         /*try {
             // Build the input string like a player typed it
             String input = "lookupnpc " + npc.getId();
@@ -362,7 +383,6 @@ public class NPCHandler {
                 }
             }, true));
         }
-
         if (npc.getId() == 4296 || npc.getId() == 6362 || npc.getDefinitions().name.toLowerCase().contains("banker")
                 || npc.getDefinitions().name.toLowerCase().contains("gundai")) {
             player.setRouteEvent(new RouteEvent(npc, () -> {
@@ -371,7 +391,7 @@ public class NPCHandler {
                 npc.resetWalkSteps();
                 npc.faceEntity(player);
                 player.faceEntity(npc);
-                player.getDialogueManager().startDialogue("Banker", npc.getId());
+                DialogueStarter.banker(player, npc.getId());
             }, true));
             return;
         }
@@ -926,15 +946,15 @@ public class NPCHandler {
         if (npc.isNpc("npc_group.banker", "npc_group.grand_exchange_clerk", "npc.jade", "npc.eniola", "npc.gundai")) {
             boolean isGeClerk = npc.isNpc("npc_group.grand_exchange_clerk");
             player.setRouteEvent(new RouteEvent(npc, () -> {
-                player.faceEntity(npc);
-                if (!player.withinDistance(npc, 2))
-                    return;
-                npc.faceEntity(player);
-                npc.setNextFaceWorldTile(new WorldTile(player.getX(), player.getY(), player.getPlane()));
-                if (isGeClerk)
-                    player.getGeManager().openGrandExchange();
-                else
-                    player.getBank().openBank();
+                    player.faceEntity(npc);
+                    if (!player.withinDistance(npc, 2))
+                        return;
+                    npc.faceEntity(player);
+                    npc.setNextFaceWorldTile(new WorldTile(player.getX(), player.getY(), player.getPlane()));
+                    if (isGeClerk)
+                        player.getGeManager().openGrandExchange();
+                    else
+                        player.getBank().openBank();
             }, true));
 
             return;
