@@ -29,11 +29,12 @@ public class DragonFire {
         METALLIC,
         VORKATH,
         KING_BLACK_DRAGON,
-        ELVARG
+        ELVARG,
+        WYVERN
     }
 
     private static class Protection {
-        boolean shield, prayer, antifire, superAntifire;
+        boolean shield, prayer, antifire, superAntifire, wyvernShield;
     }
 
     /**
@@ -77,6 +78,7 @@ public class DragonFire {
         protection.antifire = player.getAntifire() > 0;
         protection.superAntifire = player.getSuperAntifire() > 0;
         protection.prayer = dragon != DragonType.METALLIC && player.getPrayer().isMageProtecting();
+        protection.wyvernShield = hasWyvernShield(player);
 
         Pair<Integer, Integer> cap = getDragonfireCap(dragon, special, accuracyRoll, protection);
 
@@ -85,6 +87,17 @@ public class DragonFire {
 
         int damage = Utils.random(min, max);
         damage = ceilToNextTenIfEnabled(player, damage);
+        if (dragon == DragonType.WYVERN) {
+            boolean ancientShield = player.getEquipment().getItem(Equipment.SLOT_SHIELD)
+                    .isAnyOf("item.ancient_wyvern_shield_uncharged", "item.ancient_wyvern_shield_charged");
+            if (!ancientShield) {
+                if (Utils.roll(1, 7)) { // 1/7 chance
+                    player.freeze(8); // adjust ticks if needed
+                    player.message("The icy breath freezes you!");
+                }
+                return damage;
+            }
+        }
         if (damage == 0) {
             if (protection.superAntifire)
                 player.message("Your potion fully protects you from the dragon's breath.");
@@ -121,7 +134,12 @@ public class DragonFire {
         boolean prayer = p.prayer;
         boolean antifire = p.antifire;
         boolean superAntifire = p.superAntifire;
-
+        if (dragon == DragonType.WYVERN) {
+            if (p.wyvernShield) {
+                return new Pair<>(1, 100);
+            }
+            return new Pair<>(1, 570);
+        }
         //best, all protections
         if (superAntifire && prayer && shield) {
             switch (dragon) {
@@ -264,6 +282,23 @@ public class DragonFire {
             if (shieldId == id) return true;
         }
         return false;
+    }
+
+    private static boolean hasWyvernShield(Player player) {
+        Item shield = player.getEquipment().getItem(Equipment.SLOT_SHIELD);
+        if (shield == null)
+            return false;
+
+        return shield.isAnyOf(
+                "item.elemental_shield",
+                "item.mind_shield",
+                "item.dragonfire_shield_uncharged",
+                "item.dragonfire_shield_charged",
+                "item.dragonfire_ward_uncharged",
+                "item.dragonfire_ward_charged",
+                "item.ancient_wyvern_shield_uncharged",
+                "item.ancient_wyvern_shield_charged"
+        );
     }
 
     private static int ceilToNextTenIfEnabled(Player player, int value) {
