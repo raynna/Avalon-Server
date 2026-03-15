@@ -1,6 +1,7 @@
 package com.rs.kotlin.game.player.command.commands
 
 import com.rs.Settings
+import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.core.cache.defintions.NPCDefinitions
 import com.rs.java.game.item.Item
 import com.rs.java.game.player.Player
@@ -121,8 +122,8 @@ class DropTestCommand : Command {
         }
 
         for ((itemId, totalAmount) in dropCounts) {
+            player.message("You recieved " + totalAmount + " of " + ItemDefinitions.getItemDefinitions(itemId).name)
             player.bank.addItem(itemId, totalAmount, true)
-            player.collectionLog.addItem(Item(itemId, totalAmount))
         }
         BarrowsChestTable.BARROWS_CHEST_TABLE
             .writeRatesToFile(Settings.DROP_MULTIPLIER)
