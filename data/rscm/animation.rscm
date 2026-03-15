@@ -388,3 +388,7 @@ frost_dragon_death=13153
 frost_dragon_block=13154
 leather_dragon_attack=12252
 leather_dragon_firebreath=12259
+wyvern_melee_attack=1590
+wyvern_death=1591
+wyvern_breath=1592
+wyvern_range_attack=1593

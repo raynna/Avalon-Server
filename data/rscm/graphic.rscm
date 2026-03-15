@@ -265,3 +265,8 @@ skeletal_ground_hit=2133
 double_lightning_projectile=2398
 double_lightning_hit=2399
 start_of_dungeoneering_arrows=2466
+
+#npcs
+skeletal_wyvern_range=499
+skeletal_wyvern_icy_breath=501
+skeletal_wyvern_icy_breath_hit=502
