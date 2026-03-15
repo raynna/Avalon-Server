@@ -30,23 +30,52 @@ public class FightKiln extends Controller {
 
     public static final WorldTile OUTSIDE = new WorldTile(4744, 5172, 0);
 
-    private static final int TOKHAAR_HOK = 15195, TOKHAAR_HOK_SCENE = 15200;
+    private static final int TOKHAAR_HOK = 15195;
+    private static final int TOKHAAR_HOK_SCENE = 15200;
 
     private static final int[] MUSICS = {1088, 1082, 1086};
+
+    private int[] boundChuncks;
+    private Stages stage;
+
+    private boolean logoutAtEnd;
+    private boolean login;
+
+    public int selectedMusic;
+
+    private NPC tokHaarHok;
+    private HarAken harAken;
+
+    private int aliveNPCSCount;
+
+    private enum Stages {
+        LOADING, RUNNING, DESTROYING
+    }
 
     public void playMusic() {
         player.getMusicsManager().playMusic(selectedMusic);
     }
 
+    public static void enterFightKiln(Player player, boolean quickEnter) {
+        int startWave = determineStartingWave(player);
+        player.getControlerManager()
+                .startControler("FightKilnControler", startWave, quickEnter ? 1 : 0);
+    }
+
+    private static int determineStartingWave(Player player) {
+        return player.isCompletedFightKiln() ? 31 : 21;
+    }
+
+    private boolean isQuickEnter() {
+        return getArguments() != null
+                && getArguments().length > 1
+                && (int) getArguments()[1] == 1;
+    }
+
     private void debug(String msg) {
         System.out.println("[FightKiln][" + player.getUsername() + "] " + msg);
     }
-    /*
-     * 0 - south east 1 - south west 2 - north west 3 - north east TokHaar-Hur -
-     * 15201 TokHaar-Xil - 15202 TokHaar-Mej - 15203 TokHaar-Ket - 15204
-     * TokHaar-Tok-Xil - 15205 TokHaar-Yt-Mejkot - 15206 TokHaar-Ket-Zek - 15207
-     * TokHaar-Jad - 15208 TokHaar-Ket-Dill - 15213
-     */
+
     private final int[][] WAVES = {{15202, 15202, 15205, 15201, 15201}, // 1
             {15202, 15202, 15205, 15205, 15201}, // 2
             {15202, 15205, 15205, 15205, 15201}, // 3
@@ -84,23 +113,6 @@ public class FightKiln extends Controller {
             {15207, 15206, 15206, 15208}, // 35
             {15208, 15208} // 36
     };
-
-    private int[] boundChuncks;
-    private Stages stage;
-    private boolean logoutAtEnd;
-    private boolean login;
-    public int selectedMusic;
-    private NPC tokHaarHok;
-    private HarAken harAken;
-    private int aliveNPCSCount;
-
-    public static void enterFightKiln(Player player, boolean quickEnter) {
-        player.getControlerManager().startControler("FightKilnControler", 0, quickEnter ? 1 : 0);
-    }
-
-    private static enum Stages {
-        LOADING, RUNNING, DESTROYING
-    }
 
     @Override
     public void start() {
@@ -173,114 +185,89 @@ public class FightKiln extends Controller {
         debug("Map built.");
     }
 
-    public void loadCave(final boolean login) {
+    private void preparePlayer() {
+        selectedMusic = MUSICS[Utils.random(MUSICS.length)];
+        playMusic();
+        player.setForceMultiArea(true);
+        player.setLargeSceneView(true);
+        player.stopAll();
+        if (player.getFamiliar() != null)
+            player.getFamiliar().call(false);
+    }
+
+    public void loadCave(boolean login) {
+
         final FightKiln kiln = this;
+
         stage = Stages.LOADING;
-        debug("Stage -> LOADING");
         player.lock();
 
         Runnable event = () -> CoresManager.getSlowExecutor().execute(() -> {
+
             try {
-                debug("SlowExecutor started building instance. Thread=" + Thread.currentThread().getName());
 
                 int currentWave = getCurrentWave();
-                debug("Current wave resolved: " + currentWave + ", login=" + login);
 
                 if (boundChuncks == null || login) {
-                    debug("Allocating new instance chunks...");
+
                     boundChuncks = MapBuilder.findEmptyChunkBound(8, 8);
-                    debug("Allocated instance chunks: " + boundChuncks[0] + "," + boundChuncks[1]);
-
-                    debug("Building map...");
                     buildMap();
-                    debug("Map built.");
 
-                    debug("Scheduling world-thread restore task after map build...");
                     WorldTasksManager.schedule(new WorldTask() {
+
                         @Override
                         public void run() {
-                            try {
-                                debug("WorldTask restore running. Thread=" + Thread.currentThread().getName());
-                                debug("Before loadMapRegions: player tile=" + player.getTile());
 
-                                player.setForceNextMapLoadRefresh(true);
-                                player.loadMapRegions();
+                            player.setForceNextMapLoadRefresh(true);
+                            player.loadMapRegions();
 
-                                debug("After loadMapRegions: player tile=" + player.getTile());
+                            if (login) {
 
-                                if (login) {
-                                    debug("Login detected -> teleporting player into instance");
-                                    teleportPlayerToMiddle();
-                                    debug("After teleportPlayerToMiddle: player tile=" + player.getTile());
+                                teleportPlayerToMiddle();
+                                preparePlayer();
 
-                                    selectedMusic = MUSICS[Utils.random(MUSICS.length)];
-                                    playMusic();
-                                    player.setForceMultiArea(true);
-                                    player.setLargeSceneView(true);
-                                    player.stopAll();
-
-                                    if (player.getFamiliar() != null)
-                                        player.getFamiliar().call(false);
-
-                                    stage = Stages.RUNNING;
-                                    debug("Stage -> RUNNING");
-                                    player.unlock();
-                                    debug("Player unlocked after login restore");
-
-                                    setWaveEvent();
-                                    debug("Wave event scheduled after login restore");
-                                    stop();
-                                    return;
-                                }
-
-                                continueLoad(kiln, currentWave);
-                                stop();
-                            } catch (Throwable e) {
-                                debug("ERROR inside world restore task: " + e.getClass().getName() + ": " + e.getMessage());
-                                e.printStackTrace();
-                                player.unlock();
                                 stage = Stages.RUNNING;
+                                player.unlock();
+
+                                setWaveEvent();
+                                stop();
+                                return;
                             }
+
+                            continueLoad(kiln, currentWave);
+                            stop();
                         }
+
                     });
 
                     return;
                 }
 
-                if (currentWave == 11 || currentWave == 21 || currentWave == 31 || currentWave == 34) {
-                    debug("Wave requires rebuild of next map chunk set");
+                if (currentWave == 11 || currentWave == 21
+                        || currentWave == 31 || currentWave == 34)
                     buildMap();
-                    debug("Map rebuilt for special wave transition");
-                }
 
                 WorldTasksManager.schedule(new WorldTask() {
+
                     @Override
                     public void run() {
-                        try {
-                            debug("WorldTask continueLoad running. Thread=" + Thread.currentThread().getName());
 
-                            player.setForceNextMapLoadRefresh(true);
-                            player.loadMapRegions();
+                        player.setForceNextMapLoadRefresh(true);
+                        player.loadMapRegions();
 
-                            continueLoad(kiln, currentWave);
-                            stop();
-                        } catch (Throwable e) {
-                            debug("ERROR inside continueLoad world task: " + e.getClass().getName() + ": " + e.getMessage());
-                            e.printStackTrace();
-                            player.unlock();
-                            stage = Stages.RUNNING;
-                        }
+                        continueLoad(kiln, currentWave);
+                        stop();
                     }
+
                 });
 
             } catch (Throwable e) {
-                debug("ERROR inside slowExecutor loadCave: " + e.getClass().getName() + ": " + e.getMessage());
-                e.printStackTrace();
+
+                Logger.handle(e);
 
                 WorldTasksManager.schedule(new WorldTask() {
                     @Override
                     public void run() {
-                        debug("Recovery unlock task running after slowExecutor failure");
                         player.unlock();
                         stage = Stages.RUNNING;
                         stop();
@@ -296,112 +283,85 @@ public class FightKiln extends Controller {
     }
 
     private void continueLoad(FightKiln kiln, int currentWave) {
-        debug("continueLoad(currentWave=" + currentWave + ") on thread=" + Thread.currentThread().getName());
 
-        selectedMusic = MUSICS[Utils.random(MUSICS.length)];
-        playMusic();
-        player.setForceMultiArea(true);
-        player.setLargeSceneView(true);
-        player.stopAll();
+        preparePlayer();
 
-        if (player.getFamiliar() != null)
-            player.getFamiliar().call(false);
-
-        if (currentWave == 0) {
-            debug("Entering scene 0");
-
-            player.getInventory().removeItems(
-                    new Item(23653, Integer.MAX_VALUE),
-                    new Item(23654, Integer.MAX_VALUE),
-                    new Item(23655, Integer.MAX_VALUE),
-                    new Item(23656, Integer.MAX_VALUE),
-                    new Item(23657, Integer.MAX_VALUE),
-                    new Item(23658, Integer.MAX_VALUE)
-            );
-
-            player.setNextWorldTile(getWorldTile(31, 51));
-
-            tokHaarHok = new NPC(TOKHAAR_HOK, getWorldTile(30, 36), -1, true, true);
-            tokHaarHok.setDirection(Utils.getFaceDirection(0, 1));
-
-            WorldTasksManager.schedule(new WorldTask() {
-
-                int count = 0;
-                boolean run;
-
-                @Override
-                public void run() {
-
-                    if (count == 0) {
-
-                        WorldTile lookTo = getWorldTile(29, 39);
-                        player.getPackets().sendCameraLook(
-                                Cutscene.getX(player, lookTo.getX()),
-                                Cutscene.getY(player, lookTo.getY()),
-                                3500
-                        );
-
-                        WorldTile posTile = getWorldTile(27, 30);
-                        player.getPackets().sendCameraPos(
-                                Cutscene.getX(player, posTile.getX()),
-                                Cutscene.getY(player, posTile.getY()),
-                                3500
-                        );
-
-                        run = player.getRun();
-                        player.setRun(false);
-
-                        WorldTile walkTo = getWorldTile(31, 39);
-                        player.addWalkSteps(walkTo.getX(), walkTo.getY(), -1, false);
-
-                    } else if (count == 1) {
-
-                        player.getPackets().sendResetCamera();
-
-                    } else if (count == 2) {
-
-                        player.getDialogueManager().startDialogue(
-                                "TokHaarHok", 0, TOKHAAR_HOK, kiln
-                        );
-
-                        player.setRun(run);
-                        stage = Stages.RUNNING;
-                        player.unlock();
-                        stop();
-                    }
-
-                    count++;
-                }
-
-            }, 1, 6);
-
-            return;
-        }
-
-        if (currentWave == 1) {
-            debug("Entering scene 1");
-            player.getInventory().removeItems(new Item(23653, Integer.MAX_VALUE),
-                    new Item(23654, Integer.MAX_VALUE), new Item(23655, Integer.MAX_VALUE),
-                    new Item(23656, Integer.MAX_VALUE), new Item(23657, Integer.MAX_VALUE),
-                    new Item(23658, Integer.MAX_VALUE));
-            tokHaarHok = new NPC(TOKHAAR_HOK_SCENE, getWorldTile(30, 36), -1, true, true);
-            tokHaarHok.setDirection(Utils.getFaceDirection(0, 1));
-            player.setNextWorldTile(getWorldTile(31, 39));
-            player.getPackets().sendBlackOut(2);
-            player.getVarsManager().sendVar(1241, 1);
-            player.setNextFaceWorldTile(tokHaarHok);
-            debug("Scene 1 setup done");
+        if (!isQuickEnter()) {
+            playIntroScene(kiln);
             return;
         }
 
         if (currentWave > 1) {
-            debug("Login/restore during active kiln wave -> teleporting to middle");
+
             teleportPlayerToMiddle();
+
             stage = Stages.RUNNING;
             player.unlock();
-            debug("Stage -> RUNNING, unlocked, scheduling wave");
+
             setWaveEvent();
         }
+    }
+
+    private void playIntroScene(FightKiln kiln) {
+
+        removeCrystals();
+
+        player.setNextWorldTile(getWorldTile(31, 51));
+
+        tokHaarHok = new NPC(TOKHAAR_HOK, getWorldTile(30, 36), -1, true, true);
+        tokHaarHok.setDirection(Utils.getFaceDirection(0, 1));
+
+        WorldTasksManager.schedule(new WorldTask() {
+
+            int count;
+            boolean run;
+
+            @Override
+            public void run() {
+
+                if (count == 0) {
+
+                    WorldTile look = getWorldTile(29, 39);
+                    player.getPackets().sendCameraLook(
+                            Cutscene.getX(player, look.getX()),
+                            Cutscene.getY(player, look.getY()),
+                            3500
+                    );
+
+                    WorldTile pos = getWorldTile(27, 30);
+                    player.getPackets().sendCameraPos(
+                            Cutscene.getX(player, pos.getX()),
+                            Cutscene.getY(player, pos.getY()),
+                            3500
+                    );
+
+                    run = player.getRun();
+                    player.setRun(false);
+
+                    WorldTile walk = getWorldTile(31, 39);
+                    player.addWalkSteps(walk.getX(), walk.getY(), -1, false);
+
+                } else if (count == 1) {
+
+                    player.getPackets().sendResetCamera();
+
+                } else if (count == 2) {
+
+                    player.getDialogueManager()
+                            .startDialogue("TokHaarHok", 0, TOKHAAR_HOK, kiln);
+
+                    player.setRun(run);
+
+                    stage = Stages.RUNNING;
+                    player.unlock();
+
+                    stop();
+                }
+
+                count++;
+            }
+
+        }, 1, 6);
     }
 
     public WorldTile getMaxTile() {
@@ -698,57 +658,36 @@ public class FightKiln extends Controller {
         exitCave(2);
     }
 
-    /*
-     * logout or not. if didnt logout means lost, 0 logout, 1, normal, 2 tele
-     */
     public void exitCave(int type) {
+
         stage = Stages.DESTROYING;
-        WorldTile outside = new WorldTile(OUTSIDE, 2); // radomizes alil
+
+        WorldTile outside = new WorldTile(OUTSIDE, 2);
+
         if (type == 0) {
             player.setLocation(outside);
-            if (getCurrentWave() == 0) // leaves if didnt start
+            if (getCurrentWave() == 0)
                 removeControler();
         } else {
+
             player.setForceMultiArea(false);
             player.setLargeSceneView(false);
             player.getInterfaceManager().closeOverlay(false);
+
             if (type == 1 || type == 4) {
                 player.useStairs(-1, outside, 0, 1);
-                if (type == 4) {
-                    if (!player.isCompletedFightKiln()) {
-                        player.getPackets().sendGameMessage(
-                                "<col=ff0000>Congratulations, you have completed a completionist cape requirement;");
-                        player.getPackets().sendGameMessage("<col=ff0000>Complete the Fight kiln");
-                    }
-                    player.setCompletedFightKiln();
-                    player.getPackets().sendGameMessage("You were victorious!!");
-                    Integer reward = (Integer) player.temporaryAttribute().get("FightKilnReward");
-                    int itemId = reward != null && reward == 1 ? 6571 : 23659;
-                    if (player.getInventory().hasFreeSlots()) {
-                        player.getInventory().addItem(itemId, 1);
-                    } else {
-                        player.getBank().addItem(itemId, 1, true);
-                        player.getPackets()
-                                .sendGameMessage("Don't have enough inventory space for reward, reward sent to bank");
-                    }
-                    player.setAvalonPoints(player.getAvalonPoints() + 100000);
-                    player.getPackets().sendGameMessage("You gain 100,000 " + Settings.SERVER_NAME + " points for completing fight kiln.");
-                    World.sendWorldMessage(
-                            "<img=7><col=36648b>News: " + player.getDisplayName() + " has completed the fight kiln!",
-                            false);
-                    player.reset();
-                }
+
+                if (type == 4)
+                    handleVictoryReward();
             }
-            player.getInventory().removeItems(new Item(23653, Integer.MAX_VALUE), new Item(23654, Integer.MAX_VALUE),
-                    new Item(23655, Integer.MAX_VALUE), new Item(23656, Integer.MAX_VALUE),
-                    new Item(23657, Integer.MAX_VALUE), new Item(23658, Integer.MAX_VALUE));
+
+            removeCrystals();
             removeCrystalEffects();
+
             removeControler();
         }
-        /*
-         * 1200 delay because of leaving
-         */
-        CoresManager.getSlowExecutor().schedule(() -> MapBuilder.destroyMap(boundChuncks[0], boundChuncks[1], 8, 8), 1200, TimeUnit.MILLISECONDS);
+
+        destroyInstance();
     }
 
     private void removeCrystalEffects() {
@@ -759,21 +698,19 @@ public class FightKiln extends Controller {
         player.temporaryAttribute().remove("FightKilnCrystal");
     }
 
-    /*
-     * gets worldtile inside the map
-     */
     public WorldTile getWorldTile(int mapX, int mapY) {
-        return new WorldTile(boundChuncks[0] * 8 + mapX, boundChuncks[1] * 8 + mapY, 1);
+        if (boundChuncks == null)
+            return new WorldTile(mapX, mapY, 0);
+
+        return new WorldTile(
+                boundChuncks[0] * 8 + mapX,
+                boundChuncks[1] * 8 + mapY,
+                1
+        );
     }
 
-    /*
-     * return false so wont remove script
-     */
     @Override
     public boolean logout() {
-        /*
-         * only can happen if dungeon is loading and system update happens
-         */
         if (stage != Stages.RUNNING)
             return false;
         exitCave(0);
@@ -812,9 +749,6 @@ public class FightKiln extends Controller {
 
     @Override
     public void forceClose() {
-        /*
-         * shouldnt happen
-         */
         if (stage != Stages.RUNNING)
             return;
         exitCave(2);
@@ -983,5 +917,74 @@ public class FightKiln extends Controller {
                 }
             }
         }, 3000, TimeUnit.MILLISECONDS);
+    }
+
+    private void handleVictoryReward() {
+
+        if (!player.isCompletedFightKiln()) {
+
+            player.getPackets().sendGameMessage(
+                    "<col=ff0000>Congratulations, you have completed a completionist cape requirement;");
+            player.getPackets().sendGameMessage(
+                    "<col=ff0000>Complete the Fight kiln");
+
+        }
+
+        player.setCompletedFightKiln();
+
+        player.getPackets().sendGameMessage("You were victorious!!");
+
+        Integer reward = (Integer) player.temporaryAttribute().get("FightKilnReward");
+
+        int itemId = reward != null && reward == 1 ? 6571 : 23659;
+
+        if (player.getInventory().hasFreeSlots())
+            player.getInventory().addItem(itemId, 1);
+        else {
+            player.getBank().addItem(itemId, 1, true);
+            player.getPackets().sendGameMessage(
+                    "Don't have enough inventory space for reward, reward sent to bank");
+        }
+
+        player.setAvalonPoints(player.getAvalonPoints() + 100000);
+
+        player.getPackets().sendGameMessage(
+                "You gain 100,000 " + Settings.SERVER_NAME + " points for completing fight kiln.");
+
+        World.sendWorldMessage(
+                "<img=7><col=36648b>News: " + player.getDisplayName() +
+                        " has completed the fight kiln!", false);
+
+        player.reset();
+    }
+
+    private void destroyInstance() {
+
+        final int[] chunks = boundChuncks;
+
+        boundChuncks = null;
+
+        if (chunks == null)
+            return;
+
+        CoresManager.getSlowExecutor().schedule(() -> {
+            try {
+                MapBuilder.destroyMap(chunks[0], chunks[1], 8, 8);
+            } catch (Throwable e) {
+                Logger.handle(e);
+            }
+        }, 1200, TimeUnit.MILLISECONDS);
+    }
+
+    private void removeCrystals() {
+
+        player.getInventory().removeItems(
+                new Item(23653, Integer.MAX_VALUE),
+                new Item(23654, Integer.MAX_VALUE),
+                new Item(23655, Integer.MAX_VALUE),
+                new Item(23656, Integer.MAX_VALUE),
+                new Item(23657, Integer.MAX_VALUE),
+                new Item(23658, Integer.MAX_VALUE)
+        );
     }
 }
