@@ -2629,10 +2629,11 @@ public final class WorldPacketsDecoder extends Decoder {
 
         if (option != -1) {
             player.getNewDialogueManager().handleOption(option);
+            player.getDialogueManager().continueDialogue(interfaceId, componentId);
             return;
         }
-
         player.getNewDialogueManager().handleContinue();
+        player.getDialogueManager().continueDialogue(interfaceId, componentId);
     }
 
     private static void handleIncomingAssist(Player player, InputStream stream) {
