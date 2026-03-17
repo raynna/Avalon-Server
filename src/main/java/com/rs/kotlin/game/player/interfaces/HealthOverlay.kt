@@ -18,7 +18,15 @@ class HealthOverlay {
         val hpText: String,
         val hitchance: Int,
         val skillRows: List<String>,
+        val weaknessText: String?,
+        val weaknessSprite: Int?,
     )
+
+    private data class WeaknessDisplay(
+        val spriteId: Int,
+        val text: String,
+    )
+
     // toggles("HITCHANCE_OVERLAY")
     // toggles("LEVEL_STATS_OVERLAY")
 
@@ -39,6 +47,49 @@ class HealthOverlay {
             player.packets.sendRunScript(6253, 0)
             target.temporaryAttribute()["last_hp_${player.index}"] = target.hitpoints
         }
+    }
+
+    private fun getNpcWeaknessDisplay(target: Entity): WeaknessDisplay? {
+        if (target !is NPC) return null
+
+        val weaknesses = target.combatData?.weaknesses?.elemental ?: return null
+        if (weaknesses.isEmpty()) return null
+
+        val entry = weaknesses.entries.firstOrNull() ?: return null
+        val element = entry.key.lowercase()
+        val percent = entry.value
+
+        val spriteId =
+            when (element) {
+                "air" -> 35
+                "water" -> 38
+                "earth" -> 40
+                "fire" -> 44
+                "undead" -> 34
+                else -> return null
+            }
+
+        return WeaknessDisplay(
+            spriteId = spriteId,
+            text = "$percent%",
+        )
+    }
+
+    private fun updateWeaknessRow(
+        player: Player,
+        target: Entity,
+    ) {
+        val weakness = getNpcWeaknessDisplay(target)
+
+        if (weakness == null) {
+            player.packets.sendHideIComponent(3037, 27, true)
+            return
+        }
+
+        player.packets.sendHideIComponent(3037, 27, false)
+
+        player.packets.sendIComponentSprite(3037, 29, weakness.spriteId)
+        player.packets.sendTextOnComponent(3037, 30, weakness.text)
     }
 
     fun checkCombatLevel(
@@ -130,8 +181,8 @@ class HealthOverlay {
         val hitchance = (getHitchance(player, target) * 100).roundToInt()
         val showStats = player.toggles("LEVELSTATUS_OVERLAY", true)
         val skillRows = if (showStats) buildSkillRows(player) else emptyList()
-
-        val newState = OverlayState(hpText, hitchance, skillRows)
+        val weakness = getNpcWeaknessDisplay(target)
+        val newState = OverlayState(hpText, hitchance, skillRows, weaknessText = weakness?.text, weaknessSprite = weakness?.spriteId)
         val lastState = player.temporaryAttribute()["overlay_state"] as? OverlayState
 
         if (lastState != newState) {
@@ -190,6 +241,7 @@ class HealthOverlay {
                     player.packets.sendTextOnComponent(3037, compId, "")
                 }
             }
+            updateWeaknessRow(player, target)
         }
 
         // HP bar animation update stays the same

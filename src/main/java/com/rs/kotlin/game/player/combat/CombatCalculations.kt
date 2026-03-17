@@ -9,6 +9,7 @@ import com.rs.java.game.player.TickManager
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.damage.CombatMultipliers
 import com.rs.kotlin.game.player.combat.damage.MaxHit
+import com.rs.kotlin.game.player.combat.magic.ElementType
 import com.rs.kotlin.game.player.combat.magic.MagicStyle
 import com.rs.kotlin.game.player.combat.magic.Spell
 import com.rs.kotlin.game.player.combat.magic.Spellbook
@@ -368,8 +369,25 @@ object CombatCalculations {
                 levelMultiplier *= player.prayer.magicMultiplier
             }
 
-            val baseMaxHit = floor(base * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage).toInt()
+            var baseMaxHit = floor(base * magicStrengthMultiplier * levelMultiplier * voidDamage * multipliers.damage).toInt()
+            if (target is NPC && spell != null && spell.element != ElementType.None) {
+                val weaknesses = target.combatData?.weaknesses
 
+                val multiplier = weaknesses?.getMultiplier(spell.element) ?: 1.0
+
+                if (multiplier != 1.0) {
+                    baseMaxHit = (baseMaxHit * multiplier).toInt()
+                    println("${target.name} is weak to ${spell.element.key()} (x$multiplier)")
+                } else {
+                    val allWeaknesses = weaknesses?.elemental
+
+                    if (!allWeaknesses.isNullOrEmpty()) {
+                        println("${target.name} weaknesses: $allWeaknesses")
+                    } else {
+                        println("${target.name} has no elemental weaknesses")
+                    }
+                }
+            }
             var maxHit = (baseMaxHit * specialMultiplier).toInt()
             maxHit = ceilToNextTen(player, maxHit)
             if (target is NPC) {
