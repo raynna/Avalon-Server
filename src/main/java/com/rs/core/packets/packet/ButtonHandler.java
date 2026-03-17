@@ -1416,7 +1416,6 @@ public class ButtonHandler {
                 int finalLvlupSkill = lvlupSkill;
                 int finalSkillMenu = skillMenu;
                 int finalSkillId1 = skillId;
-                player.queue().enqueueWeak(() -> {
                     player.getInterfaceManager().sendInterface(finalLvlupSkill != -1 ? "interface.levelup" : "interface.skillmenu");
                     if (finalLvlupSkill != -1) {
                         LevelUp.switchFlash(player, finalLvlupSkill, false);
@@ -1425,20 +1424,15 @@ public class ButtonHandler {
                         player.getTemporaryAttributtes().put("skillMenu", finalSkillMenu);
                     }
                     int finalSkillId = finalSkillId1;
-                    player.setCloseInterfacesEvent(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            player.getTemporaryAttributtes().remove("MILESTONE");
-                            player.getTemporaryAttributtes().remove("COMBATMILESTONE");
-                            player.getTemporaryAttributtes().remove("LEVELUP[" + finalSkillId + "]:GAINEDLEVELS");
-                            player.getVarsManager().sendVarBit(4727, -1);
-                            player.getVarsManager().sendVarBit(4728, -1);
-                            player.getVarsManager().sendVarBit(4730, 0);
-                            player.getVarsManager().sendVarBit(4731, 0);
-                        }
+                    player.setCloseInterfacesEvent(() -> {
+                        player.getTemporaryAttributtes().remove("MILESTONE");
+                        player.getTemporaryAttributtes().remove("COMBATMILESTONE");
+                        player.getTemporaryAttributtes().remove("LEVELUP[" + finalSkillId + "]:GAINEDLEVELS");
+                        player.getVarsManager().sendVarBit(4727, -1);
+                        player.getVarsManager().sendVarBit(4728, -1);
+                        player.getVarsManager().sendVarBit(4730, 0);
+                        player.getVarsManager().sendVarBit(4731, 0);
                     });
-                });
             } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET || packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET) {
                 int skillId = player.getSkills().getTargetIdByComponentId(componentId);
                 boolean usingLevel = packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET;
