@@ -79,6 +79,14 @@
     "lastSeen": "2026-02-01T18:35:50.106215500Z",
     "attempts": 1
   },
+  "650": {
+    "npcId": 650,
+    "npcName": "Combat Shops",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-17T13:46:53.527460200Z",
+    "lastSeen": "2026-03-17T13:46:53.527460200Z",
+    "attempts": 1
+  },
   "944": {
     "npcId": 944,
     "npcName": "Combat instructor",
@@ -165,6 +173,54 @@
     "reason": "\u0027wikitext\u0027 not found in JSON",
     "firstSeen": "2026-01-14T15:53:39.311750Z",
     "lastSeen": "2026-01-14T15:53:39.311750Z",
+    "attempts": 1
+  },
+  "1367": {
+    "npcId": 1367,
+    "npcName": "Skraeling",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-16T21:55:43.832202900Z",
+    "lastSeen": "2026-03-16T21:55:43.832202900Z",
+    "attempts": 1
+  },
+  "1368": {
+    "npcId": 1368,
+    "npcName": "Skraeling",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-16T21:55:43.771800700Z",
+    "lastSeen": "2026-03-16T21:55:43.771800700Z",
+    "attempts": 1
+  },
+  "1379": {
+    "npcId": 1379,
+    "npcName": "Ragnar",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-16T21:55:43.903168500Z",
+    "lastSeen": "2026-03-16T21:55:43.903168500Z",
+    "attempts": 1
+  },
+  "1387": {
+    "npcId": 1387,
+    "npcName": "Thora",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-16T21:55:44.333435900Z",
+    "lastSeen": "2026-03-16T21:55:44.333435900Z",
+    "attempts": 1
+  },
+  "1389": {
+    "npcId": 1389,
+    "npcName": "Skraeling",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-16T21:55:44.121324200Z",
+    "lastSeen": "2026-03-16T21:55:44.121324200Z",
+    "attempts": 1
+  },
+  "1391": {
+    "npcId": 1391,
+    "npcName": "Skraeling",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-16T21:55:44.264307300Z",
+    "lastSeen": "2026-03-16T21:55:44.264307300Z",
     "attempts": 1
   },
   "1463": {
