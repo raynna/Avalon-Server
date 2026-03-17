@@ -513,7 +513,7 @@ public class NPCHandler {
             } else if (npc.getId() == 4247 || npc.getId() == 6715)
                 player.getDialogueManager().startDialogue("EstateAgentD", npc.getId());
             else if (npc.getId() == 650)
-                player.getDialogueManager().startDialogue("StoreD");
+                DialogueStarter.shop(player);
             else if (npc.getId() == 231)
                 player.getDialogueManager().startDialogue("MiscStoreD");
             else if (npc.getId() == 6988)
@@ -654,9 +654,8 @@ public class NPCHandler {
                 player.getDialogueManager().startDialogue("Death", npc.getId());
                 npc.faceEntity(player);
                 return;
-            } else if (npc.getId() == 6537) {
-                player.getDialogueManager().startDialogue("Mandrith", npc.getId());
-                npc.faceEntity(player);
+            } else if (npc.isNpc("npc.mandrith")) {
+                DialogueStarter.mandrith(player, npc.getId());
                 return;
             } else if (npc.getId() == 705) {
                 player.getDialogueManager().startDialogue("MeleeInstructor", npc.getId());

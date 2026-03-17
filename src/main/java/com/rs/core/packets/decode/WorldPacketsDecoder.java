@@ -23,6 +23,7 @@ import com.rs.java.game.minigames.duel.DuelArena;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.npc.familiar.Familiar.SpecialAttack;
+import com.rs.java.game.player.content.*;
 import com.rs.java.utils.*;
 import com.rs.kotlin.game.npc.drops.DropTableSource;
 import com.rs.kotlin.game.player.AccountCreation;
@@ -39,12 +40,6 @@ import com.rs.java.game.player.actions.skills.construction.Sawmill;
 import com.rs.java.game.player.actions.skills.construction.Sawmill.Plank;
 import com.rs.java.game.player.actions.skills.smithing.DungeoneeringSmithing;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
-import com.rs.java.game.player.content.Commands;
-import com.rs.java.game.player.content.GambleTest;
-import com.rs.java.game.player.content.ReferSystem;
-import com.rs.java.game.player.content.ReportAbuse;
-import com.rs.java.game.player.content.SkillCapeCustomizer;
-import com.rs.java.game.player.content.TicketSystem;
 import com.rs.java.game.player.content.clans.ClansManager;
 import com.rs.java.game.player.content.customtab.GearTab;
 import com.rs.java.game.player.content.customtab.JournalTab;
@@ -2604,9 +2599,8 @@ public final class WorldPacketsDecoder extends Decoder {
     }
 
     private static void handleDialogueContinue(Player player, InputStream stream) {
-
         int interfaceHash = stream.readInt();
-        stream.readShort128(); // junk
+        stream.readShort128();
 
         int interfaceId = interfaceHash >> 16;
 
@@ -2618,21 +2612,55 @@ public final class WorldPacketsDecoder extends Decoder {
 
         int componentId = interfaceHash - (interfaceId << 16);
 
-        int option = switch (componentId) {
-            case 11 -> 1;
-            case 13 -> 2;
-            case 14 -> 3;
-            case 15 -> 4;
-            case 16 -> 5;
-            default -> -1;
-        };
+        System.out.println("interfaceId: " + interfaceId + ", component: " + componentId);
+
+        int option = -1;
+
+        switch (interfaceId) {
+            case 905 -> {//skilling dialogue
+                int slot = SkillsDialogue.getItemSlot(componentId);
+                if (slot != -1) {
+                    if (player.getNewDialogueManager().getOptionContinuation() != null) {
+                        player.getNewDialogueManager().handleOption(slot);
+                        return;
+                    }
+                }
+            }
+            case 1188 -> { // standard options dialogue
+                option = switch (componentId) {
+                    case 11 -> 1;
+                    case 13 -> 2;
+                    case 14 -> 3;
+                    case 15 -> 4;
+                    case 16 -> 5;
+                    default -> -1;
+                };
+            }
+
+            case 1185 -> { // double item selection
+                option = switch (componentId) {
+                    case 15 -> 1;
+                    case 16 -> 2;
+                    default -> -1;
+                };
+            }
+        }
 
         if (option != -1) {
-            player.getNewDialogueManager().handleOption(option);
+            if (player.getNewDialogueManager().getOptionContinuation() != null) {
+                player.getNewDialogueManager().handleOption(option);
+                return;
+            }
+
             player.getDialogueManager().continueDialogue(interfaceId, componentId);
             return;
         }
-        player.getNewDialogueManager().handleContinue();
+
+        if (player.getNewDialogueManager().getContinueContinuation() != null) {
+            player.getNewDialogueManager().handleContinue();
+            return;
+        }
+
         player.getDialogueManager().continueDialogue(interfaceId, componentId);
     }
 

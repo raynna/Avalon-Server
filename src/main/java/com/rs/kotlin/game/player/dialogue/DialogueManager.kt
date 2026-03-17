@@ -1,14 +1,15 @@
 package com.rs.kotlin.game.player.dialogue
 
 import com.rs.java.game.player.Player
+import kotlinx.coroutines.CancellableContinuation
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 class DialogueManager(
     private val player: Player,
 ) {
-    var continueContinuation: Continuation<Unit>? = null
-    var optionContinuation: Continuation<Int>? = null
+    var continueContinuation: CancellableContinuation<Unit>? = null
+    var optionContinuation: CancellableContinuation<Int>? = null
 
     fun handleContinue() {
         val cont = continueContinuation ?: return
@@ -19,6 +20,7 @@ class DialogueManager(
     fun handleOption(option: Int) {
         val cont = optionContinuation ?: return
         optionContinuation = null
+        continueContinuation = null
         cont.resume(option)
     }
 
@@ -29,8 +31,8 @@ class DialogueManager(
         continueContinuation = null
         optionContinuation = null
 
-        cont?.resume(Unit)
-        opt?.resume(-1)
+        cont?.cancel()
+        opt?.cancel()
 
         player.interfaceManager.closeChatBoxInterface()
     }
