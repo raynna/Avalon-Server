@@ -1,0 +1,66 @@
+{
+  "name": "Giant spider",
+  "variants": [
+    {
+      "ids": [
+        59
+      ],
+      "members": false,
+      "combatLevel": 2,
+      "attackLevel": 1,
+      "strengthLevel": 1,
+      "defenceLevel": 1,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 5,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "examine": "I think this spider has been genetically modified.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 1
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 30,
+      "slayerXp": 5,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria",
+        "krystilia"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "name": "Duck",
+  "variants": [
+    {
+      "ids": [
+        46,
+        2693,
+        6113
+      ],
+      "members": false,
+      "combatLevel": 1,
+      "attackLevel": 1,
+      "strengthLevel": 1,
+      "defenceLevel": 1,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 3,
+      "attackBonus": -47,
+      "strengthBonus": -42,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": -42,
+        "slash": -42,
+        "crush": -42
+      },
+      "magicDefence": {
+        "magic": -42
+      },
+      "rangedDefence": {
+        "light": -42,
+        "standard": -42,
+        "heavy": -42
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[29 March]] [[2004]]",
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 0
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 3,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria"
+      ]
+    }
+  ]
+}

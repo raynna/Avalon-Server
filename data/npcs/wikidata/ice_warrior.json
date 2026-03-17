@@ -1,0 +1,68 @@
+{
+  "name": "Ice warrior",
+  "variants": [
+    {
+      "ids": [
+        125,
+        3073
+      ],
+      "members": false,
+      "combatLevel": 57,
+      "attackLevel": 47,
+      "strengthLevel": 47,
+      "defenceLevel": 47,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 59,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 30,
+        "slash": 40,
+        "crush": 20
+      },
+      "magicDefence": {
+        "magic": 10
+      },
+      "rangedDefence": {
+        "light": 30,
+        "standard": 30,
+        "heavy": 30
+      },
+      "weaknesses": {
+        "fire": 100
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 6
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Slash]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 30,
+      "slayerXp": 59,
+      "categories": [],
+      "assignedBy": [
+        "krystilia",
+        "mazchna",
+        "vannaka"
+      ]
+    }
+  ]
+}

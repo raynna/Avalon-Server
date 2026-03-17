@@ -1,0 +1,123 @@
+{
+  "name": "Hobgoblin",
+  "variants": [
+    {
+      "ids": [
+        13100
+      ],
+      "members": false,
+      "combatLevel": 28,
+      "attackLevel": 22,
+      "strengthLevel": 24,
+      "defenceLevel": 24,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 29,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 5
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 29,
+      "categories": [],
+      "assignedBy": [
+        "mazchna",
+        "vannaka"
+      ]
+    },
+    {
+      "ids": [
+        13246
+      ],
+      "members": false,
+      "combatLevel": 42,
+      "attackLevel": 33,
+      "strengthLevel": 31,
+      "defenceLevel": 36,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 49,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 5
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 49,
+      "categories": [],
+      "assignedBy": [
+        "mazchna",
+        "vannaka"
+      ]
+    }
+  ]
+}

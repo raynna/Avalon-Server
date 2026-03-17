@@ -1,0 +1,65 @@
+{
+  "name": "Cow calf",
+  "variants": [
+    {
+      "ids": [
+        12364,
+        12366
+      ],
+      "members": false,
+      "combatLevel": 2,
+      "attackLevel": 1,
+      "strengthLevel": 1,
+      "defenceLevel": 1,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 6,
+      "attackBonus": -20,
+      "strengthBonus": -20,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": -26,
+        "slash": -26,
+        "crush": -26
+      },
+      "magicDefence": {
+        "magic": -26
+      },
+      "rangedDefence": {
+        "light": -26,
+        "standard": -26,
+        "heavy": -26
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": true,
+        "venom": true,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "2",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 1
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 45,
+      "slayerXp": 6,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria"
+      ]
+    }
+  ]
+}

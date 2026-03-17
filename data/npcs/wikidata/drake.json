@@ -1,0 +1,75 @@
+{
+  "name": "Drake",
+  "variants": [
+    {
+      "ids": [
+        6114
+      ],
+      "members": true,
+      "combatLevel": 192,
+      "attackLevel": 140,
+      "strengthLevel": 118,
+      "defenceLevel": 120,
+      "magicLevel": 112,
+      "rangedLevel": 140,
+      "constitutionLevel": 225,
+      "attackBonus": 0,
+      "strengthBonus": 12,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 40,
+      "rangedStrengthBonus": 40,
+      "meleeDefence": {
+        "stab": 5,
+        "slash": 60,
+        "crush": 60
+      },
+      "magicDefence": {
+        "magic": 20
+      },
+      "rangedDefence": {
+        "light": 100,
+        "standard": 100,
+        "heavy": 0
+      },
+      "weaknesses": {
+        "water": 50
+      },
+      "immunities": {
+        "poison": true,
+        "venom": true,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[10 January]] [[2019]]",
+      "aliases": [],
+      "size": "5",
+      "examine": "A dragon-like creature with no wings.",
+      "attributes": [
+        "dragon"
+      ],
+      "xpBonus": 2.5,
+      "maxHit": {
+        "[[ranged]]": 15,
+        "[[ranged_melee|ranged melee]]": 15,
+        "[[dragonfire]]": 32
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Ranged]]",
+        "[[Ranged melee]]",
+        "[[Dragonfire]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 20,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": [
+        "konar",
+        "nieve",
+        "duradel"
+      ]
+    }
+  ]
+}

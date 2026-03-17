@@ -1,0 +1,72 @@
+{
+  "name": "Skeleton",
+  "variants": [
+    {
+      "ids": [
+        3291
+      ],
+      "members": false,
+      "combatLevel": 22,
+      "attackLevel": 15,
+      "strengthLevel": 18,
+      "defenceLevel": 17,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 29,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 5,
+        "slash": 5,
+        "crush": -5
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 5,
+        "standard": 5,
+        "heavy": 5
+      },
+      "weaknesses": {
+        "earth": 35
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[4 January]] [[2001]]",
+      "aliases": [],
+      "size": "1",
+      "examine": "Could do with gaining a few pounds.",
+      "attributes": [
+        "undead"
+      ],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 3
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 70,
+      "slayerXp": 29,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria",
+        "krystilia",
+        "mazchna"
+      ]
+    }
+  ]
+}

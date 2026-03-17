@@ -1,0 +1,75 @@
+{
+  "name": "Skeletal Wyvern",
+  "variants": [
+    {
+      "ids": [
+        3068
+      ],
+      "members": true,
+      "combatLevel": 140,
+      "attackLevel": 125,
+      "strengthLevel": 116,
+      "defenceLevel": 120,
+      "magicLevel": 125,
+      "rangedLevel": 120,
+      "constitutionLevel": 200,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 140,
+        "slash": 90,
+        "crush": 90
+      },
+      "magicDefence": {
+        "magic": 80
+      },
+      "rangedDefence": {
+        "light": 140,
+        "standard": 140,
+        "heavy": 140
+      },
+      "weaknesses": {
+        "fire": 25
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[12 December]] [[2005]]",
+      "aliases": [],
+      "size": "3",
+      "examine": "A very dangerous pile of animated wyvern bones.",
+      "attributes": [
+        "dragon"
+      ],
+      "xpBonus": 5.0,
+      "maxHit": {
+        "[[ranged]]": 13,
+        "[[melee]]": 13
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Ranged]]",
+        "[[Slash]]",
+        "[[Icy breath]]"
+      ],
+      "attackSpeedTicks": 6,
+      "respawnTicks": 25,
+      "slayerXp": 210,
+      "categories": [],
+      "assignedBy": [
+        "chaeldar",
+        "konar",
+        "nieve",
+        "duradel"
+      ]
+    }
+  ]
+}

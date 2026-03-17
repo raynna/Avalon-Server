@@ -1,0 +1,69 @@
+{
+  "name": "Guard",
+  "variants": [
+    {
+      "ids": [
+        296,
+        297,
+        298,
+        299,
+        3407,
+        3408,
+        5919,
+        5920
+      ],
+      "members": false,
+      "combatLevel": 21,
+      "attackLevel": 19,
+      "strengthLevel": 18,
+      "defenceLevel": 14,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 22,
+      "attackBonus": 4,
+      "strengthBonus": 5,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 18,
+        "slash": 25,
+        "crush": 19
+      },
+      "magicDefence": {
+        "magic": -4
+      },
+      "rangedDefence": {
+        "light": 20,
+        "standard": 20,
+        "heavy": 20
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[9 November]] [[2022]]",
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 3
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 50,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}

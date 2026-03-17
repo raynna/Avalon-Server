@@ -1,0 +1,129 @@
+{
+  "name": "Goblin",
+  "variants": [
+    {
+      "ids": [
+        3264,
+        3265,
+        3266,
+        3267
+      ],
+      "members": false,
+      "combatLevel": 5,
+      "attackLevel": 3,
+      "strengthLevel": 1,
+      "defenceLevel": 4,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 12,
+      "attackBonus": -21,
+      "strengthBonus": -15,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": -15,
+        "slash": -15,
+        "crush": -15
+      },
+      "magicDefence": {
+        "magic": -15
+      },
+      "rangedDefence": {
+        "light": -15,
+        "standard": -15,
+        "heavy": -15
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "examine": "An ugly green creature.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 2
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 35,
+      "slayerXp": 12,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria"
+      ]
+    },
+    {
+      "ids": [
+        11232,
+        11234
+      ],
+      "members": false,
+      "combatLevel": 2,
+      "attackLevel": 1,
+      "strengthLevel": 1,
+      "defenceLevel": 1,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 5,
+      "attackBonus": -21,
+      "strengthBonus": -15,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": -15,
+        "slash": -15,
+        "crush": -15
+      },
+      "magicDefence": {
+        "magic": -15
+      },
+      "rangedDefence": {
+        "light": -15,
+        "standard": -15,
+        "heavy": -15
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "examine": "An ugly green creature.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 2
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 35,
+      "slayerXp": 5,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria"
+      ]
+    }
+  ]
+}

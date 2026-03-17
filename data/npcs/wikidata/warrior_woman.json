@@ -1,0 +1,62 @@
+{
+  "name": "Warrior woman",
+  "variants": [
+    {
+      "ids": [
+        15
+      ],
+      "members": false,
+      "combatLevel": 24,
+      "attackLevel": 22,
+      "strengthLevel": 22,
+      "defenceLevel": 22,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 20,
+      "attackBonus": 6,
+      "strengthBonus": 7,
+      "magicBonus": 6,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 6,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 40,
+        "slash": 41,
+        "crush": 37
+      },
+      "magicDefence": {
+        "magic": -10
+      },
+      "rangedDefence": {
+        "light": 38,
+        "standard": 38,
+        "heavy": 38
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "examine": "Not very fashion conscious.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 3
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 50,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}

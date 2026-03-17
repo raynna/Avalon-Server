@@ -1,0 +1,238 @@
+{
+  "name": "Barbarian",
+  "variants": [
+    {
+      "ids": [
+        3246,
+        3248,
+        3249,
+        3253,
+        3260
+      ],
+      "members": false,
+      "combatLevel": 17,
+      "attackLevel": 15,
+      "strengthLevel": 14,
+      "defenceLevel": 10,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 24,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[20 February]] [[2006]]",
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 3
+      },
+      "aggressive": false,
+      "attackStyles": [],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 50,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    },
+    {
+      "ids": [
+        3247,
+        3250,
+        3251,
+        3252,
+        3255,
+        3256,
+        3257,
+        3258,
+        3261,
+        3262
+      ],
+      "members": false,
+      "combatLevel": 10,
+      "attackLevel": 8,
+      "strengthLevel": 7,
+      "defenceLevel": 3,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 18,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[20 February]] [[2006]]",
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 2
+      },
+      "aggressive": false,
+      "attackStyles": [],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 50,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    },
+    {
+      "ids": [
+        3259
+      ],
+      "members": false,
+      "combatLevel": 15,
+      "attackLevel": 15,
+      "strengthLevel": 3,
+      "defenceLevel": 10,
+      "magicLevel": 1,
+      "rangedLevel": 15,
+      "constitutionLevel": 24,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[20 February]] [[2006]]",
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 2
+      },
+      "aggressive": false,
+      "attackStyles": [],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 50,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    },
+    {
+      "ids": [
+        3263
+      ],
+      "members": false,
+      "combatLevel": 9,
+      "attackLevel": 6,
+      "strengthLevel": 7,
+      "defenceLevel": 3,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 20,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[20 February]] [[2006]]",
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 2
+      },
+      "aggressive": false,
+      "attackStyles": [],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 50,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}

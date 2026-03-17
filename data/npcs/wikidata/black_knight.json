@@ -1,0 +1,64 @@
+{
+  "name": "Black Knight",
+  "variants": [
+    {
+      "ids": [
+        178
+      ],
+      "members": false,
+      "combatLevel": 33,
+      "attackLevel": 25,
+      "strengthLevel": 25,
+      "defenceLevel": 25,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 42,
+      "attackBonus": 18,
+      "strengthBonus": 16,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 73,
+        "slash": 76,
+        "crush": 70
+      },
+      "magicDefence": {
+        "magic": -11
+      },
+      "rangedDefence": {
+        "light": 72,
+        "standard": 72,
+        "heavy": 72
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "examine": "A dark-hearted knight.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 4
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Slash]]"
+      ],
+      "attackSpeedTicks": 5,
+      "respawnTicks": 25,
+      "slayerXp": 42,
+      "categories": [],
+      "assignedBy": [
+        "krystilia"
+      ]
+    }
+  ]
+}

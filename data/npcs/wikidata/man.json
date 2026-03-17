@@ -1,0 +1,69 @@
+{
+  "name": "Man",
+  "variants": [
+    {
+      "ids": [
+        1,
+        2,
+        3,
+        5923,
+        12345,
+        12346,
+        12347
+      ],
+      "members": false,
+      "combatLevel": 2,
+      "attackLevel": 1,
+      "strengthLevel": 1,
+      "defenceLevel": 1,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 7,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": -21,
+        "slash": -21,
+        "crush": -21
+      },
+      "magicDefence": {
+        "magic": -21
+      },
+      "rangedDefence": {
+        "light": -21,
+        "standard": -21,
+        "heavy": -21
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[4 January]] [[2001]]",
+      "aliases": [],
+      "size": "1",
+      "examine": "One of Gielinor\u0027s many citizens.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 1
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}

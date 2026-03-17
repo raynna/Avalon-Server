@@ -1,0 +1,126 @@
+{
+  "name": "Pirate",
+  "variants": [
+    {
+      "ids": [
+        182,
+        183
+      ],
+      "members": false,
+      "combatLevel": 23,
+      "attackLevel": 21,
+      "strengthLevel": 21,
+      "defenceLevel": 21,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 20,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "maxHit": {
+        "default": 3
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Slash]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 20,
+      "categories": [],
+      "assignedBy": [
+        "krystilia"
+      ]
+    },
+    {
+      "ids": [
+        184,
+        6351,
+        6352,
+        6353,
+        6354,
+        6355,
+        6356
+      ],
+      "members": false,
+      "combatLevel": 26,
+      "attackLevel": 23,
+      "strengthLevel": 23,
+      "defenceLevel": 23,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 23,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "maxHit": {
+        "default": 4
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Slash]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 20,
+      "categories": [],
+      "assignedBy": [
+        "krystilia"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "name": "Imp",
+  "variants": [
+    {
+      "ids": [
+        708
+      ],
+      "members": false,
+      "combatLevel": 2,
+      "attackLevel": 1,
+      "strengthLevel": 1,
+      "defenceLevel": 1,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 8,
+      "attackBonus": -42,
+      "strengthBonus": -37,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": -42,
+        "slash": -42,
+        "crush": -42
+      },
+      "magicDefence": {
+        "magic": -42
+      },
+      "rangedDefence": {
+        "light": -42,
+        "standard": -42,
+        "heavy": -42
+      },
+      "weaknesses": {
+        "water": 10
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "attributes": [
+        "demon"
+      ],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 1
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 50,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}

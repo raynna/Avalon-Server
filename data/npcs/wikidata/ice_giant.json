@@ -1,0 +1,68 @@
+{
+  "name": "Ice giant",
+  "variants": [
+    {
+      "ids": [
+        3072,
+        4687
+      ],
+      "members": false,
+      "combatLevel": 53,
+      "attackLevel": 40,
+      "strengthLevel": 40,
+      "defenceLevel": 40,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 70,
+      "attackBonus": 29,
+      "strengthBonus": 31,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 3,
+        "crush": 2
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {
+        "fire": 100
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "2",
+      "examine": "He\u0027s got icicles in his beard.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 7
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Slash]]"
+      ],
+      "attackSpeedTicks": 5,
+      "respawnTicks": 30,
+      "slayerXp": 70,
+      "categories": [],
+      "assignedBy": [
+        "krystilia",
+        "vannaka"
+      ]
+    }
+  ]
+}
