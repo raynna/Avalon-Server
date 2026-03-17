@@ -162,6 +162,8 @@ public final class Commands {
                 "Play sound. Usage: ::sound [id]");
         registerCommand("inter", Commands::interfaceCommand, CommandCategory.DEVELOPER,
                 "Show interface. Usage: ::inter [id]");
+        registerCommand("chatinter", Commands::chatBoxInterfaceCommand, CommandCategory.DEVELOPER,
+                "Show interface. Usage: ::inter [id]");
         registerCommand("varbit", Commands::varbitCommand, CommandCategory.DEVELOPER,
                 "Set varbit. Usage: ::varbit [id] [value]");
         registerCommand("var", Commands::varCommand, CommandCategory.DEVELOPER,
