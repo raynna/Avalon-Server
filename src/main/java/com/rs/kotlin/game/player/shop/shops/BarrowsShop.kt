@@ -1,22 +1,54 @@
 package com.rs.kotlin.game.player.shop.shops
 
+import com.rs.kotlin.game.npc.drops.tables.minigame.BarrowsChestTable
 import com.rs.kotlin.game.player.shop.*
 import com.rs.kotlin.game.player.shop.ShopDefinitions.shop
 
 object BarrowsShop : GameShop {
-    override val definition: ShopDefinition = shop {
-        title = "Barrows Store"
-        currency = CurrencyType.COINS
-        isGlobal = true
+    val ALL_BARROWS_ITEMS: List<String> =
+        listOf(
+            // Helms
+            "item.ahrim_s_hood",
+            "item.dharok_s_helm",
+            "item.guthan_s_helm",
+            "item.karil_s_coif",
+            "item.torag_s_helm",
+            "item.verac_s_helm",
+            "item.akrisae_s_hood",
+            // Tops
+            "item.ahrim_s_robe_top",
+            "item.dharok_s_platebody",
+            "item.guthan_s_platebody",
+            "item.karil_s_top",
+            "item.torag_s_platebody",
+            "item.verac_s_brassard",
+            "item.akrisae_s_robe_top",
+            // Legs
+            "item.ahrim_s_robe_skirt",
+            "item.dharok_s_platelegs",
+            "item.guthan_s_chainskirt",
+            "item.karil_s_skirt",
+            "item.torag_s_platelegs",
+            "item.verac_s_plateskirt",
+            "item.akrisae_s_robe_skirt",
+            // Weapons
+            "item.ahrim_s_staff",
+            "item.dharok_s_greataxe",
+            "item.guthan_s_warspear",
+            "item.karil_s_crossbow",
+            "item.torag_s_hammers",
+            "item.verac_s_flail",
+            "item.akrisae_s_war_mace",
+        )
 
-        for (i in 4708..4738 step 2) {
-            item(i, 1)
+    override val definition: ShopDefinition =
+        shop {
+            title = "Barrows Store"
+            currency = CurrencyType.COINS
+            isGlobal = true
+
+            ALL_BARROWS_ITEMS.forEach {
+                item(it, 1)
+            }
         }
-        for (i in 4745..4759 step 2) {
-            item(i, 1)
-        }
-        for (i in 21736..21760 step 8) {
-            item(i, 1)
-        }
-    }
 }

@@ -20,7 +20,7 @@ object BarrowsChestTable {
             5 to listOf("item.verac_s_helm", "item.verac_s_brassard", "item.verac_s_plateskirt", "item.verac_s_flail"),
         )
 
-    private val ALL_BARROWS_ITEMS: List<String> =
+    val ALL_BARROWS_ITEMS: List<String> =
         listOf(
             // Helms
             "item.ahrim_s_hood",
