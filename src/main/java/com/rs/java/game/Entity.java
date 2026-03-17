@@ -1211,7 +1211,6 @@ public abstract class Entity extends WorldTile {
         poison.processPoison();
         newPoison.processPoison();
         tickManager.tick();
-        gameTick++;
         processPendingEffects();
         processReceivedHits();
         processReceivedDamage();
@@ -1227,6 +1226,7 @@ public abstract class Entity extends WorldTile {
                 entry.setValue(ticksLeft);
             }
         }
+        gameTick++;
     }
 
     public int getFreezeDelay() {
