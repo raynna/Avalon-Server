@@ -604,6 +604,7 @@ public class NPC extends Entity implements Serializable {
     @Override
     public void processEntity() {
         super.processEntity();
+        processNPC();
         // Decrease timers
         //super.cycle();
         if (getOwner() != null && getOwner().hasFinished()) {
@@ -613,7 +614,6 @@ public class NPC extends Entity implements Serializable {
         }
         if (gameTick % 96 == 0)
             combatData.regenerate(1);
-        processNPC();
     }
 
     public int getRespawnDirection() {

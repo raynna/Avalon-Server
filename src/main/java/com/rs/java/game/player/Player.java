@@ -2663,8 +2663,7 @@ public class Player extends Entity {
 
     @Override
     public void processEntity() {
-        queue().process();//this basically
-       // processLogicPackets();
+        queue().process();
         processEquip();
         processUnequip();
         actionManager.processPreMovement();

@@ -455,12 +455,7 @@ public final class NPCCombat {
         if (npc.isFrozen() || npc.isLocked()) {
             return;
         }
-        if (isPlayerAboutToMoveIntoDiagonal(target)) {
-            npc.resetWalkSteps();
-            return;
-        }
 
-        // If not in attack range, move closer
         boolean inAttackRange = Utils.isOnRange(
                 npc.getX(), npc.getY(), size,
                 target.getX(), target.getY(), targetSize,
