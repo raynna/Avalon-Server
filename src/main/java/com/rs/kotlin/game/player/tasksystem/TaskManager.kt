@@ -84,7 +84,7 @@ class TaskManager : Serializable {
     }
 
     private fun showCompletionOverlay(task: Task) {
-        player.queue().enqueueNormal {
+        player.queue().enqueueSoft {
             player.interfaceManager.sendOverlay(3050, false)
             player.packets.sendTextOnComponent(
                 3050,
@@ -96,7 +96,7 @@ class TaskManager : Serializable {
 
         player.queue().enqueueDelay(4)
 
-        player.queue().enqueueNormal {
+        player.queue().enqueueSoft {
             player.packets.sendRunScript(10005)
         }
 
