@@ -12,7 +12,7 @@ object IceWarriorDropTable {
     val table =
         dropTable(
             category = TableCategory.REGULAR,
-            herbTables = HerbTableConfig(1, 2), // 10/128
+            herbTables = HerbTableConfig(10, 128), // 10/128
             seedTable = SeedTableConfig(SeedTableType.UNCOMMON, numerator = 18, 128), // 18/128
             gemTable = GemTableConfig(3, 128),
         ) {
