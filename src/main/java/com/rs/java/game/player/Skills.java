@@ -15,6 +15,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.utils.HexColours;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.dialogue.DialogueStarter;
 import com.rs.kotlin.rscm.Rscm;
 import kotlin.Pair;
 
@@ -928,8 +929,8 @@ public final class Skills implements Serializable {
 
         int gained = newLevel - oldLevel;
         level[skill] += gained;
-
-        player.getDialogueManager().startDialogue("LevelUp", skill);
+        DialogueStarter.levelup(player, skill, oldLevel, newLevel);
+        //player.getDialogueManager().startDialogue("LevelUp", skill);
 
         DiscordAnnouncer.announceLevelUp(
                 player.getDisplayName(),
@@ -1057,10 +1058,10 @@ public final class Skills implements Serializable {
         int oldLevel = getOldLevel(player, skillId);
         int newLevel = getNewLevel(player, skillId);
         int gainedLevels = getGainedLevels(player, skillId);
-        int milestone = getMilestone(player);//all this to handle it good shit nice to see the little details thats what i do the best
+        int milestone = getMilestone(player);
         int combatMilestone = getCombatMilestone(player);
         int slayerCombatMilestones = getSlayerCombatMilestone(player);
-        player.getPackets().sendGlobalVar(gainedLevelConfig, gainedLevels + newLevel);
+        player.getPackets().sendGlobalVar(gainedLevelConfig, newLevel - gainedLevels);
         player.getVarsManager().sendVarBit(4727, combatMilestone);
         player.getVarsManager().sendVarBit(4728, milestone);
         player.getVarsManager().sendVarBit(4729, levelupConfig);

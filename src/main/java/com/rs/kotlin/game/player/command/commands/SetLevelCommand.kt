@@ -6,13 +6,18 @@ import com.rs.java.game.player.Ranks
 import com.rs.java.game.player.Skills
 import com.rs.kotlin.game.player.command.Command
 import com.rs.kotlin.game.player.command.CommandArguments
+import com.rs.kotlin.game.player.dialogue.DialogueStarter
 
 class SetLevelCommand : Command {
     override val requiredRank = Ranks.Rank.PLAYER
     override val description = "Set a level for a skill"
     override val usage = "::setlevel <id> <level>"
 
-    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
+    override fun execute(
+        player: Player,
+        args: List<String>,
+        trigger: String,
+    ): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::setlevel in this mode.")
             return true
@@ -33,16 +38,18 @@ class SetLevelCommand : Command {
             player.message("You are only able to change skills between 1-6 and 23.")
             return true
         }
-        if (level > 99)
+        if (level > 99) {
             level = 99
-        if (level < 0)
+        }
+        if (level < 0) {
             level = 0
+        }
 
         val previousLevel = player.skills.getLevelForXp(skill)
         player.skills[skill] = level
         player.skills.setXp(skill, Skills.getXPForLevel(level).toDouble())
         if (previousLevel < level) {
-            player.dialogueManager.startDialogue("LevelUp", skill)
+            DialogueStarter.levelup(player, skill, previousLevel, level)
         }
         player.skills.switchXPPopup(true)
         player.skills.switchXPPopup(true)

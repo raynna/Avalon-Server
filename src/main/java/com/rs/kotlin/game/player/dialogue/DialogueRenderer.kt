@@ -2,6 +2,7 @@ package com.rs.kotlin.game.player.dialogue
 
 import com.rs.core.cache.defintions.NPCDefinitions
 import com.rs.java.game.player.Player
+import com.rs.java.game.player.Skills
 import com.rs.java.game.player.content.SkillsDialogue
 
 class DialogueRenderer(
@@ -202,6 +203,35 @@ class DialogueRenderer(
 
         player.packets.sendTextOnComponent(1185, 20, option1)
         player.packets.sendTextOnComponent(1185, 25, option2)
+    }
+
+    fun levelup(
+        skill: Int,
+        level: Int,
+        levelsGained: Int = 1,
+    ) {
+        val skillName =
+            Skills.SkillData
+                .forId(skill)
+                .name
+                .lowercase()
+                .replaceFirstChar { it.uppercase() } // "Defence" not "DEFENCE"
+
+        val article =
+            when (skillName.first().lowercaseChar()) {
+                'a', 'e', 'i', 'o', 'u' -> "an"
+                else -> "a"
+            }
+
+        val levelText =
+            when (levelsGained) {
+                1 -> "$article $skillName level"
+                else -> "$levelsGained $skillName levels"
+            }
+
+        player.interfaceManager.sendChatBoxInterface(740)
+        player.packets.sendTextOnComponent(740, 0, "Congratulations, you just advanced $levelText!")
+        player.packets.sendTextOnComponent(740, 1, "Your $skillName level is now $level.")
     }
 
     fun selection(
