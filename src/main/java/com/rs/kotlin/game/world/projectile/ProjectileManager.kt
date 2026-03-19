@@ -10,6 +10,7 @@ import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.player.combat.CombatUtils
+import com.rs.kotlin.game.world.task.WorldTasks
 import com.rs.kotlin.rscm.Rscm
 import kotlin.math.max
 
@@ -128,15 +129,7 @@ object ProjectileManager {
         impactTicks: Int,
     ) {
         request.onLanded ?: return
-
-        WorldTasksManager.schedule(
-            object : WorldTask() {
-                override fun run() {
-                    request.onLanded.run()
-                }
-            },
-            impactTicks.coerceAtLeast(0),
-        )
+        WorldTasks.submit(impactTicks.coerceAtLeast(0)) { request.onLanded.run() }
     }
 
     @JvmStatic
@@ -176,15 +169,7 @@ object ProjectileManager {
         onLanded ?: return
 
         val impactTicks = impactCycles / 30
-
-        WorldTasksManager.schedule(
-            object : WorldTask() {
-                override fun run() {
-                    onLanded.run()
-                }
-            },
-            impactTicks - 1,
-        )
+        WorldTasks.submit(maxOf(0, impactTicks - 1)) { onLanded.run() }
     }
 
     @JvmStatic
@@ -391,14 +376,7 @@ object ProjectileManager {
                 def.gfx(it.id, endCycle, 100, rotation)
             }
         }
-        WorldTasksManager.schedule(
-            object : WorldTask() {
-                override fun run() {
-                    onLanded?.invoke(remainderCycles)
-                }
-            },
-            max(0, impactTicks),
-        )
+        WorldTasks.submit(maxOf(0, impactTicks)) { onLanded?.invoke(remainderCycles) }
 
         return ProjectileResult(impactTicks, remainderCycles)
     }
@@ -473,16 +451,7 @@ object ProjectileManager {
                 def?.playSound(it, endCycle, 1)
             }
         }
-        if (onLanded != null) {
-            WorldTasksManager.schedule(
-                object : WorldTask() {
-                    override fun run() {
-                        onLanded.invoke()
-                    }
-                },
-                max(0, impactTicks),
-            )
-        }
+        onLanded?.let { WorldTasks.submit(maxOf(0, impactTicks), it::invoke) }
         return impactTicks
     }
 

@@ -27,6 +27,7 @@ import com.rs.kotlin.game.player.combat.range.RangedWeapon
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.EffectResult
 import com.rs.kotlin.game.player.combat.special.SpecialAttack
+import com.rs.kotlin.game.world.task.WorldTasks
 import com.rs.kotlin.rscm.Rscm
 import kotlin.math.ceil
 import kotlin.math.max
@@ -220,14 +221,7 @@ interface CombatStyle {
         delay: Int,
         action: () -> Unit,
     ) {
-        WorldTasksManager.schedule(
-            object : WorldTask() {
-                override fun run() {
-                    action()
-                }
-            },
-            delay,
-        )
+        WorldTasks.submit(delay) { action() }
     }
 
     fun getHitChance(
