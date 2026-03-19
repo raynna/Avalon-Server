@@ -34,7 +34,7 @@ public class WorldTasksManager {
 
 			long took = System.currentTimeMillis() - start;
 
-			if (took > 200) { // only log slow tasks
+			if (took > 200) {
 				System.out.println("[SlowWorldTask] " +
 						taskInformation.task.getClass().getName() +
 						" took " + took + " ms");

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rs.Settings;
-import com.rs.core.networking.Session;
-import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.game.World;
 import com.rs.java.game.item.ground.AutomaticGroundItem;
@@ -13,6 +11,8 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import kotlinx.coroutines.BuildersKt;
+import kotlinx.coroutines.GlobalScope;
 
 public final class WorldThread extends Thread {
 
@@ -39,8 +39,15 @@ public final class WorldThread extends Thread {
             long cycleStart = Utils.currentTimeMillis();
             long start = System.currentTimeMillis();
             WorldTasksManager.processTasks();
+            try {
+                BuildersKt.runBlocking(
+                        GlobalScope.INSTANCE.getCoroutineContext(),
+                        (scope, cont) -> com.rs.kotlin.game.world.task.WorldTasksHandler.INSTANCE.processTick(cont)
+                );
+            } catch (InterruptedException e) {
+                Logger.handle(e);
+            }
             long took = System.currentTimeMillis() - start;
-
             if (took > 15) {
                 System.out.println("WorldTasksManager took " + took + " ms!");
             }
