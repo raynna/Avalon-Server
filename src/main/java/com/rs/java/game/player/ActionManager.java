@@ -13,6 +13,8 @@ public final class ActionManager {
 	}
 
 	public void processPreMovement() {
+		if (player.getInterfaceManager().containsChatBoxInter())
+			return;
 		if (action != null) {
 			if (player.isDead()) {
 				forceStop();
@@ -23,6 +25,8 @@ public final class ActionManager {
 	}
 
 	public void processPostMovement() {
+		if (player.getInterfaceManager().containsChatBoxInter())
+			return;
 		if (actionDelay > 0) {
 			actionDelay--;
 			return;
