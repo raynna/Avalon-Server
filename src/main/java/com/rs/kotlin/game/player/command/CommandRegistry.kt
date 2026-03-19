@@ -52,6 +52,7 @@ object CommandRegistry {
         register("reset", command = ResetCommand())
         register("checkmap", "mapcommand", "map", command = MapFilesCommand())
         register("dungspells", "dungeoneeringspells", "dspells", command = DungeoneeringSpellBookCommand())
+        register("testexample", command = TaskExampleCommand())
     }
 
     @JvmStatic
