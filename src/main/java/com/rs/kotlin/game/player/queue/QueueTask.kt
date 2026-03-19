@@ -11,7 +11,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 class QueueTask(
     val player: Player,
 ) {
-    private val renderer = DialogueRenderer(player)
+    val renderer = DialogueRenderer(player)
 
     suspend fun npc(
         text: String,
@@ -154,6 +154,14 @@ class QueueTask(
     suspend fun stop() {
         player.newDialogueManager.close()
         throw CancellationException()
+    }
+
+    suspend fun levelup(
+        skill: Int,
+        level: Int,
+        levelsGained: Int,
+    ) {
+        renderer.levelup(skill, level, levelsGained)
     }
 
     suspend fun selection(
