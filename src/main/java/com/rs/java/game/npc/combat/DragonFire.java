@@ -237,7 +237,7 @@ public class DragonFire {
     /**
      * Handles absorbing a dragonfire attack with a Dragonfire shield, incrementing charges.
      */
-    public static void handleDragonfireShield(Player player) {
+    public static void rechargeDragonfireShield(Player player) {
         Item shield = player.getEquipment().getItem(Equipment.SLOT_SHIELD);
         if (shield == null) return;
         if (!shield.isAnyOf("item.dragonfire_shield_uncharged", "item.dragonfire_shield_charged", "item.dragonfire_ward_uncharged", "item.dragonfire_ward_charged"))

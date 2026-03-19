@@ -96,7 +96,7 @@ public class BrutalDragonCombat extends CombatScript {
 		Hit dragonfire = npc.regularHit(target, damage);
 		ProjectileManager.send(Projectile.DRAGONFIRE, DRAGONFIRE_GFX, npc, target, () -> {
 					applyRegisteredHit(npc, target, dragonfire);
-					DragonFire.handleDragonfireShield(player);
+					DragonFire.rechargeDragonfireShield(player);
 				}
 		);
 	}
@@ -112,6 +112,6 @@ public class BrutalDragonCombat extends CombatScript {
 		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, accuracyRoll, DragonFire.DragonType.CHROMATIC);
 		Hit dragonfire = npc.regularHit(target, mitigatedDamage);
 		delayHit(npc, target, 1, dragonfire);
-		DragonFire.handleDragonfireShield(player);
+		DragonFire.rechargeDragonfireShield(player);
 	}
 }

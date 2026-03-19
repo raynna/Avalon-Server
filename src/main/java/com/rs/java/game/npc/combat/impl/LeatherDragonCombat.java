@@ -63,6 +63,6 @@ public class LeatherDragonCombat extends CombatScript {
 		int mitigatedDamage = DragonFire.applyDragonfireMitigation(player, accuracyRoll, DragonFire.DragonType.CHROMATIC);
 		Hit dragonfire = npc.regularHit(target, mitigatedDamage);
 		delayHit(npc, target, 1, dragonfire);
-		DragonFire.handleDragonfireShield(player);
+		DragonFire.rechargeDragonfireShield(player);
 	}
 }

@@ -71,7 +71,7 @@ public class MithrilDragonCombat extends CombatScript {
 
 		Hit dragonfire = npc.regularHit(target, mitigatedDamage);
 		delayHit(npc, player, 1, dragonfire);
-		DragonFire.handleDragonfireShield(player);
+		DragonFire.rechargeDragonfireShield(player);
 	}
 
 	private void performDragonfireAttack(NPC npc, Entity target) {
@@ -84,7 +84,7 @@ public class MithrilDragonCombat extends CombatScript {
 		Hit dragonfire = npc.regularHit(target, mitigated);
 		ProjectileManager.send(Projectile.DRAGONFIRE, DRAGONFIRE_NORMAL_PROJECTILE, npc, target, () -> {
 			applyRegisteredHit(npc, target, dragonfire);
-			DragonFire.handleDragonfireShield(player);
+			DragonFire.rechargeDragonfireShield(player);
 		});
 	}
 

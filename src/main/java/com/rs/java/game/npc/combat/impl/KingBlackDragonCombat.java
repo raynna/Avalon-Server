@@ -94,7 +94,7 @@ public class KingBlackDragonCombat extends CombatScript {
                             if (special && damage > 0) {
                                 attemptSpecialEffect(player, specialType);
                             }
-                            DragonFire.handleDragonfireShield(player);
+                            DragonFire.rechargeDragonfireShield(player);
                         }
                 );
                 break;

@@ -1,6 +1,5 @@
 package com.rs.java.game.npc.combat.impl;
 
-import com.rs.java.game.Animation;
 import com.rs.java.game.Entity;
 import com.rs.java.game.Hit;
 import com.rs.java.game.npc.NPC;
@@ -78,7 +77,7 @@ public class WyvernCombat extends CombatScript {
 		delayHit(npc, target, 1, hit -> {
 			if (icyBreath.getDamage() > 0) {
 				target.gfx(ICY_BREATH_HIT, 100);
-				DragonFire.handleDragonfireShield(player);
+				DragonFire.rechargeDragonfireShield(player);
 			}
 		}, icyBreath);
 	}
