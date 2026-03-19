@@ -3,7 +3,9 @@
   "variants": [
     {
       "ids": [
-        178
+        178,
+        179,
+        6189
       ],
       "members": false,
       "combatLevel": 33,

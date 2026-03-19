@@ -3,7 +3,11 @@
   "variants": [
     {
       "ids": [
-        3291
+        90,
+        3291,
+        5332,
+        5333,
+        5334
       ],
       "members": false,
       "combatLevel": 22,
@@ -60,6 +64,77 @@
       "attackSpeedTicks": 4,
       "respawnTicks": 70,
       "slayerXp": 29,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria",
+        "krystilia",
+        "mazchna"
+      ]
+    },
+    {
+      "ids": [
+        92,
+        5337,
+        5338,
+        5339,
+        5340
+      ],
+      "members": false,
+      "combatLevel": 25,
+      "attackLevel": 24,
+      "strengthLevel": 24,
+      "defenceLevel": 24,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 17,
+      "attackBonus": 15,
+      "strengthBonus": 14,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 9,
+        "slash": 11,
+        "crush": -2
+      },
+      "magicDefence": {
+        "magic": 1
+      },
+      "rangedDefence": {
+        "light": 4,
+        "standard": 4,
+        "heavy": 4
+      },
+      "weaknesses": {
+        "earth": 35
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[4 January]] [[2001]]",
+      "aliases": [],
+      "size": "1",
+      "examine": "Could do with gaining a few pounds.",
+      "attributes": [
+        "undead"
+      ],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 4
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Slash]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 60,
+      "slayerXp": 17,
       "categories": [],
       "assignedBy": [
         "turael",
