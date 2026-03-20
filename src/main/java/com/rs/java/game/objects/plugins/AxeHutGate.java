@@ -32,7 +32,7 @@ public class AxeHutGate extends ObjectPlugin {
 
 	@Override
 	public boolean processObject2(Player player, WorldObject object) {
-		if (player.getSkills().getLevelForXp(Skills.THIEVING) < 60) {
+		if (player.getSkills().getRealLevel(Skills.THIEVING) < 60) {
 			player.getDialogueManager().startDialogue("SimpleMessage",
 					"You need atleast an level of 60 thieving to picklock this door.");
 			return false;

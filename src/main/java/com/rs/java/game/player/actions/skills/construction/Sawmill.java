@@ -101,7 +101,7 @@ public class Sawmill {
 	}
 
 	public static void enter(Player player, WorldObject object) {
-		if (player.getSkills().getLevelForXp(Skills.WOODCUTTING) < 80) {
+		if (player.getSkills().getRealLevel(Skills.WOODCUTTING) < 80) {
 			player.getDialogueManager().startDialogue("SimpleNPCMessage", OVERSEER,
 					"Sorry, we don't need inexperienced woodcutters.");
 			return;

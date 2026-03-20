@@ -14,7 +14,11 @@ class HealCommand : Command {
     override val description = "Restores your health, prayer & special attack"
     override val usage = "::heal"
 
-    override fun execute(player: Player, args: List<String>, trigger: String): Boolean {
+    override fun execute(
+        player: Player,
+        args: List<String>,
+        trigger: String,
+    ): Boolean {
         if (Settings.ECONOMY_MODE == Settings.FULL_ECONOMY) {
             player.message("You can't use ::heal in this mode.")
             return true
@@ -24,18 +28,21 @@ class HealCommand : Command {
             return true
         }
         if (player.tickManager.isActive(TickManager.TickKeys.LAST_ATTACKED_TICK)) {
-            player.message("You can't use ::heal for another ${player.getTickToSeconds(player.tickManager.getTicksLeft(
-                TickManager.TickKeys.LAST_ATTACKED_TICK))} seconds.")
+            player.message(
+                "You can't use ::heal for another ${player.getTickToSeconds(
+                    player.tickManager.getTicksLeft(TickManager.TickKeys.LAST_ATTACKED_TICK),
+                )} seconds.",
+            )
             return true
         }
-        player.prayer.restorePrayer(player.skills.getLevelForXp(Skills.PRAYER) * 10)
+        player.prayer.restorePrayer(player.skills.getRealLevel(Skills.PRAYER) * 10)
         if (player.poison.isPoisoned) player.poison.reset()
         if (player.newPoison.isPoisoned()) player.newPoison.reset()
         player.setRunEnergy(100)
         player.heal(player.maxHitpoints)
         player.skills.restoreSkills()
         player.getAppearance().generateAppearenceData()
-        player.skills[Skills.SUMMONING] = player.skills.getLevelForXp(Skills.SUMMONING)
+        player.skills[Skills.SUMMONING] = player.skills.getRealLevel(Skills.SUMMONING)
         player.skills.refresh(Skills.SUMMONING)
         player.getCombatDefinitions().resetSpecialAttack()
         player.animate(Animation(8502))

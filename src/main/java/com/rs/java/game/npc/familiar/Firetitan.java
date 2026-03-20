@@ -46,9 +46,9 @@ public class Firetitan extends Familiar {
 	@Override
 	public boolean submitSpecial(Object object) {
 		int newLevel = getOwner().getSkills().getLevel(Skills.DEFENCE)
-				+ (getOwner().getSkills().getLevelForXp(Skills.DEFENCE) / (int) 12.5);
-		if (newLevel > getOwner().getSkills().getLevelForXp(Skills.DEFENCE) + (int) 12.5)
-			newLevel = getOwner().getSkills().getLevelForXp(Skills.DEFENCE) + (int) 12.5;
+				+ (getOwner().getSkills().getRealLevel(Skills.DEFENCE) / (int) 12.5);
+		if (newLevel > getOwner().getSkills().getRealLevel(Skills.DEFENCE) + (int) 12.5)
+			newLevel = getOwner().getSkills().getRealLevel(Skills.DEFENCE) + (int) 12.5;
 		getOwner().gfx(new Graphics(2011));
 		getOwner().animate(new Animation(7660));
 		getOwner().getSkills().set(Skills.DEFENCE, newLevel);

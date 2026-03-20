@@ -334,7 +334,7 @@ public class House implements Serializable {
 	}
 
 	private int getMaxQuantityRooms() {
-		int consLvl = player.getSkills().getLevelForXp(Skills.CONSTRUCTION);
+		int consLvl = player.getSkills().getRealLevel(Skills.CONSTRUCTION);
 		int maxRoom = 20;
 		/*
 		 * if (player.isExtremeDonator()) maxRoom += 10; if (player.isDonator()) maxRoom

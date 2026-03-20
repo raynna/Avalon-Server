@@ -44,7 +44,7 @@ public class CompFeatures extends Dialogue {
 	}
 
 	public static void renewSummoningPoints(Player player) {
-		int summonLevel = player.getSkills().getLevelForXp(Skills.SUMMONING);
+		int summonLevel = player.getSkills().getRealLevel(Skills.SUMMONING);
 
 		if (player.restoreDelay < Utils.currentTimeMillis()
 				&& player.getSkills().getLevel(Skills.SUMMONING) < summonLevel) {

@@ -176,7 +176,7 @@ public final class DungeonPartyManager {
 	public int getDungeoneeringLevel() {
 		int level = 120;
 		for (Player player : team) {
-			int playerLevel = player.getSkills().getLevelForXp(Skills.DUNGEONEERING);
+			int playerLevel = player.getSkills().getRealLevel(Skills.DUNGEONEERING);
 			if (playerLevel < level)
 				level = playerLevel;
 		}
@@ -249,7 +249,7 @@ public final class DungeonPartyManager {
 			return 99;
 		int level = 0;
 		for (Player player : team)
-			level += player.getSkills().getLevelForXp(Skills.DEFENCE);
+			level += player.getSkills().getRealLevel(Skills.DEFENCE);
 		return level / team.size();
 	}
 
@@ -264,7 +264,7 @@ public final class DungeonPartyManager {
 			return 1;
 		int level = 0;
 		for (Player player : team) {
-			int lvl = player.getSkills().getLevelForXp(skill);
+			int lvl = player.getSkills().getRealLevel(skill);
 			if (lvl > level)
 				level = lvl;
 		}
@@ -276,7 +276,7 @@ public final class DungeonPartyManager {
 			return 99;
 		int level = 0;
 		for (Player player : team)
-			level += player.getSkills().getLevelForXp(Skills.ATTACK);
+			level += player.getSkills().getRealLevel(Skills.ATTACK);
 		return level / team.size();
 	}
 
@@ -285,7 +285,7 @@ public final class DungeonPartyManager {
 			return 99;
 		int level = 0;
 		for (Player player : team)
-			level += player.getSkills().getLevelForXp(Skills.MAGIC);
+			level += player.getSkills().getRealLevel(Skills.MAGIC);
 		return level / team.size();
 	}
 
@@ -294,7 +294,7 @@ public final class DungeonPartyManager {
 			return 99;
 		int level = 0;
 		for (Player player : team)
-			level += player.getSkills().getLevelForXp(Skills.RANGE);
+			level += player.getSkills().getRealLevel(Skills.RANGE);
 		return level / team.size();
 	}
 

@@ -21,7 +21,7 @@ public class CookingGuildDoor extends ObjectPlugin {
 	@Override
 	public boolean processObject(Player player, WorldObject object) {
 		if (player.getY() <= object.getY()) {
-			if (player.getSkills().getLevelForXp(Skills.COOKING) < 32) {
+			if (player.getSkills().getRealLevel(Skills.COOKING) < 32) {
 				player.getPackets().sendGameMessage("You need a level of 32 cooking to enter this guild.");
 				return false;
 			}

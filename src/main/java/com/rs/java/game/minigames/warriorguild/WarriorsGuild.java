@@ -160,7 +160,7 @@ public class WarriorsGuild extends Controller {
 	 * @return whether or not the door will open.
 	 */
 	public static boolean canEnter(Player player) {
-		if (player.getSkills().getLevelForXp(Skills.STRENGTH) + player.getSkills().getLevelForXp(Skills.ATTACK) < 130) {
+		if (player.getSkills().getRealLevel(Skills.STRENGTH) + player.getSkills().getRealLevel(Skills.ATTACK) < 130) {
 			player.getPackets().sendGameMessage(
 					"You need atleast your attack level + strength level to be above 130 to enter this door.");
 			return false;

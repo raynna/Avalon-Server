@@ -20,7 +20,7 @@ public class CraftingGuildDoor extends ObjectPlugin {
 	@Override
 	public boolean processObject(Player player, WorldObject object) {
 		if (player.getY() >= object.getY()) {
-			if (player.getSkills().getLevelForXp(Skills.CRAFTING) < 40) {
+			if (player.getSkills().getRealLevel(Skills.CRAFTING) < 40) {
 				player.getPackets().sendGameMessage("You need a level of 40 crafting to enter this guild.");
 				return false;
 			}

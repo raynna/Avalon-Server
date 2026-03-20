@@ -62,9 +62,7 @@ import com.rs.kotlin.game.npc.combatdata.CombatData;
 import com.rs.kotlin.game.npc.combatdata.NpcCombatDefinition;
 import com.rs.kotlin.game.npc.drops.DropTableRegistry;
 import com.rs.kotlin.game.npc.drops.DropTableSource;
-import com.rs.kotlin.game.player.dialogue.DialogueQueues;
 import com.rs.kotlin.game.player.dialogue.DialogueStarter;
-import com.rs.kotlin.game.player.dialogue.dialogues.BankerdialogueKt;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
 import com.rs.kotlin.game.player.shop.shops.GeneralStore;
 import com.rs.kotlin.tool.WikiApi;
@@ -735,14 +733,14 @@ public class NPCHandler {
                     player.message("The nurse cannot heal you in combat.");
                     return;
                 }
-                player.getPrayer().restorePrayer(player.getSkills().getLevelForXp(Skills.PRAYER) * 10);
+                player.getPrayer().restorePrayer(player.getSkills().getRealLevel(Skills.PRAYER) * 10);
                 if (player.getPoison().isPoisoned())
                     player.getPoison().reset();
                 player.setRunEnergy(100);
                 player.heal(player.getMaxHitpoints());
                 player.getSkills().restoreSkills();
                 player.getAppearance().generateAppearenceData();
-                player.getSkills().set(Skills.SUMMONING, player.getSkills().getLevelForXp(Skills.SUMMONING));
+                player.getSkills().set(Skills.SUMMONING, player.getSkills().getRealLevel(Skills.SUMMONING));
                 player.getSkills().refresh(Skills.SUMMONING);
                 player.getCombatDefinitions().resetSpecialAttack();
                 player.animate(new Animation(8502));
@@ -1013,14 +1011,14 @@ public class NPCHandler {
                     player.message("The nurse cannot heal you in combat.");
                     return;
                 }
-                player.getPrayer().restorePrayer(player.getSkills().getLevelForXp(Skills.PRAYER) * 10);
+                player.getPrayer().restorePrayer(player.getSkills().getRealLevel(Skills.PRAYER) * 10);
                 if (player.getPoison().isPoisoned())
                     player.getPoison().reset();
                 player.setRunEnergy(100);
                 player.heal(player.getMaxHitpoints());
                 player.getSkills().restoreSkills();
                 player.getAppearance().generateAppearenceData();
-                player.getSkills().set(Skills.SUMMONING, player.getSkills().getLevelForXp(Skills.SUMMONING));
+                player.getSkills().set(Skills.SUMMONING, player.getSkills().getRealLevel(Skills.SUMMONING));
                 player.getSkills().refresh(Skills.SUMMONING);
                 player.getCombatDefinitions().resetSpecialAttack();
                 player.animate(new Animation(8502));

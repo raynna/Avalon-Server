@@ -43,5 +43,14 @@
     "lastSeen": "2026-03-17T14:47:39.494700900Z",
     "attempts": 1,
     "expectedCombatLevel": 8
+  },
+  "7891": {
+    "npcId": 7891,
+    "npcName": "Dummy",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-19T23:25:34.777879200Z",
+    "lastSeen": "2026-03-19T23:25:34.777879200Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
   }
 }

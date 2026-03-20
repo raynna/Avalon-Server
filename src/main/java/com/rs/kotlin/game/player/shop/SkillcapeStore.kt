@@ -9,7 +9,6 @@ import com.rs.java.game.player.Skills
  * No static mutable state, just generates capes based on player stats.
  */
 object SkillcapeStore {
-
     const val CURRENCY_SPRITE: Int = 1371
     const val TITLE: String = "Max' Skillcape Store"
 
@@ -17,8 +16,12 @@ object SkillcapeStore {
         val s = player.skills
         val capes = mutableListOf<Item>()
 
-        fun addIfLevel(skill: Int, level: Int, itemId: Int) {
-            if (s.getLevelForXp(skill) >= level) capes.add(Item(itemId, 1))
+        fun addIfLevel(
+            skill: Int,
+            level: Int,
+            itemId: Int,
+        ) {
+            if (s.getRealLevel(skill) >= level) capes.add(Item(itemId, 1))
         }
 
         addIfLevel(Skills.ATTACK, 99, 9748)
@@ -48,12 +51,14 @@ object SkillcapeStore {
 
         // Dungeoneering 99 + 120 capes
         addIfLevel(Skills.DUNGEONEERING, 99, 18509)
-        if (s.getLevelForXp(Skills.DUNGEONEERING) == 120)
+        if (s.getRealLevel(Skills.DUNGEONEERING) == 120) {
             capes.add(Item(19709, 1))
+        }
 
         // Max cape
-        if (player.hasMaxCapeRequirements())
+        if (player.hasMaxCapeRequirements()) {
             capes.add(Item(20767, 1))
+        }
 
         return capes
     }

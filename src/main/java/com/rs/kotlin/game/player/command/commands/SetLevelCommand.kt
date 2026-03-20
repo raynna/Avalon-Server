@@ -45,7 +45,7 @@ class SetLevelCommand : Command {
             level = 0
         }
 
-        val previousLevel = player.skills.getLevelForXp(skill)
+        val previousLevel = player.skills.getRealLevel(skill)
         player.skills[skill] = level
         player.skills.setXp(skill, Skills.getXPForLevel(level).toDouble())
         if (previousLevel < level) {

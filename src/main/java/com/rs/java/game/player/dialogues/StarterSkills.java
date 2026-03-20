@@ -24,7 +24,7 @@ public class StarterSkills extends Dialogue {
 			if (componentId == OPTION_1) {
 				player.getInterfaceManager().closeChatBoxInterface();
 				player.getPrayer().restorePrayer(
-						(int) ((int) (Math.floor(player.getSkills().getLevelForXp(Skills.PRAYER) * 2.5) + 990)
+						(int) ((int) (Math.floor(player.getSkills().getRealLevel(Skills.PRAYER) * 2.5) + 990)
 								* player.getAuraManager().getPrayerPotsRestoreMultiplier()));
 				player.getPrayer().setPrayerBook(true);
 				player.getSkills().switchXPPopup(true);
@@ -70,7 +70,7 @@ public class StarterSkills extends Dialogue {
 			} else if (componentId == OPTION_2) {
 				player.getInterfaceManager().closeChatBoxInterface();
 				player.getPrayer().restorePrayer(
-						(int) ((int) (Math.floor(player.getSkills().getLevelForXp(Skills.PRAYER) * 2.5) + 990)
+						(int) ((int) (Math.floor(player.getSkills().getRealLevel(Skills.PRAYER) * 2.5) + 990)
 								* player.getAuraManager().getPrayerPotsRestoreMultiplier()));
 				player.getPrayer().setPrayerBook(true);
 				player.getSkills().switchXPPopup(true);
@@ -116,7 +116,7 @@ public class StarterSkills extends Dialogue {
 			} else if (componentId == OPTION_3) {
 				player.getInterfaceManager().closeChatBoxInterface();
 				player.getPrayer().restorePrayer(
-						(int) ((int) (Math.floor(player.getSkills().getLevelForXp(Skills.PRAYER) * 2.5) + 990)
+						(int) ((int) (Math.floor(player.getSkills().getRealLevel(Skills.PRAYER) * 2.5) + 990)
 								* player.getAuraManager().getPrayerPotsRestoreMultiplier()));
 				player.getPrayer().setPrayerBook(true);
 				player.getSkills().switchXPPopup(true);
@@ -163,7 +163,7 @@ public class StarterSkills extends Dialogue {
 			} else if (componentId == OPTION_4) {
 				player.getInterfaceManager().closeChatBoxInterface();
 				player.getPrayer().restorePrayer(
-						(int) ((int) (Math.floor(player.getSkills().getLevelForXp(Skills.PRAYER) * 2.5) + 990)
+						(int) ((int) (Math.floor(player.getSkills().getRealLevel(Skills.PRAYER) * 2.5) + 990)
 								* player.getAuraManager().getPrayerPotsRestoreMultiplier()));
 				player.getPrayer().setPrayerBook(false);
 				player.getSkills().switchXPPopup(true);
@@ -209,7 +209,7 @@ public class StarterSkills extends Dialogue {
 			} else if (componentId == OPTION_5) {
 				player.getInterfaceManager().closeChatBoxInterface();
 				player.getPrayer().restorePrayer(
-						(int) ((int) (Math.floor(player.getSkills().getLevelForXp(Skills.PRAYER) * 2.5) + 990)
+						(int) ((int) (Math.floor(player.getSkills().getRealLevel(Skills.PRAYER) * 2.5) + 990)
 								* player.getAuraManager().getPrayerPotsRestoreMultiplier()));
 				player.getPrayer().setPrayerBook(true);
 				player.getSkills().switchXPPopup(true);

@@ -4,7 +4,6 @@ import com.rs.java.game.item.Item
 import com.rs.java.game.item.ground.GroundItems
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
-import com.rs.java.game.player.content.ShitItems
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.world.util.Msg
 import com.rs.kotlin.rscm.Rscm
@@ -37,7 +36,7 @@ object GoldenMiningOutfit {
         val missing = player.missingPieces()
         if (missing.isEmpty()) return
 
-        val level = player.skills.getLevelForXp(Skills.WOODCUTTING)
+        val level = player.skills.getRealLevel(Skills.WOODCUTTING)
 
         val chance = (BASE_CHANCE - level * 10).coerceAtLeast(MIN_CHANCE)
 

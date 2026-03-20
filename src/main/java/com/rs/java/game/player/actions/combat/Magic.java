@@ -399,7 +399,7 @@ public class Magic {
 	}
 
 	public static final boolean checkSpellRequirements1(Player player, int level, boolean delete, int... runes) {
-		if (player.getSkills().getLevelForXp(Skills.MAGIC) < level) {
+		if (player.getSkills().getRealLevel(Skills.MAGIC) < level) {
 			player.getPackets().sendGameMessage("Your Magic level is not high enough for this spell.");
 			return false;
 		}
@@ -408,7 +408,7 @@ public class Magic {
 
 	public static final boolean checkMiscSpellRequirements(Player player, int level, boolean delete, int spellId,
 			int... runes) {
-		if (player.getSkills().getLevelForXp(Skills.MAGIC) < level) {
+		if (player.getSkills().getRealLevel(Skills.MAGIC) < level) {
 			player.getPackets().sendGameMessage("Your Magic level is not high enough for this spell.");
 			return false;
 		}
@@ -1277,7 +1277,7 @@ public class Magic {
 
 	public static boolean checkSpellLevel(Player player, int level) {
 		if (player.getSkills().getLevel(Skills.MAGIC) < level
-				&& player.getSkills().getLevelForXp(Skills.MAGIC) < level) {
+				&& player.getSkills().getRealLevel(Skills.MAGIC) < level) {
 			player.getPackets().sendGameMessage("Your Magic level is not high enough for this spell.");
 			return false;
 		}

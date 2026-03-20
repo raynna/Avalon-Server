@@ -1746,55 +1746,55 @@ public final class Utils {
 	 */
 	public static byte[] completeQuickMessage(Player player, int fileId, byte[] data) {
 		if (fileId == 1)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.AGILITY) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.AGILITY) };
 		else if (fileId == 8)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.ATTACK) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.ATTACK) };
 		else if (fileId == 13)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.CONSTRUCTION) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.CONSTRUCTION) };
 		else if (fileId == 16)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.COOKING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.COOKING) };
 		else if (fileId == 23)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.CRAFTING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.CRAFTING) };
 		else if (fileId == 30)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.DEFENCE) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.DEFENCE) };
 		else if (fileId == 34)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.FARMING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.FARMING) };
 		else if (fileId == 41)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.FIREMAKING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.FIREMAKING) };
 		else if (fileId == 47)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.FISHING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.FISHING) };
 		else if (fileId == 55)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.FLETCHING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.FLETCHING) };
 		else if (fileId == 62)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.HERBLORE) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.HERBLORE) };
 		else if (fileId == 70)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.HITPOINTS) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.HITPOINTS) };
 		else if (fileId == 74)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.HUNTER) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.HUNTER) };
 		else if (fileId == 135)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.MAGIC) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.MAGIC) };
 		else if (fileId == 127)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.MINING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.MINING) };
 		else if (fileId == 120)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.PRAYER) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.PRAYER) };
 		else if (fileId == 116)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.RANGE) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.RANGE) };
 		else if (fileId == 111)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.RUNECRAFTING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.RUNECRAFTING) };
 		else if (fileId == 103)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.SLAYER) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.SLAYER) };
 		else if (fileId == 96)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.SMITHING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.SMITHING) };
 		else if (fileId == 92)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.STRENGTH) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.STRENGTH) };
 		else if (fileId == 85)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.SUMMONING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.SUMMONING) };
 		else if (fileId == 79)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.THIEVING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.THIEVING) };
 		else if (fileId == 142)
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.WOODCUTTING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.WOODCUTTING) };
 		else if (fileId == 990) {
-			data = new byte[] { (byte) player.getSkills().getLevelForXp(Skills.DUNGEONEERING) };
+			data = new byte[] { (byte) player.getSkills().getRealLevel(Skills.DUNGEONEERING) };
 		} else if (fileId == 965) {
 			int value = player.getHitpoints();
 			data = new byte[] { (byte) (value >> 24), (byte) (value >> 16), (byte) (value >> 8), (byte) value };

@@ -27,7 +27,7 @@ public class KarilCombat extends CombatScript {
 			if (rangeHit.getDamage() != 0 && target instanceof Player && Utils.random(3) == 0) {
 				target.gfx(new Graphics(401, 0, 100));
 				Player targetPlayer = (Player) target;
-				int drain = (int) (targetPlayer.getSkills().getLevelForXp(Skills.AGILITY) * 0.2);
+				int drain = (int) (targetPlayer.getSkills().getRealLevel(Skills.AGILITY) * 0.2);
 				int currentLevel = targetPlayer.getSkills().getLevel(Skills.AGILITY);
 				targetPlayer.getSkills().set(Skills.AGILITY, currentLevel < drain ? 0 : currentLevel - drain);
 			}

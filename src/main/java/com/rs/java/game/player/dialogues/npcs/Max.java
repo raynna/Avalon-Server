@@ -133,7 +133,7 @@ public class Max extends Dialogue {
 		if (!player.hasMaxCapeRequirements()) {
 			player.getPackets().sendGameMessage("You need level 99 in the following: ");
 			for (int skill = 0; skill < 25; skill++) {
-				if (player.getSkills().getLevelForXp(skill) >= 99)
+				if (player.getSkills().getRealLevel(skill) >= 99)
 					continue;
 				player.getPackets().sendGameMessage(player.getSkills().getSkillName(skill));
 			}

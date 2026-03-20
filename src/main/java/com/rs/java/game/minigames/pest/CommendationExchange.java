@@ -78,7 +78,7 @@ public class CommendationExchange {// 1875 TODO
 			player.getPackets().sendHideIComponent(INTERFACE, 70, false);
 			player.getPackets().sendHideIComponent(INTERFACE, 69, true);
 		} else if (componentId == 291) {
-			if (player.getSkills().getLevelForXp(Skills.HERBLORE) < 25) {
+			if (player.getSkills().getRealLevel(Skills.HERBLORE) < 25) {
 				player.getPackets()
 						.sendGameMessage("You need a herblore level of 25 in order to purchase a herblore pack.");
 				return;
@@ -89,7 +89,7 @@ public class CommendationExchange {// 1875 TODO
 					Utils.random(2));
 			player.getPackets().sendGameMessage("You exchange 30 commendation points for a herblore pack.");
 		} else if (componentId == 302) {
-			if (player.getSkills().getLevelForXp(Skills.MINING) < 25) {
+			if (player.getSkills().getRealLevel(Skills.MINING) < 25) {
 				player.getPackets()
 						.sendGameMessage("You need a mining level of 25 in order to purchase a herblore pack.");
 				return;
@@ -99,7 +99,7 @@ public class CommendationExchange {// 1875 TODO
 			player.getInventory().addItemDrop(454, Utils.random(30));
 			player.getPackets().sendGameMessage("You exchange 15 commendation points for a mineral pack.");
 		} else if (componentId == 313) {
-			if (player.getSkills().getLevelForXp(Skills.FARMING) < 25) {
+			if (player.getSkills().getRealLevel(Skills.FARMING) < 25) {
 				player.getPackets()
 						.sendGameMessage("You need a farming level of 25 in order to purchase a herblore pack.");
 				return;
@@ -167,7 +167,7 @@ public class CommendationExchange {// 1875 TODO
 	}
 
 	private static void addXPForSkill(Player player, int skill, int rate) {
-		if (player.getSkills().getLevelForXp(skill) < 25) {
+		if (player.getSkills().getRealLevel(skill) < 25) {
 			player.getPackets().sendGameMessage(
 					"You need a " + Skills.SKILL_NAME[skill] + " of at least 25 in order to gain experience.");
 			return;
@@ -201,7 +201,7 @@ public class CommendationExchange {// 1875 TODO
 	}
 
 	private static double calculateExperience(Player player, int skill) {
-		int level = player.getSkills().getLevelForXp(skill);
+		int level = player.getSkills().getRealLevel(skill);
 		int constant = 35;
 		if (skill == Skills.MAGIC || skill == Skills.RANGE)
 			constant = 32;

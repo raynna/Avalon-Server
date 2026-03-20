@@ -256,7 +256,7 @@ public final class Pots {
 
 			@Override
 			public void extra(Player player) {
-				toAdd = (player.getSkills().getLevelForXp(Skills.ATTACK));
+				toAdd = (player.getSkills().getRealLevel(Skills.ATTACK));
 				player.getSkills().set(Skills.ATTACK, toAdd);
 			}
 
@@ -278,7 +278,7 @@ public final class Pots {
 			@Override
 			public void extra(Player player) {
 				player.getPrayer()
-						.restorePrayer((int) ((int) (player.getSkills().getLevelForXp(Skills.PRAYER) * 0.33 * 10)
+						.restorePrayer((int) ((int) (player.getSkills().getRealLevel(Skills.PRAYER) * 0.33 * 10)
 								* player.getAuraManager().getPrayerPotsRestoreMultiplier()));
 				player.addPoisonImmune(360000);
 			}
@@ -287,7 +287,7 @@ public final class Pots {
 		SUMMONING_POT(Skills.SUMMONING) {
 			@Override
 			public int getAffectedSkill(Player player, int skillId, int actualLevel, int realLevel) {
-				int restore = (int) (Math.floor(player.getSkills().getLevelForXp(Skills.SUMMONING) * 0.25) + 7);
+				int restore = (int) (Math.floor(player.getSkills().getRealLevel(Skills.SUMMONING) * 0.25) + 7);
 				if (actualLevel + restore > realLevel)
 					return realLevel;
 				return actualLevel + restore;
@@ -427,7 +427,7 @@ public final class Pots {
 			@Override
 			public void extra(Player player) {
 				player.getPrayer().restorePrayer(
-						(int) ((int) (Math.floor(player.getSkills().getLevelForXp(Skills.PRAYER) * 2.5) + 70)
+						(int) ((int) (Math.floor(player.getSkills().getRealLevel(Skills.PRAYER) * 2.5) + 70)
 								* player.getAuraManager().getPrayerPotsRestoreMultiplier()));
 			}
 		},
@@ -654,7 +654,7 @@ public final class Pots {
 		SUPER_PRAYER() {
 			@Override
 			public void extra(Player player) {
-				player.getPrayer().restorePrayer((int) ((int) (70 + (player.getSkills().getLevelForXp(Skills.PRAYER) * 3.43))
+				player.getPrayer().restorePrayer((int) ((int) (70 + (player.getSkills().getRealLevel(Skills.PRAYER) * 3.43))
 								* player.getAuraManager().getPrayerPotsRestoreMultiplier()));
 			}
 		},
@@ -681,7 +681,7 @@ public final class Pots {
 			@Override
 			public void extra(Player player) {
 				player.getPrayer()
-						.restorePrayer((int) ((int) (player.getSkills().getLevelForXp(Skills.PRAYER) * 0.33 * 10)
+						.restorePrayer((int) ((int) (player.getSkills().getRealLevel(Skills.PRAYER) * 0.33 * 10)
 								* player.getAuraManager().getPrayerPotsRestoreMultiplier()));
 			}
 
@@ -864,7 +864,7 @@ public final class Pots {
 		pot.effect.extra(player);
 		for (int skillId : pot.effect.affectedSkills)
 			player.getSkills().set(skillId, pot.effect.getAffectedSkill(player, skillId,
-					player.getSkills().getLevel(skillId), player.getSkills().getLevelForXp(skillId)));
+					player.getSkills().getLevel(skillId), player.getSkills().getRealLevel(skillId)));
 		return true;
 	}
 
@@ -896,7 +896,7 @@ public final class Pots {
 		}
 		for (int skillId : pot.effect.affectedSkills)
 			player.getSkills().set(skillId, pot.effect.getAffectedSkill(player, skillId,
-					player.getSkills().getLevel(skillId), player.getSkills().getLevelForXp(skillId)));
+					player.getSkills().getLevel(skillId), player.getSkills().getRealLevel(skillId)));
 		player.animate(829);
 		player.playLocalSound(4580,  1);
 		if (player.toggles("BREAK_VIALS", false) && dosesLeft == 0 && pot.isPotion()) {
@@ -933,23 +933,23 @@ public final class Pots {
 	public static void resetOverLoadEffect(Player player) {
 		if (!player.isDead()) {
 			int actualLevel = player.getSkills().getLevel(Skills.ATTACK);
-			int realLevel = player.getSkills().getLevelForXp(Skills.ATTACK);
+			int realLevel = player.getSkills().getRealLevel(Skills.ATTACK);
 			if (actualLevel > realLevel)
 				player.getSkills().set(Skills.ATTACK, realLevel);
 			actualLevel = player.getSkills().getLevel(Skills.STRENGTH);
-			realLevel = player.getSkills().getLevelForXp(Skills.STRENGTH);
+			realLevel = player.getSkills().getRealLevel(Skills.STRENGTH);
 			if (actualLevel > realLevel)
 				player.getSkills().set(Skills.STRENGTH, realLevel);
 			actualLevel = player.getSkills().getLevel(Skills.DEFENCE);
-			realLevel = player.getSkills().getLevelForXp(Skills.DEFENCE);
+			realLevel = player.getSkills().getRealLevel(Skills.DEFENCE);
 			if (actualLevel > realLevel)
 				player.getSkills().set(Skills.DEFENCE, realLevel);
 			actualLevel = player.getSkills().getLevel(Skills.MAGIC);
-			realLevel = player.getSkills().getLevelForXp(Skills.MAGIC);
+			realLevel = player.getSkills().getRealLevel(Skills.MAGIC);
 			if (actualLevel > realLevel)
 				player.getSkills().set(Skills.MAGIC, realLevel);
 			actualLevel = player.getSkills().getLevel(Skills.RANGE);
-			realLevel = player.getSkills().getLevelForXp(Skills.RANGE);
+			realLevel = player.getSkills().getRealLevel(Skills.RANGE);
 			if (actualLevel > realLevel)
 				player.getSkills().set(Skills.RANGE, realLevel);
 			player.heal(500);
@@ -964,52 +964,52 @@ public final class Pots {
 				|| player.getControlerManager().getControler() instanceof CrucibleController
 				|| FfaZone.isOverloadChanged(player)) {
 			int actualLevel = player.getSkills().getLevel(Skills.ATTACK);
-			int realLevel = player.getSkills().getLevelForXp(Skills.ATTACK);
+			int realLevel = player.getSkills().getRealLevel(Skills.ATTACK);
 			int level = actualLevel > realLevel ? realLevel : actualLevel;
 			player.getSkills().set(Skills.ATTACK, (int) (level + 5 + (realLevel * 0.15)));
 
 			actualLevel = player.getSkills().getLevel(Skills.STRENGTH);
-			realLevel = player.getSkills().getLevelForXp(Skills.STRENGTH);
+			realLevel = player.getSkills().getRealLevel(Skills.STRENGTH);
 			level = actualLevel > realLevel ? realLevel : actualLevel;
 			player.getSkills().set(Skills.STRENGTH, (int) (level + 5 + (realLevel * 0.15)));
 
 			actualLevel = player.getSkills().getLevel(Skills.DEFENCE);
-			realLevel = player.getSkills().getLevelForXp(Skills.DEFENCE);
+			realLevel = player.getSkills().getRealLevel(Skills.DEFENCE);
 			level = actualLevel > realLevel ? realLevel : actualLevel;
 			player.getSkills().set(Skills.DEFENCE, (int) (level + 5 + (realLevel * 0.15)));
 
 			actualLevel = player.getSkills().getLevel(Skills.MAGIC);
-			realLevel = player.getSkills().getLevelForXp(Skills.MAGIC);
+			realLevel = player.getSkills().getRealLevel(Skills.MAGIC);
 			level = actualLevel > realLevel ? realLevel : actualLevel;
 			player.getSkills().set(Skills.MAGIC, level + 5);
 
 			actualLevel = player.getSkills().getLevel(Skills.RANGE);
-			realLevel = player.getSkills().getLevelForXp(Skills.RANGE);
+			realLevel = player.getSkills().getRealLevel(Skills.RANGE);
 			level = actualLevel > realLevel ? realLevel : actualLevel;
 			player.getSkills().set(Skills.RANGE, (int) (level + 5 + (realLevel * 0.1)));
 		} else {
 			int actualLevel = player.getSkills().getLevel(Skills.ATTACK);
-			int realLevel = player.getSkills().getLevelForXp(Skills.ATTACK);
+			int realLevel = player.getSkills().getRealLevel(Skills.ATTACK);
 			int level = actualLevel > realLevel ? realLevel : actualLevel;
 			player.getSkills().set(Skills.ATTACK, (int) (level + 5 + (realLevel * 0.22)));
 
 			actualLevel = player.getSkills().getLevel(Skills.STRENGTH);
-			realLevel = player.getSkills().getLevelForXp(Skills.STRENGTH);
+			realLevel = player.getSkills().getRealLevel(Skills.STRENGTH);
 			level = actualLevel > realLevel ? realLevel : actualLevel;
 			player.getSkills().set(Skills.STRENGTH, (int) (level + 5 + (realLevel * 0.22)));
 
 			actualLevel = player.getSkills().getLevel(Skills.DEFENCE);
-			realLevel = player.getSkills().getLevelForXp(Skills.DEFENCE);
+			realLevel = player.getSkills().getRealLevel(Skills.DEFENCE);
 			level = actualLevel > realLevel ? realLevel : actualLevel;
 			player.getSkills().set(Skills.DEFENCE, (int) (level + 5 + (realLevel * 0.22)));
 
 			actualLevel = player.getSkills().getLevel(Skills.MAGIC);
-			realLevel = player.getSkills().getLevelForXp(Skills.MAGIC);
+			realLevel = player.getSkills().getRealLevel(Skills.MAGIC);
 			level = actualLevel > realLevel ? realLevel : actualLevel;
 			player.getSkills().set(Skills.MAGIC, level + 7);
 
 			actualLevel = player.getSkills().getLevel(Skills.RANGE);
-			realLevel = player.getSkills().getLevelForXp(Skills.RANGE);
+			realLevel = player.getSkills().getRealLevel(Skills.RANGE);
 			level = actualLevel > realLevel ? realLevel : actualLevel;
 			player.getSkills().set(Skills.RANGE, (int) (level + 4 + (Math.floor(realLevel / 5.2))));
 		}

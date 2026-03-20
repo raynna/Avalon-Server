@@ -363,7 +363,7 @@ public final class Barrows extends Controller {
 //			player.getPackets().sendIComponentAnimation(9810, 24, headComponentId);
             int activeLevel = player.getPrayer().getPrayerPoints();
             if (activeLevel > 0) {
-                int level = player.getSkills().getLevelForXp(Skills.PRAYER) * 10;
+                int level = player.getSkills().getRealLevel(Skills.PRAYER) * 10;
                 player.getPrayer().drainPrayer(level / 6);
             }
             timer = 3;

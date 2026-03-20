@@ -527,7 +527,7 @@ public class Foods {
 					runEnergy = 100;
 				player.setRunEnergy(runEnergy);
 				int level = player.getSkills().getLevel(Skills.AGILITY);
-				int realLevel = player.getSkills().getLevelForXp(Skills.AGILITY);
+				int realLevel = player.getSkills().getRealLevel(Skills.AGILITY);
 				player.getSkills().set(Skills.AGILITY, level >= realLevel ? realLevel + 5 : level + 5);
 			}
 
@@ -539,7 +539,7 @@ public class Foods {
 			public void effect(Object object) {
 				Player player = (Player) object;
 				int level = player.getSkills().getLevel(Skills.FARMING);
-				int realLevel = player.getSkills().getLevelForXp(Skills.FARMING);
+				int realLevel = player.getSkills().getRealLevel(Skills.FARMING);
 				player.getSkills().set(Skills.FARMING, level >= realLevel ? realLevel + 3 : level + 3);
 			}
 
@@ -551,7 +551,7 @@ public class Foods {
 			public void effect(Object object) {
 				Player player = (Player) object;
 				int level = player.getSkills().getLevel(Skills.FISHING);
-				int realLevel = player.getSkills().getLevelForXp(Skills.FISHING);
+				int realLevel = player.getSkills().getRealLevel(Skills.FISHING);
 				player.getSkills().set(Skills.FISHING, level >= realLevel ? realLevel + 3 : level + 3);
 			}
 		},
@@ -561,7 +561,7 @@ public class Foods {
 			public void effect(Object object) {
 				Player player = (Player) object;
 				int level = player.getSkills().getLevel(Skills.FISHING);
-				int realLevel = player.getSkills().getLevelForXp(Skills.FISHING);
+				int realLevel = player.getSkills().getRealLevel(Skills.FISHING);
 				player.getSkills().set(Skills.FISHING, level >= realLevel ? realLevel + 5 : level + 5);
 			}
 		},
@@ -571,10 +571,10 @@ public class Foods {
 			public void effect(Object object) {
 				Player player = (Player) object;
 				int level = player.getSkills().getLevel(Skills.SLAYER);
-				int realLevel = player.getSkills().getLevelForXp(Skills.SLAYER);
+				int realLevel = player.getSkills().getRealLevel(Skills.SLAYER);
 				player.getSkills().set(Skills.SLAYER, level >= realLevel ? realLevel + 4 : level + 4);
 				int level2 = player.getSkills().getLevel(Skills.RANGE);
-				int realLevel2 = player.getSkills().getLevelForXp(Skills.RANGE);
+				int realLevel2 = player.getSkills().getRealLevel(Skills.RANGE);
 				player.getSkills().set(Skills.RANGE, level2 >= realLevel2 ? realLevel2 + 4 : level2 + 4);
 			}
 		},
@@ -585,7 +585,7 @@ public class Foods {
 				Player player = (Player) object;
 				if (Utils.random(100) > 5) {
 					int level = player.getSkills().getLevel(Skills.COOKING);
-					int realLevel = player.getSkills().getLevelForXp(Skills.COOKING);
+					int realLevel = player.getSkills().getRealLevel(Skills.COOKING);
 					player.getSkills().set(Skills.COOKING, level >= realLevel ? realLevel + 6 : level + 6);
 				} else {
 					int level = player.getSkills().getLevel(Skills.COOKING);

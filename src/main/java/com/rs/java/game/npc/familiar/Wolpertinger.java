@@ -53,8 +53,8 @@ public class Wolpertinger extends Familiar {
 		long familiarDelay = 3000;
 		player.addFamiliarDelay(familiarDelay);
 		int newLevel = player.getSkills().getLevel(Skills.MAGIC) + 7;
-		if (newLevel > player.getSkills().getLevelForXp(Skills.MAGIC) + 7)
-			newLevel = player.getSkills().getLevelForXp(Skills.MAGIC) + 7;
+		if (newLevel > player.getSkills().getRealLevel(Skills.MAGIC) + 7)
+			newLevel = player.getSkills().getRealLevel(Skills.MAGIC) + 7;
 		player.gfx(new Graphics(1300));
 		player.animate(new Animation(7660));
 		animate(new Animation(8308));

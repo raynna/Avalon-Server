@@ -464,7 +464,7 @@ public class GrandExchangeManager implements Serializable {
 				int level = requiriments.get(skillId);
 				if (level < 0 || level > 120)
 					continue;
-				boolean hasReq = player.getSkills().getLevelForXp(skillId) >= level;
+				boolean hasReq = player.getSkills().getRealLevel(skillId) >= level;
 				reqsText += "<br>" + (hasReq ? "<col=00ff00>" : "<col=ff0000>") + "Level " + level + " "
 						+ Skills.SKILL_NAME[skillId];
 			}

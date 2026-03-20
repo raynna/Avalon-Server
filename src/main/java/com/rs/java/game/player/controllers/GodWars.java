@@ -110,7 +110,7 @@ public class GodWars extends Controller {
 				player.getPackets().sendGameMessage("You cannot recharge your prayer while engaged in combat.");
 				return false;
 			}
-			player.getPrayer().restorePrayer(player.getSkills().getLevelForXp(Skills.PRAYER) * 10);
+			player.getPrayer().restorePrayer(player.getSkills().getRealLevel(Skills.PRAYER) * 10);
 			player.animate(new Animation(645));
 			player.getPackets().sendGameMessage("Your prayer points feel rejuvinated.");
 			lastPrayerRecharge = 600000 + Utils.currentTimeMillis();

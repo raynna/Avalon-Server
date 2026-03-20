@@ -16,13 +16,11 @@ import com.rs.kotlin.game.player.combat.damage.HitRoller
 import com.rs.kotlin.game.player.combat.damage.PendingHit
 import com.rs.kotlin.game.player.combat.damage.SoakDamage
 import com.rs.kotlin.game.player.combat.effects.EquipmentEffects
-import com.rs.kotlin.game.player.combat.magic.MagicStyle
 import com.rs.kotlin.game.player.combat.magic.special.NightmareStaff
 import com.rs.kotlin.game.player.combat.magic.special.ObliterationWeapon
 import com.rs.kotlin.game.player.combat.melee.MeleeStyle
 import com.rs.kotlin.game.player.combat.range.AmmoType
 import com.rs.kotlin.game.player.combat.range.RangeData
-import com.rs.kotlin.game.player.combat.range.RangedStyle
 import com.rs.kotlin.game.player.combat.range.RangedWeapon
 import com.rs.kotlin.game.player.combat.special.CombatContext
 import com.rs.kotlin.game.player.combat.special.EffectResult
@@ -155,8 +153,8 @@ interface CombatStyle {
                 }
             }
             if (defender.id == Rscm.lookup("npc.magic_dummy") || defender.id == Rscm.lookup("npc.melee_dummy")) {
-                if (attacker.prayer.prayerPoints < attacker.skills.getLevelForXp(Skills.PRAYER) * 10) {
-                    attacker.prayer.restorePrayer(attacker.skills.getLevelForXp(Skills.PRAYER) * 10)
+                if (attacker.prayer.prayerPoints < attacker.skills.getRealLevel(Skills.PRAYER) * 10) {
+                    attacker.prayer.restorePrayer(attacker.skills.getRealLevel(Skills.PRAYER) * 10)
                 }
                 if (attacker.combatDefinitions.specialAttackPercentage < 100) {
                     attacker.combatDefinitions.increaseSpecialAttack(100)

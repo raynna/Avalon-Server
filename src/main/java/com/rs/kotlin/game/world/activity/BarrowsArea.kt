@@ -13,27 +13,33 @@ import com.rs.java.game.player.actions.combat.Magic
 import com.rs.java.utils.Utils
 import com.rs.kotlin.game.world.area.Area
 
-class BarrowsArea : Area(14231, 14131) {//regions
+class BarrowsArea : Area(14231, 14131) { //regions
 
-    enum class Hills(val outBound: WorldTile, val inside: WorldTile) {
+    enum class Hills(
+        val outBound: WorldTile,
+        val inside: WorldTile,
+    ) {
         AHRIM_HILL(WorldTile(3566, 3288, 0), WorldTile(3557, 9703, 3)),
         DHAROK_HILL(WorldTile(3575, 3297, 0), WorldTile(3556, 9718, 3)),
         GUTHAN_HILL(WorldTile(3576, 3280, 0), WorldTile(3534, 9704, 3)),
         KARIL_HILL(WorldTile(3565, 3277, 0), WorldTile(3546, 9684, 3)),
         TORAG_HILL(WorldTile(3555, 3282, 0), WorldTile(3568, 9683, 3)),
-        VERAC_HILL(WorldTile(3558, 3297, 0), WorldTile(3578, 9706, 3));
+        VERAC_HILL(WorldTile(3558, 3297, 0), WorldTile(3578, 9706, 3)),
     }
 
     override fun update(): Area = this
+
     override fun name(): String = "Barrows"
+
     override fun member(): Boolean = false
+
     override fun environment(): Environment = Environment.MINIGAME
 
     override fun onEnter(player: Player) {
         if (player.hiddenBrother == -1) {
             player.hiddenBrother = Utils.random(6)
         }
-        //player.packets.sendBlackOut(2)
+        // player.packets.sendBlackOut(2)
         player.interfaceManager.sendOverlay(24, player.interfaceManager.hasRezizableScreen())
         resetHeadTimer(player)
         for (varbit in TUNNEL_CONFIG[player.tunnelIndex]) {
@@ -88,13 +94,16 @@ class BarrowsArea : Area(14231, 14131) {//regions
         // drain prayer
         val activeLevel = player.prayer.prayerPoints
         if (activeLevel > 0) {
-            val level = player.skills.getLevelForXp(Skills.PRAYER) * 10
+            val level = player.skills.getRealLevel(Skills.PRAYER) * 10
             player.prayer.drainPrayer(level / 6)
         }
         player.barrowsTimer = 3
     }
 
-    override fun onObjectClick(player: Player, obj: WorldObject): Boolean {
+    override fun onObjectClick(
+        player: Player,
+        obj: WorldObject,
+    ): Boolean {
         return when (obj.id) {
             in 6702..6707 -> { // crypt exit ladders
                 val out = Hills.entries[obj.id - 6702].outBound
@@ -107,11 +116,13 @@ class BarrowsArea : Area(14231, 14131) {//regions
                 for (hill in Hills.entries) {
                     if (Utils.inCircle(player.tile, hill.outBound.tile, 5)) {
                         player.useStairs(-1, hill.inside, 1, 2, "You've broken into a crypt.")
-                        WorldTasksManager.schedule(object : WorldTask() {
-                            override fun run() {
-                                onEnterCrypt(player)
-                            }
-                        })
+                        WorldTasksManager.schedule(
+                            object : WorldTask() {
+                                override fun run() {
+                                    onEnterCrypt(player)
+                                }
+                            },
+                        )
                     }
                 }
                 true
@@ -126,28 +137,36 @@ class BarrowsArea : Area(14231, 14131) {//regions
                         return true
                     }
                     Magic.sendNormalTeleportSpell(player, 0, 0.0, WorldTile(3565, 3306, 0))
-                    if (player.isTeleportBlocked)
+                    if (player.isTeleportBlocked) {
                         return true
-                    WorldTasksManager.schedule(object : WorldTask() {
-                        override fun run() {
-                            sendReward(player)
-                            player.resetBarrows()
-                            player.refreshBarrowsBrothers()
-                        }
-                    }, 5)
-                    //player.packets.sendCameraShake(3, 12, 25, 12, 25)
-                    //player.packets.sendSpawnedObject(WorldObject(6775, 10, 0, 3551, 9695, 0))
+                    }
+                    WorldTasksManager.schedule(
+                        object : WorldTask() {
+                            override fun run() {
+                                sendReward(player)
+                                player.resetBarrows()
+                                player.refreshBarrowsBrothers()
+                            }
+                        },
+                        5,
+                    )
+                    // player.packets.sendCameraShake(3, 12, 25, 12, 25)
+                    // player.packets.sendSpawnedObject(WorldObject(6775, 10, 0, 3551, 9695, 0))
                 }
                 true
             }
 
             in 6716..6749 -> { // tunnels
-                val walkTo = when (obj.rotation) { // FIX: use WorldObject.rotation
-                    0 -> WorldTile(obj.x + 5, obj.y, 0)
-                    1 -> WorldTile(obj.x, obj.y - 5, 0)
-                    2 -> WorldTile(obj.x - 5, obj.y, 0)
-                    else -> WorldTile(obj.x, obj.y + 5, 0)
-                }
+                val walkTo =
+                    when (obj.rotation) { // FIX: use WorldObject.rotation
+                        0 -> WorldTile(obj.x + 5, obj.y, 0)
+
+                        1 -> WorldTile(obj.x, obj.y - 5, 0)
+
+                        2 -> WorldTile(obj.x - 5, obj.y, 0)
+
+                        else -> WorldTile(obj.x, obj.y + 5, 0)
+                    }
                 if (!World.isNotCliped(walkTo.plane, walkTo.x, walkTo.y, 1)) return true
                 player.addWalkSteps(walkTo.x, walkTo.y, -1, false)
                 player.lock(6)
@@ -169,13 +188,17 @@ class BarrowsArea : Area(14231, 14131) {//regions
                         spawnBrother(player, 2025 + sarco, player.tile)
                     }
                     true
-                } else false
+                } else {
+                    false
+                }
             }
         }
     }
 
-
-    override fun onNPCKill(player: Player, npcId: Int) {
+    override fun onNPCKill(
+        player: Player,
+        npcId: Int,
+    ) {
         if (npcId in CRYPT_NPCS) {
             player.setBarrowsKillCount(player.barrowsKillCount++)
             sendCreaturesSlainCount(player, player.barrowsKillCount)
@@ -200,7 +223,11 @@ class BarrowsArea : Area(14231, 14131) {//regions
         player.packets.sendBlackOut(0)
     }
 
-    private fun spawnBrother(player: Player, id: Int, tile: WorldTile) {
+    private fun spawnBrother(
+        player: Player,
+        id: Int,
+        tile: WorldTile,
+    ) {
         player.barrowsTarget?.disapear()
         for (i in 0..<10) {
             val dir = Utils.random(Utils.DIRECTION_DELTA_X.size)
@@ -225,21 +252,23 @@ class BarrowsArea : Area(14231, 14131) {//regions
     private fun sendReward(player: Player) {
         val killed = player.killedBarrowBrothers.count { it }
 
-        val odds = when (killed) {
-            6 -> 5
-            4 -> 7
-            3 -> 9
-            2 -> 11
-            1 -> 13
-            else -> -1
-        }
+        val odds =
+            when (killed) {
+                6 -> 5
+                4 -> 7
+                3 -> 9
+                2 -> 11
+                1 -> 13
+                else -> -1
+            }
 
         if (odds > 0 && Utils.roll(1, odds)) {
             val casket = Item(405)
-            if (player.inventory.hasFreeSlots())
+            if (player.inventory.hasFreeSlots()) {
                 player.inventory.addItem(casket.id, 1)
-            else
+            } else {
                 GroundItems.updateGroundItem(casket, player, player, 60, 1)
+            }
 
             player.packets.sendGameMessage("You received a barrows casket.")
         }
@@ -247,59 +276,82 @@ class BarrowsArea : Area(14231, 14131) {//regions
         repeat(10) {
             if (Utils.random(100) < killed * 10) { // e.g. more kills = more chance
                 val reward = COMMON_REWARDS.random()
-                if (player.inventory.hasFreeSlots())
+                if (player.inventory.hasFreeSlots()) {
                     player.inventory.addItem(reward.id, reward.amount)
-                else
+                } else {
                     GroundItems.updateGroundItem(reward, player, player, 60, 1)
+                }
             }
         }
 
         // always some coins
         val randomCoins = Utils.random(25_000, 150_000)
-        if (player.inventory.hasFreeSlots())
+        if (player.inventory.hasFreeSlots()) {
             player.inventory.addItem(995, randomCoins)
-        else
+        } else {
             GroundItems.updateGroundItem(Item(995, randomCoins), player, player, 60, 1)
+        }
         player.teleportBlock(60)
         player.packets.sendBlackOut(0)
     }
 
-
-    private fun sendCreaturesSlainCount(player: Player, count: Int) {
+    private fun sendCreaturesSlainCount(
+        player: Player,
+        count: Int,
+    ) {
         player.packets.sendTextOnComponent(24, 6, Utils.format(count))
         player.packets.sendVarBit(464, count)
     }
 
-    private fun getSarcophagusId(objectId: Int): Int = when (objectId) {
-        66017 -> 0
-        63177 -> 1
-        66020 -> 2
-        66018 -> 3
-        66019 -> 4
-        66016 -> 5
-        else -> -1
-    }
+    private fun getSarcophagusId(objectId: Int): Int =
+        when (objectId) {
+            66017 -> 0
+            63177 -> 1
+            66020 -> 2
+            66018 -> 3
+            66019 -> 4
+            66016 -> 5
+            else -> -1
+        }
 
     companion object {
-        private val CRYPT_NPCS = intArrayOf(
-            1243, 1244, 1245, 1246, 1247,
-            1618, 2031, 2032, 2033, 2034, 2035, 2036, 2037,
-            4920, 4921, 5381, 5422, 7637
-        )
+        private val CRYPT_NPCS =
+            intArrayOf(
+                1243,
+                1244,
+                1245,
+                1246,
+                1247,
+                1618,
+                2031,
+                2032,
+                2033,
+                2034,
+                2035,
+                2036,
+                2037,
+                4920,
+                4921,
+                5381,
+                5422,
+                7637,
+            )
 
-        private val COMMON_REWARDS = arrayOf(
-            Item(ItemId.MIND_RUNE, Utils.random(850)),
-            Item(ItemId.CHAOS_RUNE, Utils.random(850)),
-            Item(ItemId.DEATH_RUNE, Utils.random(600)),
-            Item(ItemId.BLOOD_RUNE, Utils.random(850)),
-            Item(ItemId.BOLT_RACK_4740, Utils.random(850))
-        )
+        private val COMMON_REWARDS =
+            arrayOf(
+                Item(ItemId.MIND_RUNE, Utils.random(850)),
+                Item(ItemId.CHAOS_RUNE, Utils.random(850)),
+                Item(ItemId.DEATH_RUNE, Utils.random(600)),
+                Item(ItemId.BLOOD_RUNE, Utils.random(850)),
+                Item(ItemId.BOLT_RACK_4740, Utils.random(850)),
+            )
 
-        private val TUNNEL_CONFIG = arrayOf(
-            shortArrayOf(470, 479, 482, 476, 474),
-            shortArrayOf(479, 477, 478, 480, 472),
-            shortArrayOf(477, 471, 472, 476, 475, 478, 480, 477)
-        )
+        private val TUNNEL_CONFIG =
+            arrayOf(
+                shortArrayOf(470, 479, 482, 476, 474),
+                shortArrayOf(479, 477, 478, 480, 472),
+                shortArrayOf(477, 471, 472, 476, 475, 478, 480, 477),
+            )
     }
 }
 
@@ -335,8 +387,11 @@ var Player.barrowsTarget: BarrowsBrother?
     get() = temporaryAttribute()?.get("barrowsTarget") as? BarrowsBrother
     set(value) {
         val map = temporaryAttribute() ?: return
-        if (value == null) map.remove("barrowsTarget")
-        else map["barrowsTarget"] = value
+        if (value == null) {
+            map.remove("barrowsTarget")
+        } else {
+            map["barrowsTarget"] = value
+        }
     }
 
 var Player.barrowsTimer: Int

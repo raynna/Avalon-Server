@@ -94,7 +94,7 @@ public class PvMTeles extends Dialogue {
 		else if (stage == 25) {// QbdYouSure
 			if (componentId == OPTION_1) {
 				end();
-				if (player.getSkills().getLevelForXp(Skills.SUMMONING) < 60) {
+				if (player.getSkills().getRealLevel(Skills.SUMMONING) < 60) {
 					player.getPackets().sendGameMessage("You need a summoning level of 60 to go through this portal.");
 					return;
 				}

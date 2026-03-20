@@ -342,31 +342,31 @@ class HealthOverlay {
                     "Attack",
                     197, // 1478
                     player.skills.getLevel(Skills.ATTACK),
-                    player.skills.getLevelForXp(Skills.ATTACK),
+                    player.skills.getRealLevel(Skills.ATTACK),
                 ),
                 SkillRow(
                     "Strength",
                     198, // 1479
                     player.skills.getLevel(Skills.STRENGTH),
-                    player.skills.getLevelForXp(Skills.STRENGTH),
+                    player.skills.getRealLevel(Skills.STRENGTH),
                 ),
                 SkillRow(
                     "Defence",
                     199, // 1480
                     player.skills.getLevel(Skills.DEFENCE),
-                    player.skills.getLevelForXp(Skills.DEFENCE),
+                    player.skills.getRealLevel(Skills.DEFENCE),
                 ),
                 SkillRow(
                     "Ranged",
                     200, // 1481
                     player.skills.getLevel(Skills.RANGE),
-                    player.skills.getLevelForXp(Skills.RANGE),
+                    player.skills.getRealLevel(Skills.RANGE),
                 ),
                 SkillRow(
                     "Magic",
                     202, // 1483
                     player.skills.getLevel(Skills.MAGIC),
-                    player.skills.getLevelForXp(Skills.MAGIC),
+                    player.skills.getRealLevel(Skills.MAGIC),
                 ),
             )
 

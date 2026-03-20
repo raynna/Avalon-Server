@@ -142,7 +142,7 @@ public enum NormalPrayer implements Prayer {
             @Override public int getActivationSound() {return Rscm.lookup("sound.smite");}
         },
         CHIVALRY(25, 33554432, 60, 24, "Chivalry") {
-            @Override public boolean hasSpecialRequirements(Player player) { return player.getSkills().getLevelForXp(Skills.DEFENCE) >= 60; }
+            @Override public boolean hasSpecialRequirements(Player player) { return player.getSkills().getRealLevel(Skills.DEFENCE) >= 60; }
             @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.OFFENSIVE, PrayerConflictGroup.DEFENSIVE_SKINS}; }
             @Override public double getAttackBoost() { return 0.15; }
             @Override public double getStrengthBoost() { return 0.18; }
@@ -156,7 +156,7 @@ public enum NormalPrayer implements Prayer {
             @Override public int getActivationSound() {return Rscm.lookup("sound.rapid_restore");}
         },
         PIETY(27, 67108864, 70, 24, "Piety") {
-            @Override public boolean hasSpecialRequirements(Player player) { return player.getSkills().getLevelForXp(Skills.DEFENCE) >= 70; }
+            @Override public boolean hasSpecialRequirements(Player player) { return player.getSkills().getRealLevel(Skills.DEFENCE) >= 70; }
             @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.OFFENSIVE, PrayerConflictGroup.DEFENSIVE_SKINS}; }
             @Override public double getAttackBoost() { return 0.20; }
             @Override public double getStrengthBoost() { return 0.23; }
@@ -164,7 +164,7 @@ public enum NormalPrayer implements Prayer {
             @Override public int getActivationSound() {return Rscm.lookup("sound.piety");}
         },
         RIGOUR(28, 268435456*2, 74, 24, "Rigour") {
-            @Override public boolean hasSpecialRequirements(Player player) { return player.getSkills().getLevelForXp(Skills.DEFENCE) >= 70; }
+            @Override public boolean hasSpecialRequirements(Player player) { return player.getSkills().getRealLevel(Skills.DEFENCE) >= 70; }
             @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.OFFENSIVE, PrayerConflictGroup.DEFENSIVE_SKINS}; }
             @Override public int getAffectedStatIndex() { return Skills.RANGE; }
             @Override public double getRangedBoost() { return 0.20; }
@@ -172,7 +172,7 @@ public enum NormalPrayer implements Prayer {
             @Override public int getActivationSound() {return Rscm.lookup("sound.eagle_eye");}
         },
         AUGURY(29, 268435456, 77, 24, "Augury") {
-            @Override public boolean hasSpecialRequirements(Player player) { return player.getSkills().getLevelForXp(Skills.DEFENCE) >= 70; }
+            @Override public boolean hasSpecialRequirements(Player player) { return player.getSkills().getRealLevel(Skills.DEFENCE) >= 70; }
             @Override public PrayerConflictGroup[] getConflictGroups() { return new PrayerConflictGroup[]{PrayerConflictGroup.OFFENSIVE, PrayerConflictGroup.DEFENSIVE_SKINS}; }
             @Override public int getAffectedStatIndex() { return Skills.MAGIC; }
             @Override public double getMagicBoost() { return 0.25; }

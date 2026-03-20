@@ -18,7 +18,7 @@ class MilestoneCapes(
         val levelReq = product.levelRequired
 
         for (i in 0 until 25) {
-            if (player.skills.getLevelForXp(i) < levelReq) {
+            if (player.skills.getRealLevel(i) < levelReq) {
                 player.packets.sendGameMessage(
                     "You need a level of at least $levelReq in all skills to create ${product.producedItem.definitions.name}",
                 )
@@ -43,7 +43,7 @@ class MilestoneCapes(
         val levelReq = product.levelRequired
 
         for (i in 0 until 25) {
-            if (player.skills.getLevelForXp(i) < levelReq) {
+            if (player.skills.getRealLevel(i) < levelReq) {
                 player.packets.sendGameMessage(
                     "You need a level of at least $levelReq in all skills to create ${product.producedItem.definitions.name}",
                 )

@@ -806,7 +806,7 @@ public class FightKiln extends Controller {
                 break;
             case 23654: // RESTORATION
                 player.heal(player.getMaxHitpoints());
-                player.getPrayer().restorePrayer(player.getSkills().getLevelForXp(Skills.PRAYER) * 10);
+                player.getPrayer().restorePrayer(player.getSkills().getRealLevel(Skills.PRAYER) * 10);
                 player.getPackets().sendGameMessage("<col=7E2217>The power of this crystal heals you fully.");
                 break;
             case 23655: // MAGIC
@@ -822,7 +822,7 @@ public class FightKiln extends Controller {
                 player.temporaryAttribute().put("FightKilnCrystal", Boolean.TRUE);
                 player.setHpBoostMultiplier(0.5);
                 player.getEquipment().refreshConfigs(false);
-                player.heal(player.getSkills().getLevelForXp(Skills.HITPOINTS) * 5);
+                player.heal(player.getSkills().getRealLevel(Skills.HITPOINTS) * 5);
                 player.getPackets().sendGameMessage("<col=7E2217>The power of this crystal improves your Constitution.");
                 WorldTasksManager.schedule(new WorldTask() {
 
@@ -861,18 +861,18 @@ public class FightKiln extends Controller {
                         player.temporaryAttribute().remove("FightKilnCrystal");
                         player.getPackets().sendGameMessage("<col=7E2217>The power of the crystal dwindles and your "
                                 + Skills.SKILL_NAME[skill] + " prowess returns to normal.");
-                        player.getSkills().set(Skills.DEFENCE, player.getSkills().getLevelForXp(Skills.DEFENCE));
-                        player.getSkills().set(Skills.STRENGTH, player.getSkills().getLevelForXp(Skills.STRENGTH));
-                        player.getSkills().set(Skills.RANGE, player.getSkills().getLevelForXp(Skills.RANGE));
-                        player.getSkills().set(Skills.MAGIC, player.getSkills().getLevelForXp(Skills.MAGIC));
+                        player.getSkills().set(Skills.DEFENCE, player.getSkills().getRealLevel(Skills.DEFENCE));
+                        player.getSkills().set(Skills.STRENGTH, player.getSkills().getRealLevel(Skills.STRENGTH));
+                        player.getSkills().set(Skills.RANGE, player.getSkills().getRealLevel(Skills.RANGE));
+                        player.getSkills().set(Skills.MAGIC, player.getSkills().getRealLevel(Skills.MAGIC));
                         cancel();
                     } else {
                         for (int i = 1; i < 7; i++) {
                             if (i == skill || i == 3 || i == 5)
                                 continue;
-                            player.getSkills().set(i, player.getSkills().getLevelForXp(i) / 2);
+                            player.getSkills().set(i, player.getSkills().getRealLevel(i) / 2);
                         }
-                        player.getSkills().set(skill, (int) (player.getSkills().getLevelForXp(skill) * 1.5));
+                        player.getSkills().set(skill, (int) (player.getSkills().getRealLevel(skill) * 1.5));
                     }
                 } catch (Throwable e) {
                     Logger.handle(e);

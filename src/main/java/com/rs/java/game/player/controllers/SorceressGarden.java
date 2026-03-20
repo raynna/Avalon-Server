@@ -53,7 +53,7 @@ public class SorceressGarden extends Controller {
 		 *            Where the player will be spawned
 		 */
 		public static void handleGates(Player player, int objectId, int lvlReq, WorldTile toTile) {
-			if (lvlReq > player.getSkills().getLevelForXp(Skills.THIEVING))
+			if (lvlReq > player.getSkills().getRealLevel(Skills.THIEVING))
 				player.getDialogueManager().startDialogue("SimpleMessage",
 						"You need " + objectId + " thieving level to pick this gate.");
 			player.setNextWorldTile(toTile);

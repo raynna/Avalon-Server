@@ -891,7 +891,7 @@ public class InventoryOptionsHandler {
                     player.message("You haven't learned to create slayer helmet.");
                     return;
                 }
-                if (player.getSkills().getLevelForXp(Skills.CRAFTING) < 70) {
+                if (player.getSkills().getRealLevel(Skills.CRAFTING) < 70) {
                     player.getPackets().sendGameMessage("You need an level of atleast 70 crafting to make slayer helmet");
                     return;
                 }

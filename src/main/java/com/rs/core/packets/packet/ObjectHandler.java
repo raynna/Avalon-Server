@@ -161,7 +161,7 @@ public final class ObjectHandler {
     }
 
     public static void renewSummoningPoints(Player player) {
-        int summonLevel = player.getSkills().getLevelForXp(Skills.SUMMONING);
+        int summonLevel = player.getSkills().getRealLevel(Skills.SUMMONING);
         if (player.getSkills().getLevel(Skills.SUMMONING) < summonLevel) {
             player.lock(3);
             player.animate(new Animation(8502));
@@ -976,11 +976,11 @@ public final class ObjectHandler {
                  * return; }
                  */
             else if (id == 47120) {
-                if (player.getPrayer().getPrayerPoints() < player.getSkills().getLevelForXp(Skills.PRAYER) * 10) {
+                if (player.getPrayer().getPrayerPoints() < player.getSkills().getRealLevel(Skills.PRAYER) * 10) {
                     player.lock(12);
                     player.animate(new Animation(12563));
                     player.getPrayer()
-                            .restorePrayer((int) ((player.getSkills().getLevelForXp(Skills.PRAYER) * 10) * 1.15));
+                            .restorePrayer((int) ((player.getSkills().getRealLevel(Skills.PRAYER) * 10) * 1.15));
                     player.getPrayer().refresh();
                 }
                 player.getDialogueManager().startDialogue("SwitchPrayers");
@@ -1075,7 +1075,7 @@ public final class ObjectHandler {
             } else if (id == 8689)
                 player.getActionManager().setAction(new CowMilkingAction());
             else if (id == 2112 && object.getX() == 3046 && object.getY() == 9756) {
-                if (player.getSkills().getLevelForXp(Skills.MINING) < 60) {
+                if (player.getSkills().getRealLevel(Skills.MINING) < 60) {
                     player.getDialogueManager().startDialogue("SimpleNPCMessage",
                             MiningGuildDwarf.getClosestDwarfID(player),
                             "Sorry, but you need level 60 Mining to go in there.");
@@ -1083,7 +1083,7 @@ public final class ObjectHandler {
                 }
                 DoorsAndGates.handleDoorTemporary(player, object, 1200);
             } else if (id == 2113) {
-                if (player.getSkills().getLevelForXp(Skills.MINING) < 60) {
+                if (player.getSkills().getRealLevel(Skills.MINING) < 60) {
                     player.getDialogueManager().startDialogue("SimpleNPCMessage",
                             MiningGuildDwarf.getClosestDwarfID(player),
                             "Sorry, but you need level 60 Mining to go in there.");
@@ -1392,7 +1392,7 @@ public final class ObjectHandler {
                     case "gorilla statue":
                     case "chaos altar":
                         if (objectDef.containsOption(0, "Pray") || objectDef.containsOption(0, "Pray-at")) {
-                            final int maxPrayer = player.getSkills().getLevelForXp(Skills.PRAYER) * 10;
+                            final int maxPrayer = player.getSkills().getRealLevel(Skills.PRAYER) * 10;
                             if (player.getPrayer().getPrayerPoints() < maxPrayer) {
                                 player.lock(1);
                                 player.getPackets().sendGameMessage("You pray to the gods...", true);

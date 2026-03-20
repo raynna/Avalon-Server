@@ -50,7 +50,7 @@ object GreenDragonDropTable {
                     "item.green_dragon_egg",
                     numerator = 1,
                     denominator = 200,
-                    condition = { context -> context.player.skills?.getLevelForXp(Skills.SUMMONING) == 99 },
+                    condition = { context -> context.player.skills?.getRealLevel(Skills.SUMMONING) == 99 },
                 ) {
                     collectionLog = true
                 }

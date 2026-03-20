@@ -61,7 +61,7 @@ public final class MiningGuildDwarf extends Dialogue {
 			}
 			break;
 		case 1:
-			stageInt = (int) (player.getSkills().getLevelForXp(Skills.MINING) < 60 ? 2 : 4);
+			stageInt = (int) (player.getSkills().getRealLevel(Skills.MINING) < 60 ? 2 : 4);
 			sendEntityDialogue(SEND_4_TEXT_CHAT,
 					new String[] { NPCDefinitions.getNPCDefinitions(npcId).name,
 							"Ooh, it's WONDERFUL! There are lots of coal rocks,",
@@ -88,7 +88,7 @@ public final class MiningGuildDwarf extends Dialogue {
 			stageInt = 5;
 			sendEntityDialogue(SEND_1_TEXT_CHAT,
 					new String[] { player.getDisplayName(), "It's a good thing I have level "
-							+ player.getSkills().getLevelForXp(Skills.MINING) + " Mining." },
+							+ player.getSkills().getRealLevel(Skills.MINING) + " Mining." },
 					IS_PLAYER, player.getIndex(), 9827);
 			break;
 		case 5:

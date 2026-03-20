@@ -2046,7 +2046,7 @@ public final class WorldPacketsDecoder extends Decoder {
 
         if (player.temporaryAttribute().get("setLevel") != null) {
             int skillId = (Integer) player.temporaryAttribute().remove("setLevel");
-            if (value <= player.getSkills().getLevelForXp(skillId)) {
+            if (value <= player.getSkills().getRealLevel(skillId)) {
                 player.getPackets().sendGameMessage("You can't set a level target lower than your current level.");
                 return;
             }
@@ -2059,7 +2059,7 @@ public final class WorldPacketsDecoder extends Decoder {
 
         if (player.temporaryAttribute().get("setXp") != null) {
             int skillId = (Integer) player.temporaryAttribute().remove("setXp");
-            if (value <= player.getSkills().getLevelForXp(skillId)) {
+            if (value <= player.getSkills().getRealLevel(skillId)) {
                 player.getPackets().sendGameMessage("You can't set a experience target lower than your current experience.");
                 return;
             }

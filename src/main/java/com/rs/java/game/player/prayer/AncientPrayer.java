@@ -163,7 +163,7 @@ public enum AncientPrayer implements Prayer {
             return new PrayerConflictGroup[]{PrayerConflictGroup.LEECH_CURSES, PrayerConflictGroup.SAP_CURSES, PrayerConflictGroup.ENERGY_DRAIN, PrayerConflictGroup.SPECIAL_DRAIN};
         }
         @Override public boolean hasSpecialRequirements(Player player) {
-            return player.getSkills().getLevelForXp(Skills.DEFENCE) >= 30;
+            return player.getSkills().getRealLevel(Skills.DEFENCE) >= 30;
         }
         @Override public double getAttackBoost() { return 0.15; }
         @Override public double getStrengthBoost() { return 0.23; }

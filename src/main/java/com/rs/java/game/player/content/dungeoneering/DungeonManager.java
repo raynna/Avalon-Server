@@ -568,29 +568,29 @@ public class DungeonManager {
 			player.getDialogueManager().startDialogue("SimpleMessage", "<col=0000FF>Complexity 5", "All skills included", "+ Farming seeds, Herblore, Thieving, Summoning", "Complete shop stock", "Challenge rooms + skill doors");
 		}
 		if (party.getComplexity() <= 3) {
-			int defenceTier = DungeonUtils.getTier(player.getSkills().getLevelForXp(Skills.DEFENCE));
+			int defenceTier = DungeonUtils.getTier(player.getSkills().getRealLevel(Skills.DEFENCE));
 			if (defenceTier > 8)
 				defenceTier = 8;
 			player.getInventory().addItem(new Item(DungeonUtils.getPlatebody(defenceTier)));
 			player.getInventory().addItem(new Item(DungeonUtils.getPlatelegs(defenceTier, player.getAppearance().isMale())));
 			if (party.getComplexity() <= 2) {
-				int attackTier = DungeonUtils.getTier(player.getSkills().getLevelForXp(Skills.ATTACK));
+				int attackTier = DungeonUtils.getTier(player.getSkills().getRealLevel(Skills.ATTACK));
 				if (attackTier > 8)
 					attackTier = 8;
 				player.getInventory().addItem(new Item(DungeonUtils.getRapier(defenceTier)));
 				player.getInventory().addItem(new Item(DungeonUtils.getBattleaxe(defenceTier)));
 			}
-			int magicTier = DungeonUtils.getTier(player.getSkills().getLevelForXp(Skills.MAGIC));
+			int magicTier = DungeonUtils.getTier(player.getSkills().getRealLevel(Skills.MAGIC));
 			if (magicTier > 8)
 				magicTier = 8;
 			player.getInventory().addItem(new Item(DungeonUtils.getRobeTop(defenceTier < magicTier ? defenceTier : magicTier)));
 			player.getInventory().addItem(new Item(DungeonUtils.getRobeBottom(defenceTier < magicTier ? defenceTier : magicTier)));
 			if (party.getComplexity() <= 2) {
 				player.getInventory().addItem(new Item(DungeonConstants.RUNES[0], 90 + Utils.random(30)));
-				player.getInventory().addItem(new Item(DungeonUtils.getStartRunes(player.getSkills().getLevelForXp(Skills.MAGIC)), 90 + Utils.random(30)));
+				player.getInventory().addItem(new Item(DungeonUtils.getStartRunes(player.getSkills().getRealLevel(Skills.MAGIC)), 90 + Utils.random(30)));
 				player.getInventory().addItem(new Item(DungeonUtils.getElementalStaff(magicTier)));
 			}
-			int rangeTier = DungeonUtils.getTier(player.getSkills().getLevelForXp(Skills.RANGE));
+			int rangeTier = DungeonUtils.getTier(player.getSkills().getRealLevel(Skills.RANGE));
 			if (rangeTier > 8)
 				rangeTier = 8;
 			player.getInventory().addItem(new Item(DungeonUtils.getLeatherBody(defenceTier < rangeTier ? defenceTier : rangeTier)));
@@ -1297,7 +1297,7 @@ public class DungeonManager {
 			player.getPackets().sendCSVarInteger(1196, party.isGuideMode() ? 1 : 0); //sets guidemode
 			if (party.isGuideMode())
 				multiplier -= 0.05;
-			player.getPackets().sendCSVarInteger(1319, DungeonUtils.getMaxFloor(player.getSkills().getLevelForXp(Skills.DUNGEONEERING)));
+			player.getPackets().sendCSVarInteger(1319, DungeonUtils.getMaxFloor(player.getSkills().getRealLevel(Skills.DUNGEONEERING)));
 			player.getPackets().sendCSVarInteger(1320, party.getComplexity());
 			if (party.getComplexity() != 6) {
 				double penalty = DungeonConstants.COMPLEXIYY_PENALTY_BASE[party.getSize()] + (5 - party.getComplexity()) * 0.06;
@@ -1378,7 +1378,7 @@ public class DungeonManager {
 			}
 			player.getMusicsManager().forcePlayMusic(767); //fixed
 			if (!tickedOff) {
-				if (DungeonUtils.getMaxFloor(player.getSkills().getLevelForXp(Skills.DUNGEONEERING)) < party.getFloor() + 1
+				if (DungeonUtils.getMaxFloor(player.getSkills().getRealLevel(Skills.DUNGEONEERING)) < party.getFloor() + 1
 						&& false)//TODO !DungeonConstants.ENABLE_ALL_FLOORS
 					player.getPackets().sendGameMessage("The next floor is not available at your Dungeonnering level. Consider resetting your progress to gain best ongoing rate of xp.");
 			} else {
@@ -1387,7 +1387,7 @@ public class DungeonManager {
 				player.getPackets().sendGameMessage("You have already completed all the available floors of this theme and thus cannot be awarded prestige xp until you reset your progress or switch theme.");
 			}
 			player.getPackets().sendGameMessage("Pre-Share: <col=641d9e>" + (isKeyShare() ? "OFF" : "ON"));
-			if (party.getFloor() == player.getDungManager().getMaxFloor() && party.getFloor() < DungeonUtils.getMaxFloor(player.getSkills().getLevelForXp(Skills.DUNGEONEERING)))
+			if (party.getFloor() == player.getDungManager().getMaxFloor() && party.getFloor() < DungeonUtils.getMaxFloor(player.getSkills().getRealLevel(Skills.DUNGEONEERING)))
 				player.getDungManager().increaseMaxFloor();
 			if (player.getDungManager().getMaxComplexity() < 6)
 				player.getDungManager().increaseMaxComplexity();

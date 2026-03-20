@@ -215,7 +215,7 @@ object SpellHandler {
         spell: Spell,
     ): Boolean {
         if (spell.type is SpellType.Combat) {
-            if (player.skills.getLevelForXp(Skills.MAGIC) < spell.level) {
+            if (player.skills.getRealLevel(Skills.MAGIC) < spell.level) {
                 player.packets.sendGameMessage("You need at least level ${spell.level} Magic to cast this spell.")
                 return false
             }

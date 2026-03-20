@@ -93,7 +93,7 @@ class RangedStyle(
         }
 
         if (ammoLevelReq != null) {
-            if (ammoLevelReq > attacker.skills.getLevelForXp(Skills.RANGE)) {
+            if (ammoLevelReq > attacker.skills.getRealLevel(Skills.RANGE)) {
                 attacker.message("You need a Ranged level of $ammoLevelReq to use $ammoName.")
                 return false
             }

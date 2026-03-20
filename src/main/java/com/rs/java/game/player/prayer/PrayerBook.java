@@ -242,14 +242,14 @@ public class PrayerBook implements Serializable {
     }
 
     private boolean meetsLevelRequirement(Prayer prayer) {
-        int prayerLevel = player.getSkills().getLevelForXp(Skills.PRAYER);
+        int prayerLevel = player.getSkills().getRealLevel(Skills.PRAYER);
         if (prayerLevel < prayer.getRequiredLevel()) {
             player.message("You need a Prayer level of at least " + prayer.getRequiredLevel() + " to use this prayer.");
             return false;
         }
 
         if (prayer.getBook() == PrayerBookType.ANCIENT_CURSES) {
-            int defenceLevel = player.getSkills().getLevelForXp(Skills.DEFENCE);
+            int defenceLevel = player.getSkills().getRealLevel(Skills.DEFENCE);
             if (defenceLevel < DEFENCE_REQUIREMENT_ANCIENT) {
                 player.message("You need a Defence level of at least " + DEFENCE_REQUIREMENT_ANCIENT + " to use ancient curses.");
                 return false;
@@ -727,7 +727,7 @@ public class PrayerBook implements Serializable {
     public void reset() {
         closeAllPrayers();
         resetLeechBonuses();
-        prayerPoints = player.getSkills().getLevelForXp(Skills.PRAYER) * PRAYER_POINTS_PER_LEVEL;
+        prayerPoints = player.getSkills().getRealLevel(Skills.PRAYER) * PRAYER_POINTS_PER_LEVEL;
         refreshPrayerPoints();
     }
 
@@ -948,7 +948,7 @@ public class PrayerBook implements Serializable {
     }
 
     private int getMaxPrayerPoints() {
-        return player.getSkills().getLevelForXp(Skills.PRAYER) * PRAYER_POINTS_PER_LEVEL;
+        return player.getSkills().getRealLevel(Skills.PRAYER) * PRAYER_POINTS_PER_LEVEL;
     }
 
     public void refreshPrayerPoints() {

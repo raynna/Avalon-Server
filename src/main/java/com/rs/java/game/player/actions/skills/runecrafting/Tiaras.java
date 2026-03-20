@@ -53,7 +53,7 @@ public class Tiaras extends Runecrafting {
 	}
 
 	public static void enchantTiara(Player player, int talismanId, int tiaraId, int level, double exp) {
-		if (player.getSkills().getLevelForXp(Skills.RUNECRAFTING) < level) {
+		if (player.getSkills().getRealLevel(Skills.RUNECRAFTING) < level) {
 			player.getPackets().sendGameMessage("You need a level of " + level + " Runecrafting to create "
 					+ ItemDefinitions.getItemDefinitions(tiaraId).getName() + ".");
 			return;

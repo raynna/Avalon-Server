@@ -10,7 +10,6 @@ import com.rs.java.utils.Utils
 import com.rs.kotlin.game.world.util.Msg.warn
 
 object PresetInterface {
-
     const val INTERFACE_ID = 3053
 
     private const val VIEWING_TITLE = 299
@@ -64,32 +63,37 @@ object PresetInterface {
     private const val FAMILIAR_BUTTON = 224
     private const val FAMILIAR_TEXT = 225
 
-    private val EQUIPMENT_SLOT_COMPONENT = linkedMapOf(
-        0 to 157,
-        1 to 163,
-        2 to 160,
-        13 to 166,
-        3 to 169,
-        4 to 172,
-        5 to 175,
-        7 to 178,
-        9 to 181,
-        10 to 184,
-        12 to 187
-    )
+    private val EQUIPMENT_SLOT_COMPONENT =
+        linkedMapOf(
+            0 to 157,
+            1 to 163,
+            2 to 160,
+            13 to 166,
+            3 to 169,
+            4 to 172,
+            5 to 175,
+            7 to 178,
+            9 to 181,
+            10 to 184,
+            12 to 187,
+        )
 
-    private val SKILL_COMPONENTS = linkedMapOf(
-        0 to 45,
-        2 to 53,
-        1 to 61,
-        3 to 93,
-        4 to 69,
-        5 to 85,
-        6 to 77,
-        23 to 211
-    )
+    private val SKILL_COMPONENTS =
+        linkedMapOf(
+            0 to 45,
+            2 to 53,
+            1 to 61,
+            3 to 93,
+            4 to 69,
+            5 to 85,
+            6 to 77,
+            23 to 211,
+        )
 
-    fun open(player: Player, bank: Boolean = false) {
+    fun open(
+        player: Player,
+        bank: Boolean = false,
+    ) {
         if (bank) {
             player.temporaryAttributtes[ATTR_OPENED_FROM_BANK] = true
         }
@@ -101,7 +105,6 @@ object PresetInterface {
     }
 
     private fun applyCloseBehavior(player: Player) {
-
         val fromBank = player.temporaryAttributtes[ATTR_OPENED_FROM_BANK] as? Boolean ?: false
 
         if (fromBank) {
@@ -115,9 +118,10 @@ object PresetInterface {
         }
     }
 
-
-    fun handleButtons(player: Player, componentId: Int) {
-
+    fun handleButtons(
+        player: Player,
+        componentId: Int,
+    ) {
         when (componentId) {
             CURRENT_SETUP_COMPONENT -> {
                 clearConfirmations(player)
@@ -141,7 +145,7 @@ object PresetInterface {
                 showSecurityPopup(
                     player,
                     "Are you sure you want to overwrite?",
-                    "OVERWRITE"
+                    "OVERWRITE",
                 )
                 return
             }
@@ -151,7 +155,7 @@ object PresetInterface {
                 showSecurityPopup(
                     player,
                     "Are you sure you want to delete?",
-                    "DELETE"
+                    "DELETE",
                 )
                 return
             }
@@ -200,7 +204,15 @@ object PresetInterface {
                 val preset = getSelectedPreset(player)
                 if (preset == null) {
                     val spellBook = player.getCombatDefinitions().spellBook.toInt()
-                    player.getCombatDefinitions().setSpellBook(if (spellBook == 0) 1 else if (spellBook == 1) 2 else 0)
+                    player.getCombatDefinitions().setSpellBook(
+                        if (spellBook == 0) {
+                            1
+                        } else if (spellBook == 1) {
+                            2
+                        } else {
+                            0
+                        },
+                    )
                 } else {
                     preset.switchSpellBook()
                 }
@@ -212,6 +224,7 @@ object PresetInterface {
                 renderMetaTexts(player, getSelectedPreset(player))
                 return
             }
+
             BACK_TO_BANK -> {
                 player.temporaryAttributtes.remove(ATTR_OPENED_FROM_BANK)
                 player.setCloseInterfacesEvent(null)
@@ -238,20 +251,24 @@ object PresetInterface {
         }
     }
 
-    private fun handleRename(player: Player, preset: Preset) {
-
+    private fun handleRename(
+        player: Player,
+        preset: Preset,
+    ) {
         clearConfirmations(player)
 
         player.temporaryAttributtes[ATTR_RENAME_PRESET] = preset.name
 
         player.packets.sendRunScript(
             109,
-            "Enter new preset name:"
+            "Enter new preset name:",
         )
     }
 
-
-    private fun handleLevelEdit(player: Player, skillId: Int) {
+    private fun handleLevelEdit(
+        player: Player,
+        skillId: Int,
+    ) {
         if (player.inPkingArea()) {
             warn(player, "You can't change levels in player killing areas.")
             return
@@ -266,18 +283,18 @@ object PresetInterface {
 
         player.packets.sendRunScript(
             108,
-            "Enter level (1-99):"
+            "Enter level (1-99):",
         )
     }
 
     private fun renderPresetList(player: Player) {
-
-        val presets = player.presetManager.PRESET_SETUPS.values.toList()
+        val presets =
+            player.presetManager.PRESET_SETUPS.values
+                .toList()
 
         var component = PRESET_LIST_START
 
         for (i in 0 until MAX_VISIBLE_PRESETS) {
-
             val preset = presets.getOrNull(i)
 
             val text = preset?.name ?: "Empty"
@@ -285,7 +302,7 @@ object PresetInterface {
             player.packets.sendTextOnComponent(
                 INTERFACE_ID,
                 component,
-                text
+                text,
             )
 
             component += PRESET_LIST_STRIDE
@@ -294,44 +311,51 @@ object PresetInterface {
         player.packets.sendTextOnComponent(
             INTERFACE_ID,
             CURRENT_SETUP_COMPONENT,
-            "Current Setup"
+            "Current Setup",
         )
     }
 
-    private fun highlightSelection(player: Player, index: Int) {
-
-        val presets = player.presetManager.PRESET_SETUPS.values.toList()
+    private fun highlightSelection(
+        player: Player,
+        index: Int,
+    ) {
+        val presets =
+            player.presetManager.PRESET_SETUPS.values
+                .toList()
 
         var component = PRESET_LIST_START
 
         for (i in 0 until MAX_VISIBLE_PRESETS) {
-
             val preset = presets.getOrNull(i)
             val baseName = preset?.name ?: "Empty"
 
-            val text = when {
-                index == -1 && component == CURRENT_SETUP_COMPONENT -> baseName
-                i == index -> "<col=ffff00>$baseName"
-                else -> baseName
-            }
+            val text =
+                when {
+                    index == -1 && component == CURRENT_SETUP_COMPONENT -> baseName
+                    i == index -> "<col=ffff00>$baseName"
+                    else -> baseName
+                }
 
             player.packets.sendTextOnComponent(
                 INTERFACE_ID,
                 component,
-                text
+                text,
             )
 
             component += PRESET_LIST_STRIDE
         }
 
         val currentText =
-            if (index == -1) "<col=ffff00>Current Setup"
-            else "Current Setup"
+            if (index == -1) {
+                "<col=ffff00>Current Setup"
+            } else {
+                "Current Setup"
+            }
 
         player.packets.sendTextOnComponent(
             INTERFACE_ID,
             CURRENT_SETUP_COMPONENT,
-            currentText
+            currentText,
         )
 
         player.temporaryAttributtes[ATTR_SELECTED] = index
@@ -348,8 +372,10 @@ object PresetInterface {
         updateTitle(player, "Viewing: Current Setup")
     }
 
-    private fun renderInventory(player: Player, items: Array<Item?>) {
-
+    private fun renderInventory(
+        player: Player,
+        items: Array<Item?>,
+    ) {
         val container = ItemsContainer<Item>(28, false)
 
         for (slot in items.indices) {
@@ -363,7 +389,7 @@ object PresetInterface {
             INVENTORY_KEY,
             4,
             7,
-            "Add to bank"
+            "Add to bank",
         )
 
         player.packets.sendUnlockOptions(
@@ -371,15 +397,17 @@ object PresetInterface {
             INVENTORY_CONTAINER,
             0,
             27,
-            0
+            0,
         )
 
         player.packets.sendItems(INVENTORY_KEY, container)
         player.packets.sendUpdateItems(INVENTORY_KEY, container, 28)
     }
 
-    private fun renderPreset(player: Player, index: Int) {
-
+    private fun renderPreset(
+        player: Player,
+        index: Int,
+    ) {
         val preset = getPresetByIndex(player, index)
 
         if (preset == null) {
@@ -393,13 +421,14 @@ object PresetInterface {
         renderLevels(player, preset.levels)
         renderMetaTexts(player, preset)
         updateActionButtons(player, index)
-        updateTitle(player,"Viewing: ${preset.name}")
+        updateTitle(player, "Viewing: ${preset.name}")
     }
 
-    private fun renderEquipment(player: Player, equipment: Array<Item?>) {
-
+    private fun renderEquipment(
+        player: Player,
+        equipment: Array<Item?>,
+    ) {
         for ((slot, componentId) in EQUIPMENT_SLOT_COMPONENT) {
-
             val item = equipment.getOrNull(slot)
 
             if (item == null) {
@@ -410,41 +439,43 @@ object PresetInterface {
         }
     }
 
-    private fun renderLevels(player: Player, levels: IntArray?) {
-
-        val skillIndexMap = mapOf(
-            Skills.ATTACK to 0,
-            Skills.DEFENCE to 1,
-            Skills.STRENGTH to 2,
-            Skills.HITPOINTS to 3,
-            Skills.RANGE to 4,
-            Skills.PRAYER to 5,
-            Skills.MAGIC to 6,
-            Skills.SUMMONING to 7
-        )
+    private fun renderLevels(
+        player: Player,
+        levels: IntArray?,
+    ) {
+        val skillIndexMap =
+            mapOf(
+                Skills.ATTACK to 0,
+                Skills.DEFENCE to 1,
+                Skills.STRENGTH to 2,
+                Skills.HITPOINTS to 3,
+                Skills.RANGE to 4,
+                Skills.PRAYER to 5,
+                Skills.MAGIC to 6,
+                Skills.SUMMONING to 7,
+            )
         for ((skillId, baseComponent) in SKILL_COMPONENTS) {
-
             val index = skillIndexMap[skillId]
 
-            val level = if (levels != null && index != null && index < levels.size) {
-                levels[index]
-            } else {
-                player.skills.getLevelForXp(skillId)
-            }
+            val level =
+                if (levels != null && index != null && index < levels.size) {
+                    levels[index]
+                } else {
+                    player.skills.getRealLevel(skillId)
+                }
             player.packets.sendTextOnComponent(
                 INTERFACE_ID,
                 baseComponent + 3,
-                level.toString()
+                level.toString(),
             )
 
             player.packets.sendTextOnComponent(
                 INTERFACE_ID,
                 baseComponent + 4,
-                level.toString()
+                level.toString(),
             )
         }
     }
-
 
     private fun handleGearUp(player: Player) {
         val preset = getSelectedPreset(player)
@@ -457,7 +488,7 @@ object PresetInterface {
 
     private fun handleSave(player: Player) {
         if (player.presetManager.PRESET_SETUPS.size - 1 >= MAX_VISIBLE_PRESETS) {
-            warn(player,"You can't have more than $MAX_VISIBLE_PRESETS presets.")
+            warn(player, "You can't have more than $MAX_VISIBLE_PRESETS presets.")
             return
         }
         player.temporaryAttributtes.remove(ATTR_CONFIRM_DELETE)
@@ -468,7 +499,6 @@ object PresetInterface {
     }
 
     private fun renderEmptyPreview(player: Player) {
-
         clearEquipment(player)
 
         val emptyContainer = ItemsContainer<Item>(28, false)
@@ -479,12 +509,12 @@ object PresetInterface {
             player.packets.sendTextOnComponent(
                 INTERFACE_ID,
                 baseComponent + 3,
-                "1"
+                "1",
             )
             player.packets.sendTextOnComponent(
                 INTERFACE_ID,
                 baseComponent + 4,
-                "1"
+                "1",
             )
         }
 
@@ -506,12 +536,18 @@ object PresetInterface {
         return getPresetByIndex(player, idx)
     }
 
-    fun selectPresetByName(player: Player, name: String) {
-        val list = player.presetManager.PRESET_SETUPS.values.toList()
+    fun selectPresetByName(
+        player: Player,
+        name: String,
+    ) {
+        val list =
+            player.presetManager.PRESET_SETUPS.values
+                .toList()
 
-        val index = list.indexOfFirst {
-            it.name.equals(name, ignoreCase = true)
-        }
+        val index =
+            list.indexOfFirst {
+                it.name.equals(name, ignoreCase = true)
+            }
 
         if (index == -1) {
             renderCurrentSetup(player)
@@ -523,22 +559,25 @@ object PresetInterface {
         highlightSelection(player, index)
     }
 
-    private fun renderMetaTexts(player: Player, preset: Preset?) {
-
+    private fun renderMetaTexts(
+        player: Player,
+        preset: Preset?,
+    ) {
         val curses = preset?.isAncientCurses ?: player.prayer.isAncientCurses
         val spellBook = preset?.spellBook?.toInt() ?: player.combatDefinitions.spellBook.toInt()
         val pouch = preset?.familiar ?: player.familiar?.pouch
         val prayerText = if (curses) "Curses" else "Regular"
-        val spellText = when (spellBook) {
-            0 -> "Modern"
-            1 -> "Ancient"
-            2 -> "Lunar"
-            else -> "Spellbook $spellBook"
-        }
-        val familiarText = pouch?.let {
-            Utils.capitalizeFirst(it.name.replace("_", " "))
-        } ?: "None"
-
+        val spellText =
+            when (spellBook) {
+                0 -> "Modern"
+                1 -> "Ancient"
+                2 -> "Lunar"
+                else -> "Spellbook $spellBook"
+            }
+        val familiarText =
+            pouch?.let {
+                Utils.capitalizeFirst(it.name.replace("_", " "))
+            } ?: "None"
 
         player.packets.sendTextOnComponent(INTERFACE_ID, PRAYERBOOK_TEXT, prayerText)
         player.packets.sendTextOnComponent(INTERFACE_ID, SPELLBOOK_TEXT, spellText)
@@ -549,66 +588,75 @@ object PresetInterface {
         updateFamiliarSprite(player, pouch)
     }
 
-    private fun updatePrayerSprite(player: Player, curses: Boolean) {
-
-        val spriteId = if (curses) {
-            TURMOIL_SPRITE
-        } else {
-            PIETY_SPRITE
-        }
+    private fun updatePrayerSprite(
+        player: Player,
+        curses: Boolean,
+    ) {
+        val spriteId =
+            if (curses) {
+                TURMOIL_SPRITE
+            } else {
+                PIETY_SPRITE
+            }
 
         player.packets.sendSpriteOnIComponent(
             INTERFACE_ID,
             PRAYERBOOK_SPRITE,
-            spriteId
+            spriteId,
         )
     }
 
-    private fun updateSpellbookSprite(player: Player, spellBook: Int) {
-
-        val spriteId = when (spellBook) {
-            0 -> FIRE_SURGE_SPRITE
-            1 -> VENGEANCE_SPRITE
-            2 -> BARRAGE_SPRITE
-            else -> FIRE_SURGE_SPRITE
-        }
+    private fun updateSpellbookSprite(
+        player: Player,
+        spellBook: Int,
+    ) {
+        val spriteId =
+            when (spellBook) {
+                0 -> FIRE_SURGE_SPRITE
+                1 -> VENGEANCE_SPRITE
+                2 -> BARRAGE_SPRITE
+                else -> FIRE_SURGE_SPRITE
+            }
 
         player.packets.sendSpriteOnIComponent(
             INTERFACE_ID,
             SPELLBOOK_SPRITE,
-            spriteId
+            spriteId,
         )
     }
 
-    private fun updateFamiliarSprite(player: Player, pouch: Summoning.Pouch?) {
-
+    private fun updateFamiliarSprite(
+        player: Player,
+        pouch: Summoning.Pouch?,
+    ) {
         val spriteId = pouch?.realPouchId ?: -1
 
         player.packets.sendItemOnIComponent(
             INTERFACE_ID,
             FAMILIAR_SPRITE,
-            spriteId, 1
+            spriteId,
+            1,
         )
     }
 
-
-
-
-    private fun showSecurityPopup(player: Player, message: String, action: String) {
-
+    private fun showSecurityPopup(
+        player: Player,
+        message: String,
+        action: String,
+    ) {
         player.temporaryAttributtes["PRESET_SECURITY_ACTION"] = action
 
         player.packets.sendTextOnComponent(
             INTERFACE_ID,
             SECURITY_TEXT,
-            message
+            message,
         )
 
         // unhide component 292
         player.packets.sendHideIComponent(
             INTERFACE_ID,
             SECURITY_POPUP,
-            false
+            false,
         )
     }
 
@@ -616,7 +664,7 @@ object PresetInterface {
         player.packets.sendHideIComponent(
             INTERFACE_ID,
             SECURITY_POPUP,
-            true
+            true,
         )
 
         player.temporaryAttributtes.remove("PRESET_SECURITY_ACTION")
@@ -648,10 +696,13 @@ object PresetInterface {
         updateActionButtons(player, -1)
     }
 
-
-    private fun updateActionButtons(player: Player, index: Int) {
-
-        val presets = player.presetManager.PRESET_SETUPS.values.toList()
+    private fun updateActionButtons(
+        player: Player,
+        index: Int,
+    ) {
+        val presets =
+            player.presetManager.PRESET_SETUPS.values
+                .toList()
         val preset = presets.getOrNull(index)
 
         val isCurrentSetup = index < 0
@@ -667,20 +718,24 @@ object PresetInterface {
         player.packets.sendHideIComponent(INTERFACE_ID, GEARUP_PARENT, hideOtherButtons)
     }
 
-    private fun updateTitle(player: Player, line1: String, line2: String? = null) {
-
-        val text = if (line2 == null)
-            line1
-        else
-            "$line1<br>$line2"
+    private fun updateTitle(
+        player: Player,
+        line1: String,
+        line2: String? = null,
+    ) {
+        val text =
+            if (line2 == null) {
+                line1
+            } else {
+                "$line1<br>$line2"
+            }
 
         player.packets.sendTextOnComponent(
             INTERFACE_ID,
             VIEWING_TITLE,
-            text
+            text,
         )
     }
-
 
     private fun clearEquipment(player: Player) {
         for (componentId in EQUIPMENT_SLOT_COMPONENT.values) {
@@ -688,8 +743,13 @@ object PresetInterface {
         }
     }
 
-    private fun getPresetByIndex(player: Player, index: Int): Preset? {
-        val list = player.presetManager.PRESET_SETUPS.values.toList()
+    private fun getPresetByIndex(
+        player: Player,
+        index: Int,
+    ): Preset? {
+        val list =
+            player.presetManager.PRESET_SETUPS.values
+                .toList()
         return list.getOrNull(index)
     }
 }

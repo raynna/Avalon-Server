@@ -146,7 +146,7 @@ public class Burying {
 					double total = xp + lastPrayer;
 					int amount = (int) (total / 500);
 					if (amount != 0) {
-						double restore = player.getAuraManager().getPrayerRestoration() * (player.getSkills().getLevelForXp(Skills.PRAYER) * 10);
+						double restore = player.getAuraManager().getPrayerRestoration() * (player.getSkills().getRealLevel(Skills.PRAYER) * 10);
 						player.getPrayer().restorePrayer((int) (amount * restore));
 						total -= amount * 500;
 					}

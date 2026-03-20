@@ -31,7 +31,7 @@ public class Mining extends Action {
 		for (PickaxeStore pickaxe : pickaxeData) {
 			if (pickaxe != null) {
 				if (player.hasTool(pickaxe.getPickAxeId())) {
-					if (player.getSkills().getLevelForXp(Skills.MINING) >= pickaxe.getLevelRequried())
+					if (player.getSkills().getRealLevel(Skills.MINING) >= pickaxe.getLevelRequried())
 						return pickaxe;
 
 				}

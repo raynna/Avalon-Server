@@ -214,7 +214,7 @@ class Woodcutting(
     }
 
     private fun doubleLogChance(): Double {
-        val wcLevel = player.skills.getLevelForXp(Skills.WOODCUTTING)
+        val wcLevel = player.skills.getRealLevel(Skills.WOODCUTTING)
         val treeLevel = definition.level
 
         // Base scaling from player level (0% → 15%)

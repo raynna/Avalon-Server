@@ -2644,7 +2644,7 @@ public class ButtonHandler {
                 continue;
             }
 
-            int playerLevel = player.getSkills().getLevelForXp(skillId);
+            int playerLevel = player.getSkills().getRealLevel(skillId);
             if (playerLevel < requiredLevel) {
                 if (hasRequirements) {
                     player.getPackets().sendGameMessage("You are not high enough level to use this item.");
@@ -2988,7 +2988,7 @@ public class ButtonHandler {
     }
 
     public static void renewSummoningPoints(Player player) {
-        int summonLevel = player.getSkills().getLevelForXp(Skills.SUMMONING);
+        int summonLevel = player.getSkills().getRealLevel(Skills.SUMMONING);
 
         if (player.restoreDelay < Utils.currentTimeMillis() && player.getSkills().getLevel(Skills.SUMMONING) < summonLevel) {
             player.restoreDelay = (Utils.currentTimeMillis() + 30000);

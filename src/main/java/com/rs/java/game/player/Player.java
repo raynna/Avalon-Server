@@ -2104,7 +2104,7 @@ public class Player extends Entity {
     }
 
     private double getLevelScalingMultiplier(int skill) {
-        int level = getSkills().getLevelForXp(skill);
+        int level = getSkills().getRealLevel(skill);
 
         double min = Settings.SKILLING_XP_RATE;   // Level 1
         double max = 10.0;  // Level 99
@@ -2276,14 +2276,14 @@ public class Player extends Entity {
     }
 
     public boolean hasMaxCapeRequirements() {
-        if (getSkills().getLevelForXp(Skills.ATTACK) >= 99 && getSkills().getLevelForXp(Skills.STRENGTH) >= 99 && getSkills().getLevelForXp(Skills.DEFENCE) >= 99 && getSkills().getLevelForXp(Skills.HITPOINTS) >= 99 && getSkills().getLevelForXp(Skills.RANGE) >= 99 && getSkills().getLevelForXp(Skills.MAGIC) >= 99 && getSkills().getLevelForXp(Skills.RUNECRAFTING) >= 99 && getSkills().getLevelForXp(Skills.FISHING) >= 99 && getSkills().getLevelForXp(Skills.AGILITY) >= 99 && getSkills().getLevelForXp(Skills.COOKING) >= 99 && getSkills().getLevelForXp(Skills.PRAYER) >= 99 && getSkills().getLevelForXp(Skills.THIEVING) >= 99 && getSkills().getLevelForXp(Skills.MINING) >= 99 && getSkills().getLevelForXp(Skills.SMITHING) >= 99 && getSkills().getLevelForXp(Skills.SUMMONING) >= 99 && getSkills().getLevelForXp(Skills.SLAYER) >= 99 && getSkills().getLevelForXp(Skills.CRAFTING) >= 99 && getSkills().getLevelForXp(Skills.WOODCUTTING) >= 99 && getSkills().getLevelForXp(Skills.FIREMAKING) >= 99 && getSkills().getLevelForXp(Skills.FLETCHING) >= 99 && getSkills().getLevelForXp(Skills.HERBLORE) >= 99)
+        if (getSkills().getRealLevel(Skills.ATTACK) >= 99 && getSkills().getRealLevel(Skills.STRENGTH) >= 99 && getSkills().getRealLevel(Skills.DEFENCE) >= 99 && getSkills().getRealLevel(Skills.HITPOINTS) >= 99 && getSkills().getRealLevel(Skills.RANGE) >= 99 && getSkills().getRealLevel(Skills.MAGIC) >= 99 && getSkills().getRealLevel(Skills.RUNECRAFTING) >= 99 && getSkills().getRealLevel(Skills.FISHING) >= 99 && getSkills().getRealLevel(Skills.AGILITY) >= 99 && getSkills().getRealLevel(Skills.COOKING) >= 99 && getSkills().getRealLevel(Skills.PRAYER) >= 99 && getSkills().getRealLevel(Skills.THIEVING) >= 99 && getSkills().getRealLevel(Skills.MINING) >= 99 && getSkills().getRealLevel(Skills.SMITHING) >= 99 && getSkills().getRealLevel(Skills.SUMMONING) >= 99 && getSkills().getRealLevel(Skills.SLAYER) >= 99 && getSkills().getRealLevel(Skills.CRAFTING) >= 99 && getSkills().getRealLevel(Skills.WOODCUTTING) >= 99 && getSkills().getRealLevel(Skills.FIREMAKING) >= 99 && getSkills().getRealLevel(Skills.FLETCHING) >= 99 && getSkills().getRealLevel(Skills.HERBLORE) >= 99)
             return true;
         return false;
     }
 
     public void checkMaxCape() {
         for (int skill = 0; skill < 24; skill++) {
-            if (getSkills().getLevelForXp(skill) < 99) {
+            if (getSkills().getRealLevel(skill) < 99) {
                 getDialogueManager().startDialogue("You need at least 99 in all skills to wear max cape.");
                 message("You need at least 99 in all skills to wear max cape.");
                 getEquipment().deleteItem(20767, 1);
@@ -2321,19 +2321,19 @@ public class Player extends Entity {
     }
 
     public boolean hasCompletionistStatRequirements() {
-        if (getSkills().getLevelForXp(Skills.ATTACK) >= 99 && getSkills().getLevelForXp(Skills.STRENGTH) >= 99 && getSkills().getLevelForXp(Skills.DEFENCE) >= 99 && getSkills().getLevelForXp(Skills.HITPOINTS) >= 99 && getSkills().getLevelForXp(Skills.RANGE) >= 99 && getSkills().getLevelForXp(Skills.MAGIC) >= 99 && getSkills().getLevelForXp(Skills.RUNECRAFTING) >= 99 && getSkills().getLevelForXp(Skills.FISHING) >= 99 && getSkills().getLevelForXp(Skills.AGILITY) >= 99 && getSkills().getLevelForXp(Skills.COOKING) >= 99 && getSkills().getLevelForXp(Skills.PRAYER) >= 99 && getSkills().getLevelForXp(Skills.THIEVING) >= 99 && getSkills().getLevelForXp(Skills.MINING) >= 99 && getSkills().getLevelForXp(Skills.SMITHING) >= 99 && getSkills().getLevelForXp(Skills.SUMMONING) >= 99 && getSkills().getLevelForXp(Skills.SLAYER) >= 99 && getSkills().getLevelForXp(Skills.CRAFTING) >= 99 && getSkills().getLevelForXp(Skills.WOODCUTTING) >= 99 && getSkills().getLevelForXp(Skills.FIREMAKING) >= 99 && getSkills().getLevelForXp(Skills.FLETCHING) >= 99 && getSkills().getLevelForXp(Skills.HERBLORE) >= 99 && getSkills().getLevelForXp(Skills.DUNGEONEERING) >= 120)
+        if (getSkills().getRealLevel(Skills.ATTACK) >= 99 && getSkills().getRealLevel(Skills.STRENGTH) >= 99 && getSkills().getRealLevel(Skills.DEFENCE) >= 99 && getSkills().getRealLevel(Skills.HITPOINTS) >= 99 && getSkills().getRealLevel(Skills.RANGE) >= 99 && getSkills().getRealLevel(Skills.MAGIC) >= 99 && getSkills().getRealLevel(Skills.RUNECRAFTING) >= 99 && getSkills().getRealLevel(Skills.FISHING) >= 99 && getSkills().getRealLevel(Skills.AGILITY) >= 99 && getSkills().getRealLevel(Skills.COOKING) >= 99 && getSkills().getRealLevel(Skills.PRAYER) >= 99 && getSkills().getRealLevel(Skills.THIEVING) >= 99 && getSkills().getRealLevel(Skills.MINING) >= 99 && getSkills().getRealLevel(Skills.SMITHING) >= 99 && getSkills().getRealLevel(Skills.SUMMONING) >= 99 && getSkills().getRealLevel(Skills.SLAYER) >= 99 && getSkills().getRealLevel(Skills.CRAFTING) >= 99 && getSkills().getRealLevel(Skills.WOODCUTTING) >= 99 && getSkills().getRealLevel(Skills.FIREMAKING) >= 99 && getSkills().getRealLevel(Skills.FLETCHING) >= 99 && getSkills().getRealLevel(Skills.HERBLORE) >= 99 && getSkills().getRealLevel(Skills.DUNGEONEERING) >= 120)
             return true;
         return false;
     }
 
     public boolean hasCompletionistRequirements() {
-        if (getSkills().getLevelForXp(Skills.ATTACK) >= 99 && getSkills().getLevelForXp(Skills.STRENGTH) >= 99 && getSkills().getLevelForXp(Skills.DEFENCE) >= 99 && getSkills().getLevelForXp(Skills.HITPOINTS) >= 99 && getSkills().getLevelForXp(Skills.RANGE) >= 99 && getSkills().getLevelForXp(Skills.MAGIC) >= 99 && getSkills().getLevelForXp(Skills.RUNECRAFTING) >= 99 && getSkills().getLevelForXp(Skills.FISHING) >= 99 && getSkills().getLevelForXp(Skills.AGILITY) >= 99 && getSkills().getLevelForXp(Skills.COOKING) >= 99 && getSkills().getLevelForXp(Skills.PRAYER) >= 99 && getSkills().getLevelForXp(Skills.THIEVING) >= 99 && getSkills().getLevelForXp(Skills.MINING) >= 99 && getSkills().getLevelForXp(Skills.SMITHING) >= 99 && getSkills().getLevelForXp(Skills.SUMMONING) >= 99 && getSkills().getLevelForXp(Skills.SLAYER) >= 99 && getSkills().getLevelForXp(Skills.CRAFTING) >= 99 && getSkills().getLevelForXp(Skills.WOODCUTTING) >= 99 && getSkills().getLevelForXp(Skills.FIREMAKING) >= 99 && getSkills().getLevelForXp(Skills.FLETCHING) >= 99 && getSkills().getLevelForXp(Skills.HERBLORE) >= 99 && getSkills().getLevelForXp(Skills.DUNGEONEERING) >= 120 && isCompletedFightKiln() && isCompletedFightCaves() && getTaskManager().completedAllTasks())
+        if (getSkills().getRealLevel(Skills.ATTACK) >= 99 && getSkills().getRealLevel(Skills.STRENGTH) >= 99 && getSkills().getRealLevel(Skills.DEFENCE) >= 99 && getSkills().getRealLevel(Skills.HITPOINTS) >= 99 && getSkills().getRealLevel(Skills.RANGE) >= 99 && getSkills().getRealLevel(Skills.MAGIC) >= 99 && getSkills().getRealLevel(Skills.RUNECRAFTING) >= 99 && getSkills().getRealLevel(Skills.FISHING) >= 99 && getSkills().getRealLevel(Skills.AGILITY) >= 99 && getSkills().getRealLevel(Skills.COOKING) >= 99 && getSkills().getRealLevel(Skills.PRAYER) >= 99 && getSkills().getRealLevel(Skills.THIEVING) >= 99 && getSkills().getRealLevel(Skills.MINING) >= 99 && getSkills().getRealLevel(Skills.SMITHING) >= 99 && getSkills().getRealLevel(Skills.SUMMONING) >= 99 && getSkills().getRealLevel(Skills.SLAYER) >= 99 && getSkills().getRealLevel(Skills.CRAFTING) >= 99 && getSkills().getRealLevel(Skills.WOODCUTTING) >= 99 && getSkills().getRealLevel(Skills.FIREMAKING) >= 99 && getSkills().getRealLevel(Skills.FLETCHING) >= 99 && getSkills().getRealLevel(Skills.HERBLORE) >= 99 && getSkills().getRealLevel(Skills.DUNGEONEERING) >= 120 && isCompletedFightKiln() && isCompletedFightCaves() && getTaskManager().completedAllTasks())
             return true;
         return false;
     }
 
     public boolean hasTrimCompReqs() {
-        if (getSkills().getLevelForXp(Skills.ATTACK) >= 99 && getSkills().getLevelForXp(Skills.STRENGTH) >= 99 && getSkills().getLevelForXp(Skills.DEFENCE) >= 99 && getSkills().getLevelForXp(Skills.HITPOINTS) >= 99 && getSkills().getLevelForXp(Skills.RANGE) >= 99 && getSkills().getLevelForXp(Skills.MAGIC) >= 99 && getSkills().getLevelForXp(Skills.RUNECRAFTING) >= 99 && getSkills().getLevelForXp(Skills.FISHING) >= 99 && getSkills().getLevelForXp(Skills.AGILITY) >= 99 && getSkills().getLevelForXp(Skills.COOKING) >= 99 && getSkills().getLevelForXp(Skills.PRAYER) >= 99 && getSkills().getLevelForXp(Skills.THIEVING) >= 99 && getSkills().getLevelForXp(Skills.MINING) >= 99 && getSkills().getLevelForXp(Skills.SMITHING) >= 99 && getSkills().getLevelForXp(Skills.SUMMONING) >= 99 && getSkills().getLevelForXp(Skills.SLAYER) >= 99 && getSkills().getLevelForXp(Skills.CRAFTING) >= 99 && getSkills().getLevelForXp(Skills.WOODCUTTING) >= 99 && getSkills().getLevelForXp(Skills.FIREMAKING) >= 99 && getSkills().getLevelForXp(Skills.FLETCHING) >= 99 && getSkills().getLevelForXp(Skills.HERBLORE) >= 99 && getSkills().getLevelForXp(Skills.DUNGEONEERING) >= 120 && isCompletedFightKiln() && isCompletedFightCaves() && getSlayerManager().getCompletedTasks() >= 50 && getTaskManager().completedAllTasks())
+        if (getSkills().getRealLevel(Skills.ATTACK) >= 99 && getSkills().getRealLevel(Skills.STRENGTH) >= 99 && getSkills().getRealLevel(Skills.DEFENCE) >= 99 && getSkills().getRealLevel(Skills.HITPOINTS) >= 99 && getSkills().getRealLevel(Skills.RANGE) >= 99 && getSkills().getRealLevel(Skills.MAGIC) >= 99 && getSkills().getRealLevel(Skills.RUNECRAFTING) >= 99 && getSkills().getRealLevel(Skills.FISHING) >= 99 && getSkills().getRealLevel(Skills.AGILITY) >= 99 && getSkills().getRealLevel(Skills.COOKING) >= 99 && getSkills().getRealLevel(Skills.PRAYER) >= 99 && getSkills().getRealLevel(Skills.THIEVING) >= 99 && getSkills().getRealLevel(Skills.MINING) >= 99 && getSkills().getRealLevel(Skills.SMITHING) >= 99 && getSkills().getRealLevel(Skills.SUMMONING) >= 99 && getSkills().getRealLevel(Skills.SLAYER) >= 99 && getSkills().getRealLevel(Skills.CRAFTING) >= 99 && getSkills().getRealLevel(Skills.WOODCUTTING) >= 99 && getSkills().getRealLevel(Skills.FIREMAKING) >= 99 && getSkills().getRealLevel(Skills.FLETCHING) >= 99 && getSkills().getRealLevel(Skills.HERBLORE) >= 99 && getSkills().getRealLevel(Skills.DUNGEONEERING) >= 120 && isCompletedFightKiln() && isCompletedFightCaves() && getSlayerManager().getCompletedTasks() >= 50 && getTaskManager().completedAllTasks())
             return true;
         return false;
     }
@@ -2464,7 +2464,7 @@ public class Player extends Entity {
             if (skill == Skills.HITPOINTS || skill == Skills.SUMMONING || skill == Skills.PRAYER)
                 continue;
             int currentLevel = getSkills().getLevel(skill);
-            int normalLevel = getSkills().getLevelForXp(skill);
+            int normalLevel = getSkills().getRealLevel(skill);
             if (currentLevel < normalLevel) {
                 getSkills().set(skill, currentLevel + 1);
 
@@ -2477,7 +2477,7 @@ public class Player extends Entity {
             if (skill == Skills.HITPOINTS)
                 continue;
             int currentLevel = getSkills().getLevel(skill);
-            int normalLevel = getSkills().getLevelForXp(skill);
+            int normalLevel = getSkills().getRealLevel(skill);
             if (currentLevel > normalLevel) {
                 getSkills().set(skill, currentLevel - 1);
 
@@ -2743,7 +2743,7 @@ public class Player extends Entity {
         /*
          * Run Tick Actions
          */
-        runTick += (8 + (getSkills().getLevelForXp(Skills.AGILITY) / 6));
+        runTick += (8 + (getSkills().getRealLevel(Skills.AGILITY) / 6));
         int requiredTick = isResting() ? 15 : 100;
         if (runTick >= requiredTick) {
             int leftOver = runTick - requiredTick;
@@ -5806,15 +5806,15 @@ public class Player extends Entity {
             StringBuffer text = new StringBuffer();
             text.append("You need level 99 in the following: ").append("<br><br>");
             for (int skill = 0; skill < 19; skill++) {
-                if (getSkills().getLevelForXp(skill) >= 99)
+                if (getSkills().getRealLevel(skill) >= 99)
                     continue;
                 text.append(getSkills().getSkillName(skill)).append("<br>");
             }
-            if (getSkills().getLevelForXp(20) < 99)
+            if (getSkills().getRealLevel(20) < 99)
                 text.append(getSkills().getSkillName(20)).append("<br>").append("<br>");
-            if (getSkills().getLevelForXp(23) < 99)
+            if (getSkills().getRealLevel(23) < 99)
                 text.append(getSkills().getSkillName(23)).append("<br>").append("<br>");
-            if (getSkills().getLevelForXp(Skills.DUNGEONEERING) != 120) {
+            if (getSkills().getRealLevel(Skills.DUNGEONEERING) != 120) {
                 text.append("You need level 120 in the following: ").append("<br>").append("<br>");
                 text.append(getSkills().getSkillName(24)).append("<br>").append("<br>");
             }

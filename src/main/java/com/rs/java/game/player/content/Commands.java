@@ -14,7 +14,6 @@ import com.rs.core.cache.defintions.NPCDefinitions;
 import com.rs.java.game.*;
 import com.rs.java.game.Hit.HitLook;
 import com.rs.java.game.item.Item;
-import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
 import com.rs.java.game.npc.NPC;
@@ -1949,7 +1948,7 @@ public final class Commands {
 
     private static boolean healCommand(Player player, String[] cmd) {
         player.getPrayer().restorePrayer(
-                (int) ((int) (Math.floor(player.getSkills().getLevelForXp(Skills.PRAYER) * 2.5) + 990)
+                (int) ((int) (Math.floor(player.getSkills().getRealLevel(Skills.PRAYER) * 2.5) + 990)
                         * player.getAuraManager().getPrayerPotsRestoreMultiplier()));
 
         if (player.getPoison().isPoisoned())
@@ -1984,7 +1983,7 @@ public final class Commands {
         }
 
         target.getPrayer().restorePrayer(
-                (int) ((int) (Math.floor(target.getSkills().getLevelForXp(Skills.PRAYER) * 2.5) + 990)
+                (int) ((int) (Math.floor(target.getSkills().getRealLevel(Skills.PRAYER) * 2.5) + 990)
                         * target.getAuraManager().getPrayerPotsRestoreMultiplier()));
 
         target.getPoison().makePoisoned(0);
@@ -3642,8 +3641,8 @@ public final class Commands {
 
     private static boolean milestoneLevelsCommand(Player player, String[] cmd) {
         for (int i = 0; i < 24; i++) {
-            player.getSkills().setXp(i, Skills.getXPForLevel(player.getSkills().getLevelForXp(i) + 10));
-            player.getSkills().set(i, player.getSkills().getLevelForXp(i));
+            player.getSkills().setXp(i, Skills.getXPForLevel(player.getSkills().getRealLevel(i) + 10));
+            player.getSkills().set(i, player.getSkills().getRealLevel(i));
         }
         player.getAppearance().generateAppearenceData();
         player.getSkills().switchXPPopup(true);

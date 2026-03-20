@@ -18,7 +18,6 @@ import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.tasksystem.Task;
-import com.rs.kotlin.game.player.tasksystem.TaskManager;
 
 /**
  * 
@@ -50,7 +49,7 @@ public class Summoning {
 			return false;
 		}
 		int levelReq = getRequiredLevel(pouch.getRealPouchId());
-		if (player.getSkills().getLevelForXp(Skills.SUMMONING) < levelReq) {
+		if (player.getSkills().getRealLevel(Skills.SUMMONING) < levelReq) {
 			player.getPackets()
 					.sendGameMessage("You need a summoning level of " + levelReq + " in order to use this pouch.");
 			return false;
@@ -374,7 +373,7 @@ public class Summoning {
 		List<Item> itemReq = def.getCreateItemRequirements(infusingScroll);
 		int level = getRequiredLevel(pouch.getRealPouchId());
 		if (itemReq != null) {
-			if (player.getSkills().getLevelForXp(Skills.SUMMONING) < level) {
+			if (player.getSkills().getRealLevel(Skills.SUMMONING) < level) {
 				player.getPackets()
 						.sendGameMessage("You need a summoning level of " + level + " to create this pouch.");
 				return;

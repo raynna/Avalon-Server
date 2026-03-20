@@ -1,10 +1,6 @@
 package com.rs.java.game.player.actions;
 
-import com.rs.java.game.Animation;
-import com.rs.java.game.Graphics;
-import com.rs.java.game.World;
 import com.rs.java.game.WorldObject;
-import com.rs.java.game.WorldTile;
 import com.rs.java.game.objects.plugins.DoorsAndGates;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.RouteEvent;
@@ -111,7 +107,7 @@ public class ObjectOption1 {
 	public static void handleObject(Player player, WorldObject object, Objects objects) {
 		if (objects.getSkillReqs() != null) {
 			for (int i = 0; i < objects.getSkillReqs().length; i += 2) {
-				if (player.getSkills().getLevelForXp(objects.getSkillReqs()[i]) < objects.getSkillReqs()[i + 1]) {
+				if (player.getSkills().getRealLevel(objects.getSkillReqs()[i]) < objects.getSkillReqs()[i + 1]) {
 					player.getPackets().sendGameMessage("You need a level of " + objects.getSkillReqs()[i + 1] + " "
 							+ player.getSkills().getSkillName(objects.getSkillReqs()[i]) + " to enter this guild.");
 					return;

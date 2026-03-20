@@ -53,7 +53,7 @@ public class PirateHutDoor extends ObjectPlugin {
 					"You need an Lockpick to picklock this gate.");
 			return false;
 		}
-		if (player.getSkills().getLevelForXp(Skills.THIEVING) < 70) {
+		if (player.getSkills().getRealLevel(Skills.THIEVING) < 70) {
 			player.getDialogueManager().startDialogue("SimpleMessage",
 					"You need atleast an level of 70 thieving to picklock this door.");
 			return false;

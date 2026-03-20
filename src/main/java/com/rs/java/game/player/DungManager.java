@@ -109,7 +109,7 @@ public class DungManager implements Serializable {
 		int i = 0;
 		for (ResourceDungeon dung : ResourceDungeon.values()) {
 			if (object.getId() == dung.outsideId || object.getId() == dung.insideId) {
-				if (player.getSkills().getLevelForXp(Skills.DUNGEONEERING) < dung.level) {
+				if (player.getSkills().getRealLevel(Skills.DUNGEONEERING) < dung.level) {
 					player.getDialogueManager().startDialogue("SimpleMessage", "You need a dungeoneering level of "
 							+ dung.level + " to enter this dungeoneering resource.");
 					return true;
@@ -155,7 +155,7 @@ public class DungManager implements Serializable {
 				bindedAmmo.setAmount(255);
 		} else {
 			if (bindedItems.getUsedSlots() >= DungeonUtils
-					.getMaxBindItems(player.getSkills().getLevelForXp(Skills.DUNGEONEERING))) {
+					.getMaxBindItems(player.getSkills().getRealLevel(Skills.DUNGEONEERING))) {
 				player.getPackets()
 						.sendGameMessage("A currently bound item must be destroyed before another item may be bound.");
 				return;
@@ -437,7 +437,7 @@ public class DungManager implements Serializable {
 			player.getPackets().sendCSVarInteger(1153 + i,
 					teamMate == null ? -1 : teamMate.getSkills().getCombatLevelWithSummoning());
 			player.getPackets().sendCSVarInteger(1158 + i,
-					teamMate == null ? -1 : teamMate.getSkills().getLevelForXp(Skills.DUNGEONEERING));
+					teamMate == null ? -1 : teamMate.getSkills().getRealLevel(Skills.DUNGEONEERING));
 			// player.getPackets().sendCSVarInteger(1163 + i, teamMate == null ? -1 :
 			// teamMate.getSkills().getHighestSkillLevel());
 			player.getPackets().sendCSVarInteger(1168 + i,
@@ -478,7 +478,7 @@ public class DungManager implements Serializable {
 				player.getPackets().sendCSVarInteger(1153 + i,
 						teamMate == null ? -1 : teamMate.getSkills().getCombatLevelWithSummoning());
 				player.getPackets().sendCSVarInteger(1158 + i,
-						teamMate == null ? -1 : teamMate.getSkills().getLevelForXp(Skills.DUNGEONEERING));
+						teamMate == null ? -1 : teamMate.getSkills().getRealLevel(Skills.DUNGEONEERING));
 				// player.getPackets().sendCSVarInteger(1163 + i, teamMate == null ? -1 :
 				// teamMate.getSkills().getHighestSkillLevel());
 				player.getPackets().sendCSVarInteger(1168 + i,

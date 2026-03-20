@@ -162,11 +162,11 @@ public class WildernessOthers extends ObjectPlugin {
 			player.setNextWorldTile(new WorldTile(3214, 3782, 0));
 			player.getControlerManager().startControler("WildernessControler");
 		} else if (id == 38815 && object.getX() == 3209 && object.getY() == 3780 && object.getPlane() == 0) {
-			if (player.getSkills().getLevelForXp(Skills.WOODCUTTING) < 37
-					|| player.getSkills().getLevelForXp(Skills.MINING) < 45
-					|| player.getSkills().getLevelForXp(Skills.SUMMONING) < 23
-					|| player.getSkills().getLevelForXp(Skills.FIREMAKING) < 47
-					|| player.getSkills().getLevelForXp(Skills.PRAYER) < 55) {
+			if (player.getSkills().getRealLevel(Skills.WOODCUTTING) < 37
+					|| player.getSkills().getRealLevel(Skills.MINING) < 45
+					|| player.getSkills().getRealLevel(Skills.SUMMONING) < 23
+					|| player.getSkills().getRealLevel(Skills.FIREMAKING) < 47
+					|| player.getSkills().getRealLevel(Skills.PRAYER) < 55) {
 				player.getPackets().sendGameMessage(
 						"You need 23 Summoning, 37 Woodcutting, 45 Mining, 47 Firemaking and 55 Prayer to enter this dungeon.");
 				return false;

@@ -3,10 +3,7 @@ package com.rs.java.game.player.dialogues;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.rs.core.cache.defintions.ItemDefinitions;
 import com.rs.java.game.Graphics;
-import com.rs.java.game.item.Item;
-import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.kotlin.game.player.equipment.DecorativeUpgrader;
@@ -92,7 +89,7 @@ public final class LevelUp extends Dialogue {
     @Override
     public void start() {
         int skill = (Integer) parameters[0];
-        int level = player.getSkills().getLevelForXp(skill);
+        int level = player.getSkills().getRealLevel(skill);
         String name = Skills.SKILL_NAME[skill];
         player.temporaryAttribute().put("leveledUp[" + skill + "]", Boolean.TRUE);
         if (level >= 90)

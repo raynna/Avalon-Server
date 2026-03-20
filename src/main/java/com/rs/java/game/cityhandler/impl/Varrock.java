@@ -362,31 +362,31 @@ public class Varrock implements CityEvent {
 		 */
 
 		case 3374:
-			if (player.getSkills().getLevelForXp(Skills.ATTACK) < 99
-					|| player.getSkills().getLevelForXp(Skills.STRENGTH) < 99
-					|| player.getSkills().getLevelForXp(Skills.DEFENCE) < 99
-					|| player.getSkills().getLevelForXp(Skills.RANGE) < 99
-					|| player.getSkills().getLevelForXp(Skills.PRAYER) < 99
-					|| player.getSkills().getLevelForXp(Skills.MAGIC) < 99
-					|| player.getSkills().getLevelForXp(Skills.RUNECRAFTING) < 99
-					|| player.getSkills().getLevelForXp(Skills.CONSTRUCTION) < 99
-					|| player.getSkills().getLevelForXp(Skills.DUNGEONEERING) < 99
-					|| player.getSkills().getLevelForXp(Skills.HITPOINTS) < 99
-					|| player.getSkills().getLevelForXp(Skills.AGILITY) < 99
-					|| player.getSkills().getLevelForXp(Skills.HERBLORE) < 99
-					|| player.getSkills().getLevelForXp(Skills.THIEVING) < 99
-					|| player.getSkills().getLevelForXp(Skills.CRAFTING) < 99
-					|| player.getSkills().getLevelForXp(Skills.FLETCHING) < 99
-					|| player.getSkills().getLevelForXp(Skills.SLAYER) < 99
-					|| player.getSkills().getLevelForXp(Skills.HUNTER) < 99
-					|| player.getSkills().getLevelForXp(Skills.MINING) < 99
-					|| player.getSkills().getLevelForXp(Skills.SMITHING) < 99
-					|| player.getSkills().getLevelForXp(Skills.FISHING) < 99
-					|| player.getSkills().getLevelForXp(Skills.COOKING) < 99
-					|| player.getSkills().getLevelForXp(Skills.FIREMAKING) < 99
-					|| player.getSkills().getLevelForXp(Skills.WOODCUTTING) < 99
-					|| player.getSkills().getLevelForXp(Skills.FARMING) < 99
-					|| player.getSkills().getLevelForXp(Skills.SUMMONING) < 99) {
+			if (player.getSkills().getRealLevel(Skills.ATTACK) < 99
+					|| player.getSkills().getRealLevel(Skills.STRENGTH) < 99
+					|| player.getSkills().getRealLevel(Skills.DEFENCE) < 99
+					|| player.getSkills().getRealLevel(Skills.RANGE) < 99
+					|| player.getSkills().getRealLevel(Skills.PRAYER) < 99
+					|| player.getSkills().getRealLevel(Skills.MAGIC) < 99
+					|| player.getSkills().getRealLevel(Skills.RUNECRAFTING) < 99
+					|| player.getSkills().getRealLevel(Skills.CONSTRUCTION) < 99
+					|| player.getSkills().getRealLevel(Skills.DUNGEONEERING) < 99
+					|| player.getSkills().getRealLevel(Skills.HITPOINTS) < 99
+					|| player.getSkills().getRealLevel(Skills.AGILITY) < 99
+					|| player.getSkills().getRealLevel(Skills.HERBLORE) < 99
+					|| player.getSkills().getRealLevel(Skills.THIEVING) < 99
+					|| player.getSkills().getRealLevel(Skills.CRAFTING) < 99
+					|| player.getSkills().getRealLevel(Skills.FLETCHING) < 99
+					|| player.getSkills().getRealLevel(Skills.SLAYER) < 99
+					|| player.getSkills().getRealLevel(Skills.HUNTER) < 99
+					|| player.getSkills().getRealLevel(Skills.MINING) < 99
+					|| player.getSkills().getRealLevel(Skills.SMITHING) < 99
+					|| player.getSkills().getRealLevel(Skills.FISHING) < 99
+					|| player.getSkills().getRealLevel(Skills.COOKING) < 99
+					|| player.getSkills().getRealLevel(Skills.FIREMAKING) < 99
+					|| player.getSkills().getRealLevel(Skills.WOODCUTTING) < 99
+					|| player.getSkills().getRealLevel(Skills.FARMING) < 99
+					|| player.getSkills().getRealLevel(Skills.SUMMONING) < 99) {
 				player.getPackets().sendGameMessage("You need to be maxed to access Max's store.");
 				return false;
 			}
@@ -415,31 +415,31 @@ public class Varrock implements CityEvent {
 		 * Max
 		 */
 		case 3374:
-			if (player.getSkills().getLevelForXp(Skills.ATTACK) < 99
-					|| player.getSkills().getLevelForXp(Skills.STRENGTH) < 99
-					|| player.getSkills().getLevelForXp(Skills.DEFENCE) < 99
-					|| player.getSkills().getLevelForXp(Skills.RANGE) < 99
-					|| player.getSkills().getLevelForXp(Skills.PRAYER) < 99
-					|| player.getSkills().getLevelForXp(Skills.MAGIC) < 99
-					|| player.getSkills().getLevelForXp(Skills.RUNECRAFTING) < 99
-					|| player.getSkills().getLevelForXp(Skills.CONSTRUCTION) < 99
-					|| player.getSkills().getLevelForXp(Skills.DUNGEONEERING) < 99
-					|| player.getSkills().getLevelForXp(Skills.HITPOINTS) < 99
-					|| player.getSkills().getLevelForXp(Skills.AGILITY) < 99
-					|| player.getSkills().getLevelForXp(Skills.HERBLORE) < 99
-					|| player.getSkills().getLevelForXp(Skills.THIEVING) < 99
-					|| player.getSkills().getLevelForXp(Skills.CRAFTING) < 99
-					|| player.getSkills().getLevelForXp(Skills.FLETCHING) < 99
-					|| player.getSkills().getLevelForXp(Skills.SLAYER) < 99
-					|| player.getSkills().getLevelForXp(Skills.HUNTER) < 99
-					|| player.getSkills().getLevelForXp(Skills.MINING) < 99
-					|| player.getSkills().getLevelForXp(Skills.SMITHING) < 99
-					|| player.getSkills().getLevelForXp(Skills.FISHING) < 99
-					|| player.getSkills().getLevelForXp(Skills.COOKING) < 99
-					|| player.getSkills().getLevelForXp(Skills.FIREMAKING) < 99
-					|| player.getSkills().getLevelForXp(Skills.WOODCUTTING) < 99
-					|| player.getSkills().getLevelForXp(Skills.FARMING) < 99
-					|| player.getSkills().getLevelForXp(Skills.SUMMONING) < 99) {
+			if (player.getSkills().getRealLevel(Skills.ATTACK) < 99
+					|| player.getSkills().getRealLevel(Skills.STRENGTH) < 99
+					|| player.getSkills().getRealLevel(Skills.DEFENCE) < 99
+					|| player.getSkills().getRealLevel(Skills.RANGE) < 99
+					|| player.getSkills().getRealLevel(Skills.PRAYER) < 99
+					|| player.getSkills().getRealLevel(Skills.MAGIC) < 99
+					|| player.getSkills().getRealLevel(Skills.RUNECRAFTING) < 99
+					|| player.getSkills().getRealLevel(Skills.CONSTRUCTION) < 99
+					|| player.getSkills().getRealLevel(Skills.DUNGEONEERING) < 99
+					|| player.getSkills().getRealLevel(Skills.HITPOINTS) < 99
+					|| player.getSkills().getRealLevel(Skills.AGILITY) < 99
+					|| player.getSkills().getRealLevel(Skills.HERBLORE) < 99
+					|| player.getSkills().getRealLevel(Skills.THIEVING) < 99
+					|| player.getSkills().getRealLevel(Skills.CRAFTING) < 99
+					|| player.getSkills().getRealLevel(Skills.FLETCHING) < 99
+					|| player.getSkills().getRealLevel(Skills.SLAYER) < 99
+					|| player.getSkills().getRealLevel(Skills.HUNTER) < 99
+					|| player.getSkills().getRealLevel(Skills.MINING) < 99
+					|| player.getSkills().getRealLevel(Skills.SMITHING) < 99
+					|| player.getSkills().getRealLevel(Skills.FISHING) < 99
+					|| player.getSkills().getRealLevel(Skills.COOKING) < 99
+					|| player.getSkills().getRealLevel(Skills.FIREMAKING) < 99
+					|| player.getSkills().getRealLevel(Skills.WOODCUTTING) < 99
+					|| player.getSkills().getRealLevel(Skills.FARMING) < 99
+					|| player.getSkills().getRealLevel(Skills.SUMMONING) < 99) {
 				player.getPackets().sendGameMessage("You need to be maxed to access Max's store.");
 				return false;
 			}

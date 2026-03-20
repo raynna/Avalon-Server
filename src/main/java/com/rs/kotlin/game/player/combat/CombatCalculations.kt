@@ -334,12 +334,12 @@ object CombatCalculations {
                     }
 
                     spellId == 56 -> {
-                        val magicLevel = player.skills.getLevelForXp(Skills.MAGIC)
+                        val magicLevel = player.skills.getRealLevel(Skills.MAGIC)
                         (floor(magicLevel * 0.10).toInt() + 10) * 10
                     }
 
                     spellId == 99 -> {
-                        val magicLevel = player.skills.getLevelForXp(Skills.MAGIC)
+                        val magicLevel = player.skills.getRealLevel(Skills.MAGIC)
                         val baseVal = 160 + (magicLevel - 77) * 4
                         val boost = (magicLevel - 77) * 4
                         baseVal + boost
@@ -405,7 +405,7 @@ object CombatCalculations {
 
         private fun getMagicLevelMultiplier(player: Player): Double {
             val currentLevel = player.skills.getLevel(Skills.MAGIC).toDouble()
-            val baseLevel = player.skills.getLevelForXp(Skills.MAGIC).toDouble()
+            val baseLevel = player.skills.getRealLevel(Skills.MAGIC).toDouble()
 
             // Base scaling: 0.20% per level → +9.9% at level 99
             val normalScaling = 1.0 + (baseLevel * 0.0020)

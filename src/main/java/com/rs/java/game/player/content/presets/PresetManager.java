@@ -1,7 +1,6 @@
 package com.rs.java.game.player.content.presets;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,14 +78,14 @@ public final class PresetManager implements Serializable {
         Summoning.Pouch pouch = (familiar != null && familiar.getPouch() != null) ? familiar.getPouch() : null;
         int[] levels = new int[8];
 
-        levels[0] = player.getSkills().getLevelForXp(0);  // Attack
-        levels[1] = player.getSkills().getLevelForXp(1);  // Defence
-        levels[2] = player.getSkills().getLevelForXp(2);  // Strength
-        levels[3] = player.getSkills().getLevelForXp(3);  // Hitpoints
-        levels[4] = player.getSkills().getLevelForXp(4);  // Range
-        levels[5] = player.getSkills().getLevelForXp(5);  // Prayer
-        levels[6] = player.getSkills().getLevelForXp(6);  // Magic
-        levels[7] = player.getSkills().getLevelForXp(23); // Summoning
+        levels[0] = player.getSkills().getRealLevel(0);  // Attack
+        levels[1] = player.getSkills().getRealLevel(1);  // Defence
+        levels[2] = player.getSkills().getRealLevel(2);  // Strength
+        levels[3] = player.getSkills().getRealLevel(3);  // Hitpoints
+        levels[4] = player.getSkills().getRealLevel(4);  // Range
+        levels[5] = player.getSkills().getRealLevel(5);  // Prayer
+        levels[6] = player.getSkills().getRealLevel(6);  // Magic
+        levels[7] = player.getSkills().getRealLevel(23); // Summoning
         PRESET_SETUPS.put(name,
                 new Preset(name, inventory, equipment, player.getPrayer().isAncientCurses(),
                         player.getCombatDefinitions().spellBook, levels, runes, pouch));
@@ -300,7 +299,7 @@ public final class PresetManager implements Serializable {
                 if (requirements != null) {
                     for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
                         int skillId = req.getKey(), level = req.getValue();
-                        if (player.getSkills().getLevelForXp(skillId) < level) {
+                        if (player.getSkills().getRealLevel(skillId) < level) {
                             Msg.warn(player, "You were unable to equip your " + item.getName().toLowerCase()
                                     + ", as you don't meet the requirements to wear them.");
                             continue skip;
@@ -456,7 +455,7 @@ public final class PresetManager implements Serializable {
                 if (requirements != null) {
                     for (Map.Entry<Integer, Integer> req : requirements.entrySet()) {
                         int skillId = req.getKey(), level = req.getValue();
-                        if (player.getSkills().getLevelForXp(skillId) < level) {
+                        if (player.getSkills().getRealLevel(skillId) < level) {
                             Msg.warn(player, "You were unable to equip your " + item.getName().toLowerCase()
                                     + ", as you don't meet the requirements to wear them.");
                             continue skip;

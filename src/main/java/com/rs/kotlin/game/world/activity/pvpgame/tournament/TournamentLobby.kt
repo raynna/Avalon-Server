@@ -143,14 +143,14 @@ class TournamentLobby(
         val preset = getTournamentPreset()
         player.presetManager.applyPreset(preset)
 
-        player.prayer.restorePrayer(player.skills.getLevelForXp(Skills.PRAYER) * 10)
+        player.prayer.restorePrayer(player.skills.getRealLevel(Skills.PRAYER) * 10)
         if (player.poison.isPoisoned) player.poison.reset()
         if (player.newPoison.isPoisoned()) player.newPoison.reset()
         player.setRunEnergy(100)
         player.heal(player.maxHitpoints)
         player.skills.restoreSkills()
         player.getAppearance().generateAppearenceData()
-        player.skills[Skills.SUMMONING] = player.skills.getLevelForXp(Skills.SUMMONING)
+        player.skills[Skills.SUMMONING] = player.skills.getRealLevel(Skills.SUMMONING)
         player.skills.refresh(Skills.SUMMONING)
         player.getCombatDefinitions().resetSpecialAttack()
     }

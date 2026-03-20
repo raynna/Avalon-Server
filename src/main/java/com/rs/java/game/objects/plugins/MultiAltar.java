@@ -20,7 +20,7 @@ public class MultiAltar extends ObjectPlugin {
 
 	@Override
 	public boolean processObject(Player player, WorldObject object) {
-		final int maxPrayer = player.getSkills().getLevelForXp(Skills.PRAYER) * 10;
+		final int maxPrayer = player.getSkills().getRealLevel(Skills.PRAYER) * 10;
 		if (player.getPrayer().getPrayerPoints() < maxPrayer) {
 			player.lock(1);
 			player.getPackets().sendGameMessage("You pray to the gods...", true);

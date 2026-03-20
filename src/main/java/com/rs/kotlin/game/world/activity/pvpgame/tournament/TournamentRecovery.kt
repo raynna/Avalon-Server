@@ -5,10 +5,9 @@ import com.rs.java.game.player.Skills
 import com.rs.kotlin.game.world.activity.pvpgame.closePvPOverlay
 
 object TournamentRecovery {
-
     fun restore(player: Player) {
         player.closePvPOverlay()
-        player.interfaceManager.closeOverlay(false);
+        player.interfaceManager.closeOverlay(false)
         player.tempInventory?.let {
             player.inventory.restoreSnapshot(it)
         }
@@ -37,14 +36,14 @@ object TournamentRecovery {
         player.prayer.reset()
         player.appearance.generateAppearenceData()
         player.activeTournament = null
-        player.prayer.restorePrayer(player.skills.getLevelForXp(Skills.PRAYER) * 10)
+        player.prayer.restorePrayer(player.skills.getRealLevel(Skills.PRAYER) * 10)
         if (player.poison.isPoisoned) player.poison.reset()
         if (player.newPoison.isPoisoned()) player.newPoison.reset()
         player.setRunEnergy(100)
         player.heal(player.maxHitpoints)
         player.skills.restoreSkills()
         player.getAppearance().generateAppearenceData()
-        player.skills[Skills.SUMMONING] = player.skills.getLevelForXp(Skills.SUMMONING)
+        player.skills[Skills.SUMMONING] = player.skills.getRealLevel(Skills.SUMMONING)
         player.skills.refresh(Skills.SUMMONING)
         player.getCombatDefinitions().resetSpecialAttack()
         player.message("Your character has been safely restored.")

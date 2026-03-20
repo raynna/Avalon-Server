@@ -27,7 +27,7 @@ public class Alter extends ObjectPlugin {
         }
         player.lock(1);
         player.animate("animation.pray_altar");
-        player.getPrayer().restorePrayer(player.getSkills().getLevelForXp(Skills.PRAYER));
+        player.getPrayer().restorePrayer(player.getSkills().getRealLevel(Skills.PRAYER));
         player.message("You recharge your Prayer points");
 		return true;
 	}

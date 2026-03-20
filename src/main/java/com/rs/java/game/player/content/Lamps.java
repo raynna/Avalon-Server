@@ -101,7 +101,7 @@ public class Lamps {
 						return;
 					}
 					player.getInventory().deleteItem(slot, new Item(id, 1));
-					double exp = getExp(player.getSkills().getLevelForXp(selectedSkill), selectableLampType(id));
+					double exp = getExp(player.getSkills().getRealLevel(selectedSkill), selectableLampType(id));
 					player.getSkills().addXp(selectedSkill, exp);
 					player.getInterfaceManager().closeScreenInterface();
 					player.getDialogueManager().startDialogue("SimpleMessage",
@@ -150,7 +150,7 @@ public class Lamps {
 				}
 
 				player.getInventory().deleteItem(slot, new Item(id, 1));
-				double exp = getExp(player.getSkills().getLevelForXp(skillId), type) * Settings.SKILLING_XP_RATE;
+				double exp = getExp(player.getSkills().getRealLevel(skillId), type) * Settings.SKILLING_XP_RATE;
 				player.getSkills().addXp(skillId, exp);
 				player.getDialogueManager().startDialogue("SimpleMessage",
 						"<col=0000ff>Your wish has been granted!</col>", "You have been awarded "

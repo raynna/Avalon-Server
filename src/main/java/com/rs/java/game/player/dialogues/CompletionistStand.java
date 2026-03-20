@@ -283,15 +283,15 @@ public class CompletionistStand extends Dialogue {
 		if (!player.hasCompletionistStatRequirements()) {
 			player.getPackets().sendGameMessage("You need level 99 in the following: ");
 			for (int skill = 0; skill < 19; skill++) {
-				if (player.getSkills().getLevelForXp(skill) >= 99)
+				if (player.getSkills().getRealLevel(skill) >= 99)
 					continue;
 				player.getPackets().sendGameMessage(player.getSkills().getSkillName(skill));
 			}
-			if (player.getSkills().getLevelForXp(20) < 99)
+			if (player.getSkills().getRealLevel(20) < 99)
 				player.getPackets().sendGameMessage(player.getSkills().getSkillName(20));
-			if (player.getSkills().getLevelForXp(23) < 99)
+			if (player.getSkills().getRealLevel(23) < 99)
 				player.getPackets().sendGameMessage(player.getSkills().getSkillName(23));
-			if (player.getSkills().getLevelForXp(Skills.DUNGEONEERING) != 120) {
+			if (player.getSkills().getRealLevel(Skills.DUNGEONEERING) != 120) {
 				player.getPackets().sendGameMessage("You need level 120 in the following: ");
 				player.getPackets().sendGameMessage(player.getSkills().getSkillName(24));
 			}
