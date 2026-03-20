@@ -2,13 +2,8 @@ package com.rs.java.game.player;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
 import com.rs.Settings;
-import com.rs.core.thread.CoresManager;
 import com.rs.discord.DiscordAnnouncer;
 import com.rs.java.game.Entity;
 import com.rs.java.game.World;
@@ -266,7 +261,7 @@ public final class Skills implements Serializable {
 
     public void restoreSkills() {
         for (int skill = 0; skill < level.length; skill++) {
-            level[skill] = (short) getLevelForXp(skill);
+            level[skill] = (short) getRealLevel(skill);
             refresh(skill);
         }
     }
@@ -304,7 +299,7 @@ public final class Skills implements Serializable {
     public int getTotalLevel(Player player) {
         int totallevel = 0;
         for (int i = 0; i <= 24; i++) {
-            totallevel += player.getSkills().getLevelForXp(i);
+            totallevel += player.getSkills().getRealLevel(i);
         }
         return totallevel;
     }
@@ -426,7 +421,7 @@ public final class Skills implements Serializable {
             int skillLevel = skills[i + 1];
             if (skillId > 24)
                 continue;
-            if (getLevelForXp(skillId) < skillLevel) {
+            if (getRealLevel(skillId) < skillLevel) {
                 return false;
             }
         }
@@ -441,7 +436,7 @@ public final class Skills implements Serializable {
             int skillLevel = skills[i + 1];
             if (skillId > 24)
                 continue;
-            if (getLevelForXp(skillId) < skillLevel) {
+            if (getRealLevel(skillId) < skillLevel) {
                 player.message("You need an " + getSkillName(skillId) + " level of " + skillLevel + " " + finishingMessage);
                 return false;
             }
@@ -450,13 +445,13 @@ public final class Skills implements Serializable {
     }
 
     public int getCombatLevel() {
-        double attack = getLevelForXp(Skills.ATTACK);
-        double defence = getLevelForXp(Skills.DEFENCE);
-        double strength = getLevelForXp(Skills.STRENGTH);
-        double hp = getLevelForXp(Skills.HITPOINTS);
-        double prayer = getLevelForXp(Skills.PRAYER);
-        double ranged = getLevelForXp(Skills.RANGE);
-        double magic = getLevelForXp(Skills.MAGIC);
+        double attack = getRealLevel(Skills.ATTACK);
+        double defence = getRealLevel(Skills.DEFENCE);
+        double strength = getRealLevel(Skills.STRENGTH);
+        double hp = getRealLevel(Skills.HITPOINTS);
+        double prayer = getRealLevel(Skills.PRAYER);
+        double ranged = getRealLevel(Skills.RANGE);
+        double magic = getRealLevel(Skills.MAGIC);
         double combatLevel = 0;
         double melee = Math.floor(0.25 * (defence + hp + Math.floor(prayer / 2)) + 0.325 * (attack + strength));
         double ranger = Math
@@ -496,7 +491,7 @@ public final class Skills implements Serializable {
     }
 
     public int getSummoningCombatLevel() {
-        return getLevelForXp(Skills.SUMMONING) / 8;
+        return getRealLevel(Skills.SUMMONING) / 8;
     }
 
     public void drainSummoning(int amt) {
@@ -519,7 +514,7 @@ public final class Skills implements Serializable {
         return 0;
     }
 
-    public static int getLevelForXp(double exp, int max) {
+    public static int getRealLevel(double exp, int max) {
         int points = 0;
         int output = 0;
         for (int lvl = 1; lvl <= max; lvl++) {
@@ -532,7 +527,7 @@ public final class Skills implements Serializable {
         return max;
     }
 
-    public int getLevelForXp(int skill) {
+    public int getRealLevel(int skill) {
         double exp = xp[skill];
         int points = 0;
         int output = 0;
@@ -580,14 +575,14 @@ public final class Skills implements Serializable {
         int index = 0;
         int[] levelMilestones = {10, 20, 30, 40, 50, 60, 70, 80, 90};
         for (int a : levelMilestones) {
-            if (getLevelForXp(Skills.ATTACK) >= a && getLevelForXp(Skills.DEFENCE) >= a && getLevelForXp(Skills.STRENGTH) >= a
-                    && getLevelForXp(Skills.HITPOINTS) >= a && getLevelForXp(Skills.RANGE) >= a && getLevelForXp(Skills.MAGIC) >= a
-                    && getLevelForXp(Skills.PRAYER) >= a && getLevelForXp(Skills.SUMMONING) >= a && getLevelForXp(Skills.AGILITY) >= a
-                    && getLevelForXp(Skills.HERBLORE) >= a && getLevelForXp(Skills.THIEVING) >= a && getLevelForXp(Skills.CRAFTING) >= a
-                    && getLevelForXp(Skills.FLETCHING) >= a && getLevelForXp(Skills.SLAYER) >= a && getLevelForXp(Skills.HUNTER) >= a && getLevelForXp(Skills.RUNECRAFTING) >= a
-                    && getLevelForXp(Skills.CONSTRUCTION) >= a && getLevelForXp(Skills.DUNGEONEERING) >= a && getLevelForXp(Skills.MINING) >= a
-                    && getLevelForXp(Skills.SMITHING) >= a && getLevelForXp(Skills.FISHING) >= a && getLevelForXp(Skills.COOKING) >= a && getLevelForXp(Skills.FIREMAKING) >= a
-                    && getLevelForXp(Skills.WOODCUTTING) >= a && getLevelForXp(Skills.FARMING) >= a) {
+            if (getRealLevel(Skills.ATTACK) >= a && getRealLevel(Skills.DEFENCE) >= a && getRealLevel(Skills.STRENGTH) >= a
+                    && getRealLevel(Skills.HITPOINTS) >= a && getRealLevel(Skills.RANGE) >= a && getRealLevel(Skills.MAGIC) >= a
+                    && getRealLevel(Skills.PRAYER) >= a && getRealLevel(Skills.SUMMONING) >= a && getRealLevel(Skills.AGILITY) >= a
+                    && getRealLevel(Skills.HERBLORE) >= a && getRealLevel(Skills.THIEVING) >= a && getRealLevel(Skills.CRAFTING) >= a
+                    && getRealLevel(Skills.FLETCHING) >= a && getRealLevel(Skills.SLAYER) >= a && getRealLevel(Skills.HUNTER) >= a && getRealLevel(Skills.RUNECRAFTING) >= a
+                    && getRealLevel(Skills.CONSTRUCTION) >= a && getRealLevel(Skills.DUNGEONEERING) >= a && getRealLevel(Skills.MINING) >= a
+                    && getRealLevel(Skills.SMITHING) >= a && getRealLevel(Skills.FISHING) >= a && getRealLevel(Skills.COOKING) >= a && getRealLevel(Skills.FIREMAKING) >= a
+                    && getRealLevel(Skills.WOODCUTTING) >= a && getRealLevel(Skills.FARMING) >= a) {
                 milestoneLevel = a;
             }
         }
@@ -596,12 +591,12 @@ public final class Skills implements Serializable {
             World.sendWorldMessage(HexColours.Colour.DARK_GREEN.getHex() + "<img=6>News: " + player.getDisplayName()
                     + " has just achieved at least level " + milestoneLevel + " in all skills!", false);
         }
-        if (oldLevel < getLevelForXp(skill)) {
-            int levels = getLevelForXp(skill) - oldLevel;
+        if (oldLevel < getRealLevel(skill)) {
+            int levels = getRealLevel(skill) - oldLevel;
             player.getPackets().sendGameMessage("You've just advanced " + (levels > 1 ? levels : "a") + " " + getSkillName(skill)
-                    + " level"+ (levels > 1 ? "s" : "") +"! You have reached level " + getLevelForXp(skill) + ".");
+                    + " level"+ (levels > 1 ? "s" : "") +"! You have reached level " + getRealLevel(skill) + ".");
         }
-        if (oldLevel < 99 && getLevelForXp(skill) == 99 || oldLevel < 120 && getLevelForXp(skill) == 120) {
+        if (oldLevel < 99 && getRealLevel(skill) == 99 || oldLevel < 120 && getRealLevel(skill) == 120) {
             player.getPackets()
                     .sendGameMessage("You've reached the highest possible level in " + getSkillName(skill) + ".");
             World.sendWorldMessage(HexColours.Colour.ORANGE.getHex() + "<img=5>News: " + player.getDisplayName() + " has achieved level "
@@ -645,7 +640,7 @@ public final class Skills implements Serializable {
             index++;
         }
         for (int i = 0; i < Skills.SKILL_NAME.length; i++) {
-            if (player.getSkills().getLevelForXp(i) < 99) {
+            if (player.getSkills().getRealLevel(i) < 99) {
                 maxed = false;
                 break;
             }
@@ -845,7 +840,7 @@ public final class Skills implements Serializable {
 
         int oldTotalLevel = getTotalLevel(player);
         double oldXp = xp[skill];
-        int oldLevel = getLevelForXp(skill);
+        int oldLevel = getRealLevel(skill);
         int oldCombat = getCombatLevelWithSummoning();
 
         // 1️⃣ Apply base rate (combat/skilling)
@@ -892,7 +887,7 @@ public final class Skills implements Serializable {
         applyXp(skill, finalXp);
         updateXpTrackers(skill, finalXp);
 
-        int newLevel = getLevelForXp(skill);
+        int newLevel = getRealLevel(skill);
         handleLevelUp(skill, oldLevel, newLevel, oldTotalLevel, oldXp, oldCombat);
 
         refresh(skill);
@@ -1083,12 +1078,45 @@ public final class Skills implements Serializable {
     public boolean hasTwo99s() {
         int count = 0;
         for (int i = 0; i < 25; i++) {
-            if (player.getSkills().getLevelForXp(i) < 99) {
+            if (player.getSkills().getRealLevel(i) < 99) {
                 count++;
                 if (count >= 24)
                     return false;
             }
         }
         return true;
+    }
+
+    public void boost(int skill, int amount) {
+        int maxLevel = getRealLevel(skill);
+        int current = level[skill];
+
+        int boosted = current + amount;
+
+        // cap (RS-style: usually maxLevel + amount, or just allow overboost)
+        level[skill] = (short) boosted;
+
+        refresh(skill);
+    }
+
+    public void boostPercent(int skill, double percent) {
+        int maxLevel = getRealLevel(skill);
+
+        int boost = (int) Math.floor(maxLevel * percent);
+        if (boost < 1)
+            boost = 1;
+
+        level[skill] = (short) (level[skill] + boost);
+
+        refresh(skill);
+    }
+
+    public void drain(int skill, int amount) {
+        level[skill] -= amount;
+
+        if (level[skill] < 0)
+            level[skill] = 0;
+
+        refresh(skill);
     }
 }

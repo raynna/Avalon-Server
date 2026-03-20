@@ -5,6 +5,7 @@ package com.rs.kotlin.game.player.combat.melee
 import com.rs.core.tasks.WorldTasksManager
 import com.rs.core.thread.WorldThread
 import com.rs.java.game.Animation
+import com.rs.java.game.ForceTalk
 import com.rs.java.game.Hit
 import com.rs.java.game.Hit.HitLook
 import com.rs.java.game.item.Item
@@ -1528,9 +1529,39 @@ object StandardMelee : MeleeData() {
                         "item.promethium_battleaxe_b",
                         "item.primal_battleaxe",
                         "item.primal_battleaxe_b",
+                        "item.bronze_hatchet",
+                        "item.iron_hatchet",
+                        "item.steel_hatchet",
+                        "item.black_hatchet",
+                        "item.mithril_hatchet",
+                        "item.adamant_hatchet",
+                        "item.rune_hatchet",
+                        "item.novite_hatchet",
+                        "item.novite_hatchet_b",
+                        "item.bathus_hatchet",
+                        "item.bathus_hatchet_b",
+                        "item.marmaros_hatchet",
+                        "item.marmaros_hatchet_b",
+                        "item.kratonite_hatchet",
+                        "item.kratonite_hatchet_b",
+                        "item.fractite_hatchet",
+                        "item.fractite_hatchet_b",
+                        "item.zephyrium_hatchet",
+                        "item.zephyrium_hatchet_b",
+                        "item.argonite_hatchet",
+                        "item.argonite_hatchet_b",
+                        "item.katagon_hatchet",
+                        "item.katagon_hatchet_b",
+                        "item.gorgonite_hatchet",
+                        "item.gorgonite_hatchet_b",
+                        "item.promethium_hatchet",
+                        "item.promethium_hatchet_b",
+                        "item.primal_hatchet",
+                        "item.primal_hatchet_b",
+                        "item.inferno_adze",
                     ),
-                name = "Battleaxe",
-                weaponStyle = WeaponStyle.BATTLEAXE,
+                name = "Axes",
+                weaponStyle = WeaponStyle.AXE,
                 blockAnimationId = Animation.getId("animation.battleaxe_block"),
                 soundId = Rscm.lookup("sound.battleaxe"),
                 animations =
@@ -1539,6 +1570,145 @@ object StandardMelee : MeleeData() {
                         StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.battleaxe_slash"),
                         StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.battleaxe_crush"),
                         StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.battleaxe_slash"),
+                    ),
+            ),
+            MeleeWeapon(
+                itemId =
+                    Item.getIds(
+                        "item.dragon_battleaxe",
+                    ),
+                name = "Dragon Battleaxe",
+                weaponStyle = WeaponStyle.AXE,
+                blockAnimationId = Animation.getId("animation.battleaxe_block"),
+                soundId = Rscm.lookup("sound.battleaxe"),
+                animations =
+                    mapOf(
+                        StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.battleaxe_slash"),
+                        StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.battleaxe_slash"),
+                        StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.battleaxe_crush"),
+                        StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.battleaxe_slash"),
+                    ),
+                special =
+                    SpecialAttack.Instant(
+                        energyCost = 100,
+                        execute = { attacker ->
+                            attacker.animate("animation.dragon_battleaxe_special")
+                            attacker.gfx("graphic.dragon_battleaxe_special")
+                            attacker.nextForceTalk = ForceTalk("Raarrrrrgggggghhhhhhh!")
+
+                            val drainSkills = listOf(Skills.ATTACK, Skills.DEFENCE, Skills.RANGE, Skills.MAGIC)
+                            var totalDrained = 0
+
+                            for (skill in drainSkills) {
+                                val current = attacker.skills.getLevel(skill)
+                                val drain = (current * 0.10).toInt().coerceAtLeast(1)
+                                attacker.skills.drain(skill, drain)
+                                totalDrained += drain
+                            }
+                            val boost = 10 + (totalDrained / 4)
+                            val strBase = attacker.skills.getRealLevel(Skills.STRENGTH)
+                            val boostedStr = strBase + boost
+                            attacker.skills.set(Skills.STRENGTH, boostedStr)
+                        },
+                    ),
+            ),
+            MeleeWeapon(
+                itemId =
+                    Item.getIds(
+                        "item.dragon_hatchet",
+                    ),
+                name = "Dragon Hatchet",
+                weaponStyle = WeaponStyle.AXE,
+                blockAnimationId = Animation.getId("animation.battleaxe_block"),
+                soundId = Rscm.lookup("sound.battleaxe"),
+                animations =
+                    mapOf(
+                        StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.battleaxe_slash"),
+                        StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.battleaxe_slash"),
+                        StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.battleaxe_crush"),
+                        StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.battleaxe_slash"),
+                    ),
+                special =
+                    SpecialAttack.Instant(
+                        energyCost = 100,
+                        execute = { attacker ->
+                            attacker.animate("animation.dragon_hatchet_special")
+                            attacker.gfx("graphic.dragon_hatchet_special")
+                            attacker.skills.boost(Skills.WOODCUTTING, 3)
+                            attacker.nextForceTalk = ForceTalk("Chop chop!")
+                        },
+                    ),
+            ),
+            MeleeWeapon(
+                itemId =
+                    Item.getIds(
+                        "item.bronze_pickaxe",
+                        "item.iron_pickaxe",
+                        "item.steel_pickaxe",
+                        "item.mithril_pickaxe",
+                        "item.adamant_pickaxe",
+                        "item.rune_pickaxe",
+                        "item.novite_pickaxe",
+                        "item.novite_pickaxe_b",
+                        "item.bathus_pickaxe",
+                        "item.bathus_pickaxe_b",
+                        "item.marmaros_pickaxe",
+                        "item.marmaros_pickaxe_b",
+                        "item.kratonite_pickaxe",
+                        "item.kratonite_pickaxe_b",
+                        "item.fractite_pickaxe",
+                        "item.fractite_pickaxe_b",
+                        "item.zephyrium_pickaxe",
+                        "item.zephyrium_pickaxe_b",
+                        "item.argonite_pickaxe",
+                        "item.argonite_pickaxe_b",
+                        "item.katagon_pickaxe",
+                        "item.katagon_pickaxe_b",
+                        "item.gorgonite_pickaxe",
+                        "item.gorgonite_pickaxe_b",
+                        "item.promethium_pickaxe",
+                        "item.promethium_pickaxe_b",
+                        "item.primal_pickaxe",
+                        "item.primal_pickaxe_b",
+                    ),
+                name = "Pickaxes",
+                weaponStyle = WeaponStyle.PICKAXE,
+                blockAnimationId = Animation.getId("animation.pickaxe_block"),
+                soundId = Rscm.lookup("sound.battleaxe"),
+                animations =
+                    mapOf(
+                        StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.pickaxe_stab"),
+                        StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.pickaxe_stab"),
+                        StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.pickaxe_crush"),
+                        StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.pickaxe_stab"),
+                    ),
+            ),
+            MeleeWeapon(
+                itemId =
+                    Item.getIds(
+                        "item.dragon_pickaxe",
+                        "item.gilded_dragon_pickaxe",
+                    ),
+                name = "Dragon Pickaxe",
+                weaponStyle = WeaponStyle.PICKAXE,
+                blockAnimationId = Animation.getId("animation.pickaxe_block"),
+                soundId = Rscm.lookup("sound.battleaxe"),
+                animations =
+                    mapOf(
+                        StyleKey(AttackStyle.ACCURATE, 0) to Animation.getId("animation.pickaxe_stab"),
+                        StyleKey(AttackStyle.AGGRESSIVE, 1) to Animation.getId("animation.pickaxe_stab"),
+                        StyleKey(AttackStyle.AGGRESSIVE, 2) to Animation.getId("animation.pickaxe_crush"),
+                        StyleKey(AttackStyle.DEFENSIVE, 3) to Animation.getId("animation.pickaxe_stab"),
+                    ),
+                special =
+                    SpecialAttack.Instant(
+                        energyCost = 100,
+                        execute = { attacker ->
+                            attacker.animate("animation.dragon_hatchet_special")
+                            attacker.gfx("graphic.dragon_hatchet_special")
+                            attacker.skills.boost(Skills.MINING, 3)
+                            attacker.nextForceTalk = ForceTalk("Smashing!")
+                        },
                     ),
             ),
             MeleeWeapon(
@@ -1625,7 +1795,7 @@ object StandardMelee : MeleeData() {
                                 } else if (defender is Player) {
                                     val drainPercent = 0.05
                                     listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
-                                        val baseLevel = defender.skills.getLevelForXp(skill)
+                                        val baseLevel = defender.skills.getRealLevel(skill)
                                         val drainAmount = (baseLevel * drainPercent).toInt() + 1
                                         defender.skills.drainLevel(skill, drainAmount)
                                     }
@@ -1673,7 +1843,7 @@ object StandardMelee : MeleeData() {
                                 } else if (defender is Player) {
                                     val drainPercent = 0.05
                                     listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skill ->
-                                        val baseLevel = defender.skills.getLevelForXp(skill)
+                                        val baseLevel = defender.skills.getRealLevel(skill)
                                         val drainAmount = (baseLevel * drainPercent).toInt() + 1
                                         defender.skills.drainLevel(skill, drainAmount)
                                     }
@@ -1732,7 +1902,7 @@ object StandardMelee : MeleeData() {
                                 } else if (defender is Player) {
                                     val drainPercent = 0.30
                                     listOf(Skills.DEFENCE).forEach { skill ->
-                                        val baseLevel = defender.skills.getLevelForXp(skill)
+                                        val baseLevel = defender.skills.getRealLevel(skill)
                                         val drainAmount = (baseLevel * drainPercent).toInt() + 1
                                         defender.skills.drainLevel(skill, drainAmount)
                                     }

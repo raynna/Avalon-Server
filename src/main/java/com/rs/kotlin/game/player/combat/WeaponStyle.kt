@@ -1,78 +1,80 @@
 package com.rs.kotlin.game.player.combat
 
-import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
-import com.rs.kotlin.game.player.combat.melee.StandardMelee
-import com.rs.kotlin.game.player.combat.range.RangeData
 
-enum class AttackBonusType(val index: Int) {
+enum class AttackBonusType(
+    val index: Int,
+) {
     STAB(0),
     SLASH(1),
     CRUSH(2),
-    RANGE(3)
+    RANGE(3),
 }
 
 data class StyleSet(
     val styles: List<AttackStyle>,
-    val bonuses: List<AttackBonusType>
+    val bonuses: List<AttackBonusType>,
 ) {
     fun styleAt(index: Int) = styles.getOrNull(index)
+
     fun bonusAt(index: Int) = bonuses.getOrNull(index)
 }
 
 fun styles(vararg pairs: Pair<AttackStyle, AttackBonusType>) =
     StyleSet(
         styles = pairs.map { it.first },
-        bonuses = pairs.map { it.second }
+        bonuses = pairs.map { it.second },
     )
 
-
-data class StyleKey(val style: AttackStyle, val index: Int)
+data class StyleKey(
+    val style: AttackStyle,
+    val index: Int,
+)
 
 enum class WeaponStyle(
-    val styleSet: StyleSet
+    val styleSet: StyleSet,
 ) {
     SHORTBOW(
         styles(
             AttackStyle.ACCURATE_RANGE to AttackBonusType.RANGE,
             AttackStyle.RAPID to AttackBonusType.RANGE,
-            AttackStyle.LONGRANGE to AttackBonusType.RANGE
-        )
+            AttackStyle.LONGRANGE to AttackBonusType.RANGE,
+        ),
     ),
     CROSSBOW(
         styles(
             AttackStyle.ACCURATE_RANGE to AttackBonusType.RANGE,
             AttackStyle.RAPID to AttackBonusType.RANGE,
-            AttackStyle.LONGRANGE to AttackBonusType.RANGE
-        )
+            AttackStyle.LONGRANGE to AttackBonusType.RANGE,
+        ),
     ),
     THROWING(
         styles(
             AttackStyle.ACCURATE_RANGE to AttackBonusType.RANGE,
             AttackStyle.RAPID to AttackBonusType.RANGE,
-            AttackStyle.LONGRANGE to AttackBonusType.RANGE
-        )
+            AttackStyle.LONGRANGE to AttackBonusType.RANGE,
+        ),
     ),
     LONGBOW(
         styles(
             AttackStyle.ACCURATE_RANGE to AttackBonusType.RANGE,
             AttackStyle.RAPID to AttackBonusType.RANGE,
-            AttackStyle.LONGRANGE to AttackBonusType.RANGE
-        )
+            AttackStyle.LONGRANGE to AttackBonusType.RANGE,
+        ),
     ),
     UNARMED(
         styles(
             AttackStyle.ACCURATE to AttackBonusType.CRUSH,
             AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
-            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH
-        )
+            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH,
+        ),
     ),
     TWO_HANDED_SWORD(
         styles(
             AttackStyle.ACCURATE to AttackBonusType.SLASH,
             AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
             AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
-            AttackStyle.DEFENSIVE to AttackBonusType.SLASH
+            AttackStyle.DEFENSIVE to AttackBonusType.SLASH,
         ),
     ),
     SCIMITAR(
@@ -80,7 +82,7 @@ enum class WeaponStyle(
             AttackStyle.ACCURATE to AttackBonusType.SLASH,
             AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
             AttackStyle.CONTROLLED to AttackBonusType.STAB,
-            AttackStyle.DEFENSIVE to AttackBonusType.SLASH
+            AttackStyle.DEFENSIVE to AttackBonusType.SLASH,
         ),
     ),
     DAGGER(
@@ -88,7 +90,7 @@ enum class WeaponStyle(
             AttackStyle.ACCURATE to AttackBonusType.STAB,
             AttackStyle.AGGRESSIVE to AttackBonusType.STAB,
             AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
-            AttackStyle.DEFENSIVE to AttackBonusType.STAB
+            AttackStyle.DEFENSIVE to AttackBonusType.STAB,
         ),
     ),
     SCYTHE(
@@ -96,7 +98,7 @@ enum class WeaponStyle(
             AttackStyle.ACCURATE to AttackBonusType.SLASH,
             AttackStyle.AGGRESSIVE to AttackBonusType.STAB,
             AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
-            AttackStyle.DEFENSIVE to AttackBonusType.STAB
+            AttackStyle.DEFENSIVE to AttackBonusType.STAB,
         ),
     ),
     CLAWS(
@@ -104,21 +106,21 @@ enum class WeaponStyle(
             AttackStyle.ACCURATE to AttackBonusType.SLASH,
             AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
             AttackStyle.CONTROLLED to AttackBonusType.STAB,
-            AttackStyle.DEFENSIVE to AttackBonusType.SLASH
+            AttackStyle.DEFENSIVE to AttackBonusType.SLASH,
         ),
     ),
     WHIP(
         styles(
             AttackStyle.ACCURATE to AttackBonusType.SLASH,
             AttackStyle.CONTROLLED to AttackBonusType.SLASH,
-            AttackStyle.DEFENSIVE to AttackBonusType.SLASH
+            AttackStyle.DEFENSIVE to AttackBonusType.SLASH,
         ),
     ),
     HALBERD(
         styles(
             AttackStyle.CONTROLLED to AttackBonusType.STAB,
             AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
-            AttackStyle.DEFENSIVE to AttackBonusType.STAB
+            AttackStyle.DEFENSIVE to AttackBonusType.STAB,
         ),
     ),
     STAFF_OF_LIGHT(
@@ -155,22 +157,30 @@ enum class WeaponStyle(
         styles(
             AttackStyle.ACCURATE to AttackBonusType.CRUSH,
             AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
-            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH
+            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH,
         ),
     ),
     HAMMER(
         styles(
             AttackStyle.ACCURATE to AttackBonusType.CRUSH,
             AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
-            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH
+            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH,
         ),
     ),
-    BATTLEAXE(
+    AXE(
         styles(
             AttackStyle.ACCURATE to AttackBonusType.SLASH,
             AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
             AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
-            AttackStyle.DEFENSIVE to AttackBonusType.SLASH
+            AttackStyle.DEFENSIVE to AttackBonusType.SLASH,
+        ),
+    ),
+    PICKAXE(
+        styles(
+            AttackStyle.ACCURATE to AttackBonusType.STAB,
+            AttackStyle.AGGRESSIVE to AttackBonusType.STAB,
+            AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
+            AttackStyle.DEFENSIVE to AttackBonusType.STAB,
         ),
     ),
     KATANA(
@@ -178,7 +188,7 @@ enum class WeaponStyle(
             AttackStyle.ACCURATE to AttackBonusType.SLASH,
             AttackStyle.AGGRESSIVE to AttackBonusType.SLASH,
             AttackStyle.CONTROLLED to AttackBonusType.STAB,
-            AttackStyle.DEFENSIVE to AttackBonusType.SLASH
+            AttackStyle.DEFENSIVE to AttackBonusType.SLASH,
         ),
     ),
     MACE(
@@ -186,9 +196,10 @@ enum class WeaponStyle(
             AttackStyle.ACCURATE to AttackBonusType.CRUSH,
             AttackStyle.AGGRESSIVE to AttackBonusType.CRUSH,
             AttackStyle.CONTROLLED to AttackBonusType.STAB,
-            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH
+            AttackStyle.DEFENSIVE to AttackBonusType.CRUSH,
         ),
-    );
+    ),
+    ;
 
     companion object {
         fun getWeaponStyle(player: Player): AttackStyle {
@@ -210,7 +221,5 @@ enum class WeaponStyle(
                 .bonusAt(styleIndex)
                 ?: AttackBonusType.CRUSH
         }
-
-
     }
 }
