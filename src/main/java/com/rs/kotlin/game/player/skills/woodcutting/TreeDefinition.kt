@@ -1,7 +1,6 @@
 package com.rs.kotlin.game.player.skills.woodcutting
 
 import com.rs.kotlin.game.player.tasksystem.Task
-import com.rs.kotlin.game.player.tasksystem.TaskManager
 import com.rs.kotlin.rscm.RscmResolver
 
 enum class TreeDefinition(
@@ -95,7 +94,7 @@ enum class TreeDefinition(
 
     companion object {
         private val map: Map<Int, TreeDefinition> by lazy {
-            RscmResolver.buildObjectIdMap(
+            RscmResolver.buildIdMap(
                 entries = TreeDefinition.entries,
                 refsSelector = { it.objectRefs },
             )

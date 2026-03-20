@@ -114,6 +114,120 @@
       "slayerXp": 0,
       "categories": [],
       "assignedBy": []
+    },
+    {
+      "ids": [
+        3242,
+        3243
+      ],
+      "members": false,
+      "combatLevel": 22,
+      "attackLevel": 20,
+      "strengthLevel": 10,
+      "defenceLevel": 15,
+      "magicLevel": 25,
+      "rangedLevel": 1,
+      "constitutionLevel": 25,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 5
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Magic]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 50,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    },
+    {
+      "ids": [
+        3244,
+        3245
+      ],
+      "members": false,
+      "combatLevel": 11,
+      "attackLevel": 5,
+      "strengthLevel": 5,
+      "defenceLevel": 10,
+      "magicLevel": 10,
+      "rangedLevel": 1,
+      "constitutionLevel": 15,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 5
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Magic]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 50,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
     }
   ]
 }

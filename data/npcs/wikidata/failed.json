@@ -1,4 +1,13 @@
 {
+  "96": {
+    "npcId": 96,
+    "npcName": "Adolescent White wolf",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-20T20:31:51.352074600Z",
+    "lastSeen": "2026-03-20T20:31:51.352074600Z",
+    "attempts": 1,
+    "expectedCombatLevel": 3
+  },
   "152": {
     "npcId": 152,
     "npcName": "null",
@@ -7,6 +16,15 @@
     "lastSeen": "2026-03-17T14:47:50.124242Z",
     "attempts": 1,
     "expectedCombatLevel": 85
+  },
+  "329": {
+    "npcId": 329,
+    "npcName": "Fishing spot",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-20T20:12:38.977793600Z",
+    "lastSeen": "2026-03-20T20:12:38.977793600Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
   },
   "944": {
     "npcId": 944,
@@ -52,5 +70,32 @@
     "lastSeen": "2026-03-19T23:25:34.777879200Z",
     "attempts": 1,
     "expectedCombatLevel": 0
+  },
+  "14926": {
+    "npcId": 14926,
+    "npcName": "Troll commando",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-20T20:31:52.469973400Z",
+    "lastSeen": "2026-03-20T20:31:52.469973400Z",
+    "attempts": 1,
+    "expectedCombatLevel": 2
+  },
+  "14927": {
+    "npcId": 14927,
+    "npcName": "Troll ranger commando",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-20T20:31:52.618483900Z",
+    "lastSeen": "2026-03-20T20:31:52.618483900Z",
+    "attempts": 1,
+    "expectedCombatLevel": 2
+  },
+  "14928": {
+    "npcId": 14928,
+    "npcName": "Troll mage commando",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-20T20:31:52.683853800Z",
+    "lastSeen": "2026-03-20T20:31:52.683853800Z",
+    "attempts": 1,
+    "expectedCombatLevel": 2
   }
 }

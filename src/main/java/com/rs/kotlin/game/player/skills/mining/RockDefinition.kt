@@ -178,7 +178,7 @@ enum class RockDefinition(
 
     companion object {
         private val map: Map<Int, RockDefinition> by lazy {
-            RscmResolver.buildObjectIdMap(
+            RscmResolver.buildIdMap(
                 entries = entries,
                 refsSelector = { it.objectRefs },
             )

@@ -6,7 +6,6 @@ import com.rs.java.game.cityhandler.CityEventHandler;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.actions.skills.fishing.Fishing.FishingSpots;
 import com.rs.java.game.player.dialogues.Dialogue;
 
 public class Miscellania implements CityEvent {
@@ -64,12 +63,6 @@ public class Miscellania implements CityEvent {
 				
 			});
 			return true;
-		case 1399:
-			FishingSpots spot = FishingSpots.forId(npc.getId() | 1 << 24);
-			if (spot != null) {
-				//TODO player.getActionManager().setAction(new MiscellaniaFishing(spot, npc));
-				return true;
-			}
 		}
 		return false;
 	}

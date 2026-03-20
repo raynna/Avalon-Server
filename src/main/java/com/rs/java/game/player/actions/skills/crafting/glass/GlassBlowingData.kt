@@ -25,10 +25,10 @@ enum class GlassBlowingData(
         private const val GLASSBLOWING_PIPE = 1785
 
         private val baseLookup =
-            RscmResolver.buildObjectIdMap(entries) { listOf(it.baseRef) }
+            RscmResolver.buildIdMap(entries) { listOf(it.baseRef) }
 
         private val productLookup =
-            RscmResolver.buildObjectIdMap(
+            RscmResolver.buildIdMap(
                 entries.flatMap { it.products.toList() },
             ) { listOf(it.idRef) }
 

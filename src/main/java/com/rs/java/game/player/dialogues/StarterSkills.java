@@ -7,9 +7,6 @@ import com.rs.java.game.player.Skills;
 
 public class StarterSkills extends Dialogue {
 
-	public StarterSkills() {
-	}
-
 	@Override
 	public void start() {
 		stage = 1;

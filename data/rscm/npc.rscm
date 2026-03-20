@@ -465,13 +465,13 @@ forester=231
 # Friendly
 austri=232
 # Friendly
-fishing_spot=233
+fishing_spot_eel=233
 # Friendly
-fishing_spot_234=234
+fishing_spot_bait=234
 # Friendly
-fishing_spot_235=235
+fishing_spot_bait_2=235
 # Friendly
-fishing_spot_236=236
+fishing_spot_bait_3=236
 # Combat Lvl. 37
 renegade_knight_lv37=237
 # Combat Lvl. 92
@@ -617,49 +617,49 @@ hetty=307
 # Friendly
 master_fisher=308
 # Friendly
-fishing_spot_309=309
+fishing_spot_lure_bait=309
 # Friendly
-fishing_spot_310=310
+fishing_spot_lure_bait_2=310
 # Friendly
-fishing_spot_311=311
+fishing_spot_lure_bait_3=311
 # Friendly
-fishing_spot_312=312
+fishing_spot_cage_harpoon=312
 # Friendly
-fishing_spot_313=313
+fishing_spot_bignet_shark=313
 # Friendly
-fishing_spot_314=314
+fishing_spot_lure_bait_4=314
 # Friendly
-fishing_spot_315=315
+fishing_spot_lure_bait_5=315
 # Friendly
-fishing_spot_316=316
+fishing_spot_net_bait=316
 # Friendly
-fishing_spot_317=317
+fishing_spot_lure_bait_6=317
 # Friendly
-fishing_spot_318=318
+fishing_spot_lure_bait_7=318
 # Friendly
-fishing_spot_319=319
+fishing_spot_net_bait_2=319
 # Friendly
-fishing_spot_320=320
+fishing_spot_net_bait_3=320
 # Friendly
-fishing_spot_321=321
+fishing_spot_cage_harpoon_2=321
 # Friendly
-fishing_spot_322=322
+fishing_spot_net_harpoon=322
 # Friendly
-fishing_spot_323=323
+fishing_spot_net_bait_2=323
 # Friendly
-fishing_spot_324=324
+fishing_spot_cage_harpoon_3=324
 # Friendly
-fishing_spot_325=325
+fishing_spot_net_bait_2=325
 # Friendly
-fishing_spot_326=326
+fishing_spot_net_bait_3=326
 # Friendly
-fishing_spot_327=327
+fishing_spot_net_bait_4=327
 # Friendly
-fishing_spot_328=328
+fishing_spot_lure_bait_8=328
 # Friendly
-fishing_spot_329=329
+fishing_spot_lure_bait_9=329
 # Friendly
-fishing_spot_330=330
+fishing_spot_net_bait_5=330
 # Friendly
 lava_flow_miner_331=331
 # Friendly
@@ -1903,7 +1903,7 @@ giant_rat_lv3_950=950
 # Combat Lvl. 3
 chicken_lv3=951
 # Friendly
-fishing_spot_952=952
+fishing_spot_net=952
 # Friendly
 banker_953=953
 # Friendly
@@ -12507,7 +12507,7 @@ sergeant_steelwill_lv142=6263
 # Combat Lvl. 142
 sergeant_grimspike_lv142=6265
 # Friendly
-fishing_spot_6267=6267
+fishing_spot_cage=6267
 # Combat Lvl. 58
 jogre_lv58=6268
 # Combat Lvl. 81

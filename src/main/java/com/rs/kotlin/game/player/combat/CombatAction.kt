@@ -1,7 +1,5 @@
 package com.rs.kotlin.game.player.combat
 
-import com.rs.core.tasks.WorldTask
-import com.rs.core.tasks.WorldTasksManager
 import com.rs.java.game.Entity
 import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
@@ -82,9 +80,6 @@ class CombatAction(
     enum class CombatPhase {
         HIT,
     }
-
-    private var lastTargetX = -1
-    private var lastTargetY = -1
 
     private var phase = CombatPhase.HIT
     private var ticksUntilNextPhase = 0
@@ -237,7 +232,7 @@ class CombatAction(
             return -1
         }
         updateStyle(player)
-        val requiredDistance = getAdjustedAttackRange(player, target)
+        val requiredDistance = style.getAttackDistance()
         if (player.isOutOfRange(target, requiredDistance)) {
             return 0
         }
@@ -386,27 +381,6 @@ class CombatAction(
             baseDistance = (baseDistance - 1).coerceAtLeast(0)
         }
         return baseDistance
-    }
-
-    private fun getAdjustedAttackRange(
-        player: Player,
-        target: Entity,
-    ): Int {
-        var base = style.getAttackDistance()
-
-        /*if (target.hasWalkSteps() && target is Player) {
-            val playerHasPid = player.index < target.index
-            if (!playerHasPid) {
-                base += if (player.run) 1 else 1
-            }
-        }*/
-        return base
-    }
-
-    private fun isRangedWeapon(player: Player): Boolean {
-        val weaponId = player.equipment.getWeaponId()
-        val ranged = RangeData.getWeaponByItemId(weaponId)
-        return ranged != null
     }
 
     private fun handleCollisionMovement(

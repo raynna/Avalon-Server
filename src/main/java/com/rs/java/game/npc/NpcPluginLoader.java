@@ -2,6 +2,7 @@ package com.rs.java.game.npc;
 
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.rscm.Rscm;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -12,50 +13,84 @@ import java.util.Set;
 
 public class NpcPluginLoader {
 
-	public static final HashMap<Object, NpcPlugin> cachedNpcPlugins = new HashMap<Object, NpcPlugin>();
+	public static final Map<Object, NpcPlugin> cachedNpcPlugins = new HashMap<>();
 
 	public static NpcPlugin getPlugin(NPC npc) {
-		NpcPlugin plugin = cachedNpcPlugins.getOrDefault(npc.getId(), cachedNpcPlugins.get(npc.getName()));
+		NpcPlugin plugin = cachedNpcPlugins.get(npc.getId());
 		if (plugin != null) {
-			//System.out.println("[NpcPluginManager] "+npc.getName()+"("+npc.getId()+"): plugin was found by Id.");
+			System.out.println("[NpcPluginLoader] getPlugin(" + npc.getName() + "/" + npc.getId() + ") → found by id → " + plugin.getClass().getSimpleName());
 			return plugin;
 		}
-        for (Map.Entry<Object, NpcPlugin> entry : cachedNpcPlugins.entrySet()) {
-            Object[] keys = entry.getValue().getKeys();
-            for (Object key : keys) {
-                if (key instanceof String && npc.getName().toLowerCase().contains(((String) key).toLowerCase())) {
-                    plugin = entry.getValue();
-					//System.out.println("[NpcPluginManager] " + npc.getName() + "(" + npc.getId() + "): Found plugin by name");
-                    return plugin;
-                }
-            }
-        }
-		//System.out.println("[NpcPluginManager] "+npc.getName()+"("+npc.getId()+"): Found no plugin for this npc.");
+
+		String name = npc.getName().toLowerCase();
+		for (Map.Entry<Object, NpcPlugin> entry : cachedNpcPlugins.entrySet()) {
+			Object key = entry.getKey();
+			if (key instanceof String str && name.contains(str.toLowerCase())) {
+				System.out.println("[NpcPluginLoader] getPlugin(" + npc.getName() + "/" + npc.getId() + ") → found by name key='" + str + "' → " + entry.getValue().getClass().getSimpleName());
+				return entry.getValue();
+			}
+		}
+
+		System.out.println("[NpcPluginLoader] getPlugin(" + npc.getName() + "/" + npc.getId() + ") → NO PLUGIN FOUND. Registered keys: " + cachedNpcPlugins.keySet());
 		return null;
 	}
 
 	public static void init() {
 		try {
-			String[] pluginFolders = {"com.rs.java.game.npc.plugins"};
+			String[] pluginFolders = { "com.rs.java.game.npc.plugins" };
 			Set<Class<?>> processedClasses = new HashSet<>();
+
 			for (String pluginFolder : pluginFolders) {
 				Class<?>[] classes = Utils.getClasses(pluginFolder);
+
 				for (Class<?> c : classes) {
 					if (c.isAnonymousClass() || processedClasses.contains(c))
 						continue;
+
 					Object o = c.getDeclaredConstructor().newInstance();
 					if (!(o instanceof NpcPlugin plugin))
 						continue;
-					for (Object key : plugin.getKeys())
-						cachedNpcPlugins.put(key, plugin);
+
+					System.out.println("[NpcPluginLoader] Loading plugin: " + c.getName());
+
+					for (Object key : plugin.getKeys()) {
+						if (key instanceof Integer id) {
+							cachedNpcPlugins.put(id, plugin);
+							System.out.println("[NpcPluginLoader]   key (Integer): " + id);
+
+						} else if (key instanceof String keyStr) {
+							if (keyStr.startsWith("npc.")) {
+								int resolved = Rscm.lookup(keyStr);
+								cachedNpcPlugins.put(resolved, plugin);
+								System.out.println("[NpcPluginLoader]   key (npc.): " + keyStr + " → " + resolved);
+
+							} else if (keyStr.startsWith("npc_group.")) {
+								java.util.List<Integer> ids = Rscm.lookupList(keyStr);
+								for (int id : ids) {
+									cachedNpcPlugins.put(id, plugin);
+								}
+								System.out.println("[NpcPluginLoader]   key (npc_group.): " + keyStr + " → " + ids);
+
+							} else {
+								cachedNpcPlugins.put(keyStr.toLowerCase(), plugin);
+								System.out.println("[NpcPluginLoader]   key (name fallback): " + keyStr.toLowerCase());
+							}
+
+						} else {
+							System.out.println("[NpcPluginLoader]   INVALID key type " + (key == null ? "null" : key.getClass().getName()) + " for " + plugin.getClass().getName());
+						}
+					}
+
 					processedClasses.add(c);
 				}
 			}
-			System.out.println("[NpcPluginManager]: " + processedClasses.size() + " plugins were loaded.");
-		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException |
-                 ClassNotFoundException | IOException e) {
+
+			System.out.println("[NpcPluginLoader]: " + processedClasses.size() + " plugins loaded. Total registered keys: " + cachedNpcPlugins.size());
+
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 			Logger.handle(e);
+		} catch (IOException | ClassNotFoundException e) {
+			throw new RuntimeException(e);
 		}
 	}
-
 }

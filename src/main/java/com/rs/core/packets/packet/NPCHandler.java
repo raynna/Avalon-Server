@@ -36,8 +36,6 @@ import com.rs.java.game.player.actions.Rest;
 import com.rs.java.game.player.actions.combat.Magic;
 import com.rs.java.game.player.actions.runecrafting.SiphonActionCreatures;
 import com.rs.java.game.player.actions.skills.construction.Sawmill;
-import com.rs.java.game.player.actions.skills.fishing.Fishing;
-import com.rs.java.game.player.actions.skills.fishing.Fishing.FishingSpots;
 import com.rs.java.game.player.actions.skills.mining.LivingMineralMining;
 import com.rs.java.game.player.actions.skills.mining.MiningBase;
 import com.rs.java.game.player.actions.skills.slayer.Slayer.SlayerMaster;
@@ -363,7 +361,7 @@ public class NPCHandler {
 
         if (SlidingTilesRoom.handleSlidingBlock(player, npc))
             return;
-
+        System.out.println("testing npcplugins.");
         NpcPlugin plugin = NpcPluginLoader.getPlugin(npc);
         if (plugin != null) {
             player.setRouteEvent(new RouteEvent(npc, () -> {
@@ -377,9 +375,9 @@ public class NPCHandler {
                 }
                 if (pluginExecuted) {
                     Logger.log("NpcPlugin", "Option 1 - Class: " + plugin.getClass().getSimpleName() + ".java, Executed: " + npc.getName() + "(" + npc.getId() + ")");
-                    return;
                 }
             }, true));
+            return;
         }
         if (npc.getId() == 4296 || npc.getId() == 6362 || npc.getDefinitions().name.toLowerCase().contains("banker")
                 || npc.getDefinitions().name.toLowerCase().contains("gundai")) {
@@ -444,11 +442,7 @@ public class NPCHandler {
                 return;
             if (CityEventHandler.handleNPCClick(player, npc, npc.getId()))
                 return;
-            FishingSpots spot = FishingSpots.forId(npc.getId() | 1 << 24);
-            if (spot != null) {
-                player.getActionManager().setAction(new Fishing(spot, npc));
-                return; // its a spot, they wont face us
-            } else if (npc.getId() >= 8837 && npc.getId() <= 8839) {
+            if (npc.getId() >= 8837 && npc.getId() <= 8839) {
                 player.getActionManager().setAction(new LivingMineralMining((LivingRock) npc));
                 return;
                 /*
@@ -889,7 +883,6 @@ public class NPCHandler {
             player.setRun(true);
 
         NpcPlugin plugin = NpcPluginLoader.getPlugin(npc);
-
         if (plugin != null) {
             player.setRouteEvent(new RouteEvent(npc, () -> {
                 npc.resetWalkSteps();
@@ -939,6 +932,7 @@ public class NPCHandler {
                     return;
                 }
             }, true));
+            return;
         }
         if (npc.isNpc("npc_group.banker", "npc_group.grand_exchange_clerk", "npc.jade", "npc.eniola", "npc.gundai")) {
             boolean isGeClerk = npc.isNpc("npc_group.grand_exchange_clerk");
@@ -959,11 +953,6 @@ public class NPCHandler {
         player.setRouteEvent(new RouteEvent(npc, () -> {
             player.faceEntity(npc);
             //non npcFaceEntity
-            FishingSpots spot = FishingSpots.forId(npc.getId() | (2 << 24));
-            if (spot != null) {
-                player.getActionManager().setAction(new Fishing(spot, npc));
-                return;
-            }
             PickPocketableNPC pocket = PickPocketableNPC.get(npc.getId());
             if (pocket != null) {
                 if (Settings.FREE_TO_PLAY) {

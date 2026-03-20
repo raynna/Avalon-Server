@@ -19,7 +19,7 @@ enum class GemData(
 
     companion object {
         private val lookup =
-            RscmResolver.buildObjectIdMap(entries) { listOf(it.product.uncut) }
+            RscmResolver.buildIdMap(entries) { listOf(it.product.uncut) }
 
         fun forUncut(id: Int): GemData? = lookup[id]
 

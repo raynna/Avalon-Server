@@ -6,9 +6,9 @@ import com.rs.java.game.WorldTile;
 import com.rs.java.game.item.Item;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
-import com.rs.java.game.player.actions.skills.fishing.Fishing.Fish;
 import com.rs.java.game.player.actions.skills.summoning.Summoning.Pouch;
 import com.rs.java.game.player.content.Foods.Food;
+import com.rs.kotlin.game.player.skills.fishing.FishDefinition;
 
 public class Bunyip extends Familiar {
 
@@ -46,7 +46,7 @@ public class Bunyip extends Familiar {
 		return SpecialAttack.ITEM;
 	}
 
-	private static Fish[] fishData = Fish.values();
+	private static FishDefinition[] fishData = FishDefinition.values();
 	private static Food[] foodData = Food.values();
 
 	@Override
@@ -56,11 +56,11 @@ public class Bunyip extends Familiar {
 			return false;
 		getOwner().message("item: " + item.getId() + ", " + item.getName());
 		boolean canCast = false;
-		Fish fish = null;
-		for (Fish rawFish : fishData) {
+		FishDefinition fish = null;
+		for (FishDefinition rawFish : fishData) {
 			if (rawFish == null)
 				continue;
-			if (rawFish.getId() == item.getId()) {
+			if (rawFish.getItemId() == item.getId()) {
 				canCast = true;
 				fish = rawFish;
 				break;

@@ -8,9 +8,6 @@ import com.rs.java.game.player.actions.combat.Magic;
 
 public class PvMTeles extends Dialogue {
 
-	public PvMTeles() {
-	}
-
 	@Override
 	public void start() {
 		stage = 1;
