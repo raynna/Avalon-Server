@@ -102,27 +102,6 @@ class CombatAction(
         player.tickManager.addTicks(TickManager.TickKeys.LAST_INTERACTION_TARGET, 10)
         player.temporaryTarget = target
         player.healthOverlay.sendOverlay(player, target)
-
-        val requiredDistance = getAdjustedFollowDistance(target)
-        if (player.isOutOfRange(target, requiredDistance)) {
-            if (!player.hasWalkSteps()) {
-                player.calcFollow(target, if (player.run) 2 else 1, true, true)
-            }
-        }
-
-        if (player.isDiagonalMeleeBlocked(target, style)) {
-            if (!player.hasWalkSteps()) {
-                player.calcFollow(target, if (player.run) 2 else 1, true, true)
-            }
-        }
-
-        if (player.isCollidingWithTarget(target)) {
-            if (player.isFrozen) {
-                player.packets.sendGameMessage("A magical force prevents you from moving.")
-                return true
-            }
-            handleCollisionMovement(player, target, player.size)
-        }
         handleFollowing(player)
         return true
     }
@@ -356,15 +335,15 @@ class CombatAction(
 
     private fun handleFollowing(player: Player) {
         val requiredDistance = getAdjustedFollowDistance(target)
-
         if (player.isCollidingWithTarget(target)) {
             if (player.isFrozen) {
                 player.resetWalkSteps()
                 player.packets.sendGameMessage("A magical force prevents you from moving.")
                 return
             }
-
-            handleCollisionMovement(player, target, player.size)
+            if (!player.hasWalkSteps()) {
+                handleCollisionMovement(player, target, player.size)
+            }
             return
         }
 
@@ -446,14 +425,14 @@ class CombatAction(
                 player.x to target.y + target.size,
                 target.x - size to player.y,
                 target.x + target.size to player.y,
-            )
-
-        val best =
-            candidates.minByOrNull { (x, y) ->
+            ).sortedBy { (x, y) ->
                 abs(player.x - x) + abs(player.y - y)
-            } ?: return false
+            }
 
-        return player.addWalkSteps(best.first, best.second)
+        for ((x, y) in candidates) {
+            if (player.addWalkSteps(x, y)) return true
+        }
+        return false
     }
 
     private fun Player.isCollidingWithTarget(target: Entity): Boolean =
