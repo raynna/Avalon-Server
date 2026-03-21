@@ -20,8 +20,8 @@ import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.item.meta.MetaDataType;
 import com.rs.java.game.item.meta.RunePouchMetaData;
 import com.rs.java.game.player.content.ItemConstants;
-import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.utils.*;
+import com.rs.kotlin.game.player.grandexchange.GrandExchange;
 import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
 import com.rs.kotlin.game.world.pvp.PvpManager;
@@ -598,8 +598,8 @@ public final class Inventory implements Serializable {
 		new ChatLine
 		 */
 		if (isTradeable && !isFree) {
-			int bestBuyOffer = GrandExchange.getBestBuyPrice(item.getId());
-			int bestSellOffer = GrandExchange.getCheapestSellPrice(item.getId());
+			int bestBuyOffer = GrandExchange.INSTANCE.getBestBuyPrice(item.getId());
+			int bestSellOffer = GrandExchange.INSTANCE.getCheapestSellPrice(item.getId());
 			builder = new StringBuilder();
 			builder.append("Grand Exchange: ");
 			if (bestBuyOffer == 0 && bestSellOffer == 0) {

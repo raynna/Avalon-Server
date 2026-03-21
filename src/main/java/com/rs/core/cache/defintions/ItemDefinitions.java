@@ -12,11 +12,10 @@ import com.rs.java.game.player.Equipment;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.content.ItemConstants;
-import com.rs.java.game.player.content.grandexchange.LimitedGEReader;
 import com.rs.core.packets.InputStream;
 import com.rs.java.utils.ItemExamines;
-import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.grandexchange.LimitedGEReader;
 
 @SuppressWarnings("unused")
 public final class
@@ -1197,7 +1196,7 @@ getRenderAnimId = clientScriptData.get(644); (1426 if getRenderAnimId = null)
                 int itemId = Integer.parseInt(data[0]);
                 int price = Integer.parseInt(data[1]);
                 if (itemId == id) {
-                    if (LimitedGEReader.itemIsLimited(id))
+                    if (LimitedGEReader.INSTANCE.itemIsLimited(id))
                         return price;
                     return (Settings.ECONOMY_MODE == 1 && price < Settings.LOWPRICE_LIMIT) ? 0 : price;
                 }

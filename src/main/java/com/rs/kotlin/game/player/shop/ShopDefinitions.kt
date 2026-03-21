@@ -28,17 +28,13 @@ class ShopDefinition(
         shopItem: ShopDsl.ShopItem?,
     ): Int =
         when {
-            isGeneralStore -> {
-                ItemDefinitions.getItemDefinitions(itemId).price
-            }
+            // General stores always use the item's base cache price
+            isGeneralStore -> ItemDefinitions.getItemDefinitions(itemId).price
 
-            shopItem?.price != null -> {
-                shopItem.price
-            }
+            // Explicit per-item price defined in the DSL takes next priority
+            shopItem?.price != null -> shopItem.price
 
-            else -> {
-                EconomyPrices.getPrice(itemId)
-            }
+            else -> ShopPriceManager.getPrice(itemId)
         }
 
     fun getSellPrice(
@@ -46,17 +42,9 @@ class ShopDefinition(
         shopItem: ShopDsl.ShopItem?,
     ): Int =
         when {
-            isGeneralStore -> {
-                (ItemDefinitions.getItemDefinitions(itemId).lowAlchPrice)
-            }
-
-            shopItem?.price != null -> {
-                (shopItem.price * 0.66).toInt()
-            }
-
-            else -> {
-                (EconomyPrices.getPrice(itemId) * 0.66).toInt()
-            }
+            isGeneralStore -> ItemDefinitions.getItemDefinitions(itemId).lowAlchPrice
+            shopItem?.price != null -> (shopItem.price * 0.66).toInt()
+            else -> (ShopPriceManager.getPrice(itemId) * 0.66).toInt()
         }
 
     fun removeIfDepleted(item: ShopDsl.ShopItem): Boolean {

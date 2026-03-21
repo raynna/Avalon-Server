@@ -4,7 +4,7 @@ import com.rs.java.game.item.Item;
 import com.rs.java.game.item.ItemsContainer;
 import com.rs.java.game.minigames.clanwars.FfaZone;
 import com.rs.java.game.player.Player;
-import com.rs.java.game.player.content.grandexchange.GrandExchange;
+import com.rs.kotlin.game.player.grandexchange.GrandExchange;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,7 +46,7 @@ public class Skulls {
 				continue;
 			}
 
-			long price = GrandExchange.getPrice(item.getId());
+			long price = GrandExchange.INSTANCE.getPrice(item.getId());
 			long value = price * item.getAmount();
 
 			total += value;
@@ -65,7 +65,7 @@ public class Skulls {
 				continue;
 			}
 
-			long price = GrandExchange.getPrice(item.getId());
+			long price = GrandExchange.INSTANCE.getPrice(item.getId());
 			long value = price * item.getAmount();
 
 			total += value;

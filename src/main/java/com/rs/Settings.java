@@ -30,10 +30,27 @@ public final class Settings {
 	public static final String eventsWebhook = "https://discord.com/api/webhooks/1410684655065366668/u9yH0erh_h2-m6TAjclgWa8CalXV0UWjtpOSmT2LCUkdg-z2Lto38vodeZAXoiyoIAJ1";
 	public static final String levelupsWebhook = "https://discord.com/api/webhooks/NEW_LEVELUPS_URL"; // optional
 
+
+	//639 cache info
+	public static final String _639_CACHE_PATH = "C:\\Users\\deane\\Documents\\Github\\void\\data\\cache\\";
+	public static int _639_MODEL_OFFSET = 300_000;
+	public static int _639_OBJECTS_OFFSET = 100_000;
+	public static int[] _639_MAP_IDS = {
+			12598 // Grand Exchange
+	};
+
+	public static boolean is639Map(int regionId) {
+		for (int id : _639_MAP_IDS)
+			if (id == regionId)
+				return true;
+		return false;
+	}
+
+
 	/**
 	 * 0 full eco, 1 eco spawn, 2 spawn
 	 * */
-	public static int ECONOMY_MODE = 2;
+	public static int ECONOMY_MODE = 1;
 
 	public static final int FULL_ECONOMY = 0;
 	public static final int HALF_ECONOMY = 1;
@@ -98,17 +115,17 @@ public final class Settings {
 	 * Player settings
 	 */
 	public static final int START_PLAYER_HITPOINTS = 100;
-	public static final WorldTile START_PLAYER_LOCATION = new WorldTile(3093, 3495, 0);// (2387,
+	public static final WorldTile START_PLAYER_LOCATION = new WorldTile(3164, 3484, 0);// (2387,
 	// 4458,
 	// 0);
-	public static final WorldTile HOME_PLAYER_LOCATION = new WorldTile(3093, 3495, 0);// (2391,
+	public static final WorldTile HOME_PLAYER_LOCATION = new WorldTile(3164, 3484, 0);// (2391,
 	// 4450,
 	// 0);
 	public static final WorldTile RESPAWN_LOSE_LOCATION = new WorldTile(4458, 4124, 0);
 	public static final WorldTile RESPAWN_WIN_LOCATION = new WorldTile(4451, 4131, 0);
 	public static final WorldTile RESPAWN_WIN2_LOCATION = new WorldTile(4451, 4142, 0);
 	public static final WorldTile RESPAWN_LOBBY_LOCATION = new WorldTile(4459, 4148, 0);
-	public static final WorldTile RESPAWN_PLAYER_LOCATION = new WorldTile(3095, 3497, 0);// (2386,
+	public static final WorldTile RESPAWN_PLAYER_LOCATION = new WorldTile(3164, 3484, 0);// (2386,
 	// 4465,
 	// 0);
 	public static final long MAX_PACKETS_DECODER_PING_DELAY = 30000;
