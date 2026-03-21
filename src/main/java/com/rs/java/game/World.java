@@ -40,7 +40,6 @@ import com.rs.java.game.player.OwnedObjectManager;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.actions.BoxAction.HunterNPC;
 import com.rs.java.game.player.actions.skills.mining.LivingRockCavern;
-import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.game.player.content.shootingstar.ShootingStar;
 import com.rs.java.game.player.controllers.EdgevillePvPController;
 import com.rs.java.game.player.controllers.WildernessController;
@@ -51,6 +50,7 @@ import com.rs.java.utils.IPBanL;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.grandexchange.GrandExchange;
 import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.npc.combatdata.CombatDataParser;
 import com.rs.kotlin.game.world.area.Area;
@@ -1135,7 +1135,7 @@ public final class World {
                     player.realFinish();
                 }
                 IPBanL.save();
-                GrandExchange.save();
+                GrandExchange.INSTANCE.save();
                 // PlayerOwnedShops.save();
                 Launcher.shutdown();
             } catch (Throwable e) {
@@ -1162,7 +1162,7 @@ public final class World {
                     player.realFinish();
                 }
                 IPBanL.save();
-                GrandExchange.save();
+                GrandExchange.INSTANCE.save();
                 // PlayerOwnedShops.save();
                 Launcher.shutdown();
             } catch (Throwable e) {
@@ -1193,7 +1193,7 @@ public final class World {
                     player.realFinish();
                 }
                 isInUpdate = false;
-                GrandExchange.save();
+                GrandExchange.INSTANCE.save();
                 // PlayerOwnedShops.save();
                 Launcher.restart();
             } catch (Throwable e) {
