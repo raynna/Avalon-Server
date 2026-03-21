@@ -26,6 +26,24 @@
     "attempts": 1,
     "expectedCombatLevel": 0
   },
+  "553": {
+    "npcId": 553,
+    "npcName": "Banker",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-20T22:11:37.352476800Z",
+    "lastSeen": "2026-03-20T22:11:37.352476800Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "650": {
+    "npcId": 650,
+    "npcName": "Combat Shops",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-20T21:38:58.377731500Z",
+    "lastSeen": "2026-03-20T21:38:58.377731500Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
   "944": {
     "npcId": 944,
     "npcName": "Combat instructor",
@@ -34,6 +52,51 @@
     "lastSeen": "2026-03-17T14:49:09.790704300Z",
     "attempts": 1,
     "expectedCombatLevel": 146
+  },
+  "960": {
+    "npcId": 960,
+    "npcName": "Healer",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-20T21:39:33.687414700Z",
+    "lastSeen": "2026-03-20T21:39:33.687414700Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "2240": {
+    "npcId": 2240,
+    "npcName": "Grand Exchange clerk",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-20T21:36:06.069900200Z",
+    "lastSeen": "2026-03-20T21:36:06.069900200Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "2241": {
+    "npcId": 2241,
+    "npcName": "Grand Exchange clerk",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-20T22:12:48.131406Z",
+    "lastSeen": "2026-03-20T22:12:48.131406Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "2676": {
+    "npcId": 2676,
+    "npcName": "Customise character",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-20T21:40:24.854227300Z",
+    "lastSeen": "2026-03-20T21:40:24.854227300Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "2759": {
+    "npcId": 2759,
+    "npcName": "Banker",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-20T22:12:01.945735800Z",
+    "lastSeen": "2026-03-20T22:12:01.945735800Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
   },
   "3090": {
     "npcId": 3090,
@@ -44,6 +107,15 @@
     "attempts": 1,
     "expectedCombatLevel": 29
   },
+  "3416": {
+    "npcId": 3416,
+    "npcName": "Banker",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-20T22:03:47.049902300Z",
+    "lastSeen": "2026-03-20T22:03:47.049902300Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
   "3705": {
     "npcId": 3705,
     "npcName": "Max",
@@ -52,6 +124,78 @@
     "lastSeen": "2026-03-17T14:47:42.344354600Z",
     "attempts": 1,
     "expectedCombatLevel": 138
+  },
+  "4474": {
+    "npcId": 4474,
+    "npcName": "Max Hit Dummy",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-20T23:56:43.634150800Z",
+    "lastSeen": "2026-03-20T23:56:43.634150800Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "6521": {
+    "npcId": 6521,
+    "npcName": "Grand Exchange Tutor",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-20T21:33:05.997091700Z",
+    "lastSeen": "2026-03-20T21:33:05.997091700Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "6523": {
+    "npcId": 6523,
+    "npcName": "Farid Morrisane (ores)",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-20T21:35:14.227773600Z",
+    "lastSeen": "2026-03-20T21:35:14.227773600Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "6524": {
+    "npcId": 6524,
+    "npcName": "Bob Barter (herbs)",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-20T21:34:01.559702700Z",
+    "lastSeen": "2026-03-20T21:34:01.559702700Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "6525": {
+    "npcId": 6525,
+    "npcName": "Murky Matt (runes)",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-20T21:35:44.956431Z",
+    "lastSeen": "2026-03-20T21:35:44.956431Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "6526": {
+    "npcId": 6526,
+    "npcName": "Relobo Blinyo (logs)",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-20T21:34:54.373583100Z",
+    "lastSeen": "2026-03-20T21:34:54.373583100Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "6527": {
+    "npcId": 6527,
+    "npcName": "Hofuthand (armour and weapons)",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-20T21:33:30.371938Z",
+    "lastSeen": "2026-03-20T21:33:30.371938Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
+  },
+  "6537": {
+    "npcId": 6537,
+    "npcName": "Pvp store",
+    "reason": "\u0027wikitext\u0027 not found in JSON",
+    "firstSeen": "2026-03-20T21:41:02.009065Z",
+    "lastSeen": "2026-03-20T21:41:02.009065Z",
+    "attempts": 1,
+    "expectedCombatLevel": 0
   },
   "7158": {
     "npcId": 7158,
