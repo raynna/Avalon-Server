@@ -489,7 +489,7 @@ public class NPC extends Entity implements Serializable {
         if (getId() == 650) {
             setName("Combat Shops");
             setRandomWalk(0);
-            faceWorldTile(this, "east");
+            faceWorldTile(this, "west");
         }
         if (getId() == 2676) {
             setName("Customise character");
