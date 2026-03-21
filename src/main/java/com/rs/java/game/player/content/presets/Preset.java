@@ -87,6 +87,11 @@ public final class Preset implements Serializable {
 	}
 
 	public int[] getLevels() {
+		if (levels == null) {
+			levels = new int[8];
+			levels[7] = 1;
+			return levels;
+		}
 		if (levels.length < 8) {
 			int[] upgraded = new int[8];
 			System.arraycopy(levels, 0, upgraded, 0, levels.length);

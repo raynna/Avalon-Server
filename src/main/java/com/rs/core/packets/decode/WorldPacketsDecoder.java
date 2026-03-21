@@ -35,6 +35,7 @@ import com.rs.java.game.player.QuickChatMessage;
 import com.rs.java.game.player.RouteEvent;
 import com.rs.java.game.player.Skills;
 import com.rs.java.game.player.actions.PlayerFollow;
+import com.rs.java.game.player.bot.PlayerBotManager;
 import com.rs.java.game.player.actions.skills.construction.House;
 import com.rs.java.game.player.actions.skills.construction.Sawmill;
 import com.rs.java.game.player.actions.skills.construction.Sawmill.Plank;
@@ -907,6 +908,7 @@ public final class WorldPacketsDecoder extends Decoder {
             p2.gfx(new Graphics(862, 100, 0));
             return;
         }
+        PlayerBotManager.setConversationTarget(player, p2);
         player.stopAll(false);
         player.getActionManager().setAction(new PlayerFollow(p2));
     }
@@ -1512,7 +1514,6 @@ public final class WorldPacketsDecoder extends Decoder {
         }
 
         int effects = (colorEffect << 8) | (moveEffect & 0xff) & ~0x8000;
-        archiveMessage(player, message, chatType);
 
         if (chatType == 1) {
             player.sendFriendsChannelMessage(message);
@@ -1521,6 +1522,7 @@ public final class WorldPacketsDecoder extends Decoder {
         } else if (chatType == 3) {
             player.sendGuestClanChannelMessage(message);
         } else {
+            PlayerBotManager.handleChatInteraction(player, Utils.fixChatMessage(message));
             player.sendPublicChatMessage(new PublicChatMessage(Utils.fixChatMessage(message), effects));
         }
 

@@ -11,6 +11,7 @@ import com.rs.java.game.player.Equipment
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
+import com.rs.java.game.player.bot.PlayerBotManager
 import com.rs.java.game.player.prayer.PrayerEffectHandler
 import com.rs.kotlin.game.player.combat.damage.HitRoller
 import com.rs.kotlin.game.player.combat.damage.PendingHit
@@ -62,6 +63,7 @@ interface CombatStyle {
             defender.chargeManager.processIncommingHit()
             if (defender.combatDefinitions.isAutoRelatie) {
                 if (defender.actionManager.action != null) return
+                if (PlayerBotManager.isManagedBot(defender)) return
                 WorldTasksManager.schedule(
                     object : WorldTask() {
                         override fun run() {

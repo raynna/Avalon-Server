@@ -3,6 +3,7 @@ package com.rs.java.game.player;
 import com.rs.java.game.Entity;
 import com.rs.java.game.World;
 import com.rs.java.game.npc.NPC;
+import com.rs.java.game.player.bot.PlayerBotManager;
 import com.rs.kotlin.game.player.interfaces.TimerOverlay;
 
 import java.util.HashMap;
@@ -73,6 +74,9 @@ public class TickManager {
 
     private void syncOverlay(TickKeys key, int ticks) {
         if (entity instanceof Player player) {
+            if (PlayerBotManager.isManagedBot(player)) {
+                return;
+            }
             TimerOverlay.TimerType type = TICK_TO_OVERLAY.get(key);
             if (type != null) {
                 player.timerOverlay.startTimer(player, type, ticks, false);

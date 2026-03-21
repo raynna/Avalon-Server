@@ -53,14 +53,12 @@ object CombatUtils {
     fun getBlockSound(player: Player): Int {
         val shieldId = player.equipment.getShieldId()
         if (shieldId != -1) {
-            println("shieldId: $shieldId")
             val shieldName =
                 player.equipment
                     .getItem(Equipment.SLOT_SHIELD.toInt())
                     ?.definitions
                     ?.name
                     ?.lowercase() ?: ""
-            println("name contains shield: $shieldName ${shieldName.contains("shield")}")
             if (shieldName.contains("shield")) {
                 return Rscm.lookup("sound.shield_block")
             }

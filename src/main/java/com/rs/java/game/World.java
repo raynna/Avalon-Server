@@ -38,6 +38,7 @@ import com.rs.java.game.npc.nomad.Nomad;
 import com.rs.java.game.npc.others.*;
 import com.rs.java.game.player.OwnedObjectManager;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.bot.PlayerBotManager;
 import com.rs.java.game.player.actions.BoxAction.HunterNPC;
 import com.rs.java.game.player.actions.skills.mining.LivingRockCavern;
 import com.rs.java.game.player.content.shootingstar.ShootingStar;
@@ -154,6 +155,7 @@ public final class World {
         addRestoreShopItemsTask();
         addDegradeShopItemsTask();
         addOwnedObjectsTask();
+        PlayerBotManager.init();
         LivingRockCavern.init();
         WarriorsGuild.init();
         //TODO DISABLED FOR NOW executeShootingStar();

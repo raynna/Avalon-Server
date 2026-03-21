@@ -138,27 +138,64 @@ public final class Skills implements Serializable {
     }
 
     public Skills() {
-        level = new short[25];
-        xp = new double[25];
-        for (int i = 0; i < level.length; i++) {
-            level[i] = 1;
-            xp[i] = 0;
-        }
-        level[3] = 10;
-        xp[3] = 1184;
-        level[HERBLORE] = 3;
-        xp[HERBLORE] = 250;
+        ensureBackingArrays();
         xpPopup = true;
-        xpTracks = new double[3];
-        trackSkills = new boolean[3];
-        trackSkillsIds = new byte[3];
         trackSkills[0] = true;
         for (int i = 0; i < trackSkillsIds.length; i++)
             trackSkillsIds[i] = 30;
-        enabledSkillsTargets = new boolean[25];
-        skillsTargetsUsingLevelMode = new boolean[25];
-        skillsTargetsValues = new int[25];
+    }
 
+    private void ensureBackingArrays() {
+        short[] oldLevels = level;
+        double[] oldXp = xp;
+
+        if (level == null || level.length != 25)
+            level = new short[25];
+        if (xp == null || xp.length != 25)
+            xp = new double[25];
+        if (xpTracks == null || xpTracks.length != 3) {
+            xpTracks = new double[3];
+        }
+        if (trackSkills == null || trackSkills.length != 3) {
+            trackSkills = new boolean[3];
+        }
+        if (trackSkillsIds == null || trackSkillsIds.length != 3) {
+            trackSkillsIds = new byte[3];
+        }
+        if (enabledSkillsTargets == null || enabledSkillsTargets.length != 25) {
+            enabledSkillsTargets = new boolean[25];
+        }
+        if (skillsTargetsUsingLevelMode == null || skillsTargetsUsingLevelMode.length != 25) {
+            skillsTargetsUsingLevelMode = new boolean[25];
+        }
+        if (skillsTargetsValues == null || skillsTargetsValues.length != 25) {
+            skillsTargetsValues = new int[25];
+        }
+
+        if (oldLevels != null) {
+            System.arraycopy(oldLevels, 0, level, 0, Math.min(oldLevels.length, level.length));
+        }
+        if (oldXp != null) {
+            System.arraycopy(oldXp, 0, xp, 0, Math.min(oldXp.length, xp.length));
+        }
+
+        boolean allZeroLevels = true;
+        for (int i = 0; i < level.length; i++) {
+            if (level[i] > 0 || xp[i] > 0) {
+                allZeroLevels = false;
+                break;
+            }
+        }
+        if (allZeroLevels) {
+            for (int i = 0; i < level.length; i++) {
+                level[i] = 1;
+                xp[i] = 0;
+            }
+            level[3] = 10;
+            xp[3] = 1184;
+            level[HERBLORE] = 3;
+            xp[HERBLORE] = 250;
+        }
     }
 
     public void sendXPDisplay() {
@@ -268,15 +305,9 @@ public final class Skills implements Serializable {
 
     public void setPlayer(Player player) {
         this.player = player;
-        // temporary
-        if (xpTracks == null) {
-            xpPopup = true;
-            xpTracks = new double[3];
-            trackSkills = new boolean[3];
-            trackSkillsIds = new byte[3];
+        ensureBackingArrays();
+        if (trackSkills[0] == false && trackSkills[1] == false && trackSkills[2] == false) {
             trackSkills[0] = true;
-            for (int i = 0; i < trackSkillsIds.length; i++)
-                trackSkillsIds[i] = 30;
         }
     }
 
@@ -542,22 +573,13 @@ public final class Skills implements Serializable {
     }
 
     public void init() {
+        ensureBackingArrays();
         for (int skill = 0; skill < level.length; skill++)
             refresh(skill);
         sendXPDisplay();
-        if (enabledSkillsTargets == null)
-            enabledSkillsTargets = new boolean[25];
-        if (skillsTargetsUsingLevelMode == null)
-            skillsTargetsUsingLevelMode = new boolean[25];
-        if (skillsTargetsValues == null)
-            skillsTargetsValues = new int[25];
         refreshEnabledSkillsTargets();
         refreshUsingLevelTargets();
         refreshSkillsTargetsValues();
-        if (enabledSkillsTargets == null)
-            enabledSkillsTargets = new boolean[25];
-        if (skillsTargetsUsingLevelMode == null)
-            skillsTargetsUsingLevelMode = new boolean[25];
         if (skillsTargetsValues == null)
             skillsTargetsValues = new int[25];
         refreshEnabledSkillsTargets();

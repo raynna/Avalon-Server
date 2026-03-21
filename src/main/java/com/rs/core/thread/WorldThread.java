@@ -9,6 +9,7 @@ import com.rs.java.game.World;
 import com.rs.java.game.item.ground.AutomaticGroundItem;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
+import com.rs.java.game.player.bot.PlayerBotManager;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.grandexchange.GrandExchange;
@@ -16,6 +17,9 @@ import kotlinx.coroutines.BuildersKt;
 import kotlinx.coroutines.GlobalScope;
 
 public final class WorldThread extends Thread {
+    private static final long SLOW_TICK_LOG_MS = 120L;
+    private static final int SLOW_TICK_LOG_COOLDOWN = 25;
+    private static int lastSlowTickLog = -SLOW_TICK_LOG_COOLDOWN;
 
     WorldThread() {
         setPriority(Thread.MAX_PRIORITY);
@@ -38,8 +42,11 @@ public final class WorldThread extends Thread {
     public void run() {
         while (!CoresManager.shutdown) {
             long cycleStart = Utils.currentTimeMillis();
-            long start = System.currentTimeMillis();
+            long phaseStart = System.currentTimeMillis();
             WorldTasksManager.processTasks();
+            long worldTasksMs = System.currentTimeMillis() - phaseStart;
+
+            phaseStart = System.currentTimeMillis();
             try {
                 BuildersKt.runBlocking(
                         GlobalScope.INSTANCE.getCoroutineContext(),
@@ -48,12 +55,17 @@ public final class WorldThread extends Thread {
             } catch (InterruptedException e) {
                 Logger.handle(e);
             }
+            long coroutineTasksMs = System.currentTimeMillis() - phaseStart;
+
+            phaseStart = System.currentTimeMillis();
             GrandExchange.INSTANCE.processTickMatches();
-            long took = System.currentTimeMillis() - start;
-            if (took > 15) {
-                System.out.println("WorldTasksManager took " + took + " ms!");
-            }
+            long grandExchangeMs = System.currentTimeMillis() - phaseStart;
+
+            phaseStart = System.currentTimeMillis();
             AutomaticGroundItem.processGameTick();
+            long groundItemsMs = System.currentTimeMillis() - phaseStart;
+
+            phaseStart = System.currentTimeMillis();
             for (Player player : World.getPlayers()) {
                 try {
                     if (player == null || !player.hasStarted() || player.hasFinished())
@@ -63,6 +75,9 @@ public final class WorldThread extends Thread {
                     Logger.handle(e);
                 }
             }
+            long logicPacketsMs = System.currentTimeMillis() - phaseStart;
+
+            phaseStart = System.currentTimeMillis();
             for (NPC npc : World.getNPCs()) {
                 try {
                     if (npc == null || npc.hasFinished())
@@ -72,6 +87,9 @@ public final class WorldThread extends Thread {
                     Logger.handle(e);
                 }
             }
+            long npcProcessMs = System.currentTimeMillis() - phaseStart;
+
+            phaseStart = System.currentTimeMillis();
             for (Player player : World.getPlayers()) {
                 try {
                     if (player == null || !player.hasStarted() || player.hasFinished())
@@ -81,6 +99,13 @@ public final class WorldThread extends Thread {
                     Logger.handle(e);
                 }
             }
+            long playerProcessMs = System.currentTimeMillis() - phaseStart;
+
+            phaseStart = System.currentTimeMillis();
+            PlayerBotManager.processTick();
+            long botProcessMs = System.currentTimeMillis() - phaseStart;
+
+            phaseStart = System.currentTimeMillis();
             for (Player player : World.getPlayers()) {
                 try {
                     if (player == null || !player.hasStarted() || player.hasFinished())
@@ -90,7 +115,9 @@ public final class WorldThread extends Thread {
                     Logger.handle(e);
                 }
             }
+            long projectileMs = System.currentTimeMillis() - phaseStart;
 
+            phaseStart = System.currentTimeMillis();
             for (Player player : World.getPlayers()) {
                 try {
                     if (player == null || !player.hasStarted() || player.hasFinished())
@@ -102,7 +129,9 @@ public final class WorldThread extends Thread {
                     Logger.handle(e);
                 }
             }
+            long localUpdateMs = System.currentTimeMillis() - phaseStart;
 
+            phaseStart = System.currentTimeMillis();
             for (Player player : World.getPlayers()) {
                 if (player == null || !player.hasStarted() || player.hasFinished())
                     continue;
@@ -114,7 +143,9 @@ public final class WorldThread extends Thread {
                     continue;
                 npc.resetMasks();
             }
+            long resetMasksMs = System.currentTimeMillis() - phaseStart;
 
+            phaseStart = System.currentTimeMillis();
             List<Player> toCloseChannels = new ArrayList<>();
             for (Player player : World.getPlayers()) {
                 if (player == null || !player.hasStarted() || player.hasFinished())
@@ -143,9 +174,30 @@ public final class WorldThread extends Thread {
                     Logger.handle(e);
                 }
             }
+            long pingSweepMs = System.currentTimeMillis() - phaseStart;
             LAST_CYCLE_CTM = Utils.currentTimeMillis();
             WORLD_TICK++;
             long elapsed = LAST_CYCLE_CTM - cycleStart;
+            if (elapsed >= SLOW_TICK_LOG_MS && WORLD_TICK - lastSlowTickLog >= SLOW_TICK_LOG_COOLDOWN) {
+                lastSlowTickLog = WORLD_TICK;
+                System.out.println("[WorldThread SLOW] tick=" + WORLD_TICK
+                        + " total=" + elapsed + "ms"
+                        + " players=" + World.getPlayers().size()
+                        + " npcs=" + World.getNPCs().size()
+                        + " bots=" + PlayerBotManager.getPlayers().size()
+                        + " tasks=" + worldTasksMs
+                        + " coroutines=" + coroutineTasksMs
+                        + " ge=" + grandExchangeMs
+                        + " ground=" + groundItemsMs
+                        + " logic=" + logicPacketsMs
+                        + " npcProc=" + npcProcessMs
+                        + " playerProc=" + playerProcessMs
+                        + " botProc=" + botProcessMs
+                        + " projectiles=" + projectileMs
+                        + " localUpd=" + localUpdateMs
+                        + " masks=" + resetMasksMs
+                        + " ping=" + pingSweepMs);
+            }
             long sleepTime = Settings.WORLD_CYCLE_TIME - elapsed;
             if (sleepTime > 0) {
                 try {

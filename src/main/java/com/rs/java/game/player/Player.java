@@ -43,6 +43,7 @@ import com.rs.java.game.objects.GlobalObjectAddition;
 import com.rs.java.game.objects.GlobalObjectDeletion;
 import com.rs.java.game.objects.ObjectPlugin;
 import com.rs.java.game.player.actions.combat.QueuedInstantCombat;
+import com.rs.java.game.player.bot.PlayerBotManager;
 import com.rs.java.game.player.content.*;
 import com.rs.java.game.player.content.collectionlog.CollectionLog;
 import com.rs.java.game.player.content.customtab.AchievementsTab;
@@ -4069,6 +4070,9 @@ public class Player extends Entity {
     public void sendItemsOnDeath(Player killer, WorldTile deathTile, WorldTile respawnTile, boolean wilderness, Integer[][] slots) {
         if (killer == null)
             return;
+        boolean deadIsBot = PlayerBotManager.isManagedBot(this);
+        boolean killerIsBot = PlayerBotManager.isManagedBot(killer);
+        boolean botVsBot = deadIsBot && killerIsBot;
         auraManager.removeAura();
         Item[][] items = ButtonHandler.getItemsKeptOnDeath(this, slots);
         inventory.reset();
@@ -4110,7 +4114,9 @@ public class Player extends Entity {
                 inventory.addItem(item.getId(), item.getAmount());
             }
         }
-        GroundItems.updateGroundItem(new Item(526), deathTile, killer, 60, 1);
+        if (!botVsBot) {
+            GroundItems.updateGroundItem(new Item(526), deathTile, killer, 60, 1);
+        }
         for (int i = 0; i < items[1].length; i++) {
             Item item = items[1][i];
             if (Settings.ECONOMY_MODE == 1 && !LimitedGEReader.INSTANCE.itemIsLimited(item.getId()) && ItemConstants.isTradeable(item) && EconomyPrices.getPrice(item.getId()) == 0)// skip to drop free
@@ -4135,10 +4141,12 @@ public class Player extends Entity {
             if (!ItemConstants.keptOnDeath(item))
                 killer.totalCurrentDrop += ((long) item.getDefinitions().getTipitPrice() * item.getAmount());
             item = items[1][i];
-            GroundItems.updateGroundItem(item, deathTile, killer, 60, 1);
+            if (!botVsBot) {
+                GroundItems.updateGroundItem(item, deathTile, killer, 60, 1);
+            }
         }
         message("You have lost approximately: " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedBigNumber(killer.totalCurrentDrop)) + " coins!");
-        if (killer != this) {
+        if (killer != this && !botVsBot) {
             int randomCoins = Utils.randomise(25000, 100000);
             GroundItems.updateGroundItem(new Item(995, randomCoins), deathTile, killer, 60, 1);
             killer.message("You recieved an extra " + HexColours.getShortMessage(Colour.RED, Utils.getFormattedNumber(randomCoins, ',')) + " coins for killing: " + getDisplayName() + ".");
@@ -4279,8 +4287,11 @@ public class Player extends Entity {
 
     public static void archiveKills(Player player, Player p2) {
         try {
+            if (PlayerBotManager.isManagedBot(player) || PlayerBotManager.isManagedBot(p2))
+                return;
             String location = "";
             location = "data/logs/kills/" + player.getUsername() + ".txt";
+            new java.io.File("data/logs/kills").mkdirs();
             BufferedWriter writer = new BufferedWriter(new FileWriter(location, true));
             writer.write("[" + currentTime("dd MMMMM yyyy 'at' hh:mm:ss z") + "] - " + player.getUsername() + " killed " + p2.getUsername() + "");
             writer.newLine();
@@ -4293,8 +4304,11 @@ public class Player extends Entity {
 
     public static void archiveDeaths(Player player, Player p2) {
         try {
+            if (PlayerBotManager.isManagedBot(player) || PlayerBotManager.isManagedBot(p2))
+                return;
             String location = "";
             location = "data/logs/kills/" + player.getUsername() + ".txt";
+            new java.io.File("data/logs/kills").mkdirs();
             BufferedWriter writer = new BufferedWriter(new FileWriter(location, true));
             writer.write("[" + currentTime("dd MMMMM yyyy 'at' hh:mm:ss z") + "] - " + player.getUsername() + " died to " + p2.getUsername() + "");
             writer.newLine();
@@ -4307,6 +4321,8 @@ public class Player extends Entity {
 
     public void increaseKillCount(Player killed) {
         if (killed == this)
+            return;
+        if (PlayerBotManager.isManagedBot(this) || PlayerBotManager.isManagedBot(killed))
             return;
         archiveKills(this, killed);
         archiveDeaths(killed, this);

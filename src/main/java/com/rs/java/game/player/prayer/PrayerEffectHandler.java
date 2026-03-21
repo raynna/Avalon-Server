@@ -4,6 +4,7 @@ import com.rs.java.game.*;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.game.player.CombatDefinitions;
+import com.rs.java.game.player.bot.PlayerBotManager;
 import com.rs.core.tasks.WorldTask;
 import com.rs.core.tasks.WorldTasksManager;
 import com.rs.java.game.player.Skills;
@@ -82,6 +83,9 @@ public class PrayerEffectHandler {
             handleTurmoilEffects(attacker, target);
             if (attacker.getPrayer().isActive(AncientPrayer.SOUL_SPLIT)) {
                 handleSoulSplitEffect(attacker, target, hit);
+            }
+            if (PlayerBotManager.isManagedBot(attacker)) {
+                return;
             }
             WorldTasksManager.schedule(new WorldTask() {
                 @Override

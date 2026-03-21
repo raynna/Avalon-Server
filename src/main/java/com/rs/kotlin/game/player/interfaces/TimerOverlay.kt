@@ -130,7 +130,6 @@ class TimerOverlay {
     private fun closeIfEmpty(player: Player) {
         val st = state(player)
         if (st.timers.isEmpty()) {
-            println("[TimerOverlay] ${player.displayName}: no timers left, closing overlay")
             if (player.interfaceManager.containsInterface(3047)) {
                 player.interfaceManager.closeTab(player.interfaceManager.isResizableScreen, getTimerOverlayTab(player))
             }
@@ -152,14 +151,12 @@ class TimerOverlay {
         val st = state(player)
         if (st.ticking) return
         st.ticking = true
-        println("[TimerOverlay] ${player.displayName}: scheduling tick task for timers")
 
         WorldTasksManager.schedule(
             object : WorldTask() {
                 override fun run() {
                     val now = player.gameTicks
                     if (player.isDead) {
-                        println("[TimerOverlay] ${player.displayName}: stopping task (player dead)")
                         st.ticking = false
                         stop()
                         return

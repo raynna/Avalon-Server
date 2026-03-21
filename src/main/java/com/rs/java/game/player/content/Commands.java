@@ -18,6 +18,7 @@ import com.rs.java.game.item.ground.GroundItems;
 import com.rs.java.game.item.itemdegrading.ArmourRepair;
 import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.*;
+import com.rs.java.game.player.bot.PlayerBotManager;
 import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
@@ -169,6 +170,16 @@ public final class Commands {
                 "Set var. Usage: ::var [id] [value]");
         registerCommand("global", Commands::globalCommand, CommandCategory.DEVELOPER,
                 "Set global config. Usage: ::global [id] [value]");
+        registerCommand("spawnbots", Commands::spawnBotsCommand, CommandCategory.DEVELOPER,
+                "Spawn PvP player bots. Usage: ::spawnbots [count] [radius] or ::spawnbots [type] [count] [radius]");
+        registerCommand("botbattle", Commands::spawnBotsCommand, CommandCategory.DEVELOPER,
+                "Spawn PvP player bots. Usage: ::botbattle [count] [radius] or ::botbattle [type] [count] [radius]");
+        registerCommand("spawnbot", Commands::spawnBotByTypeCommand, CommandCategory.DEVELOPER,
+                "Spawn specific player bot archetypes. Usage: ::spawnbot [type] [count] [radius]");
+        registerCommand("clearbots", Commands::clearBotsCommand, CommandCategory.DEVELOPER,
+                "Remove all active player bots");
+        registerCommand("botstatus", Commands::botStatusCommand, CommandCategory.DEVELOPER,
+                "Show active player bot status");
 
         registerCommand("mute", Commands::muteCommand, CommandCategory.MODERATOR,
                 "Mute player. Usage: ::mute [player]");
@@ -1052,6 +1063,87 @@ public final class Commands {
         } catch (NumberFormatException e) {
             player.getPackets().sendPanelBoxMessage("Use: ::npc id(Integer)");
         }
+        return true;
+    }
+
+    private static boolean spawnBotsCommand(Player player, String[] cmd) {
+        int count = 2;
+        int radius = 8;
+        String selector = null;
+
+        try {
+            if (cmd.length > 1) {
+                if (cmd[1].matches("\\d+")) {
+                    count = Integer.parseInt(cmd[1]);
+                    if (cmd.length > 2) {
+                        radius = Integer.parseInt(cmd[2]);
+                    }
+                } else {
+                    selector = cmd[1];
+                    if (cmd.length > 2) {
+                        count = Integer.parseInt(cmd[2]);
+                    }
+                    if (cmd.length > 3) {
+                        radius = Integer.parseInt(cmd[3]);
+                    }
+                }
+            }
+        } catch (NumberFormatException e) {
+            player.message("Usage: ::spawnbots [count] [radius] or ::spawnbots [type] [count] [radius]");
+            player.message(PlayerBotManager.listArchetypes());
+            return true;
+        }
+
+        count = Math.max(1, Math.min(count, 25));
+        radius = Math.max(3, Math.min(radius, 32));
+
+        List<Player> bots = PlayerBotManager.spawnBattleBots(count, new WorldTile(player), radius, selector);
+        player.message("Spawned " + bots.size() + " player bots around " + player.getX() + ", " + player.getY() + ", " + player.getPlane() + ".");
+        if (selector != null) {
+            player.message("Selector: " + selector + ".");
+        }
+        player.message("Bots use the real player combat pipeline, roam the area, fight each other, and switch loadouts.");
+        return true;
+    }
+
+    private static boolean spawnBotByTypeCommand(Player player, String[] cmd) {
+        if (cmd.length < 2) {
+            player.message("Usage: ::spawnbot [type] [count] [radius]");
+            player.message(PlayerBotManager.listArchetypes());
+            return true;
+        }
+
+        int count = 1;
+        int radius = 8;
+        try {
+            if (cmd.length > 2) {
+                count = Integer.parseInt(cmd[2]);
+            }
+            if (cmd.length > 3) {
+                radius = Integer.parseInt(cmd[3]);
+            }
+        } catch (NumberFormatException e) {
+            player.message("Usage: ::spawnbot [type] [count] [radius]");
+            player.message(PlayerBotManager.listArchetypes());
+            return true;
+        }
+
+        count = Math.max(1, Math.min(count, 25));
+        radius = Math.max(3, Math.min(radius, 32));
+
+        List<Player> bots = PlayerBotManager.spawnBattleBots(count, new WorldTile(player), radius, cmd[1]);
+        player.message("Spawned " + bots.size() + " " + cmd[1] + " bot(s).");
+        return true;
+    }
+
+    private static boolean clearBotsCommand(Player player, String[] cmd) {
+        int removed = PlayerBotManager.clearBots();
+        player.message("Removed " + removed + " player bots.");
+        return true;
+    }
+
+    private static boolean botStatusCommand(Player player, String[] cmd) {
+        player.message(PlayerBotManager.status());
         return true;
     }
 
@@ -3707,6 +3799,10 @@ public final class Commands {
             String afterCMD = "";
             for (int i = 1; i < cmd.length; i++)
                 afterCMD += cmd[i] + ((i == cmd.length - 1) ? "" : " ");
+            java.io.File file = new java.io.File(location);
+            java.io.File parent = file.getParentFile();
+            if (parent != null && !parent.exists())
+                parent.mkdirs();
             BufferedWriter writer = new BufferedWriter(new FileWriter(location, true));
             writer.write("[" + currentTime("dd MMMMM yyyy 'at' hh:mm:ss z") + "] - ::" + cmd[0] + " " + afterCMD);
             writer.newLine();

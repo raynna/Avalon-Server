@@ -212,6 +212,9 @@ class CombatAction(
 
         player.combatStyle = style
         val requiredDistance = getAdjustedFollowDistance(target)
+        if (player.isOutOfRegion(target)) {
+            return false
+        }
         if (player.isOutOfRange(target, requiredDistance)) {
             player.resetWalkSteps()
             player.calcFollow(target, if (player.run) 2 else 1, true, true)
@@ -219,9 +222,6 @@ class CombatAction(
         if (player.isDiagonalMeleeBlocked(target, style)) {
             player.resetWalkSteps()
             player.calcFollow(target, if (player.run) 2 else 1, true, true)
-        }
-        if (player.isOutOfRegion(target)) {
-            return false
         }
         handleFollowing(player)
         return true
@@ -359,6 +359,7 @@ class CombatAction(
             return
         }
         if (player.isOutOfRange(target, requiredDistance)) {
+            player.resetWalkSteps()
             if (!player.hasWalkSteps()) {
                 player.calcFollow(target, if (player.run) 2 else 1, true, true)
             }

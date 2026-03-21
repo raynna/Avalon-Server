@@ -910,7 +910,7 @@ public class NPC extends Entity implements Serializable {
                     luckyPlayer.message("<col=ff0000>Untradeable drop: " + item.getName() + ".");
                 }
                 if ((item.getDefinitions().getTipitPrice() * item.getAmount()) >= Integer
-                        .parseInt(luckyPlayer.getToggleValue(luckyPlayer.toggles.get("DROPVALUE")))) {
+                        .parseInt(luckyPlayer.getToggleValue(luckyPlayer.toggles("DROPVALUE", 25000)))) {
                     player.message("<col=ff0000>Valuable drop: " + item.getName()
                             + (item.getAmount() > 1 ? " x " + item.getAmount() + " " : " ") + "("
                             + Utils.getFormattedNumber(item.getDefinitions().getTipitPrice() * item.getAmount(), ',')
@@ -994,7 +994,7 @@ public class NPC extends Entity implements Serializable {
                 GroundItems.updateGroundItem(item, new WorldTile(getCoordFaceX(size), getCoordFaceY(size), getPlane()),
                         player);
                 if ((i.getDefinitions().getTipitPrice() * i.getAmount()) >= Integer
-                        .parseInt(player.getToggleValue(player.toggles.get("DROPVALUE")))) {
+                        .parseInt(player.getToggleValue(player.toggles("DROPVALUE", 25000)))) {
                     player.message("<col=ff0000>Valuable drop: " + i.getName()
                             + (i.getAmount() > 1 ? " x " + i.getAmount() + " " : " ") + "("
                             + Utils.getFormattedNumber(i.getDefinitions().getTipitPrice() * i.getAmount(), ',')
