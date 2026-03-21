@@ -1,5 +1,6 @@
 package com.rs.kotlin.game.player.combat.magic.modern
 
+import com.rs.Settings
 import com.rs.java.game.Graphics
 import com.rs.java.game.WorldTile
 import com.rs.kotlin.game.player.combat.magic.ElementType
@@ -23,7 +24,7 @@ object ModernMagicks : Spellbook(MODERN_ID) {
                 xp = 0.0,
                 type = SpellType.Teleport,
                 runes = emptyList(),
-                teleportLocation = WorldTile(3093, 3495, 0),
+                teleportLocation = Settings.HOME_PLAYER_LOCATION,
             ),
             Spell(
                 id = 37,
