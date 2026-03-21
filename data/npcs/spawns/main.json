@@ -90726,8 +90726,8 @@
   {
     "tile": {
       "plane": 0,
-      "x": 3164,
-      "y": 3475
+      "x": 3165,
+      "y": 3482
     },
     "comment": "Grand Exchange Tutor",
     "npcId": 6521
@@ -107791,8 +107791,8 @@
   {
     "tile": {
       "plane": 0,
-      "x": 3184,
-      "y": 3492
+      "x": 3175,
+      "y": 3481
     },
     "comment": "Murky Matt (runes)",
     "npcId": 6525
