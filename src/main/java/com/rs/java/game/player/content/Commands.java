@@ -22,8 +22,6 @@ import com.rs.java.game.player.actions.skills.summoning.Summoning;
 import com.rs.java.game.player.content.dungeoneering.DungeonConstants;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.game.player.content.dungeoneering.DungeonPartyManager;
-import com.rs.java.game.player.content.grandexchange.GrandExchange;
-import com.rs.java.game.player.content.grandexchange.GrandExchangeManager;
 import com.rs.java.utils.Encrypt;
 import com.rs.java.utils.IPBanL;
 import com.rs.kotlin.game.npc.drops.Drop;
@@ -35,6 +33,8 @@ import com.rs.core.packets.packet.ButtonHandler;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.AccountCreation;
+import com.rs.kotlin.game.player.grandexchange.GrandExchange;
+import com.rs.kotlin.game.player.grandexchange.GrandExchangeManager;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
 import com.rs.kotlin.game.player.interfaces.PresetInterface;
 
@@ -1449,7 +1449,7 @@ public final class Commands {
     }
 
     private static boolean geOffersCommand(Player player, String[] cmd) {
-        GrandExchange.sendOfferTracker(player);
+        GrandExchange.INSTANCE.sendOfferTracker(player);
         return true;
     }
 
@@ -1645,7 +1645,7 @@ public final class Commands {
     }
 
     private static boolean checkOffersCommand(Player player, String[] cmd) {
-        GrandExchange.sendOfferTracker(player);
+        GrandExchange.INSTANCE.sendOfferTracker(player);
         return true;
     }
 
@@ -1674,7 +1674,7 @@ public final class Commands {
             }
             target.getGeManager().setPlayer(target);
             target.getGeManager().init();
-            GrandExchange.removeOffers(target);
+            GrandExchange.INSTANCE.removeOffers(target);
             target.setBanned(Utils.currentTimeMillis() + (48 * 60 * 60 * 1000));
             target.getSession().getChannel().close();
             player.getPackets().sendGameMessage("You have banned 48 hours: " + target.getDisplayName() + ".");
@@ -1693,7 +1693,7 @@ public final class Commands {
             }
             target.getGeManager().setPlayer(target);
             target.getGeManager().init();
-            GrandExchange.removeOffers(target);
+            GrandExchange.INSTANCE.removeOffers(target);
             target.setUsername(name);
             target.setBanned(Utils.currentTimeMillis() + (48 * 60 * 60 * 1000));
             player.getPackets().sendGameMessage("You have banned 48 hours: " + Utils.formatPlayerNameForDisplay(name) + ".");
@@ -1769,7 +1769,7 @@ public final class Commands {
             }
             target.getGeManager().setPlayer(target);
             target.getGeManager().init();
-            GrandExchange.removeOffers(target);
+            GrandExchange.INSTANCE.removeOffers(target);
             target.setPermBanned(true);
             target.getSession().getChannel().close();
             player.getPackets().sendGameMessage("You have perm banned: " + target.getDisplayName() + ".");
@@ -1788,7 +1788,7 @@ public final class Commands {
             }
             target.getGeManager().setPlayer(target);
             target.getGeManager().init();
-            GrandExchange.removeOffers(target);
+            GrandExchange.INSTANCE.removeOffers(target);
             target.setUsername(name);
             target.setPermBanned(true);
             player.getPackets().sendGameMessage("You have perm banned: " + Utils.formatPlayerNameForDisplay(name) + ".");
@@ -3511,7 +3511,7 @@ public final class Commands {
 
     private static boolean removeAllOffersCommand(Player player, String[] cmd) {
         player.getGeManager().cancelOffer();
-        GrandExchange.removeAllOffers();
+        GrandExchange.INSTANCE.removeAllOffers();
         player.message("Removed all Grand Exchange offers.");
         return true;
     }
