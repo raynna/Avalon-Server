@@ -1,6 +1,7 @@
 package com.rs.core.packets.encode;
 
 import com.rs.discord.DiscordAnnouncer;
+import com.rs.kotlin.game.player.grandexchange.Offer;
 import com.rs.kotlin.rscm.Rscm;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
@@ -25,7 +26,6 @@ import com.rs.java.game.player.QuickChatMessage;
 import com.rs.java.game.player.content.TicketSystem;
 import com.rs.java.game.player.content.clans.ClansManager;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
-import com.rs.java.game.player.content.grandexchange.Offer;
 import com.rs.java.game.worldlist.WorldList;
 import com.rs.core.packets.OutputStream;
 import com.rs.core.networking.Session;
@@ -227,7 +227,7 @@ public class WorldPacketsEncoder extends Encoder {
 			stream.writeShort(offer.getId());
 			stream.writeInt(offer.getPrice());
 			stream.writeInt(offer.getAmount());
-			stream.writeInt(offer.getTotalAmmountSoFar());
+			stream.writeInt(offer.getTotalAmountSoFar());
 			stream.writeInt(offer.getTotalPriceSoFar());
 		}
 		session.write(stream);

@@ -45,7 +45,6 @@ import com.rs.java.game.player.content.customtab.GearTab;
 import com.rs.java.game.player.content.customtab.JournalTab;
 import com.rs.java.game.player.content.customtab.SettingsTab;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
-import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.game.player.content.pet.Pets;
 import com.rs.java.game.player.content.presets.Preset;
 import com.rs.java.game.player.content.randomevent.AntiBot;
@@ -65,6 +64,7 @@ import com.rs.java.utils.huffman.Huffman;
 import com.rs.kotlin.game.player.combat.CombatAction;
 import com.rs.kotlin.game.player.combat.magic.*;
 import com.rs.kotlin.game.player.command.CommandRegistry;
+import com.rs.kotlin.game.player.grandexchange.GrandExchange;
 import com.rs.kotlin.game.player.interfaces.DropInterface;
 import com.rs.kotlin.game.player.interfaces.DropSearch;
 import com.rs.kotlin.game.player.interfaces.PresetInterface;
@@ -697,7 +697,7 @@ public final class WorldPacketsDecoder extends Decoder {
                 if (player.getInterfaceManager().containsInterface(105))
                     player.getGeManager().chooseItem(itemId);
                 else
-                    GrandExchange.priceCheckItem(player, itemId);
+                    GrandExchange.INSTANCE.priceCheckItem(player, itemId);
                 return;
             case 2://friends_packet
             case 7://unknown packet
