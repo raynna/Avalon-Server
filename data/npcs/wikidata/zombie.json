@@ -3,7 +3,11 @@
   "variants": [
     {
       "ids": [
-        74
+        74,
+        5310,
+        5311,
+        5312,
+        5313
       ],
       "members": false,
       "combatLevel": 18,
@@ -125,6 +129,77 @@
       "attackSpeedTicks": 4,
       "respawnTicks": 35,
       "slayerXp": 22,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria",
+        "krystilia",
+        "mazchna"
+      ]
+    },
+    {
+      "ids": [
+        5323,
+        5324,
+        5325,
+        5326,
+        5327
+      ],
+      "members": false,
+      "combatLevel": 24,
+      "attackLevel": 19,
+      "strengthLevel": 21,
+      "defenceLevel": 16,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 30,
+      "attackBonus": 5,
+      "strengthBonus": 7,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 9,
+        "slash": 8,
+        "crush": 12
+      },
+      "magicDefence": {
+        "magic": 10
+      },
+      "rangedDefence": {
+        "light": 11,
+        "standard": 11,
+        "heavy": 11
+      },
+      "weaknesses": {
+        "fire": 50
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[4 January]] [[2001]]",
+      "aliases": [],
+      "size": "1",
+      "examine": "The walking dead.",
+      "attributes": [
+        "undead"
+      ],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 3
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Slash]]"
+      ],
+      "attackSpeedTicks": 5,
+      "respawnTicks": 35,
+      "slayerXp": 30,
       "categories": [],
       "assignedBy": [
         "turael",

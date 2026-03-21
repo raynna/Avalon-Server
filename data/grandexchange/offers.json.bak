@@ -23,13 +23,17 @@
     "price": 7000000,
     "isBuying": false,
     "username": "Andreas",
-    "totalAmount": 0,
-    "totalPrice": 0,
+    "totalAmount": 2,
+    "totalPrice": 14000000,
     "canceled": false,
     "created": 1774064830,
     "received": {
       "data": [
-        null,
+        {
+          "id": 995,
+          "amount": 14000000,
+          "metadata": null
+        },
         null
       ],
       "alwaysStackable": true
@@ -74,7 +78,7 @@
       ],
       "alwaysStackable": true
     },
-    "data": 1774060128779,
+    "data": 1774064900055,
     "id": 11694,
     "amount": 5,
     "metadata": null

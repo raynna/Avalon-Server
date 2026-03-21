@@ -215,6 +215,15 @@
     "attempts": 1,
     "expectedCombatLevel": 0
   },
+  "9720": {
+    "npcId": 9720,
+    "npcName": "Lobster",
+    "reason": "No Infobox Monster found",
+    "firstSeen": "2026-03-21T19:32:01.571388700Z",
+    "lastSeen": "2026-03-21T19:32:01.571388700Z",
+    "attempts": 1,
+    "expectedCombatLevel": 2
+  },
   "14926": {
     "npcId": 14926,
     "npcName": "Troll commando",

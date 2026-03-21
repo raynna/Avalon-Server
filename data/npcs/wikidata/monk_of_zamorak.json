@@ -58,6 +58,65 @@
       "slayerXp": 0,
       "categories": [],
       "assignedBy": []
+    },
+    {
+      "ids": [
+        188
+      ],
+      "members": false,
+      "combatLevel": 22,
+      "attackLevel": 18,
+      "strengthLevel": 18,
+      "defenceLevel": 22,
+      "magicLevel": 25,
+      "rangedLevel": 1,
+      "constitutionLevel": 20,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "examine": "An evil human cleric.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "[[melee]]": 3,
+        "[[magic]]": 10
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Crush]]",
+        "[[Magic]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
     }
   ]
 }
