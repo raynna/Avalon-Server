@@ -1,0 +1,22 @@
+{
+  "4800278677982975201": {
+    "price": 15000000,
+    "isBuying": false,
+    "username": "Manager",
+    "totalAmount": 2,
+    "totalPrice": 30000000,
+    "canceled": false,
+    "created": 1774058902,
+    "received": {
+      "data": [
+        null,
+        null
+      ],
+      "alwaysStackable": true
+    },
+    "data": 1774060007956,
+    "id": 11694,
+    "amount": 5,
+    "metadata": null
+  }
+}
