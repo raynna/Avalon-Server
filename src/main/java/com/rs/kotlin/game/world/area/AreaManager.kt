@@ -10,9 +10,7 @@ import com.rs.kotlin.game.world.area.areas.multi.*
 import com.rs.kotlin.game.world.area.areas.zones.WildernessArea
 import com.rs.kotlin.game.world.area.areas.zones.WildernessSafeArea
 
-
 object AreaManager {
-
     private val allAreas = mutableListOf<Area>()
     private val areasByRegion = mutableMapOf<Int, MutableList<Area>>()
 
@@ -20,14 +18,57 @@ object AreaManager {
         allAreas.clear()
         areasByRegion.clear()
 
-        //minigames
+        // minigames
         register(BarrowsArea())
-        //wilderness areas
+        // wilderness areas
         register(WildernessArea(), WildernessSafeArea())
-        //safezones
-        register(AlkharidBank(), ArdougneNorthBank(), ArdougneSouthBank(), CamelotBank(), CanifisBank(),CastleWarsBank(),CatherbyBank(),DraynorBank(),DuelArenaBank(),EdgevilleBank(),FaladorEastBank(),FaladorWestBank(),FishingGuildBank(),LumbridgeCastle(),MageBank(),MobilisingArmiesBank(),NardahBank(),OoglogBank(),PortPhasmatysBank(),VarrockEastBank(),VarrockWestBank(),WarriorGuildBank(),YanilleBank())
-        //multiareas
-        register(AlkharidMulti(),ApeAtollMulti(),BarbarianVillageMulti(),BurthorpeMulti(),CastleWarsMulti(),CorporealBeastCaveMulti(),FaladorMulti(),GodwarsMulti(),Islands(),KalphiteLairMulti(),KingBlackDragonMulti(),MorytaniaMulti(),PestControlMulti(),PiscatorisColonyMulti(),WaterbirthDungeonMulti(),WhiteWolfMountainMulti(),WildernessMulti())
+        // safezones
+        register(
+            GrandExchangeBank(),
+            AlkharidBank(),
+            ArdougneNorthBank(),
+            ArdougneSouthBank(),
+            CamelotBank(),
+            CanifisBank(),
+            CastleWarsBank(),
+            CatherbyBank(),
+            DraynorBank(),
+            DuelArenaBank(),
+            EdgevilleBank(),
+            FaladorEastBank(),
+            FaladorWestBank(),
+            FishingGuildBank(),
+            LumbridgeCastle(),
+            MageBank(),
+            MobilisingArmiesBank(),
+            NardahBank(),
+            OoglogBank(),
+            PortPhasmatysBank(),
+            VarrockEastBank(),
+            VarrockWestBank(),
+            WarriorGuildBank(),
+            YanilleBank(),
+        )
+        // multiareas
+        register(
+            AlkharidMulti(),
+            ApeAtollMulti(),
+            BarbarianVillageMulti(),
+            BurthorpeMulti(),
+            CastleWarsMulti(),
+            CorporealBeastCaveMulti(),
+            FaladorMulti(),
+            GodwarsMulti(),
+            Islands(),
+            KalphiteLairMulti(),
+            KingBlackDragonMulti(),
+            MorytaniaMulti(),
+            PestControlMulti(),
+            PiscatorisColonyMulti(),
+            WaterbirthDungeonMulti(),
+            WhiteWolfMountainMulti(),
+            WildernessMulti(),
+        )
     }
 
     private fun register(vararg areas: Area) {
@@ -48,14 +89,16 @@ object AreaManager {
     }
 
     @JvmStatic
-    fun isInEnvironment(player: Player, env: Area.Environment): Boolean {
-        return getAll(player.tile).any { it.environment() == env }
-    }
+    fun isInEnvironment(
+        player: Player,
+        env: Area.Environment,
+    ): Boolean = getAll(player.tile).any { it.environment() == env }
 
     @JvmStatic
-    fun isInEnvironment(tile: WorldTile, env: Area.Environment): Boolean {
-        return AreaManager.getAll(tile).any { it.environment() == env }
-    }
+    fun isInEnvironment(
+        tile: WorldTile,
+        env: Area.Environment,
+    ): Boolean = AreaManager.getAll(tile).any { it.environment() == env }
 
     @JvmStatic
     fun get(tile: WorldTile): Area? = getAll(tile).firstOrNull()
@@ -70,24 +113,29 @@ object AreaManager {
 
         for (a in current - last) {
             a.onEnter(player)
-            //if (a.environment() == Area.Environment.MINIGAME)
-               // update(player, a)
+            // if (a.environment() == Area.Environment.MINIGAME)
+            // update(player, a)
         }
 
         player.lastAreas = current
     }
 
-
-    fun update(player: Player, area: Area) {
+    fun update(
+        player: Player,
+        area: Area,
+    ) {
         player.packets.sendTextOnComponent(1073, 10, "<col=ffffff>You have reached")
         player.packets.sendTextOnComponent(1073, 11, "<col=ffcf00>${area.name()}")
         player.interfaceManager.sendOverlay(1073, false)
 
-        WorldTasksManager.schedule(object : WorldTask() {
-            override fun run() {
-                player.interfaceManager.closeOverlay(false)
-                stop()
-            }
-        }, 3)
+        WorldTasksManager.schedule(
+            object : WorldTask() {
+                override fun run() {
+                    player.interfaceManager.closeOverlay(false)
+                    stop()
+                }
+            },
+            3,
+        )
     }
 }
