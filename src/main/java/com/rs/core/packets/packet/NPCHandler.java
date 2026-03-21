@@ -128,23 +128,23 @@ public class NPCHandler {
         if (npc.getCombatData() == null) {
             npc.setBonuses();
         }
-            CombatData data = npc.getCombatData();
-            if (data != null) {
-                player.message("Attack: " + data.attackLevel
-                        + " | Strength: " + data.strengthLevel
-                        + " | Defence: " + data.defenceLevel);
-                player.message("Magic: " + data.magicLevel
-                        + " | Ranged: " + data.rangedLevel);
-                player.message("Bonuses -> Atk: " + data.attackBonus
-                        + " | Str: " + data.strengthBonus
-                        + " | Mage: " + data.magicBonus
-                        + " | Range: " + data.rangedBonus);
-                player.message("Defences -> Stab: " + data.meleeDefence.getStab()
-                        + " | Slash: " + data.meleeDefence.getSlash()
-                        + " | Crush: " + data.meleeDefence.getCrush());
-                player.message("Magic Def: " + data.magicDefence.getMagic()
-                        + " | Range Def: " + data.rangedDefence.getStandard());
-            }
+        CombatData data = npc.getCombatData();
+        if (data != null) {
+            player.message("Attack: " + data.attackLevel
+                    + " | Strength: " + data.strengthLevel
+                    + " | Defence: " + data.defenceLevel);
+            player.message("Magic: " + data.magicLevel
+                    + " | Ranged: " + data.rangedLevel);
+            player.message("Bonuses -> Atk: " + data.attackBonus
+                    + " | Str: " + data.strengthBonus
+                    + " | Mage: " + data.magicBonus
+                    + " | Range: " + data.rangedBonus);
+            player.message("Defences -> Stab: " + data.meleeDefence.getStab()
+                    + " | Slash: " + data.meleeDefence.getSlash()
+                    + " | Crush: " + data.meleeDefence.getCrush());
+            player.message("Magic Def: " + data.magicDefence.getMagic()
+                    + " | Range Def: " + data.rangedDefence.getStandard());
+        }
         /*try {
             // Build the input string like a player typed it
             String input = "lookupnpc " + npc.getId();
@@ -379,14 +379,26 @@ public class NPCHandler {
             }, true));
             return;
         }
-        if (npc.getId() == 4296 || npc.getId() == 6362 || npc.getDefinitions().name.toLowerCase().contains("banker")
-                || npc.getDefinitions().name.toLowerCase().contains("gundai")) {
+        if (npc.isNpc("npc.combat_shops")) {
+            player.setRouteEvent(new RouteEvent(npc, () -> {
+                player.faceEntity(npc);
+                if (!player.withinDistance(npc, 1))
+                    return;
+                npc.faceEntity(player);
+                npc.setNextFaceWorldTile(new WorldTile(player.getX(), player.getY(), player.getPlane()));
+                DialogueStarter.shop(player);
+            }, true));
+
+            return;
+        }
+        if (npc.isNpc("npc_group.banker", "npc_group.grand_exchange_clerk", "npc.jade", "npc.eniola", "npc.gundai")) {
+            boolean isGeClerk = npc.isNpc("npc_group.grand_exchange_clerk");
             player.setRouteEvent(new RouteEvent(npc, () -> {
                 if (!player.withinDistance(npc, 3))
                     return;
-                npc.resetWalkSteps();
                 npc.faceEntity(player);
                 player.faceEntity(npc);
+                player.message("banker face player");
                 DialogueStarter.banker(player, npc.getId());
             }, true));
             return;
@@ -504,8 +516,6 @@ public class NPCHandler {
                         + Settings.FORMAL_SERVER_NAME + ", Pick a teleport from the teleporting tab.");
             } else if (npc.getId() == 4247 || npc.getId() == 6715)
                 player.getDialogueManager().startDialogue("EstateAgentD", npc.getId());
-            else if (npc.getId() == 650)
-                DialogueStarter.shop(player);
             else if (npc.getId() == 231)
                 player.getDialogueManager().startDialogue("MiscStoreD");
             else if (npc.getId() == 6988)
@@ -937,15 +947,15 @@ public class NPCHandler {
         if (npc.isNpc("npc_group.banker", "npc_group.grand_exchange_clerk", "npc.jade", "npc.eniola", "npc.gundai")) {
             boolean isGeClerk = npc.isNpc("npc_group.grand_exchange_clerk");
             player.setRouteEvent(new RouteEvent(npc, () -> {
-                    player.faceEntity(npc);
-                    if (!player.withinDistance(npc, 2))
-                        return;
-                    npc.faceEntity(player);
-                    npc.setNextFaceWorldTile(new WorldTile(player.getX(), player.getY(), player.getPlane()));
-                    if (isGeClerk)
-                        player.getGeManager().openGrandExchange();
-                    else
-                        player.getBank().openBank();
+                player.faceEntity(npc);
+                if (!player.withinDistance(npc, 2))
+                    return;
+                npc.faceEntity(player);
+                npc.setNextFaceWorldTile(new WorldTile(player.getX(), player.getY(), player.getPlane()));
+                if (isGeClerk)
+                    player.getGeManager().openGrandExchange();
+                else
+                    player.getBank().openBank();
             }, true));
 
             return;
@@ -994,8 +1004,7 @@ public class NPCHandler {
             if (npc.getId() == 9707)
                 FremennikShipmaster.sail(player, true);
             else if (SlayerMaster.startInteractionForId(player, npc.getId(), 2)) {
-            }
-            else if (npc.getId() == 961 || npc.getId() == 960) {
+            } else if (npc.getId() == 961 || npc.getId() == 960) {
                 if (player.getTickManager().isActive(TickManager.TickKeys.LAST_ATTACKED_TICK)) {
                     player.message("The nurse cannot heal you in combat.");
                     return;
@@ -1204,8 +1213,8 @@ public class NPCHandler {
                 }
             }, true));
         }
-        if (npc.getId() == 6362 || npc.getDefinitions().name.toLowerCase().contains("banker")
-                || npc.getDefinitions().name.toLowerCase().contains("gundai")) {
+        if (npc.isNpc("npc_group.banker", "npc_group.grand_exchange_clerk", "npc.jade", "npc.eniola", "npc.gundai")) {
+            boolean isGeClerk = npc.isNpc("npc_group.grand_exchange_clerk");
             player.setRouteEvent(new RouteEvent(npc, new Runnable() {
                 @Override
                 public void run() {
@@ -1214,9 +1223,11 @@ public class NPCHandler {
                     npc.resetWalkSteps();
                     npc.setNextFaceWorldTile(new WorldTile(player.getX(), player.getY(), player.getPlane()));
                     player.faceEntity(npc);
-                    player.getGeManager().openCollectionBox();
-                    ;
-                    return;
+                    if (isGeClerk) {
+                        player.getGeManager().openHistory();
+                    } else {
+                        player.getGeManager().openCollectionBox();
+                    }
                 }
             }, true));
             return;
