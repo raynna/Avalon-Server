@@ -7,6 +7,7 @@ import com.rs.java.game.npc.NPC
 import com.rs.java.game.player.Player
 import com.rs.java.game.player.Skills
 import com.rs.java.game.player.TickManager
+import com.rs.java.game.player.bot.PlayerBotManager
 import com.rs.kotlin.game.player.combat.CombatAction
 import com.rs.kotlin.game.player.combat.Weapon
 import com.rs.kotlin.game.player.combat.special.CombatContext
@@ -34,6 +35,7 @@ class HealthOverlay {
         player: Player,
         target: Entity,
     ) {
+        if (PlayerBotManager.isManagedBot(player)) return
         // checkCombatLevel(player, target)
         updateHealthOverlay(player, target, false)
         if (player.toggles("HEALTH_OVERLAY", false) &&
@@ -121,6 +123,7 @@ class HealthOverlay {
     }
 
     fun closeOverlay(player: Player) {
+        if (PlayerBotManager.isManagedBot(player)) return
         if (player.interfaceManager.containsTab(getHealthOverlayId(player))) {
             if (checkForClose(player) &&
                 player.interfaceManager.containsTab(getHealthOverlayId(player))
@@ -149,6 +152,7 @@ class HealthOverlay {
         target: Entity,
         updateScript: Boolean,
     ) {
+        if (PlayerBotManager.isManagedBot(player)) return
         val name: String
         val hpText: String
         var showLevel = false
