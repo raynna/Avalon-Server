@@ -22,7 +22,10 @@ import com.rs.java.game.npc.NpcPluginLoader;
 import com.rs.java.game.npc.combat.CombatScriptsHandler;
 import com.rs.java.game.player.content.collectionlog.CollectionLog;
 import com.rs.json.JsonNpcCombatDefinitions;
-import com.rs.kotlin.game.player.skills.fishing.FishingSpotsHandler;
+import com.rs.kotlin.game.player.grandexchange.GrandExchange;
+import com.rs.kotlin.game.player.grandexchange.LimitedGEReader;
+import com.rs.kotlin.game.player.grandexchange.UnlimitedGEReader;
+import com.rs.kotlin.game.player.shop.ShopPriceManager;
 import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.data.npc.JsonNpcSpawns;
 import com.rs.kotlin.game.npc.worldboss.RandomWorldBossHandler;
@@ -36,9 +39,6 @@ import com.rs.java.game.player.content.EdgevillePvPInstance;
 import com.rs.java.game.player.content.KillScoreBoard;
 import com.rs.java.game.player.content.clans.ClansManager;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
-import com.rs.java.game.player.content.grandexchange.GrandExchange;
-import com.rs.java.game.player.content.grandexchange.LimitedGEReader;
-import com.rs.java.game.player.content.grandexchange.UnlimitedGEReader;
 import com.rs.java.game.player.controllers.ControlerHandler;
 import com.rs.java.game.player.cutscenes.CutscenesHandler;
 import com.rs.java.game.player.dialogues.DialogueHandler;
@@ -101,9 +101,10 @@ public final class Launcher {
 		World.init();
 		MapBuilder.init();
 		Weights.init();
-		GrandExchange.init();
-		LimitedGEReader.init();
-		UnlimitedGEReader.init();
+		GrandExchange.INSTANCE.init();
+		ShopPriceManager.INSTANCE.init();
+		LimitedGEReader.INSTANCE.init();
+		UnlimitedGEReader.INSTANCE.init();
 		GlobalObjectDeletion.init();
 		GlobalObjectAddition.init();
 		//StarterProtection.loadIPS();
@@ -238,7 +239,7 @@ public final class Launcher {
 			Logger.log("Launcher", "Players: " + playerNames);
 		}
 		IPBanL.save();
-		GrandExchange.save();
+		GrandExchange.INSTANCE.save();
 		Time = Time("dd MMMMM yyyy 'at' hh:mm:ss z");
 	}
 
