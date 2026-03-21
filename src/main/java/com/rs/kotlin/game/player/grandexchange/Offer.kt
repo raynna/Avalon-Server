@@ -6,6 +6,7 @@ import com.rs.java.game.item.Item
 import com.rs.java.game.item.ItemsContainer
 import com.rs.java.game.player.Player
 import com.rs.java.utils.Utils
+import com.rs.kotlin.game.logging.Logs
 import java.io.Serializable
 import java.time.Instant
 
@@ -282,6 +283,22 @@ class Offer(
 
         sendUpdateWarning(this)
         fromOffer.sendUpdateWarning(fromOffer)
+        val buyer = if (isBuying) this else fromOffer
+        val seller = if (isBuying) fromOffer else this
+
+        val buyerPlayer = buyer.owner
+        val sellerPlayer = seller.owner
+
+        if (buyerPlayer != null && sellerPlayer != null) {
+            Logs.geMatch(
+                buyerPlayer,
+                sellerPlayer,
+                id,
+                definitions.name,
+                exchangeAmt,
+                fromOffer.price,
+            )
+        }
     }
 
     /**

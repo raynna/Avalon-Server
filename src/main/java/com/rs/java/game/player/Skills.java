@@ -304,10 +304,10 @@ public final class Skills implements Serializable {
         return totallevel;
     }
 
-    public int getTotalXP(Player player) {
-        int totalXP = 0;
+    public long getTotalXP(Player player) {
+        long totalXP = 0L;
         for (int skill = 0; skill <= 24; skill++) {
-            totalXP += player.getSkills().getXp(skill);
+            totalXP += (long) player.getSkills().getXp(skill);
         }
         return totalXP;
     }

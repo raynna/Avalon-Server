@@ -7,6 +7,7 @@ import com.rs.core.cache.defintions.ItemDefinitions
 import com.rs.java.game.player.Player
 import com.rs.java.utils.SerializableFilesManager
 import com.rs.java.utils.Utils
+import com.rs.kotlin.game.logging.Logs
 import java.io.IOException
 import java.math.BigInteger
 import java.nio.file.Files
@@ -152,6 +153,7 @@ object GrandExchange {
             offer.username = player.username
             player.geManager.offerUIds[slot] = createOffer(offer)
             offer.link(slot, player)
+            Logs.geOffer(player, itemId, ItemDefinitions.getItemDefinitions(itemId).name, amount, price, buy)
 
             when {
                 getPrice(offer.id) == 0 -> {

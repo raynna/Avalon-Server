@@ -7,11 +7,7 @@ import com.rs.java.game.player.Player
 import com.rs.java.game.player.content.ItemConstants
 import com.rs.java.utils.EconomyPrices
 import com.rs.java.utils.ItemExamines
-import java.io.BufferedWriter
-import java.io.FileWriter
-import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Path
+import com.rs.kotlin.game.logging.Logs
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -41,10 +37,6 @@ class Trade(
 
     val isTrading: Boolean get() = target != null && state != TradeState.CLOSED
 
-    // -------------------------------------------------------------------------
-    // Button handler — call from your interface/packet decoder
-    // -------------------------------------------------------------------------
-
     /**
      * Handles all button presses for interface 335 (trade screen) and
      * interface 336 (inventory panel during trade).
@@ -63,13 +55,8 @@ class Trade(
         when (interfaceId) {
             334 -> {
                 when (componentId) {
-                    21 -> {
-                        accept(firstStage = false)
-                    }
-
-                    22 -> {
-                        closeTrade(CloseTradeStage.CANCEL)
-                    }
+                    21 -> accept(firstStage = false)
+                    22 -> closeTrade(CloseTradeStage.CANCEL)
                 }
             }
 
@@ -191,10 +178,6 @@ class Trade(
         return true
     }
 
-    // -------------------------------------------------------------------------
-    // Public API
-    // -------------------------------------------------------------------------
-
     fun openTrade(target: Player) {
         withBothLocks(this, target.trade) {
             this.target = target
@@ -315,16 +298,12 @@ class Trade(
         withBothLocks(this, safeOtherTrade() ?: return) {
             if (!isTrading) return@withBothLocks
             if (firstStage) {
-                // Mark this player as accepted and update the message.
-                // Only advance to screen 2 once the OTHER player has also accepted.
                 accepted = true
                 val other = safeOtherTrade() ?: return@withBothLocks
                 if (other.accepted) {
-                    // Both accepted — move both players to confirmation screen
                     nextStage()
                     other.nextStage()
                 } else {
-                    // Still waiting for the other player
                     refreshBothStageMessage(firstStage = true)
                 }
             } else {
@@ -377,9 +356,10 @@ class Trade(
     /**
      * Close the trade on both sides.
      *
-     * Dupe prevention: a `COMPLETING` state flag is set atomically before any
-     * items are transferred. Once set, any re-entrant call sees COMPLETING/CLOSED
-     * and exits immediately — items are only ever moved once per side.
+     * Dupe prevention:
+     *   1. The COMPLETING guard is checked first — if already set, exit immediately.
+     *   2. The log is written AFTER the guard is set, so it only fires once per trade.
+     *   3. Item snapshots are taken before clearing containers so the log is accurate.
      */
     fun closeTrade(stage: CloseTradeStage) {
         val oldTarget = target ?: return
@@ -388,13 +368,18 @@ class Trade(
         withBothLocks(this, otherTrade) {
             if (state == TradeState.COMPLETING || state == TradeState.CLOSED) return@withBothLocks
 
-            archiveTrade(player, oldTarget, this.items, otherTrade.items)
-
             state = TradeState.COMPLETING
             otherTrade.state = TradeState.COMPLETING
-
             val myItemSnapshot = this.items.containerItems.filterNotNull()
             val theirItemSnapshot = otherTrade.items.containerItems.filterNotNull()
+
+            Logs.trade(
+                player = player,
+                target = oldTarget,
+                playerItems = myItemSnapshot,
+                targetItems = theirItemSnapshot,
+            )
+
             this.items.clear()
             otherTrade.items.clear()
 
@@ -440,10 +425,6 @@ class Trade(
             otherTrade.state = TradeState.CLOSED
         }
     }
-
-    // -------------------------------------------------------------------------
-    // UI helpers
-    // -------------------------------------------------------------------------
 
     fun sendFlash(slot: Int) {
         player.packets.sendInterFlashScript(335, 33, 4, 7, slot)
@@ -614,10 +595,6 @@ class Trade(
             EconomyPrices.getPrice(item.id).toLong() * item.amount.toLong()
         }
 
-    // -------------------------------------------------------------------------
-    // Private helpers
-    // -------------------------------------------------------------------------
-
     private fun safeOtherTrade(): Trade? = target?.trade
 
     private fun notifyNoSpace(
@@ -640,14 +617,9 @@ class Trade(
         }
     }
 
-    // -------------------------------------------------------------------------
-    // Companion
-    // -------------------------------------------------------------------------
-
     companion object {
         private const val COINS_ID = 995
 
-        // Action button packet IDs — mirror WorldPacketsDecoder constants
         private const val ACTION_BUTTON1 = WorldPacketsDecoder.ACTION_BUTTON1_PACKET
         private const val ACTION_BUTTON2 = WorldPacketsDecoder.ACTION_BUTTON2_PACKET
         private const val ACTION_BUTTON3 = WorldPacketsDecoder.ACTION_BUTTON3_PACKET
@@ -694,52 +666,8 @@ class Trade(
             return SimpleDateFormat(dateFormat).format(cal.time)
         }
 
-        fun archiveTrade(
-            player: Player?,
-            p2: Player?,
-            items: ItemsContainer<Item>,
-            items2: ItemsContainer<Item>,
-        ) {
-            if (player == null || p2 == null) return
-            val safeUser = sanitizeUsername(player.username)
-            val dir = Path.of("data", "logs", "trade")
-            val file = dir.resolve("$safeUser.txt")
-            try {
-                Files.createDirectories(dir)
-            } catch (_: IOException) {
-            }
-            try {
-                BufferedWriter(FileWriter(file.toFile(), true)).use { writer ->
-                    writer.write("[${currentTime("yyyy-MM-dd HH:mm:ss 'UTC'")}] - ${player.username} traded ${p2.username}")
-                    writer.newLine()
-                    writer.write("${player.username} items:")
-                    writer.newLine()
-                    for (item in items.containerItems) {
-                        item ?: continue
-                        writer.write("${item.definitions.name} x ${item.amount}")
-                        writer.newLine()
-                    }
-                    writer.write("for ${p2.username}'s:")
-                    writer.newLine()
-                    for (item in items2.containerItems) {
-                        item ?: continue
-                        writer.write("${item.definitions.name} x ${item.amount}")
-                        writer.newLine()
-                    }
-                    writer.newLine()
-                    writer.flush()
-                }
-            } catch (e: IOException) {
-                println(e.message)
-            }
-        }
-
         private fun sanitizeUsername(username: String?): String = username?.replace(Regex("[^A-Za-z0-9._-]"), "_") ?: "unknown"
     }
-
-    // -------------------------------------------------------------------------
-    // Enums
-    // -------------------------------------------------------------------------
 
     enum class CloseTradeStage { CANCEL, NO_SPACE, DONE }
 }

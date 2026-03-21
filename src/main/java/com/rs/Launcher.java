@@ -22,6 +22,8 @@ import com.rs.java.game.npc.NpcPluginLoader;
 import com.rs.java.game.npc.combat.CombatScriptsHandler;
 import com.rs.java.game.player.content.collectionlog.CollectionLog;
 import com.rs.json.JsonNpcCombatDefinitions;
+import com.rs.kotlin.api.LogApiServer;
+import com.rs.kotlin.game.logging.Logs;
 import com.rs.kotlin.game.player.grandexchange.GrandExchange;
 import com.rs.kotlin.game.player.grandexchange.LimitedGEReader;
 import com.rs.kotlin.game.player.grandexchange.UnlimitedGEReader;
@@ -68,6 +70,7 @@ import com.rs.kotlin.game.world.area.AreaManager;
 public final class Launcher {
 
 	public static void main(String[] args) throws Exception {
+		loadEnvFile("secret.env");
 		System.out.println("Current working directory: " + System.getProperty("user.dir"));
 		if (args.length < 2) {
 			Settings.DEBUG = true;
@@ -153,8 +156,41 @@ public final class Launcher {
 		RandomWorldBossHandler.start();
 		TournamentScheduler.INSTANCE.start();
 		FriendChatsManager.init();
+		String logApiKey = System.getProperty("LOG_API_KEY", "dev-key");
+		LogApiServer.INSTANCE.start(8765, logApiKey);
+		System.out.println("[LogApiServer] API KEY = " + logApiKey);
 		//RscmGenerator.INSTANCE.generateGroupedItemRscm();
     }
+
+	private static void loadEnvFile(String fileName) {
+		try {
+			java.nio.file.Path path = java.nio.file.Path.of(fileName).toAbsolutePath();
+			System.out.println("[ENV] Looking for file at: " + path);
+
+			if (!java.nio.file.Files.exists(path)) {
+				System.out.println("[ENV] File not found: " + path);
+				return;
+			}
+
+			java.nio.file.Files.lines(path)
+					.map(String::trim)
+					.filter(line -> !line.isEmpty() && !line.startsWith("#"))
+					.forEach(line -> {
+						String[] parts = line.split("=", 2);
+						if (parts.length == 2) {
+							String key = parts[0].trim();
+							String value = parts[1].trim();
+							System.setProperty(key, value);
+							System.out.println("[ENV] Loaded key: " + key + "=" + value);
+						}
+					});
+
+			System.out.println("[ENV] Loaded " + path);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	private static void addCleanMemoryTask() {
 		CoresManager.getSlowExecutor().scheduleWithFixedDelay(() -> {
@@ -293,6 +329,10 @@ public final class Launcher {
 				Logger.log("Launcher", t);
 			}
 		}
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			Logs.INSTANCE.shutdown();
+			LogApiServer.INSTANCE.stop();
+		}));
 		ServerChannelHandler.shutdown();
 		CoresManager.shutdown();
 	}

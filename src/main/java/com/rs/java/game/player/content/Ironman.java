@@ -76,7 +76,7 @@ public class Ironman implements Serializable {
 	}
 
 	public void takeLife(Player player, Player killer) {
-		final int PlayerTotal = player.getSkills().getTotalLevel(player),
+		final long PlayerTotal = player.getSkills().getTotalLevel(player),
 				PlayerTotalXP = player.getSkills().getTotalXP(player);
 		if (killer != null) {
 			if (player.getIronman().lifes > 1) {
@@ -118,7 +118,7 @@ public class Ironman implements Serializable {
 	}
 
 	public void takeLife(NPC npc) {
-		final int PlayerTotal = player.getSkills().getTotalLevel(player),
+		final long PlayerTotal = player.getSkills().getTotalLevel(player),
 				PlayerTotalXP = player.getSkills().getTotalXP(player);
 		if (lifes > 0) {
 			lifes--;
