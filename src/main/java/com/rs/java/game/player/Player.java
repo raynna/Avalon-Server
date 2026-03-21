@@ -49,6 +49,10 @@ import com.rs.java.game.player.content.customtab.AchievementsTab;
 import com.rs.java.game.player.prayer.*;
 import com.rs.java.game.player.Ranks.Rank;
 import com.rs.java.utils.*;
+import com.rs.kotlin.game.player.Trade;
+import com.rs.kotlin.game.player.grandexchange.GrandExchange;
+import com.rs.kotlin.game.player.grandexchange.GrandExchangeManager;
+import com.rs.kotlin.game.player.grandexchange.LimitedGEReader;
 import com.rs.kotlin.game.player.queue.PlayerActionQueue;
 import com.rs.kotlin.game.player.skills.mining.GoldenMiningOutfit;
 import com.rs.kotlin.game.player.skills.woodcutting.LumberjackOutfit;
@@ -65,9 +69,6 @@ import com.rs.java.game.player.content.clans.ClanMember;
 import com.rs.java.game.player.content.clans.ClansManager;
 import com.rs.java.game.player.content.dungeoneering.DungeonManager;
 import com.rs.java.game.player.content.friendschat.FriendChatsManager;
-import com.rs.java.game.player.content.grandexchange.GrandExchange;
-import com.rs.java.game.player.content.grandexchange.GrandExchangeManager;
-import com.rs.java.game.player.content.grandexchange.LimitedGEReader;
 import com.rs.java.game.player.content.pet.PetManager;
 import com.rs.java.game.player.content.pet.Pets;
 import com.rs.java.game.player.content.presets.PresetManager;
@@ -3456,7 +3457,7 @@ public class Player extends Entity {
         house.finish();
         dungManager.finish();
         setFinished(true);
-        GrandExchange.unlinkOffers(this);
+        GrandExchange.INSTANCE.unlinkOffers(this);
         session.setDecoder(-1);
         this.lastLoggedIn = System.currentTimeMillis();
         if (World.containsLobbyPlayer(username))
@@ -4112,7 +4113,7 @@ public class Player extends Entity {
         GroundItems.updateGroundItem(new Item(526), deathTile, killer, 60, 1);
         for (int i = 0; i < items[1].length; i++) {
             Item item = items[1][i];
-            if (Settings.ECONOMY_MODE == 1 && !LimitedGEReader.itemIsLimited(item.getId()) && ItemConstants.isTradeable(item) && EconomyPrices.getPrice(item.getId()) == 0)// skip to drop free
+            if (Settings.ECONOMY_MODE == 1 && !LimitedGEReader.INSTANCE.itemIsLimited(item.getId()) && ItemConstants.isTradeable(item) && EconomyPrices.getPrice(item.getId()) == 0)// skip to drop free
                 continue;
             if (ItemConstants.degradeOnDrop(item))
                 getChargeManager().breakItem(item);
