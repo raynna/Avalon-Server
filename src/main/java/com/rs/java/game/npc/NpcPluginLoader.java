@@ -30,8 +30,6 @@ public class NpcPluginLoader {
 				return entry.getValue();
 			}
 		}
-
-		System.out.println("[NpcPluginLoader] getPlugin(" + npc.getName() + "/" + npc.getId() + ") → NO PLUGIN FOUND. Registered keys: " + cachedNpcPlugins.keySet());
 		return null;
 	}
 
@@ -51,29 +49,24 @@ public class NpcPluginLoader {
 					if (!(o instanceof NpcPlugin plugin))
 						continue;
 
-					System.out.println("[NpcPluginLoader] Loading plugin: " + c.getName());
 
 					for (Object key : plugin.getKeys()) {
 						if (key instanceof Integer id) {
 							cachedNpcPlugins.put(id, plugin);
-							System.out.println("[NpcPluginLoader]   key (Integer): " + id);
 
 						} else if (key instanceof String keyStr) {
 							if (keyStr.startsWith("npc.")) {
 								int resolved = Rscm.lookup(keyStr);
 								cachedNpcPlugins.put(resolved, plugin);
-								System.out.println("[NpcPluginLoader]   key (npc.): " + keyStr + " → " + resolved);
 
 							} else if (keyStr.startsWith("npc_group.")) {
 								java.util.List<Integer> ids = Rscm.lookupList(keyStr);
 								for (int id : ids) {
 									cachedNpcPlugins.put(id, plugin);
 								}
-								System.out.println("[NpcPluginLoader]   key (npc_group.): " + keyStr + " → " + ids);
 
 							} else {
 								cachedNpcPlugins.put(keyStr.toLowerCase(), plugin);
-								System.out.println("[NpcPluginLoader]   key (name fallback): " + keyStr.toLowerCase());
 							}
 
 						} else {

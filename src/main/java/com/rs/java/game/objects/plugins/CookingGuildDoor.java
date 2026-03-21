@@ -10,7 +10,7 @@ public class CookingGuildDoor extends ObjectPlugin {
 
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { 2712, null };
+		return new Object[] { 2712 };
 	}
 
 	@Override

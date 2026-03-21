@@ -9,7 +9,7 @@ public class ThievingStalls extends ObjectPlugin {
 
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { 34384, 34383, 14011, 7053, 34387, 34386, 34385, null };
+		return new Object[] { 34384, 34383, 14011, 7053, 34387, 34386, 34385 };
 	}
 
 	@Override

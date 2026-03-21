@@ -13,7 +13,7 @@ public class GodWarsBoulder extends ObjectPlugin {
 
 	@Override
 	public Object[] getKeys() {
-		return new Object[] { 35390, null };
+		return new Object[] { 35390 };
 	}
 
 	@Override

@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.24"
     application
     java
-	id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "com.rs"
@@ -27,7 +27,7 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:2.0.12")
 
     // Local JARs (Try to avoid this if at all possible by using Maven)
-    implementation(files("lib/FileStore.jar"))
+    // implementation(files("lib/FileStore.jar"))
     implementation(files("lib/everythingrs-api.jar"))
     implementation(files("lib/ip2c.jar"))
 
@@ -65,4 +65,3 @@ tasks.shadowJar {
     archiveClassifier.set("") // removes "-all" suffix
     mergeServiceFiles()
 }
-

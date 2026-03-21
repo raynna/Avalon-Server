@@ -361,7 +361,6 @@ public class NPCHandler {
 
         if (SlidingTilesRoom.handleSlidingBlock(player, npc))
             return;
-        System.out.println("testing npcplugins.");
         NpcPlugin plugin = NpcPluginLoader.getPlugin(npc);
         if (plugin != null) {
             player.setRouteEvent(new RouteEvent(npc, () -> {
