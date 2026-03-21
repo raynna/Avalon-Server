@@ -11,6 +11,7 @@ import com.rs.java.game.npc.NPC;
 import com.rs.java.game.player.Player;
 import com.rs.java.utils.Logger;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.grandexchange.GrandExchange;
 import kotlinx.coroutines.BuildersKt;
 import kotlinx.coroutines.GlobalScope;
 
@@ -47,6 +48,7 @@ public final class WorldThread extends Thread {
             } catch (InterruptedException e) {
                 Logger.handle(e);
             }
+            GrandExchange.INSTANCE.processTickMatches();
             long took = System.currentTimeMillis() - start;
             if (took > 15) {
                 System.out.println("WorldTasksManager took " + took + " ms!");
