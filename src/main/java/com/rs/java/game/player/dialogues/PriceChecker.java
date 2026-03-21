@@ -1,10 +1,10 @@
 package com.rs.java.game.player.dialogues;
 
 import com.rs.core.cache.defintions.ItemDefinitions;
-import com.rs.java.game.player.content.grandexchange.GrandExchange;
-import com.rs.java.game.player.content.grandexchange.LimitedGEReader;
-import com.rs.java.game.player.content.grandexchange.UnlimitedGEReader;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.grandexchange.GrandExchange;
+import com.rs.kotlin.game.player.grandexchange.LimitedGEReader;
+import com.rs.kotlin.game.player.grandexchange.UnlimitedGEReader;
 
 public class PriceChecker extends Dialogue {
 
@@ -14,12 +14,12 @@ public class PriceChecker extends Dialogue {
 	@Override
 	public void start() {
 		itemId = (Integer) parameters[0];
-		int sellprice = GrandExchange.getCheapestSellPrice(itemId);
-		int sellamount = GrandExchange.getSellQuantity(itemId);
-		int buyprice = GrandExchange.getBestBuyPrice(itemId);
-		int buyamount = GrandExchange.getBuyQuantity(itemId);
-		if (GrandExchange.getPrice(itemId) >= 250000 && !UnlimitedGEReader.itemIsUnlimited(itemId)
-				|| LimitedGEReader.itemIsLimited(itemId))
+		int sellprice = GrandExchange.INSTANCE.getCheapestSellPrice(itemId);
+		int sellamount = GrandExchange.INSTANCE.getSellQuantity(itemId);
+		int buyprice = GrandExchange.INSTANCE.getBestBuyPrice(itemId);
+		int buyamount = GrandExchange.INSTANCE.getBuyQuantity(itemId);
+		if (GrandExchange.INSTANCE.getPrice(itemId) >= 250000 && !UnlimitedGEReader.INSTANCE.itemIsUnlimited(itemId)
+				|| LimitedGEReader.INSTANCE.itemIsLimited(itemId))
 			sendEntityDialogue(SEND_ITEM_DIALOGUE,
 					new String[] { ItemDefinitions.getItemDefinitions(itemId).name,
 							ItemDefinitions.getItemDefinitions(itemId).getName() + " Price: "

@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.rs.java.game.player.content.clans.Clan;
-import com.rs.java.game.player.content.grandexchange.Offer;
-import com.rs.java.game.player.content.grandexchange.OfferHistory;
+import com.rs.kotlin.game.player.grandexchange.Offer;
+import com.rs.kotlin.game.player.grandexchange.OfferHistory;
 
 public class SerializableFilesManager {
 

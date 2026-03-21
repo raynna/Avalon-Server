@@ -49,7 +49,6 @@ import com.rs.java.game.player.content.customtab.JournalTab;
 import com.rs.java.game.player.content.customtab.QuestTab;
 import com.rs.java.game.player.content.customtab.SettingsTab;
 import com.rs.java.game.player.content.customtab.TeleportTab;
-import com.rs.java.game.player.content.grandexchange.GrandExchange;
 import com.rs.java.game.player.dialogues.LevelUp;
 import com.rs.java.game.player.dialogues.Transportation;
 import com.rs.core.tasks.WorldTask;
@@ -60,6 +59,7 @@ import com.rs.java.utils.ItemExamines;
 import com.rs.java.utils.ShopsHandler;
 import com.rs.java.utils.Utils;
 import com.rs.kotlin.game.player.combat.Weapon;
+import com.rs.kotlin.game.player.grandexchange.GrandExchange;
 import com.rs.kotlin.game.player.transportation.FairyRings;
 import com.rs.kotlin.rscm.Rscm;
 import com.rs.kotlin.game.player.combat.magic.SpellHandler;
@@ -592,55 +592,8 @@ public class ButtonHandler {
         } else if (interfaceId == 1276) {
             if (componentId == 145) player.getInterfaceManager().closeInventoryInterface();
             else player.getRunicStaff().processSpell(player, componentId, packetId);
-        } else if (interfaceId == 334) {
-            if (componentId == 22) player.closeInterfaces();
-            else if (componentId == 21) {
-                player.getTrade().accept(false);
-            }
-        } else if (interfaceId == 335) {
-            if (componentId == 18) player.getTrade().accept(true);
-            else if (componentId == 53) {
-                player.temporaryAttribute().put("trade_moneypouch_X_Slot", slotId);
-                player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
-            } else if (componentId == 20) player.closeInterfaces();
-            else if (componentId == 32) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getTrade().removeItem(slotId, 1);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.getTrade().removeItem(slotId, 5);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    player.getTrade().removeItem(slotId, 10);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                    player.getTrade().removeItem(slotId, Integer.MAX_VALUE);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
-                    player.temporaryAttribute().put("trade_removeitem_X_Slot", slotId);
-                    player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
-                } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
-                    player.getTrade().sendValue(slotId, false);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
-                    player.getTrade().sendExamine(slotId, false);
-            } else if (componentId == 35) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET)
-                    player.getTrade().sendValue(slotId, true);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
-                    player.getTrade().sendExamine(slotId, true);
-            }
-        } else if (interfaceId == 336) {
-            if (componentId == 0) {
-                if (packetId == WorldPacketsDecoder.ACTION_BUTTON1_PACKET) player.getTrade().addItem(slotId, 1);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON2_PACKET)
-                    player.getTrade().addItem(slotId, 5);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON3_PACKET)
-                    player.getTrade().addItem(slotId, 10);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON4_PACKET)
-                    player.getTrade().addItem(slotId, Integer.MAX_VALUE);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON5_PACKET) {
-                    player.temporaryAttribute().put("trade_item_X_Slot", slotId);
-                    player.getPackets().sendRunScript(108, new Object[]{"Enter Amount:"});
-                } else if (packetId == WorldPacketsDecoder.ACTION_BUTTON9_PACKET)
-                    player.getTrade().sendValue(slotId);
-                else if (packetId == WorldPacketsDecoder.ACTION_BUTTON8_PACKET)
-                    player.getInventory().sendExamine(slotId);
-            }
+        } else if (interfaceId == 334 || interfaceId == 335 || interfaceId == 336) {
+            player.getTrade().handleButton(interfaceId, componentId, packetId, slotId);
         } else if (interfaceId == 300) {
             ForgingInterface.handleIComponents(player, componentId);
         } else if (interfaceId == 934) {
@@ -2815,7 +2768,7 @@ public class ButtonHandler {
             } else if (stageOnDeath == -1) {
                 lostItems.add(i);
             } else {
-                int price = GrandExchange.getPrice(item.getId());
+                int price = GrandExchange.INSTANCE.getPrice(item.getId());
                 long totalValue = (long) price * item.getAmount();
                 droppedSlots.add(new SlotEntry(i, item.getId(), item.getAmount(), totalValue, price));
             }
@@ -2902,13 +2855,13 @@ public class ButtonHandler {
         for (Item item : items[1]) {
             if (item == null) continue;
             long amount = item.getAmount();
-            long price = GrandExchange.getPrice(item.getId());
+            long price = GrandExchange.INSTANCE.getPrice(item.getId());
             carriedWealth = riskedWealth += price * amount;
         }
         for (Item item : items[0]) {
             if (item == null) continue;
             long amount = item.getAmount();
-            long price = GrandExchange.getPrice(item.getId());
+            long price = GrandExchange.INSTANCE.getPrice(item.getId());
             carriedWealth += price * amount;
         }
         Set<Integer> sentSlots = new HashSet<>();
