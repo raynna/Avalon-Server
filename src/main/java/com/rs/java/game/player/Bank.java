@@ -14,10 +14,9 @@ import com.rs.java.game.item.meta.ItemMetadata;
 import com.rs.java.game.item.meta.MetaDataType;
 import com.rs.java.game.npc.familiar.Familiar;
 import com.rs.java.game.player.content.ItemConstants;
-import com.rs.java.game.player.content.grandexchange.GrandExchange;
-import com.rs.java.game.player.content.presets.PresetManager;
 import com.rs.java.utils.EconomyPrices;
 import com.rs.java.utils.Utils;
+import com.rs.kotlin.game.player.grandexchange.GrandExchange;
 import com.rs.kotlin.game.player.interfaces.PresetInterface;
 
 public class Bank implements Serializable {
@@ -119,8 +118,8 @@ public class Bank implements Serializable {
 		long inventoryValue = player.getInventory().getInventoryValue();
 		long equipmentValue = player.getEquipment().getEquipmentValue();
 		long totalValue = 0;
-		long grandexchangeValue = GrandExchange.getTotalOfferValues(player);
-		long collectionValue = GrandExchange.getTotalCollectionValue(player);
+		long grandexchangeValue = GrandExchange.INSTANCE.getTotalOfferValues(player);
+		long collectionValue = GrandExchange.INSTANCE.getTotalCollectionValue(player);
 		player.closeInterfaces();
 		player.getInterfaceManager().sendInterface(629);
 		player.getPackets().sendTextOnComponent(629, 11, "Information Tab");
