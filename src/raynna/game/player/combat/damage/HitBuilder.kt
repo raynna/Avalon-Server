@@ -4,6 +4,7 @@ import raynna.game.Entity
 import raynna.game.Hit
 import raynna.game.npc.NPC
 import raynna.game.player.Player
+import raynna.game.player.bot.PlayerBotManager
 import raynna.util.Utils
 import raynna.game.player.combat.CombatCalculations
 import raynna.game.player.combat.CombatType
@@ -90,6 +91,18 @@ class HitBuilder(
 
     fun apply(): Hit {
         val hit = Hit(source, damage, look)
+        if (source is Player &&
+            target is Player &&
+            !PlayerBotManager.isManagedBot(source as Player) &&
+            PlayerBotManager.isManagedBot(target as Player)
+        ) {
+            val attacker = source as Player
+            val defender = target as Player
+            println(
+                "[CombatBot QUEUE] attacker=${attacker.displayName} defender=${defender.displayName} " +
+                    "type=manual look=${hit.look} damage=${hit.damage} delay=${delayTicks}"
+            )
+        }
         context.combat.delayHits(PendingHit(hit, target, delayTicks))
         return hit
     }
@@ -154,6 +167,17 @@ class HitBuilder(
 
         if (!accurate) {
             hit.damage = 0
+            if (target is Player &&
+                !PlayerBotManager.isManagedBot(attacker) &&
+                PlayerBotManager.isManagedBot(target)
+            ) {
+                val defender = target as Player
+                println(
+                    "[CombatBot QUEUE] attacker=${attacker.displayName} defender=${defender.displayName} " +
+                        "type=$type look=${hit.look} damage=${hit.damage} max=${hit.maxHit} " +
+                        "accurate=false delay=${delayTicks}"
+                )
+            }
             context.combat.delayHits(PendingHit(hit, target, delayTicks))
             return hit
         }
@@ -195,6 +219,17 @@ class HitBuilder(
         }
 
         postRollBonus?.invoke(hit)
+        if (target is Player &&
+            !PlayerBotManager.isManagedBot(attacker) &&
+            PlayerBotManager.isManagedBot(target)
+        ) {
+            val defender = target as Player
+            println(
+                "[CombatBot QUEUE] attacker=${attacker.displayName} defender=${defender.displayName} " +
+                    "type=$type look=${hit.look} damage=${hit.damage} max=${hit.maxHit} " +
+                    "baseMax=${hit.baseMaxHit} accurate=true delay=${delayTicks}"
+            )
+        }
         context.combat.delayHits(PendingHit(hit, target, delayTicks))
         return hit
     }

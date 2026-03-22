@@ -1815,8 +1815,6 @@ public final class Utils {
 			data = new byte[] { (byte) (value >> 24), (byte) (value >> 16), (byte) (value >> 8), (byte) value };
 		}
 
-		else if (Settings.DEBUG)
-			Logger.log("Utils", "qc: " + fileId + ", " + (data == null ? 0 : data.length));
 		return data;
 	}
 

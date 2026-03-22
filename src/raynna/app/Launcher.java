@@ -76,7 +76,7 @@ public final class Launcher {
 		loadEnvFile("secret.env");
 		System.out.println("Current working directory: " + System.getProperty("user.dir"));
 		if (args.length < 2) {
-			raynna.app.Settings.DEBUG = true;
+			Settings.DEBUG = true;
 			Settings.PORT_ID = 43594;
 		} else {
 			Settings.DEBUG = Boolean.parseBoolean(args[0]);

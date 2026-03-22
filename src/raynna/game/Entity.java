@@ -20,6 +20,7 @@ import raynna.game.npc.qbd.TorturedSoul;
 import raynna.game.player.Player;
 import raynna.game.player.Skills;
 import raynna.game.player.TickManager;
+import raynna.game.player.bot.PlayerBotManager;
 import raynna.game.player.actions.combat.Poison;
 import raynna.game.player.content.Tint;
 import raynna.game.player.prayer.NormalPrayer;

@@ -52,6 +52,7 @@ public final class WorldPacketDispatcher {
                 WorldPacketsDecoder.ACTION_BUTTON8_PACKET,
                 WorldPacketsDecoder.ACTION_BUTTON9_PACKET,
                 WorldPacketsDecoder.ACTION_BUTTON10_PACKET,
+                WorldPacketsDecoder.EQUIPMENT_REMOVE_PACKET,
                 WorldPacketsDecoder.ENTER_STRING_PACKET);
         register(new WorldSocialPacketHandler(),
                 WorldPacketsDecoder.JOIN_FRIEND_CHAT_PACKET,

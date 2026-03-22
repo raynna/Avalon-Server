@@ -6,6 +6,7 @@ import raynna.core.packets.decode.world.dispatch.WorldQueuedPacketDispatcher;
 import java.util.BitSet;
 
 public final class WorldPacketType {
+    public static final int UNDEFINED_SIZE = Byte.MIN_VALUE;
     public static final int EQUIPMENT_REMOVE = 216;
     public static final int WALKING = 8;
     public static final int MINI_WALKING = 58;
@@ -83,6 +84,7 @@ public final class WorldPacketType {
     public static final int INTERFACE_ON_FLOORITEM = 69;
     public static final int WORLD_LIST_UPDATE = 87;
     public static final int DEVELOPER = 162;
+    public static final int NPC_CLICK2_ALT = 222;
 
     private static final byte[] PACKET_SIZES = new byte[256];
     private static final boolean[] QUEUED_PACKETS = new boolean[256];
@@ -90,6 +92,7 @@ public final class WorldPacketType {
     private static final String[] PACKET_NAMES = new String[256];
 
     static {
+        initializePacketSizes();
         loadPacketSizes();
         registerNames();
         registerQueuedPackets();
@@ -100,6 +103,9 @@ public final class WorldPacketType {
     }
     public static int sizeFor(int packetId) {
         return isValidId(packetId) ? PACKET_SIZES[packetId] : Integer.MIN_VALUE;
+    }
+    public static boolean hasDefinedSize(int packetId) {
+        return isValidId(packetId) && PACKET_SIZES[packetId] != UNDEFINED_SIZE;
     }
     public static boolean isQueued(int packetId) {
         return isValidId(packetId) && QUEUED_PACKETS[packetId];
@@ -138,6 +144,9 @@ public final class WorldPacketType {
         if (!isValidId(packetId)) {
             throw new IllegalStateException("Packet handler registered invalid id " + packetId);
         }
+        if (!hasDefinedSize(packetId)) {
+            throw new IllegalStateException("Packet " + nameOf(packetId) + " (" + packetId + ") has no defined size");
+        }
         int size = sizeFor(packetId);
         if (size == 0
                 && packetId != PING
@@ -150,6 +159,12 @@ public final class WorldPacketType {
         if (queued != isQueued(packetId)) {
             String name = nameOf(packetId);
             throw new IllegalStateException("Packet " + name + " (" + packetId + ") queued registration mismatch");
+        }
+    }
+
+    private static void initializePacketSizes() {
+        for (int i = 0; i < PACKET_SIZES.length; i++) {
+            PACKET_SIZES[i] = (byte) UNDEFINED_SIZE;
         }
     }
 
@@ -229,6 +244,7 @@ public final class WorldPacketType {
         name(MOVE_CAMERA, "MOVE_CAMERA");
         name(EXAMINE_FLOORITEM, "EXAMINE_FLOORITEM");
         name(DEVELOPER, "DEVELOPER");
+        name(NPC_CLICK2_ALT, "NPC_CLICK2_ALT");
         name(EQUIPMENT_REMOVE, "EQUIPMENT_REMOVE");
         name(INCOMING_ASSIST, "INCOMING_ASSIST/PLAYER_OPTION_7");
         name(ITEM_ON_ITEM, "ITEM_ON_ITEM/EQUIPMENT_EXAMINE");
@@ -239,16 +255,20 @@ public final class WorldPacketType {
         ignore(7, "UNKNOWN_7");
         ignore(8, "UNKNOWN_8");
         ignore(10, "SET_MOUSE_PACKET");
+        ignore(12, "UNKNOWN_12");
         ignore(13, "UNKNOWN_13");
         ignore(15, "UNKNOWN_15");
         ignore(35, "UNKNOWN_35");
         ignore(39, "GAME_PANE_PACKET");
+        ignore(84, "UNKNOWN_84");
         ignore(93, "UNKNOWN_93");
         ignore(101, "UNKNOWN_101");
         ignore(158, "UNKNOWN_158");
-        ignore(222, "UNKNOWN_222");
+        ignore(161, "UNKNOWN_161");
+        ignore(221, "UNKNOWN_221");
         ignore(223, "UNKNOWN_223");
         ignore(224, "UNKNOWN_224");
+        ignore(217, "UNKNOWN_217");
     }
 
     private static void registerQueuedPackets() {
@@ -268,6 +288,7 @@ public final class WorldPacketType {
                 INTERFACE_ON_NPC,
                 NPC_CLICK1,
                 NPC_CLICK2,
+                NPC_CLICK2_ALT,
                 NPC_CLICK3,
                 NPC_CLICK4,
                 OBJECT_CLICK1,
@@ -276,8 +297,7 @@ public final class WorldPacketType {
                 OBJECT_CLICK4,
                 OBJECT_CLICK5,
                 INTERFACE_ON_OBJECT,
-                INTERFACE_ON_FLOORITEM,
-                EQUIPMENT_REMOVE
+                INTERFACE_ON_FLOORITEM
         );
     }
 
@@ -386,6 +406,15 @@ public final class WorldPacketType {
         PACKET_SIZES[101] = 3;
         PACKET_SIZES[102] = 7;
         PACKET_SIZES[103] = 4;
+        PACKET_SIZES[158] = 0;
+        PACKET_SIZES[161] = 0;
+        PACKET_SIZES[162] = 1;
+        PACKET_SIZES[216] = 8;
+        PACKET_SIZES[217] = 0;
+        PACKET_SIZES[221] = 0;
+        PACKET_SIZES[222] = 3;
+        PACKET_SIZES[223] = 0;
+        PACKET_SIZES[224] = 0;
     }
 
     private static void registerQueued(int... packetIds) {

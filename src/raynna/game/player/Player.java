@@ -125,6 +125,7 @@ import raynna.game.world.pvp.SafeZoneService;
 import static java.lang.Integer.max;
 
 public class Player extends Entity {
+    private static final long SLOW_PROCESS_ENTITY_MS = 50L;
 
     public static final int TELE_MOVE_TYPE = 127, WALK_MOVE_TYPE = 1, RUN_MOVE_TYPE = 2;
 
@@ -2664,12 +2665,24 @@ public class Player extends Entity {
 
     @Override
     public void processEntity() {
+        long processStart = System.nanoTime();
+        long preMoveNs = 0L;
+        long routeNs = 0L;
+        long superNs = 0L;
+        long postMoveNs = 0L;
+        long managerNs = 0L;
+        long upkeepNs = 0L;
+        long trailingNs = 0L;
+
+        long phaseStart = System.nanoTime();
         queue().process();
         processEquip();
         processUnequip();
         actionManager.processPreMovement();
+        preMoveNs = System.nanoTime() - phaseStart;
         RouteEvent event = routeEvent;
 
+        phaseStart = System.nanoTime();
         if (event != null && event.isTileTarget() && event.checkInteraction(this))
             routeEvent = null;
 
@@ -2679,9 +2692,13 @@ public class Player extends Entity {
             if (finished && !event.isEntityTarget())
                 routeEvent = null;
         }
+        routeNs = System.nanoTime() - phaseStart;
 
+        phaseStart = System.nanoTime();
         super.processEntity();
+        superNs = System.nanoTime() - phaseStart;
 
+        phaseStart = System.nanoTime();
         event = routeEvent;
         if (event != null && event.isEntityTarget() && event.checkInteraction(this))
             routeEvent = null;
@@ -2693,6 +2710,9 @@ public class Player extends Entity {
             addItemEvent.run();
             addItemEvent = null;
         }
+        postMoveNs = System.nanoTime() - phaseStart;
+
+        phaseStart = System.nanoTime();
         PvpManager.onEpTick(this);
         PvpManager.refreshAll(this);
         cutscenesManager.process();
@@ -2716,6 +2736,9 @@ public class Player extends Entity {
         if (getAssist().isAssisting()) {
             getAssist().Check();
         }
+        managerNs = System.nanoTime() - phaseStart;
+
+        phaseStart = System.nanoTime();
         if (miscTick % 10 == 0)
             drainHitPoints();
         //if (miscTick % 32 == 0)//TODO
@@ -2779,6 +2802,9 @@ public class Player extends Entity {
             restoreHitPoints();
             healTick -= ticksPerHeal;
         }
+        upkeepNs = System.nanoTime() - phaseStart;
+
+        phaseStart = System.nanoTime();
         for (Player player : World.getPlayers()) {
             if (player == null || skullList.isEmpty())
                 continue;
@@ -2894,6 +2920,23 @@ public class Player extends Entity {
                 if (!(getFrozenBy() instanceof NPC))
                     setFrozenBy(null);
             }
+        }
+        trailingNs = System.nanoTime() - phaseStart;
+
+        long totalMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - processStart);
+        if (totalMs >= SLOW_PROCESS_ENTITY_MS) {
+            System.out.println("[Player.processEntity SLOW] player=" + getDisplayName()
+                    + " total=" + totalMs + "ms"
+                    + " pre=" + TimeUnit.NANOSECONDS.toMillis(preMoveNs)
+                    + " route=" + TimeUnit.NANOSECONDS.toMillis(routeNs)
+                    + " super=" + TimeUnit.NANOSECONDS.toMillis(superNs)
+                    + " post=" + TimeUnit.NANOSECONDS.toMillis(postMoveNs)
+                    + " managers=" + TimeUnit.NANOSECONDS.toMillis(managerNs)
+                    + " upkeep=" + TimeUnit.NANOSECONDS.toMillis(upkeepNs)
+                    + " trailing=" + TimeUnit.NANOSECONDS.toMillis(trailingNs)
+                    + " action=" + (getActionManager().getAction() == null ? "none" : getActionManager().getAction().getClass().getSimpleName())
+                    + " controller=" + (getControlerManager().getControler() == null ? "none" : getControlerManager().getControler().getClass().getSimpleName())
+                    + " routeEvent=" + (routeEvent == null ? "none" : routeEvent.getClass().getSimpleName()));
         }
     }
 
@@ -3946,6 +3989,18 @@ public class Player extends Entity {
             return;
         if (hit.getLook() != HitLook.MELEE_DAMAGE && hit.getLook() != HitLook.RANGE_DAMAGE && hit.getLook() != HitLook.MAGIC_DAMAGE)
             return;
+        if (hit.getSource() instanceof Player attacker
+                && !PlayerBotManager.isManagedBot(attacker)
+                && PlayerBotManager.isManagedBot(this)) {
+            System.out.println("[CombatBot DEFENDER] attacker=" + attacker.getDisplayName()
+                    + " defender=" + getDisplayName()
+                    + " look=" + hit.getLook()
+                    + " damage=" + hit.getDamage()
+                    + " activeRange=" + getPrayer().isRangeProtecting()
+                    + " activeMage=" + getPrayer().isMageProtecting()
+                    + " activeMelee=" + getPrayer().isMeleeProtecting()
+                    + " headIcon=" + getPrayer().getPrayerHeadIcon());
+        }
     }
 
     public void checkPetDeath() {

@@ -6,6 +6,7 @@ import raynna.game.player.Player
 import raynna.game.player.TickManager
 import raynna.game.player.actions.Action
 import raynna.game.player.actions.combat.QueuedInstantCombat
+import raynna.game.player.bot.PlayerBotManager
 import raynna.util.Utils
 import raynna.game.player.combat.magic.MagicStyle
 import raynna.game.player.combat.magic.special.GreaterRunicStaffWeapon
@@ -262,6 +263,18 @@ class CombatAction(
                 if (!check(player, target)) {
                     return -1
                 }
+                if (target is Player &&
+                    !PlayerBotManager.isManagedBot(player) &&
+                    PlayerBotManager.isManagedBot(target)
+                ) {
+                    println(
+                        "[CombatBot START] attacker=${player.displayName} defender=${target.displayName} " +
+                            "style=${style::class.simpleName} targetAction=${target.actionManager.action?.javaClass?.simpleName ?: "none"} " +
+                            "attackerSpell=${player.combatDefinitions.spellId} weapon=${player.equipment.weaponId} " +
+                            "botRange=${target.prayer.isRangeProtecting} botMage=${target.prayer.isMageProtecting} " +
+                            "botMelee=${target.prayer.isMeleeProtecting} botHeadIcon=${target.prayer.prayerHeadIcon}"
+                    )
+                }
                 if (validateAttack(player, target)) {
                     target.attackedBy = player
 
@@ -272,6 +285,16 @@ class CombatAction(
                     if (target is Player) {
                         target.skullList[player] = 1440
                         PvpManager.onPlayerDamagedByPlayer(target, player)
+                    }
+                    if (target is Player &&
+                        !PlayerBotManager.isManagedBot(player) &&
+                        PlayerBotManager.isManagedBot(target)
+                    ) {
+                        println(
+                            "[CombatBot ATTACK] attacker=${player.displayName} defender=${target.displayName} " +
+                                "style=${style::class.simpleName} attackSpeed=${style.getAttackSpeed()} hitDelay=${style.getHitDelay()} " +
+                                "distance=${Utils.getDistance(player, target)}"
+                        )
                     }
                     style.attack()
                 }

@@ -10,11 +10,10 @@ import raynna.game.Hit
 import raynna.game.item.Item
 import raynna.game.npc.NPC
 import raynna.game.player.Equipment
+import raynna.game.player.NewPoison
 import raynna.game.player.Player
 import raynna.game.player.Skills
 import raynna.game.player.TickManager
-import raynna.util.Utils
-import raynna.game.player.NewPoison
 import raynna.game.player.combat.*
 import raynna.game.player.combat.damage.PendingHit
 import raynna.game.player.combat.magic.ancient.AncientMagicks
@@ -32,6 +31,7 @@ import raynna.game.world.projectile.Projectile
 import raynna.game.world.projectile.ProjectileManager
 import raynna.game.world.projectile.ProjectileRegistry
 import raynna.game.world.projectile.ProjectileRequest
+import raynna.util.Utils
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -434,7 +434,7 @@ class MagicStyle(
         var secondImpact = 0
         val baseProjectile = spell.projectileType
         val baseType = ProjectileRegistry.get(baseProjectile) ?: return
-        val slowType = baseType.copy(multiplier = baseType.multiplier * 2)
+        val slowType = baseType.copy(lengthAdjustment = 8, multiplier = baseType.multiplier * 2)
         if (spell.projectileIds.isNotEmpty()) {
             val heightDifferences = listOf(10, 0, -10)
 

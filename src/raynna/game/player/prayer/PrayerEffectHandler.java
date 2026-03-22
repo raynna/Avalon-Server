@@ -37,6 +37,7 @@ public class PrayerEffectHandler {
     }
 
     private static void handleActualProtectionPrayer(Entity attacker, Entity defender, Hit hit, Prayer protectionPrayer) {
+        int originalDamage = hit.getDamage();
         double multiplier = 1.0 - protectionPrayer.getDamageReduction(); //protect prayers set to 0.4, 1.0 - 0.4 = 0.6 reduction,
 
         if (attacker instanceof NPC npc) {
@@ -60,6 +61,17 @@ public class PrayerEffectHandler {
             }
         }
         hit.setDamage((int) (hit.getDamage() * multiplier));
+        if (attacker instanceof Player sourcePlayer && defender instanceof Player targetPlayer
+                && PlayerBotManager.isManagedBot(targetPlayer) && !PlayerBotManager.isManagedBot(sourcePlayer)
+                && originalDamage > 0) {
+            System.out.println("[PrayerBot DEBUG] attacker=" + sourcePlayer.getDisplayName()
+                    + " defender=" + targetPlayer.getDisplayName()
+                    + " prayer=" + protectionPrayer.getName()
+                    + " look=" + hit.getLook()
+                    + " before=" + originalDamage
+                    + " after=" + hit.getDamage()
+                    + " curses=" + targetPlayer.getPrayer().isAncientCurses());
+        }
     }
 
     private static void handleDeflectHit(Entity defender, Entity attacker, Hit hit) {

@@ -36,6 +36,7 @@ public final class WorldQueuedPacketDispatcher {
         register(WorldInteractionSupport::handleInterfaceOnNpc, WorldPacketsDecoder.INTERFACE_ON_NPC);
         register(NPCHandler::handleOption1, WorldPacketsDecoder.NPC_CLICK1_PACKET);
         register(NPCHandler::handleOption2, WorldPacketsDecoder.NPC_CLICK2_PACKET);
+        register(NPCHandler::handleOption222, WorldPacketType.NPC_CLICK2_ALT);
         register(NPCHandler::handleOption3, WorldPacketsDecoder.NPC_CLICK3_PACKET);
         register(NPCHandler::handleOption4, WorldPacketsDecoder.NPC_CLICK4_PACKET);
         register((player, stream) -> ObjectHandler.handleOption(player, stream, 1), WorldPacketsDecoder.OBJECT_CLICK1_PACKET);

@@ -23,7 +23,10 @@ import raynna.util.MachineInformation;
 import raynna.util.Utils;
 import raynna.game.player.bot.BotPresetCatalog;
 import raynna.game.player.combat.CombatAction;
+import raynna.game.player.combat.magic.RuneRequirement;
+import raynna.game.player.combat.magic.Spellbook;
 import raynna.game.player.combat.magic.lunar.spells.VengeanceService;
+import raynna.game.player.combat.range.RangeData;
 import raynna.game.world.area.Area;
 import raynna.game.world.area.AreaManager;
 import raynna.game.world.pvp.PvpManager;
@@ -308,6 +311,7 @@ public final class PlayerBotManager {
         }
 
         long upkeepStart = System.nanoTime();
+        long cooldownStart = System.nanoTime();
         if (bot.foodCooldownTicks > 0) {
             bot.foodCooldownTicks--;
         }
@@ -335,7 +339,16 @@ public final class PlayerBotManager {
         if (bot.routeCooldownTicks > 0) {
             bot.routeCooldownTicks--;
         }
+        if (!player.getRun()) {
+            player.setRun(true);
+        }
+        if (player.getRunEnergy() < 100) {
+            player.setRunEnergy(100);
+        }
+        profile.cooldownMs += System.nanoTime() - cooldownStart;
+        long movementStart = System.nanoTime();
         trackMovement(bot);
+        profile.movementMs += System.nanoTime() - movementStart;
         profile.upkeepMs += System.nanoTime() - upkeepStart;
 
         if (shouldRestock(bot)) {
@@ -371,16 +384,6 @@ public final class PlayerBotManager {
             profile.challengeMs += System.nanoTime() - start;
         }
 
-        if (isSafe(player) || !player.isCanPvp() || !isDangerous(player)) {
-            bot.state = BotState.LEAVING_SAFEZONE;
-            long start = System.nanoTime();
-            walkToDanger(bot);
-            profile.safeExitMs += System.nanoTime() - start;
-            profile.safeExitBots++;
-            profile.recordBot(bot, System.nanoTime() - botStart, "safe-exit");
-            return;
-        }
-
         long directAggressorStart = System.nanoTime();
         Player directAggressor = getDirectAggressor(bot);
         profile.aggressorLookupMs += System.nanoTime() - directAggressorStart;
@@ -394,9 +397,10 @@ public final class PlayerBotManager {
             maybeSwitchOffensivePrayer(bot);
             maybeCastVengeance(bot, directAggressor);
             maybeUseSpecial(bot, directAggressor);
-            player.resetWalkSteps();
+            player.stopAll(true, false, true);
+            bot.lastPathTarget = null;
+            bot.roamTarget = null;
             if (!(player.getActionManager().getAction() instanceof CombatAction) || player.getTemporaryTarget() != directAggressor) {
-                player.getActionManager().forceStop();
                 player.getActionManager().setAction(new CombatAction(directAggressor));
             }
             profile.combatMs += System.nanoTime() - start;
@@ -418,8 +422,10 @@ public final class PlayerBotManager {
             maybeSwitchOffensivePrayer(bot);
             maybeCastVengeance(bot, engagedTarget);
             maybeUseSpecial(bot, engagedTarget);
-            player.resetWalkSteps();
-            if (!(player.getActionManager().getAction() instanceof CombatAction)) {
+            player.stopAll(true, false, true);
+            bot.lastPathTarget = null;
+            bot.roamTarget = null;
+            if (!(player.getActionManager().getAction() instanceof CombatAction) || player.getTemporaryTarget() != engagedTarget) {
                 player.getActionManager().setAction(new CombatAction(engagedTarget));
             }
             profile.combatMs += System.nanoTime() - start;
@@ -428,10 +434,20 @@ public final class PlayerBotManager {
             return;
         }
 
+        if (isSafe(player) || !player.isCanPvp() || !isDangerous(player)) {
+            bot.state = BotState.LEAVING_SAFEZONE;
+            long start = System.nanoTime();
+            walkToDanger(bot);
+            profile.safeExitMs += System.nanoTime() - start;
+            profile.safeExitBots++;
+            profile.recordBot(bot, System.nanoTime() - botStart, "safe-exit");
+            return;
+        }
+
         if (!isNearCenter(player, bot.stageCenter, bot.radius + 18)) {
             bot.state = BotState.RETURNING;
             long start = System.nanoTime();
-            walkTowards(bot, randomDangerousTile(bot.stageCenter, bot.radius));
+            walkTowards(bot, bot.stageCenter);
             profile.returnMs += System.nanoTime() - start;
             profile.returningBots++;
             profile.recordBot(bot, System.nanoTime() - botStart, "return");
@@ -473,7 +489,10 @@ public final class PlayerBotManager {
         maybeCastVengeance(bot, target);
         maybeUseSpecial(bot, target);
 
-        if (!(player.getActionManager().getAction() instanceof CombatAction)) {
+        player.stopAll(true, false, true);
+        bot.lastPathTarget = null;
+        bot.roamTarget = null;
+        if (!(player.getActionManager().getAction() instanceof CombatAction) || player.getTemporaryTarget() != target) {
             player.getActionManager().setAction(new CombatAction(target));
         }
         profile.combatMs += System.nanoTime() - start;
@@ -510,7 +529,9 @@ public final class PlayerBotManager {
         bot.stageDirectionBias = Utils.random(0, 3);
         bot.stageCenter = findDangerousStage(randomTile(safeAnchor, Math.max(2, bot.radius + 4)), bot.stageDirectionBias);
 
-        bot.dynamicOverrides = items(BotPresetCatalog.pickOverrides(archetype.shortName));
+        BotPresetCatalog.BotPresetSelection presetSelection = BotPresetCatalog.pickSelection(archetype.shortName);
+        bot.dynamicOverrides = items(presetSelection.getEquipped());
+        bot.dynamicInventoryOverrides = items(presetSelection.getInventory());
         bot.selectedSpecWeaponId = chooseSpecWeaponId(archetype);
         refillSupplies(bot);
         applyArchetype(bot, true);
@@ -542,8 +563,8 @@ public final class PlayerBotManager {
         player.getPackets().sendPlayerOption("Trade", 4, false);
 
         bot.state = isSafe(respawnTile) ? BotState.LEAVING_SAFEZONE : BotState.ROAMING;
-        bot.safeWanderTicks = Utils.random(4, 9);
-        bot.safePauseTicks = Utils.random(2, 5);
+        bot.safeWanderTicks = 0;
+        bot.safePauseTicks = 0;
         bot.roamTicks = Utils.random(1, 3);
         bot.roamPauseTicks = Utils.random(4, 8);
         bot.roamTarget = null;
@@ -609,12 +630,21 @@ public final class PlayerBotManager {
             player.getPrayer().closeProtectionPrayers();
         }
         player.getCombatDefinitions().setSpellBook(mode.spellbook);
+        int attackStyle = chooseAttackStyleIndex(player, mode);
+        player.getCombatDefinitions().setAttackStyle(attackStyle);
         if (mode.autoCastSpell > 0) {
             player.getCombatDefinitions().setAutoCastSpell(mode.autoCastSpell);
         } else {
             player.getCombatDefinitions().resetSpells(true);
         }
         player.getAppearance().generateAppearenceData();
+    }
+
+    private static int chooseAttackStyleIndex(Player player, BotCombatMode mode) {
+        if (mode == null || mode.isMagicStyle()) {
+            return 0;
+        }
+        return 1;
     }
 
     private static void equipIfWearable(Player player, LoadoutItem item) {
@@ -704,6 +734,67 @@ public final class PlayerBotManager {
                 equipIfWearable(player, new LoadoutItem(fallbackHands, 1));
             }
         }
+
+        ensureModeWeaponry(player, mode);
+    }
+
+    private static void ensureModeWeaponry(Player player, BotCombatMode mode) {
+        Item weapon = player.getEquipment().getItem(Equipment.SLOT_WEAPON);
+        if (mode.isMagicStyle()) {
+            if (weapon == null || !isMagicWeapon(weapon.getId())) {
+                int fallbackWeapon = fallbackWeaponId(player, mode);
+                if (fallbackWeapon > 0) {
+                    equipIfWearable(player, new LoadoutItem(fallbackWeapon, 1));
+                }
+            }
+            return;
+        }
+
+        if (mode.isRangeStyle()) {
+            if (weapon == null || RangeData.Companion.getWeaponByItemId(weapon.getId()) == null) {
+                int fallbackWeapon = fallbackWeaponId(player, mode);
+                if (fallbackWeapon > 0) {
+                    equipIfWearable(player, new LoadoutItem(fallbackWeapon, 1));
+                }
+            }
+            int fallbackAmmo = fallbackAmmoId(player);
+            if (fallbackAmmo > 0) {
+                Item ammo = player.getEquipment().getItem(Equipment.SLOT_ARROWS);
+                if (ammo == null || ammo.getId() != fallbackAmmo) {
+                    player.getEquipment().getItems().set(Equipment.SLOT_ARROWS, new Item(fallbackAmmo, 250));
+                }
+            }
+            return;
+        }
+
+        if (weapon == null || RangeData.Companion.getWeaponByItemId(weapon.getId()) != null || isMagicWeapon(weapon.getId())) {
+            int fallbackWeapon = fallbackWeaponId(player, mode);
+            if (fallbackWeapon > 0) {
+                equipIfWearable(player, new LoadoutItem(fallbackWeapon, 1));
+            }
+        }
+    }
+
+    private static int fallbackAmmoId(Player player) {
+        int weaponId = player.getEquipment().getWeaponId();
+        if (weaponId == 9185) {
+            return 9244;
+        }
+        if (weaponId == 861) {
+            return 892;
+        }
+        if (weaponId == 11235) {
+            return 11212;
+        }
+        return -1;
+    }
+
+    private static boolean isMagicWeapon(int itemId) {
+        if (itemId <= 0) {
+            return false;
+        }
+        String name = ItemDefinitions.getItemDefinitions(itemId).getName().toLowerCase();
+        return name.contains("staff") || name.contains("wand") || name.contains("battlestaff");
     }
 
     private static int fallbackWeaponId(Player player, BotCombatMode mode) {
@@ -942,14 +1033,18 @@ public final class PlayerBotManager {
             return;
         }
 
-        if (hasActiveProtectionPrayer(bot.player) && Utils.random(5) == 0) {
+        boolean urgentSwap = target != null &&
+                (bot.recentAggressorName != null && bot.recentAggressorName.equalsIgnoreCase(target.getUsername())
+                        || bot.player.getAttackedBy() == target);
+
+        if (!urgentSwap && hasActiveProtectionPrayer(bot.player) && Utils.random(5) == 0) {
             bot.prayerSwitchTicks = Utils.random(2, 6);
             return;
         }
 
         prayer.closeProtectionPrayers();
         prayer.switchPrayer(desired);
-        bot.prayerSwitchTicks = Utils.random(2, 5);
+        bot.prayerSwitchTicks = urgentSwap ? 1 : Utils.random(2, 5);
     }
 
     private static Prayer fallbackProtectionPrayer(ManagedBot bot, Player target) {
@@ -1032,7 +1127,7 @@ public final class PlayerBotManager {
 
     private static void maybeEat(ManagedBot bot) {
         Player player = bot.player;
-        if (bot.foodLeft <= 0 || bot.foodCooldownTicks > 0) {
+        if (bot.foodLeft <= 0 || bot.foodCooldownTicks > 0 || player.isFoodLocked()) {
             return;
         }
 
@@ -1043,6 +1138,8 @@ public final class PlayerBotManager {
 
         int healAmount = player.getActionManager().getAction() instanceof CombatAction ? 180 : 220;
         player.animate(new Animation(829));
+        player.addFoodLock(3);
+        player.getActionManager().setActionDelay(player.getActionManager().getActionDelay() + 3);
         player.heal(healAmount);
         bot.foodLeft--;
         bot.foodCooldownTicks = healthRatio < 0.35 ? 2 : 5;
@@ -1214,6 +1311,9 @@ public final class PlayerBotManager {
         if (target.getCombatDefinitions().getSpellId() > 0) {
             return ProtectionStyle.MAGIC;
         }
+        if (RangeData.Companion.getWeaponByItemId(target.getEquipment().getWeaponId()) != null) {
+            return ProtectionStyle.RANGE;
+        }
         Item weapon = target.getEquipment().getItem(Equipment.SLOT_WEAPON);
         if (weapon == null) {
             return ProtectionStyle.MELEE;
@@ -1222,7 +1322,8 @@ public final class PlayerBotManager {
         if (name.contains("staff") || name.contains("wand") || name.contains("battlestaff")) {
             return ProtectionStyle.MAGIC;
         }
-        if (name.contains("bow") || name.contains("crossbow") || name.contains("knife") || name.contains("dart") || name.contains("javelin")) {
+        if (name.contains("bow") || name.contains("crossbow") || name.contains("knife") || name.contains("dart")
+                || name.contains("javelin") || name.contains("thrownaxe") || name.contains("chinchompa")) {
             return ProtectionStyle.RANGE;
         }
         return ProtectionStyle.MELEE;
@@ -1261,7 +1362,8 @@ public final class PlayerBotManager {
             player.refreshHitPoints();
             player.getPrayer().restorePrayer(player.getSkills().getRealLevel(Skills.PRAYER) * 10);
             player.getCombatDefinitions().resetSpecialAttack();
-            bot.safeWanderTicks = Utils.random(4, 10);
+            bot.safeWanderTicks = 0;
+            bot.safePauseTicks = 0;
             return;
         }
         if (bot.restockTicks <= 1) {
@@ -1294,19 +1396,18 @@ public final class PlayerBotManager {
         if (bot.player.hasWalkSteps()) {
             return;
         }
-        if (bot.safePauseTicks > 0) {
-            bot.safePauseTicks--;
+        if (bot.routeCooldownTicks > 0) {
             return;
         }
-        if (bot.safeWanderTicks > 0) {
-            bot.safeWanderTicks--;
-            WorldTile safeTile = randomSafeTile(bot.player, Math.max(7, Math.min(10, bot.radius + 3)));
-            walkTowards(bot, safeTile);
-            bot.safePauseTicks = Utils.random(2, 4);
-            return;
+        WorldTile target = bot.stageCenter;
+        if (target == null || !isDangerous(target) || isSafe(target)) {
+            rerollStage(bot);
+            target = bot.stageCenter;
         }
-        WorldTile target = randomDangerousTile(bot.stageCenter, Math.max(6, bot.radius));
         walkTowards(bot, target);
+        if (bot.routeCooldownTicks <= 0) {
+            bot.routeCooldownTicks = Utils.random(4, 8);
+        }
     }
 
     private static void walkTowards(ManagedBot bot, WorldTile tile) {
@@ -1314,10 +1415,18 @@ public final class PlayerBotManager {
         if (tile == null) {
             return;
         }
-        if (bot.routeCooldownTicks > 0 &&
-                bot.lastPathTarget != null &&
+        if (Utils.getDistance(player, tile) <= 1) {
+            bot.lastPathTarget = tile;
+            return;
+        }
+        if (bot.lastPathTarget != null &&
                 bot.lastPathTarget.matches(tile) &&
                 player.hasWalkSteps()) {
+            return;
+        }
+        if (bot.routeCooldownTicks > 0 &&
+                bot.lastPathTarget != null &&
+                bot.lastPathTarget.matches(tile)) {
             return;
         }
         bot.lastPathTarget = tile;
@@ -1332,12 +1441,10 @@ public final class PlayerBotManager {
                 bot.failedPathTicks = 0;
                 if (bot.state == BotState.LEAVING_SAFEZONE) {
                     rerollStage(bot);
-                    bot.safeWanderTicks = Utils.random(2, 5);
                 } else if (isSafe(player) || !isDangerous(player)) {
-                    bot.safeWanderTicks = Utils.random(2, 5);
                     player.resetWalkSteps();
                 } else {
-                    WorldTile repath = randomDangerousTile(bot.stageCenter, Math.max(4, bot.radius));
+                    WorldTile repath = bot.stageCenter;
                     if (repath != null && !repath.matches(player)) {
                         walkTowards(bot, repath);
                     } else {
@@ -1419,16 +1526,41 @@ public final class PlayerBotManager {
 
     private static Player getDirectAggressor(ManagedBot bot) {
         Player player = bot.player;
-        if (!(player.getAttackedBy() instanceof Player attacker)) {
-            return null;
+        if (player.getAttackedBy() instanceof Player attacker &&
+                player.getAttackedByDelay() > Utils.currentTimeMillis() &&
+                isValidAggressorTarget(bot, attacker)) {
+            return attacker;
         }
-        if (player.getAttackedByDelay() <= Utils.currentTimeMillis()) {
-            return null;
+        if (bot.recentAggressorTicks > 0 && bot.recentAggressorName != null) {
+            Player recent = World.getPlayer(bot.recentAggressorName);
+            if (isValidAggressorTarget(bot, recent)) {
+                return recent;
+            }
         }
-        if (!isValidCombatTarget(bot, attacker, false) || !isReasonablyReachable(player, attacker)) {
-            return null;
+        return null;
+    }
+
+    private static boolean isValidAggressorTarget(ManagedBot source, Player target) {
+        Player self = source.player;
+        if (target == null || target == self || target.hasFinished() || target.isDead()) {
+            return false;
         }
-        return attacker;
+        if (target.getPlane() != self.getPlane()) {
+            return false;
+        }
+        if (!target.isCanPvp() || !isDangerous(target)) {
+            return false;
+        }
+        if (!self.isCanPvp() || !isDangerous(self)) {
+            return false;
+        }
+        if (!PvpManager.canPlayerAttack(self, target) || !PvpManager.canPlayerAttack(target, self)) {
+            return false;
+        }
+        if (!self.getControlerManager().canAttack(target) || !target.getControlerManager().canAttack(self)) {
+            return false;
+        }
+        return self.getControlerManager().canHit(target) && target.getControlerManager().canHit(self);
     }
 
     private static boolean isValidCombatTarget(ManagedBot source, Player target) {
@@ -1493,20 +1625,39 @@ public final class PlayerBotManager {
     private static void trackPlayerAggressor(ManagedBot bot) {
         Player player = bot.player;
         if (!(player.getAttackedBy() instanceof Player attacker)) {
+            if (bot.recentAggressorTicks > 0) {
+                bot.recentAggressorTicks--;
+                if (bot.recentAggressorTicks <= 0) {
+                    bot.recentAggressorName = null;
+                }
+            }
             return;
         }
         if (player.getAttackedByDelay() <= Utils.currentTimeMillis()) {
+            if (bot.recentAggressorTicks > 0) {
+                bot.recentAggressorTicks--;
+                if (bot.recentAggressorTicks <= 0) {
+                    bot.recentAggressorName = null;
+                }
+            }
             return;
         }
         if (attacker.hasFinished() || attacker.isDead() || attacker.getPlane() != player.getPlane()) {
             return;
         }
+        bot.recentAggressorName = attacker.getUsername();
+        bot.recentAggressorTicks = 12;
         bot.challengeTargetName = attacker.getUsername();
         bot.challengeTicks = Math.max(bot.challengeTicks, 80);
         if (player.getActionManager().getAction() instanceof CombatAction && player.getTemporaryTarget() instanceof Player target &&
                 target != attacker && !isReasonablyReachable(player, target)) {
             player.getActionManager().forceStop();
             player.resetWalkSteps();
+        }
+        if (!(player.getActionManager().getAction() instanceof CombatAction) || player.getTemporaryTarget() != attacker) {
+            player.stopAll(true, false, true);
+            bot.lastPathTarget = null;
+            bot.roamTarget = null;
         }
     }
 
@@ -1597,7 +1748,7 @@ public final class PlayerBotManager {
         maybeSwitchOffensivePrayer(bot);
         maybeCastVengeance(bot, challenger);
         maybeUseSpecial(bot, challenger);
-        player.resetWalkSteps();
+        player.stopAll(true, false, true);
         if (!(player.getActionManager().getAction() instanceof CombatAction)) {
             player.getActionManager().setAction(new CombatAction(challenger));
         }
@@ -1664,15 +1815,15 @@ public final class PlayerBotManager {
             return new WorldTile(center);
         }
         List<WorldTile> candidates = new ArrayList<>();
-        int sampleRadius = 48;
-        for (int i = 0; i < 96; i++) {
+        int sampleRadius = 32;
+        for (int i = 0; i < 40; i++) {
             WorldTile tile = randomTile(center, sampleRadius);
             if (isDangerous(tile) && !isSafe(tile)) {
                 candidates.add(tile);
             }
         }
-        for (int radius = 4; radius <= sampleRadius; radius += 4) {
-            for (int step = 0; step < 16; step++) {
+        for (int radius = 4; radius <= sampleRadius; radius += 8) {
+            for (int step = 0; step < 8; step++) {
                 double angle = (Math.PI * 2D * step) / 16D;
                 int dx = (int) Math.round(Math.cos(angle) * radius);
                 int dy = (int) Math.round(Math.sin(angle) * radius);
@@ -1683,7 +1834,7 @@ public final class PlayerBotManager {
             }
         }
         if (candidates.isEmpty()) {
-            for (int radius = 1; radius <= 64; radius++) {
+            for (int radius = 1; radius <= 32; radius += 2) {
                 for (int dx = -radius; dx <= radius; dx++) {
                     for (int dy = -radius; dy <= radius; dy++) {
                         if (Math.abs(dx) != radius && Math.abs(dy) != radius) {
@@ -1704,23 +1855,18 @@ public final class PlayerBotManager {
             return center;
         }
 
-        List<WorldTile> reachableTiles = candidates.stream()
+        List<WorldTile> distinctTiles = candidates.stream()
                 .distinct()
-                .filter(tile -> routeSteps(center.getX(), center.getY(), center.getPlane(), 1, tile) >= 0)
                 .toList();
-        if (reachableTiles.isEmpty()) {
-            return center;
-        }
-
-        List<WorldTile> sectorTiles = filterPreferredDirection(center, reachableTiles, preferredDirection);
-        List<WorldTile> pool = sectorTiles.isEmpty() ? reachableTiles : sectorTiles;
+        List<WorldTile> sectorTiles = filterPreferredDirection(center, distinctTiles, preferredDirection);
+        List<WorldTile> pool = sectorTiles.isEmpty() ? distinctTiles : sectorTiles;
         List<WorldTile> bestTiles = pool.stream()
                 .distinct()
                 .sorted(Comparator
                         .comparingInt((WorldTile tile) -> scoreDangerousTile(center, tile))
                         .thenComparingInt(WorldTile::getX)
                         .thenComparingInt(WorldTile::getY))
-                .limit(24)
+                .limit(8)
                 .toList();
         return bestTiles.get(Utils.random(bestTiles.size()));
     }
@@ -1744,8 +1890,7 @@ public final class PlayerBotManager {
     private static WorldTile randomDangerousTile(WorldTile center, int radius) {
         for (int i = 0; i < 24; i++) {
             WorldTile tile = randomTile(center, radius);
-            if (isDangerous(tile) && !isSafe(tile) &&
-                    routeSteps(center.getX(), center.getY(), center.getPlane(), 1, tile) >= 0) {
+            if (isDangerous(tile) && !isSafe(tile)) {
                 return tile;
             }
         }
@@ -1763,9 +1908,6 @@ public final class PlayerBotManager {
                 continue;
             }
             if (!bot.wideWander && !isNearCenter(tile, bot.stageCenter, bot.radius + 16)) {
-                continue;
-            }
-            if (routeSteps(bot.player.getX(), bot.player.getY(), bot.player.getPlane(), bot.player.getSize(), tile) < 0) {
                 continue;
             }
             if (bot.wideWander || isNearCenter(tile, bot.stageCenter, bot.radius + 16)) {
@@ -1791,10 +1933,7 @@ public final class PlayerBotManager {
     }
 
     private static int scoreDangerousTile(WorldTile from, WorldTile tile) {
-        int euclidean = Math.abs(tile.getX() - from.getX()) + Math.abs(tile.getY() - from.getY());
-        int routeSteps = routeSteps(from.getX(), from.getY(), from.getPlane(), 1, tile);
-        int routePenalty = routeSteps < 0 ? 10_000 : routeSteps * 2;
-        return euclidean + routePenalty;
+        return Math.abs(tile.getX() - from.getX()) + Math.abs(tile.getY() - from.getY());
     }
 
     private static boolean routeTo(Player player, WorldTile tile) {
@@ -1845,13 +1984,12 @@ public final class PlayerBotManager {
         if (distance > MAX_TARGET_DISTANCE) {
             return false;
         }
-        int steps = routeSteps(source.getX(), source.getY(), source.getPlane(), source.getSize(), target);
-        return steps >= 0 && steps <= Math.max(MAX_ROUTE_STEPS, distance + 12);
+        return source.getMapRegionsIds().contains(target.getRegionId());
     }
 
     private static void trackMovement(ManagedBot bot) {
         Player player = bot.player;
-        if (needsRelocation(bot) && shouldForceRescue(bot)) {
+        if (shouldForceRescue(bot) && needsRelocation(bot)) {
             relocateBot(bot, shouldRelocateToSafe(bot));
             return;
         }
@@ -1891,7 +2029,6 @@ public final class PlayerBotManager {
             player.resetWalkSteps();
             bot.stuckTicks = 0;
             bot.failedPathTicks = 0;
-            bot.safeWanderTicks = Utils.random(2, 5);
             return;
         }
 
@@ -1902,19 +2039,22 @@ public final class PlayerBotManager {
         if (isSafe(player) || !isDangerous(player)) {
             if (bot.state == BotState.LEAVING_SAFEZONE) {
                 rerollStage(bot);
-                bot.safeWanderTicks = Utils.random(1, 4);
                 return;
             }
-            walkTowards(bot, randomDangerousTile(bot.stageCenter, Math.max(4, bot.radius)));
+            walkTowards(bot, bot.stageCenter);
         } else {
-            walkTowards(bot, randomDangerousTile(repath, 6));
+            walkTowards(bot, repath);
         }
     }
 
     private static void rerollStage(ManagedBot bot) {
+        if (bot.routeCooldownTicks > 0 && bot.stageCenter != null) {
+            return;
+        }
         WorldTile anchor = isSafe(bot.player) ? new WorldTile(bot.player) : bot.spawnCenter;
         bot.stageDirectionBias = (bot.stageDirectionBias + Utils.random(1, 3)) % 4;
         bot.stageCenter = findDangerousStage(randomTile(anchor, Math.max(4, bot.radius + 6)), bot.stageDirectionBias);
+        bot.routeCooldownTicks = Utils.random(6, 10);
     }
 
     private static boolean needsRelocation(ManagedBot bot) {
@@ -2069,6 +2209,22 @@ public final class PlayerBotManager {
     private static int scoreCombatMode(Player self, Player target, BotCombatMode mode, BotCombatMode current) {
         int distance = Utils.getDistance(self, target);
         int score = current == mode ? 1 : 0;
+        boolean targetFrozen = target.isFrozen();
+        boolean koWindow = isKoOpportunity(self, target, mode);
+        boolean specialReady = self.getCombatDefinitions().getSpecialAttackPercentage() >= mode.specialThreshold;
+        boolean targetProtectsMelee = isProtectingAgainst(target, ProtectionStyle.MELEE);
+        boolean targetProtectsRange = isProtectingAgainst(target, ProtectionStyle.RANGE);
+        boolean targetProtectsMagic = isProtectingAgainst(target, ProtectionStyle.MAGIC);
+
+        if (mode.useSpecial) {
+            if (specialReady && koWindow) {
+                score += 6;
+            } else if (!specialReady || target.getHitpoints() > target.getMaxHitpoints() * 0.55) {
+                score -= 8;
+            } else {
+                score -= 3;
+            }
+        }
 
         if (mode.isMeleeStyle()) {
             if (self.isFrozen()) {
@@ -2077,8 +2233,14 @@ public final class PlayerBotManager {
             score += Math.max(0, 6 - distance);
             score += target.getSkills().getLevel(Skills.DEFENCE) <= 75 ? 3 : 0;
             score += target.getHitpoints() < target.getMaxHitpoints() * 0.45 ? 5 : 0;
-            if (mode.useSpecial) {
+            if (distance > 1 && !targetFrozen) {
+                score -= 6;
+            }
+            if (targetFrozen) {
                 score += 2;
+            }
+            if (targetProtectsMelee) {
+                score -= 8;
             }
             return score;
         }
@@ -2087,7 +2249,12 @@ public final class PlayerBotManager {
             int magicDefence = target.getSkills().getLevel(Skills.MAGIC) + (target.getSkills().getLevel(Skills.DEFENCE) / 2);
             score += distance >= 4 ? 4 : 1;
             score += magicDefence <= 120 ? 5 : magicDefence <= 150 ? 2 : -1;
-            score += target.isFrozen() ? 3 : 0;
+            score += targetFrozen ? 3 : 8;
+            if (targetProtectsMagic) {
+                score -= 9;
+            } else {
+                score += 5;
+            }
             return score;
         }
 
@@ -2096,6 +2263,12 @@ public final class PlayerBotManager {
             score += distance >= 3 ? 4 : 1;
             score += rangedDefence <= 125 ? 4 : rangedDefence <= 155 ? 1 : -1;
             score += target.getHitpoints() < target.getMaxHitpoints() * 0.55 ? 2 : 0;
+            score += targetFrozen ? 7 : 1;
+            if (targetProtectsRange) {
+                score -= 9;
+            } else {
+                score += 3;
+            }
             return score;
         }
 
@@ -2165,8 +2338,11 @@ public final class PlayerBotManager {
         private int targetSearchCooldownTicks;
         private int routeCooldownTicks;
         private String cachedTargetName;
+        private String recentAggressorName;
+        private int recentAggressorTicks;
         private int selectedSpecWeaponId;
         private LoadoutItem[] dynamicOverrides;
+        private LoadoutItem[] dynamicInventoryOverrides;
 
         private ManagedBot(Player player, WorldTile spawnCenter, WorldTile stageCenter, int radius, BotArchetype archetype) {
             this.player = player;
@@ -2594,7 +2770,7 @@ public final class PlayerBotManager {
             this.foodItemId = 385;
             this.restoreItemId = 3024;
             this.boostPotionItemId = shortName.contains("pure") || shortName.contains("ghost") ? 2444 : 2436;
-            this.foodAmount = shortName.contains("dh") ? 14 : shortName.contains("nh") ? 12 : 11;
+            this.foodAmount = shortName.contains("dh") ? 16 : shortName.contains("nh") ? 16 : 13;
             this.restoreAmount = shortName.contains("dh") ? 4 : 4;
             this.boostPotionAmount = shortName.contains("nh") ? 4 : 3;
             this.modes = modes;
@@ -2792,7 +2968,7 @@ public final class PlayerBotManager {
         }
 
         private boolean isMagicStyle() {
-            return autoCastSpell > 0 || spellbook == 1;
+            return autoCastSpell > 0;
         }
 
         private boolean isRangeStyle() {
@@ -2877,6 +3053,18 @@ public final class PlayerBotManager {
                     merged.merge(item.id, item.amount, Math::max);
                 }
             }
+            addSpellRunes(merged, mode);
+        }
+        addModeEquipmentSwitches(merged, bot);
+        if (bot.selectedSpecWeaponId > 0) {
+            merged.merge(bot.selectedSpecWeaponId, 1, Math::max);
+        }
+        if (bot.dynamicInventoryOverrides != null) {
+            for (LoadoutItem item : bot.dynamicInventoryOverrides) {
+                if (item.valid()) {
+                    merged.merge(item.id, item.amount, Math::max);
+                }
+            }
         }
         addSupplyItem(merged, bot.foodItemId, bot.foodLeft);
         addSupplyItem(merged, bot.restoreItemId, bot.restoreLeft);
@@ -2889,9 +3077,58 @@ public final class PlayerBotManager {
         return items;
     }
 
+    private static void addModeEquipmentSwitches(Map<Integer, Integer> merged, ManagedBot bot) {
+        if (bot == null || bot.archetype == null || !bot.archetype.isNhBuild()) {
+            return;
+        }
+        BotCombatMode current = bot.currentMode;
+        for (BotCombatMode mode : bot.archetype.modes) {
+            if (mode == current) {
+                continue;
+            }
+            for (LoadoutItem item : mode.equipment) {
+                if (!item.valid()) {
+                    continue;
+                }
+                if (isSpecialWeaponItem(item.id) && item.id != bot.selectedSpecWeaponId) {
+                    continue;
+                }
+                merged.merge(item.id, item.amount, Math::max);
+            }
+        }
+    }
+
     private static void addSupplyItem(Map<Integer, Integer> merged, int itemId, int amount) {
         if (itemId > 0 && amount > 0) {
             merged.put(itemId, amount);
+        }
+    }
+
+    private static void addSpellRunes(Map<Integer, Integer> merged, BotCombatMode mode) {
+        if (mode == null || mode.autoCastSpell <= 0) {
+            return;
+        }
+        int spellbookId = switch (mode.spellbook) {
+            case 0 -> 192;
+            case 1 -> 193;
+            case 2 -> 430;
+            case 3 -> 950;
+            default -> -1;
+        };
+        if (spellbookId == -1) {
+            return;
+        }
+        Spellbook spellbook = Spellbook.get(spellbookId);
+        if (spellbook == null) {
+            return;
+        }
+        for (RuneRequirement requirement : spellbook.getRunesFor(mode.autoCastSpell)) {
+            if (requirement == null || requirement.getId() <= 0 || requirement.getAmount() <= 0) {
+                continue;
+            }
+            int desiredAmount = Math.max(requirement.getAmount() * 120,
+                    requirement.getId() == 560 || requirement.getId() == 565 || requirement.getId() == 566 ? 240 : 480);
+            merged.merge(requirement.getId(), desiredAmount, Math::max);
         }
     }
 
@@ -2976,6 +3213,8 @@ public final class PlayerBotManager {
         private int roamingBots;
         private int returningBots;
         private long upkeepMs;
+        private long cooldownMs;
+        private long movementMs;
         private long supportMs;
         private long resetMs;
         private long restockMs;
@@ -3019,6 +3258,8 @@ public final class PlayerBotManager {
                     .append(" roam=").append(roamingBots)
                     .append(" return=").append(returningBots)
                     .append(" timings[upkeep=").append(toMillis(upkeepMs))
+                    .append("ms cooldowns=").append(toMillis(cooldownMs))
+                    .append("ms movement=").append(toMillis(movementMs))
                     .append("ms support=").append(toMillis(supportMs))
                     .append("ms reset=").append(toMillis(resetMs))
                     .append("ms restock=").append(toMillis(restockMs))

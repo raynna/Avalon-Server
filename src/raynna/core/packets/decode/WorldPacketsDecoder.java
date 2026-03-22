@@ -227,6 +227,14 @@ public final class WorldPacketsDecoder extends Decoder {
 
             int length = WorldPacketType.sizeFor(packetId);
 
+            if (!WorldPacketType.hasDefinedSize(packetId)) {
+                if (Settings.DEBUG) {
+                    System.out.println("Packet " + packetId + " (" + WorldPacketType.nameOf(packetId) + ") has no defined size.");
+                }
+                stream.setOffset(startOffset);
+                break;
+            }
+
             if (length == -1) {
                 if (stream.getRemaining() < 1) {
                     stream.setOffset(startOffset);

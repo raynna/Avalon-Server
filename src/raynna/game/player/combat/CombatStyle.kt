@@ -2,6 +2,7 @@ package raynna.game.player.combat
 
 import raynna.core.tasks.WorldTask
 import raynna.core.tasks.WorldTasksManager
+import raynna.data.rscm.Rscm
 import raynna.game.Entity
 import raynna.game.ForceTalk
 import raynna.game.Hit
@@ -12,7 +13,6 @@ import raynna.game.player.Player
 import raynna.game.player.Skills
 import raynna.game.player.TickManager
 import raynna.game.player.bot.PlayerBotManager
-import raynna.game.player.prayer.PrayerEffectHandler
 import raynna.game.player.combat.damage.HitRoller
 import raynna.game.player.combat.damage.PendingHit
 import raynna.game.player.combat.damage.SoakDamage
@@ -26,8 +26,8 @@ import raynna.game.player.combat.range.RangedWeapon
 import raynna.game.player.combat.special.CombatContext
 import raynna.game.player.combat.special.EffectResult
 import raynna.game.player.combat.special.SpecialAttack
+import raynna.game.player.prayer.PrayerEffectHandler
 import raynna.game.world.task.WorldTasks
-import raynna.data.rscm.Rscm
 import kotlin.math.ceil
 import kotlin.math.max
 
@@ -62,25 +62,25 @@ interface CombatStyle {
             }
             defender.chargeManager.processIncommingHit()
             if (defender.combatDefinitions.isAutoRelatie) {
-                if (defender.actionManager.action != null) return
-                if (PlayerBotManager.isManagedBot(defender)) return
-                WorldTasksManager.schedule(
-                    object : WorldTask() {
-                        override fun run() {
-                            if (defender.isDead || attacker.isDead || defender.isLocked) return
-                            val style = CombatAction.getCombatStyle(defender, attacker)
-                            val retaliateDelay = (style.getAttackSpeed() + 1) / 2
+                if (defender.actionManager.action == null) {
+                    WorldTasksManager.schedule(
+                        object : WorldTask() {
+                            override fun run() {
+                                if (defender.isDead || attacker.isDead || defender.isLocked) return
+                                val style = CombatAction.getCombatStyle(defender, attacker)
+                                val retaliateDelay = (style.getAttackSpeed() + 1) / 2
 
-                            val currentDelay = defender.actionManager.actionDelay
-                            val finalDelay = max(currentDelay, retaliateDelay)
+                                val currentDelay = defender.actionManager.actionDelay
+                                val finalDelay = max(currentDelay, retaliateDelay)
 
-                            defender.actionManager.setAction(CombatAction(attacker))
-                            if (defender.actionManager.actionDelay > 0) {
-                                defender.actionManager.actionDelay = finalDelay
+                                defender.actionManager.setAction(CombatAction(attacker))
+                                if (defender.actionManager.actionDelay > 0) {
+                                    defender.actionManager.actionDelay = finalDelay
+                                }
                             }
-                        }
-                    },
-                )
+                        },
+                    )
+                }
             }
         }
         PrayerEffectHandler.handleProtectionReduction(attacker, defender, hit) // protection prayers first
