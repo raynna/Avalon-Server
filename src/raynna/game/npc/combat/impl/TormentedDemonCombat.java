@@ -1,0 +1,157 @@
+package raynna.game.npc.combat.impl;
+
+import raynna.game.Animation;
+import raynna.game.Entity;
+import raynna.game.Graphics;
+import raynna.game.Hit;
+import raynna.game.npc.NPC;
+import raynna.game.npc.combat.CombatScript;
+import raynna.game.npc.others.TormentedDemon;
+import raynna.game.npc.combat.NpcCombatCalculations;
+import raynna.util.Utils;
+import raynna.game.npc.combatdata.NpcAttackStyle;
+import raynna.game.npc.combatdata.NpcCombatDefinition;
+import raynna.game.npc.worldboss.TormentedDemonWorldBoss;
+import raynna.game.world.projectile.Projectile;
+import raynna.game.world.projectile.ProjectileManager;
+
+public class TormentedDemonCombat extends CombatScript {
+
+    //GFX
+    private static final int MAGIC_HIT_GFX = 1883;
+    private static final int MAGIC_PROJECTILE_ID = 1884;
+    private static final int SHIELD_GFX = 1885;
+    private static final Graphics MELEE_GFX = new Graphics(1886, 2, 0);
+    private static final int RANGE_PROJECTILE_ID = 1887;
+
+
+    // Melee
+    private static final int MELEE_MAX_HIT = 189;
+    private static final Animation MELEE_ANIMATION = new Animation(10922);
+
+    // Magic
+    private static final int MAGIC_MAX_HIT = 269;
+    private static final Animation MAGIC_ANIMATION = new Animation(10918);
+
+    // Ranged
+    private static final int RANGED_MAX_HIT = 269;
+    private static final Animation RANGED_ANIMATION = new Animation(10919);
+
+    @Override
+    public Object[] getKeys() {
+        return new Object[]{"Tormented demon"};
+    }
+
+    @Override
+    public int attack(NPC npc, Entity target) {
+        final NpcCombatDefinition defs = npc.getCombatDefinitions();
+
+        int attackStyle;
+        int previousStyle;
+
+        if (npc instanceof TormentedDemon tormentedDemon) {
+            attackStyle = tormentedDemon.getCurrentCombatType();
+            previousStyle = tormentedDemon.getPreviousCombatType();
+        } else if (npc instanceof TormentedDemonWorldBoss worldTorm) {
+            // World boss version
+            attackStyle = worldTorm.getCurrentCombatType();
+            previousStyle = worldTorm.getPreviousCombatType();
+        } else {
+            // Fallback for other NPCs
+            attackStyle = 0;
+            previousStyle = -1;
+        }
+
+        // Switch combat style if melee can't reach
+        if (attackStyle == 0 && !npc.withinDistance(target, 1)) {
+            int random = Utils.random(1, 2);
+            while (random == previousStyle) {
+                random = Utils.random(1, 2);
+            }
+            attackStyle = random;
+
+            // Update the combat style
+            if (npc instanceof TormentedDemon) {
+                ((TormentedDemon) npc).setCurrentCombatType(attackStyle);
+            } else if (npc instanceof TormentedDemonWorldBoss) {
+                ((TormentedDemonWorldBoss) npc).setCurrentCombatType(attackStyle);
+            }
+        }
+
+        switch (attackStyle) {
+            case 0 -> attackMelee(npc, target);
+            case 1 -> attackMagic(npc, target);
+            case 2 -> attackRanged(npc, target);
+        }
+
+        return npc.getAttackSpeed() + 2;
+    }
+
+    private void attackMelee(NPC npc, Entity target) {
+        Hit meleeHit = npc.meleeHit(target, MELEE_MAX_HIT, NpcAttackStyle.SLASH);
+        npc.animate(MELEE_ANIMATION);
+        npc.gfx(MELEE_GFX);
+        delayHit(npc, target, 0, meleeHit);
+    }
+
+    private void attackMagic(NPC npc, Entity target) {
+        if (npc instanceof TormentedDemonWorldBoss) {
+            attackMagicAoE(npc, target);
+        } else {
+            attackMagicSingle(npc, target);
+        }
+    }
+
+    private void attackRanged(NPC npc, Entity target) {
+        if (npc instanceof TormentedDemonWorldBoss) {
+            attackRangedAoE(npc, target);
+        } else {
+            attackRangedSingle(npc, target);
+        }
+    }
+
+    private void attackMagicSingle(NPC npc, Entity target) {
+        npc.animate(MAGIC_ANIMATION);
+        Hit magicHit = npc.magicHit(target, MAGIC_MAX_HIT);
+        ProjectileManager.send(Projectile.ELEMENTAL_SPELL, MAGIC_PROJECTILE_ID, npc, target, () -> {
+            applyRegisteredHit(npc, target, magicHit);
+        });
+    }
+
+    private void attackRangedSingle(NPC npc, Entity target) {
+        npc.animate(RANGED_ANIMATION);
+        Hit rangeHit = npc.rangedHit(target, RANGED_MAX_HIT);
+        ProjectileManager.send(Projectile.ELEMENTAL_SPELL, RANGE_PROJECTILE_ID, npc, target, () -> {
+            applyRegisteredHit(npc, target, rangeHit);
+        });
+    }
+
+    private void attackMagicAoE(NPC npc, Entity mainTarget) {
+        npc.animate(MAGIC_ANIMATION);
+
+        for (Entity target : npc.getPossibleTargets()) {
+            if (target == null || target.hasFinished() || !target.withinDistance(npc, npc.getForceTargetDistance())) {
+                continue;
+            }
+            Hit magicHit = npc.magicHit(target, MAGIC_MAX_HIT);
+            ProjectileManager.send(Projectile.ELEMENTAL_SPELL, MAGIC_PROJECTILE_ID, new Graphics(MAGIC_HIT_GFX), npc, target, () -> {
+                applyRegisteredHit(npc, target, magicHit);
+            });
+        }
+    }
+
+    private void attackRangedAoE(NPC npc, Entity mainTarget) {
+        npc.animate(RANGED_ANIMATION);
+
+        for (Entity target : npc.getPossibleTargets()) {
+            if (target == null || target.hasFinished() || !target.withinDistance(npc, npc.getForceTargetDistance())) {
+                continue;
+            }
+
+            Hit rangeHit = npc.rangedHit(target, RANGED_MAX_HIT);
+            ProjectileManager.send(Projectile.ELEMENTAL_SPELL, RANGE_PROJECTILE_ID, npc, target, () -> {
+                applyRegisteredHit(npc, target, rangeHit);
+            });
+        }
+    }
+}

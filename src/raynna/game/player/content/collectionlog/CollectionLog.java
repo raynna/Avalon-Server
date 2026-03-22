@@ -1,0 +1,645 @@
+package raynna.game.player.content.collectionlog;
+
+import raynna.core.tasks.WorldTask;
+import raynna.core.tasks.WorldTasksManager;
+import raynna.game.item.Item;
+import raynna.game.item.ItemsContainer;
+import raynna.game.player.Player;
+import raynna.util.HexColours;
+import raynna.util.Utils;
+import raynna.game.player.queue.QueueType;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static raynna.game.player.content.collectionlog.CollectionLog.MASTER;
+
+public class CollectionLog implements Serializable {
+    private static final long serialVersionUID = 4602692016264458065L;
+
+    public static final int ID = 3004;
+
+    public static CollectionLog MASTER = new CollectionLog();
+
+    public static void init() {
+    	CollectionLogBuilder.build(MASTER);
+    }
+
+    private static final int CAT_SPRITE_START = 19, TAB_BTN_START = 51,
+                            BOSS_NAME_STRING = 40, OBTAINED_STRING = 41, KILLS_STRING = 42;
+
+    private static final int MAX_TABS = 53;
+    private static final int TAB_COMPONENT_HEIGHT = 25;
+    private static final int TAB_CONTAINER_HEIGHT = 245;
+
+    private static final int COLLECTED_ITEM_CONTAINER = 213;
+    private static final int GHOST_ITEM_CONTAINER = 45;
+    public static final int ITEM_CONTAINER_KEY = 1000;
+    public static final int GHOST_CONTAINER_KEY = 1001;
+    public static final int ITEM_WIDTH = 6, ITEM_HEIGHT = 20;
+
+    private transient int tabId = 0;
+    private transient CategoryType category = CategoryType.BOSSES;
+
+    private transient ArrayList<String> tabs = new ArrayList<String>();
+
+    private LogCategory bosses, clues, minigames, others, slayers;
+
+    public LogCategory getBosses() { return bosses; }
+
+    public LogCategory getClues() { return clues; }
+
+    public LogCategory getMinigames() { return minigames; }
+
+    public LogCategory getOthers() { return others; }
+
+    public LogCategory getSlayers() { return slayers; }
+
+    transient Player player = null;
+
+    public CollectionLog() {
+        bosses = new LogCategory(CategoryType.BOSSES);
+        clues = new LogCategory(CategoryType.CLUES);
+        minigames = new LogCategory(CategoryType.MINIGAMES);
+        others = new LogCategory(CategoryType.OTHERS);
+        slayers = new LogCategory(CategoryType.SLAYER);
+    }
+
+    public void init(Player player) {
+        this.player = player;
+        this.category = CategoryType.BOSSES;
+    }
+
+    public void open() {
+        player.getInterfaceManager().sendInterface(ID);
+        writeTabs();
+        writeGhostItems();
+        writeCollectedItems();
+        writeDetails();
+        sendComponentOps();
+        for(String s : MASTER.getCategory(category).obtainedDrops.keySet())
+            if(tabs.size() == MAX_TABS)
+                System.err.println("Error: Too many tabs in " + category.name + " category, cannot display " + s + "!");
+            else
+                tabs.add(s);
+        int scrollHeight = (int) (tabs.size() * Math.ceil((double) TAB_COMPONENT_HEIGHT / 2));
+        player.getPackets().sendCSVarInteger(350, Math.max(scrollHeight - TAB_COMPONENT_HEIGHT / 2, TAB_CONTAINER_HEIGHT));
+        /*WorldTasksManager.schedule(1, () -> {
+            player.getPackets().sendRunScript(6255);
+        });*/
+    }
+
+
+
+
+    public void buttonClick(int componentId) {
+        CategoryType previousCategory = category;
+        int previousTab = tabId;
+
+        if(componentId > TAB_BTN_START && componentId < TAB_BTN_START + MAX_TABS*3) {
+            if((componentId + 1 - TAB_BTN_START) % 3 == 0) {
+                tabId = (componentId - TAB_BTN_START) / 3;
+                if(tabId != previousTab)
+                    writeCategory();
+                return;
+            }
+        }
+
+        switch(componentId) {
+            case 18:
+                category = CategoryType.BOSSES;
+                break;
+            case 21:
+                category = CategoryType.SLAYER;
+                break;
+            case 24:
+                category = CategoryType.CLUES;
+                break;
+            case 27:
+                category = CategoryType.MINIGAMES;
+                break;
+            case 30:
+                category = CategoryType.OTHERS;
+                break;
+        }
+
+        if(previousCategory != category) {
+            tabId = 0;
+            writeCategory();
+            for(String s : MASTER.getCategory(category).obtainedDrops.keySet())
+                if(tabs.size() == MAX_TABS)
+                    System.err.println("Error: Too many tabs in " + category.name + " category, cannot display " + s + "!");
+                else
+                    tabs.add(s);
+            int scrollHeight = (int) (tabs.size() * Math.ceil((double) TAB_COMPONENT_HEIGHT / 2));
+            player.getPackets().sendCSVarInteger(350, Math.max(scrollHeight - TAB_COMPONENT_HEIGHT / 2, TAB_CONTAINER_HEIGHT));
+            //player.getPackets().sendRunScript(10008);
+        }
+    }
+
+    private void writeCategory() {
+        if (MASTER.getCategory(category).getDrops().isEmpty()) {
+            player.message("Collection log data not loaded.");
+            return;
+        }
+        writeTabs();
+        writeGhostItems();
+        writeCollectedItems();
+        writeDetails();
+
+        for(int i = 0; i < CategoryType.values().length; i++) {
+            player.getPackets().sendIComponentSprite(ID, CAT_SPRITE_START + i*3, category == CategoryType.values()[i] ? 952 : 953);
+        }
+        player.getPackets().sendRunScript(6248);
+    }
+
+    private void writeDetails() {
+        if (tabs.isEmpty() || tabId >= tabs.size())
+            return;
+        String key = tabs.get(tabId);
+        String kills  = getKills(key);
+        player.getPackets().sendTextOnComponent(ID, BOSS_NAME_STRING, key);
+        player.getPackets().sendTextOnComponent(ID, KILLS_STRING, kills == null ? "" : getKillString(key, kills));
+        player.getPackets().sendTextOnComponent(ID, OBTAINED_STRING, getCompletion(category, key));
+        player.getPackets().sendTextOnComponent(ID, BOSS_NAME_STRING, tabs.get(tabId));
+    }
+
+    private String getCountLabel(String tabName) {
+        String label = category.killString;
+
+        if (category == CategoryType.OTHERS) {
+            if (tabName.equalsIgnoreCase("Magic Chest") || tabName.equalsIgnoreCase("Magic chest")) {
+                return "Opened:";
+            }
+        }
+
+        return label;
+    }
+
+    /*
+     * null hides string
+     */
+    private String getKills(String key) {
+        Integer lookup;
+
+        switch(category) {
+            case BOSSES:
+            case SLAYER:
+                lookup = player.getKillcount().getByName(key.toLowerCase());
+                return lookup + "";
+            case CLUES:
+                break;
+            case MINIGAMES:
+                switch(key) {
+                    case "Barrows":
+                        lookup = player.getKillcount().getByName("barrows chest");
+                        return lookup + "";
+
+                }
+                break;
+            case OTHERS:
+                lookup = player.getKillcount().getByName(key.toLowerCase());
+                return String.valueOf(lookup);
+		default:
+			break;
+        }
+
+        return null;
+    }
+
+    public String getCompletion(CategoryType category, String key) {
+        Map<Integer, Integer> lootTab = getCategory(category).obtainedDrops.get(key);
+        Map<Integer, Integer> masterTab = MASTER.getCategory(category).obtainedDrops.get(key);
+
+        int completion = 0;
+        if (lootTab != null) {
+            for (int amt : lootTab.values()) {
+                if (amt > 0) completion++;
+            }
+        }
+
+        String prefix = "";
+        if(completion == masterTab.size())
+            prefix = "<col=00ff00>";
+        else if (completion == 0)
+        	 prefix = "<col=FF0000>";
+        else
+        	prefix = "<col=FFFF00>";
+
+        return "Obtained: " + prefix + completion + " / " + masterTab.size();
+    }
+
+    /**
+     * Checks if a type and key has been complete or not
+     * @param type
+     * @param key
+     * @return
+     */
+    private boolean hasComplete(CategoryType type, String key) {
+        Map<Integer, Integer> lootTab = getCategory(category).obtainedDrops.get(key);
+        Map<Integer, Integer> masterTab = MASTER.getCategory(category).obtainedDrops.get(key);
+        int completion = 0;
+        if (lootTab != null) {
+            for (int amt : lootTab.values()) {
+                if (amt > 0) completion++;
+            }
+        }
+
+        if (masterTab == null) return false;
+
+        if(completion == masterTab.size()) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private void sendComponentOps() {
+
+        player.getPackets().sendUnlockOptions(
+                ID, GHOST_ITEM_CONTAINER, 0, ITEM_WIDTH * ITEM_HEIGHT - 1, 0, 1
+        );
+
+        player.getPackets().sendInterSetItemsOptionsScript(
+                ID, GHOST_ITEM_CONTAINER,
+                GHOST_CONTAINER_KEY, ITEM_WIDTH, ITEM_HEIGHT,
+                "Examine"
+        );
+
+        player.getPackets().sendUnlockOptions(
+                ID, COLLECTED_ITEM_CONTAINER, 0, ITEM_WIDTH * ITEM_HEIGHT - 1, 0);
+
+        player.getPackets().sendInterSetItemsOptionsScript(
+                ID, COLLECTED_ITEM_CONTAINER,
+                ITEM_CONTAINER_KEY, ITEM_WIDTH, ITEM_HEIGHT);
+    }
+
+
+    private void writeGhostItems() {
+        if (tabs.isEmpty() || tabId >= tabs.size())
+            return;
+
+        ItemsContainer<Item> masterLog =
+                MASTER.getCategory(category)
+                        .getCollectionList(tabs.get(tabId));
+
+        ItemsContainer<Item> ghosts =
+                new ItemsContainer<>(ITEM_WIDTH * ITEM_HEIGHT, false);
+
+        Item[] masterItems = masterLog.getItemsCopy();
+
+        for (int i = 0; i < masterItems.length; i++) {
+            Item master = masterItems[i];
+            if (master != null) {
+                ghosts.set(i, new Item(master.getId(), 1));
+            }
+        }
+        player.getPackets().sendItems(GHOST_CONTAINER_KEY, ghosts);
+
+    }
+
+
+
+    private void writeCollectedItems() {
+        if (tabs.isEmpty() || tabId >= tabs.size())
+            return;
+        ItemsContainer<Item> masterLog =
+                MASTER.getCategory(category)
+                        .getCollectionList(tabs.get(tabId));
+
+        ItemsContainer<Item> log =
+                getCategory(category)
+                        .getCollectionList(tabs.get(tabId));
+
+        ItemsContainer<Item> real =
+                new ItemsContainer<>(ITEM_WIDTH * ITEM_HEIGHT, false);
+
+        Item[] masterItems = masterLog.getItemsCopy();
+        Item[] playerItems = log.getItemsCopy();
+
+        Map<Integer, Item> lookup = new HashMap<>();
+
+        for (Item it : playerItems) {
+            if (it != null)
+                lookup.put(it.getId(), it);
+        }
+
+        for (int i = 0; i < masterItems.length; i++) {
+            Item master = masterItems[i];
+            if (master == null)
+                continue;
+
+            Item owned = lookup.get(master.getId());
+            if (owned != null) {
+                real.set(i, new Item(owned));
+            }
+        }
+
+
+
+        player.getPackets().sendItems(ITEM_CONTAINER_KEY, real);
+    }
+
+
+
+    public LogCategory getCategory(CategoryType type) {
+        switch(type) {
+            default:
+            case BOSSES:
+                return getBosses();
+            case CLUES:
+                return getClues();
+            case MINIGAMES:
+                return getMinigames();
+            case OTHERS:
+                return getOthers();
+            case SLAYER:
+                return getSlayers();
+        }
+    }
+
+    private void writeTabs() {
+        tabs.clear();
+
+        // get tab names to display
+        for(String s : MASTER.getCategory(category).obtainedDrops.keySet())
+            if(tabs.size() == MAX_TABS)
+                System.err.println("Error: Too many tabs in " + category.name + " category, cannot display " + s + "!");
+            else
+                tabs.add(s);
+
+        Collections.sort(tabs);
+
+        String tabName;
+        int component = TAB_BTN_START;
+        for(int i = 0; i < MAX_TABS; i++, component += 3) {
+            boolean hidden = i >= tabs.size();
+            tabName = !hidden ? tabs.get(i) : "";
+
+            // Here we check if it has been complete or not
+            if (hasComplete(category, tabName)) {
+                tabName = "<col=00ff00>" + tabName;
+            } else if(i == tabId) {
+                tabName = "<col=f85515>" + tabName;
+            } else {
+                tabName = "<col=ff981f>" + tabName;
+            }
+            player.getPackets().sendHideIComponent(ID, component, hidden);
+            player.getPackets().sendTextOnComponent(ID, component+2, tabName);
+        }
+    }
+
+    public String getKillString(String tabName, String kills) {
+        String label = getCountLabel(tabName);
+        if (label == null) return "";
+        return "<col=ff981f>" + tabName + " " + label + " <col=FFFFFF>" + kills;
+    }
+
+    
+    public void add(String tab, Item item) {
+    	for (CategoryType type : CategoryType.values()) {
+    		LogCategory log = MASTER.getCategory(type);
+    		for (String name : log.getDrops().keySet()) {
+    			if (name.equalsIgnoreCase(tab)) {
+    				add(type, name, item, true);
+    				return;
+    			}
+    		}
+    	}
+    }
+
+    public void add(CategoryType category, String tab, Item item, boolean showMessage) {
+        getCategory(category).addToLog(player, tab, item, showMessage);
+    }
+
+    public void addItem(Item item) {
+        boolean shown = false;
+        java.util.Set<String> processedTabs = new java.util.HashSet<>();
+
+        for (CategoryType type : CategoryType.values()) {
+            for (Map.Entry<String, Map<Integer, Integer>> entry :
+                    MASTER.getCategory(type).getDrops().entrySet()) {
+
+                String tabName = entry.getKey();
+
+                if (entry.getValue().containsKey(item.getId()) && processedTabs.add(tabName)) {
+                    add(type, tabName, item, !shown);
+                    shown = true;
+                }
+            }
+        }
+    }
+
+
+    // generally used by minigame reward shops
+    public void shopPurchase(Item item) {
+        for(Map.Entry<String, Map<Integer, Integer>> tab : getMinigames().getDrops().entrySet()) {
+            if(tab.getValue().keySet().contains(item.getId())) {
+                // this tab has the item from the shop, increment collected
+                add(CategoryType.MINIGAMES, tab.getKey(), item, true);
+            }
+        }
+    }
+
+    public void resetAll() {
+        resetCategory(CategoryType.BOSSES);
+        resetCategory(CategoryType.SLAYER);
+        resetCategory(CategoryType.CLUES);
+        resetCategory(CategoryType.MINIGAMES);
+        resetCategory(CategoryType.OTHERS);
+    }
+
+    /** Reset a whole category (keeps tabs & item ids, sets amounts to 0). */
+    public void resetCategory(CategoryType type) {
+        LogCategory cat = this.getCategory(type);
+        if (cat == null) return;
+
+        for (Map.Entry<String, Map<Integer, Integer>> tabEntry : cat.getDrops().entrySet()) {
+            Map<Integer, Integer> lootTab = tabEntry.getValue();
+            if (lootTab == null) continue;
+
+            // zero all amounts but keep keys
+            for (Integer itemId : new ArrayList<>(lootTab.keySet())) {
+                lootTab.put(itemId, 0);
+            }
+        }
+    }
+
+    /**
+     * Reset a single tab in a category (tab name matched case-insensitively against MASTER).
+     * @return true if tab existed (or was created) and was reset.
+     */
+    public boolean resetTab(CategoryType type, String tabName) {
+        LogCategory cat = this.getCategory(type);
+        if (cat == null) return false;
+
+        String canonical = null;
+        for (String k : MASTER.getCategory(type).getDrops().keySet()) {
+            if (k.equalsIgnoreCase(tabName)) {
+                canonical = k;
+                break;
+            }
+        }
+        if (canonical == null) return false;
+        cat.getDrops().remove(canonical);
+        return true;
+    }
+}
+
+/**
+ * Holds all data for category
+ */
+class LogCategory implements Serializable {
+
+    private static long serialVersionUID = 248848120918481361L;
+
+    /**
+     * Tab<Name, Rewards<itemId, amount>
+     */
+    Map<String, Map<Integer, Integer>> obtainedDrops;
+
+    CategoryType categoryType;
+
+    public LogCategory(CategoryType category) {
+        this.categoryType = category;
+        obtainedDrops = new LinkedHashMap<>();
+    }
+
+    /**
+     * Belongs to CollectionLog.MASTER
+     */
+    public boolean isMaster() {
+        return MASTER.getCategory(categoryType) == this;
+    }
+
+    /**
+     * Call to add a drop to the log (ex. boss drops, clue reward, etc)
+     */
+    public void addToLog(Player player, String key, Item value, boolean showMessage) {
+
+        Map<Integer, Integer> lootTab = obtainedDrops.get(key);
+
+        if (lootTab == null) {
+            lootTab = new HashMap<>();
+            obtainedDrops.put(key, lootTab);
+        }
+
+        boolean firstTime =
+                !lootTab.containsKey(value.getId())
+                        || lootTab.get(value.getId()) == 0;
+
+        lootTab.merge(value.getId(), value.getAmount(), Integer::sum);
+
+        if (firstTime && showMessage && !isMaster()) {
+            if (player != null) {
+
+                player.message(
+                        "New item added to your collection log: <col=" +
+                                HexColours.Colour.RED.getHex() + value.getName()
+                );
+                player.queue().enqueueSoft(() -> {
+                    player.getInterfaceManager().sendOverlay(3051, false);
+                    player.getPackets().sendTextOnComponent(
+                            3051, 6,
+                            Utils.wrapString(value.getName(), 18));
+                    player.getPackets().sendRunScript(10000);
+                });
+
+                player.queue().enqueueDelay(4, QueueType.SOFT);
+
+                player.queue().enqueueSoft(() ->
+                        player.getPackets().sendRunScript(10002)
+                );
+
+                player.queue().enqueueDelay(0, QueueType.SOFT);
+            }
+        }
+    }
+
+
+
+
+    /**
+     * Init a list of items
+     */
+    public void init(String key, Item[] val) {
+        for(Item i : val) init(key, i.getId());
+    }
+
+    /**
+     * Init a list of items
+     */
+    public void init(String key, Integer[] val) {
+        for(int i : val) init(key, i);
+    }
+
+    /**
+     * Init a list of items
+     */
+    public void init(String key, int[] val) {
+        for(int i : val) init(key, i);
+    }
+
+    /**
+     * On login init all drops, if more are added in the future
+     * the log will rebuilt with missing indexes
+     */
+    public void init(String key, int value) {
+        Map<Integer, Integer> lootTab = obtainedDrops.get(key);
+
+        if (lootTab == null) {
+            // if tab doesn't exist, create
+            lootTab = new LinkedHashMap<Integer, Integer>();
+            obtainedDrops.put(key, lootTab);
+        }
+
+        lootTab.putIfAbsent(value, 0);
+    }
+
+    /**
+     * Used when merging MASTER list and personal list
+     */
+    public ItemsContainer<Item> getCollectionList(String lootTabKey) {
+        Map<Integer, Integer> lootTab;
+        ItemsContainer<Item> con = new ItemsContainer<Item>(CollectionLog.ITEM_WIDTH * CollectionLog.ITEM_HEIGHT,true);
+
+        try {
+            lootTab = obtainedDrops.get(lootTabKey);
+
+            if (lootTab == null && isMaster()) {
+                throw new IllegalArgumentException();
+            }
+        } catch (IllegalArgumentException arg) {
+            lootTab = null;
+            System.err.println("Could not find loot table! category=" + categoryType + " tab=" + lootTabKey);
+            arg.printStackTrace();
+        }
+
+        if(lootTab == null) {
+            return con;
+        }
+
+        lootTab.forEach((item, amt) -> {
+            if (isMaster())
+                con.add(new Item(item, 0, true, null));
+            else {
+                if (amt > 0) {
+                    con.add(new Item(item, amt));
+                }
+            }
+        });
+        return con;
+    }
+
+    public Map<String, Map<Integer, Integer>> getDrops() {
+        return obtainedDrops;
+    }
+
+}
+
+

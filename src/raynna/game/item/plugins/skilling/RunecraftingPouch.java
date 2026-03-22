@@ -1,0 +1,37 @@
+package raynna.game.item.plugins.skilling;
+
+import raynna.game.item.Item;
+import raynna.game.item.ItemId;
+import raynna.game.item.ItemPlugin;
+import raynna.game.player.Player;
+import raynna.game.player.actions.skills.runecrafting.RunecraftingPouches;
+import raynna.data.rscm.Rscm;
+
+import java.util.Arrays;
+
+public class RunecraftingPouch extends ItemPlugin {
+
+    @Override
+    public Object[] getKeys() {
+        return new Object[] {"item.small_pouch", "item.medium_pouch", "item.large_pouch", "item.giant_pouch"};
+    }
+
+    @Override
+    public boolean processItem(Player player, Item item, int slotId, String option) {
+        return switch (option) {
+            case "check" -> {
+                RunecraftingPouches.checkPouch(player, item);
+                yield true;
+            }
+            case "fill" -> {
+                RunecraftingPouches.fillPouch(player, item);
+                yield true;
+            }
+            case "empty" -> {
+                RunecraftingPouches.emptyPouch(player, item);
+                yield true;
+            }
+            default -> false;
+        };
+    }
+}

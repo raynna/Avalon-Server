@@ -1,0 +1,96 @@
+package raynna.game.minigames.godwars.zamorak;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import raynna.core.thread.CoresManager;
+import raynna.game.Animation;
+import raynna.game.Entity;
+import raynna.game.World;
+import raynna.game.WorldTile;
+import raynna.game.npc.NPC;
+import raynna.game.player.Player;
+import raynna.core.tasks.WorldTask;
+import raynna.core.tasks.WorldTasksManager;
+import raynna.game.npc.combatdata.NpcCombatDefinition;
+
+@SuppressWarnings("serial")
+public class KrilTstsaroth extends NPC {
+
+	public KrilTstsaroth(int id, WorldTile tile, int mapAreaNameHash, boolean canBeAttackFromOutOfArea,
+			boolean spawned) {
+		super(id, tile, mapAreaNameHash, canBeAttackFromOutOfArea, spawned);
+		setNoDistanceCheck(true);
+	}
+
+	@Override
+	public ArrayList<Entity> getPossibleTargets() {
+		ArrayList<Entity> possibleTarget = new ArrayList<Entity>();
+		for (int regionId : getMapRegionsIds()) {
+			List<Integer> playerIndexes = World.getRegion(regionId).getPlayerIndexes();
+			if (playerIndexes != null) {
+				for (int npcIndex : playerIndexes) {
+					Player player = World.getPlayers().get(npcIndex);
+					if (player == null || player.isDead() || player.hasFinished() || !player.isActive()
+							|| !player.withinDistance(this, 64)
+							|| ((!isAtMultiArea() || !player.isAtMultiArea()) && player.getAttackedBy() != this
+									&& player.getAttackedByDelay() > System.currentTimeMillis())
+							|| !clipedProjectile(player, false))
+						continue;
+					possibleTarget.add(player);
+				}
+			}
+		}
+		return possibleTarget;
+	}
+
+	/*
+	 * gotta override else setRespawnTask override doesnt work
+	 */
+	@Override
+	public void sendDeath(final Entity source) {
+		final NpcCombatDefinition defs = getCombatDefinitions();
+		resetWalkSteps();
+		getCombat().removeTarget();
+		animate(-1);
+		WorldTasksManager.schedule(new WorldTask() {
+			int loop;
+
+			@Override
+			public void run() {
+				if (loop == 0) {
+					animate(new Animation(defs.getDeathAnim()));
+				} else if (loop >= defs.getDeathDelay()) {
+					drop();
+					reset();
+					setLocation(getRespawnTile());
+					finish();
+					setRespawnTask();
+					stop();
+				}
+				loop++;
+			}
+		}, 0, 1);
+	}
+
+	@Override
+	public void setRespawnTask() {
+		if (!hasFinished()) {
+			reset();
+			setLocation(getRespawnTile());
+			finish();
+		}
+		final NPC npc = this;
+		CoresManager.getSlowExecutor().schedule(() -> {
+            setFinished(false);
+            World.addNPC(npc);
+            npc.setLastRegionId(0);
+            World.updateEntityRegion(npc);
+            loadMapRegions();
+            checkMultiArea();
+            // GodWarsBosses.respawnZammyMinions();
+        }, getCombatDefinitions().getRespawnDelay() * 600, TimeUnit.MILLISECONDS);
+	}
+
+}

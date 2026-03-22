@@ -1,0 +1,135 @@
+package raynna.core.networking;
+
+import java.net.InetSocketAddress;
+
+import raynna.game.player.Player;
+import org.jboss.netty.bootstrap.ServerBootstrap;
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.channel.*;
+import org.jboss.netty.channel.group.ChannelGroup;
+import org.jboss.netty.channel.group.DefaultChannelGroup;
+import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
+
+import raynna.app.Settings;
+import raynna.core.thread.CoresManager;
+import raynna.util.Logger;
+
+public final class ServerChannelHandler extends SimpleChannelHandler {
+
+	private static ChannelGroup channels;
+	private static ServerBootstrap bootstrap;
+
+	public static void init() {
+		new ServerChannelHandler();
+	}
+
+	public static int getConnectedChannelsSize() {
+		return channels == null ? 0 : channels.size();
+	}
+
+	private ServerChannelHandler() {
+		channels = new DefaultChannelGroup("server-channels");
+
+		bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(
+				CoresManager.serverBossChannelExecutor,
+				CoresManager.serverWorkerChannelExecutor,
+				CoresManager.serverWorkersCount
+		));
+
+		bootstrap.getPipeline().addLast("handler", this);
+
+		bootstrap.setOption("reuseAddress", true);
+		bootstrap.setOption("child.tcpNoDelay", true);
+		bootstrap.setOption("child.keepAlive", true);
+
+		bootstrap.bind(new InetSocketAddress(Settings.PORT_ID));
+	}
+
+	@Override
+	public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e) {
+		channels.add(e.getChannel());
+	}
+
+	@Override
+	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) {
+		channels.remove(e.getChannel());
+	}
+
+	@Override
+	public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
+		Session session = new Session(e.getChannel());
+		ctx.setAttachment(session);
+		if (!session.getIP().startsWith("127.") || session.getIP().equals("127.0.0.1")) {
+			Logger.log("NET", "Channel connected: " + e.getChannel());
+		}
+	}
+	@Override
+	public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
+		Object attachment = ctx.getAttachment();
+		if (!(attachment instanceof Session session))
+			return;
+		if (!session.getIP().startsWith("127.") || session.getIP().equals("127.0.0.1")) {
+			Logger.log("NET", "Channel disconnected: " + e.getChannel());
+			Logger.log("NET", "Session closed for IP=" + session.getIP());
+		}
+		try {
+			Player p = null;
+
+			// Prefer decoder (usually survives longer than encoder)
+			if (session.getWorldPackets() != null)
+				p = session.getWorldPackets().getPlayer();
+
+			// Fallback to encoder
+			if (p == null && session.getWorldPacketsEncoder() != null)
+				p = session.getWorldPacketsEncoder().getPlayer();
+
+			if (p != null) {
+				Logger.log("NET", "Finishing player: " + p.getUsername());
+				p.finish();
+			} else {
+				if (!session.getIP().startsWith("127.") || session.getIP().equals("127.0.0.1"))
+					Logger.log("NET", "No player found for session IP=" + session.getIP());
+			}
+		} catch (Throwable t) {
+			Logger.handle(t);
+		} finally {
+			session.close();
+		}
+	}
+
+
+	@Override
+	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
+		if (!(e.getMessage() instanceof ChannelBuffer buf))
+			return;
+
+		Object attachment = ctx.getAttachment();
+		if (!(attachment instanceof Session session))
+			return;
+
+		int avail = buf.readableBytes();
+
+		if (avail < 1 || avail > Settings.RECEIVE_DATA_LIMIT)
+			return;
+
+		byte[] data = new byte[avail];
+		buf.readBytes(data);
+
+		// Process immediately instead of queuing
+		session.processIncomingData(data);
+	}
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent ee) {
+		try {
+			ctx.getChannel().close();
+		} catch (Throwable ignored) {}
+	}
+
+	public static void shutdown() {
+		if (channels != null)
+			channels.close().awaitUninterruptibly();
+		if (bootstrap != null)
+			bootstrap.releaseExternalResources();
+	}
+}

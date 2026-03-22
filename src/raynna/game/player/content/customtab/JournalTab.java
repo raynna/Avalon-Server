@@ -1,0 +1,408 @@
+package raynna.game.player.content.customtab;
+
+import java.text.DecimalFormat;
+
+import raynna.app.Settings;
+import raynna.game.ForceTalk;
+import raynna.game.World;
+import raynna.game.player.Player;
+import raynna.game.player.Ranks.Rank;
+import raynna.game.player.content.Skulls;
+import raynna.util.HexColours.Colour;
+import raynna.util.Utils;
+import raynna.game.player.interfaces.DropInterface;
+import raynna.game.player.interfaces.PresetInterface;
+
+public class JournalTab extends CustomTab {
+
+	/**
+	 * @author Andreas
+	 *
+	 */
+
+	private static final JournalStore[] STORES = JournalStore.values();
+
+	public enum JournalStore {
+
+		TITLE(25) {
+			@Override
+			public void usage(Player p) {
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Journal";
+			}
+		},
+
+		INFORMATION(3) {
+			@Override
+			public void usage(Player p) {
+			}
+
+			@Override
+			public String text(Player p) {
+				return "<col="+ Colour.YELLOW.getHex() + "<u>Server Information";
+			}
+		},
+
+		PLAYERCOUNT(4) {
+			@Override
+			public void usage(Player p) {
+				p.sendPlayersList();
+				p.getPackets().sendGameMessage("Players online: " + World.getPlayers().size() + ".");
+
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Players Online: <col=04BB3B>" + World.getPlayers().size();
+			}
+		},
+
+		WILDYCOUNT(5) {
+			@Override
+			public void usage(Player p) {
+				p.getPackets().sendGameMessage("Players in Pvp: " + World.getPlayersInPVP() + ".");
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Players in Pvp: <col=04BB3B>" + World.getPlayersInPVP();
+			}
+		},
+		PLAYERXP(6) {
+			@Override
+			public void usage(Player p) {
+				p.getPackets().sendGameMessage("Your bonus experience is " + p.getBonusExp() + ".");
+				p.setNextForceTalk(new ForceTalk("My bonus experience multiplier is " + p.getBonusExp() + "."));
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Bonus Experience: " + (p.getBonusExp() > 1 ? "<col=04BB3B>" + p.getBonusExp() + "x"
+						: "<col=BB0404>" + p.getBonusExp() + "x");
+			}
+		},
+		DOUBLEDROPS(7) {
+			@Override
+			public void usage(Player p) {
+				p.getPackets()
+						.sendGameMessage("Double drops is " + (Settings.DOUBLE_DROP ? " activated." : "inactivated."));
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Double Drops: " + (Settings.DOUBLE_DROP ? "<col=04BB3B>Active" : "<col=BB0404>Inactive");
+			}
+		},
+
+		SEARCH_DROPS(8) {
+			@Override
+			public void usage(Player p) {
+				DropInterface.INSTANCE.open(p, true);
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Drop Viewer - <col=04BB3B>Click here";
+			}
+		},
+
+		COLLECTION_LOG(9) {
+			@Override
+			public void usage(Player p) {
+				p.getCollectionLog().open();
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Collection log - <col=04BB3B>Click here";
+			}
+		},
+		PRESETS(10) {
+			@Override
+			public void usage(Player p) {
+				PresetInterface.INSTANCE.open(p, false);
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Presets - <col=04BB3B>Click here";
+			}
+		},
+
+		PLAYERINFO(11) {
+			@Override
+			public void usage(Player p) {
+			}
+
+			@Override
+			public String text(Player p) {
+				return "<col="+ Colour.YELLOW.getHex() + "<u>Player Information";
+			}
+		},
+		USERNAME(12) {
+			@Override
+			public void usage(Player p) {
+				p.temporaryAttribute().put("SETUSERNAME", Boolean.TRUE);
+				p.getPackets().sendInputNameScript("Enter the username you wish to change to:");
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Current username: <col=FFFFFF>" + (p.getUsername());
+			}
+		},
+		DISPLAYNAME(13) {
+			@Override
+			public void usage(Player p) {
+				p.temporaryAttribute().put("setdisplay", Boolean.TRUE);
+				p.getPackets().sendInputNameScript("Enter the display name you wish to change to:");
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Current Display Name: <col=FFFFFF>" + (p.getDisplayName());
+			}
+		},
+		PASSWORD(14) {
+			@Override
+			public void usage(Player p) {
+				p.temporaryAttribute().put("VERIFY_PASSWORD", Boolean.TRUE);
+				p.getPackets().sendInputNameScript("Enter your current password :");
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Change password<col=FFFFFF> - Click here";
+			}
+		},
+		PLAYERRANK(15) {
+			@Override
+			public void usage(Player p) {
+				p.setNextForceTalk(new ForceTalk(
+						"My ranks is: <img=" + p.getMessageIcon() + ">" + p.getPlayerRank().getRankNames()));
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Rank: " + Colour.GREEN.getHex() + "<img="
+						+ (p.getPlayerRank().getRank()[0] == Rank.DEVELOPER
+								|| p.getPlayerRank().getRank()[0] == Rank.DEVELOPER
+										? p.getMessageIcon() - 1
+										: p.getPlayerRank().isHardcore() ? 24
+												: p.getPlayerRank().isIronman() ? 23 : p.getMessageIcon())
+						+ ">";
+			}
+		},
+		PLAYERRANK2(16) {
+			@Override
+			public void usage(Player p) {
+				boolean donator = p.getPlayerRank().isDonator();
+				p.setNextForceTalk(new ForceTalk("My Donator rank is: "
+						+ (donator ? "<img=" + p.getDonatorIcon() + ">" + p.getPlayerRank().getRankName(1)
+								: "I'm not a donator")));
+			}
+
+			@Override
+			public String text(Player p) {
+				boolean donator = p.getPlayerRank().isDonator();
+				return "Donator rank:  " + Colour.WHITE.getHex()
+						+ (donator ? "<img=" + p.getDonatorIcon() + ">" + p.getPlayerRank().getRankName(1).replace(" Donator", "")
+								: Colour.RED.getHex() +  "I'm not a donator");
+			}
+		},
+		PLAYERTITLE(17) {
+			@Override
+			public void usage(Player p) {
+				p.temporaryAttribute().remove("TITLE_COLOR_SET");
+				p.temporaryAttribute().remove("TITLE_ORDER_SET");
+				p.getTemporaryAttributtes().put("CUSTOM_TITLE_SET", Boolean.TRUE);
+				p.getPackets().sendInputNameScript("Enter your custom title, or id 0-58");
+			}
+
+			@Override
+			public String text(Player p) {
+				if(p.getAppearance().getTitle() != -1){
+					return "Title: " + p.getAppearance().getTitleString();
+				} else {
+					return "Title: <col=BB0404>None - click to set";
+				}
+			}
+		},
+		PKINGCATEGORY(18) {
+			@Override
+			public void usage(Player p) {
+			}
+
+			@Override
+			public String text(Player p) {
+				return "<col="+ Colour.YELLOW.getHex() + "<u>Pking";
+			}
+		},
+		RISKWEALTH(19) {
+			@Override
+			public void usage(Player p) {
+				p.getPackets().sendGameMessage("My current risk is: " + Utils.formatAmount(Skulls.getRiskedWealth(p)) + ".");
+				p.setNextForceTalk(new ForceTalk("My current risk is: " + Utils.formatAmount(Skulls.getRiskedWealth(p)) + "."));
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Current risk: <col=04BB3B>" +  Utils.formatAmount(Skulls.getRiskedWealth(p)) + ".";
+			}
+		},
+		EP(20) {
+			@Override
+			public void usage(Player p) {
+				p.getPackets().sendGameMessage("My current Ep is: " + p.getEP() + ".");
+				p.setNextForceTalk(new ForceTalk("I have a total of " + p.getEP() + "% EP."));
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Ep: " + (p.getEP() == 100 ? "<col=04BB3B>" : p.getEP() > 0 ? "<col=FFF300>" : "<col=BB0404>")
+						+ p.getEP() + "%";
+			}
+		},
+		KILLS(21) {
+			@Override
+			public void usage(Player p) {
+				p.getPackets().sendGameMessage("My killcount is: " + p.getPlayerKillcount() + ".");
+				p.setNextForceTalk(new ForceTalk("My killcount is: " + p.getPlayerKillcount() + "."));
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Kills: <col=04BB3B>" + p.getPlayerKillcount();
+			}
+		},
+		DEATHS(22) {
+			@Override
+			public void usage(Player p) {
+				p.getPackets().sendGameMessage("My deathcount is: " + p.getDeathCount() + ".");
+				p.setNextForceTalk(new ForceTalk("My deathcount is: " + p.getDeathCount() + "."));
+			}
+
+			@Override
+			public String text(Player p) {
+				return "Deaths: <col=04BB3B>" + p.getDeathCount();
+			}
+		},
+		KDR(28) {
+			@Override
+			public void usage(Player p) {
+				double kill = p.getPlayerKillcount();
+				double death = p.getDeathCount();
+				double dr = death == 0 ? kill : (kill / death);
+				p.getPackets().sendGameMessage("My kill/death ratio is: " + new DecimalFormat("0.00").format(dr) + ".");
+				p.setNextForceTalk(
+						new ForceTalk("My kill/death ratio is: " + new DecimalFormat("0.00").format(dr) + "."));
+			}
+
+			@Override
+			public String text(Player p) {
+				double kill = p.getPlayerKillcount();
+				double death = p.getDeathCount();
+				double dr = death == 0 ? kill : (kill / death);
+				return "K/D Ratio: <col=04BB3B>" + new DecimalFormat("0.00").format(dr);
+			}
+		},
+
+
+		SLAYERTASK(29) {
+			@Override
+			public void usage(Player p) {
+				p.getPackets().sendGameMessage(p.getSlayerTask() == null ? "I don't have a slayer task."
+						: "I have " + p.getSlayerTask() + " to hunt.");
+				p.setNextForceTalk(new ForceTalk(p.getSlayerTask() == null ? "I don't have a slayer task."
+						: "I have " + p.getSlayerTask() + " to hunt."));
+			}
+
+			@Override
+			public String text(Player p) {
+				return "<br>Slayer Task: <col=04BB3B>"
+						+ (p.getSlayerTask() == null ? "I don't have a task." : "<br><col=04BB3B>" + p.getSlayerTask());
+			}
+		},
+
+		TASKLOCATION(32) {
+			@Override
+			public void usage(Player p) {
+				if (p.getSlayerTaskTip() != null)
+					p.getPackets().sendGameMessage("You can find your slayer monsters in:<br>" + p.getSlayerTaskTip());
+			}
+
+			@Override
+			public String text(Player p) {
+				return (p.getSlayerTaskTip() == null ? ""
+						: "<u>Locations:<br><col=04BB3B>"
+								+ p.getSlayerTaskTip().replace(" and ", "<br><col=04BB3B>")
+										.replace(", ", "<br><col=04BB3B>").replace(".", ""));
+			}
+		};
+
+		private int compId;
+
+		private JournalStore(int compId) {
+			this.compId = compId;
+		}
+
+		public abstract String text(Player p);
+
+		public abstract void usage(Player p);
+
+	}
+
+	public static void open(Player player) {
+		sendComponents(player);
+		for (int i = 3; i <= 22; i++)
+			player.getPackets().sendHideIComponent(3002, i, true);
+		for (int i = 28; i <= 56; i++)
+			player.getPackets().sendHideIComponent(3002, i, true);
+		player.getTemporaryAttributtes().put("CUSTOMTAB", 0);
+		player.getPackets().sendHideIComponent(3002, BACK_BUTTON, true);
+		player.getPackets().sendHideIComponent(3002, FORWARD_BUTTON, false);
+		player.getPackets().sendSpriteOnIComponent(3002, BLUE_STAR_COMP, BLUE_HIGHLIGHTED);
+		refresh(player);
+	}
+
+	public static void refresh(Player player) {
+		for (JournalStore store : STORES) {
+			if (store == null)
+				continue;
+
+			player.getPackets().sendHideIComponent(3002, store.compId, false);
+
+			String text = store.text(player);
+			if (text != null) {
+				player.getPackets().sendTextOnComponent(
+						3002,
+						store.compId,
+						text
+				);
+			}
+		}
+		refreshScrollbar(player, STORES.length);
+	}
+
+
+	public static void handleButtons(Player player, int compId) {
+		for (JournalStore store : STORES) {
+			if (store != null) {
+				if (compId != store.compId)
+					continue;
+				store.usage(player);
+				//refresh(player);
+			}
+		}
+		switch (compId) {
+		case FORWARD_BUTTON:
+			TeleportTab.open(player);
+			break;
+		default:
+			break;
+		}
+	}
+}

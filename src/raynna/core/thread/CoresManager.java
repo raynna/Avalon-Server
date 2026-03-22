@@ -1,0 +1,55 @@
+package raynna.core.thread;
+
+import java.util.Timer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+public final class CoresManager {
+
+	protected static volatile boolean shutdown;
+	public static WorldThread worldThread;
+	public static ExecutorService serverWorkerChannelExecutor;
+	public static ExecutorService serverBossChannelExecutor;
+	public static ScheduledThreadPoolExecutor fastExecutor;
+	public static ScheduledExecutorService slowExecutor;
+	public static int serverWorkersCount;
+
+	public static void init() {
+		worldThread = new WorldThread();
+		int availableProcessors = Runtime.getRuntime().availableProcessors();
+		serverWorkersCount = availableProcessors >= 6 ? availableProcessors - (availableProcessors >= 12 ? 7 : 5) : 1;
+		serverWorkerChannelExecutor = availableProcessors >= 6
+				? Executors.newFixedThreadPool(availableProcessors - (availableProcessors >= 12 ? 7 : 5),
+						new DecoderThreadFactory())
+				: Executors.newSingleThreadExecutor(new DecoderThreadFactory());
+		serverBossChannelExecutor = Executors.newSingleThreadExecutor(new DecoderThreadFactory());
+		fastExecutor = new ScheduledThreadPoolExecutor(2);
+		slowExecutor = availableProcessors >= 6
+				? Executors.newScheduledThreadPool(availableProcessors >= 12 ? 4 : 2, new SlowThreadFactory())
+				: Executors.newSingleThreadScheduledExecutor(new SlowThreadFactory());
+		worldThread.start();
+	}
+
+	public static void shutdown() {
+		serverWorkerChannelExecutor.shutdown();
+		serverBossChannelExecutor.shutdown();
+		fastExecutor.shutdown();
+		slowExecutor.shutdown();
+		shutdown = true;
+	}
+
+
+	public static ScheduledExecutorService getSlowExecutor() {
+		return slowExecutor;
+	}
+
+	public static ScheduledThreadPoolExecutor getFastExecutor() {
+		return fastExecutor;
+	}
+
+	private CoresManager() {
+
+	}
+}

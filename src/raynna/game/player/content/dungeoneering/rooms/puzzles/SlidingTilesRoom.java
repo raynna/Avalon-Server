@@ -1,0 +1,199 @@
+package raynna.game.player.content.dungeoneering.rooms.puzzles;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import raynna.game.Hit;
+import raynna.game.Hit.HitLook;
+import raynna.game.WorldTile;
+import raynna.game.npc.NPC;
+import raynna.game.npc.dungeoneering.DungeonNPC;
+import raynna.game.player.Player;
+import raynna.game.player.content.dungeoneering.DungeonConstants;
+import raynna.game.player.content.dungeoneering.DungeonManager;
+import raynna.game.player.content.dungeoneering.DungeonUtils;
+import raynna.game.player.content.dungeoneering.VisibleRoom;
+import raynna.game.player.content.dungeoneering.rooms.PuzzleRoom;
+import raynna.game.player.controllers.DungeonController;
+import raynna.util.Utils;
+
+public class SlidingTilesRoom extends PuzzleRoom {
+
+	private static final int[] BASE_TILE =
+	{ 12125, 12133, 12141, 12149, 12963 };
+
+	private static final int[][] TILE_COORDS =
+	{
+	{ 5, 9 },
+	{ 7, 9 },
+	{ 9, 9 },
+	{ 5, 7 },
+	{ 7, 7 },
+	{ 9, 7 },
+	{ 5, 5 },
+	{ 7, 5 },
+	{ 9, 5 }, };
+
+	private static final int[][] VALID_MOVES =
+	{
+	{ 1, 3 },
+	{ 0, 2, 4 },
+	{ 1, 5 },
+	{ 0, 4, 6 },
+	{ 1, 3, 5, 7 },
+	{ 2, 4, 8 },
+	{ 3, 7 },
+	{ 4, 6, 8 },
+	{ 5, 7 } };
+
+	private DungeonNPC[] tiles;
+	private int freeIndex = 8;
+	private int[] shuffledNpcOrder;
+	private int[] solveOrder;
+	private int solveIndex;
+
+	@Override
+	public void openRoom() {
+		int npcCount = Utils.random(4);
+		for (int i = 0; i < npcCount; i++) {
+			int x = Utils.random(2) + 1;
+			int y = Utils.random(2) + 1;
+			if (Utils.random(2) == 0) { //vertical spawn
+				x += Utils.random(2) == 0 ? 0 : 11; //left or right side
+				y = Utils.random(14) + 1;
+			} else { //horizontal spawn
+				y += Utils.random(2) == 0 ? 0 : 11; //bottom or top
+				x = Utils.random(14) + 1;
+			}
+
+			manager.spawnNPC(reference, DungeonUtils.getGuardianCreature(), x, y, true, DungeonConstants.GUARDIAN_DOOR, 0.5);
+		}
+
+		shuffle();
+		tiles = new SlidingTile[9];
+		for (int i = 0; i < 9; i++) {
+			if (shuffledNpcOrder[i] != 0) {
+				int[] coords = DungeonManager.translate(TILE_COORDS[i][0], TILE_COORDS[i][1], 0, 2, 2, 0);
+				WorldTile base = manager.getRoomBaseTile(reference);
+				tiles[i] = new SlidingTile(shuffledNpcOrder[i], new WorldTile(base.getX() + coords[0], base.getY() + coords[1], 0), manager, 0.0);
+			}
+		}
+	}
+
+	@SuppressWarnings("serial")
+	public static class SlidingTile extends DungeonNPC {
+
+		public SlidingTile(int id, WorldTile tile, DungeonManager manager, double multiplier) {
+			super(id, tile, manager, multiplier);
+		}
+
+		@Override
+		public int getDirection() {
+			return 0;
+		}
+	}
+
+	public void shuffle() {
+		int type = manager.getParty().getFloorType();
+
+		freeIndex = 8;
+		solveIndex = 0;
+
+		shuffledNpcOrder = new int[9];
+
+		for (int i = 0; i < 8; i++) {
+			shuffledNpcOrder[i] = BASE_TILE[type] + i;
+		}
+		shuffledNpcOrder[8] = 0;
+
+		// perform 200 random valid blank moves (guaranteed solvable)
+		for (int i = 0; i < 200; i++) {
+			int[] moves = VALID_MOVES[freeIndex];
+			int next = moves[Utils.random(moves.length)];
+
+			shuffledNpcOrder[freeIndex] = shuffledNpcOrder[next];
+			shuffledNpcOrder[next] = 0;
+
+			freeIndex = next;
+		}
+	}
+
+	private boolean isSolved() {
+		int type = manager.getParty().getFloorType();
+		for (int i = 0; i < 8; i++) {
+			if (shuffledNpcOrder[i] != BASE_TILE[type] + i)
+				return false;
+		}
+		return shuffledNpcOrder[8] == 0;
+	}
+
+	public static boolean handleSlidingBlock(Player player, NPC npc) {
+		if (!npc.getDefinitions().name.equals("Sliding block") || player.getControlerManager().getControler() == null || !(player.getControlerManager().getControler() instanceof DungeonController)) {
+			return false;
+		}
+		DungeonManager manager = player.getDungManager().getParty().getDungeon();
+		VisibleRoom room = manager.getVisibleRoom(manager.getCurrentRoomReference(player));
+		if (room == null) {
+			return false;
+		}
+		if (!(room instanceof SlidingTilesRoom)) {
+			return false;
+		}
+		final SlidingTilesRoom puzzle = (SlidingTilesRoom) room;
+		synchronized (puzzle) { // fixes bug, fking noobs with multithreaded networking tho
+			for (int i = 0; i < puzzle.tiles.length; i++) {
+				if (puzzle.tiles[i] == npc) {
+					player.lock(1);
+					boolean canMove = false;
+					for (int move : VALID_MOVES[i]) {
+						if (move == puzzle.freeIndex) {
+							canMove = true;
+							break;
+						}
+					}
+
+					if (!canMove) {
+						player.getPackets().sendGameMessage(
+								"You strain your powers of telekinesis, but the tile won't budge.");
+						player.applyHit(new Hit(player,
+								(int) (player.getMaxHitpoints() * .2),
+								HitLook.REGULAR_DAMAGE));
+						return true;
+					}
+
+					int[] coords = DungeonManager.translate(
+							TILE_COORDS[puzzle.freeIndex][0],
+							TILE_COORDS[puzzle.freeIndex][1],
+							0, 2, 2, 0);
+
+					WorldTile base = puzzle.manager.getRoomBaseTile(puzzle.reference);
+					npc.addWalkSteps(base.getX() + coords[0], base.getY() + coords[1]);
+
+					puzzle.tiles[puzzle.freeIndex] = puzzle.tiles[i];
+					puzzle.tiles[i] = null;
+
+					puzzle.shuffledNpcOrder[puzzle.freeIndex] =
+							puzzle.shuffledNpcOrder[i];
+					puzzle.shuffledNpcOrder[i] = 0;
+
+					puzzle.freeIndex = i;
+
+					if (puzzle.isSolved()) {
+						puzzle.setComplete();
+					}
+
+					return true;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public String getCompleteMessage() {
+		return "You hear a click as a nearby door unlocks.";//This is correct
+	}
+
+}

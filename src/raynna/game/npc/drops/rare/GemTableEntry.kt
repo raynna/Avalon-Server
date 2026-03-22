@@ -1,0 +1,95 @@
+package raynna.game.npc.drops.rare
+
+import raynna.game.player.Player
+import raynna.game.npc.drops.Drop
+import raynna.game.npc.drops.DropContext
+import raynna.game.npc.drops.DropEntry
+import raynna.game.npc.drops.DropSource
+import raynna.game.npc.drops.DropTablesSetup
+import raynna.game.npc.drops.weighted.ItemWeightedEntry
+import raynna.game.npc.drops.weighted.WeightedTable
+import raynna.data.rscm.Rscm
+
+class GemTableEntry : DropEntry(-1, 1..1) {
+    val table = WeightedTable()
+
+    companion object {
+        const val NOTHING_MARKER = -1
+        const val MEGA_RARE_MARKER = -2000
+        const val TALISMAN_MARKER = -3000
+    }
+
+    fun getEntries(): List<ItemWeightedEntry> =
+        table
+            .mutableEntries()
+            .filterIsInstance<ItemWeightedEntry>()
+
+    init {
+        table.setSize(128)
+
+        addMarker(NOTHING_MARKER, 63)
+
+        add("item.uncut_sapphire", 1..1, 32)
+        add("item.uncut_emerald", 1..1, 16)
+        add("item.uncut_ruby", 1..1, 8)
+        // removed talisman, useless, replaced with uncut_dragonstone
+        add("item.uncut_diamond", 1..1, 6)
+        add("item.uncut_dragonstone", 1..1, 2)
+        add("item.rune_javelin", 5..5, 1)
+        add("item.loop_half_of_a_key", 1..1, 1)
+        add("item.tooth_half_of_a_key", 1..1, 1)
+
+        addMarker(MEGA_RARE_MARKER, 1)
+    }
+
+    private fun add(
+        item: String,
+        amount: IntRange,
+        weight: Int,
+    ) {
+        val itemId = Rscm.lookup(item)
+        table.add(ItemWeightedEntry(itemId, amount, weight))
+    }
+
+    private fun addMarker(
+        marker: Int,
+        weight: Int,
+    ) {
+        table.add(ItemWeightedEntry(marker, 1..1, weight))
+    }
+
+    override fun roll(context: DropContext): Drop? {
+        val entries = table.mutableEntries()
+
+        val filtered =
+            if (context.player.hasRingOfWealth()) {
+                entries.filterNot { it is ItemWeightedEntry && it.itemId == NOTHING_MARKER }
+            } else {
+                entries
+            }
+
+        if (filtered.isEmpty()) return null
+
+        val temp = WeightedTable()
+        temp.setSize(128)
+        filtered.forEach { temp.add(it) }
+
+        val result = temp.roll(context.copy(dropSource = DropSource.GEM)) ?: return null
+
+        return when (result.itemId) {
+            NOTHING_MARKER -> {
+                null
+            }
+
+            MEGA_RARE_MARKER -> {
+                DropTablesSetup.megaRareTable.roll(
+                    context.copy(dropSource = DropSource.MEGARARE),
+                )
+            }
+
+            else -> {
+                result
+            }
+        }
+    }
+}

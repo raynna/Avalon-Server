@@ -1,0 +1,96 @@
+package raynna.game.player.combat.magic.special
+
+import raynna.game.Entity
+import raynna.game.Graphics
+import raynna.game.item.Item
+import raynna.game.item.meta.PolyporeStaffMetaData
+import raynna.game.player.Equipment
+import raynna.game.player.Player
+import raynna.game.player.combat.CombatType
+import raynna.game.player.combat.damage.PendingHit
+import raynna.game.player.combat.magic.MagicStyle
+import raynna.game.player.combat.magic.WeaponSpellRegistry
+import raynna.game.world.projectile.Projectile
+import raynna.game.world.projectile.ProjectileManager
+
+object PolyporeStaff : WeaponSpellRegistry.Provider {
+
+    override val weaponIds = setOf(22498, 22494)
+
+    override fun hasWeapon(player: Player): Boolean {
+        val weapon = player.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return false
+
+        if (weapon.isItem("item.polypore_staff")) {
+            return true
+        }
+
+        if (weapon.isItem("item.polypore_staff_degraded")) {
+            val data = weapon.metadata as? PolyporeStaffMetaData ?: return false
+            return data.value > 0
+        }
+        return false
+    }
+
+
+    fun cast(style: MagicStyle, attacker: Player, defender: Entity) {
+        var weapon = attacker.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return
+
+        // Fresh staff first use
+        if (weapon.isItem("item.polypore_staff")) {
+            val degraded = Item(
+                Item.getId("item.polypore_staff_degraded"),
+                weapon.amount,
+                PolyporeStaffMetaData(PolyporeStaffMetaData.MAX_CHARGES)
+            )
+            attacker.equipment.updateItemWithMeta(
+                Equipment.SLOT_WEAPON.toInt(),
+                degraded
+            )
+            attacker.equipment.refresh()
+            attacker.appearance.generateAppearenceData()
+            weapon = attacker.equipment.getItem(Equipment.SLOT_WEAPON.toInt()) ?: return
+
+        }
+
+        val data = weapon.metadata as? PolyporeStaffMetaData ?: return
+
+        if (data.value <= 0) {
+            attacker.message("Your polypore staff has no charges.")
+            return
+        }
+
+        data.decrement(1)
+
+        if (data.value == 0) {
+            attacker.message("Your polypore staff has run out of charges.")
+            attacker.equipment.updateItem(
+                Equipment.SLOT_WEAPON.toInt(),
+                Item.getId("item.polypore_stick")
+            )
+            return
+        }
+
+
+        attacker.animate(15448)
+        attacker.gfx(Graphics(2034))
+        val hit = style.hitRoll(CombatType.MAGIC, attacker, defender).spell(1000).roll()
+        val splash = hit.damage == 0
+        val endGfx = if (!splash) Graphics(2036, 100) else Graphics(85, 100)
+
+        val impactTicks = ProjectileManager.send(
+            projectile = Projectile.POLYPORE_STAFF,
+            gfxId = 2035,
+            attacker = attacker,
+            defender = defender,
+            hitGraphic = endGfx
+        )
+
+        style.delayHits(PendingHit(hit, defender, impactTicks))
+        if (data.value == 0) {
+            attacker.message("Your polypore staff has run out of charges.")
+            attacker.equipment.updateItem(Equipment.SLOT_WEAPON.toInt(), Item.getId("item.polypore_stick"))
+            attacker.equipment.refresh()
+            attacker.appearance.generateAppearenceData()
+        }
+    }
+}

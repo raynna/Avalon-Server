@@ -1,0 +1,109 @@
+package raynna.game.player.dialogues;
+
+import raynna.game.World;
+import raynna.game.WorldTile;
+import raynna.game.item.Item;
+import raynna.game.item.ItemPluginLoader;
+import raynna.game.item.ItemPlugin;
+import raynna.game.item.ground.GroundItems;
+import raynna.game.player.content.ItemConstants;
+import raynna.util.Logger;
+
+public class HighValueOption extends Dialogue {
+
+	int slotId;
+	Item item;
+
+	@Override
+	public void start() {
+		slotId = (Integer) parameters[0];
+		item = (Item) parameters[1];
+		if (player.HighValueOption) {
+			player.getChargeManager().breakItem(item);
+			player.getInventory().deleteItem(slotId, item);
+			if (item.getId() == 21371) {
+				item.setId(ItemConstants.removeAttachedId(item));
+				if (player.inPkingArea() && ItemConstants.isTradeable(item))
+					GroundItems.updateGroundItem(new Item(4151, 1), new WorldTile(player), player, 0);
+				else
+					GroundItems.updateGroundItem(new Item(4151, 1), new WorldTile(player), player, 60);
+			}
+			if (player.inPkingArea() && ItemConstants.isTradeable(item))
+				GroundItems.updateGroundItem(item, new WorldTile(player), player, 0);
+			else
+				GroundItems.updateGroundItem(item, new WorldTile(player), player, 60);
+			player.getPackets().sendSound(4500, 0, 1);
+		} else if (player.inPkingArea()) {
+			sendItemDialogue(item.getDefinitions().isNoted() ? item.getId() - 1 : item.getId(), "The item you are trying to drop is considered <col=ff0000>valuable.<br>You are standing in a PvP zone. Your item will appear instantly to everyone.");
+			stage = 1;
+		} else {
+			sendItemDialogue(item.getDefinitions().isNoted() ? item.getId() - 1 : item.getId(),
+					"The item you are trying to drop is considered <col=ff0000>valuable.<br>Are you absolutely sure that you want to drop it?");
+			stage = 1;
+		}
+	}
+
+	@Override
+	public void run(int interfaceId, int componentId) {
+		switch (stage) {
+		case 1:
+			sendOptionsDialogue(item.getName() + "; Really want to drop it?", "Yes", "Yes and don't ask me again", "No");
+			stage = 2;
+			break;
+		case 2:
+			switch (componentId) {
+			case OPTION_1:
+				if (!player.getInventory().containsItem(item.getId(), item.getAmount())) {
+					end();
+					return;		
+				}
+				ItemPlugin plugin = ItemPluginLoader.getPlugin(item);
+				if (plugin != null) {
+					boolean pluginExecuted = plugin.processDrop(player, item, slotId);
+					if (!pluginExecuted) {
+						Logger.log("ItemPlugin", "Drop - Class: " + plugin.getClass().getSimpleName() + ".java, Failed: " + item.getName() + "(" + item.getId() + ") plugin does not have this option.");
+					}
+					if (pluginExecuted) {
+						Logger.log("ItemPlugin", "Drop - Class: " + plugin.getClass().getSimpleName() + ".java, Executed: " + item.getName() + "(" + item.getId() + ")");
+						end();
+						return;
+					}
+				}
+				player.getInventory().dropItem(slotId, item, true);
+				end();
+				break;
+			case OPTION_2:
+				if (!player.getInventory().containsItem(item.getId(), item.getAmount())) {
+					end();
+					return;		
+				}
+				player.HighValueOption = true;
+				plugin = ItemPluginLoader.getPlugin(item);
+				if (plugin != null) {
+					boolean pluginExecuted = plugin.processDrop(player, item, slotId);
+					if (!pluginExecuted) {
+						Logger.log("ItemPlugin", "Drop - Class: " + plugin.getClass().getSimpleName() + ".java, Failed: " + item.getName() + "(" + item.getId() + ") plugin does not have this option.");
+					}
+					if (pluginExecuted) {
+						Logger.log("ItemPlugin", "Drop - Class: " + plugin.getClass().getSimpleName() + ".java, Executed: " + item.getName() + "(" + item.getId() + ")");
+						end();
+						return;
+					}
+				}
+				player.getInventory().dropItem(slotId, item, true);
+				player.HighValueOption = true;
+				end();
+				break;
+			case OPTION_3:
+				end();
+			}
+			break;
+		}
+	}
+
+	@Override
+	public void finish() {
+
+	}
+
+}

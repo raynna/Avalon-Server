@@ -1,0 +1,55 @@
+package raynna.game.player.actions;
+
+import raynna.core.thread.CoresManager;
+import raynna.game.WorldTile;
+import raynna.game.player.Player;
+import raynna.game.player.content.FadingScreen;
+import raynna.util.Logger;
+
+public class Charter extends Action {
+
+	private WorldTile tile;
+	public static final WorldTile KARAMJA_GANGPLANK = new WorldTile(2956, 3145, 0),
+			PORT_SARIM = new WorldTile(3029, 3217, 0);
+
+	public Charter(WorldTile tile) {
+		this.setTile(tile);
+	}
+
+	public WorldTile getTile() {
+		return tile;
+	}
+
+	public void setTile(WorldTile tile) {
+		this.tile = tile;
+	}
+
+	@Override
+	public boolean start(Player player) {
+		return process(player);
+	}
+
+	@Override
+	public boolean process(Player player) {
+		return true;
+	}
+
+	@Override
+	public int processWithDelay(Player player) {
+		final long time = FadingScreen.fade(player);
+		player.getPackets().sendGameMessage("You cross the gangplank and charter back to Port Sarim.");
+		CoresManager.getSlowExecutor().execute(() -> {
+            try {
+                FadingScreen.unfade(player, time, () -> player.setNextWorldTile(new WorldTile(PORT_SARIM)));
+            } catch (Throwable e) {
+                Logger.handle(e);
+            }
+        });
+		return -1;
+	}
+
+	@Override
+	public void stop(Player player) {
+	}
+
+}

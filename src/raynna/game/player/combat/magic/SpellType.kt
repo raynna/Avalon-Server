@@ -1,0 +1,96 @@
+package raynna.game.player.combat.magic
+
+import raynna.game.Graphics
+import raynna.game.WorldTile
+import raynna.game.player.Player
+import raynna.game.world.projectile.Projectile
+
+sealed class SpellType {
+    object Combat : SpellType()
+
+    object Teleport : SpellType()
+
+    object Instant : SpellType()
+
+    object Item : SpellType()
+
+    object ObjectTarget : SpellType()
+
+    data class ObjectSpecific(
+        val objectIds: Set<Int>,
+        val orbItemId: Int? = null,
+    ) : SpellType()
+
+    object FloorItem : SpellType()
+
+    object Target : SpellType()
+
+    companion object {
+        val ALL_TYPES =
+            listOf(
+                Combat,
+                Teleport,
+                Instant,
+                Item,
+                FloorItem,
+                Target,
+            )
+    }
+}
+
+data class RuneRequirement(
+    val id: Int,
+    val amount: Int,
+    val canBeInfinite: Boolean = true,
+    val compositeRunes: List<Int> = emptyList(),
+)
+
+data class StaffRequirement(
+    val anyOf: List<Int> = emptyList(),
+)
+
+data class ItemRequirement(
+    val anyOf: List<Int> = emptyList(),
+    val allOf: List<Int> = emptyList(),
+)
+
+data class Spell(
+    val id: Int,
+    val name: String,
+    val level: Int,
+    val damage: Int = -1,
+    val xp: Double,
+    val type: SpellType,
+    val bind: Int = -1,
+    val drain: Boolean = false,
+    val element: ElementType = ElementType.None,
+    val multi: Boolean = false,
+    val miasmic: Boolean = false,
+    val runes: List<RuneRequirement>,
+    val staff: StaffRequirement? = null,
+    val teleportLocation: WorldTile? = null,
+    val animationId: Int = -1,
+    val attackSound: Int = -1,
+    val hitSound: Int = -1,
+    val graphicId: Graphics = Graphics(-1),
+    val endGraphic: Graphics = Graphics(-1),
+    val projectileType: Projectile = Projectile.ELEMENTAL_SPELL,
+    val projectileId: Int = -1,
+    val projectileIds: List<Int> = emptyList(),
+    val itemRequirement: ItemRequirement? = null,
+    val chargeBoost: Boolean = false,
+    val builtInWeapon: Boolean = false,
+    val chargeCost: Int = 0,
+    val canCastWithWeapon: ((Player) -> Boolean)? = null,
+    val onConsumeCharge: ((Player) -> Unit)? = null,
+    val behaviour: SpellBehaviour? = null,
+) {
+    fun isElemental(): Boolean =
+        element in
+            listOf(
+                ElementType.Air,
+                ElementType.Water,
+                ElementType.Earth,
+                ElementType.Fire,
+            )
+}

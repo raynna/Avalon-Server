@@ -1,0 +1,76 @@
+package raynna.game.npc.drops.rare
+
+import raynna.game.player.Player
+import raynna.game.npc.drops.Drop
+import raynna.game.npc.drops.DropContext
+import raynna.game.npc.drops.DropEntry
+import raynna.game.npc.drops.DropSource
+import raynna.game.npc.drops.weighted.ItemWeightedEntry
+import raynna.game.npc.drops.weighted.WeightedTable
+import raynna.data.rscm.Rscm
+
+class MegaRareTableEntry : DropEntry(-1, 1..1) {
+    private val table = WeightedTable()
+
+    companion object {
+        const val NOTHING_MARKER = -1
+    }
+
+    fun getEntries(): List<ItemWeightedEntry> =
+        table
+            .mutableEntries()
+            .filterIsInstance<ItemWeightedEntry>()
+
+    init {
+        table.setSize(128)
+
+        addMarker(NOTHING_MARKER, 113)
+
+        add("item.rune_spear", 1..1, 8)
+        add("item.shield_left_half", 1..1, 4)
+        add("item.dragon_spear", 1..1, 3)
+
+        println("[DropSystem] Registered ${table.size()} SuperRare entries.")
+    }
+
+    private fun add(
+        item: String,
+        amount: IntRange,
+        weight: Int,
+    ) {
+        val itemId = Rscm.lookup(item)
+        table.add(ItemWeightedEntry(itemId, amount, weight))
+    }
+
+    private fun addMarker(
+        marker: Int,
+        weight: Int,
+    ) {
+        table.add(ItemWeightedEntry(marker, 1..1, weight))
+    }
+
+    override fun roll(context: DropContext): Drop? {
+        val entries = table.mutableEntries()
+
+        val filtered =
+            if (context.player.hasRingOfWealth()) {
+                entries.filterNot {
+                    it is ItemWeightedEntry && it.itemId == NOTHING_MARKER
+                }
+            } else {
+                entries
+            }
+
+        if (filtered.isEmpty()) return null
+
+        val temp = WeightedTable()
+        temp.setSize(128)
+        filtered.forEach { temp.add(it) }
+
+        val result =
+            temp.roll(context.copy(dropSource = DropSource.MEGARARE))
+                ?: return null
+
+        return if (result.itemId == NOTHING_MARKER) null else result
+    }
+}

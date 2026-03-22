@@ -1,0 +1,53 @@
+package raynna.game.player.command.commands
+
+import raynna.core.cache.defintions.AnimationDefinitions
+import raynna.game.Animation
+import raynna.game.player.Player
+import raynna.game.player.Ranks
+import raynna.game.player.command.Command
+import java.util.Arrays
+
+class AnimationCommand : Command {
+    override val requiredRank = Ranks.Rank.DEVELOPER
+    override val description = "Executes an animation"
+    override val usage = "::animation <id>"
+
+    override fun execute(
+        player: Player,
+        args: List<String>,
+        trigger: String,
+    ): Boolean {
+        if (args.isEmpty()) {
+            player.message("Usage: $usage")
+            return true
+        }
+        val animationId = args[0].toInt()
+        val definitions = AnimationDefinitions.getAnimationDefinitions(animationId)
+        if (animationId == -1) { // just to be able to reset animation
+            player.animate(Animation(-1))
+            player.message("Reset current animation.")
+            return true
+        }
+        if (definitions == null || definitions.anIntArray2153 == null || definitions.anIntArray2153.isEmpty()) {
+            player.message("Unknown or invalid animation ID: $animationId")
+            println("Unknown animation ID: $animationId")
+            return true
+        }
+        if (definitions.handledSounds != null) {
+            val converted: Array<IntArray?> =
+                definitions.handledSounds
+                    .map { inner ->
+                        inner
+                            ?.map { value ->
+                                value shr 8
+                            }?.toIntArray()
+                    }.toTypedArray()
+
+            println("sounds (decoded) ${converted.contentDeepToString()}")
+        }
+        player.animate(animationId)
+        println("Animation ID: $animationId")
+        player.message("Animation $animationId has been executed.")
+        return true
+    }
+}
