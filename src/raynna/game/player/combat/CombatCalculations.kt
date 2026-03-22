@@ -6,7 +6,6 @@ import raynna.game.player.Equipment
 import raynna.game.player.Player
 import raynna.game.player.Skills
 import raynna.game.player.TickManager
-import raynna.util.Utils
 import raynna.game.player.combat.damage.CombatMultipliers
 import raynna.game.player.combat.damage.MaxHit
 import raynna.game.player.combat.magic.ElementType
@@ -18,6 +17,7 @@ import raynna.game.player.combat.range.RangedStyle
 import raynna.game.player.equipment.BonusType
 import raynna.game.player.equipment.EquipmentSets
 import raynna.game.player.equipment.EquipmentSets.getDharokMultiplier
+import raynna.util.Utils
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.math.floor
 
@@ -377,15 +377,6 @@ object CombatCalculations {
 
                 if (multiplier != 1.0) {
                     baseMaxHit = (baseMaxHit * multiplier).toInt()
-                    println("${target.name} is weak to ${spell.element.key()} (x$multiplier)")
-                } else {
-                    val allWeaknesses = weaknesses?.elemental
-
-                    if (!allWeaknesses.isNullOrEmpty()) {
-                        println("${target.name} weaknesses: $allWeaknesses")
-                    } else {
-                        println("${target.name} has no elemental weaknesses")
-                    }
                 }
             }
             var maxHit = (baseMaxHit * specialMultiplier).toInt()
