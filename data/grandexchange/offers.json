@@ -14,7 +14,7 @@
       ],
       "alwaysStackable": true
     },
-    "data": 1774107156425,
+    "data": 1774131715087,
     "id": 11694,
     "amount": 2,
     "metadata": null
@@ -34,7 +34,7 @@
       ],
       "alwaysStackable": true
     },
-    "data": 1774107156424,
+    "data": 1774131715086,
     "id": 4151,
     "amount": 1,
     "metadata": null
@@ -59,14 +59,14 @@
     "amount": 5,
     "metadata": null
   },
-  "-2959178906088185234": {
-    "price": 7000000,
+  "-4559666625453354516": {
+    "price": 3000000,
     "isBuying": false,
     "username": "Andreas",
-    "totalAmount": 2,
-    "totalPrice": 14000000,
+    "totalAmount": 0,
+    "totalPrice": 0,
     "canceled": false,
-    "created": 1774064830,
+    "created": 1774131799,
     "received": {
       "data": [
         null,
@@ -74,9 +74,9 @@
       ],
       "alwaysStackable": true
     },
-    "data": 1774107156424,
+    "data": 1774131799625,
     "id": 6585,
-    "amount": 3,
+    "amount": 2,
     "metadata": null
   }
 }

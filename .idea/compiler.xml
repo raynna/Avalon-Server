@@ -9,6 +9,9 @@
       <module name="727-source" options="-Xlint:deprecation" />
       <module name="727-source.main" options="-Xlint:deprecation" />
       <module name="727-source.test" options="-Xlint:deprecation" />
+      <module name="raynna" options="-Xlint:deprecation" />
+      <module name="raynna.main" options="-Xlint:deprecation" />
+      <module name="raynna.test" options="-Xlint:deprecation" />
     </option>
   </component>
 </project>

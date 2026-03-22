@@ -5,7 +5,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-group = "com.rs"
+group = "raynna"
 version = "1.0"
 
 repositories {
@@ -44,12 +44,23 @@ dependencies {
 }
 
 application {
-    mainClass.set("com.rs.Launcher")
+    mainClass.set("raynna.Raynna")
 }
 
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+sourceSets {
+    main {
+        java.setSrcDirs(listOf("src"))
+        resources.setSrcDirs(listOf("src/main/resources"))
+        java {
+            exclude("com/com/rs/**")
+            exclude("main/resources/**")
+        }
     }
 }
 
@@ -59,6 +70,11 @@ tasks.withType<JavaCompile> {
 
 kotlin {
     jvmToolchain(21)
+    sourceSets {
+        main {
+            kotlin.srcDirs("src")
+        }
+    }
 }
 
 tasks.shadowJar {
