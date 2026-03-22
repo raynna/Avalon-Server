@@ -1,0 +1,71 @@
+{
+  "name": "Ankou",
+  "variants": [
+    {
+      "ids": [
+        4382
+      ],
+      "members": false,
+      "combatLevel": 82,
+      "attackLevel": 80,
+      "strengthLevel": 70,
+      "defenceLevel": 70,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 65,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "examine": "A boney ghost.",
+      "attributes": [
+        "undead",
+        "spectral"
+      ],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 8
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 65,
+      "categories": [],
+      "assignedBy": [
+        "krystilia",
+        "vannaka",
+        "konar",
+        "nieve",
+        "duradel"
+      ]
+    }
+  ]
+}

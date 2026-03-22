@@ -1,0 +1,63 @@
+{
+  "name": "Al-Kharid warrior",
+  "variants": [
+    {
+      "ids": [
+        18
+      ],
+      "members": false,
+      "combatLevel": 9,
+      "attackLevel": 7,
+      "strengthLevel": 5,
+      "defenceLevel": 4,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 19,
+      "attackBonus": 10,
+      "strengthBonus": 9,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 12,
+        "slash": 15,
+        "crush": 10
+      },
+      "magicDefence": {
+        "magic": -1
+      },
+      "rangedDefence": {
+        "light": 12,
+        "standard": 12,
+        "heavy": 12
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[21 January]] [[2001]]",
+      "aliases": [],
+      "size": "1",
+      "examine": "Part of Al Kharid\u0027s elite fighting force.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 2
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Slash]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}

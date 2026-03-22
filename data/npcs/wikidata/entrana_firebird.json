@@ -1,0 +1,68 @@
+{
+  "name": "Entrana firebird",
+  "variants": [
+    {
+      "ids": [
+        6108
+      ],
+      "members": true,
+      "combatLevel": 2,
+      "attackLevel": 1,
+      "strengthLevel": 1,
+      "defenceLevel": 1,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 5,
+      "attackBonus": -31,
+      "strengthBonus": -26,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": -26,
+        "slash": -26,
+        "crush": -26
+      },
+      "magicDefence": {
+        "magic": -26
+      },
+      "rangedDefence": {
+        "light": -26,
+        "standard": -26,
+        "heavy": -26
+      },
+      "weaknesses": {
+        "water": 100
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[27 February]] [[2002]]",
+      "aliases": [],
+      "size": "2",
+      "examine": "Probably not a chicken.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 1
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 35,
+      "slayerXp": 5,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria"
+      ]
+    }
+  ]
+}

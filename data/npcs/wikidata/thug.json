@@ -1,0 +1,63 @@
+{
+  "name": "Thug",
+  "variants": [
+    {
+      "ids": [
+        186
+      ],
+      "members": true,
+      "combatLevel": 10,
+      "attackLevel": 7,
+      "strengthLevel": 5,
+      "defenceLevel": 9,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 18,
+      "attackBonus": 5,
+      "strengthBonus": 5,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 2,
+        "slash": 3,
+        "crush": 3
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[27 February]] [[2002]]",
+      "aliases": [],
+      "size": "1",
+      "examine": "Low on brains, high on aggression.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 2
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 50,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}

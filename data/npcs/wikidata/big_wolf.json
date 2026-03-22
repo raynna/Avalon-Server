@@ -1,0 +1,68 @@
+{
+  "name": "Big Wolf",
+  "variants": [
+    {
+      "ids": [
+        6046
+      ],
+      "members": true,
+      "combatLevel": 73,
+      "attackLevel": 60,
+      "strengthLevel": 61,
+      "defenceLevel": 62,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 74,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {
+        "fire": 20
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "2",
+      "examine": "Must be the pack leader.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 7
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 74,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria",
+        "mazchna"
+      ]
+    }
+  ]
+}

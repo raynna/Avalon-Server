@@ -1,0 +1,72 @@
+{
+  "name": "Tormented demon",
+  "variants": [
+    {
+      "ids": [
+        8349
+      ],
+      "members": true,
+      "combatLevel": 450,
+      "attackLevel": 255,
+      "strengthLevel": 255,
+      "defenceLevel": 150,
+      "magicLevel": 255,
+      "rangedLevel": 255,
+      "constitutionLevel": 600,
+      "attackBonus": 400,
+      "strengthBonus": 10,
+      "magicBonus": 300,
+      "magicStrengthBonus": 5,
+      "rangedBonus": 300,
+      "rangedStrengthBonus": 5,
+      "meleeDefence": {
+        "stab": 75,
+        "slash": 175,
+        "crush": 68
+      },
+      "magicDefence": {
+        "magic": 5
+      },
+      "rangedDefence": {
+        "light": 140,
+        "standard": 150,
+        "heavy": 90
+      },
+      "weaknesses": {
+        "water": 30
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": true,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[10 July]] [[2024]]",
+      "aliases": [],
+      "size": "3",
+      "examine": "Lucien must be incredibly powerful if he can bind such demons to his will.",
+      "attributes": [
+        "demon"
+      ],
+      "xpBonus": 77.5,
+      "maxHit": {
+        "auto": 31,
+        "special": 45
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "All"
+      ],
+      "attackSpeedTicks": 6,
+      "respawnTicks": 21,
+      "slayerXp": 1065,
+      "categories": [],
+      "assignedBy": [
+        "chaeldar",
+        "nieve",
+        "kuradal"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "name": "Green dragon",
+  "variants": [
+    {
+      "ids": [
+        941,
+        4677,
+        4678,
+        4679,
+        4680
+      ],
+      "members": true,
+      "combatLevel": 79,
+      "attackLevel": 68,
+      "strengthLevel": 68,
+      "defenceLevel": 68,
+      "magicLevel": 68,
+      "rangedLevel": 1,
+      "constitutionLevel": 75,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 40,
+        "crush": 40
+      },
+      "magicDefence": {
+        "magic": 30
+      },
+      "rangedDefence": {
+        "light": 50,
+        "standard": 50,
+        "heavy": 10
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "4",
+      "examine": "Must be related to Elvarg.",
+      "attributes": [
+        "dragon",
+        "fiery"
+      ],
+      "xpBonus": 0.0,
+      "maxHit": {},
+      "aggressive": true,
+      "attackStyles": [
+        "[[Slash]]",
+        "[[Dragonfire]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 30,
+      "slayerXp": 75,
+      "categories": [],
+      "assignedBy": [
+        "krystilia"
+      ]
+    }
+  ]
+}

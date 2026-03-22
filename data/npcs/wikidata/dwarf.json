@@ -1,0 +1,131 @@
+{
+  "name": "Dwarf",
+  "variants": [
+    {
+      "ids": [
+        118,
+        3221,
+        3272
+      ],
+      "members": false,
+      "combatLevel": 10,
+      "attackLevel": 8,
+      "strengthLevel": 8,
+      "defenceLevel": 6,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 16,
+      "attackBonus": 5,
+      "strengthBonus": 7,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 5
+      },
+      "rangedDefence": {
+        "light": 10,
+        "standard": 10,
+        "heavy": 10
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 3
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 16,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria"
+      ]
+    },
+    {
+      "ids": [
+        3219,
+        3220,
+        3268,
+        3269,
+        3270,
+        3271,
+        3273
+      ],
+      "members": false,
+      "combatLevel": 11,
+      "attackLevel": 12,
+      "strengthLevel": 5,
+      "defenceLevel": 8,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 16,
+      "attackBonus": 5,
+      "strengthBonus": 7,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 5
+      },
+      "rangedDefence": {
+        "light": 10,
+        "standard": 10,
+        "heavy": 10
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 3
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 16,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria"
+      ]
+    }
+  ]
+}

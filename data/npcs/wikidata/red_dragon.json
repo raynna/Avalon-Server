@@ -1,0 +1,73 @@
+{
+  "name": "Red dragon",
+  "variants": [
+    {
+      "ids": [
+        4670,
+        4672
+      ],
+      "members": true,
+      "combatLevel": 152,
+      "attackLevel": 130,
+      "strengthLevel": 130,
+      "defenceLevel": 130,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 140,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 70,
+        "crush": 70
+      },
+      "magicDefence": {
+        "magic": 60
+      },
+      "rangedDefence": {
+        "light": 50,
+        "standard": 50,
+        "heavy": 10
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[27 February]] [[2002]]",
+      "aliases": [],
+      "size": "4",
+      "examine": "A big powerful dragon.",
+      "attributes": [
+        "dragon",
+        "fiery"
+      ],
+      "xpBonus": 2.5,
+      "maxHit": {
+        "[[melee]]": 14,
+        "[[dragonfire]]": 50
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Slash]]",
+        "[[Dragonfire]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": [
+        "konar",
+        "nieve",
+        "duradel"
+      ]
+    }
+  ]
+}

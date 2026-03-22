@@ -1,0 +1,60 @@
+{
+  "name": "Monk",
+  "variants": [
+    {
+      "ids": [
+        222,
+        7727
+      ],
+      "members": false,
+      "combatLevel": 5,
+      "attackLevel": 2,
+      "strengthLevel": 2,
+      "defenceLevel": 3,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 15,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "1",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {},
+      "aggressive": false,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "name": "Greater demon",
+  "variants": [
+    {
+      "ids": [
+        83,
+        4698,
+        4699,
+        4700,
+        4701
+      ],
+      "members": false,
+      "combatLevel": 92,
+      "attackLevel": 76,
+      "strengthLevel": 78,
+      "defenceLevel": 81,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 87,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": -10
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "3",
+      "attributes": [
+        "demon"
+      ],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 9
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Slash]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 15,
+      "slayerXp": 87,
+      "categories": [],
+      "assignedBy": [
+        "krystilia",
+        "chaeldar",
+        "konar",
+        "nieve",
+        "duradel"
+      ]
+    }
+  ]
+}

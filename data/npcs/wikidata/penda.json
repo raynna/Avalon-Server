@@ -1,0 +1,63 @@
+{
+  "name": "Penda",
+  "variants": [
+    {
+      "ids": [
+        1087
+      ],
+      "members": true,
+      "combatLevel": 5,
+      "attackLevel": 3,
+      "strengthLevel": 3,
+      "defenceLevel": 3,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 10,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": -12,
+        "slash": -12,
+        "crush": -12
+      },
+      "magicDefence": {
+        "magic": -12
+      },
+      "rangedDefence": {
+        "light": -12,
+        "standard": -12,
+        "heavy": -12
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[9 August]] [[2004]]",
+      "aliases": [],
+      "size": "1",
+      "examine": "A citizen of Burthorpe.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 1
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}

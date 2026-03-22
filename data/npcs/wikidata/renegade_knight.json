@@ -1,0 +1,63 @@
+{
+  "name": "Renegade Knight",
+  "variants": [
+    {
+      "ids": [
+        237
+      ],
+      "members": true,
+      "combatLevel": 37,
+      "attackLevel": 28,
+      "strengthLevel": 28,
+      "defenceLevel": 28,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 48,
+      "attackBonus": 20,
+      "strengthBonus": 16,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 99,
+        "slash": 82,
+        "crush": 62
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[27 February]] [[2002]]",
+      "aliases": [],
+      "size": "1",
+      "examine": "He isn\u0027t very friendly.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 5
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Slash]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 25,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "name": "Moss giant",
+  "variants": [
+    {
+      "ids": [
+        1587,
+        4688
+      ],
+      "members": true,
+      "combatLevel": 42,
+      "attackLevel": 30,
+      "strengthLevel": 30,
+      "defenceLevel": 30,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 60,
+      "attackBonus": 33,
+      "strengthBonus": 31,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {
+        "fire": 50
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "aliases": [],
+      "size": "2",
+      "examine": "His beard seems to have a life of its own.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {},
+      "aggressive": true,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 6,
+      "respawnTicks": 30,
+      "slayerXp": 60,
+      "categories": [],
+      "assignedBy": [
+        "krystilia",
+        "vannaka"
+      ]
+    }
+  ]
+}

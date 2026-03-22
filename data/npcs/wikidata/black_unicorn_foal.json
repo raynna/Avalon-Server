@@ -1,0 +1,63 @@
+{
+  "name": "Black unicorn Foal",
+  "variants": [
+    {
+      "ids": [
+        1329
+      ],
+      "members": true,
+      "combatLevel": 22,
+      "attackLevel": 18,
+      "strengthLevel": 18,
+      "defenceLevel": 18,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 25,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 0,
+        "slash": 0,
+        "crush": 0
+      },
+      "magicDefence": {
+        "magic": 0
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[2 November]] [[2004]]",
+      "aliases": [],
+      "size": "2",
+      "examine": "Cute but evil.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 3
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 20,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}

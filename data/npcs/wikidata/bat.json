@@ -1,0 +1,69 @@
+{
+  "name": "Bat",
+  "variants": [
+    {
+      "ids": [
+        412
+      ],
+      "members": true,
+      "combatLevel": 6,
+      "attackLevel": 5,
+      "strengthLevel": 5,
+      "defenceLevel": 5,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 8,
+      "attackBonus": 0,
+      "strengthBonus": 0,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 2,
+        "slash": 2,
+        "crush": 5
+      },
+      "magicDefence": {
+        "magic": 2
+      },
+      "rangedDefence": {
+        "light": 0,
+        "standard": 0,
+        "heavy": 0
+      },
+      "weaknesses": {
+        "air": 35
+      },
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[14 October]] [[2004]]",
+      "aliases": [],
+      "size": "1",
+      "examine": "An annoying flappy thing.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 1
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 35,
+      "slayerXp": 8,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria",
+        "mazchna"
+      ]
+    }
+  ]
+}

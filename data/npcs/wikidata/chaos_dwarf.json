@@ -1,0 +1,66 @@
+{
+  "name": "Chaos dwarf",
+  "variants": [
+    {
+      "ids": [
+        119
+      ],
+      "members": false,
+      "combatLevel": 48,
+      "attackLevel": 38,
+      "strengthLevel": 42,
+      "defenceLevel": 28,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 61,
+      "attackBonus": 13,
+      "strengthBonus": 9,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 40,
+        "slash": 34,
+        "crush": 25
+      },
+      "magicDefence": {
+        "magic": 10
+      },
+      "rangedDefence": {
+        "light": 35,
+        "standard": 35,
+        "heavy": 35
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[13 August]] [[2001]]",
+      "aliases": [],
+      "size": "1",
+      "examine": "A dwarf gone bad.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 6
+      },
+      "aggressive": true,
+      "attackStyles": [
+        "[[Crush]]"
+      ],
+      "attackSpeedTicks": 4,
+      "respawnTicks": 150,
+      "slayerXp": 61,
+      "categories": [],
+      "assignedBy": [
+        "turael",
+        "spria"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "name": "Fortress guard",
+  "variants": [
+    {
+      "ids": [
+        4603,
+        4604,
+        4605,
+        4606
+      ],
+      "members": false,
+      "combatLevel": 20,
+      "attackLevel": 18,
+      "strengthLevel": 18,
+      "defenceLevel": 15,
+      "magicLevel": 1,
+      "rangedLevel": 1,
+      "constitutionLevel": 22,
+      "attackBonus": 5,
+      "strengthBonus": 6,
+      "magicBonus": 0,
+      "magicStrengthBonus": 0,
+      "rangedBonus": 0,
+      "rangedStrengthBonus": 0,
+      "meleeDefence": {
+        "stab": 14,
+        "slash": 18,
+        "crush": 14
+      },
+      "magicDefence": {
+        "magic": -4
+      },
+      "rangedDefence": {
+        "light": 15,
+        "standard": 15,
+        "heavy": 15
+      },
+      "weaknesses": {},
+      "immunities": {
+        "poison": false,
+        "venom": false,
+        "cannons": false,
+        "thralls": false,
+        "burn": false
+      },
+      "releaseDate": "[[7 August]] [[2006]]",
+      "aliases": [],
+      "size": "1",
+      "examine": "A generic evil henchman.",
+      "attributes": [],
+      "xpBonus": 0.0,
+      "maxHit": {
+        "default": 3
+      },
+      "aggressive": false,
+      "attackStyles": [
+        "[[Stab]]"
+      ],
+      "attackSpeedTicks": 6,
+      "respawnTicks": 25,
+      "slayerXp": 0,
+      "categories": [],
+      "assignedBy": []
+    }
+  ]
+}
